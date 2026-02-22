@@ -9,6 +9,9 @@ interface RestaurantData {
   logo_url: string | null;
   tagline: string | null;
   primary_color: string | null;
+  phone: string | null;
+  address: string | null;
+  city: string | null;
 }
 
 export function useRestaurantBySlug(slug: string | undefined) {
@@ -27,7 +30,7 @@ export function useRestaurantBySlug(slug: string | undefined) {
       // Fetch restaurant
       const { data: rest, error: restErr } = await supabase
         .from("restaurants")
-        .select("id, name, slug, logo_url, tagline, primary_color")
+        .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city")
         .eq("slug", slug)
         .eq("is_active", true)
         .maybeSingle();
