@@ -56,6 +56,11 @@ const MenuItemCard = ({ item, index, onSelect }: MenuItemCardProps) => {
           </motion.div>
         )}
 
+        {/* Category badge */}
+        <div className="absolute top-3 right-12 px-2 py-0.5 rounded-full glass text-[10px] font-medium text-foreground/80 uppercase tracking-wider">
+          {item.category}
+        </div>
+
         {/* Quick add button overlaid on image */}
         <motion.button
           onClick={(e) => {
