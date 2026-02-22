@@ -14,6 +14,11 @@ interface RestaurantInfo {
   city: string | null;
   email: string | null;
   opening_hours: { day: string; hours: string }[] | null;
+  languages: string[] | null;
+  min_order_amount: number | null;
+  blocked_keywords: string[] | null;
+  policy_accepted: boolean;
+  policy_accepted_at: string | null;
 }
 
 export function useMyRestaurant() {
@@ -31,7 +36,7 @@ export function useMyRestaurant() {
       // Check if user owns a restaurant (use maybeSingle to avoid 406)
       const { data } = await supabase
         .from("restaurants")
-        .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours")
+        .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours, languages, min_order_amount, blocked_keywords, policy_accepted, policy_accepted_at")
         .eq("owner_id", user.id)
         .limit(1)
         .maybeSingle();
@@ -50,7 +55,7 @@ export function useMyRestaurant() {
         if (membership) {
           const { data: rest } = await supabase
             .from("restaurants")
-            .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours")
+            .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours, languages, min_order_amount, blocked_keywords, policy_accepted, policy_accepted_at")
             .eq("id", membership.restaurant_id)
             .maybeSingle();
 

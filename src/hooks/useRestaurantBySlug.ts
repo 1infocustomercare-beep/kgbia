@@ -14,6 +14,9 @@ interface RestaurantData {
   city: string | null;
   email: string | null;
   opening_hours: { day: string; hours: string }[] | null;
+  languages: string[] | null;
+  min_order_amount: number | null;
+  blocked_keywords: string[] | null;
 }
 
 export function useRestaurantBySlug(slug: string | undefined) {
@@ -32,7 +35,7 @@ export function useRestaurantBySlug(slug: string | undefined) {
       // Fetch restaurant
       const { data: rest, error: restErr } = await supabase
         .from("restaurants")
-        .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours")
+        .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours, languages, min_order_amount, blocked_keywords")
         .eq("slug", slug)
         .eq("is_active", true)
         .maybeSingle();
