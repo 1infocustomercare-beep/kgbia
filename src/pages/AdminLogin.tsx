@@ -29,7 +29,7 @@ const AdminLogin = () => {
     } else if (roles.includes("staff")) {
       navigate("/staff", { replace: true });
     } else {
-      navigate("/admin/dashboard", { replace: true });
+      navigate("/dashboard", { replace: true });
     }
   }, [user, roles, authLoading, navigate]);
 
