@@ -12,6 +12,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
+import KitchenView from "./pages/KitchenView";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,7 +33,7 @@ const App = () => (
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/superadmin" element={<SuperAdminDashboard />} />
-              <Route path="/staff" element={<SuperAdminDashboard />} />
+              <Route path="/kitchen" element={<KitchenView />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
