@@ -6,11 +6,16 @@ import MenuItemCard from "@/components/restaurant/MenuItemCard";
 import CartDrawer from "@/components/restaurant/CartDrawer";
 import FloatingCartButton from "@/components/restaurant/FloatingCartButton";
 import ItemDetailSheet from "@/components/restaurant/ItemDetailSheet";
+import PrivateChat from "@/components/restaurant/PrivateChat";
+import LoyaltyWallet from "@/components/restaurant/LoyaltyWallet";
+import ReviewShield from "@/components/restaurant/ReviewShield";
 import restaurantLogo from "@/assets/restaurant-logo.png";
-import { Search, Settings } from "lucide-react";
-import { motion } from "framer-motion";
+import { Search, Settings, Wallet, Star, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import type { MenuItem } from "@/types/restaurant";
+
+type ExtraPanel = null | "loyalty" | "reviews";
 
 const RestaurantPage = () => {
   const navigate = useNavigate();
@@ -19,16 +24,16 @@ const RestaurantPage = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [extraPanel, setExtraPanel] = useState<ExtraPanel>(null);
 
   const filteredItems = useMemo(() => {
-    let items = demoMenu.filter((i) => i.category === activeCategory);
     if (search.trim()) {
       const q = search.toLowerCase();
-      items = demoMenu.filter(
+      return demoMenu.filter(
         (i) => i.name.toLowerCase().includes(q) || i.description.toLowerCase().includes(q)
       );
     }
-    return items;
+    return demoMenu.filter((i) => i.category === activeCategory);
   }, [activeCategory, search]);
 
   const handleSplashComplete = useCallback(() => setShowSplash(false), []);
@@ -54,12 +59,26 @@ const RestaurantPage = () => {
               <p className="text-xs text-muted-foreground">{demoRestaurant.tagline}</p>
             </div>
           </div>
-          <button
-            onClick={() => navigate("/admin")}
-            className="p-2 rounded-full hover:bg-secondary transition-colors"
-          >
-            <Settings className="w-5 h-5 text-muted-foreground" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setExtraPanel(extraPanel === "loyalty" ? null : "loyalty")}
+              className={`p-2 rounded-full transition-colors ${extraPanel === "loyalty" ? "bg-primary/20 text-primary" : "hover:bg-secondary text-muted-foreground"}`}
+            >
+              <Wallet className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setExtraPanel(extraPanel === "reviews" ? null : "reviews")}
+              className={`p-2 rounded-full transition-colors ${extraPanel === "reviews" ? "bg-primary/20 text-primary" : "hover:bg-secondary text-muted-foreground"}`}
+            >
+              <Star className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => navigate("/admin")}
+              className="p-2 rounded-full hover:bg-secondary transition-colors"
+            >
+              <Settings className="w-5 h-5 text-muted-foreground" />
+            </button>
+          </div>
         </div>
 
         {/* Search */}
@@ -75,19 +94,45 @@ const RestaurantPage = () => {
         </div>
       </motion.header>
 
+      {/* Extra panels */}
+      <AnimatePresence mode="wait">
+        {extraPanel && (
+          <motion.div
+            key={extraPanel}
+            className="px-5 mb-4"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+          >
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-sm font-semibold text-foreground">
+                {extraPanel === "loyalty" ? "Loyalty Wallet" : "Recensioni"}
+              </h3>
+              <button onClick={() => setExtraPanel(null)} className="p-1 rounded-full hover:bg-secondary">
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </div>
+            {extraPanel === "loyalty" && <LoyaltyWallet />}
+            {extraPanel === "reviews" && <ReviewShield />}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Category tabs */}
-      {!search.trim() && (
+      {!search.trim() && !extraPanel && (
         <CategoryTabs categories={menuCategories} active={activeCategory} onSelect={setActiveCategory} />
       )}
 
       {/* Menu grid */}
-      <div className="px-5 mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {filteredItems.map((item, i) => (
-          <MenuItemCard key={item.id} item={item} index={i} onSelect={() => setSelectedItem(item)} />
-        ))}
-      </div>
+      {!extraPanel && (
+        <div className="px-5 mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {filteredItems.map((item, i) => (
+            <MenuItemCard key={item.id} item={item} index={i} onSelect={() => setSelectedItem(item)} />
+          ))}
+        </div>
+      )}
 
-      {filteredItems.length === 0 && (
+      {!extraPanel && filteredItems.length === 0 && (
         <div className="flex items-center justify-center py-20 text-muted-foreground text-sm">
           Nessun piatto trovato
         </div>
@@ -95,6 +140,9 @@ const RestaurantPage = () => {
 
       {/* Item detail */}
       <ItemDetailSheet item={selectedItem} onClose={() => setSelectedItem(null)} />
+
+      {/* Private Chat */}
+      <PrivateChat />
 
       {/* Cart */}
       <FloatingCartButton onClick={() => setCartOpen(true)} />

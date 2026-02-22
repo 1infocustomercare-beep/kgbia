@@ -5,8 +5,8 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect to demo restaurant
-    navigate("/r/impero-roma", { replace: true });
+    // Redirect to landing page
+    navigate("/home", { replace: true });
   }, [navigate]);
 
   return null;

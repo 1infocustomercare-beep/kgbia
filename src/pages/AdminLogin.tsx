@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Crown, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 
 const AdminLogin = () => {
@@ -17,11 +17,12 @@ const AdminLogin = () => {
     setError("");
     setLoading(true);
 
-    // Demo credentials check
     setTimeout(() => {
-      if (email === "admin@impero.it" && password === "admin123") {
-        navigate("/admin/dashboard");
-      } else if (email === "kevin97bernardini@gmail.com" && password === "superadmin") {
+      if (email === "kevin97bernardini@gmail.com" && password === "superadmin") {
+        navigate("/superadmin");
+      } else if (email === "mary@empire.it" && password === "staff123") {
+        navigate("/staff");
+      } else if (email === "admin@impero.it" && password === "admin123") {
         navigate("/admin/dashboard");
       } else {
         setError("Credenziali non valide");
@@ -38,7 +39,6 @@ const AdminLogin = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        {/* Logo */}
         <div className="flex flex-col items-center">
           <div className="w-16 h-16 rounded-2xl overflow-hidden mb-4">
             <img src={restaurantLogo} alt="Logo" className="w-full h-full object-contain" />
@@ -47,7 +47,6 @@ const AdminLogin = () => {
           <p className="text-sm text-muted-foreground mt-1">Accedi al pannello di gestione</p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-2">Email</label>
@@ -82,11 +81,7 @@ const AdminLogin = () => {
           </div>
 
           {error && (
-            <motion.p
-              className="text-sm text-accent text-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
+            <motion.p className="text-sm text-accent text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               {error}
             </motion.p>
           )}
@@ -101,9 +96,11 @@ const AdminLogin = () => {
           </motion.button>
         </form>
 
-        <p className="text-xs text-muted-foreground/50 text-center">
-          Demo: admin@impero.it / admin123
-        </p>
+        <div className="space-y-1 text-xs text-muted-foreground/50 text-center">
+          <p>🔑 Super Admin: kevin97bernardini@gmail.com / superadmin</p>
+          <p>👩‍💼 Staff: mary@empire.it / staff123</p>
+          <p>🍕 Ristoratore: admin@impero.it / admin123</p>
+        </div>
       </motion.div>
     </div>
   );
