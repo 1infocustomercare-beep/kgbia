@@ -19,6 +19,14 @@ import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 
 type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy";
 
+interface EditingItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+}
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { signOut, user } = useAuth();
@@ -48,6 +56,15 @@ const AdminDashboard = () => {
   const [vaultKey, setVaultKey] = useState("");
   const [vaultProvider, setVaultProvider] = useState("Scontrino.it");
   const [vaultValidating, setVaultValidating] = useState(false);
+
+  // Restaurant creation
+  const [newRestName, setNewRestName] = useState("");
+  const [newRestSlug, setNewRestSlug] = useState("");
+  const [newRestCity, setNewRestCity] = useState("");
+  const [creatingRest, setCreatingRest] = useState(false);
+
+  // Menu item editing
+  const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
 
   // AI-Mary vault chat
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
@@ -320,6 +337,44 @@ const AdminDashboard = () => {
     }, 600);
   };
 
+  const handleCreateRestaurant = async () => {
+    if (!user || !newRestName.trim() || !newRestSlug.trim()) return;
+    setCreatingRest(true);
+    const slug = newRestSlug.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
+    const { error } = await supabase.from("restaurants").insert({
+      name: newRestName.trim(),
+      slug,
+      city: newRestCity.trim() || null,
+      owner_id: user.id,
+    });
+    if (error) {
+      toast({ title: "Errore", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Ristorante creato!", description: "Ricarica la pagina per iniziare." });
+      // Add restaurant_admin role if not present
+      await supabase.from("user_roles").upsert({ user_id: user.id, role: "restaurant_admin" as any }, { onConflict: "user_id,role" });
+      window.location.reload();
+    }
+    setCreatingRest(false);
+  };
+
+  const handleEditMenuItem = async () => {
+    if (!editingItem || !restaurant) return;
+    const { error } = await supabase.from("menu_items").update({
+      name: editingItem.name,
+      description: editingItem.description,
+      price: editingItem.price,
+      category: editingItem.category,
+    }).eq("id", editingItem.id);
+    if (error) {
+      toast({ title: "Errore", description: error.message, variant: "destructive" });
+    } else {
+      setMenuItems(prev => prev.map(i => i.id === editingItem.id ? { ...i, name: editingItem.name, description: editingItem.description, price: editingItem.price, category: editingItem.category } : i));
+      setEditingItem(null);
+      toast({ title: "Piatto aggiornato" });
+    }
+  };
+
   const handleLogout = async () => {
     await signOut();
     navigate("/admin");
@@ -327,6 +382,51 @@ const AdminDashboard = () => {
 
   const activeOrders = orders.filter(o => ["pending", "preparing", "ready"].includes(o.status));
   const allCategories = [...new Set(menuItems.map(i => i.category))];
+
+  // Show restaurant creation if no restaurant exists
+  if (!restLoading && !restaurant) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+        <motion.div className="w-full max-w-sm space-y-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+              <UtensilsCrossed className="w-8 h-8 text-primary" />
+            </div>
+            <h1 className="text-2xl font-display font-bold text-gold-gradient">Crea il tuo Ristorante</h1>
+            <p className="text-sm text-muted-foreground mt-1 text-center">Configura il tuo impero digitale in 30 secondi</p>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-1.5">Nome ristorante</label>
+              <input type="text" value={newRestName} onChange={(e) => { setNewRestName(e.target.value); setNewRestSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")); }}
+                placeholder="Ristorante Da Mario" className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-1.5">Slug URL</label>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">/r/</span>
+                <input type="text" value={newRestSlug} onChange={(e) => setNewRestSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
+                  placeholder="ristorante-da-mario" className="flex-1 px-4 py-3 rounded-xl bg-secondary text-foreground text-base font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-1.5">Città</label>
+              <input type="text" value={newRestCity} onChange={(e) => setNewRestCity(e.target.value)}
+                placeholder="Roma" className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+            </div>
+          </div>
+          <motion.button onClick={handleCreateRestaurant} disabled={!newRestName.trim() || !newRestSlug.trim() || creatingRest}
+            className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-base gold-glow disabled:opacity-50 min-h-[48px]"
+            whileTap={{ scale: 0.97 }}>
+            {creatingRest ? "Creazione in corso..." : "Crea il tuo Impero"}
+          </motion.button>
+          <button onClick={handleLogout} className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+            Esci
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -441,7 +541,8 @@ const AdminDashboard = () => {
                           <p className="text-primary font-display font-semibold text-sm">€{item.price.toFixed(2)}</p>
                         </div>
                         <div className="flex gap-1">
-                          <button className="p-2 rounded-lg hover:bg-muted transition-colors">
+                          <button onClick={() => setEditingItem({ id: item.id, name: item.name, description: item.description, price: item.price, category: item.category })}
+                            className="p-2 rounded-lg hover:bg-muted transition-colors">
                             <Edit className="w-3.5 h-3.5 text-muted-foreground" />
                           </button>
                           <button onClick={() => handleDeleteMenuItem(item.id)} className="p-2 rounded-lg hover:bg-accent/20 transition-colors">
@@ -454,6 +555,40 @@ const AdminDashboard = () => {
                 </div>
               );
             })}
+          </motion.div>
+        )}
+
+        {/* EDIT ITEM MODAL */}
+        {editingItem && (
+          <motion.div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center px-5"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setEditingItem(null)}>
+            <motion.div className="w-full max-w-sm bg-card rounded-2xl border border-border p-5 space-y-4"
+              initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-display font-bold text-foreground">Modifica piatto</h3>
+                <button onClick={() => setEditingItem(null)} className="p-1.5 rounded-full hover:bg-secondary"><X className="w-4 h-4 text-muted-foreground" /></button>
+              </div>
+              <div className="space-y-3">
+                <input type="text" value={editingItem.name} onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
+                  placeholder="Nome" className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                <textarea value={editingItem.description} onChange={(e) => setEditingItem({ ...editingItem, description: e.target.value })}
+                  placeholder="Descrizione" className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base resize-none h-20 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                <div className="grid grid-cols-2 gap-2">
+                  <input type="number" step="0.01" value={editingItem.price} onChange={(e) => setEditingItem({ ...editingItem, price: parseFloat(e.target.value) || 0 })}
+                    placeholder="Prezzo" className="px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  <input type="text" value={editingItem.category} onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
+                    placeholder="Categoria" className="px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={handleEditMenuItem} className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm min-h-[44px] flex items-center justify-center gap-2">
+                  <Save className="w-4 h-4" /> Salva
+                </button>
+                <button onClick={() => setEditingItem(null)} className="px-4 py-2.5 rounded-xl bg-secondary text-secondary-foreground text-sm min-h-[44px]">
+                  Annulla
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
 
