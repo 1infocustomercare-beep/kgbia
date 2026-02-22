@@ -6,9 +6,8 @@ import {
   UtensilsCrossed, Eye, Sparkles, Lock
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import heroImage from "@/assets/hero-landing.jpg";
 import restaurantLogo from "@/assets/restaurant-logo.png";
-import demoVideo from "@/assets/demo-app-video.mp4";
+import heroVideo from "@/assets/hero-restaurant.mp4";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -58,89 +57,80 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative flex flex-col items-center justify-center pt-20 pb-12">
-        <div className="absolute inset-0">
-          <img src={heroImage} alt="" className="w-full h-full object-cover opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
-        </div>
-        
-        <div className="relative z-10 max-w-4xl mx-auto px-5 text-center pt-10 pb-8">
+      {/* Hero Section — Full-screen Video */}
+      <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+        {/* Video Background */}
+        <video
+          src={heroVideo}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/50" />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center text-center px-5">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="flex flex-col items-center"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-xs font-medium text-primary mb-6">
-              <Sparkles className="w-3 h-3" />
-              Powered by Intelligenza Artificiale
-            </div>
-            
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold text-foreground leading-tight">
-              Smetti di <span className="text-gold-gradient">regalare il 30%</span> dei tuoi incassi
+            <Crown className="w-10 h-10 text-primary mb-3" />
+            <h1 className="text-5xl sm:text-7xl md:text-8xl font-display font-bold tracking-[0.25em] text-foreground uppercase">
+              Empire
             </h1>
-            
-            <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Empire è la tua app di proprietà. Nessun abbonamento. Nessun intermediario.
-              Il tuo ristorante, il tuo brand, i tuoi clienti.
-            </p>
-
-            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <motion.button
-                onClick={() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" })}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-lg gold-glow flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                Ottieni Empire · €1.997
-                <ArrowRight className="w-5 h-5" />
-              </motion.button>
-              <button
-                onClick={() => navigate("/r/impero-roma")}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-secondary text-secondary-foreground font-semibold text-lg flex items-center justify-center gap-2"
-              >
-                <Eye className="w-5 h-5" />
-                Vedi Demo Live
-              </button>
+            <div className="flex items-center gap-4 mt-3">
+              <span className="w-12 h-px bg-primary" />
+              <span className="text-xs sm:text-sm tracking-[0.3em] text-primary uppercase font-medium">
+                Restaurant Suite
+              </span>
+              <span className="w-12 h-px bg-primary" />
             </div>
+          </motion.div>
 
-            <p className="mt-4 text-xs text-muted-foreground">
-              Pagamento unico · IVA 22% esclusa · Costo mensile: €0
-            </p>
+          <motion.p
+            className="mt-8 text-lg sm:text-xl text-foreground/80 max-w-xl leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            La tua app di proprietà. Zero abbonamenti. Zero intermediari.
+          </motion.p>
+
+          <motion.div
+            className="mt-10 flex flex-col sm:flex-row items-center gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+          >
+            <motion.button
+              onClick={() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" })}
+              className="px-10 py-4 rounded-none border-2 border-primary bg-primary text-primary-foreground font-semibold text-sm tracking-widest uppercase gold-glow"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Ottieni Empire
+            </motion.button>
+            <button
+              onClick={() => navigate("/r/impero-roma")}
+              className="px-10 py-4 rounded-none border-2 border-foreground/30 text-foreground font-semibold text-sm tracking-widest uppercase hover:border-primary hover:text-primary transition-colors"
+            >
+              Demo Live
+            </button>
           </motion.div>
         </div>
 
-        {/* Video Demo Phone Mockup */}
-        <motion.div
-          className="relative z-10 w-full max-w-xs mx-auto mt-4"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.4 }}
-        >
-          <div className="relative mx-auto rounded-[2.5rem] border-[6px] border-muted bg-background shadow-2xl overflow-hidden aspect-[9/19]">
-            {/* Phone notch */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-background rounded-b-2xl z-20" />
-            <video
-              src={demoVideo}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <p className="mt-4 text-center text-xs text-muted-foreground">
-            👆 Demo reale dell'app in funzione
-          </p>
-        </motion.div>
-
         {/* Scroll indicator */}
         <motion.div
-          className="mt-8"
-          animate={{ y: [0, 8, 0] }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <ChevronRight className="w-6 h-6 text-muted-foreground rotate-90" />
+          <ChevronRight className="w-6 h-6 text-foreground/50 rotate-90" />
         </motion.div>
       </section>
 
