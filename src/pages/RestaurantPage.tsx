@@ -549,7 +549,7 @@ const RestaurantPage = () => {
 
       {/* ====== OVERLAYS ====== */}
       <ItemDetailSheet item={selectedItem} onClose={() => setSelectedItem(null)} />
-      <PrivateChat />
+      <PrivateChat restaurantId={dbRestaurant?.id} />
       <FloatingCartButton onClick={() => setCartOpen(true)} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} allMenuItems={menu} />
     </div>

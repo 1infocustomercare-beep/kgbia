@@ -155,10 +155,14 @@ const CheckoutPage = () => {
     setLoading(false);
   };
 
+  const deliveryEnabled = (dbRestaurant as any)?.delivery_enabled ?? true;
+  const takeawayEnabled = (dbRestaurant as any)?.takeaway_enabled ?? true;
+  const tableOrdersEnabled = (dbRestaurant as any)?.table_orders_enabled ?? true;
+
   const orderTypes: { value: OrderType; label: string; icon: React.ReactNode }[] = [
-    { value: "delivery", label: "Consegna", icon: <MapPin className="w-4 h-4" /> },
-    { value: "takeaway", label: "Asporto", icon: <Clock className="w-4 h-4" /> },
-    { value: "table", label: "Tavolo", icon: <CreditCard className="w-4 h-4" /> },
+    ...(deliveryEnabled ? [{ value: "delivery" as OrderType, label: "Consegna", icon: <MapPin className="w-4 h-4" /> }] : []),
+    ...(takeawayEnabled ? [{ value: "takeaway" as OrderType, label: "Asporto", icon: <Clock className="w-4 h-4" /> }] : []),
+    ...(tableOrdersEnabled ? [{ value: "table" as OrderType, label: "Tavolo", icon: <CreditCard className="w-4 h-4" /> }] : []),
   ];
 
   const paymentMethods: { value: PaymentMethod; label: string; icon: React.ReactNode }[] = [
