@@ -1,23 +1,17 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Crown, ChevronRight, Check, Calculator, Play, Star, 
+  Crown, ChevronRight, Check, Calculator, Star, 
   Zap, Shield, Smartphone, TrendingUp, ArrowRight, X,
-  UtensilsCrossed, Eye, Sparkles, Lock, Menu
+  Sparkles, Lock, Menu, Target, DollarSign, Brain
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import restaurantLogo from "@/assets/restaurant-logo.png";
-import heroVideo from "@/assets/hero-restaurant.mp4";
-import storyInterior from "@/assets/story-interior.jpg";
-import storyWine from "@/assets/story-wine.jpg";
-import storyPasta from "@/assets/story-pasta.jpg";
-import storyDish from "@/assets/story-dish.jpg";
+import demoVideo from "@/assets/demo-app-video.mp4";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [monthlyOrders, setMonthlyOrders] = useState(500);
   const [avgOrder, setAvgOrder] = useState(25);
-  const [showVideo, setShowVideo] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
@@ -28,16 +22,15 @@ const LandingPage = () => {
     { id: "contact", href: "#contact", label: "Contatti" },
   ];
 
-  // Track active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["contact", "pricing", "features", "story", "hero"];
+      const sections = ["contact", "pricing", "features", "vision", "hero"];
       for (const id of sections) {
         const el = document.getElementById(id);
         if (el) {
           const rect = el.getBoundingClientRect();
           if (rect.top <= 120) {
-            if (id === "hero" || id === "story") setActiveSection("home");
+            if (id === "hero" || id === "vision") setActiveSection("home");
             else setActiveSection(id);
             break;
           }
@@ -49,8 +42,8 @@ const LandingPage = () => {
   }, []);
 
   // ROI Calculator
-  const justEatFee = 0.30; // 30%
-  const empireFee = 0.02; // 2%
+  const justEatFee = 0.30;
+  const empireFee = 0.02;
   const setupCost = 1997;
   const monthlyRevenue = monthlyOrders * avgOrder;
   const justEatCost = monthlyRevenue * justEatFee;
@@ -59,18 +52,18 @@ const LandingPage = () => {
   const roiMonths = monthlySaving > 0 ? Math.ceil(setupCost / monthlySaving) : 0;
 
   const features = [
-    { icon: <Sparkles className="w-6 h-6" />, title: "IA Menu Creator", desc: "Foto del menu cartaceo → menu digitale con foto food-porn generate dall'IA" },
-    { icon: <Smartphone className="w-6 h-6" />, title: "PWA White Label", desc: "App installabile col TUO brand. Nessun logo di terzi. È casa tua." },
-    { icon: <Shield className="w-6 h-6" />, title: "Review Shield", desc: "Recensioni negative restano private. Solo le migliori vanno su Google." },
-    { icon: <Zap className="w-6 h-6" />, title: "Panic Mode", desc: "Modifica tutti i prezzi con un solo slider. Promozioni flash in 2 secondi." },
-    { icon: <TrendingUp className="w-6 h-6" />, title: "Dashboard Real-Time", desc: "Ordini, incassi, cucina. Tutto in un unico pannello. Zero caos." },
-    { icon: <Lock className="w-6 h-6" />, title: "Zero Abbonamenti", desc: "Paghi una volta, è tuo per sempre. Solo 2% sulle transazioni. Basta." },
+    { icon: <Brain className="w-6 h-6" />, title: "IA Menu Creator", desc: "Carica una foto del menu cartaceo. L'IA genera il menu digitale con foto food-porn in 60 secondi." },
+    { icon: <Smartphone className="w-6 h-6" />, title: "PWA White Label", desc: "App installabile col TUO brand. Nessun logo di terzi. Il cliente vede solo te." },
+    { icon: <Shield className="w-6 h-6" />, title: "Review Shield", desc: "Recensioni negative restano private. Solo le migliori vanno su Google. Tu controlli la narrazione." },
+    { icon: <Zap className="w-6 h-6" />, title: "Panic Mode", desc: "Modifica tutti i prezzi con un solo slider. Promozioni flash in 2 secondi. Margini protetti." },
+    { icon: <TrendingUp className="w-6 h-6" />, title: "Dashboard Real-Time", desc: "Ordini, incassi, cucina. Tutto in un unico pannello. Zero caos, massimo controllo." },
+    { icon: <Lock className="w-6 h-6" />, title: "Zero Abbonamenti", desc: "Paghi una volta, è tuo per sempre. Solo 2% sulle transazioni. Basta regalare margini." },
   ];
 
   const painPoints = [
-    { percent: "30%", label: "Commissioni JustEat/Deliveroo su ogni ordine" },
-    { percent: "0%", label: "Controllo sul TUO brand e i TUOI clienti" },
-    { percent: "0€/mese", label: "Nessun canone mensile per il resto della vita" },
+    { percent: "30%", label: "Commissioni che JustEat/Deliveroo ti rubano su ogni ordine" },
+    { percent: "0%", label: "Controllo sul TUO brand e i TUOI dati cliente" },
+    { percent: "0€/mese", label: "Nessun canone mensile. Mai. Per sempre." },
   ];
 
   return (
@@ -83,16 +76,13 @@ const LandingPage = () => {
             <span className="font-display font-bold text-lg text-foreground tracking-[0.15em] uppercase">Empire</span>
           </a>
 
-          {/* Desktop links */}
           <div className="hidden md:flex items-center gap-8 text-xs font-medium tracking-[0.15em] uppercase">
             {navLinks.map((link) => (
               <a
                 key={link.id}
                 href={link.href}
                 className={`transition-colors relative py-1 ${
-                  activeSection === link.id
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-primary"
+                  activeSection === link.id ? "text-primary" : "text-muted-foreground hover:text-primary"
                 }`}
               >
                 {link.label}
@@ -114,7 +104,6 @@ const LandingPage = () => {
             >
               Demo Live
             </button>
-            {/* Mobile hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 text-foreground"
@@ -125,7 +114,6 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Mobile dropdown */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
@@ -142,9 +130,7 @@ const LandingPage = () => {
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`w-full text-center py-3 text-sm font-medium tracking-[0.15em] uppercase transition-colors ${
-                      activeSection === link.id
-                        ? "text-primary bg-primary/5"
-                        : "text-muted-foreground hover:text-primary"
+                      activeSection === link.id ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary"
                     }`}
                   >
                     {link.label}
@@ -162,21 +148,18 @@ const LandingPage = () => {
         </AnimatePresence>
       </nav>
 
-      {/* Hero Section — Full-screen Video */}
+      {/* Hero Section — Demo Video */}
       <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center justify-center">
-        {/* Video Background */}
         <video
-          src={heroVideo}
+          src={demoVideo}
           autoPlay
           loop
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
         />
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/60" />
 
-        {/* Content */}
         <div className="relative z-10 flex flex-col items-center text-center px-5">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -203,7 +186,7 @@ const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            La tua app di proprietà. Zero abbonamenti. Zero intermediari.
+            Smetti di regalare il 30% a JustEat. Costruisci il tuo impero digitale.
           </motion.p>
 
           <motion.div
@@ -218,7 +201,7 @@ const LandingPage = () => {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
-              Ottieni Empire
+              Ottieni Empire · €1.997
             </motion.button>
             <button
               onClick={() => navigate("/r/impero-roma")}
@@ -229,7 +212,6 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
         <motion.div
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
           animate={{ y: [0, 10, 0] }}
@@ -239,80 +221,73 @@ const LandingPage = () => {
         </motion.div>
       </section>
 
-      {/* La Nostra Storia */}
-      <section id="story" className="py-24 px-5 bg-background">
+      {/* La Nostra Visione — B2B Tech */}
+      <section id="vision" className="py-24 px-5 bg-background">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Text */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">La Nostra Storia</span>
+            <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">La Nostra Visione</span>
             <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground leading-tight">
-              Una passione per la <span className="text-gold-gradient">cucina autentica</span>
+              Tecnologia per la tua <span className="text-gold-gradient">indipendenza finanziaria</span>
             </h2>
             <p className="mt-6 text-muted-foreground leading-relaxed">
-              Nel cuore della città, Empire nasce dalla passione per l'eccellenza culinaria italiana. 
-              La nostra cucina combina ricette tradizionali con accenti moderni, utilizzando solo i 
-              migliori ingredienti dal territorio e dall'Italia.
+              Empire nasce con una missione: distruggere il monopolio delle piattaforme di delivery. 
+              Ogni ristoratore merita di possedere i propri clienti, i propri dati e i propri margini — 
+              senza intermediari che divorano il 30% del fatturato.
             </p>
             <p className="mt-4 text-muted-foreground leading-relaxed">
-              Dalla pasta fatta in casa ai piatti gourmet, ogni visita diventa un'esperienza 
-              indimenticabile per tutti i sensi.
+              La nostra suite IA trasforma qualsiasi ristorante in un ecosistema digitale autonomo: 
+              app nativa, menu intelligente, gestione ordini real-time, e zero abbonamenti. 
+              Il futuro della ristorazione è <strong className="text-foreground">indipendente</strong>.
             </p>
-            <div className="mt-8 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <Crown className="w-5 h-5 text-primary" />
+            <div className="mt-8 grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <p className="text-2xl font-display font-bold text-primary">2%</p>
+                <p className="text-[11px] text-muted-foreground mt-1">Fee totale</p>
               </div>
-              <div>
-                <p className="text-foreground font-semibold font-display">Empire Restaurant</p>
-                <p className="text-xs text-muted-foreground">Eccellenza & Tradizione</p>
+              <div className="text-center">
+                <p className="text-2xl font-display font-bold text-primary">0€</p>
+                <p className="text-[11px] text-muted-foreground mt-1">Canone mensile</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-display font-bold text-primary">60s</p>
+                <p className="text-[11px] text-muted-foreground mt-1">Menu IA pronto</p>
               </div>
             </div>
           </motion.div>
 
-          {/* Image Grid */}
+          {/* Stats Grid */}
           <motion.div
-            className="grid grid-cols-2 gap-3"
+            className="grid grid-cols-2 gap-4"
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="space-y-3">
-              <motion.div 
-                className="rounded-2xl overflow-hidden aspect-[3/4]"
+            {[
+              { icon: <Target className="w-7 h-7" />, stat: "€7.500", label: "Risparmio medio mensile", sub: "su 1000 ordini" },
+              { icon: <DollarSign className="w-7 h-7" />, stat: "ROI < 3", label: "Mesi per il rientro", sub: "investimento coperto" },
+              { icon: <Brain className="w-7 h-7" />, stat: "100%", label: "Proprietà totale", sub: "dati, brand, clienti" },
+              { icon: <Zap className="w-7 h-7" />, stat: "∞", label: "Nessun limite", sub: "ordini illimitati" },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className="p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-colors flex flex-col items-center text-center"
                 whileHover={{ scale: 1.03 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.2 }}
               >
-                <img src={storyInterior} alt="Interno del ristorante" className="w-full h-full object-cover" />
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
+                  {item.icon}
+                </div>
+                <p className="text-2xl font-display font-bold text-primary">{item.stat}</p>
+                <p className="text-xs font-semibold text-foreground mt-1">{item.label}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{item.sub}</p>
               </motion.div>
-              <motion.div 
-                className="rounded-2xl overflow-hidden aspect-square"
-                whileHover={{ scale: 1.03 }}
-                transition={{ duration: 0.3 }}
-              >
-                <img src={storyWine} alt="Selezione vini" className="w-full h-full object-cover" />
-              </motion.div>
-            </div>
-            <div className="space-y-3 pt-8">
-              <motion.div 
-                className="rounded-2xl overflow-hidden aspect-square"
-                whileHover={{ scale: 1.03 }}
-                transition={{ duration: 0.3 }}
-              >
-                <img src={storyPasta} alt="Pasta fresca" className="w-full h-full object-cover" />
-              </motion.div>
-              <motion.div 
-                className="rounded-2xl overflow-hidden aspect-[3/4]"
-                whileHover={{ scale: 1.03 }}
-                transition={{ duration: 0.3 }}
-              >
-                <img src={storyDish} alt="Piatto signature" className="w-full h-full object-cover" />
-              </motion.div>
-            </div>
+            ))}
           </motion.div>
         </div>
       </section>
@@ -330,7 +305,7 @@ const LandingPage = () => {
           </motion.h2>
           <p className="text-center text-muted-foreground mb-12 max-w-xl mx-auto">
             Ogni ordine su JustEat ti costa il 30%. Su 1.000 ordini al mese, 
-            sono <span className="text-accent font-semibold">€7.500 bruciati</span> — ogni mese.
+            sono <span className="text-accent font-semibold">€7.500 bruciati</span> — ogni singolo mese.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -360,10 +335,10 @@ const LandingPage = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            Non è un'app. È un <span className="text-gold-gradient">impero</span>.
+            Non è un'app. È un <span className="text-gold-gradient">arsenale</span>.
           </motion.h2>
           <p className="text-center text-muted-foreground mb-12 max-w-xl mx-auto">
-            Tutto ciò di cui il tuo ristorante ha bisogno, senza dipendere da nessuno.
+            Ogni strumento che ti serve per dominare il mercato, senza dipendere da nessuno.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -397,10 +372,10 @@ const LandingPage = () => {
             viewport={{ once: true }}
           >
             <Calculator className="w-8 h-8 inline-block mr-2 text-primary" />
-            Calcola il tuo risparmio
+            Calcola quanto stai bruciando
           </motion.h2>
           <p className="text-center text-muted-foreground mb-10">
-            Scopri quanto stai regalando ogni mese alle piattaforme
+            Muovi gli slider e guarda il danno che le piattaforme fanno ai tuoi margini
           </p>
 
           <motion.div
@@ -409,17 +384,13 @@ const LandingPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            {/* Sliders */}
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-muted-foreground">Ordini al mese</span>
                 <span className="text-foreground font-semibold">{monthlyOrders}</span>
               </div>
               <input
-                type="range"
-                min="100"
-                max="3000"
-                step="50"
+                type="range" min="100" max="3000" step="50"
                 value={monthlyOrders}
                 onChange={(e) => setMonthlyOrders(Number(e.target.value))}
                 className="w-full accent-primary h-2 rounded-full"
@@ -431,17 +402,13 @@ const LandingPage = () => {
                 <span className="text-foreground font-semibold">€{avgOrder}</span>
               </div>
               <input
-                type="range"
-                min="10"
-                max="80"
-                step="5"
+                type="range" min="10" max="80" step="5"
                 value={avgOrder}
                 onChange={(e) => setAvgOrder(Number(e.target.value))}
                 className="w-full accent-primary h-2 rounded-full"
               />
             </div>
 
-            {/* Results */}
             <div className="border-t border-border pt-6 space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">💸 Con JustEat (30%)</span>
@@ -451,7 +418,7 @@ const LandingPage = () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">👑 Con Empire (2%)</span>
-                <span className="text-green-400 font-display font-bold text-lg">
+                <span className="text-primary font-display font-bold text-lg">
                   -€{empireCost.toLocaleString("it-IT", { maximumFractionDigits: 0 })}/mese
                 </span>
               </div>
@@ -492,25 +459,25 @@ const LandingPage = () => {
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary mb-6">
               <Crown className="w-3 h-3" />
-              Pagamento unico · Per sempre
+              Pagamento unico · Per sempre tuo
             </div>
 
             <h2 className="text-4xl sm:text-5xl font-display font-bold text-foreground">
               €1.997
             </h2>
-            <p className="text-muted-foreground mt-1">+ IVA 22% · Pagamento unico</p>
+            <p className="text-muted-foreground mt-1">+ IVA 22% · Pagamento unico · Mai più canoni</p>
 
             <div className="mt-8 space-y-3 text-left">
               {[
-                "App PWA col TUO brand",
-                "Menu IA con foto food-porn",
+                "App PWA col TUO brand — installabile",
+                "Menu IA con foto food-porn generate",
                 "Dashboard Admin completa",
-                "Kitchen View real-time",
+                "Kitchen View real-time per lo staff",
                 "Panic Mode (prezzi di massa)",
-                "Review Shield",
-                "Academy integrata",
-                "Assistenza dedicata",
-                "Aggiornamenti inclusi",
+                "Review Shield — solo 4-5★ pubbliche",
+                "Checkout 1-Tap con Apple/Google Pay",
+                "Assistenza dedicata a vita",
+                "Aggiornamenti inclusi per sempre",
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <Check className="w-5 h-5 text-primary flex-shrink-0" />
@@ -543,10 +510,10 @@ const LandingPage = () => {
       <section className="py-20 px-5">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-display font-bold text-foreground">
-            Il tuo ristorante merita un <span className="text-gold-gradient">impero</span>
+            Ogni giorno senza Empire, <span className="text-gold-gradient">regali soldi</span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Ogni giorno che passi su JustEat, stai regalando migliaia di euro.
+            I tuoi competitor stanno già costruendo il loro ecosistema. Tu stai ancora pagando il 30%.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <motion.button
@@ -566,7 +533,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Contact / Footer */}
+      {/* Footer */}
       <footer id="contact" className="border-t border-border py-12 px-5">
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
@@ -576,7 +543,7 @@ const LandingPage = () => {
                 <span className="font-display font-bold text-foreground tracking-[0.1em] uppercase">Empire</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                La suite definitiva per ristoranti che vogliono liberarsi dalle commissioni dei delivery.
+                La suite tecnologica che libera i ristoratori dalle commissioni delle piattaforme di delivery.
               </p>
             </div>
             <div>
