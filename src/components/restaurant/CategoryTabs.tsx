@@ -1,11 +1,21 @@
 import { motion } from "framer-motion";
 import { useRef, useEffect } from "react";
+import { UtensilsCrossed, Soup, Pizza, Beef, IceCreamCone, Wine } from "lucide-react";
 
 interface CategoryTabsProps {
   categories: string[];
   active: string;
   onSelect: (cat: string) => void;
 }
+
+const categoryIcons: Record<string, React.ReactNode> = {
+  Antipasti: <UtensilsCrossed className="w-4 h-4" />,
+  Primi: <Soup className="w-4 h-4" />,
+  Pizze: <Pizza className="w-4 h-4" />,
+  Secondi: <Beef className="w-4 h-4" />,
+  Dolci: <IceCreamCone className="w-4 h-4" />,
+  Bevande: <Wine className="w-4 h-4" />,
+};
 
 const CategoryTabs = ({ categories, active, onSelect }: CategoryTabsProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -23,7 +33,7 @@ const CategoryTabs = ({ categories, active, onSelect }: CategoryTabsProps) => {
   return (
     <div
       ref={scrollRef}
-      className="flex gap-2 overflow-x-auto scrollbar-hide px-5 py-3 sticky top-0 z-20 glass-strong"
+      className="flex gap-1.5 overflow-x-auto scrollbar-hide px-5 pb-3"
     >
       {categories.map((cat) => {
         const isActive = cat === active;
@@ -32,7 +42,7 @@ const CategoryTabs = ({ categories, active, onSelect }: CategoryTabsProps) => {
             key={cat}
             ref={isActive ? activeRef : undefined}
             onClick={() => onSelect(cat)}
-            className="relative px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors flex-shrink-0"
+            className="relative flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
           >
             {isActive && (
               <motion.div
@@ -41,7 +51,8 @@ const CategoryTabs = ({ categories, active, onSelect }: CategoryTabsProps) => {
                 transition={{ type: "spring", damping: 25, stiffness: 300 }}
               />
             )}
-            <span className={`relative z-10 ${isActive ? "text-primary-foreground" : "text-muted-foreground"}`}>
+            <span className={`relative z-10 flex items-center gap-1.5 ${isActive ? "text-primary-foreground" : "text-muted-foreground"}`}>
+              {categoryIcons[cat] || <UtensilsCrossed className="w-4 h-4" />}
               {cat}
             </span>
           </button>
