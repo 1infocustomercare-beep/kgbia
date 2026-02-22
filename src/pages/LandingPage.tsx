@@ -8,6 +8,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 import heroVideo from "@/assets/hero-restaurant.mp4";
+import storyInterior from "@/assets/story-interior.jpg";
+import storyWine from "@/assets/story-wine.jpg";
+import storyPasta from "@/assets/story-pasta.jpg";
+import storyDish from "@/assets/story-dish.jpg";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -132,6 +136,84 @@ const LandingPage = () => {
         >
           <ChevronRight className="w-6 h-6 text-foreground/50 rotate-90" />
         </motion.div>
+      </section>
+
+      {/* La Nostra Storia */}
+      <section className="py-24 px-5 bg-background">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Text */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">La Nostra Storia</span>
+            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground leading-tight">
+              Una passione per la <span className="text-gold-gradient">cucina autentica</span>
+            </h2>
+            <p className="mt-6 text-muted-foreground leading-relaxed">
+              Nel cuore della città, Empire nasce dalla passione per l'eccellenza culinaria italiana. 
+              La nostra cucina combina ricette tradizionali con accenti moderni, utilizzando solo i 
+              migliori ingredienti dal territorio e dall'Italia.
+            </p>
+            <p className="mt-4 text-muted-foreground leading-relaxed">
+              Dalla pasta fatta in casa ai piatti gourmet, ogni visita diventa un'esperienza 
+              indimenticabile per tutti i sensi.
+            </p>
+            <div className="mt-8 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Crown className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-foreground font-semibold font-display">Empire Restaurant</p>
+                <p className="text-xs text-muted-foreground">Eccellenza & Tradizione</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Image Grid */}
+          <motion.div
+            className="grid grid-cols-2 gap-3"
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <div className="space-y-3">
+              <motion.div 
+                className="rounded-2xl overflow-hidden aspect-[3/4]"
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img src={storyInterior} alt="Interno del ristorante" className="w-full h-full object-cover" />
+              </motion.div>
+              <motion.div 
+                className="rounded-2xl overflow-hidden aspect-square"
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img src={storyWine} alt="Selezione vini" className="w-full h-full object-cover" />
+              </motion.div>
+            </div>
+            <div className="space-y-3 pt-8">
+              <motion.div 
+                className="rounded-2xl overflow-hidden aspect-square"
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img src={storyPasta} alt="Pasta fresca" className="w-full h-full object-cover" />
+              </motion.div>
+              <motion.div 
+                className="rounded-2xl overflow-hidden aspect-[3/4]"
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img src={storyDish} alt="Piatto signature" className="w-full h-full object-cover" />
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* Pain Points */}
