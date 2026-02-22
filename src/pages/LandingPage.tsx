@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-landing.jpg";
 import restaurantLogo from "@/assets/restaurant-logo.png";
+import demoVideo from "@/assets/demo-app-video.mp4";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -64,13 +65,13 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-16">
+      <section className="relative flex flex-col items-center justify-center pt-20 pb-12">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="" className="w-full h-full object-cover opacity-30" />
+          <img src={heroImage} alt="" className="w-full h-full object-cover opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
         
-        <div className="relative z-10 max-w-4xl mx-auto px-5 text-center py-20">
+        <div className="relative z-10 max-w-4xl mx-auto px-5 text-center pt-10 pb-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -115,9 +116,33 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
+        {/* Video Demo Phone Mockup */}
+        <motion.div
+          className="relative z-10 w-full max-w-xs mx-auto mt-4"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.4 }}
+        >
+          <div className="relative mx-auto rounded-[2.5rem] border-[6px] border-muted bg-background shadow-2xl overflow-hidden aspect-[9/19]">
+            {/* Phone notch */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-background rounded-b-2xl z-20" />
+            <video
+              src={demoVideo}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            👆 Demo reale dell'app in funzione
+          </p>
+        </motion.div>
+
         {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="mt-8"
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
