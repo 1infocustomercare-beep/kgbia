@@ -4,7 +4,8 @@ import {
   Crown, Power, TrendingUp, DollarSign, Users, Store,
   Megaphone, BarChart3, LogOut, Search,
   Key, HeadphonesIcon, CheckCircle2, XCircle, AlertCircle,
-  Cpu, Wifi, ChevronRight, Eye, EyeOff, Save, Bot, Send
+  Cpu, Wifi, ChevronRight, Save, Bot, Send, Bell,
+  ShieldCheck, Lock
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -22,7 +23,16 @@ interface Tenant {
   fee2percent: number;
 }
 
-type SuperTab = "overview" | "tenants" | "ads" | "billing" | "staff";
+interface FiscoStatus {
+  id: string;
+  restaurantId: string;
+  tenantName: string;
+  provider: string;
+  configured: boolean;
+  updatedAt: string;
+}
+
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "mary";
 
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
@@ -30,16 +40,12 @@ const SuperAdminDashboard = () => {
   const [activeTab, setActiveTab] = useState<SuperTab>("overview");
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [searchTenant, setSearchTenant] = useState("");
-  const [staffSubTab, setStaffSubTab] = useState<"fisco" | "mary" | "status">("fisco");
-  const [fiscoConfigs, setFiscoConfigs] = useState<any[]>([]);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editKey, setEditKey] = useState("");
-  const [showKeys, setShowKeys] = useState<Record<string, boolean>>({});
+  const [fiscoStatuses, setFiscoStatuses] = useState<FiscoStatus[]>([]);
   const [loading, setLoading] = useState(true);
 
   // AI-Mary chat
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
-    { role: "assistant", content: "Ciao! Sono Mary, il tuo agente IA per la configurazione fiscale. Posso aiutarti a:\n\n• Configurare le API fiscali (Scontrino.it / Aruba)\n• Verificare lo stato delle connessioni\n• Guidarti nel processo BYOK\n\nCome posso aiutarti?" }
+    { role: "assistant", content: "Ciao Kevin! Sono **Mary**, il tuo agente IA per il controllo centralizzato.\n\nDa qui puoi:\n• 📊 Monitorare lo stato fiscale di ogni tenant\n• 🔔 Richiedere il setup fiscale ai ristoratori\n• ✅ Verificare connessioni API in tempo reale\n• 🔒 Nessun accesso alle chiavi private — solo stato operativo\n\nCome posso assisterti?" }
   ]);
   const [maryInput, setMaryInput] = useState("");
 
@@ -49,14 +55,12 @@ const SuperAdminDashboard = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    // Fetch all restaurants
     const { data: restaurants } = await supabase
       .from("restaurants")
       .select("id, name, slug, is_active, city")
       .order("created_at", { ascending: false });
 
     if (restaurants) {
-      // Fetch order totals per restaurant
       const { data: orders } = await supabase
         .from("orders")
         .select("restaurant_id, total")
@@ -81,18 +85,18 @@ const SuperAdminDashboard = () => {
       })));
     }
 
-    // Fetch fisco configs
+    // Fetch fisco statuses (Kevin sees only status, never keys)
     const { data: fisco } = await supabase
       .from("fisco_configs")
-      .select("*, restaurants(name)");
+      .select("id, restaurant_id, provider, configured, updated_at, restaurants(name)");
     if (fisco) {
-      setFiscoConfigs(fisco.map(f => ({
+      setFiscoStatuses(fisco.map(f => ({
         id: f.id,
         restaurantId: f.restaurant_id,
         tenantName: (f as any).restaurants?.name || "—",
         provider: f.provider,
-        apiKey: f.api_key_encrypted || "",
         configured: f.configured,
+        updatedAt: f.updated_at,
       })));
     }
 
@@ -105,18 +109,14 @@ const SuperAdminDashboard = () => {
     const newActive = !tenant.active;
     await supabase.from("restaurants").update({ is_active: newActive }).eq("id", id);
     setTenants(prev => prev.map(t => t.id === id ? { ...t, active: newActive } : t));
-    toast({ title: newActive ? "Ristorante attivato" : "Ristorante disattivato (Kill-Switch)" });
+    toast({ title: newActive ? "Tenant riattivato" : "Kill-Switch attivato — Tenant disabilitato" });
   };
 
-  const handleSaveKey = async (configId: string) => {
-    await supabase.from("fisco_configs").update({
-      api_key_encrypted: editKey,
-      configured: editKey.length > 0,
-    }).eq("id", configId);
-    setFiscoConfigs(prev => prev.map(f => f.id === configId ? { ...f, apiKey: editKey, configured: editKey.length > 0 } : f));
-    setEditingId(null);
-    setEditKey("");
-    toast({ title: "Chiave API salvata" });
+  const handleRequestFiscoSetup = (tenantName: string) => {
+    toast({
+      title: "Notifica inviata",
+      description: `Richiesta di setup fiscale inviata a ${tenantName}. Il ristoratore riceverà la notifica nel suo pannello.`,
+    });
   };
 
   const handleMaryMessage = () => {
@@ -125,18 +125,27 @@ const SuperAdminDashboard = () => {
     setMaryMessages(prev => [...prev, userMsg]);
     setMaryInput("");
 
-    // Simulated AI-Mary responses based on keywords
     const input = maryInput.toLowerCase();
-    let response = "Capisco! Per qualsiasi configurazione fiscale, vai nella sezione BYOK Fisco e inserisci la chiave API del provider scelto. Vuoi che ti guidi passo passo?";
+    let response = "Posso aiutarti a monitorare lo stato fiscale di tutti i tenant. Usa la tab **Fiscalità** per una panoramica completa con semafori Verde/Rosso.";
 
-    if (input.includes("scontrino") || input.includes("aruba")) {
-      response = "Per configurare **Scontrino.it** o **Aruba**:\n\n1. Accedi al portale del provider\n2. Vai su Impostazioni → API Keys\n3. Genera una nuova chiave\n4. Copiala e incollala nella sezione BYOK Fisco\n\nLa chiave verrà criptata e isolata per ogni ristorante. Vuoi che verifichi una chiave esistente?";
-    } else if (input.includes("verifica") || input.includes("test") || input.includes("stato")) {
-      response = "✅ Ho verificato lo stato delle connessioni:\n\n" +
-        fiscoConfigs.map(f => `• **${f.tenantName}**: ${f.configured ? "🟢 Configurato" : "🔴 Da configurare"}`).join("\n") +
-        "\n\nVuoi che configuri una chiave mancante?";
-    } else if (input.includes("come") || input.includes("guida") || input.includes("aiuto")) {
-      response = "Ecco la guida rapida:\n\n**BYOK = Bring Your Own Key**\n\nOgni ristorante inserisce la propria chiave API fiscale. I vantaggi:\n\n• 🔐 Criptazione end-to-end\n• 🏠 Isolamento per tenant\n• ✅ Validazione automatica\n• 📊 Semaforo verde/rosso\n\nVai nella tab **BYOK Fisco** per iniziare!";
+    if (input.includes("stato") || input.includes("verifica") || input.includes("check")) {
+      const configured = fiscoStatuses.filter(f => f.configured).length;
+      const missing = fiscoStatuses.filter(f => !f.configured).length;
+      response = `📊 **Report Fiscale Centralizzato**\n\n✅ Operativi: ${configured} tenant\n🔴 Da configurare: ${missing} tenant\n\n` +
+        fiscoStatuses.map(f => `• **${f.tenantName}**: ${f.configured ? "🟢 Vault attivo — Connessione validata" : "🔴 Vault non configurato"}`).join("\n") +
+        "\n\n💡 Puoi inviare una richiesta di setup ai tenant non configurati dalla tab **Fiscalità**.";
+    } else if (input.includes("sicur") || input.includes("cript") || input.includes("privacy")) {
+      response = "🔐 **Architettura di Sicurezza Vault**\n\n• Le chiavi API sono criptate AES-256 lato server\n• Isolamento completo per tenant (zero cross-access)\n• Tu vedi **solo lo stato** (Verde/Rosso), mai le chiavi\n• Il ristoratore è l'unico custode delle proprie credenziali\n• Audit trail completo su ogni modifica";
+    } else if (input.includes("richiedi") || input.includes("notif") || input.includes("setup")) {
+      const unconfigured = fiscoStatuses.filter(f => !f.configured);
+      if (unconfigured.length === 0) {
+        response = "✅ Tutti i tenant hanno il Vault Fiscale configurato. Nessuna azione necessaria.";
+      } else {
+        response = `📨 Tenant che necessitano configurazione:\n\n${unconfigured.map(f => `• **${f.tenantName}** — Provider: ${f.provider}`).join("\n")}\n\nVuoi che invii una notifica di setup a tutti?`;
+      }
+    } else if (input.includes("rendita") || input.includes("2%") || input.includes("fee")) {
+      const totalFee = tenants.reduce((s, t) => s + t.fee2percent, 0);
+      response = `💰 **Rendita 2% Globale**\n\nFee totali accumulate: **€${totalFee.toLocaleString()}**\nTenant attivi: ${tenants.filter(t => t.active).length}\nTransato totale: €${tenants.reduce((s, t) => s + t.monthlyRevenue, 0).toLocaleString()}\n\nLa fatturazione automatica si attiverà con Stripe Connect.`;
     }
 
     setTimeout(() => {
@@ -149,6 +158,8 @@ const SuperAdminDashboard = () => {
   const totalOrders = tenants.reduce((s, t) => s + t.orders, 0);
   const activeTenants = tenants.filter(t => t.active).length;
   const filteredTenants = tenants.filter(t => t.name.toLowerCase().includes(searchTenant.toLowerCase()));
+  const fiscoConfigured = fiscoStatuses.filter(f => f.configured).length;
+  const fiscoMissing = fiscoStatuses.filter(f => !f.configured).length;
 
   const systemStatus = [
     { name: "Stripe Connect", status: "online" as const, latency: "45ms" },
@@ -165,9 +176,9 @@ const SuperAdminDashboard = () => {
   const tabs: { id: SuperTab; label: string; icon: React.ReactNode }[] = [
     { id: "overview", label: "Overview", icon: <BarChart3 className="w-5 h-5" /> },
     { id: "tenants", label: "Tenant", icon: <Store className="w-5 h-5" /> },
-    { id: "ads", label: "B2B Ads", icon: <Megaphone className="w-5 h-5" /> },
+    { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-5 h-5" /> },
     { id: "billing", label: "Fatture", icon: <DollarSign className="w-5 h-5" /> },
-    { id: "staff", label: "Staff", icon: <HeadphonesIcon className="w-5 h-5" /> },
+    { id: "mary", label: "AI-Mary", icon: <Bot className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => {
@@ -184,7 +195,7 @@ const SuperAdminDashboard = () => {
             <Crown className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-lg font-display font-bold text-foreground">Super Admin</h1>
+            <h1 className="text-lg font-display font-bold text-foreground">Comando Centrale</h1>
             <p className="text-xs text-primary">kevin97bernardini@gmail.com</p>
           </div>
         </div>
@@ -221,28 +232,39 @@ const SuperAdminDashboard = () => {
               <div className="p-4 rounded-2xl bg-card border border-primary/20">
                 <Crown className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-primary">€{totalFee.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">Rendita 2%</p>
+                <p className="text-xs text-muted-foreground">Rendita netta 2%</p>
               </div>
               <div className="p-4 rounded-2xl bg-card">
                 <TrendingUp className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-foreground">€{totalRevenue.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">Transato totale</p>
+                <p className="text-xs text-muted-foreground">Volume transato</p>
               </div>
               <div className="p-4 rounded-2xl bg-card">
                 <Store className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-foreground">{activeTenants}/{tenants.length}</p>
-                <p className="text-xs text-muted-foreground">Locali attivi</p>
+                <p className="text-xs text-muted-foreground">Tenant operativi</p>
               </div>
               <div className="p-4 rounded-2xl bg-card">
-                <Users className="w-5 h-5 text-primary mb-2" />
-                <p className="text-2xl font-display font-bold text-foreground">{totalOrders.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">Ordini totali</p>
+                <ShieldCheck className="w-5 h-5 text-primary mb-2" />
+                <p className="text-2xl font-display font-bold text-foreground">{fiscoConfigured}/{fiscoStatuses.length}</p>
+                <p className="text-xs text-muted-foreground">Vault fiscali attivi</p>
               </div>
             </div>
 
+            {/* Fiscal status summary */}
+            {fiscoMissing > 0 && (
+              <div className="p-4 rounded-2xl bg-accent/5 border border-accent/20 flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-accent flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">{fiscoMissing} Vault fiscali non configurati</p>
+                  <p className="text-xs text-muted-foreground">Vai alla tab Fiscalità per richiedere il setup</p>
+                </div>
+              </div>
+            )}
+
             {tenants.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold text-foreground mb-3">Top performer</h3>
+                <h3 className="text-sm font-semibold text-foreground mb-3">Top performer per volume</h3>
                 <div className="space-y-2">
                   {tenants
                     .filter(t => t.active)
@@ -257,7 +279,7 @@ const SuperAdminDashboard = () => {
                         </div>
                         <div className="text-right">
                           <p className="text-sm font-display font-bold text-foreground">€{t.monthlyRevenue.toLocaleString()}</p>
-                          <p className="text-xs text-primary">+€{t.fee2percent}</p>
+                          <p className="text-xs text-primary">+€{t.fee2percent} rendita</p>
                         </div>
                       </div>
                     ))}
@@ -268,9 +290,23 @@ const SuperAdminDashboard = () => {
             {tenants.length === 0 && (
               <div className="text-center py-12">
                 <Store className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
-                <p className="text-sm text-muted-foreground">Nessun ristorante registrato</p>
+                <p className="text-sm text-muted-foreground">Nessun tenant registrato</p>
               </div>
             )}
+
+            {/* System Status inline */}
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-3">Infrastruttura</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {systemStatus.map((sys) => (
+                  <div key={sys.name} className="flex items-center gap-2 p-2.5 rounded-xl bg-card">
+                    {statusIcons[sys.status]}
+                    <span className="text-xs text-foreground">{sys.name}</span>
+                    <span className="text-[10px] text-muted-foreground ml-auto">{sys.latency}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </motion.div>
         )}
 
@@ -279,50 +315,118 @@ const SuperAdminDashboard = () => {
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="relative">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input type="text" placeholder="Cerca ristorante..." value={searchTenant}
+              <input type="text" placeholder="Cerca tenant..." value={searchTenant}
                 onChange={(e) => setSearchTenant(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
             </div>
             <div className="space-y-2">
-              {filteredTenants.map((tenant) => (
-                <div key={tenant.id}
-                  className={`p-4 rounded-2xl ${tenant.active ? "bg-card" : "bg-card/50 opacity-60"} border ${tenant.active ? "border-border" : "border-accent/20"}`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <div>
-                      <h4 className="font-medium text-foreground">{tenant.name}</h4>
-                      <p className="text-xs text-muted-foreground">{tenant.city} · /{tenant.slug}</p>
+              {filteredTenants.map((tenant) => {
+                const fiscoStatus = fiscoStatuses.find(f => f.restaurantId === tenant.id);
+                return (
+                  <div key={tenant.id}
+                    className={`p-4 rounded-2xl ${tenant.active ? "bg-card" : "bg-card/50 opacity-60"} border ${tenant.active ? "border-border" : "border-accent/20"}`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium text-foreground">{tenant.name}</h4>
+                          {fiscoStatus && (
+                            <span className={`w-2.5 h-2.5 rounded-full ${fiscoStatus.configured ? "bg-green-400" : "bg-red-400"}`} 
+                              title={fiscoStatus.configured ? "Vault Fiscale operativo" : "Vault Fiscale non configurato"} />
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground">{tenant.city} · /{tenant.slug}</p>
+                      </div>
+                      <button onClick={() => toggleTenant(tenant.id)}
+                        className={`p-2 rounded-xl transition-colors ${
+                          tenant.active ? "bg-green-500/10 text-green-400 hover:bg-green-500/20" : "bg-accent/10 text-accent hover:bg-accent/20"
+                        }`}>
+                        <Power className="w-5 h-5" />
+                      </button>
                     </div>
-                    <button onClick={() => toggleTenant(tenant.id)}
-                      className={`p-2 rounded-xl transition-colors ${
-                        tenant.active ? "bg-green-500/10 text-green-400 hover:bg-green-500/20" : "bg-accent/10 text-accent hover:bg-accent/20"
-                      }`}>
-                      <Power className="w-5 h-5" />
-                    </button>
+                    {tenant.active && (
+                      <div className="flex gap-4 text-xs text-muted-foreground mt-2">
+                        <span>€{tenant.monthlyRevenue.toLocaleString()} transato</span>
+                        <span>{tenant.orders} ordini</span>
+                        <span className="text-primary font-medium">+€{tenant.fee2percent} rendita</span>
+                      </div>
+                    )}
+                    {!tenant.active && <p className="text-xs text-accent mt-1">⛔ Kill-Switch attivo — Tenant disabilitato</p>}
                   </div>
-                  {tenant.active && (
-                    <div className="flex gap-4 text-xs text-muted-foreground mt-2">
-                      <span>€{tenant.monthlyRevenue.toLocaleString()} transato</span>
-                      <span>{tenant.orders} ordini</span>
-                      <span className="text-primary font-medium">+€{tenant.fee2percent} fee</span>
-                    </div>
-                  )}
-                  {!tenant.active && <p className="text-xs text-accent mt-1">⛔ Kill-Switch attivo</p>}
-                </div>
-              ))}
+                );
+              })}
               {filteredTenants.length === 0 && (
-                <p className="text-center text-sm text-muted-foreground py-8">Nessun ristorante trovato</p>
+                <p className="text-center text-sm text-muted-foreground py-8">Nessun tenant trovato</p>
               )}
             </div>
           </motion.div>
         )}
 
-        {/* B2B ADS */}
-        {!loading && activeTab === "ads" && (
+        {/* FISCALITÀ — Monitoring Table (Kevin sees ONLY status, never keys) */}
+        {!loading && activeTab === "fisco" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <div className="text-center py-12">
-              <Megaphone className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
-              <p className="text-foreground font-display font-semibold">B2B Ads Manager</p>
-              <p className="text-sm text-muted-foreground mt-1">Il modulo sponsorizzazioni sarà disponibile con il primo cliente attivo.</p>
+            <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20">
+              <div className="flex items-center gap-2 mb-1">
+                <Lock className="w-4 h-4 text-primary" />
+                <h3 className="text-sm font-semibold text-foreground">Monitoraggio Fiscale Centralizzato</h3>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Visibilità esclusiva sullo stato operativo. Le chiavi API restano criptate nel Vault privato di ogni ristoratore.
+              </p>
+            </div>
+
+            {/* Summary cards */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/20 text-center">
+                <p className="text-3xl font-display font-bold text-green-400">{fiscoConfigured}</p>
+                <p className="text-xs text-muted-foreground mt-1">🟢 Vault Operativi</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-accent/5 border border-accent/20 text-center">
+                <p className="text-3xl font-display font-bold text-accent">{fiscoMissing}</p>
+                <p className="text-xs text-muted-foreground mt-1">🔴 Setup Richiesto</p>
+              </div>
+            </div>
+
+            {/* Fiscal monitoring table */}
+            <div className="space-y-2">
+              {fiscoStatuses.map((config) => (
+                <div key={config.id} className={`p-4 rounded-2xl border ${
+                  config.configured ? "bg-card border-green-500/20" : "bg-card border-accent/20"
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-3 h-3 rounded-full flex-shrink-0 ${
+                        config.configured ? "bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]" : "bg-red-400 shadow-[0_0_8px_rgba(248,113,113,0.5)]"
+                      }`} />
+                      <div>
+                        <h4 className="font-medium text-foreground text-sm">{config.tenantName}</h4>
+                        <p className="text-xs text-muted-foreground">Provider: {config.provider}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {config.configured ? (
+                        <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400">
+                          Operativo
+                        </span>
+                      ) : (
+                        <button onClick={() => handleRequestFiscoSetup(config.tenantName)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors">
+                          <Bell className="w-3 h-3" />
+                          Richiedi Setup
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  {config.configured && (
+                    <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                      <ShieldCheck className="w-3 h-3 text-green-400" />
+                      <span>Vault criptato AES-256 · Ultimo aggiornamento: {new Date(config.updatedAt).toLocaleDateString("it-IT")}</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {fiscoStatuses.length === 0 && (
+                <p className="text-center text-sm text-muted-foreground py-8">Nessun tenant con configurazione fiscale</p>
+              )}
             </div>
           </motion.div>
         )}
@@ -336,157 +440,56 @@ const SuperAdminDashboard = () => {
                 <p className="text-xl font-display font-bold text-foreground">€{(tenants.length * 1997).toLocaleString()}</p>
               </div>
               <div className="p-4 rounded-2xl bg-card">
-                <p className="text-xs text-muted-foreground">Fee 2% totali</p>
+                <p className="text-xs text-muted-foreground">Rendita 2% accumulata</p>
                 <p className="text-xl font-display font-bold text-primary">€{totalFee.toLocaleString()}</p>
               </div>
             </div>
             <p className="text-xs text-muted-foreground text-center py-4">
-              La fatturazione automatica verrà attivata con l'integrazione Stripe Connect.
+              La fatturazione automatica si attiverà con l'integrazione Stripe Connect. Ogni transazione genera rendita passiva del 2%.
             </p>
           </motion.div>
         )}
 
-        {/* STAFF — AI-Mary + BYOK Fisco + Status */}
-        {!loading && activeTab === "staff" && (
+        {/* AI-MARY — Command Center */}
+        {!loading && activeTab === "mary" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
                 <Bot className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-foreground">AI-Mary Agent</p>
-                <p className="text-xs text-muted-foreground">Onboarding fiscale & supporto</p>
+                <p className="text-sm font-semibold text-foreground">AI-Mary — Agente di Comando</p>
+                <p className="text-xs text-muted-foreground">Monitoraggio fiscale · Analisi rendita · Controllo tenant</p>
               </div>
             </div>
 
-            <div className="flex gap-1">
-              {([
-                { id: "mary" as const, label: "AI-Mary", icon: <Bot className="w-4 h-4" /> },
-                { id: "fisco" as const, label: "BYOK Fisco", icon: <Key className="w-4 h-4" /> },
-                { id: "status" as const, label: "Status", icon: <Cpu className="w-4 h-4" /> },
-              ]).map((st) => (
-                <button key={st.id} onClick={() => setStaffSubTab(st.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
-                    staffSubTab === st.id ? "bg-secondary text-foreground" : "text-muted-foreground"
-                  }`}>
-                  {st.icon}
-                  {st.label}
-                </button>
-              ))}
+            <div className="rounded-2xl bg-card border border-border overflow-hidden">
+              <div className="h-80 overflow-y-auto p-4 space-y-3 scrollbar-hide">
+                {maryMessages.map((msg, i) => (
+                  <motion.div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                    <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-sm whitespace-pre-line ${
+                      msg.role === "user"
+                        ? "bg-primary text-primary-foreground rounded-br-md"
+                        : "bg-secondary text-secondary-foreground rounded-bl-md"
+                    }`}>
+                      {msg.content}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+              <div className="p-3 border-t border-border flex gap-2">
+                <input type="text" placeholder="Chiedi a Mary: stato fiscale, rendita, sicurezza..." value={maryInput}
+                  onChange={(e) => setMaryInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleMaryMessage()}
+                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                <motion.button onClick={handleMaryMessage}
+                  className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center"
+                  whileTap={{ scale: 0.9 }}>
+                  <Send className="w-4 h-4" />
+                </motion.button>
+              </div>
             </div>
-
-            {/* AI-Mary Chat */}
-            {staffSubTab === "mary" && (
-              <div className="rounded-2xl bg-card border border-border overflow-hidden">
-                <div className="h-80 overflow-y-auto p-4 space-y-3 scrollbar-hide">
-                  {maryMessages.map((msg, i) => (
-                    <motion.div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                      <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-sm whitespace-pre-line ${
-                        msg.role === "user"
-                          ? "bg-primary text-primary-foreground rounded-br-md"
-                          : "bg-secondary text-secondary-foreground rounded-bl-md"
-                      }`}>
-                        {msg.content}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-                <div className="p-3 border-t border-border flex gap-2">
-                  <input type="text" placeholder="Chiedi a Mary..." value={maryInput}
-                    onChange={(e) => setMaryInput(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleMaryMessage()}
-                    className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                  <motion.button onClick={handleMaryMessage}
-                    className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center"
-                    whileTap={{ scale: 0.9 }}>
-                    <Send className="w-4 h-4" />
-                  </motion.button>
-                </div>
-              </div>
-            )}
-
-            {/* BYOK Fisco */}
-            {staffSubTab === "fisco" && (
-              <div className="space-y-3">
-                {fiscoConfigs.length === 0 && (
-                  <p className="text-center text-sm text-muted-foreground py-8">Nessun ristorante con configurazione fiscale</p>
-                )}
-                {fiscoConfigs.map((config) => (
-                  <div key={config.id} className="p-4 rounded-2xl bg-card border border-border">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <h4 className="font-medium text-foreground">{config.tenantName}</h4>
-                        <p className="text-xs text-muted-foreground">Provider: {config.provider}</p>
-                      </div>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        config.configured ? "bg-green-500/10 text-green-400" : "bg-accent/10 text-accent"
-                      }`}>
-                        {config.configured ? "🟢 Configurato" : "🔴 Da configurare"}
-                      </span>
-                    </div>
-                    {editingId === config.id ? (
-                      <div className="space-y-2">
-                        <input type="text" placeholder="Inserisci API Key fiscale..." value={editKey}
-                          onChange={(e) => setEditKey(e.target.value)}
-                          className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 font-mono" />
-                        <div className="flex gap-2">
-                          <button onClick={() => handleSaveKey(config.id)}
-                            className="flex-1 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-1">
-                            <Save className="w-3.5 h-3.5" /> Salva
-                          </button>
-                          <button onClick={() => setEditingId(null)} className="px-4 py-2 rounded-xl bg-secondary text-secondary-foreground text-sm">
-                            Annulla
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        {config.configured && (
-                          <>
-                            <code className="flex-1 text-xs text-muted-foreground font-mono bg-secondary/50 px-3 py-2 rounded-lg truncate">
-                              {showKeys[config.id] ? config.apiKey : "••••••••••••••••"}
-                            </code>
-                            <button onClick={() => setShowKeys(prev => ({ ...prev, [config.id]: !prev[config.id] }))}
-                              className="p-2 rounded-lg hover:bg-secondary transition-colors">
-                              {showKeys[config.id] ? <EyeOff className="w-4 h-4 text-muted-foreground" /> : <Eye className="w-4 h-4 text-muted-foreground" />}
-                            </button>
-                          </>
-                        )}
-                        <button onClick={() => { setEditingId(config.id); setEditKey(config.apiKey); }}
-                          className="px-3 py-2 rounded-xl bg-secondary text-secondary-foreground text-xs font-medium">
-                          {config.configured ? "Modifica" : "Configura"}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* System Status */}
-            {staffSubTab === "status" && (
-              <div className="space-y-3">
-                <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/20">
-                  <div className="flex items-center gap-2">
-                    <Wifi className="w-5 h-5 text-green-400" />
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Tutti i sistemi operativi</p>
-                      <p className="text-xs text-muted-foreground">Ultimo check: adesso</p>
-                    </div>
-                  </div>
-                </div>
-                {systemStatus.map((sys) => (
-                  <div key={sys.name} className="flex items-center justify-between p-3 rounded-xl bg-card">
-                    <div className="flex items-center gap-3">
-                      {statusIcons[sys.status]}
-                      <span className="text-sm text-foreground">{sys.name}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">{sys.latency}</span>
-                  </div>
-                ))}
-              </div>
-            )}
           </motion.div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { 
   Crown, ChevronRight, Check, Calculator, Star, 
   Zap, Shield, Smartphone, TrendingUp, X,
@@ -84,43 +84,43 @@ const LandingPage = () => {
     { 
       icon: <Brain className="w-7 h-7" />, 
       title: "AI Menu Creator", 
-      benefit: "Risparmia €2.000+ in fotografi",
-      desc: "Carica una foto del menu cartaceo. L'IA estrae testi, prezzi e genera foto food-porn iper-realistiche in 60 secondi. Zero fotografi, zero grafici.",
+      benefit: "Elimina €2.000+ in costi fotografi",
+      desc: "Carica una foto del menu cartaceo. L'IA estrae testi, prezzi e genera foto food-porn iper-realistiche in 60 secondi. Zero intermediari, zero attese.",
       tag: "IA"
     },
     { 
       icon: <ChefHat className="w-7 h-7" />, 
       title: "Kitchen View Real-Time", 
-      benefit: "Zero errori in cucina",
-      desc: "Lo staff vede gli ordini in tempo reale con pulsanti enormi: In Preparazione → Pronto → Consegnato. Alert sonoro istantaneo ad ogni ordine.",
+      benefit: "Zero errori, zero perdite",
+      desc: "Lo staff gestisce gli ordini con interfaccia dedicata: notifiche sonore istantanee, stati ordine (In Preparazione → Pronto → Consegnato), funzione Stampa Ticket integrata.",
       tag: "STAFF"
     },
     { 
       icon: <AlertTriangle className="w-7 h-7" />, 
       title: "Panic Mode", 
       benefit: "Margini protetti in 2 secondi",
-      desc: "Un solo slider per modificare tutti i prezzi del menu in percentuale. Promozioni flash o rialzo istantaneo. Il database si aggiorna in tempo reale.",
+      desc: "Un solo slider per modificare tutti i prezzi del catalogo in percentuale. Promozioni flash o rialzo istantaneo. Il database si sincronizza in tempo reale su tutti i dispositivi.",
       tag: "MARGINI"
     },
     { 
-      icon: <MessageCircle className="w-7 h-7" />, 
-      title: "AI-Mary Agent", 
-      benefit: "Fiscalità automatizzata",
-      desc: "L'agente IA guida il ristoratore nel setup delle API fiscali (Scontrino.it, Aruba). Valida le chiavi, mostra lo stato verde/rosso, cripta i dati.",
+      icon: <Lock className="w-7 h-7" />, 
+      title: "Vault Fiscale Criptato", 
+      benefit: "Automazione fiscale 100% compliant",
+      desc: "L'agente AI-Mary guida il setup delle API fiscali (Scontrino.it, Aruba). Chiavi criptate AES-256, isolamento totale per tenant. Il controllo centralizzato vede solo lo stato operativo.",
       tag: "FISCO"
     },
     { 
       icon: <Shield className="w-7 h-7" />, 
       title: "Review Shield", 
-      benefit: "Solo 4-5★ su Google",
-      desc: "Le recensioni da 1 a 3 stelle restano private. Solo le migliori vengono inviate su Google. Tu controlli la tua reputazione online.",
+      benefit: "Solo 4-5★ raggiungono Google",
+      desc: "Filtro intelligente: le recensioni da 1 a 3 stelle restano nel tuo archivio privato. Solo le migliori costruiscono la tua reputazione online.",
       tag: "BRAND"
     },
     { 
       icon: <Smartphone className="w-7 h-7" />, 
       title: "PWA White Label", 
-      benefit: "La TUA app, il TUO brand",
-      desc: "App installabile come nativa. Logo, colori, dominio personalizzato. Il cliente vede solo il tuo ristorante, mai il nostro logo.",
+      benefit: "L'unico Asset Digitale di Proprietà",
+      desc: "App installabile come nativa. Logo, colori, dominio personalizzato. Il cliente vede solo il tuo brand. Zero commissioni marketplace, controllo fiscale centralizzato.",
       tag: "BRAND"
     },
   ];
@@ -128,19 +128,19 @@ const LandingPage = () => {
   const faqs = [
     {
       q: "È difficile da usare?",
-      a: "No. Se sai usare Instagram, sai usare Empire. L'interfaccia è progettata per ristoratori, non per programmatori. In più, l'IA fa il lavoro pesante: carica una foto del menu e in 60 secondi hai tutto digitalizzato."
+      a: "No. Se sai usare Instagram, sai usare Empire. L'interfaccia è progettata per ristoratori, non per programmatori. L'IA fa il lavoro pesante: carica una foto del menu e in 60 secondi hai il catalogo digitale completo."
     },
     {
       q: "Come arrivano i soldi?",
-      a: "I pagamenti dei clienti arrivano direttamente sul TUO conto Stripe. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico — 15 volte meno di JustEat."
+      a: "I pagamenti dei clienti arrivano direttamente sul TUO conto Stripe. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico — 15 volte meno di JustEat. Trasparenza totale."
     },
     {
       q: "Perché pago solo il 2%?",
-      a: "Perché non siamo un marketplace. Non abbiamo rider, non abbiamo pubblicità da pagare. Il nostro modello è semplice: tu paghi €1.997 una volta, noi prendiamo il 2% per mantenere i server, l'IA e gli aggiornamenti. Per sempre."
+      a: "Perché non siamo un marketplace. Non abbiamo rider, non abbiamo pubblicità da pagare. Il nostro modello è semplice: tu paghi €1.997 una volta, noi prendiamo il 2% per mantenere l'infrastruttura, l'IA e gli aggiornamenti. Per sempre."
     },
     {
-      q: "E se non funziona per il mio ristorante?",
-      a: "Empire funziona per qualsiasi ristorante con almeno 200 ordini al mese. Con lo slider ROI puoi calcolare esattamente il tuo rientro. La maggior parte dei ristoranti recupera l'investimento in meno di 3 mesi."
+      q: "La fiscalità è sicura?",
+      a: "Assolutamente. Le tue chiavi API fiscali sono criptate con standard bancario AES-256 nel Vault privato. Nessuno può vederle, nemmeno il nostro team. L'agente AI-Mary valida la connessione e mostra solo lo stato operativo (semaforo Verde/Rosso)."
     },
     {
       q: "Cosa succede ai miei clienti di JustEat?",
@@ -209,15 +209,15 @@ const LandingPage = () => {
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2 }} className="flex flex-col items-center">
             <Crown className="w-12 h-12 text-primary mb-4 drop-shadow-[0_0_30px_hsla(38,75%,55%,0.5)]" />
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-bold text-foreground leading-[1.1]">
-              Smetti di regalare{" "}
-              <span className="text-gold-gradient">il 30%</span>{" "}
-              del tuo fatturato
+              Riprenditi il tuo{" "}
+              <span className="text-gold-gradient">Impero</span>.{" "}
+              Zero Commissioni.
             </h1>
           </motion.div>
 
           <motion.p className="mt-6 text-base sm:text-lg text-foreground/70 max-w-lg leading-relaxed"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-            Empire è la suite IA che trasforma il tuo ristorante in un impero digitale indipendente. 
+            L'unico Asset Digitale di Proprietà con controllo fiscale centralizzato. 
             <strong className="text-foreground"> Una volta. Per sempre.</strong>
           </motion.p>
 
@@ -235,7 +235,7 @@ const LandingPage = () => {
 
           <motion.div className="mt-6 flex items-center gap-6 text-xs text-foreground/50"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-            <span>🔒 Pagamento sicuro</span>
+            <span>🔒 Vault criptato AES-256</span>
             <span>⚡ Setup in 60 secondi</span>
             <span>♾️ Zero canoni</span>
           </motion.div>
@@ -252,19 +252,18 @@ const LandingPage = () => {
           <motion.div className="text-center mb-14" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <span className="text-xs tracking-[0.3em] uppercase text-accent font-medium">Il problema</span>
             <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">
-              Ogni mese, <span className="text-accent">bruci migliaia di euro</span>
+              Ogni mese, <span className="text-accent">regali migliaia di euro</span>
             </h2>
             <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
-              Le piattaforme di delivery si prendono il 30% di ogni ordine. Non è una commissione, è un furto legalizzato.
+              Le piattaforme di delivery si prendono il 30% di ogni ordine. Non è una commissione, è una perdita sistematica dei tuoi margini.
             </p>
           </motion.div>
 
-          {/* Visual money drain */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
             {[
-              { icon: <Banknote className="w-8 h-8" />, amount: "€7.500", label: "Persi ogni mese", sub: "su 1000 ordini a €25", color: "text-accent" },
-              { icon: <DollarSign className="w-8 h-8" />, amount: "€90.000", label: "Persi ogni anno", sub: "soldi che non tornano mai", color: "text-accent" },
-              { icon: <Target className="w-8 h-8" />, amount: "€0", label: "Controllo sul tuo brand", sub: "JustEat possiede i tuoi clienti", color: "text-accent" },
+              { icon: <Banknote className="w-8 h-8" />, amount: "€7.500", label: "Margini erosi ogni mese", sub: "su 1000 ordini a €25", color: "text-accent" },
+              { icon: <DollarSign className="w-8 h-8" />, amount: "€90.000", label: "Capitale disperso ogni anno", sub: "rendita che alimenta i competitor", color: "text-accent" },
+              { icon: <Target className="w-8 h-8" />, amount: "€0", label: "Proprietà sui tuoi clienti", sub: "il marketplace possiede i tuoi dati", color: "text-accent" },
             ].map((item, i) => (
               <motion.div key={i} className="p-6 rounded-2xl bg-card border border-border text-center"
                 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
@@ -276,9 +275,8 @@ const LandingPage = () => {
             ))}
           </div>
 
-          {/* Transition to solution */}
           <motion.div className="text-center" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            <p className="text-lg text-muted-foreground">E se potessi tenere <strong className="text-primary">il 98%</strong> per te?</p>
+            <p className="text-lg text-muted-foreground">E se potessi trattenere <strong className="text-primary">il 98%</strong> dei tuoi margini?</p>
             <ArrowDown className="w-5 h-5 text-primary mx-auto mt-4 animate-bounce" />
           </motion.div>
         </div>
@@ -290,15 +288,15 @@ const LandingPage = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">La Soluzione</span>
             <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">
-              Il tuo ristorante. Il tuo <span className="text-gold-gradient">impero digitale</span>.
+              L'unico Asset Digitale di Proprietà con{" "}
+              <span className="text-gold-gradient">controllo fiscale centralizzato</span>
             </h2>
             <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
-              Una suite completa che ti libera dalle piattaforme e mette i tuoi margini al sicuro.
+              Una suite completa che ti libera dalle piattaforme, protegge i tuoi margini e automatizza la fiscalità.
             </p>
           </motion.div>
         </div>
 
-        {/* Big stats */}
         <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16">
           {[
             { value: 2, suffix: "%", label: "Fee totale" },
@@ -351,7 +349,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ====== 5. ROI CALCULATOR — VISUAL ====== */}
+      {/* ====== 5. ROI CALCULATOR ====== */}
       <section id="calculator" className="py-20 px-5 bg-card/30">
         <div className="max-w-2xl mx-auto">
           <motion.div className="text-center mb-10" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
@@ -359,7 +357,7 @@ const LandingPage = () => {
             <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground">
               Calcola il tuo <span className="text-gold-gradient">risparmio reale</span>
             </h2>
-            <p className="mt-3 text-muted-foreground">Muovi gli slider. Guarda la differenza.</p>
+            <p className="mt-3 text-muted-foreground">Muovi gli slider. Guarda la differenza sui tuoi margini.</p>
           </motion.div>
 
           <motion.div className="p-6 sm:p-8 rounded-3xl bg-card border border-border space-y-6"
@@ -382,11 +380,10 @@ const LandingPage = () => {
                 onChange={(e) => setAvgOrder(Number(e.target.value))} className="w-full accent-primary h-2 rounded-full" />
             </div>
 
-            {/* Visual bar comparison */}
             <div className="space-y-4 pt-4 border-t border-border">
               <div>
                 <div className="flex justify-between text-sm mb-1.5">
-                  <span className="text-muted-foreground">💸 JustEat (30%)</span>
+                  <span className="text-muted-foreground">💸 Marketplace (30%)</span>
                   <span className="text-accent font-display font-bold">-€{justEatCost.toLocaleString("it-IT", { maximumFractionDigits: 0 })}/mese</span>
                 </div>
                 <div className="h-8 rounded-lg bg-accent/20 overflow-hidden relative">
@@ -410,16 +407,15 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Results */}
             <div className="p-5 rounded-2xl bg-primary/5 border border-primary/20 space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-foreground font-medium">Risparmi al mese</span>
+                <span className="text-foreground font-medium">Margini recuperati al mese</span>
                 <span className="text-2xl font-display font-bold text-primary">
                   €{monthlySaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-foreground font-medium">Risparmi all'anno</span>
+                <span className="text-foreground font-medium">Margini recuperati all'anno</span>
                 <span className="text-2xl font-display font-bold text-gold-gradient">
                   €{yearSaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}
                 </span>
@@ -453,16 +449,16 @@ const LandingPage = () => {
 
             <div className="mt-8 space-y-3 text-left">
               {[
-                "App PWA installabile col TUO brand",
-                "AI Menu Creator (OCR + foto food-porn)",
-                "Dashboard Admin completa",
-                "Kitchen View real-time per lo staff",
-                "AI-Mary Agent fiscale integrato",
-                "Panic Mode (prezzi di massa)",
-                "Review Shield — solo 4-5★ pubbliche",
+                "L'unico Asset Digitale di Proprietà col TUO brand",
+                "AI Menu Creator (OCR + foto food-porn automatiche)",
+                "Centro di Controllo Admin completo",
+                "Kitchen View real-time con notifiche sonore",
+                "Vault Fiscale criptato AES-256 con AI-Mary",
+                "Panic Mode — protezione margini istantanea",
+                "Review Shield — solo 4-5★ su Google",
                 "Checkout 1-Tap (Apple Pay / Google Pay)",
-                "Assistenza dedicata a vita",
-                "Aggiornamenti inclusi per sempre",
+                "Assistenza dedicata e aggiornamenti a vita",
+                "Controllo fiscale centralizzato 100% compliant",
               ].map((item, i) => (
                 <motion.div key={i} className="flex items-center gap-3"
                   initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
@@ -482,7 +478,7 @@ const LandingPage = () => {
             </p>
 
             <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
-              <span>🔒 Stripe Secure</span>
+              <span>🔒 Vault Criptato</span>
               <span>📞 Supporto incluso</span>
               <span>♾️ Per sempre</span>
             </div>
@@ -490,7 +486,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ====== 7. FAQ — DISTRUGGI OBIEZIONI ====== */}
+      {/* ====== 7. FAQ ====== */}
       <section className="py-20 px-5 bg-card/30">
         <div className="max-w-2xl mx-auto">
           <motion.div className="text-center mb-12" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
@@ -531,10 +527,10 @@ const LandingPage = () => {
           <Crown className="w-12 h-12 mx-auto text-primary mb-4" />
           <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground">
             Ogni giorno senza Empire,{" "}
-            <span className="text-gold-gradient">regali soldi</span>
+            <span className="text-gold-gradient">regali margini</span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            I tuoi competitor stanno già costruendo il loro impero. Tu stai ancora pagando il 30%.
+            I tuoi competitor stanno costruendo il loro impero digitale. Tu stai ancora alimentando i marketplace.
           </p>
           <motion.button onClick={scrollToPricing}
             className="mt-8 px-10 py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg gold-glow"
@@ -554,7 +550,7 @@ const LandingPage = () => {
                 <span className="font-display font-bold text-foreground tracking-[0.1em] uppercase">Empire</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                La suite tecnologica che libera i ristoratori dalle commissioni predatorie delle piattaforme di delivery.
+                L'unico Asset Digitale di Proprietà che libera i ristoratori dalle commissioni predatorie con controllo fiscale centralizzato.
               </p>
             </div>
             <div>
@@ -566,11 +562,11 @@ const LandingPage = () => {
               </div>
             </div>
             <div>
-              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">Link Utili</p>
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">Risorse</p>
               <div className="space-y-1.5 text-xs text-muted-foreground">
-                <a href="#features" className="block hover:text-primary transition-colors">Funzionalità</a>
+                <a href="#features" className="block hover:text-primary transition-colors">Arsenale Funzionalità</a>
                 <a href="#calculator" className="block hover:text-primary transition-colors">Calcolatore ROI</a>
-                <a href="#pricing" className="block hover:text-primary transition-colors">Prezzo</a>
+                <a href="#pricing" className="block hover:text-primary transition-colors">Investimento</a>
               </div>
             </div>
           </div>
