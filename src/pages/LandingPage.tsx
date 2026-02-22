@@ -1,12 +1,36 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
 import { 
   Crown, ChevronRight, Check, Calculator, Star, 
-  Zap, Shield, Smartphone, TrendingUp, ArrowRight, X,
-  Sparkles, Lock, Menu, Target, DollarSign, Brain
+  Zap, Shield, Smartphone, TrendingUp, X,
+  Sparkles, Lock, Menu, Target, DollarSign, Brain,
+  ChefHat, AlertTriangle, Banknote, ArrowDown,
+  MessageCircle, HelpCircle, ChevronDown, Eye
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import demoVideo from "@/assets/demo-app-video.mp4";
+
+// Animated counter component
+const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+    let start = 0;
+    const duration = 1500;
+    const step = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      setDisplay(Math.floor(progress * value));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [isInView, value]);
+
+  return <span ref={ref}>{prefix}{display.toLocaleString("it-IT")}{suffix}</span>;
+};
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -14,23 +38,25 @@ const LandingPage = () => {
   const [avgOrder, setAvgOrder] = useState(25);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const navLinks = [
     { id: "home", href: "#hero", label: "Home" },
-    { id: "features", href: "#features", label: "Menù" },
+    { id: "features", href: "#features", label: "Funzioni" },
     { id: "pricing", href: "#pricing", label: "Prezzo" },
     { id: "contact", href: "#contact", label: "Contatti" },
   ];
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["contact", "pricing", "features", "vision", "hero"];
+      const sections = ["contact", "pricing", "calculator", "features", "pain", "vision", "hero"];
       for (const id of sections) {
         const el = document.getElementById(id);
         if (el) {
           const rect = el.getBoundingClientRect();
           if (rect.top <= 120) {
-            if (id === "hero" || id === "vision") setActiveSection("home");
+            if (id === "hero" || id === "vision" || id === "pain") setActiveSection("home");
+            else if (id === "calculator") setActiveSection("features");
             else setActiveSection(id);
             break;
           }
@@ -41,7 +67,7 @@ const LandingPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ROI Calculator
+  // ROI
   const justEatFee = 0.30;
   const empireFee = 0.02;
   const setupCost = 1997;
@@ -50,490 +76,475 @@ const LandingPage = () => {
   const empireCost = monthlyRevenue * empireFee;
   const monthlySaving = justEatCost - empireCost;
   const roiMonths = monthlySaving > 0 ? Math.ceil(setupCost / monthlySaving) : 0;
+  const yearSaving = monthlySaving * 12;
+  const justEatBarWidth = 100;
+  const empireBarWidth = Math.max(5, (empireCost / justEatCost) * 100);
 
-  const features = [
-    { icon: <Brain className="w-6 h-6" />, title: "IA Menu Creator", desc: "Carica una foto del menu cartaceo. L'IA genera il menu digitale con foto food-porn in 60 secondi." },
-    { icon: <Smartphone className="w-6 h-6" />, title: "PWA White Label", desc: "App installabile col TUO brand. Nessun logo di terzi. Il cliente vede solo te." },
-    { icon: <Shield className="w-6 h-6" />, title: "Review Shield", desc: "Recensioni negative restano private. Solo le migliori vanno su Google. Tu controlli la narrazione." },
-    { icon: <Zap className="w-6 h-6" />, title: "Panic Mode", desc: "Modifica tutti i prezzi con un solo slider. Promozioni flash in 2 secondi. Margini protetti." },
-    { icon: <TrendingUp className="w-6 h-6" />, title: "Dashboard Real-Time", desc: "Ordini, incassi, cucina. Tutto in un unico pannello. Zero caos, massimo controllo." },
-    { icon: <Lock className="w-6 h-6" />, title: "Zero Abbonamenti", desc: "Paghi una volta, è tuo per sempre. Solo 2% sulle transazioni. Basta regalare margini." },
+  const featureCards = [
+    { 
+      icon: <Brain className="w-7 h-7" />, 
+      title: "AI Menu Creator", 
+      benefit: "Risparmia €2.000+ in fotografi",
+      desc: "Carica una foto del menu cartaceo. L'IA estrae testi, prezzi e genera foto food-porn iper-realistiche in 60 secondi. Zero fotografi, zero grafici.",
+      tag: "IA"
+    },
+    { 
+      icon: <ChefHat className="w-7 h-7" />, 
+      title: "Kitchen View Real-Time", 
+      benefit: "Zero errori in cucina",
+      desc: "Lo staff vede gli ordini in tempo reale con pulsanti enormi: In Preparazione → Pronto → Consegnato. Alert sonoro istantaneo ad ogni ordine.",
+      tag: "STAFF"
+    },
+    { 
+      icon: <AlertTriangle className="w-7 h-7" />, 
+      title: "Panic Mode", 
+      benefit: "Margini protetti in 2 secondi",
+      desc: "Un solo slider per modificare tutti i prezzi del menu in percentuale. Promozioni flash o rialzo istantaneo. Il database si aggiorna in tempo reale.",
+      tag: "MARGINI"
+    },
+    { 
+      icon: <MessageCircle className="w-7 h-7" />, 
+      title: "AI-Mary Agent", 
+      benefit: "Fiscalità automatizzata",
+      desc: "L'agente IA guida il ristoratore nel setup delle API fiscali (Scontrino.it, Aruba). Valida le chiavi, mostra lo stato verde/rosso, cripta i dati.",
+      tag: "FISCO"
+    },
+    { 
+      icon: <Shield className="w-7 h-7" />, 
+      title: "Review Shield", 
+      benefit: "Solo 4-5★ su Google",
+      desc: "Le recensioni da 1 a 3 stelle restano private. Solo le migliori vengono inviate su Google. Tu controlli la tua reputazione online.",
+      tag: "BRAND"
+    },
+    { 
+      icon: <Smartphone className="w-7 h-7" />, 
+      title: "PWA White Label", 
+      benefit: "La TUA app, il TUO brand",
+      desc: "App installabile come nativa. Logo, colori, dominio personalizzato. Il cliente vede solo il tuo ristorante, mai il nostro logo.",
+      tag: "BRAND"
+    },
   ];
 
-  const painPoints = [
-    { percent: "30%", label: "Commissioni che JustEat/Deliveroo ti rubano su ogni ordine" },
-    { percent: "0%", label: "Controllo sul TUO brand e i TUOI dati cliente" },
-    { percent: "0€/mese", label: "Nessun canone mensile. Mai. Per sempre." },
+  const faqs = [
+    {
+      q: "È difficile da usare?",
+      a: "No. Se sai usare Instagram, sai usare Empire. L'interfaccia è progettata per ristoratori, non per programmatori. In più, l'IA fa il lavoro pesante: carica una foto del menu e in 60 secondi hai tutto digitalizzato."
+    },
+    {
+      q: "Come arrivano i soldi?",
+      a: "I pagamenti dei clienti arrivano direttamente sul TUO conto Stripe. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico — 15 volte meno di JustEat."
+    },
+    {
+      q: "Perché pago solo il 2%?",
+      a: "Perché non siamo un marketplace. Non abbiamo rider, non abbiamo pubblicità da pagare. Il nostro modello è semplice: tu paghi €1.997 una volta, noi prendiamo il 2% per mantenere i server, l'IA e gli aggiornamenti. Per sempre."
+    },
+    {
+      q: "E se non funziona per il mio ristorante?",
+      a: "Empire funziona per qualsiasi ristorante con almeno 200 ordini al mese. Con lo slider ROI puoi calcolare esattamente il tuo rientro. La maggior parte dei ristoranti recupera l'investimento in meno di 3 mesi."
+    },
+    {
+      q: "Cosa succede ai miei clienti di JustEat?",
+      a: "Li recuperi. Con il QR Code sui tavoli e il tuo link diretto, i clienti ordinano dalla TUA app. Ogni ordine che sposti da JustEat a Empire ti fa risparmiare il 28% netto. Moltiplica per 1000 ordini/mese."
+    },
   ];
+
+  const scrollToPricing = () => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      {/* Navigation */}
+      {/* ====== STICKY NAV ====== */}
       <nav className="fixed top-0 inset-x-0 z-50 glass-strong border-b border-border/30">
         <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
           <a href="#hero" className="flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
             <Crown className="w-6 h-6 text-primary" />
             <span className="font-display font-bold text-lg text-foreground tracking-[0.15em] uppercase">Empire</span>
           </a>
-
           <div className="hidden md:flex items-center gap-8 text-xs font-medium tracking-[0.15em] uppercase">
             {navLinks.map((link) => (
-              <a
-                key={link.id}
-                href={link.href}
-                className={`transition-colors relative py-1 ${
-                  activeSection === link.id ? "text-primary" : "text-muted-foreground hover:text-primary"
-                }`}
-              >
+              <a key={link.id} href={link.href}
+                className={`transition-colors relative py-1 ${activeSection === link.id ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>
                 {link.label}
                 {activeSection === link.id && (
-                  <motion.span
-                    layoutId="nav-underline"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
+                  <motion.span layoutId="nav-underline" className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }} />
                 )}
               </a>
             ))}
           </div>
-
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate("/r/impero-roma")}
-              className="hidden md:inline-flex px-5 py-2 rounded-none border border-primary text-primary text-xs font-medium tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors"
-            >
+            <button onClick={() => navigate("/r/impero-roma")}
+              className="hidden md:inline-flex px-5 py-2 rounded-none border border-primary text-primary text-xs font-medium tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors">
               Demo Live
             </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-foreground"
-              aria-label="Menu"
-            >
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-foreground" aria-label="Menu">
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
-
         <AnimatePresence>
           {mobileMenuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="md:hidden overflow-hidden glass-strong border-t border-border/30"
-            >
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }} className="md:hidden overflow-hidden glass-strong border-t border-border/30">
               <div className="flex flex-col items-center gap-1 py-4">
                 {navLinks.map((link) => (
-                  <a
-                    key={link.id}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`w-full text-center py-3 text-sm font-medium tracking-[0.15em] uppercase transition-colors ${
-                      activeSection === link.id ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary"
-                    }`}
-                  >
+                  <a key={link.id} href={link.href} onClick={() => setMobileMenuOpen(false)}
+                    className={`w-full text-center py-3 text-sm font-medium tracking-[0.15em] uppercase transition-colors ${activeSection === link.id ? "text-primary bg-primary/5" : "text-muted-foreground"}`}>
                     {link.label}
                   </a>
                 ))}
-                <button
-                  onClick={() => { navigate("/r/impero-roma"); setMobileMenuOpen(false); }}
-                  className="mt-2 mx-5 w-[calc(100%-2.5rem)] py-3 border border-primary text-primary text-sm font-medium tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors"
-                >
-                  Demo Live
-                </button>
+                <button onClick={() => { navigate("/r/impero-roma"); setMobileMenuOpen(false); }}
+                  className="mt-2 mx-5 w-[calc(100%-2.5rem)] py-3 border border-primary text-primary text-sm font-medium tracking-widest uppercase">Demo Live</button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </nav>
 
-      {/* Hero Section — Demo Video */}
+      {/* ====== 1. HERO — HOOK ====== */}
       <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center justify-center">
-        <video
-          src={demoVideo}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/60" />
+        <video src={demoVideo} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/40 to-background/90" />
 
-        <div className="relative z-10 flex flex-col items-center text-center px-5">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="flex flex-col items-center"
-          >
-            <Crown className="w-10 h-10 text-primary mb-3" />
-            <h1 className="text-5xl sm:text-7xl md:text-8xl font-display font-bold tracking-[0.25em] text-foreground uppercase">
-              Empire
+        <div className="relative z-10 flex flex-col items-center text-center px-5 max-w-3xl">
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2 }} className="flex flex-col items-center">
+            <Crown className="w-12 h-12 text-primary mb-4 drop-shadow-[0_0_30px_hsla(38,75%,55%,0.5)]" />
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-bold text-foreground leading-[1.1]">
+              Smetti di regalare{" "}
+              <span className="text-gold-gradient">il 30%</span>{" "}
+              del tuo fatturato
             </h1>
-            <div className="flex items-center gap-4 mt-3">
-              <span className="w-12 h-px bg-primary" />
-              <span className="text-xs sm:text-sm tracking-[0.3em] text-primary uppercase font-medium">
-                Restaurant Suite
-              </span>
-              <span className="w-12 h-px bg-primary" />
-            </div>
           </motion.div>
 
-          <motion.p
-            className="mt-8 text-lg sm:text-xl text-foreground/80 max-w-xl leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            Smetti di regalare il 30% a JustEat. Costruisci il tuo impero digitale.
+          <motion.p className="mt-6 text-base sm:text-lg text-foreground/70 max-w-lg leading-relaxed"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+            Empire è la suite IA che trasforma il tuo ristorante in un impero digitale indipendente. 
+            <strong className="text-foreground"> Una volta. Per sempre.</strong>
           </motion.p>
 
-          <motion.div
-            className="mt-10 flex flex-col sm:flex-row items-center gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.9 }}
-          >
-            <motion.button
-              onClick={() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" })}
-              className="px-10 py-4 rounded-none border-2 border-primary bg-primary text-primary-foreground font-semibold text-sm tracking-widest uppercase gold-glow"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Ottieni Empire · €1.997
+          <motion.div className="mt-8 flex flex-col sm:flex-row items-center gap-3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
+            <motion.button onClick={scrollToPricing}
+              className="px-10 py-4 bg-primary text-primary-foreground font-semibold text-sm tracking-widest uppercase gold-glow"
+              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              Inizia il tuo Impero Ora
             </motion.button>
-            <button
-              onClick={() => navigate("/r/impero-roma")}
-              className="px-10 py-4 rounded-none border-2 border-foreground/30 text-foreground font-semibold text-sm tracking-widest uppercase hover:border-primary hover:text-primary transition-colors"
-            >
+            <button onClick={() => navigate("/r/impero-roma")}
+              className="px-10 py-4 border-2 border-foreground/20 text-foreground text-sm tracking-widest uppercase hover:border-primary hover:text-primary transition-colors">
               Demo Live
             </button>
           </motion.div>
+
+          <motion.div className="mt-6 flex items-center gap-6 text-xs text-foreground/50"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
+            <span>🔒 Pagamento sicuro</span>
+            <span>⚡ Setup in 60 secondi</span>
+            <span>♾️ Zero canoni</span>
+          </motion.div>
         </div>
 
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <ChevronRight className="w-6 h-6 text-foreground/50 rotate-90" />
+        <motion.div className="absolute bottom-6 left-1/2 -translate-x-1/2" animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+          <ArrowDown className="w-5 h-5 text-primary/50" />
         </motion.div>
       </section>
 
-      {/* La Nostra Visione — B2B Tech */}
-      <section id="vision" className="py-24 px-5 bg-background">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">La Nostra Visione</span>
-            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground leading-tight">
-              Tecnologia per la tua <span className="text-gold-gradient">indipendenza finanziaria</span>
-            </h2>
-            <p className="mt-6 text-muted-foreground leading-relaxed">
-              Empire nasce con una missione: distruggere il monopolio delle piattaforme di delivery. 
-              Ogni ristoratore merita di possedere i propri clienti, i propri dati e i propri margini — 
-              senza intermediari che divorano il 30% del fatturato.
-            </p>
-            <p className="mt-4 text-muted-foreground leading-relaxed">
-              La nostra suite IA trasforma qualsiasi ristorante in un ecosistema digitale autonomo: 
-              app nativa, menu intelligente, gestione ordini real-time, e zero abbonamenti. 
-              Il futuro della ristorazione è <strong className="text-foreground">indipendente</strong>.
-            </p>
-            <div className="mt-8 grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <p className="text-2xl font-display font-bold text-primary">2%</p>
-                <p className="text-[11px] text-muted-foreground mt-1">Fee totale</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-display font-bold text-primary">0€</p>
-                <p className="text-[11px] text-muted-foreground mt-1">Canone mensile</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-display font-bold text-primary">60s</p>
-                <p className="text-[11px] text-muted-foreground mt-1">Menu IA pronto</p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Stats Grid */}
-          <motion.div
-            className="grid grid-cols-2 gap-4"
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            {[
-              { icon: <Target className="w-7 h-7" />, stat: "€7.500", label: "Risparmio medio mensile", sub: "su 1000 ordini" },
-              { icon: <DollarSign className="w-7 h-7" />, stat: "ROI < 3", label: "Mesi per il rientro", sub: "investimento coperto" },
-              { icon: <Brain className="w-7 h-7" />, stat: "100%", label: "Proprietà totale", sub: "dati, brand, clienti" },
-              { icon: <Zap className="w-7 h-7" />, stat: "∞", label: "Nessun limite", sub: "ordini illimitati" },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                className="p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-colors flex flex-col items-center text-center"
-                whileHover={{ scale: 1.03 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
-                  {item.icon}
-                </div>
-                <p className="text-2xl font-display font-bold text-primary">{item.stat}</p>
-                <p className="text-xs font-semibold text-foreground mt-1">{item.label}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">{item.sub}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Pain Points */}
-      <section className="py-20 px-5">
+      {/* ====== 2. AGITAZIONE — IL PROBLEMA ====== */}
+      <section id="pain" className="py-20 px-5">
         <div className="max-w-4xl mx-auto">
-          <motion.h2
-            className="text-3xl sm:text-4xl font-display font-bold text-center text-foreground mb-4"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            Il problema che stai ignorando
-          </motion.h2>
-          <p className="text-center text-muted-foreground mb-12 max-w-xl mx-auto">
-            Ogni ordine su JustEat ti costa il 30%. Su 1.000 ordini al mese, 
-            sono <span className="text-accent font-semibold">€7.500 bruciati</span> — ogni singolo mese.
-          </p>
+          <motion.div className="text-center mb-14" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-xs tracking-[0.3em] uppercase text-accent font-medium">Il problema</span>
+            <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">
+              Ogni mese, <span className="text-accent">bruci migliaia di euro</span>
+            </h2>
+            <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
+              Le piattaforme di delivery si prendono il 30% di ogni ordine. Non è una commissione, è un furto legalizzato.
+            </p>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {painPoints.map((point, i) => (
-              <motion.div
-                key={i}
-                className="p-6 rounded-2xl bg-card text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-              >
-                <p className="text-3xl font-display font-bold text-primary">{point.percent}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{point.label}</p>
+          {/* Visual money drain */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+            {[
+              { icon: <Banknote className="w-8 h-8" />, amount: "€7.500", label: "Persi ogni mese", sub: "su 1000 ordini a €25", color: "text-accent" },
+              { icon: <DollarSign className="w-8 h-8" />, amount: "€90.000", label: "Persi ogni anno", sub: "soldi che non tornano mai", color: "text-accent" },
+              { icon: <Target className="w-8 h-8" />, amount: "€0", label: "Controllo sul tuo brand", sub: "JustEat possiede i tuoi clienti", color: "text-accent" },
+            ].map((item, i) => (
+              <motion.div key={i} className="p-6 rounded-2xl bg-card border border-border text-center"
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
+                <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mx-auto mb-3">{item.icon}</div>
+                <p className={`text-3xl font-display font-bold ${item.color}`}>{item.amount}</p>
+                <p className="text-sm font-medium text-foreground mt-1">{item.label}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{item.sub}</p>
               </motion.div>
             ))}
           </div>
+
+          {/* Transition to solution */}
+          <motion.div className="text-center" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <p className="text-lg text-muted-foreground">E se potessi tenere <strong className="text-primary">il 98%</strong> per te?</p>
+            <ArrowDown className="w-5 h-5 text-primary mx-auto mt-4 animate-bounce" />
+          </motion.div>
         </div>
       </section>
 
-      {/* Features */}
-      <section id="features" className="py-20 px-5 bg-card/50">
+      {/* ====== 3. VISION — LA SOLUZIONE ====== */}
+      <section id="vision" className="py-20 px-5 bg-card/30">
+        <div className="max-w-5xl mx-auto text-center mb-14">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">La Soluzione</span>
+            <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">
+              Il tuo ristorante. Il tuo <span className="text-gold-gradient">impero digitale</span>.
+            </h2>
+            <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
+              Una suite completa che ti libera dalle piattaforme e mette i tuoi margini al sicuro.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Big stats */}
+        <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16">
+          {[
+            { value: 2, suffix: "%", label: "Fee totale" },
+            { value: 0, prefix: "€", label: "Canone mensile" },
+            { value: 60, suffix: "s", label: "Menu IA pronto" },
+            { value: 98, suffix: "%", label: "Margini salvati" },
+          ].map((s, i) => (
+            <motion.div key={i} className="p-5 rounded-2xl bg-card border border-border text-center"
+              initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              <p className="text-3xl font-display font-bold text-primary">
+                <AnimatedNumber value={s.value} prefix={s.prefix} suffix={s.suffix} />
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">{s.label}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ====== 4. FEATURES — CARD ANALITICHE ====== */}
+      <section id="features" className="py-20 px-5">
         <div className="max-w-5xl mx-auto">
-          <motion.h2
-            className="text-3xl sm:text-4xl font-display font-bold text-center text-foreground mb-4"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            Non è un'app. È un <span className="text-gold-gradient">arsenale</span>.
-          </motion.h2>
-          <p className="text-center text-muted-foreground mb-12 max-w-xl mx-auto">
-            Ogni strumento che ti serve per dominare il mercato, senza dipendere da nessuno.
-          </p>
+          <motion.div className="text-center mb-14" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">L'Arsenale</span>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-display font-bold text-foreground">
+              Ogni funzione è un <span className="text-gold-gradient">vantaggio competitivo</span>
+            </h2>
+          </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {features.map((feat, i) => (
-              <motion.div
-                key={i}
-                className="p-6 rounded-2xl bg-secondary/30 border border-border hover:border-primary/30 transition-colors"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4">
-                  {feat.icon}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {featureCards.map((feat, i) => (
+              <motion.div key={i}
+                className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all duration-500"
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.6 }}>
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                    {feat.icon}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-display text-lg font-bold text-foreground">{feat.title}</h3>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium tracking-wider">{feat.tag}</span>
+                    </div>
+                    <p className="text-sm font-semibold text-primary mb-2">💰 {feat.benefit}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{feat.desc}</p>
+                  </div>
                 </div>
-                <h3 className="font-display text-lg font-semibold text-foreground">{feat.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{feat.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ROI Calculator */}
-      <section id="calculator" className="py-20 px-5">
+      {/* ====== 5. ROI CALCULATOR — VISUAL ====== */}
+      <section id="calculator" className="py-20 px-5 bg-card/30">
         <div className="max-w-2xl mx-auto">
-          <motion.h2
-            className="text-3xl sm:text-4xl font-display font-bold text-center text-foreground mb-4"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <Calculator className="w-8 h-8 inline-block mr-2 text-primary" />
-            Calcola quanto stai bruciando
-          </motion.h2>
-          <p className="text-center text-muted-foreground mb-10">
-            Muovi gli slider e guarda il danno che le piattaforme fanno ai tuoi margini
-          </p>
+          <motion.div className="text-center mb-10" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <Calculator className="w-10 h-10 mx-auto text-primary mb-3" />
+            <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground">
+              Calcola il tuo <span className="text-gold-gradient">risparmio reale</span>
+            </h2>
+            <p className="mt-3 text-muted-foreground">Muovi gli slider. Guarda la differenza.</p>
+          </motion.div>
 
-          <motion.div
-            className="p-6 sm:p-8 rounded-3xl bg-card border border-border space-y-6"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <motion.div className="p-6 sm:p-8 rounded-3xl bg-card border border-border space-y-6"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-muted-foreground">Ordini al mese</span>
                 <span className="text-foreground font-semibold">{monthlyOrders}</span>
               </div>
-              <input
-                type="range" min="100" max="3000" step="50"
-                value={monthlyOrders}
-                onChange={(e) => setMonthlyOrders(Number(e.target.value))}
-                className="w-full accent-primary h-2 rounded-full"
-              />
+              <input type="range" min="100" max="3000" step="50" value={monthlyOrders}
+                onChange={(e) => setMonthlyOrders(Number(e.target.value))} className="w-full accent-primary h-2 rounded-full" />
             </div>
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-muted-foreground">Scontrino medio</span>
                 <span className="text-foreground font-semibold">€{avgOrder}</span>
               </div>
-              <input
-                type="range" min="10" max="80" step="5"
-                value={avgOrder}
-                onChange={(e) => setAvgOrder(Number(e.target.value))}
-                className="w-full accent-primary h-2 rounded-full"
-              />
+              <input type="range" min="10" max="80" step="5" value={avgOrder}
+                onChange={(e) => setAvgOrder(Number(e.target.value))} className="w-full accent-primary h-2 rounded-full" />
             </div>
 
-            <div className="border-t border-border pt-6 space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">💸 Con JustEat (30%)</span>
-                <span className="text-accent font-display font-bold text-lg">
-                  -€{justEatCost.toLocaleString("it-IT", { maximumFractionDigits: 0 })}/mese
-                </span>
+            {/* Visual bar comparison */}
+            <div className="space-y-4 pt-4 border-t border-border">
+              <div>
+                <div className="flex justify-between text-sm mb-1.5">
+                  <span className="text-muted-foreground">💸 JustEat (30%)</span>
+                  <span className="text-accent font-display font-bold">-€{justEatCost.toLocaleString("it-IT", { maximumFractionDigits: 0 })}/mese</span>
+                </div>
+                <div className="h-8 rounded-lg bg-accent/20 overflow-hidden relative">
+                  <motion.div className="h-full bg-accent/60 rounded-lg flex items-center justify-end pr-3"
+                    initial={{ width: 0 }} animate={{ width: `${justEatBarWidth}%` }} transition={{ duration: 1, delay: 0.3 }}>
+                    <span className="text-xs font-bold text-foreground">-30%</span>
+                  </motion.div>
+                </div>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">👑 Con Empire (2%)</span>
-                <span className="text-primary font-display font-bold text-lg">
-                  -€{empireCost.toLocaleString("it-IT", { maximumFractionDigits: 0 })}/mese
-                </span>
+              <div>
+                <div className="flex justify-between text-sm mb-1.5">
+                  <span className="text-muted-foreground">👑 Empire (2%)</span>
+                  <span className="text-primary font-display font-bold">-€{empireCost.toLocaleString("it-IT", { maximumFractionDigits: 0 })}/mese</span>
+                </div>
+                <div className="h-8 rounded-lg bg-primary/10 overflow-hidden relative">
+                  <motion.div className="h-full bg-primary/40 rounded-lg flex items-center justify-end pr-3"
+                    initial={{ width: 0 }} animate={{ width: `${empireBarWidth}%` }} transition={{ duration: 1, delay: 0.5 }}>
+                    <span className="text-xs font-bold text-foreground">-2%</span>
+                  </motion.div>
+                </div>
               </div>
-              <div className="flex justify-between items-center pt-3 border-t border-border">
-                <span className="text-foreground font-semibold">Risparmi ogni mese</span>
-                <span className="text-primary font-display font-bold text-2xl">
+            </div>
+
+            {/* Results */}
+            <div className="p-5 rounded-2xl bg-primary/5 border border-primary/20 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-foreground font-medium">Risparmi al mese</span>
+                <span className="text-2xl font-display font-bold text-primary">
                   €{monthlySaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground text-sm">ROI completo in</span>
-                <span className="text-foreground font-display font-bold">
-                  {roiMonths} {roiMonths === 1 ? "mese" : "mesi"}
+                <span className="text-foreground font-medium">Risparmi all'anno</span>
+                <span className="text-2xl font-display font-bold text-gold-gradient">
+                  €{yearSaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}
                 </span>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t border-primary/20">
+                <span className="text-muted-foreground text-sm">ROI completo in</span>
+                <span className="text-foreground font-display font-bold">{roiMonths} {roiMonths === 1 ? "mese" : "mesi"}</span>
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20">
-              <p className="text-sm text-foreground text-center">
-                In <strong>{12 - roiMonths > 0 ? 12 - roiMonths : 0} mesi</strong> del primo anno, 
-                il risparmio netto è di{" "}
-                <strong className="text-primary">
-                  €{Math.max(0, monthlySaving * (12 - roiMonths) - setupCost).toLocaleString("it-IT", { maximumFractionDigits: 0 })}
-                </strong>
-              </p>
-            </div>
+            <motion.button onClick={scrollToPricing}
+              className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-base gold-glow"
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+              Inizia il tuo Impero Ora · €1.997
+            </motion.button>
           </motion.div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="py-20 px-5 bg-card/50">
+      {/* ====== 6. PRICING ====== */}
+      <section id="pricing" className="py-20 px-5">
         <div className="max-w-lg mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary mb-6">
               <Crown className="w-3 h-3" />
               Pagamento unico · Per sempre tuo
             </div>
 
-            <h2 className="text-4xl sm:text-5xl font-display font-bold text-foreground">
-              €1.997
-            </h2>
-            <p className="text-muted-foreground mt-1">+ IVA 22% · Pagamento unico · Mai più canoni</p>
+            <h2 className="text-5xl sm:text-6xl font-display font-bold text-foreground">€1.997</h2>
+            <p className="text-muted-foreground mt-1">+ IVA 22% · Una volta sola · Mai più canoni</p>
 
             <div className="mt-8 space-y-3 text-left">
               {[
-                "App PWA col TUO brand — installabile",
-                "Menu IA con foto food-porn generate",
+                "App PWA installabile col TUO brand",
+                "AI Menu Creator (OCR + foto food-porn)",
                 "Dashboard Admin completa",
                 "Kitchen View real-time per lo staff",
+                "AI-Mary Agent fiscale integrato",
                 "Panic Mode (prezzi di massa)",
                 "Review Shield — solo 4-5★ pubbliche",
-                "Checkout 1-Tap con Apple/Google Pay",
+                "Checkout 1-Tap (Apple Pay / Google Pay)",
                 "Assistenza dedicata a vita",
                 "Aggiornamenti inclusi per sempre",
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3">
+                <motion.div key={i} className="flex items-center gap-3"
+                  initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
                   <Check className="w-5 h-5 text-primary flex-shrink-0" />
                   <span className="text-sm text-foreground">{item}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
 
-            <motion.button
-              className="mt-10 w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-lg gold-glow"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Inizia Ora · €1.997 + IVA
+            <motion.button className="mt-10 w-full py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg gold-glow tracking-wide"
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+              Inizia il tuo Impero Ora
             </motion.button>
 
             <p className="mt-4 text-xs text-muted-foreground">
-              Costo mensile: <strong className="text-foreground">€0</strong> · Solo 2% sulle transazioni
+              Dopo: <strong className="text-foreground">€0/mese</strong> · Solo 2% sulle transazioni
             </p>
 
             <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
-              <span>🔒 Pagamento sicuro Stripe</span>
+              <span>🔒 Stripe Secure</span>
               <span>📞 Supporto incluso</span>
+              <span>♾️ Per sempre</span>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* CTA Final */}
-      <section className="py-20 px-5">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl font-display font-bold text-foreground">
-            Ogni giorno senza Empire, <span className="text-gold-gradient">regali soldi</span>
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            I tuoi competitor stanno già costruendo il loro ecosistema. Tu stai ancora pagando il 30%.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <motion.button
-              onClick={() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" })}
-              className="px-8 py-4 rounded-2xl bg-primary text-primary-foreground font-semibold gold-glow"
-              whileTap={{ scale: 0.97 }}
-            >
-              Ottieni Empire Adesso
-            </motion.button>
-            <button
-              onClick={() => navigate("/r/impero-roma")}
-              className="px-8 py-4 rounded-2xl bg-secondary text-secondary-foreground font-medium"
-            >
-              Prova la Demo
-            </button>
+      {/* ====== 7. FAQ — DISTRUGGI OBIEZIONI ====== */}
+      <section className="py-20 px-5 bg-card/30">
+        <div className="max-w-2xl mx-auto">
+          <motion.div className="text-center mb-12" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <HelpCircle className="w-10 h-10 mx-auto text-primary mb-3" />
+            <h2 className="text-3xl font-display font-bold text-foreground">
+              Domande? <span className="text-gold-gradient">Risposte.</span>
+            </h2>
+          </motion.div>
+
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <motion.div key={i} className="rounded-2xl bg-card border border-border overflow-hidden"
+                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
+                <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between p-5 text-left">
+                  <span className="text-sm font-semibold text-foreground pr-4">{faq.q}</span>
+                  <motion.div animate={{ rotate: openFaq === i ? 180 : 0 }} transition={{ duration: 0.3 }}>
+                    <ChevronDown className="w-5 h-5 text-primary flex-shrink-0" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}>
+                      <p className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
+      {/* ====== 8. CTA FINALE ====== */}
+      <section className="py-20 px-5">
+        <div className="max-w-2xl mx-auto text-center">
+          <Crown className="w-12 h-12 mx-auto text-primary mb-4" />
+          <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground">
+            Ogni giorno senza Empire,{" "}
+            <span className="text-gold-gradient">regali soldi</span>
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            I tuoi competitor stanno già costruendo il loro impero. Tu stai ancora pagando il 30%.
+          </p>
+          <motion.button onClick={scrollToPricing}
+            className="mt-8 px-10 py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg gold-glow"
+            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+            Inizia il tuo Impero Ora · €1.997
+          </motion.button>
+        </div>
+      </section>
+
+      {/* ====== FOOTER ====== */}
       <footer id="contact" className="border-t border-border py-12 px-5">
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
@@ -543,7 +554,7 @@ const LandingPage = () => {
                 <span className="font-display font-bold text-foreground tracking-[0.1em] uppercase">Empire</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                La suite tecnologica che libera i ristoratori dalle commissioni delle piattaforme di delivery.
+                La suite tecnologica che libera i ristoratori dalle commissioni predatorie delle piattaforme di delivery.
               </p>
             </div>
             <div>
@@ -569,6 +580,16 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+
+      {/* ====== STICKY CTA MOBILE ====== */}
+      <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 glass-strong border-t border-border/30 md:hidden safe-bottom"
+        initial={{ y: 100 }} animate={{ y: 0 }} transition={{ delay: 2, type: "spring", damping: 25 }}>
+        <motion.button onClick={scrollToPricing}
+          className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-bold text-sm tracking-wider gold-glow"
+          whileTap={{ scale: 0.97 }}>
+          👑 Inizia il tuo Impero Ora
+        </motion.button>
+      </motion.div>
     </div>
   );
 };
