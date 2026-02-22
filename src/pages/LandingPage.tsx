@@ -55,12 +55,6 @@ const LandingPage = () => {
             <a href="#calculator" className="hover:text-foreground transition-colors">Calcolatore ROI</a>
             <a href="#pricing" className="hover:text-foreground transition-colors">Prezzo</a>
           </div>
-          <button
-            onClick={() => navigate("/admin")}
-            className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-          >
-            Accedi
-          </button>
         </div>
       </nav>
 
