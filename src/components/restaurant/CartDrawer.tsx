@@ -1,17 +1,34 @@
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import UpsellingSuggestion from "./UpsellingSuggestion";
+import type { MenuItem } from "@/types/restaurant";
 
 interface CartDrawerProps {
   open: boolean;
   onClose: () => void;
+  allMenuItems?: MenuItem[];
 }
 
-const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
+const CartDrawer = ({ open, onClose, allMenuItems = [] }: CartDrawerProps) => {
   const { items, updateQuantity, removeItem, total } = useCart();
   const navigate = useNavigate();
   const { slug } = useParams();
+  const [showUpsell, setShowUpsell] = useState(false);
+  const [lastAddedCat, setLastAddedCat] = useState<string | undefined>();
+
+  // Detect when a new item is added to show upselling
+  const prevCountRef = { current: items.length };
+  useEffect(() => {
+    if (items.length > prevCountRef.current && items.length > 0) {
+      const lastItem = items[items.length - 1];
+      setLastAddedCat(lastItem?.category);
+      setShowUpsell(true);
+    }
+    prevCountRef.current = items.length;
+  }, [items.length]);
 
   return (
     <AnimatePresence>
@@ -46,6 +63,16 @@ const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
                 <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
+
+            {/* Upselling Suggestion */}
+            {allMenuItems.length > 0 && (
+              <UpsellingSuggestion
+                allMenuItems={allMenuItems}
+                lastAddedCategory={lastAddedCat}
+                onClose={() => setShowUpsell(false)}
+                visible={showUpsell && items.length > 0}
+              />
+            )}
 
             {/* Items */}
             <div className="flex-1 overflow-y-auto px-5 space-y-3 scrollbar-hide pb-4">

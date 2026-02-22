@@ -519,7 +519,7 @@ const RestaurantPage = () => {
       <ItemDetailSheet item={selectedItem} onClose={() => setSelectedItem(null)} />
       <PrivateChat />
       <FloatingCartButton onClick={() => setCartOpen(true)} />
-      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} allMenuItems={menu} />
     </div>
   );
 };

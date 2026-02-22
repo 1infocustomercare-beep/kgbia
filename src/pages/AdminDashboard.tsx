@@ -7,8 +7,11 @@ import {
   Camera, Sparkles, Coins, Wand2, QrCode, ExternalLink,
   Save, X, Check, Bot, Send, ShieldCheck, Lock, Key, Download,
   Settings, Phone, Mail, MapPin, Clock, Upload, Globe, Ban, 
-  BarChart3, FileCheck, Image
+  BarChart3, FileCheck, Image, Smartphone, UserX, Move
 } from "lucide-react";
+import TableMap from "@/components/restaurant/TableMap";
+import LivePreview from "@/components/restaurant/LivePreview";
+import LostCustomers from "@/components/restaurant/LostCustomers";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useMyRestaurant } from "@/hooks/useMyRestaurant";
@@ -19,7 +22,7 @@ import restaurantLogo from "@/assets/restaurant-logo.png";
 import { toast } from "@/hooks/use-toast";
 import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 
-type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings";
+type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings" | "preview" | "clients";
 
 interface EditingItem {
   id: string;
@@ -190,15 +193,20 @@ const AdminDashboard = () => {
     return () => { supabase.removeChannel(channel); };
   }, [restaurant]);
 
+  // Table map edit mode
+  const [tableMapEditMode, setTableMapEditMode] = useState(false);
+
   const tabs: { id: AdminTab; label: string; icon: React.ReactNode }[] = [
     { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: "menu", label: "Menu", icon: <UtensilsCrossed className="w-5 h-5" /> },
+    { id: "preview", label: "Preview", icon: <Smartphone className="w-5 h-5" /> },
     { id: "kitchen", label: "Cucina", icon: <ChefHat className="w-5 h-5" /> },
     { id: "ai", label: "IA Menu", icon: <Sparkles className="w-5 h-5" /> },
     { id: "vault", label: "Vault", icon: <Lock className="w-5 h-5" /> },
     { id: "qr", label: "QR", icon: <QrCode className="w-5 h-5" /> },
     { id: "panic", label: "Panic", icon: <AlertTriangle className="w-5 h-5" /> },
     { id: "reviews", label: "Reviews", icon: <Star className="w-5 h-5" /> },
+    { id: "clients", label: "Clienti", icon: <UserX className="w-5 h-5" /> },
     { id: "academy", label: "Academy", icon: <GraduationCap className="w-5 h-5" /> },
     { id: "settings", label: "Info", icon: <Settings className="w-5 h-5" /> },
   ];
@@ -986,28 +994,47 @@ const AdminDashboard = () => {
               </button>
             </div>
 
-            {/* Table Management */}
+            {/* Table Management — Dynamic Map */}
             <div>
               <div className="flex items-center justify-between mb-3">
                 <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Mappa tavoli ({restaurantTables.length})</p>
-                {restaurantTables.length === 0 && (
-                  <button onClick={async () => {
-                    if (!restaurant) return;
-                    const inserts = Array.from({ length: newTableCount }, (_, i) => ({
-                      restaurant_id: restaurant.id,
-                      table_number: i + 1,
-                      status: "free",
-                      seats: 4,
-                    }));
-                    await supabase.from("restaurant_tables").insert(inserts);
-                    const { data } = await supabase.from("restaurant_tables").select("*")
-                      .eq("restaurant_id", restaurant.id).order("table_number");
-                    if (data) setRestaurantTables(data);
-                    toast({ title: `${newTableCount} tavoli creati` });
-                  }} className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium min-h-[44px]">
-                    Genera {newTableCount} tavoli
-                  </button>
-                )}
+                <div className="flex gap-2">
+                  {restaurantTables.length > 0 && (
+                    <button onClick={() => {
+                      if (tableMapEditMode) {
+                        // Save positions
+                        restaurantTables.forEach(async (table) => {
+                          await supabase.from("restaurant_tables").update({ pos_x: table.pos_x || 0, pos_y: table.pos_y || 0 } as any).eq("id", table.id);
+                        });
+                        toast({ title: "Layout salvato!" });
+                      }
+                      setTableMapEditMode(!tableMapEditMode);
+                    }} className={`px-3 py-1.5 rounded-lg text-xs font-medium min-h-[44px] flex items-center gap-1.5 ${
+                      tableMapEditMode ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
+                    }`}>
+                      <Move className="w-3.5 h-3.5" />
+                      {tableMapEditMode ? "Salva Layout" : "Modifica Layout"}
+                    </button>
+                  )}
+                  {restaurantTables.length === 0 && (
+                    <button onClick={async () => {
+                      if (!restaurant) return;
+                      const inserts = Array.from({ length: newTableCount }, (_, i) => ({
+                        restaurant_id: restaurant.id,
+                        table_number: i + 1,
+                        status: "free",
+                        seats: 4,
+                      }));
+                      await supabase.from("restaurant_tables").insert(inserts);
+                      const { data } = await supabase.from("restaurant_tables").select("*")
+                        .eq("restaurant_id", restaurant.id).order("table_number");
+                      if (data) setRestaurantTables(data);
+                      toast({ title: `${newTableCount} tavoli creati` });
+                    }} className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium min-h-[44px]">
+                      Genera {newTableCount} tavoli
+                    </button>
+                  )}
+                </div>
               </div>
 
               {restaurantTables.length === 0 && (
@@ -1022,70 +1049,47 @@ const AdminDashboard = () => {
                 </div>
               )}
 
-              <div className="grid grid-cols-4 gap-2">
-                {restaurantTables.map((table) => {
-                  const statusConfig: Record<string, { bg: string; label: string; dot: string }> = {
-                    free: { bg: "bg-green-500/10 border-green-500/20", label: "Libero", dot: "bg-green-400" },
-                    waiting: { bg: "bg-amber-500/10 border-amber-500/20", label: "In attesa", dot: "bg-amber-400" },
-                    served: { bg: "bg-blue-500/10 border-blue-500/20", label: "Servito", dot: "bg-blue-400" },
-                    paid: { bg: "bg-muted border-border", label: "Pagato", dot: "bg-muted-foreground" },
-                  };
-                  const cfg = statusConfig[table.status] || statusConfig.free;
-                  const tableUrl = `${menuUrl}?table=${table.table_number}`;
-                  return (
-                    <motion.button key={table.id}
-                      onClick={async () => {
-                        const next: Record<string, string> = { free: "waiting", waiting: "served", served: "paid", paid: "free" };
-                        const newStatus = next[table.status] || "free";
-                        await supabase.from("restaurant_tables").update({ status: newStatus }).eq("id", table.id);
-                        setRestaurantTables(prev => prev.map(t => t.id === table.id ? { ...t, status: newStatus } : t));
-                      }}
-                      onDoubleClick={() => {
-                        navigator.clipboard.writeText(tableUrl);
-                        toast({ title: `Link tavolo ${table.table_number} copiato` });
-                      }}
-                      className={`p-3 rounded-xl border text-center transition-all min-h-[72px] ${cfg.bg}`}
-                      whileTap={{ scale: 0.95 }}>
-                      <p className="text-lg font-display font-bold text-foreground">{table.table_number}</p>
-                      <div className="flex items-center justify-center gap-1 mt-1">
-                        <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-                        <span className="text-[10px] text-muted-foreground">{cfg.label}</span>
-                      </div>
-                    </motion.button>
-                  );
-                })}
-              </div>
               {restaurantTables.length > 0 && (
-                <div className="mt-3 space-y-2">
-                  <p className="text-[10px] text-muted-foreground text-center">
-                    Tap = cambia stato · Doppio tap = copia link QR tavolo
-                  </p>
+                <>
+                  <TableMap
+                    tables={restaurantTables}
+                    editMode={tableMapEditMode}
+                    onStatusChange={async (tableId, newStatus) => {
+                      await supabase.from("restaurant_tables").update({ status: newStatus }).eq("id", tableId);
+                      setRestaurantTables(prev => prev.map(t => t.id === tableId ? { ...t, status: newStatus } : t));
+                    }}
+                    onPositionChange={(tableId, x, y) => {
+                      setRestaurantTables(prev => prev.map(t => t.id === tableId ? { ...t, pos_x: x, pos_y: y } : t));
+                    }}
+                  />
                   {/* Per-table QR download */}
-                  <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
-                    {restaurantTables.slice(0, 12).map((table) => {
-                      const tableUrl = `${menuUrl}?table=${table.table_number}`;
-                      return (
-                        <button key={table.id}
-                          onClick={() => downloadQR(tableUrl, `qr-tavolo-${table.table_number}`)}
-                          className="flex-shrink-0 flex flex-col items-center gap-1 p-2 rounded-xl bg-card border border-border hover:border-primary/30 transition-colors min-w-[64px]">
-                          <img src={generateQRDataUrl(tableUrl, 80)} alt={`T${table.table_number}`} className="w-10 h-10 rounded" />
-                          <span className="text-[10px] text-muted-foreground">T{table.table_number}</span>
-                        </button>
-                      );
-                    })}
+                  <div className="mt-3 space-y-2">
+                    <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+                      {restaurantTables.slice(0, 12).map((table) => {
+                        const tableUrl = `${menuUrl}?table=${table.table_number}`;
+                        return (
+                          <button key={table.id}
+                            onClick={() => downloadQR(tableUrl, `qr-tavolo-${table.table_number}`)}
+                            className="flex-shrink-0 flex flex-col items-center gap-1 p-2 rounded-xl bg-card border border-border hover:border-primary/30 transition-colors min-w-[64px]">
+                            <img src={generateQRDataUrl(tableUrl, 80)} alt={`T${table.table_number}`} className="w-10 h-10 rounded" />
+                            <span className="text-[10px] text-muted-foreground">T{table.table_number}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {restaurantTables.length > 12 && (
+                      <button onClick={() => {
+                        restaurantTables.forEach((table) => {
+                          const url = `${menuUrl}?table=${table.table_number}`;
+                          downloadQR(url, `qr-tavolo-${table.table_number}`);
+                        });
+                        toast({ title: "Download QR completato", description: `${restaurantTables.length} QR scaricati` });
+                      }} className="w-full py-2 rounded-xl bg-secondary text-secondary-foreground text-xs font-medium min-h-[44px]">
+                        Scarica tutti i QR ({restaurantTables.length})
+                      </button>
+                    )}
                   </div>
-                  {restaurantTables.length > 12 && (
-                    <button onClick={() => {
-                      restaurantTables.forEach((table) => {
-                        const url = `${menuUrl}?table=${table.table_number}`;
-                        downloadQR(url, `qr-tavolo-${table.table_number}`);
-                      });
-                      toast({ title: "Download QR completato", description: `${restaurantTables.length} QR scaricati` });
-                    }} className="w-full py-2 rounded-xl bg-secondary text-secondary-foreground text-xs font-medium min-h-[44px]">
-                      Scarica tutti i QR ({restaurantTables.length})
-                    </button>
-                  )}
-                </div>
+                </>
               )}
             </div>
           </motion.div>
@@ -1206,6 +1210,16 @@ const AdminDashboard = () => {
               </div>
             ))}
           </motion.div>
+        )}
+
+        {/* LIVE PREVIEW */}
+        {activeTab === "preview" && restaurant && (
+          <LivePreview slug={restaurantSlug} />
+        )}
+
+        {/* LOST CUSTOMERS */}
+        {activeTab === "clients" && restaurant && (
+          <LostCustomers restaurantId={restaurant.id} />
         )}
 
         {/* SETTINGS — Full Config Panel */}
