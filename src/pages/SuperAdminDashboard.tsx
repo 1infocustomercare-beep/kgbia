@@ -188,19 +188,19 @@ const SuperAdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-border">
+      {/* Header — Gold/Empire theme for Super Admin */}
+      <div className="flex items-center justify-between px-4 sm:px-5 pt-4 pb-3 border-b-2 border-primary/40 bg-gradient-to-r from-primary/5 to-transparent">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-primary/20 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-lg bg-primary/20 flex items-center justify-center ring-2 ring-primary/30">
             <Crown className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-lg font-display font-bold text-foreground">Comando Centrale</h1>
-            <p className="text-xs text-primary">kevin97bernardini@gmail.com</p>
+            <h1 className="text-base sm:text-lg font-display font-bold text-gold-gradient">Empire Central</h1>
+            <p className="text-[10px] sm:text-xs text-primary/70 font-medium tracking-wider uppercase">👑 Super Admin</p>
           </div>
         </div>
         <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
-          <LogOut className="w-5 h-5 text-muted-foreground" />
+          <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
         </button>
       </div>
 

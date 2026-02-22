@@ -33,11 +33,13 @@ const App = () => (
               <Route path="/r/:slug" element={<RestaurantPage />} />
               <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
               <Route path="/admin" element={<AdminLogin />} />
-              <Route path="/admin/dashboard" element={
-                <ProtectedRoute>
+              {/* Restaurant Admin — blocked for super_admin */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
                   <AdminDashboard />
                 </ProtectedRoute>
               } />
+              {/* Super Admin only — Kevin */}
               <Route path="/superadmin" element={
                 <ProtectedRoute requiredRole="super_admin">
                   <SuperAdminDashboard />
@@ -49,6 +51,12 @@ const App = () => (
                 </ProtectedRoute>
               } />
               <Route path="/kitchen" element={<KitchenView />} />
+              {/* Legacy redirect */}
+              <Route path="/admin/dashboard" element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

@@ -430,21 +430,21 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-5 pt-5 pb-3">
+      {/* Top bar — Restaurant Brand Color */}
+      <div className="flex items-center justify-between px-4 sm:px-5 pt-4 pb-3 border-b border-border/50 bg-card/50">
         <div className="flex items-center gap-3">
           <img src={restaurant?.logo_url || restaurantLogo} alt="" className="w-9 h-9 rounded-lg object-contain" />
           <div>
-            <h1 className="text-lg font-display font-bold text-foreground">{restaurantName}</h1>
-            <p className="text-xs text-primary">Centro di Controllo</p>
+            <h1 className="text-base sm:text-lg font-display font-bold text-foreground">{restaurantName}</h1>
+            <p className="text-[10px] sm:text-xs text-primary font-medium tracking-wider uppercase">Pannello Ristorante</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded-lg">
-            <Coins className="w-3 h-3 inline mr-1" />{aiTokens} token
+          <span className="text-[10px] sm:text-xs text-muted-foreground bg-secondary px-2 py-1 rounded-lg">
+            <Coins className="w-3 h-3 inline mr-1" />{aiTokens}
           </span>
           <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
-            <LogOut className="w-5 h-5 text-muted-foreground" />
+            <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
           </button>
         </div>
       </div>
