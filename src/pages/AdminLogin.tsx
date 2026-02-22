@@ -1,34 +1,52 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, EyeOff } from "lucide-react";
-import restaurantLogo from "@/assets/restaurant-logo.png";
+import { Eye, EyeOff, Crown } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "@/hooks/use-toast";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const { signIn, signUp } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    setTimeout(() => {
-      if (email === "kevin97bernardini@gmail.com" && password === "superadmin") {
-        navigate("/superadmin");
-      } else if (email === "mary@empire.it" && password === "staff123") {
-        navigate("/superadmin");
-      } else if (email === "admin@impero.it" && password === "admin123") {
-        navigate("/admin/dashboard");
+    if (isSignUp) {
+      const { error } = await signUp(email, password, fullName);
+      if (error) {
+        setError(error.message);
       } else {
-        setError("Credenziali non valide");
+        toast({
+          title: "Registrazione completata!",
+          description: "Controlla la tua email per confermare l'account.",
+        });
+        setIsSignUp(false);
       }
       setLoading(false);
-    }, 800);
+      return;
+    }
+
+    const { error } = await signIn(email, password);
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+      return;
+    }
+
+    // Role-based redirect happens via AuthContext + routing
+    // For now, navigate to dashboard - the routing will handle role checks
+    navigate("/admin/dashboard");
+    setLoading(false);
   };
 
   return (
@@ -40,14 +58,30 @@ const AdminLogin = () => {
         transition={{ duration: 0.6 }}
       >
         <div className="flex flex-col items-center">
-          <div className="w-16 h-16 rounded-2xl overflow-hidden mb-4">
-            <img src={restaurantLogo} alt="Logo" className="w-full h-full object-contain" />
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+            <Crown className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-display font-bold text-gold-gradient">Area Riservata</h1>
-          <p className="text-sm text-muted-foreground mt-1">Accedi al pannello di gestione</p>
+          <h1 className="text-2xl font-display font-bold text-gold-gradient">
+            {isSignUp ? "Crea Account" : "Area Riservata"}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {isSignUp ? "Registrati per iniziare" : "Accedi al pannello di gestione"}
+          </p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
+          {isSignUp && (
+            <div>
+              <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-2">Nome completo</label>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Mario Rossi"
+                className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+              />
+            </div>
+          )}
           <div>
             <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-2">Email</label>
             <input
@@ -69,6 +103,7 @@ const AdminLogin = () => {
                 placeholder="••••••••"
                 className="w-full px-4 py-3 pr-11 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                 required
+                minLength={6}
               />
               <button
                 type="button"
@@ -92,15 +127,16 @@ const AdminLogin = () => {
             className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-base gold-glow disabled:opacity-50"
             whileTap={{ scale: 0.97 }}
           >
-            {loading ? "Accesso in corso..." : "Accedi"}
+            {loading ? "Caricamento..." : isSignUp ? "Registrati" : "Accedi"}
           </motion.button>
         </form>
 
-        <div className="space-y-1 text-xs text-muted-foreground/50 text-center">
-          <p>🔑 Super Admin: kevin97bernardini@gmail.com / superadmin</p>
-          <p>👩‍💼 Staff: mary@empire.it / staff123</p>
-          <p>🍕 Ristoratore: admin@impero.it / admin123</p>
-        </div>
+        <button
+          onClick={() => { setIsSignUp(!isSignUp); setError(""); }}
+          className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {isSignUp ? "Hai già un account? Accedi" : "Non hai un account? Registrati"}
+        </button>
       </motion.div>
     </div>
   );
