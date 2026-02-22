@@ -15,6 +15,7 @@ export const demoRestaurant: Restaurant = {
 };
 
 export const demoMenu: MenuItem[] = [
+  // ANTIPASTI
   {
     id: "1",
     name: "Bruschetta Classica",
@@ -26,6 +27,35 @@ export const demoMenu: MenuItem[] = [
     isPopular: true,
   },
   {
+    id: "6",
+    name: "Carpaccio di Manzo",
+    description: "Fettine sottili di filetto di Fassona, rucola selvatica, scaglie di Parmigiano 36 mesi, olio al tartufo.",
+    price: 16.0,
+    image: dishSteak,
+    category: "Antipasti",
+    allergens: ["latticini"],
+  },
+  {
+    id: "7",
+    name: "Burrata Pugliese",
+    description: "Burrata freschissima di Andria su letto di pomodorini confit, pesto di basilico genovese DOP.",
+    price: 14.0,
+    image: dishBruschetta,
+    category: "Antipasti",
+    allergens: ["latticini"],
+    isPopular: true,
+  },
+  {
+    id: "8",
+    name: "Tagliere Imperiale",
+    description: "Selezione di salumi artigianali, formaggi stagionati, miele di acacia, confettura di fichi e grissini.",
+    price: 22.0,
+    image: dishBruschetta,
+    category: "Antipasti",
+    allergens: ["glutine", "latticini"],
+  },
+  // PRIMI
+  {
     id: "2",
     name: "Tagliatelle al Tartufo",
     description: "Pasta fresca all'uovo, crema di Parmigiano 36 mesi, tartufo nero pregiato di Norcia, burro di montagna.",
@@ -36,6 +66,35 @@ export const demoMenu: MenuItem[] = [
     isPopular: true,
   },
   {
+    id: "9",
+    name: "Risotto allo Zafferano",
+    description: "Riso Carnaroli mantecato con zafferano di Navelli, midollo di vitello e foglia d'oro 24k.",
+    price: 20.0,
+    image: dishPasta,
+    category: "Primi",
+    allergens: ["latticini"],
+  },
+  {
+    id: "10",
+    name: "Cacio e Pepe",
+    description: "Tonnarelli freschi, Pecorino Romano DOP 18 mesi, pepe nero Tellicherry macinato al momento.",
+    price: 16.0,
+    image: dishPasta,
+    category: "Primi",
+    allergens: ["glutine", "uova", "latticini"],
+    isPopular: true,
+  },
+  {
+    id: "11",
+    name: "Paccheri all'Amatriciana",
+    description: "Paccheri di Gragnano, guanciale croccante di Amatrice, pomodoro San Marzano, pecorino grattugiato.",
+    price: 17.0,
+    image: dishPasta,
+    category: "Primi",
+    allergens: ["glutine", "latticini"],
+  },
+  // PIZZE
+  {
     id: "3",
     name: "Margherita DOP",
     description: "Impasto a 72h di lievitazione, pomodoro San Marzano, mozzarella di bufala campana DOP, basilico fresco.",
@@ -44,6 +103,35 @@ export const demoMenu: MenuItem[] = [
     category: "Pizze",
     allergens: ["glutine", "latticini"],
   },
+  {
+    id: "12",
+    name: "Diavola Infernale",
+    description: "Salame piccante calabrese 'Nduja, peperoncino fresco, mozzarella fior di latte, olio al peperoncino.",
+    price: 16.0,
+    image: dishPizza,
+    category: "Pizze",
+    allergens: ["glutine", "latticini"],
+    isPopular: true,
+  },
+  {
+    id: "13",
+    name: "Quattro Formaggi",
+    description: "Gorgonzola dolce, fontina valdostana, taleggio, parmigiano reggiano, noci caramellate e miele.",
+    price: 18.0,
+    image: dishPizza,
+    category: "Pizze",
+    allergens: ["glutine", "latticini", "frutta a guscio"],
+  },
+  {
+    id: "14",
+    name: "Tartufata",
+    description: "Crema di tartufo nero, mozzarella di bufala, funghi porcini, olio al tartufo bianco d'Alba.",
+    price: 24.0,
+    image: dishPizza,
+    category: "Pizze",
+    allergens: ["glutine", "latticini"],
+  },
+  // SECONDI
   {
     id: "4",
     name: "Ribeye alla Griglia",
@@ -55,6 +143,25 @@ export const demoMenu: MenuItem[] = [
     isPopular: true,
   },
   {
+    id: "15",
+    name: "Branzino al Sale",
+    description: "Branzino selvaggio in crosta di sale marino di Trapani, patate al forno, salsa verde.",
+    price: 32.0,
+    image: dishSteak,
+    category: "Secondi",
+    allergens: ["pesce"],
+  },
+  {
+    id: "16",
+    name: "Tagliata di Fassona",
+    description: "Tagliata piemontese su rucola, pomodorini, scaglie di grana, riduzione di balsamico di Modena IGP.",
+    price: 28.0,
+    image: dishSteak,
+    category: "Secondi",
+    allergens: ["latticini"],
+  },
+  // DOLCI
+  {
     id: "5",
     name: "Tiramisù della Nonna",
     description: "Mascarpone artigianale, savoiardi fatti in casa, caffè espresso, cacao amaro del Venezuela.",
@@ -63,6 +170,59 @@ export const demoMenu: MenuItem[] = [
     category: "Dolci",
     allergens: ["glutine", "uova", "latticini"],
   },
+  {
+    id: "17",
+    name: "Panna Cotta al Passion Fruit",
+    description: "Panna cotta con vaniglia del Madagascar, coulis di passion fruit e crumble croccante.",
+    price: 9.0,
+    image: dishTiramisu,
+    category: "Dolci",
+    allergens: ["latticini", "glutine"],
+  },
+  {
+    id: "18",
+    name: "Cannolo Siciliano",
+    description: "Cialda croccante, ricotta di pecora setacciata, pistacchio di Bronte, gocce di cioccolato fondente.",
+    price: 8.0,
+    image: dishTiramisu,
+    category: "Dolci",
+    allergens: ["glutine", "latticini", "frutta a guscio"],
+    isPopular: true,
+  },
+  // BEVANDE
+  {
+    id: "19",
+    name: "Acqua Panna / S.Pellegrino",
+    description: "Acqua minerale naturale o frizzante, bottiglia da 75cl.",
+    price: 3.5,
+    image: dishBruschetta,
+    category: "Bevande",
+  },
+  {
+    id: "20",
+    name: "Calice di Prosecco DOC",
+    description: "Prosecco Superiore Valdobbiadene DOCG, bollicine fini e persistenti, profumo floreale.",
+    price: 8.0,
+    image: dishBruschetta,
+    category: "Bevande",
+  },
+  {
+    id: "21",
+    name: "Chianti Classico (bottiglia)",
+    description: "Chianti Classico DOCG Riserva, corpo pieno, sentori di ciliegia e tabacco dolce.",
+    price: 28.0,
+    image: dishBruschetta,
+    category: "Bevande",
+    isPopular: true,
+  },
+  {
+    id: "22",
+    name: "Cocktail della Casa",
+    description: "Negroni sbagliato con Prosecco, Aperol Spritz classico, o Hugo con fiori di sambuco.",
+    price: 10.0,
+    image: dishBruschetta,
+    category: "Bevande",
+  },
 ];
 
-export const menuCategories = ["Antipasti", "Primi", "Pizze", "Secondi", "Dolci"];
+export const menuCategories = ["Antipasti", "Primi", "Pizze", "Secondi", "Dolci", "Bevande"];

@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, MapPin, Clock, Phone, User, MessageSquare, CreditCard, Check } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Phone, User, MessageSquare, CreditCard, Check, Smartphone } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useNavigate, useParams } from "react-router-dom";
 
 type OrderType = "delivery" | "takeaway" | "table";
+type PaymentMethod = "card" | "apple" | "google";
 
 const CheckoutPage = () => {
-  const { items, total, clearCart, itemCount } = useCart();
+  const { items, total, clearCart } = useCart();
   const navigate = useNavigate();
   const { slug } = useParams();
   const [orderType, setOrderType] = useState<OrderType>("delivery");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -43,16 +45,16 @@ const CheckoutPage = () => {
           Ordine Confermato!
         </motion.h1>
         <motion.p
-          className="mt-2 text-muted-foreground text-center text-sm"
+          className="mt-2 text-muted-foreground text-center text-sm max-w-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          Riceverai una notifica quando il tuo ordine sarà pronto.
+          Riceverai una notifica quando il tuo ordine sarà pronto. Tempo stimato: ~25 min.
         </motion.p>
         <motion.button
           onClick={() => navigate(`/r/${slug}`)}
-          className="mt-8 px-8 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold"
+          className="mt-8 px-8 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold gold-glow"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
@@ -78,10 +80,22 @@ const CheckoutPage = () => {
     { value: "table", label: "Tavolo", icon: <CreditCard className="w-4 h-4" /> },
   ];
 
+  const paymentMethods: { value: PaymentMethod; label: string; icon: React.ReactNode }[] = [
+    { value: "card", label: "Carta", icon: <CreditCard className="w-4 h-4" /> },
+    { value: "apple", label: "Apple Pay", icon: <Smartphone className="w-4 h-4" /> },
+    { value: "google", label: "Google Pay", icon: <Smartphone className="w-4 h-4" /> },
+  ];
+
+  const isValid = name.trim() && phone.trim() && (
+    orderType !== "delivery" || address.trim()
+  ) && (
+    orderType !== "table" || tableNumber.trim()
+  );
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="flex items-center gap-3 px-5 pt-6 pb-4">
+      <div className="flex items-center gap-3 px-5 pt-6 pb-4 sticky top-0 z-10 glass-strong">
         <button
           onClick={() => navigate(-1)}
           className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center"
@@ -89,9 +103,10 @@ const CheckoutPage = () => {
           <ArrowLeft className="w-5 h-5 text-foreground" />
         </button>
         <h1 className="text-xl font-display font-bold text-foreground">Checkout</h1>
+        <span className="ml-auto text-sm text-muted-foreground">{items.length} articoli</span>
       </div>
 
-      <div className="px-5 pb-32 space-y-5">
+      <div className="px-5 pb-36 space-y-6">
         {/* Order type */}
         <div>
           <p className="text-xs text-muted-foreground/70 uppercase tracking-wider mb-3">Tipo ordine</p>
@@ -137,39 +152,44 @@ const CheckoutPage = () => {
               className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
-          {orderType === "delivery" && (
-            <motion.div
-              className="relative"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-            >
-              <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Indirizzo di consegna"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-              />
-            </motion.div>
-          )}
-          {orderType === "table" && (
-            <motion.div
-              className="relative"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-            >
-              <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                type="number"
-                placeholder="Numero tavolo"
-                value={tableNumber}
-                onChange={(e) => setTableNumber(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-              />
-            </motion.div>
-          )}
+          <AnimatePresence>
+            {orderType === "delivery" && (
+              <motion.div
+                className="relative"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Indirizzo di consegna"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {orderType === "table" && (
+              <motion.div
+                className="relative"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="number"
+                  placeholder="Numero tavolo"
+                  value={tableNumber}
+                  onChange={(e) => setTableNumber(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
           <div className="relative">
             <MessageSquare className="absolute left-3.5 top-3.5 w-4 h-4 text-muted-foreground" />
             <textarea
@@ -178,6 +198,28 @@ const CheckoutPage = () => {
               onChange={(e) => setNotes(e.target.value)}
               className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground resize-none h-20 focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
+          </div>
+        </div>
+
+        {/* Payment method */}
+        <div>
+          <p className="text-xs text-muted-foreground/70 uppercase tracking-wider mb-3">Metodo di pagamento</p>
+          <div className="grid grid-cols-3 gap-2">
+            {paymentMethods.map((p) => (
+              <motion.button
+                key={p.value}
+                onClick={() => setPaymentMethod(p.value)}
+                className={`flex flex-col items-center gap-1.5 py-3 rounded-xl text-xs font-medium transition-colors ${
+                  paymentMethod === p.value
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-secondary-foreground"
+                }`}
+                whileTap={{ scale: 0.95 }}
+              >
+                {p.icon}
+                {p.label}
+              </motion.button>
+            ))}
           </div>
         </div>
 
@@ -216,14 +258,17 @@ const CheckoutPage = () => {
       </div>
 
       {/* Fixed footer */}
-      <div className="fixed bottom-0 inset-x-0 p-5 bg-card border-t border-border">
+      <div className="fixed bottom-0 inset-x-0 p-5 bg-card/95 backdrop-blur-lg border-t border-border safe-bottom">
         <motion.button
           onClick={handleSubmit}
-          className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-lg gold-glow"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
+          disabled={!isValid}
+          className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-lg gold-glow disabled:opacity-40 disabled:shadow-none"
+          whileHover={isValid ? { scale: 1.02 } : {}}
+          whileTap={isValid ? { scale: 0.97 } : {}}
         >
-          Conferma Ordine · €{grandTotal.toFixed(2)}
+          {paymentMethod === "apple" ? " Pay" : 
+           paymentMethod === "google" ? "Google Pay" : 
+           "Conferma Ordine"} · €{grandTotal.toFixed(2)}
         </motion.button>
       </div>
     </div>
