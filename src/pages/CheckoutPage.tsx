@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, MapPin, Clock, Phone, User, MessageSquare, CreditCard, Check, Smartphone, Shield } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Phone, User, MessageSquare, CreditCard, Check, Smartphone, Shield, AlertTriangle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { useRestaurantBySlug } from "@/hooks/useRestaurantBySlug";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -16,7 +17,9 @@ const CheckoutPage = () => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
   const tableFromQR = searchParams.get("table");
+  const utmSource = searchParams.get("utm_source") || document.referrer || null;
   const { user } = useAuth();
+  const { restaurant: dbRestaurant } = useRestaurantBySlug(slug);
   const [orderType, setOrderType] = useState<OrderType>(tableFromQR ? "table" : "delivery");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [name, setName] = useState("");
@@ -79,6 +82,22 @@ const CheckoutPage = () => {
   const grandTotal = total + deliveryFee;
 
   const handleSubmit = async () => {
+    // Check min order amount
+    const minOrder = (dbRestaurant as any)?.min_order_amount || 0;
+    if (minOrder > 0 && grandTotal < minOrder) {
+      toast({ title: "Ordine minimo non raggiunto", description: `L'importo minimo per un ordine è €${minOrder.toFixed(2)}.`, variant: "destructive" });
+      return;
+    }
+    // Check blocked keywords
+    const blockedKeywords: string[] = (dbRestaurant as any)?.blocked_keywords || [];
+    if (blockedKeywords.length > 0 && notes.trim()) {
+      const notesLower = notes.toLowerCase();
+      const blocked = blockedKeywords.find(kw => notesLower.includes(kw.toLowerCase()));
+      if (blocked) {
+        toast({ title: "Nota non consentita", description: `L'ordine contiene contenuto non accettabile. Rimuovi la nota e riprova.`, variant: "destructive" });
+        return;
+      }
+    }
     setLoading(true);
     try {
       // Find restaurant by slug
@@ -116,7 +135,9 @@ const CheckoutPage = () => {
           total: grandTotal,
           notes: notes || null,
           status: "pending",
-        });
+          utm_source: utmSource || null,
+          referrer: document.referrer || null,
+        } as any);
 
       if (orderError) {
         console.error("Order error:", orderError);
@@ -146,11 +167,12 @@ const CheckoutPage = () => {
     { value: "google", label: "Google Pay", icon: <Smartphone className="w-4 h-4" /> },
   ];
 
+  const minOrder = (dbRestaurant as any)?.min_order_amount || 0;
   const isValid = name.trim() && phone.trim() && gdprAccepted && !loading && (
     orderType !== "delivery" || address.trim()
   ) && (
     orderType !== "table" || tableNumber.trim()
-  );
+  ) && (minOrder <= 0 || grandTotal >= minOrder);
 
   return (
     <div className="min-h-screen bg-background">
@@ -313,6 +335,12 @@ const CheckoutPage = () => {
                 <span className="text-primary font-display text-xl">€{grandTotal.toFixed(2)}</span>
               </div>
             </div>
+            {minOrder > 0 && grandTotal < minOrder && (
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-accent/10 border border-accent/20 mt-2">
+                <AlertTriangle className="w-4 h-4 text-accent flex-shrink-0" />
+                <p className="text-xs text-accent">Ordine minimo: €{minOrder.toFixed(2)} — aggiungi altri articoli</p>
+              </div>
+            )}
           </div>
         </div>
 

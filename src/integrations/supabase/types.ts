@@ -256,12 +256,14 @@ export type Database = {
           items: Json
           notes: string | null
           order_type: string
+          referrer: string | null
           restaurant_id: string
           status: string
           stripe_payment_id: string | null
           table_number: number | null
           total: number
           updated_at: string
+          utm_source: string | null
         }
         Insert: {
           created_at?: string
@@ -273,12 +275,14 @@ export type Database = {
           items?: Json
           notes?: string | null
           order_type?: string
+          referrer?: string | null
           restaurant_id: string
           status?: string
           stripe_payment_id?: string | null
           table_number?: number | null
           total?: number
           updated_at?: string
+          utm_source?: string | null
         }
         Update: {
           created_at?: string
@@ -290,12 +294,14 @@ export type Database = {
           items?: Json
           notes?: string | null
           order_type?: string
+          referrer?: string | null
           restaurant_id?: string
           status?: string
           stripe_payment_id?: string | null
           table_number?: number | null
           total?: number
           updated_at?: string
+          utm_source?: string | null
         }
         Relationships: [
           {
@@ -413,16 +419,21 @@ export type Database = {
       restaurants: {
         Row: {
           address: string | null
+          blocked_keywords: string[] | null
           city: string | null
           created_at: string
           email: string | null
           id: string
           is_active: boolean
+          languages: string[] | null
           logo_url: string | null
+          min_order_amount: number | null
           name: string
           opening_hours: Json | null
           owner_id: string | null
           phone: string | null
+          policy_accepted: boolean | null
+          policy_accepted_at: string | null
           primary_color: string | null
           setup_paid: boolean
           slug: string
@@ -432,16 +443,21 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          blocked_keywords?: string[] | null
           city?: string | null
           created_at?: string
           email?: string | null
           id?: string
           is_active?: boolean
+          languages?: string[] | null
           logo_url?: string | null
+          min_order_amount?: number | null
           name: string
           opening_hours?: Json | null
           owner_id?: string | null
           phone?: string | null
+          policy_accepted?: boolean | null
+          policy_accepted_at?: string | null
           primary_color?: string | null
           setup_paid?: boolean
           slug: string
@@ -451,16 +467,21 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          blocked_keywords?: string[] | null
           city?: string | null
           created_at?: string
           email?: string | null
           id?: string
           is_active?: boolean
+          languages?: string[] | null
           logo_url?: string | null
+          min_order_amount?: number | null
           name?: string
           opening_hours?: Json | null
           owner_id?: string | null
           phone?: string | null
+          policy_accepted?: boolean | null
+          policy_accepted_at?: string | null
           primary_color?: string | null
           setup_paid?: boolean
           slug?: string

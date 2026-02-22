@@ -6,7 +6,8 @@ import {
   Edit, Trash2, DollarSign, Users, ShoppingCart,
   Camera, Sparkles, Coins, Wand2, QrCode, ExternalLink,
   Save, X, Check, Bot, Send, ShieldCheck, Lock, Key, Download,
-  Settings, Phone, Mail, MapPin, Clock
+  Settings, Phone, Mail, MapPin, Clock, Upload, Globe, Ban, 
+  BarChart3, FileCheck, Image
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -79,6 +80,13 @@ const AdminDashboard = () => {
     { day: "Domenica", hours: "Chiuso" },
   ]);
   const [settingsSaving, setSettingsSaving] = useState(false);
+  const [settingsLanguages, setSettingsLanguages] = useState<string[]>(["it"]);
+  const [settingsMinOrder, setSettingsMinOrder] = useState(0);
+  const [settingsBlockedKeywords, setSettingsBlockedKeywords] = useState<string[]>([]);
+  const [settingsNewKeyword, setSettingsNewKeyword] = useState("");
+  const [policyAccepted, setPolicyAccepted] = useState(false);
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [orderAnalytics, setOrderAnalytics] = useState<{source: string; count: number}[]>([]);
 
   // Menu item editing
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
@@ -100,9 +108,11 @@ const AdminDashboard = () => {
     setSettingsEmail(restaurant.email || "");
     setSettingsAddress(restaurant.address || "");
     setSettingsCity(restaurant.city || "");
-    if (restaurant.opening_hours) {
-      setSettingsHours(restaurant.opening_hours);
-    }
+    if (restaurant.opening_hours) setSettingsHours(restaurant.opening_hours);
+    if (restaurant.languages) setSettingsLanguages(restaurant.languages);
+    setSettingsMinOrder(restaurant.min_order_amount || 0);
+    if (restaurant.blocked_keywords) setSettingsBlockedKeywords(restaurant.blocked_keywords);
+    setPolicyAccepted(restaurant.policy_accepted || false);
   }, [restaurant]);
 
   useEffect(() => {
@@ -156,6 +166,19 @@ const AdminDashboard = () => {
         .eq("restaurant_id", restaurant.id)
         .order("table_number", { ascending: true });
       if (tables) setRestaurantTables(tables);
+
+      // Order analytics by source
+      const { data: allOrders } = await supabase
+        .from("orders").select("utm_source, referrer")
+        .eq("restaurant_id", restaurant.id);
+      if (allOrders) {
+        const sourceMap: Record<string, number> = {};
+        allOrders.forEach(o => {
+          const src = (o as any).utm_source || (o as any).referrer || "diretto";
+          sourceMap[src] = (sourceMap[src] || 0) + 1;
+        });
+        setOrderAnalytics(Object.entries(sourceMap).map(([source, count]) => ({ source, count })).sort((a, b) => b.count - a.count));
+      }
     };
     fetchData();
 
@@ -414,13 +437,49 @@ const AdminDashboard = () => {
       address: settingsAddress.trim() || null,
       city: settingsCity.trim() || null,
       opening_hours: settingsHours as any,
-    }).eq("id", restaurant.id);
+      languages: settingsLanguages as any,
+      min_order_amount: settingsMinOrder,
+      blocked_keywords: settingsBlockedKeywords as any,
+      policy_accepted: policyAccepted,
+      policy_accepted_at: policyAccepted ? new Date().toISOString() : null,
+    } as any).eq("id", restaurant.id);
     setSettingsSaving(false);
     if (error) {
       toast({ title: "Errore", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Impostazioni salvate", description: "Contatti e orari aggiornati con successo." });
+      toast({ title: "Impostazioni salvate", description: "Tutte le configurazioni aggiornate con successo." });
     }
+  };
+
+  const handleLogoUpload = async () => {
+    if (!restaurant) return;
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) {
+        toast({ title: "File troppo grande", description: "Massimo 5MB.", variant: "destructive" });
+        return;
+      }
+      setLogoUploading(true);
+      const ext = file.name.split(".").pop() || "png";
+      const path = `${restaurant.id}/logo.${ext}`;
+      const { error: uploadErr } = await supabase.storage.from("restaurant-logos").upload(path, file, { upsert: true });
+      if (uploadErr) {
+        toast({ title: "Errore upload", description: uploadErr.message, variant: "destructive" });
+        setLogoUploading(false);
+        return;
+      }
+      const { data: urlData } = supabase.storage.from("restaurant-logos").getPublicUrl(path);
+      const logoUrl = urlData.publicUrl + "?t=" + Date.now();
+      await supabase.from("restaurants").update({ logo_url: logoUrl }).eq("id", restaurant.id);
+      toast({ title: "Logo aggiornato!", description: "Il nuovo logo è attivo. I colori del brand si adatteranno automaticamente." });
+      setLogoUploading(false);
+      window.location.reload();
+    };
+    input.click();
   };
 
   const handleLogout = async () => {
@@ -1134,14 +1193,67 @@ const AdminDashboard = () => {
           </motion.div>
         )}
 
-        {/* SETTINGS — Contatti & Orari */}
+        {/* SETTINGS — Full Config Panel */}
         {activeTab === "settings" && (
           <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="text-center py-2">
               <Settings className="w-10 h-10 mx-auto mb-2 text-primary" />
-              <h3 className="text-lg font-display font-bold text-foreground">Contatti & Orari</h3>
-              <p className="text-sm text-muted-foreground mt-1">Queste informazioni vengono mostrate ai tuoi clienti</p>
+              <h3 className="text-lg font-display font-bold text-foreground">Configurazione Ristorante</h3>
+              <p className="text-sm text-muted-foreground mt-1">Identità, contatti, orari, lingue, filtri e policy</p>
             </div>
+
+            {/* Logo Upload */}
+            <div className="p-4 rounded-2xl bg-secondary/50 space-y-3">
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><Image className="w-3.5 h-3.5" /> Logo & Identità</p>
+              <div className="flex items-center gap-4">
+                <img src={restaurant?.logo_url || restaurantLogo} alt="Logo" className="w-16 h-16 rounded-xl object-contain border border-border" />
+                <div className="flex-1">
+                  <p className="text-sm text-foreground font-medium">Logo del ristorante</p>
+                  <p className="text-xs text-muted-foreground">L'app adatterà colori e atmosfera dal tuo logo</p>
+                </div>
+                <motion.button onClick={handleLogoUpload} disabled={logoUploading}
+                  className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-medium flex items-center gap-2 disabled:opacity-50 min-h-[44px]"
+                  whileTap={{ scale: 0.95 }}>
+                  {logoUploading ? (
+                    <motion.div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full"
+                      animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+                  ) : (
+                    <><Upload className="w-4 h-4" /> Carica</>
+                  )}
+                </motion.button>
+              </div>
+            </div>
+
+            {/* Policy Consent */}
+            {!policyAccepted && (
+              <div className="p-4 rounded-2xl bg-accent/5 border border-accent/20 space-y-3">
+                <div className="flex items-start gap-3">
+                  <FileCheck className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Accettazione Policy Obbligatoria</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Per operare sulla piattaforma Empire, è necessario accettare le policy di privacy, gestione dati e termini di servizio.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-secondary/50">
+                  <button onClick={() => setPolicyAccepted(!policyAccepted)}
+                    className={`mt-0.5 w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${policyAccepted ? "bg-primary border-primary" : "border-muted-foreground/40"}`}>
+                    {policyAccepted && <Check className="w-3 h-3 text-primary-foreground" />}
+                  </button>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Accetto le <span className="text-primary font-medium">Condizioni di Servizio</span>, la <span className="text-primary font-medium">Privacy Policy</span> e la <span className="text-primary font-medium">Cookie Policy</span> della piattaforma Empire. 
+                    I dati saranno trattati ai sensi del GDPR (Reg. UE 2016/679).
+                  </p>
+                </div>
+              </div>
+            )}
+            {policyAccepted && (
+              <div className="p-3 rounded-2xl bg-green-500/5 border border-green-500/20 flex items-center gap-3">
+                <FileCheck className="w-4 h-4 text-green-400" />
+                <p className="text-xs text-green-400 font-medium">Policy accettate ✓</p>
+              </div>
+            )}
 
             {/* Contact fields */}
             <div className="space-y-3">
@@ -1188,11 +1300,110 @@ const AdminDashboard = () => {
               ))}
             </div>
 
+            {/* Languages */}
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><Globe className="w-3.5 h-3.5" /> Lingue del menu</p>
+              <p className="text-xs text-muted-foreground">Scegli le lingue in cui offrire il servizio per attrarre turisti e clienti locali</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { code: "it", label: "🇮🇹 Italiano" },
+                  { code: "en", label: "🇬🇧 English" },
+                  { code: "de", label: "🇩🇪 Deutsch" },
+                  { code: "fr", label: "🇫🇷 Français" },
+                  { code: "es", label: "🇪🇸 Español" },
+                  { code: "zh", label: "🇨🇳 中文" },
+                  { code: "ja", label: "🇯🇵 日本語" },
+                  { code: "ar", label: "🇸🇦 العربية" },
+                ].map(lang => (
+                  <button key={lang.code}
+                    onClick={() => {
+                      setSettingsLanguages(prev => 
+                        prev.includes(lang.code) ? prev.filter(l => l !== lang.code) : [...prev, lang.code]
+                      );
+                    }}
+                    className={`px-3 py-2 rounded-xl text-xs font-medium transition-colors min-h-[40px] ${
+                      settingsLanguages.includes(lang.code) ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
+                    }`}>
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Order Filters */}
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><Ban className="w-3.5 h-3.5" /> Filtro Ordini</p>
+              <div>
+                <label className="text-xs text-muted-foreground block mb-1.5">Importo minimo ordine (€)</label>
+                <input type="number" step="0.50" min="0" value={settingsMinOrder}
+                  onChange={e => setSettingsMinOrder(parseFloat(e.target.value) || 0)}
+                  className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground block mb-1.5">Parole chiave bloccate nelle note ordine</label>
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {settingsBlockedKeywords.map((kw, i) => (
+                    <span key={i} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-accent/10 text-accent text-xs">
+                      {kw}
+                      <button onClick={() => setSettingsBlockedKeywords(prev => prev.filter((_, j) => j !== i))}
+                        className="hover:text-foreground"><X className="w-3 h-3" /></button>
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <input type="text" value={settingsNewKeyword}
+                    onChange={e => setSettingsNewKeyword(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === "Enter" && settingsNewKeyword.trim()) {
+                        e.preventDefault();
+                        setSettingsBlockedKeywords(prev => [...prev, settingsNewKeyword.trim()]);
+                        setSettingsNewKeyword("");
+                      }
+                    }}
+                    placeholder="Es: gratis, sconto..." maxLength={50}
+                    className="flex-1 px-3 py-2 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[40px]" />
+                  <button onClick={() => {
+                    if (settingsNewKeyword.trim()) {
+                      setSettingsBlockedKeywords(prev => [...prev, settingsNewKeyword.trim()]);
+                      setSettingsNewKeyword("");
+                    }
+                  }} className="px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium min-h-[40px]">
+                    Aggiungi
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Traffic Analytics */}
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> Traffico & Fonti Ordini</p>
+              {orderAnalytics.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">Nessun dato disponibile — gli ordini futuri tracceranno automaticamente la fonte</p>
+              ) : (
+                <div className="space-y-2">
+                  {orderAnalytics.map((item) => {
+                    const maxCount = orderAnalytics[0]?.count || 1;
+                    return (
+                      <div key={item.source} className="p-3 rounded-xl bg-secondary/50">
+                        <div className="flex justify-between items-center mb-1.5">
+                          <span className="text-sm font-medium text-foreground capitalize">{item.source}</span>
+                          <span className="text-xs text-primary font-semibold">{item.count} ordini</span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                          <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(item.count / maxCount) * 100}%` }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
             <motion.button onClick={handleSaveSettings} disabled={settingsSaving}
               className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50 min-h-[48px]"
               whileTap={{ scale: 0.97 }}>
               <Save className="w-4 h-4" />
-              {settingsSaving ? "Salvataggio..." : "Salva Impostazioni"}
+              {settingsSaving ? "Salvataggio..." : "Salva Tutte le Impostazioni"}
             </motion.button>
           </motion.div>
         )}
