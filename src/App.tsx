@@ -31,7 +31,7 @@ const App = () => (
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/superadmin" element={<SuperAdminDashboard />} />
-            <Route path="/staff" element={<StaffPanel />} />
+            <Route path="/staff" element={<SuperAdminDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

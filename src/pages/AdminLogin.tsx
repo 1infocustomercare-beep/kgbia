@@ -21,7 +21,7 @@ const AdminLogin = () => {
       if (email === "kevin97bernardini@gmail.com" && password === "superadmin") {
         navigate("/superadmin");
       } else if (email === "mary@empire.it" && password === "staff123") {
-        navigate("/staff");
+        navigate("/superadmin");
       } else if (email === "admin@impero.it" && password === "admin123") {
         navigate("/admin/dashboard");
       } else {
