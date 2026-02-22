@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Crown, ChefHat, ArrowLeft } from "lucide-react";
@@ -10,7 +10,7 @@ type LoginMode = "choose" | "owner" | "kitchen";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const { signIn, signUp } = useAuth();
+  const { user, roles, loading: authLoading, signIn, signUp } = useAuth();
   const [mode, setMode] = useState<LoginMode>("choose");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,10 +19,19 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
-
-  // Kitchen PIN state
   const [kitchenPin, setKitchenPin] = useState("");
-  const [restaurantSlug, setRestaurantSlug] = useState("");
+
+  // Auto-redirect if already logged in
+  useEffect(() => {
+    if (authLoading || !user) return;
+    if (roles.includes("super_admin")) {
+      navigate("/superadmin", { replace: true });
+    } else if (roles.includes("staff")) {
+      navigate("/staff", { replace: true });
+    } else {
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [user, roles, authLoading, navigate]);
 
   const handleOwnerLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,8 +59,7 @@ const AdminLogin = () => {
       setLoading(false);
       return;
     }
-
-    navigate("/admin/dashboard");
+    // Redirect handled by useEffect above
     setLoading(false);
   };
 
@@ -61,9 +69,8 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      // Look up PIN in kitchen_access_pins
       const { data, error: dbError } = await supabase
-        .from("kitchen_access_pins" as any)
+        .from("kitchen_access_pins")
         .select("id, restaurant_id, label")
         .eq("pin_code", kitchenPin.trim())
         .eq("is_active", true)
@@ -75,9 +82,7 @@ const AdminLogin = () => {
         return;
       }
 
-      const pin = data[0] as any;
-
-      // Store kitchen session in sessionStorage (no auth account needed)
+      const pin = data[0];
       sessionStorage.setItem("kitchen_mode", JSON.stringify({
         restaurantId: pin.restaurant_id,
         pinId: pin.id,
@@ -90,6 +95,14 @@ const AdminLogin = () => {
     }
     setLoading(false);
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   // Mode chooser
   if (mode === "choose") {

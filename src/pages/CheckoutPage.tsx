@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, MapPin, Clock, Phone, User, MessageSquare, CreditCard, Check, Smartphone, Shield } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 type OrderType = "delivery" | "takeaway" | "table";
 type PaymentMethod = "card" | "apple" | "google";
@@ -11,6 +14,7 @@ const CheckoutPage = () => {
   const { items, total, clearCart } = useCart();
   const navigate = useNavigate();
   const { slug } = useParams();
+  const { user } = useAuth();
   const [orderType, setOrderType] = useState<OrderType>("delivery");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [name, setName] = useState("");
@@ -21,6 +25,7 @@ const CheckoutPage = () => {
   const [gdprAccepted, setGdprAccepted] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (items.length === 0 && !submitted) {
     navigate(`/r/${slug}`, { replace: true });
@@ -71,9 +76,60 @@ const CheckoutPage = () => {
   const deliveryFee = orderType === "delivery" ? 3.5 : 0;
   const grandTotal = total + deliveryFee;
 
-  const handleSubmit = () => {
-    clearCart();
-    setSubmitted(true);
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      // Find restaurant by slug
+      const { data: restaurant, error: restError } = await supabase
+        .from("restaurants")
+        .select("id")
+        .eq("slug", slug || "")
+        .eq("is_active", true)
+        .single();
+
+      if (restError || !restaurant) {
+        toast({ title: "Errore", description: "Ristorante non trovato.", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+
+      const orderItems = items.map(i => ({
+        name: i.name,
+        price: i.price,
+        quantity: i.quantity,
+        id: i.id,
+      }));
+
+      const { error: orderError } = await supabase
+        .from("orders")
+        .insert({
+          restaurant_id: restaurant.id,
+          customer_id: user?.id || null,
+          customer_name: name,
+          customer_phone: phone,
+          customer_address: orderType === "delivery" ? address : null,
+          table_number: orderType === "table" ? parseInt(tableNumber) : null,
+          order_type: orderType,
+          items: orderItems as any,
+          total: grandTotal,
+          notes: notes || null,
+          status: "pending",
+        });
+
+      if (orderError) {
+        console.error("Order error:", orderError);
+        toast({ title: "Errore", description: "Impossibile inviare l'ordine. Riprova.", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+
+      clearCart();
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      toast({ title: "Errore", description: "Errore di connessione.", variant: "destructive" });
+    }
+    setLoading(false);
   };
 
   const orderTypes: { value: OrderType; label: string; icon: React.ReactNode }[] = [
@@ -88,7 +144,7 @@ const CheckoutPage = () => {
     { value: "google", label: "Google Pay", icon: <Smartphone className="w-4 h-4" /> },
   ];
 
-  const isValid = name.trim() && phone.trim() && gdprAccepted && (
+  const isValid = name.trim() && phone.trim() && gdprAccepted && !loading && (
     orderType !== "delivery" || address.trim()
   ) && (
     orderType !== "table" || tableNumber.trim()
@@ -312,7 +368,8 @@ const CheckoutPage = () => {
           whileHover={isValid ? { scale: 1.02 } : {}}
           whileTap={isValid ? { scale: 0.97 } : {}}
         >
-          {paymentMethod === "apple" ? " Pay" : 
+          {loading ? "Invio ordine..." :
+           paymentMethod === "apple" ? " Pay" : 
            paymentMethod === "google" ? "Google Pay" : 
            "Conferma Ordine"} · €{grandTotal.toFixed(2)}
         </motion.button>

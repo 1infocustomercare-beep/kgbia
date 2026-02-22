@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback, useRef } from "react";
-import { demoRestaurant, demoMenu, menuCategories } from "@/data/demo-restaurant";
+import { useParams } from "react-router-dom";
+import { demoRestaurant, demoMenu, menuCategories as demoCats } from "@/data/demo-restaurant";
+import { useRestaurantBySlug } from "@/hooks/useRestaurantBySlug";
 import SplashScreen from "@/components/restaurant/SplashScreen";
 import CategoryTabs from "@/components/restaurant/CategoryTabs";
 import MenuItemCard from "@/components/restaurant/MenuItemCard";
@@ -11,7 +13,7 @@ import LoyaltyWallet from "@/components/restaurant/LoyaltyWallet";
 import ReviewShield from "@/components/restaurant/ReviewShield";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 import dishBurrata from "@/assets/dish-burrata.jpg";
-import { Search, Wallet, Star, X, ChevronDown, Crown, Home, UtensilsCrossed, ClipboardList, User, ShoppingBag, Plus } from "lucide-react";
+import { Search, Star, X, Crown, Home, UtensilsCrossed, ClipboardList, User, ShoppingBag, Plus } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import type { MenuItem } from "@/types/restaurant";
 import { useCart } from "@/context/CartContext";
@@ -20,8 +22,19 @@ type ExtraPanel = null | "loyalty" | "reviews";
 type BottomTab = "home" | "menu" | "orders" | "profile";
 
 const RestaurantPage = () => {
+  const { slug } = useParams();
+  const { restaurant: dbRestaurant, menuItems: dbMenu, categories: dbCats, loading: dbLoading, notFound } = useRestaurantBySlug(slug);
+
+  // Use DB data if available, otherwise demo
+  const hasDbData = dbMenu.length > 0;
+  const menu = hasDbData ? dbMenu : demoMenu;
+  const menuCategories = hasDbData ? dbCats : demoCats;
+  const restaurantName = dbRestaurant?.name || demoRestaurant.name;
+  const restaurantTagline = dbRestaurant?.tagline || demoRestaurant.tagline;
+  const restaurantLogoUrl = dbRestaurant?.logo_url || restaurantLogo;
+
   const [showSplash, setShowSplash] = useState(true);
-  const [activeCategory, setActiveCategory] = useState(menuCategories[0]);
+  const [activeCategory, setActiveCategory] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
@@ -34,22 +47,36 @@ const RestaurantPage = () => {
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 400], [1, 1.1]);
 
+  // Set initial category when data loads
+  const effectiveCategory = activeCategory || menuCategories[0] || "Antipasti";
+
   const filteredItems = useMemo(() => {
     if (search.trim()) {
       const q = search.toLowerCase();
-      return demoMenu.filter(
+      return menu.filter(
         (i) => i.name.toLowerCase().includes(q) || i.description.toLowerCase().includes(q)
       );
     }
-    return demoMenu.filter((i) => i.category === activeCategory);
-  }, [activeCategory, search]);
+    return menu.filter((i) => i.category === effectiveCategory);
+  }, [effectiveCategory, search, menu]);
 
-  const popularItems = useMemo(() => demoMenu.filter(i => i.isPopular), []);
+  const popularItems = useMemo(() => menu.filter(i => i.isPopular), [menu]);
+  const heroItem = popularItems[0] || menu[0];
 
   const handleSplashComplete = useCallback(() => setShowSplash(false), []);
 
   if (showSplash) {
-    return <SplashScreen restaurantName={demoRestaurant.name} onComplete={handleSplashComplete} />;
+    return <SplashScreen restaurantName={restaurantName} onComplete={handleSplashComplete} />;
+  }
+
+  if (notFound) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+        <Crown className="w-16 h-16 text-muted-foreground/20 mb-4" />
+        <h1 className="text-2xl font-display font-bold text-foreground">Ristorante non trovato</h1>
+        <p className="text-sm text-muted-foreground mt-2">Questo ristorante non esiste o non è attivo.</p>
+      </div>
+    );
   }
 
   return (
@@ -57,18 +84,16 @@ const RestaurantPage = () => {
       {/* ========== TOP NAVBAR — ARIA STYLE ========== */}
       <div className="sticky top-0 z-40 glass-strong safe-top">
         <div className="flex items-center justify-between px-4 py-3">
-          {/* Logo + Crown */}
           <div className="flex items-center gap-2">
             <div className="relative">
-              <img src={restaurantLogo} alt="" className="w-9 h-9 rounded-xl object-contain" />
+              <img src={restaurantLogoUrl} alt="" className="w-9 h-9 rounded-xl object-contain" />
               <Crown className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 text-primary" />
             </div>
             <div>
-              <p className="font-display text-sm font-bold text-foreground leading-tight">{demoRestaurant.name}</p>
-              <p className="text-[10px] text-muted-foreground">{demoRestaurant.tagline}</p>
+              <p className="font-display text-sm font-bold text-foreground leading-tight">{restaurantName}</p>
+              <p className="text-[10px] text-muted-foreground">{restaurantTagline}</p>
             </div>
           </div>
-          {/* Actions */}
           <div className="flex items-center gap-1">
             <button
               onClick={() => setExtraPanel(extraPanel === "reviews" ? null : "reviews")}
@@ -87,7 +112,7 @@ const RestaurantPage = () => {
       </div>
 
       {/* ========== HERO IMAGE — Dish of the Day ========== */}
-      {activeTab === "home" && (
+      {activeTab === "home" && heroItem && (
         <motion.div
           ref={heroRef}
           className="relative h-[50vh] overflow-hidden"
@@ -95,7 +120,7 @@ const RestaurantPage = () => {
         >
           <motion.div className="absolute inset-0" style={{ scale: heroScale }}>
             <img
-              src={dishBurrata}
+              src={heroItem.image || dishBurrata}
               alt="Piatto del giorno"
               className="w-full h-full object-cover"
             />
@@ -112,16 +137,13 @@ const RestaurantPage = () => {
                 Piatto del Giorno
               </span>
               <h2 className="text-3xl font-display font-bold text-foreground leading-tight">
-                Burrata Pugliese
+                {heroItem.name}
               </h2>
-              <p className="text-sm text-foreground/70 mt-1">Burrata freschissima di Andria con pomodorini confit</p>
+              <p className="text-sm text-foreground/70 mt-1">{heroItem.description}</p>
               <div className="flex items-center gap-3 mt-3">
-                <span className="text-xl font-display font-bold text-primary">€14.00</span>
+                <span className="text-xl font-display font-bold text-primary">€{heroItem.price.toFixed(2)}</span>
                 <motion.button
-                  onClick={() => {
-                    const burrata = demoMenu.find(i => i.id === "7");
-                    if (burrata) addItem(burrata);
-                  }}
+                  onClick={() => addItem(heroItem)}
                   className="px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-semibold tracking-wider uppercase"
                   whileTap={{ scale: 0.95 }}
                 >
@@ -149,7 +171,7 @@ const RestaurantPage = () => {
 
       {/* ========== CATEGORY HORIZONTAL SCROLL ========== */}
       {!search.trim() && !extraPanel && (
-        <CategoryTabs categories={menuCategories} active={activeCategory} onSelect={(cat) => { setActiveCategory(cat); setActiveTab("menu"); }} />
+        <CategoryTabs categories={menuCategories} active={effectiveCategory} onSelect={(cat) => { setActiveCategory(cat); setActiveTab("menu"); }} />
       )}
 
       {/* ========== EXTRA PANELS ========== */}
@@ -177,7 +199,7 @@ const RestaurantPage = () => {
       </AnimatePresence>
 
       {/* ========== HOME: Popular Items ========== */}
-      {activeTab === "home" && !extraPanel && !search.trim() && (
+      {activeTab === "home" && !extraPanel && !search.trim() && popularItems.length > 0 && (
         <div className="px-4 mt-2">
           <h3 className="text-lg font-display font-bold text-foreground mb-3">🔥 I più amati</h3>
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
@@ -216,9 +238,9 @@ const RestaurantPage = () => {
               className="mb-3 px-1"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              key={activeCategory}
+              key={effectiveCategory}
             >
-              <h2 className="text-2xl font-display font-bold text-foreground">{activeCategory}</h2>
+              <h2 className="text-2xl font-display font-bold text-foreground">{effectiveCategory}</h2>
               <p className="text-xs text-muted-foreground mt-0.5">{filteredItems.length} piatti</p>
             </motion.div>
           )}

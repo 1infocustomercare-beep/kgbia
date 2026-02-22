@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import LandingPage from "./pages/LandingPage";
 import RestaurantPage from "./pages/RestaurantPage";
@@ -13,6 +14,7 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import KitchenView from "./pages/KitchenView";
+import StaffPanel from "./pages/StaffPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,8 +33,21 @@ const App = () => (
               <Route path="/r/:slug" element={<RestaurantPage />} />
               <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
               <Route path="/admin" element={<AdminLogin />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/superadmin" element={<SuperAdminDashboard />} />
+              <Route path="/admin/dashboard" element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/superadmin" element={
+                <ProtectedRoute requiredRole="super_admin">
+                  <SuperAdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/staff" element={
+                <ProtectedRoute requiredRole="staff">
+                  <StaffPanel />
+                </ProtectedRoute>
+              } />
               <Route path="/kitchen" element={<KitchenView />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
