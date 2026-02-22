@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, FormEvent } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { demoRestaurant, demoMenu, menuCategories as demoCats } from "@/data/demo-restaurant";
 import { useRestaurantBySlug } from "@/hooks/useRestaurantBySlug";
@@ -59,10 +59,25 @@ const RestaurantPage = () => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Reservation form state
+  const [resDate, setResDate] = useState("");
+  const [resTime, setResTime] = useState("");
+  const [resGuests, setResGuests] = useState("2");
+  const [resName, setResName] = useState("");
+  const [resPhone, setResPhone] = useState("");
+  const [resSubmitted, setResSubmitted] = useState(false);
+
+  const handleReservation = (e: FormEvent) => {
+    e.preventDefault();
+    setResSubmitted(true);
+    setTimeout(() => setResSubmitted(false), 4000);
+  };
+
   const navLinks = [
     { id: "home", label: "Home" },
     { id: "story", label: "Chi Siamo" },
     { id: "menu-section", label: "Menù" },
+    { id: "reservation", label: "Prenota" },
     { id: "contact", label: "Contatti" },
   ];
 
@@ -394,6 +409,94 @@ const RestaurantPage = () => {
               </div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* ====== 5. PRENOTAZIONE TAVOLO ====== */}
+      <section id="reservation" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5 bg-card/30">
+        <div className="max-w-3xl mx-auto">
+          <motion.div className="text-center mb-8 sm:mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Riserva il Tuo Tavolo</span>
+            <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Prenotazione</h2>
+            <p className="mt-3 text-sm text-muted-foreground max-w-md mx-auto">
+              Prenota il tuo tavolo in pochi secondi. Compila il form e ti confermeremo via telefono.
+            </p>
+          </motion.div>
+
+          <motion.form
+            onSubmit={handleReservation}
+            className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl glass border border-border/30 space-y-5"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+
+            {resSubmitted ? (
+              <motion.div className="text-center py-8" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+                <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-4">
+                  <CalendarDays className="w-7 h-7 text-primary" />
+                </div>
+                <h3 className="font-display text-lg font-bold text-foreground">Prenotazione Inviata!</h3>
+                <p className="text-sm text-muted-foreground mt-2">Ti contatteremo a breve per confermare.</p>
+              </motion.div>
+            ) : (
+              <>
+                {/* Row: Date + Time */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Data</label>
+                    <input type="date" required value={resDate} onChange={e => setResDate(e.target.value)}
+                      min={new Date().toISOString().split("T")[0]}
+                      className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Ora</label>
+                    <select required value={resTime} onChange={e => setResTime(e.target.value)}
+                      className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all appearance-none">
+                      <option value="">Seleziona orario</option>
+                      {["12:00","12:30","13:00","13:30","14:00","14:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00"].map(t => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Guests */}
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Numero Ospiti</label>
+                  <div className="flex gap-2 flex-wrap">
+                    {["1","2","3","4","5","6","7","8+"].map(n => (
+                      <button type="button" key={n} onClick={() => setResGuests(n)}
+                        className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
+                          ${resGuests === n ? "bg-primary text-primary-foreground" : "bg-background border border-border/40 text-muted-foreground hover:border-primary/40"}`}>
+                        {n}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Row: Name + Phone */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Nome</label>
+                    <input type="text" required placeholder="Mario Rossi" value={resName} onChange={e => setResName(e.target.value)}
+                      maxLength={100}
+                      className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Telefono</label>
+                    <input type="tel" required placeholder="+39 333 1234567" value={resPhone} onChange={e => setResPhone(e.target.value)}
+                      maxLength={20}
+                      className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all" />
+                  </div>
+                </div>
+
+                <motion.button type="submit"
+                  className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold tracking-[0.15em] uppercase hover:bg-primary/90 transition-colors"
+                  whileTap={{ scale: 0.98 }}>
+                  <CalendarDays className="w-4 h-4 inline-block mr-2 -mt-0.5" />
+                  Prenota Ora
+                </motion.button>
+              </>
+            )}
+          </motion.form>
         </div>
       </section>
 
