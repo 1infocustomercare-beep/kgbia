@@ -30,7 +30,7 @@ export function useRestaurantBySlug(slug: string | undefined) {
         .select("id, name, slug, logo_url, tagline, primary_color")
         .eq("slug", slug)
         .eq("is_active", true)
-        .single();
+        .maybeSingle();
 
       if (restErr || !rest) {
         setNotFound(true);

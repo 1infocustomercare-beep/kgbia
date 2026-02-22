@@ -23,13 +23,13 @@ export function useMyRestaurant() {
     }
 
     const fetch = async () => {
-      // Check if user owns a restaurant
+      // Check if user owns a restaurant (use maybeSingle to avoid 406)
       const { data } = await supabase
         .from("restaurants")
         .select("id, name, slug, logo_url, tagline, primary_color")
         .eq("owner_id", user.id)
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (data) {
         setRestaurant(data);
@@ -40,14 +40,14 @@ export function useMyRestaurant() {
           .select("restaurant_id")
           .eq("user_id", user.id)
           .limit(1)
-          .single();
+          .maybeSingle();
 
         if (membership) {
           const { data: rest } = await supabase
             .from("restaurants")
             .select("id, name, slug, logo_url, tagline, primary_color")
             .eq("id", membership.restaurant_id)
-            .single();
+            .maybeSingle();
 
           if (rest) setRestaurant(rest);
         }

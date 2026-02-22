@@ -69,7 +69,9 @@ const RestaurantPage = () => {
     return <SplashScreen restaurantName={restaurantName} onComplete={handleSplashComplete} />;
   }
 
-  if (notFound) {
+  // Only show not found if slug doesn't match demo and DB returned not found
+  const isDemoSlug = slug === demoRestaurant.slug;
+  if (notFound && !isDemoSlug) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
         <Crown className="w-16 h-16 text-muted-foreground/20 mb-4" />
