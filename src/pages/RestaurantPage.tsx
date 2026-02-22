@@ -14,7 +14,8 @@ import storyPasta from "@/assets/story-pasta.jpg";
 import storyWine from "@/assets/story-wine.jpg";
 import storyDish from "@/assets/story-dish.jpg";
 import heroVideo from "@/assets/hero-restaurant.mp4";
-import { Search, Star, Crown, Phone, Mail, MapPin, Clock, ChevronDown, Plus, ShoppingBag, X, Menu as MenuIcon, CalendarDays } from "lucide-react";
+import { Search, Star, Crown, Phone, Mail, MapPin, Clock, ChevronDown, Plus, ShoppingBag, X, Menu as MenuIcon, CalendarDays, Bell } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import type { MenuItem } from "@/types/restaurant";
 import { useCart } from "@/context/CartContext";
@@ -73,6 +74,28 @@ const RestaurantPage = () => {
   const [resName, setResName] = useState("");
   const [resPhone, setResPhone] = useState("");
   const [resSubmitted, setResSubmitted] = useState(false);
+  const [waiterCalling, setWaiterCalling] = useState(false);
+
+  const handleCallWaiter = async () => {
+    if (!tableFromQR || waiterCalling) return;
+    setWaiterCalling(true);
+    try {
+      const restaurantId = dbRestaurant?.id;
+      if (!restaurantId) return;
+      // Insert a waiter call as a special order
+      await supabase.from("orders").insert({
+        restaurant_id: restaurantId,
+        order_type: "waiter_call",
+        table_number: parseInt(tableFromQR),
+        customer_name: "Chiamata Cameriere",
+        items: [] as any,
+        total: 0,
+        status: "pending",
+        notes: `🔔 Chiamata cameriere — Tavolo ${tableFromQR}`,
+      } as any);
+    } catch {}
+    setTimeout(() => setWaiterCalling(false), 5000);
+  };
 
   const handleReservation = (e: FormEvent) => {
     e.preventDefault();
@@ -107,8 +130,17 @@ const RestaurantPage = () => {
     <div className="min-h-screen bg-background overflow-x-hidden">
       {/* TABLE QR BANNER */}
       {tableFromQR && (
-        <div className="fixed top-0 inset-x-0 z-[60] bg-primary/90 text-primary-foreground px-4 py-2 flex items-center justify-center gap-2 text-sm font-medium">
-          🪑 Tavolo {tableFromQR} — ordine assegnato automaticamente
+        <div className="fixed top-0 inset-x-0 z-[60] bg-primary/90 text-primary-foreground px-4 py-2 flex items-center justify-between text-sm font-medium">
+          <span>🪑 Tavolo {tableFromQR}</span>
+          <motion.button
+            onClick={handleCallWaiter}
+            disabled={waiterCalling}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-foreground/20 text-primary-foreground text-xs font-semibold disabled:opacity-50"
+            whileTap={{ scale: 0.9 }}
+          >
+            <Bell className="w-3.5 h-3.5" />
+            {waiterCalling ? "Chiamata inviata ✓" : "Chiama Cameriere"}
+          </motion.button>
         </div>
       )}
 

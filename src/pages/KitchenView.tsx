@@ -84,6 +84,25 @@ const playPaymentAlert = () => {
   } catch {}
 };
 
+const playWaiterCallAlert = () => {
+  try {
+    const ctx = new AudioContext();
+    const gain = ctx.createGain();
+    gain.gain.value = 0.4;
+    gain.connect(ctx.destination);
+    // Urgent alternating two-tone bell for waiter call
+    [0, 300, 600].forEach((delay, i) => {
+      const osc = ctx.createOscillator();
+      osc.frequency.value = i % 2 === 0 ? 1200 : 900;
+      osc.type = "square";
+      osc.connect(gain);
+      osc.start(ctx.currentTime + delay / 1000);
+      osc.stop(ctx.currentTime + delay / 1000 + 0.18);
+    });
+    setTimeout(() => ctx.close(), 1200);
+  } catch {}
+};
+
 const KitchenView = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<KitchenSession | null>(null);
@@ -106,10 +125,17 @@ const KitchenView = () => {
     const channel = supabase
       .channel("kitchen-orders")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "orders", filter: `restaurant_id=eq.${parsed.restaurantId}` },
-        () => {
+        (payload) => {
           fetchOrders(parsed.restaurantId);
-          if (soundOn) playNewOrderAlert();
-          toast({ title: "🔔 Nuovo ordine!", description: "Un nuovo ordine è arrivato in cucina." });
+          const orderType = (payload.new as any)?.order_type;
+          if (orderType === "waiter_call") {
+            if (soundOn) playWaiterCallAlert();
+            const tableNum = (payload.new as any)?.table_number;
+            toast({ title: "🔔 Chiamata Cameriere!", description: `Tavolo ${tableNum} richiede assistenza!` });
+          } else {
+            if (soundOn) playNewOrderAlert();
+            toast({ title: "🔔 Nuovo ordine!", description: "Un nuovo ordine è arrivato in cucina." });
+          }
         }
       )
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "orders", filter: `restaurant_id=eq.${parsed.restaurantId}` },
@@ -246,12 +272,18 @@ const KitchenView = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-display font-bold text-foreground text-lg">#{order.id.slice(0, 8)}</span>
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusBadge[order.status] || ""}`}>
-                      {statusLabels[order.status] || order.status}
-                    </span>
+                    {order.order_type === "waiter_call" ? (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400">🔔 Cameriere</span>
+                    ) : (
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusBadge[order.status] || ""}`}>
+                        {statusLabels[order.status] || order.status}
+                      </span>
+                    )}
                   </div>
                   <p className="text-sm text-muted-foreground mt-0.5">
-                    {order.customer_name || "Cliente"} · {order.order_type === "table" ? `Tavolo ${order.table_number}` : order.order_type === "delivery" ? "Consegna" : "Asporto"}
+                    {order.order_type === "waiter_call" 
+                      ? `🔔 Tavolo ${order.table_number} — Richiesta assistenza`
+                      : `${order.customer_name || "Cliente"} · ${order.order_type === "table" ? `Tavolo ${order.table_number}` : order.order_type === "delivery" ? "Consegna" : "Asporto"}`}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
