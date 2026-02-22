@@ -29,6 +29,61 @@ const statusLabels: Record<string, string> = {
   ready: "✅ Pronto",
 };
 
+// Differentiated audio alerts
+const playNewOrderAlert = () => {
+  try {
+    const ctx = new AudioContext();
+    const gain = ctx.createGain();
+    gain.gain.value = 0.35;
+    gain.connect(ctx.destination);
+    // Double beep for new order
+    [0, 200].forEach((delay) => {
+      const osc = ctx.createOscillator();
+      osc.frequency.value = 880;
+      osc.type = "sine";
+      osc.connect(gain);
+      osc.start(ctx.currentTime + delay / 1000);
+      osc.stop(ctx.currentTime + delay / 1000 + 0.15);
+    });
+    setTimeout(() => ctx.close(), 600);
+  } catch {}
+};
+
+const playUpdateAlert = () => {
+  try {
+    const ctx = new AudioContext();
+    const gain = ctx.createGain();
+    gain.gain.value = 0.25;
+    gain.connect(ctx.destination);
+    const osc = ctx.createOscillator();
+    osc.frequency.value = 660;
+    osc.type = "triangle";
+    osc.connect(gain);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.12);
+    setTimeout(() => ctx.close(), 300);
+  } catch {}
+};
+
+const playPaymentAlert = () => {
+  try {
+    const ctx = new AudioContext();
+    const gain = ctx.createGain();
+    gain.gain.value = 0.3;
+    gain.connect(ctx.destination);
+    // Rising three-tone for payment
+    [523, 659, 784].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      osc.frequency.value = freq;
+      osc.type = "sine";
+      osc.connect(gain);
+      osc.start(ctx.currentTime + i * 0.12);
+      osc.stop(ctx.currentTime + i * 0.12 + 0.1);
+    });
+    setTimeout(() => ctx.close(), 600);
+  } catch {}
+};
+
 const KitchenView = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<KitchenSession | null>(null);
@@ -53,12 +108,19 @@ const KitchenView = () => {
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "orders", filter: `restaurant_id=eq.${parsed.restaurantId}` },
         () => {
           fetchOrders(parsed.restaurantId);
-          if (soundOn) playAlert();
+          if (soundOn) playNewOrderAlert();
           toast({ title: "🔔 Nuovo ordine!", description: "Un nuovo ordine è arrivato in cucina." });
         }
       )
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "orders", filter: `restaurant_id=eq.${parsed.restaurantId}` },
-        () => fetchOrders(parsed.restaurantId)
+        (payload) => {
+          fetchOrders(parsed.restaurantId);
+          if (soundOn) {
+            const newStatus = (payload.new as any)?.status;
+            if (newStatus === "delivered") playPaymentAlert();
+            else playUpdateAlert();
+          }
+        }
       )
       .subscribe();
 
@@ -73,25 +135,11 @@ const KitchenView = () => {
       .order("created_at", { ascending: true });
     if (data) {
       if (data.length > prevOrderCountRef.current && prevOrderCountRef.current > 0 && soundOn) {
-        playAlert();
+        playNewOrderAlert();
       }
       prevOrderCountRef.current = data.length;
       setOrders(data);
     }
-  };
-
-  const playAlert = () => {
-    try {
-      const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.frequency.value = 880;
-      gain.gain.value = 0.3;
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      setTimeout(() => { osc.stop(); ctx.close(); }, 300);
-    } catch {}
   };
 
   const updateStatus = async (orderId: string, status: string) => {
@@ -153,10 +201,10 @@ const KitchenView = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setSoundOn(!soundOn)} className="p-2 rounded-full hover:bg-secondary transition-colors">
+          <button onClick={() => setSoundOn(!soundOn)} className="p-2 rounded-full hover:bg-secondary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
             {soundOn ? <Volume2 className="w-5 h-5 text-primary" /> : <VolumeX className="w-5 h-5 text-muted-foreground" />}
           </button>
-          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
+          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
             <LogOut className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
@@ -207,8 +255,8 @@ const KitchenView = () => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => printTicket(order)} className="p-2 rounded-lg hover:bg-secondary transition-colors" title="Stampa ticket">
-                    <Printer className="w-4 h-4 text-muted-foreground" />
+                  <button onClick={() => printTicket(order)} className="p-2 rounded-lg hover:bg-secondary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" title="Stampa ticket">
+                    <Printer className="w-5 h-5 text-muted-foreground" />
                   </button>
                   <span className="text-xs text-muted-foreground">
                     {new Date(order.created_at).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}
@@ -232,21 +280,21 @@ const KitchenView = () => {
               <div className="flex gap-2">
                 {order.status === "pending" && (
                   <motion.button onClick={() => updateStatus(order.id, "preparing")}
-                    className="flex-1 py-3 rounded-xl bg-blue-500/20 text-blue-400 text-base font-semibold"
+                    className="flex-1 py-4 rounded-xl bg-blue-500/20 text-blue-400 text-base font-semibold min-h-[56px]"
                     whileTap={{ scale: 0.97 }}>
                     🔥 Inizia Preparazione
                   </motion.button>
                 )}
                 {order.status === "preparing" && (
                   <motion.button onClick={() => updateStatus(order.id, "ready")}
-                    className="flex-1 py-3 rounded-xl bg-green-500/20 text-green-400 text-base font-semibold"
+                    className="flex-1 py-4 rounded-xl bg-green-500/20 text-green-400 text-base font-semibold min-h-[56px]"
                     whileTap={{ scale: 0.97 }}>
                     ✅ Pronto
                   </motion.button>
                 )}
                 {order.status === "ready" && (
                   <motion.button onClick={() => updateStatus(order.id, "delivered")}
-                    className="flex-1 py-3 rounded-xl bg-muted text-muted-foreground text-base font-semibold"
+                    className="flex-1 py-4 rounded-xl bg-muted text-muted-foreground text-base font-semibold min-h-[56px]"
                     whileTap={{ scale: 0.97 }}>
                     📦 Consegnato
                   </motion.button>
