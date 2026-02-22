@@ -169,22 +169,22 @@ const RestaurantPage = () => {
 
         <motion.div className="relative z-10 text-center px-5" style={{ opacity: heroOpacity }}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-            <h1 className="text-6xl sm:text-8xl md:text-9xl font-display font-bold text-foreground tracking-[0.15em] uppercase leading-none">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-bold text-foreground tracking-[0.1em] sm:tracking-[0.15em] uppercase leading-none">
               {restaurantName.split(" ").map((word, i) => (
                 <span key={i} className="block">{word}</span>
               ))}
             </h1>
-            <div className="flex items-center justify-center gap-4 mt-4">
-              <span className="w-12 h-px bg-primary" />
-              <p className="text-sm sm:text-base text-foreground/70 tracking-[0.2em] uppercase font-light">
+            <div className="flex items-center justify-center gap-3 mt-3">
+              <span className="w-8 sm:w-12 h-px bg-primary" />
+              <p className="text-xs sm:text-sm text-foreground/70 tracking-[0.15em] sm:tracking-[0.2em] uppercase font-light">
                 {restaurantTagline}
               </p>
-              <span className="w-12 h-px bg-primary" />
+              <span className="w-8 sm:w-12 h-px bg-primary" />
             </div>
           </motion.div>
 
           <motion.button onClick={() => scrollToSection("menu-section")}
-            className="mt-10 px-10 py-4 border-2 border-foreground/30 text-foreground text-sm tracking-[0.2em] uppercase font-medium hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all duration-300"
+            className="mt-6 sm:mt-10 px-7 sm:px-10 py-3 sm:py-4 border-2 border-foreground/30 text-foreground text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all duration-300"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
             Ordina Ora
           </motion.button>
@@ -197,12 +197,12 @@ const RestaurantPage = () => {
       </section>
 
       {/* ====== 2. LA NOSTRA STORIA ====== */}
-      <section id="story" className="py-20 sm:py-28 px-5">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <section id="story" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           {/* Text */}
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
             <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">La Nostra Storia</span>
-            <h2 className="mt-4 text-3xl sm:text-5xl font-display font-bold text-foreground leading-tight">
+            <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground leading-tight">
               Una passione per la<br />
               <span className="text-gold-gradient">cucina autentica</span>
             </h2>
@@ -238,20 +238,20 @@ const RestaurantPage = () => {
       </section>
 
       {/* ====== 3. MENU — Le Nostre Specialità ====== */}
-      <section id="menu-section" className="py-20 sm:py-28 px-5 bg-card/30">
+      <section id="menu-section" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5 bg-card/30">
         <div className="max-w-6xl mx-auto">
-          <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">Le Nostre Specialità</span>
-            <h2 className="mt-4 text-3xl sm:text-5xl font-display font-bold text-foreground">Il Nostro Menù</h2>
+          <motion.div className="text-center mb-8 sm:mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Le Nostre Specialità</span>
+            <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Il Nostro Menù</h2>
           </motion.div>
 
           {/* Signature Dishes — Featured Grid */}
           {popularItems.length > 0 && (
-            <div className="mb-16">
-              <h3 className="text-lg font-display font-semibold text-foreground mb-6 flex items-center gap-2">
-                <Star className="w-5 h-5 text-primary" /> Piatti Signature
+            <div className="mb-10 sm:mb-16">
+              <h3 className="text-base sm:text-lg font-display font-semibold text-foreground mb-4 sm:mb-6 flex items-center gap-2">
+                <Star className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> Piatti Signature
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
                 {popularItems.map((item, i) => (
                   <motion.div key={item.id}
                     className="group relative rounded-2xl overflow-hidden bg-card border border-border/30 hover:border-primary/30 transition-all duration-500 cursor-pointer"
@@ -270,11 +270,11 @@ const RestaurantPage = () => {
                         <Plus className="w-5 h-5" />
                       </motion.button>
                     </div>
-                    <div className="p-5">
-                      <h4 className="font-display text-lg font-bold text-foreground">{item.name}</h4>
-                      <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
-                      <div className="flex items-center justify-between mt-3">
-                        <span className="text-xl font-display font-bold text-primary">€{item.price.toFixed(2)}</span>
+                    <div className="p-3 sm:p-5">
+                      <h4 className="font-display text-base sm:text-lg font-bold text-foreground">{item.name}</h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
+                      <div className="flex items-center justify-between mt-2 sm:mt-3">
+                        <span className="text-lg sm:text-xl font-display font-bold text-primary">€{item.price.toFixed(2)}</span>
                         <motion.button
                           onClick={(e) => { e.stopPropagation(); addItem(item); }}
                           className="px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase hover:bg-primary hover:text-primary-foreground transition-colors"
@@ -294,10 +294,10 @@ const RestaurantPage = () => {
             <h3 className="text-lg font-display font-semibold text-foreground mb-6">Menu Completo</h3>
             
             {/* Category tabs */}
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-4 mb-6">
+            <div className="flex gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide pb-3 mb-4 sm:mb-6">
               {menuCategories.map((cat) => (
                 <button key={cat} onClick={() => setActiveMenuCat(cat)}
-                  className={`flex-shrink-0 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300
+                  className={`flex-shrink-0 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-300
                     ${effectiveCat === cat ? "bg-primary text-primary-foreground" : "glass border border-border/30 text-muted-foreground hover:text-foreground hover:border-primary/30"}`}>
                   {cat}
                 </button>
@@ -305,14 +305,14 @@ const RestaurantPage = () => {
             </div>
 
             {/* Items grid */}
-            <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" key={effectiveCat}
+            <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" key={effectiveCat}
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
               {catItems.map((item, i) => (
                 <motion.div key={item.id}
                   className="group flex gap-4 p-4 rounded-2xl bg-card border border-border/30 hover:border-primary/20 transition-all cursor-pointer"
                   initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
                   onClick={() => setSelectedItem(item)}>
-                  <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden flex-shrink-0">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -336,20 +336,20 @@ const RestaurantPage = () => {
       </section>
 
       {/* ====== 4. CONTATTI & ORARI ====== */}
-      <section id="contact" className="py-20 sm:py-28 px-5">
+      <section id="contact" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5">
         <div className="max-w-6xl mx-auto">
-          <motion.div className="text-center mb-14" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">Vieni a Trovarci</span>
-            <h2 className="mt-4 text-3xl sm:text-5xl font-display font-bold text-foreground">Contatti & Orari</h2>
+          <motion.div className="text-center mb-8 sm:mb-14" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Vieni a Trovarci</span>
+            <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Contatti & Orari</h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {/* Location */}
-            <motion.div className="p-8 rounded-3xl glass border border-border/30"
+            <motion.div className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl glass border border-border/30"
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <MapPin className="w-8 h-8 text-primary mb-4" />
-              <h3 className="font-display text-lg font-bold text-foreground mb-3">{restaurantCity}</h3>
-              <p className="text-sm text-muted-foreground mb-4">{restaurantAddress}</p>
+              <MapPin className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-3" />
+              <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-2">{restaurantCity}</h3>
+              <p className="text-sm text-muted-foreground mb-3">{restaurantAddress}</p>
               <a href={`https://maps.google.com/?q=${encodeURIComponent(restaurantAddress + " " + restaurantCity)}`}
                 target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-xs text-primary font-semibold tracking-wider uppercase hover:underline">
@@ -358,10 +358,10 @@ const RestaurantPage = () => {
             </motion.div>
 
             {/* Contacts */}
-            <motion.div className="p-8 rounded-3xl glass border border-border/30"
+            <motion.div className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl glass border border-border/30"
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
-              <Phone className="w-8 h-8 text-primary mb-4" />
-              <h3 className="font-display text-lg font-bold text-foreground mb-3">Contatti</h3>
+              <Phone className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-3" />
+              <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-2">Contatti</h3>
               <div className="space-y-3 text-sm text-muted-foreground">
                 <a href={`tel:${restaurantPhone}`} className="flex items-center gap-2 hover:text-primary transition-colors">
                   <Phone className="w-4 h-4" /> {restaurantPhone}
@@ -376,10 +376,10 @@ const RestaurantPage = () => {
             </motion.div>
 
             {/* Hours */}
-            <motion.div className="p-8 rounded-3xl glass border border-border/30"
+            <motion.div className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl glass border border-border/30"
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
-              <Clock className="w-8 h-8 text-primary mb-4" />
-              <h3 className="font-display text-lg font-bold text-foreground mb-3">Orari di Apertura</h3>
+              <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-3" />
+              <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-2">Orari di Apertura</h3>
               <div className="space-y-2 text-sm">
                 {[
                   { day: "Lunedì - Venerdì", hours: "12:00 - 15:00 · 19:00 - 23:30" },
@@ -398,7 +398,7 @@ const RestaurantPage = () => {
       </section>
 
       {/* ====== FOOTER ====== */}
-      <footer className="border-t border-border/30 py-10 px-5">
+      <footer className="border-t border-border/30 py-6 sm:py-10 px-4 sm:px-5">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <img src={restaurantLogoUrl} alt="" className="w-8 h-8 rounded-lg object-contain" />
