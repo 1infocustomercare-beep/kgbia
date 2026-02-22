@@ -34,6 +34,13 @@ const RestaurantPage = () => {
   const restaurantPhone = dbRestaurant?.phone || "+39 06 1234 5678";
   const restaurantAddress = dbRestaurant?.address || "Via del Corso 42, Roma";
   const restaurantCity = dbRestaurant?.city || "Roma, Italia";
+  const restaurantEmail = dbRestaurant?.email || `info@${slug}.it`;
+  const defaultHours = [
+    { day: "Lunedì - Venerdì", hours: "12:00 - 15:00 · 19:00 - 23:30" },
+    { day: "Sabato", hours: "12:00 - 15:30 · 19:00 - 24:00" },
+    { day: "Domenica", hours: "Chiuso" },
+  ];
+  const openingHours = dbRestaurant?.opening_hours || defaultHours;
 
   const [showSplash, setShowSplash] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
@@ -382,7 +389,7 @@ const RestaurantPage = () => {
                   <Phone className="w-4 h-4" /> {restaurantPhone}
                 </a>
                 <p className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" /> info@{slug}.it
+                  <Mail className="w-4 h-4" /> {restaurantEmail}
                 </p>
                 <p className="flex items-center gap-2">
                   <MapPin className="w-4 h-4" /> {restaurantAddress}
@@ -396,11 +403,7 @@ const RestaurantPage = () => {
               <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-3" />
               <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-2">Orari di Apertura</h3>
               <div className="space-y-2 text-sm">
-                {[
-                  { day: "Lunedì - Venerdì", hours: "12:00 - 15:00 · 19:00 - 23:30" },
-                  { day: "Sabato", hours: "12:00 - 15:30 · 19:00 - 24:00" },
-                  { day: "Domenica", hours: "Chiuso" },
-                ].map((item, i) => (
+                {openingHours.map((item, i) => (
                   <div key={i} className="flex justify-between items-center py-1.5 border-b border-border/20 last:border-0">
                     <span className="text-foreground font-medium text-xs">{item.day}</span>
                     <span className={`text-xs ${item.hours === "Chiuso" ? "text-accent" : "text-muted-foreground"}`}>{item.hours}</span>

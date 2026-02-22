@@ -9,6 +9,11 @@ interface RestaurantInfo {
   logo_url: string | null;
   tagline: string | null;
   primary_color: string | null;
+  phone: string | null;
+  address: string | null;
+  city: string | null;
+  email: string | null;
+  opening_hours: { day: string; hours: string }[] | null;
 }
 
 export function useMyRestaurant() {
@@ -26,13 +31,13 @@ export function useMyRestaurant() {
       // Check if user owns a restaurant (use maybeSingle to avoid 406)
       const { data } = await supabase
         .from("restaurants")
-        .select("id, name, slug, logo_url, tagline, primary_color")
+        .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours")
         .eq("owner_id", user.id)
         .limit(1)
         .maybeSingle();
 
       if (data) {
-        setRestaurant(data);
+        setRestaurant({ ...data, opening_hours: data.opening_hours as any });
       } else {
         // Check memberships
         const { data: membership } = await supabase
@@ -45,11 +50,11 @@ export function useMyRestaurant() {
         if (membership) {
           const { data: rest } = await supabase
             .from("restaurants")
-            .select("id, name, slug, logo_url, tagline, primary_color")
+            .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours")
             .eq("id", membership.restaurant_id)
             .maybeSingle();
 
-          if (rest) setRestaurant(rest);
+          if (rest) setRestaurant({ ...rest, opening_hours: rest.opening_hours as any });
         }
       }
       setLoading(false);

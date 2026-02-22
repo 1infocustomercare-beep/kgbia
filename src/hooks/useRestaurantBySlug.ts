@@ -12,6 +12,8 @@ interface RestaurantData {
   phone: string | null;
   address: string | null;
   city: string | null;
+  email: string | null;
+  opening_hours: { day: string; hours: string }[] | null;
 }
 
 export function useRestaurantBySlug(slug: string | undefined) {
@@ -30,7 +32,7 @@ export function useRestaurantBySlug(slug: string | undefined) {
       // Fetch restaurant
       const { data: rest, error: restErr } = await supabase
         .from("restaurants")
-        .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city")
+        .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours")
         .eq("slug", slug)
         .eq("is_active", true)
         .maybeSingle();
@@ -41,7 +43,7 @@ export function useRestaurantBySlug(slug: string | undefined) {
         return;
       }
 
-      setRestaurant(rest);
+      setRestaurant({ ...rest, opening_hours: rest.opening_hours as any });
 
       // Fetch menu items
       const { data: items } = await supabase

@@ -5,7 +5,8 @@ import {
   LogOut, AlertTriangle, Star, GraduationCap,
   Edit, Trash2, DollarSign, Users, ShoppingCart,
   Camera, Sparkles, Coins, Wand2, QrCode, ExternalLink,
-  Save, X, Check, Bot, Send, ShieldCheck, Lock, Key, Download
+  Save, X, Check, Bot, Send, ShieldCheck, Lock, Key, Download,
+  Settings, Phone, Mail, MapPin, Clock
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -17,7 +18,7 @@ import restaurantLogo from "@/assets/restaurant-logo.png";
 import { toast } from "@/hooks/use-toast";
 import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 
-type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy";
+type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings";
 
 interface EditingItem {
   id: string;
@@ -63,6 +64,22 @@ const AdminDashboard = () => {
   const [newRestCity, setNewRestCity] = useState("");
   const [creatingRest, setCreatingRest] = useState(false);
 
+  // Settings state
+  const [settingsPhone, setSettingsPhone] = useState("");
+  const [settingsEmail, setSettingsEmail] = useState("");
+  const [settingsAddress, setSettingsAddress] = useState("");
+  const [settingsCity, setSettingsCity] = useState("");
+  const [settingsHours, setSettingsHours] = useState<{ day: string; hours: string }[]>([
+    { day: "Lunedì", hours: "12:00 - 15:00 · 19:00 - 23:30" },
+    { day: "Martedì", hours: "12:00 - 15:00 · 19:00 - 23:30" },
+    { day: "Mercoledì", hours: "12:00 - 15:00 · 19:00 - 23:30" },
+    { day: "Giovedì", hours: "12:00 - 15:00 · 19:00 - 23:30" },
+    { day: "Venerdì", hours: "12:00 - 15:00 · 19:00 - 23:30" },
+    { day: "Sabato", hours: "12:00 - 15:30 · 19:00 - 24:00" },
+    { day: "Domenica", hours: "Chiuso" },
+  ]);
+  const [settingsSaving, setSettingsSaving] = useState(false);
+
   // Menu item editing
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
 
@@ -75,6 +92,18 @@ const AdminDashboard = () => {
   const restaurantSlug = restaurant?.slug || "impero-roma";
   const restaurantName = restaurant?.name || "Impero Roma";
   const menuUrl = `${window.location.origin}/r/${restaurantSlug}`;
+
+  // Load settings from restaurant data
+  useEffect(() => {
+    if (!restaurant) return;
+    setSettingsPhone(restaurant.phone || "");
+    setSettingsEmail(restaurant.email || "");
+    setSettingsAddress(restaurant.address || "");
+    setSettingsCity(restaurant.city || "");
+    if (restaurant.opening_hours) {
+      setSettingsHours(restaurant.opening_hours);
+    }
+  }, [restaurant]);
 
   useEffect(() => {
     if (!restaurant) return;
@@ -146,6 +175,7 @@ const AdminDashboard = () => {
     { id: "panic", label: "Panic", icon: <AlertTriangle className="w-5 h-5" /> },
     { id: "reviews", label: "Reviews", icon: <Star className="w-5 h-5" /> },
     { id: "academy", label: "Academy", icon: <GraduationCap className="w-5 h-5" /> },
+    { id: "settings", label: "Info", icon: <Settings className="w-5 h-5" /> },
   ];
 
   const updateOrderStatus = async (orderId: string, status: string) => {
@@ -372,6 +402,24 @@ const AdminDashboard = () => {
       setMenuItems(prev => prev.map(i => i.id === editingItem.id ? { ...i, name: editingItem.name, description: editingItem.description, price: editingItem.price, category: editingItem.category } : i));
       setEditingItem(null);
       toast({ title: "Piatto aggiornato" });
+    }
+  };
+
+  const handleSaveSettings = async () => {
+    if (!restaurant) return;
+    setSettingsSaving(true);
+    const { error } = await supabase.from("restaurants").update({
+      phone: settingsPhone.trim() || null,
+      email: settingsEmail.trim() || null,
+      address: settingsAddress.trim() || null,
+      city: settingsCity.trim() || null,
+      opening_hours: settingsHours as any,
+    }).eq("id", restaurant.id);
+    setSettingsSaving(false);
+    if (error) {
+      toast({ title: "Errore", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Impostazioni salvate", description: "Contatti e orari aggiornati con successo." });
     }
   };
 
@@ -1083,6 +1131,69 @@ const AdminDashboard = () => {
                 {lesson.done ? <Check className="w-5 h-5 text-primary" /> : <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />}
               </div>
             ))}
+          </motion.div>
+        )}
+
+        {/* SETTINGS — Contatti & Orari */}
+        {activeTab === "settings" && (
+          <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center py-2">
+              <Settings className="w-10 h-10 mx-auto mb-2 text-primary" />
+              <h3 className="text-lg font-display font-bold text-foreground">Contatti & Orari</h3>
+              <p className="text-sm text-muted-foreground mt-1">Queste informazioni vengono mostrate ai tuoi clienti</p>
+            </div>
+
+            {/* Contact fields */}
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Informazioni di contatto</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-muted-foreground block mb-1.5 flex items-center gap-1.5"><Phone className="w-3.5 h-3.5" /> Telefono</label>
+                  <input type="tel" value={settingsPhone} onChange={e => setSettingsPhone(e.target.value)} placeholder="+39 06 1234 5678" maxLength={20}
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground block mb-1.5 flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> Email</label>
+                  <input type="email" value={settingsEmail} onChange={e => setSettingsEmail(e.target.value)} placeholder="info@ristorante.it" maxLength={100}
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground block mb-1.5 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Indirizzo</label>
+                <input type="text" value={settingsAddress} onChange={e => setSettingsAddress(e.target.value)} placeholder="Via del Corso 42, Roma" maxLength={200}
+                  className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground block mb-1.5 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Città</label>
+                <input type="text" value={settingsCity} onChange={e => setSettingsCity(e.target.value)} placeholder="Roma, Italia" maxLength={100}
+                  className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+              </div>
+            </div>
+
+            {/* Opening Hours */}
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Orari di apertura</p>
+              {settingsHours.map((entry, i) => (
+                <div key={entry.day} className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                  <span className="text-sm font-medium text-foreground w-24 flex-shrink-0">{entry.day}</span>
+                  <input type="text" value={entry.hours}
+                    onChange={e => {
+                      const updated = [...settingsHours];
+                      updated[i] = { ...updated[i], hours: e.target.value };
+                      setSettingsHours(updated);
+                    }}
+                    placeholder="12:00 - 15:00 · 19:00 - 23:30" maxLength={60}
+                    className="flex-1 px-3 py-2 rounded-lg bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[40px]" />
+                </div>
+              ))}
+            </div>
+
+            <motion.button onClick={handleSaveSettings} disabled={settingsSaving}
+              className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50 min-h-[48px]"
+              whileTap={{ scale: 0.97 }}>
+              <Save className="w-4 h-4" />
+              {settingsSaving ? "Salvataggio..." : "Salva Impostazioni"}
+            </motion.button>
           </motion.div>
         )}
       </div>
