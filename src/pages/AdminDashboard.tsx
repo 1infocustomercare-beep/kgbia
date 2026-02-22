@@ -7,8 +7,11 @@ import {
   Camera, Sparkles, Coins, Wand2, QrCode, ExternalLink,
   Save, X, Check, Bot, Send, ShieldCheck, Lock, Key, Download,
   Settings, Phone, Mail, MapPin, Clock, Upload, Globe, Ban, 
-  BarChart3, FileCheck, Image, Smartphone, UserX, Move
+  BarChart3, FileCheck, Image, Smartphone, UserX, Move,
+  Power, Package, Languages, MessageSquare, ShieldBan
 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import PrivateChat from "@/components/restaurant/PrivateChat";
 import TableMap from "@/components/restaurant/TableMap";
 import LivePreview from "@/components/restaurant/LivePreview";
 import LostCustomers from "@/components/restaurant/LostCustomers";
@@ -24,7 +27,7 @@ import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 import { extractDominantColor, hslToHex } from "@/lib/color-extract";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 
-type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings" | "preview" | "clients";
+type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings" | "preview" | "clients" | "traffic" | "inventory" | "chat" | "blacklist" | "translate";
 
 interface EditingItem {
   id: string;
@@ -97,6 +100,25 @@ const AdminDashboard = () => {
   // Menu item editing
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
 
+  // Traffic control toggles
+  const [deliveryEnabled, setDeliveryEnabled] = useState(true);
+  const [takeawayEnabled, setTakeawayEnabled] = useState(true);
+  const [tableOrdersEnabled, setTableOrdersEnabled] = useState(true);
+
+  // AI Inventory
+  const [inventoryLoading, setInventoryLoading] = useState(false);
+  const [inventoryResult, setInventoryResult] = useState<any>(null);
+
+  // Blacklist
+  const [blacklist, setBlacklist] = useState<any[]>([]);
+  const [blacklistPhone, setBlacklistPhone] = useState("");
+  const [blacklistName, setBlacklistName] = useState("");
+  const [blacklistReason, setBlacklistReason] = useState("");
+
+  // Translation
+  const [translating, setTranslating] = useState(false);
+  const [translationDone, setTranslationDone] = useState(false);
+
   // AI-Mary vault chat
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
     { role: "assistant", content: "Benvenuto nella **Cassaforte Fiscale**. Sono Mary, il tuo assistente per la configurazione del Vault.\n\n🔐 Qui puoi inserire in sicurezza le tue chiavi API fiscali. I dati vengono criptati AES-256 e **nessuno**, nemmeno il Super-Admin, può visualizzarli.\n\nVuoi configurare **Scontrino.it** o **Aruba**?" }
@@ -120,6 +142,10 @@ const AdminDashboard = () => {
     setSettingsMinOrder(restaurant.min_order_amount || 0);
     if (restaurant.blocked_keywords) setSettingsBlockedKeywords(restaurant.blocked_keywords);
     setPolicyAccepted(restaurant.policy_accepted || false);
+    // Traffic toggles
+    setDeliveryEnabled((restaurant as any).delivery_enabled ?? true);
+    setTakeawayEnabled((restaurant as any).takeaway_enabled ?? true);
+    setTableOrdersEnabled((restaurant as any).table_orders_enabled ?? true);
   }, [restaurant]);
 
   useEffect(() => {
@@ -186,6 +212,14 @@ const AdminDashboard = () => {
         });
         setOrderAnalytics(Object.entries(sourceMap).map(([source, count]) => ({ source, count })).sort((a, b) => b.count - a.count));
       }
+
+      // Blacklist
+      const { data: bl } = await (supabase as any)
+        .from("customer_blacklist").select("*")
+        .eq("restaurant_id", restaurant.id)
+        .eq("is_active", true)
+        .order("blocked_at", { ascending: false });
+      if (bl) setBlacklist(bl);
     };
     fetchData();
 
@@ -203,7 +237,12 @@ const AdminDashboard = () => {
     { id: "menu", label: "Menu", icon: <UtensilsCrossed className="w-5 h-5" /> },
     { id: "preview", label: "Preview", icon: <Smartphone className="w-5 h-5" /> },
     { id: "kitchen", label: "Cucina", icon: <ChefHat className="w-5 h-5" /> },
+    { id: "traffic", label: "Traffico", icon: <Power className="w-5 h-5" /> },
+    { id: "inventory", label: "Scorte", icon: <Package className="w-5 h-5" /> },
     { id: "ai", label: "IA Menu", icon: <Sparkles className="w-5 h-5" /> },
+    { id: "translate", label: "Lingue", icon: <Languages className="w-5 h-5" /> },
+    { id: "chat", label: "Chat", icon: <MessageSquare className="w-5 h-5" /> },
+    { id: "blacklist", label: "BlackList", icon: <ShieldBan className="w-5 h-5" /> },
     { id: "vault", label: "Vault", icon: <Lock className="w-5 h-5" /> },
     { id: "qr", label: "QR", icon: <QrCode className="w-5 h-5" /> },
     { id: "panic", label: "Panic", icon: <AlertTriangle className="w-5 h-5" /> },
@@ -1222,6 +1261,201 @@ const AdminDashboard = () => {
                 {lesson.done ? <Check className="w-5 h-5 text-primary" /> : <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />}
               </div>
             ))}
+          </motion.div>
+        )}
+
+        {/* TRAFFIC CONTROL */}
+        {activeTab === "traffic" && (
+          <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center py-4">
+              <Power className="w-12 h-12 mx-auto mb-3 text-primary" />
+              <h3 className="text-lg font-display font-bold text-foreground">Cruscotto Traffico</h3>
+              <p className="text-sm text-muted-foreground mt-1">Apri e chiudi i rubinetti degli ordini in tempo reale</p>
+            </div>
+            <div className="space-y-3">
+              {[
+                { key: "delivery", label: "🚗 Consegna", enabled: deliveryEnabled, setter: setDeliveryEnabled },
+                { key: "takeaway", label: "🥡 Asporto", enabled: takeawayEnabled, setter: setTakeawayEnabled },
+                { key: "table", label: "🪑 Tavolo", enabled: tableOrdersEnabled, setter: setTableOrdersEnabled },
+              ].map(ch => (
+                <div key={ch.key} className="flex items-center justify-between p-4 rounded-xl bg-secondary/50">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-3 h-3 rounded-full ${ch.enabled ? "bg-green-400" : "bg-red-400"}`} />
+                    <span className="text-sm font-medium text-foreground">{ch.label}</span>
+                  </div>
+                  <Switch checked={ch.enabled} onCheckedChange={async (val) => {
+                    ch.setter(val);
+                    if (restaurant) {
+                      await supabase.from("restaurants").update({ [`${ch.key}_enabled`]: val } as any).eq("id", restaurant.id);
+                      toast({ title: val ? `${ch.label} attivato` : `${ch.label} disattivato` });
+                    }
+                  }} />
+                </div>
+              ))}
+            </div>
+            <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20">
+              <p className="text-xs text-muted-foreground">💡 Locale pieno? Disattiva i canali con un tap.</p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* AI INVENTORY */}
+        {activeTab === "inventory" && (
+          <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center py-4">
+              <Package className="w-12 h-12 mx-auto mb-3 text-primary" />
+              <h3 className="text-lg font-display font-bold text-foreground">AI Inventory</h3>
+              <p className="text-sm text-muted-foreground mt-1">Predizione scorte e piatto del giorno</p>
+            </div>
+            <motion.button onClick={async () => {
+              if (!restaurant) return;
+              setInventoryLoading(true);
+              try {
+                const { data, error } = await supabase.functions.invoke("ai-inventory", {
+                  body: { restaurantId: restaurant.id, orders, menuItems },
+                });
+                if (error) throw error;
+                setInventoryResult(data);
+              } catch (err: any) {
+                toast({ title: "Errore", description: err?.message || "Riprova.", variant: "destructive" });
+              }
+              setInventoryLoading(false);
+            }} disabled={inventoryLoading}
+              className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 gold-glow disabled:opacity-50 min-h-[48px]"
+              whileTap={{ scale: 0.97 }}>
+              {inventoryLoading ? "Analisi IA..." : <><Sparkles className="w-4 h-4" /> Analizza Scorte</>}
+            </motion.button>
+            {inventoryResult && (
+              <motion.div className="space-y-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                {inventoryResult.alerts?.map((a: any, i: number) => (
+                  <div key={i} className={`p-3 rounded-xl border ${a.urgency === "high" ? "bg-accent/5 border-accent/20" : "bg-secondary/50 border-border"}`}>
+                    <div className="flex justify-between"><span className="text-sm font-medium text-foreground">{a.ingredient}</span>
+                      <span className="text-xs text-muted-foreground">{a.urgency === "high" ? "🔴" : "🟡"} ~{a.estimatedDaysLeft}gg</span></div>
+                    <p className="text-xs text-muted-foreground mt-1">Ordina: {a.suggestedOrder}</p>
+                  </div>
+                ))}
+                {inventoryResult.dailySpecial && (
+                  <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20">
+                    <p className="text-xs text-primary uppercase tracking-wider font-medium mb-1">🍽️ Piatto del Giorno</p>
+                    <p className="text-base font-display font-bold text-foreground">{inventoryResult.dailySpecial.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{inventoryResult.dailySpecial.reason}</p>
+                  </div>
+                )}
+                {inventoryResult.insights && <p className="text-xs text-muted-foreground p-3 rounded-xl bg-secondary/50">{inventoryResult.insights}</p>}
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+
+        {/* CHAT */}
+        {activeTab === "chat" && restaurant && (
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center py-4">
+              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-primary" />
+              <h3 className="text-lg font-display font-bold text-foreground">Private Connect</h3>
+              <p className="text-sm text-muted-foreground mt-1">Chat criptata — nessun numero esposto</p>
+            </div>
+            <PrivateChat restaurantId={restaurant.id} isRestaurantView={true} />
+          </motion.div>
+        )}
+
+        {/* BLACKLIST */}
+        {activeTab === "blacklist" && (
+          <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center py-4">
+              <ShieldBan className="w-12 h-12 mx-auto mb-3 text-primary" />
+              <h3 className="text-lg font-display font-bold text-foreground">Black-List</h3>
+              <p className="text-sm text-muted-foreground mt-1">Blocca utenti inaccettabili</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-secondary/50 space-y-3">
+              <input type="tel" placeholder="Telefono" value={blacklistPhone} onChange={e => setBlacklistPhone(e.target.value)} maxLength={20}
+                className="w-full px-3 py-2.5 rounded-xl bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+              <input type="text" placeholder="Nome (opz.)" value={blacklistName} onChange={e => setBlacklistName(e.target.value)} maxLength={100}
+                className="w-full px-3 py-2.5 rounded-xl bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+              <input type="text" placeholder="Motivo" value={blacklistReason} onChange={e => setBlacklistReason(e.target.value)} maxLength={200}
+                className="w-full px-3 py-2.5 rounded-xl bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+              <motion.button onClick={async () => {
+                if (!restaurant || !blacklistPhone.trim()) return;
+                const { error } = await (supabase as any).from("customer_blacklist").insert({
+                  restaurant_id: restaurant.id, customer_phone: blacklistPhone.trim(),
+                  customer_name: blacklistName.trim() || null, reason: blacklistReason.trim() || null, blocked_by: user?.id,
+                });
+                if (error) { toast({ title: "Errore", description: error.message, variant: "destructive" }); }
+                else {
+                  toast({ title: "Utente bloccato" });
+                  setBlacklistPhone(""); setBlacklistName(""); setBlacklistReason("");
+                  const { data: bl } = await (supabase as any).from("customer_blacklist").select("*")
+                    .eq("restaurant_id", restaurant.id).eq("is_active", true);
+                  if (bl) setBlacklist(bl);
+                }
+              }} disabled={!blacklistPhone.trim()}
+                className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-medium text-sm disabled:opacity-40 min-h-[48px]"
+                whileTap={{ scale: 0.97 }}>🚫 Blocca</motion.button>
+            </div>
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Bloccati ({blacklist.length})</p>
+              {blacklist.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">Nessun utente bloccato</p>}
+              {blacklist.map((e: any) => (
+                <div key={e.id} className="flex items-center gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
+                  <ShieldBan className="w-4 h-4 text-accent flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">{e.customer_name || e.customer_phone}</p>
+                    <p className="text-xs text-muted-foreground">{e.reason || "—"}</p>
+                  </div>
+                  <button onClick={async () => {
+                    await (supabase as any).from("customer_blacklist").update({ is_active: false }).eq("id", e.id);
+                    setBlacklist(prev => prev.filter(b => b.id !== e.id));
+                    toast({ title: "Sbloccato" });
+                  }} className="text-xs text-primary px-2 py-1 rounded-lg hover:bg-primary/10">Sblocca</button>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* AI TRANSLATE */}
+        {activeTab === "translate" && (
+          <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center py-4">
+              <Languages className="w-12 h-12 mx-auto mb-3 text-primary" />
+              <h3 className="text-lg font-display font-bold text-foreground">Traduzione IA</h3>
+              <p className="text-sm text-muted-foreground mt-1">Menu tradotto automaticamente per i turisti</p>
+            </div>
+            <motion.button onClick={async () => {
+              if (!restaurant) return;
+              setTranslating(true); setTranslationDone(false);
+              try {
+                const { data, error } = await supabase.functions.invoke("ai-translate", {
+                  body: { menuItems, targetLanguages: settingsLanguages },
+                });
+                if (error) throw error;
+                if (data?.translations) {
+                  for (const t of data.translations) {
+                    await supabase.from("menu_items").update({
+                      name_translations: t.name_translations, description_translations: t.description_translations,
+                    } as any).eq("id", t.id);
+                  }
+                }
+                setTranslationDone(true);
+                toast({ title: "Menu tradotto!", description: `${data?.translations?.length || 0} piatti tradotti.` });
+              } catch (err: any) {
+                toast({ title: "Errore", description: err?.message || "Riprova.", variant: "destructive" });
+              }
+              setTranslating(false);
+            }} disabled={translating || settingsLanguages.filter(l => l !== "it").length === 0}
+              className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 gold-glow disabled:opacity-50 min-h-[48px]"
+              whileTap={{ scale: 0.97 }}>
+              {translating ? "Traduzione IA..." : <><Languages className="w-4 h-4" /> Traduci Menu</>}
+            </motion.button>
+            {translationDone && (
+              <div className="p-4 rounded-2xl bg-green-500/10 border border-green-500/20 text-center">
+                <Check className="w-6 h-6 mx-auto text-green-400 mb-1" />
+                <p className="text-sm text-green-400 font-medium">Traduzione completata</p>
+              </div>
+            )}
+            {settingsLanguages.filter(l => l !== "it").length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-4">Vai in Impostazioni → Lingue per attivare le traduzioni.</p>
+            )}
           </motion.div>
         )}
 
