@@ -6,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 interface MenuItemCardProps {
   item: MenuItem;
   index: number;
+  onSelect?: () => void;
 }
 
 const allergenIcons: Record<string, string> = {
@@ -16,7 +17,7 @@ const allergenIcons: Record<string, string> = {
   arachidi: "🥜",
 };
 
-const MenuItemCard = ({ item, index }: MenuItemCardProps) => {
+const MenuItemCard = ({ item, index, onSelect }: MenuItemCardProps) => {
   const { addItem } = useCart();
 
   return (
@@ -26,6 +27,7 @@ const MenuItemCard = ({ item, index }: MenuItemCardProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       whileTap={{ scale: 0.98 }}
+      onClick={onSelect}
     >
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden">

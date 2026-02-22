@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface CartDrawerProps {
   open: boolean;
@@ -9,6 +10,8 @@ interface CartDrawerProps {
 
 const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
   const { items, updateQuantity, removeItem, total, clearCart } = useCart();
+  const navigate = useNavigate();
+  const { slug } = useParams();
 
   return (
     <AnimatePresence>
@@ -103,6 +106,10 @@ const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
                   className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-lg gold-glow"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    onClose();
+                    navigate(`/r/${slug}/checkout`);
+                  }}
                 >
                   Ordina Ora
                 </motion.button>

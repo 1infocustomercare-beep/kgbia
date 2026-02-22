@@ -5,15 +5,20 @@ import CategoryTabs from "@/components/restaurant/CategoryTabs";
 import MenuItemCard from "@/components/restaurant/MenuItemCard";
 import CartDrawer from "@/components/restaurant/CartDrawer";
 import FloatingCartButton from "@/components/restaurant/FloatingCartButton";
+import ItemDetailSheet from "@/components/restaurant/ItemDetailSheet";
 import restaurantLogo from "@/assets/restaurant-logo.png";
-import { Search } from "lucide-react";
+import { Search, Settings } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import type { MenuItem } from "@/types/restaurant";
 
 const RestaurantPage = () => {
+  const navigate = useNavigate();
   const [showSplash, setShowSplash] = useState(true);
   const [activeCategory, setActiveCategory] = useState(menuCategories[0]);
   const [cartOpen, setCartOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
   const filteredItems = useMemo(() => {
     let items = demoMenu.filter((i) => i.category === activeCategory);
@@ -41,12 +46,20 @@ const RestaurantPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex items-center gap-3">
-          <img src={restaurantLogo} alt={demoRestaurant.name} className="w-11 h-11 rounded-xl object-contain" />
-          <div>
-            <h1 className="text-xl font-display font-bold text-foreground">{demoRestaurant.name}</h1>
-            <p className="text-xs text-muted-foreground">{demoRestaurant.tagline}</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src={restaurantLogo} alt={demoRestaurant.name} className="w-11 h-11 rounded-xl object-contain" />
+            <div>
+              <h1 className="text-xl font-display font-bold text-foreground">{demoRestaurant.name}</h1>
+              <p className="text-xs text-muted-foreground">{demoRestaurant.tagline}</p>
+            </div>
           </div>
+          <button
+            onClick={() => navigate("/admin")}
+            className="p-2 rounded-full hover:bg-secondary transition-colors"
+          >
+            <Settings className="w-5 h-5 text-muted-foreground" />
+          </button>
         </div>
 
         {/* Search */}
@@ -70,7 +83,7 @@ const RestaurantPage = () => {
       {/* Menu grid */}
       <div className="px-5 mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filteredItems.map((item, i) => (
-          <MenuItemCard key={item.id} item={item} index={i} />
+          <MenuItemCard key={item.id} item={item} index={i} onSelect={() => setSelectedItem(item)} />
         ))}
       </div>
 
@@ -79,6 +92,9 @@ const RestaurantPage = () => {
           Nessun piatto trovato
         </div>
       )}
+
+      {/* Item detail */}
+      <ItemDetailSheet item={selectedItem} onClose={() => setSelectedItem(null)} />
 
       {/* Cart */}
       <FloatingCartButton onClick={() => setCartOpen(true)} />
