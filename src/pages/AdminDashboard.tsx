@@ -2,21 +2,21 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   UtensilsCrossed, LayoutDashboard, ChefHat, TrendingUp, 
-  Settings, LogOut, AlertTriangle, Percent, Star, GraduationCap,
-  Plus, Edit, Trash2, DollarSign, Users, ShoppingCart
+  LogOut, AlertTriangle, Star, GraduationCap,
+  Plus, Edit, Trash2, DollarSign, Users, ShoppingCart,
+  Camera, Sparkles, Coins, Upload, Wand2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { demoMenu, menuCategories } from "@/data/demo-restaurant";
 import type { MenuItem, Order } from "@/types/restaurant";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 
-type AdminTab = "dashboard" | "menu" | "kitchen" | "panic" | "reviews" | "academy";
+type AdminTab = "dashboard" | "menu" | "kitchen" | "panic" | "ai" | "tokens" | "reviews" | "academy";
 
-// Demo orders
 const demoOrders: Order[] = [
   {
     id: "ORD-001",
-    items: [{ ...demoMenu[0], quantity: 2 }, { ...demoMenu[1], quantity: 1 }],
+    items: [{ ...demoMenu[0], quantity: 2 }, { ...demoMenu[4], quantity: 1 }],
     total: 39.0,
     status: "pending",
     customerName: "Marco Rossi",
@@ -28,7 +28,7 @@ const demoOrders: Order[] = [
   },
   {
     id: "ORD-002",
-    items: [{ ...demoMenu[3], quantity: 1 }],
+    items: [{ ...demoMenu[12], quantity: 1 }],
     total: 38.0,
     status: "preparing",
     customerName: "Laura Bianchi",
@@ -41,7 +41,7 @@ const demoOrders: Order[] = [
   },
   {
     id: "ORD-003",
-    items: [{ ...demoMenu[2], quantity: 3 }, { ...demoMenu[4], quantity: 2 }],
+    items: [{ ...demoMenu[8], quantity: 3 }, { ...demoMenu[15], quantity: 2 }],
     total: 62.0,
     status: "ready",
     customerName: "Giovanni Verdi",
@@ -57,13 +57,18 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
   const [panicPercent, setPanicPercent] = useState(0);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(demoMenu);
+  const [menuItems] = useState<MenuItem[]>(demoMenu);
   const [orders, setOrders] = useState<Order[]>(demoOrders);
+  const [aiTokens, setAiTokens] = useState(12);
+  const [ocrUploading, setOcrUploading] = useState(false);
+  const [ocrResult, setOcrResult] = useState<string[] | null>(null);
 
   const tabs: { id: AdminTab; label: string; icon: React.ReactNode }[] = [
     { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: "menu", label: "Menu", icon: <UtensilsCrossed className="w-5 h-5" /> },
     { id: "kitchen", label: "Cucina", icon: <ChefHat className="w-5 h-5" /> },
+    { id: "ai", label: "IA Menu", icon: <Sparkles className="w-5 h-5" /> },
+    { id: "tokens", label: "Token", icon: <Coins className="w-5 h-5" /> },
     { id: "panic", label: "Panic", icon: <AlertTriangle className="w-5 h-5" /> },
     { id: "reviews", label: "Recensioni", icon: <Star className="w-5 h-5" /> },
     { id: "academy", label: "Academy", icon: <GraduationCap className="w-5 h-5" /> },
@@ -91,6 +96,22 @@ const AdminDashboard = () => {
 
   const todayRevenue = demoOrders.reduce((s, o) => s + o.total, 0);
 
+  const handleOcrUpload = () => {
+    if (aiTokens <= 0) return;
+    setOcrUploading(true);
+    setTimeout(() => {
+      setOcrResult([
+        "Bruschetta al Pomodoro - €7.00",
+        "Spaghetti alla Carbonara - €12.00",
+        "Pizza Napoli - €10.00",
+        "Insalata Mista - €6.50",
+        "Dolce del Giorno - €5.00",
+      ]);
+      setAiTokens((t) => t - 1);
+      setOcrUploading(false);
+    }, 2000);
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Top bar */}
@@ -102,21 +123,26 @@ const AdminDashboard = () => {
             <p className="text-xs text-primary">Admin Panel</p>
           </div>
         </div>
-        <button
-          onClick={() => navigate("/admin")}
-          className="p-2 rounded-full hover:bg-secondary transition-colors"
-        >
-          <LogOut className="w-5 h-5 text-muted-foreground" />
-        </button>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded-lg">
+            <Coins className="w-3 h-3 inline mr-1" />{aiTokens} token
+          </span>
+          <button
+            onClick={() => navigate("/admin")}
+            className="p-2 rounded-full hover:bg-secondary transition-colors"
+          >
+            <LogOut className="w-5 h-5 text-muted-foreground" />
+          </button>
+        </div>
       </div>
 
-      {/* Tab bar - horizontal scroll */}
+      {/* Tab bar */}
       <div className="flex gap-1 px-5 overflow-x-auto scrollbar-hide pb-3">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.id
                 ? "bg-primary text-primary-foreground"
                 : "bg-secondary/50 text-muted-foreground"
@@ -132,11 +158,7 @@ const AdminDashboard = () => {
       <div className="flex-1 px-5 pb-8 overflow-y-auto">
         {/* DASHBOARD TAB */}
         {activeTab === "dashboard" && (
-          <motion.div
-            className="space-y-4 mt-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="grid grid-cols-2 gap-3">
               <div className="p-4 rounded-2xl bg-secondary/50">
                 <DollarSign className="w-5 h-5 text-primary mb-2" />
@@ -160,7 +182,6 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* Recent orders */}
             <div>
               <h3 className="text-sm font-semibold text-foreground mb-3">Ordini recenti</h3>
               <div className="space-y-2">
@@ -184,11 +205,7 @@ const AdminDashboard = () => {
 
         {/* MENU TAB */}
         {activeTab === "menu" && (
-          <motion.div
-            className="space-y-3 mt-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
+          <motion.div className="space-y-3 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-semibold text-foreground">{menuItems.length} piatti</h3>
               <button className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium">
@@ -208,23 +225,14 @@ const AdminDashboard = () => {
                         ? item.price * (1 + panicPercent / 100)
                         : item.price;
                       return (
-                        <div
-                          key={item.id}
-                          className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50"
-                        >
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
-                          />
+                        <div key={item.id} className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                          <img src={item.image} alt={item.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
                             <p className="text-primary font-display font-semibold text-sm">
                               €{adjustedPrice.toFixed(2)}
                               {panicPercent !== 0 && (
-                                <span className="text-xs text-muted-foreground line-through ml-1">
-                                  €{item.price.toFixed(2)}
-                                </span>
+                                <span className="text-xs text-muted-foreground line-through ml-1">€{item.price.toFixed(2)}</span>
                               )}
                             </p>
                           </div>
@@ -248,11 +256,7 @@ const AdminDashboard = () => {
 
         {/* KITCHEN TAB */}
         {activeTab === "kitchen" && (
-          <motion.div
-            className="space-y-4 mt-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <h3 className="text-sm font-semibold text-foreground">Kitchen View</h3>
             {orders.map((order) => (
               <div
@@ -293,33 +297,22 @@ const AdminDashboard = () => {
                 </div>
 
                 {order.notes && (
-                  <p className="text-xs text-amber-400 bg-amber-500/10 px-2.5 py-1.5 rounded-lg mb-3">
-                    📝 {order.notes}
-                  </p>
+                  <p className="text-xs text-amber-400 bg-amber-500/10 px-2.5 py-1.5 rounded-lg mb-3">📝 {order.notes}</p>
                 )}
 
                 <div className="flex gap-2">
                   {order.status === "pending" && (
-                    <button
-                      onClick={() => updateOrderStatus(order.id, "preparing")}
-                      className="flex-1 py-2 rounded-xl bg-blue-500/20 text-blue-400 text-sm font-medium"
-                    >
+                    <button onClick={() => updateOrderStatus(order.id, "preparing")} className="flex-1 py-2 rounded-xl bg-blue-500/20 text-blue-400 text-sm font-medium">
                       Inizia Preparazione
                     </button>
                   )}
                   {order.status === "preparing" && (
-                    <button
-                      onClick={() => updateOrderStatus(order.id, "ready")}
-                      className="flex-1 py-2 rounded-xl bg-green-500/20 text-green-400 text-sm font-medium"
-                    >
+                    <button onClick={() => updateOrderStatus(order.id, "ready")} className="flex-1 py-2 rounded-xl bg-green-500/20 text-green-400 text-sm font-medium">
                       Segna come Pronto
                     </button>
                   )}
                   {order.status === "ready" && (
-                    <button
-                      onClick={() => updateOrderStatus(order.id, "delivered")}
-                      className="flex-1 py-2 rounded-xl bg-muted text-muted-foreground text-sm font-medium"
-                    >
+                    <button onClick={() => updateOrderStatus(order.id, "delivered")} className="flex-1 py-2 rounded-xl bg-muted text-muted-foreground text-sm font-medium">
                       Consegnato
                     </button>
                   )}
@@ -329,19 +322,188 @@ const AdminDashboard = () => {
           </motion.div>
         )}
 
+        {/* AI MENU CREATOR TAB */}
+        {activeTab === "ai" && (
+          <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center py-4">
+              <Sparkles className="w-12 h-12 mx-auto mb-3 text-primary" />
+              <h3 className="text-lg font-display font-bold text-foreground">AI Menu Creator</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Carica una foto del menu cartaceo → l'IA estrae testi e crea foto food-porn
+              </p>
+            </div>
+
+            {/* Upload area */}
+            <motion.div
+              className="border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center cursor-pointer hover:border-primary/50 transition-colors"
+              whileTap={{ scale: 0.98 }}
+              onClick={handleOcrUpload}
+            >
+              {ocrUploading ? (
+                <div className="space-y-3">
+                  <motion.div
+                    className="w-12 h-12 rounded-full border-2 border-primary border-t-transparent mx-auto"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  />
+                  <p className="text-sm text-primary font-medium">Analisi OCR in corso...</p>
+                  <p className="text-xs text-muted-foreground">Estrazione testi e prezzi dal menu</p>
+                </div>
+              ) : (
+                <>
+                  <Camera className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
+                  <p className="text-sm font-medium text-foreground">Scatta o carica foto del menu</p>
+                  <p className="text-xs text-muted-foreground mt-1">JPG, PNG · Max 10MB · Costa 1 token IA</p>
+                </>
+              )}
+            </motion.div>
+
+            {/* OCR Results */}
+            {ocrResult && (
+              <motion.div
+                className="space-y-3"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-semibold text-foreground">Piatti rilevati dall'IA</h4>
+                  <span className="text-xs text-primary">{ocrResult.length} piatti</span>
+                </div>
+                {ocrResult.map((dish, i) => (
+                  <motion.div
+                    key={i}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Wand2 className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-foreground">{dish}</p>
+                      <p className="text-xs text-primary">Foto IA generabile</p>
+                    </div>
+                    <button className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium">
+                      Genera Foto
+                    </button>
+                  </motion.div>
+                ))}
+
+                <button className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm gold-glow">
+                  Importa tutti nel menu
+                </button>
+              </motion.div>
+            )}
+
+            {/* Info */}
+            <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20">
+              <h4 className="text-sm font-semibold text-foreground mb-1 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                Come funziona
+              </h4>
+              <ol className="space-y-1 text-xs text-muted-foreground list-decimal list-inside">
+                <li>Scatta una foto del menu cartaceo</li>
+                <li>L'IA estrae nome piatto, descrizione, prezzo</li>
+                <li>Genera foto iper-realistiche per ogni piatto</li>
+                <li>Importa tutto nel menu digitale con un click</li>
+              </ol>
+            </div>
+          </motion.div>
+        )}
+
+        {/* TOKEN WALLET TAB */}
+        {activeTab === "tokens" && (
+          <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center py-4">
+              <Coins className="w-12 h-12 mx-auto mb-3 text-primary" />
+              <h3 className="text-lg font-display font-bold text-foreground">Wallet Gettoni IA</h3>
+              <p className="text-sm text-muted-foreground mt-1">Ricarica manuale — Zero abbonamenti</p>
+            </div>
+
+            {/* Balance card */}
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/20 via-card to-primary/5 border border-primary/20 text-center">
+              <p className="text-5xl font-display font-bold text-gold-gradient">{aiTokens}</p>
+              <p className="text-sm text-muted-foreground mt-1">gettoni IA disponibili</p>
+              <div className="mt-4 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+                <span>1 token = 1 OCR</span>
+                <span>•</span>
+                <span>1 token = 1 foto IA</span>
+              </div>
+            </div>
+
+            {/* Recharge options */}
+            <div>
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider mb-3">Ricarica</p>
+              <div className="space-y-2">
+                {[
+                  { tokens: 10, price: 15, popular: false },
+                  { tokens: 25, price: 30, popular: true },
+                  { tokens: 50, price: 50, popular: false },
+                ].map((pack) => (
+                  <motion.button
+                    key={pack.tokens}
+                    className={`w-full flex items-center justify-between p-4 rounded-xl border transition-colors ${
+                      pack.popular
+                        ? "border-primary/40 bg-primary/5"
+                        : "border-border bg-card"
+                    }`}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <Coins className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="text-left">
+                        <p className="text-sm font-semibold text-foreground">{pack.tokens} gettoni</p>
+                        {pack.popular && <span className="text-xs text-primary">Più popolare</span>}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-display font-bold text-foreground">€{pack.price}</p>
+                      <p className="text-xs text-muted-foreground">+ IVA 22%</p>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+
+            {/* Usage history */}
+            <div>
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider mb-3">Utilizzo recente</p>
+              <div className="space-y-2">
+                {[
+                  { action: "OCR Menu cartaceo", date: "Oggi, 14:30", tokens: -1 },
+                  { action: "Foto IA: Carbonara", date: "Oggi, 14:32", tokens: -1 },
+                  { action: "Ricarica 10 gettoni", date: "20 Feb 2026", tokens: 10 },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-secondary/50">
+                    <div>
+                      <p className="text-sm text-foreground">{item.action}</p>
+                      <p className="text-xs text-muted-foreground">{item.date}</p>
+                    </div>
+                    <span className={`text-sm font-display font-bold ${item.tokens > 0 ? "text-green-400" : "text-accent"}`}>
+                      {item.tokens > 0 ? "+" : ""}{item.tokens}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/20 text-center">
+              <p className="text-sm font-medium text-foreground">💰 Costo Mensile: <strong className="text-green-400">€0</strong></p>
+              <p className="text-xs text-muted-foreground mt-1">Paghi solo quando ricarichi. Nessun abbonamento.</p>
+            </div>
+          </motion.div>
+        )}
+
         {/* PANIC MODE TAB */}
         {activeTab === "panic" && (
-          <motion.div
-            className="space-y-6 mt-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
+          <motion.div className="space-y-6 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="text-center py-4">
               <AlertTriangle className={`w-12 h-12 mx-auto mb-3 ${panicPercent !== 0 ? "text-accent" : "text-muted-foreground/30"}`} />
               <h3 className="text-lg font-display font-bold text-foreground">Panic Mode</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Modifica tutti i prezzi del menu istantaneamente
-              </p>
+              <p className="text-sm text-muted-foreground mt-1">Modifica tutti i prezzi del menu istantaneamente</p>
             </div>
 
             <div className="p-5 rounded-2xl bg-secondary/50 space-y-4">
@@ -383,10 +545,7 @@ const AdminDashboard = () => {
               </motion.div>
             )}
 
-            <button
-              onClick={() => setPanicPercent(0)}
-              className="w-full py-3 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium"
-            >
+            <button onClick={() => setPanicPercent(0)} className="w-full py-3 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium">
               Resetta a 0%
             </button>
           </motion.div>
@@ -394,41 +553,32 @@ const AdminDashboard = () => {
 
         {/* REVIEWS TAB */}
         {activeTab === "reviews" && (
-          <motion.div
-            className="space-y-4 mt-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="text-center py-4">
               <Star className="w-12 h-12 mx-auto mb-3 text-primary" />
               <h3 className="text-lg font-display font-bold text-foreground">Review Shield</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Gestisci le recensioni in modo intelligente
-              </p>
+              <p className="text-sm text-muted-foreground mt-1">Gestisci le recensioni in modo intelligente</p>
             </div>
 
             <div className="p-4 rounded-2xl bg-secondary/50 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground">⭐ 4-5 stelle</span>
-                <span className="text-xs text-green-400 bg-green-500/10 px-2 py-1 rounded-full">
-                  → Google Reviews
-                </span>
+                <span className="text-xs text-green-400 bg-green-500/10 px-2 py-1 rounded-full">→ Google Reviews</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground">⭐ 1-3 stelle</span>
-                <span className="text-xs text-amber-400 bg-amber-500/10 px-2 py-1 rounded-full">
-                  → Private (solo per te)
-                </span>
+                <span className="text-xs text-amber-400 bg-amber-500/10 px-2 py-1 rounded-full">→ Private (solo per te)</span>
               </div>
             </div>
 
-            {/* Demo reviews */}
             <div className="space-y-3">
               <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Recensioni recenti</p>
               {[
                 { name: "Giulia M.", stars: 5, text: "Pasta incredibile! Torneremo sicuramente.", public: true },
                 { name: "Paolo T.", stars: 2, text: "Servizio lento, pizza fredda.", public: false },
                 { name: "Francesca R.", stars: 4, text: "Ottima carne, ambiente accogliente.", public: true },
+                { name: "Roberto C.", stars: 5, text: "Miglior carbonara di Roma!", public: true },
+                { name: "Chiara B.", stars: 1, text: "Attesa interminabile.", public: false },
               ].map((review, i) => (
                 <div key={i} className={`p-3 rounded-xl ${review.public ? "bg-secondary/50" : "bg-accent/5 border border-accent/20"}`}>
                   <div className="flex justify-between items-center mb-1">
@@ -440,9 +590,7 @@ const AdminDashboard = () => {
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground">{review.text}</p>
-                  {!review.public && (
-                    <p className="text-xs text-accent mt-1">🔒 Privata — non pubblicata</p>
-                  )}
+                  {!review.public && <p className="text-xs text-accent mt-1">🔒 Privata — non pubblicata</p>}
                 </div>
               ))}
             </div>
@@ -451,17 +599,11 @@ const AdminDashboard = () => {
 
         {/* ACADEMY TAB */}
         {activeTab === "academy" && (
-          <motion.div
-            className="space-y-4 mt-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="text-center py-4">
               <GraduationCap className="w-12 h-12 mx-auto mb-3 text-primary" />
               <h3 className="text-lg font-display font-bold text-foreground">Academy</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Mini-video tutorial per il tuo marketing
-              </p>
+              <p className="text-sm text-muted-foreground mt-1">Mini-video tutorial per il tuo marketing</p>
             </div>
 
             {[
@@ -470,6 +612,7 @@ const AdminDashboard = () => {
               { title: "Instagram Stories per ristoranti", duration: "30s", emoji: "📱", done: false },
               { title: "Rispondere alle recensioni negative", duration: "30s", emoji: "💬", done: false },
               { title: "Promozioni last-minute efficaci", duration: "30s", emoji: "🔥", done: false },
+              { title: "QR Code sul tavolo: best practice", duration: "30s", emoji: "📋", done: false },
             ].map((lesson, i) => (
               <div
                 key={i}
