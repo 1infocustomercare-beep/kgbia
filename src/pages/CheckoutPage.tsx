@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, MapPin, Clock, Phone, User, MessageSquare, CreditCard, Check, Smartphone } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Phone, User, MessageSquare, CreditCard, Check, Smartphone, Shield } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -18,6 +18,8 @@ const CheckoutPage = () => {
   const [address, setAddress] = useState("");
   const [tableNumber, setTableNumber] = useState("");
   const [notes, setNotes] = useState("");
+  const [gdprAccepted, setGdprAccepted] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   if (items.length === 0 && !submitted) {
@@ -86,7 +88,7 @@ const CheckoutPage = () => {
     { value: "google", label: "Google Pay", icon: <Smartphone className="w-4 h-4" /> },
   ];
 
-  const isValid = name.trim() && phone.trim() && (
+  const isValid = name.trim() && phone.trim() && gdprAccepted && (
     orderType !== "delivery" || address.trim()
   ) && (
     orderType !== "table" || tableNumber.trim()
@@ -254,6 +256,50 @@ const CheckoutPage = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* GDPR Privacy */}
+        <div className="space-y-3">
+          <div className="flex items-start gap-3">
+            <button
+              onClick={() => setGdprAccepted(!gdprAccepted)}
+              className={`mt-0.5 w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
+                gdprAccepted ? "bg-primary border-primary" : "border-muted-foreground/40"
+              }`}
+            >
+              {gdprAccepted && <Check className="w-3 h-3 text-primary-foreground" />}
+            </button>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Accetto la{" "}
+              <button onClick={() => setShowPrivacy(!showPrivacy)} className="text-primary underline">
+                Privacy Policy e Cookie Policy
+              </button>{" "}
+              del ristorante. I miei dati saranno trattati ai sensi del GDPR (Reg. UE 2016/679) esclusivamente per 
+              l'evasione dell'ordine.
+            </p>
+          </div>
+          <AnimatePresence>
+            {showPrivacy && (
+              <motion.div
+                className="p-4 rounded-xl bg-secondary/50 text-xs text-muted-foreground space-y-2 max-h-48 overflow-y-auto"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <p className="font-semibold text-foreground flex items-center gap-1.5">
+                  <Shield className="w-3.5 h-3.5 text-primary" /> Informativa Privacy
+                </p>
+                <p>I dati personali forniti (nome, telefono, indirizzo) saranno utilizzati esclusivamente per la gestione 
+                e consegna dell'ordine. I dati non saranno ceduti a terzi né utilizzati per finalità di marketing 
+                senza il tuo consenso esplicito.</p>
+                <p>Il titolare del trattamento è il ristorante. Puoi esercitare i tuoi diritti (accesso, rettifica, 
+                cancellazione) contattando direttamente il locale. I dati saranno conservati per il tempo 
+                strettamente necessario alle finalità indicate.</p>
+                <p>Questo sito utilizza cookie tecnici essenziali per il funzionamento del servizio. 
+                Non vengono utilizzati cookie di profilazione.</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 

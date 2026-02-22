@@ -51,12 +51,21 @@ const LandingPage = () => {
         <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Crown className="w-6 h-6 text-primary" />
-            <span className="font-display font-bold text-lg text-foreground">Empire</span>
+            <span className="font-display font-bold text-lg text-foreground tracking-[0.15em] uppercase">Empire</span>
           </div>
-          <div className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="#features" className="hover:text-foreground transition-colors">Funzionalità</a>
-            <a href="#calculator" className="hover:text-foreground transition-colors">Calcolatore ROI</a>
-            <a href="#pricing" className="hover:text-foreground transition-colors">Prezzo</a>
+          <div className="hidden md:flex items-center gap-8 text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground">
+            <a href="#story" className="hover:text-primary transition-colors">Home</a>
+            <a href="#features" className="hover:text-primary transition-colors">Menù</a>
+            <a href="#pricing" className="hover:text-primary transition-colors">Prezzo</a>
+            <a href="#contact" className="hover:text-primary transition-colors">Contatti</a>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/r/impero-roma")}
+              className="hidden md:inline-flex px-5 py-2 rounded-none border border-primary text-primary text-xs font-medium tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors"
+            >
+              Demo Live
+            </button>
           </div>
         </div>
       </nav>
@@ -139,7 +148,7 @@ const LandingPage = () => {
       </section>
 
       {/* La Nostra Storia */}
-      <section className="py-24 px-5 bg-background">
+      <section id="story" className="py-24 px-5 bg-background">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Text */}
           <motion.div
@@ -465,14 +474,40 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-8 px-5">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <Crown className="w-4 h-4 text-primary" />
-            <span>Empire Restaurant Suite</span>
+      {/* Contact / Footer */}
+      <footer id="contact" className="border-t border-border py-12 px-5">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Crown className="w-5 h-5 text-primary" />
+                <span className="font-display font-bold text-foreground tracking-[0.1em] uppercase">Empire</span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                La suite definitiva per ristoranti che vogliono liberarsi dalle commissioni dei delivery.
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">Contatti</p>
+              <div className="space-y-1.5 text-xs text-muted-foreground">
+                <p>📧 info@empire-suite.it</p>
+                <p>📞 +39 06 1234 5678</p>
+                <p>📍 Roma, Italia</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">Link Utili</p>
+              <div className="space-y-1.5 text-xs text-muted-foreground">
+                <a href="#features" className="block hover:text-primary transition-colors">Funzionalità</a>
+                <a href="#calculator" className="block hover:text-primary transition-colors">Calcolatore ROI</a>
+                <a href="#pricing" className="block hover:text-primary transition-colors">Prezzo</a>
+              </div>
+            </div>
           </div>
-          <p>© 2026 Empire. Tutti i diritti riservati.</p>
+          <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+            <p>© 2026 Empire Restaurant Suite. Tutti i diritti riservati.</p>
+            <p>P.IVA IT12345678901</p>
+          </div>
         </div>
       </footer>
     </div>
