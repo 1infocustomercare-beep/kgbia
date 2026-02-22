@@ -5,7 +5,7 @@ import {
   LogOut, AlertTriangle, Star, GraduationCap,
   Edit, Trash2, DollarSign, Users, ShoppingCart,
   Camera, Sparkles, Coins, Wand2, QrCode, ExternalLink,
-  Save, X, Check, Bot, Send, ShieldCheck, Lock, Key
+  Save, X, Check, Bot, Send, ShieldCheck, Lock, Key, Download
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -15,6 +15,7 @@ import { demoMenu } from "@/data/demo-restaurant";
 import type { MenuItem } from "@/types/restaurant";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 import { toast } from "@/hooks/use-toast";
+import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 
 type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy";
 
@@ -31,7 +32,6 @@ const AdminDashboard = () => {
   const [ocrUploading, setOcrUploading] = useState(false);
   const [ocrResult, setOcrResult] = useState<{name: string; description: string; price: number; category: string}[] | null>(null);
   const [ocrImporting, setOcrImporting] = useState(false);
-  const fileInputRef = (typeof window !== 'undefined') ? { current: null as HTMLInputElement | null } : { current: null };
   const [todayRevenue, setTodayRevenue] = useState(0);
   const [todayOrderCount, setTodayOrderCount] = useState(0);
   const [reviews, setReviews] = useState<any[]>([]);
@@ -98,7 +98,6 @@ const AdminDashboard = () => {
         .eq("restaurant_id", restaurant.id)
         .eq("is_active", true);
       if (pins) setExistingPins(pins);
-      // Fetch vault config
       const { data: fisco } = await supabase
         .from("fisco_configs").select("*")
         .eq("restaurant_id", restaurant.id).single();
@@ -106,7 +105,6 @@ const AdminDashboard = () => {
         setVaultConfig(fisco);
         setVaultProvider(fisco.provider);
       }
-      // Fetch restaurant tables
       const { data: tables } = await supabase
         .from("restaurant_tables").select("*")
         .eq("restaurant_id", restaurant.id)
@@ -152,7 +150,6 @@ const AdminDashboard = () => {
       toast({ title: "Token IA esauriti", description: "Ricarica il wallet gettoni per utilizzare il Menu Creator." });
       return;
     }
-    // Trigger hidden file input
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
@@ -167,7 +164,6 @@ const AdminDashboard = () => {
       setOcrUploading(true);
       setOcrResult(null);
       try {
-        // Convert to base64
         const reader = new FileReader();
         const base64 = await new Promise<string>((resolve, reject) => {
           reader.onload = () => resolve(reader.result as string);
@@ -175,7 +171,6 @@ const AdminDashboard = () => {
           reader.readAsDataURL(file);
         });
 
-        // Call edge function
         const { data, error } = await supabase.functions.invoke("ai-menu", {
           body: { action: "ocr", imageBase64: base64 },
         });
@@ -220,7 +215,6 @@ const AdminDashboard = () => {
       const { error } = await supabase.from("menu_items").insert(inserts);
       if (error) throw error;
 
-      // Refresh menu items
       const { data: items } = await supabase.from("menu_items").select("*")
         .eq("restaurant_id", restaurantId).order("sort_order", { ascending: true });
       if (items && items.length > 0) {
@@ -279,7 +273,6 @@ const AdminDashboard = () => {
     if (!restaurant || !vaultKey.trim()) return;
     setVaultValidating(true);
 
-    // Simulate API validation ping
     setTimeout(async () => {
       await supabase.from("fisco_configs").update({
         api_key_encrypted: vaultKey,
@@ -331,8 +324,6 @@ const AdminDashboard = () => {
     await signOut();
     navigate("/admin");
   };
-
-  const qrSvg = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white" rx="16"/><rect x="20" y="20" width="60" height="60" rx="4" fill="#1a1a1a"/><rect x="28" y="28" width="44" height="44" rx="2" fill="white"/><rect x="36" y="36" width="28" height="28" rx="2" fill="#1a1a1a"/><rect x="120" y="20" width="60" height="60" rx="4" fill="#1a1a1a"/><rect x="128" y="28" width="44" height="44" rx="2" fill="white"/><rect x="136" y="36" width="28" height="28" rx="2" fill="#1a1a1a"/><rect x="20" y="120" width="60" height="60" rx="4" fill="#1a1a1a"/><rect x="28" y="128" width="44" height="44" rx="2" fill="white"/><rect x="36" y="136" width="28" height="28" rx="2" fill="#1a1a1a"/><rect x="90" y="90" width="20" height="20" fill="#1a1a1a"/><rect x="120" y="120" width="16" height="16" fill="#1a1a1a"/><rect x="144" y="120" width="16" height="16" fill="#1a1a1a"/><rect x="120" y="144" width="16" height="16" fill="#1a1a1a"/><rect x="144" y="144" width="16" height="16" fill="#1a1a1a"/><rect x="168" y="144" width="12" height="12" fill="#1a1a1a"/><rect x="120" y="168" width="60" height="12" rx="2" fill="#1a1a1a"/></svg>`)}`;
 
   const activeOrders = orders.filter(o => ["pending", "preparing", "ready"].includes(o.status));
   const allCategories = [...new Set(menuItems.map(i => i.category))];
@@ -399,7 +390,6 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* Vault status alert */}
             {vaultConfig && !vaultConfig.configured && (
               <div className="p-4 rounded-2xl bg-accent/5 border border-accent/20 flex items-center gap-3">
                 <Lock className="w-5 h-5 text-accent flex-shrink-0" />
@@ -417,7 +407,7 @@ const AdminDashboard = () => {
                   <div key={order.id} className="p-3 rounded-xl bg-secondary/50 flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-foreground">{order.customer_name || "Cliente"}</p>
-                      <p className="text-xs text-muted-foreground">€{Number(order.total).toFixed(2)} · {order.order_type}</p>
+                      <p className="text-xs text-muted-foreground">€{Number(order.total).toFixed(2)} · {order.order_type === "table" ? `Tavolo ${order.table_number}` : order.order_type === "delivery" ? "Consegna" : "Asporto"}</p>
                     </div>
                     <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || ""}`}>
                       {statusLabels[order.status] || order.status}
@@ -473,7 +463,7 @@ const AdminDashboard = () => {
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-semibold text-foreground">Gestione Cucina</h3>
               <button onClick={() => window.open("/kitchen", "_blank")}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium">
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium min-h-[44px]">
                 <ExternalLink className="w-3.5 h-3.5" />
                 Apri Vista Cucina
               </button>
@@ -489,9 +479,9 @@ const AdminDashboard = () => {
               <div className="flex gap-2">
                 <input type="text" inputMode="numeric" placeholder="Nuovo PIN (4-6 cifre)" value={kitchenPin}
                   onChange={(e) => setKitchenPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  className="flex-1 px-3 py-2.5 rounded-xl bg-card text-foreground text-base font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  className="flex-1 px-3 py-2.5 rounded-xl bg-card text-foreground text-base font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
                 <button onClick={handleCreatePin} disabled={kitchenPin.length < 4}
-                  className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium disabled:opacity-40">
+                  className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium disabled:opacity-40 min-h-[44px]">
                   Genera PIN
                 </button>
               </div>
@@ -516,7 +506,9 @@ const AdminDashboard = () => {
                       <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[order.status] || ""}`}>
                         {statusLabels[order.status] || order.status}
                       </span>
-                      <p className="text-xs text-muted-foreground mt-0.5">{order.customer_name || "Cliente"}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {order.customer_name || "Cliente"} · {order.order_type === "table" ? `Tavolo ${order.table_number}` : order.order_type === "delivery" ? "Consegna" : "Asporto"}
+                      </p>
                     </div>
                   </div>
                   <div className="space-y-1 mb-3">
@@ -526,13 +518,13 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex gap-2">
                     {order.status === "pending" && (
-                      <button onClick={() => updateOrderStatus(order.id, "preparing")} className="flex-1 py-2 rounded-xl bg-blue-500/20 text-blue-400 text-sm font-medium">Inizia Preparazione</button>
+                      <button onClick={() => updateOrderStatus(order.id, "preparing")} className="flex-1 py-3 rounded-xl bg-blue-500/20 text-blue-400 text-sm font-medium min-h-[48px]">🔥 Inizia Preparazione</button>
                     )}
                     {order.status === "preparing" && (
-                      <button onClick={() => updateOrderStatus(order.id, "ready")} className="flex-1 py-2 rounded-xl bg-green-500/20 text-green-400 text-sm font-medium">Segna Pronto</button>
+                      <button onClick={() => updateOrderStatus(order.id, "ready")} className="flex-1 py-3 rounded-xl bg-green-500/20 text-green-400 text-sm font-medium min-h-[48px]">✅ Segna Pronto</button>
                     )}
                     {order.status === "ready" && (
-                      <button onClick={() => updateOrderStatus(order.id, "delivered")} className="flex-1 py-2 rounded-xl bg-muted text-muted-foreground text-sm font-medium">Consegnato</button>
+                      <button onClick={() => updateOrderStatus(order.id, "delivered")} className="flex-1 py-3 rounded-xl bg-muted text-muted-foreground text-sm font-medium min-h-[48px]">📦 Consegnato</button>
                     )}
                   </div>
                 </div>
@@ -549,7 +541,7 @@ const AdminDashboard = () => {
               <h3 className="text-lg font-display font-bold text-foreground">AI Menu Creator</h3>
               <p className="text-sm text-muted-foreground mt-1">Digitalizzazione intelligente: foto → OCR → menu professionale in 60 secondi</p>
             </div>
-            <motion.div className="border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center cursor-pointer hover:border-primary/50 transition-colors"
+            <motion.div className="border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center cursor-pointer hover:border-primary/50 transition-colors min-h-[120px]"
               whileTap={{ scale: 0.98 }} onClick={handleOcrUpload}>
               {ocrUploading ? (
                 <div className="space-y-3">
@@ -585,7 +577,7 @@ const AdminDashboard = () => {
                   </motion.div>
                 ))}
                 <button onClick={handleImportOcrDishes} disabled={ocrImporting}
-                  className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm gold-glow disabled:opacity-50">
+                  className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm gold-glow disabled:opacity-50 min-h-[48px]">
                   {ocrImporting ? "Importazione in corso..." : `Importa ${ocrResult.length} piatti nel catalogo`}
                 </button>
               </motion.div>
@@ -596,7 +588,6 @@ const AdminDashboard = () => {
         {/* VAULT FISCALE — Private key vault with AI-Mary */}
         {activeTab === "vault" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            {/* Vault header */}
             <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20">
               <div className="flex items-center gap-2 mb-1">
                 <ShieldCheck className="w-5 h-5 text-primary" />
@@ -607,7 +598,6 @@ const AdminDashboard = () => {
               </p>
             </div>
 
-            {/* Current status */}
             <div className={`p-4 rounded-2xl border ${
               vaultConfig?.configured ? "bg-green-500/5 border-green-500/20" : "bg-accent/5 border-accent/20"
             }`}>
@@ -628,14 +618,13 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* Vault configuration form */}
             {(!vaultConfig?.configured || vaultEditing) && (
               <div className="p-4 rounded-2xl bg-card border border-border space-y-3">
                 <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Configura il tuo Vault Fiscale protetto</p>
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">Provider fiscale</label>
                   <select value={vaultProvider} onChange={(e) => setVaultProvider(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30">
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]">
                     <option value="Scontrino.it">Scontrino.it</option>
                     <option value="Aruba">Aruba Fatturazione</option>
                   </select>
@@ -644,26 +633,26 @@ const AdminDashboard = () => {
                   <label className="text-xs text-muted-foreground mb-1 block">Chiave API (criptata automaticamente)</label>
                   <input type="password" placeholder="Inserisci la tua chiave API privata..." value={vaultKey}
                     onChange={(e) => setVaultKey(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
                 </div>
                 <div className="flex gap-2">
                   <button onClick={handleVaultSave} disabled={!vaultKey.trim() || vaultValidating}
-                    className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-40">
+                    className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-40 min-h-[44px]">
                     {vaultValidating ? (
                       <>
                         <motion.div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full"
                           animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
-                        AI-Mary sta validando...
+                        Validazione...
                       </>
                     ) : (
                       <>
                         <ShieldCheck className="w-4 h-4" />
-                        Cripta e Valida Connessione
+                        Cripta e Valida
                       </>
                     )}
                   </button>
                   {vaultEditing && (
-                    <button onClick={() => setVaultEditing(false)} className="px-4 py-2 rounded-xl bg-secondary text-secondary-foreground text-sm">
+                    <button onClick={() => setVaultEditing(false)} className="px-4 py-2 rounded-xl bg-secondary text-secondary-foreground text-sm min-h-[44px]">
                       Annulla
                     </button>
                   )}
@@ -673,7 +662,7 @@ const AdminDashboard = () => {
 
             {vaultConfig?.configured && !vaultEditing && (
               <button onClick={() => setVaultEditing(true)}
-                className="w-full py-2.5 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium">
+                className="w-full py-2.5 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium min-h-[44px]">
                 Aggiorna credenziali Vault
               </button>
             )}
@@ -695,12 +684,12 @@ const AdminDashboard = () => {
                 ))}
               </div>
               <div className="p-3 border-t border-border flex gap-2">
-                <input type="text" placeholder="Chiedi a Mary: setup, sicurezza, provider..." value={maryInput}
+                <input type="text" placeholder="Chiedi a Mary..." value={maryInput}
                   onChange={(e) => setMaryInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleMaryVaultMessage()}
-                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
                 <motion.button onClick={handleMaryVaultMessage}
-                  className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center" whileTap={{ scale: 0.9 }}>
+                  className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center min-w-[44px] min-h-[44px]" whileTap={{ scale: 0.9 }}>
                   <Send className="w-4 h-4" />
                 </motion.button>
               </div>
@@ -714,27 +703,27 @@ const AdminDashboard = () => {
             <div className="text-center py-4">
               <QrCode className="w-12 h-12 mx-auto mb-3 text-primary" />
               <h3 className="text-lg font-display font-bold text-foreground">QR Master — Gestione Tavoli</h3>
-              <p className="text-sm text-muted-foreground mt-1">Mappa interattiva, QR univoci e stato real-time</p>
+              <p className="text-sm text-muted-foreground mt-1">QR univoci per tavolo, mappa interattiva e stato real-time</p>
             </div>
 
-            {/* Main QR */}
+            {/* Main restaurant QR */}
             <div className="flex flex-col items-center">
               <div className="p-6 rounded-3xl bg-card border border-border">
                 <div className="bg-white rounded-2xl p-4 mb-4">
-                  <img src={qrSvg} alt="QR Code" className="w-40 h-40 mx-auto" />
+                  <img src={generateQRDataUrl(menuUrl)} alt="QR Code" className="w-40 h-40 mx-auto" />
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-display font-semibold text-foreground">{restaurantName}</p>
-                  <p className="text-xs text-muted-foreground mt-1 break-all">{menuUrl}</p>
+                  <p className="text-xs text-muted-foreground mt-1 break-all max-w-[200px]">{menuUrl}</p>
                 </div>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <button className="py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm gold-glow flex items-center justify-center gap-2"
-                onClick={() => { const link = document.createElement("a"); link.href = qrSvg; link.download = `qr-${restaurantSlug}.svg`; link.click(); }}>
-                <QrCode className="w-4 h-4" /> Scarica QR
+              <button className="py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm gold-glow flex items-center justify-center gap-2 min-h-[48px]"
+                onClick={() => downloadQR(menuUrl, `qr-${restaurantSlug}`)}>
+                <Download className="w-4 h-4" /> Scarica QR
               </button>
-              <button className="py-3 rounded-xl bg-secondary text-secondary-foreground font-medium text-sm flex items-center justify-center gap-2"
+              <button className="py-3 rounded-xl bg-secondary text-secondary-foreground font-medium text-sm flex items-center justify-center gap-2 min-h-[48px]"
                 onClick={() => window.open(menuUrl, "_blank")}>
                 <ExternalLink className="w-4 h-4" /> Anteprima
               </button>
@@ -758,7 +747,7 @@ const AdminDashboard = () => {
                       .eq("restaurant_id", restaurant.id).order("table_number");
                     if (data) setRestaurantTables(data);
                     toast({ title: `${newTableCount} tavoli creati` });
-                  }} className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium">
+                  }} className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium min-h-[44px]">
                     Genera {newTableCount} tavoli
                   </button>
                 )}
@@ -771,7 +760,7 @@ const AdminDashboard = () => {
                     <span className="text-xs text-muted-foreground">Quantità:</span>
                     <input type="number" min="1" max="50" value={newTableCount}
                       onChange={(e) => setNewTableCount(Math.min(50, Math.max(1, Number(e.target.value))))}
-                      className="w-16 px-2 py-1 rounded-lg bg-card text-foreground text-base text-center focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                      className="w-16 px-2 py-1 rounded-lg bg-card text-foreground text-base text-center focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
                   </div>
                 </div>
               )}
@@ -798,7 +787,7 @@ const AdminDashboard = () => {
                         navigator.clipboard.writeText(tableUrl);
                         toast({ title: `Link tavolo ${table.table_number} copiato` });
                       }}
-                      className={`p-3 rounded-xl border text-center transition-all ${cfg.bg}`}
+                      className={`p-3 rounded-xl border text-center transition-all min-h-[72px] ${cfg.bg}`}
                       whileTap={{ scale: 0.95 }}>
                       <p className="text-lg font-display font-bold text-foreground">{table.table_number}</p>
                       <div className="flex items-center justify-center gap-1 mt-1">
@@ -810,9 +799,36 @@ const AdminDashboard = () => {
                 })}
               </div>
               {restaurantTables.length > 0 && (
-                <p className="text-[10px] text-muted-foreground text-center mt-2">
-                  Tap = cambia stato · Doppio tap = copia link QR tavolo
-                </p>
+                <div className="mt-3 space-y-2">
+                  <p className="text-[10px] text-muted-foreground text-center">
+                    Tap = cambia stato · Doppio tap = copia link QR tavolo
+                  </p>
+                  {/* Per-table QR download */}
+                  <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+                    {restaurantTables.slice(0, 12).map((table) => {
+                      const tableUrl = `${menuUrl}?table=${table.table_number}`;
+                      return (
+                        <button key={table.id}
+                          onClick={() => downloadQR(tableUrl, `qr-tavolo-${table.table_number}`)}
+                          className="flex-shrink-0 flex flex-col items-center gap-1 p-2 rounded-xl bg-card border border-border hover:border-primary/30 transition-colors min-w-[64px]">
+                          <img src={generateQRDataUrl(tableUrl, 80)} alt={`T${table.table_number}`} className="w-10 h-10 rounded" />
+                          <span className="text-[10px] text-muted-foreground">T{table.table_number}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {restaurantTables.length > 12 && (
+                    <button onClick={() => {
+                      restaurantTables.forEach((table) => {
+                        const url = `${menuUrl}?table=${table.table_number}`;
+                        downloadQR(url, `qr-tavolo-${table.table_number}`);
+                      });
+                      toast({ title: "Download QR completato", description: `${restaurantTables.length} QR scaricati` });
+                    }} className="w-full py-2 rounded-xl bg-secondary text-secondary-foreground text-xs font-medium min-h-[44px]">
+                      Scarica tutti i QR ({restaurantTables.length})
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           </motion.div>
@@ -852,7 +868,7 @@ const AdminDashboard = () => {
                   </p>
                 </div>
                 <motion.button onClick={handlePanicApply}
-                  className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-semibold text-sm"
+                  className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-semibold text-sm min-h-[48px]"
                   whileTap={{ scale: 0.97 }}>
                   🚨 Esegui Panic Mode
                 </motion.button>
@@ -922,7 +938,7 @@ const AdminDashboard = () => {
               { title: "Promozioni flash: urgenza e conversione", emoji: "🔥", done: false },
               { title: "QR Code strategico: posizionamento e best practice", emoji: "📋", done: false },
             ].map((lesson, i) => (
-              <div key={i} className={`flex items-center gap-3 p-4 rounded-xl ${
+              <div key={i} className={`flex items-center gap-3 p-4 rounded-xl min-h-[56px] ${
                 lesson.done ? "bg-primary/10 border border-primary/20" : "bg-secondary/50"
               }`}>
                 <span className="text-2xl">{lesson.emoji}</span>
