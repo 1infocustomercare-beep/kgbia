@@ -29,7 +29,9 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [aiTokens, setAiTokens] = useState(5);
   const [ocrUploading, setOcrUploading] = useState(false);
-  const [ocrResult, setOcrResult] = useState<string[] | null>(null);
+  const [ocrResult, setOcrResult] = useState<{name: string; description: string; price: number; category: string}[] | null>(null);
+  const [ocrImporting, setOcrImporting] = useState(false);
+  const fileInputRef = (typeof window !== 'undefined') ? { current: null as HTMLInputElement | null } : { current: null };
   const [todayRevenue, setTodayRevenue] = useState(0);
   const [todayOrderCount, setTodayOrderCount] = useState(0);
   const [reviews, setReviews] = useState<any[]>([]);
@@ -142,18 +144,91 @@ const AdminDashboard = () => {
       toast({ title: "Token IA esauriti", description: "Ricarica il wallet gettoni per utilizzare il Menu Creator." });
       return;
     }
-    setOcrUploading(true);
-    setTimeout(() => {
-      setOcrResult([
-        "Bruschetta al Pomodoro - €7.00",
-        "Spaghetti alla Carbonara - €12.00",
-        "Pizza Napoli - €10.00",
-        "Insalata Mista - €6.50",
-        "Dolce del Giorno - €5.00",
-      ]);
-      setAiTokens(t => t - 1);
+    // Trigger hidden file input
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.capture = "environment";
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      if (file.size > 10 * 1024 * 1024) {
+        toast({ title: "File troppo grande", description: "Massimo 10MB per immagine.", variant: "destructive" });
+        return;
+      }
+      setOcrUploading(true);
+      setOcrResult(null);
+      try {
+        // Convert to base64
+        const reader = new FileReader();
+        const base64 = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        // Call edge function
+        const { data, error } = await supabase.functions.invoke("ai-menu", {
+          body: { action: "ocr", imageBase64: base64 },
+        });
+
+        if (error) throw error;
+
+        if (data?.dishes && data.dishes.length > 0) {
+          setOcrResult(data.dishes);
+          setAiTokens(t => Math.max(0, t - 1));
+          toast({ title: `${data.dishes.length} piatti rilevati`, description: "Revisiona e importa nel tuo catalogo digitale." });
+        } else {
+          toast({ title: "Nessun piatto rilevato", description: "Prova con una foto più nitida del menu.", variant: "destructive" });
+        }
+      } catch (err: any) {
+        console.error("OCR error:", err);
+        toast({ title: "Errore OCR", description: err?.message || "Impossibile analizzare il menu. Riprova.", variant: "destructive" });
+      }
       setOcrUploading(false);
-    }, 2000);
+    };
+    input.click();
+  };
+
+  const handleImportOcrDishes = async () => {
+    if (!ocrResult || ocrResult.length === 0) return;
+    const restaurantId = restaurant?.id;
+    if (!restaurantId) {
+      toast({ title: "Nessun ristorante", description: "Crea prima il tuo ristorante.", variant: "destructive" });
+      return;
+    }
+    setOcrImporting(true);
+    try {
+      const inserts = ocrResult.map((dish, i) => ({
+        restaurant_id: restaurantId,
+        name: dish.name,
+        description: dish.description || "",
+        price: dish.price || 0,
+        category: dish.category || "Altro",
+        sort_order: i,
+        is_active: true,
+        is_popular: false,
+      }));
+      const { error } = await supabase.from("menu_items").insert(inserts);
+      if (error) throw error;
+
+      // Refresh menu items
+      const { data: items } = await supabase.from("menu_items").select("*")
+        .eq("restaurant_id", restaurantId).order("sort_order", { ascending: true });
+      if (items && items.length > 0) {
+        setMenuItems(items.map(i => ({
+          id: i.id, name: i.name, description: i.description || "",
+          price: Number(i.price), image: i.image_url || "",
+          category: i.category, allergens: i.allergens || [], isPopular: i.is_popular,
+        })));
+      }
+      setOcrResult(null);
+      toast({ title: "Menu importato!", description: `${inserts.length} piatti aggiunti al tuo catalogo digitale.` });
+    } catch (err: any) {
+      console.error("Import error:", err);
+      toast({ title: "Errore importazione", description: err?.message || "Riprova.", variant: "destructive" });
+    }
+    setOcrImporting(false);
   };
 
   const handlePanicApply = async () => {
@@ -487,18 +562,23 @@ const AdminDashboard = () => {
                 <h4 className="text-sm font-semibold text-foreground">{ocrResult.length} piatti rilevati dall'IA</h4>
                 {ocrResult.map((dish, i) => (
                   <motion.div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50"
-                    initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
+                    initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
                     <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <Wand2 className="w-5 h-5 text-primary" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-foreground">{dish}</p>
-                      <p className="text-xs text-primary">Foto food-porn generabile</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">{dish.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{dish.description}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-xs font-semibold text-primary">€{dish.price?.toFixed(2) || "0.00"}</span>
+                        <span className="text-xs text-muted-foreground/60">· {dish.category || "Altro"}</span>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
-                <button className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm gold-glow">
-                  Importa nel catalogo digitale
+                <button onClick={handleImportOcrDishes} disabled={ocrImporting}
+                  className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm gold-glow disabled:opacity-50">
+                  {ocrImporting ? "Importazione in corso..." : `Importa ${ocrResult.length} piatti nel catalogo`}
                 </button>
               </motion.div>
             )}
