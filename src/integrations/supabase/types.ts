@@ -113,6 +113,56 @@ export type Database = {
           },
         ]
       }
+      customer_activity: {
+        Row: {
+          created_at: string
+          customer_name: string | null
+          customer_phone: string
+          discount_sent: boolean
+          discount_sent_at: string | null
+          id: string
+          last_order_at: string
+          restaurant_id: string
+          total_orders: number
+          total_spent: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string | null
+          customer_phone: string
+          discount_sent?: boolean
+          discount_sent_at?: string | null
+          id?: string
+          last_order_at?: string
+          restaurant_id: string
+          total_orders?: number
+          total_spent?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string | null
+          customer_phone?: string
+          discount_sent?: boolean
+          discount_sent_at?: string | null
+          id?: string
+          last_order_at?: string
+          restaurant_id?: string
+          total_orders?: number
+          total_spent?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_activity_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fisco_configs: {
         Row: {
           api_key_encrypted: string | null
@@ -380,6 +430,8 @@ export type Database = {
           created_at: string
           id: string
           label: string | null
+          pos_x: number | null
+          pos_y: number | null
           restaurant_id: string
           seats: number | null
           status: string
@@ -390,6 +442,8 @@ export type Database = {
           created_at?: string
           id?: string
           label?: string | null
+          pos_x?: number | null
+          pos_y?: number | null
           restaurant_id: string
           seats?: number | null
           status?: string
@@ -400,6 +454,8 @@ export type Database = {
           created_at?: string
           id?: string
           label?: string | null
+          pos_x?: number | null
+          pos_y?: number | null
           restaurant_id?: string
           seats?: number | null
           status?: string
