@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   Crown, ChevronRight, Check, Calculator, Play, Star, 
   Zap, Shield, Smartphone, TrendingUp, ArrowRight, X,
-  UtensilsCrossed, Eye, Sparkles, Lock
+  UtensilsCrossed, Eye, Sparkles, Lock, Menu
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import restaurantLogo from "@/assets/restaurant-logo.png";
@@ -18,6 +18,35 @@ const LandingPage = () => {
   const [monthlyOrders, setMonthlyOrders] = useState(500);
   const [avgOrder, setAvgOrder] = useState(25);
   const [showVideo, setShowVideo] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+
+  const navLinks = [
+    { id: "home", href: "#hero", label: "Home" },
+    { id: "features", href: "#features", label: "Menù" },
+    { id: "pricing", href: "#pricing", label: "Prezzo" },
+    { id: "contact", href: "#contact", label: "Contatti" },
+  ];
+
+  // Track active section on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ["contact", "pricing", "features", "story", "hero"];
+      for (const id of sections) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 120) {
+            if (id === "hero" || id === "story") setActiveSection("home");
+            else setActiveSection(id);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // ROI Calculator
   const justEatFee = 0.30; // 30%
@@ -47,18 +76,37 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Navigation */}
-      <nav className="fixed top-0 inset-x-0 z-50 glass-strong">
+      <nav className="fixed top-0 inset-x-0 z-50 glass-strong border-b border-border/30">
         <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <a href="#hero" className="flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
             <Crown className="w-6 h-6 text-primary" />
             <span className="font-display font-bold text-lg text-foreground tracking-[0.15em] uppercase">Empire</span>
+          </a>
+
+          {/* Desktop links */}
+          <div className="hidden md:flex items-center gap-8 text-xs font-medium tracking-[0.15em] uppercase">
+            {navLinks.map((link) => (
+              <a
+                key={link.id}
+                href={link.href}
+                className={`transition-colors relative py-1 ${
+                  activeSection === link.id
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                {link.label}
+                {activeSection === link.id && (
+                  <motion.span
+                    layoutId="nav-underline"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+              </a>
+            ))}
           </div>
-          <div className="hidden md:flex items-center gap-8 text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground">
-            <a href="#story" className="hover:text-primary transition-colors">Home</a>
-            <a href="#features" className="hover:text-primary transition-colors">Menù</a>
-            <a href="#pricing" className="hover:text-primary transition-colors">Prezzo</a>
-            <a href="#contact" className="hover:text-primary transition-colors">Contatti</a>
-          </div>
+
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate("/r/impero-roma")}
@@ -66,12 +114,56 @@ const LandingPage = () => {
             >
               Demo Live
             </button>
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-foreground"
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile dropdown */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden overflow-hidden glass-strong border-t border-border/30"
+            >
+              <div className="flex flex-col items-center gap-1 py-4">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`w-full text-center py-3 text-sm font-medium tracking-[0.15em] uppercase transition-colors ${
+                      activeSection === link.id
+                        ? "text-primary bg-primary/5"
+                        : "text-muted-foreground hover:text-primary"
+                    }`}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                <button
+                  onClick={() => { navigate("/r/impero-roma"); setMobileMenuOpen(false); }}
+                  className="mt-2 mx-5 w-[calc(100%-2.5rem)] py-3 border border-primary text-primary text-sm font-medium tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  Demo Live
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section — Full-screen Video */}
-      <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+      <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         {/* Video Background */}
         <video
           src={heroVideo}
