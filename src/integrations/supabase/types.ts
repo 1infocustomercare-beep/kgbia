@@ -415,10 +415,12 @@ export type Database = {
           address: string | null
           city: string | null
           created_at: string
+          email: string | null
           id: string
           is_active: boolean
           logo_url: string | null
           name: string
+          opening_hours: Json | null
           owner_id: string | null
           phone: string | null
           primary_color: string | null
@@ -432,10 +434,12 @@ export type Database = {
           address?: string | null
           city?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           is_active?: boolean
           logo_url?: string | null
           name: string
+          opening_hours?: Json | null
           owner_id?: string | null
           phone?: string | null
           primary_color?: string | null
@@ -449,10 +453,12 @@ export type Database = {
           address?: string | null
           city?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           is_active?: boolean
           logo_url?: string | null
           name?: string
+          opening_hours?: Json | null
           owner_id?: string | null
           phone?: string | null
           primary_color?: string | null
