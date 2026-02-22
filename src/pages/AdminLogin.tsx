@@ -42,25 +42,14 @@ const AdminLogin = () => {
       const { error } = await signUp(email, password, fullName);
       if (error) {
         setError(error.message);
-        setLoading(false);
       } else {
-        // Auto-confirm is enabled, so user is logged in immediately.
-        // Assign restaurant_admin role for new signups
-        const { data: sessionData } = await supabase.auth.getSession();
-        const newUserId = sessionData?.session?.user?.id;
-        if (newUserId) {
-          await supabase.from("user_roles").upsert(
-            { user_id: newUserId, role: "restaurant_admin" as any },
-            { onConflict: "user_id,role" }
-          );
-        }
         toast({
           title: "Account creato con successo!",
           description: "Benvenuto nella piattaforma Empire.",
         });
-        // The useEffect redirect will handle navigation
-        setLoading(false);
+        // Auto-confirm is on, so the useEffect redirect will handle navigation
       }
+      setLoading(false);
       return;
     }
 
