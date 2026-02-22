@@ -197,7 +197,7 @@ const CheckoutPage = () => {
               placeholder="Nome e cognome"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
           <div className="relative">
@@ -207,7 +207,7 @@ const CheckoutPage = () => {
               placeholder="Telefono"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
           <AnimatePresence>
@@ -224,7 +224,7 @@ const CheckoutPage = () => {
                   placeholder="Indirizzo di consegna"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
               </motion.div>
             )}
@@ -243,7 +243,7 @@ const CheckoutPage = () => {
                   placeholder="Numero tavolo"
                   value={tableNumber}
                   onChange={(e) => setTableNumber(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
               </motion.div>
             )}
@@ -254,7 +254,7 @@ const CheckoutPage = () => {
               placeholder="Note aggiuntive..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground resize-none h-20 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground resize-none h-20 focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
         </div>
