@@ -493,8 +493,20 @@ const AdminDashboard = () => {
   const activeOrders = orders.filter(o => ["pending", "preparing", "ready"].includes(o.status));
   const allCategories = [...new Set(menuItems.map(i => i.category))];
 
+  // Loading state
+  if (restLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-muted-foreground">Caricamento...</p>
+        </div>
+      </div>
+    );
+  }
+
   // Show restaurant creation if no restaurant exists
-  if (!restLoading && !restaurant) {
+  if (!restaurant) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
         <motion.div className="w-full max-w-sm space-y-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
