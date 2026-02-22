@@ -3,6 +3,23 @@ import dishPizza from "@/assets/dish-pizza.jpg";
 import dishTiramisu from "@/assets/dish-tiramisu.jpg";
 import dishBruschetta from "@/assets/dish-bruschetta.jpg";
 import dishSteak from "@/assets/dish-steak.jpg";
+import dishBurrata from "@/assets/dish-burrata.jpg";
+import dishTagliere from "@/assets/dish-tagliere.jpg";
+import dishRisotto from "@/assets/dish-risotto.jpg";
+import dishCacioPepe from "@/assets/dish-cacio-pepe.jpg";
+import dishPaccheri from "@/assets/dish-paccheri.jpg";
+import dishDiavola from "@/assets/dish-diavola.jpg";
+import dishQuattroFormaggi from "@/assets/dish-quattro-formaggi.jpg";
+import dishTartufata from "@/assets/dish-tartufata.jpg";
+import dishCarpaccio from "@/assets/dish-carpaccio.jpg";
+import dishBranzino from "@/assets/dish-branzino.jpg";
+import dishTagliata from "@/assets/dish-tagliata.jpg";
+import dishPannaCotta from "@/assets/dish-panna-cotta.jpg";
+import dishCannolo from "@/assets/dish-cannolo.jpg";
+import dishAcqua from "@/assets/dish-acqua.jpg";
+import dishProsecco from "@/assets/dish-prosecco.jpg";
+import dishChianti from "@/assets/dish-chianti.jpg";
+import dishCocktail from "@/assets/dish-cocktail.jpg";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 import type { MenuItem, Restaurant } from "@/types/restaurant";
 
@@ -31,7 +48,7 @@ export const demoMenu: MenuItem[] = [
     name: "Carpaccio di Manzo",
     description: "Fettine sottili di filetto di Fassona, rucola selvatica, scaglie di Parmigiano 36 mesi, olio al tartufo.",
     price: 16.0,
-    image: dishSteak,
+    image: dishCarpaccio,
     category: "Antipasti",
     allergens: ["latticini"],
   },
@@ -40,7 +57,7 @@ export const demoMenu: MenuItem[] = [
     name: "Burrata Pugliese",
     description: "Burrata freschissima di Andria su letto di pomodorini confit, pesto di basilico genovese DOP.",
     price: 14.0,
-    image: dishBruschetta,
+    image: dishBurrata,
     category: "Antipasti",
     allergens: ["latticini"],
     isPopular: true,
@@ -50,7 +67,7 @@ export const demoMenu: MenuItem[] = [
     name: "Tagliere Imperiale",
     description: "Selezione di salumi artigianali, formaggi stagionati, miele di acacia, confettura di fichi e grissini.",
     price: 22.0,
-    image: dishBruschetta,
+    image: dishTagliere,
     category: "Antipasti",
     allergens: ["glutine", "latticini"],
   },
@@ -70,7 +87,7 @@ export const demoMenu: MenuItem[] = [
     name: "Risotto allo Zafferano",
     description: "Riso Carnaroli mantecato con zafferano di Navelli, midollo di vitello e foglia d'oro 24k.",
     price: 20.0,
-    image: dishPasta,
+    image: dishRisotto,
     category: "Primi",
     allergens: ["latticini"],
   },
@@ -79,7 +96,7 @@ export const demoMenu: MenuItem[] = [
     name: "Cacio e Pepe",
     description: "Tonnarelli freschi, Pecorino Romano DOP 18 mesi, pepe nero Tellicherry macinato al momento.",
     price: 16.0,
-    image: dishPasta,
+    image: dishCacioPepe,
     category: "Primi",
     allergens: ["glutine", "uova", "latticini"],
     isPopular: true,
@@ -89,7 +106,7 @@ export const demoMenu: MenuItem[] = [
     name: "Paccheri all'Amatriciana",
     description: "Paccheri di Gragnano, guanciale croccante di Amatrice, pomodoro San Marzano, pecorino grattugiato.",
     price: 17.0,
-    image: dishPasta,
+    image: dishPaccheri,
     category: "Primi",
     allergens: ["glutine", "latticini"],
   },
@@ -108,7 +125,7 @@ export const demoMenu: MenuItem[] = [
     name: "Diavola Infernale",
     description: "Salame piccante calabrese 'Nduja, peperoncino fresco, mozzarella fior di latte, olio al peperoncino.",
     price: 16.0,
-    image: dishPizza,
+    image: dishDiavola,
     category: "Pizze",
     allergens: ["glutine", "latticini"],
     isPopular: true,
@@ -118,7 +135,7 @@ export const demoMenu: MenuItem[] = [
     name: "Quattro Formaggi",
     description: "Gorgonzola dolce, fontina valdostana, taleggio, parmigiano reggiano, noci caramellate e miele.",
     price: 18.0,
-    image: dishPizza,
+    image: dishQuattroFormaggi,
     category: "Pizze",
     allergens: ["glutine", "latticini", "frutta a guscio"],
   },
@@ -127,7 +144,7 @@ export const demoMenu: MenuItem[] = [
     name: "Tartufata",
     description: "Crema di tartufo nero, mozzarella di bufala, funghi porcini, olio al tartufo bianco d'Alba.",
     price: 24.0,
-    image: dishPizza,
+    image: dishTartufata,
     category: "Pizze",
     allergens: ["glutine", "latticini"],
   },
@@ -147,7 +164,7 @@ export const demoMenu: MenuItem[] = [
     name: "Branzino al Sale",
     description: "Branzino selvaggio in crosta di sale marino di Trapani, patate al forno, salsa verde.",
     price: 32.0,
-    image: dishSteak,
+    image: dishBranzino,
     category: "Secondi",
     allergens: ["pesce"],
   },
@@ -156,7 +173,7 @@ export const demoMenu: MenuItem[] = [
     name: "Tagliata di Fassona",
     description: "Tagliata piemontese su rucola, pomodorini, scaglie di grana, riduzione di balsamico di Modena IGP.",
     price: 28.0,
-    image: dishSteak,
+    image: dishTagliata,
     category: "Secondi",
     allergens: ["latticini"],
   },
@@ -175,7 +192,7 @@ export const demoMenu: MenuItem[] = [
     name: "Panna Cotta al Passion Fruit",
     description: "Panna cotta con vaniglia del Madagascar, coulis di passion fruit e crumble croccante.",
     price: 9.0,
-    image: dishTiramisu,
+    image: dishPannaCotta,
     category: "Dolci",
     allergens: ["latticini", "glutine"],
   },
@@ -184,7 +201,7 @@ export const demoMenu: MenuItem[] = [
     name: "Cannolo Siciliano",
     description: "Cialda croccante, ricotta di pecora setacciata, pistacchio di Bronte, gocce di cioccolato fondente.",
     price: 8.0,
-    image: dishTiramisu,
+    image: dishCannolo,
     category: "Dolci",
     allergens: ["glutine", "latticini", "frutta a guscio"],
     isPopular: true,
@@ -195,7 +212,7 @@ export const demoMenu: MenuItem[] = [
     name: "Acqua Panna / S.Pellegrino",
     description: "Acqua minerale naturale o frizzante, bottiglia da 75cl.",
     price: 3.5,
-    image: dishBruschetta,
+    image: dishAcqua,
     category: "Bevande",
   },
   {
@@ -203,7 +220,7 @@ export const demoMenu: MenuItem[] = [
     name: "Calice di Prosecco DOC",
     description: "Prosecco Superiore Valdobbiadene DOCG, bollicine fini e persistenti, profumo floreale.",
     price: 8.0,
-    image: dishBruschetta,
+    image: dishProsecco,
     category: "Bevande",
   },
   {
@@ -211,7 +228,7 @@ export const demoMenu: MenuItem[] = [
     name: "Chianti Classico (bottiglia)",
     description: "Chianti Classico DOCG Riserva, corpo pieno, sentori di ciliegia e tabacco dolce.",
     price: 28.0,
-    image: dishBruschetta,
+    image: dishChianti,
     category: "Bevande",
     isPopular: true,
   },
@@ -220,7 +237,7 @@ export const demoMenu: MenuItem[] = [
     name: "Cocktail della Casa",
     description: "Negroni sbagliato con Prosecco, Aperol Spritz classico, o Hugo con fiori di sambuco.",
     price: 10.0,
-    image: dishBruschetta,
+    image: dishCocktail,
     category: "Bevande",
   },
 ];
