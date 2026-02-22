@@ -80,7 +80,7 @@ const RestaurantPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-24 overflow-x-hidden">
       {/* ========== TOP NAVBAR — ARIA STYLE ========== */}
       <div className="sticky top-0 z-40 glass-strong safe-top">
         <div className="flex items-center justify-between px-4 py-3">
@@ -164,7 +164,7 @@ const RestaurantPage = () => {
             placeholder="Cerca nel menu..."
             value={search}
             onChange={(e) => { setSearch(e.target.value); setActiveTab("menu"); }}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-secondary/60 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+            className="w-full pl-10 pr-4 py-3 rounded-xl bg-secondary/60 text-foreground text-base placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
           />
         </div>
       </div>
@@ -292,7 +292,7 @@ const RestaurantPage = () => {
 
       {/* ========== BOTTOM NAV — ARIA STYLE ========== */}
       <nav className="fixed bottom-0 inset-x-0 z-40 glass-strong border-t border-border/30 safe-bottom">
-        <div className="flex items-center justify-around py-2">
+        <div className="flex items-center justify-around py-2.5">
           {([
             { id: "home" as BottomTab, icon: Home, label: "Home" },
             { id: "menu" as BottomTab, icon: UtensilsCrossed, label: "Menu" },
@@ -304,7 +304,7 @@ const RestaurantPage = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className="flex flex-col items-center gap-0.5 py-1 px-3 relative"
+                className="flex flex-col items-center gap-0.5 py-1.5 px-4 relative min-w-[3rem]"
               >
                 {isActive && (
                   <motion.div

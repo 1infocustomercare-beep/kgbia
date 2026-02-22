@@ -276,10 +276,10 @@ const AdminDashboard = () => {
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 px-5 overflow-x-auto scrollbar-hide pb-3">
+      <div className="flex gap-1.5 px-4 overflow-x-auto scrollbar-hide pb-3">
         {tabs.map((tab) => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${
+            className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-medium whitespace-nowrap transition-colors min-h-[44px] ${
               activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
             }`}>
             {tab.icon}
@@ -406,7 +406,7 @@ const AdminDashboard = () => {
               <div className="flex gap-2">
                 <input type="text" inputMode="numeric" placeholder="Nuovo PIN (4-6 cifre)" value={kitchenPin}
                   onChange={(e) => setKitchenPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  className="flex-1 px-3 py-2 rounded-xl bg-card text-foreground text-sm font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  className="flex-1 px-3 py-2.5 rounded-xl bg-card text-foreground text-base font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
                 <button onClick={handleCreatePin} disabled={kitchenPin.length < 4}
                   className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium disabled:opacity-40">
                   Genera PIN
@@ -547,7 +547,7 @@ const AdminDashboard = () => {
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">Provider fiscale</label>
                   <select value={vaultProvider} onChange={(e) => setVaultProvider(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30">
                     <option value="Scontrino.it">Scontrino.it</option>
                     <option value="Aruba">Aruba Fatturazione</option>
                   </select>
@@ -556,7 +556,7 @@ const AdminDashboard = () => {
                   <label className="text-xs text-muted-foreground mb-1 block">Chiave API (criptata automaticamente)</label>
                   <input type="password" placeholder="Inserisci la tua chiave API privata..." value={vaultKey}
                     onChange={(e) => setVaultKey(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
                 </div>
                 <div className="flex gap-2">
                   <button onClick={handleVaultSave} disabled={!vaultKey.trim() || vaultValidating}
@@ -610,7 +610,7 @@ const AdminDashboard = () => {
                 <input type="text" placeholder="Chiedi a Mary: setup, sicurezza, provider..." value={maryInput}
                   onChange={(e) => setMaryInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleMaryVaultMessage()}
-                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
                 <motion.button onClick={handleMaryVaultMessage}
                   className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center" whileTap={{ scale: 0.9 }}>
                   <Send className="w-4 h-4" />

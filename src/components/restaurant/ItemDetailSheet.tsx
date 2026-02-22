@@ -106,7 +106,7 @@ const ItemDetailSheet = ({ item, onClose }: ItemDetailSheetProps) => {
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Es: senza cipolla, ben cotta..."
-                    className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm placeholder:text-muted-foreground/40 resize-none h-20 focus:outline-none focus:ring-1 focus:ring-primary/30"
+                    className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-base placeholder:text-muted-foreground/40 resize-none h-20 focus:outline-none focus:ring-1 focus:ring-primary/30"
                   />
                 </div>
               </div>

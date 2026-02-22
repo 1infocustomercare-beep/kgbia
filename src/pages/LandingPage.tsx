@@ -151,7 +151,7 @@ const LandingPage = () => {
   const scrollToPricing = () => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden overflow-y-auto">
       {/* ====== STICKY NAV ====== */}
       <nav className="fixed top-0 inset-x-0 z-50 glass-strong border-b border-border/30">
         <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
@@ -233,7 +233,7 @@ const LandingPage = () => {
             </button>
           </motion.div>
 
-          <motion.div className="mt-6 flex items-center gap-6 text-xs text-foreground/50"
+          <motion.div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-xs text-foreground/50"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
             <span>🔒 Vault criptato AES-256</span>
             <span>⚡ Setup in 60 secondi</span>
@@ -578,10 +578,10 @@ const LandingPage = () => {
       </footer>
 
       {/* ====== STICKY CTA MOBILE ====== */}
-      <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 glass-strong border-t border-border/30 md:hidden safe-bottom"
+      <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] glass-strong border-t border-border/30 md:hidden"
         initial={{ y: 100 }} animate={{ y: 0 }} transition={{ delay: 2, type: "spring", damping: 25 }}>
         <motion.button onClick={scrollToPricing}
-          className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-bold text-sm tracking-wider gold-glow"
+          className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-base tracking-wider gold-glow min-h-[48px]"
           whileTap={{ scale: 0.97 }}>
           👑 Inizia il tuo Impero Ora
         </motion.button>

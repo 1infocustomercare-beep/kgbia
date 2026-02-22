@@ -100,10 +100,10 @@ const StaffPanel = () => {
         </button>
       </div>
 
-      <div className="flex gap-1 px-5 py-3 overflow-x-auto scrollbar-hide">
+      <div className="flex gap-1.5 px-4 py-3 overflow-x-auto scrollbar-hide">
         {tabs.map((tab) => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors min-h-[44px] ${
               activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
             }`}>
             {tab.icon} {tab.label}
@@ -144,7 +144,7 @@ const StaffPanel = () => {
                 <input type="text" placeholder="Chiedi a Mary: stato Vault, sicurezza, flusso..." value={maryInput}
                   onChange={(e) => setMaryInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleMaryMessage()}
-                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
                 <motion.button onClick={handleMaryMessage}
                   className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center" whileTap={{ scale: 0.9 }}>
                   <Send className="w-4 h-4" />
