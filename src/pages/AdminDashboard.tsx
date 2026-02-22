@@ -21,6 +21,8 @@ import type { MenuItem } from "@/types/restaurant";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 import { toast } from "@/hooks/use-toast";
 import { generateQRDataUrl, downloadQR } from "@/lib/qr";
+import { extractDominantColor, hslToHex } from "@/lib/color-extract";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 
 type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings" | "preview" | "clients";
 
@@ -485,8 +487,19 @@ const AdminDashboard = () => {
       }
       const { data: urlData } = supabase.storage.from("restaurant-logos").getPublicUrl(path);
       const logoUrl = urlData.publicUrl + "?t=" + Date.now();
-      await supabase.from("restaurants").update({ logo_url: logoUrl }).eq("id", restaurant.id);
-      toast({ title: "Logo aggiornato!", description: "Il nuovo logo è attivo. I colori del brand si adatteranno automaticamente." });
+      
+      // Extract dominant color from logo for adaptive branding
+      try {
+        const hslColor = await extractDominantColor(logoUrl);
+        const hexColor = hslToHex(hslColor);
+        await supabase.from("restaurants").update({ logo_url: logoUrl, primary_color: hexColor }).eq("id", restaurant.id);
+        // Apply color to CSS in real-time
+        document.documentElement.style.setProperty("--primary", hslColor);
+        toast({ title: "Logo aggiornato!", description: `Branding adattivo: colore primario estratto automaticamente (${hexColor}).` });
+      } catch {
+        await supabase.from("restaurants").update({ logo_url: logoUrl }).eq("id", restaurant.id);
+        toast({ title: "Logo aggiornato!", description: "Il nuovo logo è attivo." });
+      }
       setLogoUploading(false);
       window.location.reload();
     };
@@ -1219,7 +1232,7 @@ const AdminDashboard = () => {
 
         {/* LOST CUSTOMERS */}
         {activeTab === "clients" && restaurant && (
-          <LostCustomers restaurantId={restaurant.id} />
+          <LostCustomers restaurantId={restaurant.id} restaurantName={restaurantName} />
         )}
 
         {/* SETTINGS — Full Config Panel */}
@@ -1416,22 +1429,41 @@ const AdminDashboard = () => {
               {orderAnalytics.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-4">Nessun dato disponibile — gli ordini futuri tracceranno automaticamente la fonte</p>
               ) : (
-                <div className="space-y-2">
-                  {orderAnalytics.map((item) => {
-                    const maxCount = orderAnalytics[0]?.count || 1;
-                    return (
-                      <div key={item.source} className="p-3 rounded-xl bg-secondary/50">
-                        <div className="flex justify-between items-center mb-1.5">
-                          <span className="text-sm font-medium text-foreground capitalize">{item.source}</span>
-                          <span className="text-xs text-primary font-semibold">{item.count} ordini</span>
+                <>
+                  {/* Pie Chart */}
+                  <div className="h-48 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie data={orderAnalytics} dataKey="count" nameKey="source" cx="50%" cy="50%" outerRadius={70} innerRadius={35} paddingAngle={3} strokeWidth={0}>
+                          {orderAnalytics.map((_, idx) => (
+                            <Cell key={idx} fill={`hsl(${38 + idx * 45}, ${75 - idx * 8}%, ${55 + idx * 5}%)`} />
+                          ))}
+                        </Pie>
+                        <RechartsTooltip contentStyle={{ background: "hsl(20, 12%, 8%)", border: "1px solid hsl(20, 10%, 16%)", borderRadius: "12px", fontSize: "12px", color: "hsl(40, 20%, 92%)" }} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  {/* Legend bars */}
+                  <div className="space-y-2">
+                    {orderAnalytics.map((item, idx) => {
+                      const maxCount = orderAnalytics[0]?.count || 1;
+                      return (
+                        <div key={item.source} className="p-3 rounded-xl bg-secondary/50">
+                          <div className="flex justify-between items-center mb-1.5">
+                            <div className="flex items-center gap-2">
+                              <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: `hsl(${38 + idx * 45}, ${75 - idx * 8}%, ${55 + idx * 5}%)` }} />
+                              <span className="text-sm font-medium text-foreground capitalize">{item.source}</span>
+                            </div>
+                            <span className="text-xs text-primary font-semibold">{item.count} ordini</span>
+                          </div>
+                          <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                            <div className="h-full rounded-full transition-all" style={{ width: `${(item.count / maxCount) * 100}%`, background: `hsl(${38 + idx * 45}, ${75 - idx * 8}%, ${55 + idx * 5}%)` }} />
+                          </div>
                         </div>
-                        <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                          <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(item.count / maxCount) * 100}%` }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                </>
               )}
             </div>
 
