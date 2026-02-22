@@ -5,7 +5,7 @@ import {
   Megaphone, BarChart3, LogOut, Search,
   Key, HeadphonesIcon, CheckCircle2, XCircle, AlertCircle,
   Cpu, Wifi, ChevronRight, Save, Bot, Send, Bell,
-  ShieldCheck, Lock
+  ShieldCheck, Lock, ExternalLink
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -344,10 +344,15 @@ const SuperAdminDashboard = () => {
                       </button>
                     </div>
                     {tenant.active && (
-                      <div className="flex gap-4 text-xs text-muted-foreground mt-2">
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground mt-2">
                         <span>€{tenant.monthlyRevenue.toLocaleString()} transato</span>
                         <span>{tenant.orders} ordini</span>
                         <span className="text-primary font-medium">+€{tenant.fee2percent} rendita</span>
+                        <button onClick={() => navigate(`/r/${tenant.slug}`)}
+                          className="ml-auto flex items-center gap-1 text-primary hover:text-primary/80 transition-colors">
+                          <ExternalLink className="w-3 h-3" />
+                          <span>Entra</span>
+                        </button>
                       </div>
                     )}
                     {!tenant.active && <p className="text-xs text-accent mt-1">⛔ Kill-Switch attivo — Tenant disabilitato</p>}

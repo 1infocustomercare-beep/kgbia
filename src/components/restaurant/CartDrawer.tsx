@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 interface CartDrawerProps {
   open: boolean;
@@ -117,7 +117,9 @@ const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => {
                     onClose();
-                    navigate(`/r/${slug}/checkout`);
+                    const params = new URLSearchParams(window.location.search);
+                    const tableParam = params.get("table");
+                    navigate(`/r/${slug}/checkout${tableParam ? `?table=${tableParam}` : ""}`);
                   }}
                 >
                   Ordina Ora
