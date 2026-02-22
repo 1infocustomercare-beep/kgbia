@@ -1,5 +1,5 @@
-import { useState, useMemo, useCallback, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import { demoRestaurant, demoMenu, menuCategories as demoCats } from "@/data/demo-restaurant";
 import { useRestaurantBySlug } from "@/hooks/useRestaurantBySlug";
 import SplashScreen from "@/components/restaurant/SplashScreen";
@@ -23,6 +23,8 @@ type BottomTab = "home" | "menu" | "orders" | "profile";
 
 const RestaurantPage = () => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const tableFromQR = searchParams.get("table");
   const { restaurant: dbRestaurant, menuItems: dbMenu, categories: dbCats, loading: dbLoading, notFound } = useRestaurantBySlug(slug);
 
   // Use DB data if available, otherwise demo
@@ -83,6 +85,13 @@ const RestaurantPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 overflow-x-hidden">
+      {/* ========== TABLE RECOGNITION BANNER ========== */}
+      {tableFromQR && (
+        <div className="bg-primary/10 border-b border-primary/20 px-4 py-2 flex items-center justify-center gap-2 text-sm">
+          <span className="text-primary font-medium">🪑 Tavolo {tableFromQR}</span>
+          <span className="text-muted-foreground text-xs">— ordine assegnato automaticamente</span>
+        </div>
+      )}
       {/* ========== TOP NAVBAR — ARIA STYLE ========== */}
       <div className="sticky top-0 z-40 glass-strong safe-top">
         <div className="flex items-center justify-between px-4 py-3">

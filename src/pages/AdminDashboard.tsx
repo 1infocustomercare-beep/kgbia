@@ -35,6 +35,8 @@ const AdminDashboard = () => {
   const [todayRevenue, setTodayRevenue] = useState(0);
   const [todayOrderCount, setTodayOrderCount] = useState(0);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [restaurantTables, setRestaurantTables] = useState<any[]>([]);
+  const [newTableCount, setNewTableCount] = useState(8);
 
   // Kitchen PIN management
   const [kitchenPin, setKitchenPin] = useState("");
@@ -104,6 +106,12 @@ const AdminDashboard = () => {
         setVaultConfig(fisco);
         setVaultProvider(fisco.provider);
       }
+      // Fetch restaurant tables
+      const { data: tables } = await supabase
+        .from("restaurant_tables").select("*")
+        .eq("restaurant_id", restaurant.id)
+        .order("table_number", { ascending: true });
+      if (tables) setRestaurantTables(tables);
     };
     fetchData();
 
@@ -700,17 +708,20 @@ const AdminDashboard = () => {
           </motion.div>
         )}
 
-        {/* TOKEN WALLET */}
+        {/* QR MASTER + TABLE MANAGEMENT */}
         {activeTab === "qr" && (
           <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="text-center py-4">
               <QrCode className="w-12 h-12 mx-auto mb-3 text-primary" />
-              <h3 className="text-lg font-display font-bold text-foreground">QR Master — Generatore Tavoli</h3>
+              <h3 className="text-lg font-display font-bold text-foreground">QR Master — Gestione Tavoli</h3>
+              <p className="text-sm text-muted-foreground mt-1">Mappa interattiva, QR univoci e stato real-time</p>
             </div>
+
+            {/* Main QR */}
             <div className="flex flex-col items-center">
               <div className="p-6 rounded-3xl bg-card border border-border">
                 <div className="bg-white rounded-2xl p-4 mb-4">
-                  <img src={qrSvg} alt="QR Code" className="w-48 h-48 mx-auto" />
+                  <img src={qrSvg} alt="QR Code" className="w-40 h-40 mx-auto" />
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-display font-semibold text-foreground">{restaurantName}</p>
@@ -718,26 +729,91 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
-            <div className="space-y-2">
-              <button className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm gold-glow flex items-center justify-center gap-2"
+            <div className="grid grid-cols-2 gap-2">
+              <button className="py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm gold-glow flex items-center justify-center gap-2"
                 onClick={() => { const link = document.createElement("a"); link.href = qrSvg; link.download = `qr-${restaurantSlug}.svg`; link.click(); }}>
-                <QrCode className="w-4 h-4" /> Scarica QR Code
+                <QrCode className="w-4 h-4" /> Scarica QR
               </button>
-              <button className="w-full py-3 rounded-xl bg-secondary text-secondary-foreground font-medium text-sm flex items-center justify-center gap-2"
+              <button className="py-3 rounded-xl bg-secondary text-secondary-foreground font-medium text-sm flex items-center justify-center gap-2"
                 onClick={() => window.open(menuUrl, "_blank")}>
-                <ExternalLink className="w-4 h-4" /> Anteprima Mobile
+                <ExternalLink className="w-4 h-4" /> Anteprima
               </button>
             </div>
+
+            {/* Table Management */}
             <div>
-              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider mb-3">QR per tavolo</p>
-              <div className="grid grid-cols-4 gap-2">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((table) => (
-                  <div key={table} className="p-2 rounded-xl bg-secondary/50 text-center">
-                    <p className="text-lg font-display font-bold text-foreground">{table}</p>
-                    <p className="text-[10px] text-muted-foreground">Tavolo</p>
-                  </div>
-                ))}
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Mappa tavoli ({restaurantTables.length})</p>
+                {restaurantTables.length === 0 && (
+                  <button onClick={async () => {
+                    if (!restaurant) return;
+                    const inserts = Array.from({ length: newTableCount }, (_, i) => ({
+                      restaurant_id: restaurant.id,
+                      table_number: i + 1,
+                      status: "free",
+                      seats: 4,
+                    }));
+                    await supabase.from("restaurant_tables").insert(inserts);
+                    const { data } = await supabase.from("restaurant_tables").select("*")
+                      .eq("restaurant_id", restaurant.id).order("table_number");
+                    if (data) setRestaurantTables(data);
+                    toast({ title: `${newTableCount} tavoli creati` });
+                  }} className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium">
+                    Genera {newTableCount} tavoli
+                  </button>
+                )}
               </div>
+
+              {restaurantTables.length === 0 && (
+                <div className="p-4 rounded-xl bg-secondary/50 text-center">
+                  <p className="text-sm text-muted-foreground">Nessun tavolo configurato</p>
+                  <div className="flex items-center justify-center gap-2 mt-3">
+                    <span className="text-xs text-muted-foreground">Quantità:</span>
+                    <input type="number" min="1" max="50" value={newTableCount}
+                      onChange={(e) => setNewTableCount(Math.min(50, Math.max(1, Number(e.target.value))))}
+                      className="w-16 px-2 py-1 rounded-lg bg-card text-foreground text-base text-center focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-4 gap-2">
+                {restaurantTables.map((table) => {
+                  const statusConfig: Record<string, { bg: string; label: string; dot: string }> = {
+                    free: { bg: "bg-green-500/10 border-green-500/20", label: "Libero", dot: "bg-green-400" },
+                    waiting: { bg: "bg-amber-500/10 border-amber-500/20", label: "In attesa", dot: "bg-amber-400" },
+                    served: { bg: "bg-blue-500/10 border-blue-500/20", label: "Servito", dot: "bg-blue-400" },
+                    paid: { bg: "bg-muted border-border", label: "Pagato", dot: "bg-muted-foreground" },
+                  };
+                  const cfg = statusConfig[table.status] || statusConfig.free;
+                  const tableUrl = `${menuUrl}?table=${table.table_number}`;
+                  return (
+                    <motion.button key={table.id}
+                      onClick={async () => {
+                        const next: Record<string, string> = { free: "waiting", waiting: "served", served: "paid", paid: "free" };
+                        const newStatus = next[table.status] || "free";
+                        await supabase.from("restaurant_tables").update({ status: newStatus }).eq("id", table.id);
+                        setRestaurantTables(prev => prev.map(t => t.id === table.id ? { ...t, status: newStatus } : t));
+                      }}
+                      onDoubleClick={() => {
+                        navigator.clipboard.writeText(tableUrl);
+                        toast({ title: `Link tavolo ${table.table_number} copiato` });
+                      }}
+                      className={`p-3 rounded-xl border text-center transition-all ${cfg.bg}`}
+                      whileTap={{ scale: 0.95 }}>
+                      <p className="text-lg font-display font-bold text-foreground">{table.table_number}</p>
+                      <div className="flex items-center justify-center gap-1 mt-1">
+                        <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
+                        <span className="text-[10px] text-muted-foreground">{cfg.label}</span>
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+              {restaurantTables.length > 0 && (
+                <p className="text-[10px] text-muted-foreground text-center mt-2">
+                  Tap = cambia stato · Doppio tap = copia link QR tavolo
+                </p>
+              )}
             </div>
           </motion.div>
         )}
