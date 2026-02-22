@@ -86,6 +86,7 @@ const AdminDashboard = () => {
   const [settingsNewKeyword, setSettingsNewKeyword] = useState("");
   const [policyAccepted, setPolicyAccepted] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
+  const [settingsTagline, setSettingsTagline] = useState("");
   const [orderAnalytics, setOrderAnalytics] = useState<{source: string; count: number}[]>([]);
 
   // Menu item editing
@@ -110,6 +111,7 @@ const AdminDashboard = () => {
     setSettingsCity(restaurant.city || "");
     if (restaurant.opening_hours) setSettingsHours(restaurant.opening_hours);
     if (restaurant.languages) setSettingsLanguages(restaurant.languages);
+    setSettingsTagline(restaurant.tagline || "");
     setSettingsMinOrder(restaurant.min_order_amount || 0);
     if (restaurant.blocked_keywords) setSettingsBlockedKeywords(restaurant.blocked_keywords);
     setPolicyAccepted(restaurant.policy_accepted || false);
@@ -436,6 +438,7 @@ const AdminDashboard = () => {
       email: settingsEmail.trim() || null,
       address: settingsAddress.trim() || null,
       city: settingsCity.trim() || null,
+      tagline: settingsTagline.trim() || null,
       opening_hours: settingsHours as any,
       languages: settingsLanguages as any,
       min_order_amount: settingsMinOrder,
@@ -1202,8 +1205,8 @@ const AdminDashboard = () => {
               <p className="text-sm text-muted-foreground mt-1">Identità, contatti, orari, lingue, filtri e policy</p>
             </div>
 
-            {/* Logo Upload */}
-            <div className="p-4 rounded-2xl bg-secondary/50 space-y-3">
+            {/* Logo Upload & Tagline */}
+            <div className="p-4 rounded-2xl bg-secondary/50 space-y-4">
               <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><Image className="w-3.5 h-3.5" /> Logo & Identità</p>
               <div className="flex items-center gap-4">
                 <img src={restaurant?.logo_url || restaurantLogo} alt="Logo" className="w-16 h-16 rounded-xl object-contain border border-border" />
@@ -1221,6 +1224,13 @@ const AdminDashboard = () => {
                     <><Upload className="w-4 h-4" /> Carica</>
                   )}
                 </motion.button>
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground block mb-1.5">Tagline / Slogan</label>
+                <input type="text" value={settingsTagline} onChange={e => setSettingsTagline(e.target.value)}
+                  placeholder="Benvenuti nel nostro ristorante" maxLength={120}
+                  className="w-full px-3 py-2.5 rounded-xl bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                <p className="text-[10px] text-muted-foreground/60 mt-1">Visibile ai clienti sotto il nome del ristorante</p>
               </div>
             </div>
 
