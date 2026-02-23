@@ -325,7 +325,7 @@ const AdminDashboard = () => {
           for (let idx = 0; idx < dishesWithLoading.length; idx++) {
             const dish = dishesWithLoading[idx];
             supabase.functions.invoke("ai-menu", {
-              body: { action: "generate-image", dishDescription: `${dish.name}. ${dish.description || ""}` },
+              body: { action: "generate-image", dishDescription: `${dish.name}. ${dish.description || ""}`, dishCategory: dish.category || "" },
             }).then(({ data: imgData }) => {
               setOcrResult(prev => {
                 if (!prev) return prev;

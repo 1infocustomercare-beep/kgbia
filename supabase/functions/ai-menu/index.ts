@@ -9,7 +9,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { action, imageBase64, dishDescription } = await req.json();
+    const { action, imageBase64, dishDescription, dishCategory } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -78,7 +78,38 @@ serve(async (req) => {
     }
 
     if (action === "generate-image") {
-      // Generate food-porn image from dish description
+      // Category-adaptive styling for food photography
+      const cat = (dishCategory || "").toLowerCase();
+      
+      const categoryStyles: Record<string, string> = {
+        pizza: "shot from directly above (flat lay) on a rustic wooden pizza board, melted cheese pull visible, charred crust with leopard spots, scattered fresh basil leaves, olive oil drizzle glistening, wood-fired oven glow in background, rustic Italian pizzeria ambiance",
+        pasta: "shot from 45-degree angle, pasta twirled on a fork hovering above the plate, creamy/rich sauce coating every strand, parmesan shavings falling mid-air, steam rising dramatically, elegant deep white ceramic bowl, soft trattoria lighting",
+        antipasti: "elegant overhead shot on a marble slab, artfully arranged small portions, edible flowers and microgreens, drizzled aged balsamic reduction, extra virgin olive oil pools, Mediterranean appetizer styling, aperitivo ambiance",
+        secondi: "dramatic 30-degree angle on a warm ceramic plate, perfectly seared protein with golden crust, jus pooling around, rosemary sprig garnish, charcoal grill marks visible, dimly-lit fine dining atmosphere with candle flicker",
+        contorni: "bright natural daylight shot, vibrant garden-fresh colors, rustic terracotta bowl, herbs scattered, lemon wedge, farm-to-table aesthetic, clean Mediterranean styling",
+        dolci: "macro close-up with extreme shallow depth of field, dusted powdered sugar particles floating, chocolate drip or caramel sauce flowing, dessert on a dark slate, warm pastry shop glow, indulgent and romantic mood",
+        dessert: "macro close-up with extreme shallow depth of field, dusted powdered sugar particles floating, chocolate drip or caramel sauce flowing, dessert on a dark slate, warm pastry shop glow, indulgent and romantic mood",
+        bevande: "condensation droplets on glass, backlit with golden hour light, garnish details (citrus peel, herbs), elegant bar counter reflection, atmospheric cocktail bar mood, crystal clear liquid",
+        drink: "condensation droplets on glass, backlit with golden hour light, garnish details (citrus peel, herbs), elegant bar counter reflection, atmospheric cocktail bar mood, crystal clear liquid",
+        vini: "wine glass at 30-degree angle with wine swirl visible, vineyard or cellar bokeh background, rich deep color of wine catching light, elegant sommelier presentation",
+        insalate: "bright overhead shot, colorful fresh ingredients popping against white bowl, seeds and nuts scattered, light vinaigrette glistening, airy and healthy Mediterranean feel",
+        zuppe: "steaming bowl shot from 45 degrees, ladle dripping, crusty bread on the side, warm rustic kitchen background, comfort food atmosphere, earthenware bowl",
+        pesce: "elegant plating on elongated white plate, crispy skin texture visible, lemon and herb garnish, sea salt flakes, coastal restaurant with ocean view bokeh",
+        carne: "dramatic low-angle shot, perfectly sliced to show pink interior, jus and reduction sauce artfully drizzled, charred edges, rosemary and garlic cloves, steakhouse mood lighting",
+        fritti: "golden crispy texture in sharp focus, served in paper cone or rustic basket, sea salt crystals visible, lemon wedge, casual Italian street food energy",
+      };
+
+      // Find matching style or use default
+      let styleDirections = "shot from 45-degree angle on an elegant dark ceramic plate, restaurant table setting with soft warm candlelight, extremely shallow depth of field with creamy bokeh background, garnished beautifully, steam rising if hot dish";
+      for (const [key, style] of Object.entries(categoryStyles)) {
+        if (cat.includes(key)) {
+          styleDirections = style;
+          break;
+        }
+      }
+
+      const prompt = `Generate a hyper-realistic, ultra professional food photography image of this Italian restaurant dish: "${dishDescription}". Photography direction: ${styleDirections}. Technical: vibrant natural colors, 8K quality, Michelin-star presentation, the food must look absolutely irresistible and mouthwatering. Ultra high resolution.`;
+
       const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -87,12 +118,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           model: "google/gemini-2.5-flash-image",
-          messages: [
-            {
-              role: "user",
-              content: `Generate a hyper-realistic, ultra professional food photography image of this Italian restaurant dish: "${dishDescription}". Style: food porn, Michelin-star presentation, shot from 45-degree angle on an elegant dark ceramic plate, restaurant table setting with soft warm candlelight, extremely shallow depth of field with creamy bokeh background, garnished beautifully, steam rising if hot dish, vibrant natural colors, 8K quality. The food must look absolutely irresistible and mouthwatering. Ultra high resolution.`
-            }
-          ],
+          messages: [{ role: "user", content: prompt }],
           modalities: ["image", "text"],
         }),
       });
