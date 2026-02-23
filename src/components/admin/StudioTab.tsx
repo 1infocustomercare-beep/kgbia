@@ -10,7 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { applyBrandTheme, resetBrandTheme, extractDominantColor, hslToHex, DEFAULT_PRIMARY_HEX } from "@/lib/color-extract";
 import type { MenuItem } from "@/types/restaurant";
 
-type StudioSection = "menu" | "design" | "ai" | "translate" | "preview";
+type StudioSection = "menu" | "ai" | "translate" | "preview";
 
 interface StudioTabProps {
   restaurant: any;
@@ -175,10 +175,9 @@ const StudioTab = ({
 
   const sections: { id: StudioSection; label: string; icon: React.ReactNode }[] = [
     { id: "menu", label: "Menu", icon: <UtensilsCrossed className="w-4 h-4" /> },
-    { id: "design", label: "Design", icon: <Palette className="w-4 h-4" /> },
+    { id: "preview", label: "🎨 Design & Preview", icon: <Palette className="w-4 h-4" /> },
     { id: "ai", label: "IA", icon: <Sparkles className="w-4 h-4" /> },
     { id: "translate", label: "Lingue", icon: <Languages className="w-4 h-4" /> },
-    { id: "preview", label: "Preview", icon: <ImageIcon className="w-4 h-4" /> },
   ];
 
   return (
@@ -274,51 +273,7 @@ const StudioTab = ({
         </div>
       )}
 
-      {/* ===== DESIGN & BRANDING ===== */}
-      {section === "design" && (
-        <div className="space-y-4">
-          <div className="p-4 rounded-2xl bg-secondary/50 space-y-4">
-            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><ImageIcon className="w-3.5 h-3.5" /> Logo & Identità</p>
-            <div className="flex items-center gap-4">
-              <img src={restaurant?.logo_url || "/placeholder.svg"} alt="Logo" className="w-16 h-16 rounded-xl object-contain border border-border" />
-              <div className="flex-1">
-                <p className="text-sm text-foreground font-medium">Logo</p>
-                <p className="text-xs text-muted-foreground">I colori si adattano automaticamente</p>
-              </div>
-              <motion.button onClick={handleLogoUpload} disabled={logoUploading}
-                className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-medium min-h-[44px]"
-                whileTap={{ scale: 0.95 }}>
-                {logoUploading ? "..." : <><Upload className="w-4 h-4 inline mr-1" />Carica</>}
-              </motion.button>
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground block mb-1.5">Tagline</label>
-              <input type="text" value={settingsTagline} onChange={e => setSettingsTagline(e.target.value)}
-                placeholder="Benvenuti nel nostro ristorante" maxLength={120}
-                className="w-full px-3 py-2.5 rounded-xl bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground block mb-1.5 flex items-center gap-1.5"><Palette className="w-3.5 h-3.5" /> Colore Brand</label>
-              <div className="flex items-center gap-3">
-                <input type="color" value={settingsPrimaryColor} onChange={e => { setSettingsPrimaryColor(e.target.value); applyBrandTheme(e.target.value); }}
-                  className="w-11 h-11 rounded-xl border border-border cursor-pointer bg-transparent p-0.5" />
-                <input type="text" value={settingsPrimaryColor} onChange={e => { setSettingsPrimaryColor(e.target.value); if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) applyBrandTheme(e.target.value); }}
-                  placeholder="#C8963E" maxLength={7}
-                  className="flex-1 px-3 py-2.5 rounded-xl bg-background text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-                <div className="w-11 h-11 rounded-xl border border-border" style={{ backgroundColor: settingsPrimaryColor }} />
-              </div>
-              <div className="flex gap-2 mt-2">
-                <button onClick={() => { setSettingsPrimaryColor(DEFAULT_PRIMARY_HEX); resetBrandTheme(); }}
-                  className="flex-1 px-3 py-2 rounded-xl bg-secondary text-secondary-foreground text-xs min-h-[40px]">🔄 Ripristina</button>
-                {restaurant?.logo_url && (
-                  <button onClick={async () => { try { const h = await extractDominantColor(restaurant.logo_url!); const hex = hslToHex(h); setSettingsPrimaryColor(hex); applyBrandTheme(hex); toast({ title: "Colore estratto" }); } catch { toast({ title: "Errore", variant: "destructive" }); } }}
-                    className="flex-1 px-3 py-2 rounded-xl bg-primary/10 text-primary text-xs min-h-[40px]">🎨 Dal Logo</button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Design section removed — merged into Preview */}
 
       {/* ===== AI MENU CREATOR ===== */}
       {section === "ai" && (
@@ -406,8 +361,104 @@ const StudioTab = ({
         </div>
       )}
 
-      {/* ===== LIVE PREVIEW ===== */}
-      {section === "preview" && restaurant && <LivePreview slug={restaurantSlug} />}
+      {/* ===== DESIGN & LIVE PREVIEW (UNIFIED) ===== */}
+      {section === "preview" && restaurant && (
+        <div className="space-y-5">
+          {/* Fun header */}
+          <div className="text-center py-2">
+            <motion.div initial={{ rotate: -10 }} animate={{ rotate: 10 }} transition={{ duration: 2, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}>
+              <Palette className="w-10 h-10 mx-auto mb-2 text-primary" />
+            </motion.div>
+            <h3 className="text-lg font-display font-bold text-foreground">Il tuo Brand, Live 🎨</h3>
+            <p className="text-sm text-muted-foreground mt-1">Modifica e guarda i cambiamenti in tempo reale</p>
+          </div>
+
+          {/* Branding controls */}
+          <div className="space-y-4">
+            {/* Logo */}
+            <motion.div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3" whileHover={{ scale: 1.01 }}>
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5">
+                <ImageIcon className="w-3.5 h-3.5" /> Logo
+              </p>
+              <div className="flex items-center gap-4">
+                <motion.div className="relative" whileTap={{ scale: 0.95 }}>
+                  <img src={restaurant?.logo_url || "/placeholder.svg"} alt="Logo" className="w-16 h-16 rounded-2xl object-contain border-2 border-primary/20 shadow-lg" />
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-md">
+                    <Upload className="w-3 h-3 text-primary-foreground" />
+                  </div>
+                </motion.div>
+                <div className="flex-1">
+                  <motion.button onClick={handleLogoUpload} disabled={logoUploading}
+                    className="w-full px-4 py-3 rounded-xl bg-primary/10 text-primary text-sm font-medium min-h-[44px] border border-primary/20 hover:bg-primary/20 transition-colors"
+                    whileTap={{ scale: 0.97 }}>
+                    {logoUploading ? "Caricamento..." : "📸 Carica nuovo logo"}
+                  </motion.button>
+                  <p className="text-[10px] text-muted-foreground mt-1 text-center">I colori si estraggono automaticamente</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Tagline */}
+            <motion.div className="p-4 rounded-2xl bg-card border border-border/50 space-y-2" whileHover={{ scale: 1.01 }}>
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">✍️ Tagline</p>
+              <input type="text" value={settingsTagline} onChange={e => setSettingsTagline(e.target.value)}
+                placeholder="Es: La vera cucina italiana dal 1985"
+                maxLength={120}
+                className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/40" />
+            </motion.div>
+
+            {/* Color Picker — fun & interactive */}
+            <motion.div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3" whileHover={{ scale: 1.01 }}>
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5">
+                <Palette className="w-3.5 h-3.5" /> 🎨 Colore Brand
+              </p>
+              <div className="flex items-center gap-3">
+                <label className="relative cursor-pointer group">
+                  <input type="color" value={settingsPrimaryColor}
+                    onChange={e => { setSettingsPrimaryColor(e.target.value); applyBrandTheme(e.target.value); }}
+                    className="absolute inset-0 opacity-0 cursor-pointer w-14 h-14" />
+                  <motion.div className="w-14 h-14 rounded-2xl border-2 border-primary/30 shadow-lg group-hover:shadow-xl transition-shadow"
+                    style={{ backgroundColor: settingsPrimaryColor }}
+                    whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.05 }} />
+                </label>
+                <div className="flex-1 space-y-2">
+                  <input type="text" value={settingsPrimaryColor}
+                    onChange={e => { setSettingsPrimaryColor(e.target.value); if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) applyBrandTheme(e.target.value); }}
+                    placeholder="#C8963E" maxLength={7}
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  {/* Quick presets */}
+                  <div className="flex gap-1.5 flex-wrap">
+                    {["#C8963E", "#E74C3C", "#2ECC71", "#3498DB", "#9B59B6", "#1ABC9C", "#F39C12", "#E91E63"].map(c => (
+                      <motion.button key={c} onClick={() => { setSettingsPrimaryColor(c); applyBrandTheme(c); }}
+                        className={`w-7 h-7 rounded-lg border-2 transition-all ${settingsPrimaryColor === c ? "border-foreground scale-110 shadow-md" : "border-transparent hover:border-muted-foreground/30"}`}
+                        style={{ backgroundColor: c }}
+                        whileTap={{ scale: 0.85 }} whileHover={{ scale: 1.15 }} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-1">
+                <button onClick={() => { setSettingsPrimaryColor(DEFAULT_PRIMARY_HEX); resetBrandTheme(); }}
+                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-secondary-foreground text-xs min-h-[40px] hover:bg-secondary/80 transition-colors">
+                  🔄 Ripristina
+                </button>
+                {restaurant?.logo_url && (
+                  <button onClick={async () => {
+                    try { const h = await extractDominantColor(restaurant.logo_url!); const hex = hslToHex(h); setSettingsPrimaryColor(hex); applyBrandTheme(hex); toast({ title: "Colore estratto dal logo! 🎨" }); }
+                    catch { toast({ title: "Errore", variant: "destructive" }); }
+                  }}
+                    className="flex-1 px-3 py-2.5 rounded-xl bg-primary/10 text-primary text-xs min-h-[40px] hover:bg-primary/20 transition-colors">
+                    🪄 Estrai dal Logo
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* iPhone Live Preview */}
+          <LivePreview slug={restaurantSlug} />
+        </div>
+      )}
 
       {/* EDIT ITEM MODAL */}
       {editingItem && (
