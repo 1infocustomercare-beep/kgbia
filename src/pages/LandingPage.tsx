@@ -237,12 +237,51 @@ const LandingPage = () => {
             </motion.div>
           </div>
 
-          {/* Right: Live iPhone Preview */}
+          {/* Right: Live iPhone Preview with Annotations */}
           <motion.div className="flex-shrink-0"
             initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6, duration: 1 }}>
             <div className="relative">
               {/* Glow behind phone */}
               <div className="absolute -inset-8 bg-primary/15 rounded-[60px] blur-[60px]" />
+
+              {/* Animated Annotations — Left side */}
+              {[
+                { label: "Menu Digitale AI", emoji: "🤖", top: "8%", side: "left" as const, delay: 1.5 },
+                { label: "Ordini Real-Time", emoji: "⚡", top: "35%", side: "left" as const, delay: 2.2 },
+                { label: "Zero Commissioni", emoji: "💰", top: "62%", side: "left" as const, delay: 2.9 },
+              ].map((ann, i) => (
+                <motion.div key={`l-${i}`}
+                  className="absolute hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl glass border border-primary/20 shadow-lg whitespace-nowrap"
+                  style={{ top: ann.top, right: "calc(100% + 16px)" }}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: ann.delay, duration: 0.6 }}>
+                  <span className="text-sm">{ann.emoji}</span>
+                  <span className="text-[11px] font-medium text-foreground">{ann.label}</span>
+                  {/* Connector line */}
+                  <div className="absolute top-1/2 -translate-y-1/2 -right-3 w-3 h-px bg-primary/30" />
+                </motion.div>
+              ))}
+
+              {/* Animated Annotations — Right side */}
+              {[
+                { label: "PWA Installabile", emoji: "📱", top: "15%", delay: 1.8 },
+                { label: "Review Shield", emoji: "🛡️", top: "48%", delay: 2.5 },
+                { label: "Pagamenti Sicuri", emoji: "🔒", top: "75%", delay: 3.2 },
+              ].map((ann, i) => (
+                <motion.div key={`r-${i}`}
+                  className="absolute hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl glass border border-primary/20 shadow-lg whitespace-nowrap"
+                  style={{ top: ann.top, left: "calc(100% + 16px)" }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: ann.delay, duration: 0.6 }}>
+                  {/* Connector line */}
+                  <div className="absolute top-1/2 -translate-y-1/2 -left-3 w-3 h-px bg-primary/30" />
+                  <span className="text-sm">{ann.emoji}</span>
+                  <span className="text-[11px] font-medium text-foreground">{ann.label}</span>
+                </motion.div>
+              ))}
+
               {/* iPhone bezel */}
               <div className="relative w-[280px] h-[580px] bg-[#1a1a1a] rounded-[40px] p-[10px] shadow-2xl border border-[#333]">
                 {/* Notch */}
@@ -269,6 +308,7 @@ const LandingPage = () => {
                 {/* Home indicator */}
                 <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[100px] h-[4px] rounded-full bg-white/20" />
               </div>
+
               {/* Label under phone */}
               <motion.p className="text-center text-xs text-muted-foreground mt-4 flex items-center justify-center gap-1.5"
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
