@@ -246,37 +246,37 @@ const LandingPage = () => {
 
               {/* Animated Annotations — Left side */}
               {[
-                { label: "Menu Digitale AI", emoji: "🤖", top: "8%", side: "left" as const, delay: 1.5 },
-                { label: "Ordini Real-Time", emoji: "⚡", top: "35%", side: "left" as const, delay: 2.2 },
-                { label: "Zero Commissioni", emoji: "💰", top: "62%", side: "left" as const, delay: 2.9 },
+                { label: "Menu Digitale AI", emoji: "🤖", top: "4%", delay: 1.5 },
+                { label: "Ordini Real-Time", emoji: "⚡", top: "28%", delay: 2.2 },
+                { label: "Zero Commissioni", emoji: "💰", top: "52%", delay: 2.9 },
+                { label: "Kitchen View", emoji: "👨‍🍳", top: "76%", delay: 3.4 },
               ].map((ann, i) => (
                 <motion.div key={`l-${i}`}
-                  className="absolute hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl glass border border-primary/20 shadow-lg whitespace-nowrap"
-                  style={{ top: ann.top, right: "calc(100% + 16px)" }}
+                  className="absolute hidden xl:flex items-center gap-2 px-3 py-2 rounded-xl glass border border-primary/20 shadow-lg whitespace-nowrap"
+                  style={{ top: ann.top, right: "calc(100% + 20px)" }}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: ann.delay, duration: 0.6 }}>
                   <span className="text-sm">{ann.emoji}</span>
                   <span className="text-[11px] font-medium text-foreground">{ann.label}</span>
-                  {/* Connector line */}
-                  <div className="absolute top-1/2 -translate-y-1/2 -right-3 w-3 h-px bg-primary/30" />
+                  <div className="absolute top-1/2 -translate-y-1/2 -right-4 w-4 h-px bg-primary/30" />
                 </motion.div>
               ))}
 
               {/* Animated Annotations — Right side */}
               {[
-                { label: "PWA Installabile", emoji: "📱", top: "15%", delay: 1.8 },
-                { label: "Review Shield", emoji: "🛡️", top: "48%", delay: 2.5 },
-                { label: "Pagamenti Sicuri", emoji: "🔒", top: "75%", delay: 3.2 },
+                { label: "PWA Installabile", emoji: "📱", top: "10%", delay: 1.8 },
+                { label: "Review Shield", emoji: "🛡️", top: "34%", delay: 2.5 },
+                { label: "Chat Privata", emoji: "💬", top: "58%", delay: 3.0 },
+                { label: "Pagamenti Sicuri", emoji: "🔒", top: "82%", delay: 3.6 },
               ].map((ann, i) => (
                 <motion.div key={`r-${i}`}
-                  className="absolute hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl glass border border-primary/20 shadow-lg whitespace-nowrap"
-                  style={{ top: ann.top, left: "calc(100% + 16px)" }}
+                  className="absolute hidden xl:flex items-center gap-2 px-3 py-2 rounded-xl glass border border-primary/20 shadow-lg whitespace-nowrap"
+                  style={{ top: ann.top, left: "calc(100% + 20px)" }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: ann.delay, duration: 0.6 }}>
-                  {/* Connector line */}
-                  <div className="absolute top-1/2 -translate-y-1/2 -left-3 w-3 h-px bg-primary/30" />
+                  <div className="absolute top-1/2 -translate-y-1/2 -left-4 w-4 h-px bg-primary/30" />
                   <span className="text-sm">{ann.emoji}</span>
                   <span className="text-[11px] font-medium text-foreground">{ann.label}</span>
                 </motion.div>
