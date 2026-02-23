@@ -8,6 +8,7 @@ import FloatingCartButton from "@/components/restaurant/FloatingCartButton";
 import ItemDetailSheet from "@/components/restaurant/ItemDetailSheet";
 import PrivateChat from "@/components/restaurant/PrivateChat";
 import ReviewShield from "@/components/restaurant/ReviewShield";
+import NotificationOptIn from "@/components/restaurant/NotificationOptIn";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 import storyInterior from "@/assets/story-interior.jpg";
 import storyPasta from "@/assets/story-pasta.jpg";
@@ -637,6 +638,7 @@ const RestaurantPage = () => {
       {/* ====== OVERLAYS ====== */}
       <ItemDetailSheet item={selectedItem} onClose={() => setSelectedItem(null)} />
       <PrivateChat restaurantId={dbRestaurant?.id} />
+      <NotificationOptIn restaurantId={dbRestaurant?.id} restaurantName={restaurantName} />
       <FloatingCartButton onClick={() => setCartOpen(true)} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} allMenuItems={menu} />
     </div>

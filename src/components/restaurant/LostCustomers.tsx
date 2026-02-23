@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { UserX, Gift, Clock, Check, Download } from "lucide-react";
+import { UserX, Gift, Clock, Check, Download, Bell, Wallet, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -87,10 +87,22 @@ const LostCustomers = ({ restaurantId, restaurantName = "Ristorante" }: LostCust
   const [inactivityDays, setInactivityDays] = useState(30);
   const [discountPercent, setDiscountPercent] = useState(10);
   const [sendingTo, setSendingTo] = useState<string | null>(null);
+  const [pushSubCount, setPushSubCount] = useState(0);
+  const [walletPassCount, setWalletPassCount] = useState(0);
 
   useEffect(() => {
     fetchCustomers();
+    fetchStats();
   }, [restaurantId, inactivityDays]);
+
+  const fetchStats = async () => {
+    const [{ count: pushCount }, { count: passCount }] = await Promise.all([
+      supabase.from("push_subscriptions").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantId).eq("is_active", true),
+      supabase.from("wallet_passes").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantId),
+    ]);
+    setPushSubCount(pushCount || 0);
+    setWalletPassCount(passCount || 0);
+  };
 
   const fetchCustomers = async () => {
     setLoading(true);
@@ -110,12 +122,30 @@ const LostCustomers = ({ restaurantId, restaurantName = "Ristorante" }: LostCust
 
   const handleSendDiscount = async (customer: CustomerActivity) => {
     setSendingTo(customer.id);
+
+    // Call edge function to create wallet pass + send push
+    const { data: pushResult, error: pushError } = await supabase.functions.invoke("send-push-discount", {
+      body: {
+        restaurant_id: restaurantId,
+        customer_phone: customer.customer_phone,
+        customer_name: customer.customer_name || customer.customer_phone,
+        discount_percent: discountPercent,
+        restaurant_name: restaurantName,
+      },
+    });
+
+    if (pushError) {
+      console.error("Push error:", pushError);
+    }
+
+    // Update customer activity
     await supabase
       .from("customer_activity")
       .update({ discount_sent: true, discount_sent_at: new Date().toISOString() } as any)
       .eq("id", customer.id);
 
-    const code = `TORNA${discountPercent}-${customer.id.slice(0, 6).toUpperCase()}`;
+    // Also generate coupon image for download
+    const code = pushResult?.code || `TORNA${discountPercent}-${customer.id.slice(0, 6).toUpperCase()}`;
     const couponUrl = generateCouponImage(
       customer.customer_name || customer.customer_phone,
       discountPercent,
@@ -128,16 +158,28 @@ const LostCustomers = ({ restaurantId, restaurantName = "Ristorante" }: LostCust
       prev.map(c => c.id === customer.id ? { ...c, discount_sent: true, discount_sent_at: new Date().toISOString() } : c)
     );
 
+    const pushMsg = pushResult?.push_sent > 0 ? ` + ${pushResult.push_sent} push inviate` : "";
     toast({
-      title: "Coupon Wallet generato!",
-      description: `${discountPercent}% per ${customer.customer_name || customer.customer_phone} — coupon scaricato`,
+      title: "🎁 Coupon Wallet + Push inviato!",
+      description: `${discountPercent}% per ${customer.customer_name || customer.customer_phone} — coupon scaricato${pushMsg}`,
     });
     setSendingTo(null);
+    fetchStats();
   };
 
   const handleSendToAll = async () => {
     const unsent = customers.filter(c => !c.discount_sent);
     for (const c of unsent) {
+      await supabase.functions.invoke("send-push-discount", {
+        body: {
+          restaurant_id: restaurantId,
+          customer_phone: c.customer_phone,
+          customer_name: c.customer_name || c.customer_phone,
+          discount_percent: discountPercent,
+          restaurant_name: restaurantName,
+        },
+      });
+
       await supabase
         .from("customer_activity")
         .update({ discount_sent: true, discount_sent_at: new Date().toISOString() } as any)
@@ -151,9 +193,10 @@ const LostCustomers = ({ restaurantId, restaurantName = "Ristorante" }: LostCust
       prev.map(c => c.discount_sent ? c : { ...c, discount_sent: true, discount_sent_at: new Date().toISOString() })
     );
     toast({
-      title: "Coupon Wallet generati!",
-      description: `${unsent.length} coupon scaricati — condividili via WhatsApp`,
+      title: "🚀 Coupon + Push inviati a tutti!",
+      description: `${unsent.length} coupon wallet generati e notifiche push inviate`,
     });
+    fetchStats();
   };
 
   const daysSince = (date: string) => {
@@ -169,7 +212,25 @@ const LostCustomers = ({ restaurantId, restaurantName = "Ristorante" }: LostCust
       <div className="text-center py-4">
         <UserX className="w-12 h-12 mx-auto mb-3 text-accent" />
         <h3 className="text-lg font-display font-bold text-foreground">Sistema Clienti Persi</h3>
-        <p className="text-sm text-muted-foreground mt-1">Rileva clienti inattivi e genera coupon Wallet da condividere</p>
+        <p className="text-sm text-muted-foreground mt-1">Push notification + Wallet Pass automatici per riconquistare clienti</p>
+      </div>
+
+      {/* Push & Wallet stats */}
+      <div className="grid grid-cols-2 gap-2">
+        <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/20 flex items-center gap-3">
+          <Bell className="w-5 h-5 text-blue-400" />
+          <div>
+            <p className="text-lg font-display font-bold text-blue-400">{pushSubCount}</p>
+            <p className="text-[10px] text-muted-foreground">Iscritti Push</p>
+          </div>
+        </div>
+        <div className="p-3 rounded-xl bg-purple-500/5 border border-purple-500/20 flex items-center gap-3">
+          <Wallet className="w-5 h-5 text-purple-400" />
+          <div>
+            <p className="text-lg font-display font-bold text-purple-400">{walletPassCount}</p>
+            <p className="text-[10px] text-muted-foreground">Pass Wallet emessi</p>
+          </div>
+        </div>
       </div>
 
       {/* Controls */}
@@ -206,7 +267,7 @@ const LostCustomers = ({ restaurantId, restaurantName = "Ristorante" }: LostCust
         </div>
         <div className="p-3 rounded-xl bg-green-500/5 border border-green-500/20 text-center">
           <p className="text-xl font-display font-bold text-green-400">{customers.length - unsentCount}</p>
-          <p className="text-[10px] text-muted-foreground">Coupon inviati</p>
+          <p className="text-[10px] text-muted-foreground">Push + Pass inviati</p>
         </div>
       </div>
 
@@ -215,10 +276,19 @@ const LostCustomers = ({ restaurantId, restaurantName = "Ristorante" }: LostCust
         <motion.button onClick={handleSendToAll}
           className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 gold-glow min-h-[48px]"
           whileTap={{ scale: 0.97 }}>
-          <Download className="w-4 h-4" />
-          Genera {unsentCount} coupon Wallet ({discountPercent}%)
+          <Send className="w-4 h-4" />
+          Push + Wallet a {unsentCount} clienti ({discountPercent}%)
         </motion.button>
       )}
+
+      {/* Info banner */}
+      <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10">
+        <p className="text-[11px] text-muted-foreground leading-relaxed">
+          <Bell className="w-3.5 h-3.5 inline-block mr-1 text-blue-400" />
+          Ogni invio crea un <strong className="text-foreground">Wallet Pass</strong> (Apple/Google) + invia una <strong className="text-foreground">Push Notification</strong> ai clienti iscritti. 
+          Il coupon viene anche scaricato come immagine da condividere via WhatsApp.
+        </p>
+      </div>
 
       {/* Customer list */}
       {loading ? (
@@ -259,15 +329,22 @@ const LostCustomers = ({ restaurantId, restaurantName = "Ristorante" }: LostCust
               </div>
               {customer.discount_sent ? (
                 <span className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/10 text-green-400 text-[10px] font-medium">
-                  <Check className="w-3 h-3" /> Inviato
+                  <Check className="w-3 h-3" /> Push + Pass ✓
                 </span>
               ) : (
                 <motion.button onClick={() => handleSendDiscount(customer)}
                   disabled={sendingTo === customer.id}
                   className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-[10px] font-medium flex items-center gap-1 min-h-[36px] disabled:opacity-50"
                   whileTap={{ scale: 0.95 }}>
-                  <Gift className="w-3 h-3" />
-                  {discountPercent}%
+                  {sendingTo === customer.id ? (
+                    <motion.div className="w-3 h-3 border-2 border-primary-foreground border-t-transparent rounded-full"
+                      animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+                  ) : (
+                    <>
+                      <Bell className="w-3 h-3" />
+                      {discountPercent}%
+                    </>
+                  )}
                 </motion.button>
               )}
             </motion.div>

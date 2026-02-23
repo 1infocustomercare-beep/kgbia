@@ -393,6 +393,47 @@ export type Database = {
         }
         Relationships: []
       }
+      push_subscriptions: {
+        Row: {
+          auth_key: string
+          created_at: string
+          customer_phone: string | null
+          endpoint: string
+          id: string
+          is_active: boolean
+          p256dh: string
+          restaurant_id: string
+        }
+        Insert: {
+          auth_key: string
+          created_at?: string
+          customer_phone?: string | null
+          endpoint: string
+          id?: string
+          is_active?: boolean
+          p256dh: string
+          restaurant_id: string
+        }
+        Update: {
+          auth_key?: string
+          created_at?: string
+          customer_phone?: string | null
+          endpoint?: string
+          id?: string
+          is_active?: boolean
+          p256dh?: string
+          restaurant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       restaurant_memberships: {
         Row: {
           created_at: string
@@ -608,6 +649,53 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      wallet_passes: {
+        Row: {
+          created_at: string
+          customer_phone: string
+          discount_percent: number
+          expires_at: string
+          id: string
+          pass_type: string
+          redeemed: boolean
+          redeemed_at: string | null
+          restaurant_id: string
+          serial_number: string
+        }
+        Insert: {
+          created_at?: string
+          customer_phone: string
+          discount_percent?: number
+          expires_at?: string
+          id?: string
+          pass_type?: string
+          redeemed?: boolean
+          redeemed_at?: string | null
+          restaurant_id: string
+          serial_number?: string
+        }
+        Update: {
+          created_at?: string
+          customer_phone?: string
+          discount_percent?: number
+          expires_at?: string
+          id?: string
+          pass_type?: string
+          redeemed?: boolean
+          redeemed_at?: string | null
+          restaurant_id?: string
+          serial_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_passes_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
