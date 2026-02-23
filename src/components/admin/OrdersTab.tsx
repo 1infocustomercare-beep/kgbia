@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  ChefHat, ExternalLink, Power, CalendarDays, Move, Save, BarChart3, Key
+  ChefHat, ExternalLink, Power, CalendarDays, Move, Save, BarChart3, Key,
+  Plus, Trash2, QrCode, Download
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
@@ -9,6 +10,7 @@ import TableMap from "@/components/restaurant/TableMap";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
+import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 
 type OrdersSection = "orders" | "tables" | "traffic" | "reservations";
 
@@ -201,23 +203,71 @@ const OrdersTab = ({
             </div>
           ) : (
             <>
-              <div className="flex gap-2">
+              {/* Controls row */}
+              <div className="flex gap-2 flex-wrap">
                 <button onClick={() => setTableMapEditMode(!tableMapEditMode)}
                   className={`flex-1 py-2 rounded-xl text-xs font-medium min-h-[40px] ${tableMapEditMode ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
-                  <Move className="w-3.5 h-3.5 inline mr-1" /> {tableMapEditMode ? "Editing..." : "Modifica Layout"}
+                  <Move className="w-3.5 h-3.5 inline mr-1" /> {tableMapEditMode ? "Editing..." : "Layout"}
                 </button>
                 {tableMapEditMode && (
                   <button onClick={handleSaveLayout} className="flex-1 py-2 rounded-xl bg-green-500/20 text-green-400 text-xs font-medium min-h-[40px]">
-                    <Save className="w-3.5 h-3.5 inline mr-1" /> Salva Layout
+                    <Save className="w-3.5 h-3.5 inline mr-1" /> Salva
                   </button>
                 )}
+                <button onClick={async () => {
+                  if (!restaurant) return;
+                  const maxNum = Math.max(0, ...restaurantTables.map(t => t.table_number));
+                  const { error } = await supabase.from("restaurant_tables").insert({
+                    restaurant_id: restaurant.id, table_number: maxNum + 1, seats: 4, status: "free", pos_x: 50, pos_y: 50,
+                  });
+                  if (error) { toast({ title: "Errore", variant: "destructive" }); return; }
+                  const { data } = await supabase.from("restaurant_tables").select("*").eq("restaurant_id", restaurant.id).order("table_number");
+                  if (data) setRestaurantTables(data);
+                  toast({ title: `Tavolo ${maxNum + 1} aggiunto` });
+                }} className="py-2 px-3 rounded-xl bg-primary/10 text-primary text-xs font-medium min-h-[40px]">
+                  <Plus className="w-3.5 h-3.5 inline mr-1" /> Tavolo
+                </button>
               </div>
+
+              {/* Table Map */}
               <TableMap tables={restaurantTables} editMode={tableMapEditMode}
                 onStatusChange={async (id, status) => {
                   await supabase.from("restaurant_tables").update({ status }).eq("id", id);
                   setRestaurantTables(prev => prev.map(t => t.id === id ? { ...t, status } : t));
                 }}
                 onPositionChange={(id, x, y) => setRestaurantTables(prev => prev.map(t => t.id === id ? { ...t, pos_x: x, pos_y: y } : t))} />
+
+              {/* Table list with QR + delete */}
+              <div className="space-y-2">
+                <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Gestione Tavoli ({restaurantTables.length})</p>
+                {restaurantTables.map(table => {
+                  const tableUrl = `${window.location.origin}/r/${restaurant?.slug}?table=${table.table_number}`;
+                  return (
+                    <div key={table.id} className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <span className="text-sm font-display font-bold text-primary">{table.table_number}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground">Tavolo {table.table_number}</p>
+                        <p className="text-xs text-muted-foreground">{table.seats || 4} posti</p>
+                      </div>
+                      <button onClick={() => downloadQR(tableUrl, `qr-tavolo-${table.table_number}`)}
+                        className="p-2 rounded-lg hover:bg-primary/10 transition-colors" title="Scarica QR">
+                        <QrCode className="w-4 h-4 text-primary" />
+                      </button>
+                      <button onClick={async () => {
+                        const { error } = await supabase.from("restaurant_tables").delete().eq("id", table.id);
+                        if (error) { toast({ title: "Errore", variant: "destructive" }); return; }
+                        setRestaurantTables(prev => prev.filter(t => t.id !== table.id));
+                        toast({ title: `Tavolo ${table.table_number} rimosso` });
+                      }}
+                        className="p-2 rounded-lg hover:bg-accent/10 transition-colors" title="Elimina tavolo">
+                        <Trash2 className="w-4 h-4 text-accent" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
             </>
           )}
         </div>
