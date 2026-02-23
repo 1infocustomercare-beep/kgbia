@@ -46,7 +46,53 @@ const LandingPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const heroRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+
+  // Auto-scroll the iframe to showcase all sections
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    let scrollY = 0;
+    let direction = 1; // 1 = down, -1 = up
+    const scrollStep = 1.2; // px per tick
+    const maxScroll = 2400; // approximate content height beyond viewport
+    let paused = false;
+    let pauseTimer: ReturnType<typeof setTimeout>;
+
+    const tick = () => {
+      if (paused) return;
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (!doc) return;
+        scrollY += scrollStep * direction;
+        if (scrollY >= maxScroll) {
+          direction = -1;
+          paused = true;
+          pauseTimer = setTimeout(() => { paused = false; }, 1500);
+        } else if (scrollY <= 0) {
+          direction = 1;
+          paused = true;
+          pauseTimer = setTimeout(() => { paused = false; }, 1500);
+        }
+        iframe.contentWindow?.scrollTo({ top: scrollY, behavior: "auto" });
+      } catch (_) {
+        // cross-origin guard
+      }
+    };
+
+    // Wait for iframe to load then start
+    const startDelay = setTimeout(() => {
+      const interval = setInterval(tick, 25);
+      return () => clearInterval(interval);
+    }, 3000);
+
+    return () => {
+      clearTimeout(startDelay);
+      clearTimeout(pauseTimer);
+    };
+  }, []);
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 100]);
@@ -293,6 +339,7 @@ const LandingPage = () => {
                 {/* Screen */}
                 <div className="w-full h-full rounded-[32px] overflow-hidden bg-background">
                   <iframe
+                    ref={iframeRef}
                     src={`${window.location.origin}/r/impero-roma`}
                     className="border-0 origin-top-left"
                     style={{
