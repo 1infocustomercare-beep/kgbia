@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
@@ -20,7 +20,7 @@ const CartDrawer = ({ open, onClose, allMenuItems = [] }: CartDrawerProps) => {
   const [lastAddedCat, setLastAddedCat] = useState<string | undefined>();
 
   // Detect when a new item is added to show upselling
-  const prevCountRef = { current: items.length };
+  const prevCountRef = useRef(items.length);
   useEffect(() => {
     if (items.length > prevCountRef.current && items.length > 0) {
       const lastItem = items[items.length - 1];
