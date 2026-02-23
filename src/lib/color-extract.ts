@@ -109,3 +109,48 @@ export function hslToHex(hslStr: string): string {
   const toHex = (x: number) => Math.round(x * 255).toString(16).padStart(2, "0");
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
+
+/** Convert hex color (#RRGGBB) to HSL string "H S% L%" */
+export function hexToHsl(hex: string): string {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) return "38 75% 55%";
+  const [r, g, b] = [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
+  const hsl = rgbToHsl(r, g, b);
+  return `${Math.round(hsl[0])} ${Math.round(hsl[1])}% ${Math.round(hsl[2])}%`;
+}
+
+/** The default Empire gold theme primary HSL */
+export const DEFAULT_PRIMARY_HSL = "38 75% 55%";
+export const DEFAULT_PRIMARY_HEX = "#C8963E";
+
+/**
+ * Apply a primary color (hex) to the document CSS variables,
+ * generating a complete adaptive palette from the hue.
+ */
+export function applyBrandTheme(hexColor: string | null | undefined) {
+  const hsl = hexColor ? hexToHsl(hexColor) : DEFAULT_PRIMARY_HSL;
+  const parts = hsl.match(/[\d.]+/g);
+  if (!parts || parts.length < 3) return;
+  const h = parseFloat(parts[0]);
+  const s = parseFloat(parts[1]);
+  const l = parseFloat(parts[2]);
+
+  const root = document.documentElement;
+  // Primary color
+  root.style.setProperty("--primary", `${h} ${s}% ${l}%`);
+  // Ring matches primary
+  root.style.setProperty("--ring", `${h} ${s}% ${l}%`);
+  // Gold glow based on primary
+  root.style.setProperty("--gold-glow", `${h} ${s}% ${l}% / 0.3`);
+  // Sidebar primary
+  root.style.setProperty("--sidebar-primary", `${h} ${s}% ${l}%`);
+  root.style.setProperty("--sidebar-ring", `${h} ${s}% ${l}%`);
+}
+
+/** Remove all inline overrides and return to the CSS defaults */
+export function resetBrandTheme() {
+  const root = document.documentElement;
+  ["--primary", "--ring", "--gold-glow", "--sidebar-primary", "--sidebar-ring"].forEach(prop => {
+    root.style.removeProperty(prop);
+  });
+}
