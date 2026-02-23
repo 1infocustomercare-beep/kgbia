@@ -163,6 +163,47 @@ export type Database = {
           },
         ]
       }
+      customer_blacklist: {
+        Row: {
+          blocked_at: string
+          blocked_by: string | null
+          customer_name: string | null
+          customer_phone: string
+          id: string
+          is_active: boolean
+          reason: string | null
+          restaurant_id: string
+        }
+        Insert: {
+          blocked_at?: string
+          blocked_by?: string | null
+          customer_name?: string | null
+          customer_phone: string
+          id?: string
+          is_active?: boolean
+          reason?: string | null
+          restaurant_id: string
+        }
+        Update: {
+          blocked_at?: string
+          blocked_by?: string | null
+          customer_name?: string | null
+          customer_phone?: string
+          id?: string
+          is_active?: boolean
+          reason?: string | null
+          restaurant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_blacklist_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fisco_configs: {
         Row: {
           api_key_encrypted: string | null
@@ -245,11 +286,13 @@ export type Database = {
           category: string
           created_at: string
           description: string | null
+          description_translations: Json | null
           id: string
           image_url: string | null
           is_active: boolean
           is_popular: boolean
           name: string
+          name_translations: Json | null
           price: number
           restaurant_id: string
           sort_order: number | null
@@ -260,11 +303,13 @@ export type Database = {
           category?: string
           created_at?: string
           description?: string | null
+          description_translations?: Json | null
           id?: string
           image_url?: string | null
           is_active?: boolean
           is_popular?: boolean
           name: string
+          name_translations?: Json | null
           price?: number
           restaurant_id: string
           sort_order?: number | null
@@ -275,11 +320,13 @@ export type Database = {
           category?: string
           created_at?: string
           description?: string | null
+          description_translations?: Json | null
           id?: string
           image_url?: string | null
           is_active?: boolean
           is_popular?: boolean
           name?: string
+          name_translations?: Json | null
           price?: number
           restaurant_id?: string
           sort_order?: number | null
@@ -434,6 +481,56 @@ export type Database = {
           },
         ]
       }
+      reservations: {
+        Row: {
+          created_at: string
+          customer_name: string
+          customer_phone: string
+          guests: number
+          id: string
+          notes: string | null
+          reservation_date: string
+          reservation_time: string
+          restaurant_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name: string
+          customer_phone: string
+          guests?: number
+          id?: string
+          notes?: string | null
+          reservation_date: string
+          reservation_time: string
+          restaurant_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          guests?: number
+          id?: string
+          notes?: string | null
+          reservation_date?: string
+          reservation_time?: string
+          restaurant_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       restaurant_memberships: {
         Row: {
           created_at: string
@@ -519,6 +616,7 @@ export type Database = {
           blocked_keywords: string[] | null
           city: string | null
           created_at: string
+          delivery_enabled: boolean
           email: string | null
           id: string
           is_active: boolean
@@ -535,7 +633,9 @@ export type Database = {
           setup_paid: boolean
           slug: string
           stripe_account_id: string | null
+          table_orders_enabled: boolean
           tagline: string | null
+          takeaway_enabled: boolean
           updated_at: string
         }
         Insert: {
@@ -543,6 +643,7 @@ export type Database = {
           blocked_keywords?: string[] | null
           city?: string | null
           created_at?: string
+          delivery_enabled?: boolean
           email?: string | null
           id?: string
           is_active?: boolean
@@ -559,7 +660,9 @@ export type Database = {
           setup_paid?: boolean
           slug: string
           stripe_account_id?: string | null
+          table_orders_enabled?: boolean
           tagline?: string | null
+          takeaway_enabled?: boolean
           updated_at?: string
         }
         Update: {
@@ -567,6 +670,7 @@ export type Database = {
           blocked_keywords?: string[] | null
           city?: string | null
           created_at?: string
+          delivery_enabled?: boolean
           email?: string | null
           id?: string
           is_active?: boolean
@@ -583,7 +687,9 @@ export type Database = {
           setup_paid?: boolean
           slug?: string
           stripe_account_id?: string | null
+          table_orders_enabled?: boolean
           tagline?: string | null
+          takeaway_enabled?: boolean
           updated_at?: string
         }
         Relationships: []

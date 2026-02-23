@@ -114,6 +114,22 @@ const CheckoutPage = () => {
         return;
       }
 
+      // Check blacklist
+      if (phone.trim()) {
+        const { data: blocked } = await (supabase as any)
+          .from("customer_blacklist")
+          .select("id")
+          .eq("restaurant_id", restaurant.id)
+          .eq("customer_phone", phone.trim())
+          .eq("is_active", true)
+          .maybeSingle();
+        if (blocked) {
+          toast({ title: "Ordine non consentito", description: "Non è possibile procedere con questo numero di telefono.", variant: "destructive" });
+          setLoading(false);
+          return;
+        }
+      }
+
       const orderItems = items.map(i => ({
         name: i.name,
         price: i.price,
