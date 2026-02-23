@@ -5,7 +5,7 @@ import {
   Megaphone, BarChart3, LogOut, Search,
   Key, HeadphonesIcon, CheckCircle2, XCircle, AlertCircle,
   Cpu, Wifi, ChevronRight, Save, Bot, Send, Bell,
-  ShieldCheck, Lock, ExternalLink
+  ShieldCheck, Lock, ExternalLink, Download, FileText, FileSpreadsheet
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -151,6 +151,39 @@ const SuperAdminDashboard = () => {
     setTimeout(() => {
       setMaryMessages(prev => [...prev, { role: "assistant", content: response }]);
     }, 800);
+  };
+
+  const exportReport = (format: "csv" | "pdf") => {
+    const date = new Date().toLocaleDateString("it-IT");
+    if (format === "csv") {
+      const header = "Tenant,Città,Slug,Attivo,Volume Transato,Ordini,Fee 2%\n";
+      const rows = tenants.map(t => `"${t.name}","${t.city}","${t.slug}",${t.active ? "Sì" : "No"},${t.monthlyRevenue},${t.orders},${t.fee2percent}`).join("\n");
+      const totalsRow = `\n"TOTALE","","","",${totalRevenue},${totalOrders},${totalFee}`;
+      const blob = new Blob(["\uFEFF" + header + rows + totalsRow], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = `empire-report-${date}.csv`; a.click();
+      URL.revokeObjectURL(url);
+      toast({ title: "CSV esportato", description: `Report commissioni scaricato (${date})` });
+    } else {
+      const html = `<html><head><title>Empire Report ${date}</title>
+        <style>body{font-family:system-ui;padding:40px;max-width:800px;margin:0 auto}
+        h1{color:#C8963E;font-size:24px}h2{font-size:14px;color:#666;margin-bottom:20px}
+        table{width:100%;border-collapse:collapse;margin-top:20px}
+        th{background:#f5f5f5;text-align:left;padding:10px;font-size:12px;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #C8963E}
+        td{padding:10px;border-bottom:1px solid #eee;font-size:13px}
+        .total{font-weight:bold;background:#faf5eb}
+        .fee{color:#C8963E;font-weight:bold}
+        .footer{margin-top:30px;font-size:11px;color:#999;border-top:1px solid #eee;padding-top:15px}</style></head>
+        <body><h1>👑 Empire — Report Commissioni</h1><h2>Generato il ${date}</h2>
+        <table><tr><th>Tenant</th><th>Città</th><th>Stato</th><th style="text-align:right">Transato</th><th style="text-align:right">Ordini</th><th style="text-align:right">Fee 2%</th></tr>
+        ${tenants.map(t => `<tr><td>${t.name}</td><td>${t.city}</td><td>${t.active ? "🟢 Attivo" : "🔴 Disattivato"}</td><td style="text-align:right">€${t.monthlyRevenue.toLocaleString()}</td><td style="text-align:right">${t.orders}</td><td style="text-align:right" class="fee">€${t.fee2percent.toLocaleString()}</td></tr>`).join("")}
+        <tr class="total"><td colspan="3">TOTALE</td><td style="text-align:right">€${totalRevenue.toLocaleString()}</td><td style="text-align:right">${totalOrders}</td><td style="text-align:right" class="fee">€${totalFee.toLocaleString()}</td></tr>
+        </table><div class="footer">Empire SaaS Platform · Report generato automaticamente · Tutti i diritti riservati</div></body></html>`;
+      const win = window.open("", "_blank", "width=900,height=700");
+      if (win) { win.document.write(html); win.document.close(); setTimeout(() => win.print(), 400); }
+      toast({ title: "PDF pronto", description: "Finestra di stampa aperta per il report commissioni." });
+    }
   };
 
   const totalRevenue = tenants.reduce((s, t) => s + t.monthlyRevenue, 0);
@@ -436,7 +469,7 @@ const SuperAdminDashboard = () => {
           </motion.div>
         )}
 
-        {/* BILLING */}
+        {/* BILLING with CSV/PDF Export */}
         {!loading && activeTab === "billing" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="grid grid-cols-2 gap-3">
@@ -449,8 +482,53 @@ const SuperAdminDashboard = () => {
                 <p className="text-xl font-display font-bold text-primary">€{totalFee.toLocaleString()}</p>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground text-center py-4">
-              La fatturazione automatica si attiverà con l'integrazione Stripe Connect. Ogni transazione genera rendita passiva del 2%.
+
+            {/* Detailed table */}
+            <div className="rounded-2xl bg-card border border-border overflow-hidden">
+              <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-foreground">Report Commissioni per Tenant</h3>
+                <div className="flex gap-2">
+                  <button onClick={() => exportReport("csv")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary text-foreground text-xs font-medium hover:bg-secondary/80 transition-colors">
+                    <FileSpreadsheet className="w-3.5 h-3.5" /> CSV
+                  </button>
+                  <button onClick={() => exportReport("pdf")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors">
+                    <FileText className="w-3.5 h-3.5" /> PDF
+                  </button>
+                </div>
+              </div>
+              <div className="divide-y divide-border">
+                <div className="grid grid-cols-5 gap-2 px-4 py-2 text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
+                  <span className="col-span-2">Tenant</span>
+                  <span className="text-right">Transato</span>
+                  <span className="text-right">Ordini</span>
+                  <span className="text-right">Fee 2%</span>
+                </div>
+                {tenants.map((t) => (
+                  <div key={t.id} className="grid grid-cols-5 gap-2 px-4 py-3 text-sm">
+                    <div className="col-span-2">
+                      <p className="font-medium text-foreground truncate">{t.name}</p>
+                      <p className="text-[10px] text-muted-foreground">{t.city}</p>
+                    </div>
+                    <p className="text-right text-foreground">€{t.monthlyRevenue.toLocaleString()}</p>
+                    <p className="text-right text-muted-foreground">{t.orders}</p>
+                    <p className="text-right text-primary font-semibold">€{t.fee2percent.toLocaleString()}</p>
+                  </div>
+                ))}
+                {tenants.length > 0 && (
+                  <div className="grid grid-cols-5 gap-2 px-4 py-3 text-sm bg-primary/5">
+                    <span className="col-span-2 font-bold text-foreground">TOTALE</span>
+                    <p className="text-right font-bold text-foreground">€{totalRevenue.toLocaleString()}</p>
+                    <p className="text-right font-bold text-muted-foreground">{totalOrders}</p>
+                    <p className="text-right font-bold text-primary">€{totalFee.toLocaleString()}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <p className="text-xs text-muted-foreground text-center py-2">
+              La fatturazione automatica si attiverà con Stripe Connect. Ogni transazione genera rendita passiva del 2%.
             </p>
           </motion.div>
         )}
