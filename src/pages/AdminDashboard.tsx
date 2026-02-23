@@ -24,7 +24,7 @@ import type { MenuItem } from "@/types/restaurant";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 import { toast } from "@/hooks/use-toast";
 import { generateQRDataUrl, downloadQR } from "@/lib/qr";
-import { extractDominantColor, hslToHex } from "@/lib/color-extract";
+import { extractDominantColor, hslToHex, applyBrandTheme, resetBrandTheme, DEFAULT_PRIMARY_HEX } from "@/lib/color-extract";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 
 type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings" | "preview" | "clients" | "traffic" | "inventory" | "chat" | "blacklist" | "translate" | "reservations";
@@ -141,7 +141,9 @@ const AdminDashboard = () => {
     if (restaurant.opening_hours) setSettingsHours(restaurant.opening_hours);
     if (restaurant.languages) setSettingsLanguages(restaurant.languages);
     setSettingsTagline(restaurant.tagline || "");
-    setSettingsPrimaryColor(restaurant.primary_color || "#C8963E");
+    const pc = restaurant.primary_color || "#C8963E";
+    setSettingsPrimaryColor(pc);
+    applyBrandTheme(pc);
     setSettingsMinOrder(restaurant.min_order_amount || 0);
     if (restaurant.blocked_keywords) setSettingsBlockedKeywords(restaurant.blocked_keywords);
     setPolicyAccepted(restaurant.policy_accepted || false);
@@ -149,6 +151,7 @@ const AdminDashboard = () => {
     setDeliveryEnabled((restaurant as any).delivery_enabled ?? true);
     setTakeawayEnabled((restaurant as any).takeaway_enabled ?? true);
     setTableOrdersEnabled((restaurant as any).table_orders_enabled ?? true);
+    return () => { resetBrandTheme(); };
   }, [restaurant]);
 
   useEffect(() => {
@@ -1622,14 +1625,46 @@ const AdminDashboard = () => {
               <div>
                 <label className="text-xs text-muted-foreground block mb-1.5 flex items-center gap-1.5"><Palette className="w-3.5 h-3.5" /> Colore primario del brand</label>
                 <div className="flex items-center gap-3">
-                  <input type="color" value={settingsPrimaryColor} onChange={e => setSettingsPrimaryColor(e.target.value)}
+                  <input type="color" value={settingsPrimaryColor} onChange={e => {
+                    setSettingsPrimaryColor(e.target.value);
+                    applyBrandTheme(e.target.value);
+                  }}
                     className="w-11 h-11 rounded-xl border border-border cursor-pointer bg-transparent p-0.5" />
-                  <input type="text" value={settingsPrimaryColor} onChange={e => setSettingsPrimaryColor(e.target.value)}
+                  <input type="text" value={settingsPrimaryColor} onChange={e => {
+                    setSettingsPrimaryColor(e.target.value);
+                    if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) applyBrandTheme(e.target.value);
+                  }}
                     placeholder="#C8963E" maxLength={7}
                     className="flex-1 px-3 py-2.5 rounded-xl bg-background text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
                   <div className="w-11 h-11 rounded-xl border border-border" style={{ backgroundColor: settingsPrimaryColor }} />
                 </div>
                 <p className="text-[10px] text-muted-foreground/60 mt-1">Estratto automaticamente dal logo, ma puoi personalizzarlo</p>
+                <div className="flex gap-2 mt-2">
+                  <button onClick={() => {
+                    setSettingsPrimaryColor(DEFAULT_PRIMARY_HEX);
+                    resetBrandTheme();
+                    toast({ title: "Tema ripristinato", description: "Colore originale Empire Gold ripristinato. Salva per confermare." });
+                  }}
+                    className="flex-1 px-3 py-2 rounded-xl bg-secondary text-secondary-foreground text-xs font-medium min-h-[40px] flex items-center justify-center gap-1.5">
+                    🔄 Ripristina Originale
+                  </button>
+                  {restaurant?.logo_url && (
+                    <button onClick={async () => {
+                      try {
+                        const hslColor = await extractDominantColor(restaurant.logo_url!);
+                        const hexColor = hslToHex(hslColor);
+                        setSettingsPrimaryColor(hexColor);
+                        applyBrandTheme(hexColor);
+                        toast({ title: "Colore estratto dal logo", description: `Nuovo colore: ${hexColor}` });
+                      } catch {
+                        toast({ title: "Errore", description: "Impossibile estrarre il colore dal logo.", variant: "destructive" });
+                      }
+                    }}
+                      className="flex-1 px-3 py-2 rounded-xl bg-primary/10 text-primary text-xs font-medium min-h-[40px] flex items-center justify-center gap-1.5">
+                      🎨 Ricalcola dal Logo
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 

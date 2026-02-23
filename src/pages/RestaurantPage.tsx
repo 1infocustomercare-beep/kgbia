@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef, FormEvent } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect, FormEvent } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { demoRestaurant, demoMenu, menuCategories as demoCats } from "@/data/demo-restaurant";
 import { useRestaurantBySlug } from "@/hooks/useRestaurantBySlug";
@@ -20,6 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import type { MenuItem } from "@/types/restaurant";
 import { useCart } from "@/context/CartContext";
+import { applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
 
 const RestaurantPage = () => {
   const { slug } = useParams();
@@ -62,6 +63,14 @@ const RestaurantPage = () => {
   const catItems = useMemo(() => menu.filter(i => i.category === effectiveCat), [menu, effectiveCat]);
 
   const handleSplashComplete = useCallback(() => setShowSplash(false), []);
+
+  // Apply adaptive brand theme from restaurant's primary color
+  useEffect(() => {
+    if (dbRestaurant?.primary_color) {
+      applyBrandTheme(dbRestaurant.primary_color);
+    }
+    return () => { resetBrandTheme(); };
+  }, [dbRestaurant?.primary_color]);
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
