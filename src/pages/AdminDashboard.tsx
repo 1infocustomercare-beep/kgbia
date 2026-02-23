@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LayoutDashboard, UtensilsCrossed, ShoppingCart, TrendingUp, LogOut, Settings } from "lucide-react";
+import { LayoutDashboard, UtensilsCrossed, ChefHat, QrCode, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useMyRestaurant } from "@/hooks/useMyRestaurant";
@@ -242,10 +242,10 @@ const AdminDashboard = () => {
   );
 
   const bottomTabs: { id: MainTab; label: string; icon: React.ReactNode }[] = [
-    { id: "dashboard", label: "Home", icon: <LayoutDashboard className="w-5 h-5" /> },
-    { id: "studio", label: "Studio", icon: <UtensilsCrossed className="w-5 h-5" /> },
-    { id: "orders", label: "Ordini", icon: <ShoppingCart className="w-5 h-5" /> },
-    { id: "profit", label: "Profitto", icon: <TrendingUp className="w-5 h-5" /> },
+    { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" /> },
+    { id: "studio", label: "Menu", icon: <UtensilsCrossed className="w-5 h-5" /> },
+    { id: "orders", label: "Kitchen", icon: <ChefHat className="w-5 h-5" /> },
+    { id: "profit", label: "QR", icon: <QrCode className="w-5 h-5" /> },
     { id: "more", label: "Altro", icon: <Settings className="w-5 h-5" /> },
   ];
 
