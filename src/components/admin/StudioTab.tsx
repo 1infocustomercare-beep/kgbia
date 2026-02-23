@@ -413,14 +413,11 @@ const StudioTab = ({
                 <Palette className="w-3.5 h-3.5" /> 🎨 Colore Brand
               </p>
               <div className="flex items-center gap-3">
-                <label className="relative cursor-pointer group">
+                <div className="relative w-14 h-14 flex-shrink-0">
                   <input type="color" value={settingsPrimaryColor}
                     onChange={e => { setSettingsPrimaryColor(e.target.value); applyBrandTheme(e.target.value); }}
-                    className="absolute inset-0 opacity-0 cursor-pointer w-14 h-14" />
-                  <motion.div className="w-14 h-14 rounded-2xl border-2 border-primary/30 shadow-lg group-hover:shadow-xl transition-shadow"
-                    style={{ backgroundColor: settingsPrimaryColor }}
-                    whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.05 }} />
-                </label>
+                    className="w-14 h-14 rounded-2xl border-2 border-primary/30 shadow-lg cursor-pointer bg-transparent p-0.5 appearance-none [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-xl [&::-webkit-color-swatch]:border-0 [&::-moz-color-swatch]:rounded-xl [&::-moz-color-swatch]:border-0" />
+                </div>
                 <div className="flex-1 space-y-2">
                   <input type="text" value={settingsPrimaryColor}
                     onChange={e => { setSettingsPrimaryColor(e.target.value); if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) applyBrandTheme(e.target.value); }}
