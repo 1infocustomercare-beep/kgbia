@@ -277,6 +277,10 @@ const AdminDashboard = () => {
               menuItemCount={menuItems.length}
               aiTokens={aiTokens}
               restaurantName={restaurantName}
+              reviews={reviews}
+              reservations={reservations}
+              menuUrl={menuUrl}
+              onNavigate={(tab) => setActiveTab(tab as MainTab)}
             />
           )}
           {activeTab === "studio" && (
@@ -295,6 +299,7 @@ const AdminDashboard = () => {
               setSettingsLanguages={setSettingsLanguages}
               logoUploading={logoUploading}
               handleLogoUpload={handleLogoUpload}
+              handleSaveSettings={handleSaveSettings}
               userId={user?.id}
             />
           )}
