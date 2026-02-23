@@ -39,6 +39,8 @@ interface MoreMenuProps {
   // Inventory
   menuItems: any[];
   orders: any[];
+  // Tables (for QR per-table)
+  restaurantTables: any[];
 }
 
 const MoreMenu = ({
@@ -50,7 +52,7 @@ const MoreMenu = ({
   settingsHours, setSettingsHours, settingsMinOrder, setSettingsMinOrder,
   settingsBlockedKeywords, setSettingsBlockedKeywords,
   policyAccepted, setPolicyAccepted, handleSaveSettings, settingsSaving,
-  menuItems, orders,
+  menuItems, orders, restaurantTables,
 }: MoreMenuProps) => {
   const [section, setSection] = useState<MoreSection>("grid");
   const [blacklistPhone, setBlacklistPhone] = useState("");
@@ -123,27 +125,64 @@ const MoreMenu = ({
 
       {/* QR */}
       {section === "qr" && (
-        <div className="space-y-4">
+        <div className="space-y-5">
           <div className="text-center py-4">
             <QrCode className="w-12 h-12 mx-auto mb-3 text-primary" />
             <h3 className="text-lg font-display font-bold text-foreground">QR Code</h3>
+            <p className="text-xs text-muted-foreground mt-1">Menu generico + QR per ogni tavolo</p>
           </div>
-          <div className="flex justify-center">
-            <div className="p-6 rounded-2xl bg-white">
-              <img src={generateQRDataUrl(menuUrl)} alt="QR Code" className="w-48 h-48" />
+
+          {/* Generic menu QR */}
+          <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
+            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">📋 Menu Generico</p>
+            <div className="flex justify-center">
+              <div className="p-4 rounded-xl bg-white">
+                <img src={generateQRDataUrl(menuUrl)} alt="QR Menu" className="w-36 h-36" />
+              </div>
             </div>
+            <div className="flex gap-2">
+              <button onClick={() => downloadQR(menuUrl, `qr-${restaurant?.slug || "menu"}`)}
+                className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center gap-2 min-h-[44px]">
+                <Download className="w-3.5 h-3.5" /> Scarica
+              </button>
+              <button onClick={() => window.open(menuUrl, "_blank")}
+                className="flex-1 py-2.5 rounded-xl bg-secondary text-secondary-foreground text-xs font-medium flex items-center justify-center gap-2 min-h-[44px]">
+                <ExternalLink className="w-3.5 h-3.5" /> Apri
+              </button>
+            </div>
+            <p className="text-[10px] text-muted-foreground text-center break-all">{menuUrl}</p>
           </div>
-          <div className="flex gap-2">
-            <button onClick={() => downloadQR(menuUrl, `qr-${restaurant?.slug || "menu"}`)}
-              className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2 min-h-[48px]">
-              <Download className="w-4 h-4" /> Scarica
-            </button>
-            <button onClick={() => window.open(menuUrl, "_blank")}
-              className="flex-1 py-3 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium flex items-center justify-center gap-2 min-h-[48px]">
-              <ExternalLink className="w-4 h-4" /> Apri
-            </button>
-          </div>
-          <p className="text-xs text-muted-foreground text-center">{menuUrl}</p>
+
+          {/* Per-table QR codes */}
+          {restaurantTables.length > 0 && (
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">🪑 QR per Tavolo</p>
+              <p className="text-xs text-muted-foreground">Ogni QR include il numero del tavolo — l'ordine arriverà già associato.</p>
+              <div className="grid grid-cols-2 gap-3">
+                {restaurantTables.map(table => {
+                  const tableUrl = `${menuUrl}?table=${table.table_number}`;
+                  return (
+                    <div key={table.id} className="p-3 rounded-xl bg-card border border-border/50 flex flex-col items-center gap-2">
+                      <p className="text-xs font-semibold text-foreground">Tavolo {table.table_number}</p>
+                      <div className="p-2 rounded-lg bg-white">
+                        <img src={generateQRDataUrl(tableUrl, 120)} alt={`QR Tavolo ${table.table_number}`} className="w-20 h-20" />
+                      </div>
+                      <button onClick={() => downloadQR(tableUrl, `qr-tavolo-${table.table_number}`)}
+                        className="w-full py-2 rounded-lg bg-primary/10 text-primary text-[10px] font-medium min-h-[36px]">
+                        📥 Scarica
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {restaurantTables.length === 0 && (
+            <div className="p-4 rounded-2xl bg-secondary/50 text-center">
+              <p className="text-xs text-muted-foreground">Crea i tavoli nella sezione Ordini → Tavoli per generare QR dedicati</p>
+            </div>
+          )}
         </div>
       )}
 
