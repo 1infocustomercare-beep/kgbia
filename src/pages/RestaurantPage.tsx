@@ -72,6 +72,18 @@ const RestaurantPage = () => {
     return () => { resetBrandTheme(); };
   }, [dbRestaurant?.primary_color]);
 
+  // Listen for live brand updates from admin preview (postMessage)
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (e.origin !== window.location.origin) return;
+      if (e.data?.type === "brand-update" && e.data.primaryColor) {
+        applyBrandTheme(e.data.primaryColor);
+      }
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
