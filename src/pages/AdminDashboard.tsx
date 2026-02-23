@@ -353,6 +353,7 @@ const AdminDashboard = () => {
               settingsSaving={settingsSaving}
               menuItems={menuItems}
               orders={orders}
+              restaurantTables={restaurantTables}
             />
           )}
         </AnimatePresence>
