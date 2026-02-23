@@ -453,7 +453,7 @@ const StudioTab = ({
           </div>
 
           {/* iPhone Live Preview */}
-          <LivePreview slug={restaurantSlug} />
+          <LivePreview slug={restaurantSlug} primaryColor={settingsPrimaryColor} />
         </div>
       )}
 
