@@ -125,7 +125,8 @@ export const DEFAULT_PRIMARY_HEX = "#C8963E";
 
 /**
  * Apply a primary color (hex) to the document CSS variables,
- * generating a complete adaptive palette from the hue.
+ * generating a FULL adaptive palette: background, card, secondary,
+ * muted, accent, border, glass, sidebar — all derived from the hue.
  */
 export function applyBrandTheme(hexColor: string | null | undefined) {
   const hsl = hexColor ? hexToHsl(hexColor) : DEFAULT_PRIMARY_HSL;
@@ -136,21 +137,79 @@ export function applyBrandTheme(hexColor: string | null | undefined) {
   const l = parseFloat(parts[2]);
 
   const root = document.documentElement;
-  // Primary color
-  root.style.setProperty("--primary", `${h} ${s}% ${l}%`);
-  // Ring matches primary
-  root.style.setProperty("--ring", `${h} ${s}% ${l}%`);
-  // Gold glow based on primary
-  root.style.setProperty("--gold-glow", `${h} ${s}% ${l}% / 0.3`);
-  // Sidebar primary
-  root.style.setProperty("--sidebar-primary", `${h} ${s}% ${l}%`);
-  root.style.setProperty("--sidebar-ring", `${h} ${s}% ${l}%`);
+  const set = (k: string, v: string) => root.style.setProperty(k, v);
+
+  // ── Primary ──
+  set("--primary", `${h} ${s}% ${l}%`);
+  set("--primary-foreground", `${h} ${Math.min(s, 20)}% 4%`);
+  set("--ring", `${h} ${s}% ${l}%`);
+
+  // ── Backgrounds — very dark, tinted with brand hue ──
+  const bs = Math.max(s * 0.15, 5); // subtle saturation for bg
+  set("--background", `${h} ${bs}% 4%`);
+  set("--foreground", `${h} ${Math.min(s * 0.3, 20)}% 92%`);
+
+  // ── Card — slightly lighter than bg ──
+  set("--card", `${h} ${Math.max(bs - 2, 3)}% 8%`);
+  set("--card-foreground", `${h} ${Math.min(s * 0.3, 20)}% 92%`);
+
+  // ── Popover ──
+  set("--popover", `${h} ${Math.max(bs - 2, 3)}% 8%`);
+  set("--popover-foreground", `${h} ${Math.min(s * 0.3, 20)}% 92%`);
+
+  // ── Secondary — muted brand tint ──
+  set("--secondary", `${h} ${Math.max(s * 0.12, 4)}% 14%`);
+  set("--secondary-foreground", `${h} ${Math.min(s * 0.3, 20)}% 85%`);
+
+  // ── Muted ──
+  set("--muted", `${h} ${Math.max(s * 0.1, 3)}% 12%`);
+  set("--muted-foreground", `${h} ${Math.min(s * 0.15, 10)}% 50%`);
+
+  // ── Accent — complementary warm shift ──
+  const accentH = (h + 330) % 360; // slight warm shift for contrast
+  set("--accent", `${accentH} 70% 50%`);
+  set("--accent-foreground", `${h} ${Math.min(s * 0.3, 20)}% 95%`);
+
+  // ── Borders & inputs ──
+  set("--border", `${h} ${Math.max(s * 0.12, 4)}% 16%`);
+  set("--input", `${h} ${Math.max(s * 0.12, 4)}% 16%`);
+
+  // ── Glassmorphism ──
+  set("--glass", `${h} ${Math.max(bs - 2, 3)}% 10% / 0.6`);
+  set("--glass-border", `${h} ${Math.min(s * 0.3, 20)}% 92% / 0.08`);
+  set("--glass-shine", `${h} ${Math.min(s * 0.3, 20)}% 92% / 0.04`);
+  set("--gold-glow", `${h} ${s}% ${l}% / 0.3`);
+
+  // ── Sidebar ──
+  set("--sidebar-background", `${h} ${Math.max(bs - 1, 3)}% 6%`);
+  set("--sidebar-foreground", `${h} ${Math.min(s * 0.3, 20)}% 85%`);
+  set("--sidebar-primary", `${h} ${s}% ${l}%`);
+  set("--sidebar-primary-foreground", `${h} ${Math.min(s, 20)}% 4%`);
+  set("--sidebar-accent", `${h} ${Math.max(s * 0.12, 4)}% 14%`);
+  set("--sidebar-accent-foreground", `${h} ${Math.min(s * 0.3, 20)}% 85%`);
+  set("--sidebar-border", `${h} ${Math.max(s * 0.12, 4)}% 16%`);
+  set("--sidebar-ring", `${h} ${s}% ${l}%`);
 }
+
+/** All CSS variables managed by the brand theme */
+const BRAND_VARS = [
+  "--primary", "--primary-foreground", "--ring",
+  "--background", "--foreground",
+  "--card", "--card-foreground",
+  "--popover", "--popover-foreground",
+  "--secondary", "--secondary-foreground",
+  "--muted", "--muted-foreground",
+  "--accent", "--accent-foreground",
+  "--border", "--input",
+  "--glass", "--glass-border", "--glass-shine", "--gold-glow",
+  "--sidebar-background", "--sidebar-foreground",
+  "--sidebar-primary", "--sidebar-primary-foreground",
+  "--sidebar-accent", "--sidebar-accent-foreground",
+  "--sidebar-border", "--sidebar-ring",
+];
 
 /** Remove all inline overrides and return to the CSS defaults */
 export function resetBrandTheme() {
   const root = document.documentElement;
-  ["--primary", "--ring", "--gold-glow", "--sidebar-primary", "--sidebar-ring"].forEach(prop => {
-    root.style.removeProperty(prop);
-  });
+  BRAND_VARS.forEach(prop => root.style.removeProperty(prop));
 }
