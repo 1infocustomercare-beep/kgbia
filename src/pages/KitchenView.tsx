@@ -108,6 +108,8 @@ const KitchenView = () => {
   const [session, setSession] = useState<KitchenSession | null>(null);
   const [orders, setOrders] = useState<any[]>([]);
   const [soundOn, setSoundOn] = useState(true);
+  const soundOnRef = useRef(true); // Fix closure issue
+
   const [restaurantName, setRestaurantName] = useState("");
   const prevOrderCountRef = useRef(0);
 
@@ -129,11 +131,11 @@ const KitchenView = () => {
           fetchOrders(parsed.restaurantId);
           const orderType = (payload.new as any)?.order_type;
           if (orderType === "waiter_call") {
-            if (soundOn) playWaiterCallAlert();
+            if (soundOnRef.current) playWaiterCallAlert();
             const tableNum = (payload.new as any)?.table_number;
             toast({ title: "🔔 Chiamata Cameriere!", description: `Tavolo ${tableNum} richiede assistenza!` });
           } else {
-            if (soundOn) playNewOrderAlert();
+            if (soundOnRef.current) playNewOrderAlert();
             toast({ title: "🔔 Nuovo ordine!", description: "Un nuovo ordine è arrivato in cucina." });
           }
         }
@@ -141,7 +143,7 @@ const KitchenView = () => {
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "orders", filter: `restaurant_id=eq.${parsed.restaurantId}` },
         (payload) => {
           fetchOrders(parsed.restaurantId);
-          if (soundOn) {
+          if (soundOnRef.current) {
             const newStatus = (payload.new as any)?.status;
             if (newStatus === "delivered") playPaymentAlert();
             else playUpdateAlert();
@@ -160,7 +162,7 @@ const KitchenView = () => {
       .in("status", ["pending", "preparing", "ready"])
       .order("created_at", { ascending: true });
     if (data) {
-      if (data.length > prevOrderCountRef.current && prevOrderCountRef.current > 0 && soundOn) {
+      if (data.length > prevOrderCountRef.current && prevOrderCountRef.current > 0 && soundOnRef.current) {
         playNewOrderAlert();
       }
       prevOrderCountRef.current = data.length;
@@ -227,7 +229,7 @@ const KitchenView = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setSoundOn(!soundOn)} className="p-2 rounded-full hover:bg-secondary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
+          <button onClick={() => { setSoundOn(!soundOn); soundOnRef.current = !soundOn; }} className="p-2 rounded-full hover:bg-secondary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
             {soundOn ? <Volume2 className="w-5 h-5 text-primary" /> : <VolumeX className="w-5 h-5 text-muted-foreground" />}
           </button>
           <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">

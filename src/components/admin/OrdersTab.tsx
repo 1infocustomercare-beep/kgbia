@@ -229,7 +229,7 @@ const OrdersTab = ({
           {[
             { key: "delivery", label: "🚗 Consegna", enabled: deliveryEnabled, setter: setDeliveryEnabled },
             { key: "takeaway", label: "🥡 Asporto", enabled: takeawayEnabled, setter: setTakeawayEnabled },
-            { key: "table", label: "🪑 Tavolo", enabled: tableOrdersEnabled, setter: setTableOrdersEnabled },
+            { key: "table_orders", label: "🪑 Tavolo", enabled: tableOrdersEnabled, setter: setTableOrdersEnabled },
           ].map(ch => (
             <div key={ch.key} className="flex items-center justify-between p-4 rounded-xl bg-secondary/50">
               <div className="flex items-center gap-3">

@@ -25,7 +25,7 @@ interface StudioTabProps {
   settingsLanguages: string[];
   setSettingsLanguages: React.Dispatch<React.SetStateAction<string[]>>;
   logoUploading: boolean;
-  handleLogoUpload: () => void;
+  handleLogoUpload: () => void; // This is actually handleSaveSettings in AdminDashboard
   userId?: string;
 }
 
@@ -404,6 +404,7 @@ const StudioTab = ({
               <input type="text" value={settingsTagline} onChange={e => setSettingsTagline(e.target.value)}
                 placeholder="Es: La vera cucina italiana dal 1985"
                 maxLength={120}
+                onBlur={handleLogoUpload} // Save on blur
                 className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/40" />
             </motion.div>
 
@@ -415,18 +416,18 @@ const StudioTab = ({
               <div className="flex items-center gap-3">
                 <div className="relative w-14 h-14 flex-shrink-0">
                   <input type="color" value={settingsPrimaryColor}
-                    onChange={e => { setSettingsPrimaryColor(e.target.value); applyBrandTheme(e.target.value); }}
+                    onChange={e => { setSettingsPrimaryColor(e.target.value); applyBrandTheme(e.target.value); handleLogoUpload(); /* Force update parent state */ }}
                     className="w-14 h-14 rounded-2xl border-2 border-primary/30 shadow-lg cursor-pointer bg-transparent p-0.5 appearance-none [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-xl [&::-webkit-color-swatch]:border-0 [&::-moz-color-swatch]:rounded-xl [&::-moz-color-swatch]:border-0" />
                 </div>
                 <div className="flex-1 space-y-2">
                   <input type="text" value={settingsPrimaryColor}
-                    onChange={e => { setSettingsPrimaryColor(e.target.value); if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) applyBrandTheme(e.target.value); }}
+                    onChange={e => { setSettingsPrimaryColor(e.target.value); if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) { applyBrandTheme(e.target.value); handleLogoUpload(); } }}
                     placeholder="#C8963E" maxLength={7}
                     className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
                   {/* Quick presets */}
                   <div className="flex gap-1.5 flex-wrap">
                     {["#C8963E", "#E74C3C", "#2ECC71", "#3498DB", "#9B59B6", "#1ABC9C", "#F39C12", "#E91E63"].map(c => (
-                      <motion.button key={c} onClick={() => { setSettingsPrimaryColor(c); applyBrandTheme(c); }}
+                      <motion.button key={c} onClick={() => { setSettingsPrimaryColor(c); applyBrandTheme(c); handleLogoUpload(); }}
                         className={`w-7 h-7 rounded-lg border-2 transition-all ${settingsPrimaryColor === c ? "border-foreground scale-110 shadow-md" : "border-transparent hover:border-muted-foreground/30"}`}
                         style={{ backgroundColor: c }}
                         whileTap={{ scale: 0.85 }} whileHover={{ scale: 1.15 }} />
@@ -435,13 +436,13 @@ const StudioTab = ({
                 </div>
               </div>
               <div className="flex gap-2 mt-1">
-                <button onClick={() => { setSettingsPrimaryColor(DEFAULT_PRIMARY_HEX); resetBrandTheme(); }}
+                <button onClick={() => { setSettingsPrimaryColor(DEFAULT_PRIMARY_HEX); resetBrandTheme(); handleLogoUpload(); }}
                   className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-secondary-foreground text-xs min-h-[40px] hover:bg-secondary/80 transition-colors">
                   🔄 Ripristina
                 </button>
                 {restaurant?.logo_url && (
                   <button onClick={async () => {
-                    try { const h = await extractDominantColor(restaurant.logo_url!); const hex = hslToHex(h); setSettingsPrimaryColor(hex); applyBrandTheme(hex); toast({ title: "Colore estratto dal logo! 🎨" }); }
+                    try { const h = await extractDominantColor(restaurant.logo_url!); const hex = hslToHex(h); setSettingsPrimaryColor(hex); applyBrandTheme(hex); handleLogoUpload(); toast({ title: "Colore estratto dal logo! 🎨" }); }
                     catch { toast({ title: "Errore", variant: "destructive" }); }
                   }}
                     className="flex-1 px-3 py-2.5 rounded-xl bg-primary/10 text-primary text-xs min-h-[40px] hover:bg-primary/20 transition-colors">

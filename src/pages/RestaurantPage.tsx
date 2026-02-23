@@ -8,6 +8,7 @@ import FloatingCartButton from "@/components/restaurant/FloatingCartButton";
 import ItemDetailSheet from "@/components/restaurant/ItemDetailSheet";
 import PrivateChat from "@/components/restaurant/PrivateChat";
 import ReviewShield from "@/components/restaurant/ReviewShield";
+import ReviewForm from "@/components/restaurant/ReviewForm";
 import NotificationOptIn from "@/components/restaurant/NotificationOptIn";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 import storyInterior from "@/assets/story-interior.jpg";
@@ -147,6 +148,7 @@ const RestaurantPage = () => {
     { id: "home", label: "Home" },
     { id: "story", label: "Chi Siamo" },
     { id: "menu-section", label: "Menù" },
+    { id: "reviews", label: "Recensioni" },
     { id: "reservation", label: "Prenota" },
     { id: "contact", label: "Contatti" },
   ];
@@ -565,6 +567,13 @@ const RestaurantPage = () => {
           initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
       </div>
 
+      {/* ====== REVIEWS ====== */}
+      <section id="reviews" className="py-12 px-4 sm:px-5">
+        <div className="max-w-3xl mx-auto">
+          <ReviewShield restaurantId={dbRestaurant?.id} />
+        </div>
+      </section>
+
       {/* ====== 5. PRENOTAZIONE TAVOLO ====== */}
       <section id="reservation" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5 bg-card/30">
         <div className="max-w-3xl mx-auto">
@@ -677,6 +686,7 @@ const RestaurantPage = () => {
       {/* ====== OVERLAYS ====== */}
       <ItemDetailSheet item={selectedItem} onClose={() => setSelectedItem(null)} />
       <PrivateChat restaurantId={dbRestaurant?.id} />
+      {dbRestaurant?.id && <ReviewForm restaurantId={dbRestaurant.id} />}
       <NotificationOptIn restaurantId={dbRestaurant?.id} restaurantName={restaurantName} />
       <FloatingCartButton onClick={() => setCartOpen(true)} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} allMenuItems={menu} />
