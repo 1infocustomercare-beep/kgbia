@@ -1,14 +1,13 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Crown } from "lucide-react";
-import restaurantLogo from "@/assets/restaurant-logo.png";
 
 interface SplashScreenProps {
   restaurantName: string;
+  logoUrl?: string;
   onComplete: () => void;
 }
 
-const SplashScreen = ({ restaurantName, onComplete }: SplashScreenProps) => {
+const SplashScreen = ({ restaurantName, logoUrl, onComplete }: SplashScreenProps) => {
   const [phase, setPhase] = useState<"brand" | "reveal" | "done">("brand");
 
   useEffect(() => {
@@ -33,27 +32,12 @@ const SplashScreen = ({ restaurantName, onComplete }: SplashScreenProps) => {
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />
 
-          {/* Crown */}
-          <motion.div
-            className="relative z-10 mb-3"
-            initial={{ opacity: 0, y: -25, scale: 0 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <motion.div
-              animate={{ y: [0, -4, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Crown className="w-10 h-10 text-primary drop-shadow-[0_0_24px_hsla(38,75%,55%,0.6)]" />
-            </motion.div>
-          </motion.div>
-
-          {/* Logo */}
+          {/* Restaurant Logo */}
           <motion.div
             className="relative z-10"
             initial={{ scale: 0.4, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="relative">
               <motion.div
@@ -61,11 +45,19 @@ const SplashScreen = ({ restaurantName, onComplete }: SplashScreenProps) => {
                 animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 1.02, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />
-              <img
-                src={restaurantLogo}
-                alt={restaurantName}
-                className="w-24 h-24 rounded-2xl object-contain"
-              />
+              {logoUrl ? (
+                <img
+                  src={logoUrl}
+                  alt={restaurantName}
+                  className="w-28 h-28 rounded-2xl object-contain"
+                />
+              ) : (
+                <div className="w-28 h-28 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <span className="text-4xl font-display font-bold text-primary">
+                    {restaurantName.charAt(0)}
+                  </span>
+                </div>
+              )}
             </div>
           </motion.div>
 
@@ -89,7 +81,7 @@ const SplashScreen = ({ restaurantName, onComplete }: SplashScreenProps) => {
             Powered by Empire
           </motion.p>
 
-          {/* Progress bar — Glovo style */}
+          {/* Progress bar */}
           <motion.div
             className="mt-8 h-1 rounded-full bg-secondary overflow-hidden relative z-10"
             initial={{ width: 0 }}
