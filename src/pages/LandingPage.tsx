@@ -494,7 +494,8 @@ const LandingPage = () => {
                   ))}
                 </div>
 
-                <motion.button className="mt-10 w-full py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg tracking-wide relative overflow-hidden"
+                <motion.button onClick={() => navigate("/admin")}
+                  className="mt-10 w-full py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg tracking-wide relative overflow-hidden"
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
                   <span className="relative z-10">Inizia il tuo Impero Ora</span>
                   <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
@@ -562,7 +563,7 @@ const LandingPage = () => {
             <p className="mt-4 text-muted-foreground max-w-md mx-auto">
               I tuoi competitor stanno costruendo il loro impero digitale. Tu stai ancora alimentando i marketplace.
             </p>
-            <motion.button onClick={scrollToPricing}
+            <motion.button onClick={() => navigate("/admin")}
               className="mt-8 px-12 py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg tracking-wide relative overflow-hidden"
               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <span className="relative z-10 flex items-center gap-2">
