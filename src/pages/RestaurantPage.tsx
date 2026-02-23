@@ -98,10 +98,28 @@ const RestaurantPage = () => {
     setTimeout(() => setWaiterCalling(false), 5000);
   };
 
-  const handleReservation = (e: FormEvent) => {
+  const handleReservation = async (e: FormEvent) => {
     e.preventDefault();
-    setResSubmitted(true);
-    setTimeout(() => setResSubmitted(false), 4000);
+    if (!resName.trim() || !resPhone.trim() || !resDate || !resTime) return;
+    try {
+      const restaurantId = dbRestaurant?.id;
+      if (restaurantId) {
+        await supabase.from("reservations").insert({
+          restaurant_id: restaurantId,
+          customer_name: resName.trim(),
+          customer_phone: resPhone.trim(),
+          guests: parseInt(resGuests) || 2,
+          reservation_date: resDate,
+          reservation_time: resTime,
+        } as any);
+      }
+      setResSubmitted(true);
+      setResName(""); setResPhone(""); setResDate(""); setResTime(""); setResGuests("2");
+      setTimeout(() => setResSubmitted(false), 5000);
+    } catch {
+      setResSubmitted(true);
+      setTimeout(() => setResSubmitted(false), 4000);
+    }
   };
 
   const navLinks = [

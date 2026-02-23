@@ -8,7 +8,7 @@ import {
   Save, X, Check, Bot, Send, ShieldCheck, Lock, Key, Download,
   Settings, Phone, Mail, MapPin, Clock, Upload, Globe, Ban, 
   BarChart3, FileCheck, Image, Smartphone, UserX, Move, Palette,
-  Power, Package, Languages, MessageSquare, ShieldBan
+  Power, Package, Languages, MessageSquare, ShieldBan, CalendarDays
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import PrivateChat from "@/components/restaurant/PrivateChat";
@@ -27,7 +27,7 @@ import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 import { extractDominantColor, hslToHex } from "@/lib/color-extract";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 
-type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings" | "preview" | "clients" | "traffic" | "inventory" | "chat" | "blacklist" | "translate";
+type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings" | "preview" | "clients" | "traffic" | "inventory" | "chat" | "blacklist" | "translate" | "reservations";
 
 interface EditingItem {
   id: string;
@@ -55,6 +55,7 @@ const AdminDashboard = () => {
   const [reviews, setReviews] = useState<any[]>([]);
   const [restaurantTables, setRestaurantTables] = useState<any[]>([]);
   const [newTableCount, setNewTableCount] = useState(8);
+  const [reservations, setReservations] = useState<any[]>([]);
 
   // Kitchen PIN management
   const [kitchenPin, setKitchenPin] = useState("");
@@ -222,11 +223,21 @@ const AdminDashboard = () => {
         .eq("is_active", true)
         .order("blocked_at", { ascending: false });
       if (bl) setBlacklist(bl);
+
+      // Reservations
+      const { data: resData } = await supabase
+        .from("reservations").select("*")
+        .eq("restaurant_id", restaurant.id)
+        .order("reservation_date", { ascending: true })
+        .order("reservation_time", { ascending: true })
+        .limit(50) as any;
+      if (resData) setReservations(resData);
     };
     fetchData();
 
     const channel = supabase.channel("admin-orders")
       .on("postgres_changes", { event: "*", schema: "public", table: "orders", filter: `restaurant_id=eq.${restaurant.id}` }, () => fetchData())
+      .on("postgres_changes", { event: "*", schema: "public", table: "reservations", filter: `restaurant_id=eq.${restaurant.id}` }, () => fetchData())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [restaurant]);
@@ -250,6 +261,7 @@ const AdminDashboard = () => {
     { id: "panic", label: "Panic", icon: <AlertTriangle className="w-5 h-5" /> },
     { id: "reviews", label: "Reviews", icon: <Star className="w-5 h-5" /> },
     { id: "clients", label: "Clienti", icon: <UserX className="w-5 h-5" /> },
+    { id: "reservations", label: "Prenotazioni", icon: <CalendarDays className="w-5 h-5" /> },
     { id: "academy", label: "Academy", icon: <GraduationCap className="w-5 h-5" /> },
     { id: "settings", label: "Info", icon: <Settings className="w-5 h-5" /> },
   ];
@@ -1505,6 +1517,70 @@ const AdminDashboard = () => {
         {/* LOST CUSTOMERS */}
         {activeTab === "clients" && restaurant && (
           <LostCustomers restaurantId={restaurant.id} restaurantName={restaurantName} />
+        )}
+
+        {/* RESERVATIONS */}
+        {activeTab === "reservations" && restaurant && (
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center py-4">
+              <CalendarDays className="w-12 h-12 mx-auto mb-3 text-primary" />
+              <h3 className="text-lg font-display font-bold text-foreground">Prenotazioni</h3>
+              <p className="text-sm text-muted-foreground mt-1">Gestisci le prenotazioni dei clienti in tempo reale</p>
+            </div>
+            {reservations.length === 0 && (
+              <div className="text-center py-12">
+                <CalendarDays className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
+                <p className="text-sm text-muted-foreground">Nessuna prenotazione ricevuta</p>
+              </div>
+            )}
+            {reservations.map((res: any) => (
+              <div key={res.id} className={`p-4 rounded-2xl border ${
+                res.status === "confirmed" ? "bg-green-500/5 border-green-500/20" :
+                res.status === "cancelled" ? "bg-accent/5 border-accent/20 opacity-60" :
+                "bg-secondary/50 border-border"
+              }`}>
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{res.customer_name}</p>
+                    <p className="text-xs text-muted-foreground">{res.customer_phone}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-display font-bold text-primary">{res.reservation_date}</p>
+                    <p className="text-xs text-muted-foreground">ore {res.reservation_time}</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-xs text-muted-foreground">👥 {res.guests} ospiti</span>
+                  <div className="flex gap-2">
+                    {res.status === "pending" && (
+                      <>
+                        <button onClick={async () => {
+                          await supabase.from("reservations").update({ status: "confirmed" } as any).eq("id", res.id);
+                          setReservations(prev => prev.map(r => r.id === res.id ? { ...r, status: "confirmed" } : r));
+                          toast({ title: "Prenotazione confermata" });
+                        }} className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-400 text-xs font-medium min-h-[36px]">
+                          ✅ Conferma
+                        </button>
+                        <button onClick={async () => {
+                          await supabase.from("reservations").update({ status: "cancelled" } as any).eq("id", res.id);
+                          setReservations(prev => prev.map(r => r.id === res.id ? { ...r, status: "cancelled" } : r));
+                          toast({ title: "Prenotazione annullata" });
+                        }} className="px-3 py-1.5 rounded-lg bg-accent/20 text-accent text-xs font-medium min-h-[36px]">
+                          ✖ Rifiuta
+                        </button>
+                      </>
+                    )}
+                    {res.status === "confirmed" && (
+                      <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400">Confermata</span>
+                    )}
+                    {res.status === "cancelled" && (
+                      <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-accent/20 text-accent">Annullata</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
         )}
 
         {/* SETTINGS — Full Config Panel */}
