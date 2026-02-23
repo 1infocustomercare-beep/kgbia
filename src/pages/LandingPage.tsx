@@ -8,7 +8,7 @@ import {
   MessageCircle, HelpCircle, ChevronDown, Eye, Play, Gem
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import demoVideo from "@/assets/demo-app-video.mp4";
+// Live preview replaces video import
 
 // Animated counter
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) => {
@@ -175,64 +175,106 @@ const LandingPage = () => {
 
       {/* ====== 1. HERO — Cinematic ====== */}
       <section id="hero" ref={heroRef} className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
-        <video src={demoVideo} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/50 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
         
-        {/* Radial glow behind text */}
+        {/* Radial glow behind content */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary/10 rounded-full blur-[150px]" />
 
-        <motion.div className="relative z-10 flex flex-col items-center text-center px-5 max-w-4xl"
+        <motion.div className="relative z-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 px-5 max-w-6xl w-full pt-28 pb-16"
           style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}>
           
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass border border-primary/20 mb-8">
-            <Sparkles className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-medium text-primary tracking-wider uppercase">La Rivoluzione per i Ristoratori</span>
-          </motion.div>
+          {/* Left: Text content */}
+          <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass border border-primary/20 mb-8">
+              <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-medium text-primary tracking-wider uppercase">La Rivoluzione per i Ristoratori</span>
+            </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 }}
-            className="text-5xl sm:text-7xl md:text-8xl font-display font-bold text-foreground leading-[1.05] tracking-tight">
-            Riprenditi il tuo{" "}
-            <span className="relative inline-block">
-              <span className="text-gold-gradient">Impero</span>
-              <motion.span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full"
-                initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.2, duration: 0.8 }} />
-            </span>
-          </motion.h1>
-
-          <motion.p className="mt-6 text-lg sm:text-xl text-foreground/60 max-w-xl leading-relaxed font-light"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-            L'Asset Digitale di Proprietà che ti libera dal 30% di commissioni.{" "}
-            <span className="text-foreground font-medium">Una volta. Per sempre.</span>
-          </motion.p>
-
-          <motion.div className="mt-10 flex flex-col sm:flex-row items-center gap-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
-            <motion.button onClick={scrollToPricing}
-              className="group relative px-10 py-4 bg-primary text-primary-foreground font-semibold text-sm tracking-widest uppercase rounded-2xl overflow-hidden"
-              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <span className="relative z-10 flex items-center gap-2">
-                Inizia Ora <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 }}
+              className="text-4xl sm:text-6xl lg:text-7xl font-display font-bold text-foreground leading-[1.05] tracking-tight">
+              Riprenditi il tuo{" "}
+              <span className="relative inline-block">
+                <span className="text-gold-gradient">Impero</span>
+                <motion.span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full"
+                  initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.2, duration: 0.8 }} />
               </span>
-              <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
-                animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
-            </motion.button>
-            <button onClick={() => navigate("/r/impero-roma")}
-              className="group px-10 py-4 rounded-2xl glass border border-foreground/10 text-foreground text-sm tracking-widest uppercase hover:border-primary/40 transition-all duration-300 flex items-center gap-2">
-              <Play className="w-4 h-4 text-primary" /> Demo Live
-            </button>
-          </motion.div>
+            </motion.h1>
 
-          {/* Trust badges */}
-          <motion.div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-foreground/40"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}>
-            {[
-              { icon: <Lock className="w-3.5 h-3.5" />, text: "AES-256 Encrypted" },
-              { icon: <Zap className="w-3.5 h-3.5" />, text: "Setup in 60s" },
-              { icon: <Gem className="w-3.5 h-3.5" />, text: "Zero Canoni" },
-            ].map((badge, i) => (
-              <span key={i} className="flex items-center gap-1.5">{badge.icon} {badge.text}</span>
-            ))}
+            <motion.p className="mt-6 text-lg sm:text-xl text-foreground/60 max-w-xl leading-relaxed font-light"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+              L'Asset Digitale di Proprietà che ti libera dal 30% di commissioni.{" "}
+              <span className="text-foreground font-medium">Una volta. Per sempre.</span>
+            </motion.p>
+
+            <motion.div className="mt-10 flex flex-col sm:flex-row items-center gap-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
+              <motion.button onClick={scrollToPricing}
+                className="group relative px-10 py-4 bg-primary text-primary-foreground font-semibold text-sm tracking-widest uppercase rounded-2xl overflow-hidden"
+                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                <span className="relative z-10 flex items-center gap-2">
+                  Inizia Ora <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+                <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
+                  animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
+              </motion.button>
+              <button onClick={() => navigate("/r/impero-roma")}
+                className="group px-10 py-4 rounded-2xl glass border border-foreground/10 text-foreground text-sm tracking-widest uppercase hover:border-primary/40 transition-all duration-300 flex items-center gap-2">
+                <Play className="w-4 h-4 text-primary" /> Demo Live
+              </button>
+            </motion.div>
+
+            {/* Trust badges */}
+            <motion.div className="mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-foreground/40"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}>
+              {[
+                { icon: <Lock className="w-3.5 h-3.5" />, text: "AES-256 Encrypted" },
+                { icon: <Zap className="w-3.5 h-3.5" />, text: "Setup in 60s" },
+                { icon: <Gem className="w-3.5 h-3.5" />, text: "Zero Canoni" },
+              ].map((badge, i) => (
+                <span key={i} className="flex items-center gap-1.5">{badge.icon} {badge.text}</span>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Right: Live iPhone Preview */}
+          <motion.div className="flex-shrink-0"
+            initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6, duration: 1 }}>
+            <div className="relative">
+              {/* Glow behind phone */}
+              <div className="absolute -inset-8 bg-primary/15 rounded-[60px] blur-[60px]" />
+              {/* iPhone bezel */}
+              <div className="relative w-[280px] h-[580px] bg-[#1a1a1a] rounded-[40px] p-[10px] shadow-2xl border border-[#333]">
+                {/* Notch */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[28px] bg-[#1a1a1a] rounded-b-2xl z-10" />
+                {/* Status bar */}
+                <div className="absolute top-[6px] left-[28px] flex items-center gap-1 z-10">
+                  <span className="text-[9px] text-white/60 font-medium">9:41</span>
+                </div>
+                {/* Screen */}
+                <div className="w-full h-full rounded-[32px] overflow-hidden bg-background">
+                  <iframe
+                    src={`${window.location.origin}/r/impero-roma`}
+                    className="border-0 origin-top-left"
+                    style={{
+                      transform: "scale(0.6933)",
+                      transformOrigin: "top left",
+                      width: "375px",
+                      height: "812px",
+                    }}
+                    title="Live App Preview"
+                    sandbox="allow-scripts allow-same-origin allow-popups"
+                  />
+                </div>
+                {/* Home indicator */}
+                <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[100px] h-[4px] rounded-full bg-white/20" />
+              </div>
+              {/* Label under phone */}
+              <motion.p className="text-center text-xs text-muted-foreground mt-4 flex items-center justify-center gap-1.5"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
+                <Smartphone className="w-3.5 h-3.5 text-primary" /> App live — interagisci in tempo reale
+              </motion.p>
+            </div>
           </motion.div>
         </motion.div>
 
