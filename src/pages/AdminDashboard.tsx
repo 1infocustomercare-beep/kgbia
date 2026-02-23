@@ -27,7 +27,7 @@ import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 import { extractDominantColor, hslToHex, applyBrandTheme, resetBrandTheme, DEFAULT_PRIMARY_HEX } from "@/lib/color-extract";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 
-type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings" | "preview" | "clients" | "traffic" | "inventory" | "chat" | "blacklist" | "translate" | "reservations";
+type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "panic" | "reviews" | "academy" | "settings" | "preview" | "clients" | "traffic" | "inventory" | "chat" | "blacklist" | "translate" | "reservations" | "more";
 
 interface EditingItem {
   id: string;
@@ -246,8 +246,8 @@ const AdminDashboard = () => {
     return () => { supabase.removeChannel(channel); };
   }, [restaurant]);
 
-  // Table map edit mode
   const [tableMapEditMode, setTableMapEditMode] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const tabs: { id: AdminTab; label: string; icon: React.ReactNode }[] = [
     { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" /> },
@@ -696,42 +696,44 @@ const AdminDashboard = () => {
     );
   }
 
+  const currentTabLabel = tabs.find(t => t.id === activeTab)?.label || "Dashboard";
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Top bar — Restaurant Brand Color */}
-      <div className="flex items-center justify-between px-4 sm:px-5 pt-4 pb-3 border-b border-border/50 bg-card/50">
-        <div className="flex items-center gap-3">
-          <img src={restaurant?.logo_url || restaurantLogo} alt="" className="w-9 h-9 rounded-lg object-contain" />
-          <div>
-            <h1 className="text-base sm:text-lg font-display font-bold text-foreground">{restaurantName}</h1>
-            <p className="text-[10px] sm:text-xs text-primary font-medium tracking-wider uppercase">Pannello Ristorante</p>
+      {/* Top bar — compact mobile header */}
+      <div className="flex items-center justify-between px-3 sm:px-5 pt-2 sm:pt-4 pb-2 sm:pb-3 border-b border-border/50 bg-card/50 safe-top">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <img src={restaurant?.logo_url || restaurantLogo} alt="" className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg object-contain flex-shrink-0" />
+          <div className="min-w-0">
+            <h1 className="text-sm sm:text-lg font-display font-bold text-foreground truncate">{restaurantName}</h1>
+            <p className="text-[10px] text-primary font-medium tracking-wider uppercase">{currentTabLabel}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] sm:text-xs text-muted-foreground bg-secondary px-2 py-1 rounded-lg">
-            <Coins className="w-3 h-3 inline mr-1" />{aiTokens}
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 sm:px-2 py-1 rounded-lg flex items-center gap-1">
+            <Coins className="w-3 h-3" />{aiTokens}
           </span>
-          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
-            <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
+          <button onClick={handleLogout} className="p-1.5 sm:p-2 rounded-full hover:bg-secondary transition-colors">
+            <LogOut className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
       </div>
 
-      {/* Tab bar */}
-      <div className="flex gap-1.5 px-4 overflow-x-auto scrollbar-hide pb-3">
+      {/* Desktop/Tablet: horizontal scrollable tab bar */}
+      <div className="hidden sm:flex gap-1.5 px-4 py-2 overflow-x-auto scrollbar-hide border-b border-border/30">
         {tabs.map((tab) => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-medium whitespace-nowrap transition-colors min-h-[44px] ${
-              activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${
+              activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
             }`}>
             {tab.icon}
-            <span className="hidden sm:inline">{tab.label}</span>
+            <span>{tab.label}</span>
           </button>
         ))}
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-5 pb-8 overflow-y-auto">
+      <div className="flex-1 px-3 sm:px-5 pb-24 sm:pb-8 overflow-y-auto">
         {/* DASHBOARD */}
         {activeTab === "dashboard" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -1786,7 +1788,7 @@ const AdminDashboard = () => {
               <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Orari di apertura</p>
               {settingsHours.map((entry, i) => (
                 <div key={entry.day} className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
-                  <span className="text-sm font-medium text-foreground w-24 flex-shrink-0">{entry.day}</span>
+                  <span className="text-xs sm:text-sm font-medium text-foreground w-16 sm:w-24 flex-shrink-0">{entry.day.slice(0, 3)}</span>
                   <input type="text" value={entry.hours}
                     onChange={e => {
                       const updated = [...settingsHours];
@@ -1926,6 +1928,70 @@ const AdminDashboard = () => {
           </motion.div>
         )}
       </div>
+
+      {/* Mobile bottom navigation */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border/50 safe-bottom z-40">
+        <div className="grid grid-cols-5 gap-0.5 px-1 pt-1.5 pb-1">
+          {[
+            tabs.find(t => t.id === "dashboard")!,
+            tabs.find(t => t.id === "menu")!,
+            tabs.find(t => t.id === "kitchen")!,
+            tabs.find(t => t.id === "qr")!,
+            { id: "more" as AdminTab, label: "Altro", icon: <Settings className="w-5 h-5" /> },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => {
+                if (tab.id === "more") {
+                  setShowMobileMenu(!showMobileMenu);
+                } else {
+                  setActiveTab(tab.id);
+                  setShowMobileMenu(false);
+                }
+              }}
+              className={`flex flex-col items-center justify-center py-1.5 rounded-xl text-[10px] font-medium transition-colors ${
+                (tab.id === "more" && showMobileMenu) || (tab.id !== "more" && activeTab === tab.id)
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {tab.icon}
+              <span className="mt-0.5">{tab.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Mobile "More" menu overlay */}
+      {showMobileMenu && (
+        <motion.div
+          className="sm:hidden fixed inset-0 z-30 bg-background/80 backdrop-blur-sm"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          onClick={() => setShowMobileMenu(false)}
+        >
+          <motion.div
+            className="absolute bottom-20 left-2 right-2 bg-card rounded-2xl border border-border p-3 shadow-2xl safe-bottom"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider px-2 mb-2">Tutte le sezioni</p>
+            <div className="grid grid-cols-4 gap-1.5">
+              {tabs.filter(t => !["dashboard", "menu", "kitchen", "qr"].includes(t.id)).map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => { setActiveTab(tab.id); setShowMobileMenu(false); }}
+                  className={`flex flex-col items-center gap-1 py-3 px-1 rounded-xl text-[10px] font-medium transition-colors ${
+                    activeTab === tab.id ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {tab.icon}
+                  <span className="truncate w-full text-center">{tab.label}</span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 };
