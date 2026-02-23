@@ -1,73 +1,99 @@
 import { motion } from "framer-motion";
 import { Star, Shield, ExternalLink } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
-const ReviewShield = () => {
-  const reviews = [
-    { name: "Giulia M.", stars: 5, text: "Pasta incredibile! Torneremo sicuramente. Il tartufo era divino.", date: "2 ore fa", public: true },
-    { name: "Andrea P.", stars: 5, text: "Miglior pizza di Roma, impasto perfetto.", date: "5 ore fa", public: true },
-    { name: "Paolo T.", stars: 2, text: "Servizio lento, pizza fredda.", date: "1 giorno fa", public: false },
-    { name: "Francesca R.", stars: 4, text: "Ottima carne, ambiente accogliente e personale gentile.", date: "2 giorni fa", public: true },
-    { name: "Luca G.", stars: 1, text: "Attesa di 50 minuti per un antipasto.", date: "3 giorni fa", public: false },
-  ];
+interface ReviewShieldProps {
+  restaurantId?: string;
+}
+
+const ReviewShield = ({ restaurantId }: ReviewShieldProps) => {
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!restaurantId) return;
+    const fetchReviews = async () => {
+      const { data } = await supabase
+        .from("reviews")
+        .select("*")
+        .eq("restaurant_id", restaurantId)
+        .order("created_at", { ascending: false })
+        .limit(10);
+      
+      if (data) setReviews(data);
+      setLoading(false);
+    };
+    fetchReviews();
+  }, [restaurantId]);
+
+  if (!restaurantId || (reviews.length === 0 && !loading)) return null;
+
+  const publicReviews = reviews.filter(r => r.is_public);
+  const avgRating = reviews.length > 0 
+    ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) 
+    : "—";
+  
+  const totalReviews = reviews.length;
+  const positiveReviews = reviews.filter(r => r.rating >= 4).length;
+  const positivePercent = totalReviews > 0 ? Math.round((positiveReviews / totalReviews) * 100) : 0;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mb-8">
       <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20">
         <div className="flex items-center gap-2 mb-1">
           <Shield className="w-5 h-5 text-primary" />
           <h3 className="font-display font-bold text-foreground">Review Shield</h3>
         </div>
         <p className="text-xs text-muted-foreground">
-          Solo le recensioni 4-5★ vengono inviate a Google. Le altre restano private per il tuo miglioramento.
+          Recensioni verificate e filtrate.
         </p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2">
-        <div className="p-3 rounded-xl bg-card text-center">
-          <p className="text-xl font-display font-bold text-primary">4.7</p>
+        <div className="p-3 rounded-xl bg-card text-center border border-border/50">
+          <p className="text-xl font-display font-bold text-primary">{avgRating}</p>
           <p className="text-xs text-muted-foreground">Media</p>
         </div>
-        <div className="p-3 rounded-xl bg-card text-center">
-          <p className="text-xl font-display font-bold text-foreground">127</p>
+        <div className="p-3 rounded-xl bg-card text-center border border-border/50">
+          <p className="text-xl font-display font-bold text-foreground">{totalReviews}</p>
           <p className="text-xs text-muted-foreground">Totali</p>
         </div>
-        <div className="p-3 rounded-xl bg-card text-center">
-          <p className="text-xl font-display font-bold text-green-400">89%</p>
+        <div className="p-3 rounded-xl bg-card text-center border border-border/50">
+          <p className="text-xl font-display font-bold text-green-400">{positivePercent}%</p>
           <p className="text-xs text-muted-foreground">Positive</p>
         </div>
       </div>
 
-      {/* Reviews */}
+      {/* Reviews List - Only Public */}
       <div className="space-y-2">
-        {reviews.map((review, i) => (
+        {publicReviews.map((review, i) => (
           <motion.div
-            key={i}
-            className={`p-3 rounded-xl ${review.public ? "bg-card" : "bg-accent/5 border border-accent/15"}`}
+            key={review.id}
+            className="p-3 rounded-xl bg-card border border-border/50"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08 }}
           >
             <div className="flex justify-between items-center mb-1">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-foreground">{review.name}</span>
-                <span className="text-xs text-muted-foreground">{review.date}</span>
+                <span className="text-sm font-medium text-foreground">{review.customer_name || "Cliente"}</span>
+                <span className="text-xs text-muted-foreground">
+                  {new Date(review.created_at).toLocaleDateString("it-IT")}
+                </span>
               </div>
               <div className="flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, j) => (
-                  <Star key={j} className={`w-3 h-3 ${j < review.stars ? "text-primary fill-primary" : "text-muted"}`} />
+                  <Star key={j} className={`w-3 h-3 ${j < review.rating ? "text-primary fill-primary" : "text-muted"}`} />
                 ))}
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">{review.text}</p>
+            {review.comment && <p className="text-xs text-muted-foreground">{review.comment}</p>}
             <div className="mt-1.5">
-              {review.public ? (
-                <span className="inline-flex items-center gap-1 text-xs text-green-400">
-                  <ExternalLink className="w-3 h-3" /> Su Google
-                </span>
-              ) : (
-                <span className="text-xs text-accent">🔒 Privata</span>
-              )}
+              <span className="inline-flex items-center gap-1 text-xs text-green-400">
+                <ExternalLink className="w-3 h-3" /> Verificata
+              </span>
             </div>
           </motion.div>
         ))}
