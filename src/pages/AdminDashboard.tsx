@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   UtensilsCrossed, LayoutDashboard, ChefHat, TrendingUp, 
   LogOut, AlertTriangle, Star, GraduationCap,
@@ -8,7 +8,7 @@ import {
   Save, X, Check, Bot, Send, ShieldCheck, Lock, Key, Download,
   Settings, Phone, Mail, MapPin, Clock, Upload, Globe, Ban, 
   BarChart3, FileCheck, Image, Smartphone, UserX, Move, Palette,
-  Power, Package, Languages, MessageSquare, ShieldBan, CalendarDays
+  Power, Package, Languages, MessageSquare, ShieldBan, CalendarDays, Plus
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import PrivateChat from "@/components/restaurant/PrivateChat";
@@ -31,6 +31,13 @@ type AdminTab = "dashboard" | "menu" | "kitchen" | "ai" | "vault" | "qr" | "pani
 
 interface EditingItem {
   id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+}
+
+interface NewMenuItem {
   name: string;
   description: string;
   price: number;
@@ -100,8 +107,9 @@ const AdminDashboard = () => {
   const [settingsPrimaryColor, setSettingsPrimaryColor] = useState("#C8963E");
   const [orderAnalytics, setOrderAnalytics] = useState<{source: string; count: number}[]>([]);
 
-  // Menu item editing
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
+  const [showAddItem, setShowAddItem] = useState(false);
+  const [newItem, setNewItem] = useState<NewMenuItem>({ name: "", description: "", price: 0, category: "Altro" });
 
   // Traffic control toggles
   const [deliveryEnabled, setDeliveryEnabled] = useState(true);
@@ -564,6 +572,32 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleAddMenuItem = async () => {
+    if (!restaurant || !newItem.name.trim()) return;
+    const { data, error } = await supabase.from("menu_items").insert({
+      restaurant_id: restaurant.id,
+      name: newItem.name.trim(),
+      description: newItem.description.trim() || "",
+      price: newItem.price || 0,
+      category: newItem.category.trim() || "Altro",
+      sort_order: menuItems.length,
+      is_active: true,
+      is_popular: false,
+    }).select().single();
+    if (error) {
+      toast({ title: "Errore", description: error.message, variant: "destructive" });
+    } else if (data) {
+      setMenuItems(prev => [...prev, {
+        id: data.id, name: data.name, description: data.description || "",
+        price: Number(data.price), image: data.image_url || "",
+        category: data.category, allergens: data.allergens || [], isPopular: data.is_popular,
+      }]);
+      setNewItem({ name: "", description: "", price: 0, category: "Altro" });
+      setShowAddItem(false);
+      toast({ title: "Piatto aggiunto al menu!" });
+    }
+  };
+
   const handleSaveSettings = async () => {
     if (!restaurant) return;
     setSettingsSaving(true);
@@ -795,7 +829,39 @@ const AdminDashboard = () => {
           <motion.div className="space-y-3 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-semibold text-foreground">{menuItems.length} piatti nel catalogo</h3>
+              <motion.button onClick={() => setShowAddItem(!showAddItem)}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium min-h-[40px]"
+                whileTap={{ scale: 0.95 }}>
+                {showAddItem ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                {showAddItem ? "Chiudi" : "Aggiungi"}
+              </motion.button>
             </div>
+
+            {/* Add new item form */}
+            <AnimatePresence>
+              {showAddItem && (
+                <motion.div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-3"
+                  initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
+                  <p className="text-xs text-primary uppercase tracking-wider font-medium">Nuovo piatto</p>
+                  <input type="text" value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })}
+                    placeholder="Nome del piatto" className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  <textarea value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })}
+                    placeholder="Descrizione (opz.)" className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  <div className="grid grid-cols-2 gap-2">
+                    <input type="number" step="0.01" value={newItem.price || ""} onChange={e => setNewItem({ ...newItem, price: parseFloat(e.target.value) || 0 })}
+                      placeholder="€ Prezzo" className="px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                    <input type="text" value={newItem.category} onChange={e => setNewItem({ ...newItem, category: e.target.value })}
+                      placeholder="Categoria" className="px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  </div>
+                  <motion.button onClick={handleAddMenuItem} disabled={!newItem.name.trim()}
+                    className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-40 min-h-[48px]"
+                    whileTap={{ scale: 0.97 }}>
+                    <Plus className="w-4 h-4" /> Aggiungi al Menu
+                  </motion.button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {allCategories.map((cat) => {
               const catItems = menuItems.filter(i => i.category === cat);
               if (catItems.length === 0) return null;
@@ -836,6 +902,12 @@ const AdminDashboard = () => {
                 </div>
               );
             })}
+            {menuItems.length === 0 && (
+              <div className="text-center py-12">
+                <UtensilsCrossed className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
+                <p className="text-sm text-muted-foreground">Nessun piatto — aggiungi manualmente o usa l'IA Menu Creator</p>
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -1405,6 +1477,48 @@ const AdminDashboard = () => {
             </div>
             <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20">
               <p className="text-xs text-muted-foreground">💡 Locale pieno? Disattiva i canali con un tap.</p>
+            </div>
+
+            {/* Traffic Analytics */}
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> Fonti Ordini</p>
+              {orderAnalytics.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">Nessun dato — gli ordini futuri tracceranno la fonte automaticamente</p>
+              ) : (
+                <>
+                  <div className="h-48 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie data={orderAnalytics} dataKey="count" nameKey="source" cx="50%" cy="50%" outerRadius={70} innerRadius={35} paddingAngle={3} strokeWidth={0}>
+                          {orderAnalytics.map((_, idx) => (
+                            <Cell key={idx} fill={`hsl(${38 + idx * 45}, ${75 - idx * 8}%, ${55 + idx * 5}%)`} />
+                          ))}
+                        </Pie>
+                        <RechartsTooltip contentStyle={{ background: "hsl(20, 12%, 8%)", border: "1px solid hsl(20, 10%, 16%)", borderRadius: "12px", fontSize: "12px", color: "hsl(40, 20%, 92%)" }} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="space-y-2">
+                    {orderAnalytics.map((item, idx) => {
+                      const maxCount = orderAnalytics[0]?.count || 1;
+                      return (
+                        <div key={item.source} className="p-3 rounded-xl bg-secondary/50">
+                          <div className="flex justify-between items-center mb-1.5">
+                            <div className="flex items-center gap-2">
+                              <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: `hsl(${38 + idx * 45}, ${75 - idx * 8}%, ${55 + idx * 5}%)` }} />
+                              <span className="text-sm font-medium text-foreground capitalize">{item.source}</span>
+                            </div>
+                            <span className="text-xs text-primary font-semibold">{item.count} ordini</span>
+                          </div>
+                          <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                            <div className="h-full rounded-full transition-all" style={{ width: `${(item.count / maxCount) * 100}%`, background: `hsl(${38 + idx * 45}, ${75 - idx * 8}%, ${55 + idx * 5}%)` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         )}
