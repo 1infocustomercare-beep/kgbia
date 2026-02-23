@@ -250,25 +250,44 @@ const RestaurantPage = () => {
         </motion.div>
       </section>
 
+      {/* ====== SECTION DIVIDER ====== */}
+      <div className="relative h-16 sm:h-24 overflow-hidden">
+        <motion.div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-background/0 via-primary/[0.03] to-background/0"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1.2 }} />
+        <motion.div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-px bg-primary/30"
+          initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} />
+      </div>
+
       {/* ====== 2. LA NOSTRA STORIA ====== */}
       <section id="story" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           {/* Text */}
-          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-            <span className="text-xs tracking-[0.3em] uppercase text-primary font-medium">La Nostra Storia</span>
-            <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground leading-tight">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}>
+            <motion.span className="text-xs tracking-[0.3em] uppercase text-primary font-medium inline-block"
+              initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}>
+              La Nostra Storia
+            </motion.span>
+            <motion.h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground leading-tight"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}>
               Una passione per la<br />
               <span className="text-gold-gradient">cucina autentica</span>
-            </h2>
-            <p className="mt-6 text-muted-foreground leading-relaxed">
+            </motion.h2>
+            <motion.p className="mt-6 text-muted-foreground leading-relaxed"
+              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.45 }}>
               Nel cuore della città vi attende {restaurantName} — un luogo dove l'ospitalità italiana incontra l'eccellenza culinaria. 
               La nostra cucina unisce ricette tradizionali con accenti moderni, utilizzando solo gli ingredienti più pregiati d'Italia e del territorio.
-            </p>
-            <p className="mt-4 text-muted-foreground leading-relaxed">
+            </motion.p>
+            <motion.p className="mt-4 text-muted-foreground leading-relaxed"
+              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.55 }}>
               Dalla nostra pasta fatta a mano alle carni selezionate, dai vini della nostra enoteca ai dolci della tradizione — 
               ogni visita diventa un'esperienza indimenticabile per tutti i sensi.
-            </p>
-            <div className="mt-8 flex items-center gap-4">
+            </motion.p>
+            <motion.div className="mt-8 flex items-center gap-4"
+              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.65 }}>
               <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
                 <Crown className="w-6 h-6 text-primary" />
               </div>
@@ -276,26 +295,46 @@ const RestaurantPage = () => {
                 <p className="font-display font-bold text-foreground">Chef & Proprietario</p>
                 <p className="text-sm text-muted-foreground">{restaurantName}</p>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* Photo Grid */}
-          <motion.div className="grid grid-cols-2 gap-3" initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+          <div className="grid grid-cols-2 gap-3">
             {[storyInterior, storyWine, storyPasta, storyDish].map((img, i) => (
               <motion.div key={i} className={`overflow-hidden rounded-2xl ${i === 0 ? "row-span-2" : ""}`}
-                whileHover={{ scale: 1.02 }} transition={{ duration: 0.4 }}>
-                <img src={img} alt="Restaurant" className={`w-full object-cover ${i === 0 ? "h-full" : "h-48 sm:h-56"}`} loading="lazy" />
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.7, delay: 0.15 * i + 0.2, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ scale: 1.03 }}>
+                <img src={img} alt="Restaurant" className={`w-full object-cover ${i === 0 ? "h-full" : "h-48 sm:h-56"} transition-transform duration-700`} loading="lazy" />
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
+
+      {/* ====== SECTION DIVIDER ====== */}
+      <div className="relative h-16 sm:h-24 overflow-hidden">
+        <motion.div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-px bg-primary/30"
+          initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+      </div>
 
       {/* ====== 3. MENU — Le Nostre Specialità ====== */}
       <section id="menu-section" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5 bg-card/30">
         <div className="max-w-6xl mx-auto">
-          <motion.div className="text-center mb-8 sm:mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Le Nostre Specialità</span>
+          <motion.div className="text-center mb-8 sm:mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+            <motion.span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium inline-block"
+              initial={{ opacity: 0, letterSpacing: "0.1em" }}
+              whileInView={{ opacity: 1, letterSpacing: "0.3em" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9, delay: 0.15 }}>
+              Le Nostre Specialità
+            </motion.span>
             <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Il Nostro Menù</h2>
           </motion.div>
 
@@ -309,7 +348,10 @@ const RestaurantPage = () => {
                 {popularItems.map((item, i) => (
                   <motion.div key={item.id}
                     className="group relative rounded-2xl overflow-hidden bg-card border border-border/30 hover:border-primary/30 transition-all duration-500 cursor-pointer"
-                    initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true, margin: "-30px" }}
+                    transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                     onClick={() => setSelectedItem(item)}>
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
@@ -359,13 +401,16 @@ const RestaurantPage = () => {
             </div>
 
             {/* Items grid */}
-            <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" key={effectiveCat}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-              {catItems.map((item, i) => (
-                <motion.div key={item.id}
-                  className="group flex gap-4 p-4 rounded-2xl bg-card border border-border/30 hover:border-primary/20 transition-all cursor-pointer"
-                  initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                  onClick={() => setSelectedItem(item)}>
+            <AnimatePresence mode="wait">
+              <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" key={effectiveCat}
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
+                {catItems.map((item, i) => (
+                  <motion.div key={item.id}
+                    className="group flex gap-4 p-4 rounded-2xl bg-card border border-border/30 hover:border-primary/20 transition-all cursor-pointer"
+                    initial={{ opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: i * 0.06, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    onClick={() => setSelectedItem(item)}>
                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden flex-shrink-0">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                   </div>
@@ -384,15 +429,26 @@ const RestaurantPage = () => {
                   </div>
                 </motion.div>
               ))}
-            </motion.div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </section>
 
+      {/* ====== SECTION DIVIDER ====== */}
+      <div className="relative h-16 sm:h-24 overflow-hidden">
+        <motion.div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-px bg-primary/30"
+          initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+      </div>
+
       {/* ====== 4. CONTATTI & ORARI ====== */}
       <section id="contact" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5">
         <div className="max-w-6xl mx-auto">
-          <motion.div className="text-center mb-8 sm:mb-14" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.div className="text-center mb-8 sm:mb-14"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
             <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Vieni a Trovarci</span>
             <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Contatti & Orari</h2>
           </motion.div>
@@ -400,8 +456,13 @@ const RestaurantPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {/* Location */}
             <motion.div className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl glass border border-border/30"
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <MapPin className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-3" />
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
+              <motion.div initial={{ scale: 0.5, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3, type: "spring", stiffness: 200 }}>
+                <MapPin className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-3" />
+              </motion.div>
               <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-2">{restaurantCity}</h3>
               <p className="text-sm text-muted-foreground mb-3">{restaurantAddress}</p>
               <a href={`https://maps.google.com/?q=${encodeURIComponent(restaurantAddress + " " + restaurantCity)}`}
@@ -413,8 +474,13 @@ const RestaurantPage = () => {
 
             {/* Contacts */}
             <motion.div className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl glass border border-border/30"
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
-              <Phone className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-3" />
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ delay: 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
+              <motion.div initial={{ scale: 0.5, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4, type: "spring", stiffness: 200 }}>
+                <Phone className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-3" />
+              </motion.div>
               <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-2">Contatti</h3>
               <div className="space-y-3 text-sm text-muted-foreground">
                 <a href={`tel:${restaurantPhone}`} className="flex items-center gap-2 hover:text-primary transition-colors">
@@ -431,15 +497,21 @@ const RestaurantPage = () => {
 
             {/* Hours */}
             <motion.div className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl glass border border-border/30"
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
-              <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-3" />
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ delay: 0.24, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
+              <motion.div initial={{ scale: 0.5, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5, type: "spring", stiffness: 200 }}>
+                <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-3" />
+              </motion.div>
               <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-2">Orari di Apertura</h3>
               <div className="space-y-2 text-sm">
                 {openingHours.map((item, i) => (
-                  <div key={i} className="flex justify-between items-center py-1.5 border-b border-border/20 last:border-0">
+                  <motion.div key={i} className="flex justify-between items-center py-1.5 border-b border-border/20 last:border-0"
+                    initial={{ opacity: 0, x: 10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 + i * 0.08 }}>
                     <span className="text-foreground font-medium text-xs">{item.day}</span>
                     <span className={`text-xs ${item.hours === "Chiuso" ? "text-accent" : "text-muted-foreground"}`}>{item.hours}</span>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
@@ -447,10 +519,20 @@ const RestaurantPage = () => {
         </div>
       </section>
 
+      {/* ====== SECTION DIVIDER ====== */}
+      <div className="relative h-16 sm:h-24 overflow-hidden">
+        <motion.div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-px bg-primary/30"
+          initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+      </div>
+
       {/* ====== 5. PRENOTAZIONE TAVOLO ====== */}
       <section id="reservation" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5 bg-card/30">
         <div className="max-w-3xl mx-auto">
-          <motion.div className="text-center mb-8 sm:mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.div className="text-center mb-8 sm:mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
             <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Riserva il Tuo Tavolo</span>
             <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Prenotazione</h2>
             <p className="mt-3 text-sm text-muted-foreground max-w-md mx-auto">
@@ -461,7 +543,10 @@ const RestaurantPage = () => {
           <motion.form
             onSubmit={handleReservation}
             className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl glass border border-border/30 space-y-5"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            initial={{ opacity: 0, y: 30, scale: 0.97 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}>
 
             {resSubmitted ? (
               <motion.div className="text-center py-8" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
@@ -536,16 +621,18 @@ const RestaurantPage = () => {
       </section>
 
       {/* ====== FOOTER ====== */}
-      <footer className="border-t border-border/30 py-6 sm:py-10 px-4 sm:px-5">
+      <motion.footer className="border-t border-border/30 py-6 sm:py-10 px-4 sm:px-5"
+        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <motion.div className="flex items-center gap-3"
+            initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <img src={restaurantLogoUrl} alt="" className="w-8 h-8 rounded-lg object-contain" />
             <span className="font-display font-bold text-foreground tracking-[0.08em] uppercase text-sm">{restaurantName}</span>
-          </div>
+          </motion.div>
           <p className="text-xs text-muted-foreground">© 2026 {restaurantName}. Tutti i diritti riservati.</p>
           <p className="text-[10px] text-muted-foreground/50">Powered by Empire</p>
         </div>
-      </footer>
+      </motion.footer>
 
       {/* ====== OVERLAYS ====== */}
       <ItemDetailSheet item={selectedItem} onClose={() => setSelectedItem(null)} />
