@@ -110,8 +110,6 @@ const AdminDashboard = () => {
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
   const [showAddItem, setShowAddItem] = useState(false);
   const [newItem, setNewItem] = useState<NewMenuItem>({ name: "", description: "", price: 0, category: "Altro" });
-  const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
-  const triggerPreviewRefresh = () => setPreviewRefreshKey(k => k + 1);
 
   // Traffic control toggles
   const [deliveryEnabled, setDeliveryEnabled] = useState(true);
@@ -262,7 +260,7 @@ const AdminDashboard = () => {
   const tabs: { id: AdminTab; label: string; icon: React.ReactNode }[] = [
     { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: "menu", label: "Menu", icon: <UtensilsCrossed className="w-5 h-5" /> },
-    { id: "preview", label: "Design", icon: <Smartphone className="w-5 h-5" /> },
+    { id: "preview", label: "Preview", icon: <Smartphone className="w-5 h-5" /> },
     { id: "kitchen", label: "Cucina", icon: <ChefHat className="w-5 h-5" /> },
     { id: "traffic", label: "Traffico", icon: <Power className="w-5 h-5" /> },
     { id: "inventory", label: "Scorte", icon: <Package className="w-5 h-5" /> },
@@ -399,7 +397,6 @@ const AdminDashboard = () => {
       }
       setOcrResult(null);
       toast({ title: "Menu importato!", description: `${inserts.length} piatti aggiunti al tuo catalogo digitale.` });
-      triggerPreviewRefresh();
     } catch (err: any) {
       console.error("Import error:", err);
       toast({ title: "Errore importazione", description: err?.message || "Riprova.", variant: "destructive" });
@@ -418,7 +415,6 @@ const AdminDashboard = () => {
     setPanicApplied(true);
     setPanicPercent(0);
     toast({ title: "Panic Mode eseguito", description: `Tutti i prezzi aggiornati. Il database è sincronizzato in tempo reale.` });
-    triggerPreviewRefresh();
   };
 
   const handleCreatePin = async () => {
@@ -442,7 +438,6 @@ const AdminDashboard = () => {
     await supabase.from("menu_items").delete().eq("id", itemId);
     setMenuItems(prev => prev.filter(i => i.id !== itemId));
     toast({ title: "Piatto rimosso dal menu" });
-    triggerPreviewRefresh();
   };
 
   const handleRegenerateImage = async (item: MenuItem) => {
@@ -479,7 +474,6 @@ const AdminDashboard = () => {
         await supabase.from("menu_items").update({ image_url: newUrl }).eq("id", item.id);
         setMenuItems(prev => prev.map(i => i.id === item.id ? { ...i, image: newUrl } : i));
         toast({ title: "Foto rigenerata!", description: `Token rimanenti: ${currentBalance - 1}` });
-        triggerPreviewRefresh();
       } else {
         toast({ title: "Errore", description: "Nessuna immagine generata. Il token è stato consumato.", variant: "destructive" });
       }
@@ -575,7 +569,6 @@ const AdminDashboard = () => {
       setMenuItems(prev => prev.map(i => i.id === editingItem.id ? { ...i, name: editingItem.name, description: editingItem.description, price: editingItem.price, category: editingItem.category } : i));
       setEditingItem(null);
       toast({ title: "Piatto aggiornato" });
-      triggerPreviewRefresh();
     }
   };
 
@@ -602,7 +595,6 @@ const AdminDashboard = () => {
       setNewItem({ name: "", description: "", price: 0, category: "Altro" });
       setShowAddItem(false);
       toast({ title: "Piatto aggiunto al menu!" });
-      triggerPreviewRefresh();
     }
   };
 
@@ -628,7 +620,6 @@ const AdminDashboard = () => {
       toast({ title: "Errore", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Impostazioni salvate", description: "Tutte le configurazioni aggiornate con successo." });
-      triggerPreviewRefresh();
     }
   };
 
@@ -669,7 +660,7 @@ const AdminDashboard = () => {
         toast({ title: "Logo aggiornato!", description: "Il nuovo logo è attivo." });
       }
       setLogoUploading(false);
-      triggerPreviewRefresh();
+      window.location.reload();
     };
     input.click();
   };
@@ -775,10 +766,8 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      {/* Main content area — split on large screens */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Editor panel */}
-        <div className="flex-1 px-3 sm:px-5 pb-24 sm:pb-8 overflow-y-auto">
+      {/* Content */}
+      <div className="flex-1 px-3 sm:px-5 pb-24 sm:pb-8 overflow-y-auto">
         {/* DASHBOARD */}
         {activeTab === "dashboard" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -1694,105 +1683,9 @@ const AdminDashboard = () => {
           </motion.div>
         )}
 
-        {/* DESIGN STUDIO + LIVE PREVIEW (mobile) */}
+        {/* LIVE PREVIEW */}
         {activeTab === "preview" && restaurant && (
-          <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <div className="text-center py-2">
-              <Palette className="w-10 h-10 mx-auto mb-2 text-primary" />
-              <h3 className="text-lg font-display font-bold text-foreground">Design Studio</h3>
-              <p className="text-sm text-muted-foreground mt-1">Modifica aspetto, branding e contenuti — vedi le modifiche in tempo reale</p>
-            </div>
-
-            {/* Quick Brand Controls */}
-            <div className="p-4 rounded-2xl bg-secondary/50 space-y-4">
-              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><Palette className="w-3.5 h-3.5" /> Branding rapido</p>
-              
-              {/* Logo */}
-              <div className="flex items-center gap-3">
-                <img src={restaurant?.logo_url || restaurantLogo} alt="Logo" className="w-14 h-14 rounded-xl object-contain border border-border" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-foreground">Logo</p>
-                  <p className="text-[10px] text-muted-foreground">Colori estratti automaticamente</p>
-                </div>
-                <motion.button onClick={handleLogoUpload} disabled={logoUploading}
-                  className="px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium flex items-center gap-1.5 disabled:opacity-50 min-h-[40px]"
-                  whileTap={{ scale: 0.95 }}>
-                  <Upload className="w-3.5 h-3.5" /> {logoUploading ? "..." : "Cambia"}
-                </motion.button>
-              </div>
-
-              {/* Primary Color */}
-              <div className="flex items-center gap-3">
-                <input type="color" value={settingsPrimaryColor} onChange={e => {
-                  setSettingsPrimaryColor(e.target.value);
-                  applyBrandTheme(e.target.value);
-                }} className="w-11 h-11 rounded-xl border border-border cursor-pointer bg-transparent p-0.5" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-foreground">Colore primario</p>
-                  <p className="text-[10px] text-muted-foreground font-mono">{settingsPrimaryColor}</p>
-                </div>
-              </div>
-
-              {/* Tagline */}
-              <div>
-                <label className="text-xs text-muted-foreground block mb-1.5">Tagline / Slogan</label>
-                <input type="text" value={settingsTagline} onChange={e => setSettingsTagline(e.target.value)}
-                  placeholder="Benvenuti nel nostro ristorante" maxLength={120}
-                  className="w-full px-3 py-2.5 rounded-xl bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-              </div>
-
-              {/* Restaurant Name (read-only info) */}
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50">
-                <div className="flex-1">
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Nome ristorante</p>
-                  <p className="text-sm font-display font-bold text-foreground">{restaurantName}</p>
-                </div>
-                <span className="text-[10px] text-muted-foreground">/r/{restaurantSlug}</span>
-              </div>
-            </div>
-
-            {/* Quick Contact Info */}
-            <div className="p-4 rounded-2xl bg-secondary/50 space-y-3">
-              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><Phone className="w-3.5 h-3.5" /> Contatti rapidi</p>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-[10px] text-muted-foreground block mb-1">Telefono</label>
-                  <input type="tel" value={settingsPhone} onChange={e => setSettingsPhone(e.target.value)} placeholder="+39..."
-                    className="w-full px-3 py-2 rounded-xl bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[40px]" />
-                </div>
-                <div>
-                  <label className="text-[10px] text-muted-foreground block mb-1">Email</label>
-                  <input type="email" value={settingsEmail} onChange={e => setSettingsEmail(e.target.value)} placeholder="info@..."
-                    className="w-full px-3 py-2 rounded-xl bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[40px]" />
-                </div>
-              </div>
-              <div>
-                <label className="text-[10px] text-muted-foreground block mb-1">Indirizzo</label>
-                <input type="text" value={settingsAddress} onChange={e => setSettingsAddress(e.target.value)} placeholder="Via..."
-                  className="w-full px-3 py-2 rounded-xl bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[40px]" />
-              </div>
-            </div>
-
-            {/* Quick Save + Preview Refresh */}
-            <motion.button onClick={async () => {
-              await handleSaveSettings();
-            }} disabled={settingsSaving}
-              className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50 min-h-[48px]"
-              whileTap={{ scale: 0.97 }}>
-              <Save className="w-4 h-4" />
-              {settingsSaving ? "Salvataggio..." : "💾 Salva e Aggiorna Preview"}
-            </motion.button>
-
-            {/* Mobile: show preview below */}
-            <div className="lg:hidden">
-              <LivePreview slug={restaurantSlug} refreshKey={previewRefreshKey} />
-            </div>
-
-            {/* Desktop hint */}
-            <div className="hidden lg:block p-3 rounded-xl bg-primary/5 border border-primary/20 text-center">
-              <p className="text-xs text-muted-foreground">👉 La preview è visibile in tempo reale nella colonna a destra</p>
-            </div>
-          </motion.div>
+          <LivePreview slug={restaurantSlug} />
         )}
 
         {/* LOST CUSTOMERS */}
@@ -2148,16 +2041,9 @@ const AdminDashboard = () => {
             </motion.button>
           </motion.div>
         )}
-        </div>
-        {/* END editor panel */}
-
-        {/* Desktop persistent Live Preview sidebar */}
-        <div className="hidden lg:flex w-[320px] xl:w-[360px] flex-shrink-0 border-l border-border/50 bg-card/30">
-          {restaurant && <LivePreview slug={restaurantSlug} refreshKey={previewRefreshKey} compact />}
-        </div>
       </div>
-      {/* END main split area */}
 
+      {/* Mobile bottom navigation */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border/50 safe-bottom z-40">
         <div className="grid grid-cols-5 gap-0.5 px-1 pt-1.5 pb-1">
           {[
