@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.ai-translate]
 verify_jwt = false
+
+[functions.send-push-discount]
+verify_jwt = false
