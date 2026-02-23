@@ -90,7 +90,7 @@ serve(async (req) => {
           messages: [
             {
               role: "user",
-              content: `Generate a hyper-realistic, professional food photography image of: ${dishDescription}. The image should be appetizing, well-lit, shot from above at 45 degrees, on an elegant plate, restaurant setting, shallow depth of field, warm lighting. Ultra high resolution food photography.`
+              content: `Generate a hyper-realistic, ultra professional food photography image of this Italian restaurant dish: "${dishDescription}". Style: food porn, Michelin-star presentation, shot from 45-degree angle on an elegant dark ceramic plate, restaurant table setting with soft warm candlelight, extremely shallow depth of field with creamy bokeh background, garnished beautifully, steam rising if hot dish, vibrant natural colors, 8K quality. The food must look absolutely irresistible and mouthwatering. Ultra high resolution.`
             }
           ],
           modalities: ["image", "text"],
@@ -114,6 +114,37 @@ serve(async (req) => {
 
       const data = await response.json();
       const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url || null;
+
+      // If we got a base64 image, upload to storage
+      if (imageUrl && imageUrl.startsWith("data:")) {
+        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+        const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+        const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2.49.1");
+        const supabase = createClient(supabaseUrl, serviceKey);
+
+        // Extract base64 data
+        const base64Match = imageUrl.match(/^data:image\/(\w+);base64,(.+)$/);
+        if (base64Match) {
+          const ext = base64Match[1] === "jpeg" ? "jpg" : base64Match[1];
+          const base64Data = base64Match[2];
+          const bytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+          const fileName = `ai-dishes/${crypto.randomUUID()}.${ext}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from("restaurant-logos")
+            .upload(fileName, bytes, { contentType: `image/${base64Match[1]}`, upsert: true });
+
+          if (!uploadError) {
+            const { data: publicUrl } = supabase.storage
+              .from("restaurant-logos")
+              .getPublicUrl(fileName);
+            return new Response(JSON.stringify({ imageUrl: publicUrl.publicUrl }), {
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+          console.error("Upload error:", uploadError);
+        }
+      }
 
       return new Response(JSON.stringify({ imageUrl }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

@@ -48,7 +48,7 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [aiTokens, setAiTokens] = useState(5);
   const [ocrUploading, setOcrUploading] = useState(false);
-  const [ocrResult, setOcrResult] = useState<{name: string; description: string; price: number; category: string}[] | null>(null);
+  const [ocrResult, setOcrResult] = useState<{name: string; description: string; price: number; category: string; image_url?: string; imageLoading?: boolean}[] | null>(null);
   const [ocrImporting, setOcrImporting] = useState(false);
   const [todayRevenue, setTodayRevenue] = useState(0);
   const [todayOrderCount, setTodayOrderCount] = useState(0);
@@ -301,9 +301,32 @@ const AdminDashboard = () => {
         if (error) throw error;
 
         if (data?.dishes && data.dishes.length > 0) {
-          setOcrResult(data.dishes);
+          const dishesWithLoading = data.dishes.map((d: any) => ({ ...d, imageLoading: true }));
+          setOcrResult(dishesWithLoading);
           setAiTokens(t => Math.max(0, t - 1));
-          toast({ title: `${data.dishes.length} piatti rilevati`, description: "Revisiona e importa nel tuo catalogo digitale." });
+          toast({ title: `${data.dishes.length} piatti rilevati`, description: "Generazione foto food-porn in corso..." });
+
+          // Generate images for each dish in parallel
+          for (let idx = 0; idx < dishesWithLoading.length; idx++) {
+            const dish = dishesWithLoading[idx];
+            supabase.functions.invoke("ai-menu", {
+              body: { action: "generate-image", dishDescription: `${dish.name}. ${dish.description || ""}` },
+            }).then(({ data: imgData }) => {
+              setOcrResult(prev => {
+                if (!prev) return prev;
+                const updated = [...prev];
+                updated[idx] = { ...updated[idx], image_url: imgData?.imageUrl || "", imageLoading: false };
+                return updated;
+              });
+            }).catch(() => {
+              setOcrResult(prev => {
+                if (!prev) return prev;
+                const updated = [...prev];
+                updated[idx] = { ...updated[idx], imageLoading: false };
+                return updated;
+              });
+            });
+          }
         } else {
           toast({ title: "Nessun piatto rilevato", description: "Prova con una foto più nitida del menu.", variant: "destructive" });
         }
@@ -331,6 +354,7 @@ const AdminDashboard = () => {
         description: dish.description || "",
         price: dish.price || 0,
         category: dish.category || "Altro",
+        image_url: dish.image_url || null,
         sort_order: i,
         is_active: true,
         is_popular: false,
@@ -883,8 +907,19 @@ const AdminDashboard = () => {
                 {ocrResult.map((dish, i) => (
                   <motion.div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50"
                     initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <Wand2 className="w-5 h-5 text-primary" />
+                    <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-primary/10">
+                      {dish.imageLoading ? (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <motion.div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full"
+                            animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+                        </div>
+                      ) : dish.image_url ? (
+                        <img src={dish.image_url} alt={dish.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Wand2 className="w-5 h-5 text-primary" />
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-foreground truncate">{dish.name}</p>
