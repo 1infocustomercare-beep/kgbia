@@ -7,7 +7,7 @@ import {
   Camera, Sparkles, Coins, Wand2, QrCode, ExternalLink,
   Save, X, Check, Bot, Send, ShieldCheck, Lock, Key, Download,
   Settings, Phone, Mail, MapPin, Clock, Upload, Globe, Ban, 
-  BarChart3, FileCheck, Image, Smartphone, UserX, Move,
+  BarChart3, FileCheck, Image, Smartphone, UserX, Move, Palette,
   Power, Package, Languages, MessageSquare, ShieldBan
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
@@ -95,6 +95,7 @@ const AdminDashboard = () => {
   const [policyAccepted, setPolicyAccepted] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
   const [settingsTagline, setSettingsTagline] = useState("");
+  const [settingsPrimaryColor, setSettingsPrimaryColor] = useState("#C8963E");
   const [orderAnalytics, setOrderAnalytics] = useState<{source: string; count: number}[]>([]);
 
   // Menu item editing
@@ -139,6 +140,7 @@ const AdminDashboard = () => {
     if (restaurant.opening_hours) setSettingsHours(restaurant.opening_hours);
     if (restaurant.languages) setSettingsLanguages(restaurant.languages);
     setSettingsTagline(restaurant.tagline || "");
+    setSettingsPrimaryColor(restaurant.primary_color || "#C8963E");
     setSettingsMinOrder(restaurant.min_order_amount || 0);
     if (restaurant.blocked_keywords) setSettingsBlockedKeywords(restaurant.blocked_keywords);
     setPolicyAccepted(restaurant.policy_accepted || false);
@@ -488,6 +490,7 @@ const AdminDashboard = () => {
       address: settingsAddress.trim() || null,
       city: settingsCity.trim() || null,
       tagline: settingsTagline.trim() || null,
+      primary_color: settingsPrimaryColor.trim() || null,
       opening_hours: settingsHours as any,
       languages: settingsLanguages as any,
       min_order_amount: settingsMinOrder,
@@ -1504,6 +1507,18 @@ const AdminDashboard = () => {
                   placeholder="Benvenuti nel nostro ristorante" maxLength={120}
                   className="w-full px-3 py-2.5 rounded-xl bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
                 <p className="text-[10px] text-muted-foreground/60 mt-1">Visibile ai clienti sotto il nome del ristorante</p>
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground block mb-1.5 flex items-center gap-1.5"><Palette className="w-3.5 h-3.5" /> Colore primario del brand</label>
+                <div className="flex items-center gap-3">
+                  <input type="color" value={settingsPrimaryColor} onChange={e => setSettingsPrimaryColor(e.target.value)}
+                    className="w-11 h-11 rounded-xl border border-border cursor-pointer bg-transparent p-0.5" />
+                  <input type="text" value={settingsPrimaryColor} onChange={e => setSettingsPrimaryColor(e.target.value)}
+                    placeholder="#C8963E" maxLength={7}
+                    className="flex-1 px-3 py-2.5 rounded-xl bg-background text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  <div className="w-11 h-11 rounded-xl border border-border" style={{ backgroundColor: settingsPrimaryColor }} />
+                </div>
+                <p className="text-[10px] text-muted-foreground/60 mt-1">Estratto automaticamente dal logo, ma puoi personalizzarlo</p>
               </div>
             </div>
 
