@@ -47,6 +47,7 @@ const AdminDashboard = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>(demoMenu);
   const [orders, setOrders] = useState<any[]>([]);
   const [aiTokens, setAiTokens] = useState(5);
+  const [regeneratingId, setRegeneratingId] = useState<string | null>(null);
   const [ocrUploading, setOcrUploading] = useState(false);
   const [ocrResult, setOcrResult] = useState<{name: string; description: string; price: number; category: string; image_url?: string; imageLoading?: boolean}[] | null>(null);
   const [ocrImporting, setOcrImporting] = useState(false);
@@ -431,6 +432,49 @@ const AdminDashboard = () => {
     toast({ title: "Piatto rimosso dal menu" });
   };
 
+  const handleRegenerateImage = async (item: MenuItem) => {
+    if (!restaurant) return;
+    if (aiTokens <= 0) {
+      toast({ title: "Gettoni IA esauriti", description: "Ricarica il wallet gettoni (€15 + IVA) per rigenerare le foto.", variant: "destructive" });
+      return;
+    }
+    setRegeneratingId(item.id);
+    try {
+      // Deduct token from DB
+      const { data: tokenData } = await supabase
+        .from("ai_tokens").select("balance").eq("restaurant_id", restaurant.id).single();
+      const currentBalance = tokenData?.balance ?? 0;
+      if (currentBalance <= 0) {
+        toast({ title: "Gettoni IA esauriti", description: "Ricarica il wallet gettoni (€15 + IVA) per rigenerare le foto.", variant: "destructive" });
+        setRegeneratingId(null);
+        return;
+      }
+      // Deduct 1 token
+      await supabase.from("ai_tokens").update({ balance: currentBalance - 1 }).eq("restaurant_id", restaurant.id);
+      await (supabase as any).from("ai_token_history").insert({
+        restaurant_id: restaurant.id, tokens: -1, action: `Rigenera foto: ${item.name}`,
+      });
+      setAiTokens(currentBalance - 1);
+
+      // Generate new image
+      const { data, error } = await supabase.functions.invoke("ai-menu", {
+        body: { action: "generate-image", dishDescription: `${item.name}. ${item.description || ""}`, dishCategory: item.category },
+      });
+      if (error) throw error;
+      const newUrl = data?.imageUrl;
+      if (newUrl) {
+        await supabase.from("menu_items").update({ image_url: newUrl }).eq("id", item.id);
+        setMenuItems(prev => prev.map(i => i.id === item.id ? { ...i, image: newUrl } : i));
+        toast({ title: "Foto rigenerata!", description: `Token rimanenti: ${currentBalance - 1}` });
+      } else {
+        toast({ title: "Errore", description: "Nessuna immagine generata. Il token è stato consumato.", variant: "destructive" });
+      }
+    } catch (err: any) {
+      toast({ title: "Errore", description: err?.message || "Riprova.", variant: "destructive" });
+    }
+    setRegeneratingId(null);
+  };
+
   const handleVaultSave = async () => {
     if (!restaurant || !vaultKey.trim()) return;
     setVaultValidating(true);
@@ -765,6 +809,17 @@ const AdminDashboard = () => {
                           <p className="text-primary font-display font-semibold text-sm">€{item.price.toFixed(2)}</p>
                         </div>
                         <div className="flex gap-1">
+                          <button onClick={() => handleRegenerateImage(item)}
+                            disabled={regeneratingId === item.id}
+                            className="p-2 rounded-lg hover:bg-primary/10 transition-colors disabled:opacity-40"
+                            title="Rigenera foto IA">
+                            {regeneratingId === item.id ? (
+                              <motion.div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full"
+                                animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+                            ) : (
+                              <Camera className="w-3.5 h-3.5 text-primary" />
+                            )}
+                          </button>
                           <button onClick={() => setEditingItem({ id: item.id, name: item.name, description: item.description, price: item.price, category: item.category })}
                             className="p-2 rounded-lg hover:bg-muted transition-colors">
                             <Edit className="w-3.5 h-3.5 text-muted-foreground" />
