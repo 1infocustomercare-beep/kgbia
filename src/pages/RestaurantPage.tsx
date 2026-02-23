@@ -154,7 +154,7 @@ const RestaurantPage = () => {
   ];
 
   if (showSplash) {
-    return <SplashScreen restaurantName={restaurantName} onComplete={handleSplashComplete} />;
+    return <SplashScreen restaurantName={restaurantName} logoUrl={restaurantLogoUrl} onComplete={handleSplashComplete} />;
   }
 
   const isDemoSlug = slug === demoRestaurant.slug;
