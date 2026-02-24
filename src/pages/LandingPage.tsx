@@ -5,7 +5,8 @@ import {
   Zap, Shield, Smartphone, TrendingUp, X,
   Sparkles, Lock, Menu, Target, DollarSign, Brain,
   ChefHat, AlertTriangle, Banknote, ArrowDown, ArrowRight,
-  MessageCircle, HelpCircle, ChevronDown, Eye, Play, Gem
+  MessageCircle, HelpCircle, ChevronDown, Eye, Play, Gem,
+  Users, Rocket, CreditCard, Gift, Trophy
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 // Live preview replaces video import
@@ -44,6 +45,21 @@ const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [roiTipIndex, setRoiTipIndex] = useState(0);
+
+  const roiTips = [
+    { emoji: "💰", text: "Con €2.997 risparmi €30.000+/anno di commissioni" },
+    { emoji: "📈", text: "ROI in meno di 2 mesi con 500 ordini/mese" },
+    { emoji: "🚫", text: "Zero canoni mensili — l'app è TUA per sempre" },
+    { emoji: "⚡", text: "2% vs 30% — risparmi il 93% sui costi" },
+    { emoji: "🎯", text: "Ogni ordine spostato = 28% di margine salvato" },
+  ];
+
+  // Cycle ROI tips
+  useEffect(() => {
+    const timer = setInterval(() => setRoiTipIndex(prev => (prev + 1) % 5), 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -138,7 +154,7 @@ const LandingPage = () => {
   // ROI
   const justEatFee = 0.30;
   const empireFee = 0.02;
-  const setupCost = 1997;
+  const setupCost = 2997;
   const monthlyRevenue = monthlyOrders * avgOrder;
   const justEatCost = monthlyRevenue * justEatFee;
   const empireCost = monthlyRevenue * empireFee;
@@ -160,7 +176,7 @@ const LandingPage = () => {
   const faqs = [
     { q: "È difficile da usare?", a: "No. Se sai usare Instagram, sai usare Empire. L'interfaccia è progettata per ristoratori, non per programmatori. L'IA fa il lavoro pesante: carica una foto del menu e in 60 secondi hai il catalogo digitale completo." },
     { q: "Come arrivano i soldi?", a: "I pagamenti dei clienti arrivano direttamente sul TUO conto Stripe. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico — 15 volte meno di JustEat. Trasparenza totale." },
-    { q: "Perché pago solo il 2%?", a: "Perché non siamo un marketplace. Non abbiamo rider, non abbiamo pubblicità da pagare. Il nostro modello è semplice: tu paghi €1.997 una volta, noi prendiamo il 2% per mantenere l'infrastruttura, l'IA e gli aggiornamenti. Per sempre." },
+    { q: "Perché pago solo il 2%?", a: "Perché non siamo un marketplace. Non abbiamo rider, non abbiamo pubblicità da pagare. Il nostro modello è semplice: tu paghi €2.997 una volta (o in comode rate), noi prendiamo il 2% per mantenere l'infrastruttura, l'IA e gli aggiornamenti. Per sempre." },
     { q: "La fiscalità è sicura?", a: "Assolutamente. Le tue chiavi API fiscali sono criptate con standard bancario AES-256 nel Vault privato. Nessuno può vederle, nemmeno il nostro team. L'agente AI-Mary valida la connessione e mostra solo lo stato operativo." },
     { q: "Cosa succede ai miei clienti di JustEat?", a: "Li recuperi. Con il QR Code sui tavoli e il tuo link diretto, i clienti ordinano dalla TUA app. Ogni ordine che sposti da JustEat a Empire ti fa risparmiare il 28% netto." },
   ];
@@ -373,6 +389,22 @@ const LandingPage = () => {
                     }}
                     id="iframe-overlay"
                   />
+                  {/* Sales Pitch ROI Overlay */}
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={roiTipIndex}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.4 }}
+                      className="absolute top-10 left-2 right-2 z-30 px-3 py-2 rounded-xl bg-background/90 backdrop-blur-md border border-primary/30 shadow-lg"
+                    >
+                      <p className="text-[10px] font-semibold text-foreground leading-tight flex items-start gap-1.5">
+                        <span className="text-sm flex-shrink-0">{roiTips[roiTipIndex].emoji}</span>
+                        <span>{roiTips[roiTipIndex].text}</span>
+                      </p>
+                    </motion.div>
+                  </AnimatePresence>
                   {/* Auto-scroll indicator */}
                   <AnimatePresence>
                     {!autoScrollActive && (
@@ -611,69 +643,186 @@ const LandingPage = () => {
             <motion.button onClick={scrollToPricing}
               className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-base tracking-wide"
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-              Inizia il tuo Impero · €1.997
+              Inizia il tuo Impero · €2.997
             </motion.button>
           </motion.div>
         </div>
       </section>
 
-      {/* ====== 6. PRICING — Premium card ====== */}
+      {/* ====== 6. PRICING — Premium card with plans ====== */}
       <section id="pricing" className="relative py-24 px-5">
         <GlowOrb className="w-[600px] h-[400px] bg-primary top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-        <div className="max-w-lg mx-auto relative">
-          <motion.div className="text-center" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            
-            {/* Card with shine effect */}
-            <div className="relative p-10 rounded-[2rem] glass border border-primary/20 overflow-hidden">
-              {/* Top shine bar */}
+        <div className="max-w-4xl mx-auto relative">
+          <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
+              <Crown className="w-3 h-3" /> Investimento
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-display font-bold text-foreground">
+              Scegli il tuo <span className="text-gold-gradient">piano</span>
+            </h2>
+          </motion.div>
+
+          {/* Payment plans grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+            {/* 6-Month Plan */}
+            <motion.div className="relative p-7 rounded-[2rem] glass border border-border/30 hover:border-primary/30 transition-all duration-500"
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0 }}>
+              <p className="text-xs font-semibold text-muted-foreground tracking-wider uppercase mb-3">6 Rate</p>
+              <p className="text-4xl font-display font-bold text-foreground">€550<span className="text-lg text-muted-foreground font-normal">/mese</span></p>
+              <p className="text-xs text-muted-foreground mt-1">Totale: €3.300 + IVA</p>
+              <div className="mt-6 space-y-2">
+                {["Tutte le funzionalità", "Pagamento dilazionato", "Attivazione immediata"].map((f, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs text-foreground/70">
+                    <Check className="w-3.5 h-3.5 text-primary" /> {f}
+                  </div>
+                ))}
+              </div>
+              <button onClick={() => navigate("/admin")}
+                className="mt-6 w-full py-3.5 rounded-xl border border-primary/30 text-primary font-semibold text-sm tracking-wide hover:bg-primary hover:text-primary-foreground transition-all">
+                Scegli 6 Rate
+              </button>
+            </motion.div>
+
+            {/* Full Payment — HERO */}
+            <motion.div className="relative p-7 rounded-[2rem] glass border-2 border-primary/40 overflow-hidden md:-mt-4 md:mb-0"
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
               <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-primary/5 to-transparent" />
-              
               <div className="relative">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-semibold text-primary mb-6">
-                  <Crown className="w-3 h-3" /> Pagamento unico · Per sempre
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-xs font-semibold text-primary tracking-wider uppercase">Pagamento Unico</p>
+                  <span className="px-2.5 py-1 rounded-full bg-primary/10 text-[10px] font-bold text-primary">BEST VALUE</span>
                 </div>
-
-                <h2 className="text-6xl sm:text-7xl font-display font-bold text-foreground">€1.997</h2>
-                <p className="text-muted-foreground mt-2 text-sm">+ IVA 22% · Una volta sola · Mai più canoni</p>
-
-                <div className="mt-8 space-y-3 text-left">
+                <p className="text-5xl font-display font-bold text-foreground">€2.997</p>
+                <p className="text-xs text-muted-foreground mt-1">+ IVA 22% · Una volta sola</p>
+                <div className="mt-6 space-y-2">
                   {[
-                    "Asset Digitale di Proprietà col TUO brand",
-                    "AI Menu Creator — OCR + foto automatiche",
-                    "Centro di Controllo Admin completo",
-                    "Kitchen View real-time + notifiche sonore",
-                    "Vault Fiscale criptato AES-256",
-                    "Panic Mode — protezione margini",
-                    "Review Shield — solo 4-5★ su Google",
-                    "Checkout 1-Tap (Apple / Google Pay)",
-                    "Assistenza + aggiornamenti a vita",
-                    "Controllo fiscale centralizzato",
-                  ].map((item, i) => (
-                    <motion.div key={i} className="flex items-center gap-3"
-                      initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.04 }}>
-                      <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3 h-3 text-primary" />
+                    "Asset Digitale di Proprietà",
+                    "AI Menu Creator + OCR",
+                    "Kitchen View real-time",
+                    "Vault Fiscale AES-256",
+                    "Panic Mode + Review Shield",
+                    "PWA White Label",
+                    "Assistenza a vita",
+                    "Zero canoni mensili",
+                  ].map((f, i) => (
+                    <div key={i} className="flex items-center gap-2 text-xs text-foreground/80">
+                      <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Check className="w-2.5 h-2.5 text-primary" />
                       </div>
-                      <span className="text-sm text-foreground/80">{item}</span>
-                    </motion.div>
+                      {f}
+                    </div>
                   ))}
                 </div>
-
                 <motion.button onClick={() => navigate("/admin")}
-                  className="mt-10 w-full py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg tracking-wide relative overflow-hidden"
+                  className="mt-6 w-full py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm tracking-wide relative overflow-hidden"
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-                  <span className="relative z-10">Inizia il tuo Impero Ora</span>
+                  <span className="relative z-10">Inizia il tuo Impero</span>
                   <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
                     animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
                 </motion.button>
-
-                <p className="mt-4 text-xs text-muted-foreground">
-                  Dopo: <strong className="text-foreground">€0/mese</strong> · Solo 2% sulle transazioni
-                </p>
+                <p className="mt-3 text-[10px] text-center text-muted-foreground">Dopo: €0/mese · Solo 2% sulle transazioni</p>
               </div>
-            </div>
+            </motion.div>
+
+            {/* 3-Month Plan */}
+            <motion.div className="relative p-7 rounded-[2rem] glass border border-border/30 hover:border-primary/30 transition-all duration-500"
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
+              <p className="text-xs font-semibold text-muted-foreground tracking-wider uppercase mb-3">3 Rate</p>
+              <p className="text-4xl font-display font-bold text-foreground">€1.050<span className="text-lg text-muted-foreground font-normal">/mese</span></p>
+              <p className="text-xs text-muted-foreground mt-1">Totale: €3.150 + IVA</p>
+              <div className="mt-6 space-y-2">
+                {["Tutte le funzionalità", "Massima flessibilità", "Attivazione immediata"].map((f, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs text-foreground/70">
+                    <Check className="w-3.5 h-3.5 text-primary" /> {f}
+                  </div>
+                ))}
+              </div>
+              <button onClick={() => navigate("/admin")}
+                className="mt-6 w-full py-3.5 rounded-xl border border-primary/30 text-primary font-semibold text-sm tracking-wide hover:bg-primary hover:text-primary-foreground transition-all">
+                Scegli 3 Rate
+              </button>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ====== 7. PARTNER RECRUITMENT — "Costruisci il tuo Impero" ====== */}
+      <section className="relative py-24 px-5 overflow-hidden">
+        <GlowOrb className="w-[500px] h-[500px] bg-amber-500 top-0 -right-40" />
+        <div className="max-w-5xl mx-auto relative">
+          <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
+              <Users className="w-3 h-3" /> Partner Program
+            </span>
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
+              Costruisci il tuo <span className="text-gold-gradient">Impero</span>
+            </h2>
+            <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
+              Diventa Partner Empire e guadagna quasi €1.000 per ogni vendita. Zero rischi, strumenti elite, pagamenti istantanei.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {[
+              {
+                icon: <Trophy className="w-6 h-6" />,
+                title: "Guadagni High-Ticket",
+                desc: "Guadagna quasi €1.000 per ogni singola vendita chiusa. Con soli 2 contratti al mese, superi lo stipendio di un dirigente.",
+                highlight: "€997 / vendita",
+                gradient: "from-primary/20 to-amber-500/20",
+              },
+              {
+                icon: <TrendingUp className="w-6 h-6" />,
+                title: "Rendita Passiva",
+                desc: "Ottieni una parte della rendita costante grazie alla gestione della flotta. Più ristoranti porti, più il tuo reddito cresce mese dopo mese.",
+                highlight: "Recurring Revenue",
+                gradient: "from-emerald-500/20 to-teal-500/20",
+              },
+              {
+                icon: <CreditCard className="w-6 h-6" />,
+                title: "Pagamenti Automatici",
+                desc: "Niente attese. Grazie a Stripe Connect, ricevi la tua provvigione istantaneamente al momento del pagamento del cliente.",
+                highlight: "Payout Istantaneo",
+                gradient: "from-sky-500/20 to-blue-500/20",
+              },
+              {
+                icon: <Rocket className="w-6 h-6" />,
+                title: "Strumenti Elite",
+                desc: "Ti forniamo noi la 'Sandbox Demo' perfetta. Non devi spiegare l'app, devi solo mostrarla. Si vende da sola.",
+                highlight: "Demo Chiavi in Mano",
+                gradient: "from-violet-500/20 to-fuchsia-500/20",
+              },
+            ].map((card, i) => (
+              <motion.div key={i}
+                className="group relative p-7 rounded-3xl glass border border-border/30 hover:border-primary/30 transition-all duration-500 overflow-hidden"
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+                <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">{card.icon}</div>
+                    <div>
+                      <h3 className="font-display text-base font-bold text-foreground">{card.title}</h3>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold tracking-wider">{card.highlight}</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{card.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Zero Risk badge */}
+          <motion.div className="mt-10 p-6 rounded-3xl glass border border-primary/20 text-center max-w-xl mx-auto"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <Gift className="w-8 h-8 text-primary mx-auto mb-3" />
+            <h3 className="font-display font-bold text-lg text-foreground mb-2">Zero Rischi</h3>
+            <p className="text-sm text-muted-foreground">Nessun costo di ingresso. Paghiamo solo il tuo talento. Inizia a vendere oggi, guadagna domani.</p>
+            <button onClick={() => navigate("/admin")}
+              className="mt-4 px-8 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm tracking-wide">
+              Diventa Partner
+            </button>
           </motion.div>
         </div>
       </section>
