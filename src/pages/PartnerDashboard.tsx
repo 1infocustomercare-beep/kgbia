@@ -1,23 +1,26 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  LayoutDashboard, Rocket, DollarSign, Megaphone, LogOut,
-  Crown, TrendingUp, Users, Zap, CreditCard, Trophy,
-  Gift, Target, ArrowUpRight, ChevronRight, Sparkles,
-  Play, Info
+  LayoutDashboard, DollarSign, LogOut,
+  Crown, TrendingUp, Trophy,
+  ChevronRight, Sparkles,
+  Play, Target, CreditCard
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import PartnerSandbox from "@/components/partner/PartnerSandbox";
 import PartnerEarnings from "@/components/partner/PartnerEarnings";
 import PartnerRecruitment from "@/components/partner/PartnerRecruitment";
+import PricingClosing from "@/components/partner/PricingClosing";
+import ROICalculator from "@/components/partner/ROICalculator";
 
-type Tab = "dashboard" | "sandbox" | "earnings" | "recruitment";
+type Tab = "dashboard" | "sandbox" | "earnings" | "pricing" | "recruitment";
 
 const PartnerDashboard = () => {
   const navigate = useNavigate();
-  const { signOut, user } = useAuth();
+  const { signOut } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
+  const [showROI, setShowROI] = useState(false);
 
   const handleLogout = async () => {
     await signOut();
@@ -33,7 +36,8 @@ const PartnerDashboard = () => {
 
   const bottomTabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: "dashboard", label: "Home", icon: <LayoutDashboard className="w-5 h-5" /> },
-    { id: "sandbox", label: "Sandbox", icon: <Play className="w-5 h-5" /> },
+    { id: "sandbox", label: "Demo", icon: <Play className="w-5 h-5" /> },
+    { id: "pricing", label: "Prezzi", icon: <CreditCard className="w-5 h-5" /> },
     { id: "earnings", label: "Guadagni", icon: <DollarSign className="w-5 h-5" /> },
     { id: "recruitment", label: "Impero", icon: <Crown className="w-5 h-5" /> },
   ];
@@ -86,11 +90,13 @@ const PartnerDashboard = () => {
               <div className="space-y-3">
                 <h3 className="text-sm font-semibold text-foreground">Azioni Rapide</h3>
                 {[
-                  { label: "Apri Sandbox Demo", desc: "Mostra l'app al ristoratore", icon: <Play className="w-5 h-5" />, tab: "sandbox" as Tab },
-                  { label: "Costruisci il tuo Impero", desc: "Scopri il piano commissioni", icon: <Crown className="w-5 h-5" />, tab: "recruitment" as Tab },
+                  { label: "Apri Demo Guidata", desc: "Tour automatico per vendere", icon: <Play className="w-5 h-5" />, tab: "sandbox" as Tab },
+                  { label: "Mostra i Prezzi", desc: "Plan A + B per il ristoratore", icon: <CreditCard className="w-5 h-5" />, tab: "pricing" as Tab },
+                  { label: "Calcola il ROI", desc: "Quanto risparmia il cliente", icon: <TrendingUp className="w-5 h-5" />, action: () => setShowROI(true) },
+                  { label: "Costruisci il tuo Impero", desc: "Piano commissioni e affiliazione", icon: <Crown className="w-5 h-5" />, tab: "recruitment" as Tab },
                   { label: "Controlla i Guadagni", desc: "Storico vendite e payout", icon: <DollarSign className="w-5 h-5" />, tab: "earnings" as Tab },
                 ].map((action, i) => (
-                  <motion.button key={i} onClick={() => setActiveTab(action.tab)}
+                  <motion.button key={i} onClick={() => action.action ? action.action() : action.tab && setActiveTab(action.tab)}
                     className="w-full flex items-center gap-3 p-4 rounded-xl bg-card border border-border/50 hover:border-primary/30 transition-colors text-left"
                     whileTap={{ scale: 0.98 }}>
                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">{action.icon}</div>
@@ -102,24 +108,38 @@ const PartnerDashboard = () => {
                   </motion.button>
                 ))}
               </div>
+
+              {/* Partner Incentive Banner */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-center">
+                <p className="text-sm font-display font-bold text-foreground">
+                  Tua Commissione: <span className="text-emerald-400">€997</span> per vendita
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  "Vendi l'unica app che si presenta da sola. Guadagna €1.000 a contratto senza essere un venditore."
+                </p>
+              </div>
             </motion.div>
           )}
           {activeTab === "sandbox" && <PartnerSandbox key="sandbox" />}
+          {activeTab === "pricing" && <PricingClosing key="pricing" onOpenROI={() => setShowROI(true)} />}
           {activeTab === "earnings" && <PartnerEarnings key="earnings" />}
           {activeTab === "recruitment" && <PartnerRecruitment key="recruitment" />}
         </AnimatePresence>
       </div>
 
+      {/* ROI Calculator Modal */}
+      <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
+
       {/* Bottom Tabs */}
       <div className="fixed bottom-0 inset-x-0 bg-card/95 backdrop-blur-xl border-t border-border/50 safe-bottom z-50">
-        <div className="flex items-center justify-around px-2 py-2">
+        <div className="flex items-center justify-around px-1 py-2">
           {bottomTabs.map((tab) => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center gap-0.5 py-1.5 px-4 rounded-xl transition-all min-w-[60px] min-h-[48px]
+              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all min-h-[44px]
                 ${activeTab === tab.id ? "text-primary" : "text-muted-foreground"}`}>
               {tab.icon}
-              <span className="text-[10px] font-medium">{tab.label}</span>
-              {activeTab === tab.id && <motion.div layoutId="partner-tab" className="w-5 h-0.5 bg-primary rounded-full mt-0.5" />}
+              <span className="text-[9px] font-medium">{tab.label}</span>
+              {activeTab === tab.id && <motion.div layoutId="partner-tab" className="w-4 h-0.5 bg-primary rounded-full" />}
             </button>
           ))}
         </div>
