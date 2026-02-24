@@ -16,6 +16,7 @@ import StudioTab from "@/components/admin/StudioTab";
 import OrdersTab from "@/components/admin/OrdersTab";
 import ProfitTab from "@/components/admin/ProfitTab";
 import MoreMenu from "@/components/admin/MoreMenu";
+import EmpireAssistant from "@/components/admin/EmpireAssistant";
 
 type MainTab = "dashboard" | "studio" | "orders" | "profit" | "more";
 
@@ -382,6 +383,9 @@ const AdminDashboard = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Empire Assistant */}
+      <EmpireAssistant />
 
       {/* Bottom Navigation — 5 tabs */}
       <div className="fixed bottom-0 inset-x-0 z-40 bg-card/95 backdrop-blur-lg border-t border-border/50 safe-bottom">
