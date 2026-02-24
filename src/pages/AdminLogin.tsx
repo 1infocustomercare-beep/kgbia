@@ -26,6 +26,8 @@ const AdminLogin = () => {
     if (authLoading || !user) return;
     if (roles.includes("super_admin")) {
       navigate("/superadmin", { replace: true });
+    } else if (roles.includes("partner")) {
+      navigate("/partner", { replace: true });
     } else if (roles.includes("staff")) {
       navigate("/staff", { replace: true });
     } else {

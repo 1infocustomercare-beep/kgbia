@@ -18,6 +18,7 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
 const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
+const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -59,6 +60,11 @@ const App = () => (
                   </ProtectedRoute>
                 } />
                 <Route path="/kitchen" element={<KitchenView />} />
+                <Route path="/partner" element={
+                  <ProtectedRoute requiredRole="partner">
+                    <PartnerDashboard />
+                  </ProtectedRoute>
+                } />
                 <Route path="/admin/dashboard" element={
                   <ProtectedRoute>
                     <AdminDashboard />
