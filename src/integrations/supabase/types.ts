@@ -563,6 +563,65 @@ export type Database = {
           },
         ]
       }
+      restaurant_payments: {
+        Row: {
+          amount_paid: number
+          blocked_at: string | null
+          created_at: string
+          grace_period_days: number
+          id: string
+          installment_amount: number
+          installments_paid: number
+          installments_total: number
+          is_overdue: boolean
+          next_due_date: string | null
+          plan_type: string
+          restaurant_id: string
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          amount_paid?: number
+          blocked_at?: string | null
+          created_at?: string
+          grace_period_days?: number
+          id?: string
+          installment_amount?: number
+          installments_paid?: number
+          installments_total?: number
+          is_overdue?: boolean
+          next_due_date?: string | null
+          plan_type?: string
+          restaurant_id: string
+          total_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          amount_paid?: number
+          blocked_at?: string | null
+          created_at?: string
+          grace_period_days?: number
+          id?: string
+          installment_amount?: number
+          installments_paid?: number
+          installments_total?: number
+          is_overdue?: boolean
+          next_due_date?: string | null
+          plan_type?: string
+          restaurant_id?: string
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_payments_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: true
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       restaurant_tables: {
         Row: {
           created_at: string
@@ -614,12 +673,14 @@ export type Database = {
         Row: {
           address: string | null
           blocked_keywords: string[] | null
+          blocked_reason: string | null
           city: string | null
           created_at: string
           delivery_enabled: boolean
           email: string | null
           id: string
           is_active: boolean
+          is_blocked: boolean
           languages: string[] | null
           logo_url: string | null
           min_order_amount: number | null
@@ -641,12 +702,14 @@ export type Database = {
         Insert: {
           address?: string | null
           blocked_keywords?: string[] | null
+          blocked_reason?: string | null
           city?: string | null
           created_at?: string
           delivery_enabled?: boolean
           email?: string | null
           id?: string
           is_active?: boolean
+          is_blocked?: boolean
           languages?: string[] | null
           logo_url?: string | null
           min_order_amount?: number | null
@@ -668,12 +731,14 @@ export type Database = {
         Update: {
           address?: string | null
           blocked_keywords?: string[] | null
+          blocked_reason?: string | null
           city?: string | null
           created_at?: string
           delivery_enabled?: boolean
           email?: string | null
           id?: string
           is_active?: boolean
+          is_blocked?: boolean
           languages?: string[] | null
           logo_url?: string | null
           min_order_amount?: number | null
@@ -808,6 +873,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_overdue_payments: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

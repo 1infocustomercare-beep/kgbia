@@ -249,6 +249,25 @@ const AdminDashboard = () => {
     { id: "more", label: "Altro", icon: <Settings className="w-5 h-5" /> },
   ];
 
+  // Kill-switch: blocked restaurant
+  if (restaurant?.is_blocked) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 text-center">
+        <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center mb-5">
+          <Settings className="w-10 h-10 text-destructive" />
+        </div>
+        <h1 className="text-2xl font-display font-bold text-foreground">Accesso Sospeso</h1>
+        <p className="text-sm text-muted-foreground mt-2 max-w-xs">
+          {restaurant.blocked_reason || "Il tuo account è stato temporaneamente sospeso per un pagamento mancante."}
+        </p>
+        <p className="text-xs text-muted-foreground/60 mt-4">Contatta il supporto Empire per regolarizzare la tua posizione.</p>
+        <button onClick={handleLogout} className="mt-6 px-6 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-bold">
+          Esci
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}

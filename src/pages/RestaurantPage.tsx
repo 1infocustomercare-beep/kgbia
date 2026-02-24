@@ -158,6 +158,22 @@ const RestaurantPage = () => {
     return <SplashScreen restaurantName={restaurantName} logoUrl={restaurantLogoUrl} onComplete={handleSplashComplete} />;
   }
 
+  // Kill-switch: blocked restaurant
+  if (dbRestaurant?.is_blocked) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 text-center">
+        <div className="w-20 h-20 rounded-full bg-red-500/10 flex items-center justify-center mb-5">
+          <Crown className="w-10 h-10 text-red-400" />
+        </div>
+        <h1 className="text-2xl font-display font-bold text-foreground">Servizio Sospeso</h1>
+        <p className="text-sm text-muted-foreground mt-2 max-w-xs">
+          {dbRestaurant.blocked_reason || "Questo ristorante è temporaneamente non disponibile."}
+        </p>
+        <p className="text-xs text-muted-foreground/60 mt-4">Contatta il supporto Empire per assistenza.</p>
+      </div>
+    );
+  }
+
   const isDemoSlug = slug === demoRestaurant.slug;
   if (notFound && !isDemoSlug) {
     return (
