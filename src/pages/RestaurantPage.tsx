@@ -9,6 +9,7 @@ import ItemDetailSheet from "@/components/restaurant/ItemDetailSheet";
 import PrivateChat from "@/components/restaurant/PrivateChat";
 import ReviewShield from "@/components/restaurant/ReviewShield";
 import ReviewForm from "@/components/restaurant/ReviewForm";
+import LoyaltyWallet from "@/components/restaurant/LoyaltyWallet";
 import NotificationOptIn from "@/components/restaurant/NotificationOptIn";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 import storyInterior from "@/assets/story-interior.jpg";
@@ -571,6 +572,18 @@ const RestaurantPage = () => {
       <section id="reviews" className="py-12 px-4 sm:px-5">
         <div className="max-w-3xl mx-auto">
           <ReviewShield restaurantId={dbRestaurant?.id} />
+        </div>
+      </section>
+
+      {/* ====== LOYALTY WALLET ====== */}
+      <section className="py-12 px-4 sm:px-5 bg-card/30">
+        <div className="max-w-md mx-auto">
+          <motion.div className="text-center mb-6"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Programma Fedeltà</span>
+            <h2 className="mt-2 text-xl sm:text-2xl font-display font-bold text-foreground">I Tuoi Premi</h2>
+          </motion.div>
+          <LoyaltyWallet />
         </div>
       </section>
 

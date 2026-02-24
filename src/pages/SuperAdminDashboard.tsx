@@ -475,7 +475,7 @@ const SuperAdminDashboard = () => {
             <div className="grid grid-cols-2 gap-3">
               <div className="p-4 rounded-2xl bg-card">
                 <p className="text-xs text-muted-foreground">Setup fee potenziali</p>
-                <p className="text-xl font-display font-bold text-foreground">€{(tenants.length * 1997).toLocaleString()}</p>
+                <p className="text-xl font-display font-bold text-foreground">€{(tenants.length * 2997).toLocaleString()}</p>
               </div>
               <div className="p-4 rounded-2xl bg-card">
                 <p className="text-xs text-muted-foreground">Rendita 2% accumulata</p>
