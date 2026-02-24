@@ -3,8 +3,8 @@ import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: "super_admin" | "staff" | "restaurant_admin";
-  blockRole?: "super_admin" | "staff" | "restaurant_admin";
+  requiredRole?: "super_admin" | "staff" | "restaurant_admin" | "partner";
+  blockRole?: "super_admin" | "staff" | "restaurant_admin" | "partner";
 }
 
 const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRouteProps) => {
