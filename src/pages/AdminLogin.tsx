@@ -45,18 +45,19 @@ const AdminLogin = () => {
       if (error) {
         setError(error.message);
       } else {
-        // If signing up as partner, swap the role
+        // If signing up as partner, swap the role via edge function
         if (mode === "partner") {
-          // Wait for auth to complete then swap role
-          const waitForUser = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session?.user) {
-              // Remove default restaurant_admin role and add partner
-              await supabase.from("user_roles").delete().eq("user_id", session.user.id).eq("role", "restaurant_admin" as any);
-              await supabase.from("user_roles").upsert({ user_id: session.user.id, role: "partner" as any }, { onConflict: "user_id,role" });
-            }
-          };
-          setTimeout(waitForUser, 1000);
+          // Wait a moment for the user to be fully created
+          await new Promise(r => setTimeout(r, 1500));
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            await supabase.functions.invoke("assign-partner-role", {
+              body: { user_id: session.user.id },
+            });
+            // Refresh roles
+            window.location.href = "/partner";
+            return;
+          }
         }
         toast({
           title: mode === "partner" ? "Account Partner creato!" : "Account creato con successo!",
