@@ -99,8 +99,14 @@ const PartnerRecruitment = () => {
         <Gift className="w-8 h-8 text-primary mx-auto" />
         <h3 className="text-base font-display font-bold text-foreground">Pronto a iniziare?</h3>
         <p className="text-xs text-muted-foreground">
-          Contatta il tuo referente Empire per attivare il tuo account Partner e ricevere la tua Sandbox Demo personalizzata.
+          Vendi l'unica app che si presenta da sola. Guadagna €1.000 a contratto senza essere un venditore.
         </p>
+        <div className="p-3 rounded-xl bg-card/50 border border-border/30 mt-2">
+          <p className="text-sm font-display font-bold text-primary">Tua Commissione: €997/vendita</p>
+          <p className="text-[10px] text-muted-foreground mt-1">
+            Payout istantaneo via Stripe Connect. Zero rischio, zero costi d'ingresso.
+          </p>
+        </div>
         <p className="text-[10px] text-muted-foreground/70 italic">
           "Il modo più elegante per guadagnare €10.000 al mese è vendere qualcosa che si vende da solo."
         </p>
