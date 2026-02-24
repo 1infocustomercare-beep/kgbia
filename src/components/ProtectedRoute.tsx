@@ -22,6 +22,11 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     return <Navigate to="/admin" replace />;
   }
 
+  // Redirect partners to their dashboard if they land on a non-partner route
+  if (roles.includes("partner") && requiredRole !== "partner") {
+    return <Navigate to="/partner" replace />;
+  }
+
   // Block specific roles from accessing this route
   if (blockRole && roles.includes(blockRole)) {
     if (blockRole === "super_admin" || roles.includes("super_admin")) {
