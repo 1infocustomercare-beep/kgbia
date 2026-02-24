@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Crown, ChefHat, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Crown, ChefHat, ArrowLeft, Users } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
-type LoginMode = "choose" | "owner" | "kitchen";
+type LoginMode = "choose" | "owner" | "kitchen" | "partner";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -45,11 +45,23 @@ const AdminLogin = () => {
       if (error) {
         setError(error.message);
       } else {
+        // If signing up as partner, swap the role
+        if (mode === "partner") {
+          // Wait for auth to complete then swap role
+          const waitForUser = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) {
+              // Remove default restaurant_admin role and add partner
+              await supabase.from("user_roles").delete().eq("user_id", session.user.id).eq("role", "restaurant_admin" as any);
+              await supabase.from("user_roles").upsert({ user_id: session.user.id, role: "partner" as any }, { onConflict: "user_id,role" });
+            }
+          };
+          setTimeout(waitForUser, 1000);
+        }
         toast({
-          title: "Account creato con successo!",
-          description: "Benvenuto nella piattaforma Empire.",
+          title: mode === "partner" ? "Account Partner creato!" : "Account creato con successo!",
+          description: mode === "partner" ? "Benvenuto nel programma Partner Empire." : "Benvenuto nella piattaforma Empire.",
         });
-        // Auto-confirm is on, so the useEffect redirect will handle navigation
       }
       setLoading(false);
       return;
@@ -61,7 +73,6 @@ const AdminLogin = () => {
       setLoading(false);
       return;
     }
-    // Redirect handled by useEffect above
     setLoading(false);
   };
 
@@ -151,6 +162,20 @@ const AdminLogin = () => {
               <p className="text-xs text-muted-foreground mt-0.5">Accedi con PIN del ristorante</p>
             </div>
           </motion.button>
+
+          <motion.button
+            onClick={() => { setMode("partner"); setIsSignUp(false); }}
+            className="w-full p-5 rounded-2xl bg-gradient-to-r from-primary/5 to-amber-500/5 border border-primary/30 hover:border-primary/60 transition-colors text-left flex items-center gap-4"
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-amber-500/20 flex items-center justify-center flex-shrink-0">
+              <Users className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-base font-semibold text-foreground">Diventa Partner</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Vendi Empire e guadagna €997 per contratto</p>
+            </div>
+          </motion.button>
         </motion.div>
       </div>
     );
@@ -216,7 +241,8 @@ const AdminLogin = () => {
     );
   }
 
-  // Owner / Super Admin login
+  // Owner / Super Admin / Partner login
+  const isPartnerMode = mode === "partner";
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
       <motion.div
@@ -233,14 +259,18 @@ const AdminLogin = () => {
         </button>
 
         <div className="flex flex-col items-center">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-            <Crown className="w-8 h-8 text-primary" />
+          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${isPartnerMode ? "bg-gradient-to-br from-primary/20 to-amber-500/20" : "bg-primary/10"}`}>
+            {isPartnerMode ? <Users className="w-8 h-8 text-primary" /> : <Crown className="w-8 h-8 text-primary" />}
           </div>
           <h1 className="text-2xl font-display font-bold text-gold-gradient">
-            {isSignUp ? "Crea Account Ristorante" : "Accesso Titolare"}
+            {isPartnerMode
+              ? (isSignUp ? "Registrati come Partner" : "Accesso Partner")
+              : (isSignUp ? "Crea Account Ristorante" : "Accesso Titolare")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {isSignUp ? "Un account unico per gestire tutto" : "Accedi al pannello di gestione"}
+            {isPartnerMode
+              ? (isSignUp ? "Unisciti al programma e guadagna €997/vendita" : "Accedi alla tua dashboard Partner")
+              : (isSignUp ? "Un account unico per gestire tutto" : "Accedi al pannello di gestione")}
           </p>
         </div>
 
@@ -252,7 +282,7 @@ const AdminLogin = () => {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Mario Rossi"
+                placeholder={isPartnerMode ? "Marco Bianchi" : "Mario Rossi"}
                 className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
             </div>
@@ -263,7 +293,7 @@ const AdminLogin = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="titolare@ristorante.it"
+              placeholder={isPartnerMode ? "partner@email.com" : "titolare@ristorante.it"}
               className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
               required
             />
@@ -302,7 +332,9 @@ const AdminLogin = () => {
             className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-base gold-glow disabled:opacity-50"
             whileTap={{ scale: 0.97 }}
           >
-            {loading ? "Caricamento..." : isSignUp ? "Crea Account" : "Accedi"}
+            {loading ? "Caricamento..." : isSignUp
+              ? (isPartnerMode ? "Diventa Partner" : "Crea Account")
+              : "Accedi"}
           </motion.button>
         </form>
 
@@ -310,7 +342,9 @@ const AdminLogin = () => {
           onClick={() => { setIsSignUp(!isSignUp); setError(""); }}
           className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          {isSignUp ? "Hai già un account? Accedi" : "Nuovo ristorante? Crea account"}
+          {isSignUp
+            ? "Hai già un account Partner? Accedi"
+            : (isPartnerMode ? "Nuovo qui? Registrati come Partner" : "Nuovo ristorante? Crea account")}
         </button>
       </motion.div>
     </div>
