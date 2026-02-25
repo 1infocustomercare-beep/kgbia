@@ -13,6 +13,7 @@ import PartnerEarnings from "@/components/partner/PartnerEarnings";
 import PartnerRecruitment from "@/components/partner/PartnerRecruitment";
 import PricingClosing from "@/components/partner/PricingClosing";
 import ROICalculator from "@/components/partner/ROICalculator";
+import EmpireAssistant from "@/components/admin/EmpireAssistant";
 
 type Tab = "dashboard" | "sandbox" | "earnings" | "pricing" | "recruitment";
 
@@ -126,6 +127,9 @@ const PartnerDashboard = () => {
           {activeTab === "recruitment" && <PartnerRecruitment key="recruitment" />}
         </AnimatePresence>
       </div>
+
+      {/* Empire Assistant */}
+      <EmpireAssistant />
 
       {/* ROI Calculator Modal */}
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
