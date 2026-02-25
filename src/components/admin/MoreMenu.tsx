@@ -61,7 +61,11 @@ const MoreMenu = ({
   const [vaultEditing, setVaultEditing] = useState(false);
   const [vaultKey, setVaultKey] = useState("");
   const [vaultProvider, setVaultProvider] = useState("Scontrino.it");
+  const [vaultProviderSecondary, setVaultProviderSecondary] = useState("");
+  const [vaultKeySecondary, setVaultKeySecondary] = useState("");
   const [vaultValidating, setVaultValidating] = useState(false);
+  const [autoSendEnabled, setAutoSendEnabled] = useState(vaultConfig?.auto_send_enabled || false);
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(vaultConfig?.disclaimer_accepted || false);
   const [inventoryLoading, setInventoryLoading] = useState(false);
   const [inventoryResult, setInventoryResult] = useState<any>(null);
   const [settingsNewKeyword, setSettingsNewKeyword] = useState("");
@@ -82,10 +86,24 @@ const MoreMenu = ({
 
   const handleVaultSave = async () => {
     if (!restaurant || !vaultKey.trim()) return;
+    if (autoSendEnabled && !disclaimerAccepted) {
+      toast({ title: "Disclaimer richiesto", description: "Devi accettare il disclaimer per attivare l'invio automatico.", variant: "destructive" });
+      return;
+    }
     setVaultValidating(true);
     setTimeout(async () => {
-      await supabase.from("fisco_configs").update({ api_key_encrypted: vaultKey, configured: true, provider: vaultProvider, configured_by: userId }).eq("restaurant_id", restaurant.id);
-      setVaultConfig((prev: any) => ({ ...prev, configured: true, provider: vaultProvider }));
+      await supabase.from("fisco_configs").update({
+        api_key_encrypted: vaultKey,
+        configured: true,
+        provider: vaultProvider,
+        configured_by: userId,
+        provider_secondary: vaultProviderSecondary || null,
+        api_key_secondary_encrypted: vaultKeySecondary || null,
+        auto_send_enabled: autoSendEnabled,
+        disclaimer_accepted: disclaimerAccepted,
+        disclaimer_accepted_at: disclaimerAccepted ? new Date().toISOString() : null,
+      } as any).eq("restaurant_id", restaurant.id);
+      setVaultConfig((prev: any) => ({ ...prev, configured: true, provider: vaultProvider, auto_send_enabled: autoSendEnabled }));
       setVaultEditing(false); setVaultKey(""); setVaultValidating(false);
       toast({ title: "Vault configurato" });
     }, 2000);
@@ -200,13 +218,69 @@ const MoreMenu = ({
           </div>
           {(!vaultConfig?.configured || vaultEditing) && (
             <div className="p-4 rounded-2xl bg-card border border-border space-y-3">
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Provider Principale</p>
               <select value={vaultProvider} onChange={e => setVaultProvider(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]">
                 <option value="Scontrino.it">Scontrino.it</option>
-                <option value="Aruba">Aruba Fatturazione</option>
+                <option value="Aruba">Aruba Corrispettivi</option>
+                <option value="Fattura24">Fattura24</option>
+                <option value="FattureInCloud">Fatture in Cloud</option>
+                <option value="Agenzia Entrate RT">Agenzia Entrate (RT diretto)</option>
               </select>
-              <input type="password" placeholder="Chiave API..." value={vaultKey} onChange={e => setVaultKey(e.target.value)}
+              <input type="password" placeholder="Chiave API principale..." value={vaultKey} onChange={e => setVaultKey(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm font-mono min-h-[44px]" />
+
+              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider pt-2">Provider Secondario (opzionale)</p>
+              <select value={vaultProviderSecondary} onChange={e => setVaultProviderSecondary(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]">
+                <option value="">Nessuno</option>
+                <option value="Scontrino.it">Scontrino.it</option>
+                <option value="Aruba">Aruba Corrispettivi</option>
+                <option value="Fattura24">Fattura24</option>
+                <option value="FattureInCloud">Fatture in Cloud</option>
+              </select>
+              {vaultProviderSecondary && (
+                <input type="password" placeholder="Chiave API secondaria..." value={vaultKeySecondary} onChange={e => setVaultKeySecondary(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm font-mono min-h-[44px]" />
+              )}
+
+              {/* Auto-send toggle */}
+              <div className="pt-3 border-t border-border space-y-3">
+                <button
+                  onClick={() => setAutoSendEnabled(!autoSendEnabled)}
+                  className="w-full flex items-center justify-between p-3 rounded-xl bg-secondary/50"
+                >
+                  <div className="text-left">
+                    <p className="text-xs font-semibold text-foreground">⚡ Invio Automatico</p>
+                    <p className="text-[10px] text-muted-foreground">Invia scontrino automaticamente dopo ogni pagamento</p>
+                  </div>
+                  <div className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors ${autoSendEnabled ? "bg-primary/30 justify-end" : "bg-muted justify-start"}`}>
+                    <div className={`w-4 h-4 rounded-full transition-colors ${autoSendEnabled ? "bg-primary" : "bg-muted-foreground/40"}`} />
+                  </div>
+                </button>
+
+                {autoSendEnabled && (
+                  <div className="p-3 rounded-xl bg-accent/5 border border-accent/20 space-y-2">
+                    <p className="text-[10px] text-accent font-semibold">⚠️ DISCLAIMER OBBLIGATORIO</p>
+                    <p className="text-[10px] text-muted-foreground leading-relaxed">
+                      Dichiaro di essere l'unico responsabile dei dati fiscali trasmessi tramite questo software. 
+                      La piattaforma Empire agisce esclusivamente come intermediario tecnico e non assume alcuna 
+                      responsabilità per errori, omissioni o difformità nei corrispettivi telematici inviati 
+                      all'Agenzia delle Entrate.
+                    </p>
+                    <button
+                      onClick={() => setDisclaimerAccepted(!disclaimerAccepted)}
+                      className="flex items-center gap-2"
+                    >
+                      <div className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${disclaimerAccepted ? "bg-primary border-primary" : "border-muted-foreground/40"}`}>
+                        {disclaimerAccepted && <Check className="w-3 h-3 text-primary-foreground" />}
+                      </div>
+                      <span className="text-[10px] text-foreground font-medium">Accetto e confermo</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <button onClick={handleVaultSave} disabled={!vaultKey.trim() || vaultValidating}
                 className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium disabled:opacity-40 min-h-[44px] flex items-center justify-center gap-2">
                 {vaultValidating ? "Validazione..." : <><ShieldCheck className="w-4 h-4" /> Cripta e Valida</>}

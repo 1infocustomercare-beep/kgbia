@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect, FormEvent } from "react";
+import CookieBanner from "@/components/gdpr/CookieBanner";
 import { useParams, useSearchParams } from "react-router-dom";
 import { demoRestaurant, demoMenu, menuCategories as demoCats } from "@/data/demo-restaurant";
 import { useRestaurantBySlug } from "@/hooks/useRestaurantBySlug";
@@ -719,6 +720,7 @@ const RestaurantPage = () => {
       <NotificationOptIn restaurantId={dbRestaurant?.id} restaurantName={restaurantName} />
       <FloatingCartButton onClick={() => setCartOpen(true)} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} allMenuItems={menu} />
+      <CookieBanner restaurantId={dbRestaurant?.id} />
     </div>
   );
 };
