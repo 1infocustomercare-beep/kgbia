@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { DollarSign, ArrowUpRight, Crown, CreditCard, Calendar, CheckCircle } from "lucide-react";
 
@@ -9,13 +10,13 @@ const mockSales = [
   { id: 5, restaurant: "Café Parisien", date: "2026-01-28", amount: 2997, plan: "Full Pay", status: "paid", commission: 997 },
 ];
 
-const PartnerEarnings = () => {
+const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
   const totalEarned = mockSales.filter(s => s.status === "paid").reduce((s, i) => s + i.commission, 0);
   const pendingEarnings = mockSales.filter(s => s.status === "pending").reduce((s, i) => s + i.commission, 0);
   const totalSales = mockSales.length;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
+    <motion.div ref={ref} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
       <h2 className="text-lg font-display font-bold text-foreground">I tuoi Guadagni</h2>
 
       {/* Summary Cards */}
@@ -90,6 +91,8 @@ const PartnerEarnings = () => {
       </div>
     </motion.div>
   );
-};
+});
+
+PartnerEarnings.displayName = "PartnerEarnings";
 
 export default PartnerEarnings;
