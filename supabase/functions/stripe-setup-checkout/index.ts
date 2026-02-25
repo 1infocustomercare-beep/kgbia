@@ -3,9 +3,14 @@ import Stripe from "https://esm.sh/stripe@14.21.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+/**
+ * Empire Setup Checkout — Creates Stripe Checkout sessions for the €2,997 setup fee.
+ * Supports: full (€2,997), 3x (€1,050/mo), 6x (€550/mo)
+ * Uses transfer_group to link the 2000/997 split done in the webhook.
+ */
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -16,15 +21,26 @@ serve(async (req) => {
     const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
     const { plan, restaurantId, partnerId, customerEmail, successUrl, cancelUrl } = await req.json();
 
-    // Price logic: 2997 full, 1050x3, 550x6
-    const plans: Record<string, { amount: number; installments: number }> = {
-      full: { amount: 299700, installments: 1 },
-      "3x": { amount: 105000, installments: 3 },
-      "6x": { amount: 55000, installments: 6 },
+    if (!restaurantId || !customerEmail) {
+      throw new Error("Missing restaurantId or customerEmail");
+    }
+
+    const plans: Record<string, { amount: number; installments: number; label: string }> = {
+      full: { amount: 299700, installments: 1, label: "Empire Setup — Pagamento Unico €2.997" },
+      "3x": { amount: 105000, installments: 3, label: "Empire Setup — 3 Rate da €1.050/mese" },
+      "6x": { amount: 55000, installments: 6, label: "Empire Setup — 6 Rate da €550/mese" },
     };
 
     const selectedPlan = plans[plan] || plans.full;
     const transferGroup = `setup_${restaurantId}_${Date.now()}`;
+
+    const metadata = {
+      restaurantId,
+      partnerId: partnerId || "",
+      plan: plan || "full",
+      transferGroup,
+      type: "setup_fee",
+    };
 
     if (selectedPlan.installments === 1) {
       // One-time payment
@@ -35,18 +51,18 @@ serve(async (req) => {
         line_items: [{
           price_data: {
             currency: "eur",
-            product_data: { name: "Empire Setup Fee — Full Payment" },
+            product_data: { name: selectedPlan.label },
             unit_amount: selectedPlan.amount,
           },
           quantity: 1,
         }],
         payment_intent_data: {
           transfer_group: transferGroup,
-          metadata: { restaurantId, partnerId: partnerId || "", plan },
+          metadata,
         },
         success_url: successUrl || "https://empire.app/dashboard?setup=success",
         cancel_url: cancelUrl || "https://empire.app/dashboard?setup=cancelled",
-        metadata: { restaurantId, partnerId: partnerId || "", plan, transferGroup },
+        metadata,
       });
 
       return new Response(JSON.stringify({ url: session.url, transferGroup }), {
@@ -61,18 +77,18 @@ serve(async (req) => {
         line_items: [{
           price_data: {
             currency: "eur",
-            product_data: { name: `Empire Setup — ${selectedPlan.installments}x Rate` },
+            product_data: { name: selectedPlan.label },
             unit_amount: selectedPlan.amount,
             recurring: { interval: "month", interval_count: 1 },
           },
           quantity: 1,
         }],
         subscription_data: {
-          metadata: { restaurantId, partnerId: partnerId || "", plan, transferGroup, installmentsTotal: String(selectedPlan.installments) },
+          metadata: { ...metadata, installmentsTotal: String(selectedPlan.installments) },
         },
         success_url: successUrl || "https://empire.app/dashboard?setup=success",
         cancel_url: cancelUrl || "https://empire.app/dashboard?setup=cancelled",
-        metadata: { restaurantId, partnerId: partnerId || "", plan, transferGroup },
+        metadata,
       });
 
       return new Response(JSON.stringify({ url: session.url, transferGroup }), {
