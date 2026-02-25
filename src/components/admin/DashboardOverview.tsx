@@ -86,10 +86,13 @@ const DashboardOverview = ({
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-display font-bold text-foreground">{todayReservations.length}</span>
             <span className="text-xs text-muted-foreground">oggi</span>
-            {pendingReservations.length > 0 && (
-              <span className="text-xs text-accent font-medium">{pendingReservations.length} in attesa</span>
-            )}
           </div>
+          {pendingReservations.length > 0 && (
+            <div className="mt-1.5 flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="text-[10px] text-amber-400 font-semibold">{pendingReservations.length} da confermare</span>
+            </div>
+          )}
         </motion.div>
       </div>
 

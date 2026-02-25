@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ChefHat, ExternalLink, Power, CalendarDays, Move, Save, BarChart3, Key,
-  Plus, Trash2, QrCode, Download
+  Plus, Trash2, QrCode, Download, Clock, CheckCircle2, XCircle, Filter,
+  Phone, Users, MessageSquare, Bell
 } from "lucide-react";
+import { format, isToday, isTomorrow, parseISO, isPast } from "date-fns";
+import { it } from "date-fns/locale";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import TableMap from "@/components/restaurant/TableMap";
@@ -55,8 +58,23 @@ const OrdersTab = ({
 }: OrdersTabProps) => {
   const [section, setSection] = useState<OrdersSection>("orders");
   const [tableMapEditMode, setTableMapEditMode] = useState(false);
+  const [reservationFilter, setReservationFilter] = useState<"all" | "pending" | "confirmed" | "cancelled">("all");
 
   const activeOrders = orders.filter(o => ["pending", "preparing", "ready"].includes(o.status));
+  const pendingReservationCount = reservations.filter((r: any) => r.status === "pending").length;
+
+  const filteredReservations = useMemo(() => {
+    let filtered = [...reservations];
+    if (reservationFilter !== "all") {
+      filtered = filtered.filter((r: any) => r.status === reservationFilter);
+    }
+    // Sort: pending first, then by date
+    return filtered.sort((a: any, b: any) => {
+      if (a.status === "pending" && b.status !== "pending") return -1;
+      if (b.status === "pending" && a.status !== "pending") return 1;
+      return new Date(a.reservation_date + "T" + a.reservation_time).getTime() - new Date(b.reservation_date + "T" + b.reservation_time).getTime();
+    });
+  }, [reservations, reservationFilter]);
 
   const updateOrderStatus = async (orderId: string, status: string) => {
     await supabase.from("orders").update({ status }).eq("id", orderId);
@@ -93,22 +111,36 @@ const OrdersTab = ({
     setTableMapEditMode(false);
   };
 
-  const sections: { id: OrdersSection; label: string }[] = [
+  const sections: { id: OrdersSection; label: string; badge?: number }[] = [
     { id: "orders", label: "Cucina" },
     { id: "tables", label: "Tavoli" },
     { id: "traffic", label: "Canali" },
-    { id: "reservations", label: "Prenota" },
+    { id: "reservations", label: "Prenota", badge: pendingReservationCount },
   ];
+
+  const formatReservationDate = (dateStr: string) => {
+    try {
+      const d = parseISO(dateStr);
+      if (isToday(d)) return "Oggi";
+      if (isTomorrow(d)) return "Domani";
+      return format(d, "EEE d MMM", { locale: it });
+    } catch { return dateStr; }
+  };
 
   return (
     <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <div className="flex gap-1 overflow-x-auto scrollbar-hide pb-1">
         {sections.map(s => (
           <button key={s.id} onClick={() => setSection(s.id)}
-            className={`px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors min-h-[36px] ${
+            className={`relative flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors min-h-[36px] ${
               section === s.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
             }`}>
             {s.label}
+            {s.badge && s.badge > 0 && (
+              <span className="ml-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-accent text-accent-foreground animate-pulse">
+                {s.badge}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -325,51 +357,157 @@ const OrdersTab = ({
       {/* RESERVATIONS */}
       {section === "reservations" && (
         <div className="space-y-3">
-          {reservations.length === 0 && (
+          {/* Stats bar */}
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { label: "In attesa", count: reservations.filter((r: any) => r.status === "pending").length, icon: <Clock className="w-3.5 h-3.5 text-amber-400" />, color: "bg-amber-500/10 border-amber-500/20" },
+              { label: "Confermate", count: reservations.filter((r: any) => r.status === "confirmed").length, icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />, color: "bg-emerald-500/10 border-emerald-500/20" },
+              { label: "Rifiutate", count: reservations.filter((r: any) => r.status === "cancelled").length, icon: <XCircle className="w-3.5 h-3.5 text-accent" />, color: "bg-accent/10 border-accent/20" },
+            ].map(stat => (
+              <div key={stat.label} className={`p-2.5 rounded-xl border ${stat.color} text-center`}>
+                <div className="flex justify-center mb-1">{stat.icon}</div>
+                <p className="text-lg font-display font-bold text-foreground">{stat.count}</p>
+                <p className="text-[9px] text-muted-foreground">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Filter tabs */}
+          <div className="flex gap-1 overflow-x-auto scrollbar-hide">
+            {([
+              { id: "all" as const, label: "Tutte" },
+              { id: "pending" as const, label: "In attesa" },
+              { id: "confirmed" as const, label: "Confermate" },
+              { id: "cancelled" as const, label: "Rifiutate" },
+            ]).map(f => (
+              <button key={f.id} onClick={() => setReservationFilter(f.id)}
+                className={`px-2.5 py-1.5 rounded-lg text-[10px] font-medium whitespace-nowrap transition-colors ${
+                  reservationFilter === f.id ? "bg-foreground text-background" : "bg-secondary/50 text-muted-foreground"
+                }`}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Empty state */}
+          {filteredReservations.length === 0 && (
             <div className="text-center py-12">
               <CalendarDays className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
-              <p className="text-sm text-muted-foreground">Nessuna prenotazione</p>
+              <p className="text-sm text-muted-foreground">
+                {reservationFilter === "all" ? "Nessuna prenotazione" : `Nessuna prenotazione ${reservationFilter === "pending" ? "in attesa" : reservationFilter === "confirmed" ? "confermata" : "rifiutata"}`}
+              </p>
             </div>
           )}
-          {reservations.map((res: any) => (
-            <div key={res.id} className={`p-4 rounded-2xl border ${
-              res.status === "confirmed" ? "bg-green-500/5 border-green-500/20" :
-              res.status === "cancelled" ? "bg-accent/5 border-accent/20 opacity-60" :
-              "bg-secondary/50 border-border"
-            }`}>
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <p className="text-sm font-medium text-foreground">{res.customer_name}</p>
-                  <p className="text-xs text-muted-foreground">{res.customer_phone}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-display font-bold text-primary">{res.reservation_date}</p>
-                  <p className="text-xs text-muted-foreground">ore {res.reservation_time}</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-xs text-muted-foreground">👥 {res.guests} ospiti</span>
-                <div className="flex gap-2">
-                  {res.status === "pending" && (
-                    <>
-                      <button onClick={async () => {
-                        await supabase.from("reservations").update({ status: "confirmed" } as any).eq("id", res.id);
-                        setReservations(prev => prev.map(r => r.id === res.id ? { ...r, status: "confirmed" } : r));
-                        toast({ title: "Confermata" });
-                      }} className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-400 text-xs font-medium min-h-[36px]">✅ Conferma</button>
-                      <button onClick={async () => {
-                        await supabase.from("reservations").update({ status: "cancelled" } as any).eq("id", res.id);
-                        setReservations(prev => prev.map(r => r.id === res.id ? { ...r, status: "cancelled" } : r));
-                        toast({ title: "Annullata" });
-                      }} className="px-3 py-1.5 rounded-lg bg-accent/20 text-accent text-xs font-medium min-h-[36px]">✖ Rifiuta</button>
-                    </>
+
+          {/* Reservation cards */}
+          <AnimatePresence mode="popLayout">
+            {filteredReservations.map((res: any) => {
+              const dateLabel = formatReservationDate(res.reservation_date);
+              const isExpired = isPast(parseISO(res.reservation_date + "T23:59:59"));
+              const isPending = res.status === "pending";
+
+              return (
+                <motion.div
+                  key={res.id}
+                  layout
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className={`p-4 rounded-2xl border transition-all ${
+                    isPending ? "border-amber-500/30 bg-amber-500/5" :
+                    res.status === "confirmed" ? "border-emerald-500/20 bg-emerald-500/5" :
+                    "border-border/30 bg-secondary/30 opacity-60"
+                  } ${isPending && !isExpired ? "ring-1 ring-amber-500/20" : ""}`}
+                >
+                  {/* Header row */}
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+                        isPending ? "bg-amber-500/20" : res.status === "confirmed" ? "bg-emerald-500/20" : "bg-muted"
+                      }`}>
+                        <CalendarDays className={`w-4 h-4 ${
+                          isPending ? "text-amber-400" : res.status === "confirmed" ? "text-emerald-400" : "text-muted-foreground"
+                        }`} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-foreground">{res.customer_name}</p>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <Phone className="w-2.5 h-2.5 text-muted-foreground" />
+                          <a href={`tel:${res.customer_phone}`} className="text-[10px] text-primary underline-offset-2 hover:underline">{res.customer_phone}</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className={`text-sm font-display font-bold ${isToday(parseISO(res.reservation_date)) ? "text-primary" : "text-foreground"}`}>
+                        {dateLabel}
+                      </p>
+                      <p className="text-xs text-muted-foreground">🕐 {res.reservation_time}</p>
+                    </div>
+                  </div>
+
+                  {/* Details row */}
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Users className="w-3 h-3" /> {res.guests} ospiti
+                    </div>
+                    {isExpired && res.status !== "cancelled" && (
+                      <span className="text-[9px] text-accent font-medium">⚠ Data passata</span>
+                    )}
+                  </div>
+
+                  {/* Notes */}
+                  {res.notes && (
+                    <div className="flex items-start gap-1.5 p-2 rounded-lg bg-card/50 border border-border/30 mb-3">
+                      <MessageSquare className="w-3 h-3 text-muted-foreground flex-shrink-0 mt-0.5" />
+                      <p className="text-[10px] text-foreground/70 leading-relaxed">{res.notes}</p>
+                    </div>
                   )}
-                  {res.status === "confirmed" && <span className="px-2.5 py-1 rounded-full text-xs bg-green-500/20 text-green-400">Confermata</span>}
-                  {res.status === "cancelled" && <span className="px-2.5 py-1 rounded-full text-xs bg-accent/20 text-accent">Annullata</span>}
-                </div>
-              </div>
-            </div>
-          ))}
+
+                  {/* Actions */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      {res.status === "confirmed" && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-emerald-500/15 text-emerald-400">
+                          <CheckCircle2 className="w-3 h-3" /> Confermata
+                        </span>
+                      )}
+                      {res.status === "cancelled" && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-accent/15 text-accent">
+                          <XCircle className="w-3 h-3" /> Rifiutata
+                        </span>
+                      )}
+                    </div>
+                    {isPending && (
+                      <div className="flex gap-2">
+                        <motion.button
+                          whileTap={{ scale: 0.95 }}
+                          onClick={async () => {
+                            await supabase.from("reservations").update({ status: "confirmed" } as any).eq("id", res.id);
+                            setReservations((prev: any[]) => prev.map((r: any) => r.id === res.id ? { ...r, status: "confirmed" } : r));
+                            toast({ title: "✅ Prenotazione confermata", description: `${res.customer_name} — ${dateLabel} ore ${res.reservation_time}` });
+                          }}
+                          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 text-xs font-semibold min-h-[40px] hover:bg-emerald-500/30 transition-colors"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Conferma
+                        </motion.button>
+                        <motion.button
+                          whileTap={{ scale: 0.95 }}
+                          onClick={async () => {
+                            await supabase.from("reservations").update({ status: "cancelled" } as any).eq("id", res.id);
+                            setReservations((prev: any[]) => prev.map((r: any) => r.id === res.id ? { ...r, status: "cancelled" } : r));
+                            toast({ title: "✖ Prenotazione rifiutata", description: `${res.customer_name}` });
+                          }}
+                          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-accent/20 text-accent text-xs font-semibold min-h-[40px] hover:bg-accent/30 transition-colors"
+                        >
+                          <XCircle className="w-3.5 h-3.5" /> Rifiuta
+                        </motion.button>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
         </div>
       )}
     </motion.div>
