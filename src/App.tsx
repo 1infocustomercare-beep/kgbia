@@ -20,6 +20,8 @@ const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
 const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 
 const queryClient = new QueryClient();
 
@@ -70,6 +72,8 @@ const App = () => (
                     <AdminDashboard />
                   </ProtectedRoute>
                 } />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/cookie-policy" element={<CookiePolicy />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

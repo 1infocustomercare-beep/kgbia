@@ -207,28 +207,43 @@ export type Database = {
       fisco_configs: {
         Row: {
           api_key_encrypted: string | null
+          api_key_secondary_encrypted: string | null
+          auto_send_enabled: boolean
           configured: boolean
           configured_by: string | null
+          disclaimer_accepted: boolean
+          disclaimer_accepted_at: string | null
           id: string
           provider: string
+          provider_secondary: string | null
           restaurant_id: string
           updated_at: string
         }
         Insert: {
           api_key_encrypted?: string | null
+          api_key_secondary_encrypted?: string | null
+          auto_send_enabled?: boolean
           configured?: boolean
           configured_by?: string | null
+          disclaimer_accepted?: boolean
+          disclaimer_accepted_at?: string | null
           id?: string
           provider?: string
+          provider_secondary?: string | null
           restaurant_id: string
           updated_at?: string
         }
         Update: {
           api_key_encrypted?: string | null
+          api_key_secondary_encrypted?: string | null
+          auto_send_enabled?: boolean
           configured?: boolean
           configured_by?: string | null
+          disclaimer_accepted?: boolean
+          disclaimer_accepted_at?: string | null
           id?: string
           provider?: string
+          provider_secondary?: string | null
           restaurant_id?: string
           updated_at?: string
         }
@@ -237,6 +252,50 @@ export type Database = {
             foreignKeyName: "fisco_configs_restaurant_id_fkey"
             columns: ["restaurant_id"]
             isOneToOne: true
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gdpr_consents: {
+        Row: {
+          consent_analytics: boolean
+          consent_marketing: boolean
+          consent_necessary: boolean
+          created_at: string
+          id: string
+          ip_hash: string | null
+          restaurant_id: string | null
+          session_id: string
+          updated_at: string
+        }
+        Insert: {
+          consent_analytics?: boolean
+          consent_marketing?: boolean
+          consent_necessary?: boolean
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          restaurant_id?: string | null
+          session_id: string
+          updated_at?: string
+        }
+        Update: {
+          consent_analytics?: boolean
+          consent_marketing?: boolean
+          consent_necessary?: boolean
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          restaurant_id?: string | null
+          session_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gdpr_consents_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
             referencedRelation: "restaurants"
             referencedColumns: ["id"]
           },
@@ -342,6 +401,44 @@ export type Database = {
           },
         ]
       }
+      monthly_fee_invoices: {
+        Row: {
+          generated_at: string
+          id: string
+          month_year: string
+          restaurant_id: string
+          total_fees: number
+          total_orders: number
+          total_revenue: number
+        }
+        Insert: {
+          generated_at?: string
+          id?: string
+          month_year: string
+          restaurant_id: string
+          total_fees?: number
+          total_orders?: number
+          total_revenue?: number
+        }
+        Update: {
+          generated_at?: string
+          id?: string
+          month_year?: string
+          restaurant_id?: string
+          total_fees?: number
+          total_orders?: number
+          total_revenue?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monthly_fee_invoices_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           created_at: string
@@ -403,6 +500,54 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "orders_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_fees: {
+        Row: {
+          created_at: string
+          fee_amount: number
+          fee_percent: number
+          id: string
+          order_id: string
+          order_total: number
+          restaurant_id: string
+          stripe_fee_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          fee_amount?: number
+          fee_percent?: number
+          id?: string
+          order_id: string
+          order_total?: number
+          restaurant_id: string
+          stripe_fee_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          fee_amount?: number
+          fee_percent?: number
+          id?: string
+          order_id?: string
+          order_total?: number
+          restaurant_id?: string
+          stripe_fee_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_fees_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_fees_restaurant_id_fkey"
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
@@ -576,9 +721,14 @@ export type Database = {
           installments_total: number
           is_overdue: boolean
           next_due_date: string | null
+          partner_commission: number
+          partner_id: string | null
+          partner_paid: boolean
           plan_type: string
           reactivation_sent_at: string | null
           restaurant_id: string
+          stripe_payment_intent_id: string | null
+          stripe_transfer_group: string | null
           total_amount: number
           updated_at: string
           warning_sent_at: string | null
@@ -595,9 +745,14 @@ export type Database = {
           installments_total?: number
           is_overdue?: boolean
           next_due_date?: string | null
+          partner_commission?: number
+          partner_id?: string | null
+          partner_paid?: boolean
           plan_type?: string
           reactivation_sent_at?: string | null
           restaurant_id: string
+          stripe_payment_intent_id?: string | null
+          stripe_transfer_group?: string | null
           total_amount?: number
           updated_at?: string
           warning_sent_at?: string | null
@@ -614,9 +769,14 @@ export type Database = {
           installments_total?: number
           is_overdue?: boolean
           next_due_date?: string | null
+          partner_commission?: number
+          partner_id?: string | null
+          partner_paid?: boolean
           plan_type?: string
           reactivation_sent_at?: string | null
           restaurant_id?: string
+          stripe_payment_intent_id?: string | null
+          stripe_transfer_group?: string | null
           total_amount?: number
           updated_at?: string
           warning_sent_at?: string | null
@@ -703,6 +863,8 @@ export type Database = {
           setup_paid: boolean
           slug: string
           stripe_account_id: string | null
+          stripe_connect_account_id: string | null
+          stripe_onboarding_complete: boolean
           table_orders_enabled: boolean
           tagline: string | null
           takeaway_enabled: boolean
@@ -732,6 +894,8 @@ export type Database = {
           setup_paid?: boolean
           slug: string
           stripe_account_id?: string | null
+          stripe_connect_account_id?: string | null
+          stripe_onboarding_complete?: boolean
           table_orders_enabled?: boolean
           tagline?: string | null
           takeaway_enabled?: boolean
@@ -761,6 +925,8 @@ export type Database = {
           setup_paid?: boolean
           slug?: string
           stripe_account_id?: string | null
+          stripe_connect_account_id?: string | null
+          stripe_onboarding_complete?: boolean
           table_orders_enabled?: boolean
           tagline?: string | null
           takeaway_enabled?: boolean
