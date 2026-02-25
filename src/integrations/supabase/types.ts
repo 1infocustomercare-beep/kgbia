@@ -566,6 +566,7 @@ export type Database = {
       restaurant_payments: {
         Row: {
           amount_paid: number
+          block_notice_sent_at: string | null
           blocked_at: string | null
           created_at: string
           grace_period_days: number
@@ -576,12 +577,15 @@ export type Database = {
           is_overdue: boolean
           next_due_date: string | null
           plan_type: string
+          reactivation_sent_at: string | null
           restaurant_id: string
           total_amount: number
           updated_at: string
+          warning_sent_at: string | null
         }
         Insert: {
           amount_paid?: number
+          block_notice_sent_at?: string | null
           blocked_at?: string | null
           created_at?: string
           grace_period_days?: number
@@ -592,12 +596,15 @@ export type Database = {
           is_overdue?: boolean
           next_due_date?: string | null
           plan_type?: string
+          reactivation_sent_at?: string | null
           restaurant_id: string
           total_amount?: number
           updated_at?: string
+          warning_sent_at?: string | null
         }
         Update: {
           amount_paid?: number
+          block_notice_sent_at?: string | null
           blocked_at?: string | null
           created_at?: string
           grace_period_days?: number
@@ -608,9 +615,11 @@ export type Database = {
           is_overdue?: boolean
           next_due_date?: string | null
           plan_type?: string
+          reactivation_sent_at?: string | null
           restaurant_id?: string
           total_amount?: number
           updated_at?: string
+          warning_sent_at?: string | null
         }
         Relationships: [
           {
