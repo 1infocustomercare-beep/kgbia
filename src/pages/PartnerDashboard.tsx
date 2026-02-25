@@ -13,6 +13,7 @@ import PartnerEarnings from "@/components/partner/PartnerEarnings";
 import PartnerRecruitment from "@/components/partner/PartnerRecruitment";
 import PricingClosing from "@/components/partner/PricingClosing";
 import ROICalculator from "@/components/partner/ROICalculator";
+import PromoVideoPlayer from "@/components/PromoVideoPlayer";
 
 type Tab = "dashboard" | "sandbox" | "earnings" | "pricing" | "recruitment";
 
@@ -107,6 +108,16 @@ const PartnerDashboard = () => {
                     <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                   </motion.button>
                 ))}
+              </div>
+
+              {/* Welcome Video — Academy */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <Play className="w-4 h-4 text-primary" /> Video Presentazione
+                </h3>
+                <div className="rounded-2xl overflow-hidden shadow-lg">
+                  <PromoVideoPlayer autoPlay={false} compact />
+                </div>
               </div>
 
               {/* Partner Incentive Banner */}
