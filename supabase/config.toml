@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.empire-assistant]
 verify_jwt = false
+
+[functions.payment-notifications]
+verify_jwt = false
