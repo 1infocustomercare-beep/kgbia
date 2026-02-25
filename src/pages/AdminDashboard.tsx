@@ -387,7 +387,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Empire Assistant */}
-      <EmpireAssistant />
+      <EmpireAssistant restaurantId={restaurant?.id} />
 
       {/* Bottom Navigation — 5 tabs */}
       <div className="fixed bottom-0 inset-x-0 z-40 bg-card/95 backdrop-blur-lg border-t border-border/50 safe-bottom">
