@@ -4,7 +4,7 @@ import {
   LayoutDashboard, DollarSign, LogOut,
   Crown, TrendingUp, Trophy,
   ChevronRight, Sparkles,
-  Play, Target, CreditCard
+  Play, Target, CreditCard, BookOpen
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -13,9 +13,10 @@ import PartnerEarnings from "@/components/partner/PartnerEarnings";
 import PartnerRecruitment from "@/components/partner/PartnerRecruitment";
 import PricingClosing from "@/components/partner/PricingClosing";
 import ROICalculator from "@/components/partner/ROICalculator";
+import PartnerSalesToolkit from "@/components/partner/PartnerSalesToolkit";
 import EmpireAssistant from "@/components/admin/EmpireAssistant";
 
-type Tab = "dashboard" | "sandbox" | "earnings" | "pricing" | "recruitment";
+type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment";
 
 const PartnerDashboard = () => {
   const navigate = useNavigate();
@@ -38,9 +39,9 @@ const PartnerDashboard = () => {
   const bottomTabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: "dashboard", label: "Home", icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: "sandbox", label: "Demo", icon: <Play className="w-5 h-5" /> },
+    { id: "toolkit", label: "Vendita", icon: <BookOpen className="w-5 h-5" /> },
     { id: "pricing", label: "Prezzi", icon: <CreditCard className="w-5 h-5" /> },
     { id: "earnings", label: "Guadagni", icon: <DollarSign className="w-5 h-5" /> },
-    { id: "recruitment", label: "Impero", icon: <Crown className="w-5 h-5" /> },
   ];
 
   return (
@@ -92,9 +93,9 @@ const PartnerDashboard = () => {
                 <h3 className="text-sm font-semibold text-foreground">Azioni Rapide</h3>
                 {[
                   { label: "Apri Demo Guidata", desc: "Tour automatico per vendere", icon: <Play className="w-5 h-5" />, tab: "sandbox" as Tab },
+                  { label: "Schede Vendita", desc: "Tutte le funzionalità dettagliate", icon: <BookOpen className="w-5 h-5" />, tab: "toolkit" as Tab },
                   { label: "Mostra i Prezzi", desc: "Plan A + B per il ristoratore", icon: <CreditCard className="w-5 h-5" />, tab: "pricing" as Tab },
                   { label: "Calcola il ROI", desc: "Quanto risparmia il cliente", icon: <TrendingUp className="w-5 h-5" />, action: () => setShowROI(true) },
-                  { label: "Costruisci il tuo Impero", desc: "Piano commissioni e affiliazione", icon: <Crown className="w-5 h-5" />, tab: "recruitment" as Tab },
                   { label: "Controlla i Guadagni", desc: "Storico vendite e payout", icon: <DollarSign className="w-5 h-5" />, tab: "earnings" as Tab },
                 ].map((action, i) => (
                   <motion.button key={i} onClick={() => action.action ? action.action() : action.tab && setActiveTab(action.tab)}
@@ -122,6 +123,7 @@ const PartnerDashboard = () => {
             </motion.div>
           )}
           {activeTab === "sandbox" && <PartnerSandbox key="sandbox" />}
+          {activeTab === "toolkit" && <PartnerSalesToolkit key="toolkit" />}
           {activeTab === "pricing" && <PricingClosing key="pricing" onOpenROI={() => setShowROI(true)} />}
           {activeTab === "earnings" && <PartnerEarnings key="earnings" />}
           {activeTab === "recruitment" && <PartnerRecruitment key="recruitment" />}
