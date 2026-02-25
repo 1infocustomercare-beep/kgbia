@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Smartphone, RotateCcw, ExternalLink, ChefHat, LayoutDashboard, Users,
@@ -47,11 +47,16 @@ const DEMO_ORDERS = [
   { id: "i9j0k1l2", status: "ready", customer: "Giovanni P.", type: "takeaway", table: null, items: [{ name: "Risotto", qty: 1, price: 16 }, { name: "Tagliata", qty: 1, price: 22 }], total: 38, time: "14:05", notes: "Extra limone" },
 ];
 
+const VIEWS: PreviewView[] = ["customer", "admin", "kitchen"];
+const VIEW_LABELS = { customer: "👤 Cliente", admin: "⚙️ Admin", kitchen: "👨‍🍳 Cucina" };
+
 const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
   const [view, setView] = useState<PreviewView>("customer");
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [autoTourActive, setAutoTourActive] = useState(false);
   const [autoTourStep, setAutoTourStep] = useState(0);
+  const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
+  const [swipeDirection, setSwipeDirection] = useState<1 | -1>(1);
 
   // Customer sub-state
   const [customerSection, setCustomerSection] = useState<"hero" | "menu" | "story" | "contact">("hero");
@@ -141,12 +146,16 @@ const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
       setAutoTourActive(false);
       setAutoTourStep(0);
       setActiveTooltip(null);
+      setHighlightedElement(null);
       return;
     }
     const tipId = seq[autoTourStep];
     // Navigate to correct sub-section
     viewSectionMap[tipId]?.();
-    setTimeout(() => setActiveTooltip(tipId), 200);
+    setTimeout(() => {
+      setActiveTooltip(tipId);
+      setHighlightedElement(tipId);
+    }, 200);
     const timer = setTimeout(() => setAutoTourStep(s => s + 1), 3500);
     return () => clearTimeout(timer);
   }, [autoTourActive, autoTourStep, view]);
@@ -159,6 +168,7 @@ const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
   const stopTour = () => {
     setAutoTourActive(false);
     setActiveTooltip(null);
+    setHighlightedElement(null);
   };
 
   const toggleTooltip = (id: string) => {
@@ -171,10 +181,39 @@ const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
     const tip = tooltips[id];
     if (!tip) return <>{children}</>;
     const isActive = activeTooltip === id;
+    const isHighlighted = highlightedElement === id;
     return (
       <div className="relative">
-        <div onClick={() => toggleTooltip(id)} className="cursor-pointer">
+        <div onClick={() => toggleTooltip(id)} className="cursor-pointer relative">
           {children}
+          {/* Highlight pulse overlay during tour */}
+          <AnimatePresence>
+            {isHighlighted && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 z-40 pointer-events-none rounded-xl"
+              >
+                <motion.div
+                  animate={{
+                    boxShadow: [
+                      "0 0 0 0px hsl(var(--primary) / 0.4)",
+                      "0 0 0 4px hsl(var(--primary) / 0.2)",
+                      "0 0 0 0px hsl(var(--primary) / 0.4)",
+                    ],
+                  }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  className="absolute inset-0 rounded-xl border-2 border-primary/60"
+                />
+                <motion.div
+                  animate={{ opacity: [0.15, 0.3, 0.15] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  className="absolute inset-0 rounded-xl bg-primary/20"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
         <AnimatePresence>
           {isActive && (
@@ -724,27 +763,62 @@ const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
     </div>
   );
 
+  const swipeToView = (direction: 1 | -1) => {
+    const currentIdx = VIEWS.indexOf(view);
+    const nextIdx = currentIdx + direction;
+    if (nextIdx >= 0 && nextIdx < VIEWS.length) {
+      setSwipeDirection(direction);
+      setView(VIEWS[nextIdx]);
+      setActiveTooltip(null);
+      setHighlightedElement(null);
+      stopTour();
+    }
+  };
+
+  const handleDragEnd = (_: any, info: { offset: { x: number }; velocity: { x: number } }) => {
+    const threshold = 50;
+    if (info.offset.x < -threshold || info.velocity.x < -200) {
+      swipeToView(1);
+    } else if (info.offset.x > threshold || info.velocity.x > 200) {
+      swipeToView(-1);
+    }
+  };
+
+  const slideVariants = {
+    enter: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%", opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%", opacity: 0 }),
+  };
+
+  const currentViewIndex = VIEWS.indexOf(view);
+
   return (
     <motion.div className="space-y-3 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       {/* Header */}
       <div className="text-center py-1">
         <Smartphone className="w-8 h-8 mx-auto mb-1 text-primary" />
         <h3 className="text-base font-display font-bold text-foreground">Live Preview Completa</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">Tutte le interfacce dell'app — tocca gli elementi per i dettagli</p>
+        <p className="text-xs text-muted-foreground mt-0.5">Swipe per cambiare vista · Tocca gli elementi per i dettagli</p>
       </div>
 
-      {/* View tabs */}
-      <div className="flex gap-1 justify-center">
-        {([
-          { id: "customer" as const, label: "👤 Cliente", icon: <Users className="w-3.5 h-3.5" /> },
-          { id: "admin" as const, label: "⚙️ Admin", icon: <LayoutDashboard className="w-3.5 h-3.5" /> },
-          { id: "kitchen" as const, label: "👨‍🍳 Cucina", icon: <ChefHat className="w-3.5 h-3.5" /> },
-        ]).map(tab => (
-          <button key={tab.id} onClick={() => { setView(tab.id); setActiveTooltip(null); stopTour(); }}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors min-h-[36px] ${
-              view === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
+      {/* Swipe dot indicators + labels */}
+      <div className="flex items-center justify-center gap-3">
+        {VIEWS.map((v, i) => (
+          <button
+            key={v}
+            onClick={() => { setSwipeDirection(i > currentViewIndex ? 1 : -1); setView(v); setActiveTooltip(null); setHighlightedElement(null); stopTour(); }}
+            className={`flex items-center gap-1.5 transition-all ${
+              view === v ? "opacity-100" : "opacity-40"
+            }`}
+          >
+            <div className={`rounded-full transition-all ${
+              view === v ? "w-5 h-2 bg-primary" : "w-2 h-2 bg-muted-foreground"
+            }`} />
+            <span className={`text-[9px] font-medium transition-all ${
+              view === v ? "text-primary" : "text-muted-foreground"
             }`}>
-            {tab.label}
+              {VIEW_LABELS[v]}
+            </span>
           </button>
         ))}
       </div>
@@ -763,7 +837,7 @@ const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
         </button>
       </div>
 
-      {/* iPhone Frame */}
+      {/* iPhone Frame with swipe */}
       <div className="flex justify-center">
         <div className="relative">
           <div className="w-[260px] h-[520px] bg-[#1a1a1a] rounded-[36px] p-[8px] shadow-2xl border border-[#333]">
@@ -773,35 +847,57 @@ const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
             <div className="absolute top-[5px] left-[24px] z-30">
               <span className="text-[8px] text-white/60 font-medium">9:41</span>
             </div>
-            {/* Screen */}
+            {/* Screen with swipe */}
             <div className="w-full h-full rounded-[28px] overflow-hidden bg-background relative">
-              <AnimatePresence mode="wait">
-                {view === "customer" && (
-                  <motion.div key="customer" className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <CustomerView />
-                  </motion.div>
-                )}
-                {view === "admin" && (
-                  <motion.div key="admin" className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <AdminView />
-                  </motion.div>
-                )}
-                {view === "kitchen" && (
-                  <motion.div key="kitchen" className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <KitchenViewDemo />
-                  </motion.div>
-                )}
+              <AnimatePresence mode="wait" custom={swipeDirection}>
+                <motion.div
+                  key={view}
+                  custom={swipeDirection}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.2}
+                  onDragEnd={handleDragEnd}
+                  className="absolute inset-0 touch-pan-y"
+                >
+                  {view === "customer" && <CustomerView />}
+                  {view === "admin" && <AdminView />}
+                  {view === "kitchen" && <KitchenViewDemo />}
+                </motion.div>
               </AnimatePresence>
             </div>
             {/* Home indicator */}
             <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[80px] h-[3px] rounded-full bg-white/20" />
           </div>
+          {/* Swipe hint arrows */}
+          {currentViewIndex > 0 && (
+            <motion.div
+              animate={{ x: [-2, 2, -2] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+              className="absolute left-[-16px] top-1/2 -translate-y-1/2 text-muted-foreground/40"
+            >
+              <ChevronDown className="w-4 h-4 -rotate-90" />
+            </motion.div>
+          )}
+          {currentViewIndex < VIEWS.length - 1 && (
+            <motion.div
+              animate={{ x: [2, -2, 2] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+              className="absolute right-[-16px] top-1/2 -translate-y-1/2 text-muted-foreground/40"
+            >
+              <ChevronDown className="w-4 h-4 rotate-90" />
+            </motion.div>
+          )}
         </div>
       </div>
 
       {/* Legend */}
       <p className="text-[10px] text-muted-foreground text-center">
-        💡 Tocca qualsiasi elemento per una spiegazione · Usa il "Tour Guidato" per una demo automatica
+        👆 Swipe orizzontale per cambiare vista · 💡 Tocca un elemento per la spiegazione
       </p>
     </motion.div>
   );
