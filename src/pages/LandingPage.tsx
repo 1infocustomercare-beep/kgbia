@@ -9,7 +9,7 @@ import {
   Users, Rocket, CreditCard, Gift, Trophy
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import PromoVideoPlayer from "@/components/PromoVideoPlayer";
+// Live preview replaces video import
 
 // Animated counter
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) => {
@@ -439,24 +439,6 @@ const LandingPage = () => {
           <span className="text-[10px] text-foreground/30 tracking-widest uppercase">Scopri</span>
           <ArrowDown className="w-4 h-4 text-primary/40" />
         </motion.div>
-      </section>
-
-      {/* ====== VIDEO PROMO — Between Hero & Problem ====== */}
-      <section className="relative py-20 px-5">
-        <div className="max-w-sm mx-auto relative">
-          <motion.div className="text-center mb-8" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
-              <Play className="w-3 h-3" /> Video Tour
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground">
-              Scopri <span className="text-gold-gradient">Empire</span> in 15 secondi
-            </h2>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            className="rounded-3xl overflow-hidden shadow-2xl gold-glow">
-            <PromoVideoPlayer autoPlay={false} />
-          </motion.div>
-        </div>
       </section>
 
       {/* ====== 2. PROBLEM — Glass cards ====== */}
