@@ -6,7 +6,11 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-assis
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const EmpireAssistant = () => {
+interface EmpireAssistantProps {
+  restaurantId?: string;
+}
+
+const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
     { role: "assistant", content: "Ciao! 👋 Sono **Empire Assistant**, il tuo supporto tecnico 24/7. Come posso aiutarti?" }
@@ -57,7 +61,10 @@ const EmpireAssistant = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
+        body: JSON.stringify({
+          messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
+          restaurant_id: restaurantId || null,
+        }),
       });
 
       if (!resp.ok || !resp.body) {

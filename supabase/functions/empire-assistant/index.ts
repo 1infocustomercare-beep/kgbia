@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,6 +14,7 @@ Il tuo ruolo è aiutare i ristoratori con:
 - Risoluzione problemi comuni (login, pagamenti, configurazione)
 - Suggerimenti di marketing e gestione del ristorante
 - Domande sul fisco e conformità (senza dare consulenza legale)
+- Analisi e risposte basate sui DATI REALI del ristorante (ordini, menu, prenotazioni, clienti)
 
 Regole:
 - Rispondi SEMPRE in italiano
@@ -21,6 +23,9 @@ Regole:
 - Se non sai qualcosa, dillo onestamente
 - Non inventare funzionalità che non esistono
 - Per problemi tecnici complessi, suggerisci di contattare il supporto Empire
+- Quando rispondi con dati del ristorante, sii preciso e cita numeri reali
+- MAI rivelare dati di altri ristoranti — rispondi SOLO con i dati del ristorante corrente
+- Se non hai dati del ristorante, rispondi comunque in modo utile ma specifica che non hai accesso ai dati
 
 Funzionalità della piattaforma Empire:
 1. Menu digitale con QR code per ogni tavolo
@@ -39,17 +44,152 @@ Funzionalità della piattaforma Empire:
 14. PIN cucina per accesso sicuro
 15. Multi-lingua per menu (traduzione AI)`;
 
+async function fetchRestaurantContext(restaurantId: string): Promise<string> {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    return "⚠️ Dati ristorante non disponibili al momento.";
+  }
+
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  try {
+    // Fetch restaurant info
+    const { data: restaurant } = await supabase
+      .from("restaurants")
+      .select("name, slug, city, address, tagline, table_orders_enabled, takeaway_enabled, delivery_enabled, is_active, primary_color")
+      .eq("id", restaurantId)
+      .single();
+
+    if (!restaurant) {
+      return "⚠️ Ristorante non trovato.";
+    }
+
+    // Fetch all data in parallel for speed
+    const [menuRes, ordersRes, reservationsRes, activityRes, tablesRes] = await Promise.all([
+      supabase
+        .from("menu_items")
+        .select("name, category, price, is_active, is_popular")
+        .eq("restaurant_id", restaurantId)
+        .order("category")
+        .limit(100),
+      supabase
+        .from("orders")
+        .select("id, order_type, status, total, customer_name, created_at, table_number")
+        .eq("restaurant_id", restaurantId)
+        .order("created_at", { ascending: false })
+        .limit(30),
+      supabase
+        .from("reservations")
+        .select("customer_name, guests, reservation_date, reservation_time, status")
+        .eq("restaurant_id", restaurantId)
+        .order("reservation_date", { ascending: false })
+        .limit(20),
+      supabase
+        .from("customer_activity")
+        .select("customer_name, total_orders, total_spent, last_order_at, discount_sent")
+        .eq("restaurant_id", restaurantId)
+        .order("total_spent", { ascending: false })
+        .limit(15),
+      supabase
+        .from("restaurant_tables")
+        .select("table_number, seats, status, label")
+        .eq("restaurant_id", restaurantId)
+        .order("table_number"),
+    ]);
+
+    const menu = menuRes.data || [];
+    const orders = ordersRes.data || [];
+    const reservations = reservationsRes.data || [];
+    const customers = activityRes.data || [];
+    const tables = tablesRes.data || [];
+
+    // Build summary stats
+    const activeMenuItems = menu.filter(m => m.is_active).length;
+    const categories = [...new Set(menu.map(m => m.category))];
+    const pendingOrders = orders.filter(o => o.status === "pending").length;
+    const totalRevenue = orders.filter(o => o.status !== "cancelled").reduce((sum, o) => sum + Number(o.total), 0);
+    const upcomingReservations = reservations.filter(r => r.status === "pending" || r.status === "confirmed").length;
+
+    let context = `\n\n--- DATI REALI DEL RISTORANTE "${restaurant.name}" ---\n`;
+    context += `Slug: ${restaurant.slug} | Città: ${restaurant.city || "N/D"} | Indirizzo: ${restaurant.address || "N/D"}\n`;
+    context += `Tagline: ${restaurant.tagline || "N/D"}\n`;
+    context += `Servizi attivi: Tavolo=${restaurant.table_orders_enabled ? "Sì" : "No"}, Asporto=${restaurant.takeaway_enabled ? "Sì" : "No"}, Delivery=${restaurant.delivery_enabled ? "Sì" : "No"}\n`;
+    context += `Stato: ${restaurant.is_active ? "Attivo" : "Inattivo"}\n\n`;
+
+    // Menu summary
+    context += `📋 MENU: ${activeMenuItems} piatti attivi su ${menu.length} totali | Categorie: ${categories.join(", ")}\n`;
+    if (menu.length > 0) {
+      const popularItems = menu.filter(m => m.is_popular);
+      if (popularItems.length > 0) {
+        context += `⭐ Piatti popolari: ${popularItems.map(m => `${m.name} (€${m.price})`).join(", ")}\n`;
+      }
+      const avgPrice = menu.reduce((s, m) => s + Number(m.price), 0) / menu.length;
+      context += `💰 Prezzo medio menu: €${avgPrice.toFixed(2)}\n`;
+    }
+
+    // Orders summary
+    context += `\n🛒 ORDINI (ultimi 30): ${orders.length} totali | ${pendingOrders} in attesa | Fatturato: €${totalRevenue.toFixed(2)}\n`;
+    if (orders.length > 0) {
+      const byType: Record<string, number> = {};
+      orders.forEach(o => { byType[o.order_type] = (byType[o.order_type] || 0) + 1; });
+      context += `Tipi: ${Object.entries(byType).map(([t, c]) => `${t}=${c}`).join(", ")}\n`;
+      context += `Ultimi ordini:\n`;
+      orders.slice(0, 5).forEach(o => {
+        context += `  - ${o.created_at?.slice(0, 16)} | ${o.order_type} | €${o.total} | ${o.status} | ${o.customer_name || "Anonimo"}\n`;
+      });
+    }
+
+    // Reservations
+    context += `\n📅 PRENOTAZIONI: ${upcomingReservations} in arrivo su ${reservations.length} totali\n`;
+    if (reservations.length > 0) {
+      reservations.slice(0, 5).forEach(r => {
+        context += `  - ${r.reservation_date} ${r.reservation_time} | ${r.customer_name} | ${r.guests} ospiti | ${r.status}\n`;
+      });
+    }
+
+    // Top customers
+    if (customers.length > 0) {
+      context += `\n👥 TOP CLIENTI:\n`;
+      customers.slice(0, 5).forEach(c => {
+        context += `  - ${c.customer_name || "Anonimo"} | ${c.total_orders} ordini | €${Number(c.total_spent).toFixed(2)} spesi | Ultimo: ${c.last_order_at?.slice(0, 10)}\n`;
+      });
+    }
+
+    // Tables
+    if (tables.length > 0) {
+      const freeTables = tables.filter(t => t.status === "free").length;
+      context += `\n🪑 TAVOLI: ${tables.length} totali | ${freeTables} liberi\n`;
+    }
+
+    context += `\n--- FINE DATI RISTORANTE ---`;
+    return context;
+  } catch (e) {
+    console.error("Error fetching restaurant context:", e);
+    return "⚠️ Errore nel recupero dei dati del ristorante.";
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, restaurant_id } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+
+    // Fetch restaurant context if restaurant_id is provided
+    let contextBlock = "";
+    if (restaurant_id && typeof restaurant_id === "string") {
+      contextBlock = await fetchRestaurantContext(restaurant_id);
+    }
+
+    const systemMessage = SYSTEM_PROMPT + contextBlock;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -60,7 +200,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
+          { role: "system", content: systemMessage },
           ...messages,
         ],
         stream: true,
