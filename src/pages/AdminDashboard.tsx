@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LayoutDashboard, UtensilsCrossed, ShoppingCart, TrendingUp, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import { demoMenu } from "@/data/demo-restaurant";
 import type { MenuItem } from "@/types/restaurant";
 import restaurantLogo from "@/assets/restaurant-logo.png";
 import { toast } from "@/hooks/use-toast";
+import { useOrderNotifications } from "@/hooks/useOrderNotifications";
 import { extractDominantColor, hslToHex, applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
 
 import DashboardOverview from "@/components/admin/DashboardOverview";
@@ -24,6 +25,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const { signOut, user } = useAuth();
   const { restaurant, loading: restLoading } = useMyRestaurant();
+  useOrderNotifications(restaurant?.id);
   const [activeTab, setActiveTab] = useState<MainTab>("dashboard");
   const [menuItems, setMenuItems] = useState<MenuItem[]>(demoMenu);
   const [orders, setOrders] = useState<any[]>([]);
