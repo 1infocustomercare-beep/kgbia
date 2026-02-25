@@ -247,65 +247,65 @@ const LandingPage = () => {
       </nav>
 
       {/* ====== 1. HERO — Cinematic ====== */}
-      <section id="hero" ref={heroRef} className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
+      <section id="hero" ref={heroRef} className="relative min-h-[90vh] sm:min-h-screen w-full overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
         
         {/* Radial glow behind content */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary/10 rounded-full blur-[150px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[800px] h-[400px] sm:h-[500px] bg-primary/10 rounded-full blur-[150px]" />
 
-        <motion.div className="relative z-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 px-5 max-w-6xl w-full pt-28 pb-16"
+        <motion.div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-16 px-4 sm:px-5 max-w-6xl w-full pt-20 sm:pt-28 pb-10 sm:pb-16"
           style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}>
           
           {/* Left: Text content */}
           <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass border border-primary/20 mb-8">
-              <Sparkles className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-medium text-primary tracking-wider uppercase">La Rivoluzione per i Ristoratori</span>
+              className="inline-flex items-center gap-1.5 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full glass border border-primary/20 mb-5 sm:mb-8">
+              <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-primary" />
+              <span className="text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase">La Rivoluzione per i Ristoratori</span>
             </motion.div>
 
             <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 }}
-              className="text-4xl sm:text-6xl lg:text-7xl font-display font-bold text-foreground leading-[1.05] tracking-tight">
+              className="text-3xl sm:text-6xl lg:text-7xl font-display font-bold text-foreground leading-[1.08] tracking-tight">
               Riprenditi il tuo{" "}
               <span className="relative inline-block">
                 <span className="text-gold-gradient">Impero</span>
-                <motion.span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full"
+                <motion.span className="absolute -bottom-1 sm:-bottom-2 left-0 right-0 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full"
                   initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.2, duration: 0.8 }} />
               </span>
             </motion.h1>
 
-            <motion.p className="mt-6 text-lg sm:text-xl text-foreground/60 max-w-xl leading-relaxed font-light"
+            <motion.p className="mt-3 sm:mt-6 text-sm sm:text-xl text-foreground/60 max-w-xl leading-relaxed font-light"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
               L'Asset Digitale di Proprietà che ti libera dal 30% di commissioni.{" "}
               <span className="text-foreground font-medium">Una volta. Per sempre.</span>
             </motion.p>
 
-            <motion.div className="mt-10 flex flex-col sm:flex-row items-center gap-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
+            <motion.div className="mt-5 sm:mt-10 flex flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto justify-center" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
               <motion.button onClick={scrollToPricing}
-                className="group relative px-10 py-4 bg-primary text-primary-foreground font-semibold text-sm tracking-widest uppercase rounded-2xl overflow-hidden"
+                className="group relative flex-1 sm:flex-none px-6 sm:px-10 py-3 sm:py-4 bg-primary text-primary-foreground font-semibold text-xs sm:text-sm tracking-widest uppercase rounded-2xl overflow-hidden"
                 whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <span className="relative z-10 flex items-center gap-2">
-                  Inizia Ora <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  Inizia Ora <ArrowRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
                 <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
                   animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
               </motion.button>
               <button onClick={() => navigate("/r/impero-roma")}
-                className="group px-10 py-4 rounded-2xl glass border border-foreground/10 text-foreground text-sm tracking-widest uppercase hover:border-primary/40 transition-all duration-300 flex items-center gap-2">
-                <Play className="w-4 h-4 text-primary" /> Demo Live
+                className="group flex-1 sm:flex-none px-6 sm:px-10 py-3 sm:py-4 rounded-2xl glass border border-foreground/10 text-foreground text-xs sm:text-sm tracking-widest uppercase hover:border-primary/40 transition-all duration-300 flex items-center justify-center gap-2">
+                <Play className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-primary" /> Demo
               </button>
             </motion.div>
 
             {/* Trust badges */}
-            <motion.div className="mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-foreground/40"
+            <motion.div className="mt-5 sm:mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 text-[10px] sm:text-xs text-foreground/40"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}>
               {[
-                { icon: <Lock className="w-3.5 h-3.5" />, text: "AES-256 Encrypted" },
-                { icon: <Zap className="w-3.5 h-3.5" />, text: "Setup in 60s" },
-                { icon: <Gem className="w-3.5 h-3.5" />, text: "Zero Canoni" },
+                { icon: <Lock className="w-3 sm:w-3.5 h-3 sm:h-3.5" />, text: "AES-256" },
+                { icon: <Zap className="w-3 sm:w-3.5 h-3 sm:h-3.5" />, text: "Setup 60s" },
+                { icon: <Gem className="w-3 sm:w-3.5 h-3 sm:h-3.5" />, text: "Zero Canoni" },
               ].map((badge, i) => (
-                <span key={i} className="flex items-center gap-1.5">{badge.icon} {badge.text}</span>
+                <span key={i} className="flex items-center gap-1">{badge.icon} {badge.text}</span>
               ))}
             </motion.div>
           </div>
@@ -356,21 +356,21 @@ const LandingPage = () => {
               ))}
 
               {/* iPhone bezel */}
-              <div className="relative w-[280px] h-[580px] bg-[#1a1a1a] rounded-[40px] p-[10px] shadow-2xl border border-[#333]">
+              <div className="relative w-[220px] sm:w-[280px] h-[460px] sm:h-[580px] bg-[#1a1a1a] rounded-[32px] sm:rounded-[40px] p-[8px] sm:p-[10px] shadow-2xl border border-[#333]">
                 {/* Notch */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[28px] bg-[#1a1a1a] rounded-b-2xl z-10" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90px] sm:w-[120px] h-[22px] sm:h-[28px] bg-[#1a1a1a] rounded-b-2xl z-10" />
                 {/* Status bar */}
                 <div className="absolute top-[6px] left-[28px] flex items-center gap-1 z-10">
                   <span className="text-[9px] text-white/60 font-medium">9:41</span>
                 </div>
                 {/* Screen */}
-                <div className="relative w-full h-full rounded-[32px] overflow-hidden bg-background">
+                <div className="relative w-full h-full rounded-[24px] sm:rounded-[32px] overflow-hidden bg-background">
                   <iframe
                     ref={iframeRef}
                     src={`${window.location.origin}/r/impero-roma`}
                     className="border-0 origin-top-left"
                     style={{
-                      transform: "scale(0.6933)",
+                      transform: "scale(0.545)",
                       transformOrigin: "top left",
                       width: "375px",
                       height: "812px",
@@ -434,69 +434,69 @@ const LandingPage = () => {
           </motion.div>
         </motion.div>
 
-        <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        <motion.div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-2"
           animate={{ y: [0, 8, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}>
-          <span className="text-[10px] text-foreground/30 tracking-widest uppercase">Scopri</span>
-          <ArrowDown className="w-4 h-4 text-primary/40" />
+          <span className="text-[9px] sm:text-[10px] text-foreground/30 tracking-widest uppercase">Scopri</span>
+          <ArrowDown className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-primary/40" />
         </motion.div>
       </section>
 
       {/* ====== 2. PROBLEM — Glass cards ====== */}
-      <section id="pain" className="relative py-24 px-5">
+      <section id="pain" className="relative py-12 sm:py-24 px-4 sm:px-5">
         <GlowOrb className="w-[400px] h-[400px] bg-accent -top-40 right-0" />
         <div className="max-w-5xl mx-auto relative">
-          <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-xs font-medium text-accent tracking-wider uppercase mb-4">
+          <motion.div className="text-center mb-8 sm:mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-accent/10 text-[10px] sm:text-xs font-medium text-accent tracking-wider uppercase mb-3 sm:mb-4">
               <AlertTriangle className="w-3 h-3" /> Il Problema
             </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
+            <h2 className="text-2xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
               Ogni mese, <span className="text-accent">regali migliaia</span><br className="hidden sm:block" /> di euro
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-5">
             {[
               { icon: <Banknote className="w-7 h-7" />, amount: "€7.500", label: "Margini erosi / mese", sub: "su 1000 ordini a €25" },
               { icon: <DollarSign className="w-7 h-7" />, amount: "€90.000", label: "Dispersi ogni anno", sub: "capitale che alimenta i competitor" },
               { icon: <Target className="w-7 h-7" />, amount: "€0", label: "Proprietà clienti", sub: "il marketplace possiede i tuoi dati" },
             ].map((item, i) => (
               <motion.div key={i}
-                className="group relative p-7 rounded-3xl glass border border-border/30 hover:border-accent/30 transition-all duration-500 overflow-hidden"
+                className="group relative p-5 sm:p-7 rounded-2xl sm:rounded-3xl glass border border-border/30 hover:border-accent/30 transition-all duration-500 overflow-hidden"
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
                 <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative">
-                  <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-4">{item.icon}</div>
-                  <p className="text-4xl font-display font-bold text-accent">{item.amount}</p>
-                  <p className="text-sm font-semibold text-foreground mt-2">{item.label}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{item.sub}</p>
+                  <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-xl sm:rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-3 sm:mb-4">{item.icon}</div>
+                  <p className="text-3xl sm:text-4xl font-display font-bold text-accent">{item.amount}</p>
+                  <p className="text-xs sm:text-sm font-semibold text-foreground mt-1.5 sm:mt-2">{item.label}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">{item.sub}</p>
                 </div>
               </motion.div>
             ))}
           </div>
 
-          <motion.div className="text-center mt-16" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            <p className="text-lg text-muted-foreground">E se potessi trattenere <strong className="text-primary">il 98%</strong> dei tuoi margini?</p>
-            <ArrowDown className="w-5 h-5 text-primary mx-auto mt-4 animate-bounce" />
+          <motion.div className="text-center mt-8 sm:mt-16" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <p className="text-sm sm:text-lg text-muted-foreground">E se potessi trattenere <strong className="text-primary">il 98%</strong> dei tuoi margini?</p>
+            <ArrowDown className="w-4 sm:w-5 h-4 sm:h-5 text-primary mx-auto mt-3 sm:mt-4 animate-bounce" />
           </motion.div>
         </div>
       </section>
 
       {/* ====== 3. STATS — Floating metrics ====== */}
-      <section id="vision" className="relative py-24 px-5">
+      <section id="vision" className="relative py-12 sm:py-24 px-4 sm:px-5">
         <div className="max-w-5xl mx-auto">
-          <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
+          <motion.div className="text-center mb-8 sm:mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3 sm:mb-4">
               <Sparkles className="w-3 h-3" /> La Soluzione
             </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
+            <h2 className="text-2xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
               Il tuo <span className="text-gold-gradient">controllo totale</span>
             </h2>
-            <p className="mt-4 text-muted-foreground max-w-md mx-auto">
+            <p className="mt-2 sm:mt-4 text-xs sm:text-base text-muted-foreground max-w-md mx-auto">
               Una suite che ti libera dalle piattaforme e protegge i tuoi margini.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {[
               { value: 2, suffix: "%", label: "Fee totale", icon: <TrendingUp className="w-4 h-4" /> },
               { value: 0, prefix: "€", label: "Canone mensile", icon: <Banknote className="w-4 h-4" /> },
@@ -504,14 +504,14 @@ const LandingPage = () => {
               { value: 98, suffix: "%", label: "Margini salvati", icon: <Shield className="w-4 h-4" /> },
             ].map((s, i) => (
               <motion.div key={i}
-                className="relative p-6 rounded-3xl glass border border-border/30 text-center overflow-hidden group"
+                className="relative p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass border border-border/30 text-center overflow-hidden group"
                 initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-3">{s.icon}</div>
-                <p className="text-4xl font-display font-bold text-primary">
+                <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-2 sm:mb-3">{s.icon}</div>
+                <p className="text-2xl sm:text-4xl font-display font-bold text-primary">
                   <AnimatedNumber value={s.value} prefix={s.prefix} suffix={s.suffix} />
                 </p>
-                <p className="text-xs text-muted-foreground mt-2 font-medium">{s.label}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 sm:mt-2 font-medium">{s.label}</p>
               </motion.div>
             ))}
           </div>
@@ -519,22 +519,22 @@ const LandingPage = () => {
       </section>
 
       {/* ====== 4. FEATURES — Bento Grid ====== */}
-      <section id="features" className="relative py-24 px-5">
+      <section id="features" className="relative py-12 sm:py-24 px-4 sm:px-5">
         <GlowOrb className="w-[500px] h-[500px] bg-violet-500 -top-20 left-1/4" />
         <div className="max-w-5xl mx-auto relative">
-          <motion.div className="text-center mb-16" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
+          <motion.div className="text-center mb-8 sm:mb-16" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3 sm:mb-4">
               <Zap className="w-3 h-3" /> L'Arsenale
             </span>
-            <h2 className="text-3xl sm:text-5xl font-display font-bold text-foreground">
+            <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground">
               Ogni funzione, un <span className="text-gold-gradient">vantaggio</span>
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {featureCards.map((feat, i) => (
               <motion.div key={i}
-                className={`group relative p-6 rounded-3xl glass border border-border/30 hover:border-primary/30 transition-all duration-500 overflow-hidden
+                className={`group relative p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass border border-border/30 hover:border-primary/30 transition-all duration-500 overflow-hidden
                   ${i === 0 ? "md:col-span-2 lg:col-span-2" : ""}`}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.6 }}>
                 
@@ -542,19 +542,19 @@ const LandingPage = () => {
                 <div className={`absolute inset-0 bg-gradient-to-br ${feat.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                 
                 <div className="relative">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
+                  <div className="flex items-center gap-2.5 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="w-9 sm:w-11 h-9 sm:h-11 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
                       {feat.icon}
                     </div>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-display text-base font-bold text-foreground">{feat.title}</h3>
-                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold tracking-wider">{feat.tag}</span>
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <h3 className="font-display text-sm sm:text-base font-bold text-foreground">{feat.title}</h3>
+                        <span className="text-[8px] sm:text-[9px] px-1.5 sm:px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold tracking-wider">{feat.tag}</span>
                       </div>
-                      <p className="text-xs font-semibold text-primary mt-0.5">💰 {feat.benefit}</p>
+                      <p className="text-[10px] sm:text-xs font-semibold text-primary mt-0.5">💰 {feat.benefit}</p>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{feat.desc}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{feat.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -563,18 +563,18 @@ const LandingPage = () => {
       </section>
 
       {/* ====== 5. ROI CALCULATOR ====== */}
-      <section id="calculator" className="relative py-24 px-5">
+      <section id="calculator" className="relative py-12 sm:py-24 px-4 sm:px-5">
         <div className="max-w-2xl mx-auto relative">
-          <motion.div className="text-center mb-12" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
+          <motion.div className="text-center mb-8 sm:mb-12" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3 sm:mb-4">
               <Calculator className="w-3 h-3" /> ROI Calculator
             </span>
-            <h2 className="text-3xl sm:text-5xl font-display font-bold text-foreground">
+            <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground">
               Il tuo <span className="text-gold-gradient">risparmio reale</span>
             </h2>
           </motion.div>
 
-          <motion.div className="p-8 rounded-[2rem] glass border border-border/30 space-y-6"
+          <motion.div className="p-5 sm:p-8 rounded-2xl sm:rounded-[2rem] glass border border-border/30 space-y-4 sm:space-y-6"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             
             {/* Sliders */}
@@ -583,9 +583,9 @@ const LandingPage = () => {
               { label: "Scontrino medio", value: avgOrder, min: 10, max: 80, step: 5, display: `€${avgOrder}`, onChange: setAvgOrder },
             ].map((slider, i) => (
               <div key={i}>
-                <div className="flex justify-between text-sm mb-3">
+                <div className="flex justify-between text-xs sm:text-sm mb-2 sm:mb-3">
                   <span className="text-muted-foreground">{slider.label}</span>
-                  <span className="text-foreground font-bold text-lg font-display">{slider.display}</span>
+                  <span className="text-foreground font-bold text-base sm:text-lg font-display">{slider.display}</span>
                 </div>
                 <input type="range" min={slider.min} max={slider.max} step={slider.step} value={slider.value}
                   onChange={(e) => slider.onChange(Number(e.target.value))} className="w-full accent-primary h-2 rounded-full" />
@@ -593,14 +593,14 @@ const LandingPage = () => {
             ))}
 
             {/* Comparison bars */}
-            <div className="space-y-4 pt-6 border-t border-border/30">
+            <div className="space-y-3 sm:space-y-4 pt-4 sm:pt-6 border-t border-border/30">
               <div>
-                <div className="flex justify-between text-sm mb-2">
+                <div className="flex justify-between text-xs sm:text-sm mb-1.5 sm:mb-2">
                   <span className="text-muted-foreground">💸 Marketplace (30%)</span>
                   <span className="text-accent font-display font-bold">-€{justEatCost.toLocaleString("it-IT", { maximumFractionDigits: 0 })}/mese</span>
                 </div>
-                <div className="h-10 rounded-2xl bg-accent/10 overflow-hidden relative">
-                  <motion.div className="h-full bg-gradient-to-r from-accent/40 to-accent/60 rounded-2xl flex items-center justify-end pr-4"
+                <div className="h-8 sm:h-10 rounded-xl sm:rounded-2xl bg-accent/10 overflow-hidden relative">
+                  <motion.div className="h-full bg-gradient-to-r from-accent/40 to-accent/60 rounded-xl sm:rounded-2xl flex items-center justify-end pr-3 sm:pr-4"
                     initial={{ width: 0 }} animate={{ width: `${justEatBarWidth}%` }} transition={{ duration: 1, delay: 0.3 }}>
                     <span className="text-xs font-bold text-foreground">-30%</span>
                   </motion.div>
@@ -621,27 +621,27 @@ const LandingPage = () => {
             </div>
 
             {/* Results */}
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 space-y-4">
+            <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 space-y-3 sm:space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-foreground font-medium text-sm">Risparmi al mese</span>
-                <span className="text-3xl font-display font-bold text-primary">
+                <span className="text-foreground font-medium text-xs sm:text-sm">Risparmi al mese</span>
+                <span className="text-2xl sm:text-3xl font-display font-bold text-primary">
                   €{monthlySaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-foreground font-medium text-sm">Risparmi all'anno</span>
-                <span className="text-3xl font-display font-bold text-gold-gradient">
+                <span className="text-foreground font-medium text-xs sm:text-sm">Risparmi all'anno</span>
+                <span className="text-2xl sm:text-3xl font-display font-bold text-gold-gradient">
                   €{yearSaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}
                 </span>
               </div>
-              <div className="flex justify-between items-center pt-3 border-t border-primary/20">
-                <span className="text-muted-foreground text-sm">ROI completo in</span>
-                <span className="text-foreground font-display font-bold text-lg">{roiMonths} {roiMonths === 1 ? "mese" : "mesi"}</span>
+              <div className="flex justify-between items-center pt-2 sm:pt-3 border-t border-primary/20">
+                <span className="text-muted-foreground text-xs sm:text-sm">ROI completo in</span>
+                <span className="text-foreground font-display font-bold text-base sm:text-lg">{roiMonths} {roiMonths === 1 ? "mese" : "mesi"}</span>
               </div>
             </div>
 
             <motion.button onClick={scrollToPricing}
-              className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-base tracking-wide"
+              className="w-full py-3.5 sm:py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-sm sm:text-base tracking-wide"
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
               Inizia il tuo Impero · €2.997
             </motion.button>
@@ -650,27 +650,27 @@ const LandingPage = () => {
       </section>
 
       {/* ====== 6. PRICING — Premium card with plans ====== */}
-      <section id="pricing" className="relative py-24 px-5">
+      <section id="pricing" className="relative py-12 sm:py-24 px-4 sm:px-5">
         <GlowOrb className="w-[600px] h-[400px] bg-primary top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         <div className="max-w-4xl mx-auto relative">
-          <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
+          <motion.div className="text-center mb-8 sm:mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3 sm:mb-4">
               <Crown className="w-3 h-3" /> Investimento
             </span>
-            <h2 className="text-3xl sm:text-5xl font-display font-bold text-foreground">
+            <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground">
               Scegli il tuo <span className="text-gold-gradient">piano</span>
             </h2>
           </motion.div>
 
           {/* Payment plans grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 mb-8 sm:mb-10">
             {/* 6-Month Plan */}
-            <motion.div className="relative p-7 rounded-[2rem] glass border border-border/30 hover:border-primary/30 transition-all duration-500"
+            <motion.div className="relative p-5 sm:p-7 rounded-2xl sm:rounded-[2rem] glass border border-border/30 hover:border-primary/30 transition-all duration-500"
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0 }}>
-              <p className="text-xs font-semibold text-muted-foreground tracking-wider uppercase mb-3">6 Rate</p>
-              <p className="text-4xl font-display font-bold text-foreground">€550<span className="text-lg text-muted-foreground font-normal">/mese</span></p>
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground tracking-wider uppercase mb-2 sm:mb-3">6 Rate</p>
+              <p className="text-3xl sm:text-4xl font-display font-bold text-foreground">€550<span className="text-base sm:text-lg text-muted-foreground font-normal">/mese</span></p>
               <p className="text-xs text-muted-foreground mt-1">Totale: €3.300 + IVA</p>
-              <div className="mt-6 space-y-2">
+              <div className="mt-4 sm:mt-6 space-y-2">
                 {["Tutte le funzionalità", "Pagamento dilazionato", "Attivazione immediata"].map((f, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs text-foreground/70">
                     <Check className="w-3.5 h-3.5 text-primary" /> {f}
@@ -678,24 +678,24 @@ const LandingPage = () => {
                 ))}
               </div>
               <button onClick={() => navigate("/admin")}
-                className="mt-6 w-full py-3.5 rounded-xl border border-primary/30 text-primary font-semibold text-sm tracking-wide hover:bg-primary hover:text-primary-foreground transition-all">
+                className="mt-4 sm:mt-6 w-full py-3 sm:py-3.5 rounded-xl border border-primary/30 text-primary font-semibold text-xs sm:text-sm tracking-wide hover:bg-primary hover:text-primary-foreground transition-all">
                 Scegli 6 Rate
               </button>
             </motion.div>
 
             {/* Full Payment — HERO */}
-            <motion.div className="relative p-7 rounded-[2rem] glass border-2 border-primary/40 overflow-hidden md:-mt-4 md:mb-0"
+            <motion.div className="relative p-5 sm:p-7 rounded-2xl sm:rounded-[2rem] glass border-2 border-primary/40 overflow-hidden md:-mt-4 md:mb-0"
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
               <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-primary/5 to-transparent" />
               <div className="relative">
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-xs font-semibold text-primary tracking-wider uppercase">Pagamento Unico</p>
-                  <span className="px-2.5 py-1 rounded-full bg-primary/10 text-[10px] font-bold text-primary">BEST VALUE</span>
+                <div className="flex items-center justify-between mb-2 sm:mb-3">
+                  <p className="text-[10px] sm:text-xs font-semibold text-primary tracking-wider uppercase">Pagamento Unico</p>
+                  <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-primary/10 text-[9px] sm:text-[10px] font-bold text-primary">BEST VALUE</span>
                 </div>
-                <p className="text-5xl font-display font-bold text-foreground">€2.997</p>
-                <p className="text-xs text-muted-foreground mt-1">+ IVA 22% · Una volta sola</p>
-                <div className="mt-6 space-y-2">
+                <p className="text-4xl sm:text-5xl font-display font-bold text-foreground">€2.997</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">+ IVA 22% · Una volta sola</p>
+                <div className="mt-4 sm:mt-6 space-y-1.5 sm:space-y-2">
                   {[
                     "Asset Digitale di Proprietà",
                     "AI Menu Creator + OCR",
@@ -715,7 +715,7 @@ const LandingPage = () => {
                   ))}
                 </div>
                 <motion.button onClick={() => navigate("/admin")}
-                  className="mt-6 w-full py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm tracking-wide relative overflow-hidden"
+                  className="mt-4 sm:mt-6 w-full py-3.5 sm:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-xs sm:text-sm tracking-wide relative overflow-hidden"
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
                   <span className="relative z-10">Inizia il tuo Impero</span>
                   <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
@@ -727,12 +727,12 @@ const LandingPage = () => {
             </motion.div>
 
             {/* 3-Month Plan */}
-            <motion.div className="relative p-7 rounded-[2rem] glass border border-border/30 hover:border-primary/30 transition-all duration-500"
+            <motion.div className="relative p-5 sm:p-7 rounded-2xl sm:rounded-[2rem] glass border border-border/30 hover:border-primary/30 transition-all duration-500"
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
-              <p className="text-xs font-semibold text-muted-foreground tracking-wider uppercase mb-3">3 Rate</p>
-              <p className="text-4xl font-display font-bold text-foreground">€1.050<span className="text-lg text-muted-foreground font-normal">/mese</span></p>
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground tracking-wider uppercase mb-2 sm:mb-3">3 Rate</p>
+              <p className="text-3xl sm:text-4xl font-display font-bold text-foreground">€1.050<span className="text-base sm:text-lg text-muted-foreground font-normal">/mese</span></p>
               <p className="text-xs text-muted-foreground mt-1">Totale: €3.150 + IVA</p>
-              <div className="mt-6 space-y-2">
+              <div className="mt-4 sm:mt-6 space-y-2">
                 {["Tutte le funzionalità", "Massima flessibilità", "Attivazione immediata"].map((f, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs text-foreground/70">
                     <Check className="w-3.5 h-3.5 text-primary" /> {f}
@@ -740,7 +740,7 @@ const LandingPage = () => {
                 ))}
               </div>
               <button onClick={() => navigate("/admin")}
-                className="mt-6 w-full py-3.5 rounded-xl border border-primary/30 text-primary font-semibold text-sm tracking-wide hover:bg-primary hover:text-primary-foreground transition-all">
+                className="mt-4 sm:mt-6 w-full py-3 sm:py-3.5 rounded-xl border border-primary/30 text-primary font-semibold text-xs sm:text-sm tracking-wide hover:bg-primary hover:text-primary-foreground transition-all">
                 Scegli 3 Rate
               </button>
             </motion.div>
@@ -749,22 +749,22 @@ const LandingPage = () => {
       </section>
 
       {/* ====== 7. PARTNER RECRUITMENT — "Costruisci il tuo Impero" ====== */}
-      <section className="relative py-24 px-5 overflow-hidden">
+      <section className="relative py-12 sm:py-24 px-4 sm:px-5 overflow-hidden">
         <GlowOrb className="w-[500px] h-[500px] bg-amber-500 top-0 -right-40" />
         <div className="max-w-5xl mx-auto relative">
-          <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
+          <motion.div className="text-center mb-8 sm:mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3 sm:mb-4">
               <Users className="w-3 h-3" /> Partner Program
             </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
+            <h2 className="text-2xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
               Costruisci il tuo <span className="text-gold-gradient">Impero</span>
             </h2>
-            <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
+            <p className="mt-2 sm:mt-4 text-xs sm:text-base text-muted-foreground max-w-lg mx-auto">
               Diventa Partner Empire e guadagna quasi €1.000 per ogni vendita. Zero rischi, strumenti elite, pagamenti istantanei.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5">
             {[
               {
                 icon: <Trophy className="w-6 h-6" />,
@@ -796,31 +796,31 @@ const LandingPage = () => {
               },
             ].map((card, i) => (
               <motion.div key={i}
-                className="group relative p-7 rounded-3xl glass border border-border/30 hover:border-primary/30 transition-all duration-500 overflow-hidden"
+                className="group relative p-5 sm:p-7 rounded-2xl sm:rounded-3xl glass border border-border/30 hover:border-primary/30 transition-all duration-500 overflow-hidden"
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                 <div className="relative">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">{card.icon}</div>
+                  <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-9 sm:w-11 h-9 sm:h-11 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center text-primary">{card.icon}</div>
                     <div>
-                      <h3 className="font-display text-base font-bold text-foreground">{card.title}</h3>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold tracking-wider">{card.highlight}</span>
+                      <h3 className="font-display text-sm sm:text-base font-bold text-foreground">{card.title}</h3>
+                      <span className="text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold tracking-wider">{card.highlight}</span>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{card.desc}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{card.desc}</p>
                 </div>
               </motion.div>
             ))}
           </div>
 
           {/* Zero Risk badge */}
-          <motion.div className="mt-10 p-6 rounded-3xl glass border border-primary/20 text-center max-w-xl mx-auto"
+          <motion.div className="mt-6 sm:mt-10 p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass border border-primary/20 text-center max-w-xl mx-auto"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <Gift className="w-8 h-8 text-primary mx-auto mb-3" />
-            <h3 className="font-display font-bold text-lg text-foreground mb-2">Zero Rischi</h3>
-            <p className="text-sm text-muted-foreground">Nessun costo di ingresso. Paghiamo solo il tuo talento. Inizia a vendere oggi, guadagna domani.</p>
+            <Gift className="w-7 sm:w-8 h-7 sm:h-8 text-primary mx-auto mb-2 sm:mb-3" />
+            <h3 className="font-display font-bold text-base sm:text-lg text-foreground mb-1 sm:mb-2">Zero Rischi</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground">Nessun costo di ingresso. Paghiamo solo il tuo talento. Inizia a vendere oggi, guadagna domani.</p>
             <button onClick={() => navigate("/admin")}
-              className="mt-4 px-8 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm tracking-wide">
+              className="mt-3 sm:mt-4 px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-xs sm:text-sm tracking-wide">
               Diventa Partner
             </button>
           </motion.div>
@@ -828,26 +828,26 @@ const LandingPage = () => {
       </section>
 
       {/* ====== 7. FAQ ====== */}
-      <section className="py-24 px-5">
+      <section className="py-12 sm:py-24 px-4 sm:px-5">
         <div className="max-w-2xl mx-auto">
-          <motion.div className="text-center mb-14" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
+          <motion.div className="text-center mb-8 sm:mb-14" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3 sm:mb-4">
               <HelpCircle className="w-3 h-3" /> FAQ
             </span>
-            <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground">
+            <h2 className="text-2xl sm:text-4xl font-display font-bold text-foreground">
               Domande? <span className="text-gold-gradient">Risposte.</span>
             </h2>
           </motion.div>
 
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {faqs.map((faq, i) => (
-              <motion.div key={i} className="rounded-2xl glass border border-border/30 overflow-hidden"
+              <motion.div key={i} className="rounded-xl sm:rounded-2xl glass border border-border/30 overflow-hidden"
                 initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between p-5 text-left hover:bg-foreground/[0.02] transition-colors">
-                  <span className="text-sm font-semibold text-foreground pr-4">{faq.q}</span>
+                  className="w-full flex items-center justify-between p-3.5 sm:p-5 text-left hover:bg-foreground/[0.02] transition-colors">
+                  <span className="text-xs sm:text-sm font-semibold text-foreground pr-3 sm:pr-4">{faq.q}</span>
                   <motion.div animate={{ rotate: openFaq === i ? 180 : 0 }} transition={{ duration: 0.3 }}
-                    className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    className="w-7 sm:w-8 h-7 sm:h-8 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <ChevronDown className="w-4 h-4 text-primary" />
                   </motion.div>
                 </button>
@@ -855,7 +855,7 @@ const LandingPage = () => {
                   {openFaq === i && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3 }}>
-                      <p className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+                      <p className="px-3.5 sm:px-5 pb-3.5 sm:pb-5 text-xs sm:text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -866,23 +866,23 @@ const LandingPage = () => {
       </section>
 
       {/* ====== 8. CTA FINALE ====== */}
-      <section className="relative py-24 px-5">
+      <section className="relative py-12 sm:py-24 px-4 sm:px-5">
         <div className="max-w-3xl mx-auto text-center relative">
           <GlowOrb className="w-[400px] h-[300px] bg-primary top-0 left-1/2 -translate-x-1/2" />
           <motion.div className="relative" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <Crown className="w-14 h-14 mx-auto text-primary mb-6 drop-shadow-[0_0_40px_hsla(38,75%,55%,0.4)]" />
-            <h2 className="text-3xl sm:text-5xl font-display font-bold text-foreground leading-tight">
+            <Crown className="w-10 sm:w-14 h-10 sm:h-14 mx-auto text-primary mb-4 sm:mb-6 drop-shadow-[0_0_40px_hsla(38,75%,55%,0.4)]" />
+            <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground leading-tight">
               Ogni giorno senza Empire,<br />
               <span className="text-gold-gradient">regali margini</span>
             </h2>
-            <p className="mt-4 text-muted-foreground max-w-md mx-auto">
+            <p className="mt-2 sm:mt-4 text-xs sm:text-base text-muted-foreground max-w-md mx-auto">
               I tuoi competitor stanno costruendo il loro impero digitale. Tu stai ancora alimentando i marketplace.
             </p>
             <motion.button onClick={() => navigate("/admin")}
-              className="mt-8 px-12 py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg tracking-wide relative overflow-hidden"
+              className="mt-5 sm:mt-8 px-8 sm:px-12 py-3.5 sm:py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-sm sm:text-lg tracking-wide relative overflow-hidden"
               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <span className="relative z-10 flex items-center gap-2">
-                Inizia il tuo Impero Ora <ArrowRight className="w-5 h-5" />
+                Inizia il tuo Impero Ora <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5" />
               </span>
               <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
                 animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
@@ -893,9 +893,9 @@ const LandingPage = () => {
       </section>
 
       {/* ====== FOOTER ====== */}
-      <footer id="contact" className="border-t border-border/30 py-14 px-5">
+      <footer id="contact" className="border-t border-border/30 py-8 sm:py-14 px-4 sm:px-5">
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 mb-6 sm:mb-10">
             <div>
               <div className="flex items-center gap-2.5 mb-4">
                 <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
