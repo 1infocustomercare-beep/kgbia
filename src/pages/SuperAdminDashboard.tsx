@@ -5,7 +5,8 @@ import {
   Megaphone, BarChart3, LogOut, Search,
   Key, HeadphonesIcon, CheckCircle2, XCircle, AlertCircle,
   Cpu, Wifi, ChevronRight, Save, Bot, Send, Bell,
-  ShieldCheck, Lock, ExternalLink, Download, FileText, FileSpreadsheet
+  ShieldCheck, Lock, ExternalLink, Download, FileText, FileSpreadsheet,
+  CreditCard, Ban, Unlock, Calendar, Clock, Eye
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -32,7 +33,24 @@ interface FiscoStatus {
   updatedAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "mary";
+interface PaymentRecord {
+  id: string;
+  restaurantId: string;
+  tenantName: string;
+  planType: string;
+  totalAmount: number;
+  amountPaid: number;
+  installmentAmount: number;
+  installmentsPaid: number;
+  installmentsTotal: number;
+  isOverdue: boolean;
+  nextDueDate: string | null;
+  gracePeriodDays: number;
+  blockedAt: string | null;
+  createdAt: string;
+}
+
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary";
 
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
@@ -41,6 +59,7 @@ const SuperAdminDashboard = () => {
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [searchTenant, setSearchTenant] = useState("");
   const [fiscoStatuses, setFiscoStatuses] = useState<FiscoStatus[]>([]);
+  const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
   // AI-Mary chat
@@ -100,6 +119,31 @@ const SuperAdminDashboard = () => {
       })));
     }
 
+    // Fetch payments
+    const { data: paymentsData } = await supabase
+      .from("restaurant_payments")
+      .select("*, restaurants(name)")
+      .order("created_at", { ascending: false });
+
+    if (paymentsData) {
+      setPayments(paymentsData.map((p: any) => ({
+        id: p.id,
+        restaurantId: p.restaurant_id,
+        tenantName: p.restaurants?.name || "—",
+        planType: p.plan_type,
+        totalAmount: Number(p.total_amount),
+        amountPaid: Number(p.amount_paid),
+        installmentAmount: Number(p.installment_amount),
+        installmentsPaid: p.installments_paid,
+        installmentsTotal: p.installments_total,
+        isOverdue: p.is_overdue,
+        nextDueDate: p.next_due_date,
+        gracePeriodDays: p.grace_period_days,
+        blockedAt: p.blocked_at,
+        createdAt: p.created_at,
+      })));
+    }
+
     setLoading(false);
   };
 
@@ -110,6 +154,65 @@ const SuperAdminDashboard = () => {
     await supabase.from("restaurants").update({ is_active: newActive }).eq("id", id);
     setTenants(prev => prev.map(t => t.id === id ? { ...t, active: newActive } : t));
     toast({ title: newActive ? "Tenant riattivato" : "Kill-Switch attivato — Tenant disabilitato" });
+  };
+
+  const handleToggleBlock = async (payment: PaymentRecord) => {
+    const restaurant = tenants.find(t => t.id === payment.restaurantId);
+    if (!restaurant) return;
+    const isCurrentlyBlocked = !!tenants.find(t => t.id === payment.restaurantId && !t.active);
+    
+    if (isCurrentlyBlocked) {
+      // Unblock
+      await supabase.from("restaurants").update({ 
+        is_blocked: false, blocked_reason: null, is_active: true 
+      }).eq("id", payment.restaurantId);
+      await supabase.from("restaurant_payments").update({ 
+        is_overdue: false, blocked_at: null 
+      }).eq("id", payment.id);
+      toast({ title: "Ristorante sbloccato", description: `${payment.tenantName} è stato riattivato.` });
+    } else {
+      // Block
+      await supabase.from("restaurants").update({ 
+        is_blocked: true, 
+        blocked_reason: "Pagamento non ricevuto. Bloccato manualmente dal Super Admin.",
+        is_active: false 
+      }).eq("id", payment.restaurantId);
+      await supabase.from("restaurant_payments").update({ 
+        is_overdue: true, blocked_at: new Date().toISOString() 
+      }).eq("id", payment.id);
+      toast({ title: "Ristorante bloccato", description: `${payment.tenantName} è stato sospeso per mancato pagamento.` });
+    }
+    fetchData();
+  };
+
+  const handleMarkPaid = async (payment: PaymentRecord) => {
+    const newPaid = payment.installmentsPaid + 1;
+    const newAmountPaid = payment.amountPaid + payment.installmentAmount;
+    const isComplete = newPaid >= payment.installmentsTotal;
+    
+    const nextDue = isComplete ? null : (() => {
+      const d = new Date(payment.nextDueDate || new Date());
+      d.setMonth(d.getMonth() + 1);
+      return d.toISOString().split("T")[0];
+    })();
+
+    await supabase.from("restaurant_payments").update({
+      installments_paid: newPaid,
+      amount_paid: newAmountPaid,
+      is_overdue: false,
+      next_due_date: nextDue,
+    }).eq("id", payment.id);
+
+    // Unblock if was blocked
+    await supabase.from("restaurants").update({
+      is_blocked: false, blocked_reason: null, is_active: true
+    }).eq("id", payment.restaurantId);
+
+    toast({ 
+      title: isComplete ? "Pagamento completato! 🎉" : "Rata registrata", 
+      description: `${payment.tenantName}: ${newPaid}/${payment.installmentsTotal} rate pagate (€${newAmountPaid.toLocaleString()})` 
+    });
+    fetchData();
   };
 
   const handleRequestFiscoSetup = (tenantName: string) => {
@@ -209,6 +312,7 @@ const SuperAdminDashboard = () => {
   const tabs: { id: SuperTab; label: string; icon: React.ReactNode }[] = [
     { id: "overview", label: "Overview", icon: <BarChart3 className="w-5 h-5" /> },
     { id: "tenants", label: "Tenant", icon: <Store className="w-5 h-5" /> },
+    { id: "payments", label: "Pagamenti", icon: <CreditCard className="w-5 h-5" /> },
     { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-5 h-5" /> },
     { id: "billing", label: "Fatture", icon: <DollarSign className="w-5 h-5" /> },
     { id: "mary", label: "AI-Mary", icon: <Bot className="w-5 h-5" /> },
@@ -464,6 +568,158 @@ const SuperAdminDashboard = () => {
               ))}
               {fiscoStatuses.length === 0 && (
                 <p className="text-center text-sm text-muted-foreground py-8">Nessun tenant con configurazione fiscale</p>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* PAYMENTS MANAGEMENT */}
+        {!loading && activeTab === "payments" && (
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {/* Summary */}
+            <div className="grid grid-cols-3 gap-2">
+              <div className="p-3 rounded-2xl bg-card border border-border text-center">
+                <p className="text-2xl font-display font-bold text-foreground">{payments.length}</p>
+                <p className="text-[10px] text-muted-foreground">Contratti</p>
+              </div>
+              <div className="p-3 rounded-2xl bg-card border border-border text-center">
+                <p className="text-2xl font-display font-bold text-primary">
+                  €{payments.reduce((s, p) => s + p.amountPaid, 0).toLocaleString()}
+                </p>
+                <p className="text-[10px] text-muted-foreground">Incassato</p>
+              </div>
+              <div className="p-3 rounded-2xl bg-destructive/5 border border-destructive/20 text-center">
+                <p className="text-2xl font-display font-bold text-destructive">
+                  {payments.filter(p => p.isOverdue).length}
+                </p>
+                <p className="text-[10px] text-muted-foreground">In ritardo</p>
+              </div>
+            </div>
+
+            {/* Overdue alert */}
+            {payments.filter(p => p.isOverdue).length > 0 && (
+              <div className="p-3 rounded-2xl bg-destructive/5 border border-destructive/20 flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">{payments.filter(p => p.isOverdue).length} pagamenti in ritardo</p>
+                  <p className="text-xs text-muted-foreground">I ristoranti con rate scadute vengono bloccati automaticamente</p>
+                </div>
+              </div>
+            )}
+
+            {/* Payment cards */}
+            <div className="space-y-3">
+              {payments.map((payment) => {
+                const progress = payment.installmentsTotal > 0 ? (payment.installmentsPaid / payment.installmentsTotal) * 100 : 0;
+                const isComplete = payment.installmentsPaid >= payment.installmentsTotal;
+                const isBlocked = tenants.find(t => t.id === payment.restaurantId && !t.active);
+                const planLabels: Record<string, string> = { full: "Unica Soluzione", "3mo": "3 Rate", "6mo": "6 Rate" };
+
+                return (
+                  <motion.div key={payment.id}
+                    className={`p-4 rounded-2xl border ${
+                      isComplete ? "bg-card border-green-500/20" :
+                      payment.isOverdue ? "bg-destructive/5 border-destructive/30" :
+                      "bg-card border-border"
+                    }`}
+                    layout>
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium text-foreground">{payment.tenantName}</h4>
+                          {isComplete && <CheckCircle2 className="w-4 h-4 text-green-400" />}
+                          {payment.isOverdue && !isComplete && <AlertCircle className="w-4 h-4 text-destructive" />}
+                        </div>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                          <CreditCard className="w-3 h-3" />
+                          {planLabels[payment.planType] || payment.planType} · €{payment.totalAmount.toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        {!isComplete && (
+                          <button onClick={() => handleMarkPaid(payment)}
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-green-500/10 text-green-400 text-xs font-medium hover:bg-green-500/20 transition-colors"
+                            title="Registra rata pagata">
+                            <DollarSign className="w-3 h-3" /> Rata
+                          </button>
+                        )}
+                        <button onClick={() => handleToggleBlock(payment)}
+                          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                            isBlocked 
+                              ? "bg-green-500/10 text-green-400 hover:bg-green-500/20" 
+                              : "bg-destructive/10 text-destructive hover:bg-destructive/20"
+                          }`}
+                          title={isBlocked ? "Sblocca ristorante" : "Blocca ristorante"}>
+                          {isBlocked ? <Unlock className="w-3 h-3" /> : <Ban className="w-3 h-3" />}
+                          {isBlocked ? "Sblocca" : "Blocca"}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Progress bar */}
+                    <div className="mb-2">
+                      <div className="flex items-center justify-between text-xs mb-1">
+                        <span className="text-muted-foreground">
+                          {payment.installmentsPaid}/{payment.installmentsTotal} rate
+                        </span>
+                        <span className="font-medium text-foreground">
+                          €{payment.amountPaid.toLocaleString()} / €{payment.totalAmount.toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
+                        <motion.div
+                          className={`h-full rounded-full ${
+                            isComplete ? "bg-green-400" : payment.isOverdue ? "bg-destructive" : "bg-primary"
+                          }`}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progress}%` }}
+                          transition={{ duration: 0.8, ease: "easeOut" }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Details */}
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        Creato: {new Date(payment.createdAt).toLocaleDateString("it-IT")}
+                      </span>
+                      {payment.nextDueDate && !isComplete && (
+                        <span className={`flex items-center gap-1 ${payment.isOverdue ? "text-destructive font-medium" : ""}`}>
+                          <Clock className="w-3 h-3" />
+                          Prossima: {new Date(payment.nextDueDate).toLocaleDateString("it-IT")}
+                          {payment.isOverdue && " ⚠️ SCADUTA"}
+                        </span>
+                      )}
+                      {payment.blockedAt && (
+                        <span className="flex items-center gap-1 text-destructive">
+                          <Ban className="w-3 h-3" />
+                          Bloccato: {new Date(payment.blockedAt).toLocaleDateString("it-IT")}
+                        </span>
+                      )}
+                      {isComplete && (
+                        <span className="flex items-center gap-1 text-green-400 font-medium">
+                          <CheckCircle2 className="w-3 h-3" /> Saldato
+                        </span>
+                      )}
+                    </div>
+
+                    {isBlocked && (
+                      <div className="mt-2 px-2.5 py-1.5 rounded-lg bg-destructive/10 text-xs text-destructive font-medium">
+                        ⛔ Ristorante attualmente bloccato — App cliente e admin disabilitati
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
+
+              {payments.length === 0 && (
+                <div className="text-center py-12">
+                  <CreditCard className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
+                  <p className="text-sm text-muted-foreground">Nessun contratto di pagamento registrato</p>
+                  <p className="text-xs text-muted-foreground/60 mt-1">I contratti vengono creati automaticamente con il setup del ristorante</p>
+                </div>
               )}
             </div>
           </motion.div>
