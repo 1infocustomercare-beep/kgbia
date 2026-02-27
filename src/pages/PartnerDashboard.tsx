@@ -42,7 +42,42 @@ const PartnerDashboard = () => {
   useEffect(() => {
     if (!user?.id) return;
     fetchPartnerData();
-  }, [user?.id]);
+
+    // Realtime: notify Team Leader when a new partner joins via invite link
+    if (!isTeamLeader) return;
+    const channel = supabase
+      .channel('team-recruits')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'partner_teams',
+          filter: `team_leader_id=eq.${user.id}`,
+        },
+        async (payload) => {
+          // Fetch the new partner's profile name
+          const newPartnerId = (payload.new as any).partner_id;
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('full_name, email')
+            .eq('user_id', newPartnerId)
+            .maybeSingle();
+          const name = profile?.full_name || profile?.email || 'Nuovo partner';
+          toast({
+            title: "🎉 Nuovo Partner nel Team!",
+            description: `${name} si è registrato tramite il tuo link di invito.`,
+          });
+          // Refresh team data
+          fetchPartnerData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, isTeamLeader]);
 
   const fetchPartnerData = async () => {
     if (!user?.id) return;
