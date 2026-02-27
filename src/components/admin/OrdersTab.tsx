@@ -126,17 +126,17 @@ const OrdersTab = ({
   };
 
   return (
-    <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+    <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       {/* Section tabs */}
-      <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1">
+      <div className="flex gap-1 bg-secondary/30 p-1 rounded-2xl">
         {sections.map(s => (
           <button key={s.id} onClick={() => setSection(s.id)}
-            className={`relative flex items-center gap-1 px-3.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors min-h-[38px] ${
-              section === s.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
+            className={`relative flex-1 flex items-center justify-center gap-1 py-2.5 rounded-xl text-xs font-medium transition-all min-h-[40px] ${
+              section === s.id ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground"
             }`}>
             {s.label}
-            {s.badge && s.badge > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-accent text-accent-foreground animate-pulse">
+            {s.badge != null && s.badge > 0 && (
+              <span className="w-4 h-4 rounded-full text-[8px] font-bold bg-accent text-accent-foreground flex items-center justify-center animate-pulse">
                 {s.badge}
               </span>
             )}
@@ -144,108 +144,150 @@ const OrdersTab = ({
         ))}
       </div>
 
-      {/* ORDERS / KITCHEN */}
+      {/* ═══════════ ORDERS / KITCHEN ═══════════ */}
       {section === "orders" && (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center gap-2">
-            <h3 className="text-sm font-semibold text-foreground">{activeOrders.length} ordini attivi</h3>
+        <div className="space-y-3">
+          {/* Header */}
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-sm font-semibold text-foreground">
+              {activeOrders.length} ordini attivi
+            </h3>
             <button onClick={() => window.open("/kitchen", "_blank")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium min-h-[40px] flex-shrink-0">
-              <ExternalLink className="w-3.5 h-3.5" /> Vista Cucina
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium min-h-[40px] flex-shrink-0 active:scale-[0.97] transition-transform">
+              <ExternalLink className="w-3.5 h-3.5" /> Cucina
             </button>
           </div>
 
           {/* Kitchen PIN */}
-          <div className="p-3 rounded-2xl bg-secondary/50 space-y-2">
-            <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><Key className="w-3 h-3" /> PIN Staff</p>
+          <div className="p-3 rounded-2xl bg-secondary/40 space-y-2">
+            <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5 font-medium">
+              <Key className="w-3 h-3" /> PIN Staff
+            </p>
             {existingPins.map(pin => (
-              <div key={pin.id} className="flex items-center justify-between p-2.5 rounded-lg bg-card">
-                <span className="text-sm font-mono text-foreground">{pin.pin_code}</span>
-                <span className="text-xs text-green-400">Operativo</span>
+              <div key={pin.id} className="flex items-center justify-between p-2.5 rounded-xl bg-card border border-border/30">
+                <span className="text-sm font-mono font-semibold text-foreground tracking-widest">{pin.pin_code}</span>
+                <span className="text-[10px] text-green-400 font-medium flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400" /> Attivo
+                </span>
               </div>
             ))}
             <div className="flex gap-2">
-              <input type="text" inputMode="numeric" placeholder="Nuovo PIN (4-6)" value={kitchenPin}
+              <input type="text" inputMode="numeric" placeholder="Nuovo PIN (4-6 cifre)" value={kitchenPin}
                 onChange={e => setKitchenPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                className="flex-1 px-3 py-2.5 rounded-xl bg-card text-foreground text-sm font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] min-w-0" />
+                className="flex-1 px-3 py-2.5 rounded-xl bg-card border border-border/30 text-foreground text-sm font-mono placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] min-w-0" />
               <button onClick={handleCreatePin} disabled={kitchenPin.length < 4}
-                className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-medium disabled:opacity-40 min-h-[44px] flex-shrink-0">
+                className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold disabled:opacity-40 min-h-[44px] flex-shrink-0 active:scale-[0.97] transition-transform">
                 Genera
               </button>
             </div>
           </div>
 
+          {/* Orders list */}
           {activeOrders.length === 0 && (
-            <div className="text-center py-12">
-              <ChefHat className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
+            <div className="text-center py-10">
+              <ChefHat className="w-10 h-10 mx-auto mb-2 text-muted-foreground/20" />
               <p className="text-sm text-muted-foreground">Nessun ordine in coda</p>
+              <p className="text-[10px] text-muted-foreground/50 mt-1">I nuovi ordini appariranno qui</p>
             </div>
           )}
 
-          {activeOrders.map(order => {
-            const items = Array.isArray(order.items) ? order.items : [];
-            return (
-              <div key={order.id} className={`p-4 rounded-2xl border ${
-                order.status === "pending" ? "border-amber-500/30 bg-amber-500/5" :
-                order.status === "preparing" ? "border-blue-500/30 bg-blue-500/5" :
-                "border-green-500/30 bg-green-500/5"
-              }`}>
-                <div className="flex justify-between items-start mb-2 gap-2">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-display font-bold text-foreground text-sm">#{order.id.slice(0, 8)}</span>
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${statusColors[order.status] || ""}`}>
-                        {statusLabels[order.status] || order.status}
-                      </span>
+          <div className="space-y-2.5">
+            {activeOrders.map(order => {
+              const items = Array.isArray(order.items) ? order.items : [];
+              return (
+                <motion.div key={order.id} layout
+                  className={`p-3.5 rounded-2xl border ${
+                    order.status === "pending" ? "border-amber-500/30 bg-amber-500/5" :
+                    order.status === "preparing" ? "border-blue-500/30 bg-blue-500/5" :
+                    "border-green-500/30 bg-green-500/5"
+                  }`}>
+                  {/* Order header */}
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-display font-bold text-foreground text-sm">#{order.id.slice(0, 6)}</span>
+                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-semibold ${statusColors[order.status] || ""}`}>
+                          {statusLabels[order.status] || order.status}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
+                        {order.customer_name || "Cliente"} · {order.order_type === "table" ? `Tavolo ${order.table_number}` : order.order_type === "delivery" ? "Consegna" : "Asporto"}
+                      </p>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                      {order.customer_name || "Cliente"} · {order.order_type === "table" ? `Tavolo ${order.table_number}` : order.order_type === "delivery" ? "Consegna" : "Asporto"}
-                    </p>
+                    <span className="text-xs text-muted-foreground/60 flex-shrink-0 tabular-nums">
+                      €{Number(order.total).toFixed(2)}
+                    </span>
                   </div>
-                </div>
-                <div className="space-y-1 mb-3">
-                  {items.map((item: any, i: number) => (
-                    <div key={i} className="text-sm text-foreground">{item.quantity || 1}× {item.name}</div>
-                  ))}
-                </div>
-                <div className="flex gap-2">
-                  {order.status === "pending" && <button onClick={() => updateOrderStatus(order.id, "preparing")} className="flex-1 py-3 rounded-xl bg-blue-500/20 text-blue-400 text-sm font-medium min-h-[48px]">🔥 Prepara</button>}
-                  {order.status === "preparing" && <button onClick={() => updateOrderStatus(order.id, "ready")} className="flex-1 py-3 rounded-xl bg-green-500/20 text-green-400 text-sm font-medium min-h-[48px]">✅ Pronto</button>}
-                  {order.status === "ready" && <button onClick={() => updateOrderStatus(order.id, "delivered")} className="flex-1 py-3 rounded-xl bg-muted text-muted-foreground text-sm font-medium min-h-[48px]">📦 Consegnato</button>}
-                </div>
-              </div>
-            );
-          })}
+
+                  {/* Items */}
+                  <div className="space-y-0.5 mb-3 pl-0.5">
+                    {items.slice(0, 5).map((item: any, i: number) => (
+                      <p key={i} className="text-xs text-foreground/80">{item.quantity || 1}× {item.name}</p>
+                    ))}
+                    {items.length > 5 && <p className="text-[10px] text-muted-foreground">+{items.length - 5} altri</p>}
+                  </div>
+
+                  {/* Action button */}
+                  {order.status === "pending" && (
+                    <button onClick={() => updateOrderStatus(order.id, "preparing")}
+                      className="w-full py-2.5 rounded-xl bg-blue-500/20 text-blue-400 text-sm font-semibold min-h-[44px] active:scale-[0.97] transition-transform">
+                      🔥 Prepara
+                    </button>
+                  )}
+                  {order.status === "preparing" && (
+                    <button onClick={() => updateOrderStatus(order.id, "ready")}
+                      className="w-full py-2.5 rounded-xl bg-green-500/20 text-green-400 text-sm font-semibold min-h-[44px] active:scale-[0.97] transition-transform">
+                      ✅ Pronto
+                    </button>
+                  )}
+                  {order.status === "ready" && (
+                    <button onClick={() => updateOrderStatus(order.id, "delivered")}
+                      className="w-full py-2.5 rounded-xl bg-muted text-muted-foreground text-sm font-semibold min-h-[44px] active:scale-[0.97] transition-transform">
+                      📦 Consegnato
+                    </button>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       )}
 
-      {/* TABLES */}
+      {/* ═══════════ TABLES ═══════════ */}
       {section === "tables" && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {restaurantTables.length === 0 ? (
             <div className="space-y-3">
               <div className="text-center py-8">
-                <Move className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
+                <Move className="w-10 h-10 mx-auto mb-2 text-muted-foreground/20" />
                 <p className="text-sm text-muted-foreground">Crea i tavoli per la tua sala</p>
               </div>
-              <div className="flex items-center gap-3 p-4 rounded-2xl bg-secondary/50">
-                <label className="text-sm text-foreground flex-shrink-0">Tavoli</label>
-                <input type="number" min={1} max={50} value={newTableCount} onChange={e => setNewTableCount(Number(e.target.value) || 1)}
-                  className="w-16 px-2 py-2.5 rounded-lg bg-background text-foreground text-sm text-center min-h-[44px]" />
-                <button onClick={handleCreateTables} className="ml-auto px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-medium min-h-[44px] flex-shrink-0">Crea</button>
+              <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-secondary/40">
+                <label className="text-sm text-foreground flex-shrink-0">N° Tavoli</label>
+                <input type="number" min={1} max={50} value={newTableCount}
+                  onChange={e => setNewTableCount(Math.max(1, Math.min(50, Number(e.target.value) || 1)))}
+                  className="w-14 px-2 py-2.5 rounded-xl bg-card border border-border/30 text-foreground text-sm text-center min-h-[44px]" />
+                <button onClick={handleCreateTables}
+                  className="ml-auto px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold min-h-[44px] flex-shrink-0 active:scale-[0.97] transition-transform">
+                  Crea
+                </button>
               </div>
             </div>
           ) : (
             <>
-              {/* Controls row */}
+              {/* Controls */}
               <div className="flex gap-2">
                 <button onClick={() => setTableMapEditMode(!tableMapEditMode)}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-medium min-h-[40px] ${tableMapEditMode ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
-                  <Move className="w-3.5 h-3.5 inline mr-1" /> {tableMapEditMode ? "Editing..." : "Layout"}
+                  className={`flex items-center justify-center gap-1.5 flex-1 py-2.5 rounded-xl text-xs font-medium min-h-[40px] transition-colors ${
+                    tableMapEditMode ? "bg-primary text-primary-foreground" : "bg-secondary/60 text-muted-foreground"
+                  }`}>
+                  <Move className="w-3.5 h-3.5" />
+                  {tableMapEditMode ? "Editando..." : "Layout"}
                 </button>
                 {tableMapEditMode && (
-                  <button onClick={handleSaveLayout} className="flex-1 py-2.5 rounded-xl bg-green-500/20 text-green-400 text-xs font-medium min-h-[40px]">
-                    <Save className="w-3.5 h-3.5 inline mr-1" /> Salva
+                  <button onClick={handleSaveLayout}
+                    className="flex items-center justify-center gap-1.5 flex-1 py-2.5 rounded-xl bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px] active:scale-[0.97] transition-transform">
+                    <Save className="w-3.5 h-3.5" /> Salva
                   </button>
                 )}
                 <button onClick={async () => {
@@ -258,12 +300,12 @@ const OrdersTab = ({
                   const { data } = await supabase.from("restaurant_tables").select("*").eq("restaurant_id", restaurant.id).order("table_number");
                   if (data) setRestaurantTables(data);
                   toast({ title: `Tavolo ${maxNum + 1} aggiunto` });
-                }} className="py-2.5 px-3 rounded-xl bg-primary/10 text-primary text-xs font-medium min-h-[40px] flex-shrink-0">
-                  <Plus className="w-3.5 h-3.5 inline mr-1" /> Tavolo
+                }} className="flex items-center justify-center gap-1 py-2.5 px-3 rounded-xl bg-primary/10 text-primary text-xs font-medium min-h-[40px] flex-shrink-0 active:scale-[0.97] transition-transform">
+                  <Plus className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              {/* Table Map */}
+              {/* Interactive Table Map */}
               <TableMap tables={restaurantTables} editMode={tableMapEditMode}
                 onStatusChange={async (id, status) => {
                   await supabase.from("restaurant_tables").update({ status }).eq("id", id);
@@ -272,32 +314,36 @@ const OrdersTab = ({
                 onPositionChange={(id, x, y) => setRestaurantTables(prev => prev.map(t => t.id === id ? { ...t, pos_x: x, pos_y: y } : t))} />
 
               {/* Table list */}
-              <div className="space-y-2">
-                <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">Gestione Tavoli ({restaurantTables.length})</p>
+              <div className="space-y-1.5">
+                <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider font-medium">
+                  Tavoli ({restaurantTables.length})
+                </p>
                 {restaurantTables.map(table => {
                   const tableUrl = `${window.location.origin}/r/${restaurant?.slug}?table=${table.table_number}`;
                   return (
-                    <div key={table.id} className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50">
-                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-display font-bold text-primary">{table.table_number}</span>
+                    <div key={table.id} className="flex items-center gap-2.5 p-2.5 rounded-xl bg-card border border-border/30">
+                      <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <span className="text-xs font-display font-bold text-primary">{table.table_number}</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground">Tavolo {table.table_number}</p>
-                        <p className="text-[11px] text-muted-foreground">{table.seats || 4} posti</p>
+                        <p className="text-xs font-medium text-foreground">Tavolo {table.table_number}</p>
+                        <p className="text-[10px] text-muted-foreground">{table.seats || 4} posti</p>
                       </div>
-                      <button onClick={() => downloadQR(tableUrl, `qr-tavolo-${table.table_number}`)}
-                        className="p-2.5 rounded-lg hover:bg-primary/10 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center" title="Scarica QR">
-                        <QrCode className="w-4 h-4 text-primary" />
-                      </button>
-                      <button onClick={async () => {
-                        const { error } = await supabase.from("restaurant_tables").delete().eq("id", table.id);
-                        if (error) { toast({ title: "Errore", variant: "destructive" }); return; }
-                        setRestaurantTables(prev => prev.filter(t => t.id !== table.id));
-                        toast({ title: `Tavolo ${table.table_number} rimosso` });
-                      }}
-                        className="p-2.5 rounded-lg hover:bg-accent/10 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center" title="Elimina tavolo">
-                        <Trash2 className="w-4 h-4 text-accent" />
-                      </button>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button onClick={() => downloadQR(tableUrl, `qr-tavolo-${table.table_number}`)}
+                          className="p-2 rounded-lg hover:bg-primary/10 active:bg-primary/20 transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center" title="QR">
+                          <QrCode className="w-3.5 h-3.5 text-primary" />
+                        </button>
+                        <button onClick={async () => {
+                          const { error } = await supabase.from("restaurant_tables").delete().eq("id", table.id);
+                          if (error) { toast({ title: "Errore", variant: "destructive" }); return; }
+                          setRestaurantTables(prev => prev.filter(t => t.id !== table.id));
+                          toast({ title: `Tavolo ${table.table_number} rimosso` });
+                        }}
+                          className="p-2 rounded-lg hover:bg-destructive/10 active:bg-destructive/20 transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center" title="Elimina">
+                          <Trash2 className="w-3.5 h-3.5 text-destructive/70" />
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
@@ -307,18 +353,20 @@ const OrdersTab = ({
         </div>
       )}
 
-      {/* TRAFFIC CONTROL */}
+      {/* ═══════════ TRAFFIC CONTROL ═══════════ */}
       {section === "traffic" && (
-        <div className="space-y-4">
+        <div className="space-y-3">
+          <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider font-medium">Canali Ordini</p>
           {[
-            { key: "delivery", label: "🚗 Consegna", enabled: deliveryEnabled, setter: setDeliveryEnabled },
-            { key: "takeaway", label: "🥡 Asporto", enabled: takeawayEnabled, setter: setTakeawayEnabled },
-            { key: "table_orders", label: "🪑 Tavolo", enabled: tableOrdersEnabled, setter: setTableOrdersEnabled },
+            { key: "delivery", label: "Consegna", emoji: "🚗", desc: "Ordini con consegna a domicilio", enabled: deliveryEnabled, setter: setDeliveryEnabled },
+            { key: "takeaway", label: "Asporto", emoji: "🥡", desc: "Ordini da ritirare in loco", enabled: takeawayEnabled, setter: setTakeawayEnabled },
+            { key: "table_orders", label: "Tavolo", emoji: "🪑", desc: "Ordini da tavolo con QR", enabled: tableOrdersEnabled, setter: setTableOrdersEnabled },
           ].map(ch => (
-            <div key={ch.key} className="flex items-center justify-between p-4 rounded-xl bg-secondary/50 min-h-[56px]">
-              <div className="flex items-center gap-3">
-                <div className={`w-3 h-3 rounded-full flex-shrink-0 ${ch.enabled ? "bg-green-400" : "bg-red-400"}`} />
-                <span className="text-sm font-medium text-foreground">{ch.label}</span>
+            <div key={ch.key} className="flex items-center gap-3 p-3.5 rounded-2xl bg-card border border-border/30">
+              <div className="text-xl flex-shrink-0">{ch.emoji}</div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground">{ch.label}</p>
+                <p className="text-[10px] text-muted-foreground truncate">{ch.desc}</p>
               </div>
               <Switch checked={ch.enabled} onCheckedChange={async val => {
                 ch.setter(val);
@@ -329,26 +377,30 @@ const OrdersTab = ({
               }} />
             </div>
           ))}
+
+          {/* Analytics */}
           {orderAnalytics.length > 0 && (
-            <div className="space-y-3 mt-4">
-              <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> Fonti</p>
-              <div className="h-48 w-full">
+            <div className="space-y-2.5 mt-2">
+              <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider font-medium flex items-center gap-1.5">
+                <BarChart3 className="w-3 h-3" /> Fonti Traffico
+              </p>
+              <div className="h-40 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie data={orderAnalytics} dataKey="count" nameKey="source" cx="50%" cy="50%" outerRadius={70} innerRadius={35} paddingAngle={3} strokeWidth={0}>
+                    <Pie data={orderAnalytics} dataKey="count" nameKey="source" cx="50%" cy="50%" outerRadius={60} innerRadius={30} paddingAngle={3} strokeWidth={0}>
                       {orderAnalytics.map((_, idx) => (
                         <Cell key={idx} fill={`hsl(${38 + idx * 45}, ${75 - idx * 8}%, ${55 + idx * 5}%)`} />
                       ))}
                     </Pie>
-                    <RechartsTooltip contentStyle={{ background: "hsl(20, 12%, 8%)", border: "1px solid hsl(20, 10%, 16%)", borderRadius: "12px", fontSize: "12px", color: "hsl(40, 20%, 92%)" }} />
+                    <RechartsTooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "12px", fontSize: "11px", color: "hsl(var(--foreground))" }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
               {orderAnalytics.map((item, idx) => (
-                <div key={item.source} className="flex items-center gap-2 p-2.5 rounded-xl bg-secondary/50">
-                  <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: `hsl(${38 + idx * 45}, ${75 - idx * 8}%, ${55 + idx * 5}%)` }} />
+                <div key={item.source} className="flex items-center gap-2 p-2.5 rounded-xl bg-secondary/40">
+                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: `hsl(${38 + idx * 45}, ${75 - idx * 8}%, ${55 + idx * 5}%)` }} />
                   <span className="text-xs font-medium text-foreground flex-1 capitalize truncate">{item.source}</span>
-                  <span className="text-xs text-primary font-semibold flex-shrink-0">{item.count}</span>
+                  <span className="text-xs text-primary font-bold flex-shrink-0 tabular-nums">{item.count}</span>
                 </div>
               ))}
             </div>
@@ -356,52 +408,50 @@ const OrdersTab = ({
         </div>
       )}
 
-      {/* RESERVATIONS */}
+      {/* ═══════════ RESERVATIONS ═══════════ */}
       {section === "reservations" && (
         <div className="space-y-3">
-          {/* Stats bar */}
+          {/* Stats */}
           <div className="grid grid-cols-3 gap-2">
             {[
-              { label: "In attesa", count: reservations.filter((r: any) => r.status === "pending").length, icon: <Clock className="w-3.5 h-3.5 text-amber-400" />, color: "bg-amber-500/10 border-amber-500/20" },
-              { label: "Confermate", count: reservations.filter((r: any) => r.status === "confirmed").length, icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />, color: "bg-emerald-500/10 border-emerald-500/20" },
-              { label: "Rifiutate", count: reservations.filter((r: any) => r.status === "cancelled").length, icon: <XCircle className="w-3.5 h-3.5 text-accent" />, color: "bg-accent/10 border-accent/20" },
+              { label: "In attesa", count: reservations.filter((r: any) => r.status === "pending").length, icon: <Clock className="w-3.5 h-3.5" />, color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
+              { label: "Confermate", count: reservations.filter((r: any) => r.status === "confirmed").length, icon: <CheckCircle2 className="w-3.5 h-3.5" />, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
+              { label: "Rifiutate", count: reservations.filter((r: any) => r.status === "cancelled").length, icon: <XCircle className="w-3.5 h-3.5" />, color: "text-destructive", bg: "bg-destructive/10 border-destructive/20" },
             ].map(stat => (
-              <div key={stat.label} className={`p-2.5 rounded-xl border ${stat.color} text-center`}>
-                <div className="flex justify-center mb-1">{stat.icon}</div>
-                <p className="text-lg font-display font-bold text-foreground">{stat.count}</p>
-                <p className="text-[9px] text-muted-foreground">{stat.label}</p>
+              <div key={stat.label} className={`p-2.5 rounded-xl border text-center ${stat.bg}`}>
+                <div className={`flex justify-center mb-1 ${stat.color}`}>{stat.icon}</div>
+                <p className="text-lg font-display font-bold text-foreground leading-none">{stat.count}</p>
+                <p className="text-[9px] text-muted-foreground mt-0.5">{stat.label}</p>
               </div>
             ))}
           </div>
 
-          {/* Filter tabs */}
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+          {/* Filter */}
+          <div className="flex gap-1 bg-secondary/30 p-1 rounded-xl">
             {([
               { id: "all" as const, label: "Tutte" },
-              { id: "pending" as const, label: "In attesa" },
-              { id: "confirmed" as const, label: "Confermate" },
-              { id: "cancelled" as const, label: "Rifiutate" },
+              { id: "pending" as const, label: "Attesa" },
+              { id: "confirmed" as const, label: "OK" },
+              { id: "cancelled" as const, label: "No" },
             ]).map(f => (
               <button key={f.id} onClick={() => setReservationFilter(f.id)}
-                className={`px-3 py-1.5 rounded-lg text-[11px] font-medium whitespace-nowrap transition-colors min-h-[32px] ${
-                  reservationFilter === f.id ? "bg-foreground text-background" : "bg-secondary/50 text-muted-foreground"
+                className={`flex-1 py-2 rounded-lg text-[11px] font-medium transition-all min-h-[34px] ${
+                  reservationFilter === f.id ? "bg-foreground text-background shadow-sm" : "text-muted-foreground"
                 }`}>
                 {f.label}
               </button>
             ))}
           </div>
 
-          {/* Empty state */}
+          {/* Empty */}
           {filteredReservations.length === 0 && (
-            <div className="text-center py-12">
-              <CalendarDays className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
-              <p className="text-sm text-muted-foreground">
-                {reservationFilter === "all" ? "Nessuna prenotazione" : `Nessuna prenotazione ${reservationFilter === "pending" ? "in attesa" : reservationFilter === "confirmed" ? "confermata" : "rifiutata"}`}
-              </p>
+            <div className="text-center py-10">
+              <CalendarDays className="w-10 h-10 mx-auto mb-2 text-muted-foreground/20" />
+              <p className="text-sm text-muted-foreground">Nessuna prenotazione</p>
             </div>
           )}
 
-          {/* Reservation cards */}
+          {/* Cards */}
           <AnimatePresence mode="popLayout">
             {filteredReservations.map((res: any) => {
               const dateLabel = formatReservationDate(res.reservation_date);
@@ -409,103 +459,93 @@ const OrdersTab = ({
               const isPending = res.status === "pending";
 
               return (
-                <motion.div
-                  key={res.id}
-                  layout
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className={`p-4 rounded-2xl border transition-all ${
+                <motion.div key={res.id} layout
+                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }}
+                  className={`p-3.5 rounded-2xl border transition-all ${
                     isPending ? "border-amber-500/30 bg-amber-500/5" :
                     res.status === "confirmed" ? "border-emerald-500/20 bg-emerald-500/5" :
-                    "border-border/30 bg-secondary/30 opacity-60"
-                  } ${isPending && !isExpired ? "ring-1 ring-amber-500/20" : ""}`}
-                >
-                  {/* Header row */}
-                  <div className="flex justify-between items-start mb-2 gap-2">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                    "border-border/30 bg-secondary/20 opacity-60"
+                  }`}>
+                  {/* Top row */}
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
                         isPending ? "bg-amber-500/20" : res.status === "confirmed" ? "bg-emerald-500/20" : "bg-muted"
                       }`}>
-                        <CalendarDays className={`w-4 h-4 ${
+                        <CalendarDays className={`w-3.5 h-3.5 ${
                           isPending ? "text-amber-400" : res.status === "confirmed" ? "text-emerald-400" : "text-muted-foreground"
                         }`} />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-bold text-foreground truncate">{res.customer_name}</p>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                          <Phone className="w-2.5 h-2.5 text-muted-foreground flex-shrink-0" />
-                          <a href={`tel:${res.customer_phone}`} className="text-[10px] text-primary underline-offset-2 hover:underline truncate">{res.customer_phone}</a>
-                        </div>
+                        <p className="text-sm font-semibold text-foreground truncate">{res.customer_name}</p>
+                        <a href={`tel:${res.customer_phone}`} className="text-[10px] text-primary flex items-center gap-1">
+                          <Phone className="w-2.5 h-2.5" />
+                          <span className="truncate">{res.customer_phone}</span>
+                        </a>
                       </div>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className={`text-sm font-display font-bold ${isToday(parseISO(res.reservation_date)) ? "text-primary" : "text-foreground"}`}>
+                      <p className={`text-xs font-display font-bold ${isToday(parseISO(res.reservation_date)) ? "text-primary" : "text-foreground"}`}>
                         {dateLabel}
                       </p>
-                      <p className="text-[11px] text-muted-foreground">🕐 {res.reservation_time}</p>
+                      <p className="text-[10px] text-muted-foreground">🕐 {res.reservation_time}</p>
                     </div>
                   </div>
 
-                  {/* Details row */}
+                  {/* Details */}
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                       <Users className="w-3 h-3" /> {res.guests} ospiti
-                    </div>
+                    </span>
                     {isExpired && res.status !== "cancelled" && (
-                      <span className="text-[9px] text-accent font-medium">⚠ Data passata</span>
+                      <span className="text-[9px] text-destructive font-medium">⚠ Passata</span>
                     )}
                   </div>
 
                   {/* Notes */}
                   {res.notes && (
-                    <div className="flex items-start gap-1.5 p-2 rounded-lg bg-card/50 border border-border/30 mb-3">
+                    <div className="flex items-start gap-1.5 p-2 rounded-lg bg-card/50 border border-border/20 mb-2.5">
                       <MessageSquare className="w-3 h-3 text-muted-foreground flex-shrink-0 mt-0.5" />
-                      <p className="text-[10px] text-foreground/70 leading-relaxed">{res.notes}</p>
+                      <p className="text-[10px] text-foreground/70 leading-relaxed line-clamp-2">{res.notes}</p>
                     </div>
                   )}
 
                   {/* Actions */}
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="min-w-0">
+                  {isPending ? (
+                    <div className="flex gap-2">
+                      <motion.button whileTap={{ scale: 0.95 }}
+                        onClick={async () => {
+                          await supabase.from("reservations").update({ status: "confirmed" } as any).eq("id", res.id);
+                          setReservations((prev: any[]) => prev.map((r: any) => r.id === res.id ? { ...r, status: "confirmed" } : r));
+                          toast({ title: "✅ Confermata", description: `${res.customer_name} — ${dateLabel}` });
+                        }}
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 text-xs font-semibold min-h-[44px]">
+                        <CheckCircle2 className="w-4 h-4" /> Conferma
+                      </motion.button>
+                      <motion.button whileTap={{ scale: 0.95 }}
+                        onClick={async () => {
+                          await supabase.from("reservations").update({ status: "cancelled" } as any).eq("id", res.id);
+                          setReservations((prev: any[]) => prev.map((r: any) => r.id === res.id ? { ...r, status: "cancelled" } : r));
+                          toast({ title: "✖ Rifiutata", description: `${res.customer_name}` });
+                        }}
+                        className="py-2.5 px-4 rounded-xl bg-destructive/15 text-destructive text-xs font-semibold min-h-[44px]">
+                        <XCircle className="w-4 h-4" />
+                      </motion.button>
+                    </div>
+                  ) : (
+                    <div>
                       {res.status === "confirmed" && (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-emerald-500/15 text-emerald-400">
                           <CheckCircle2 className="w-3 h-3" /> Confermata
                         </span>
                       )}
                       {res.status === "cancelled" && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-accent/15 text-accent">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-destructive/15 text-destructive">
                           <XCircle className="w-3 h-3" /> Rifiutata
                         </span>
                       )}
                     </div>
-                    {isPending && (
-                      <div className="flex gap-2 flex-shrink-0">
-                        <motion.button
-                          whileTap={{ scale: 0.95 }}
-                          onClick={async () => {
-                            await supabase.from("reservations").update({ status: "confirmed" } as any).eq("id", res.id);
-                            setReservations((prev: any[]) => prev.map((r: any) => r.id === res.id ? { ...r, status: "confirmed" } : r));
-                            toast({ title: "✅ Confermata", description: `${res.customer_name} — ${dateLabel}` });
-                          }}
-                          className="flex items-center gap-1 px-3 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 text-xs font-semibold min-h-[40px]"
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5" /> Sì
-                        </motion.button>
-                        <motion.button
-                          whileTap={{ scale: 0.95 }}
-                          onClick={async () => {
-                            await supabase.from("reservations").update({ status: "cancelled" } as any).eq("id", res.id);
-                            setReservations((prev: any[]) => prev.map((r: any) => r.id === res.id ? { ...r, status: "cancelled" } : r));
-                            toast({ title: "✖ Rifiutata", description: `${res.customer_name}` });
-                          }}
-                          className="flex items-center gap-1 px-3 py-2 rounded-xl bg-accent/20 text-accent text-xs font-semibold min-h-[40px]"
-                        >
-                          <XCircle className="w-3.5 h-3.5" /> No
-                        </motion.button>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </motion.div>
               );
             })}
