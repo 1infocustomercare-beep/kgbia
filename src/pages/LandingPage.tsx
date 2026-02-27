@@ -298,9 +298,9 @@ const LandingPage = () => {
                 </motion.div>
               ))}
 
-              {/* Live Preview Component */}
-              <div className="w-full max-w-[320px] sm:max-w-[340px]">
-                <LivePreview slug="impero-roma" primaryColor="#C8963E" />
+              {/* Live Preview Component — compact mode for hero embedding */}
+              <div className="w-[280px] sm:w-[300px]">
+                <LivePreview slug="impero-roma" primaryColor="#C8963E" compact />
               </div>
             </div>
           </motion.div>

@@ -25,6 +25,7 @@ import restaurantLogo from "@/assets/restaurant-logo.png";
 interface LivePreviewProps {
   slug: string;
   primaryColor?: string;
+  compact?: boolean;
 }
 
 type PreviewView = "customer" | "admin" | "kitchen";
@@ -53,7 +54,7 @@ const DEMO_ORDERS = [
 const VIEWS: PreviewView[] = ["customer", "admin", "kitchen"];
 const VIEW_LABELS = { customer: "👤 Cliente", admin: "⚙️ Admin", kitchen: "👨‍🍳 Cucina" };
 
-const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
+const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) => {
   const [view, setView] = useState<PreviewView>("customer");
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [autoTourActive, setAutoTourActive] = useState(false);
@@ -1111,13 +1112,15 @@ const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
   const currentViewIndex = VIEWS.indexOf(view);
 
   return (
-    <motion.div className="space-y-3 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      {/* Header */}
-      <div className="text-center py-1">
-        <Smartphone className="w-8 h-8 mx-auto mb-1 text-primary" />
-        <h3 className="text-base font-display font-bold text-foreground">Live Preview Completa</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">Swipe per cambiare vista · Tocca per i dettagli</p>
-      </div>
+    <motion.div className={compact ? "space-y-2" : "space-y-3 mt-2"} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      {/* Header — only in full mode */}
+      {!compact && (
+        <div className="text-center py-1">
+          <Smartphone className="w-8 h-8 mx-auto mb-1 text-primary" />
+          <h3 className="text-base font-display font-bold text-foreground">Live Preview Completa</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">Swipe per cambiare vista · Tocca per i dettagli</p>
+        </div>
+      )}
 
       {/* Swipe dot indicators + labels */}
       <div className="flex items-center justify-center gap-3">
@@ -1133,19 +1136,21 @@ const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
         ))}
       </div>
 
-      {/* Auto-tour button */}
-      <div className="flex justify-center gap-2">
-        <button onClick={autoTourActive ? stopTour : startTour}
-          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium min-h-[36px] ${
-            autoTourActive ? "bg-destructive text-destructive-foreground" : "bg-primary/10 text-primary border border-primary/20"
-          }`}>
-          {autoTourActive ? <><X className="w-3 h-3" /> Stop Tour</> : <><Info className="w-3 h-3" /> Tour Guidato</>}
-        </button>
-        <button onClick={() => window.open(previewUrl, "_blank")}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium min-h-[36px]">
-          <ExternalLink className="w-3.5 h-3.5" /> Apri App
-        </button>
-      </div>
+      {/* Auto-tour & open app buttons — only in full mode */}
+      {!compact && (
+        <div className="flex justify-center gap-2">
+          <button onClick={autoTourActive ? stopTour : startTour}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium min-h-[36px] ${
+              autoTourActive ? "bg-destructive text-destructive-foreground" : "bg-primary/10 text-primary border border-primary/20"
+            }`}>
+            {autoTourActive ? <><X className="w-3 h-3" /> Stop Tour</> : <><Info className="w-3 h-3" /> Tour Guidato</>}
+          </button>
+          <button onClick={() => window.open(previewUrl, "_blank")}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium min-h-[36px]">
+            <ExternalLink className="w-3.5 h-3.5" /> Apri App
+          </button>
+        </div>
+      )}
 
       {/* iPhone Frame with swipe */}
       <div className="flex justify-center">
@@ -1194,9 +1199,12 @@ const LivePreview = ({ slug, primaryColor }: LivePreviewProps) => {
         </div>
       </div>
 
-      <p className="text-[10px] text-muted-foreground text-center">
-        👆 Swipe per cambiare vista · 💡 Tocca un elemento per la spiegazione
-      </p>
+      {/* Bottom hint — only in full mode */}
+      {!compact && (
+        <p className="text-[10px] text-muted-foreground text-center">
+          👆 Swipe per cambiare vista · 💡 Tocca un elemento per la spiegazione
+        </p>
+      )}
     </motion.div>
   );
 };
