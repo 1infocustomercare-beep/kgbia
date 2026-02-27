@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, DollarSign, LogOut,
@@ -26,7 +26,7 @@ import PartnerLeaderboard from "@/components/partner/PartnerLeaderboard";
 import AssetVault from "@/components/partner/AssetVault";
 import { toast } from "@/hooks/use-toast";
 import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Palette, Pencil, Upload, Save, X as XIcon } from "lucide-react";
 
 type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault";
 
@@ -43,6 +43,20 @@ const PartnerDashboard = () => {
   const [inviteCopied, setInviteCopied] = useState(false);
   const { demoRestaurant, loading: demoLoading, refetch: refetchDemo } = usePartnerDemoRestaurant();
   const [resettingDemo, setResettingDemo] = useState(false);
+  const [editingDemo, setEditingDemo] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [editColor, setEditColor] = useState("#C8963E");
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [savingDemo, setSavingDemo] = useState(false);
+  const logoFileRef = useRef<HTMLInputElement>(null);
+
+  // Sync edit fields when demoRestaurant loads
+  useEffect(() => {
+    if (demoRestaurant) {
+      setEditName(demoRestaurant.name);
+      setEditColor(demoRestaurant.primary_color || "#C8963E");
+    }
+  }, [demoRestaurant]);
 
   const handleResetDemo = async () => {
     if (resettingDemo) return;
@@ -65,6 +79,46 @@ const PartnerDashboard = () => {
       toast({ title: "Errore", description: err.message, variant: "destructive" });
     } finally {
       setResettingDemo(false);
+    }
+  };
+
+  const handleUploadLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !demoRestaurant) return;
+    setUploadingLogo(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `${demoRestaurant.id}/logo.${ext}`;
+      const { error: upErr } = await supabase.storage.from("restaurant-logos").upload(path, file, { upsert: true });
+      if (upErr) throw upErr;
+      const { data: urlData } = supabase.storage.from("restaurant-logos").getPublicUrl(path);
+      const logoUrl = urlData.publicUrl + "?t=" + Date.now();
+      await supabase.from("restaurants").update({ logo_url: logoUrl }).eq("id", demoRestaurant.id);
+      toast({ title: "Logo caricato!" });
+      refetchDemo();
+    } catch (err: any) {
+      toast({ title: "Errore upload", description: err.message, variant: "destructive" });
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
+  const handleSaveDemoCustomization = async () => {
+    if (!demoRestaurant || savingDemo) return;
+    setSavingDemo(true);
+    try {
+      const { error } = await supabase.from("restaurants").update({
+        name: editName.trim() || demoRestaurant.name,
+        primary_color: editColor,
+      }).eq("id", demoRestaurant.id);
+      if (error) throw error;
+      toast({ title: "✅ Personalizzazione salvata!" });
+      setEditingDemo(false);
+      refetchDemo();
+    } catch (err: any) {
+      toast({ title: "Errore", description: err.message, variant: "destructive" });
+    } finally {
+      setSavingDemo(false);
     }
   };
   useEffect(() => {
@@ -381,18 +435,109 @@ const PartnerDashboard = () => {
                 ))}
               </div>
 
-              {/* === DEMO RESTAURANT — Live Links === */}
+              {/* === DEMO RESTAURANT — Live Links + Customization === */}
               {demoRestaurant && (
                 <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/5 via-card to-amber-500/5 border border-primary/20 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Smartphone className="w-5 h-5 text-primary" />
-                    <div>
-                      <h3 className="text-sm font-bold text-foreground">Il tuo Ristorante Demo</h3>
-                      <p className="text-[10px] text-muted-foreground">{demoRestaurant.name} — pronto all'uso</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {demoRestaurant.logo_url ? (
+                        <img src={demoRestaurant.logo_url} alt="Logo" className="w-9 h-9 rounded-xl object-cover border border-border/50" />
+                      ) : (
+                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                          <Smartphone className="w-5 h-5 text-primary" />
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="text-sm font-bold text-foreground">Il tuo Ristorante Demo</h3>
+                        <p className="text-[10px] text-muted-foreground">{demoRestaurant.name}</p>
+                      </div>
                     </div>
+                    <motion.button
+                      onClick={() => setEditingDemo(!editingDemo)}
+                      className="p-2 rounded-lg bg-secondary hover:bg-accent transition-colors"
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {editingDemo ? <XIcon className="w-4 h-4 text-muted-foreground" /> : <Pencil className="w-4 h-4 text-muted-foreground" />}
+                    </motion.button>
                   </div>
+
+                  {/* Customization Panel */}
+                  <AnimatePresence>
+                    {editingDemo && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden space-y-3"
+                      >
+                        <div className="p-4 rounded-xl bg-card border border-border/50 space-y-4">
+                          <p className="text-[10px] font-semibold text-primary uppercase tracking-widest">Personalizza per il cliente</p>
+                          
+                          {/* Name */}
+                          <div className="space-y-1.5">
+                            <label className="text-[11px] font-medium text-muted-foreground">Nome Ristorante</label>
+                            <input
+                              type="text"
+                              value={editName}
+                              onChange={e => setEditName(e.target.value)}
+                              placeholder="Es. Trattoria da Mario"
+                              className="w-full px-3 py-2 rounded-lg bg-secondary border border-border/50 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                            />
+                          </div>
+
+                          {/* Color */}
+                          <div className="space-y-1.5">
+                            <label className="text-[11px] font-medium text-muted-foreground">Colore Primario</label>
+                            <div className="flex items-center gap-3">
+                              <input
+                                type="color"
+                                value={editColor}
+                                onChange={e => setEditColor(e.target.value)}
+                                className="w-10 h-10 rounded-lg border border-border/50 cursor-pointer bg-transparent"
+                              />
+                              <span className="text-xs font-mono text-muted-foreground">{editColor}</span>
+                              <div className="flex gap-1.5 ml-auto">
+                                {["#C8963E", "#1A1A2E", "#E74C3C", "#2ECC71", "#3498DB", "#8E44AD"].map(c => (
+                                  <button key={c} onClick={() => setEditColor(c)}
+                                    className={`w-7 h-7 rounded-lg border-2 transition-all ${editColor === c ? "border-foreground scale-110" : "border-transparent"}`}
+                                    style={{ backgroundColor: c }} />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Logo */}
+                          <div className="space-y-1.5">
+                            <label className="text-[11px] font-medium text-muted-foreground">Logo</label>
+                            <input type="file" accept="image/*" ref={logoFileRef} onChange={handleUploadLogo} className="hidden" />
+                            <motion.button
+                              onClick={() => logoFileRef.current?.click()}
+                              disabled={uploadingLogo}
+                              className="w-full flex items-center justify-center gap-2 p-3 rounded-lg border border-dashed border-border/50 hover:border-primary/30 bg-secondary/50 transition-all disabled:opacity-50"
+                              whileTap={{ scale: 0.97 }}
+                            >
+                              <Upload className={`w-4 h-4 text-muted-foreground ${uploadingLogo ? "animate-pulse" : ""}`} />
+                              <span className="text-xs text-muted-foreground">{uploadingLogo ? "Caricamento..." : demoRestaurant.logo_url ? "Cambia Logo" : "Carica Logo"}</span>
+                            </motion.button>
+                          </div>
+
+                          {/* Save */}
+                          <motion.button
+                            onClick={handleSaveDemoCustomization}
+                            disabled={savingDemo}
+                            className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm disabled:opacity-50"
+                            whileTap={{ scale: 0.97 }}
+                          >
+                            <Save className={`w-4 h-4 ${savingDemo ? "animate-spin" : ""}`} />
+                            {savingDemo ? "Salvataggio..." : "Salva Personalizzazione"}
+                          </motion.button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   <p className="text-xs text-muted-foreground">
-                    Usa questi link per mostrare tutte le interfacce al potenziale cliente: menu, dashboard admin, e vista cucina.
+                    Usa questi link per mostrare tutte le interfacce al potenziale cliente.
                   </p>
                   <div className="grid grid-cols-1 gap-2">
                     {[
@@ -414,15 +559,25 @@ const PartnerDashboard = () => {
                   <p className="text-[10px] text-muted-foreground text-center">
                     PIN Cucina Demo: <span className="font-mono font-bold text-foreground">1234</span>
                   </p>
-                  <motion.button
-                    onClick={handleResetDemo}
-                    disabled={resettingDemo}
-                    className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive/20 transition-all disabled:opacity-50"
-                    whileTap={{ scale: 0.97 }}
-                  >
-                    <RefreshCw className={`w-4 h-4 ${resettingDemo ? "animate-spin" : ""}`} />
-                    <span className="text-xs font-semibold">{resettingDemo ? "Resettando..." : "Resetta Demo"}</span>
-                  </motion.button>
+                  <div className="grid grid-cols-2 gap-2">
+                    <motion.button
+                      onClick={() => setEditingDemo(true)}
+                      className="flex items-center justify-center gap-2 p-3 rounded-xl bg-primary/10 border border-primary/20 text-primary transition-all"
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      <Palette className="w-4 h-4" />
+                      <span className="text-xs font-semibold">Personalizza</span>
+                    </motion.button>
+                    <motion.button
+                      onClick={handleResetDemo}
+                      disabled={resettingDemo}
+                      className="flex items-center justify-center gap-2 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive/20 transition-all disabled:opacity-50"
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      <RefreshCw className={`w-4 h-4 ${resettingDemo ? "animate-spin" : ""}`} />
+                      <span className="text-xs font-semibold">{resettingDemo ? "Reset..." : "Resetta"}</span>
+                    </motion.button>
+                  </div>
                 </div>
               )}
 
