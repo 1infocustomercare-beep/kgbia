@@ -32,3 +32,9 @@ verify_jwt = false
 
 [functions.generate-fee-invoice]
 verify_jwt = false
+
+[functions.ai-token-checkout]
+verify_jwt = false
+
+[functions.partner-connect-onboarding]
+verify_jwt = false

@@ -1,5 +1,9 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingUp, ShoppingCart, DollarSign, Users, Star, CalendarDays, ChefHat, ExternalLink } from "lucide-react";
+import { TrendingUp, ShoppingCart, DollarSign, Users, Star, CalendarDays, ChefHat, ExternalLink, Sparkles, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "@/hooks/use-toast";
 
 interface DashboardOverviewProps {
   todayRevenue: number;
@@ -8,6 +12,7 @@ interface DashboardOverviewProps {
   menuItemCount: number;
   aiTokens: number;
   restaurantName: string;
+  restaurantId?: string;
   reviews: any[];
   reservations: any[];
   menuUrl: string;
@@ -16,8 +21,10 @@ interface DashboardOverviewProps {
 
 const DashboardOverview = ({
   todayRevenue, todayOrderCount, activeOrderCount, menuItemCount, aiTokens, restaurantName,
-  reviews, reservations, menuUrl, onNavigate,
+  restaurantId, reviews, reservations, menuUrl, onNavigate,
 }: DashboardOverviewProps) => {
+  const [buyingTokens, setBuyingTokens] = useState(false);
+  const { user } = useAuth();
   const avgRating = reviews.length > 0
     ? (reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviews.length).toFixed(1)
     : "—";
@@ -99,13 +106,40 @@ const DashboardOverview = ({
       {/* AI Tokens */}
       <div className="p-3 rounded-2xl bg-primary/5 border border-primary/20 flex items-center gap-3">
         <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
-          <Users className="w-4 h-4 text-primary" />
+          <Sparkles className="w-4 h-4 text-primary" />
         </div>
         <div className="flex-1">
           <p className="text-sm font-medium text-foreground">Gettoni IA</p>
           <p className="text-xs text-muted-foreground">Menu Creator, Foto, Traduzioni</p>
         </div>
-        <span className="text-lg font-display font-bold text-primary">{aiTokens}</span>
+        <span className="text-lg font-display font-bold text-primary mr-2">{aiTokens}</span>
+        <motion.button
+          onClick={async () => {
+            if (!restaurantId) return;
+            setBuyingTokens(true);
+            try {
+              const { data, error } = await supabase.functions.invoke("ai-token-checkout", {
+                body: {
+                  restaurantId,
+                  customerEmail: user?.email,
+                  successUrl: `${window.location.origin}/dashboard?tokens=success`,
+                  cancelUrl: `${window.location.origin}/dashboard?tokens=cancelled`,
+                },
+              });
+              if (error) throw error;
+              if (data?.url) window.open(data.url, "_blank");
+            } catch (e: any) {
+              toast({ title: "Errore", description: e.message || "Impossibile avviare l'acquisto", variant: "destructive" });
+            }
+            setBuyingTokens(false);
+          }}
+          disabled={buyingTokens}
+          className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold flex items-center gap-1 disabled:opacity-50"
+          whileTap={{ scale: 0.95 }}
+        >
+          {buyingTokens ? <Loader2 className="w-3 h-3 animate-spin" /> : <DollarSign className="w-3 h-3" />}
+          +50
+        </motion.button>
       </div>
 
       {/* Quick Actions */}
