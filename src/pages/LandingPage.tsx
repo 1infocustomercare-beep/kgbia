@@ -260,7 +260,7 @@ const LandingPage = () => {
               {/* Glow behind phone */}
               <div className="absolute -inset-8 bg-primary/15 rounded-[60px] blur-[60px]" />
 
-              {/* Animated Annotations — Left side */}
+              {/* Animated Annotations — Left side (xl: beside phone) */}
               {[
                 { label: "Menu Digitale AI", emoji: "🤖", top: "4%", delay: 1.5 },
                 { label: "Ordini Real-Time", emoji: "⚡", top: "28%", delay: 2.2 },
@@ -279,7 +279,7 @@ const LandingPage = () => {
                 </motion.div>
               ))}
 
-              {/* Animated Annotations — Right side */}
+              {/* Animated Annotations — Right side (xl: beside phone) */}
               {[
                 { label: "PWA Installabile", emoji: "📱", top: "10%", delay: 1.8 },
                 { label: "Review Shield", emoji: "🛡️", top: "34%", delay: 2.5 },
@@ -297,6 +297,29 @@ const LandingPage = () => {
                   <span className="text-[11px] font-medium text-foreground">{ann.label}</span>
                 </motion.div>
               ))}
+
+              {/* Mobile annotations — below the phone, as a scrollable row */}
+              <motion.div className="flex xl:hidden flex-wrap justify-center gap-1.5 mt-3 px-2"
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.6 }}>
+                {[
+                  { label: "Menu AI", emoji: "🤖" },
+                  { label: "Real-Time", emoji: "⚡" },
+                  { label: "0 Commissioni", emoji: "💰" },
+                  { label: "Kitchen", emoji: "👨‍🍳" },
+                  { label: "PWA", emoji: "📱" },
+                  { label: "Review Shield", emoji: "🛡️" },
+                  { label: "Chat", emoji: "💬" },
+                  { label: "Pagamenti", emoji: "🔒" },
+                ].map((ann, i) => (
+                  <motion.span key={i}
+                    className="flex items-center gap-1 px-2 py-1 rounded-lg bg-card/80 border border-primary/10 text-[9px] font-medium text-foreground/80 backdrop-blur-sm"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.5 + i * 0.1, duration: 0.3 }}>
+                    <span>{ann.emoji}</span>{ann.label}
+                  </motion.span>
+                ))}
+              </motion.div>
 
               {/* Live Preview Component — compact mode for hero embedding */}
               <div className="w-[280px] sm:w-[300px]">
