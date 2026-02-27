@@ -6,7 +6,8 @@ import {
   Sparkles, Lock, Menu, Target, DollarSign, Brain,
   ChefHat, AlertTriangle, Banknote, ArrowDown, ArrowRight,
   MessageCircle, HelpCircle, ChevronDown, Eye, Play, Gem,
-  Users, Rocket, CreditCard, Gift, Trophy, Award, Handshake
+  Users, Rocket, CreditCard, Gift, Trophy, Award, Handshake,
+  Quote
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import LivePreview from "@/components/restaurant/LivePreview";
@@ -63,14 +64,14 @@ const LandingPage = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["contact", "partner", "pricing", "calculator", "features", "pain", "vision", "hero"];
+      const sections = ["contact", "testimonials", "partner", "pricing", "calculator", "features", "pain", "vision", "hero"];
       for (const id of sections) {
         const el = document.getElementById(id);
         if (el) {
           const rect = el.getBoundingClientRect();
           if (rect.top <= 120) {
-            if (id === "hero" || id === "vision" || id === "pain") setActiveSection("home");
-            else if (id === "calculator") setActiveSection("features");
+                if (id === "hero" || id === "vision" || id === "pain") setActiveSection("home");
+                else if (id === "calculator" || id === "testimonials") setActiveSection("features");
             else setActiveSection(id);
             break;
           }
@@ -819,6 +820,147 @@ const LandingPage = () => {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ====== TESTIMONIALS ====== */}
+      <section id="testimonials" className="py-12 sm:py-24 px-4 relative overflow-hidden">
+        <GlowOrb className="w-[500px] h-[400px] bg-amber-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        <div className="max-w-5xl mx-auto relative">
+          <motion.div className="text-center mb-8 sm:mb-14" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
+              <Star className="w-3 h-3" /> Social Proof
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-display font-bold text-foreground">
+              Chi usa Empire, <span className="text-gold-gradient">non torna indietro</span>
+            </h2>
+            <p className="mt-2 text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto">
+              Ristoratori e Partner raccontano i risultati concreti ottenuti
+            </p>
+          </motion.div>
+
+          {/* Ristoratori */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-6 sm:mb-10">
+            {[
+              {
+                name: "Marco Pellegrini",
+                role: "Titolare — Trattoria da Marco, Roma",
+                quote: "In 3 mesi ho spostato il 60% degli ordini da JustEat alla mia app. Risparmio €3.200/mese netti. Il ROI si è ripagato in 3 settimane.",
+                stars: 5,
+                metric: "−€3.200/mese commissioni",
+                gradient: "from-primary/10 to-amber-500/10",
+              },
+              {
+                name: "Giulia Ferretti",
+                role: "Chef & Owner — Osteria Ferretti, Milano",
+                quote: "Kitchen View ha eliminato gli errori in cucina. Prima perdevamo 4-5 ordini a settimana per incomprensioni. Ora zero. Il setup ha richiesto 10 minuti.",
+                stars: 5,
+                metric: "Zero errori in cucina",
+                gradient: "from-emerald-500/10 to-teal-500/10",
+              },
+              {
+                name: "Antonio Russo",
+                role: "Pizzeria Napoli Verace, Napoli",
+                quote: "Review Shield è geniale. Le recensioni negative restano nel mio archivio, su Google ho solo 4.8★. I clienti nuovi arrivano grazie al rating perfetto.",
+                stars: 5,
+                metric: "4.8★ media su Google",
+                gradient: "from-sky-500/10 to-blue-500/10",
+              },
+            ].map((t, i) => (
+              <motion.div key={i}
+                className={`relative p-5 sm:p-7 rounded-2xl glass border border-border/30 hover:border-primary/30 transition-all duration-500 group`}
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12 }}>
+                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${t.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                <div className="relative">
+                  <Quote className="w-6 h-6 text-primary/30 mb-3" />
+                  <div className="flex gap-0.5 mb-3">
+                    {Array.from({ length: t.stars }).map((_, j) => (
+                      <Star key={j} className="w-3.5 h-3.5 text-primary fill-primary" />
+                    ))}
+                  </div>
+                  <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed mb-4 italic">"{t.quote}"</p>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-[9px] sm:text-[10px] text-primary font-bold mb-4">
+                    <TrendingUp className="w-3 h-3" /> {t.metric}
+                  </div>
+                  <div className="border-t border-border/30 pt-3">
+                    <p className="text-xs sm:text-sm font-bold text-foreground">{t.name}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">{t.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Partner */}
+          <motion.div className="text-center mb-5 sm:mb-8" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 text-[10px] sm:text-xs font-medium text-violet-400 tracking-wider uppercase">
+              <Handshake className="w-3 h-3" /> Testimonianze Partner
+            </span>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+            {[
+              {
+                name: "Luca Marini",
+                role: "Partner Empire · Team Leader — Roma",
+                quote: "In 4 mesi ho chiuso 14 contratti e costruito un team di 3 persone. Guadagno tra commissioni, bonus e override circa €8.000/mese. Non avrei mai pensato fosse possibile senza investimento iniziale.",
+                stars: 5,
+                metric: "14 contratti in 4 mesi",
+                highlight: "~€8.000/mese",
+                gradient: "from-violet-500/10 to-fuchsia-500/10",
+              },
+              {
+                name: "Sara Colombo",
+                role: "Partner Empire — Milano",
+                quote: "La sandbox demo si vende da sola. Mostro l'app al ristoratore, gli faccio vedere i suoi piatti col menu AI e firma in 20 minuti. Il payout arriva istantaneamente su Stripe.",
+                stars: 5,
+                metric: "Chiusura media: 20 min",
+                highlight: "€997/vendita",
+                gradient: "from-primary/10 to-amber-500/10",
+              },
+            ].map((t, i) => (
+              <motion.div key={i}
+                className="relative p-5 sm:p-7 rounded-2xl glass border border-border/30 hover:border-violet-500/30 transition-all duration-500 group"
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12 }}>
+                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${t.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                <div className="relative">
+                  <div className="flex items-center justify-between mb-3">
+                    <Quote className="w-6 h-6 text-violet-400/30" />
+                    <span className="text-xs sm:text-sm font-display font-bold text-primary">{t.highlight}</span>
+                  </div>
+                  <div className="flex gap-0.5 mb-3">
+                    {Array.from({ length: t.stars }).map((_, j) => (
+                      <Star key={j} className="w-3.5 h-3.5 text-primary fill-primary" />
+                    ))}
+                  </div>
+                  <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed mb-4 italic">"{t.quote}"</p>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-violet-500/10 text-[9px] sm:text-[10px] text-violet-400 font-bold mb-4">
+                    <Trophy className="w-3 h-3" /> {t.metric}
+                  </div>
+                  <div className="border-t border-border/30 pt-3">
+                    <p className="text-xs sm:text-sm font-bold text-foreground">{t.name}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">{t.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Trust bar */}
+          <motion.div className="mt-8 sm:mt-12 flex flex-wrap items-center justify-center gap-4 sm:gap-8"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            {[
+              { value: "150+", label: "Ristoranti attivi" },
+              { value: "4.9★", label: "Rating medio" },
+              { value: "€2.1M", label: "Risparmi generati" },
+              { value: "45+", label: "Partner attivi" },
+            ].map((stat, i) => (
+              <div key={i} className="text-center">
+                <p className="text-lg sm:text-2xl font-display font-bold text-primary">{stat.value}</p>
+                <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
