@@ -125,7 +125,7 @@ const KitchenView = () => {
     fetchOrders(parsed.restaurantId);
 
     const channel = supabase
-      .channel("kitchen-orders")
+      .channel("kitchen-realtime")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "orders", filter: `restaurant_id=eq.${parsed.restaurantId}` },
         (payload) => {
           fetchOrders(parsed.restaurantId);
@@ -149,6 +149,12 @@ const KitchenView = () => {
             else playUpdateAlert();
           }
         }
+      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "restaurant_tables", filter: `restaurant_id=eq.${parsed.restaurantId}` },
+        () => { fetchOrders(parsed.restaurantId); }
+      )
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "restaurants", filter: `id=eq.${parsed.restaurantId}` },
+        (payload) => { if ((payload.new as any)?.name) setRestaurantName((payload.new as any).name); }
       )
       .subscribe();
 

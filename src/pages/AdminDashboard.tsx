@@ -145,8 +145,12 @@ const AdminDashboard = () => {
     };
     fetchData();
 
-    const channel = supabase.channel("admin-orders")
+    const channel = supabase.channel("admin-realtime")
       .on("postgres_changes", { event: "*", schema: "public", table: "orders", filter: `restaurant_id=eq.${restaurant.id}` }, () => fetchData())
+      .on("postgres_changes", { event: "*", schema: "public", table: "menu_items", filter: `restaurant_id=eq.${restaurant.id}` }, () => fetchData())
+      .on("postgres_changes", { event: "*", schema: "public", table: "restaurant_tables", filter: `restaurant_id=eq.${restaurant.id}` }, () => fetchData())
+      .on("postgres_changes", { event: "*", schema: "public", table: "reviews", filter: `restaurant_id=eq.${restaurant.id}` }, () => fetchData())
+      .on("postgres_changes", { event: "*", schema: "public", table: "restaurants", filter: `id=eq.${restaurant.id}` }, () => fetchData())
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "reservations", filter: `restaurant_id=eq.${restaurant.id}` }, (payload) => {
         fetchData();
         const newRes = payload.new as any;
@@ -154,7 +158,6 @@ const AdminDashboard = () => {
           title: "📅 Nuova prenotazione!",
           description: `${newRes.customer_name || "Cliente"} — ${newRes.reservation_date} ore ${newRes.reservation_time} · ${newRes.guests || 2} ospiti`,
         });
-        // Play notification sound
         try {
           const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdH2JkZaYl5KMhX17d3V1eH6EiY6QkI6Mg3x2cW9vcniBi5SZnJqWkIiAfHl3d3l+hYuPkZGPjIZ/eHNwb3F2foeQmJucmZONhX57eXl7f4WLj5GRkI2Hf3h0cHBydnuEjJSZm5mVj4eDfnp5eXuAhouPkZGQjYeBenVxcHJ2fISMlJmbmZWPh4J+enl5e4CGi4+RkZCNh4F6dXFwcnZ8hIyUmZuZlY+Hgn56eXl7gIaLj5GRkI2HgXp1cXBydn0=");
           audio.volume = 0.3;
@@ -162,6 +165,7 @@ const AdminDashboard = () => {
         } catch {}
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "reservations", filter: `restaurant_id=eq.${restaurant.id}` }, () => fetchData())
+      .on("postgres_changes", { event: "*", schema: "public", table: "customer_blacklist", filter: `restaurant_id=eq.${restaurant.id}` }, () => fetchData())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [restaurant]);
