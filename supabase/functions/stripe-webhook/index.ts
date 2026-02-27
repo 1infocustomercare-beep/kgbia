@@ -14,9 +14,10 @@ const corsHeaders = {
  * 2. invoice.paid — Subsequent installment payments
  * 3. invoice.payment_failed — Mark overdue, pause partner payout
  * 
- * Split logic (Kevin Rule):
- * - €2,000 → Platform (STRIPE_MASTER_ACCOUNT_ID)  
- * - €997   → Partner (partner's stripe_connect_account_id from profiles)
+ * Split logic (€1,997):
+ * - €800  → Platform (STRIPE_MASTER_ACCOUNT_ID)  
+ * - €997  → Partner (partner's stripe_connect_account_id)
+ * - €200  → Team Leader override (if partner has a team leader)
  * - For installments: pro-rata split per payment
  */
 serve(async (req) => {
@@ -106,11 +107,11 @@ serve(async (req) => {
     // Mark restaurant as paid
     await supabase.from("restaurants").update({ setup_paid: true }).eq("id", restaurantId);
 
-    // Plan split calculations
-    const planConfigs: Record<string, { total: number; installment: number; count: number; kevinPerInstallment: number; partnerPerInstallment: number }> = {
-      full:  { total: 2997, installment: 2997, count: 1, kevinPerInstallment: 200000, partnerPerInstallment: 99700 },
-      "3x":  { total: 3150, installment: 1050, count: 3, kevinPerInstallment: 66700,  partnerPerInstallment: 33233 },
-      "6x":  { total: 3300, installment: 550,  count: 6, kevinPerInstallment: 33334,  partnerPerInstallment: 16566 },
+    // Plan split calculations (€1,997 = €800 platform + €997 partner + €200 TL override)
+    const planConfigs: Record<string, { total: number; installment: number; count: number; platformPerInstallment: number; partnerPerInstallment: number; overridePerInstallment: number }> = {
+      full:  { total: 1997, installment: 1997, count: 1, platformPerInstallment: 80000, partnerPerInstallment: 99700, overridePerInstallment: 20000 },
+      "3x":  { total: 2097, installment: 699,  count: 3, platformPerInstallment: 26700, partnerPerInstallment: 33233, overridePerInstallment: 6667 },
+      "6x":  { total: 2196, installment: 366,  count: 6, platformPerInstallment: 13334, partnerPerInstallment: 16616, overridePerInstallment: 3334 },
     };
     const p = planConfigs[plan || "full"] || planConfigs.full;
 
@@ -133,45 +134,56 @@ serve(async (req) => {
         : null,
     } as any, { onConflict: "restaurant_id" });
 
-    // ── TRANSFERS (Kevin Rule) ──
+    // Record the sale in partner_sales
+    if (partnerId) {
+      // Find team leader for this partner
+      const { data: teamData } = await supabase
+        .from("partner_teams")
+        .select("team_leader_id")
+        .eq("partner_id", partnerId)
+        .single();
+
+      const teamLeaderId = teamData?.team_leader_id || null;
+
+      await supabase.from("partner_sales").insert({
+        partner_id: partnerId,
+        sale_amount: p.total,
+        partner_commission: 997,
+        team_leader_id: teamLeaderId,
+        team_leader_override: teamLeaderId ? 200 : 0,
+        sale_month: new Date().toISOString().slice(0, 7),
+      } as any);
+
+      // Check for team leader promotion (3+ sales)
+      await supabase.rpc("check_team_leader_promotion" as any, { p_partner_id: partnerId });
+
+      // Calculate monthly bonus
+      const currentMonth = new Date().toISOString().slice(0, 7);
+      await supabase.rpc("calculate_monthly_bonus" as any, { p_partner_id: partnerId, p_month: currentMonth });
+    }
+
+    // ── TRANSFERS (Platform + Partner + Team Leader Override) ──
     const masterAccountId = Deno.env.get("STRIPE_MASTER_ACCOUNT_ID");
 
-    // Transfer Kevin's share
+    // Transfer Platform's share (€800 for full)
     if (masterAccountId && transferGroup) {
       try {
         await stripe.transfers.create({
-          amount: p.kevinPerInstallment,
+          amount: p.platformPerInstallment,
           currency: "eur",
           destination: masterAccountId,
           transfer_group: transferGroup,
           metadata: { type: "platform_revenue", restaurantId, installment: "1" },
         });
-        console.log(`Transfer €${(p.kevinPerInstallment / 100).toFixed(2)} to master account`);
+        console.log(`Transfer €${(p.platformPerInstallment / 100).toFixed(2)} to platform`);
       } catch (e: any) {
-        console.error("Transfer to master failed:", e.message);
+        console.error("Transfer to platform failed:", e.message);
       }
     }
 
-    // Transfer Partner's share (only if full payment or first installment)
+    // Transfer Partner's share (€997 for full)
     if (partnerId && transferGroup) {
       try {
-        // Get partner's Stripe Connect account
-        const { data: partnerProfile } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("user_id", partnerId)
-          .single();
-
-        // Check if partner has a connected account stored in user metadata
-        // We store partner_stripe_account_id in the profiles table or a dedicated field
-        const { data: partnerRestMembership } = await supabase
-          .from("restaurant_memberships")
-          .select("*")
-          .eq("user_id", partnerId)
-          .limit(1);
-
-        // For now we look up the partner's Stripe Connect account from a custom query
-        // Partners connect their Stripe account via the partner-connect-onboarding function
         const { data: partnerPaymentInfo } = await supabase
           .rpc("get_partner_stripe_account" as any, { partner_user_id: partnerId })
           .single();
@@ -188,17 +200,41 @@ serve(async (req) => {
           });
           console.log(`Transfer €${(p.partnerPerInstallment / 100).toFixed(2)} to partner ${partnerId}`);
           
-          // Mark partner as paid if full payment
           if (plan === "full") {
             await supabase.from("restaurant_payments")
               .update({ partner_paid: true } as any)
               .eq("restaurant_id", restaurantId);
           }
         } else {
-          console.log(`Partner ${partnerId} has no Stripe Connect account linked. Commission pending.`);
+          console.log(`Partner ${partnerId} has no Stripe Connect account. Commission pending.`);
+        }
+
+        // Transfer Team Leader Override (€200 for full)
+        const { data: teamData } = await supabase
+          .from("partner_teams")
+          .select("team_leader_id")
+          .eq("partner_id", partnerId)
+          .single();
+
+        if (teamData?.team_leader_id) {
+          const { data: tlPaymentInfo } = await supabase
+            .rpc("get_partner_stripe_account" as any, { partner_user_id: teamData.team_leader_id })
+            .single();
+
+          const tlStripeAccount = (tlPaymentInfo as any)?.stripe_account_id;
+          if (tlStripeAccount) {
+            await stripe.transfers.create({
+              amount: p.overridePerInstallment,
+              currency: "eur",
+              destination: tlStripeAccount,
+              transfer_group: transferGroup,
+              metadata: { type: "team_leader_override", restaurantId, teamLeaderId: teamData.team_leader_id, installment: "1" },
+            });
+            console.log(`Transfer €${(p.overridePerInstallment / 100).toFixed(2)} team leader override`);
+          }
         }
       } catch (e: any) {
-        console.error("Partner commission transfer error:", e.message);
+        console.error("Partner/TL transfer error:", e.message);
       }
     }
   }
@@ -243,9 +279,9 @@ serve(async (req) => {
       } as any).eq("restaurant_id", restaurantId);
 
       // Pro-rata transfer for this installment
-      const planConfigs: Record<string, { kevinPerInstallment: number; partnerPerInstallment: number }> = {
-        "3x": { kevinPerInstallment: 66700, partnerPerInstallment: 33233 },
-        "6x": { kevinPerInstallment: 33334, partnerPerInstallment: 16566 },
+      const planConfigs: Record<string, { platformPerInstallment: number; partnerPerInstallment: number; overridePerInstallment: number }> = {
+        "3x": { platformPerInstallment: 26700, partnerPerInstallment: 33233, overridePerInstallment: 6667 },
+        "6x": { platformPerInstallment: 13334, partnerPerInstallment: 16616, overridePerInstallment: 3334 },
       };
       const planType = payment.plan_type || "3x";
       const pc = planConfigs[planType];
@@ -255,14 +291,14 @@ serve(async (req) => {
         if (masterAccountId) {
           try {
             await stripe.transfers.create({
-              amount: pc.kevinPerInstallment,
+              amount: pc.platformPerInstallment,
               currency: "eur",
               destination: masterAccountId,
               transfer_group: transferGroup,
               metadata: { type: "platform_revenue", restaurantId, installment: String(newPaid) },
             });
           } catch (e: any) {
-            console.error("Installment transfer to master failed:", e.message);
+            console.error("Installment transfer to platform failed:", e.message);
           }
         }
 
@@ -282,8 +318,31 @@ serve(async (req) => {
                 metadata: { type: "partner_commission", restaurantId, partnerId, installment: String(newPaid) },
               });
             }
+
+            // Team Leader Override transfer
+            const { data: teamData } = await supabase
+              .from("partner_teams")
+              .select("team_leader_id")
+              .eq("partner_id", partnerId)
+              .single();
+
+            if (teamData?.team_leader_id) {
+              const { data: tlInfo } = await supabase
+                .rpc("get_partner_stripe_account" as any, { partner_user_id: teamData.team_leader_id })
+                .single();
+              const tlAccount = (tlInfo as any)?.stripe_account_id;
+              if (tlAccount) {
+                await stripe.transfers.create({
+                  amount: pc.overridePerInstallment,
+                  currency: "eur",
+                  destination: tlAccount,
+                  transfer_group: transferGroup,
+                  metadata: { type: "team_leader_override", restaurantId, installment: String(newPaid) },
+                });
+              }
+            }
           } catch (e: any) {
-            console.error("Partner installment transfer error:", e.message);
+            console.error("Partner/TL installment transfer error:", e.message);
           }
         }
       }

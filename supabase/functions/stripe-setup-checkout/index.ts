@@ -7,9 +7,9 @@ const corsHeaders = {
 };
 
 /**
- * Empire Setup Checkout — Creates Stripe Checkout sessions for the €2,997 setup fee.
- * Supports: full (€2,997), 3x (€1,050/mo), 6x (€550/mo)
- * Uses transfer_group to link the 2000/997 split done in the webhook.
+ * Empire Setup Checkout — Creates Stripe Checkout sessions for the €1,997 setup fee.
+ * Supports: full (€1,997), 3x (€699/mo), 6x (€366/mo)
+ * Uses transfer_group to link the 800/997/200 split done in the webhook.
  */
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -26,9 +26,9 @@ serve(async (req) => {
     }
 
     const plans: Record<string, { amount: number; installments: number; label: string }> = {
-      full: { amount: 299700, installments: 1, label: "Empire Setup — Pagamento Unico €2.997" },
-      "3x": { amount: 105000, installments: 3, label: "Empire Setup — 3 Rate da €1.050/mese" },
-      "6x": { amount: 55000, installments: 6, label: "Empire Setup — 6 Rate da €550/mese" },
+      full: { amount: 199700, installments: 1, label: "Empire Setup — Pagamento Unico €1.997" },
+      "3x": { amount: 69900, installments: 3, label: "Empire Setup — 3 Rate da €699/mese" },
+      "6x": { amount: 36600, installments: 6, label: "Empire Setup — 6 Rate da €366/mese" },
     };
 
     const selectedPlan = plans[plan] || plans.full;

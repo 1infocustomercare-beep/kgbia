@@ -3,8 +3,8 @@ import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: "super_admin" | "staff" | "restaurant_admin" | "partner";
-  blockRole?: "super_admin" | "staff" | "restaurant_admin" | "partner";
+  requiredRole?: "super_admin" | "staff" | "restaurant_admin" | "partner" | "team_leader";
+  blockRole?: "super_admin" | "staff" | "restaurant_admin" | "partner" | "team_leader";
 }
 
 const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRouteProps) => {
@@ -22,8 +22,8 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     return <Navigate to="/admin" replace />;
   }
 
-  // Redirect partners to their dashboard if they land on a non-partner route
-  if (roles.includes("partner") && requiredRole !== "partner") {
+  // Redirect partners/team_leaders to their dashboard if they land on a non-partner route
+  if ((roles.includes("partner") || roles.includes("team_leader")) && requiredRole !== "partner") {
     return <Navigate to="/partner" replace />;
   }
 
@@ -35,8 +35,12 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     return <Navigate to="/dashboard" replace />;
   }
 
-  // Check required role (super_admin bypasses all except blockRole)
+  // Check required role (super_admin bypasses all except blockRole, team_leader can access partner routes)
   if (requiredRole && !roles.includes(requiredRole) && !roles.includes("super_admin")) {
+    // team_leader can access partner routes
+    if (requiredRole === "partner" && roles.includes("team_leader")) {
+      return <>{children}</>;
+    }
     return <Navigate to="/dashboard" replace />;
   }
 

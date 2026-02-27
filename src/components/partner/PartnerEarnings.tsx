@@ -138,35 +138,47 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
 
       {/* Split Breakdown Visual */}
       <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
-        <h3 className="text-sm font-bold text-foreground">Split per Vendita (€2.997)</h3>
+        <h3 className="text-sm font-bold text-foreground">Split per Vendita (€1.997)</h3>
         <div className="space-y-2">
           <div>
             <div className="flex items-center justify-between text-xs mb-1">
               <span className="text-muted-foreground flex items-center gap-1.5">
-                <Crown className="w-3.5 h-3.5 text-primary" /> Platform Revenue (Kevin)
+                <Crown className="w-3.5 h-3.5 text-primary" /> Platform Revenue
               </span>
-              <span className="font-bold text-foreground">€2.000</span>
+              <span className="font-bold text-foreground">€800</span>
             </div>
             <div className="h-3 rounded-full bg-muted overflow-hidden">
               <motion.div className="h-full rounded-full bg-gradient-to-r from-primary to-amber-500"
-                initial={{ width: 0 }} animate={{ width: "66.7%" }} transition={{ delay: 0.3, duration: 0.8 }} />
+                initial={{ width: 0 }} animate={{ width: "40%" }} transition={{ delay: 0.3, duration: 0.8 }} />
             </div>
           </div>
           <div>
             <div className="flex items-center justify-between text-xs mb-1">
               <span className="text-muted-foreground flex items-center gap-1.5">
-                <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Your Commission (Partner)
+                <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Partner Commission
               </span>
               <span className="font-bold text-foreground">€997</span>
             </div>
             <div className="h-3 rounded-full bg-muted overflow-hidden">
               <motion.div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-400"
-                initial={{ width: 0 }} animate={{ width: "33.3%" }} transition={{ delay: 0.5, duration: 0.8 }} />
+                initial={{ width: 0 }} animate={{ width: "50%" }} transition={{ delay: 0.5, duration: 0.8 }} />
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-muted-foreground flex items-center gap-1.5">
+                <Crown className="w-3.5 h-3.5 text-sky-400" /> Team Leader Override
+              </span>
+              <span className="font-bold text-foreground">€200</span>
+            </div>
+            <div className="h-3 rounded-full bg-muted overflow-hidden">
+              <motion.div className="h-full rounded-full bg-gradient-to-r from-sky-400 to-blue-400"
+                initial={{ width: 0 }} animate={{ width: "10%" }} transition={{ delay: 0.7, duration: 0.8 }} />
             </div>
           </div>
         </div>
         <p className="text-[10px] text-muted-foreground text-center mt-1">
-          Rate 3 mesi: €350 x 3 | Rate 6 mesi: €166 x 6 (pro-rata via Stripe Connect)
+          Bonus: €500 per 3 vendite/mese · €1.500 per 5 vendite/mese
         </p>
       </div>
 
