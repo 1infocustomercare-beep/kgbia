@@ -507,6 +507,56 @@ export type Database = {
           },
         ]
       }
+      partner_sales: {
+        Row: {
+          bonus_amount: number
+          bonus_type: string | null
+          created_at: string
+          id: string
+          partner_commission: number
+          partner_id: string
+          restaurant_payment_id: string | null
+          sale_amount: number
+          sale_month: string
+          team_leader_id: string | null
+          team_leader_override: number
+        }
+        Insert: {
+          bonus_amount?: number
+          bonus_type?: string | null
+          created_at?: string
+          id?: string
+          partner_commission?: number
+          partner_id: string
+          restaurant_payment_id?: string | null
+          sale_amount?: number
+          sale_month?: string
+          team_leader_id?: string | null
+          team_leader_override?: number
+        }
+        Update: {
+          bonus_amount?: number
+          bonus_type?: string | null
+          created_at?: string
+          id?: string
+          partner_commission?: number
+          partner_id?: string
+          restaurant_payment_id?: string | null
+          sale_amount?: number
+          sale_month?: string
+          team_leader_id?: string | null
+          team_leader_override?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_sales_restaurant_payment_id_fkey"
+            columns: ["restaurant_payment_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_stripe_accounts: {
         Row: {
           charges_enabled: boolean
@@ -540,6 +590,60 @@ export type Database = {
           stripe_account_id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      partner_teams: {
+        Row: {
+          created_at: string
+          id: string
+          partner_id: string
+          team_leader_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          partner_id: string
+          team_leader_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          partner_id?: string
+          team_leader_id?: string
+        }
+        Relationships: []
+      }
+      performance_bonuses: {
+        Row: {
+          bonus_amount: number
+          bonus_month: string
+          bonus_tier: string
+          created_at: string
+          id: string
+          paid: boolean
+          partner_id: string
+          sales_count: number
+        }
+        Insert: {
+          bonus_amount?: number
+          bonus_month: string
+          bonus_tier?: string
+          created_at?: string
+          id?: string
+          paid?: boolean
+          partner_id: string
+          sales_count?: number
+        }
+        Update: {
+          bonus_amount?: number
+          bonus_month?: string
+          bonus_tier?: string
+          created_at?: string
+          id?: string
+          paid?: boolean
+          partner_id?: string
+          sales_count?: number
         }
         Relationships: []
       }
@@ -1084,7 +1188,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_monthly_bonus: {
+        Args: { p_month: string; p_partner_id: string }
+        Returns: number
+      }
       check_overdue_payments: { Args: never; Returns: undefined }
+      check_team_leader_promotion: {
+        Args: { p_partner_id: string }
+        Returns: boolean
+      }
       get_partner_stripe_account: {
         Args: { partner_user_id: string }
         Returns: {

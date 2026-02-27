@@ -39,8 +39,8 @@ const PricingClosing = ({ onOpenROI, demoMode = false }: Props) => {
           </h3>
         </div>
 
-        <p className="text-4xl font-display font-bold text-foreground mb-1">€2.997</p>
-        <p className="text-xs text-muted-foreground mb-4">IVA 22% inclusa. Pagamento unico.</p>
+        <p className="text-4xl font-display font-bold text-foreground mb-1">€1.997</p>
+        <p className="text-xs text-muted-foreground mb-4">IVA 22% inclusa. Pagamento unico. <span className="line-through">€2.997</span></p>
 
         <div className="space-y-2.5">
           {[
@@ -92,14 +92,14 @@ const PricingClosing = ({ onOpenROI, demoMode = false }: Props) => {
 
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="p-3 rounded-xl bg-muted/30 border border-border/30 text-center">
-            <p className="text-lg font-display font-bold text-foreground">€1.050</p>
+            <p className="text-lg font-display font-bold text-foreground">€699</p>
             <p className="text-[10px] text-muted-foreground">x 3 mesi</p>
-            <p className="text-[10px] text-primary font-semibold mt-1">Totale: €3.150</p>
+            <p className="text-[10px] text-primary font-semibold mt-1">Totale: €2.097</p>
           </div>
           <div className="p-3 rounded-xl bg-muted/30 border border-border/30 text-center">
-            <p className="text-lg font-display font-bold text-foreground">€550</p>
+            <p className="text-lg font-display font-bold text-foreground">€366</p>
             <p className="text-[10px] text-muted-foreground">x 6 mesi</p>
-            <p className="text-[10px] text-primary font-semibold mt-1">Totale: €3.300</p>
+            <p className="text-[10px] text-primary font-semibold mt-1">Totale: €2.196</p>
           </div>
         </div>
 
