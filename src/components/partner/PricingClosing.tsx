@@ -1,18 +1,23 @@
 import { motion } from "framer-motion";
-import { Crown, CreditCard, Zap, Shield, CheckCircle, Star, Gift } from "lucide-react";
+import { Crown, CreditCard, Zap, Shield, CheckCircle, Star } from "lucide-react";
 
 interface Props {
   onOpenROI: () => void;
+  demoMode?: boolean;
 }
 
-const PricingClosing = ({ onOpenROI }: Props) => {
+const PricingClosing = ({ onOpenROI, demoMode = false }: Props) => {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
       {/* Hero */}
       <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/15 via-card to-amber-500/10 border border-primary/20 text-center">
         <Crown className="w-10 h-10 text-primary mx-auto mb-3" />
-        <h2 className="text-xl font-display font-bold text-foreground">Chiudi il Contratto</h2>
-        <p className="text-sm text-muted-foreground mt-1">Mostra i piani al ristoratore</p>
+        <h2 className="text-xl font-display font-bold text-foreground">
+          {demoMode ? "Piano Investimento" : "Chiudi il Contratto"}
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          {demoMode ? "Tutto incluso, per sempre" : "Mostra i piani al ristoratore"}
+        </p>
       </div>
 
       {/* Plan A - Featured */}
@@ -24,12 +29,14 @@ const PricingClosing = ({ onOpenROI }: Props) => {
       >
         {/* Badge */}
         <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center gap-1">
-          <Star className="w-3 h-3" /> CONSIGLIATO
+          <Star className="w-3 h-3" /> {demoMode ? "MIGLIOR VALORE" : "CONSIGLIATO"}
         </div>
 
         <div className="flex items-center gap-2 mb-3">
           <Zap className="w-5 h-5 text-primary" />
-          <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">Plan A — Full Ownership</h3>
+          <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">
+            {demoMode ? "Licenza Lifetime" : "Plan A — Full Ownership"}
+          </h3>
         </div>
 
         <p className="text-4xl font-display font-bold text-foreground mb-1">€2.997</p>
@@ -44,6 +51,13 @@ const PricingClosing = ({ onOpenROI }: Props) => {
             "Kitchen View + Push Wallet",
             "Aggiornamenti illimitati a vita",
             "Supporto prioritario Empire",
+            ...(demoMode ? [
+              "Menu Digitale QR per ogni tavolo",
+              "Upselling Intelligente automatico",
+              "Panic Mode — prezzi in 1 secondo",
+              "Review Shield — solo 4-5★ pubbliche",
+              "Analytics & Tracciamento sorgenti",
+            ] : []),
           ].map((feature, i) => (
             <div key={i} className="flex items-center gap-2 text-xs">
               <CheckCircle className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
@@ -52,11 +66,14 @@ const PricingClosing = ({ onOpenROI }: Props) => {
           ))}
         </div>
 
-        <div className="mt-4 p-3 rounded-xl bg-primary/10 border border-primary/20 text-center">
-          <p className="text-[11px] text-foreground font-semibold">
-            💡 Tua Commissione Partner: <span className="text-primary font-bold">€997</span>
-          </p>
-        </div>
+        {/* Partner commission - HIDDEN in demo mode */}
+        {!demoMode && (
+          <div className="mt-4 p-3 rounded-xl bg-primary/10 border border-primary/20 text-center">
+            <p className="text-[11px] text-foreground font-semibold">
+              💡 Tua Commissione Partner: <span className="text-primary font-bold">€997</span>
+            </p>
+          </div>
+        )}
       </motion.div>
 
       {/* Plan B - Installments */}
@@ -68,7 +85,9 @@ const PricingClosing = ({ onOpenROI }: Props) => {
       >
         <div className="flex items-center gap-2 mb-3">
           <CreditCard className="w-5 h-5 text-amber-400" />
-          <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">Plan B — Rate</h3>
+          <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">
+            {demoMode ? "Opzione Rate" : "Plan B — Rate"}
+          </h3>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
@@ -98,7 +117,7 @@ const PricingClosing = ({ onOpenROI }: Props) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        📊 Quanto Risparmi con Empire?
+        📊 {demoMode ? "Calcola il Tuo Risparmio" : "Quanto Risparmi con Empire?"}
       </motion.button>
 
       {/* Final Quote */}
@@ -112,13 +131,14 @@ const PricingClosing = ({ onOpenROI }: Props) => {
         </p>
       </div>
 
-      {/* Partner Note */}
-      <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/15 text-center">
-        <p className="text-[10px] text-muted-foreground">
-          <Gift className="w-3 h-3 inline text-emerald-400 mr-1" />
-          Ricorda: ogni Plan A chiuso = <span className="text-emerald-400 font-bold">€997 in tasca</span>. Rate = commissione pro-rata.
-        </p>
-      </div>
+      {/* Partner Note - HIDDEN in demo mode */}
+      {!demoMode && (
+        <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/15 text-center">
+          <p className="text-[10px] text-muted-foreground">
+            💰 Ricorda: ogni Plan A chiuso = <span className="text-emerald-400 font-bold">€997 in tasca</span>. Rate = commissione pro-rata.
+          </p>
+        </div>
+      )}
     </motion.div>
   );
 };
