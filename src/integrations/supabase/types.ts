@@ -507,6 +507,42 @@ export type Database = {
           },
         ]
       }
+      partner_stripe_accounts: {
+        Row: {
+          charges_enabled: boolean
+          created_at: string
+          email: string | null
+          id: string
+          onboarding_complete: boolean
+          payouts_enabled: boolean
+          stripe_account_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          charges_enabled?: boolean
+          created_at?: string
+          email?: string | null
+          id?: string
+          onboarding_complete?: boolean
+          payouts_enabled?: boolean
+          stripe_account_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          charges_enabled?: boolean
+          created_at?: string
+          email?: string | null
+          id?: string
+          onboarding_complete?: boolean
+          payouts_enabled?: boolean
+          stripe_account_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       platform_fees: {
         Row: {
           created_at: string
@@ -1049,6 +1085,13 @@ export type Database = {
     }
     Functions: {
       check_overdue_payments: { Args: never; Returns: undefined }
+      get_partner_stripe_account: {
+        Args: { partner_user_id: string }
+        Returns: {
+          onboarding_complete: boolean
+          stripe_account_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

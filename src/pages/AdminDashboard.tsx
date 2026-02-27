@@ -313,6 +313,7 @@ const AdminDashboard = () => {
               menuItemCount={menuItems.length}
               aiTokens={aiTokens}
               restaurantName={restaurantName}
+              restaurantId={restaurant?.id}
               reviews={reviews}
               reservations={reservations}
               menuUrl={menuUrl}
