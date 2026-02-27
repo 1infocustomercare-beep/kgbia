@@ -28,7 +28,7 @@ const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
 
   useEffect(() => {
     if (open && inputRef.current) {
-      inputRef.current.focus();
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [open]);
 
@@ -155,7 +155,7 @@ const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
 
   return (
     <>
-      {/* FAB */}
+      {/* FAB — positioned above bottom nav (bottom-nav is ~60px + safe-bottom) */}
       <AnimatePresence>
         {!open && (
           <motion.button
@@ -163,44 +163,49 @@ const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             onClick={() => setOpen(true)}
-            className="fixed bottom-24 right-4 z-50 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 flex items-center justify-center"
+            className="fixed z-50 w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 flex items-center justify-center"
+            style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 76px)", right: "16px" }}
             whileTap={{ scale: 0.9 }}
           >
-            <Sparkles className="w-6 h-6" />
+            <Sparkles className="w-5 h-5" />
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* Chat Window */}
+      {/* Chat Window — full-width on mobile, positioned above bottom nav */}
       <AnimatePresence>
         {open && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-20 right-3 left-3 sm:left-auto sm:right-4 sm:w-[380px] z-50 max-h-[70vh] flex flex-col rounded-2xl bg-card border border-border/50 shadow-2xl overflow-hidden"
+            className="fixed inset-x-3 z-50 flex flex-col rounded-2xl bg-card border border-border/50 shadow-2xl overflow-hidden"
+            style={{
+              bottom: "calc(env(safe-area-inset-bottom, 0px) + 72px)",
+              maxHeight: "calc(100dvh - env(safe-area-inset-bottom, 0px) - 140px)",
+            }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border/30 bg-card">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border/30 bg-card flex-shrink-0">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-primary/15 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">
                   <Bot className="w-4 h-4 text-primary" />
                 </div>
-                <div>
-                  <p className="text-sm font-display font-bold text-foreground">Empire Assistant</p>
+                <div className="min-w-0">
+                  <p className="text-sm font-display font-bold text-foreground truncate">Empire Assistant</p>
                   <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-                    Online · Supporto 24/7
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block flex-shrink-0" />
+                    Online · 24/7
                   </p>
                 </div>
               </div>
-              <button onClick={() => setOpen(false)} className="p-2 rounded-lg hover:bg-secondary transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center">
+              <button onClick={() => setOpen(false)} className="p-2 rounded-lg hover:bg-secondary transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center flex-shrink-0">
                 <X className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3 min-h-[200px] max-h-[50vh]">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3 min-h-0">
               {messages.map((msg, i) => (
                 <motion.div
                   key={i}
@@ -213,7 +218,7 @@ const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
                   }`}>
                     {msg.role === "assistant" ? <Bot className="w-3 h-3 text-primary" /> : <User className="w-3 h-3 text-muted-foreground" />}
                   </div>
-                  <div className={`max-w-[80%] px-3 py-2 rounded-xl text-[13px] leading-relaxed ${
+                  <div className={`max-w-[80%] px-3 py-2 rounded-xl text-[13px] leading-relaxed break-words ${
                     msg.role === "assistant"
                       ? "bg-secondary/50 text-foreground"
                       : "bg-primary text-primary-foreground"
@@ -239,7 +244,7 @@ const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
             </div>
 
             {/* Input */}
-            <div className="p-3 border-t border-border/30 bg-card">
+            <div className="p-3 border-t border-border/30 bg-card flex-shrink-0">
               <div className="flex gap-2">
                 <input
                   ref={inputRef}
@@ -249,20 +254,17 @@ const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
                   onKeyDown={handleKeyDown}
                   placeholder="Chiedi qualcosa..."
                   disabled={isLoading}
-                  className="flex-1 px-3 py-2.5 rounded-xl bg-background border border-border/40 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 disabled:opacity-50 min-h-[44px]"
+                  className="flex-1 px-3 py-2.5 rounded-xl bg-background border border-border/40 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 disabled:opacity-50 min-h-[44px] min-w-0"
                 />
                 <motion.button
                   onClick={sendMessage}
                   disabled={!input.trim() || isLoading}
-                  className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50 min-w-[44px] min-h-[44px]"
+                  className="w-11 h-11 rounded-xl bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50 flex-shrink-0"
                   whileTap={{ scale: 0.9 }}
                 >
                   <Send className="w-4 h-4" />
                 </motion.button>
               </div>
-              <p className="text-[9px] text-muted-foreground/50 text-center mt-1.5">
-                Powered by Empire AI · Le risposte possono contenere errori
-              </p>
             </div>
           </motion.div>
         )}

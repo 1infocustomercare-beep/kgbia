@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   QrCode, Lock, MessageSquare, ShieldBan, Package, GraduationCap, Settings,
   Download, ExternalLink, Save, ShieldCheck, Bot, Send, Check, X,
-  Phone, Mail, MapPin, Clock, Upload, Globe, Ban, FileCheck, Image
+  Phone, Mail, MapPin, Clock, Upload, Globe, Ban, FileCheck, Image,
+  ArrowLeft
 } from "lucide-react";
 import PrivateChat from "@/components/restaurant/PrivateChat";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,13 +17,10 @@ interface MoreMenuProps {
   restaurant: any;
   userId?: string;
   menuUrl: string;
-  // Vault
   vaultConfig: any;
   setVaultConfig: React.Dispatch<React.SetStateAction<any>>;
-  // Blacklist
   blacklist: any[];
   setBlacklist: React.Dispatch<React.SetStateAction<any[]>>;
-  // Settings
   settingsPhone: string; setSettingsPhone: (v: string) => void;
   settingsEmail: string; setSettingsEmail: (v: string) => void;
   settingsAddress: string; setSettingsAddress: (v: string) => void;
@@ -36,10 +34,8 @@ interface MoreMenuProps {
   setPolicyAccepted: React.Dispatch<React.SetStateAction<boolean>>;
   handleSaveSettings: () => void;
   settingsSaving: boolean;
-  // Inventory
   menuItems: any[];
   orders: any[];
-  // Tables (for QR per-table)
   restaurantTables: any[];
 }
 
@@ -70,7 +66,7 @@ const MoreMenu = ({
   const [inventoryResult, setInventoryResult] = useState<any>(null);
   const [settingsNewKeyword, setSettingsNewKeyword] = useState("");
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
-    { role: "assistant", content: "Benvenuto nella **Cassaforte Fiscale**. Sono Mary. Configura qui le tue chiavi API in sicurezza.\n\nVuoi configurare **Scontrino.it** o **Aruba**?" }
+    { role: "assistant", content: "Benvenuto nella **Cassaforte Fiscale**. Sono Mary. Configura qui le tue chiavi API.\n\nVuoi configurare **Scontrino.it** o **Aruba**?" }
   ]);
   const [maryInput, setMaryInput] = useState("");
 
@@ -120,39 +116,47 @@ const MoreMenu = ({
     setTimeout(() => setMaryMessages(prev => [...prev, { role: "assistant", content: response }]), 600);
   };
 
+  // Back button used across all sub-sections
+  const BackButton = () => (
+    <button onClick={() => setSection("grid")} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors min-h-[36px]">
+      <ArrowLeft className="w-3.5 h-3.5" /> Menu
+    </button>
+  );
+
   if (section === "grid") {
     return (
-      <motion.div className="grid grid-cols-3 gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        {gridItems.map(item => (
-          <motion.button key={item.id} onClick={() => setSection(item.id)}
-            className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/30 transition-colors min-h-[90px]"
-            whileTap={{ scale: 0.95 }}>
-            <span className={item.color}>{item.icon}</span>
-            <span className="text-xs font-medium text-foreground">{item.label}</span>
-          </motion.button>
-        ))}
+      <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">Strumenti</p>
+        <div className="grid grid-cols-3 gap-3">
+          {gridItems.map(item => (
+            <motion.button key={item.id} onClick={() => setSection(item.id)}
+              className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/30 active:scale-[0.95] transition-all min-h-[90px]"
+              whileTap={{ scale: 0.95 }}>
+              <span className={item.color}>{item.icon}</span>
+              <span className="text-[11px] font-medium text-foreground text-center leading-tight">{item.label}</span>
+            </motion.button>
+          ))}
+        </div>
       </motion.div>
     );
   }
 
   return (
     <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <button onClick={() => setSection("grid")} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
-        ← Torna al menu
-      </button>
+      <BackButton />
 
       {/* QR */}
       {section === "qr" && (
         <div className="space-y-5">
-          <div className="text-center py-4">
-            <QrCode className="w-12 h-12 mx-auto mb-3 text-primary" />
+          <div className="text-center py-2">
+            <QrCode className="w-10 h-10 mx-auto mb-2 text-primary" />
             <h3 className="text-lg font-display font-bold text-foreground">QR Code</h3>
             <p className="text-xs text-muted-foreground mt-1">Menu generico + QR per ogni tavolo</p>
           </div>
 
           {/* Generic menu QR */}
           <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
-            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">📋 Menu Generico</p>
+            <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">📋 Menu Generico</p>
             <div className="flex justify-center">
               <div className="p-4 rounded-xl bg-white">
                 <img src={generateQRDataUrl(menuUrl)} alt="QR Menu" className="w-36 h-36" />
@@ -174,8 +178,8 @@ const MoreMenu = ({
           {/* Per-table QR codes */}
           {restaurantTables.length > 0 && (
             <div className="space-y-3">
-              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">🪑 QR per Tavolo</p>
-              <p className="text-xs text-muted-foreground">Ogni QR include il numero del tavolo — l'ordine arriverà già associato.</p>
+              <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">🪑 QR per Tavolo</p>
+              <p className="text-xs text-muted-foreground">Ogni QR include il numero del tavolo.</p>
               <div className="grid grid-cols-2 gap-3">
                 {restaurantTables.map(table => {
                   const tableUrl = `${menuUrl}?table=${table.table_number}`;
@@ -209,16 +213,16 @@ const MoreMenu = ({
         <div className="space-y-4">
           <div className={`p-4 rounded-2xl border ${vaultConfig?.configured ? "bg-green-500/5 border-green-500/20" : "bg-accent/5 border-accent/20"}`}>
             <div className="flex items-center gap-3">
-              <div className={`w-4 h-4 rounded-full ${vaultConfig?.configured ? "bg-green-400 shadow-[0_0_12px_rgba(74,222,128,0.5)]" : "bg-red-400 shadow-[0_0_12px_rgba(248,113,113,0.5)]"}`} />
-              <div>
+              <div className={`w-4 h-4 rounded-full flex-shrink-0 ${vaultConfig?.configured ? "bg-green-400 shadow-[0_0_12px_rgba(74,222,128,0.5)]" : "bg-red-400 shadow-[0_0_12px_rgba(248,113,113,0.5)]"}`} />
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-foreground">{vaultConfig?.configured ? "Vault operativo" : "Setup richiesto"}</p>
-                <p className="text-xs text-muted-foreground">{vaultConfig?.configured ? `Provider: ${vaultConfig.provider}` : "Configura per attivare"}</p>
+                <p className="text-xs text-muted-foreground truncate">{vaultConfig?.configured ? `Provider: ${vaultConfig.provider}` : "Configura per attivare"}</p>
               </div>
             </div>
           </div>
           {(!vaultConfig?.configured || vaultEditing) && (
             <div className="p-4 rounded-2xl bg-card border border-border space-y-3">
-              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Provider Principale</p>
+              <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">Provider Principale</p>
               <select value={vaultProvider} onChange={e => setVaultProvider(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]">
                 <option value="Scontrino.it">Scontrino.it</option>
@@ -230,7 +234,7 @@ const MoreMenu = ({
               <input type="password" placeholder="Chiave API principale..." value={vaultKey} onChange={e => setVaultKey(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm font-mono min-h-[44px]" />
 
-              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider pt-2">Provider Secondario (opzionale)</p>
+              <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider pt-2">Provider Secondario (opzionale)</p>
               <select value={vaultProviderSecondary} onChange={e => setVaultProviderSecondary(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]">
                 <option value="">Nessuno</option>
@@ -248,13 +252,13 @@ const MoreMenu = ({
               <div className="pt-3 border-t border-border space-y-3">
                 <button
                   onClick={() => setAutoSendEnabled(!autoSendEnabled)}
-                  className="w-full flex items-center justify-between p-3 rounded-xl bg-secondary/50"
+                  className="w-full flex items-center justify-between p-3 rounded-xl bg-secondary/50 min-h-[52px]"
                 >
-                  <div className="text-left">
+                  <div className="text-left min-w-0 flex-1">
                     <p className="text-xs font-semibold text-foreground">⚡ Invio Automatico</p>
-                    <p className="text-[10px] text-muted-foreground">Invia scontrino automaticamente dopo ogni pagamento</p>
+                    <p className="text-[10px] text-muted-foreground">Invia scontrino dopo ogni pagamento</p>
                   </div>
-                  <div className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors ${autoSendEnabled ? "bg-primary/30 justify-end" : "bg-muted justify-start"}`}>
+                  <div className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors flex-shrink-0 ml-3 ${autoSendEnabled ? "bg-primary/30 justify-end" : "bg-muted justify-start"}`}>
                     <div className={`w-4 h-4 rounded-full transition-colors ${autoSendEnabled ? "bg-primary" : "bg-muted-foreground/40"}`} />
                   </div>
                 </button>
@@ -263,19 +267,18 @@ const MoreMenu = ({
                   <div className="p-3 rounded-xl bg-accent/5 border border-accent/20 space-y-2">
                     <p className="text-[10px] text-accent font-semibold">⚠️ DISCLAIMER OBBLIGATORIO</p>
                     <p className="text-[10px] text-muted-foreground leading-relaxed">
-                      Dichiaro di essere l'unico responsabile dei dati fiscali trasmessi tramite questo software. 
-                      La piattaforma Empire agisce esclusivamente come intermediario tecnico e non assume alcuna 
-                      responsabilità per errori, omissioni o difformità nei corrispettivi telematici inviati 
-                      all'Agenzia delle Entrate.
+                      Dichiaro di essere l'unico responsabile dei dati fiscali trasmessi. 
+                      La piattaforma agisce come intermediario tecnico senza responsabilità 
+                      per errori nei corrispettivi telematici.
                     </p>
                     <button
                       onClick={() => setDisclaimerAccepted(!disclaimerAccepted)}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 min-h-[36px]"
                     >
                       <div className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${disclaimerAccepted ? "bg-primary border-primary" : "border-muted-foreground/40"}`}>
                         {disclaimerAccepted && <Check className="w-3 h-3 text-primary-foreground" />}
                       </div>
-                      <span className="text-[10px] text-foreground font-medium">Accetto e confermo</span>
+                      <span className="text-[11px] text-foreground font-medium">Accetto e confermo</span>
                     </button>
                   </div>
                 )}
@@ -290,24 +293,25 @@ const MoreMenu = ({
           {vaultConfig?.configured && !vaultEditing && (
             <button onClick={() => setVaultEditing(true)} className="w-full py-2.5 rounded-xl bg-secondary text-sm min-h-[44px]">Aggiorna credenziali</button>
           )}
-          {/* Mary chat */}
+
+          {/* Mary chat — contained height */}
           <div className="rounded-2xl bg-card border border-border overflow-hidden">
-            <div className="px-4 py-2 border-b border-border flex items-center gap-2">
-              <Bot className="w-4 h-4 text-primary" />
+            <div className="px-4 py-2.5 border-b border-border flex items-center gap-2">
+              <Bot className="w-4 h-4 text-primary flex-shrink-0" />
               <span className="text-xs font-medium text-foreground">AI-Mary</span>
             </div>
-            <div className="h-40 overflow-y-auto p-3 space-y-2 scrollbar-hide">
+            <div className="h-36 overflow-y-auto p-3 space-y-2 scrollbar-hide">
               {maryMessages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[85%] px-3 py-2 rounded-2xl text-xs whitespace-pre-line ${msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>{msg.content}</div>
+                  <div className={`max-w-[85%] px-3 py-2 rounded-2xl text-xs whitespace-pre-line break-words ${msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>{msg.content}</div>
                 </div>
               ))}
             </div>
-            <div className="p-2 border-t border-border flex gap-2">
+            <div className="p-2.5 border-t border-border flex gap-2">
               <input type="text" placeholder="Chiedi a Mary..." value={maryInput} onChange={e => setMaryInput(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleMaryMessage()}
-                className="flex-1 px-3 py-2 rounded-xl bg-secondary text-foreground text-sm min-h-[40px]" />
-              <button onClick={handleMaryMessage} className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center">
+                className="flex-1 px-3 py-2 rounded-xl bg-secondary text-foreground text-sm min-h-[40px] min-w-0" />
+              <button onClick={handleMaryMessage} className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0">
                 <Send className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -340,19 +344,19 @@ const MoreMenu = ({
               className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-medium text-sm disabled:opacity-40 min-h-[48px]">🚫 Blocca</button>
           </div>
           <div className="space-y-2">
-            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Bloccati ({blacklist.length})</p>
+            <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">Bloccati ({blacklist.length})</p>
             {blacklist.map((e: any) => (
               <div key={e.id} className="flex items-center gap-3 p-3 rounded-xl bg-accent/5 border border-accent/20">
                 <ShieldBan className="w-4 h-4 text-accent flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground">{e.customer_name || e.customer_phone}</p>
-                  <p className="text-xs text-muted-foreground">{e.reason || "—"}</p>
+                  <p className="text-sm font-medium text-foreground truncate">{e.customer_name || e.customer_phone}</p>
+                  <p className="text-xs text-muted-foreground truncate">{e.reason || "—"}</p>
                 </div>
                 <button onClick={async () => {
                   await (supabase as any).from("customer_blacklist").update({ is_active: false }).eq("id", e.id);
                   setBlacklist(prev => prev.filter(b => b.id !== e.id));
                   toast({ title: "Sbloccato" });
-                }} className="text-xs text-primary px-2 py-1 rounded-lg hover:bg-primary/10">Sblocca</button>
+                }} className="text-xs text-primary px-2.5 py-1.5 rounded-lg hover:bg-primary/10 min-h-[32px] flex-shrink-0">Sblocca</button>
               </div>
             ))}
           </div>
@@ -384,14 +388,14 @@ const MoreMenu = ({
             <div className="space-y-3">
               {inventoryResult.alerts?.map((a: any, i: number) => (
                 <div key={i} className={`p-3 rounded-xl border ${a.urgency === "high" ? "bg-accent/5 border-accent/20" : "bg-secondary/50 border-border"}`}>
-                  <div className="flex justify-between"><span className="text-sm font-medium text-foreground">{a.ingredient}</span>
-                    <span className="text-xs text-muted-foreground">{a.urgency === "high" ? "🔴" : "🟡"} ~{a.estimatedDaysLeft}gg</span></div>
+                  <div className="flex justify-between gap-2"><span className="text-sm font-medium text-foreground truncate">{a.ingredient}</span>
+                    <span className="text-xs text-muted-foreground flex-shrink-0">{a.urgency === "high" ? "🔴" : "🟡"} ~{a.estimatedDaysLeft}gg</span></div>
                   <p className="text-xs text-muted-foreground mt-1">Ordina: {a.suggestedOrder}</p>
                 </div>
               ))}
               {inventoryResult.dailySpecial && (
                 <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20">
-                  <p className="text-xs text-primary uppercase tracking-wider font-medium mb-1">🍽️ Piatto del Giorno</p>
+                  <p className="text-[11px] text-primary uppercase tracking-wider font-medium mb-1">🍽️ Piatto del Giorno</p>
                   <p className="text-base font-display font-bold text-foreground">{inventoryResult.dailySpecial.name}</p>
                   <p className="text-xs text-muted-foreground mt-1">{inventoryResult.dailySpecial.reason}</p>
                 </div>
@@ -417,9 +421,9 @@ const MoreMenu = ({
             { title: "QR Code strategico", emoji: "📋", done: false },
           ].map((l, i) => (
             <div key={i} className={`flex items-center gap-3 p-4 rounded-xl min-h-[56px] ${l.done ? "bg-primary/10 border border-primary/20" : "bg-secondary/50"}`}>
-              <span className="text-2xl">{l.emoji}</span>
-              <p className="text-sm font-medium text-foreground flex-1">{l.title}</p>
-              {l.done && <Check className="w-5 h-5 text-primary" />}
+              <span className="text-2xl flex-shrink-0">{l.emoji}</span>
+              <p className="text-sm font-medium text-foreground flex-1 min-w-0">{l.title}</p>
+              {l.done && <Check className="w-5 h-5 text-primary flex-shrink-0" />}
             </div>
           ))}
         </div>
@@ -446,63 +450,66 @@ const MoreMenu = ({
           )}
           {policyAccepted && (
             <div className="p-3 rounded-2xl bg-green-500/5 border border-green-500/20 flex items-center gap-3">
-              <FileCheck className="w-4 h-4 text-green-400" /><p className="text-xs text-green-400">Policy accettate ✓</p>
+              <FileCheck className="w-4 h-4 text-green-400 flex-shrink-0" /><p className="text-xs text-green-400">Policy accettate ✓</p>
             </div>
           )}
+
           {/* Contact */}
           <div className="space-y-3">
-            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Contatti</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">Contatti</p>
+            <div className="space-y-3">
               <div>
-                <label className="text-xs text-muted-foreground block mb-1 flex items-center gap-1"><Phone className="w-3 h-3" /> Telefono</label>
+                <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><Phone className="w-3 h-3" /> Telefono</label>
                 <input type="tel" value={settingsPhone} onChange={e => setSettingsPhone(e.target.value)} placeholder="+39..." maxLength={20}
                   className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]" />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground block mb-1 flex items-center gap-1"><Mail className="w-3 h-3" /> Email</label>
+                <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><Mail className="w-3 h-3" /> Email</label>
                 <input type="email" value={settingsEmail} onChange={e => setSettingsEmail(e.target.value)} placeholder="info@..." maxLength={100}
                   className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]" />
               </div>
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground block mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" /> Indirizzo</label>
-              <input type="text" value={settingsAddress} onChange={e => setSettingsAddress(e.target.value)} placeholder="Via..." maxLength={200}
-                className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]" />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground block mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" /> Città</label>
-              <input type="text" value={settingsCity} onChange={e => setSettingsCity(e.target.value)} placeholder="Roma" maxLength={100}
-                className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]" />
+              <div>
+                <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" /> Indirizzo</label>
+                <input type="text" value={settingsAddress} onChange={e => setSettingsAddress(e.target.value)} placeholder="Via..." maxLength={200}
+                  className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]" />
+              </div>
+              <div>
+                <label className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" /> Città</label>
+                <input type="text" value={settingsCity} onChange={e => setSettingsCity(e.target.value)} placeholder="Roma" maxLength={100}
+                  className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]" />
+              </div>
             </div>
           </div>
+
           {/* Hours */}
           <div className="space-y-2">
-            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1"><Clock className="w-3 h-3" /> Orari</p>
+            <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1"><Clock className="w-3 h-3" /> Orari</p>
             {settingsHours.map((entry, i) => (
               <div key={entry.day} className="flex items-center gap-2 p-2 rounded-xl bg-secondary/50">
-                <span className="text-xs font-medium text-foreground w-12 flex-shrink-0">{entry.day.slice(0, 3)}</span>
+                <span className="text-[11px] font-medium text-foreground w-10 flex-shrink-0">{entry.day.slice(0, 3)}</span>
                 <input type="text" value={entry.hours}
                   onChange={e => { const u = [...settingsHours]; u[i] = { ...u[i], hours: e.target.value }; setSettingsHours(u); }}
-                  placeholder="12:00 - 23:30" className="flex-1 px-3 py-2 rounded-lg bg-background text-foreground text-sm min-h-[36px]" />
+                  placeholder="12:00 - 23:30" className="flex-1 px-3 py-2 rounded-lg bg-background text-foreground text-sm min-h-[38px] min-w-0" />
               </div>
             ))}
           </div>
+
           {/* Filters */}
           <div className="space-y-3">
-            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1"><Ban className="w-3 h-3" /> Filtro Ordini</p>
+            <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1"><Ban className="w-3 h-3" /> Filtro Ordini</p>
             <div>
-              <label className="text-xs text-muted-foreground block mb-1">Importo minimo (€)</label>
+              <label className="text-[11px] text-muted-foreground mb-1 block">Importo minimo (€)</label>
               <input type="number" step="0.50" min="0" value={settingsMinOrder} onChange={e => setSettingsMinOrder(parseFloat(e.target.value) || 0)}
                 className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]" />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground block mb-1">Parole bloccate</label>
+              <label className="text-[11px] text-muted-foreground mb-1 block">Parole bloccate</label>
               <div className="flex gap-2">
                 <input type="text" value={settingsNewKeyword} onChange={e => setSettingsNewKeyword(e.target.value)} placeholder="Aggiungi..."
-                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px]"
+                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm min-h-[44px] min-w-0"
                   onKeyDown={e => { if (e.key === "Enter" && settingsNewKeyword.trim()) { setSettingsBlockedKeywords(prev => [...prev, settingsNewKeyword.trim()]); setSettingsNewKeyword(""); } }} />
                 <button onClick={() => { if (settingsNewKeyword.trim()) { setSettingsBlockedKeywords(prev => [...prev, settingsNewKeyword.trim()]); setSettingsNewKeyword(""); } }}
-                  className="px-3 py-2 rounded-xl bg-accent text-accent-foreground text-xs min-h-[44px]">+</button>
+                  className="px-3 py-2.5 rounded-xl bg-accent text-accent-foreground text-xs min-h-[44px] flex-shrink-0">+</button>
               </div>
               <div className="flex flex-wrap gap-1.5 mt-2">
                 {settingsBlockedKeywords.map((kw, i) => (
@@ -514,6 +521,7 @@ const MoreMenu = ({
               </div>
             </div>
           </div>
+
           {/* Save */}
           <button onClick={handleSaveSettings} disabled={settingsSaving}
             className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm gold-glow disabled:opacity-50 min-h-[48px] flex items-center justify-center gap-2">
