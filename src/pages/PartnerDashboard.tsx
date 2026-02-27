@@ -90,9 +90,25 @@ const PartnerDashboard = () => {
     if (isTeamLeader) {
       const { data: team } = await supabase
         .from("partner_teams")
-        .select("*, profiles:partner_id(full_name, email)")
+        .select("*")
         .eq("team_leader_id", user.id);
-      setTeamMembers(team || []);
+      
+      // Fetch profiles for each team member
+      if (team && team.length > 0) {
+        const memberIds = team.map((t: any) => t.partner_id);
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("user_id, full_name, email")
+          .in("user_id", memberIds);
+        
+        const enrichedTeam = team.map((t: any) => ({
+          ...t,
+          profiles: profiles?.find((p: any) => p.user_id === t.partner_id) || null,
+        }));
+        setTeamMembers(enrichedTeam);
+      } else {
+        setTeamMembers([]);
+      }
 
       // Fetch team members' sales for override tracking
       if (team && team.length > 0) {
