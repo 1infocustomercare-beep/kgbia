@@ -355,7 +355,7 @@ const SuperAdminDashboard = () => {
       </div>
 
       {/* Content */}
-      <div className="px-5 pb-8">
+      <div className="px-4 sm:px-5 pb-8">
         {loading && (
           <div className="flex items-center justify-center py-20">
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -754,32 +754,34 @@ const SuperAdminDashboard = () => {
                   </button>
                 </div>
               </div>
-              <div className="divide-y divide-border">
-                <div className="grid grid-cols-5 gap-2 px-4 py-2 text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
-                  <span className="col-span-2">Tenant</span>
-                  <span className="text-right">Transato</span>
-                  <span className="text-right">Ordini</span>
-                  <span className="text-right">Fee 2%</span>
-                </div>
-                {tenants.map((t) => (
-                  <div key={t.id} className="grid grid-cols-5 gap-2 px-4 py-3 text-sm">
-                    <div className="col-span-2">
-                      <p className="font-medium text-foreground truncate">{t.name}</p>
-                      <p className="text-[10px] text-muted-foreground">{t.city}</p>
+              <div className="overflow-x-auto -mx-4 px-4">
+                <div className="min-w-[420px]">
+                  <div className="grid grid-cols-5 gap-2 px-4 py-2 text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
+                    <span className="col-span-2">Tenant</span>
+                    <span className="text-right">Transato</span>
+                    <span className="text-right">Ordini</span>
+                    <span className="text-right">Fee 2%</span>
+                  </div>
+                  {tenants.map((t) => (
+                    <div key={t.id} className="grid grid-cols-5 gap-2 px-4 py-3 text-sm border-t border-border">
+                      <div className="col-span-2">
+                        <p className="font-medium text-foreground truncate">{t.name}</p>
+                        <p className="text-[10px] text-muted-foreground">{t.city}</p>
+                      </div>
+                      <p className="text-right text-foreground">€{t.monthlyRevenue.toLocaleString()}</p>
+                      <p className="text-right text-muted-foreground">{t.orders}</p>
+                      <p className="text-right text-primary font-semibold">€{t.fee2percent.toLocaleString()}</p>
                     </div>
-                    <p className="text-right text-foreground">€{t.monthlyRevenue.toLocaleString()}</p>
-                    <p className="text-right text-muted-foreground">{t.orders}</p>
-                    <p className="text-right text-primary font-semibold">€{t.fee2percent.toLocaleString()}</p>
-                  </div>
-                ))}
-                {tenants.length > 0 && (
-                  <div className="grid grid-cols-5 gap-2 px-4 py-3 text-sm bg-primary/5">
-                    <span className="col-span-2 font-bold text-foreground">TOTALE</span>
-                    <p className="text-right font-bold text-foreground">€{totalRevenue.toLocaleString()}</p>
-                    <p className="text-right font-bold text-muted-foreground">{totalOrders}</p>
-                    <p className="text-right font-bold text-primary">€{totalFee.toLocaleString()}</p>
-                  </div>
-                )}
+                  ))}
+                  {tenants.length > 0 && (
+                    <div className="grid grid-cols-5 gap-2 px-4 py-3 text-sm bg-primary/5 border-t border-border">
+                      <span className="col-span-2 font-bold text-foreground">TOTALE</span>
+                      <p className="text-right font-bold text-foreground">€{totalRevenue.toLocaleString()}</p>
+                      <p className="text-right font-bold text-muted-foreground">{totalOrders}</p>
+                      <p className="text-right font-bold text-primary">€{totalFee.toLocaleString()}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
