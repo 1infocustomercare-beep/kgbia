@@ -9,7 +9,7 @@ import {
   Users, Rocket, CreditCard, Gift, Trophy
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-// Live preview replaces video import
+import LivePreview from "@/components/restaurant/LivePreview";
 
 // Animated counter
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) => {
@@ -62,64 +62,7 @@ const LandingPage = () => {
   }, []);
 
   const heroRef = useRef<HTMLDivElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [autoScrollActive, setAutoScrollActive] = useState(true);
-  const autoScrollRef = useRef(true);
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
-  const resumeTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-
-  // Keep ref in sync with state
-  useEffect(() => { autoScrollRef.current = autoScrollActive; }, [autoScrollActive]);
-
-  // Auto-scroll the iframe to showcase all sections
-  useEffect(() => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
-
-    let scrollY = 0;
-    let direction = 1;
-    const scrollStep = 2.2; // faster
-    const maxScroll = 2400;
-    let edgePaused = false;
-    let edgeTimer: ReturnType<typeof setTimeout>;
-
-    const tick = () => {
-      if (!autoScrollRef.current || edgePaused) return;
-      try {
-        const doc = iframe.contentDocument || iframe.contentWindow?.document;
-        if (!doc) return;
-        scrollY += scrollStep * direction;
-        if (scrollY >= maxScroll) {
-          direction = -1;
-          edgePaused = true;
-          edgeTimer = setTimeout(() => { edgePaused = false; }, 1200);
-        } else if (scrollY <= 0) {
-          direction = 1;
-          edgePaused = true;
-          edgeTimer = setTimeout(() => { edgePaused = false; }, 1200);
-        }
-        iframe.contentWindow?.scrollTo({ top: scrollY, behavior: "auto" });
-      } catch (_) { /* cross-origin guard */ }
-    };
-
-    const startDelay = setTimeout(() => {
-      intervalRef.current = setInterval(tick, 20);
-    }, 2500);
-
-    return () => {
-      clearTimeout(startDelay);
-      clearTimeout(edgeTimer);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
-
-  // Pause auto-scroll when user interacts, resume after 6s
-  const handleIframeInteraction = () => {
-    setAutoScrollActive(false);
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(() => setAutoScrollActive(true), 6000);
-  };
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 100]);
@@ -355,81 +298,10 @@ const LandingPage = () => {
                 </motion.div>
               ))}
 
-              {/* iPhone bezel */}
-              <div className="relative w-[220px] sm:w-[280px] h-[460px] sm:h-[580px] bg-[#1a1a1a] rounded-[32px] sm:rounded-[40px] p-[8px] sm:p-[10px] shadow-2xl border border-[#333]">
-                {/* Notch */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90px] sm:w-[120px] h-[22px] sm:h-[28px] bg-[#1a1a1a] rounded-b-2xl z-10" />
-                {/* Status bar */}
-                <div className="absolute top-[6px] left-[28px] flex items-center gap-1 z-10">
-                  <span className="text-[9px] text-white/60 font-medium">9:41</span>
-                </div>
-                {/* Screen */}
-                <div className="relative w-full h-full rounded-[24px] sm:rounded-[32px] overflow-hidden bg-background">
-                  <iframe
-                    ref={iframeRef}
-                    src={`${window.location.origin}/r/impero-roma`}
-                    className="border-0 origin-top-left"
-                    style={{
-                      transform: "scale(0.545)",
-                      transformOrigin: "top left",
-                      width: "375px",
-                      height: "812px",
-                    }}
-                    title="Live App Preview"
-                    sandbox="allow-scripts allow-same-origin allow-popups"
-                  />
-                  {/* Transparent interaction overlay — catches clicks to pause auto-scroll, then lets pointer through */}
-                  <div
-                    className="absolute inset-0 z-20 cursor-pointer"
-                    onPointerDown={() => {
-                      handleIframeInteraction();
-                      // After capturing the pause event, hide overlay briefly so user can interact with iframe
-                      const el = document.getElementById("iframe-overlay");
-                      if (el) { el.style.pointerEvents = "none"; setTimeout(() => { el.style.pointerEvents = "auto"; }, 6000); }
-                    }}
-                    id="iframe-overlay"
-                  />
-                  {/* Sales Pitch ROI Overlay */}
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={roiTipIndex}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.4 }}
-                      className="absolute top-10 left-2 right-2 z-30 px-3 py-2 rounded-xl bg-background/90 backdrop-blur-md border border-primary/30 shadow-lg"
-                    >
-                      <p className="text-[10px] font-semibold text-foreground leading-tight flex items-start gap-1.5">
-                        <span className="text-sm flex-shrink-0">{roiTips[roiTipIndex].emoji}</span>
-                        <span>{roiTips[roiTipIndex].text}</span>
-                      </p>
-                    </motion.div>
-                  </AnimatePresence>
-                  {/* Auto-scroll indicator */}
-                  <AnimatePresence>
-                    {!autoScrollActive && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 px-3 py-1.5 rounded-full glass border border-primary/30 flex items-center gap-1.5"
-                      >
-                        <Play className="w-3 h-3 text-primary" />
-                        <span className="text-[9px] font-medium text-foreground/70">Scorri tu!</span>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-                {/* Home indicator */}
-                <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[100px] h-[4px] rounded-full bg-white/20" />
+              {/* Live Preview Component */}
+              <div className="w-full max-w-[320px] sm:max-w-[340px]">
+                <LivePreview slug="impero-roma" primaryColor="#C8963E" />
               </div>
-
-              {/* Label under phone */}
-              <motion.p className="text-center text-xs text-muted-foreground mt-4 flex items-center justify-center gap-1.5"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-                <Smartphone className="w-3.5 h-3.5 text-primary" />
-                {autoScrollActive ? "Auto-scroll attivo — tocca per esplorare" : "Stai esplorando — riprende tra poco"}
-              </motion.p>
             </div>
           </motion.div>
         </motion.div>
