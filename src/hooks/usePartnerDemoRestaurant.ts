@@ -1,0 +1,40 @@
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/context/AuthContext";
+
+interface DemoRestaurant {
+  id: string;
+  name: string;
+  slug: string;
+  primary_color: string | null;
+}
+
+export function usePartnerDemoRestaurant() {
+  const { user } = useAuth();
+  const [demoRestaurant, setDemoRestaurant] = useState<DemoRestaurant | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchDemo = async () => {
+      const { data } = await supabase
+        .from("restaurants")
+        .select("id, name, slug, primary_color")
+        .eq("owner_id", user.id)
+        .like("slug", "demo-partner-%")
+        .limit(1)
+        .maybeSingle();
+
+      setDemoRestaurant(data);
+      setLoading(false);
+    };
+
+    fetchDemo();
+  }, [user]);
+
+  return { demoRestaurant, loading };
+}

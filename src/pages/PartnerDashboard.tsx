@@ -7,7 +7,8 @@ import {
   Play, Target, CreditCard, BookOpen,
   Eye, EyeOff, Briefcase, BarChart3,
   Users, Award, Star, FolderDown,
-  Link2, Copy, CheckCircle, UserPlus
+  Link2, Copy, CheckCircle, UserPlus,
+  ExternalLink, ChefHat, Smartphone, Monitor
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -24,6 +25,7 @@ import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import PartnerLeaderboard from "@/components/partner/PartnerLeaderboard";
 import AssetVault from "@/components/partner/AssetVault";
 import { toast } from "@/hooks/use-toast";
+import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
 
 type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault";
 
@@ -38,7 +40,7 @@ const PartnerDashboard = () => {
   const [salesCount, setSalesCount] = useState(0);
   const [monthlyBonuses, setMonthlyBonuses] = useState<any[]>([]);
   const [inviteCopied, setInviteCopied] = useState(false);
-
+  const { demoRestaurant } = usePartnerDemoRestaurant();
   useEffect(() => {
     if (!user?.id) return;
     fetchPartnerData();
@@ -352,6 +354,42 @@ const PartnerDashboard = () => {
                   </motion.button>
                 ))}
               </div>
+
+              {/* === DEMO RESTAURANT — Live Links === */}
+              {demoRestaurant && (
+                <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/5 via-card to-amber-500/5 border border-primary/20 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Smartphone className="w-5 h-5 text-primary" />
+                    <div>
+                      <h3 className="text-sm font-bold text-foreground">Il tuo Ristorante Demo</h3>
+                      <p className="text-[10px] text-muted-foreground">{demoRestaurant.name} — pronto all'uso</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Usa questi link per mostrare tutte le interfacce al potenziale cliente: menu, dashboard admin, e vista cucina.
+                  </p>
+                  <div className="grid grid-cols-1 gap-2">
+                    {[
+                      { label: "👤 Vista Cliente", desc: "Menu, carrello, ordini, prenotazioni", href: `/r/${demoRestaurant.slug}`, color: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" },
+                      { label: "⚙️ Dashboard Admin", desc: "Studio, ordini, profitto, impostazioni", href: `/dashboard`, color: "bg-sky-500/10 border-sky-500/20 text-sky-400" },
+                      { label: "👨‍🍳 Vista Cucina", desc: "PIN: 1234 — ordini live, stati, stampa", href: `/kitchen`, color: "bg-amber-500/10 border-amber-500/20 text-amber-400" },
+                    ].map((link, i) => (
+                      <motion.a key={i} href={link.href} target="_blank" rel="noopener noreferrer"
+                        className={`flex items-center gap-3 p-3 rounded-xl border ${link.color} transition-all`}
+                        whileTap={{ scale: 0.97 }}>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-foreground">{link.label}</p>
+                          <p className="text-[10px] text-muted-foreground">{link.desc}</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 flex-shrink-0" />
+                      </motion.a>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground text-center">
+                    PIN Cucina Demo: <span className="font-mono font-bold text-foreground">1234</span>
+                  </p>
+                </div>
+              )}
 
               {/* Bottom Banner */}
               <div className="space-y-2">
