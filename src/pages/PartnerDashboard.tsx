@@ -43,6 +43,7 @@ const PartnerDashboard = () => {
   const [inviteCopied, setInviteCopied] = useState(false);
   const { demoRestaurant, loading: demoLoading, refetch: refetchDemo } = usePartnerDemoRestaurant();
   const [resettingDemo, setResettingDemo] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [editingDemo, setEditingDemo] = useState(false);
   const [editName, setEditName] = useState("");
   const [editColor, setEditColor] = useState("#C8963E");
@@ -58,29 +59,31 @@ const PartnerDashboard = () => {
     }
   }, [demoRestaurant]);
 
-  const handleResetDemo = async () => {
-    if (resettingDemo) return;
-    setResettingDemo(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/reset-partner-demo`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Reset failed");
-      toast({ title: "✅ Demo Resettata", description: "Tutti i dati demo sono stati ricreati." });
-      refetchDemo();
-    } catch (err: any) {
-      toast({ title: "Errore", description: err.message, variant: "destructive" });
-    } finally {
-      setResettingDemo(false);
-    }
-  };
+   const handleResetDemo = async () => {
+     if (resettingDemo) return;
+     setShowResetConfirm(false);
+     setResettingDemo(true);
+     try {
+       const { data: { session } } = await supabase.auth.getSession();
+       if (!session) throw new Error("Not authenticated");
+       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/reset-partner-demo`, {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: `Bearer ${session.access_token}`,
+           apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+         },
+       });
+       const result = await res.json();
+       if (!res.ok) throw new Error(result.error || "Reset failed");
+       toast({ title: "✅ Demo Resettata", description: "Tutti i dati demo sono stati ricreati." });
+       refetchDemo();
+     } catch (err: any) {
+       toast({ title: "Errore", description: err.message, variant: "destructive" });
+     } finally {
+       setResettingDemo(false);
+     }
+   };
 
   const handleUploadLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -569,7 +572,7 @@ const PartnerDashboard = () => {
                       <span className="text-xs font-semibold">Personalizza</span>
                     </motion.button>
                     <motion.button
-                      onClick={handleResetDemo}
+                      onClick={() => setShowResetConfirm(true)}
                       disabled={resettingDemo}
                       className="flex items-center justify-center gap-2 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive/20 transition-all disabled:opacity-50"
                       whileTap={{ scale: 0.97 }}
@@ -577,6 +580,51 @@ const PartnerDashboard = () => {
                       <RefreshCw className={`w-4 h-4 ${resettingDemo ? "animate-spin" : ""}`} />
                       <span className="text-xs font-semibold">{resettingDemo ? "Reset..." : "Resetta"}</span>
                     </motion.button>
+
+                    {/* Reset confirmation dialog */}
+                    <AnimatePresence>
+                      {showResetConfirm && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm px-4"
+                          onClick={() => setShowResetConfirm(false)}
+                        >
+                          <motion.div
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full max-w-sm p-6 rounded-2xl bg-card border border-border shadow-2xl"
+                          >
+                            <div className="w-12 h-12 rounded-xl bg-destructive/10 flex items-center justify-center mx-auto mb-4">
+                              <RefreshCw className="w-6 h-6 text-destructive" />
+                            </div>
+                            <h3 className="text-base font-display font-bold text-foreground text-center mb-2">
+                              Resettare i dati demo?
+                            </h3>
+                            <p className="text-xs text-muted-foreground text-center mb-6 leading-relaxed">
+                              Tutti gli ordini, le prenotazioni e le personalizzazioni della demo verranno eliminati e ricreati da zero. Questa azione è irreversibile.
+                            </p>
+                            <div className="flex gap-3">
+                              <button
+                                onClick={() => setShowResetConfirm(false)}
+                                className="flex-1 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium hover:bg-muted/80 transition-colors"
+                              >
+                                Annulla
+                              </button>
+                              <button
+                                onClick={handleResetDemo}
+                                className="flex-1 py-2.5 rounded-xl bg-destructive text-destructive-foreground text-sm font-bold hover:bg-destructive/90 transition-colors"
+                              >
+                                Resetta tutto
+                              </button>
+                            </div>
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
               )}
