@@ -6,7 +6,8 @@ import {
   ChevronRight, Sparkles,
   Play, Target, CreditCard, BookOpen,
   Eye, EyeOff, Briefcase, BarChart3,
-  Users, Award, Star
+  Users, Award, Star, FolderDown,
+  Link2, Copy, CheckCircle, UserPlus
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -19,8 +20,12 @@ import ROICalculator from "@/components/partner/ROICalculator";
 import PartnerSalesToolkit from "@/components/partner/PartnerSalesToolkit";
 import InvestmentSummary from "@/components/partner/InvestmentSummary";
 import EmpireAssistant from "@/components/admin/EmpireAssistant";
+import BonusProgressRing from "@/components/partner/BonusProgressRing";
+import PartnerLeaderboard from "@/components/partner/PartnerLeaderboard";
+import AssetVault from "@/components/partner/AssetVault";
+import { toast } from "@/hooks/use-toast";
 
-type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team";
+type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault";
 
 const PartnerDashboard = () => {
   const navigate = useNavigate();
@@ -29,8 +34,10 @@ const PartnerDashboard = () => {
   const [showROI, setShowROI] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  const [teamSales, setTeamSales] = useState<any[]>([]);
   const [salesCount, setSalesCount] = useState(0);
   const [monthlyBonuses, setMonthlyBonuses] = useState<any[]>([]);
+  const [inviteCopied, setInviteCopied] = useState(false);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -39,23 +46,30 @@ const PartnerDashboard = () => {
 
   const fetchPartnerData = async () => {
     if (!user?.id) return;
-    // Fetch sales count
     const { data: sales } = await supabase
       .from("partner_sales")
       .select("id")
       .eq("partner_id", user.id);
     setSalesCount(sales?.length || 0);
 
-    // Fetch team members if team leader
     if (isTeamLeader) {
       const { data: team } = await supabase
         .from("partner_teams")
         .select("*, profiles:partner_id(full_name, email)")
         .eq("team_leader_id", user.id);
       setTeamMembers(team || []);
+
+      // Fetch team members' sales for override tracking
+      if (team && team.length > 0) {
+        const memberIds = team.map((t: any) => t.partner_id);
+        const { data: tSales } = await supabase
+          .from("partner_sales")
+          .select("*")
+          .in("partner_id", memberIds);
+        setTeamSales(tSales || []);
+      }
     }
 
-    // Fetch bonuses
     const { data: bonuses } = await supabase
       .from("performance_bonuses")
       .select("*")
@@ -70,25 +84,23 @@ const PartnerDashboard = () => {
     navigate("/admin");
   };
 
+  const handleCopyInviteLink = () => {
+    const link = `${window.location.origin}/admin?ref=${user?.id?.slice(0, 8)}`;
+    navigator.clipboard.writeText(link);
+    setInviteCopied(true);
+    toast({ title: "Link copiato!", description: "Condividi il link con i tuoi reclutati." });
+    setTimeout(() => setInviteCopied(false), 2000);
+  };
+
   const totalBonuses = monthlyBonuses.reduce((s, b) => s + Number(b.bonus_amount), 0);
   const estimatedCommissions = salesCount * 997;
+  const totalOverrides = teamSales.length * 200;
+  const netEarnings = estimatedCommissions + totalBonuses + totalOverrides;
 
-  const stats = demoMode ? [
-    { label: "Ristoranti Attivi", value: "127", icon: <Briefcase className="w-5 h-5" />, color: "text-primary" },
-    { label: "Soddisfazione", value: "98%", icon: <Trophy className="w-5 h-5" />, color: "text-emerald-400" },
-    { label: "Funzionalità", value: "21+", icon: <Target className="w-5 h-5" />, color: "text-sky-400" },
-    { label: "Crescita Media", value: "+34%", icon: <TrendingUp className="w-5 h-5" />, color: "text-amber-400" },
-  ] : isTeamLeader ? [
-    { label: "Vendite Personali", value: String(salesCount), icon: <Trophy className="w-5 h-5" />, color: "text-primary" },
-    { label: "Commissioni", value: `€${estimatedCommissions.toLocaleString()}`, icon: <DollarSign className="w-5 h-5" />, color: "text-emerald-400" },
-    { label: "Team Members", value: String(teamMembers.length), icon: <Users className="w-5 h-5" />, color: "text-sky-400" },
-    { label: "Bonus Totali", value: `€${totalBonuses.toLocaleString()}`, icon: <Award className="w-5 h-5" />, color: "text-amber-400" },
-  ] : [
-    { label: "Vendite Chiuse", value: String(salesCount), icon: <Trophy className="w-5 h-5" />, color: "text-primary" },
-    { label: "Commissioni", value: `€${estimatedCommissions.toLocaleString()}`, icon: <DollarSign className="w-5 h-5" />, color: "text-emerald-400" },
-    { label: salesCount >= 3 ? "🎯 Promo Team Leader!" : `${3 - salesCount} vendite a TL`, value: salesCount >= 3 ? "✓" : `${salesCount}/3`, icon: <Star className="w-5 h-5" />, color: "text-sky-400" },
-    { label: "Bonus Mese", value: `€${totalBonuses.toLocaleString()}`, icon: <Award className="w-5 h-5" />, color: "text-amber-400" },
-  ];
+  // Current month sales for bonus progress
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  const currentMonthBonus = monthlyBonuses.find(b => b.bonus_month === currentMonth);
+  const currentMonthSales = currentMonthBonus?.sales_count || 0;
 
   const bottomTabs: { id: Tab; label: string; icon: React.ReactNode }[] = demoMode ? [
     { id: "dashboard", label: "Home", icon: <LayoutDashboard className="w-5 h-5" /> },
@@ -101,13 +113,13 @@ const PartnerDashboard = () => {
     { id: "sandbox", label: "Demo", icon: <Play className="w-5 h-5" /> },
     ...(isTeamLeader ? [{ id: "team" as Tab, label: "Team", icon: <Users className="w-5 h-5" /> }] : []),
     { id: "earnings", label: "Guadagni", icon: <DollarSign className="w-5 h-5" /> },
-    { id: "pricing", label: "Prezzi", icon: <CreditCard className="w-5 h-5" /> },
+    { id: "vault", label: "Asset", icon: <FolderDown className="w-5 h-5" /> },
   ];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/50 bg-card/50 safe-top">
+      {/* Header — Fintech style */}
+      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/50 bg-card/80 backdrop-blur-xl safe-top">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/20 to-amber-500/20 flex items-center justify-center">
             <Crown className="w-5 h-5 text-primary" />
@@ -122,12 +134,10 @@ const PartnerDashboard = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {/* Demo Mode Toggle */}
           <motion.button
             onClick={() => {
               setDemoMode(!demoMode);
-              // Reset to dashboard when toggling
-              if (activeTab === "earnings" || activeTab === "investment") setActiveTab("dashboard");
+              if (activeTab === "earnings" || activeTab === "investment" || activeTab === "vault" || activeTab === "team") setActiveTab("dashboard");
             }}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all ${
               demoMode
@@ -135,7 +145,6 @@ const PartnerDashboard = () => {
                 : "bg-secondary text-muted-foreground hover:text-foreground"
             }`}
             whileTap={{ scale: 0.95 }}
-            title={demoMode ? "Disattiva Modalità Presentazione" : "Attiva Modalità Presentazione"}
           >
             {demoMode ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
             {demoMode ? "LIVE" : "DEMO"}
@@ -170,58 +179,116 @@ const PartnerDashboard = () => {
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-4 py-4 pb-24">
         <AnimatePresence mode="wait">
-          {activeTab === "dashboard" && (
+          {activeTab === "dashboard" && !demoMode && (
             <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-              {/* Welcome */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/10 via-card to-amber-500/5 border border-primary/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="w-4 h-4 text-primary" />
-                  <span className="text-xs font-medium text-primary tracking-wider uppercase">
-                    {demoMode ? "Enterprise Preview" : isTeamLeader ? "Benvenuto, Team Leader" : "Benvenuto, Partner"}
-                  </span>
+
+              {/* === NET EARNINGS HERO WIDGET === */}
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Guadagni Netti</p>
+                <motion.p
+                  className="text-4xl font-display font-bold text-foreground"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  €{netEarnings.toLocaleString()}
+                </motion.p>
+                <div className="flex items-center gap-4 mt-3">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <span className="text-[10px] text-muted-foreground">Commissioni €{estimatedCommissions.toLocaleString()}</span>
+                  </div>
+                  {isTeamLeader && (
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-sky-400" />
+                      <span className="text-[10px] text-muted-foreground">Override €{totalOverrides.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {totalBonuses > 0 && (
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-amber-400" />
+                      <span className="text-[10px] text-muted-foreground">Bonus €{totalBonuses.toLocaleString()}</span>
+                    </div>
+                  )}
                 </div>
-                <h2 className="text-xl font-display font-bold text-foreground">
-                  {demoMode ? "La Suite Completa per la Ristorazione" : isTeamLeader ? "Gestisci il tuo Team" : "Il tuo Impero cresce"}
-                </h2>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {demoMode 
-                    ? "21+ funzionalità integrate. Un'unica soluzione. Proprietà permanente."
-                    : isTeamLeader
-                      ? `€997 per vendita personale + €200 override per ogni vendita del tuo team.`
-                      : "Chiudi contratti, guadagna €997 per vendita. 3 vendite = Team Leader."
-                  }
-                </p>
               </div>
 
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 gap-3">
-                {stats.map((s, i) => (
-                  <motion.div key={i} className="p-4 rounded-xl bg-card border border-border/50" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-                    <div className={`${s.color} mb-2`}>{s.icon}</div>
-                    <p className="text-xl font-display font-bold text-foreground">{s.value}</p>
-                    <p className="text-[11px] text-muted-foreground">{s.label}</p>
-                  </motion.div>
-                ))}
+              {/* === STATS ROW — Fintech high contrast === */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="p-3.5 rounded-xl bg-card border border-border/50">
+                  <Trophy className="w-4 h-4 text-primary mb-1.5" />
+                  <p className="text-xl font-display font-bold text-foreground">{salesCount}</p>
+                  <p className="text-[10px] text-muted-foreground">Vendite</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-card border border-border/50">
+                  <DollarSign className="w-4 h-4 text-emerald-400 mb-1.5" />
+                  <p className="text-xl font-display font-bold text-foreground">€997</p>
+                  <p className="text-[10px] text-muted-foreground">Per Vendita</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-card border border-border/50">
+                  {isTeamLeader ? (
+                    <>
+                      <Users className="w-4 h-4 text-sky-400 mb-1.5" />
+                      <p className="text-xl font-display font-bold text-foreground">{teamMembers.length}</p>
+                      <p className="text-[10px] text-muted-foreground">Team</p>
+                    </>
+                  ) : (
+                    <>
+                      <Target className="w-4 h-4 text-sky-400 mb-1.5" />
+                      <p className="text-xl font-display font-bold text-foreground">{salesCount}/3</p>
+                      <p className="text-[10px] text-muted-foreground">a Team Leader</p>
+                    </>
+                  )}
+                </div>
               </div>
 
-              {/* Quick Actions */}
+              {/* === BONUS ACCELERATOR — Progress Rings === */}
+              <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-primary" /> Bonus Accelerator
+                  </h3>
+                  <span className="text-[10px] text-muted-foreground">Mese corrente</span>
+                </div>
+                <div className="flex items-center justify-around">
+                  <BonusProgressRing
+                    salesCount={salesCount}
+                    milestone={3}
+                    label="Milestone 1"
+                    reward={salesCount >= 3 ? "Team Leader ✓" : "€500 + Team Leader"}
+                    unlocked={salesCount >= 3}
+                  />
+                  <BonusProgressRing
+                    salesCount={currentMonthSales}
+                    milestone={5}
+                    label="Milestone 2"
+                    reward="€1.500 Bonus"
+                    unlocked={currentMonthSales >= 5}
+                  />
+                </div>
+                {!isTeamLeader && salesCount < 3 && (
+                  <div className="p-3 rounded-xl bg-primary/5 border border-primary/10 text-center">
+                    <p className="text-[11px] text-primary font-medium">
+                      🎯 {3 - salesCount} vendite per diventare Team Leader → guadagna €200 override per ogni vendita del tuo team
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* === LEADERBOARD === */}
+              <PartnerLeaderboard currentUserSales={salesCount} />
+
+              {/* === QUICK ACTIONS — Fintech cards === */}
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-foreground">
-                  {demoMode ? "Esplora la Piattaforma" : "Azioni Rapide"}
-                </h3>
-                {(demoMode ? [
-                  { label: "Demo Interattiva", desc: "Prova l'app dal vivo — 3 viste", icon: <Play className="w-5 h-5" />, tab: "sandbox" as Tab },
-                  { label: "Tutte le Funzionalità", desc: "21+ strumenti inclusi nella licenza", icon: <BookOpen className="w-5 h-5" />, tab: "toolkit" as Tab },
-                  { label: "Piano Investimento", desc: "Costi, inclusi e garanzie", icon: <CreditCard className="w-5 h-5" />, tab: "pricing" as Tab },
-                  { label: "Calcola il ROI", desc: "Quanto risparmia il tuo locale", icon: <TrendingUp className="w-5 h-5" />, action: () => setShowROI(true) },
-                  { label: "Proiezione Crescita", desc: "Come crescerà il tuo fatturato", icon: <BarChart3 className="w-5 h-5" />, tab: "investment" as Tab },
-                ] : [
-                  { label: "Apri Demo Guidata", desc: "Tour automatico per vendere", icon: <Play className="w-5 h-5" />, tab: "sandbox" as Tab },
-                  { label: "Schede Vendita", desc: "Tutte le funzionalità dettagliate", icon: <BookOpen className="w-5 h-5" />, tab: "toolkit" as Tab },
-                  { label: "Mostra i Prezzi", desc: "Plan A + B per il ristoratore", icon: <CreditCard className="w-5 h-5" />, tab: "pricing" as Tab },
+                <h3 className="text-sm font-semibold text-foreground">Azioni Rapide</h3>
+                {[
+                  { label: "Demo Interattiva", desc: "Tour guidato con 3 viste", icon: <Play className="w-5 h-5" />, tab: "sandbox" as Tab },
+                  { label: "Schede Vendita", desc: "21+ funzionalità dettagliate", icon: <BookOpen className="w-5 h-5" />, tab: "toolkit" as Tab },
                   { label: "Calcola il ROI", desc: "Quanto risparmia il cliente", icon: <TrendingUp className="w-5 h-5" />, action: () => setShowROI(true) },
-                  { label: "Controlla i Guadagni", desc: "Storico vendite e payout", icon: <DollarSign className="w-5 h-5" />, tab: "earnings" as Tab },
-                ]).map((action, i) => (
+                  { label: "I tuoi Guadagni", desc: "Storico vendite e payout", icon: <DollarSign className="w-5 h-5" />, tab: "earnings" as Tab },
+                  { label: "Asset Vault", desc: "Scarica Sales Deck e materiali", icon: <FolderDown className="w-5 h-5" />, tab: "vault" as Tab },
+                ].map((action, i) => (
                   <motion.button key={i} onClick={() => action.action ? action.action() : action.tab && setActiveTab(action.tab)}
                     className="w-full flex items-center gap-3 p-4 rounded-xl bg-card border border-border/50 hover:border-primary/30 transition-colors text-left"
                     whileTap={{ scale: 0.98 }}>
@@ -236,78 +303,146 @@ const PartnerDashboard = () => {
               </div>
 
               {/* Bottom Banner */}
-              {demoMode ? (
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-amber-500/10 border border-primary/20 text-center">
+              <div className="space-y-2">
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-center">
                   <p className="text-sm font-display font-bold text-foreground">
-                    Licenza Lifetime: <span className="text-primary">€1.997</span> <span className="text-xs text-muted-foreground line-through">€2.997</span>
+                    Commissione: <span className="text-emerald-400">€997</span>/vendita
+                    {isTeamLeader && <span className="text-sky-400"> + €200 override/team</span>}
                   </p>
                   <p className="text-[10px] text-muted-foreground mt-1">
-                    Zero canoni mensili. Proprietà permanente. 21+ funzionalità incluse.
+                    {isTeamLeader
+                      ? "Guadagni €997 per vendita diretta + €200 per ogni vendita dei tuoi reclutati."
+                      : "Bonus: €500 per 3 vendite/mese, €1.500 per 5 vendite/mese."
+                    }
                   </p>
                 </div>
-              ) : (
-                <div className="space-y-2">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-center">
-                    <p className="text-sm font-display font-bold text-foreground">
-                      Commissione: <span className="text-emerald-400">€997</span>/vendita
-                      {isTeamLeader && <span className="text-sky-400"> + €200 override/team</span>}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground mt-1">
-                      {isTeamLeader 
-                        ? "Guadagni €997 per vendita diretta + €200 per ogni vendita dei tuoi reclutati."
-                        : "3 vendite = diventi Team Leader. Bonus: €500 per 3 vendite/mese, €1.500 per 5."
-                      }
-                    </p>
-                  </div>
-                  {/* Bonus Tiers Info */}
-                  {!isTeamLeader && salesCount < 3 && (
-                    <div className="p-3 rounded-xl bg-primary/5 border border-primary/10 text-center">
-                      <p className="text-[11px] font-medium text-primary">
-                        🎯 {3 - salesCount} vendite per diventare Team Leader e guadagnare €200 override per ogni vendita del tuo team
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
+              </div>
             </motion.div>
           )}
+
+          {/* Demo mode dashboard */}
+          {activeTab === "dashboard" && demoMode && (
+            <motion.div key="dash-demo" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/10 via-card to-amber-500/5 border border-primary/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  <span className="text-xs font-medium text-primary tracking-wider uppercase">Enterprise Preview</span>
+                </div>
+                <h2 className="text-xl font-display font-bold text-foreground">La Suite Completa per la Ristorazione</h2>
+                <p className="text-sm text-muted-foreground mt-1">21+ funzionalità integrate. Un'unica soluzione. Proprietà permanente.</p>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { label: "Ristoranti Attivi", value: "127", icon: <Briefcase className="w-5 h-5" />, color: "text-primary" },
+                  { label: "Soddisfazione", value: "98%", icon: <Trophy className="w-5 h-5" />, color: "text-emerald-400" },
+                  { label: "Funzionalità", value: "21+", icon: <Target className="w-5 h-5" />, color: "text-sky-400" },
+                  { label: "Crescita Media", value: "+34%", icon: <TrendingUp className="w-5 h-5" />, color: "text-amber-400" },
+                ].map((s, i) => (
+                  <motion.div key={i} className="p-4 rounded-xl bg-card border border-border/50" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+                    <div className={`${s.color} mb-2`}>{s.icon}</div>
+                    <p className="text-xl font-display font-bold text-foreground">{s.value}</p>
+                    <p className="text-[11px] text-muted-foreground">{s.label}</p>
+                  </motion.div>
+                ))}
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-foreground">Esplora la Piattaforma</h3>
+                {[
+                  { label: "Demo Interattiva", desc: "Prova l'app dal vivo — 3 viste", icon: <Play className="w-5 h-5" />, tab: "sandbox" as Tab },
+                  { label: "Tutte le Funzionalità", desc: "21+ strumenti inclusi nella licenza", icon: <BookOpen className="w-5 h-5" />, tab: "toolkit" as Tab },
+                  { label: "Piano Investimento", desc: "Costi, inclusi e garanzie", icon: <CreditCard className="w-5 h-5" />, tab: "pricing" as Tab },
+                  { label: "Calcola il ROI", desc: "Quanto risparmia il tuo locale", icon: <TrendingUp className="w-5 h-5" />, action: () => setShowROI(true) },
+                  { label: "Proiezione Crescita", desc: "Come crescerà il tuo fatturato", icon: <BarChart3 className="w-5 h-5" />, tab: "investment" as Tab },
+                ].map((action, i) => (
+                  <motion.button key={i} onClick={() => action.action ? action.action() : action.tab && setActiveTab(action.tab)}
+                    className="w-full flex items-center gap-3 p-4 rounded-xl bg-card border border-border/50 hover:border-primary/30 transition-colors text-left"
+                    whileTap={{ scale: 0.98 }}>
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">{action.icon}</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-foreground">{action.label}</p>
+                      <p className="text-xs text-muted-foreground">{action.desc}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  </motion.button>
+                ))}
+              </div>
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-amber-500/10 border border-primary/20 text-center">
+                <p className="text-sm font-display font-bold text-foreground">
+                  Licenza Lifetime: <span className="text-primary">€1.997</span> <span className="text-xs text-muted-foreground line-through">€2.997</span>
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  Zero canoni mensili. Proprietà permanente. 21+ funzionalità incluse.
+                </p>
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === "sandbox" && <PartnerSandbox key="sandbox" />}
           {activeTab === "toolkit" && <PartnerSalesToolkit key="toolkit" />}
           {activeTab === "pricing" && <PricingClosing key="pricing" onOpenROI={() => setShowROI(true)} demoMode={demoMode} />}
           {activeTab === "earnings" && !demoMode && <PartnerEarnings key="earnings" />}
+          {activeTab === "vault" && !demoMode && <AssetVault key="vault" />}
+
+          {/* === TEAM LEADER — Enhanced Interface === */}
           {activeTab === "team" && isTeamLeader && !demoMode && (
             <motion.div key="team" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
               <h2 className="text-lg font-display font-bold text-foreground">Il tuo Team</h2>
-              
-              {/* Override Summary */}
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-500/10 to-blue-500/10 border border-sky-500/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <Users className="w-5 h-5 text-sky-400" />
-                  <h3 className="text-sm font-bold text-foreground">Override Management Bonus</h3>
+
+              {/* Override Revenue Tracker */}
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-sky-500/10 via-card to-blue-500/5 border border-sky-500/20">
+                <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Revenue da Management</p>
+                <motion.p className="text-3xl font-display font-bold text-foreground"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+                  €{totalOverrides.toLocaleString()}
+                </motion.p>
+                <div className="flex items-center gap-3 mt-2">
+                  <span className="text-[10px] text-sky-400 font-medium">€200 × {teamSales.length} vendite team</span>
+                  <span className="text-[10px] text-muted-foreground">·</span>
+                  <span className="text-[10px] text-muted-foreground">{teamMembers.length} partner attivi</span>
                 </div>
-                <p className="text-2xl font-display font-bold text-foreground">€200 <span className="text-sm font-normal text-muted-foreground">per vendita del team</span></p>
-                <p className="text-xs text-muted-foreground mt-1">Guadagni automaticamente €200 per ogni vendita chiusa dai tuoi partner reclutati.</p>
               </div>
 
-              {/* Team Members */}
+              {/* Recruitment Engine */}
+              <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
+                <div className="flex items-center gap-2">
+                  <UserPlus className="w-5 h-5 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Recluta Partner</h3>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Condividi il tuo link di invito. I nuovi partner verranno assegnati automaticamente al tuo team.
+                </p>
+                <motion.button
+                  onClick={handleCopyInviteLink}
+                  className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2"
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {inviteCopied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {inviteCopied ? "Link Copiato!" : "Copia Link di Invito"}
+                </motion.button>
+              </div>
+
+              {/* Hierarchy View */}
               <div className="space-y-2">
                 <h3 className="text-sm font-bold text-foreground">Membri del Team ({teamMembers.length})</h3>
                 {teamMembers.length === 0 ? (
                   <p className="text-xs text-muted-foreground py-4 text-center">Nessun membro ancora. Recluta partner per guadagnare override!</p>
                 ) : (
-                  teamMembers.map((member, i) => (
-                    <motion.div key={member.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50">
-                      <div className="w-9 h-9 rounded-full bg-sky-500/10 flex items-center justify-center">
-                        <Users className="w-4 h-4 text-sky-400" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-foreground truncate">{(member.profiles as any)?.full_name || "Partner"}</p>
-                        <p className="text-[10px] text-muted-foreground">{(member.profiles as any)?.email || "—"}</p>
-                      </div>
-                      <span className="text-xs text-primary font-medium">€200/vendita</span>
-                    </motion.div>
-                  ))
+                  teamMembers.map((member, i) => {
+                    const memberSales = teamSales.filter((s: any) => s.partner_id === member.partner_id).length;
+                    return (
+                      <motion.div key={member.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50">
+                        <div className="w-9 h-9 rounded-full bg-sky-500/10 flex items-center justify-center">
+                          <Users className="w-4 h-4 text-sky-400" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold text-foreground truncate">{(member.profiles as any)?.full_name || "Partner"}</p>
+                          <p className="text-[10px] text-muted-foreground">{memberSales} vendite · €{(memberSales * 200).toLocaleString()} override</p>
+                        </div>
+                        <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${memberSales > 0 ? "bg-emerald-400" : "bg-muted-foreground/30"}`} />
+                      </motion.div>
+                    );
+                  })
                 )}
               </div>
 
@@ -315,7 +450,7 @@ const PartnerDashboard = () => {
               {monthlyBonuses.length > 0 && (
                 <div className="space-y-2">
                   <h3 className="text-sm font-bold text-foreground">Bonus Performance</h3>
-                  {monthlyBonuses.map((bonus, i) => (
+                  {monthlyBonuses.map((bonus) => (
                     <div key={bonus.id} className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50">
                       <div className={`w-9 h-9 rounded-full flex items-center justify-center ${bonus.bonus_tier === 'elite' ? 'bg-amber-500/10' : 'bg-emerald-500/10'}`}>
                         <Award className={`w-4 h-4 ${bonus.bonus_tier === 'elite' ? 'text-amber-400' : 'text-emerald-400'}`} />
@@ -331,6 +466,7 @@ const PartnerDashboard = () => {
               )}
             </motion.div>
           )}
+
           {activeTab === "investment" && <InvestmentSummary key="investment" />}
           {activeTab === "recruitment" && !demoMode && <PartnerRecruitment key="recruitment" />}
         </AnimatePresence>
