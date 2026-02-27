@@ -107,11 +107,11 @@ serve(async (req) => {
     // Mark restaurant as paid
     await supabase.from("restaurants").update({ setup_paid: true }).eq("id", restaurantId);
 
-    // Plan split calculations (€1,997 = €800 platform + €997 partner + €200 TL override)
+    // Plan split calculations (€2,997 = €1,950 platform + €997 partner + €50 TL override from 4th sale)
     const planConfigs: Record<string, { total: number; installment: number; count: number; platformPerInstallment: number; partnerPerInstallment: number; overridePerInstallment: number }> = {
-      full:  { total: 1997, installment: 1997, count: 1, platformPerInstallment: 80000, partnerPerInstallment: 99700, overridePerInstallment: 20000 },
-      "3x":  { total: 2097, installment: 699,  count: 3, platformPerInstallment: 26700, partnerPerInstallment: 33233, overridePerInstallment: 6667 },
-      "6x":  { total: 2196, installment: 366,  count: 6, platformPerInstallment: 13334, partnerPerInstallment: 16616, overridePerInstallment: 3334 },
+      full:  { total: 2997, installment: 2997, count: 1, platformPerInstallment: 195000, partnerPerInstallment: 99700, overridePerInstallment: 5000 },
+      "3x":  { total: 3297, installment: 1099, count: 3, platformPerInstallment: 65000,  partnerPerInstallment: 33233, overridePerInstallment: 1667 },
+      "6x":  { total: 3294, installment: 549,  count: 6, platformPerInstallment: 32500,  partnerPerInstallment: 16616, overridePerInstallment: 833 },
     };
     const p = planConfigs[plan || "full"] || planConfigs.full;
 

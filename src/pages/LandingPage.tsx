@@ -530,13 +530,13 @@ const LandingPage = () => {
             <motion.button onClick={scrollToPricing}
               className="w-full py-3.5 sm:py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-sm tracking-wide"
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-              Inizia il tuo Impero · €1.997
+              Inizia il tuo Impero · €2.997
             </motion.button>
           </motion.div>
         </div>
       </section>
 
-      {/* ====== 6. PRICING — Updated to €1.997 ====== */}
+      {/* ====== 6. PRICING — Updated to €2.997 ====== */}
       <section id="pricing" className="relative py-12 sm:py-24 px-4">
         <GlowOrb className="w-[600px] h-[400px] bg-primary top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         <div className="max-w-4xl mx-auto relative">
@@ -553,14 +553,14 @@ const LandingPage = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 mb-8">
-            {/* 5 Rate */}
+            {/* 6 Rate */}
             <motion.div className="relative p-5 sm:p-7 rounded-2xl glass border border-border/30 hover:border-primary/30 transition-all duration-500"
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0 }}>
-              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground tracking-wider uppercase mb-2">5 Rate</p>
-              <p className="text-3xl sm:text-4xl font-display font-bold text-foreground">€399<span className="text-base sm:text-lg text-muted-foreground font-normal">/mese</span></p>
-              <p className="text-xs text-muted-foreground mt-1">Totale: €1.997 + IVA</p>
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground tracking-wider uppercase mb-2">6 Rate</p>
+              <p className="text-3xl sm:text-4xl font-display font-bold text-foreground">€549<span className="text-base sm:text-lg text-muted-foreground font-normal">/mese</span></p>
+              <p className="text-xs text-muted-foreground mt-1">Totale: €3.294 · IVA inclusa</p>
               <div className="mt-4 sm:mt-6 space-y-2">
-                {["Tutte le funzionalità", "Pagamento dilazionato", "Attivazione immediata", "Zero interessi"].map((f, i) => (
+                {["Tutte le funzionalità", "Pagamento dilazionato", "Attivazione immediata", "Massima flessibilità"].map((f, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs text-foreground/70">
                     <Check className="w-3.5 h-3.5 text-primary flex-shrink-0" /> {f}
                   </div>
@@ -568,7 +568,7 @@ const LandingPage = () => {
               </div>
               <button onClick={() => navigate("/admin")}
                 className="mt-4 sm:mt-6 w-full py-3 rounded-xl border border-primary/30 text-primary font-semibold text-xs sm:text-sm tracking-wide hover:bg-primary hover:text-primary-foreground transition-all min-h-[44px]">
-                Scegli 5 Rate
+                Scegli 6 Rate
               </button>
             </motion.div>
 
@@ -585,7 +585,7 @@ const LandingPage = () => {
                 <div className="flex items-baseline gap-2">
                   <p className="text-4xl sm:text-5xl font-display font-bold text-foreground">€2.997</p>
                 </div>
-                <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">+ IVA 22% · Una volta sola</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">IVA 22% inclusa · Una volta sola</p>
                 <div className="mt-4 sm:mt-6 space-y-1.5">
                   {[
                     "Asset Digitale di Proprietà",
@@ -624,7 +624,7 @@ const LandingPage = () => {
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground tracking-wider uppercase mb-2">3 Rate</p>
               <p className="text-3xl sm:text-4xl font-display font-bold text-foreground">€1.099<span className="text-base sm:text-lg text-muted-foreground font-normal">/mese</span></p>
-              <p className="text-xs text-muted-foreground mt-1">Totale: €3.297 + IVA</p>
+              <p className="text-xs text-muted-foreground mt-1">Totale: €3.297 · IVA inclusa</p>
               <div className="mt-4 sm:mt-6 space-y-2">
                 {["Tutte le funzionalità", "Massima flessibilità", "Attivazione immediata", "Chiusura rapida"].map((f, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs text-foreground/70">
@@ -767,7 +767,7 @@ const LandingPage = () => {
                 <span className="text-foreground font-semibold">Totale mensile</span>
                 <span className="text-xl font-display font-bold text-primary">€6.485</span>
               </div>
-              <p className="text-[10px] text-muted-foreground text-center pt-1">+ override €200/vendita come Team Leader sui membri del tuo team</p>
+              <p className="text-[10px] text-muted-foreground text-center pt-1">+ override €50/vendita come Team Leader dalla 4ª vendita di ogni membro del team</p>
             </div>
           </motion.div>
 
@@ -1050,7 +1050,7 @@ const LandingPage = () => {
           <motion.button onClick={scrollToPricing}
             className="flex-1 py-3.5 rounded-2xl bg-primary text-primary-foreground font-bold text-sm tracking-wider min-h-[48px] relative overflow-hidden"
             whileTap={{ scale: 0.97 }}>
-            <span className="relative z-10">€1.997 · Inizia Ora</span>
+            <span className="relative z-10">€2.997 · Inizia Ora</span>
             <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
               animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
