@@ -26,6 +26,7 @@ import PartnerLeaderboard from "@/components/partner/PartnerLeaderboard";
 import AssetVault from "@/components/partner/AssetVault";
 import { toast } from "@/hooks/use-toast";
 import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
+import { RefreshCw } from "lucide-react";
 
 type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault";
 
@@ -40,7 +41,32 @@ const PartnerDashboard = () => {
   const [salesCount, setSalesCount] = useState(0);
   const [monthlyBonuses, setMonthlyBonuses] = useState<any[]>([]);
   const [inviteCopied, setInviteCopied] = useState(false);
-  const { demoRestaurant } = usePartnerDemoRestaurant();
+  const { demoRestaurant, loading: demoLoading, refetch: refetchDemo } = usePartnerDemoRestaurant();
+  const [resettingDemo, setResettingDemo] = useState(false);
+
+  const handleResetDemo = async () => {
+    if (resettingDemo) return;
+    setResettingDemo(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/reset-partner-demo`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Reset failed");
+      toast({ title: "✅ Demo Resettata", description: "Tutti i dati demo sono stati ricreati." });
+      refetchDemo();
+    } catch (err: any) {
+      toast({ title: "Errore", description: err.message, variant: "destructive" });
+    } finally {
+      setResettingDemo(false);
+    }
+  };
   useEffect(() => {
     if (!user?.id) return;
     fetchPartnerData();
@@ -388,6 +414,15 @@ const PartnerDashboard = () => {
                   <p className="text-[10px] text-muted-foreground text-center">
                     PIN Cucina Demo: <span className="font-mono font-bold text-foreground">1234</span>
                   </p>
+                  <motion.button
+                    onClick={handleResetDemo}
+                    disabled={resettingDemo}
+                    className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive/20 transition-all disabled:opacity-50"
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    <RefreshCw className={`w-4 h-4 ${resettingDemo ? "animate-spin" : ""}`} />
+                    <span className="text-xs font-semibold">{resettingDemo ? "Resettando..." : "Resetta Demo"}</span>
+                  </motion.button>
                 </div>
               )}
 
