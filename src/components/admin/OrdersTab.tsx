@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChefHat, ExternalLink, Power, CalendarDays, Move, Save, BarChart3, Key,
-  Plus, Trash2, QrCode, Download, Clock, CheckCircle2, XCircle, Filter,
+  Plus, Minus, Trash2, QrCode, Download, Clock, CheckCircle2, XCircle, Filter,
   Phone, Users, MessageSquare, Bell
 } from "lucide-react";
 import { format, isToday, isTomorrow, parseISO, isPast } from "date-fns";
@@ -366,7 +366,29 @@ const OrdersTab = ({
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium text-foreground">Tavolo {table.table_number}</p>
-                        <p className="text-[10px] text-muted-foreground">{table.seats || 4} posti</p>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <button
+                            onClick={async () => {
+                              const newSeats = Math.max(1, (table.seats || 4) - 1);
+                              await supabase.from("restaurant_tables").update({ seats: newSeats }).eq("id", table.id);
+                              setRestaurantTables(prev => prev.map(t => t.id === table.id ? { ...t, seats: newSeats } : t));
+                            }}
+                            className="w-5 h-5 rounded bg-secondary flex items-center justify-center hover:bg-accent transition-colors"
+                          >
+                            <Minus className="w-3 h-3 text-muted-foreground" />
+                          </button>
+                          <span className="text-[10px] font-semibold text-muted-foreground min-w-[32px] text-center">{table.seats || 4} posti</span>
+                          <button
+                            onClick={async () => {
+                              const newSeats = (table.seats || 4) + 1;
+                              await supabase.from("restaurant_tables").update({ seats: newSeats }).eq("id", table.id);
+                              setRestaurantTables(prev => prev.map(t => t.id === table.id ? { ...t, seats: newSeats } : t));
+                            }}
+                            className="w-5 h-5 rounded bg-secondary flex items-center justify-center hover:bg-accent transition-colors"
+                          >
+                            <Plus className="w-3 h-3 text-muted-foreground" />
+                          </button>
+                        </div>
                       </div>
                       <div className="flex items-center gap-1 flex-shrink-0">
                         <button onClick={() => downloadQR(tableUrl, `qr-tavolo-${table.table_number}`)}
