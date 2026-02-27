@@ -372,6 +372,7 @@ const MoreMenu = ({
             try {
               const { data, error } = await supabase.functions.invoke("ai-inventory", { body: { restaurantId: restaurant.id, orders, menuItems } });
               if (error) throw error;
+              if (data?.error) throw new Error(data.error);
               setInventoryResult(data);
             } catch (err: any) { toast({ title: "Errore", description: err?.message, variant: "destructive" }); }
             setInventoryLoading(false);
