@@ -83,7 +83,7 @@ const LandingPage = () => {
   }, []);
 
   // ROI — updated prices
-  const setupCost = 1997;
+  const setupCost = 2997;
   const justEatFee = 0.30;
   const empireFee = 0.02;
   const monthlyRevenue = monthlyOrders * avgOrder;
@@ -107,10 +107,10 @@ const LandingPage = () => {
   const faqs = [
     { q: "È difficile da usare?", a: "No. Se sai usare Instagram, sai usare Empire. L'interfaccia è progettata per ristoratori, non per programmatori. L'IA fa il lavoro pesante: carica una foto del menu e in 60 secondi hai il catalogo digitale completo." },
     { q: "Come arrivano i soldi?", a: "I pagamenti dei clienti arrivano direttamente sul TUO conto Stripe. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico — 15 volte meno di JustEat. Trasparenza totale." },
-    { q: "Quanto costa davvero Empire?", a: "€1.997 una tantum (o in comode rate da €399/mese × 5). Dopodiché €0/mese per sempre. Solo il 2% sulle transazioni per mantenere infrastruttura, IA e aggiornamenti. Un ristorante con 500 ordini/mese a €25 risparmia oltre €40.000/anno rispetto a JustEat." },
+    { q: "Quanto costa davvero Empire?", a: "€2.997 una tantum (o in comode rate). Dopodiché €0/mese per sempre. Solo il 2% sulle transazioni per mantenere infrastruttura, IA e aggiornamenti. Un ristorante con 500 ordini/mese a €25 risparmia oltre €40.000/anno rispetto a JustEat." },
     { q: "La fiscalità è sicura?", a: "Assolutamente. Le tue chiavi API fiscali sono criptate con standard bancario AES-256 nel Vault privato. Nessuno può vederle, nemmeno il nostro team. L'agente AI-Mary valida la connessione e mostra solo lo stato operativo." },
     { q: "Cosa succede ai miei clienti di JustEat?", a: "Li recuperi. Con il QR Code sui tavoli e il tuo link diretto, i clienti ordinano dalla TUA app. Ogni ordine che sposti da JustEat a Empire ti fa risparmiare il 28% netto." },
-    { q: "Come funziona il Partner Program?", a: "Diventi Partner gratis. Ricevi €997 per ogni vendita chiusa + €200 override da Team Leader dopo 3 vendite. Bonus mensili fino a €1.500. Pagamenti istantanei via Stripe Connect." },
+    { q: "Come funziona il Partner Program?", a: "Diventi Partner gratis. Ricevi €997 per ogni vendita chiusa + €50 override da Team Leader dalla 4ª vendita di ogni membro. Bonus mensili fino a €1.500. Pagamenti istantanei via Stripe Connect." },
   ];
 
   const scrollToPricing = () => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
@@ -208,7 +208,7 @@ const LandingPage = () => {
             <motion.p className="mt-3 sm:mt-6 text-sm sm:text-xl text-foreground/60 max-w-xl leading-relaxed font-light"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
               L'Asset Digitale di Proprietà che ti libera dal 30% di commissioni.{" "}
-              <span className="text-foreground font-medium">€1.997 una volta. Per sempre.</span>
+              <span className="text-foreground font-medium">€2.997 una volta. Per sempre.</span>
             </motion.p>
 
             {/* Audience toggle */}
@@ -583,7 +583,7 @@ const LandingPage = () => {
                   <span className="px-2 py-0.5 rounded-full bg-primary/10 text-[9px] sm:text-[10px] font-bold text-primary">BEST VALUE</span>
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-4xl sm:text-5xl font-display font-bold text-foreground">€1.997</p>
+                  <p className="text-4xl sm:text-5xl font-display font-bold text-foreground">€2.997</p>
                 </div>
                 <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">+ IVA 22% · Una volta sola</p>
                 <div className="mt-4 sm:mt-6 space-y-1.5">
@@ -623,8 +623,8 @@ const LandingPage = () => {
             <motion.div className="relative p-5 sm:p-7 rounded-2xl glass border border-border/30 hover:border-primary/30 transition-all duration-500"
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground tracking-wider uppercase mb-2">3 Rate</p>
-              <p className="text-3xl sm:text-4xl font-display font-bold text-foreground">€699<span className="text-base sm:text-lg text-muted-foreground font-normal">/mese</span></p>
-              <p className="text-xs text-muted-foreground mt-1">Totale: €2.097 + IVA</p>
+              <p className="text-3xl sm:text-4xl font-display font-bold text-foreground">€1.099<span className="text-base sm:text-lg text-muted-foreground font-normal">/mese</span></p>
+              <p className="text-xs text-muted-foreground mt-1">Totale: €3.297 + IVA</p>
               <div className="mt-4 sm:mt-6 space-y-2">
                 {["Tutte le funzionalità", "Massima flessibilità", "Attivazione immediata", "Chiusura rapida"].map((f, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs text-foreground/70">
@@ -670,7 +670,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             {[
               { value: "€997", label: "Per vendita", icon: <Trophy className="w-4 h-4" />, sub: "Commissione Partner" },
-              { value: "€200", label: "Override TL", icon: <Award className="w-4 h-4" />, sub: "Da Team Leader" },
+              { value: "€50", label: "Override TL", icon: <Award className="w-4 h-4" />, sub: "Dalla 4ª vendita" },
               { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-4 h-4" />, sub: "Bonus mensile" },
               { value: "€1.500", label: "Bonus 5 vendite", icon: <Rocket className="w-4 h-4" />, sub: "Bonus Elite" },
             ].map((s, i) => (
@@ -692,7 +692,7 @@ const LandingPage = () => {
               {[
                 { step: "1", title: "Partner", desc: "€997/vendita", icon: <Handshake className="w-5 h-5" /> },
                 { step: "2", title: "3 Vendite", desc: "Promozione automatica", icon: <TrendingUp className="w-5 h-5" /> },
-                { step: "3", title: "Team Leader", desc: "+€200 override/vendita team", icon: <Crown className="w-5 h-5" /> },
+                { step: "3", title: "Team Leader", desc: "+€50 override dalla 4ª vendita", icon: <Crown className="w-5 h-5" /> },
               ].map((s, i) => (
                 <div key={i} className="flex sm:flex-col items-center gap-3 sm:gap-2 text-center w-full sm:w-auto">
                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">{s.icon}</div>

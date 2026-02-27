@@ -230,7 +230,18 @@ const PartnerDashboard = () => {
 
   const totalBonuses = monthlyBonuses.reduce((s, b) => s + Number(b.bonus_amount), 0);
   const estimatedCommissions = salesCount * 997;
-  const totalOverrides = teamSales.length * 200;
+  // Meritocratic override: €50 only from the 4th sale per sub-partner
+  const calculateOverrides = () => {
+    if (!isTeamLeader || teamMembers.length === 0) return 0;
+    let total = 0;
+    for (const member of teamMembers) {
+      const memberSalesCount = teamSales.filter((s: any) => s.partner_id === member.partner_id).length;
+      const eligibleSales = Math.max(0, memberSalesCount - 3); // only from 4th sale
+      total += eligibleSales * 50;
+    }
+    return total;
+  };
+  const totalOverrides = calculateOverrides();
   const netEarnings = estimatedCommissions + totalBonuses + totalOverrides;
 
   // Current month sales for bonus progress
@@ -406,7 +417,7 @@ const PartnerDashboard = () => {
                 {!isTeamLeader && salesCount < 3 && (
                   <div className="p-3 rounded-xl bg-primary/5 border border-primary/10 text-center">
                     <p className="text-[11px] text-primary font-medium">
-                      🎯 {3 - salesCount} vendite per diventare Team Leader → guadagna €200 override per ogni vendita del tuo team
+                      🎯 {3 - salesCount} vendite per diventare Team Leader → guadagna €50 override dalla 4ª vendita di ogni membro
                     </p>
                   </div>
                 )}
@@ -634,11 +645,11 @@ const PartnerDashboard = () => {
                 <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-center">
                   <p className="text-sm font-display font-bold text-foreground">
                     Commissione: <span className="text-emerald-400">€997</span>/vendita
-                    {isTeamLeader && <span className="text-sky-400"> + €200 override/team</span>}
+                    {isTeamLeader && <span className="text-sky-400"> + €50 override/team (dalla 4ª vendita)</span>}
                   </p>
                   <p className="text-[10px] text-muted-foreground mt-1">
                     {isTeamLeader
-                      ? "Guadagni €997 per vendita diretta + €200 per ogni vendita dei tuoi reclutati."
+                      ? "Guadagni €997 per vendita diretta + €50 per ogni vendita dei tuoi reclutati (dalla 4ª in poi)."
                       : "Bonus: €500 per 3 vendite/mese, €1.500 per 5 vendite/mese."
                     }
                   </p>
@@ -695,7 +706,7 @@ const PartnerDashboard = () => {
               </div>
               <div className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-amber-500/10 border border-primary/20 text-center">
                 <p className="text-sm font-display font-bold text-foreground">
-                  Licenza Lifetime: <span className="text-primary">€1.997</span> <span className="text-xs text-muted-foreground line-through">€2.997</span>
+                  Licenza Lifetime: <span className="text-primary">€2.997</span>
                 </p>
                 <p className="text-[10px] text-muted-foreground mt-1">
                   Zero canoni mensili. Proprietà permanente. 21+ funzionalità incluse.
@@ -723,7 +734,7 @@ const PartnerDashboard = () => {
                   €{totalOverrides.toLocaleString()}
                 </motion.p>
                 <div className="flex items-center gap-3 mt-2">
-                  <span className="text-[10px] text-sky-400 font-medium">€200 × {teamSales.length} vendite team</span>
+                  <span className="text-[10px] text-sky-400 font-medium">€50 × vendite idonee (dalla 4ª)</span>
                   <span className="text-[10px] text-muted-foreground">·</span>
                   <span className="text-[10px] text-muted-foreground">{teamMembers.length} partner attivi</span>
                 </div>
@@ -764,7 +775,7 @@ const PartnerDashboard = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold text-foreground truncate">{(member.profiles as any)?.full_name || "Partner"}</p>
-                          <p className="text-[10px] text-muted-foreground">{memberSales} vendite · €{(memberSales * 200).toLocaleString()} override</p>
+                          <p className="text-[10px] text-muted-foreground">{memberSales} vendite · €{(Math.max(0, memberSales - 3) * 50).toLocaleString()} override</p>
                         </div>
                         <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${memberSales > 0 ? "bg-emerald-400" : "bg-muted-foreground/30"}`} />
                       </motion.div>

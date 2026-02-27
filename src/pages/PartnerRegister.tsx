@@ -33,7 +33,7 @@ const benefits = [
   { icon: <Award className="w-5 h-5" />, title: "Bonus fino a €1.500/mese", desc: "Acceleratori su 3 e 5 vendite mensili" },
   { icon: <CreditCard className="w-5 h-5" />, title: "Payout istantaneo", desc: "Pagamenti automatici via Stripe Connect" },
   { icon: <Rocket className="w-5 h-5" />, title: "Sandbox Demo", desc: "Demo pre-configurata per chiudere vendite" },
-  { icon: <Users className="w-5 h-5" />, title: "Team Leader", desc: "Override €200/vendita sul tuo team dopo 3 vendite" },
+  { icon: <Users className="w-5 h-5" />, title: "Team Leader", desc: "Override €50/vendita dalla 4ª vendita di ogni membro" },
   { icon: <Gift className="w-5 h-5" />, title: "Zero costi di ingresso", desc: "Nessun investimento iniziale richiesto" },
 ];
 
@@ -500,7 +500,7 @@ const PartnerRegister = () => {
                   { q: "Quanto posso guadagnare per ogni vendita?", a: "La commissione base è di €997 per contratto chiuso. Con i bonus acceleratori puoi arrivare a €1.500 extra al mese raggiungendo 3 o 5 vendite." },
                   { q: "Come funziona il payout?", a: "I pagamenti avvengono in automatico tramite Stripe Connect. Appena il ristoratore paga, la tua commissione viene accreditata direttamente sul tuo conto." },
                   { q: "Cos'è la Sandbox Demo?", a: "È un ambiente demo completo e pre-configurato che puoi mostrare ai prospect. Include menu, ordini, cucina e dashboard — tutto funzionante, con dati finti realistici." },
-                  { q: "Posso costruire un team?", a: "Sì! Dopo 3 vendite diventi Team Leader e guadagni un override di €200 per ogni vendita fatta dal tuo team. Puoi reclutare nuovi partner con il tuo link referral." },
+                  { q: "Posso costruire un team?", a: "Sì! Dopo 3 vendite diventi Team Leader e guadagni un override di €50 a partire dalla 4ª vendita di ogni membro del tuo team. Puoi reclutare nuovi partner con il tuo link referral." },
                   { q: "Serve esperienza nel settore?", a: "No. Forniamo script di vendita, materiali di marketing, obiezioni con risposte pronte e una demo che parla da sola. Ti basta la motivazione." },
                   { q: "Posso farlo part-time?", a: "Assolutamente. Molti partner vendono nei ritagli di tempo. Non ci sono obiettivi minimi obbligatori." },
                 ].map((faq, i) => (

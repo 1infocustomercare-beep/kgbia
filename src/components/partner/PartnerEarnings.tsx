@@ -144,18 +144,18 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
 
       {/* Split Breakdown Visual */}
       <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
-        <h3 className="text-sm font-bold text-foreground">Split per Vendita (€1.997)</h3>
+        <h3 className="text-sm font-bold text-foreground">Split per Vendita (€2.997)</h3>
         <div className="space-y-2">
           <div>
             <div className="flex items-center justify-between text-xs mb-1">
               <span className="text-muted-foreground flex items-center gap-1.5">
                 <Crown className="w-3.5 h-3.5 text-primary" /> Platform Revenue
               </span>
-              <span className="font-bold text-foreground">€800</span>
+              <span className="font-bold text-foreground">€1.950</span>
             </div>
             <div className="h-3 rounded-full bg-muted overflow-hidden">
               <motion.div className="h-full rounded-full bg-gradient-to-r from-primary to-amber-500"
-                initial={{ width: 0 }} animate={{ width: "40%" }} transition={{ delay: 0.3, duration: 0.8 }} />
+                initial={{ width: 0 }} animate={{ width: "65%" }} transition={{ delay: 0.3, duration: 0.8 }} />
             </div>
           </div>
           <div>
@@ -167,7 +167,7 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
             </div>
             <div className="h-3 rounded-full bg-muted overflow-hidden">
               <motion.div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-400"
-                initial={{ width: 0 }} animate={{ width: "50%" }} transition={{ delay: 0.5, duration: 0.8 }} />
+                initial={{ width: 0 }} animate={{ width: "33%" }} transition={{ delay: 0.5, duration: 0.8 }} />
             </div>
           </div>
           <div>
@@ -175,16 +175,16 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
               <span className="text-muted-foreground flex items-center gap-1.5">
                 <Crown className="w-3.5 h-3.5 text-sky-400" /> Team Leader Override
               </span>
-              <span className="font-bold text-foreground">€200</span>
+              <span className="font-bold text-foreground">€50</span>
             </div>
             <div className="h-3 rounded-full bg-muted overflow-hidden">
               <motion.div className="h-full rounded-full bg-gradient-to-r from-sky-400 to-blue-400"
-                initial={{ width: 0 }} animate={{ width: "10%" }} transition={{ delay: 0.7, duration: 0.8 }} />
+                initial={{ width: 0 }} animate={{ width: "2%" }} transition={{ delay: 0.7, duration: 0.8 }} />
             </div>
           </div>
         </div>
         <p className="text-[10px] text-muted-foreground text-center mt-1">
-          Bonus: €500 per 3 vendite/mese · €1.500 per 5 vendite/mese
+          Override €50 dalla 4ª vendita per membro · Bonus: €500 per 3 vendite/mese · €1.500 per 5 vendite/mese
         </p>
       </div>
 
