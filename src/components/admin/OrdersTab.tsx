@@ -88,11 +88,24 @@ const OrdersTab = ({
     if (data) setExistingPins(data);
   };
 
+  const getGridPositions = (count: number, startIndex = 0) => {
+    const cols = Math.ceil(Math.sqrt(count));
+    const rows = Math.ceil(count / cols);
+    const marginX = 10, marginY = 10;
+    const spacingX = (100 - marginX * 2) / Math.max(cols, 1);
+    const spacingY = (100 - marginY * 2) / Math.max(rows, 1);
+    return Array.from({ length: count }, (_, i) => ({
+      x: Math.round(marginX + spacingX * ((i % cols) + 0.5)),
+      y: Math.round(marginY + spacingY * (Math.floor(i / cols) + 0.5)),
+    }));
+  };
+
   const handleCreateTables = async () => {
     if (!restaurant) return;
+    const positions = getGridPositions(newTableCount);
     const inserts = Array.from({ length: newTableCount }, (_, i) => ({
       restaurant_id: restaurant.id, table_number: i + 1, seats: 4, status: "free",
-      pos_x: 0, pos_y: 0,
+      pos_x: positions[i].x, pos_y: positions[i].y,
     }));
     const { error } = await supabase.from("restaurant_tables").insert(inserts);
     if (error) { toast({ title: "Errore", description: error.message, variant: "destructive" }); return; }
@@ -293,8 +306,18 @@ const OrdersTab = ({
                 <button onClick={async () => {
                   if (!restaurant) return;
                   const maxNum = Math.max(0, ...restaurantTables.map(t => t.table_number));
+                  // Find an empty spot by checking existing positions
+                  const occupied = new Set(restaurantTables.map(t => `${Math.round((t.pos_x || 0) / 10) * 10}-${Math.round((t.pos_y || 0) / 10) * 10}`));
+                  let newX = 15, newY = 15;
+                  for (let y = 15; y <= 85; y += 20) {
+                    for (let x = 15; x <= 85; x += 20) {
+                      const key = `${Math.round(x / 10) * 10}-${Math.round(y / 10) * 10}`;
+                      if (!occupied.has(key)) { newX = x; newY = y; break; }
+                    }
+                    if (newX !== 15 || newY !== 15) break;
+                  }
                   const { error } = await supabase.from("restaurant_tables").insert({
-                    restaurant_id: restaurant.id, table_number: maxNum + 1, seats: 4, status: "free", pos_x: 50, pos_y: 50,
+                    restaurant_id: restaurant.id, table_number: maxNum + 1, seats: 4, status: "free", pos_x: newX, pos_y: newY,
                   });
                   if (error) { toast({ title: "Errore", variant: "destructive" }); return; }
                   const { data } = await supabase.from("restaurant_tables").select("*").eq("restaurant_id", restaurant.id).order("table_number");
@@ -304,6 +327,22 @@ const OrdersTab = ({
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               </div>
+
+              {/* Auto-redistribute if all tables stuck at 0,0 */}
+              {restaurantTables.length > 0 && !restaurantTables.some(t => (t.pos_x || 0) > 5 || (t.pos_y || 0) > 5) && (
+                <button onClick={async () => {
+                  const positions = getGridPositions(restaurantTables.length);
+                  const updated = restaurantTables.map((t, i) => ({ ...t, pos_x: positions[i].x, pos_y: positions[i].y }));
+                  for (const t of updated) {
+                    await supabase.from("restaurant_tables").update({ pos_x: t.pos_x, pos_y: t.pos_y }).eq("id", t.id);
+                  }
+                  setRestaurantTables(updated);
+                  toast({ title: "Tavoli ridistribuiti" });
+                }}
+                  className="w-full py-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-semibold min-h-[44px] active:scale-[0.97] transition-transform">
+                  <Move className="w-3.5 h-3.5 inline mr-1.5" />Ridistribuisci Tavoli nella Mappa
+                </button>
+              )}
 
               {/* Interactive Table Map */}
               <TableMap tables={restaurantTables} editMode={tableMapEditMode}

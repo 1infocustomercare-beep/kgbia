@@ -53,7 +53,7 @@ const TableMap = ({ tables, onStatusChange, onPositionChange, editMode = false }
     setDraggingId(null);
   };
 
-  const hasPositions = tables.some(t => (t.pos_x || 0) > 0 || (t.pos_y || 0) > 0);
+  const hasPositions = tables.some(t => (t.pos_x || 0) > 5 || (t.pos_y || 0) > 5);
 
   const getAutoPosition = (index: number, total: number) => {
     const cols = Math.ceil(Math.sqrt(total));
@@ -136,7 +136,7 @@ const TableMap = ({ tables, onStatusChange, onPositionChange, editMode = false }
       </div>
 
       {/* Map - compact for mobile */}
-      <div ref={mapRef} className="relative rounded-2xl border border-border bg-card/50 overflow-hidden h-[260px]"
+      <div ref={mapRef} className="relative rounded-2xl border border-border bg-card/50 overflow-hidden h-[320px] sm:h-[360px]"
         style={{ backgroundImage: "radial-gradient(circle, hsla(var(--border)) 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
         <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-secondary/80 text-[8px] text-muted-foreground uppercase tracking-wider z-10">
           Planimetria
