@@ -19,6 +19,7 @@ const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
 const KitchenView = lazy(() => import("./pages/KitchenView"));
 const StaffPanel = lazy(() => import("./pages/StaffPanel"));
 const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
+const PartnerRegister = lazy(() => import("./pages/PartnerRegister"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
@@ -67,6 +68,7 @@ const App = () => (
                     <PartnerDashboard />
                   </ProtectedRoute>
                 } />
+                <Route path="/partner/register" element={<PartnerRegister />} />
                 <Route path="/admin/dashboard" element={
                   <ProtectedRoute>
                     <AdminDashboard />

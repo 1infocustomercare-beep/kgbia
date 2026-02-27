@@ -777,7 +777,7 @@ const LandingPage = () => {
             <Gift className="w-7 h-7 text-primary mx-auto mb-2" />
             <h3 className="font-display font-bold text-base sm:text-lg text-foreground mb-1">Zero Costi di Ingresso</h3>
             <p className="text-xs sm:text-sm text-muted-foreground mb-4">Nessun investimento iniziale. Paghiamo solo il tuo talento.</p>
-            <button onClick={() => navigate("/admin")}
+            <button onClick={() => navigate("/partner/register")}
               className="px-6 sm:px-8 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-xs sm:text-sm tracking-wide min-h-[44px]">
               Diventa Partner
             </button>
@@ -988,7 +988,7 @@ const LandingPage = () => {
                   animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
               </motion.button>
-              <button onClick={scrollToPartner}
+              <button onClick={() => navigate("/partner/register")}
                 className="w-full sm:w-auto px-8 sm:px-12 py-3.5 sm:py-5 rounded-2xl glass border border-primary/30 text-foreground font-bold text-sm sm:text-lg tracking-wide hover:border-primary transition-all min-h-[48px]">
                 Diventa Partner
               </button>
