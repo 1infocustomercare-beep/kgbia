@@ -85,7 +85,7 @@ const PartnerDashboard = () => {
   };
 
   const handleCopyInviteLink = () => {
-    const link = `${window.location.origin}/admin?ref=${user?.id?.slice(0, 8)}`;
+    const link = `${window.location.origin}/admin?ref=${user?.id}`;
     navigator.clipboard.writeText(link);
     setInviteCopied(true);
     toast({ title: "Link copiato!", description: "Condividi il link con i tuoi reclutati." });
