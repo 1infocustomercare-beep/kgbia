@@ -80,14 +80,19 @@ export function useRestaurantBySlug(slug: string | undefined) {
 
     fetchData();
 
-    // Realtime subscription for menu updates
+    // Realtime subscription for menu, restaurant, and review updates
     const channel = supabase
-      .channel(`menu-${slug}`)
+      .channel(`restaurant-${slug}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "menu_items" },
-        () => {
-          if (slug) fetchData();
+        () => { if (slug) fetchData(); }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "restaurants" },
+        (payload) => {
+          if ((payload.new as any)?.slug === slug) fetchData();
         }
       )
       .subscribe();
