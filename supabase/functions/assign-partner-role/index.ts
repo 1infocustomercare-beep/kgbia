@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -17,7 +17,7 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    const { user_id } = await req.json();
+    const { user_id, team_leader_id } = await req.json();
     if (!user_id) {
       return new Response(JSON.stringify({ error: "user_id required" }), {
         status: 400,
@@ -33,10 +33,36 @@ serve(async (req) => {
       { user_id, role: "partner" },
       { onConflict: "user_id,role" }
     );
-
     if (error) throw error;
 
-    return new Response(JSON.stringify({ success: true }), {
+    // If referred by a team leader, add to their team
+    if (team_leader_id) {
+      // Verify the team_leader_id is actually a team leader
+      const { data: leaderRole } = await supabaseAdmin
+        .from("user_roles")
+        .select("id")
+        .eq("user_id", team_leader_id)
+        .eq("role", "team_leader")
+        .maybeSingle();
+
+      if (leaderRole) {
+        // Check not already in a team
+        const { data: existing } = await supabaseAdmin
+          .from("partner_teams")
+          .select("id")
+          .eq("partner_id", user_id)
+          .maybeSingle();
+
+        if (!existing) {
+          await supabaseAdmin.from("partner_teams").insert({
+            partner_id: user_id,
+            team_leader_id,
+          });
+        }
+      }
+    }
+
+    return new Response(JSON.stringify({ success: true, team_leader_id: team_leader_id || null }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Crown, ChefHat, ArrowLeft, Users } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
@@ -10,15 +10,17 @@ type LoginMode = "choose" | "owner" | "kitchen" | "partner";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const refCode = searchParams.get("ref"); // Team Leader referral code (user_id)
   const { user, roles, loading: authLoading, signIn, signUp } = useAuth();
-  const [mode, setMode] = useState<LoginMode>("choose");
+  const [mode, setMode] = useState<LoginMode>(refCode ? "partner" : "choose");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(!!refCode);
   const [kitchenPin, setKitchenPin] = useState("");
 
   // Auto-redirect if already logged in
@@ -52,7 +54,7 @@ const AdminLogin = () => {
           const { data: { session } } = await supabase.auth.getSession();
           if (session?.user) {
             await supabase.functions.invoke("assign-partner-role", {
-              body: { user_id: session.user.id },
+              body: { user_id: session.user.id, team_leader_id: refCode || null },
             });
             // Refresh roles
             window.location.href = "/partner";
@@ -61,7 +63,9 @@ const AdminLogin = () => {
         }
         toast({
           title: mode === "partner" ? "Account Partner creato!" : "Account creato con successo!",
-          description: mode === "partner" ? "Benvenuto nel programma Partner Empire." : "Benvenuto nella piattaforma Empire.",
+          description: mode === "partner"
+            ? (refCode ? "Sei stato aggiunto al team! Benvenuto nel programma Partner Empire." : "Benvenuto nel programma Partner Empire.")
+            : "Benvenuto nella piattaforma Empire.",
         });
       }
       setLoading(false);
@@ -270,10 +274,25 @@ const AdminLogin = () => {
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             {isPartnerMode
-              ? (isSignUp ? "Unisciti al programma e guadagna €997/vendita" : "Accedi alla tua dashboard Partner")
+              ? (isSignUp
+                ? (refCode ? "Sei stato invitato da un Team Leader!" : "Unisciti al programma e guadagna €997/vendita")
+                : "Accedi alla tua dashboard Partner")
               : (isSignUp ? "Un account unico per gestire tutto" : "Accedi al pannello di gestione")}
           </p>
         </div>
+
+        {/* Referral banner */}
+        {refCode && isPartnerMode && isSignUp && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-3 rounded-xl bg-primary/10 border border-primary/20 text-center"
+          >
+            <p className="text-xs text-primary font-medium">
+              🎯 Invito Team Leader · Verrai aggiunto automaticamente al team
+            </p>
+          </motion.div>
+        )}
 
         <form onSubmit={handleOwnerLogin} className="space-y-4">
           {isSignUp && (
@@ -334,7 +353,7 @@ const AdminLogin = () => {
             whileTap={{ scale: 0.97 }}
           >
             {loading ? "Caricamento..." : isSignUp
-              ? (isPartnerMode ? "Diventa Partner" : "Crea Account")
+              ? (isPartnerMode ? (refCode ? "Unisciti al Team" : "Diventa Partner") : "Crea Account")
               : "Accedi"}
           </motion.button>
         </form>
