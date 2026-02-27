@@ -3,8 +3,11 @@ import { motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Crown, Handshake, Trophy, CreditCard, Rocket, Award,
-  ArrowRight, Check, Eye, EyeOff, Loader2, Gift, Users, Star
+  ArrowRight, Check, Eye, EyeOff, Loader2, Gift, Users, Star,
+  Play, ChevronDown, HelpCircle
 } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import demoVideo from "@/assets/demo-app-video.mp4";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -449,6 +452,82 @@ const PartnerRegister = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Video + FAQ Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="mt-16 sm:mt-24 max-w-4xl mx-auto space-y-16"
+        >
+          {/* Video Section */}
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
+              <Play className="w-3.5 h-3.5" /> Guarda come funziona
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-3">
+              Scopri Empire in 2 minuti
+            </h2>
+            <p className="text-sm text-muted-foreground mb-8 max-w-lg mx-auto">
+              Guarda il video per scoprire come i nostri Partner chiudono vendite e guadagnano commissioni high-ticket.
+            </p>
+            <div className="rounded-2xl overflow-hidden border border-border/30 glass">
+              <video
+                controls
+                playsInline
+                preload="metadata"
+                className="w-full aspect-video bg-card"
+                src={demoVideo}
+              />
+            </div>
+          </div>
+
+          {/* FAQ Section */}
+          <div>
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-xs font-medium text-primary tracking-wider uppercase mb-4">
+                <HelpCircle className="w-3.5 h-3.5" /> Domande frequenti
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground">
+                Hai delle domande?
+              </h2>
+            </div>
+
+            <div className="rounded-2xl glass border border-border/30 p-4 sm:p-6">
+              <Accordion type="single" collapsible className="space-y-1">
+                {[
+                  { q: "Quanto costa diventare Partner?", a: "Zero. Non ci sono costi di ingresso, fee mensili o vincoli. Guadagni solo quando vendi." },
+                  { q: "Quanto posso guadagnare per ogni vendita?", a: "La commissione base è di €997 per contratto chiuso. Con i bonus acceleratori puoi arrivare a €1.500 extra al mese raggiungendo 3 o 5 vendite." },
+                  { q: "Come funziona il payout?", a: "I pagamenti avvengono in automatico tramite Stripe Connect. Appena il ristoratore paga, la tua commissione viene accreditata direttamente sul tuo conto." },
+                  { q: "Cos'è la Sandbox Demo?", a: "È un ambiente demo completo e pre-configurato che puoi mostrare ai prospect. Include menu, ordini, cucina e dashboard — tutto funzionante, con dati finti realistici." },
+                  { q: "Posso costruire un team?", a: "Sì! Dopo 3 vendite diventi Team Leader e guadagni un override di €200 per ogni vendita fatta dal tuo team. Puoi reclutare nuovi partner con il tuo link referral." },
+                  { q: "Serve esperienza nel settore?", a: "No. Forniamo script di vendita, materiali di marketing, obiezioni con risposte pronte e una demo che parla da sola. Ti basta la motivazione." },
+                  { q: "Posso farlo part-time?", a: "Assolutamente. Molti partner vendono nei ritagli di tempo. Non ci sono obiettivi minimi obbligatori." },
+                ].map((faq, i) => (
+                  <AccordionItem key={i} value={`faq-${i}`} className="border-border/20">
+                    <AccordionTrigger className="text-sm text-foreground hover:no-underline py-3">
+                      {faq.q}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-sm text-muted-foreground">
+                      {faq.a}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </div>
+
+          {/* CTA finale */}
+          <div className="text-center pb-12">
+            <p className="text-sm text-muted-foreground mb-4">Pronto a iniziare?</p>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="px-8 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm tracking-wide inline-flex items-center gap-2"
+            >
+              Registrati ora <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
