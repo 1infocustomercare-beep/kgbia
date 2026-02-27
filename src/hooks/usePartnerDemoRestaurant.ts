@@ -7,6 +7,7 @@ interface DemoRestaurant {
   name: string;
   slug: string;
   primary_color: string | null;
+  logo_url: string | null;
 }
 
 export function usePartnerDemoRestaurant() {
@@ -18,7 +19,7 @@ export function usePartnerDemoRestaurant() {
     if (!user) { setLoading(false); return; }
     const { data } = await supabase
       .from("restaurants")
-      .select("id, name, slug, primary_color")
+      .select("id, name, slug, primary_color, logo_url")
       .eq("owner_id", user.id)
       .like("slug", "demo-partner-%")
       .limit(1)
