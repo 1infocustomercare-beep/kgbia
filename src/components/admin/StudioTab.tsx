@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   UtensilsCrossed, Sparkles, Camera, Wand2, Save, X, Edit, Trash2,
-  Image as ImageIcon, Plus, Palette, Upload, Globe, Languages, Check
+  Image as ImageIcon, Plus, Palette, Upload, Globe, Languages, Check,
+  ChevronDown, ChevronUp, Search, Loader2
 } from "lucide-react";
 import LivePreview from "@/components/restaurant/LivePreview";
 import { supabase } from "@/integrations/supabase/client";
@@ -45,9 +46,23 @@ const StudioTab = ({
   const [regeneratingId, setRegeneratingId] = useState<string | null>(null);
   const [translating, setTranslating] = useState(false);
   const [translationDone, setTranslationDone] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(new Set());
 
   const allCategories = [...new Set(menuItems.map(i => i.category))];
   const restaurantSlug = restaurant?.slug || "";
+
+  const filteredItems = searchQuery.trim()
+    ? menuItems.filter(i => i.name.toLowerCase().includes(searchQuery.toLowerCase()) || i.category.toLowerCase().includes(searchQuery.toLowerCase()))
+    : menuItems;
+
+  const toggleCategory = (cat: string) => {
+    setCollapsedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat); else next.add(cat);
+      return next;
+    });
+  };
 
   const handleAddMenuItem = async () => {
     if (!restaurant || !newItem.name.trim()) return;
@@ -101,6 +116,7 @@ const StudioTab = ({
         body: { action: "generate-image", dishDescription: `${item.name}. ${item.description || ""}`, dishCategory: item.category },
       });
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
       if (data?.imageUrl) {
         await supabase.from("menu_items").update({ image_url: data.imageUrl }).eq("id", item.id);
         setMenuItems(prev => prev.map(i => i.id === item.id ? { ...i, image: data.imageUrl } : i));
@@ -124,6 +140,7 @@ const StudioTab = ({
         const base64 = await new Promise<string>((resolve, reject) => { reader.onload = () => resolve(reader.result as string); reader.onerror = reject; reader.readAsDataURL(file); });
         const { data, error } = await supabase.functions.invoke("ai-menu", { body: { action: "ocr", imageBase64: base64 } });
         if (error) throw error;
+        if (data?.error) throw new Error(data.error);
         if (data?.dishes?.length > 0) {
           const dishesWithLoading = data.dishes.map((d: any) => ({ ...d, imageLoading: true }));
           setOcrResult(dishesWithLoading);
@@ -163,6 +180,7 @@ const StudioTab = ({
     try {
       const { data, error } = await supabase.functions.invoke("ai-translate", { body: { menuItems, targetLanguages: settingsLanguages } });
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
       if (data?.translations) {
         for (const t of data.translations) {
           await supabase.from("menu_items").update({ name_translations: t.name_translations, description_translations: t.description_translations } as any).eq("id", t.id);
@@ -176,154 +194,267 @@ const StudioTab = ({
 
   const sections: { id: StudioSection; label: string; icon: React.ReactNode }[] = [
     { id: "menu", label: "Menu", icon: <UtensilsCrossed className="w-4 h-4" /> },
-    { id: "preview", label: "🎨 Design & Preview", icon: <Palette className="w-4 h-4" /> },
+    { id: "preview", label: "Design", icon: <Palette className="w-4 h-4" /> },
     { id: "ai", label: "IA", icon: <Sparkles className="w-4 h-4" /> },
     { id: "translate", label: "Lingue", icon: <Languages className="w-4 h-4" /> },
   ];
 
+  const filteredCategories = searchQuery.trim()
+    ? [...new Set(filteredItems.map(i => i.category))]
+    : allCategories;
+
   return (
-    <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      {/* Sub-tabs */}
-      <div className="flex gap-1 overflow-x-auto scrollbar-hide pb-1">
+    <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      {/* Sub-tabs — sticky, compact */}
+      <div className="flex gap-1.5 bg-secondary/30 p-1 rounded-xl">
         {sections.map(s => (
           <button key={s.id} onClick={() => setSection(s.id)}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors min-h-[36px] ${
-              section === s.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
+            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-lg text-xs font-semibold transition-all min-h-[40px] ${
+              section === s.id
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             }`}>
-            {s.icon} {s.label}
+            {s.icon}
+            <span className="hidden xs:inline">{s.label}</span>
           </button>
         ))}
       </div>
 
       {/* ===== MENU MANAGEMENT ===== */}
       {section === "menu" && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-foreground">{menuItems.length} piatti</h3>
+        <div className="space-y-3">
+          {/* Header bar: count + search + add */}
+          <div className="flex items-center gap-2">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder={`Cerca tra ${menuItems.length} piatti...`}
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/40"
+              />
+            </div>
             <motion.button onClick={() => setShowAddItem(!showAddItem)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium min-h-[40px]"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold min-h-[44px] flex-shrink-0 shadow-sm"
               whileTap={{ scale: 0.95 }}>
-              <Plus className="w-3.5 h-3.5" /> Aggiungi
+              <Plus className="w-4 h-4" />
+              <span className="hidden sm:inline">Aggiungi</span>
             </motion.button>
           </div>
 
+          {/* Add item form */}
           <AnimatePresence>
             {showAddItem && (
               <motion.div className="p-4 rounded-2xl bg-card border border-primary/20 space-y-3"
                 initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-sm font-semibold text-foreground">Nuovo piatto</p>
+                  <button onClick={() => setShowAddItem(false)} className="p-1 rounded-lg hover:bg-secondary">
+                    <X className="w-4 h-4 text-muted-foreground" />
+                  </button>
+                </div>
                 <input type="text" value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })}
-                  placeholder="Nome piatto" className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  placeholder="Nome piatto" className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
                 <textarea value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })}
-                  placeholder="Descrizione" className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  placeholder="Descrizione (opzionale)" rows={2} className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30" />
                 <div className="grid grid-cols-2 gap-2">
-                  <input type="number" step="0.01" value={newItem.price} onChange={e => setNewItem({ ...newItem, price: parseFloat(e.target.value) || 0 })}
-                    placeholder="€ Prezzo" className="px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">€</span>
+                    <input type="number" step="0.01" value={newItem.price || ""} onChange={e => setNewItem({ ...newItem, price: parseFloat(e.target.value) || 0 })}
+                      placeholder="0.00" className="w-full pl-7 pr-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  </div>
+                  <select value={newItem.category} onChange={e => setNewItem({ ...newItem, category: e.target.value })}
+                    className="px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] appearance-none">
+                    {allCategories.map(c => <option key={c} value={c}>{c}</option>)}
+                    <option value="Altro">+ Nuova categoria</option>
+                  </select>
+                </div>
+                {newItem.category === "Altro" && !allCategories.includes(newItem.category) && (
                   <input type="text" value={newItem.category} onChange={e => setNewItem({ ...newItem, category: e.target.value })}
-                    placeholder="Categoria" className="px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-                </div>
-                <div className="flex gap-2">
-                  <motion.button onClick={handleAddMenuItem} disabled={!newItem.name.trim()}
-                    className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium min-h-[44px] disabled:opacity-40"
-                    whileTap={{ scale: 0.97 }}>Aggiungi</motion.button>
-                  <button onClick={() => setShowAddItem(false)} className="px-4 py-2.5 rounded-xl bg-secondary text-sm min-h-[44px]">Annulla</button>
-                </div>
+                    placeholder="Nome categoria" className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                )}
+                <motion.button onClick={handleAddMenuItem} disabled={!newItem.name.trim()}
+                  className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold min-h-[48px] disabled:opacity-40 shadow-sm"
+                  whileTap={{ scale: 0.97 }}>
+                  <Plus className="w-4 h-4 inline mr-1.5" />Aggiungi piatto
+                </motion.button>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {allCategories.map(cat => {
-            const catItems = menuItems.filter(i => i.category === cat);
-            return (
-              <div key={cat}>
-                <p className="text-xs text-muted-foreground/70 uppercase tracking-wider mb-2">{cat} ({catItems.length})</p>
-                <div className="space-y-2">
-                  {catItems.map(item => (
-                    <motion.div key={item.id} className="flex gap-3 p-3 rounded-xl bg-card" layout>
-                      {item.image ? (
-                        <img src={item.image} alt={item.name} className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
-                      ) : (
-                        <div className="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
-                          <UtensilsCrossed className="w-5 h-5 text-muted-foreground/30" />
+          {/* Menu items by category — collapsible */}
+          <div className="space-y-2">
+            {filteredCategories.map(cat => {
+              const catItems = filteredItems.filter(i => i.category === cat);
+              const isCollapsed = collapsedCategories.has(cat);
+              return (
+                <div key={cat} className="rounded-2xl bg-card border border-border/40 overflow-hidden">
+                  {/* Category header — tappable */}
+                  <button
+                    onClick={() => toggleCategory(cat)}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-secondary/30 transition-colors min-h-[48px]"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-foreground">{cat}</span>
+                      <span className="px-2 py-0.5 rounded-full bg-secondary text-[10px] font-medium text-muted-foreground">
+                        {catItems.length}
+                      </span>
+                    </div>
+                    {isCollapsed ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronUp className="w-4 h-4 text-muted-foreground" />}
+                  </button>
+
+                  {/* Items */}
+                  <AnimatePresence initial={false}>
+                    {!isCollapsed && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="divide-y divide-border/30">
+                          {catItems.map(item => (
+                            <div key={item.id} className="flex items-center gap-3 px-4 py-3">
+                              {/* Image */}
+                              <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-secondary/50">
+                                {item.image ? (
+                                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center">
+                                    <UtensilsCrossed className="w-4 h-4 text-muted-foreground/30" />
+                                  </div>
+                                )}
+                                {regeneratingId === item.id && (
+                                  <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
+                                    <Loader2 className="w-4 h-4 text-primary animate-spin" />
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Info */}
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-foreground leading-tight truncate">{item.name}</p>
+                                {item.description && (
+                                  <p className="text-[11px] text-muted-foreground leading-tight truncate mt-0.5">{item.description}</p>
+                                )}
+                              </div>
+
+                              {/* Price */}
+                              <span className="text-sm font-bold text-primary tabular-nums flex-shrink-0">
+                                €{item.price.toFixed(2)}
+                              </span>
+
+                              {/* Actions */}
+                              <div className="flex items-center gap-0.5 flex-shrink-0">
+                                <button onClick={() => setEditingItem({ id: item.id, name: item.name, description: item.description, price: item.price, category: item.category })}
+                                  className="p-2 rounded-lg hover:bg-secondary min-w-[36px] min-h-[36px] flex items-center justify-center">
+                                  <Edit className="w-3.5 h-3.5 text-muted-foreground" />
+                                </button>
+                                <button onClick={() => handleRegenerateImage(item)} disabled={regeneratingId === item.id}
+                                  className="p-2 rounded-lg hover:bg-secondary disabled:opacity-30 min-w-[36px] min-h-[36px] flex items-center justify-center">
+                                  <Wand2 className="w-3.5 h-3.5 text-primary" />
+                                </button>
+                                <button onClick={() => handleDeleteMenuItem(item.id)}
+                                  className="p-2 rounded-lg hover:bg-destructive/10 min-w-[36px] min-h-[36px] flex items-center justify-center">
+                                  <Trash2 className="w-3.5 h-3.5 text-destructive/70" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
-                        <p className="text-xs text-muted-foreground truncate">{item.description}</p>
-                        <p className="text-sm font-display font-bold text-primary mt-0.5">€{item.price.toFixed(2)}</p>
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <button onClick={() => setEditingItem({ id: item.id, name: item.name, description: item.description, price: item.price, category: item.category })}
-                          className="p-1.5 rounded-lg hover:bg-secondary"><Edit className="w-3.5 h-3.5 text-muted-foreground" /></button>
-                        <button onClick={() => handleRegenerateImage(item)} disabled={regeneratingId === item.id}
-                          className="p-1.5 rounded-lg hover:bg-secondary disabled:opacity-30"><Wand2 className="w-3.5 h-3.5 text-primary" /></button>
-                        <button onClick={() => handleDeleteMenuItem(item.id)}
-                          className="p-1.5 rounded-lg hover:bg-accent/10"><Trash2 className="w-3.5 h-3.5 text-accent" /></button>
-                      </div>
-                    </motion.div>
-                  ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+
           {menuItems.length === 0 && (
-            <div className="text-center py-12">
+            <div className="text-center py-16 rounded-2xl bg-card border border-border/40">
               <UtensilsCrossed className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
-              <p className="text-sm text-muted-foreground">Nessun piatto — aggiungi manualmente o usa l'IA</p>
+              <p className="text-sm font-medium text-muted-foreground">Nessun piatto nel menu</p>
+              <p className="text-xs text-muted-foreground/60 mt-1">Aggiungi manualmente o usa l'IA per importare</p>
+            </div>
+          )}
+
+          {searchQuery && filteredItems.length === 0 && menuItems.length > 0 && (
+            <div className="text-center py-8 rounded-2xl bg-card border border-border/40">
+              <Search className="w-8 h-8 mx-auto mb-2 text-muted-foreground/20" />
+              <p className="text-sm text-muted-foreground">Nessun risultato per "{searchQuery}"</p>
             </div>
           )}
         </div>
       )}
 
-      {/* Design section removed — merged into Preview */}
-
       {/* ===== AI MENU CREATOR ===== */}
       {section === "ai" && (
-        <div className="space-y-5">
-          <div className="text-center py-2">
-            <Sparkles className="w-10 h-10 mx-auto mb-2 text-primary" />
-            <h3 className="text-base font-display font-bold text-foreground">AI Menu Creator</h3>
-            <p className="text-xs text-muted-foreground mt-1">Foto → OCR → Menu in 60 secondi</p>
+        <div className="space-y-4">
+          <div className="p-5 rounded-2xl bg-card border border-border/40 text-center">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
+              <Sparkles className="w-7 h-7 text-primary" />
+            </div>
+            <h3 className="text-base font-bold text-foreground">AI Menu Creator</h3>
+            <p className="text-xs text-muted-foreground mt-1">Scatta una foto del menu cartaceo → l'IA lo digitalizza in secondi</p>
+            <p className="text-[10px] text-primary/70 mt-2 font-medium">
+              Token disponibili: {aiTokens}
+            </p>
           </div>
-          <motion.div className="border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center cursor-pointer hover:border-primary/50 transition-colors min-h-[120px]"
-            whileTap={{ scale: 0.98 }} onClick={handleOcrUpload}>
+
+          <motion.button
+            onClick={handleOcrUpload}
+            disabled={ocrUploading}
+            className="w-full p-6 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 transition-all text-center min-h-[120px] disabled:opacity-50"
+            whileTap={{ scale: 0.98 }}
+          >
             {ocrUploading ? (
               <div className="space-y-3">
-                <motion.div className="w-12 h-12 rounded-full border-2 border-primary border-t-transparent mx-auto" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+                <Loader2 className="w-10 h-10 mx-auto text-primary animate-spin" />
                 <p className="text-sm text-primary font-medium">Analisi OCR in corso...</p>
               </div>
             ) : (
               <>
-                <Camera className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
-                <p className="text-sm font-medium text-foreground">Scatta o carica il menu cartaceo</p>
-                <p className="text-xs text-muted-foreground mt-1">Max 10MB · Costa 1 gettone IA</p>
+                <Camera className="w-10 h-10 mx-auto mb-3 text-primary/60" />
+                <p className="text-sm font-semibold text-foreground">Scatta o carica il menu</p>
+                <p className="text-xs text-muted-foreground mt-1">Max 10MB · Costa 1 token IA</p>
               </>
             )}
-          </motion.div>
+          </motion.button>
+
           {ocrResult && (
-            <motion.div className="space-y-3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <h4 className="text-sm font-semibold text-foreground">{ocrResult.length} piatti rilevati</h4>
-              {ocrResult.map((dish, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
-                  <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-primary/10">
-                    {dish.imageLoading ? (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <motion.div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity }} />
-                      </div>
-                    ) : dish.image_url ? (
-                      <img src={dish.image_url} alt={dish.name} className="w-full h-full object-cover" />
-                    ) : <div className="w-full h-full flex items-center justify-center"><Wand2 className="w-5 h-5 text-primary" /></div>}
+            <motion.div className="space-y-3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-semibold text-foreground">{ocrResult.length} piatti rilevati</h4>
+                <button onClick={() => setOcrResult(null)} className="text-xs text-muted-foreground hover:text-foreground">Annulla</button>
+              </div>
+              <div className="space-y-2 max-h-[50vh] overflow-y-auto rounded-2xl">
+                {ocrResult.map((dish, i) => (
+                  <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/40">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-primary/5">
+                      {dish.imageLoading ? (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Loader2 className="w-5 h-5 text-primary animate-spin" />
+                        </div>
+                      ) : dish.image_url ? (
+                        <img src={dish.image_url} alt={dish.name} className="w-full h-full object-cover" />
+                      ) : <div className="w-full h-full flex items-center justify-center"><Wand2 className="w-4 h-4 text-primary/40" /></div>}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">{dish.name}</p>
+                      <p className="text-[11px] text-muted-foreground truncate">{dish.description}</p>
+                    </div>
+                    <span className="text-sm font-bold text-primary flex-shrink-0">€{dish.price?.toFixed(2) || "0.00"}</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{dish.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">{dish.description}</p>
-                    <span className="text-xs font-semibold text-primary">€{dish.price?.toFixed(2) || "0.00"}</span>
-                  </div>
-                </div>
-              ))}
-              <button onClick={handleImportOcrDishes} disabled={ocrImporting}
-                className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm gold-glow disabled:opacity-50 min-h-[48px]">
+                ))}
+              </div>
+              <motion.button onClick={handleImportOcrDishes} disabled={ocrImporting}
+                className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm disabled:opacity-50 min-h-[48px] shadow-sm"
+                whileTap={{ scale: 0.97 }}>
+                {ocrImporting ? <Loader2 className="w-4 h-4 inline animate-spin mr-2" /> : <Plus className="w-4 h-4 inline mr-2" />}
                 {ocrImporting ? "Importazione..." : `Importa ${ocrResult.length} piatti`}
-              </button>
+              </motion.button>
             </motion.div>
           )}
         </div>
@@ -331,167 +462,186 @@ const StudioTab = ({
 
       {/* ===== TRANSLATE ===== */}
       {section === "translate" && (
-        <div className="space-y-5">
-          <div className="text-center py-2">
-            <Languages className="w-10 h-10 mx-auto mb-2 text-primary" />
-            <h3 className="text-base font-display font-bold text-foreground">Traduzione IA</h3>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {[
-              { code: "it", label: "🇮🇹 IT" }, { code: "en", label: "🇬🇧 EN" }, { code: "de", label: "🇩🇪 DE" },
-              { code: "fr", label: "🇫🇷 FR" }, { code: "es", label: "🇪🇸 ES" }, { code: "zh", label: "🇨🇳 中" },
-              { code: "ja", label: "🇯🇵 日" }, { code: "ar", label: "🇸🇦 عر" },
-            ].map(l => (
-              <button key={l.code} onClick={() => setSettingsLanguages(prev => prev.includes(l.code) ? prev.filter(x => x !== l.code) : [...prev, l.code])}
-                className={`px-3 py-2 rounded-xl text-xs font-medium min-h-[40px] ${settingsLanguages.includes(l.code) ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
-                {l.label}
-              </button>
-            ))}
-          </div>
-          <motion.button onClick={handleTranslate} disabled={translating || settingsLanguages.filter(l => l !== "it").length === 0}
-            className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm gold-glow disabled:opacity-50 min-h-[48px]"
-            whileTap={{ scale: 0.97 }}>
-            {translating ? "Traduzione IA..." : <><Languages className="w-4 h-4 inline mr-2" />Traduci Menu</>}
-          </motion.button>
-          {translationDone && (
-            <div className="p-4 rounded-2xl bg-green-500/10 border border-green-500/20 text-center">
-              <Check className="w-6 h-6 mx-auto text-green-400 mb-1" />
-              <p className="text-sm text-green-400 font-medium">Traduzione completata</p>
+        <div className="space-y-4">
+          <div className="p-5 rounded-2xl bg-card border border-border/40 text-center">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
+              <Languages className="w-7 h-7 text-primary" />
             </div>
+            <h3 className="text-base font-bold text-foreground">Traduzione IA</h3>
+            <p className="text-xs text-muted-foreground mt-1">Traduci automaticamente il menu in più lingue</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-card border border-border/40 space-y-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Seleziona lingue</p>
+            <div className="grid grid-cols-4 gap-2">
+              {[
+                { code: "it", label: "🇮🇹", name: "IT" },
+                { code: "en", label: "🇬🇧", name: "EN" },
+                { code: "de", label: "🇩🇪", name: "DE" },
+                { code: "fr", label: "🇫🇷", name: "FR" },
+                { code: "es", label: "🇪🇸", name: "ES" },
+                { code: "zh", label: "🇨🇳", name: "中" },
+                { code: "ja", label: "🇯🇵", name: "日" },
+                { code: "ar", label: "🇸🇦", name: "عر" },
+              ].map(l => (
+                <button key={l.code} onClick={() => setSettingsLanguages(prev => prev.includes(l.code) ? prev.filter(x => x !== l.code) : [...prev, l.code])}
+                  className={`flex flex-col items-center gap-1 py-3 rounded-xl text-sm font-medium min-h-[56px] transition-all ${
+                    settingsLanguages.includes(l.code)
+                      ? "bg-primary/10 text-primary border-2 border-primary/30"
+                      : "bg-secondary/30 text-muted-foreground border-2 border-transparent hover:border-border"
+                  }`}>
+                  <span className="text-lg">{l.label}</span>
+                  <span className="text-[10px]">{l.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <motion.button onClick={handleTranslate} disabled={translating || settingsLanguages.filter(l => l !== "it").length === 0}
+            className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm disabled:opacity-40 min-h-[48px] shadow-sm"
+            whileTap={{ scale: 0.97 }}>
+            {translating ? <Loader2 className="w-4 h-4 inline animate-spin mr-2" /> : <Languages className="w-4 h-4 inline mr-2" />}
+            {translating ? "Traduzione in corso..." : "Traduci Menu"}
+          </motion.button>
+
+          {translationDone && (
+            <motion.div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-center"
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+              <Check className="w-6 h-6 mx-auto text-emerald-500 mb-1" />
+              <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">Traduzione completata</p>
+            </motion.div>
           )}
         </div>
       )}
 
-      {/* ===== DESIGN & LIVE PREVIEW (UNIFIED) ===== */}
+      {/* ===== DESIGN & LIVE PREVIEW ===== */}
       {section === "preview" && restaurant && (
-        <div className="space-y-5">
-          {/* Fun header */}
-          <div className="text-center py-2">
-            <motion.div initial={{ rotate: -10 }} animate={{ rotate: 10 }} transition={{ duration: 2, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}>
-              <Palette className="w-10 h-10 mx-auto mb-2 text-primary" />
-            </motion.div>
-            <h3 className="text-lg font-display font-bold text-foreground">Il tuo Brand, Live 🎨</h3>
-            <p className="text-sm text-muted-foreground mt-1">Modifica e guarda i cambiamenti in tempo reale</p>
-          </div>
-
-          {/* Branding controls */}
-          <div className="space-y-4">
-            {/* Logo */}
-            <motion.div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3" whileHover={{ scale: 1.01 }}>
-              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5">
-                <ImageIcon className="w-3.5 h-3.5" /> Logo
-              </p>
-              <div className="flex items-center gap-4">
-                <motion.div className="relative" whileTap={{ scale: 0.95 }}>
-                  <img src={restaurant?.logo_url || "/placeholder.svg"} alt="Logo" className="w-16 h-16 rounded-2xl object-contain border-2 border-primary/20 shadow-lg" />
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-md">
-                    <Upload className="w-3 h-3 text-primary-foreground" />
-                  </div>
-                </motion.div>
-                <div className="flex-1">
-                  <motion.button onClick={handleLogoUpload} disabled={logoUploading}
-                    className="w-full px-4 py-3 rounded-xl bg-primary/10 text-primary text-sm font-medium min-h-[44px] border border-primary/20 hover:bg-primary/20 transition-colors"
-                    whileTap={{ scale: 0.97 }}>
-                    {logoUploading ? "Caricamento..." : "📸 Carica nuovo logo"}
-                  </motion.button>
-                  <p className="text-[10px] text-muted-foreground mt-1 text-center">I colori si estraggono automaticamente</p>
+        <div className="space-y-4">
+          {/* Logo */}
+          <div className="p-4 rounded-2xl bg-card border border-border/40 space-y-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+              <ImageIcon className="w-3.5 h-3.5" /> Logo del ristorante
+            </p>
+            <div className="flex items-center gap-4">
+              <div className="relative flex-shrink-0">
+                <img src={restaurant?.logo_url || "/placeholder.svg"} alt="Logo"
+                  className="w-16 h-16 rounded-2xl object-contain border-2 border-border/50 shadow-sm bg-secondary/30" />
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-md">
+                  <Upload className="w-3 h-3 text-primary-foreground" />
                 </div>
               </div>
-            </motion.div>
+              <div className="flex-1 space-y-1.5">
+                <motion.button onClick={handleLogoUpload} disabled={logoUploading}
+                  className="w-full px-4 py-3 rounded-xl bg-primary/10 text-primary text-sm font-medium min-h-[44px] border border-primary/20 hover:bg-primary/20 transition-colors"
+                  whileTap={{ scale: 0.97 }}>
+                  {logoUploading ? <Loader2 className="w-4 h-4 inline animate-spin mr-2" /> : null}
+                  {logoUploading ? "Caricamento..." : "Carica nuovo logo"}
+                </motion.button>
+                <p className="text-[10px] text-muted-foreground/70 text-center">I colori si estraggono automaticamente</p>
+              </div>
+            </div>
+          </div>
 
-            {/* Tagline */}
-            <motion.div className="p-4 rounded-2xl bg-card border border-border/50 space-y-2" whileHover={{ scale: 1.01 }}>
-              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">✍️ Tagline</p>
-              <input type="text" value={settingsTagline} onChange={e => setSettingsTagline(e.target.value)}
-                placeholder="Es: La vera cucina italiana dal 1985"
-                maxLength={120}
+          {/* Tagline */}
+          <div className="p-4 rounded-2xl bg-card border border-border/40 space-y-2">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tagline</p>
+            <input type="text" value={settingsTagline} onChange={e => setSettingsTagline(e.target.value)}
+              placeholder="Es: La vera cucina italiana dal 1985"
+              maxLength={120}
+              onBlur={handleSaveSettings}
+              className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/40" />
+          </div>
+
+          {/* Color Picker */}
+          <div className="p-4 rounded-2xl bg-card border border-border/40 space-y-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+              <Palette className="w-3.5 h-3.5" /> Colore Brand
+            </p>
+            <div className="flex items-center gap-3">
+              <input type="color" value={settingsPrimaryColor}
+                onChange={e => { setSettingsPrimaryColor(e.target.value); applyBrandTheme(e.target.value); }}
                 onBlur={handleSaveSettings}
-                className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/40" />
-            </motion.div>
-
-            {/* Color Picker — fun & interactive */}
-            <motion.div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3" whileHover={{ scale: 1.01 }}>
-              <p className="text-xs text-muted-foreground/70 uppercase tracking-wider flex items-center gap-1.5">
-                <Palette className="w-3.5 h-3.5" /> 🎨 Colore Brand
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="relative w-14 h-14 flex-shrink-0">
-                  <input type="color" value={settingsPrimaryColor}
-                    onChange={e => { setSettingsPrimaryColor(e.target.value); applyBrandTheme(e.target.value); }}
-                    onBlur={handleSaveSettings}
-                    className="w-14 h-14 rounded-2xl border-2 border-primary/30 shadow-lg cursor-pointer bg-transparent p-0.5 appearance-none [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-xl [&::-webkit-color-swatch]:border-0 [&::-moz-color-swatch]:rounded-xl [&::-moz-color-swatch]:border-0" />
-                </div>
-                <div className="flex-1 space-y-2">
-                  <input type="text" value={settingsPrimaryColor}
-                    onChange={e => { setSettingsPrimaryColor(e.target.value); if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) { applyBrandTheme(e.target.value); } }}
-                    onBlur={handleSaveSettings}
-                    placeholder="#C8963E" maxLength={7}
-                    className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-                  {/* Quick presets */}
-                  <div className="flex gap-1.5 flex-wrap">
-                    {["#C8963E", "#E74C3C", "#2ECC71", "#3498DB", "#9B59B6", "#1ABC9C", "#F39C12", "#E91E63"].map(c => (
-                      <motion.button key={c} onClick={() => { setSettingsPrimaryColor(c); applyBrandTheme(c); handleSaveSettings(); }}
-                        className={`w-7 h-7 rounded-lg border-2 transition-all ${settingsPrimaryColor === c ? "border-foreground scale-110 shadow-md" : "border-transparent hover:border-muted-foreground/30"}`}
-                        style={{ backgroundColor: c }}
-                        whileTap={{ scale: 0.85 }} whileHover={{ scale: 1.15 }} />
-                    ))}
-                  </div>
+                className="w-12 h-12 rounded-xl border-2 border-border/50 cursor-pointer bg-transparent p-0.5 appearance-none flex-shrink-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-lg [&::-webkit-color-swatch]:border-0" />
+              <div className="flex-1 space-y-2">
+                <input type="text" value={settingsPrimaryColor}
+                  onChange={e => { setSettingsPrimaryColor(e.target.value); if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) applyBrandTheme(e.target.value); }}
+                  onBlur={handleSaveSettings}
+                  placeholder="#C8963E" maxLength={7}
+                  className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                <div className="flex gap-1.5 flex-wrap">
+                  {["#C8963E", "#E74C3C", "#2ECC71", "#3498DB", "#9B59B6", "#1ABC9C", "#F39C12", "#E91E63"].map(c => (
+                    <motion.button key={c} onClick={() => { setSettingsPrimaryColor(c); applyBrandTheme(c); handleSaveSettings(); }}
+                      className={`w-7 h-7 rounded-lg border-2 transition-all ${settingsPrimaryColor === c ? "border-foreground scale-110 shadow-md" : "border-transparent hover:border-muted-foreground/30"}`}
+                      style={{ backgroundColor: c }}
+                      whileTap={{ scale: 0.85 }} whileHover={{ scale: 1.15 }} />
+                  ))}
                 </div>
               </div>
-              <div className="flex gap-2 mt-1">
-                <button onClick={() => { setSettingsPrimaryColor(DEFAULT_PRIMARY_HEX); resetBrandTheme(); handleSaveSettings(); }}
-                  className="flex-1 px-3 py-2.5 rounded-xl bg-secondary text-secondary-foreground text-xs min-h-[40px] hover:bg-secondary/80 transition-colors">
-                  🔄 Ripristina
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => { setSettingsPrimaryColor(DEFAULT_PRIMARY_HEX); resetBrandTheme(); handleSaveSettings(); }}
+                className="flex-1 px-3 py-2.5 rounded-xl bg-secondary/50 text-muted-foreground text-xs min-h-[40px] hover:bg-secondary transition-colors font-medium">
+                Ripristina default
+              </button>
+              {restaurant?.logo_url && (
+                <button onClick={async () => {
+                  try { const h = await extractDominantColor(restaurant.logo_url!); const hex = hslToHex(h); setSettingsPrimaryColor(hex); applyBrandTheme(hex); handleSaveSettings(); toast({ title: "Colore estratto dal logo!" }); }
+                  catch { toast({ title: "Errore", variant: "destructive" }); }
+                }}
+                  className="flex-1 px-3 py-2.5 rounded-xl bg-primary/10 text-primary text-xs min-h-[40px] hover:bg-primary/20 transition-colors font-medium">
+                  Estrai dal logo
                 </button>
-                {restaurant?.logo_url && (
-                  <button onClick={async () => {
-                    try { const h = await extractDominantColor(restaurant.logo_url!); const hex = hslToHex(h); setSettingsPrimaryColor(hex); applyBrandTheme(hex); handleSaveSettings(); toast({ title: "Colore estratto dal logo! 🎨" }); }
-                    catch { toast({ title: "Errore", variant: "destructive" }); }
-                  }}
-                    className="flex-1 px-3 py-2.5 rounded-xl bg-primary/10 text-primary text-xs min-h-[40px] hover:bg-primary/20 transition-colors">
-                    🪄 Estrai dal Logo
-                  </button>
-                )}
-              </div>
-            </motion.div>
+              )}
+            </div>
           </div>
 
-          {/* iPhone Live Preview */}
+          {/* Live Preview */}
           <LivePreview slug={restaurantSlug} primaryColor={settingsPrimaryColor} />
         </div>
       )}
 
       {/* EDIT ITEM MODAL */}
-      {editingItem && (
-        <motion.div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center px-5"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setEditingItem(null)}>
-          <motion.div className="w-full max-w-sm bg-card rounded-2xl border border-border p-5 space-y-4"
-            initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-display font-bold text-foreground">Modifica piatto</h3>
-              <button onClick={() => setEditingItem(null)} className="p-1.5 rounded-full hover:bg-secondary"><X className="w-4 h-4 text-muted-foreground" /></button>
-            </div>
-            <div className="space-y-3">
-              <input type="text" value={editingItem.name} onChange={e => setEditingItem({ ...editingItem, name: e.target.value })}
-                placeholder="Nome" className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-              <textarea value={editingItem.description} onChange={e => setEditingItem({ ...editingItem, description: e.target.value })}
-                placeholder="Descrizione" className="w-full px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm resize-none h-20 focus:outline-none focus:ring-2 focus:ring-primary/30" />
-              <div className="grid grid-cols-2 gap-2">
-                <input type="number" step="0.01" value={editingItem.price} onChange={e => setEditingItem({ ...editingItem, price: parseFloat(e.target.value) || 0 })}
-                  placeholder="Prezzo" className="px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-                <input type="text" value={editingItem.category} onChange={e => setEditingItem({ ...editingItem, category: e.target.value })}
-                  placeholder="Categoria" className="px-3 py-2.5 rounded-xl bg-secondary text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+      <AnimatePresence>
+        {editingItem && (
+          <motion.div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:px-5"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setEditingItem(null)}>
+            <motion.div className="w-full sm:max-w-sm bg-card rounded-t-3xl sm:rounded-2xl border border-border p-5 space-y-4 safe-bottom"
+              initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }} onClick={e => e.stopPropagation()}>
+              {/* Handle bar on mobile */}
+              <div className="w-10 h-1 bg-border/50 rounded-full mx-auto sm:hidden" />
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-foreground">Modifica piatto</h3>
+                <button onClick={() => setEditingItem(null)} className="p-2 rounded-full hover:bg-secondary min-w-[36px] min-h-[36px] flex items-center justify-center">
+                  <X className="w-4 h-4 text-muted-foreground" />
+                </button>
               </div>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={handleEditMenuItem} className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm min-h-[44px] flex items-center justify-center gap-2">
-                <Save className="w-4 h-4" /> Salva
-              </button>
-              <button onClick={() => setEditingItem(null)} className="px-4 py-2.5 rounded-xl bg-secondary text-sm min-h-[44px]">Annulla</button>
-            </div>
+              <div className="space-y-3">
+                <input type="text" value={editingItem.name} onChange={e => setEditingItem({ ...editingItem, name: e.target.value })}
+                  placeholder="Nome" className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                <textarea value={editingItem.description} onChange={e => setEditingItem({ ...editingItem, description: e.target.value })}
+                  placeholder="Descrizione" rows={3} className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">€</span>
+                    <input type="number" step="0.01" value={editingItem.price} onChange={e => setEditingItem({ ...editingItem, price: parseFloat(e.target.value) || 0 })}
+                      placeholder="Prezzo" className="w-full pl-7 pr-3 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  </div>
+                  <input type="text" value={editingItem.category} onChange={e => setEditingItem({ ...editingItem, category: e.target.value })}
+                    placeholder="Categoria" className="px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <motion.button onClick={handleEditMenuItem}
+                  className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm min-h-[48px] flex items-center justify-center gap-2 shadow-sm"
+                  whileTap={{ scale: 0.97 }}>
+                  <Save className="w-4 h-4" /> Salva
+                </motion.button>
+                <button onClick={() => setEditingItem(null)} className="px-5 py-3 rounded-xl bg-secondary/50 text-sm min-h-[48px] font-medium text-muted-foreground">Annulla</button>
+              </div>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      )}
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
