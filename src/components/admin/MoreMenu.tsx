@@ -7,11 +7,13 @@ import {
   ArrowLeft
 } from "lucide-react";
 import PrivateChat from "@/components/restaurant/PrivateChat";
+import SubscriptionSection from "@/components/admin/SubscriptionSection";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { generateQRDataUrl, downloadQR } from "@/lib/qr";
+import { CreditCard } from "lucide-react";
 
-type MoreSection = "grid" | "qr" | "vault" | "chat" | "blacklist" | "inventory" | "academy" | "settings";
+type MoreSection = "grid" | "qr" | "vault" | "chat" | "blacklist" | "inventory" | "academy" | "settings" | "subscription";
 
 interface MoreMenuProps {
   restaurant: any;
@@ -78,6 +80,7 @@ const MoreMenu = ({
     { id: "inventory", label: "AI Scorte", icon: <Package className="w-6 h-6" />, color: "text-purple-400" },
     { id: "academy", label: "Academy", icon: <GraduationCap className="w-6 h-6" />, color: "text-amber-400" },
     { id: "settings", label: "Impostazioni", icon: <Settings className="w-6 h-6" />, color: "text-muted-foreground" },
+    { id: "subscription", label: "Abbonamento", icon: <CreditCard className="w-6 h-6" />, color: "text-emerald-400" },
   ];
 
   const handleVaultSave = async () => {
@@ -527,6 +530,18 @@ const MoreMenu = ({
             className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm gold-glow disabled:opacity-50 min-h-[48px] flex items-center justify-center gap-2">
             {settingsSaving ? "Salvataggio..." : <><Save className="w-4 h-4" /> Salva Impostazioni</>}
           </button>
+        </div>
+      )}
+
+      {/* Subscription */}
+      {section === "subscription" && restaurant?.id && (
+        <div className="space-y-4">
+          <div className="text-center py-2">
+            <CreditCard className="w-10 h-10 mx-auto mb-2 text-primary" />
+            <h3 className="text-lg font-display font-bold text-foreground">Abbonamento</h3>
+            <p className="text-xs text-muted-foreground mt-1">Gestisci il tuo piano Empire</p>
+          </div>
+          <SubscriptionSection restaurantId={restaurant.id} />
         </div>
       )}
     </motion.div>
