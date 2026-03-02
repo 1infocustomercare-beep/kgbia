@@ -75,6 +75,80 @@ export type Database = {
           },
         ]
       }
+      b2b_invoices: {
+        Row: {
+          codice_univoco: string | null
+          created_at: string
+          id: string
+          invoice_number: string
+          invoice_type: string
+          issued_at: string
+          line_items: Json
+          notes: string | null
+          partita_iva: string | null
+          partner_id: string | null
+          pec: string | null
+          recipient_email: string | null
+          recipient_name: string | null
+          restaurant_id: string
+          status: string
+          subtotal: number
+          total: number
+          vat_amount: number
+          vat_rate: number
+        }
+        Insert: {
+          codice_univoco?: string | null
+          created_at?: string
+          id?: string
+          invoice_number: string
+          invoice_type?: string
+          issued_at?: string
+          line_items?: Json
+          notes?: string | null
+          partita_iva?: string | null
+          partner_id?: string | null
+          pec?: string | null
+          recipient_email?: string | null
+          recipient_name?: string | null
+          restaurant_id: string
+          status?: string
+          subtotal?: number
+          total?: number
+          vat_amount?: number
+          vat_rate?: number
+        }
+        Update: {
+          codice_univoco?: string | null
+          created_at?: string
+          id?: string
+          invoice_number?: string
+          invoice_type?: string
+          issued_at?: string
+          line_items?: Json
+          notes?: string | null
+          partita_iva?: string | null
+          partner_id?: string | null
+          pec?: string | null
+          recipient_email?: string | null
+          recipient_name?: string | null
+          restaurant_id?: string
+          status?: string
+          subtotal?: number
+          total?: number
+          vat_amount?: number
+          vat_rate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "b2b_invoices_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_messages: {
         Row: {
           created_at: string
@@ -203,6 +277,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      demo_credit_usage: {
+        Row: {
+          action: string
+          created_at: string
+          credits_used: number
+          expires_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          action?: string
+          created_at?: string
+          credits_used?: number
+          expires_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          credits_used?: number
+          expires_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       fisco_configs: {
         Row: {
@@ -506,6 +607,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      partner_commission_notes: {
+        Row: {
+          created_at: string
+          id: string
+          net_amount: number
+          partner_id: string
+          period: string
+          status: string
+          total_bonuses: number
+          total_commission: number
+          total_overrides: number
+          total_sales: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          net_amount?: number
+          partner_id: string
+          period: string
+          status?: string
+          total_bonuses?: number
+          total_commission?: number
+          total_overrides?: number
+          total_sales?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          net_amount?: number
+          partner_id?: string
+          period?: string
+          status?: string
+          total_bonuses?: number
+          total_commission?: number
+          total_overrides?: number
+          total_sales?: number
+        }
+        Relationships: []
+      }
+      partner_demo_credits: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       partner_sales: {
         Row: {

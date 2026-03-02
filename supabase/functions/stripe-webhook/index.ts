@@ -107,7 +107,8 @@ serve(async (req) => {
     // Mark restaurant as paid
     await supabase.from("restaurants").update({ setup_paid: true }).eq("id", restaurantId);
 
-    // Plan split calculations (€2,997 = €1,950 platform + €997 partner + €50 TL override from 4th sale)
+    // Plan split calculations (€2,997 = €1,950 platform + €997 partner + €50 TL override from 5th sale)
+    // Override amounts are conditional — only applied when leader is active & sub-partner sale >= 5
     const planConfigs: Record<string, { total: number; installment: number; count: number; platformPerInstallment: number; partnerPerInstallment: number; overridePerInstallment: number }> = {
       full:  { total: 2997, installment: 2997, count: 1, platformPerInstallment: 195000, partnerPerInstallment: 99700, overridePerInstallment: 5000 },
       "3x":  { total: 3297, installment: 1099, count: 3, platformPerInstallment: 65000,  partnerPerInstallment: 33233, overridePerInstallment: 1667 },
@@ -145,12 +146,40 @@ serve(async (req) => {
 
       const teamLeaderId = teamData?.team_leader_id || null;
 
+      // Count this partner's sales BEFORE inserting the new one (so current = prior + 1)
+      const { count: priorSalesCount } = await supabase
+        .from("partner_sales")
+        .select("id", { count: "exact", head: true })
+        .eq("partner_id", partnerId);
+      const currentSaleNumber = (priorSalesCount || 0) + 1;
+
+      // Override only from 5th sale AND leader must be "Active Leader" (4 personal sales + 2 sub-partners)
+      let overrideAmount = 0;
+      if (teamLeaderId && currentSaleNumber >= 5) {
+        // Verify leader is active: 4 personal sales + 2 sub-partners
+        const { count: leaderSales } = await supabase
+          .from("partner_sales")
+          .select("id", { count: "exact", head: true })
+          .eq("partner_id", teamLeaderId);
+        const { count: leaderRecruits } = await supabase
+          .from("partner_teams")
+          .select("id", { count: "exact", head: true })
+          .eq("team_leader_id", teamLeaderId);
+        
+        if ((leaderSales || 0) >= 4 && (leaderRecruits || 0) >= 2) {
+          overrideAmount = 50;
+          console.log(`Active Leader ${teamLeaderId}: override €50 on sale #${currentSaleNumber} by ${partnerId}`);
+        } else {
+          console.log(`Leader ${teamLeaderId} NOT active (${leaderSales} sales, ${leaderRecruits} recruits). Override held.`);
+        }
+      }
+
       await supabase.from("partner_sales").insert({
         partner_id: partnerId,
         sale_amount: p.total,
         partner_commission: 997,
         team_leader_id: teamLeaderId,
-        team_leader_override: teamLeaderId ? 200 : 0,
+        team_leader_override: overrideAmount,
         sale_month: new Date().toISOString().slice(0, 7),
       } as any);
 
@@ -209,29 +238,33 @@ serve(async (req) => {
           console.log(`Partner ${partnerId} has no Stripe Connect account. Commission pending.`);
         }
 
-        // Transfer Team Leader Override (€200 for full)
-        const { data: teamData } = await supabase
-          .from("partner_teams")
-          .select("team_leader_id")
-          .eq("partner_id", partnerId)
-          .single();
-
-        if (teamData?.team_leader_id) {
-          const { data: tlPaymentInfo } = await supabase
-            .rpc("get_partner_stripe_account" as any, { partner_user_id: teamData.team_leader_id })
+        // Transfer Team Leader Override (€50 for full) — ONLY if override was earned
+        if (overrideAmount > 0) {
+          const { data: teamData2 } = await supabase
+            .from("partner_teams")
+            .select("team_leader_id")
+            .eq("partner_id", partnerId)
             .single();
 
-          const tlStripeAccount = (tlPaymentInfo as any)?.stripe_account_id;
-          if (tlStripeAccount) {
-            await stripe.transfers.create({
-              amount: p.overridePerInstallment,
-              currency: "eur",
-              destination: tlStripeAccount,
-              transfer_group: transferGroup,
-              metadata: { type: "team_leader_override", restaurantId, teamLeaderId: teamData.team_leader_id, installment: "1" },
-            });
-            console.log(`Transfer €${(p.overridePerInstallment / 100).toFixed(2)} team leader override`);
+          if (teamData2?.team_leader_id) {
+            const { data: tlPaymentInfo } = await supabase
+              .rpc("get_partner_stripe_account" as any, { partner_user_id: teamData2.team_leader_id })
+              .single();
+
+            const tlStripeAccount = (tlPaymentInfo as any)?.stripe_account_id;
+            if (tlStripeAccount) {
+              await stripe.transfers.create({
+                amount: p.overridePerInstallment,
+                currency: "eur",
+                destination: tlStripeAccount,
+                transfer_group: transferGroup,
+                metadata: { type: "team_leader_override", restaurantId, teamLeaderId: teamData2.team_leader_id, installment: "1" },
+              });
+              console.log(`Transfer €${(p.overridePerInstallment / 100).toFixed(2)} team leader override`);
+            }
           }
+        } else {
+          console.log("No override transfer: sub-partner sale < 5 or leader not active");
         }
       } catch (e: any) {
         console.error("Partner/TL transfer error:", e.message);

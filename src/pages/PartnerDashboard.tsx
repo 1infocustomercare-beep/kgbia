@@ -26,6 +26,7 @@ import PartnerLeaderboard from "@/components/partner/PartnerLeaderboard";
 import AssetVault from "@/components/partner/AssetVault";
 import { toast } from "@/hooks/use-toast";
 import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
+import DemoCreditsWallet from "@/components/partner/DemoCreditsWallet";
 import { RefreshCw, Palette, Pencil, Upload, Save, X as XIcon } from "lucide-react";
 
 type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault";
@@ -230,13 +231,13 @@ const PartnerDashboard = () => {
 
   const totalBonuses = monthlyBonuses.reduce((s, b) => s + Number(b.bonus_amount), 0);
   const estimatedCommissions = salesCount * 997;
-  // Meritocratic override: €50 only from the 4th sale per sub-partner
+  // Meritocratic override: €50 only from the 5th sale per sub-partner (Active Leader required)
   const calculateOverrides = () => {
     if (!isTeamLeader || teamMembers.length === 0) return 0;
     let total = 0;
     for (const member of teamMembers) {
       const memberSalesCount = teamSales.filter((s: any) => s.partner_id === member.partner_id).length;
-      const eligibleSales = Math.max(0, memberSalesCount - 3); // only from 4th sale
+      const eligibleSales = Math.max(0, memberSalesCount - 4); // only from 5th sale
       total += eligibleSales * 50;
     }
     return total;
@@ -374,7 +375,7 @@ const PartnerDashboard = () => {
                   <p className="text-[10px] text-muted-foreground">Per Vendita</p>
                 </div>
                 <div className="p-3.5 rounded-xl bg-card border border-border/50">
-                  {isTeamLeader ? (
+                {isTeamLeader ? (
                     <>
                       <Users className="w-4 h-4 text-sky-400 mb-1.5" />
                       <p className="text-xl font-display font-bold text-foreground">{teamMembers.length}</p>
@@ -383,12 +384,46 @@ const PartnerDashboard = () => {
                   ) : (
                     <>
                       <Target className="w-4 h-4 text-sky-400 mb-1.5" />
-                      <p className="text-xl font-display font-bold text-foreground">{salesCount}/3</p>
+                      <p className="text-xl font-display font-bold text-foreground">{salesCount}/4</p>
                       <p className="text-[10px] text-muted-foreground">a Team Leader</p>
                     </>
                   )}
                 </div>
               </div>
+
+              {/* === TEAM LEADER GATE PROGRESS === */}
+              {!isTeamLeader && (
+                <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-4">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Crown className="w-4 h-4 text-primary" /> Percorso Team Leader
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 rounded-xl bg-secondary/50 border border-border/50 text-center">
+                      <p className="text-2xl font-display font-bold text-foreground">{Math.min(salesCount, 4)}/4</p>
+                      <p className="text-[10px] text-muted-foreground">Vendite Personali</p>
+                      <div className="w-full h-1.5 rounded-full bg-muted mt-2 overflow-hidden">
+                        <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${Math.min(100, (salesCount / 4) * 100)}%` }} />
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-xl bg-secondary/50 border border-border/50 text-center">
+                      <p className="text-2xl font-display font-bold text-foreground">{Math.min(teamMembers.length, 2)}/2</p>
+                      <p className="text-[10px] text-muted-foreground">Partner Reclutati</p>
+                      <div className="w-full h-1.5 rounded-full bg-muted mt-2 overflow-hidden">
+                        <div className="h-full rounded-full bg-sky-400 transition-all" style={{ width: `${Math.min(100, (teamMembers.length / 2) * 100)}%` }} />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-center text-muted-foreground">
+                    {salesCount >= 4 && teamMembers.length >= 2 
+                      ? "🎉 Requisiti soddisfatti! Promozione in corso..." 
+                      : `🎯 ${Math.max(0, 4 - salesCount)} vendite e ${Math.max(0, 2 - teamMembers.length)} reclute per sbloccare Team Leader`
+                    }
+                  </p>
+                </div>
+              )}
+
+              {/* === DEMO CREDITS WALLET === */}
+              <DemoCreditsWallet userId={user?.id} />
 
               {/* === BONUS ACCELERATOR — Progress Rings === */}
               <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-4">
@@ -401,10 +436,10 @@ const PartnerDashboard = () => {
                 <div className="flex items-center justify-around">
                   <BonusProgressRing
                     salesCount={salesCount}
-                    milestone={3}
+                    milestone={4}
                     label="Milestone 1"
-                    reward={salesCount >= 3 ? "Team Leader ✓" : "€500 + Team Leader"}
-                    unlocked={salesCount >= 3}
+                    reward={salesCount >= 4 ? "Team Leader ✓" : "€500 + Team Leader"}
+                    unlocked={salesCount >= 4}
                   />
                   <BonusProgressRing
                     salesCount={currentMonthSales}
@@ -414,10 +449,10 @@ const PartnerDashboard = () => {
                     unlocked={currentMonthSales >= 5}
                   />
                 </div>
-                {!isTeamLeader && salesCount < 3 && (
+                {!isTeamLeader && salesCount < 4 && (
                   <div className="p-3 rounded-xl bg-primary/5 border border-primary/10 text-center">
                     <p className="text-[11px] text-primary font-medium">
-                      🎯 {3 - salesCount} vendite per diventare Team Leader → guadagna €50 override dalla 4ª vendita di ogni membro
+                      🎯 {4 - salesCount} vendite per diventare Team Leader → guadagna €50 override dalla 5ª vendita di ogni membro
                     </p>
                   </div>
                 )}
@@ -645,11 +680,11 @@ const PartnerDashboard = () => {
                 <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-center">
                   <p className="text-sm font-display font-bold text-foreground">
                     Commissione: <span className="text-emerald-400">€997</span>/vendita
-                    {isTeamLeader && <span className="text-sky-400"> + €50 override/team (dalla 4ª vendita)</span>}
+                    {isTeamLeader && <span className="text-sky-400"> + €50 override/team (dalla 5ª vendita)</span>}
                   </p>
                   <p className="text-[10px] text-muted-foreground mt-1">
                     {isTeamLeader
-                      ? "Guadagni €997 per vendita diretta + €50 per ogni vendita dei tuoi reclutati (dalla 4ª in poi)."
+                      ? "Guadagni €997 per vendita diretta + €50 per ogni vendita dei tuoi reclutati (dalla 5ª in poi)."
                       : "Bonus: €500 per 3 vendite/mese, €1.500 per 5 vendite/mese."
                     }
                   </p>
