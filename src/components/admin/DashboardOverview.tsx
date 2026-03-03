@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, ShoppingCart, DollarSign, Users, Star, CalendarDays, ChefHat, ExternalLink, Sparkles, Loader2 } from "lucide-react";
+import InfoGuide from "@/components/ui/info-guide";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -36,9 +37,20 @@ const DashboardOverview = ({
   return (
     <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       {/* Greeting */}
-      <div className="py-1">
-        <h2 className="text-lg font-display font-bold text-foreground">{restaurantName}</h2>
-        <p className="text-xs text-muted-foreground">Panoramica giornaliera</p>
+      <div className="py-1 flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-display font-bold text-foreground">{restaurantName}</h2>
+          <p className="text-xs text-muted-foreground">Panoramica giornaliera</p>
+        </div>
+        <InfoGuide
+          title="Dashboard Principale"
+          description="La tua panoramica quotidiana con i KPI più importanti: incasso, ordini, piatti in cucina e statistiche."
+          steps={[
+            "Tocca ogni card per accedere alla sezione dedicata",
+            "I dati si aggiornano in tempo reale",
+            "Usa 'Azioni rapide' per aprire menu o cucina",
+          ]}
+        />
       </div>
 
       {/* Main KPIs — 2x2 grid */}
@@ -99,7 +111,18 @@ const DashboardOverview = ({
       </div>
 
       {/* AI Tokens */}
-      <div className="p-3 rounded-2xl bg-primary/5 border border-primary/20 flex items-center gap-3">
+      <div className="p-3 rounded-2xl bg-primary/5 border border-primary/20 flex items-center gap-3 relative">
+        <div className="absolute top-2 right-2">
+          <InfoGuide
+            title="Gettoni IA"
+            description="I gettoni alimentano le funzionalità AI: creazione menu da foto, generazione immagini food e traduzione automatica in più lingue."
+            steps={[
+              "Ogni operazione AI consuma 1 gettone",
+              "Premi +50 per acquistare un pacchetto aggiuntivo",
+              "Vai in Studio → AI per usarli",
+            ]}
+          />
+        </div>
         <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
           <Sparkles className="w-4 h-4 text-primary" />
         </div>
