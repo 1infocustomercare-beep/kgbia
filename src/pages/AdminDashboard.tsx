@@ -18,6 +18,7 @@ import OrdersTab from "@/components/admin/OrdersTab";
 import ProfitTab from "@/components/admin/ProfitTab";
 import MoreMenu from "@/components/admin/MoreMenu";
 import EmpireAssistant from "@/components/admin/EmpireAssistant";
+import { GuidesToggle } from "@/components/ui/info-guide";
 
 type MainTab = "dashboard" | "studio" | "orders" | "profit" | "more";
 
@@ -300,9 +301,12 @@ const AdminDashboard = () => {
             <p className="text-[10px] text-primary">{bottomTabs.find(t => t.id === activeTab)?.label}</p>
           </div>
         </div>
-        <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center">
-          <LogOut className="w-4 h-4 text-muted-foreground" />
-        </button>
+        <div className="flex items-center gap-2">
+          <GuidesToggle />
+          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center">
+            <LogOut className="w-4 h-4 text-muted-foreground" />
+          </button>
+        </div>
       </div>
 
       {/* Content */}

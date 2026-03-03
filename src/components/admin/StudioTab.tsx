@@ -5,6 +5,7 @@ import {
   Image as ImageIcon, Plus, Palette, Upload, Globe, Languages, Check,
   ChevronDown, ChevronUp, Search, Loader2
 } from "lucide-react";
+import InfoGuide from "@/components/ui/info-guide";
 import LivePreview from "@/components/restaurant/LivePreview";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -206,7 +207,8 @@ const StudioTab = ({
   return (
     <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       {/* Sub-tabs — sticky, compact */}
-      <div className="flex gap-1.5 bg-secondary/30 p-1 rounded-xl">
+      <div className="flex items-center gap-2">
+        <div className="flex-1 flex gap-1.5 bg-secondary/30 p-1 rounded-xl">
         {sections.map(s => (
           <button key={s.id} onClick={() => setSection(s.id)}
             className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-lg text-xs font-semibold transition-all min-h-[40px] ${
@@ -218,6 +220,17 @@ const StudioTab = ({
             <span className="hidden xs:inline">{s.label}</span>
           </button>
         ))}
+        </div>
+        <InfoGuide
+          title="Studio Creativo"
+          description="Il tuo centro di controllo creativo: gestisci il menu, personalizza il design, usa l'IA per creare foto e traduci in più lingue."
+          steps={[
+            "Menu: aggiungi, modifica ed elimina piatti con categorie",
+            "Design: personalizza logo, colori e anteprima live",
+            "IA: carica una foto del menu per creare il catalogo digitale",
+            "Lingue: traduci automaticamente in tutte le lingue attive",
+          ]}
+        />
       </div>
 
       {/* ===== MENU MANAGEMENT ===== */}

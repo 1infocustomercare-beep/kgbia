@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import InfoGuide from "@/components/ui/info-guide";
 import { Coins, Play, Clock, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -102,6 +103,15 @@ const DemoCreditsWallet = ({ userId }: DemoCreditsWalletProps) => {
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
           <Coins className="w-4 h-4 text-amber-400" /> Demo Credits
+          <InfoGuide
+            title="Demo Credits"
+            description="Crediti per sbloccare la sandbox demo per 24 ore. Ricevi 5 crediti alla registrazione. Ogni sblocco consuma 1 credito."
+            steps={[
+              "Premi 'Sblocca Sandbox 24h' per attivare",
+              "Hai 24 ore di accesso completo alla demo",
+              "Mostra tutte le interfacce al potenziale cliente",
+            ]}
+          />
         </h3>
         <span className="text-2xl font-display font-bold text-amber-400">{credits}</span>
       </div>

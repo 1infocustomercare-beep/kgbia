@@ -5,6 +5,7 @@ import {
   Plus, Minus, Trash2, QrCode, Download, Clock, CheckCircle2, XCircle, Filter,
   Phone, Users, MessageSquare, Bell
 } from "lucide-react";
+import InfoGuide from "@/components/ui/info-guide";
 import { format, isToday, isTomorrow, parseISO, isPast } from "date-fns";
 import { it } from "date-fns/locale";
 import { Switch } from "@/components/ui/switch";
@@ -141,7 +142,8 @@ const OrdersTab = ({
   return (
     <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       {/* Section tabs */}
-      <div className="flex gap-1 bg-secondary/30 p-1 rounded-2xl">
+      <div className="flex items-center gap-2">
+        <div className="flex-1 flex gap-1 bg-secondary/30 p-1 rounded-2xl">
         {sections.map(s => (
           <button key={s.id} onClick={() => setSection(s.id)}
             className={`relative flex-1 flex items-center justify-center gap-1 py-2.5 rounded-xl text-xs font-medium transition-all min-h-[40px] ${
@@ -155,6 +157,17 @@ const OrdersTab = ({
             )}
           </button>
         ))}
+        </div>
+        <InfoGuide
+          title="Gestione Ordini"
+          description="Centro operativo: gestisci ordini in cucina, mappa tavoli, canali di traffico e prenotazioni."
+          steps={[
+            "Cucina: cambia stato ordini (in attesa → in preparazione → pronto)",
+            "Tavoli: crea e posiziona i tavoli con drag & drop",
+            "Canali: monitora da dove arrivano gli ordini",
+            "Prenota: conferma o rifiuta le prenotazioni",
+          ]}
+        />
       </div>
 
       {/* ═══════════ ORDERS / KITCHEN ═══════════ */}

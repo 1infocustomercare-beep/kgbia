@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import InfoGuide from "@/components/ui/info-guide";
 import {
   QrCode, ShoppingCart, ChefHat, AlertTriangle, Wallet, Shield,
   Sparkles, Palette, Globe, Users, Star, Bell, MessageSquare,
@@ -419,7 +420,18 @@ const PartnerSalesToolkit = () => {
           <Crown className="w-5 h-5 text-primary" />
           <span className="text-xs font-medium text-primary tracking-wider uppercase">Sales Toolkit</span>
         </div>
-        <h2 className="text-lg font-display font-bold text-foreground">Schede Vendita Empire</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-display font-bold text-foreground">Schede Vendita Empire</h2>
+          <InfoGuide
+            title="Sales Toolkit"
+            description="21+ schede dettagliate per ogni funzionalità della piattaforma. Ogni scheda include benefici, vantaggi competitivi e dati per convincere il cliente."
+            steps={[
+              "Filtra per categoria per trovare la scheda giusta",
+              "Tocca una scheda per espandere i dettagli",
+              "Usa le 'Sales Pills' durante le presentazioni",
+            ]}
+          />
+        </div>
         <p className="text-xs text-muted-foreground mt-1">
           {features.length} funzionalità dettagliate da mostrare al ristoratore. Tocca ogni scheda per espandere problema, soluzione e vantaggi.
         </p>

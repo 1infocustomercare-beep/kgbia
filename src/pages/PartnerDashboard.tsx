@@ -27,6 +27,8 @@ import AssetVault from "@/components/partner/AssetVault";
 import { toast } from "@/hooks/use-toast";
 import { usePartnerDemoRestaurant } from "@/hooks/usePartnerDemoRestaurant";
 import DemoCreditsWallet from "@/components/partner/DemoCreditsWallet";
+import { GuidesToggle } from "@/components/ui/info-guide";
+import InfoGuide from "@/components/ui/info-guide";
 import { RefreshCw, Palette, Pencil, Upload, Save, X as XIcon } from "lucide-react";
 
 type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault";
@@ -282,6 +284,7 @@ const PartnerDashboard = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <GuidesToggle />
           <motion.button
             onClick={() => {
               setDemoMode(!demoMode);
@@ -333,6 +336,17 @@ const PartnerDashboard = () => {
               {/* === NET EARNINGS HERO WIDGET === */}
               <div className="p-5 rounded-2xl bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute top-3 right-12">
+                  <InfoGuide
+                    title="Guadagni Netti"
+                    description="Totale dei tuoi guadagni come partner: commissioni per vendite, bonus mensili e override da Team Leader."
+                    steps={[
+                      "€997 per ogni vendita completata",
+                      "Bonus fino a €1.500/mese al raggiungimento delle milestone",
+                      "€50 override dalla 5ª vendita di ogni membro del team",
+                    ]}
+                  />
+                </div>
                 <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Guadagni Netti</p>
                 <motion.p
                   className="text-4xl font-display font-bold text-foreground"
@@ -396,6 +410,15 @@ const PartnerDashboard = () => {
                 <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-4">
                   <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                     <Crown className="w-4 h-4 text-primary" /> Percorso Team Leader
+                    <InfoGuide
+                      title="Percorso Team Leader"
+                      description="Per diventare Team Leader devi completare 4 vendite personali e reclutare almeno 2 sub-partner. Una volta attivato, guadagni €50 override dalla 5ª vendita di ogni membro."
+                      steps={[
+                        "Completa 4 vendite personali",
+                        "Recluta almeno 2 partner con il tuo link di invito",
+                        "La promozione è automatica al raggiungimento",
+                      ]}
+                    />
                   </h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 rounded-xl bg-secondary/50 border border-border/50 text-center">
@@ -431,7 +454,18 @@ const PartnerDashboard = () => {
                   <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-primary" /> Bonus Accelerator
                   </h3>
-                  <span className="text-[10px] text-muted-foreground">Mese corrente</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-muted-foreground">Mese corrente</span>
+                    <InfoGuide
+                      title="Bonus Accelerator"
+                      description="Sistema di bonus progressivi basato sulle tue vendite mensili. Raggiungi le milestone per sbloccare premi extra."
+                      steps={[
+                        "Milestone 1: 4 vendite → €500 + status Team Leader",
+                        "Milestone 2: 5 vendite/mese → €1.500 bonus mensile",
+                        "I bonus si accumulano con le commissioni standard",
+                      ]}
+                    />
+                  </div>
                 </div>
                 <div className="flex items-center justify-around">
                   <BonusProgressRing
@@ -463,7 +497,13 @@ const PartnerDashboard = () => {
 
               {/* === QUICK ACTIONS — Fintech cards === */}
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-foreground">Azioni Rapide</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-foreground">Azioni Rapide</h3>
+                  <InfoGuide
+                    title="Azioni Rapide"
+                    description="Accesso diretto a tutti gli strumenti per la vendita: demo interattiva, schede funzionalità, calcolatore ROI, storico guadagni e materiale marketing."
+                  />
+                </div>
                 {[
                   { label: "Demo Interattiva", desc: "Tour guidato con 3 viste", icon: <Play className="w-5 h-5" />, tab: "sandbox" as Tab },
                   { label: "Schede Vendita", desc: "21+ funzionalità dettagliate", icon: <BookOpen className="w-5 h-5" />, tab: "toolkit" as Tab },

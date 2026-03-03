@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Download, FileText, Palette, Image as ImageIcon, Presentation, BookOpen, Loader2, Check } from "lucide-react";
+import InfoGuide from "@/components/ui/info-guide";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -114,7 +115,18 @@ const AssetVault = () => {
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-display font-bold text-foreground">Asset Vault</h2>
-        <span className="text-[10px] px-2.5 py-1 rounded-full bg-primary/10 text-primary font-bold">{assets.length} file</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] px-2.5 py-1 rounded-full bg-primary/10 text-primary font-bold">{assets.length} file</span>
+          <InfoGuide
+            title="Asset Vault"
+            description="Materiale marketing professionale pronto per le presentazioni: sales deck, script di vendita, branding kit e loghi."
+            steps={[
+              "Scarica i file con il pulsante download",
+              "Genera automaticamente nuovi asset con l'IA",
+              "Usa il sales deck durante le presentazioni ai clienti",
+            ]}
+          />
+        </div>
       </div>
 
       <div className="space-y-3">

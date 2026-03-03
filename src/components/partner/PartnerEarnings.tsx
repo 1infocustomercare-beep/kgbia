@@ -1,6 +1,7 @@
 import { forwardRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { DollarSign, ArrowUpRight, Crown, CreditCard, Calendar, CheckCircle, Link2, ExternalLink, Loader2 } from "lucide-react";
+import InfoGuide from "@/components/ui/info-guide";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -91,7 +92,18 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <motion.div ref={ref} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
-      <h2 className="text-lg font-display font-bold text-foreground">I tuoi Guadagni</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-display font-bold text-foreground">I tuoi Guadagni</h2>
+        <InfoGuide
+          title="I tuoi Guadagni"
+          description="Storico completo delle tue vendite, commissioni e payout. Collega il tuo account Stripe Connect per ricevere i pagamenti."
+          steps={[
+            "Collega Stripe Connect per attivare i pagamenti",
+            "Ogni vendita completata genera €997 di commissione",
+            "I payout vengono elaborati automaticamente",
+          ]}
+        />
+      </div>
 
       {/* Stripe Connect Status */}
       <div className="p-4 rounded-2xl border border-border/50 bg-card space-y-3">

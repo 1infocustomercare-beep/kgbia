@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle, Star, UserX, ExternalLink, Shield, ThumbsUp, ThumbsDown } from "lucide-react";
+import InfoGuide from "@/components/ui/info-guide";
 import { Slider } from "@/components/ui/slider";
 import LostCustomers from "@/components/restaurant/LostCustomers";
 import { supabase } from "@/integrations/supabase/client";
@@ -47,15 +48,26 @@ const ProfitTab = ({ restaurant, menuItems, setMenuItems, reviews }: ProfitTabPr
   return (
     <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       {/* Segmented tabs */}
-      <div className="flex gap-1 bg-secondary/30 p-1 rounded-2xl">
-        {sections.map(s => (
-          <button key={s.id} onClick={() => setSection(s.id)}
-            className={`flex-1 py-2.5 rounded-xl text-xs font-medium transition-all min-h-[40px] ${
-              section === s.id ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground"
-            }`}>
-            {s.label}
-          </button>
-        ))}
+      <div className="flex items-center gap-2">
+        <div className="flex-1 flex gap-1 bg-secondary/30 p-1 rounded-2xl">
+          {sections.map(s => (
+            <button key={s.id} onClick={() => setSection(s.id)}
+              className={`flex-1 py-2.5 rounded-xl text-xs font-medium transition-all min-h-[40px] ${
+                section === s.id ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground"
+              }`}>
+              {s.label}
+            </button>
+          ))}
+        </div>
+        <InfoGuide
+          title="Protezione Profitto"
+          description="Strumenti per proteggere i tuoi margini: modifica prezzi istantaneamente, recupera clienti persi e gestisci le recensioni."
+          steps={[
+            "Panic Mode: usa lo slider per variare tutti i prezzi in %",
+            "Clienti Persi: identifica chi non ordina da tempo e invia sconti",
+            "Review Shield: filtra le recensioni negative dal pubblico",
+          ]}
+        />
       </div>
 
       {/* ═══════ PANIC MODE ═══════ */}

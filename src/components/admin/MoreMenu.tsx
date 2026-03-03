@@ -6,6 +6,7 @@ import {
   Phone, Mail, MapPin, Clock, Upload, Globe, Ban, FileCheck, Image,
   ArrowLeft
 } from "lucide-react";
+import InfoGuide from "@/components/ui/info-guide";
 import PrivateChat from "@/components/restaurant/PrivateChat";
 import SubscriptionSection from "@/components/admin/SubscriptionSection";
 import { supabase } from "@/integrations/supabase/client";
@@ -129,7 +130,19 @@ const MoreMenu = ({
   if (section === "grid") {
     return (
       <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">Strumenti</p>
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">Strumenti</p>
+          <InfoGuide
+            title="Strumenti Avanzati"
+            description="Funzionalità aggiuntive: QR Code per tavoli, Vault fiscale, chat privata, blacklist clienti, inventario AI, academy e impostazioni."
+            steps={[
+              "QR Code: genera codici per menu generico e per ogni tavolo",
+              "Vault Fiscale: configura le API per la fatturazione automatica",
+              "Chat: comunica privatamente con i tuoi clienti",
+              "Impostazioni: personalizza orari, contatti e canali attivi",
+            ]}
+          />
+        </div>
         <div className="grid grid-cols-3 gap-3">
           {gridItems.map(item => (
             <motion.button key={item.id} onClick={() => setSection(item.id)}
