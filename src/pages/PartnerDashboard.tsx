@@ -761,6 +761,29 @@ const PartnerDashboard = () => {
             <motion.div key="team" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
               <h2 className="text-lg font-display font-bold text-foreground">Il tuo Team</h2>
 
+              {/* Leader Status Badge */}
+              {(() => {
+                const isActive = salesCount >= 4 && teamMembers.length >= 2;
+                return (
+                  <div className={`p-4 rounded-2xl border ${isActive ? "bg-emerald-500/5 border-emerald-500/20" : "bg-destructive/5 border-destructive/20"}`}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2.5 h-2.5 rounded-full ${isActive ? "bg-emerald-400 animate-pulse" : "bg-destructive"}`} />
+                        <span className={`text-xs font-bold uppercase tracking-widest ${isActive ? "text-emerald-400" : "text-destructive"}`}>
+                          {isActive ? "Leader Attivo" : "Leader Sospeso"}
+                        </span>
+                      </div>
+                      <Crown className={`w-5 h-5 ${isActive ? "text-emerald-400" : "text-destructive/50"}`} />
+                    </div>
+                    {!isActive && (
+                      <p className="text-[10px] text-muted-foreground mt-2">
+                        ⚠️ Override sospesi. Requisiti: {salesCount < 4 ? `${4 - salesCount} vendite personali mancanti` : ""}{salesCount < 4 && teamMembers.length < 2 ? " + " : ""}{teamMembers.length < 2 ? `${2 - teamMembers.length} partner mancanti` : ""}
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
+
               {/* Override Revenue Tracker */}
               <div className="p-5 rounded-2xl bg-gradient-to-br from-sky-500/10 via-card to-blue-500/5 border border-sky-500/20">
                 <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Revenue da Management</p>
@@ -769,7 +792,7 @@ const PartnerDashboard = () => {
                   €{totalOverrides.toLocaleString()}
                 </motion.p>
                 <div className="flex items-center gap-3 mt-2">
-                  <span className="text-[10px] text-sky-400 font-medium">€50 × vendite idonee (dalla 4ª)</span>
+                  <span className="text-[10px] text-sky-400 font-medium">€50 × vendite idonee (dalla 5ª)</span>
                   <span className="text-[10px] text-muted-foreground">·</span>
                   <span className="text-[10px] text-muted-foreground">{teamMembers.length} partner attivi</span>
                 </div>
@@ -794,29 +817,86 @@ const PartnerDashboard = () => {
                 </motion.button>
               </div>
 
-              {/* Hierarchy View */}
+              {/* Team Ledger — Hierarchy View */}
               <div className="space-y-2">
-                <h3 className="text-sm font-bold text-foreground">Membri del Team ({teamMembers.length})</h3>
+                <h3 className="text-sm font-bold text-foreground">Team Ledger ({teamMembers.length} membri)</h3>
                 {teamMembers.length === 0 ? (
                   <p className="text-xs text-muted-foreground py-4 text-center">Nessun membro ancora. Recluta partner per guadagnare override!</p>
                 ) : (
-                  teamMembers.map((member, i) => {
-                    const memberSales = teamSales.filter((s: any) => s.partner_id === member.partner_id).length;
-                    return (
-                      <motion.div key={member.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/50">
-                        <div className="w-9 h-9 rounded-full bg-sky-500/10 flex items-center justify-center">
-                          <Users className="w-4 h-4 text-sky-400" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold text-foreground truncate">{(member.profiles as any)?.full_name || "Partner"}</p>
-                          <p className="text-[10px] text-muted-foreground">{memberSales} vendite · €{(Math.max(0, memberSales - 3) * 50).toLocaleString()} override</p>
-                        </div>
-                        <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${memberSales > 0 ? "bg-emerald-400" : "bg-muted-foreground/30"}`} />
-                      </motion.div>
-                    );
-                  })
+                  <>
+                    {/* Table Header */}
+                    <div className="grid grid-cols-12 gap-2 px-3 py-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+                      <span className="col-span-5">Partner</span>
+                      <span className="col-span-2 text-center">Vendite</span>
+                      <span className="col-span-3 text-center">Override</span>
+                      <span className="col-span-2 text-center">Stato</span>
+                    </div>
+                    {teamMembers.map((member, i) => {
+                      const memberSales = teamSales.filter((s: any) => s.partner_id === member.partner_id).length;
+                      const eligibleOverrides = Math.max(0, memberSales - 4);
+                      const overrideActive = memberSales >= 5;
+                      return (
+                        <motion.div key={member.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
+                          className="grid grid-cols-12 gap-2 items-center p-3 rounded-xl bg-card border border-border/50">
+                          <div className="col-span-5 flex items-center gap-2 min-w-0">
+                            <div className="w-8 h-8 rounded-full bg-sky-500/10 flex items-center justify-center flex-shrink-0">
+                              <Users className="w-3.5 h-3.5 text-sky-400" />
+                            </div>
+                            <p className="text-xs font-semibold text-foreground truncate">{(member.profiles as any)?.full_name || "Partner"}</p>
+                          </div>
+                          <p className="col-span-2 text-center text-sm font-bold text-foreground">{memberSales}</p>
+                          <p className="col-span-3 text-center text-sm font-bold text-primary">€{(eligibleOverrides * 50).toLocaleString()}</p>
+                          <div className="col-span-2 flex justify-center">
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${overrideActive ? "bg-emerald-500/10 text-emerald-400" : "bg-muted text-muted-foreground"}`}>
+                              {overrideActive ? "Attivo" : "🔒"}
+                            </span>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                    {/* Totals */}
+                    <div className="grid grid-cols-12 gap-2 px-3 py-2 rounded-xl bg-primary/5 border border-primary/10">
+                      <span className="col-span-5 text-xs font-bold text-foreground">Totale</span>
+                      <span className="col-span-2 text-center text-xs font-bold text-foreground">{teamSales.length}</span>
+                      <span className="col-span-3 text-center text-xs font-bold text-primary">€{totalOverrides.toLocaleString()}</span>
+                      <span className="col-span-2" />
+                    </div>
+                  </>
                 )}
+              </div>
+
+              {/* Commission Summary Generator */}
+              <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
+                <div className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Nota Provvigioni (L. 173/2005)</h3>
+                </div>
+                <p className="text-[10px] text-muted-foreground">
+                  Genera un riepilogo provvigioni per il mese corrente conforme alla normativa italiana sugli incaricati alle vendite.
+                </p>
+                <motion.button
+                  onClick={async () => {
+                    try {
+                      const { data: { session } } = await supabase.auth.getSession();
+                      if (!session) throw new Error("Non autenticato");
+                      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-b2b-invoice`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}`, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
+                        body: JSON.stringify({ partner_id: user?.id, invoice_type: "commission_note" }),
+                      });
+                      const result = await res.json();
+                      if (!res.ok) throw new Error(result.error || "Errore generazione");
+                      toast({ title: "📄 Nota Provvigioni Generata", description: `Periodo: ${result.note?.period} · Netto: €${Number(result.note?.net_amount).toLocaleString()}` });
+                    } catch (err: any) {
+                      toast({ title: "Errore", description: err.message, variant: "destructive" });
+                    }
+                  }}
+                  className="w-full py-3 rounded-xl bg-secondary text-foreground font-semibold text-sm flex items-center justify-center gap-2 hover:bg-accent transition-colors"
+                  whileTap={{ scale: 0.97 }}
+                >
+                  <CreditCard className="w-4 h-4" />
+                  Genera Nota Mese Corrente
+                </motion.button>
               </div>
 
               {/* Performance Bonuses */}
