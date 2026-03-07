@@ -826,9 +826,20 @@ const LandingPage = () => {
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
               <HelpCircle className="w-3 h-3" /> FAQ
             </span>
-            <h2 className="text-2xl sm:text-4xl font-display font-bold text-foreground">
-              Domande? <span className="text-gold-gradient">Risposte.</span>
-            </h2>
+            <div className="flex items-center justify-center gap-2">
+              <h2 className="text-2xl sm:text-4xl font-display font-bold text-foreground">
+                Domande? <span className="text-gold-gradient">Risposte.</span>
+              </h2>
+              <InfoGuide
+                title="FAQ — Domande Frequenti"
+                description="Risposte rapide ai dubbi più comuni su Empire: costi, pagamenti, fiscalità e Partner Program."
+                steps={[
+                  "Tocca una domanda per espandere la risposta",
+                  "Copre costi, sicurezza fiscale e commissioni",
+                  "Include dettagli sul Partner Program",
+                ]}
+              />
+            </div>
           </motion.div>
 
           <div className="space-y-2">
@@ -865,9 +876,20 @@ const LandingPage = () => {
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
               <Star className="w-3 h-3" /> Social Proof
             </span>
-            <h2 className="text-2xl sm:text-4xl font-display font-bold text-foreground">
-              Chi usa Empire, <span className="text-gold-gradient">non torna indietro</span>
-            </h2>
+            <div className="flex items-center justify-center gap-2">
+              <h2 className="text-2xl sm:text-4xl font-display font-bold text-foreground">
+                Chi usa Empire, <span className="text-gold-gradient">non torna indietro</span>
+              </h2>
+              <InfoGuide
+                title="Recensioni & Testimonianze"
+                description="Storie reali di ristoratori e partner che usano Empire. Risultati verificati con metriche concrete."
+                steps={[
+                  "Leggi i risultati ottenuti da ogni ristoratore",
+                  "Scopri quanto risparmiano rispetto a JustEat",
+                  "Guarda i guadagni reali dei Partner Empire",
+                ]}
+              />
+            </div>
             <p className="mt-2 text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto">
               Ristoratori e Partner raccontano i risultati concreti ottenuti
             </p>
