@@ -600,6 +600,18 @@ const RestaurantPage = () => {
       {/* ====== REVIEWS ====== */}
       <section id="reviews" className="py-12 px-4 sm:px-5">
         <div className="max-w-3xl mx-auto">
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground">Recensioni</h2>
+            <InfoGuide
+              title="Recensioni Clienti"
+              description="Lascia una recensione sulla tua esperienza. Il sistema Review Shield protegge la reputazione del ristorante mostrando solo le migliori."
+              steps={[
+                "Seleziona da 1 a 5 stelle",
+                "Aggiungi un commento opzionale",
+                "Le recensioni 4-5★ appaiono su Google",
+              ]}
+            />
+          </div>
           <ReviewShield restaurantId={dbRestaurant?.id} />
         </div>
       </section>
@@ -610,7 +622,18 @@ const RestaurantPage = () => {
           <motion.div className="text-center mb-6"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Programma Fedeltà</span>
-            <h2 className="mt-2 text-xl sm:text-2xl font-display font-bold text-foreground">I Tuoi Premi</h2>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground">I Tuoi Premi</h2>
+              <InfoGuide
+                title="Programma Fedeltà"
+                description="Accumula punti ad ogni ordine e sblocca premi esclusivi. Aggiungi la card al tuo wallet per non perdere mai i tuoi punti."
+                steps={[
+                  "Guadagni punti automaticamente ad ogni ordine",
+                  "Raggiungi le soglie per riscattare i premi",
+                  "Tocca 'Aggiungi al Wallet' per la card digitale",
+                ]}
+              />
+            </div>
           </motion.div>
           <LoyaltyWallet />
         </div>
