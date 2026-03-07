@@ -890,7 +890,6 @@ const LandingPage = () => {
                 ]}
               />
             </div>
-            </h2>
             <p className="mt-2 text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto">
               Ristoratori e Partner raccontano i risultati concreti ottenuti
             </p>
