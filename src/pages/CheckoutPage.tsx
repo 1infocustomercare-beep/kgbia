@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, MapPin, Clock, Phone, User, MessageSquare, CreditCard, Check, Smartphone, Shield, AlertTriangle } from "lucide-react";
+import { InfoGuide } from "@/components/ui/info-guide";
 import { useCart } from "@/context/CartContext";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -211,7 +212,18 @@ const CheckoutPage = () => {
       <div className="px-5 pb-36 space-y-6">
         {/* Order type */}
         <div>
-          <p className="text-xs text-muted-foreground/70 uppercase tracking-wider mb-3">Tipo ordine</p>
+          <div className="flex items-center gap-2 mb-3">
+            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Tipo ordine</p>
+            <InfoGuide
+              title="Tipo di Ordine"
+              description="Scegli come vuoi ricevere il tuo ordine: a domicilio, da ritirare al locale, o servito direttamente al tavolo."
+              steps={[
+                "Consegna: ricevi l'ordine al tuo indirizzo (costo aggiuntivo €3.50)",
+                "Asporto: ritira al bancone senza costi extra",
+                "Tavolo: ordina dal tavolo scansionando il QR code",
+              ]}
+            />
+          </div>
           <div className="grid grid-cols-3 gap-2">
             {orderTypes.map((t) => (
               <motion.button
@@ -305,7 +317,18 @@ const CheckoutPage = () => {
 
         {/* Payment method */}
         <div>
-          <p className="text-xs text-muted-foreground/70 uppercase tracking-wider mb-3">Metodo di pagamento</p>
+          <div className="flex items-center gap-2 mb-3">
+            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Metodo di pagamento</p>
+            <InfoGuide
+              title="Pagamento Sicuro"
+              description="Tutti i pagamenti sono processati in modo sicuro tramite Stripe. I tuoi dati non vengono mai memorizzati sul nostro server."
+              steps={[
+                "Scegli il metodo preferito: carta, Apple Pay o Google Pay",
+                "Il pagamento è protetto da crittografia SSL a 256 bit",
+                "Riceverai la ricevuta via email dopo il pagamento",
+              ]}
+            />
+          </div>
           <div className="grid grid-cols-3 gap-2">
             {paymentMethods.map((p) => (
               <motion.button
@@ -327,7 +350,13 @@ const CheckoutPage = () => {
 
         {/* Order summary */}
         <div className="space-y-3">
-          <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Riepilogo</p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs text-muted-foreground/70 uppercase tracking-wider">Riepilogo</p>
+            <InfoGuide
+              title="Riepilogo Ordine"
+              description="Controlla gli articoli, le quantità e il totale prima di confermare. Il prezzo include IVA."
+            />
+          </div>
           <div className="rounded-2xl bg-secondary/50 p-4 space-y-3">
             {items.map((item) => (
               <div key={item.id} className="flex justify-between items-center text-sm">

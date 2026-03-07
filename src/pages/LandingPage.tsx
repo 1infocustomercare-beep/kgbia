@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import LivePreview from "@/components/restaurant/LivePreview";
+import { InfoGuide } from "@/components/ui/info-guide";
 
 // Animated counter
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) => {
@@ -419,9 +420,20 @@ const LandingPage = () => {
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
               <Zap className="w-3 h-3" /> L'Arsenale
             </span>
-            <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground">
-              Ogni funzione, un <span className="text-gold-gradient">vantaggio</span>
-            </h2>
+            <div className="flex items-center justify-center gap-2">
+              <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground">
+                Ogni funzione, un <span className="text-gold-gradient">vantaggio</span>
+              </h2>
+              <InfoGuide
+                title="Arsenale Funzionalità"
+                description="Ogni card rappresenta una funzione inclusa nel tuo abbonamento Empire. Nessun costo aggiuntivo."
+                steps={[
+                  "Leggi il beneficio economico di ogni funzione (es. 'Elimina €2.000+ costi fotografi')",
+                  "Clicca sulla Demo in alto per vedere le funzioni in azione",
+                  "Tutte le funzioni sono attive dal giorno 1 del tuo abbonamento",
+                ]}
+              />
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -459,9 +471,20 @@ const LandingPage = () => {
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
               <Calculator className="w-3 h-3" /> ROI Calculator
             </span>
-            <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground">
-              Il tuo <span className="text-gold-gradient">risparmio reale</span>
-            </h2>
+            <div className="flex items-center justify-center gap-2">
+              <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground">
+                Il tuo <span className="text-gold-gradient">risparmio reale</span>
+              </h2>
+              <InfoGuide
+                title="Calcolatore ROI"
+                description="Confronta quanto paghi oggi con i marketplace (30% di commissione) rispetto a Empire (solo 2%). Il calcolatore mostra il risparmio reale basato sui tuoi dati."
+                steps={[
+                  "Sposta gli slider per inserire i tuoi ordini mensili e lo scontrino medio",
+                  "Il grafico mostra il confronto visivo tra le commissioni marketplace vs Empire",
+                  "In basso vedi il risparmio mensile, annuale e in quanti mesi recuperi l'investimento",
+                ]}
+              />
+            </div>
           </motion.div>
 
           <motion.div className="p-5 sm:p-8 rounded-2xl glass border border-border/30 space-y-4 sm:space-y-6"
@@ -657,9 +680,20 @@ const LandingPage = () => {
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
               <Users className="w-3 h-3" /> Partner Program
             </span>
-            <h2 className="text-2xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
-              Costruisci il tuo <span className="text-gold-gradient">Impero</span>
-            </h2>
+            <div className="flex items-center justify-center gap-2">
+              <h2 className="text-2xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
+                Costruisci il tuo <span className="text-gold-gradient">Impero</span>
+              </h2>
+              <InfoGuide
+                title="Partner Program"
+                description="Il programma partner ti permette di guadagnare vendendo Empire ai ristoratori. Nessun investimento iniziale, commissioni alte e pagamenti istantanei via Stripe."
+                steps={[
+                  "Registrati gratis come Partner dalla pagina dedicata",
+                  "Usa la Sandbox Demo per mostrare l'app ai ristoratori",
+                  "Guadagni €997 per ogni vendita + bonus mensili + override come Team Leader",
+                ]}
+              />
+            </div>
             <p className="mt-2 sm:mt-4 text-xs sm:text-base text-muted-foreground max-w-lg mx-auto">
               Diventa Partner Empire e guadagna €997 per ogni vendita. Zero rischi, strumenti elite, pagamenti istantanei.
             </p>
