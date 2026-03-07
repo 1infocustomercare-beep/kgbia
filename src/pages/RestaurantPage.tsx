@@ -19,6 +19,7 @@ import storyWine from "@/assets/story-wine.jpg";
 import storyDish from "@/assets/story-dish.jpg";
 import heroVideo from "@/assets/hero-restaurant.mp4";
 import { Search, Star, Crown, Phone, Mail, MapPin, Clock, ChevronDown, Plus, ShoppingBag, X, Menu as MenuIcon, CalendarDays, Bell } from "lucide-react";
+import { InfoGuide } from "@/components/ui/info-guide";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import type { MenuItem } from "@/types/restaurant";
@@ -395,7 +396,18 @@ const RestaurantPage = () => {
               transition={{ duration: 0.9, delay: 0.15 }}>
               Le Nostre Specialità
             </motion.span>
-            <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Il Nostro Menù</h2>
+            <div className="flex items-center justify-center gap-2">
+              <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Il Nostro Menù</h2>
+              <InfoGuide
+                title="Menù Digitale"
+                description="Sfoglia il nostro menu completo. Puoi aggiungere piatti al carrello e ordinare direttamente dall'app."
+                steps={[
+                  "Scorri i piatti Signature in evidenza o naviga per categoria",
+                  "Tocca un piatto per vedere dettagli, allergeni e foto",
+                  "Premi + per aggiungere al carrello, poi vai al Checkout",
+                ]}
+              />
+            </div>
           </motion.div>
 
           {/* Signature Dishes — Featured Grid */}
@@ -613,7 +625,18 @@ const RestaurantPage = () => {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
             <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Riserva il Tuo Tavolo</span>
-            <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Prenotazione</h2>
+            <div className="flex items-center justify-center gap-2">
+              <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Prenotazione</h2>
+              <InfoGuide
+                title="Prenota un Tavolo"
+                description="Riserva il tuo tavolo in pochi secondi. Riceverai una conferma telefonica dal ristorante."
+                steps={[
+                  "Seleziona data e ora desiderata",
+                  "Indica il numero di ospiti",
+                  "Inserisci nome e telefono per la conferma",
+                ]}
+              />
+            </div>
             <p className="mt-3 text-sm text-muted-foreground max-w-md mx-auto">
               Prenota il tuo tavolo in pochi secondi. Compila il form e ti confermeremo via telefono.
             </p>
