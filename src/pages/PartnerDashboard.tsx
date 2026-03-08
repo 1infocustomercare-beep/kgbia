@@ -331,37 +331,22 @@ const PartnerDashboard = () => {
       <div className="flex-1 overflow-y-auto px-4 py-4 pb-24">
         <AnimatePresence mode="wait">
           {activeTab === "dashboard" && !demoMode && (
-            <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+            <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
 
-              {/* === NET EARNINGS HERO WIDGET === */}
+              {/* === NET EARNINGS HERO === */}
               <div className="p-5 rounded-2xl glass border border-primary/20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute top-3 right-12">
-                  <InfoGuide
-                    title="Guadagni Netti"
-                    description="Totale dei tuoi guadagni come partner: commissioni per vendite, bonus mensili e override da Team Leader."
-                    steps={[
-                      "€997 per ogni vendita completata",
-                      "Bonus fino a €1.500/mese al raggiungimento delle milestone",
-                      "€50 override dalla 5ª vendita di ogni membro del team",
-                    ]}
-                  />
-                </div>
                 <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Guadagni Netti</p>
-                <motion.p
-                  className="text-4xl font-heading font-bold text-vibrant-gradient"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
+                <motion.p className="text-4xl font-heading font-bold text-vibrant-gradient"
+                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                   €{netEarnings.toLocaleString()}
                 </motion.p>
-                <div className="flex items-center gap-4 mt-3">
+                <div className="flex items-center gap-4 mt-3 flex-wrap">
                   <div className="flex items-center gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-emerald-400" />
                     <span className="text-[10px] text-muted-foreground">Commissioni €{estimatedCommissions.toLocaleString()}</span>
                   </div>
-                  {isTeamLeader && (
+                  {isTeamLeader && totalOverrides > 0 && (
                     <div className="flex items-center gap-1.5">
                       <div className="w-2 h-2 rounded-full bg-sky-400" />
                       <span className="text-[10px] text-muted-foreground">Override €{totalOverrides.toLocaleString()}</span>
@@ -376,28 +361,28 @@ const PartnerDashboard = () => {
                 </div>
               </div>
 
-              {/* === STATS ROW — Fintech high contrast === */}
+              {/* === STATS ROW === */}
               <div className="grid grid-cols-3 gap-3">
-                <div className="p-3.5 rounded-xl bg-card border border-border/50">
-                  <Trophy className="w-4 h-4 text-primary mb-1.5" />
+                <div className="p-3.5 rounded-xl bg-card border border-border/50 text-center">
+                  <Trophy className="w-4 h-4 text-primary mb-1 mx-auto" />
                   <p className="text-xl font-display font-bold text-foreground">{salesCount}</p>
                   <p className="text-[10px] text-muted-foreground">Vendite</p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-card border border-border/50">
-                  <DollarSign className="w-4 h-4 text-emerald-400 mb-1.5" />
+                <div className="p-3.5 rounded-xl bg-card border border-border/50 text-center">
+                  <DollarSign className="w-4 h-4 text-emerald-400 mb-1 mx-auto" />
                   <p className="text-xl font-display font-bold text-foreground">€997</p>
                   <p className="text-[10px] text-muted-foreground">Per Vendita</p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-card border border-border/50">
-                {isTeamLeader ? (
+                <div className="p-3.5 rounded-xl bg-card border border-border/50 text-center">
+                  {isTeamLeader ? (
                     <>
-                      <Users className="w-4 h-4 text-sky-400 mb-1.5" />
+                      <Users className="w-4 h-4 text-sky-400 mb-1 mx-auto" />
                       <p className="text-xl font-display font-bold text-foreground">{teamMembers.length}</p>
                       <p className="text-[10px] text-muted-foreground">Team</p>
                     </>
                   ) : (
                     <>
-                      <Target className="w-4 h-4 text-sky-400 mb-1.5" />
+                      <Target className="w-4 h-4 text-sky-400 mb-1 mx-auto" />
                       <p className="text-xl font-display font-bold text-foreground">{salesCount}/4</p>
                       <p className="text-[10px] text-muted-foreground">a Team Leader</p>
                     </>
