@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap');
 
 @layer base {
   :root {
@@ -62,11 +62,15 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Space Grotesk', 'Playfair Display', serif;
   }
 }
 
 @layer utilities {
+  .font-heading {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
   .glass {
     background: hsla(var(--glass));
     backdrop-filter: blur(20px) saturate(1.2);
@@ -74,7 +78,7 @@
   }
 
   .glass-strong {
-    background: hsla(20, 12%, 10%, 0.85);
+    background: hsla(265, 50%, 6%, 0.88);
     backdrop-filter: blur(30px) saturate(1.3);
     border: 1px solid hsla(var(--glass-border));
   }
@@ -111,6 +115,11 @@
     66% { transform: translate(-20px, 20px) scale(0.95); }
   }
 
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+
   .animate-blob-float {
     animation: blob-float 12s ease-in-out infinite;
   }
@@ -121,6 +130,10 @@
 
   .animate-blob-float-slow {
     animation: blob-float 18s ease-in-out infinite;
+  }
+
+  .animate-pulse-dot {
+    animation: pulse-dot 2s infinite;
   }
 
   .food-card-shadow {
