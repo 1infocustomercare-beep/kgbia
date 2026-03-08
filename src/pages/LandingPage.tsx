@@ -10,6 +10,9 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import LivePreview from "@/components/restaurant/LivePreview";
+import mockupCliente from "@/assets/mockup-cliente.jpg";
+import mockupAdmin from "@/assets/mockup-admin.jpg";
+import mockupCucina from "@/assets/mockup-cucina.jpg";
 
 /* ═══════════════════════════════════════════
    HELPERS
@@ -476,22 +479,19 @@ const LandingPage = () => {
               <div className="absolute -inset-10 bg-violet-600/10 rounded-[60px] blur-[80px] pointer-events-none" />
               
               {[
-                { label: "👤 Cliente", src: "/r/impero-roma?sandbox=true", title: "Vista Cliente" },
-                { label: "⚙️ Admin", src: "/dashboard?sandbox=true", title: "Pannello Admin" },
-                { label: "🍳 Cucina", src: "/kitchen?sandbox=true", title: "Kitchen View" },
+                { label: "👤 Cliente", img: mockupCliente, title: "Vista Cliente" },
+                { label: "⚙️ Admin", img: mockupAdmin, title: "Pannello Admin" },
+                { label: "🍳 Cucina", img: mockupCucina, title: "Kitchen View" },
               ].map((phone, i) => (
                 <div key={i} className="relative flex flex-col items-center">
                   <span className="text-[9px] sm:text-[10px] font-heading font-bold text-accent tracking-widest uppercase mb-2">{phone.label}</span>
                   <div className="relative w-[110px] sm:w-[160px] lg:w-[150px] h-[220px] sm:h-[340px] lg:h-[320px] bg-card rounded-[20px] sm:rounded-[28px] border-2 border-foreground/10 overflow-hidden shadow-[0_20px_50px_hsla(0,0%,0%,0.4),0_0_40px_hsla(263,70%,58%,0.12)]">
                     <div className="w-[50px] sm:w-[70px] h-3 sm:h-4 bg-background rounded-b-[10px] sm:rounded-b-[14px] mx-auto relative z-20" />
-                    <div className="w-full overflow-hidden" style={{ height: 'calc(100% - 12px)' }}>
-                      <iframe
-                        src={phone.src}
-                        className="border-0 phone-iframe-scale"
-                        title={phone.title}
-                        loading="lazy"
-                      />
-                    </div>
+                    <img
+                      src={phone.img}
+                      alt={phone.title}
+                      className="w-full h-full object-cover object-top"
+                    />
                   </div>
                 </div>
               ))}
