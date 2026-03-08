@@ -36,8 +36,8 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; pr
 };
 
 // Floating orb background
-const GlowOrb = ({ className }: { className?: string }) => (
-  <div className={`absolute rounded-full blur-[120px] opacity-20 pointer-events-none ${className}`} />
+const GlowOrb = ({ className, color = "bg-violet-600" }: { className?: string; color?: string }) => (
+  <div className={`absolute rounded-full blur-[120px] opacity-20 pointer-events-none ${color} ${className}`} />
 );
 
 const LandingPage = () => {
@@ -119,10 +119,10 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden overflow-y-auto relative">
-      {/* Global ambient orbs */}
-      <GlowOrb className="w-[600px] h-[600px] bg-primary top-0 -left-60" />
-      <GlowOrb className="w-[500px] h-[500px] bg-accent top-[80vh] -right-40" />
-      <GlowOrb className="w-[400px] h-[400px] bg-violet-500 top-[200vh] left-1/2" />
+      {/* Global ambient orbs — FLAVR vibrant */}
+      <GlowOrb className="w-[600px] h-[600px] top-0 -left-60" color="bg-violet-600" />
+      <GlowOrb className="w-[500px] h-[500px] top-[80vh] -right-40" color="bg-orange-500" />
+      <GlowOrb className="w-[400px] h-[400px] top-[200vh] left-1/2" color="bg-pink-500" />
 
       {/* ====== NAV — Glassmorphism ====== */}
       <nav className="fixed top-0 inset-x-0 z-50">
@@ -183,7 +183,7 @@ const LandingPage = () => {
       {/* ====== 1. HERO ====== */}
       <section id="hero" ref={heroRef} className="relative min-h-[92vh] sm:min-h-screen w-full overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[800px] h-[350px] sm:h-[500px] bg-primary/10 rounded-full blur-[150px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[800px] h-[350px] sm:h-[500px] bg-violet-600/15 rounded-full blur-[150px]" />
 
         <motion.div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-14 px-4 max-w-6xl w-full pt-24 sm:pt-28 pb-8 sm:pb-16"
           style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}>
@@ -237,7 +237,7 @@ const LandingPage = () => {
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   Inizia Ora <ArrowRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
-                <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
+                <motion.div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-pink-500 to-orange-500 bg-[length:200%_100%]"
                   animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
               </motion.button>
@@ -337,7 +337,7 @@ const LandingPage = () => {
 
       {/* ====== 2. PROBLEM ====== */}
       <section id="pain" className="relative py-12 sm:py-24 px-4">
-        <GlowOrb className="w-[400px] h-[400px] bg-accent -top-40 right-0" />
+        <GlowOrb className="w-[400px] h-[400px] -top-40 right-0" color="bg-orange-500" />
         <div className="max-w-5xl mx-auto relative">
           <motion.div className="text-center mb-8 sm:mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-[10px] sm:text-xs font-medium text-accent tracking-wider uppercase mb-3">
@@ -414,7 +414,7 @@ const LandingPage = () => {
 
       {/* ====== 4. FEATURES ====== */}
       <section id="features" className="relative py-12 sm:py-24 px-4">
-        <GlowOrb className="w-[500px] h-[500px] bg-violet-500 -top-20 left-1/4" />
+        <GlowOrb className="w-[500px] h-[500px] -top-20 left-1/4" color="bg-pink-500" />
         <div className="max-w-5xl mx-auto relative">
           <motion.div className="text-center mb-8 sm:mb-16" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
@@ -634,7 +634,7 @@ const LandingPage = () => {
                   className="mt-4 sm:mt-6 w-full py-3.5 sm:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-xs sm:text-sm tracking-wide relative overflow-hidden min-h-[48px]"
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
                   <span className="relative z-10">Inizia il tuo Impero</span>
-                  <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
+                  <motion.div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-pink-500 to-orange-500 bg-[length:200%_100%]"
                     animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
                 </motion.button>
@@ -674,7 +674,7 @@ const LandingPage = () => {
 
       {/* ====== 7. PARTNER PROGRAM ====== */}
       <section id="partner" className="relative py-12 sm:py-24 px-4 overflow-hidden">
-        <GlowOrb className="w-[500px] h-[500px] bg-amber-500 top-0 -right-40" />
+        <GlowOrb className="w-[500px] h-[500px] top-0 -right-40" color="bg-orange-500" />
         <div className="max-w-5xl mx-auto relative">
           <motion.div className="text-center mb-8 sm:mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
@@ -870,7 +870,7 @@ const LandingPage = () => {
 
       {/* ====== TESTIMONIALS ====== */}
       <section id="testimonials" className="py-12 sm:py-24 px-4 relative overflow-hidden">
-        <GlowOrb className="w-[500px] h-[400px] bg-amber-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        <GlowOrb className="w-[500px] h-[400px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" color="bg-pink-500" />
         <div className="max-w-5xl mx-auto relative">
           <motion.div className="text-center mb-8 sm:mb-14" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
@@ -1023,9 +1023,9 @@ const LandingPage = () => {
       {/* ====== 9. CTA FINALE ====== */}
       <section className="relative py-12 sm:py-24 px-4">
         <div className="max-w-3xl mx-auto text-center relative">
-          <GlowOrb className="w-[400px] h-[300px] bg-primary top-0 left-1/2 -translate-x-1/2" />
+          <GlowOrb className="w-[400px] h-[300px] top-0 left-1/2 -translate-x-1/2" color="bg-violet-600" />
           <motion.div className="relative" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <Crown className="w-10 sm:w-14 h-10 sm:h-14 mx-auto text-primary mb-4 drop-shadow-[0_0_40px_hsla(38,75%,55%,0.4)]" />
+            <Crown className="w-10 sm:w-14 h-10 sm:h-14 mx-auto text-primary mb-4 drop-shadow-[0_0_40px_hsla(263,70%,58%,0.4)]" />
             <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground leading-tight">
               Ogni giorno senza Empire,<br />
               <span className="text-gold-gradient">regali margini</span>
@@ -1040,7 +1040,7 @@ const LandingPage = () => {
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   Sono un Ristoratore <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5" />
                 </span>
-                <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
+                <motion.div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-pink-500 to-orange-500 bg-[length:200%_100%]"
                   animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
               </motion.button>
@@ -1107,7 +1107,7 @@ const LandingPage = () => {
             className="flex-1 py-3.5 rounded-2xl bg-primary text-primary-foreground font-bold text-sm tracking-wider min-h-[48px] relative overflow-hidden"
             whileTap={{ scale: 0.97 }}>
             <span className="relative z-10">€2.997 · Inizia Ora</span>
-            <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
+            <motion.div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-pink-500 to-orange-500 bg-[length:200%_100%]"
               animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
           </motion.button>
