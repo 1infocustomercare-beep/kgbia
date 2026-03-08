@@ -357,12 +357,18 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ staggerChildren: 0.08 }}
+        >
           {services.map((s, i) => (
             <motion.div key={i}
               className="group relative p-6 sm:p-7 rounded-3xl glass border border-border/30 hover:border-primary/25 hover:bg-foreground/[0.03] hover:-translate-y-1 hover:shadow-[0_20px_60px_hsla(263,70%,58%,0.12)] transition-all duration-500"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/15 border border-primary/20 flex items-center justify-center text-primary mb-5 group-hover:scale-105 transition-transform">
+              variants={fadeUp}>
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/15 border border-primary/20 flex items-center justify-center text-primary mb-5 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
                 {s.icon}
               </div>
               <div className="flex items-center gap-2 mb-2">
@@ -375,7 +381,7 @@ const LandingPage = () => {
               </span>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
 
       {/* ═══════════════════════════════════════════

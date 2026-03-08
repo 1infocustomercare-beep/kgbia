@@ -335,7 +335,7 @@ const RestaurantPage = () => {
             <motion.h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground leading-tight"
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}>
               Una passione per la<br />
-              <span className="text-gold-gradient">cucina autentica</span>
+              <span className="text-brand-gradient">cucina autentica</span>
             </motion.h2>
             <motion.p className="mt-6 text-muted-foreground leading-relaxed"
               initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.45 }}>
