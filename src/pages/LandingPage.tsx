@@ -322,36 +322,36 @@ const LandingPage = () => {
           2. PROBLEMA — Il costo nascosto
          ═══════════════════════════════════════════ */}
       <Section id="problem">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <SectionLabel text="Il Problema" />
-          <motion.h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Ogni mese, <span className="text-vibrant-gradient">regali migliaia</span> di euro
           </motion.h2>
-          <motion.p className="text-[1.15rem] text-foreground/60 max-w-[600px] mx-auto leading-[1.7]"
+          <motion.p className="text-base text-foreground/60 max-w-[550px] mx-auto leading-[1.6]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Le piattaforme di delivery assorbono fino al 30% del tuo fatturato. È ora di riprendere il controllo.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             { icon: <Banknote className="w-8 h-8" />, amount: "€7.500", label: "Margini erosi / mese", sub: "Su 1000 ordini a €25 con marketplace" },
             { icon: <DollarSign className="w-8 h-8" />, amount: "€90.000", label: "Dispersi ogni anno", sub: "Capitale che alimenta i tuoi competitor" },
             { icon: <Target className="w-8 h-8" />, amount: "€0", label: "Proprietà clienti", sub: "Il marketplace possiede i TUOI dati" },
           ].map((item, i) => (
             <motion.div key={i}
-              className="group relative p-10 rounded-3xl glass border border-border/30 hover:border-accent/25 hover:-translate-y-1 hover:shadow-[0_20px_60px_hsla(263,70%,58%,0.12)] transition-all duration-500 text-center"
+              className="group relative p-6 rounded-2xl glass border border-border/30 hover:border-accent/25 hover:-translate-y-1 hover:shadow-[0_16px_48px_hsla(263,70%,58%,0.12)] transition-all duration-500 text-center"
               variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/15 border border-primary/20 flex items-center justify-center text-accent mx-auto mb-5">{item.icon}</div>
-              <p className="text-5xl font-heading font-bold text-accent">{item.amount}</p>
-              <p className="text-sm font-semibold text-foreground mt-3">{item.label}</p>
-              <p className="text-xs text-muted-foreground mt-1">{item.sub}</p>
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/15 border border-primary/20 flex items-center justify-center text-accent mx-auto mb-3">{item.icon}</div>
+              <p className="text-3xl font-heading font-bold text-accent">{item.amount}</p>
+              <p className="text-xs font-semibold text-foreground mt-2">{item.label}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{item.sub}</p>
             </motion.div>
           ))}
         </div>
 
-        <motion.p className="text-center mt-14 text-lg text-muted-foreground"
+        <motion.p className="text-center mt-8 text-sm text-muted-foreground"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           E se potessi trattenere <strong className="text-primary">il 98%</strong> dei tuoi margini?
         </motion.p>
@@ -361,21 +361,21 @@ const LandingPage = () => {
           3. SERVIZI — L'arsenale completo
          ═══════════════════════════════════════════ */}
       <Section id="services">
-        <div className="text-center mb-[72px]">
+        <div className="text-center mb-10">
           <SectionLabel text="I Nostri Servizi" />
-          <motion.h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Tutto Ciò di Cui il Tuo<br className="hidden sm:block" />
             <span className="text-vibrant-gradient">Ristorante Ha Bisogno</span>
           </motion.h2>
-          <motion.p className="text-[1.15rem] text-foreground/60 max-w-[600px] mx-auto leading-[1.7]"
+          <motion.p className="text-base text-foreground/60 max-w-[550px] mx-auto leading-[1.6]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Soluzioni end-to-end per portare il tuo ristorante nell'era digitale con stile e intelligenza.
           </motion.p>
         </div>
 
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
@@ -383,18 +383,18 @@ const LandingPage = () => {
         >
           {services.map((s, i) => (
             <motion.div key={i}
-              className="group relative p-8 rounded-3xl glass border border-border/30 hover:bg-foreground/[0.03] hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_20px_60px_hsla(263,70%,58%,0.12)] transition-all duration-500"
+              className="group relative p-6 rounded-2xl glass border border-border/30 hover:bg-foreground/[0.03] hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_16px_48px_hsla(263,70%,58%,0.12)] transition-all duration-500"
               variants={fadeUp}>
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/15 border border-primary/20 flex items-center justify-center text-primary mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary/20 to-accent/15 border border-primary/20 flex items-center justify-center text-primary mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
                 {s.icon}
               </div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <h3 className="font-heading text-[1.3rem] font-semibold text-foreground">{s.title}</h3>
-                <span className="text-[9px] px-2 py-0.5 rounded-full bg-accent/10 text-accent font-bold tracking-wider font-heading">{s.tag}</span>
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="font-heading text-base font-semibold text-foreground">{s.title}</h3>
+                <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-accent/10 text-accent font-bold tracking-wider font-heading">{s.tag}</span>
               </div>
-              <p className="text-[0.95rem] text-foreground/60 leading-[1.7]">{s.desc}</p>
-              <span className="inline-flex items-center gap-1.5 mt-5 text-sm font-semibold text-accent font-heading group-hover:gap-3 transition-all">
-                Scopri di più <ArrowRight className="w-3.5 h-3.5" />
+              <p className="text-sm text-foreground/60 leading-[1.6]">{s.desc}</p>
+              <span className="inline-flex items-center gap-1.5 mt-3 text-xs font-semibold text-accent font-heading group-hover:gap-2.5 transition-all">
+                Scopri di più <ArrowRight className="w-3 h-3" />
               </span>
             </motion.div>
           ))}
