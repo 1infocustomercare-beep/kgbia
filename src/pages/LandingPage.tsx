@@ -114,16 +114,14 @@ const HeroParallax = ({ navigate, scrollTo }: { navigate: (path: string) => void
             </button>
           </motion.div>
 
-          {/* Mobile Live Preview — scaled to fit properly */}
-          <motion.div className="mt-6 relative lg:hidden w-full flex justify-center"
+          {/* Mobile Live Preview — fully visible iPhone frame */}
+          <motion.div className="mt-8 relative lg:hidden w-full flex justify-center"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
-            <div className="absolute -inset-6 bg-primary/10 rounded-[40px] blur-[60px] pointer-events-none" />
-            <div className="relative w-[220px] h-[420px] overflow-hidden">
-              <div className="origin-top-left scale-[0.78]">
+            <div className="absolute -inset-8 bg-primary/10 rounded-[40px] blur-[60px] pointer-events-none" />
+            <div className="relative" style={{ width: 234, height: 468 }}>
+              <div className="absolute inset-0 origin-top-left" style={{ transform: 'scale(0.9)', transformOrigin: 'top center' }}>
                 <LivePreview slug="impero-roma" primaryColor="#7C3AED" compact />
               </div>
-              {/* Fade out bottom edge */}
-              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10" />
             </div>
           </motion.div>
 
