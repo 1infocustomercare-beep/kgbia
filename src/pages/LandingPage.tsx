@@ -950,7 +950,7 @@ const LandingPage = () => {
                 </AnimatePresence>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </Section>
 
