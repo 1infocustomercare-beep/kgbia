@@ -842,72 +842,66 @@ const LandingPage = () => {
           12. BLOG
          ═══════════════════════════════════════════ */}
       <Section>
-        <div className="text-center mb-[72px]">
+        <div className="text-center mb-10">
           <SectionLabel text="Blog & Risorse" />
-          <motion.h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Insights per il <span className="text-vibrant-gradient">Tuo Business</span>
           </motion.h2>
-          <motion.p className="text-[1.15rem] text-foreground/60 max-w-[600px] mx-auto leading-[1.7]"
+          <motion.p className="text-base text-foreground/60 max-w-[550px] mx-auto leading-[1.6]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Guide, trend e best practices per ristoratori che vogliono innovare.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {blogPosts.map((post, i) => (
             <motion.div key={i}
-              className="group rounded-3xl glass border border-border/30 overflow-hidden hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_20px_60px_hsla(263,70%,58%,0.12)] transition-all duration-500 cursor-pointer"
+              className="group rounded-2xl glass border border-border/30 overflow-hidden hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_16px_48px_hsla(263,70%,58%,0.12)] transition-all duration-500 cursor-pointer"
               variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-              {/* Thumbnail */}
-              <div className="h-[200px] bg-gradient-to-br from-card to-background relative overflow-hidden">
+              <div className="h-[140px] bg-gradient-to-br from-card to-background relative overflow-hidden">
                 <div className="absolute inset-0 bg-vibrant-gradient opacity-[0.08]" />
-                <span className="absolute top-4 left-4 px-3.5 py-1.5 bg-background/60 backdrop-blur-xl rounded-full text-[0.7rem] font-bold uppercase tracking-wider text-accent font-heading">{post.tag}</span>
+                <span className="absolute top-3 left-3 px-2.5 py-1 bg-background/60 backdrop-blur-xl rounded-full text-[0.65rem] font-bold uppercase tracking-wider text-accent font-heading">{post.tag}</span>
               </div>
-              {/* Body */}
-              <div className="p-7">
-                <p className="text-xs text-muted-foreground mb-2.5">{post.date}</p>
-                <h3 className="font-heading text-[1.15rem] font-semibold text-foreground leading-snug mb-2.5">{post.title}</h3>
-                <p className="text-[0.9rem] text-foreground/60 leading-[1.6]">{post.desc}</p>
+              <div className="p-5">
+                <p className="text-[10px] text-muted-foreground mb-1.5">{post.date}</p>
+                <h3 className="font-heading text-sm font-semibold text-foreground leading-snug mb-1.5">{post.title}</h3>
+                <p className="text-xs text-foreground/60 leading-[1.5]">{post.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
       </Section>
 
-      {/* ═══════════════════════════════════════════
-          13. FAQ — Side-by-side layout
-         ═══════════════════════════════════════════ */}
+      {/* ═══════ FAQ ═══════ */}
       <Section>
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-20 items-start">
-          {/* Left text */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 items-start">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="FAQ" />
-            <h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5">
+            <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3">
               Domande? <span className="text-vibrant-gradient">Risposte.</span>
             </h2>
-            <p className="text-base text-foreground/60 leading-[1.8]">
-              Tutto quello che devi sapere su Empire, dai costi alla tecnologia. Non trovi la tua domanda? Scrivici.
+            <p className="text-sm text-foreground/60 leading-[1.7]">
+              Tutto quello che devi sapere su Empire, dai costi alla tecnologia.
             </p>
           </motion.div>
 
-          {/* Right — FAQ items */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             {faqs.map((faq, i) => (
-              <motion.div key={i} className="rounded-3xl glass border border-border/30 overflow-hidden"
-                variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
+              <motion.div key={i} className="rounded-2xl glass border border-border/30 overflow-hidden"
+                variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between p-6 text-left hover:bg-foreground/[0.02] transition-colors">
-                  <span className="text-[1.05rem] font-semibold text-foreground pr-4 font-heading">{faq.q}</span>
+                  className="w-full flex items-center justify-between p-4 text-left hover:bg-foreground/[0.02] transition-colors">
+                  <span className="text-sm font-semibold text-foreground pr-3 font-heading">{faq.q}</span>
                   <motion.div animate={{ rotate: openFaq === i ? 45 : 0 }}
-                    className="w-8 h-8 rounded-full bg-primary/[0.12] flex items-center justify-center flex-shrink-0 text-primary text-lg font-heading">
+                    className="w-6 h-6 rounded-full bg-primary/[0.12] flex items-center justify-center flex-shrink-0 text-primary text-sm font-heading">
                     +
                   </motion.div>
                 </button>
                 <AnimatePresence>
                   {openFaq === i && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
-                      <p className="px-6 pb-6 text-[0.92rem] text-foreground/60 leading-[1.7]">{faq.a}</p>
+                      <p className="px-4 pb-4 text-xs text-foreground/60 leading-[1.6]">{faq.a}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -917,27 +911,25 @@ const LandingPage = () => {
         </div>
       </Section>
 
-      {/* ═══════════════════════════════════════════
-          14. CTA + NEWSLETTER
-         ═══════════════════════════════════════════ */}
+      {/* ═══════ CTA ═══════ */}
       <Section>
-        <div className="relative text-center p-12 sm:p-20 rounded-[32px] bg-gradient-to-br from-primary/[0.15] to-accent/[0.08] border border-primary/20 overflow-hidden">
+        <div className="relative text-center p-8 sm:p-12 rounded-[24px] bg-gradient-to-br from-primary/[0.15] to-accent/[0.08] border border-primary/20 overflow-hidden">
           <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-[radial-gradient(circle_at_30%_30%,hsla(263,70%,58%,0.12)_0%,transparent_50%),radial-gradient(circle_at_70%_70%,hsla(24,95%,53%,0.08)_0%,transparent_50%)] animate-blob-float-slow pointer-events-none" />
           <div className="relative z-10">
-            <Crown className="w-12 h-12 mx-auto text-primary mb-6 drop-shadow-[0_0_40px_hsla(263,70%,58%,0.4)]" />
-            <h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5">
-              Pronto a Dominare <br /> il <span className="text-vibrant-gradient">Digitale?</span>
+            <Crown className="w-10 h-10 mx-auto text-primary mb-4 drop-shadow-[0_0_40px_hsla(263,70%,58%,0.4)]" />
+            <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3">
+              Pronto a Dominare il <span className="text-vibrant-gradient">Digitale?</span>
             </h2>
-            <p className="text-base text-muted-foreground max-w-md mx-auto mb-10">
+            <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
               I tuoi competitor stanno costruendo il loro impero digitale. Inizia il tuo oggi.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <button onClick={() => navigate("/admin")}
-                className="w-full sm:w-auto px-10 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-base font-heading hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all flex items-center justify-center gap-2">
-                Sono un Ristoratore <ArrowRight className="w-5 h-5" />
+                className="w-full sm:w-auto px-8 py-3 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all flex items-center justify-center gap-2">
+                Sono un Ristoratore <ArrowRight className="w-4 h-4" />
               </button>
               <button onClick={() => navigate("/partner/register")}
-                className="w-full sm:w-auto px-10 py-4 rounded-full border-2 border-border/30 text-foreground font-bold text-base font-heading hover:border-primary/40 transition-all">
+                className="w-full sm:w-auto px-8 py-3 rounded-full border-2 border-border/30 text-foreground font-bold text-sm font-heading hover:border-primary/40 transition-all">
                 Diventa Partner
               </button>
             </div>
@@ -945,71 +937,63 @@ const LandingPage = () => {
         </div>
       </Section>
 
-      {/* ═══════════════════════════════════════════
-          FOOTER — Professional 4-column
-         ═══════════════════════════════════════════ */}
-      <footer id="contact" className="border-t border-border/30 py-20 pb-10 px-6">
+      {/* ═══════ FOOTER ═══════ */}
+      <footer id="contact" className="border-t border-border/30 py-12 pb-8 px-6">
         <div className="max-w-[1200px] mx-auto">
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-12 mb-16">
-            {/* Brand */}
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 sm:gap-10 mb-10">
             <div className="col-span-2 sm:col-span-1">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-9 h-9 rounded-xl bg-vibrant-gradient flex items-center justify-center">
-                  <Crown className="w-4 h-4 text-primary-foreground" />
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center">
+                  <Crown className="w-3.5 h-3.5 text-primary-foreground" />
                 </div>
-                <span className="font-heading font-bold text-foreground tracking-[0.12em] uppercase text-sm">Empire<span className="text-accent">.AI</span></span>
+                <span className="font-heading font-bold text-foreground tracking-[0.12em] uppercase text-xs">Empire<span className="text-accent">.AI</span></span>
               </div>
-              <p className="text-sm text-foreground/60 leading-[1.7] max-w-[280px] mb-6">
-                L'unico Asset Digitale di Proprietà che libera i ristoratori dalle commissioni predatorie dei marketplace.
+              <p className="text-xs text-foreground/60 leading-[1.6] max-w-[260px] mb-4">
+                L'unico Asset Digitale di Proprietà che libera i ristoratori dalle commissioni predatorie.
               </p>
-              {/* Social links */}
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 {["In", "𝕏", "IG"].map((s, i) => (
-                  <div key={i} className="w-10 h-10 rounded-full glass border border-border/30 flex items-center justify-center text-sm text-foreground/60 hover:bg-vibrant-gradient hover:text-primary-foreground hover:border-transparent hover:-translate-y-0.5 transition-all cursor-pointer">{s}</div>
+                  <div key={i} className="w-8 h-8 rounded-full glass border border-border/30 flex items-center justify-center text-xs text-foreground/60 hover:bg-vibrant-gradient hover:text-primary-foreground hover:border-transparent transition-all cursor-pointer">{s}</div>
                 ))}
               </div>
             </div>
 
-            {/* Contatti */}
             <div>
-              <h4 className="font-heading text-[0.95rem] font-semibold text-foreground mb-5">Contatti</h4>
-              <div className="space-y-3 text-sm text-foreground/60">
+              <h4 className="font-heading text-xs font-semibold text-foreground mb-3">Contatti</h4>
+              <div className="space-y-2 text-xs text-foreground/60">
                 <p>📧 info@empire-suite.it</p>
                 <p>📞 +39 06 1234 5678</p>
                 <p>📍 Roma, Italia</p>
               </div>
             </div>
 
-            {/* Risorse */}
             <div>
-              <h4 className="font-heading text-[0.95rem] font-semibold text-foreground mb-5">Risorse</h4>
-              <div className="space-y-3 text-sm">
+              <h4 className="font-heading text-xs font-semibold text-foreground mb-3">Risorse</h4>
+              <div className="space-y-2 text-xs">
                 {[
                   { label: "Servizi", href: "#services" },
                   { label: "Portfolio", href: "#portfolio" },
-                  { label: "Calcolatore ROI", href: "#calculator" },
+                  { label: "ROI Calculator", href: "#calculator" },
                   { label: "Prezzi", href: "#pricing" },
                 ].map((link, i) => (
-                  <a key={i} href={link.href} className="block text-foreground/60 hover:text-accent hover:pl-1 transition-all">{link.label}</a>
+                  <a key={i} href={link.href} className="block text-foreground/60 hover:text-accent transition-colors">{link.label}</a>
                 ))}
               </div>
             </div>
 
-            {/* Legale */}
             <div>
-              <h4 className="font-heading text-[0.95rem] font-semibold text-foreground mb-5">Legale</h4>
-              <div className="space-y-3 text-sm">
-                <a href="/privacy" className="block text-foreground/60 hover:text-accent hover:pl-1 transition-all">Privacy Policy</a>
-                <a href="/cookie-policy" className="block text-foreground/60 hover:text-accent hover:pl-1 transition-all">Cookie Policy</a>
-                <a href="#" className="block text-foreground/60 hover:text-accent hover:pl-1 transition-all">Termini di Servizio</a>
+              <h4 className="font-heading text-xs font-semibold text-foreground mb-3">Legale</h4>
+              <div className="space-y-2 text-xs">
+                <a href="/privacy" className="block text-foreground/60 hover:text-accent transition-colors">Privacy Policy</a>
+                <a href="/cookie-policy" className="block text-foreground/60 hover:text-accent transition-colors">Cookie Policy</a>
+                <a href="#" className="block text-foreground/60 hover:text-accent transition-colors">Termini di Servizio</a>
               </div>
             </div>
           </div>
 
-          {/* Bottom bar */}
-          <div className="border-t border-border/30 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+          <div className="border-t border-border/30 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] text-muted-foreground">
             <p>© 2026 Empire Restaurant Suite. Tutti i diritti riservati.</p>
-            <div className="flex gap-6">
+            <div className="flex gap-5">
               <a href="/privacy" className="hover:text-foreground transition-colors">Privacy</a>
               <a href="/cookie-policy" className="hover:text-foreground transition-colors">Cookie</a>
               <span>P.IVA IT12345678901</span>
