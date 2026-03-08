@@ -162,4 +162,23 @@
   .safe-top {
     padding-top: max(env(safe-area-inset-top, 0px), 0.5rem);
   }
+
+  .phone-iframe-scale {
+    width: 375px;
+    height: 812px;
+    transform-origin: top left;
+    transform: scale(0.293);
+  }
+
+  @media (min-width: 640px) {
+    .phone-iframe-scale {
+      transform: scale(0.427);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .phone-iframe-scale {
+      transform: scale(0.4);
+    }
+  }
 }
