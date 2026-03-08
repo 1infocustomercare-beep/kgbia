@@ -138,8 +138,7 @@ const HeroParallax = ({ navigate, scrollTo }: { navigate: (path: string) => void
             <LivePreview slug="impero-roma" primaryColor="#7C3AED" compact />
           </div>
         </motion.div>
-      </motion.div>
-
+      </div>
       <motion.div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-10"
         style={{ opacity: opacityFade }}
         animate={{ y: [0, 8, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
