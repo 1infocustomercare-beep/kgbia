@@ -453,11 +453,11 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           <div className="hidden lg:block absolute top-[28px] left-[calc(12.5%+28px)] right-[calc(12.5%+28px)] h-0.5 bg-gradient-to-r from-primary/30 via-pink-500/30 to-accent/30 z-0" />
           {howItWorks.map((s, i) => (
-            <motion.div key={i} className="relative text-center z-10"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+            <motion.div key={i} className="relative text-center z-10" variants={popIn}>
               <div className="relative w-14 h-14 rounded-full bg-vibrant-gradient flex items-center justify-center mx-auto mb-4">
                 <span className="font-heading font-bold text-lg text-primary-foreground">{s.step}</span>
                 <div className="absolute -inset-1 rounded-full border-2 border-primary/25" />
@@ -466,7 +466,7 @@ const LandingPage = () => {
               <p className="text-xs text-foreground/60 leading-[1.5]">{s.desc}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
 
       {/* ═══════════════════════════════════════════
@@ -485,11 +485,12 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-5"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           {portfolioItems.map((item, i) => (
             <motion.div key={i}
               className="group relative rounded-3xl overflow-hidden aspect-[4/3] glass border border-border/30 cursor-pointer hover:-translate-y-1.5 hover:shadow-[0_20px_60px_hsla(263,70%,58%,0.2)] transition-all duration-500"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              variants={fadeScale}>
               {/* Mockup browser */}
               <div className="absolute inset-0 bg-gradient-to-br from-card to-background flex items-center justify-center">
                 <div className="w-[80%] h-[70%] rounded-2xl bg-background/60 border border-border/40 overflow-hidden">
@@ -514,7 +515,7 @@ const LandingPage = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
 
       {/* ═══════════════════════════════════════════
@@ -522,7 +523,7 @@ const LandingPage = () => {
          ═══════════════════════════════════════════ */}
       <Section id="app">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="App Personalizzate" />
             <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3">
               La Tua App, <br /><span className="text-vibrant-gradient">Il Tuo Brand</span>
@@ -552,7 +553,7 @@ const LandingPage = () => {
           </motion.div>
 
           {/* 3 Phone Mockups */}
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}>
+          <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <div className="flex justify-center items-end gap-3 sm:gap-4 relative">
               <div className="absolute -inset-10 bg-violet-600/10 rounded-[60px] blur-[80px] pointer-events-none" />
               {[
@@ -579,7 +580,7 @@ const LandingPage = () => {
       <Section>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* About text */}
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="Chi Siamo" />
             <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3">
               Il Team Dietro <br /><span className="text-vibrant-gradient">la Magia</span>
@@ -604,20 +605,21 @@ const LandingPage = () => {
 
           {/* Team grid */}
           <motion.div className="grid grid-cols-2 gap-4"
-            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}>
+            variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             {[
               { name: "Marco R.", role: "CEO & AI Strategist" },
               { name: "Sofia L.", role: "Lead Designer" },
               { name: "Luca B.", role: "CTO & Full-Stack Dev" },
               { name: "Elena M.", role: "Marketing & Growth" },
             ].map((m, i) => (
-              <div key={i} className="p-5 rounded-2xl glass border border-border/30 text-center hover:border-primary/20 hover:-translate-y-1 transition-all duration-500">
+              <motion.div key={i} variants={fadeScale}
+                className="p-5 rounded-2xl glass border border-border/30 text-center hover:border-primary/20 hover:-translate-y-1 transition-all duration-500">
                 <div className="w-14 h-14 rounded-full bg-vibrant-gradient opacity-30 mx-auto mb-3 relative">
                   <div className="absolute -inset-[2px] rounded-full border-2 border-primary/25" />
                 </div>
                 <h4 className="font-heading text-sm font-semibold text-foreground mb-0.5">{m.name}</h4>
                 <p className="text-[10px] text-muted-foreground">{m.role}</p>
-              </div>
+              </motion.div>
             ))}
           </motion.div>
         </div>
