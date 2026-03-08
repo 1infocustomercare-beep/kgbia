@@ -102,7 +102,7 @@
   }
 
   .vibrant-glow {
-    box-shadow: 0 0 60px hsla(263, 85%, 60%, 0.3);
+    box-shadow: 0 0 60px hsla(263, 85%, 60%, 0.3), 0 0 120px hsla(330, 80%, 60%, 0.15);
   }
 
   @keyframes blob-float {

@@ -1025,7 +1025,7 @@ const LandingPage = () => {
         <div className="max-w-3xl mx-auto text-center relative">
           <GlowOrb className="w-[400px] h-[300px] top-0 left-1/2 -translate-x-1/2" color="bg-violet-600" />
           <motion.div className="relative" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <Crown className="w-10 sm:w-14 h-10 sm:h-14 mx-auto text-primary mb-4 drop-shadow-[0_0_40px_hsla(38,75%,55%,0.4)]" />
+            <Crown className="w-10 sm:w-14 h-10 sm:h-14 mx-auto text-primary mb-4 drop-shadow-[0_0_40px_hsla(263,70%,58%,0.4)]" />
             <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground leading-tight">
               Ogni giorno senza Empire,<br />
               <span className="text-gold-gradient">regali margini</span>
