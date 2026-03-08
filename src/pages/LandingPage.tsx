@@ -870,7 +870,7 @@ const LandingPage = () => {
 
       {/* ====== TESTIMONIALS ====== */}
       <section id="testimonials" className="py-12 sm:py-24 px-4 relative overflow-hidden">
-        <GlowOrb className="w-[500px] h-[400px] bg-amber-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        <GlowOrb className="w-[500px] h-[400px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" color="bg-pink-500" />
         <div className="max-w-5xl mx-auto relative">
           <motion.div className="text-center mb-8 sm:mb-14" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
