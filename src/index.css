@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -88,6 +88,39 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .text-vibrant-gradient {
+    background: linear-gradient(135deg, hsl(263, 85%, 60%), hsl(330, 80%, 60%), hsl(24, 95%, 55%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-vibrant-gradient {
+    background: linear-gradient(135deg, hsl(263, 85%, 60%), hsl(330, 80%, 60%), hsl(24, 95%, 55%));
+  }
+
+  .vibrant-glow {
+    box-shadow: 0 0 60px hsla(263, 85%, 60%, 0.3);
+  }
+
+  @keyframes blob-float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -30px) scale(1.05); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+  }
+
+  .animate-blob-float {
+    animation: blob-float 12s ease-in-out infinite;
+  }
+
+  .animate-blob-float-reverse {
+    animation: blob-float 15s ease-in-out infinite reverse;
+  }
+
+  .animate-blob-float-slow {
+    animation: blob-float 18s ease-in-out infinite;
   }
 
   .food-card-shadow {
