@@ -57,6 +57,97 @@ const SectionLabel = ({ icon, text }: { icon: React.ReactNode; text: string }) =
   </motion.div>
 );
 
+/* Hero with Parallax */
+const HeroParallax = ({ navigate, scrollTo }: { navigate: (path: string) => void; scrollTo: (id: string) => void }) => {
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
+  const opacityFade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  return (
+    <section id="hero" ref={heroRef} className="relative min-h-[90vh] sm:min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6">
+      {/* Parallax background layers */}
+      <motion.div className="absolute inset-0" style={{ y: bgY }}>
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[900px] h-[300px] sm:h-[600px] bg-primary/15 rounded-full blur-[180px]" />
+        <div className="absolute inset-0 pointer-events-none hidden sm:block">
+          <div className="absolute w-[300px] h-[300px] rounded-full border border-foreground/[0.04] top-[10%] right-[5%] animate-blob-float" />
+          <div className="absolute w-[200px] h-[200px] rounded-full border border-accent/[0.08] bottom-[20%] right-[15%] animate-blob-float-reverse" />
+        </div>
+      </motion.div>
+
+      <motion.div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-6 lg:gap-16 pt-20 sm:pt-32 pb-8 sm:pb-12"
+        style={{ y: contentY, opacity: opacityFade }}>
+        {/* Left */}
+        <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+          <motion.div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-primary/10 border border-primary/25 mb-4 sm:mb-6"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-accent animate-pulse-dot" />
+            <span className="text-[10px] sm:text-xs font-medium text-primary/80 tracking-wider uppercase font-heading">AI-Powered Restaurant Suite</span>
+          </motion.div>
+
+          <motion.h1
+            className="text-[1.75rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground tracking-tight"
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.15 }}>
+            Trasforma il Tuo Ristorante con l'
+            <span className="text-vibrant-gradient">Intelligenza Artificiale</span>
+          </motion.h1>
+
+          <motion.p className="mt-3 sm:mt-7 text-xs sm:text-lg text-foreground/60 max-w-xl leading-relaxed"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+            PWA di proprietà, menu AI, kitchen view, review shield e molto altro.
+            Tutto ciò di cui hai bisogno per <strong className="text-foreground">dominare il digitale</strong> e liberarti dal 30% di commissioni.
+          </motion.p>
+
+          <motion.div className="mt-5 sm:mt-9 flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3 w-full sm:w-auto"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+            <button onClick={() => scrollTo("pricing")}
+              className="group relative w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-xs sm:text-sm tracking-widest uppercase font-heading overflow-hidden transition-transform hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)]">
+              Prenota una Demo <ArrowRight className="inline w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button onClick={() => navigate("/r/impero-roma")}
+              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full glass text-foreground text-xs sm:text-sm font-bold tracking-widest uppercase font-heading hover:border-primary/40 transition-all flex items-center justify-center gap-2">
+              <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent" /> Scopri i Servizi
+            </button>
+          </motion.div>
+
+          {/* Hero stats */}
+          <motion.div className="mt-6 sm:mt-14 flex flex-wrap items-center justify-center lg:justify-start gap-5 sm:gap-12 pt-5 sm:pt-8 border-t border-border/30 w-full"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
+            {[
+              { value: "200+", label: "Ristoranti Serviti" },
+              { value: "98%", label: "Soddisfazione Clienti" },
+              { value: "+45%", label: "Aumento Ordini" },
+            ].map((s, i) => (
+              <div key={i} className="text-center lg:text-left">
+                <p className="text-xl sm:text-3xl font-heading font-bold text-vibrant-gradient">{s.value}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">{s.label}</p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Right — Live Preview — hidden on small mobile */}
+        <motion.div className="flex-shrink-0 relative hidden sm:block"
+          initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }}>
+          <div className="absolute -inset-10 bg-primary/15 rounded-[60px] blur-[80px]" />
+          <div className="relative w-[280px] sm:w-[300px]">
+            <LivePreview slug="impero-roma" primaryColor="#7C3AED" compact />
+          </div>
+        </motion.div>
+      </motion.div>
+
+      <motion.div className="absolute bottom-4 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-10"
+        style={{ opacity: opacityFade }}
+        animate={{ y: [0, 8, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
+        <span className="text-[9px] text-foreground/30 tracking-widest uppercase font-heading">Scopri</span>
+        <ArrowDown className="w-4 h-4 text-primary/40" />
+      </motion.div>
+    </section>
+  );
+};
+
 /* Stagger container */
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
 
