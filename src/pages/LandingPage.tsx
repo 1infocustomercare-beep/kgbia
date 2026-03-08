@@ -69,9 +69,9 @@ const HeroParallax = ({ navigate, scrollTo }: { navigate: (path: string) => void
   const opacityFade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <section id="hero" ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden px-5 sm:px-6">
+    <section id="hero" ref={heroRef} className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden px-5 sm:px-6">
       {/* Parallax background layers */}
-      <motion.div className="absolute inset-0" style={{ y: bgY }}>
+      <motion.div className="absolute inset-0 overflow-hidden" style={{ y: bgY }}>
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[900px] h-[400px] sm:h-[600px] bg-primary/15 rounded-full blur-[180px]" />
         <div className="absolute inset-0 pointer-events-none hidden sm:block">
@@ -80,8 +80,7 @@ const HeroParallax = ({ navigate, scrollTo }: { navigate: (path: string) => void
         </div>
       </motion.div>
 
-      <motion.div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-8 lg:gap-16 pt-24 sm:pt-32 pb-12"
-        style={{ y: contentY, opacity: opacityFade }}>
+      <div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-8 lg:gap-16 pt-24 sm:pt-32 pb-16 sm:pb-12">
         {/* Left */}
         <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
           <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/25 mb-5 sm:mb-6"
