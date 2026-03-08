@@ -331,37 +331,22 @@ const PartnerDashboard = () => {
       <div className="flex-1 overflow-y-auto px-4 py-4 pb-24">
         <AnimatePresence mode="wait">
           {activeTab === "dashboard" && !demoMode && (
-            <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+            <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
 
-              {/* === NET EARNINGS HERO WIDGET === */}
+              {/* === NET EARNINGS HERO === */}
               <div className="p-5 rounded-2xl glass border border-primary/20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute top-3 right-12">
-                  <InfoGuide
-                    title="Guadagni Netti"
-                    description="Totale dei tuoi guadagni come partner: commissioni per vendite, bonus mensili e override da Team Leader."
-                    steps={[
-                      "€997 per ogni vendita completata",
-                      "Bonus fino a €1.500/mese al raggiungimento delle milestone",
-                      "€50 override dalla 5ª vendita di ogni membro del team",
-                    ]}
-                  />
-                </div>
                 <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Guadagni Netti</p>
-                <motion.p
-                  className="text-4xl font-heading font-bold text-vibrant-gradient"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
+                <motion.p className="text-4xl font-heading font-bold text-vibrant-gradient"
+                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                   €{netEarnings.toLocaleString()}
                 </motion.p>
-                <div className="flex items-center gap-4 mt-3">
+                <div className="flex items-center gap-4 mt-3 flex-wrap">
                   <div className="flex items-center gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-emerald-400" />
                     <span className="text-[10px] text-muted-foreground">Commissioni €{estimatedCommissions.toLocaleString()}</span>
                   </div>
-                  {isTeamLeader && (
+                  {isTeamLeader && totalOverrides > 0 && (
                     <div className="flex items-center gap-1.5">
                       <div className="w-2 h-2 rounded-full bg-sky-400" />
                       <span className="text-[10px] text-muted-foreground">Override €{totalOverrides.toLocaleString()}</span>
@@ -376,28 +361,28 @@ const PartnerDashboard = () => {
                 </div>
               </div>
 
-              {/* === STATS ROW — Fintech high contrast === */}
+              {/* === STATS ROW === */}
               <div className="grid grid-cols-3 gap-3">
-                <div className="p-3.5 rounded-xl bg-card border border-border/50">
-                  <Trophy className="w-4 h-4 text-primary mb-1.5" />
+                <div className="p-3.5 rounded-xl bg-card border border-border/50 text-center">
+                  <Trophy className="w-4 h-4 text-primary mb-1 mx-auto" />
                   <p className="text-xl font-display font-bold text-foreground">{salesCount}</p>
                   <p className="text-[10px] text-muted-foreground">Vendite</p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-card border border-border/50">
-                  <DollarSign className="w-4 h-4 text-emerald-400 mb-1.5" />
+                <div className="p-3.5 rounded-xl bg-card border border-border/50 text-center">
+                  <DollarSign className="w-4 h-4 text-emerald-400 mb-1 mx-auto" />
                   <p className="text-xl font-display font-bold text-foreground">€997</p>
                   <p className="text-[10px] text-muted-foreground">Per Vendita</p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-card border border-border/50">
-                {isTeamLeader ? (
+                <div className="p-3.5 rounded-xl bg-card border border-border/50 text-center">
+                  {isTeamLeader ? (
                     <>
-                      <Users className="w-4 h-4 text-sky-400 mb-1.5" />
+                      <Users className="w-4 h-4 text-sky-400 mb-1 mx-auto" />
                       <p className="text-xl font-display font-bold text-foreground">{teamMembers.length}</p>
                       <p className="text-[10px] text-muted-foreground">Team</p>
                     </>
                   ) : (
                     <>
-                      <Target className="w-4 h-4 text-sky-400 mb-1.5" />
+                      <Target className="w-4 h-4 text-sky-400 mb-1 mx-auto" />
                       <p className="text-xl font-display font-bold text-foreground">{salesCount}/4</p>
                       <p className="text-[10px] text-muted-foreground">a Team Leader</p>
                     </>
@@ -405,331 +390,133 @@ const PartnerDashboard = () => {
                 </div>
               </div>
 
-              {/* === TEAM LEADER GATE PROGRESS === */}
-              {!isTeamLeader && (
-                <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-4">
-                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                    <Crown className="w-4 h-4 text-primary" /> Percorso Team Leader
-                    <InfoGuide
-                      title="Percorso Team Leader"
-                      description="Per diventare Team Leader devi completare 4 vendite personali e reclutare almeno 2 sub-partner. Una volta attivato, guadagni €50 override dalla 5ª vendita di ogni membro."
-                      steps={[
-                        "Completa 4 vendite personali",
-                        "Recluta almeno 2 partner con il tuo link di invito",
-                        "La promozione è automatica al raggiungimento",
-                      ]}
-                    />
+              {/* === BONUS PROGRESS (compact) === */}
+              <div className="p-4 rounded-2xl bg-card border border-border/50">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-bold text-foreground flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-primary" /> Bonus Mensile
                   </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 rounded-xl bg-secondary/50 border border-border/50 text-center">
-                      <p className="text-2xl font-display font-bold text-foreground">{Math.min(salesCount, 4)}/4</p>
-                      <p className="text-[10px] text-muted-foreground">Vendite Personali</p>
-                      <div className="w-full h-1.5 rounded-full bg-muted mt-2 overflow-hidden">
-                        <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${Math.min(100, (salesCount / 4) * 100)}%` }} />
-                      </div>
-                    </div>
-                    <div className="p-3 rounded-xl bg-secondary/50 border border-border/50 text-center">
-                      <p className="text-2xl font-display font-bold text-foreground">{Math.min(teamMembers.length, 2)}/2</p>
-                      <p className="text-[10px] text-muted-foreground">Partner Reclutati</p>
-                      <div className="w-full h-1.5 rounded-full bg-muted mt-2 overflow-hidden">
-                        <div className="h-full rounded-full bg-sky-400 transition-all" style={{ width: `${Math.min(100, (teamMembers.length / 2) * 100)}%` }} />
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-[10px] text-center text-muted-foreground">
-                    {salesCount >= 4 && teamMembers.length >= 2 
-                      ? "🎉 Requisiti soddisfatti! Promozione in corso..." 
-                      : `🎯 ${Math.max(0, 4 - salesCount)} vendite e ${Math.max(0, 2 - teamMembers.length)} reclute per sbloccare Team Leader`
-                    }
-                  </p>
-                </div>
-              )}
-
-              {/* === DEMO CREDITS WALLET === */}
-              <DemoCreditsWallet userId={user?.id} />
-
-              {/* === BONUS ACCELERATOR — Progress Rings === */}
-              <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-primary" /> Bonus Accelerator
-                  </h3>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-muted-foreground">Mese corrente</span>
-                    <InfoGuide
-                      title="Bonus Accelerator"
-                      description="Sistema di bonus progressivi basato sulle tue vendite mensili. Raggiungi le milestone per sbloccare premi extra."
-                      steps={[
-                        "Milestone 1: 4 vendite → €500 + status Team Leader",
-                        "Milestone 2: 5 vendite/mese → €1.500 bonus mensile",
-                        "I bonus si accumulano con le commissioni standard",
-                      ]}
-                    />
-                  </div>
+                  <span className="text-[10px] text-muted-foreground">{currentMonth}</span>
                 </div>
                 <div className="flex items-center justify-around">
-                  <BonusProgressRing
-                    salesCount={salesCount}
-                    milestone={4}
-                    label="Milestone 1"
-                    reward={salesCount >= 4 ? "Team Leader ✓" : "€500 + Team Leader"}
-                    unlocked={salesCount >= 4}
-                  />
-                  <BonusProgressRing
-                    salesCount={currentMonthSales}
-                    milestone={5}
-                    label="Milestone 2"
-                    reward="€1.500 Bonus"
-                    unlocked={currentMonthSales >= 5}
-                  />
+                  <BonusProgressRing salesCount={salesCount} milestone={4} label="€500" reward={salesCount >= 4 ? "✓ Sbloccato" : `${4 - salesCount} mancanti`} unlocked={salesCount >= 4} />
+                  <BonusProgressRing salesCount={currentMonthSales} milestone={5} label="€1.500" reward={currentMonthSales >= 5 ? "✓ Sbloccato" : `${5 - currentMonthSales} mancanti`} unlocked={currentMonthSales >= 5} />
                 </div>
-                {!isTeamLeader && salesCount < 4 && (
-                  <div className="p-3 rounded-xl bg-primary/5 border border-primary/10 text-center">
-                    <p className="text-[11px] text-primary font-medium">
-                      🎯 {4 - salesCount} vendite per diventare Team Leader → guadagna €50 override dalla 5ª vendita di ogni membro
-                    </p>
-                  </div>
-                )}
               </div>
 
-              {/* === LEADERBOARD === */}
-              <PartnerLeaderboard currentUserSales={salesCount} />
+              {/* === DEMO CREDITS === */}
+              <DemoCreditsWallet userId={user?.id} />
 
-              {/* === QUICK ACTIONS — Fintech cards === */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-foreground">Azioni Rapide</h3>
-                  <InfoGuide
-                    title="Azioni Rapide"
-                    description="Accesso diretto a tutti gli strumenti per la vendita: demo interattiva, schede funzionalità, calcolatore ROI, storico guadagni e materiale marketing."
-                  />
-                </div>
-                {[
-                  { label: "Demo Interattiva", desc: "Tour guidato con 3 viste", icon: <Play className="w-5 h-5" />, tab: "sandbox" as Tab },
-                  { label: "Schede Vendita", desc: "21+ funzionalità dettagliate", icon: <BookOpen className="w-5 h-5" />, tab: "toolkit" as Tab },
-                  { label: "Calcola il ROI", desc: "Quanto risparmia il cliente", icon: <TrendingUp className="w-5 h-5" />, action: () => setShowROI(true) },
-                  { label: "I tuoi Guadagni", desc: "Storico vendite e payout", icon: <DollarSign className="w-5 h-5" />, tab: "earnings" as Tab },
-                  { label: "Asset Vault", desc: "Scarica Sales Deck e materiali", icon: <FolderDown className="w-5 h-5" />, tab: "vault" as Tab },
-                ].map((action, i) => (
-                  <motion.button key={i} onClick={() => action.action ? action.action() : action.tab && setActiveTab(action.tab)}
-                    className="w-full flex items-center gap-3 p-4 rounded-xl bg-card border border-border/50 hover:border-primary/30 transition-colors text-left"
-                    whileTap={{ scale: 0.98 }}>
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">{action.icon}</div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-foreground">{action.label}</p>
-                      <p className="text-xs text-muted-foreground">{action.desc}</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  </motion.button>
-                ))}
-              </div>
-
-              {/* === DEMO RESTAURANT — Live Links + Customization === */}
+              {/* === DEMO RESTAURANT (streamlined) === */}
               {demoRestaurant && (
-                <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/5 via-card to-amber-500/5 border border-primary/20 space-y-3">
+                <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {demoRestaurant.logo_url ? (
-                        <img src={demoRestaurant.logo_url} alt="Logo" className="w-9 h-9 rounded-xl object-cover border border-border/50" />
+                        <img src={demoRestaurant.logo_url} alt="Logo" className="w-8 h-8 rounded-lg object-cover border border-border/50" />
                       ) : (
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-                          <Smartphone className="w-5 h-5 text-primary" />
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <Smartphone className="w-4 h-4 text-primary" />
                         </div>
                       )}
                       <div>
-                        <h3 className="text-sm font-bold text-foreground">Il tuo Ristorante Demo</h3>
-                        <p className="text-[10px] text-muted-foreground">{demoRestaurant.name}</p>
+                        <h3 className="text-xs font-bold text-foreground">{demoRestaurant.name}</h3>
+                        <p className="text-[10px] text-muted-foreground">Ristorante Demo</p>
                       </div>
                     </div>
-                    <motion.button
-                      onClick={() => setEditingDemo(!editingDemo)}
-                      className="p-2 rounded-lg bg-secondary hover:bg-accent transition-colors"
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {editingDemo ? <XIcon className="w-4 h-4 text-muted-foreground" /> : <Pencil className="w-4 h-4 text-muted-foreground" />}
-                    </motion.button>
+                    <div className="flex items-center gap-1.5">
+                      <motion.button onClick={() => setEditingDemo(!editingDemo)}
+                        className="p-2 rounded-lg bg-secondary hover:bg-accent transition-colors" whileTap={{ scale: 0.95 }}>
+                        {editingDemo ? <XIcon className="w-3.5 h-3.5 text-muted-foreground" /> : <Pencil className="w-3.5 h-3.5 text-muted-foreground" />}
+                      </motion.button>
+                      <motion.button onClick={() => setShowResetConfirm(true)} disabled={resettingDemo}
+                        className="p-2 rounded-lg bg-secondary hover:bg-destructive/10 transition-colors" whileTap={{ scale: 0.95 }}>
+                        <RefreshCw className={`w-3.5 h-3.5 text-muted-foreground ${resettingDemo ? "animate-spin" : ""}`} />
+                      </motion.button>
+                    </div>
                   </div>
 
                   {/* Customization Panel */}
                   <AnimatePresence>
                     {editingDemo && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="overflow-hidden space-y-3"
-                      >
-                        <div className="p-4 rounded-xl bg-card border border-border/50 space-y-4">
-                          <p className="text-[10px] font-semibold text-primary uppercase tracking-widest">Personalizza per il cliente</p>
-                          
-                          {/* Name */}
+                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden space-y-3">
+                        <div className="p-3 rounded-xl bg-secondary/50 border border-border/50 space-y-3">
                           <div className="space-y-1.5">
-                            <label className="text-[11px] font-medium text-muted-foreground">Nome Ristorante</label>
-                            <input
-                              type="text"
-                              value={editName}
-                              onChange={e => setEditName(e.target.value)}
-                              placeholder="Es. Trattoria da Mario"
-                              className="w-full px-3 py-2 rounded-lg bg-secondary border border-border/50 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-                            />
+                            <label className="text-[10px] font-medium text-muted-foreground">Nome</label>
+                            <input type="text" value={editName} onChange={e => setEditName(e.target.value)} placeholder="Es. Trattoria da Mario"
+                              className="w-full px-3 py-2 rounded-lg bg-background border border-border/50 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
                           </div>
-
-                          {/* Color */}
                           <div className="space-y-1.5">
-                            <label className="text-[11px] font-medium text-muted-foreground">Colore Primario</label>
-                            <div className="flex items-center gap-3">
-                              <input
-                                type="color"
-                                value={editColor}
-                                onChange={e => setEditColor(e.target.value)}
-                                className="w-10 h-10 rounded-lg border border-border/50 cursor-pointer bg-transparent"
-                              />
-                              <span className="text-xs font-mono text-muted-foreground">{editColor}</span>
-                              <div className="flex gap-1.5 ml-auto">
-                                {["#C8963E", "#1A1A2E", "#E74C3C", "#2ECC71", "#3498DB", "#8E44AD"].map(c => (
-                                  <button key={c} onClick={() => setEditColor(c)}
-                                    className={`w-7 h-7 rounded-lg border-2 transition-all ${editColor === c ? "border-foreground scale-110" : "border-transparent"}`}
-                                    style={{ backgroundColor: c }} />
-                                ))}
-                              </div>
+                            <label className="text-[10px] font-medium text-muted-foreground">Colore</label>
+                            <div className="flex items-center gap-2">
+                              <input type="color" value={editColor} onChange={e => setEditColor(e.target.value)}
+                                className="w-8 h-8 rounded-lg border border-border/50 cursor-pointer bg-transparent" />
+                              {["#C8963E", "#1A1A2E", "#E74C3C", "#2ECC71", "#3498DB", "#8E44AD"].map(c => (
+                                <button key={c} onClick={() => setEditColor(c)}
+                                  className={`w-6 h-6 rounded-lg border-2 transition-all ${editColor === c ? "border-foreground scale-110" : "border-transparent"}`}
+                                  style={{ backgroundColor: c }} />
+                              ))}
                             </div>
                           </div>
-
-                          {/* Logo */}
                           <div className="space-y-1.5">
-                            <label className="text-[11px] font-medium text-muted-foreground">Logo</label>
+                            <label className="text-[10px] font-medium text-muted-foreground">Logo</label>
                             <input type="file" accept="image/*" ref={logoFileRef} onChange={handleUploadLogo} className="hidden" />
-                            <motion.button
-                              onClick={() => logoFileRef.current?.click()}
-                              disabled={uploadingLogo}
-                              className="w-full flex items-center justify-center gap-2 p-3 rounded-lg border border-dashed border-border/50 hover:border-primary/30 bg-secondary/50 transition-all disabled:opacity-50"
-                              whileTap={{ scale: 0.97 }}
-                            >
-                              <Upload className={`w-4 h-4 text-muted-foreground ${uploadingLogo ? "animate-pulse" : ""}`} />
-                              <span className="text-xs text-muted-foreground">{uploadingLogo ? "Caricamento..." : demoRestaurant.logo_url ? "Cambia Logo" : "Carica Logo"}</span>
-                            </motion.button>
+                            <button onClick={() => logoFileRef.current?.click()} disabled={uploadingLogo}
+                              className="w-full flex items-center justify-center gap-2 p-2.5 rounded-lg border border-dashed border-border/50 hover:border-primary/30 bg-background transition-all disabled:opacity-50 text-xs text-muted-foreground">
+                              <Upload className={`w-3.5 h-3.5 ${uploadingLogo ? "animate-pulse" : ""}`} />
+                              {uploadingLogo ? "Caricamento..." : "Carica Logo"}
+                            </button>
                           </div>
-
-                          {/* Save */}
-                          <motion.button
-                            onClick={handleSaveDemoCustomization}
-                            disabled={savingDemo}
-                            className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm disabled:opacity-50"
-                            whileTap={{ scale: 0.97 }}
-                          >
-                            <Save className={`w-4 h-4 ${savingDemo ? "animate-spin" : ""}`} />
-                            {savingDemo ? "Salvataggio..." : "Salva Personalizzazione"}
+                          <motion.button onClick={handleSaveDemoCustomization} disabled={savingDemo}
+                            className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold text-xs disabled:opacity-50 flex items-center justify-center gap-2"
+                            whileTap={{ scale: 0.97 }}>
+                            <Save className={`w-3.5 h-3.5 ${savingDemo ? "animate-spin" : ""}`} />
+                            {savingDemo ? "Salvataggio..." : "Salva"}
                           </motion.button>
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
 
-                  <p className="text-xs text-muted-foreground">
-                    Usa questi link per mostrare tutte le interfacce al potenziale cliente.
-                  </p>
-                  <div className="grid grid-cols-1 gap-2">
+                  {/* Quick links */}
+                  <div className="grid grid-cols-3 gap-2">
                     {[
-                      { label: "👤 Vista Cliente", desc: "Menu, carrello, ordini, prenotazioni", href: `/r/${demoRestaurant.slug}`, color: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" },
-                      { label: "⚙️ Dashboard Admin", desc: "Studio, ordini, profitto, impostazioni", href: `/dashboard`, color: "bg-sky-500/10 border-sky-500/20 text-sky-400" },
-                      { label: "👨‍🍳 Vista Cucina", desc: "PIN: 1234 — ordini live, stati, stampa", href: `/kitchen`, color: "bg-amber-500/10 border-amber-500/20 text-amber-400" },
+                      { label: "Cliente", emoji: "👤", href: `/r/${demoRestaurant.slug}` },
+                      { label: "Admin", emoji: "⚙️", href: `/dashboard` },
+                      { label: "Cucina", emoji: "👨‍🍳", href: `/kitchen` },
                     ].map((link, i) => (
-                      <motion.a key={i} href={link.href} target="_blank" rel="noopener noreferrer"
-                        className={`flex items-center gap-3 p-3 rounded-xl border ${link.color} transition-all`}
-                        whileTap={{ scale: 0.97 }}>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-foreground">{link.label}</p>
-                          <p className="text-[10px] text-muted-foreground">{link.desc}</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 flex-shrink-0" />
-                      </motion.a>
+                      <a key={i} href={link.href} target="_blank" rel="noopener noreferrer"
+                        className="flex flex-col items-center gap-1 p-2.5 rounded-xl bg-secondary/50 border border-border/50 hover:border-primary/30 transition-all text-center">
+                        <span className="text-base">{link.emoji}</span>
+                        <span className="text-[10px] font-semibold text-foreground">{link.label}</span>
+                      </a>
                     ))}
                   </div>
-                  <p className="text-[10px] text-muted-foreground text-center">
-                    PIN Cucina Demo: <span className="font-mono font-bold text-foreground">1234</span>
-                  </p>
-                  <div className="grid grid-cols-2 gap-2">
-                    <motion.button
-                      onClick={() => setEditingDemo(true)}
-                      className="flex items-center justify-center gap-2 p-3 rounded-xl bg-primary/10 border border-primary/20 text-primary transition-all"
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <Palette className="w-4 h-4" />
-                      <span className="text-xs font-semibold">Personalizza</span>
-                    </motion.button>
-                    <motion.button
-                      onClick={() => setShowResetConfirm(true)}
-                      disabled={resettingDemo}
-                      className="flex items-center justify-center gap-2 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive/20 transition-all disabled:opacity-50"
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <RefreshCw className={`w-4 h-4 ${resettingDemo ? "animate-spin" : ""}`} />
-                      <span className="text-xs font-semibold">{resettingDemo ? "Reset..." : "Resetta"}</span>
-                    </motion.button>
+                  <p className="text-[9px] text-muted-foreground text-center">PIN Cucina: <span className="font-mono font-bold text-foreground">1234</span></p>
 
-                    {/* Reset confirmation dialog */}
-                    <AnimatePresence>
-                      {showResetConfirm && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm px-4"
-                          onClick={() => setShowResetConfirm(false)}
-                        >
-                          <motion.div
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="w-full max-w-sm p-6 rounded-2xl bg-card border border-border shadow-2xl"
-                          >
-                            <div className="w-12 h-12 rounded-xl bg-destructive/10 flex items-center justify-center mx-auto mb-4">
-                              <RefreshCw className="w-6 h-6 text-destructive" />
-                            </div>
-                            <h3 className="text-base font-display font-bold text-foreground text-center mb-2">
-                              Resettare i dati demo?
-                            </h3>
-                            <p className="text-xs text-muted-foreground text-center mb-6 leading-relaxed">
-                              Tutti gli ordini, le prenotazioni e le personalizzazioni della demo verranno eliminati e ricreati da zero. Questa azione è irreversibile.
-                            </p>
-                            <div className="flex gap-3">
-                              <button
-                                onClick={() => setShowResetConfirm(false)}
-                                className="flex-1 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium hover:bg-muted/80 transition-colors"
-                              >
-                                Annulla
-                              </button>
-                              <button
-                                onClick={handleResetDemo}
-                                className="flex-1 py-2.5 rounded-xl bg-destructive text-destructive-foreground text-sm font-bold hover:bg-destructive/90 transition-colors"
-                              >
-                                Resetta tutto
-                              </button>
-                            </div>
-                          </motion.div>
+                  {/* Reset confirmation dialog */}
+                  <AnimatePresence>
+                    {showResetConfirm && (
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm px-4"
+                        onClick={() => setShowResetConfirm(false)}>
+                        <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+                          onClick={(e) => e.stopPropagation()} className="w-full max-w-sm p-6 rounded-2xl bg-card border border-border shadow-2xl">
+                          <h3 className="text-base font-bold text-foreground mb-2">Resetta Demo?</h3>
+                          <p className="text-xs text-muted-foreground mb-5">Tutti i dati demo saranno ricreati da zero.</p>
+                          <div className="flex gap-3">
+                            <button onClick={() => setShowResetConfirm(false)} className="flex-1 py-2.5 rounded-xl bg-secondary text-foreground text-sm font-medium">Annulla</button>
+                            <button onClick={handleResetDemo} className="flex-1 py-2.5 rounded-xl bg-destructive text-destructive-foreground text-sm font-bold">Resetta tutto</button>
+                          </div>
                         </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               )}
 
-              {/* Bottom Banner */}
-              <div className="space-y-2">
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-center">
-                  <p className="text-sm font-display font-bold text-foreground">
-                    Commissione: <span className="text-emerald-400">€997</span>/vendita
-                    {isTeamLeader && <span className="text-sky-400"> + €50 override/team (dalla 5ª vendita)</span>}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground mt-1">
-                    {isTeamLeader
-                      ? "Guadagni €997 per vendita diretta + €50 per ogni vendita dei tuoi reclutati (dalla 5ª in poi)."
-                      : "Bonus: €500 per 3 vendite/mese, €1.500 per 5 vendite/mese."
-                    }
-                  </p>
-                </div>
-              </div>
+              {/* === LEADERBOARD === */}
+              <PartnerLeaderboard currentUserSales={salesCount} />
             </motion.div>
           )}
 
@@ -758,26 +545,8 @@ const PartnerDashboard = () => {
                   </motion.div>
                 ))}
               </div>
-              <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-foreground">Esplora la Piattaforma</h3>
-                {[
-                  { label: "Demo Interattiva", desc: "Prova l'app dal vivo — 3 viste", icon: <Play className="w-5 h-5" />, tab: "sandbox" as Tab },
-                  { label: "Tutte le Funzionalità", desc: "21+ strumenti inclusi nella licenza", icon: <BookOpen className="w-5 h-5" />, tab: "toolkit" as Tab },
-                  { label: "Piano Investimento", desc: "Costi, inclusi e garanzie", icon: <CreditCard className="w-5 h-5" />, tab: "pricing" as Tab },
-                  { label: "Calcola il ROI", desc: "Quanto risparmia il tuo locale", icon: <TrendingUp className="w-5 h-5" />, action: () => setShowROI(true) },
-                  { label: "Proiezione Crescita", desc: "Come crescerà il tuo fatturato", icon: <BarChart3 className="w-5 h-5" />, tab: "investment" as Tab },
-                ].map((action, i) => (
-                  <motion.button key={i} onClick={() => action.action ? action.action() : action.tab && setActiveTab(action.tab)}
-                    className="w-full flex items-center gap-3 p-4 rounded-xl bg-card border border-border/50 hover:border-primary/30 transition-colors text-left"
-                    whileTap={{ scale: 0.98 }}>
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">{action.icon}</div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-foreground">{action.label}</p>
-                      <p className="text-xs text-muted-foreground">{action.desc}</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  </motion.button>
-                ))}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-amber-500/10 border border-primary/20 text-center">
+                <p className="text-xs text-muted-foreground">Usa le tab in basso per esplorare Demo, Funzionalità e Investimento</p>
               </div>
               <div className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-amber-500/10 border border-primary/20 text-center">
                 <p className="text-sm font-display font-bold text-foreground">
