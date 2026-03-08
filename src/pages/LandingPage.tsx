@@ -469,19 +469,39 @@ const LandingPage = () => {
             </button>
           </motion.div>
 
-          {/* Phone mockup */}
-          <motion.div className="flex justify-center relative"
+          {/* Phone mockups — Cliente + Admin */}
+          <motion.div className="flex justify-center items-end gap-4 sm:gap-6 relative"
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}>
             <div className="absolute -inset-10 bg-violet-600/10 rounded-[60px] blur-[80px]" />
-            <div className="relative w-[260px] sm:w-[280px] h-[520px] sm:h-[560px] bg-card rounded-[40px] border-[3px] border-foreground/10 overflow-hidden shadow-[0_40px_80px_hsla(0,0%,0%,0.5),0_0_80px_hsla(263,70%,58%,0.2)]">
-              <div className="w-[120px] h-7 bg-background rounded-b-[20px] mx-auto relative z-20" />
-              <iframe
-                src="/dashboard?sandbox=true"
-                className="w-full border-0"
-                style={{ height: 'calc(100% - 28px)' }}
-                title="Pannello Admin Reale"
-                allow="autoplay"
-              />
+            
+            {/* Phone 1 — Vista Cliente */}
+            <div className="relative flex flex-col items-center">
+              <span className="text-[9px] sm:text-[10px] font-heading font-bold text-accent tracking-widest uppercase mb-2">👤 Cliente</span>
+              <div className="relative w-[140px] sm:w-[180px] h-[280px] sm:h-[380px] bg-card rounded-[24px] sm:rounded-[32px] border-[2px] sm:border-[3px] border-foreground/10 overflow-hidden shadow-[0_30px_60px_hsla(0,0%,0%,0.4),0_0_60px_hsla(263,70%,58%,0.15)]">
+                <div className="w-[60px] sm:w-[80px] h-4 sm:h-5 bg-background rounded-b-[12px] sm:rounded-b-[16px] mx-auto relative z-20" />
+                <iframe
+                  src="/r/impero-roma?sandbox=true"
+                  className="w-full border-0"
+                  style={{ height: 'calc(100% - 20px)' }}
+                  title="Vista Cliente Reale"
+                  allow="autoplay"
+                />
+              </div>
+            </div>
+
+            {/* Phone 2 — Vista Admin */}
+            <div className="relative flex flex-col items-center">
+              <span className="text-[9px] sm:text-[10px] font-heading font-bold text-accent tracking-widest uppercase mb-2">⚙️ Admin</span>
+              <div className="relative w-[140px] sm:w-[180px] h-[280px] sm:h-[380px] bg-card rounded-[24px] sm:rounded-[32px] border-[2px] sm:border-[3px] border-foreground/10 overflow-hidden shadow-[0_30px_60px_hsla(0,0%,0%,0.4),0_0_60px_hsla(263,70%,58%,0.15)]">
+                <div className="w-[60px] sm:w-[80px] h-4 sm:h-5 bg-background rounded-b-[12px] sm:rounded-b-[16px] mx-auto relative z-20" />
+                <iframe
+                  src="/dashboard?sandbox=true"
+                  className="w-full border-0"
+                  style={{ height: 'calc(100% - 20px)' }}
+                  title="Pannello Admin Reale"
+                  allow="autoplay"
+                />
+              </div>
             </div>
           </motion.div>
         </div>
