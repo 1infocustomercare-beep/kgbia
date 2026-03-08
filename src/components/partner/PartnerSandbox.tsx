@@ -754,9 +754,27 @@ const PartnerSandbox = () => {
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-3">
+      {/* Fullscreen Presentation CTA */}
+      <motion.button
+        onClick={() => setFullDemoOpen(true)}
+        className="w-full p-4 rounded-2xl bg-vibrant-gradient text-primary-foreground flex items-center justify-between group hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all"
+        whileTap={{ scale: 0.98 }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
+            <Eye className="w-5 h-5" />
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-bold font-heading">Presentazione Vendita</p>
+            <p className="text-[10px] opacity-80">App reale + script di vendita step-by-step</p>
+          </div>
+        </div>
+        <ExternalLink className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+      </motion.button>
+
       {/* Header with Customizer + Guided Demo Toggle */}
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 className="text-sm sm:text-base font-display font-bold text-foreground">Demo Live</h2>
+        <h2 className="text-sm sm:text-base font-display font-bold text-foreground">Demo Interattiva</h2>
         <div className="flex items-center gap-1.5">
           <motion.button
             onClick={() => setShowCustomizer(!showCustomizer)}
@@ -781,6 +799,7 @@ const PartnerSandbox = () => {
           </motion.button>
         </div>
       </div>
+
 
       {/* ===== CUSTOMIZER PANEL ===== */}
       <AnimatePresence>
