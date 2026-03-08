@@ -405,31 +405,29 @@ const LandingPage = () => {
           4. COME FUNZIONA
          ═══════════════════════════════════════════ */}
       <Section id="process">
-        <div className="text-center mb-20">
+        <div className="text-center mb-10">
           <SectionLabel text="Come Funziona" />
-          <motion.h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Dal Concept al <span className="text-vibrant-gradient">Lancio in 4 Step</span>
           </motion.h2>
-          <motion.p className="text-[1.15rem] text-foreground/60 max-w-[600px] mx-auto leading-[1.7]"
+          <motion.p className="text-base text-foreground/60 max-w-[550px] mx-auto leading-[1.6]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Un processo collaudato per trasformare la tua visione in realtà digitale.
           </motion.p>
         </div>
 
-        <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Connector line desktop */}
-          <div className="hidden lg:block absolute top-[36px] left-[calc(12.5%+36px)] right-[calc(12.5%+36px)] h-0.5 bg-gradient-to-r from-primary/30 via-pink-500/30 to-accent/30 z-0" />
-
+        <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="hidden lg:block absolute top-[28px] left-[calc(12.5%+28px)] right-[calc(12.5%+28px)] h-0.5 bg-gradient-to-r from-primary/30 via-pink-500/30 to-accent/30 z-0" />
           {howItWorks.map((s, i) => (
             <motion.div key={i} className="relative text-center z-10"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.12 }}>
-              <div className="relative w-[72px] h-[72px] rounded-full bg-vibrant-gradient flex items-center justify-center mx-auto mb-6">
-                <span className="font-heading font-bold text-[1.5rem] text-primary-foreground">{s.step}</span>
+              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              <div className="relative w-14 h-14 rounded-full bg-vibrant-gradient flex items-center justify-center mx-auto mb-4">
+                <span className="font-heading font-bold text-lg text-primary-foreground">{s.step}</span>
                 <div className="absolute -inset-1 rounded-full border-2 border-primary/25" />
               </div>
-              <h3 className="font-heading text-[1.15rem] font-semibold text-foreground mb-2.5">{s.title}</h3>
-              <p className="text-[0.9rem] text-foreground/60 leading-[1.6]">{s.desc}</p>
+              <h3 className="font-heading text-sm font-semibold text-foreground mb-1.5">{s.title}</h3>
+              <p className="text-xs text-foreground/60 leading-[1.5]">{s.desc}</p>
             </motion.div>
           ))}
         </div>
