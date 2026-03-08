@@ -475,32 +475,13 @@ const LandingPage = () => {
             <div className="absolute -inset-10 bg-violet-600/10 rounded-[60px] blur-[80px]" />
             <div className="relative w-[260px] sm:w-[280px] h-[520px] sm:h-[560px] bg-card rounded-[40px] border-[3px] border-foreground/10 overflow-hidden shadow-[0_40px_80px_hsla(0,0%,0%,0.5),0_0_80px_hsla(263,70%,58%,0.2)]">
               <div className="w-[120px] h-7 bg-background rounded-b-[20px] mx-auto relative z-20" />
-              <div className="p-4 space-y-3">
-                <div className="text-center py-3">
-                  <h4 className="font-heading font-semibold text-foreground text-sm">🍕 Buon Appetito</h4>
-                  <p className="text-xs text-muted-foreground">Cosa desideri oggi?</p>
-                </div>
-                <div className="flex gap-2 overflow-hidden">
-                  {["Pizza", "Pasta", "Dolci", "Vini"].map((c, i) => (
-                    <span key={i} className={`px-3 py-1.5 rounded-full text-[10px] font-semibold whitespace-nowrap font-heading
-                      ${i === 0 ? "bg-vibrant-gradient text-primary-foreground" : "bg-foreground/5 text-muted-foreground"}`}>{c}</span>
-                  ))}
-                </div>
-                {[
-                  { name: "Margherita DOP", price: "€12", desc: "Pomodoro San Marzano" },
-                  { name: "Carbonara", price: "€16", desc: "Guanciale croccante" },
-                  { name: "Tiramisù", price: "€8", desc: "Mascarpone fresco" },
-                ].map((item, i) => (
-                  <div key={i} className="flex gap-3 items-center bg-foreground/[0.04] rounded-2xl p-3">
-                    <div className="w-12 h-12 rounded-xl bg-vibrant-gradient opacity-50 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-foreground truncate">{item.name}</p>
-                      <p className="text-[10px] text-muted-foreground">{item.desc}</p>
-                    </div>
-                    <span className="text-xs font-bold text-accent font-heading">{item.price}</span>
-                  </div>
-                ))}
-              </div>
+              <iframe
+                src="/dashboard?sandbox=true"
+                className="w-full border-0"
+                style={{ height: 'calc(100% - 28px)' }}
+                title="Pannello Admin Reale"
+                allow="autoplay"
+              />
             </div>
           </motion.div>
         </div>
