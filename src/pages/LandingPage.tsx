@@ -237,7 +237,7 @@ const LandingPage = () => {
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   Inizia Ora <ArrowRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
-                <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
+                <motion.div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-pink-500 to-orange-500 bg-[length:200%_100%]"
                   animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
               </motion.button>
@@ -634,7 +634,7 @@ const LandingPage = () => {
                   className="mt-4 sm:mt-6 w-full py-3.5 sm:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-xs sm:text-sm tracking-wide relative overflow-hidden min-h-[48px]"
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
                   <span className="relative z-10">Inizia il tuo Impero</span>
-                  <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
+                  <motion.div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-pink-500 to-orange-500 bg-[length:200%_100%]"
                     animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
                 </motion.button>
@@ -1023,7 +1023,7 @@ const LandingPage = () => {
       {/* ====== 9. CTA FINALE ====== */}
       <section className="relative py-12 sm:py-24 px-4">
         <div className="max-w-3xl mx-auto text-center relative">
-          <GlowOrb className="w-[400px] h-[300px] bg-primary top-0 left-1/2 -translate-x-1/2" />
+          <GlowOrb className="w-[400px] h-[300px] top-0 left-1/2 -translate-x-1/2" color="bg-violet-600" />
           <motion.div className="relative" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <Crown className="w-10 sm:w-14 h-10 sm:h-14 mx-auto text-primary mb-4 drop-shadow-[0_0_40px_hsla(38,75%,55%,0.4)]" />
             <h2 className="text-2xl sm:text-5xl font-display font-bold text-foreground leading-tight">
@@ -1040,7 +1040,7 @@ const LandingPage = () => {
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   Sono un Ristoratore <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5" />
                 </span>
-                <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
+                <motion.div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-pink-500 to-orange-500 bg-[length:200%_100%]"
                   animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
               </motion.button>
@@ -1107,7 +1107,7 @@ const LandingPage = () => {
             className="flex-1 py-3.5 rounded-2xl bg-primary text-primary-foreground font-bold text-sm tracking-wider min-h-[48px] relative overflow-hidden"
             whileTap={{ scale: 0.97 }}>
             <span className="relative z-10">€2.997 · Inizia Ora</span>
-            <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-amber-400 to-primary bg-[length:200%_100%]"
+            <motion.div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-pink-500 to-orange-500 bg-[length:200%_100%]"
               animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
           </motion.button>
