@@ -119,10 +119,10 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden overflow-y-auto relative">
-      {/* Global ambient orbs */}
-      <GlowOrb className="w-[600px] h-[600px] bg-primary top-0 -left-60" />
-      <GlowOrb className="w-[500px] h-[500px] bg-accent top-[80vh] -right-40" />
-      <GlowOrb className="w-[400px] h-[400px] bg-violet-500 top-[200vh] left-1/2" />
+      {/* Global ambient orbs — FLAVR vibrant */}
+      <GlowOrb className="w-[600px] h-[600px] top-0 -left-60" color="bg-violet-600" />
+      <GlowOrb className="w-[500px] h-[500px] top-[80vh] -right-40" color="bg-orange-500" />
+      <GlowOrb className="w-[400px] h-[400px] top-[200vh] left-1/2" color="bg-pink-500" />
 
       {/* ====== NAV — Glassmorphism ====== */}
       <nav className="fixed top-0 inset-x-0 z-50">
@@ -183,7 +183,7 @@ const LandingPage = () => {
       {/* ====== 1. HERO ====== */}
       <section id="hero" ref={heroRef} className="relative min-h-[92vh] sm:min-h-screen w-full overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[800px] h-[350px] sm:h-[500px] bg-primary/10 rounded-full blur-[150px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[800px] h-[350px] sm:h-[500px] bg-violet-600/15 rounded-full blur-[150px]" />
 
         <motion.div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-14 px-4 max-w-6xl w-full pt-24 sm:pt-28 pb-8 sm:pb-16"
           style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}>
@@ -337,7 +337,7 @@ const LandingPage = () => {
 
       {/* ====== 2. PROBLEM ====== */}
       <section id="pain" className="relative py-12 sm:py-24 px-4">
-        <GlowOrb className="w-[400px] h-[400px] bg-accent -top-40 right-0" />
+        <GlowOrb className="w-[400px] h-[400px] -top-40 right-0" color="bg-orange-500" />
         <div className="max-w-5xl mx-auto relative">
           <motion.div className="text-center mb-8 sm:mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-[10px] sm:text-xs font-medium text-accent tracking-wider uppercase mb-3">
@@ -414,7 +414,7 @@ const LandingPage = () => {
 
       {/* ====== 4. FEATURES ====== */}
       <section id="features" className="relative py-12 sm:py-24 px-4">
-        <GlowOrb className="w-[500px] h-[500px] bg-violet-500 -top-20 left-1/4" />
+        <GlowOrb className="w-[500px] h-[500px] -top-20 left-1/4" color="bg-pink-500" />
         <div className="max-w-5xl mx-auto relative">
           <motion.div className="text-center mb-8 sm:mb-16" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
@@ -674,7 +674,7 @@ const LandingPage = () => {
 
       {/* ====== 7. PARTNER PROGRAM ====== */}
       <section id="partner" className="relative py-12 sm:py-24 px-4 overflow-hidden">
-        <GlowOrb className="w-[500px] h-[500px] bg-amber-500 top-0 -right-40" />
+        <GlowOrb className="w-[500px] h-[500px] top-0 -right-40" color="bg-orange-500" />
         <div className="max-w-5xl mx-auto relative">
           <motion.div className="text-center mb-8 sm:mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary tracking-wider uppercase mb-3">
