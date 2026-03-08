@@ -29,8 +29,10 @@ import { applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
 
 const RestaurantPage = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tableFromQR = searchParams.get("table");
+  const isDemo = slug === "impero-roma";
   const { restaurant: dbRestaurant, menuItems: dbMenu, categories: dbCats, loading: dbLoading, notFound } = useRestaurantBySlug(slug);
 
   const hasDbData = dbMenu.length > 0;
