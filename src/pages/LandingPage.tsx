@@ -44,7 +44,7 @@ const Blob = ({ className = "", color = "bg-primary" }: { className?: string; co
 
 /* Section wrapper */
 const Section = ({ id, children, className = "" }: { id?: string; children: React.ReactNode; className?: string }) => (
-  <section id={id} className={`relative py-14 sm:py-32 px-4 sm:px-6 overflow-hidden ${className}`}>
+  <section id={id} className={`relative py-16 sm:py-32 px-5 sm:px-6 overflow-hidden ${className}`}>
     <div className="max-w-6xl mx-auto relative z-10">{children}</div>
   </section>
 );
@@ -69,54 +69,54 @@ const HeroParallax = ({ navigate, scrollTo }: { navigate: (path: string) => void
   const opacityFade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <section id="hero" ref={heroRef} className="relative min-h-[90vh] sm:min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6">
+    <section id="hero" ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden px-5 sm:px-6">
       {/* Parallax background layers */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[900px] h-[300px] sm:h-[600px] bg-primary/15 rounded-full blur-[180px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[900px] h-[400px] sm:h-[600px] bg-primary/15 rounded-full blur-[180px]" />
         <div className="absolute inset-0 pointer-events-none hidden sm:block">
           <div className="absolute w-[300px] h-[300px] rounded-full border border-foreground/[0.04] top-[10%] right-[5%] animate-blob-float" />
           <div className="absolute w-[200px] h-[200px] rounded-full border border-accent/[0.08] bottom-[20%] right-[15%] animate-blob-float-reverse" />
         </div>
       </motion.div>
 
-      <motion.div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-6 lg:gap-16 pt-20 sm:pt-32 pb-8 sm:pb-12"
+      <motion.div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-8 lg:gap-16 pt-24 sm:pt-32 pb-12"
         style={{ y: contentY, opacity: opacityFade }}>
         {/* Left */}
         <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
-          <motion.div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-primary/10 border border-primary/25 mb-4 sm:mb-6"
+          <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/25 mb-5 sm:mb-6"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-accent animate-pulse-dot" />
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse-dot" />
             <span className="text-[10px] sm:text-xs font-medium text-primary/80 tracking-wider uppercase font-heading">AI-Powered Restaurant Suite</span>
           </motion.div>
 
           <motion.h1
-            className="text-[1.75rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground tracking-tight"
+            className="text-[2rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground tracking-tight"
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.15 }}>
             Trasforma il Tuo Ristorante con l'
             <span className="text-vibrant-gradient">Intelligenza Artificiale</span>
           </motion.h1>
 
-          <motion.p className="mt-3 sm:mt-7 text-xs sm:text-lg text-foreground/60 max-w-xl leading-relaxed"
+          <motion.p className="mt-4 sm:mt-7 text-sm sm:text-lg text-foreground/60 max-w-xl leading-relaxed"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
             PWA di proprietà, menu AI, kitchen view, review shield e molto altro.
             Tutto ciò di cui hai bisogno per <strong className="text-foreground">dominare il digitale</strong> e liberarti dal 30% di commissioni.
           </motion.p>
 
-          <motion.div className="mt-5 sm:mt-9 flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3 w-full sm:w-auto"
+          <motion.div className="mt-6 sm:mt-9 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
             <button onClick={() => scrollTo("pricing")}
-              className="group relative w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-xs sm:text-sm tracking-widest uppercase font-heading overflow-hidden transition-transform hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)]">
-              Prenota una Demo <ArrowRight className="inline w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
+              className="group relative w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm tracking-widest uppercase font-heading overflow-hidden transition-transform hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)]">
+              Prenota una Demo <ArrowRight className="inline w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
             </button>
             <button onClick={() => navigate("/r/impero-roma")}
-              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full glass text-foreground text-xs sm:text-sm font-bold tracking-widest uppercase font-heading hover:border-primary/40 transition-all flex items-center justify-center gap-2">
-              <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent" /> Scopri i Servizi
+              className="w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-full glass text-foreground text-sm font-bold tracking-widest uppercase font-heading hover:border-primary/40 transition-all flex items-center justify-center gap-2">
+              <Play className="w-4 h-4 text-accent" /> Scopri i Servizi
             </button>
           </motion.div>
 
           {/* Hero stats */}
-          <motion.div className="mt-6 sm:mt-14 flex flex-wrap items-center justify-center lg:justify-start gap-5 sm:gap-12 pt-5 sm:pt-8 border-t border-border/30 w-full"
+          <motion.div className="mt-8 sm:mt-14 grid grid-cols-3 gap-4 sm:gap-12 pt-6 sm:pt-8 border-t border-border/30 w-full"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
             {[
               { value: "200+", label: "Ristoranti Serviti" },
@@ -124,15 +124,15 @@ const HeroParallax = ({ navigate, scrollTo }: { navigate: (path: string) => void
               { value: "+45%", label: "Aumento Ordini" },
             ].map((s, i) => (
               <div key={i} className="text-center lg:text-left">
-                <p className="text-xl sm:text-3xl font-heading font-bold text-vibrant-gradient">{s.value}</p>
+                <p className="text-lg sm:text-3xl font-heading font-bold text-vibrant-gradient">{s.value}</p>
                 <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">{s.label}</p>
               </div>
             ))}
           </motion.div>
         </div>
 
-        {/* Right — Live Preview — hidden on small mobile */}
-        <motion.div className="flex-shrink-0 relative hidden sm:block"
+        {/* Right — Live Preview */}
+        <motion.div className="flex-shrink-0 relative hidden lg:block"
           initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }}>
           <div className="absolute -inset-10 bg-primary/15 rounded-[60px] blur-[80px]" />
           <div className="relative w-[280px] sm:w-[300px]">
@@ -141,7 +141,7 @@ const HeroParallax = ({ navigate, scrollTo }: { navigate: (path: string) => void
         </motion.div>
       </motion.div>
 
-      <motion.div className="absolute bottom-4 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-10"
+      <motion.div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-10"
         style={{ opacity: opacityFade }}
         animate={{ y: [0, 8, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
         <span className="text-[9px] text-foreground/30 tracking-widest uppercase font-heading">Scopri</span>
@@ -330,7 +330,7 @@ const LandingPage = () => {
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
           {[
             { icon: <Banknote className="w-8 h-8" />, amount: "€7.500", label: "Margini erosi / mese", sub: "Su 1000 ordini a €25 con marketplace" },
             { icon: <DollarSign className="w-8 h-8" />, amount: "€90.000", label: "Dispersi ogni anno", sub: "Capitale che alimenta i tuoi competitor" },
@@ -472,10 +472,10 @@ const LandingPage = () => {
             </button>
           </motion.div>
 
-          {/* 3 Phone Mockups — horizontal scroll on mobile */}
-          <motion.div className="flex-shrink-0 w-full lg:w-auto overflow-x-auto scrollbar-hide"
+          {/* 3 Phone Mockups */}
+          <motion.div className="flex-shrink-0 w-full lg:w-auto"
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}>
-            <div className="flex justify-center items-end gap-3 sm:gap-5 relative min-w-max px-4 sm:px-0">
+            <div className="flex justify-center items-end gap-3 sm:gap-5 relative">
               <div className="absolute -inset-10 bg-violet-600/10 rounded-[60px] blur-[80px] pointer-events-none" />
               
               {[
@@ -483,14 +483,14 @@ const LandingPage = () => {
                 { label: "⚙️ Admin", img: mockupAdmin, title: "Pannello Admin" },
                 { label: "🍳 Cucina", img: mockupCucina, title: "Kitchen View" },
               ].map((phone, i) => (
-                <div key={i} className="relative flex flex-col items-center">
+                <div key={i} className="relative flex flex-col items-center flex-1 max-w-[160px] lg:max-w-[150px]">
                   <span className="text-[9px] sm:text-[10px] font-heading font-bold text-accent tracking-widest uppercase mb-2">{phone.label}</span>
-                  <div className="relative w-[110px] sm:w-[160px] lg:w-[150px] h-[220px] sm:h-[340px] lg:h-[320px] bg-card rounded-[20px] sm:rounded-[28px] border-2 border-foreground/10 overflow-hidden shadow-[0_20px_50px_hsla(0,0%,0%,0.4),0_0_40px_hsla(263,70%,58%,0.12)]">
-                    <div className="w-[50px] sm:w-[70px] h-3 sm:h-4 bg-background rounded-b-[10px] sm:rounded-b-[14px] mx-auto relative z-20" />
+                  <div className="relative w-full aspect-[9/19] bg-card rounded-[18px] sm:rounded-[28px] border-2 border-foreground/10 overflow-hidden shadow-[0_20px_50px_hsla(0,0%,0%,0.4),0_0_40px_hsla(263,70%,58%,0.12)]">
+                    <div className="w-[40%] h-3 sm:h-4 bg-background rounded-b-[10px] sm:rounded-b-[14px] mx-auto relative z-20" />
                     <img
                       src={phone.img}
                       alt={phone.title}
-                      className="w-full h-full object-cover object-top"
+                      className="absolute inset-0 w-full h-full object-cover object-top"
                     />
                   </div>
                 </div>
@@ -512,14 +512,14 @@ const LandingPage = () => {
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
           {[
             { value: 2, suffix: "%", label: "Fee totale", icon: <TrendingUp className="w-5 h-5" /> },
             { value: 0, prefix: "€", label: "Canone mensile", icon: <Banknote className="w-5 h-5" /> },
             { value: 60, suffix: "s", label: "Menu IA pronto", icon: <Zap className="w-5 h-5" /> },
             { value: 98, suffix: "%", label: "Margini salvati", icon: <Shield className="w-5 h-5" /> },
           ].map((s, i) => (
-            <motion.div key={i} className="relative p-5 sm:p-7 rounded-3xl glass border border-border/30 text-center overflow-hidden"
+            <motion.div key={i} className="relative p-5 sm:p-7 rounded-2xl sm:rounded-3xl glass border border-border/30 text-center overflow-hidden"
               variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-3">{s.icon}</div>
@@ -690,14 +690,14 @@ const LandingPage = () => {
         </div>
 
         {/* Earnings */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 mb-10">
           {[
             { value: "€997", label: "Per vendita", icon: <Trophy className="w-5 h-5" />, sub: "Commissione Partner" },
             { value: "€50", label: "Override TL", icon: <Award className="w-5 h-5" />, sub: "Dalla 4ª vendita" },
             { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-5 h-5" />, sub: "Bonus mensile" },
             { value: "€1.500", label: "Bonus 5 vendite", icon: <Rocket className="w-5 h-5" />, sub: "Bonus Elite" },
           ].map((s, i) => (
-            <motion.div key={i} className="p-4 sm:p-6 rounded-3xl glass border border-border/30 text-center"
+            <motion.div key={i} className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass border border-border/30 text-center"
               variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-2">{s.icon}</div>
               <p className="text-xl sm:text-2xl font-heading font-bold text-primary">{s.value}</p>
@@ -848,7 +848,7 @@ const LandingPage = () => {
          ═══════════════════════════════════════════ */}
       <Section>
         <Blob className="w-[500px] h-[400px] top-0 left-1/2 -translate-x-1/2" color="bg-violet-600" />
-        <div className="relative max-w-3xl mx-auto text-center p-10 sm:p-16 rounded-[32px] bg-gradient-to-br from-primary/15 to-accent/8 border border-primary/20 overflow-hidden">
+        <div className="relative max-w-3xl mx-auto text-center p-8 sm:p-16 rounded-[28px] sm:rounded-[32px] bg-gradient-to-br from-primary/15 to-accent/8 border border-primary/20 overflow-hidden">
           <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-[radial-gradient(circle_at_30%_30%,hsla(263,70%,58%,0.12)_0%,transparent_50%),radial-gradient(circle_at_70%_70%,hsla(24,95%,53%,0.08)_0%,transparent_50%)] animate-blob-float-slow pointer-events-none" />
           <div className="relative z-10">
             <Crown className="w-12 h-12 mx-auto text-primary mb-5 drop-shadow-[0_0_40px_hsla(263,70%,58%,0.4)]" />
@@ -875,9 +875,9 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           FOOTER
          ═══════════════════════════════════════════ */}
-      <footer id="contact" className="border-t border-border/30 py-10 sm:py-16 px-5 sm:px-6">
+      <footer id="contact" className="border-t border-border/30 py-12 sm:py-16 px-5 sm:px-6 pb-28 sm:pb-16">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10">
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 sm:gap-8 mb-10">
             <div className="col-span-2 sm:col-span-1">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-9 h-9 rounded-xl bg-vibrant-gradient flex items-center justify-center">
