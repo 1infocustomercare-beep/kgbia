@@ -541,33 +541,33 @@ const LandingPage = () => {
           7. STATS + CHI SIAMO
          ═══════════════════════════════════════════ */}
       <Section>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* About text */}
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="Chi Siamo" />
-            <h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5">
+            <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3">
               Il Team Dietro <br /><span className="text-vibrant-gradient">la Magia</span>
             </h2>
-            <p className="text-base text-foreground/60 leading-[1.8] mb-8">
+            <p className="text-sm text-foreground/60 leading-[1.7] mb-6">
               Siamo un team di designer, sviluppatori e specialisti AI con una passione: rivoluzionare il modo in cui i ristoranti interagiscono con i loro clienti attraverso la tecnologia.
             </p>
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-2 gap-3">
               {[
                 { value: "5+", label: "Anni di Esperienza" },
                 { value: "15", label: "Esperti nel Team" },
                 { value: "200+", label: "Progetti Completati" },
                 { value: "12", label: "Città Servite" },
               ].map((c, i) => (
-                <div key={i} className="p-6 rounded-2xl glass border border-border/30">
-                  <p className="text-2xl font-heading font-bold text-vibrant-gradient">{c.value}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{c.label}</p>
+                <div key={i} className="p-4 rounded-xl glass border border-border/30">
+                  <p className="text-xl font-heading font-bold text-vibrant-gradient">{c.value}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{c.label}</p>
                 </div>
               ))}
             </div>
           </motion.div>
 
           {/* Team grid */}
-          <motion.div className="grid grid-cols-2 gap-5"
+          <motion.div className="grid grid-cols-2 gap-4"
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}>
             {[
               { name: "Marco R.", role: "CEO & AI Strategist" },
@@ -575,12 +575,12 @@ const LandingPage = () => {
               { name: "Luca B.", role: "CTO & Full-Stack Dev" },
               { name: "Elena M.", role: "Marketing & Growth" },
             ].map((m, i) => (
-              <div key={i} className="p-8 rounded-3xl glass border border-border/30 text-center hover:border-primary/20 hover:-translate-y-1 transition-all duration-500">
-                <div className="w-20 h-20 rounded-full bg-vibrant-gradient opacity-30 mx-auto mb-4 relative">
-                  <div className="absolute -inset-[3px] rounded-full border-2 border-primary/25" />
+              <div key={i} className="p-5 rounded-2xl glass border border-border/30 text-center hover:border-primary/20 hover:-translate-y-1 transition-all duration-500">
+                <div className="w-14 h-14 rounded-full bg-vibrant-gradient opacity-30 mx-auto mb-3 relative">
+                  <div className="absolute -inset-[2px] rounded-full border-2 border-primary/25" />
                 </div>
-                <h4 className="font-heading text-base font-semibold text-foreground mb-1">{m.name}</h4>
-                <p className="text-xs text-muted-foreground">{m.role}</p>
+                <h4 className="font-heading text-sm font-semibold text-foreground mb-0.5">{m.name}</h4>
+                <p className="text-[10px] text-muted-foreground">{m.role}</p>
               </div>
             ))}
           </motion.div>
@@ -591,15 +591,15 @@ const LandingPage = () => {
           8. ROI CALCULATOR
          ═══════════════════════════════════════════ */}
       <Section id="calculator">
-        <div className="text-center mb-[72px]">
+        <div className="text-center mb-8">
           <SectionLabel text="ROI Calculator" />
-          <motion.h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15]"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15]"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Il tuo <span className="text-vibrant-gradient">risparmio reale</span>
           </motion.h2>
         </div>
 
-        <motion.div className="max-w-2xl mx-auto p-8 sm:p-10 rounded-3xl glass border border-border/30 space-y-6"
+        <motion.div className="max-w-2xl mx-auto p-6 sm:p-8 rounded-2xl glass border border-border/30 space-y-5"
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           {[
             { label: "Ordini al mese", value: monthlyOrders, min: 100, max: 3000, step: 50, display: monthlyOrders.toString(), onChange: setMonthlyOrders },
@@ -608,7 +608,7 @@ const LandingPage = () => {
             <div key={i}>
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-muted-foreground font-heading">{sl.label}</span>
-                <span className="text-foreground font-bold text-lg font-heading">{sl.display}</span>
+                <span className="text-foreground font-bold font-heading">{sl.display}</span>
               </div>
               <input type="range" min={sl.min} max={sl.max} step={sl.step} value={sl.value}
                 onChange={e => sl.onChange(Number(e.target.value))} className="w-full accent-primary h-2 rounded-full" />
@@ -625,7 +625,7 @@ const LandingPage = () => {
                   <span className="text-muted-foreground">{bar.label}</span>
                   <span className={`text-${bar.color} font-heading font-bold`}>-€{bar.value.toLocaleString("it-IT", { maximumFractionDigits: 0 })}/mese</span>
                 </div>
-                <div className={`h-10 rounded-xl bg-${bar.color}/10 overflow-hidden`}>
+                <div className={`h-8 rounded-xl bg-${bar.color}/10 overflow-hidden`}>
                   <motion.div className={`h-full bg-gradient-to-r from-${bar.color}/30 to-${bar.color}/50 rounded-xl flex items-center justify-end pr-3`}
                     initial={{ width: 0 }} whileInView={{ width: `${bar.width}%` }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.3 + i * 0.2 }}>
                     <span className="text-xs font-bold text-foreground">-{i === 0 ? "30" : "2"}%</span>
@@ -635,18 +635,18 @@ const LandingPage = () => {
             ))}
           </div>
 
-          <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20 space-y-4">
+          <div className="p-5 sm:p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20 space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-foreground font-medium">Risparmi al mese</span>
-              <span className="text-2xl sm:text-3xl font-heading font-bold text-primary">€{monthlySaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}</span>
+              <span className="text-sm text-foreground font-medium">Risparmi al mese</span>
+              <span className="text-xl sm:text-2xl font-heading font-bold text-primary">€{monthlySaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-foreground font-medium">Risparmi all'anno</span>
-              <span className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient">€{yearSaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}</span>
+              <span className="text-sm text-foreground font-medium">Risparmi all'anno</span>
+              <span className="text-xl sm:text-2xl font-heading font-bold text-vibrant-gradient">€{yearSaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}</span>
             </div>
-            <div className="flex justify-between items-center pt-3 border-t border-primary/20">
-              <span className="text-muted-foreground text-sm">ROI completo in</span>
-              <span className="text-foreground font-heading font-bold text-lg">{roiMonths} {roiMonths === 1 ? "mese" : "mesi"}</span>
+            <div className="flex justify-between items-center pt-2 border-t border-primary/20">
+              <span className="text-xs text-muted-foreground">ROI completo in</span>
+              <span className="text-foreground font-heading font-bold">{roiMonths} {roiMonths === 1 ? "mese" : "mesi"}</span>
             </div>
           </div>
         </motion.div>
