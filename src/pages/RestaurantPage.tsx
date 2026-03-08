@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useRef, useEffect, FormEvent } from "react";
 import CookieBanner from "@/components/gdpr/CookieBanner";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { demoRestaurant, demoMenu, menuCategories as demoCats } from "@/data/demo-restaurant";
 import { useRestaurantBySlug } from "@/hooks/useRestaurantBySlug";
 import SplashScreen from "@/components/restaurant/SplashScreen";
@@ -18,7 +18,7 @@ import storyPasta from "@/assets/story-pasta.jpg";
 import storyWine from "@/assets/story-wine.jpg";
 import storyDish from "@/assets/story-dish.jpg";
 import heroVideo from "@/assets/hero-restaurant.mp4";
-import { Search, Star, Crown, Phone, Mail, MapPin, Clock, ChevronDown, Plus, ShoppingBag, X, Menu as MenuIcon, CalendarDays, Bell } from "lucide-react";
+import { Search, Star, Crown, Phone, Mail, MapPin, Clock, ChevronDown, Plus, ShoppingBag, X, Menu as MenuIcon, CalendarDays, Bell, ArrowLeft } from "lucide-react";
 import { InfoGuide } from "@/components/ui/info-guide";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
@@ -28,8 +28,10 @@ import { applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
 
 const RestaurantPage = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tableFromQR = searchParams.get("table");
+  const isDemo = slug === "impero-roma";
   const { restaurant: dbRestaurant, menuItems: dbMenu, categories: dbCats, loading: dbLoading, notFound } = useRestaurantBySlug(slug);
 
   const hasDbData = dbMenu.length > 0;
@@ -209,13 +211,20 @@ const RestaurantPage = () => {
       <nav className={`fixed ${tableFromQR ? "top-9" : "top-0"} inset-x-0 z-50 transition-all`}>
         <div className="glass-strong border-b border-border/20">
           <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
-            {/* Logo + Name */}
-            <button onClick={() => scrollToSection("home")} className="flex items-center gap-3">
-              <img src={restaurantLogoUrl} alt="" className="w-10 h-10 rounded-xl object-contain" />
-              <span className="font-display font-bold text-lg text-foreground tracking-[0.08em] uppercase hidden sm:block">
-                {restaurantName}
-              </span>
-            </button>
+            {/* Back button for demo + Logo + Name */}
+            <div className="flex items-center gap-2">
+              {isDemo && (
+                <button onClick={() => navigate("/home")} className="p-2 -ml-2 rounded-xl hover:bg-primary/10 transition-colors" aria-label="Torna alla home">
+                  <ArrowLeft className="w-5 h-5 text-primary" />
+                </button>
+              )}
+              <button onClick={() => scrollToSection("home")} className="flex items-center gap-3">
+                <img src={restaurantLogoUrl} alt="" className="w-10 h-10 rounded-xl object-contain" />
+                <span className="font-display font-bold text-lg text-foreground tracking-[0.08em] uppercase hidden sm:block">
+                  {restaurantName}
+                </span>
+              </button>
+            </div>
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-8 text-xs font-medium tracking-[0.12em] uppercase">
