@@ -41,7 +41,7 @@ const Blob = ({ className = "", color = "bg-primary" }: { className?: string; co
 
 /* Section wrapper */
 const Section = ({ id, children, className = "" }: { id?: string; children: React.ReactNode; className?: string }) => (
-  <section id={id} className={`relative py-20 sm:py-32 px-5 sm:px-6 overflow-hidden ${className}`}>
+  <section id={id} className={`relative py-14 sm:py-32 px-4 sm:px-6 overflow-hidden ${className}`}>
     <div className="max-w-6xl mx-auto relative z-10">{children}</div>
   </section>
 );
