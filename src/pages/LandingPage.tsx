@@ -437,19 +437,19 @@ const LandingPage = () => {
           5. PORTFOLIO
          ═══════════════════════════════════════════ */}
       <Section id="portfolio">
-        <div className="text-center mb-[72px]">
+        <div className="text-center mb-10">
           <SectionLabel text="Portfolio" />
-          <motion.h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Progetti che <span className="text-vibrant-gradient">Parlano da Soli</span>
           </motion.h2>
-          <motion.p className="text-[1.15rem] text-foreground/60 max-w-[600px] mx-auto leading-[1.7]"
+          <motion.p className="text-base text-foreground/60 max-w-[550px] mx-auto leading-[1.6]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Ogni ristorante è unico. Ecco come abbiamo trasformato la presenza digitale dei nostri clienti.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-7">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           {portfolioItems.map((item, i) => (
             <motion.div key={i}
               className="group relative rounded-3xl overflow-hidden aspect-[4/3] glass border border-border/30 cursor-pointer hover:-translate-y-1.5 hover:shadow-[0_20px_60px_hsla(263,70%,58%,0.2)] transition-all duration-500"
