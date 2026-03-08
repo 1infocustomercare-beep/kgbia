@@ -268,14 +268,14 @@ const PartnerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header — Fintech style */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/50 bg-card/80 backdrop-blur-xl safe-top">
+      {/* Header — Vibrant FLAVR style */}
+      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/30 glass-strong safe-top">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/20 to-amber-500/20 flex items-center justify-center">
-            <Crown className="w-5 h-5 text-primary" />
+          <div className="w-9 h-9 rounded-xl bg-vibrant-gradient flex items-center justify-center vibrant-glow">
+            <Crown className="w-5 h-5 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-sm font-display font-bold text-foreground">
+            <h1 className="text-sm font-heading font-bold text-foreground">
               {demoMode ? "Empire Solutions" : isTeamLeader ? "Empire Team Leader" : "Empire Partner"}
             </h1>
             <p className="text-[10px] text-primary">
@@ -292,7 +292,7 @@ const PartnerDashboard = () => {
             }}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all ${
               demoMode
-                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                ? "bg-vibrant-gradient text-primary-foreground shadow-lg shadow-primary/30"
                 : "bg-secondary text-muted-foreground hover:text-foreground"
             }`}
             whileTap={{ scale: 0.95 }}
@@ -315,7 +315,7 @@ const PartnerDashboard = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="bg-gradient-to-r from-primary/10 to-amber-500/10 border-b border-primary/20 overflow-hidden"
+            className="bg-gradient-to-r from-primary/10 via-pink-500/10 to-accent/10 border-b border-primary/20 overflow-hidden"
           >
             <div className="px-4 py-2 flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
@@ -334,7 +334,7 @@ const PartnerDashboard = () => {
             <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
 
               {/* === NET EARNINGS HERO WIDGET === */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 relative overflow-hidden">
+              <div className="p-5 rounded-2xl glass border border-primary/20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <div className="absolute top-3 right-12">
                   <InfoGuide
@@ -349,7 +349,7 @@ const PartnerDashboard = () => {
                 </div>
                 <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Guadagni Netti</p>
                 <motion.p
-                  className="text-4xl font-display font-bold text-foreground"
+                  className="text-4xl font-heading font-bold text-vibrant-gradient"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
@@ -972,7 +972,7 @@ const PartnerDashboard = () => {
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
 
       {/* Bottom Tabs */}
-      <div className="fixed bottom-0 inset-x-0 bg-card/95 backdrop-blur-xl border-t border-border/50 safe-bottom z-50">
+      <div className="fixed bottom-0 inset-x-0 glass-strong border-t border-border/30 safe-bottom z-50">
         <div className="flex items-center justify-around px-1 py-2">
           {bottomTabs.map((tab) => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
@@ -980,7 +980,7 @@ const PartnerDashboard = () => {
                 ${activeTab === tab.id ? "text-primary" : "text-muted-foreground"}`}>
               {tab.icon}
               <span className="text-[9px] font-medium">{tab.label}</span>
-              {activeTab === tab.id && <motion.div layoutId="partner-tab" className="w-4 h-0.5 bg-primary rounded-full" />}
+              {activeTab === tab.id && <motion.div layoutId="partner-tab" className="w-4 h-0.5 bg-vibrant-gradient rounded-full" />}
             </button>
           ))}
         </div>
