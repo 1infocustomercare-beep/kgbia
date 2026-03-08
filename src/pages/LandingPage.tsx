@@ -895,11 +895,12 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-5"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           {blogPosts.map((post, i) => (
             <motion.div key={i}
               className="group rounded-2xl glass border border-border/30 overflow-hidden hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_16px_48px_hsla(263,70%,58%,0.12)] transition-all duration-500 cursor-pointer"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              variants={fadeScale}>
               <div className="h-[140px] bg-gradient-to-br from-card to-background relative overflow-hidden">
                 <div className="absolute inset-0 bg-vibrant-gradient opacity-[0.08]" />
                 <span className="absolute top-3 left-3 px-2.5 py-1 bg-background/60 backdrop-blur-xl rounded-full text-[0.65rem] font-bold uppercase tracking-wider text-accent font-heading">{post.tag}</span>
@@ -911,13 +912,13 @@ const LandingPage = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
 
       {/* ═══════ FAQ ═══════ */}
       <Section>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 items-start">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="FAQ" />
             <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3">
               Domande? <span className="text-vibrant-gradient">Risposte.</span>
@@ -927,10 +928,11 @@ const LandingPage = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-3">
+          <motion.div className="space-y-3"
+            variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             {faqs.map((faq, i) => (
               <motion.div key={i} className="rounded-2xl glass border border-border/30 overflow-hidden"
-                variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
+                variants={fadeUp}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between p-4 text-left hover:bg-foreground/[0.02] transition-colors">
                   <span className="text-sm font-semibold text-foreground pr-3 font-heading">{faq.q}</span>
