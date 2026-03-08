@@ -36,8 +36,8 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; pr
 };
 
 // Floating orb background
-const GlowOrb = ({ className }: { className?: string }) => (
-  <div className={`absolute rounded-full blur-[120px] opacity-20 pointer-events-none ${className}`} />
+const GlowOrb = ({ className, color = "bg-violet-600" }: { className?: string; color?: string }) => (
+  <div className={`absolute rounded-full blur-[120px] opacity-20 pointer-events-none ${color} ${className}`} />
 );
 
 const LandingPage = () => {
