@@ -656,34 +656,34 @@ const LandingPage = () => {
           9. TESTIMONIALS
          ═══════════════════════════════════════════ */}
       <Section id="testimonials">
-        <div className="text-center mb-[72px]">
+        <div className="text-center mb-10">
           <SectionLabel text="Testimonianze" />
-          <motion.h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             I Nostri Clienti <span className="text-vibrant-gradient">Parlano</span>
           </motion.h2>
-          <motion.p className="text-[1.15rem] text-foreground/60 max-w-[600px] mx-auto leading-[1.7]"
+          <motion.p className="text-base text-foreground/60 max-w-[550px] mx-auto leading-[1.6]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Ecco cosa dicono i ristoratori che hanno scelto Empire per la loro trasformazione digitale.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {testimonials.map((t, i) => (
-            <motion.div key={i} className="group relative p-8 rounded-3xl glass border border-border/30 hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_20px_60px_hsla(263,70%,58%,0.12)] transition-all duration-500"
+            <motion.div key={i} className="group relative p-6 rounded-2xl glass border border-border/30 hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_16px_48px_hsla(263,70%,58%,0.12)] transition-all duration-500"
               variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-              <div className="flex gap-1 mb-5">
-                {Array.from({ length: t.stars }).map((_, j) => <Star key={j} className="w-4 h-4 text-accent fill-accent" />)}
+              <div className="flex gap-0.5 mb-3">
+                {Array.from({ length: t.stars }).map((_, j) => <Star key={j} className="w-3.5 h-3.5 text-accent fill-accent" />)}
               </div>
-              <blockquote className="text-[0.95rem] text-foreground/70 leading-[1.7] mb-6 italic">"{t.quote}"</blockquote>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-[10px] text-primary font-bold mb-5 font-heading">
-                <TrendingUp className="w-3 h-3" /> {t.metric}
+              <blockquote className="text-sm text-foreground/70 leading-[1.6] mb-4 italic">"{t.quote}"</blockquote>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-[9px] text-primary font-bold mb-3 font-heading">
+                <TrendingUp className="w-2.5 h-2.5" /> {t.metric}
               </div>
-              <div className="flex items-center gap-3 border-t border-border/30 pt-4">
-                <div className="w-11 h-11 rounded-full bg-vibrant-gradient opacity-40" />
+              <div className="flex items-center gap-2.5 border-t border-border/30 pt-3">
+                <div className="w-9 h-9 rounded-full bg-vibrant-gradient opacity-40" />
                 <div>
-                  <h4 className="font-heading text-sm font-semibold text-foreground">{t.name}</h4>
-                  <p className="text-xs text-muted-foreground">{t.role}</p>
+                  <h4 className="font-heading text-xs font-semibold text-foreground">{t.name}</h4>
+                  <p className="text-[10px] text-muted-foreground">{t.role}</p>
                 </div>
               </div>
             </motion.div>
@@ -695,68 +695,66 @@ const LandingPage = () => {
           10. PRICING
          ═══════════════════════════════════════════ */}
       <Section id="pricing">
-        <div className="text-center mb-[72px]">
+        <div className="text-center mb-10">
           <SectionLabel text="Prezzi" />
-          <motion.h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Piani <span className="text-vibrant-gradient">Trasparenti</span>
           </motion.h2>
-          <motion.p className="text-[1.15rem] text-foreground/60 max-w-[600px] mx-auto leading-[1.7]"
+          <motion.p className="text-base text-foreground/60 max-w-[550px] mx-auto leading-[1.6]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Un investimento una tantum. Zero canoni. Il tuo asset digitale per sempre.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-7 max-w-3xl mx-auto">
-          {/* Full */}
-          <motion.div className="relative p-8 sm:p-10 rounded-3xl glass border border-primary/25 overflow-hidden bg-gradient-to-br from-primary/[0.12] to-accent/[0.06]"
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
+          <motion.div className="relative p-6 sm:p-8 rounded-2xl glass border border-primary/25 overflow-hidden bg-gradient-to-br from-primary/[0.12] to-accent/[0.06]"
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <div className="absolute top-0 left-0 right-0 h-1 bg-vibrant-gradient" />
-            <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-vibrant-gradient text-[10px] font-bold text-primary-foreground tracking-wider font-heading">PIÙ POPOLARE</span>
+            <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-vibrant-gradient text-[9px] font-bold text-primary-foreground tracking-wider font-heading">PIÙ POPOLARE</span>
             <div className="relative">
-              <span className="text-xs font-semibold text-accent tracking-wider uppercase font-heading">Pagamento Unico</span>
-              <p className="text-[3rem] font-heading font-bold text-foreground mt-2">€2.997</p>
-              <p className="text-sm text-muted-foreground">IVA 22% inclusa · Una volta sola</p>
-              <ul className="mt-8 space-y-3 mb-9">
+              <span className="text-[10px] font-semibold text-accent tracking-wider uppercase font-heading">Pagamento Unico</span>
+              <p className="text-[2.5rem] font-heading font-bold text-foreground mt-1">€2.997</p>
+              <p className="text-xs text-muted-foreground">IVA 22% inclusa · Una volta sola</p>
+              <ul className="mt-5 space-y-2 mb-6">
                 {[
                   "Asset Digitale di Proprietà", "AI Menu Creator + OCR", "Kitchen View real-time",
                   "Vault Fiscale AES-256", "Panic Mode + Review Shield", "PWA White Label",
-                  "Chat Privata + Notifiche Push", "Mappa Tavoli Interattiva", "Assistenza a vita", "Zero canoni mensili",
+                  "Chat Privata + Push", "Mappa Tavoli", "Assistenza a vita", "Zero canoni mensili",
                 ].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-[0.9rem] text-foreground/70 py-1 border-b border-border/20 last:border-0">
-                    <span className="text-accent font-bold">✓</span> {f}
+                  <li key={i} className="flex items-center gap-2 text-xs text-foreground/70 py-0.5">
+                    <span className="text-accent font-bold text-[10px]">✓</span> {f}
                   </li>
                 ))}
               </ul>
               <button onClick={() => navigate("/admin")}
-                className="w-full py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-base font-heading hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all">
+                className="w-full py-3 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all">
                 Inizia il tuo Impero
               </button>
-              <p className="mt-3 text-xs text-center text-muted-foreground">Dopo: €0/mese · Solo 2% sulle transazioni</p>
+              <p className="mt-2 text-[10px] text-center text-muted-foreground">Dopo: €0/mese · Solo 2% sulle transazioni</p>
             </div>
           </motion.div>
 
-          {/* 3 Rate */}
-          <motion.div className="relative p-8 sm:p-10 rounded-3xl glass border border-border/30 hover:border-primary/25 transition-all duration-500"
+          <motion.div className="relative p-6 sm:p-8 rounded-2xl glass border border-border/30 hover:border-primary/25 transition-all duration-500"
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.15 }}>
-            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase font-heading">3 Rate</span>
-            <p className="text-[2.5rem] font-heading font-bold text-foreground mt-2">€1.099<span className="text-base text-muted-foreground font-normal">/mese</span></p>
-            <p className="text-sm text-muted-foreground">Totale: €3.297 · IVA inclusa</p>
-            <ul className="mt-8 space-y-3 mb-9">
-              {["Tutte le funzionalità incluse", "Massima flessibilità di pagamento", "Attivazione immediata del servizio", "Chiusura rapida senza vincoli"].map((f, i) => (
-                <li key={i} className="flex items-center gap-3 text-[0.9rem] text-foreground/60 py-1 border-b border-border/20 last:border-0">
-                  <span className="text-accent font-bold">✓</span> {f}
+            <span className="text-[10px] font-semibold text-muted-foreground tracking-wider uppercase font-heading">3 Rate</span>
+            <p className="text-[2rem] font-heading font-bold text-foreground mt-1">€1.099<span className="text-sm text-muted-foreground font-normal">/mese</span></p>
+            <p className="text-xs text-muted-foreground">Totale: €3.297 · IVA inclusa</p>
+            <ul className="mt-5 space-y-2 mb-6">
+              {["Tutte le funzionalità incluse", "Massima flessibilità di pagamento", "Attivazione immediata", "Chiusura senza vincoli"].map((f, i) => (
+                <li key={i} className="flex items-center gap-2 text-xs text-foreground/60 py-0.5">
+                  <span className="text-accent font-bold text-[10px]">✓</span> {f}
                 </li>
               ))}
             </ul>
             <button onClick={() => navigate("/admin")}
-              className="w-full py-4 rounded-full border-2 border-primary/25 text-primary font-bold text-base font-heading hover:bg-primary hover:text-primary-foreground transition-all">
+              className="w-full py-3 rounded-full border-2 border-primary/25 text-primary font-bold text-sm font-heading hover:bg-primary hover:text-primary-foreground transition-all">
               Scegli 3 Rate
             </button>
           </motion.div>
         </div>
 
-        <motion.p className="text-center mt-10 text-sm text-muted-foreground max-w-xl mx-auto"
+        <motion.p className="text-center mt-6 text-xs text-muted-foreground max-w-xl mx-auto"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           <span className="text-foreground font-semibold">Dopo l'attivazione:</span> €0/mese · Solo <span className="text-primary font-bold">2%</span> sulle transazioni per infrastruttura, IA e aggiornamenti continui.
         </motion.p>
