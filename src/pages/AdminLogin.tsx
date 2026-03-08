@@ -8,6 +8,11 @@ import { toast } from "@/hooks/use-toast";
 
 type LoginMode = "choose" | "owner" | "kitchen" | "partner";
 
+/* Animated blob */
+const Blob = ({ className = "", color = "bg-primary" }: { className?: string; color?: string }) => (
+  <div className={`absolute rounded-full blur-[140px] opacity-[0.18] pointer-events-none ${color} ${className}`} />
+);
+
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -116,8 +121,10 @@ const AdminLogin = () => {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
+        <Blob className="w-[500px] h-[500px] top-0 -left-40 animate-blob-float" color="bg-violet-600" />
+        <Blob className="w-[400px] h-[400px] bottom-0 right-0 animate-blob-float-reverse" color="bg-orange-500" />
+        <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -125,27 +132,31 @@ const AdminLogin = () => {
   // Mode chooser
   if (mode === "choose") {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
+        <Blob className="w-[500px] h-[500px] -top-20 -left-40 animate-blob-float" color="bg-violet-600" />
+        <Blob className="w-[400px] h-[400px] bottom-10 -right-20 animate-blob-float-reverse" color="bg-orange-500" />
+        <Blob className="w-[300px] h-[300px] top-1/2 left-1/2 animate-blob-float-slow" color="bg-pink-500" />
+
         <motion.div
-          className="w-full max-w-sm space-y-6"
+          className="w-full max-w-sm space-y-6 relative z-10"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <div className="flex flex-col items-center">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-              <Crown className="w-8 h-8 text-primary" />
+            <div className="w-16 h-16 rounded-2xl bg-vibrant-gradient flex items-center justify-center mb-4 vibrant-glow">
+              <Crown className="w-8 h-8 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-display font-bold text-gold-gradient">Area Riservata</h1>
+            <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">Area Riservata</h1>
             <p className="text-sm text-muted-foreground mt-1">Seleziona il tuo accesso</p>
           </div>
 
           <motion.button
             onClick={() => setMode("owner")}
-            className="w-full p-5 rounded-2xl bg-card border border-border hover:border-primary/40 transition-colors text-left flex items-center gap-4"
+            className="w-full p-5 rounded-2xl glass border border-border/30 hover:border-primary/40 transition-all text-left flex items-center gap-4 hover:-translate-y-0.5"
             whileTap={{ scale: 0.98 }}
           >
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/15 border border-primary/20 flex items-center justify-center flex-shrink-0">
               <Crown className="w-6 h-6 text-primary" />
             </div>
             <div>
@@ -156,10 +167,10 @@ const AdminLogin = () => {
 
           <motion.button
             onClick={() => setMode("kitchen")}
-            className="w-full p-5 rounded-2xl bg-card border border-border hover:border-primary/40 transition-colors text-left flex items-center gap-4"
+            className="w-full p-5 rounded-2xl glass border border-border/30 hover:border-primary/40 transition-all text-left flex items-center gap-4 hover:-translate-y-0.5"
             whileTap={{ scale: 0.98 }}
           >
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/15 border border-primary/20 flex items-center justify-center flex-shrink-0">
               <ChefHat className="w-6 h-6 text-primary" />
             </div>
             <div>
@@ -170,11 +181,11 @@ const AdminLogin = () => {
 
           <motion.button
             onClick={() => { setMode("partner"); setIsSignUp(false); }}
-            className="w-full p-5 rounded-2xl bg-gradient-to-r from-primary/5 to-amber-500/5 border border-primary/30 hover:border-primary/60 transition-colors text-left flex items-center gap-4"
+            className="w-full p-5 rounded-2xl glass border border-primary/30 hover:border-primary/60 transition-all text-left flex items-center gap-4 hover:-translate-y-0.5"
             whileTap={{ scale: 0.98 }}
           >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-amber-500/20 flex items-center justify-center flex-shrink-0">
-              <Users className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-xl bg-vibrant-gradient flex items-center justify-center flex-shrink-0">
+              <Users className="w-6 h-6 text-primary-foreground" />
             </div>
             <div>
               <p className="text-base font-semibold text-foreground">Diventa Partner</p>
@@ -189,9 +200,11 @@ const AdminLogin = () => {
   // Kitchen PIN login
   if (mode === "kitchen") {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
+        <Blob className="w-[400px] h-[400px] -top-20 -right-20 animate-blob-float" color="bg-violet-600" />
+        <Blob className="w-[300px] h-[300px] bottom-20 -left-20 animate-blob-float-reverse" color="bg-pink-500" />
         <motion.div
-          className="w-full max-w-sm space-y-8"
+          className="w-full max-w-sm space-y-8 relative z-10"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -204,10 +217,10 @@ const AdminLogin = () => {
           </button>
 
           <div className="flex flex-col items-center">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-              <ChefHat className="w-8 h-8 text-primary" />
+            <div className="w-16 h-16 rounded-2xl bg-vibrant-gradient flex items-center justify-center mb-4 vibrant-glow">
+              <ChefHat className="w-8 h-8 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-display font-bold text-gold-gradient">Kitchen View</h1>
+            <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">Kitchen View</h1>
             <p className="text-sm text-muted-foreground mt-1">Inserisci il PIN fornito dal titolare</p>
           </div>
 
@@ -235,7 +248,7 @@ const AdminLogin = () => {
             <motion.button
               type="submit"
               disabled={loading || kitchenPin.length < 4}
-              className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-base gold-glow disabled:opacity-50"
+              className="w-full py-3.5 rounded-2xl bg-vibrant-gradient text-primary-foreground font-semibold text-base vibrant-glow disabled:opacity-50"
               whileTap={{ scale: 0.97 }}
             >
               {loading ? "Verifica..." : "Entra in Cucina"}
@@ -249,9 +262,11 @@ const AdminLogin = () => {
   // Owner / Super Admin / Partner login
   const isPartnerMode = mode === "partner";
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      <Blob className="w-[500px] h-[500px] -top-20 -left-40 animate-blob-float" color="bg-violet-600" />
+      <Blob className="w-[400px] h-[400px] bottom-10 -right-20 animate-blob-float-reverse" color="bg-orange-500" />
       <motion.div
-        className="w-full max-w-sm space-y-8"
+        className="w-full max-w-sm space-y-8 relative z-10"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -264,10 +279,10 @@ const AdminLogin = () => {
         </button>
 
         <div className="flex flex-col items-center">
-          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${isPartnerMode ? "bg-gradient-to-br from-primary/20 to-amber-500/20" : "bg-primary/10"}`}>
-            {isPartnerMode ? <Users className="w-8 h-8 text-primary" /> : <Crown className="w-8 h-8 text-primary" />}
+          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 vibrant-glow ${isPartnerMode ? "bg-vibrant-gradient" : "bg-vibrant-gradient"}`}>
+            {isPartnerMode ? <Users className="w-8 h-8 text-primary-foreground" /> : <Crown className="w-8 h-8 text-primary-foreground" />}
           </div>
-          <h1 className="text-2xl font-display font-bold text-gold-gradient">
+          <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">
             {isPartnerMode
               ? (isSignUp ? "Registrati come Partner" : "Accesso Partner")
               : (isSignUp ? "Crea Account Ristorante" : "Accesso Titolare")}
@@ -349,7 +364,7 @@ const AdminLogin = () => {
           <motion.button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-base gold-glow disabled:opacity-50"
+            className="w-full py-3.5 rounded-2xl bg-vibrant-gradient text-primary-foreground font-semibold text-base vibrant-glow disabled:opacity-50"
             whileTap={{ scale: 0.97 }}
           >
             {loading ? "Caricamento..." : isSignUp
