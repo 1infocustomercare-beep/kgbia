@@ -10,6 +10,9 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import LivePreview from "@/components/restaurant/LivePreview";
+import mockupCliente from "@/assets/mockup-cliente.jpg";
+import mockupAdmin from "@/assets/mockup-admin.jpg";
+import mockupCucina from "@/assets/mockup-cucina.jpg";
 
 /* ═══════════════════════════════════════════
    HELPERS
