@@ -764,79 +764,75 @@ const LandingPage = () => {
           11. PARTNER PROGRAM
          ═══════════════════════════════════════════ */}
       <Section id="partner">
-        <div className="text-center mb-[72px]">
+        <div className="text-center mb-10">
           <SectionLabel text="Partner Program" />
-          <motion.h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Costruisci il tuo <span className="text-vibrant-gradient">Impero</span>
           </motion.h2>
-          <motion.p className="text-[1.15rem] text-foreground/60 max-w-[600px] mx-auto leading-[1.7]"
+          <motion.p className="text-base text-foreground/60 max-w-[550px] mx-auto leading-[1.6]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Diventa Partner e guadagna €997 per ogni vendita. Zero rischi, strumenti elite, pagamenti istantanei.
+            Diventa Partner e guadagna €997 per ogni vendita. Zero rischi, pagamenti istantanei.
           </motion.p>
         </div>
 
-        {/* Earnings grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mb-12">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {[
-            { value: "€997", label: "Per vendita", icon: <Trophy className="w-5 h-5" />, sub: "Commissione Partner" },
-            { value: "€50", label: "Override TL", icon: <Award className="w-5 h-5" />, sub: "Dalla 4ª vendita" },
-            { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-5 h-5" />, sub: "Bonus mensile" },
-            { value: "€1.500", label: "Bonus 5 vendite", icon: <Rocket className="w-5 h-5" />, sub: "Bonus Elite" },
+            { value: "€997", label: "Per vendita", icon: <Trophy className="w-4 h-4" />, sub: "Commissione" },
+            { value: "€50", label: "Override TL", icon: <Award className="w-4 h-4" />, sub: "Dalla 4ª vendita" },
+            { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-4 h-4" />, sub: "Mensile" },
+            { value: "€1.500", label: "Bonus 5 vendite", icon: <Rocket className="w-4 h-4" />, sub: "Elite" },
           ].map((s, i) => (
-            <motion.div key={i} className="p-6 rounded-3xl glass border border-border/30 text-center hover:border-primary/20 hover:-translate-y-1 transition-all duration-500"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-3">{s.icon}</div>
-              <p className="text-2xl font-heading font-bold text-primary">{s.value}</p>
-              <p className="text-xs font-semibold text-foreground mt-1">{s.label}</p>
-              <p className="text-[10px] text-muted-foreground">{s.sub}</p>
+            <motion.div key={i} className="p-4 rounded-2xl glass border border-border/30 text-center hover:border-primary/20 hover:-translate-y-1 transition-all duration-500"
+              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
+              <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary mx-auto mb-2">{s.icon}</div>
+              <p className="text-lg font-heading font-bold text-primary">{s.value}</p>
+              <p className="text-[10px] font-semibold text-foreground">{s.label}</p>
+              <p className="text-[9px] text-muted-foreground">{s.sub}</p>
             </motion.div>
           ))}
         </div>
 
-        {/* Career path */}
-        <motion.div className="p-7 rounded-3xl glass border border-primary/20 mb-12"
+        <motion.div className="p-5 rounded-2xl glass border border-primary/20 mb-8"
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <h3 className="font-heading font-bold text-lg text-foreground text-center mb-6">Percorso di Carriera</h3>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-0">
+          <h3 className="font-heading font-bold text-sm text-foreground text-center mb-4">Percorso di Carriera</h3>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
             {[
-              { title: "Partner", desc: "€997/vendita", icon: <Handshake className="w-5 h-5" /> },
-              { title: "3 Vendite", desc: "Promozione automatica", icon: <TrendingUp className="w-5 h-5" /> },
-              { title: "Team Leader", desc: "+€50 override", icon: <Crown className="w-5 h-5" /> },
+              { title: "Partner", desc: "€997/vendita", icon: <Handshake className="w-4 h-4" /> },
+              { title: "3 Vendite", desc: "Promozione auto", icon: <TrendingUp className="w-4 h-4" /> },
+              { title: "Team Leader", desc: "+€50 override", icon: <Crown className="w-4 h-4" /> },
             ].map((s, i) => (
-              <div key={i} className="flex sm:flex-col items-center gap-3 sm:gap-2 text-center w-full sm:w-auto">
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">{s.icon}</div>
+              <div key={i} className="flex sm:flex-col items-center gap-2 text-center w-full sm:w-auto">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">{s.icon}</div>
                 <div className="text-left sm:text-center">
-                  <p className="text-sm font-bold text-foreground font-heading">{s.title}</p>
-                  <p className="text-xs text-muted-foreground">{s.desc}</p>
+                  <p className="text-xs font-bold text-foreground font-heading">{s.title}</p>
+                  <p className="text-[10px] text-muted-foreground">{s.desc}</p>
                 </div>
-                {i < 2 && <ArrowRight className="hidden sm:block w-5 h-5 text-primary/30 mx-8 flex-shrink-0" />}
+                {i < 2 && <ArrowRight className="hidden sm:block w-4 h-4 text-primary/30 mx-6 flex-shrink-0" />}
               </div>
             ))}
           </div>
         </motion.div>
 
-        {/* Scenario */}
-        <motion.div className="p-7 rounded-3xl glass border border-primary/20 max-w-xl mx-auto mb-12"
+        <motion.div className="p-5 rounded-2xl glass border border-primary/20 max-w-md mx-auto mb-8"
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <h3 className="font-heading font-bold text-base text-foreground text-center mb-5">📊 Scenario: 5 vendite al mese</h3>
-          <div className="space-y-2.5 text-sm">
-            <div className="flex justify-between"><span className="text-muted-foreground">5× Commissioni Partner</span><span className="font-bold text-foreground">€4.985</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">Bonus Elite mensile</span><span className="font-bold text-foreground">€1.500</span></div>
-            <div className="flex justify-between pt-4 border-t border-primary/20">
+          <h3 className="font-heading font-bold text-xs text-foreground text-center mb-3">📊 Scenario: 5 vendite/mese</h3>
+          <div className="space-y-2 text-xs">
+            <div className="flex justify-between"><span className="text-muted-foreground">5× Commissioni</span><span className="font-bold text-foreground">€4.985</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Bonus Elite</span><span className="font-bold text-foreground">€1.500</span></div>
+            <div className="flex justify-between pt-3 border-t border-primary/20">
               <span className="font-semibold text-foreground">Totale mensile</span>
-              <span className="text-2xl font-heading font-bold text-vibrant-gradient">€6.485</span>
+              <span className="text-xl font-heading font-bold text-vibrant-gradient">€6.485</span>
             </div>
           </div>
         </motion.div>
 
-        {/* CTA */}
         <motion.div className="text-center" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <Gift className="w-10 h-10 text-primary mx-auto mb-4" />
-          <h3 className="font-heading font-bold text-xl text-foreground mb-3">Zero Costi di Ingresso</h3>
-          <p className="text-base text-muted-foreground mb-6">Nessun investimento iniziale. Paghiamo solo il tuo talento.</p>
+          <Gift className="w-8 h-8 text-primary mx-auto mb-3" />
+          <h3 className="font-heading font-bold text-base text-foreground mb-2">Zero Costi di Ingresso</h3>
+          <p className="text-sm text-muted-foreground mb-4">Nessun investimento iniziale. Paghiamo solo il tuo talento.</p>
           <button onClick={() => navigate("/partner/register")}
-            className="px-10 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-base font-heading hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all">
+            className="px-8 py-3 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all">
             Diventa Partner
           </button>
         </motion.div>
