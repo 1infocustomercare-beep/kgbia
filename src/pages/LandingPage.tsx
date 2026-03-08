@@ -369,7 +369,8 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           {[
             { icon: <Banknote className="w-8 h-8" />, amount: "€7.500", label: "Margini erosi / mese", sub: "Su 1000 ordini a €25 con marketplace" },
             { icon: <DollarSign className="w-8 h-8" />, amount: "€90.000", label: "Dispersi ogni anno", sub: "Capitale che alimenta i tuoi competitor" },
@@ -377,14 +378,14 @@ const LandingPage = () => {
           ].map((item, i) => (
             <motion.div key={i}
               className="group relative p-6 rounded-2xl glass border border-border/30 hover:border-accent/25 hover:-translate-y-1 hover:shadow-[0_16px_48px_hsla(263,70%,58%,0.12)] transition-all duration-500 text-center"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
+              variants={fadeScale}>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/15 border border-primary/20 flex items-center justify-center text-accent mx-auto mb-3">{item.icon}</div>
               <p className="text-3xl font-heading font-bold text-accent">{item.amount}</p>
               <p className="text-xs font-semibold text-foreground mt-2">{item.label}</p>
               <p className="text-[10px] text-muted-foreground mt-0.5">{item.sub}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <motion.p className="text-center mt-8 text-sm text-muted-foreground"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
