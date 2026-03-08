@@ -897,37 +897,28 @@ const PartnerSandbox = () => {
       {/* ===== FULL-WIDTH DEMO ===== */}
       <div className="w-full">
         <div className="w-full rounded-2xl border border-border/30 overflow-hidden bg-background relative shadow-xl">
-          {/* Order placed flash */}
-          <AnimatePresence>
-            {orderPlacedFlash && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-sm">
-                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-center">
-                  <motion.div animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.2, 1] }} transition={{ duration: 0.5 }} className="text-5xl mb-3">🎉</motion.div>
-                  <p className="text-base font-display font-bold text-foreground">Ordine Inviato!</p>
-                  <p className="text-xs text-muted-foreground mt-1">Guarda nella Cucina →</p>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* ===== CUSTOMER VIEW ===== */}
           {activeView === "customer" && (
-            <div className="max-h-[70vh] overflow-hidden rounded-2xl">
-              <iframe
-                src="/r/impero-roma?sandbox=true"
-                className="w-full h-[70vh] border-0"
-                title="Vista Cliente Reale"
-                allow="autoplay"
-              />
-            </div>
+            <iframe
+              src="/r/impero-roma?sandbox=true"
+              className="w-full h-[75vh] border-0"
+              title="Vista Cliente Reale"
+              allow="autoplay"
+            />
           )}
-
-          {/* ===== ADMIN VIEW ===== */}
-          {activeView === "admin" && renderAdminView()}
-
-          {/* ===== KITCHEN VIEW ===== */}
-          {activeView === "kitchen" && renderKitchenView()}
-
+          {activeView === "admin" && (
+            <iframe
+              src="/dashboard?sandbox=true"
+              className="w-full h-[75vh] border-0"
+              title="Pannello Admin Reale"
+            />
+          )}
+          {activeView === "kitchen" && (
+            <iframe
+              src="/kitchen?sandbox=true"
+              className="w-full h-[75vh] border-0"
+              title="Vista Cucina Reale"
+            />
+          )}
         </div>
       </div>
 
