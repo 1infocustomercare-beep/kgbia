@@ -928,19 +928,6 @@ const PartnerSandbox = () => {
           {/* ===== KITCHEN VIEW ===== */}
           {activeView === "kitchen" && renderKitchenView()}
 
-          {/* Cart floating */}
-          {activeView === "customer" && cartCount > 0 && (
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-              className="sticky bottom-0 mx-4 mb-3 p-3 rounded-xl bg-primary text-primary-foreground flex items-center justify-between z-30 shadow-lg">
-              <div className="flex items-center gap-2">
-                <ShoppingCart className="w-4 h-4" />
-                <span className="text-xs font-bold">{cartCount} articoli</span>
-              </div>
-              <button onClick={placeOrder} className="px-4 py-2 rounded-lg bg-primary-foreground text-primary text-xs font-bold">
-                Ordina €{cartTotal.toFixed(2)}
-              </button>
-            </motion.div>
-          )}
         </div>
       </div>
 
