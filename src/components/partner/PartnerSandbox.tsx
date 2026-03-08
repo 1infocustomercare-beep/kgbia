@@ -1092,6 +1092,12 @@ const PartnerSandbox = () => {
         onClose={() => setGuidedMode(false)}
         onStepChange={(id) => setGuidedStepId(id)}
       />
+
+      {/* Fullscreen Sales Presentation */}
+      <PartnerFullDemo
+        open={fullDemoOpen}
+        onClose={() => setFullDemoOpen(false)}
+      />
     </motion.div>
   );
 };
