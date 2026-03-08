@@ -49,7 +49,7 @@ Blob.displayName = "Blob";
 /* Section wrapper */
 const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string }>(
   ({ id, children, className = "" }, ref) => (
-    <section ref={ref} id={id} className={`relative py-20 sm:py-[120px] px-6 overflow-hidden ${className}`}>
+    <section ref={ref} id={id} className={`relative py-14 sm:py-20 px-6 overflow-hidden ${className}`}>
       <div className="max-w-[1200px] mx-auto relative z-10">{children}</div>
     </section>
   )
@@ -226,7 +226,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           1. HERO
          ═══════════════════════════════════════════ */}
-      <section id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-6 pt-[140px] pb-[100px]">
+      <section id="hero" className="relative min-h-[90dvh] flex items-center overflow-hidden px-6 pt-24 pb-16">
         {/* Floating shapes */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute w-[300px] h-[300px] rounded-full border border-foreground/[0.04] top-[10%] right-[5%] animate-blob-float hidden sm:block" />
@@ -241,35 +241,35 @@ const LandingPage = () => {
         <div className="relative z-10 max-w-[1200px] mx-auto w-full flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           {/* Left — Content */}
           <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left max-w-[720px]">
-            <motion.div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/[0.12] border border-primary/25 mb-8"
+            <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/[0.12] border border-primary/25 mb-5"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse-dot" />
               <span className="text-xs font-medium text-primary/80 tracking-wider font-heading">AI-Powered Restaurant Suite</span>
             </motion.div>
 
             <motion.h1
-              className="text-[2.2rem] leading-[1.08] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-heading font-bold text-foreground tracking-tight"
+              className="text-[2rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-[3.5rem] font-heading font-bold text-foreground tracking-tight"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.15 }}>
               Trasforma il Tuo Ristorante con l'
               <span className="text-vibrant-gradient">Intelligenza Artificiale</span>
             </motion.h1>
 
-            <motion.p className="mt-6 text-base sm:text-lg text-foreground/60 max-w-[540px] leading-[1.8]"
+            <motion.p className="mt-4 text-sm sm:text-base text-foreground/60 max-w-[500px] leading-[1.7]"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
               PWA di proprietà, menu AI, kitchen view, review shield e molto altro.
               Tutto ciò di cui hai bisogno per <strong className="text-foreground">dominare il digitale</strong> e liberarti dal 30% di commissioni.
             </motion.p>
 
-            <motion.div className="mt-10 flex flex-col sm:flex-row items-center gap-4"
+            <motion.div className="mt-7 flex flex-col sm:flex-row items-center gap-3"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
               <button onClick={() => scrollTo("pricing")}
-                className="group relative w-full sm:w-auto px-9 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-base font-heading overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)]">
+                className="group relative w-full sm:w-auto px-7 py-3 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)]">
                 <span className="absolute inset-0 bg-gradient-to-br from-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="relative flex items-center gap-2.5">Prenota una Demo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
+                <span className="relative flex items-center gap-2">Prenota una Demo <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" /></span>
               </button>
               <button onClick={() => navigate("/r/impero-roma")}
-                className="w-full sm:w-auto px-9 py-4 rounded-full border-2 border-border/30 text-foreground text-base font-semibold font-heading hover:border-primary/40 hover:bg-primary/[0.06] transition-all flex items-center justify-center gap-2.5">
-                <Play className="w-4 h-4 text-accent" /> Scopri i Servizi
+                className="w-full sm:w-auto px-7 py-3 rounded-full border-2 border-border/30 text-foreground text-sm font-semibold font-heading hover:border-primary/40 hover:bg-primary/[0.06] transition-all flex items-center justify-center gap-2">
+                <Play className="w-3.5 h-3.5 text-accent" /> Scopri i Servizi
               </button>
             </motion.div>
 
@@ -285,7 +285,7 @@ const LandingPage = () => {
             </motion.div>
 
             {/* Hero stats */}
-            <motion.div className="mt-[72px] flex flex-wrap justify-center lg:justify-start gap-12 pt-10 border-t border-border/30 w-full"
+            <motion.div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-8 pt-6 border-t border-border/30 w-full"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
               {[
                 { value: "200+", label: "Ristoranti Serviti" },
@@ -293,8 +293,8 @@ const LandingPage = () => {
                 { value: "+45%", label: "Aumento Ordini Online" },
               ].map((s, i) => (
                 <div key={i} className="text-center lg:text-left">
-                  <p className="text-2xl sm:text-[2.2rem] font-heading font-bold text-vibrant-gradient">{s.value}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{s.label}</p>
+                  <p className="text-xl sm:text-2xl font-heading font-bold text-vibrant-gradient">{s.value}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
                 </div>
               ))}
             </motion.div>
