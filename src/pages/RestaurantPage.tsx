@@ -1,7 +1,6 @@
 import { useState, useMemo, useCallback, useRef, useEffect, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
 import CookieBanner from "@/components/gdpr/CookieBanner";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { demoRestaurant, demoMenu, menuCategories as demoCats } from "@/data/demo-restaurant";
 import { useRestaurantBySlug } from "@/hooks/useRestaurantBySlug";
 import SplashScreen from "@/components/restaurant/SplashScreen";
