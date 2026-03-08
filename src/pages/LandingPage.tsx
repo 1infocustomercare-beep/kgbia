@@ -487,13 +487,7 @@ const LandingPage = () => {
                     <div className="w-full overflow-hidden" style={{ height: 'calc(100% - 12px)' }}>
                       <iframe
                         src={phone.src}
-                        className="border-0 origin-top-left"
-                        style={{
-                          width: '375px',
-                          height: '667px',
-                          transform: 'scale(0.293)',
-                          transformOrigin: 'top left',
-                        }}
+                        className="border-0 phone-iframe-scale"
                         title={phone.title}
                         loading="lazy"
                       />
