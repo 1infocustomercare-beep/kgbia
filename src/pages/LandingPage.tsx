@@ -66,8 +66,43 @@ const SectionLabel = ({ text }: { text: string }) => (
   </motion.span>
 );
 
-/* Stagger container */
-const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
+/* Animation variants */
+const smoothEase = [0.22, 1, 0.36, 1] as const;
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: smoothEase } },
+};
+
+const fadeScale = {
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: smoothEase } },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
+};
+
+const staggerFast = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
+};
+
+const slideInLeft = {
+  hidden: { opacity: 0, x: -40 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: smoothEase } },
+};
+
+const slideInRight = {
+  hidden: { opacity: 0, x: 40 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: smoothEase } },
+};
+
+const popIn = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 200, damping: 20 } },
+};
 
 /* ═══════════════════════════════════════════
    MAIN COMPONENT
@@ -334,7 +369,8 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           {[
             { icon: <Banknote className="w-8 h-8" />, amount: "€7.500", label: "Margini erosi / mese", sub: "Su 1000 ordini a €25 con marketplace" },
             { icon: <DollarSign className="w-8 h-8" />, amount: "€90.000", label: "Dispersi ogni anno", sub: "Capitale che alimenta i tuoi competitor" },
@@ -342,14 +378,14 @@ const LandingPage = () => {
           ].map((item, i) => (
             <motion.div key={i}
               className="group relative p-6 rounded-2xl glass border border-border/30 hover:border-accent/25 hover:-translate-y-1 hover:shadow-[0_16px_48px_hsla(263,70%,58%,0.12)] transition-all duration-500 text-center"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
+              variants={fadeScale}>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/15 border border-primary/20 flex items-center justify-center text-accent mx-auto mb-3">{item.icon}</div>
               <p className="text-3xl font-heading font-bold text-accent">{item.amount}</p>
               <p className="text-xs font-semibold text-foreground mt-2">{item.label}</p>
               <p className="text-[10px] text-muted-foreground mt-0.5">{item.sub}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <motion.p className="text-center mt-8 text-sm text-muted-foreground"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
@@ -376,10 +412,10 @@ const LandingPage = () => {
 
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          transition={{ staggerChildren: 0.08 }}
         >
           {services.map((s, i) => (
             <motion.div key={i}
@@ -417,11 +453,11 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           <div className="hidden lg:block absolute top-[28px] left-[calc(12.5%+28px)] right-[calc(12.5%+28px)] h-0.5 bg-gradient-to-r from-primary/30 via-pink-500/30 to-accent/30 z-0" />
           {howItWorks.map((s, i) => (
-            <motion.div key={i} className="relative text-center z-10"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+            <motion.div key={i} className="relative text-center z-10" variants={popIn}>
               <div className="relative w-14 h-14 rounded-full bg-vibrant-gradient flex items-center justify-center mx-auto mb-4">
                 <span className="font-heading font-bold text-lg text-primary-foreground">{s.step}</span>
                 <div className="absolute -inset-1 rounded-full border-2 border-primary/25" />
@@ -430,7 +466,7 @@ const LandingPage = () => {
               <p className="text-xs text-foreground/60 leading-[1.5]">{s.desc}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
 
       {/* ═══════════════════════════════════════════
@@ -449,11 +485,12 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-5"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           {portfolioItems.map((item, i) => (
             <motion.div key={i}
               className="group relative rounded-3xl overflow-hidden aspect-[4/3] glass border border-border/30 cursor-pointer hover:-translate-y-1.5 hover:shadow-[0_20px_60px_hsla(263,70%,58%,0.2)] transition-all duration-500"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              variants={fadeScale}>
               {/* Mockup browser */}
               <div className="absolute inset-0 bg-gradient-to-br from-card to-background flex items-center justify-center">
                 <div className="w-[80%] h-[70%] rounded-2xl bg-background/60 border border-border/40 overflow-hidden">
@@ -478,7 +515,7 @@ const LandingPage = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
 
       {/* ═══════════════════════════════════════════
@@ -486,7 +523,7 @@ const LandingPage = () => {
          ═══════════════════════════════════════════ */}
       <Section id="app">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="App Personalizzate" />
             <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3">
               La Tua App, <br /><span className="text-vibrant-gradient">Il Tuo Brand</span>
@@ -516,7 +553,7 @@ const LandingPage = () => {
           </motion.div>
 
           {/* 3 Phone Mockups */}
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}>
+          <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <div className="flex justify-center items-end gap-3 sm:gap-4 relative">
               <div className="absolute -inset-10 bg-violet-600/10 rounded-[60px] blur-[80px] pointer-events-none" />
               {[
@@ -543,7 +580,7 @@ const LandingPage = () => {
       <Section>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* About text */}
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="Chi Siamo" />
             <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3">
               Il Team Dietro <br /><span className="text-vibrant-gradient">la Magia</span>
@@ -568,20 +605,21 @@ const LandingPage = () => {
 
           {/* Team grid */}
           <motion.div className="grid grid-cols-2 gap-4"
-            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}>
+            variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             {[
               { name: "Marco R.", role: "CEO & AI Strategist" },
               { name: "Sofia L.", role: "Lead Designer" },
               { name: "Luca B.", role: "CTO & Full-Stack Dev" },
               { name: "Elena M.", role: "Marketing & Growth" },
             ].map((m, i) => (
-              <div key={i} className="p-5 rounded-2xl glass border border-border/30 text-center hover:border-primary/20 hover:-translate-y-1 transition-all duration-500">
+              <motion.div key={i} variants={fadeScale}
+                className="p-5 rounded-2xl glass border border-border/30 text-center hover:border-primary/20 hover:-translate-y-1 transition-all duration-500">
                 <div className="w-14 h-14 rounded-full bg-vibrant-gradient opacity-30 mx-auto mb-3 relative">
                   <div className="absolute -inset-[2px] rounded-full border-2 border-primary/25" />
                 </div>
                 <h4 className="font-heading text-sm font-semibold text-foreground mb-0.5">{m.name}</h4>
                 <p className="text-[10px] text-muted-foreground">{m.role}</p>
-              </div>
+              </motion.div>
             ))}
           </motion.div>
         </div>
@@ -668,10 +706,11 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-5"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           {testimonials.map((t, i) => (
             <motion.div key={i} className="group relative p-6 rounded-2xl glass border border-border/30 hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_16px_48px_hsla(263,70%,58%,0.12)] transition-all duration-500"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              variants={fadeUp}>
               <div className="flex gap-0.5 mb-3">
                 {Array.from({ length: t.stars }).map((_, j) => <Star key={j} className="w-3.5 h-3.5 text-accent fill-accent" />)}
               </div>
@@ -688,7 +727,7 @@ const LandingPage = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
 
       {/* ═══════════════════════════════════════════
@@ -707,9 +746,10 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
+        <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           <motion.div className="relative p-6 sm:p-8 rounded-2xl glass border border-primary/25 overflow-hidden bg-gradient-to-br from-primary/[0.12] to-accent/[0.06]"
-            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            variants={fadeScale}>
             <div className="absolute top-0 left-0 right-0 h-1 bg-vibrant-gradient" />
             <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-vibrant-gradient text-[9px] font-bold text-primary-foreground tracking-wider font-heading">PIÙ POPOLARE</span>
             <div className="relative">
@@ -736,7 +776,7 @@ const LandingPage = () => {
           </motion.div>
 
           <motion.div className="relative p-6 sm:p-8 rounded-2xl glass border border-border/30 hover:border-primary/25 transition-all duration-500"
-            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.15 }}>
+            variants={fadeScale}>
             <span className="text-[10px] font-semibold text-muted-foreground tracking-wider uppercase font-heading">3 Rate</span>
             <p className="text-[2rem] font-heading font-bold text-foreground mt-1">€1.099<span className="text-sm text-muted-foreground font-normal">/mese</span></p>
             <p className="text-xs text-muted-foreground">Totale: €3.297 · IVA inclusa</p>
@@ -752,7 +792,7 @@ const LandingPage = () => {
               Scegli 3 Rate
             </button>
           </motion.div>
-        </div>
+        </motion.div>
 
         <motion.p className="text-center mt-6 text-xs text-muted-foreground max-w-xl mx-auto"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
@@ -776,7 +816,8 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+        <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8"
+          variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           {[
             { value: "€997", label: "Per vendita", icon: <Trophy className="w-4 h-4" />, sub: "Commissione" },
             { value: "€50", label: "Override TL", icon: <Award className="w-4 h-4" />, sub: "Dalla 4ª vendita" },
@@ -784,14 +825,14 @@ const LandingPage = () => {
             { value: "€1.500", label: "Bonus 5 vendite", icon: <Rocket className="w-4 h-4" />, sub: "Elite" },
           ].map((s, i) => (
             <motion.div key={i} className="p-4 rounded-2xl glass border border-border/30 text-center hover:border-primary/20 hover:-translate-y-1 transition-all duration-500"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
+              variants={popIn}>
               <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary mx-auto mb-2">{s.icon}</div>
               <p className="text-lg font-heading font-bold text-primary">{s.value}</p>
               <p className="text-[10px] font-semibold text-foreground">{s.label}</p>
               <p className="text-[9px] text-muted-foreground">{s.sub}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <motion.div className="p-5 rounded-2xl glass border border-primary/20 mb-8"
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
@@ -854,11 +895,12 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-5"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           {blogPosts.map((post, i) => (
             <motion.div key={i}
               className="group rounded-2xl glass border border-border/30 overflow-hidden hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_16px_48px_hsla(263,70%,58%,0.12)] transition-all duration-500 cursor-pointer"
-              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              variants={fadeScale}>
               <div className="h-[140px] bg-gradient-to-br from-card to-background relative overflow-hidden">
                 <div className="absolute inset-0 bg-vibrant-gradient opacity-[0.08]" />
                 <span className="absolute top-3 left-3 px-2.5 py-1 bg-background/60 backdrop-blur-xl rounded-full text-[0.65rem] font-bold uppercase tracking-wider text-accent font-heading">{post.tag}</span>
@@ -870,13 +912,13 @@ const LandingPage = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
 
       {/* ═══════ FAQ ═══════ */}
       <Section>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 items-start">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="FAQ" />
             <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3">
               Domande? <span className="text-vibrant-gradient">Risposte.</span>
@@ -886,10 +928,11 @@ const LandingPage = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-3">
+          <motion.div className="space-y-3"
+            variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             {faqs.map((faq, i) => (
               <motion.div key={i} className="rounded-2xl glass border border-border/30 overflow-hidden"
-                variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
+                variants={fadeUp}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between p-4 text-left hover:bg-foreground/[0.02] transition-colors">
                   <span className="text-sm font-semibold text-foreground pr-3 font-heading">{faq.q}</span>
@@ -907,7 +950,7 @@ const LandingPage = () => {
                 </AnimatePresence>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </Section>
 
