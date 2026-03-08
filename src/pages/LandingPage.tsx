@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
   Crown, Check, Calculator, Star, Zap, Shield, Smartphone,
   TrendingUp, X, Sparkles, Lock, Menu, Target, DollarSign, Brain,
@@ -219,17 +219,9 @@ const LandingPage = () => {
       </nav>
 
       {/* ═══════════════════════════════════════════
-          1. HERO
+          1. HERO — with Parallax
          ═══════════════════════════════════════════ */}
-      <section id="hero" className="relative min-h-[90vh] sm:min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[900px] h-[300px] sm:h-[600px] bg-violet-600/15 rounded-full blur-[180px]" />
-
-        {/* Floating shapes — hidden on small mobile */}
-        <div className="absolute inset-0 pointer-events-none hidden sm:block">
-          <div className="absolute w-[300px] h-[300px] rounded-full border border-foreground/[0.04] top-[10%] right-[5%] animate-blob-float" />
-          <div className="absolute w-[200px] h-[200px] rounded-full border border-accent/[0.08] bottom-[20%] right-[15%] animate-blob-float-reverse" />
-        </div>
+      <HeroSection />
 
         <div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-6 lg:gap-16 pt-20 sm:pt-32 pb-8 sm:pb-12">
           {/* Left */}
