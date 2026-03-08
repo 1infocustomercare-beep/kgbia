@@ -485,49 +485,49 @@ const LandingPage = () => {
           6. APP SHOWCASE — 3 Phone Mockups
          ═══════════════════════════════════════════ */}
       <Section id="app">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="App Personalizzate" />
-            <h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.15] mb-5">
+            <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.15] mb-3">
               La Tua App, <br /><span className="text-vibrant-gradient">Il Tuo Brand</span>
             </h2>
-            <p className="text-[1.15rem] text-foreground/60 leading-[1.7] max-w-lg mb-8">
+            <p className="text-base text-foreground/60 leading-[1.6] max-w-lg mb-5">
               Cliente, Admin e Cucina — tutto in un ecosistema unico, white-label, di tua proprietà.
             </p>
-            <div className="space-y-5 mb-10">
+            <div className="space-y-3 mb-6">
               {[
                 { title: "Ordini Online", desc: "Menu interattivo con pagamento integrato Stripe" },
                 { title: "Programma Fedeltà", desc: "Wallet pass, reward e offerte personalizzate AI" },
                 { title: "Push & Chat", desc: "Comunicazione diretta e campagne marketing push" },
                 { title: "Kitchen View", desc: "Ordini real-time in cucina, zero errori garantiti" },
               ].map((f, i) => (
-                <div key={i} className="flex gap-4 items-start">
-                  <div className="w-7 h-7 min-w-[28px] rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-accent text-xs font-bold mt-0.5">✓</div>
+                <div key={i} className="flex gap-3 items-start">
+                  <div className="w-5 h-5 min-w-[20px] rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-accent text-[10px] font-bold mt-0.5">✓</div>
                   <div>
-                    <p className="text-[0.95rem] text-foreground"><strong>{f.title}</strong> — {f.desc}</p>
+                    <p className="text-sm text-foreground"><strong>{f.title}</strong> — {f.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
             <button onClick={() => navigate("/r/impero-roma")}
-              className="group px-9 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-base font-heading hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all inline-flex items-center gap-2.5">
-              Richiedi una Demo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              className="group px-7 py-3 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all inline-flex items-center gap-2">
+              Richiedi una Demo <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </button>
           </motion.div>
 
           {/* 3 Phone Mockups */}
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}>
-            <div className="flex justify-center items-end gap-4 sm:gap-5 relative">
+            <div className="flex justify-center items-end gap-3 sm:gap-4 relative">
               <div className="absolute -inset-10 bg-violet-600/10 rounded-[60px] blur-[80px] pointer-events-none" />
               {[
                 { label: "👤 Cliente", img: mockupCliente, title: "Vista Cliente" },
                 { label: "⚙️ Admin", img: mockupAdmin, title: "Pannello Admin" },
                 { label: "🍳 Cucina", img: mockupCucina, title: "Kitchen View" },
               ].map((phone, i) => (
-                <div key={i} className="relative flex flex-col items-center flex-1 max-w-[160px]">
-                  <span className="text-[10px] font-heading font-bold text-accent tracking-widest uppercase mb-2">{phone.label}</span>
-                  <div className="relative w-full aspect-[9/19] bg-card rounded-[20px] sm:rounded-[28px] border-[3px] border-foreground/10 overflow-hidden shadow-[0_40px_80px_hsla(0,0%,0%,0.5),0_0_80px_hsla(263,70%,58%,0.15)]">
-                    <div className="w-[40%] h-3 sm:h-[28px] bg-background rounded-b-[14px] mx-auto relative z-20" />
+                <div key={i} className="relative flex flex-col items-center flex-1 max-w-[140px]">
+                  <span className="text-[9px] font-heading font-bold text-accent tracking-widest uppercase mb-1.5">{phone.label}</span>
+                  <div className="relative w-full aspect-[9/19] bg-card rounded-[18px] sm:rounded-[24px] border-[2px] border-foreground/10 overflow-hidden shadow-[0_30px_60px_hsla(0,0%,0%,0.5),0_0_60px_hsla(263,70%,58%,0.15)]">
+                    <div className="w-[40%] h-2.5 sm:h-[22px] bg-background rounded-b-[12px] mx-auto relative z-20" />
                     <img src={phone.img} alt={phone.title} className="absolute inset-0 w-full h-full object-cover object-top" />
                   </div>
                 </div>
