@@ -434,28 +434,28 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          5. APP SHOWCASE
+          5. APP SHOWCASE — 3 Phone Mockups
          ═══════════════════════════════════════════ */}
       <Section>
         <Blob className="w-[500px] h-[500px] bottom-0 right-0 animate-blob-float" color="bg-violet-600" />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-center">
+          <motion.div className="flex-1" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel icon={<Smartphone className="w-3.5 h-3.5 text-accent" />} text="App Personalizzate" />
             <h2 className="text-2xl sm:text-5xl font-heading font-bold text-foreground leading-tight">
               La Tua App, <br /><span className="text-vibrant-gradient">Il Tuo Brand</span>
             </h2>
-            <p className="mt-4 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg">
-              App native che i tuoi clienti ameranno usare. Design premium e funzionalità avanzate per il tuo ristorante.
+            <p className="mt-3 sm:mt-4 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg">
+              Cliente, Admin e Cucina — tutto in un ecosistema unico, white-label, di tua proprietà.
             </p>
-            <div className="mt-6 space-y-4">
+            <div className="mt-5 space-y-3">
               {[
-                { title: "Ordini Online", desc: "Menu digitale interattivo con pagamento integrato" },
-                { title: "Programma Fedeltà", desc: "Sistema punti, reward e offerte personalizzate con AI" },
-                { title: "Push Notifications", desc: "Comunicazione diretta e campagne marketing automatizzate" },
-                { title: "Delivery Tracking", desc: "Tracciamento in tempo reale con mappa interattiva" },
+                { title: "Ordini Online", desc: "Menu interattivo con pagamento integrato" },
+                { title: "Programma Fedeltà", desc: "Wallet pass, reward e offerte AI" },
+                { title: "Push & Chat", desc: "Comunicazione diretta con i clienti" },
+                { title: "Kitchen View", desc: "Ordini real-time in cucina, zero errori" },
               ].map((f, i) => (
-                <div key={i} className="flex gap-4 items-start">
-                  <div className="w-7 h-7 min-w-[28px] rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-accent text-xs font-bold">✓</div>
+                <div key={i} className="flex gap-3 items-start">
+                  <div className="w-6 h-6 min-w-[24px] rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-accent text-[10px] font-bold">✓</div>
                   <div>
                     <p className="text-sm font-semibold text-foreground">{f.title}</p>
                     <p className="text-xs text-muted-foreground">{f.desc}</p>
@@ -464,44 +464,43 @@ const LandingPage = () => {
               ))}
             </div>
             <button onClick={() => navigate("/r/impero-roma")}
-              className="mt-8 px-8 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm tracking-widest uppercase font-heading hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all">
+              className="mt-6 px-8 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm tracking-widest uppercase font-heading hover:-translate-y-0.5 hover:shadow-[0_12px_40px_hsla(263,70%,58%,0.4)] transition-all">
               Richiedi una Demo <ArrowRight className="inline w-4 h-4 ml-2" />
             </button>
           </motion.div>
 
-          {/* Phone mockups — Cliente + Admin */}
-          <motion.div className="flex justify-center items-end gap-4 sm:gap-6 relative"
+          {/* 3 Phone Mockups — horizontal scroll on mobile */}
+          <motion.div className="flex-shrink-0 w-full lg:w-auto overflow-x-auto scrollbar-hide"
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}>
-            <div className="absolute -inset-10 bg-violet-600/10 rounded-[60px] blur-[80px]" />
-            
-            {/* Phone 1 — Vista Cliente */}
-            <div className="relative flex flex-col items-center">
-              <span className="text-[9px] sm:text-[10px] font-heading font-bold text-accent tracking-widest uppercase mb-2">👤 Cliente</span>
-              <div className="relative w-[140px] sm:w-[180px] h-[280px] sm:h-[380px] bg-card rounded-[24px] sm:rounded-[32px] border-[2px] sm:border-[3px] border-foreground/10 overflow-hidden shadow-[0_30px_60px_hsla(0,0%,0%,0.4),0_0_60px_hsla(263,70%,58%,0.15)]">
-                <div className="w-[60px] sm:w-[80px] h-4 sm:h-5 bg-background rounded-b-[12px] sm:rounded-b-[16px] mx-auto relative z-20" />
-                <iframe
-                  src="/r/impero-roma?sandbox=true"
-                  className="w-full border-0"
-                  style={{ height: 'calc(100% - 20px)' }}
-                  title="Vista Cliente Reale"
-                  allow="autoplay"
-                />
-              </div>
-            </div>
-
-            {/* Phone 2 — Vista Admin */}
-            <div className="relative flex flex-col items-center">
-              <span className="text-[9px] sm:text-[10px] font-heading font-bold text-accent tracking-widest uppercase mb-2">⚙️ Admin</span>
-              <div className="relative w-[140px] sm:w-[180px] h-[280px] sm:h-[380px] bg-card rounded-[24px] sm:rounded-[32px] border-[2px] sm:border-[3px] border-foreground/10 overflow-hidden shadow-[0_30px_60px_hsla(0,0%,0%,0.4),0_0_60px_hsla(263,70%,58%,0.15)]">
-                <div className="w-[60px] sm:w-[80px] h-4 sm:h-5 bg-background rounded-b-[12px] sm:rounded-b-[16px] mx-auto relative z-20" />
-                <iframe
-                  src="/dashboard?sandbox=true"
-                  className="w-full border-0"
-                  style={{ height: 'calc(100% - 20px)' }}
-                  title="Pannello Admin Reale"
-                  allow="autoplay"
-                />
-              </div>
+            <div className="flex justify-center items-end gap-3 sm:gap-5 relative min-w-max px-4 sm:px-0">
+              <div className="absolute -inset-10 bg-violet-600/10 rounded-[60px] blur-[80px] pointer-events-none" />
+              
+              {[
+                { label: "👤 Cliente", src: "/r/impero-roma?sandbox=true", title: "Vista Cliente" },
+                { label: "⚙️ Admin", src: "/dashboard?sandbox=true", title: "Pannello Admin" },
+                { label: "🍳 Cucina", src: "/kitchen?sandbox=true", title: "Kitchen View" },
+              ].map((phone, i) => (
+                <div key={i} className="relative flex flex-col items-center">
+                  <span className="text-[9px] sm:text-[10px] font-heading font-bold text-accent tracking-widest uppercase mb-2">{phone.label}</span>
+                  <div className="relative w-[110px] sm:w-[160px] lg:w-[150px] h-[220px] sm:h-[340px] lg:h-[320px] bg-card rounded-[20px] sm:rounded-[28px] border-2 border-foreground/10 overflow-hidden shadow-[0_20px_50px_hsla(0,0%,0%,0.4),0_0_40px_hsla(263,70%,58%,0.12)]">
+                    <div className="w-[50px] sm:w-[70px] h-3 sm:h-4 bg-background rounded-b-[10px] sm:rounded-b-[14px] mx-auto relative z-20" />
+                    <div className="w-full overflow-hidden" style={{ height: 'calc(100% - 12px)' }}>
+                      <iframe
+                        src={phone.src}
+                        className="border-0 origin-top-left"
+                        style={{
+                          width: '375px',
+                          height: '667px',
+                          transform: 'scale(0.293)',
+                          transformOrigin: 'top left',
+                        }}
+                        title={phone.title}
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </motion.div>
         </div>
