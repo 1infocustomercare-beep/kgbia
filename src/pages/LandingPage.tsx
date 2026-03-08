@@ -118,8 +118,8 @@ const HeroParallax = ({ navigate, scrollTo }: { navigate: (path: string) => void
           <motion.div className="mt-8 relative lg:hidden w-full flex justify-center"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
             <div className="absolute -inset-8 bg-primary/10 rounded-[40px] blur-[60px] pointer-events-none" />
-            <div className="relative" style={{ width: 221, height: 442 }}>
-              <div style={{ width: 260, height: 520, transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+            <div className="relative overflow-hidden rounded-[32px]" style={{ width: 221, height: 442 }}>
+              <div className="absolute top-0 left-1/2" style={{ width: 260, height: 520, transform: 'translateX(-50%) scale(0.85)', transformOrigin: 'top center' }}>
                 <LivePreview slug="impero-roma" primaryColor="#7C3AED" compact />
               </div>
             </div>
