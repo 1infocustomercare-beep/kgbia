@@ -18,6 +18,7 @@ import {
   Upload, Move, Download
 } from "lucide-react";
 import GuidedDemoOverlay from "./GuidedDemoOverlay";
+import PartnerFullDemo from "./PartnerFullDemo";
 
 // Import real dish images
 import dishBruschetta from "@/assets/dish-bruschetta.jpg";
