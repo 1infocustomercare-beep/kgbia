@@ -176,6 +176,7 @@ const PartnerSandbox = () => {
   const [showWallet, setShowWallet] = useState(false);
   const [showNotifOptIn, setShowNotifOptIn] = useState(false);
   const [tableQR, setTableQR] = useState<number | null>(null);
+  const [fullDemoOpen, setFullDemoOpen] = useState(false);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
