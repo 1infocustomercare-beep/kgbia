@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, forwardRef } from "react";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
   Crown, Check, Calculator, Star, Zap, Shield, Smartphone,
@@ -38,16 +38,22 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; pr
 };
 
 /* Animated blob */
-const Blob = ({ className = "", color = "bg-primary" }: { className?: string; color?: string }) => (
-  <div className={`absolute rounded-full blur-[140px] opacity-[0.18] pointer-events-none ${color} ${className}`} />
+const Blob = forwardRef<HTMLDivElement, { className?: string; color?: string }>(
+  ({ className = "", color = "bg-primary" }, ref) => (
+    <div ref={ref} className={`absolute rounded-full blur-[140px] opacity-[0.18] pointer-events-none ${color} ${className}`} />
+  )
 );
+Blob.displayName = "Blob";
 
 /* Section wrapper */
-const Section = ({ id, children, className = "" }: { id?: string; children: React.ReactNode; className?: string }) => (
-  <section id={id} className={`relative py-16 sm:py-32 px-5 sm:px-6 overflow-hidden ${className}`}>
-    <div className="max-w-6xl mx-auto relative z-10">{children}</div>
-  </section>
+const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string }>(
+  ({ id, children, className = "" }, ref) => (
+    <section ref={ref} id={id} className={`relative py-16 sm:py-32 px-5 sm:px-6 overflow-hidden ${className}`}>
+      <div className="max-w-6xl mx-auto relative z-10">{children}</div>
+    </section>
+  )
 );
+Section.displayName = "Section";
 
 /* Section label */
 const SectionLabel = ({ icon, text }: { icon: React.ReactNode; text: string }) => (
