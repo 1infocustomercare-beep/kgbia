@@ -23,6 +23,7 @@ const PartnerRegister = lazy(() => import("./pages/PartnerRegister"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
+const GuidedSetup = lazy(() => import("./pages/GuidedSetup"));
 
 const queryClient = new QueryClient();
 
@@ -72,6 +73,11 @@ const App = () => (
                 <Route path="/admin/dashboard" element={
                   <ProtectedRoute>
                     <AdminDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/setup" element={
+                  <ProtectedRoute>
+                    <GuidedSetup />
                   </ProtectedRoute>
                 } />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
