@@ -290,7 +290,7 @@ const MoreMenu = ({
       )}
 
       {/* VAULT */}
-      {section === "vault" && (
+      {section === "vault" && can("fiscal_vault") && (
         <div className="space-y-4">
           <div className={`p-4 rounded-2xl border ${vaultConfig?.configured ? "bg-green-500/5 border-green-500/20" : "bg-accent/5 border-accent/20"}`}>
             <div className="flex items-center gap-3">
@@ -401,7 +401,7 @@ const MoreMenu = ({
       )}
 
       {/* CHAT */}
-      {section === "chat" && restaurant && <PrivateChat restaurantId={restaurant.id} isRestaurantView={true} />}
+      {section === "chat" && can("private_chat") && restaurant && <PrivateChat restaurantId={restaurant.id} isRestaurantView={true} />}
 
       {/* BLACKLIST */}
       {section === "blacklist" && (
@@ -445,7 +445,7 @@ const MoreMenu = ({
       )}
 
       {/* AI INVENTORY */}
-      {section === "inventory" && (
+      {section === "inventory" && can("inventory_ai") && (
         <div className="space-y-5">
           <div className="text-center py-2">
             <Package className="w-10 h-10 mx-auto mb-2 text-primary" />
