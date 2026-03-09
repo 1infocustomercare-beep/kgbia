@@ -115,10 +115,6 @@ const MoreMenu = ({
     chat: "private_chat",
     inventory: "inventory_ai",
   };
-  const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
-    { role: "assistant", content: "Benvenuto nella **Cassaforte Fiscale**. Sono Mary. Configura qui le tue chiavi API.\n\nVuoi configurare **Scontrino.it** o **Aruba**?" }
-  ]);
-  const [maryInput, setMaryInput] = useState("");
 
   const gridItems: { id: MoreSection; label: string; icon: React.ReactNode; color: string }[] = [
     { id: "qr", label: "QR Code", icon: <QrCode className="w-6 h-6" />, color: "text-primary" },
