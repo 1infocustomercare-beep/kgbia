@@ -12,6 +12,7 @@ import SubscriptionSection from "@/components/admin/SubscriptionSection";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { generateQRDataUrl, downloadQR } from "@/lib/qr";
+import { BUSINESS_TYPE_OPTIONS, type BusinessType } from "@/lib/business-type";
 import { CreditCard } from "lucide-react";
 
 type MoreSection = "grid" | "qr" | "vault" | "chat" | "blacklist" | "inventory" | "academy" | "settings" | "subscription";
@@ -24,13 +25,22 @@ interface MoreMenuProps {
   setVaultConfig: React.Dispatch<React.SetStateAction<any>>;
   blacklist: any[];
   setBlacklist: React.Dispatch<React.SetStateAction<any[]>>;
-  settingsPhone: string; setSettingsPhone: (v: string) => void;
-  settingsEmail: string; setSettingsEmail: (v: string) => void;
-  settingsAddress: string; setSettingsAddress: (v: string) => void;
-  settingsCity: string; setSettingsCity: (v: string) => void;
+
+  settingsBusinessType: BusinessType;
+  setSettingsBusinessType: (v: BusinessType) => void;
+
+  settingsPhone: string;
+  setSettingsPhone: (v: string) => void;
+  settingsEmail: string;
+  setSettingsEmail: (v: string) => void;
+  settingsAddress: string;
+  setSettingsAddress: (v: string) => void;
+  settingsCity: string;
+  setSettingsCity: (v: string) => void;
   settingsHours: { day: string; hours: string }[];
   setSettingsHours: React.Dispatch<React.SetStateAction<{ day: string; hours: string }[]>>;
-  settingsMinOrder: number; setSettingsMinOrder: (v: number) => void;
+  settingsMinOrder: number;
+  setSettingsMinOrder: (v: number) => void;
   settingsBlockedKeywords: string[];
   setSettingsBlockedKeywords: React.Dispatch<React.SetStateAction<string[]>>;
   policyAccepted: boolean;

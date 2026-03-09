@@ -25,6 +25,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import type { MenuItem } from "@/types/restaurant";
 import { useCart } from "@/context/CartContext";
 import { applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
+import { getBusinessTypeConfig, normalizeBusinessType } from "@/lib/business-type";
 
 const RestaurantPage = () => {
   const { slug } = useParams();
@@ -50,6 +51,9 @@ const RestaurantPage = () => {
     { day: "Domenica", hours: "Chiuso" },
   ];
   const openingHours = dbRestaurant?.opening_hours || defaultHours;
+
+  const businessType = normalizeBusinessType((dbRestaurant as any)?.business_type);
+  const businessConfig = getBusinessTypeConfig(businessType);
 
   const [showSplash, setShowSplash] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
@@ -151,10 +155,10 @@ const RestaurantPage = () => {
 
   const navLinks = [
     { id: "home", label: "Home" },
-    { id: "story", label: "Chi Siamo" },
-    { id: "menu-section", label: "Menù" },
+    { id: "story", label: businessConfig.copy.storyLabel },
+    { id: "menu-section", label: businessConfig.copy.menuLabel },
     { id: "reviews", label: "Recensioni" },
-    { id: "reservation", label: "Prenota" },
+    ...(businessConfig.modules.reservations ? [{ id: "reservation", label: businessConfig.copy.reservationLabel }] : []),
     { id: "contact", label: "Contatti" },
   ];
 
@@ -626,133 +630,186 @@ const RestaurantPage = () => {
       </section>
 
       {/* ====== LOYALTY WALLET ====== */}
-      <section className="py-12 px-4 sm:px-5 bg-card/30">
-        <div className="max-w-md mx-auto">
-          <motion.div className="text-center mb-6"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Programma Fedeltà</span>
-            <div className="flex items-center justify-center gap-2 mt-2">
-              <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground">I Tuoi Premi</h2>
-              <InfoGuide
-                title="Programma Fedeltà"
-                description="Accumula punti ad ogni ordine e sblocca premi esclusivi. Aggiungi la card al tuo wallet per non perdere mai i tuoi punti."
-                steps={[
-                  "Guadagni punti automaticamente ad ogni ordine",
-                  "Raggiungi le soglie per riscattare i premi",
-                  "Tocca 'Aggiungi al Wallet' per la card digitale",
-                ]}
-              />
-            </div>
-          </motion.div>
-          <LoyaltyWallet />
-        </div>
-      </section>
+      {businessConfig.modules.loyalty && (
+        <section className="py-12 px-4 sm:px-5 bg-card/30">
+          <div className="max-w-md mx-auto">
+            <motion.div
+              className="text-center mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Programma Fedeltà</span>
+              <div className="flex items-center justify-center gap-2 mt-2">
+                <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground">I Tuoi Premi</h2>
+                <InfoGuide
+                  title="Programma Fedeltà"
+                  description="Accumula punti ad ogni ordine e sblocca premi esclusivi. Aggiungi la card al tuo wallet per non perdere mai i tuoi punti."
+                  steps={[
+                    "Guadagni punti automaticamente ad ogni ordine",
+                    "Raggiungi le soglie per riscattare i premi",
+                    "Tocca 'Aggiungi al Wallet' per la card digitale",
+                  ]}
+                />
+              </div>
+            </motion.div>
+            <LoyaltyWallet />
+          </div>
+        </section>
+      )}
 
       {/* ====== 5. PRENOTAZIONE TAVOLO ====== */}
-      <section id="reservation" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5 bg-card/30">
-        <div className="max-w-3xl mx-auto">
-          <motion.div className="text-center mb-8 sm:mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
-            <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">Riserva il Tuo Tavolo</span>
-            <div className="flex items-center justify-center gap-2">
-              <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Prenotazione</h2>
-              <InfoGuide
-                title="Prenota un Tavolo"
-                description="Riserva il tuo tavolo in pochi secondi. Riceverai una conferma telefonica dal ristorante."
-                steps={[
-                  "Seleziona data e ora desiderata",
-                  "Indica il numero di ospiti",
-                  "Inserisci nome e telefono per la conferma",
-                ]}
-              />
-            </div>
-            <p className="mt-3 text-sm text-muted-foreground max-w-md mx-auto">
-              Prenota il tuo tavolo in pochi secondi. Compila il form e ti confermeremo via telefono.
-            </p>
-          </motion.div>
+      {businessConfig.modules.reservations && (
+        <section id="reservation" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5 bg-card/30">
+          <div className="max-w-3xl mx-auto">
+            <motion.div
+              className="text-center mb-8 sm:mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium">{businessConfig.copy.reservationKicker}</span>
+              <div className="flex items-center justify-center gap-2">
+                <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">{businessConfig.copy.reservationTitle}</h2>
+                <InfoGuide
+                  title="Prenota"
+                  description="Invia una richiesta: il locale ti contatterà per conferma."
+                  steps={[
+                    "Seleziona data e ora desiderata",
+                    "Indica il numero di ospiti",
+                    "Inserisci nome e telefono per la conferma",
+                  ]}
+                />
+              </div>
+              <p className="mt-3 text-sm text-muted-foreground max-w-md mx-auto">{businessConfig.copy.reservationDescription}</p>
+            </motion.div>
 
-          <motion.form
-            onSubmit={handleReservation}
-            className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl glass border border-border/30 space-y-5"
-            initial={{ opacity: 0, y: 30, scale: 0.97 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}>
-
-            {resSubmitted ? (
-              <motion.div className="text-center py-8" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-                <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-4">
-                  <CalendarDays className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="font-display text-lg font-bold text-foreground">Prenotazione Inviata!</h3>
-                <p className="text-sm text-muted-foreground mt-2">Ti contatteremo a breve per confermare.</p>
-              </motion.div>
-            ) : (
-              <>
-                {/* Row: Date + Time */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Data</label>
-                    <input type="date" required value={resDate} onChange={e => setResDate(e.target.value)}
-                      min={new Date().toISOString().split("T")[0]}
-                      className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all" />
+            <motion.form
+              onSubmit={handleReservation}
+              className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl glass border border-border/30 space-y-5"
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {resSubmitted ? (
+                <motion.div className="text-center py-8" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+                  <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-4">
+                    <CalendarDays className="w-7 h-7 text-primary" />
                   </div>
+                  <h3 className="font-display text-lg font-bold text-foreground">Richiesta inviata!</h3>
+                  <p className="text-sm text-muted-foreground mt-2">Ti contatteremo a breve per confermare.</p>
+                </motion.div>
+              ) : (
+                <>
+                  {/* Row: Date + Time */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Data</label>
+                      <input
+                        type="date"
+                        required
+                        value={resDate}
+                        onChange={(e) => setResDate(e.target.value)}
+                        min={new Date().toISOString().split("T")[0]}
+                        className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Ora</label>
+                      <select
+                        required
+                        value={resTime}
+                        onChange={(e) => setResTime(e.target.value)}
+                        className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all appearance-none"
+                      >
+                        <option value="">Seleziona orario</option>
+                        {[
+                          "12:00",
+                          "12:30",
+                          "13:00",
+                          "13:30",
+                          "14:00",
+                          "14:30",
+                          "19:00",
+                          "19:30",
+                          "20:00",
+                          "20:30",
+                          "21:00",
+                          "21:30",
+                          "22:00",
+                          "22:30",
+                          "23:00",
+                        ].map((t) => (
+                          <option key={t} value={t}>
+                            {t}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Guests */}
                   <div>
-                    <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Ora</label>
-                    <select required value={resTime} onChange={e => setResTime(e.target.value)}
-                      className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all appearance-none">
-                      <option value="">Seleziona orario</option>
-                      {["12:00","12:30","13:00","13:30","14:00","14:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00"].map(t => (
-                        <option key={t} value={t}>{t}</option>
+                    <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Numero Ospiti</label>
+                    <div className="flex gap-2 flex-wrap">
+                      {["1", "2", "3", "4", "5", "6", "7", "8+"].map((n) => (
+                        <button
+                          type="button"
+                          key={n}
+                          onClick={() => setResGuests(n)}
+                          className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
+                          ${resGuests === n ? "bg-primary text-primary-foreground" : "bg-background border border-border/40 text-muted-foreground hover:border-primary/40"}`}
+                        >
+                          {n}
+                        </button>
                       ))}
-                    </select>
+                    </div>
                   </div>
-                </div>
 
-                {/* Guests */}
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Numero Ospiti</label>
-                  <div className="flex gap-2 flex-wrap">
-                    {["1","2","3","4","5","6","7","8+"].map(n => (
-                      <button type="button" key={n} onClick={() => setResGuests(n)}
-                        className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
-                          ${resGuests === n ? "bg-primary text-primary-foreground" : "bg-background border border-border/40 text-muted-foreground hover:border-primary/40"}`}>
-                        {n}
-                      </button>
-                    ))}
+                  {/* Row: Name + Phone */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Nome</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Mario Rossi"
+                        value={resName}
+                        onChange={(e) => setResName(e.target.value)}
+                        maxLength={100}
+                        className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Telefono</label>
+                      <input
+                        type="tel"
+                        required
+                        placeholder="+39 333 1234567"
+                        value={resPhone}
+                        onChange={(e) => setResPhone(e.target.value)}
+                        maxLength={20}
+                        className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                {/* Row: Name + Phone */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Nome</label>
-                    <input type="text" required placeholder="Mario Rossi" value={resName} onChange={e => setResName(e.target.value)}
-                      maxLength={100}
-                      className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-foreground mb-1.5 tracking-wider uppercase">Telefono</label>
-                    <input type="tel" required placeholder="+39 333 1234567" value={resPhone} onChange={e => setResPhone(e.target.value)}
-                      maxLength={20}
-                      className="w-full h-11 px-3 rounded-xl bg-background border border-border/40 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all" />
-                  </div>
-                </div>
-
-                <motion.button type="submit"
-                  className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold tracking-[0.15em] uppercase hover:bg-primary/90 transition-colors"
-                  whileTap={{ scale: 0.98 }}>
-                  <CalendarDays className="w-4 h-4 inline-block mr-2 -mt-0.5" />
-                  Prenota Ora
-                </motion.button>
-              </>
-            )}
-          </motion.form>
-        </div>
-      </section>
+                  <motion.button
+                    type="submit"
+                    className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold tracking-[0.15em] uppercase hover:bg-primary/90 transition-colors"
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <CalendarDays className="w-4 h-4 inline-block mr-2 -mt-0.5" />
+                    {businessConfig.copy.reservationCta}
+                  </motion.button>
+                </>
+              )}
+            </motion.form>
+          </div>
+        </section>
+      )}
 
       {/* ====== FOOTER ====== */}
       <motion.footer className="border-t border-border/30 py-6 sm:py-10 px-4 sm:px-5"
