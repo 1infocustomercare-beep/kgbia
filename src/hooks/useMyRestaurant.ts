@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
+import { normalizeBusinessType, type BusinessType } from "@/lib/business-type";
 
 interface RestaurantInfo {
   id: string;
@@ -21,6 +22,7 @@ interface RestaurantInfo {
   policy_accepted_at: string | null;
   is_blocked: boolean;
   blocked_reason: string | null;
+  business_type: BusinessType;
 }
 
 export function useMyRestaurant() {
@@ -34,17 +36,25 @@ export function useMyRestaurant() {
       return;
     }
 
+    const mapRestaurant = (r: any): RestaurantInfo => ({
+      ...r,
+      business_type: normalizeBusinessType(r.business_type),
+      opening_hours: r.opening_hours as any,
+    });
+
     const fetch = async () => {
       // Check if user owns a restaurant (use maybeSingle to avoid 406)
       const { data } = await supabase
         .from("restaurants")
-        .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours, languages, min_order_amount, blocked_keywords, policy_accepted, policy_accepted_at, is_blocked, blocked_reason")
+        .select(
+          "id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours, languages, min_order_amount, blocked_keywords, policy_accepted, policy_accepted_at, is_blocked, blocked_reason, business_type",
+        )
         .eq("owner_id", user.id)
         .limit(1)
         .maybeSingle();
 
       if (data) {
-        setRestaurant({ ...data, opening_hours: data.opening_hours as any });
+        setRestaurant(mapRestaurant(data));
       } else {
         // Check memberships
         const { data: membership } = await supabase
@@ -57,11 +67,13 @@ export function useMyRestaurant() {
         if (membership) {
           const { data: rest } = await supabase
             .from("restaurants")
-            .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours, languages, min_order_amount, blocked_keywords, policy_accepted, policy_accepted_at, is_blocked, blocked_reason")
+            .select(
+              "id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours, languages, min_order_amount, blocked_keywords, policy_accepted, policy_accepted_at, is_blocked, blocked_reason, business_type",
+            )
             .eq("id", membership.restaurant_id)
             .maybeSingle();
 
-          if (rest) setRestaurant({ ...rest, opening_hours: rest.opening_hours as any });
+          if (rest) setRestaurant(mapRestaurant(rest));
         }
       }
       setLoading(false);

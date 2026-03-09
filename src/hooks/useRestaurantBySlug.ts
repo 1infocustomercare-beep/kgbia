@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { MenuItem } from "@/types/restaurant";
+import { normalizeBusinessType, type BusinessType } from "@/lib/business-type";
 
 interface RestaurantData {
   id: string;
@@ -19,6 +20,7 @@ interface RestaurantData {
   blocked_keywords: string[] | null;
   is_blocked: boolean;
   blocked_reason: string | null;
+  business_type: BusinessType;
 }
 
 export function useRestaurantBySlug(slug: string | undefined) {
@@ -37,7 +39,9 @@ export function useRestaurantBySlug(slug: string | undefined) {
       // Fetch restaurant
       const { data: rest, error: restErr } = await supabase
         .from("restaurants")
-        .select("id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours, languages, min_order_amount, blocked_keywords, is_blocked, blocked_reason")
+        .select(
+          "id, name, slug, logo_url, tagline, primary_color, phone, address, city, email, opening_hours, languages, min_order_amount, blocked_keywords, is_blocked, blocked_reason, business_type",
+        )
         .eq("slug", slug)
         .eq("is_active", true)
         .maybeSingle();
@@ -48,7 +52,11 @@ export function useRestaurantBySlug(slug: string | undefined) {
         return;
       }
 
-      setRestaurant({ ...rest, opening_hours: rest.opening_hours as any });
+      setRestaurant({
+        ...(rest as any),
+        business_type: normalizeBusinessType((rest as any).business_type),
+        opening_hours: (rest as any).opening_hours as any,
+      });
 
       // Fetch menu items
       const { data: items } = await supabase
@@ -83,18 +91,12 @@ export function useRestaurantBySlug(slug: string | undefined) {
     // Realtime subscription for menu, restaurant, and review updates
     const channel = supabase
       .channel(`restaurant-${slug}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "menu_items" },
-        () => { if (slug) fetchData(); }
-      )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "restaurants" },
-        (payload) => {
-          if ((payload.new as any)?.slug === slug) fetchData();
-        }
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "menu_items" }, () => {
+        if (slug) fetchData();
+      })
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "restaurants" }, (payload) => {
+        if ((payload.new as any)?.slug === slug) fetchData();
+      })
       .subscribe();
 
     return () => {
