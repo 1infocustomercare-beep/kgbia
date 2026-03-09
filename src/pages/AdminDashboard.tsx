@@ -433,14 +433,24 @@ const AdminDashboard = () => {
               setVaultConfig={setVaultConfig}
               blacklist={blacklist}
               setBlacklist={setBlacklist}
-              settingsPhone={settingsPhone} setSettingsPhone={setSettingsPhone}
-              settingsEmail={settingsEmail} setSettingsEmail={setSettingsEmail}
-              settingsAddress={settingsAddress} setSettingsAddress={setSettingsAddress}
-              settingsCity={settingsCity} setSettingsCity={setSettingsCity}
-              settingsHours={settingsHours} setSettingsHours={setSettingsHours}
-              settingsMinOrder={settingsMinOrder} setSettingsMinOrder={setSettingsMinOrder}
-              settingsBlockedKeywords={settingsBlockedKeywords} setSettingsBlockedKeywords={setSettingsBlockedKeywords}
-              policyAccepted={policyAccepted} setPolicyAccepted={setPolicyAccepted}
+              settingsBusinessType={settingsBusinessType}
+              setSettingsBusinessType={setSettingsBusinessType}
+              settingsPhone={settingsPhone}
+              setSettingsPhone={setSettingsPhone}
+              settingsEmail={settingsEmail}
+              setSettingsEmail={setSettingsEmail}
+              settingsAddress={settingsAddress}
+              setSettingsAddress={setSettingsAddress}
+              settingsCity={settingsCity}
+              setSettingsCity={setSettingsCity}
+              settingsHours={settingsHours}
+              setSettingsHours={setSettingsHours}
+              settingsMinOrder={settingsMinOrder}
+              setSettingsMinOrder={setSettingsMinOrder}
+              settingsBlockedKeywords={settingsBlockedKeywords}
+              setSettingsBlockedKeywords={setSettingsBlockedKeywords}
+              policyAccepted={policyAccepted}
+              setPolicyAccepted={setPolicyAccepted}
               handleSaveSettings={handleSaveSettings}
               settingsSaving={settingsSaving}
               menuItems={menuItems}
