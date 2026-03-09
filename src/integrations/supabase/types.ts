@@ -1203,6 +1203,7 @@ export type Database = {
           address: string | null
           blocked_keywords: string[] | null
           blocked_reason: string | null
+          business_type: Database["public"]["Enums"]["business_type"]
           city: string | null
           created_at: string
           delivery_enabled: boolean
@@ -1234,6 +1235,7 @@ export type Database = {
           address?: string | null
           blocked_keywords?: string[] | null
           blocked_reason?: string | null
+          business_type?: Database["public"]["Enums"]["business_type"]
           city?: string | null
           created_at?: string
           delivery_enabled?: boolean
@@ -1265,6 +1267,7 @@ export type Database = {
           address?: string | null
           blocked_keywords?: string[] | null
           blocked_reason?: string | null
+          business_type?: Database["public"]["Enums"]["business_type"]
           city?: string | null
           created_at?: string
           delivery_enabled?: boolean
@@ -1450,6 +1453,7 @@ export type Database = {
         | "customer"
         | "partner"
         | "team_leader"
+      business_type: "restaurant" | "pizzeria" | "bar" | "bakery" | "sushi"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1585,6 +1589,7 @@ export const Constants = {
         "partner",
         "team_leader",
       ],
+      business_type: ["restaurant", "pizzeria", "bar", "bakery", "sushi"],
     },
   },
 } as const

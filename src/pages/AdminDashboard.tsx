@@ -11,6 +11,7 @@ import restaurantLogo from "@/assets/restaurant-logo.png";
 import { toast } from "@/hooks/use-toast";
 import { useOrderNotifications } from "@/hooks/useOrderNotifications";
 import { extractDominantColor, hslToHex, applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
+import { BUSINESS_TYPE_OPTIONS, getBusinessTypeConfig, normalizeBusinessType, type BusinessType } from "@/lib/business-type";
 
 import DashboardOverview from "@/components/admin/DashboardOverview";
 import StudioTab from "@/components/admin/StudioTab";
@@ -75,7 +76,11 @@ const AdminDashboard = () => {
   const [newRestName, setNewRestName] = useState("");
   const [newRestSlug, setNewRestSlug] = useState("");
   const [newRestCity, setNewRestCity] = useState("");
+  const [newRestBusinessType, setNewRestBusinessType] = useState<BusinessType>("restaurant");
   const [creatingRest, setCreatingRest] = useState(false);
+
+  // Business type (adaptive UI)
+  const [settingsBusinessType, setSettingsBusinessType] = useState<BusinessType>("restaurant");
 
   const restaurantSlug = restaurant?.slug || "impero-roma";
   const restaurantName = restaurant?.name || "Impero Roma";
@@ -91,16 +96,23 @@ const AdminDashboard = () => {
     if (restaurant.opening_hours) setSettingsHours(restaurant.opening_hours);
     if (restaurant.languages) setSettingsLanguages(restaurant.languages);
     setSettingsTagline(restaurant.tagline || "");
+
+    const bt = normalizeBusinessType((restaurant as any).business_type);
+    setSettingsBusinessType(bt);
+
     const pc = restaurant.primary_color || "#C8963E";
     setSettingsPrimaryColor(pc);
     applyBrandTheme(pc);
+
     setSettingsMinOrder(restaurant.min_order_amount || 0);
     if (restaurant.blocked_keywords) setSettingsBlockedKeywords(restaurant.blocked_keywords);
     setPolicyAccepted(restaurant.policy_accepted || false);
     setDeliveryEnabled((restaurant as any).delivery_enabled ?? true);
     setTakeawayEnabled((restaurant as any).takeaway_enabled ?? true);
     setTableOrdersEnabled((restaurant as any).table_orders_enabled ?? true);
-    return () => { resetBrandTheme(); };
+    return () => {
+      resetBrandTheme();
+    };
   }, [restaurant]);
 
   // Fetch all data
@@ -204,14 +216,24 @@ const AdminDashboard = () => {
   const handleSaveSettings = async () => {
     if (!restaurant) return;
     setSettingsSaving(true);
-    await supabase.from("restaurants").update({
-      phone: settingsPhone.trim() || null, email: settingsEmail.trim() || null,
-      address: settingsAddress.trim() || null, city: settingsCity.trim() || null,
-      tagline: settingsTagline.trim() || null, primary_color: settingsPrimaryColor.trim() || null,
-      opening_hours: settingsHours as any, languages: settingsLanguages as any,
-      min_order_amount: settingsMinOrder, blocked_keywords: settingsBlockedKeywords as any,
-      policy_accepted: policyAccepted, policy_accepted_at: policyAccepted ? new Date().toISOString() : null,
-    } as any).eq("id", restaurant.id);
+    await supabase
+      .from("restaurants")
+      .update({
+        business_type: settingsBusinessType as any,
+        phone: settingsPhone.trim() || null,
+        email: settingsEmail.trim() || null,
+        address: settingsAddress.trim() || null,
+        city: settingsCity.trim() || null,
+        tagline: settingsTagline.trim() || null,
+        primary_color: settingsPrimaryColor.trim() || null,
+        opening_hours: settingsHours as any,
+        languages: settingsLanguages as any,
+        min_order_amount: settingsMinOrder,
+        blocked_keywords: settingsBlockedKeywords as any,
+        policy_accepted: policyAccepted,
+        policy_accepted_at: policyAccepted ? new Date().toISOString() : null,
+      } as any)
+      .eq("id", restaurant.id);
     setSettingsSaving(false);
     toast({ title: "Impostazioni salvate" });
   };
@@ -220,9 +242,29 @@ const AdminDashboard = () => {
     if (!user || !newRestName.trim() || !newRestSlug.trim()) return;
     setCreatingRest(true);
     const slug = newRestSlug.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
-    const { error } = await supabase.from("restaurants").insert({ name: newRestName.trim(), slug, city: newRestCity.trim() || null, owner_id: user.id });
-    if (error) { toast({ title: "Errore", description: error.message, variant: "destructive" }); }
-    else { toast({ title: "Ristorante creato!" }); await supabase.from("user_roles").upsert({ user_id: user.id, role: "restaurant_admin" as any }, { onConflict: "user_id,role" }); window.location.reload(); }
+
+    const cfg = getBusinessTypeConfig(newRestBusinessType);
+
+    const { error } = await supabase.from("restaurants").insert({
+      name: newRestName.trim(),
+      slug,
+      city: newRestCity.trim() || null,
+      owner_id: user.id,
+      business_type: newRestBusinessType as any,
+      delivery_enabled: cfg.channels.delivery,
+      takeaway_enabled: cfg.channels.takeaway,
+      table_orders_enabled: cfg.channels.tableOrders,
+    } as any);
+
+    if (error) {
+      toast({ title: "Errore", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Attività creata!", description: `Preset: ${cfg.label}` });
+      await supabase
+        .from("user_roles")
+        .upsert({ user_id: user.id, role: "restaurant_admin" as any }, { onConflict: "user_id,role" });
+      window.location.reload();
+    }
     setCreatingRest(false);
   };
 
@@ -391,14 +433,24 @@ const AdminDashboard = () => {
               setVaultConfig={setVaultConfig}
               blacklist={blacklist}
               setBlacklist={setBlacklist}
-              settingsPhone={settingsPhone} setSettingsPhone={setSettingsPhone}
-              settingsEmail={settingsEmail} setSettingsEmail={setSettingsEmail}
-              settingsAddress={settingsAddress} setSettingsAddress={setSettingsAddress}
-              settingsCity={settingsCity} setSettingsCity={setSettingsCity}
-              settingsHours={settingsHours} setSettingsHours={setSettingsHours}
-              settingsMinOrder={settingsMinOrder} setSettingsMinOrder={setSettingsMinOrder}
-              settingsBlockedKeywords={settingsBlockedKeywords} setSettingsBlockedKeywords={setSettingsBlockedKeywords}
-              policyAccepted={policyAccepted} setPolicyAccepted={setPolicyAccepted}
+              settingsBusinessType={settingsBusinessType}
+              setSettingsBusinessType={setSettingsBusinessType}
+              settingsPhone={settingsPhone}
+              setSettingsPhone={setSettingsPhone}
+              settingsEmail={settingsEmail}
+              setSettingsEmail={setSettingsEmail}
+              settingsAddress={settingsAddress}
+              setSettingsAddress={setSettingsAddress}
+              settingsCity={settingsCity}
+              setSettingsCity={setSettingsCity}
+              settingsHours={settingsHours}
+              setSettingsHours={setSettingsHours}
+              settingsMinOrder={settingsMinOrder}
+              setSettingsMinOrder={setSettingsMinOrder}
+              settingsBlockedKeywords={settingsBlockedKeywords}
+              setSettingsBlockedKeywords={setSettingsBlockedKeywords}
+              policyAccepted={policyAccepted}
+              setPolicyAccepted={setPolicyAccepted}
               handleSaveSettings={handleSaveSettings}
               settingsSaving={settingsSaving}
               menuItems={menuItems}
