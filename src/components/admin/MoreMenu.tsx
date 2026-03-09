@@ -187,14 +187,21 @@ const MoreMenu = ({
           />
         </div>
         <div className="grid grid-cols-3 gap-3">
-          {gridItems.map(item => (
-            <motion.button key={item.id} onClick={() => setSection(item.id)}
-              className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/30 active:scale-[0.95] transition-all min-h-[90px]"
-              whileTap={{ scale: 0.95 }}>
-              <span className={item.color}>{item.icon}</span>
-              <span className="text-[11px] font-medium text-foreground text-center leading-tight">{item.label}</span>
-            </motion.button>
-          ))}
+          {gridItems.map(item => {
+            const featureKey = TOOL_FEATURE_MAP[item.id];
+            const locked = featureKey ? !can(featureKey) : false;
+            return (
+              <motion.button key={item.id} onClick={() => setSection(item.id)}
+                className={`flex flex-col items-center gap-2 p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/30 active:scale-[0.95] transition-all min-h-[90px] relative ${locked ? "opacity-60" : ""}`}
+                whileTap={{ scale: 0.95 }}>
+                {locked && (
+                  <span className="absolute top-2 right-2 text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/20 text-primary">PRO</span>
+                )}
+                <span className={item.color}>{item.icon}</span>
+                <span className="text-[11px] font-medium text-foreground text-center leading-tight">{item.label}</span>
+              </motion.button>
+            );
+          })}
         </div>
       </motion.div>
     );
