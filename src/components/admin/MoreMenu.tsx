@@ -9,11 +9,14 @@ import {
 import InfoGuide from "@/components/ui/info-guide";
 import PrivateChat from "@/components/restaurant/PrivateChat";
 import SubscriptionSection from "@/components/admin/SubscriptionSection";
+import UpgradePrompt from "@/components/admin/UpgradePrompt";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 import { BUSINESS_TYPE_OPTIONS, type BusinessType } from "@/lib/business-type";
 import { CreditCard } from "lucide-react";
+import { useSubscription } from "@/hooks/useSubscription";
+import type { FeatureKey } from "@/lib/subscription-plans";
 
 type MoreSection = "grid" | "qr" | "vault" | "chat" | "blacklist" | "inventory" | "academy" | "settings" | "subscription";
 
@@ -104,6 +107,15 @@ const MoreMenu = ({
   ]);
   const [maryInput, setMaryInput] = useState("");
 
+  const { can, requiredPlanFor } = useSubscription(restaurant?.id);
+
+  // Map grid items to feature keys for plan gating
+  const TOOL_FEATURE_MAP: Partial<Record<MoreSection, FeatureKey>> = {
+    vault: "fiscal_vault",
+    chat: "private_chat",
+    inventory: "inventory_ai",
+  };
+
   const gridItems: { id: MoreSection; label: string; icon: React.ReactNode; color: string }[] = [
     { id: "qr", label: "QR Code", icon: <QrCode className="w-6 h-6" />, color: "text-primary" },
     { id: "vault", label: "Vault Fiscale", icon: <Lock className="w-6 h-6" />, color: "text-green-400" },
@@ -175,14 +187,21 @@ const MoreMenu = ({
           />
         </div>
         <div className="grid grid-cols-3 gap-3">
-          {gridItems.map(item => (
-            <motion.button key={item.id} onClick={() => setSection(item.id)}
-              className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/30 active:scale-[0.95] transition-all min-h-[90px]"
-              whileTap={{ scale: 0.95 }}>
-              <span className={item.color}>{item.icon}</span>
-              <span className="text-[11px] font-medium text-foreground text-center leading-tight">{item.label}</span>
-            </motion.button>
-          ))}
+          {gridItems.map(item => {
+            const featureKey = TOOL_FEATURE_MAP[item.id];
+            const locked = featureKey ? !can(featureKey) : false;
+            return (
+              <motion.button key={item.id} onClick={() => setSection(item.id)}
+                className={`flex flex-col items-center gap-2 p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/30 active:scale-[0.95] transition-all min-h-[90px] relative ${locked ? "opacity-60" : ""}`}
+                whileTap={{ scale: 0.95 }}>
+                {locked && (
+                  <span className="absolute top-2 right-2 text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/20 text-primary">PRO</span>
+                )}
+                <span className={item.color}>{item.icon}</span>
+                <span className="text-[11px] font-medium text-foreground text-center leading-tight">{item.label}</span>
+              </motion.button>
+            );
+          })}
         </div>
       </motion.div>
     );
@@ -191,6 +210,21 @@ const MoreMenu = ({
   return (
     <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <BackButton />
+
+      {/* Plan-gated section check */}
+      {(() => {
+        const featureKey = TOOL_FEATURE_MAP[section];
+        if (featureKey && !can(featureKey)) {
+          return (
+            <UpgradePrompt
+              feature={featureKey}
+              requiredPlan={requiredPlanFor(featureKey)}
+              onUpgrade={() => setSection("subscription")}
+            />
+          );
+        }
+        return null;
+      })()}
 
       {/* QR */}
       {section === "qr" && (
@@ -256,7 +290,7 @@ const MoreMenu = ({
       )}
 
       {/* VAULT */}
-      {section === "vault" && (
+      {section === "vault" && can("fiscal_vault") && (
         <div className="space-y-4">
           <div className={`p-4 rounded-2xl border ${vaultConfig?.configured ? "bg-green-500/5 border-green-500/20" : "bg-accent/5 border-accent/20"}`}>
             <div className="flex items-center gap-3">
@@ -367,7 +401,7 @@ const MoreMenu = ({
       )}
 
       {/* CHAT */}
-      {section === "chat" && restaurant && <PrivateChat restaurantId={restaurant.id} isRestaurantView={true} />}
+      {section === "chat" && can("private_chat") && restaurant && <PrivateChat restaurantId={restaurant.id} isRestaurantView={true} />}
 
       {/* BLACKLIST */}
       {section === "blacklist" && (
@@ -411,7 +445,7 @@ const MoreMenu = ({
       )}
 
       {/* AI INVENTORY */}
-      {section === "inventory" && (
+      {section === "inventory" && can("inventory_ai") && (
         <div className="space-y-5">
           <div className="text-center py-2">
             <Package className="w-10 h-10 mx-auto mb-2 text-primary" />
