@@ -277,33 +277,10 @@ const AdminDashboard = () => {
     </div>
   );
 
-  if (!restaurant) return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
-      <motion.div className="w-full max-w-sm space-y-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex flex-col items-center">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-            <UtensilsCrossed className="w-8 h-8 text-primary" />
-          </div>
-          <h1 className="text-2xl font-display font-bold text-gold-gradient">Crea il tuo Ristorante</h1>
-        </div>
-        <div className="space-y-3">
-          <input type="text" value={newRestName} onChange={e => { setNewRestName(e.target.value); setNewRestSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")); }}
-            placeholder="Nome ristorante" className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base min-h-[44px]" />
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">/r/</span>
-            <input type="text" value={newRestSlug} onChange={e => setNewRestSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
-              placeholder="slug" className="flex-1 px-4 py-3 rounded-xl bg-secondary text-foreground font-mono text-base min-h-[44px]" />
-          </div>
-          <input type="text" value={newRestCity} onChange={e => setNewRestCity(e.target.value)}
-            placeholder="Città" className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base min-h-[44px]" />
-        </div>
-        <motion.button onClick={handleCreateRestaurant} disabled={!newRestName.trim() || !newRestSlug.trim() || creatingRest}
-          className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold gold-glow disabled:opacity-50 min-h-[48px]"
-          whileTap={{ scale: 0.97 }}>{creatingRest ? "Creazione..." : "Crea il tuo Impero"}</motion.button>
-        <button onClick={handleLogout} className="w-full text-center text-sm text-muted-foreground">Esci</button>
-      </motion.div>
-    </div>
-  );
+  if (!restaurant) {
+    navigate("/setup");
+    return null;
+  }
 
   const bottomTabs: { id: MainTab; label: string; icon: React.ReactNode }[] = [
     { id: "dashboard", label: "Home", icon: <LayoutDashboard className="w-5 h-5" /> },

@@ -9,11 +9,14 @@ import {
 import InfoGuide from "@/components/ui/info-guide";
 import PrivateChat from "@/components/restaurant/PrivateChat";
 import SubscriptionSection from "@/components/admin/SubscriptionSection";
+import UpgradePrompt from "@/components/admin/UpgradePrompt";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 import { BUSINESS_TYPE_OPTIONS, type BusinessType } from "@/lib/business-type";
 import { CreditCard } from "lucide-react";
+import { useSubscription } from "@/hooks/useSubscription";
+import type { FeatureKey } from "@/lib/subscription-plans";
 
 type MoreSection = "grid" | "qr" | "vault" | "chat" | "blacklist" | "inventory" | "academy" | "settings" | "subscription";
 
@@ -99,6 +102,19 @@ const MoreMenu = ({
   const [inventoryLoading, setInventoryLoading] = useState(false);
   const [inventoryResult, setInventoryResult] = useState<any>(null);
   const [settingsNewKeyword, setSettingsNewKeyword] = useState("");
+  const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
+    { role: "assistant", content: "Benvenuto nella **Cassaforte Fiscale**. Sono Mary. Configura qui le tue chiavi API.\n\nVuoi configurare **Scontrino.it** o **Aruba**?" }
+  ]);
+  const [maryInput, setMaryInput] = useState("");
+
+  const { can, requiredPlanFor } = useSubscription(restaurant?.id);
+
+  // Map grid items to feature keys for plan gating
+  const TOOL_FEATURE_MAP: Partial<Record<MoreSection, FeatureKey>> = {
+    vault: "fiscal_vault",
+    chat: "private_chat",
+    inventory: "inventory_ai",
+  };
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
     { role: "assistant", content: "Benvenuto nella **Cassaforte Fiscale**. Sono Mary. Configura qui le tue chiavi API.\n\nVuoi configurare **Scontrino.it** o **Aruba**?" }
   ]);
