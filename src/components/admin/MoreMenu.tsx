@@ -211,6 +211,21 @@ const MoreMenu = ({
     <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <BackButton />
 
+      {/* Plan-gated section check */}
+      {(() => {
+        const featureKey = TOOL_FEATURE_MAP[section];
+        if (featureKey && !can(featureKey)) {
+          return (
+            <UpgradePrompt
+              feature={featureKey}
+              requiredPlan={requiredPlanFor(featureKey)}
+              onUpgrade={() => setSection("subscription")}
+            />
+          );
+        }
+        return null;
+      })()}
+
       {/* QR */}
       {section === "qr" && (
         <div className="space-y-5">
