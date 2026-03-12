@@ -223,7 +223,7 @@
 
   /* ═══ COUNTER CARD ═══ */
   .counter-card {
-    background: hsla(222, 14%, 8%, 0.6);
+    background: hsla(260, 18%, 8%, 0.6);
     backdrop-filter: blur(20px);
     border: 1px solid hsla(210, 40%, 97%, 0.06);
     position: relative;
@@ -234,13 +234,13 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, hsla(217, 91%, 60%, 0.04) 0%, transparent 50%);
+    background: linear-gradient(135deg, hsla(265, 85%, 65%, 0.04) 0%, transparent 50%);
     pointer-events: none;
   }
 
   /* ═══ NEON TEXT ═══ */
   .neon-text {
-    text-shadow: 0 0 20px hsla(217, 91%, 60%, 0.4), 0 0 60px hsla(217, 91%, 60%, 0.15);
+    text-shadow: 0 0 20px hsla(265, 85%, 65%, 0.4), 0 0 60px hsla(280, 80%, 60%, 0.15);
   }
 
   /* ═══ FUTURISTIC CARD ═══ */
