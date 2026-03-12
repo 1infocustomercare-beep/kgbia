@@ -7,7 +7,7 @@ import {
   Play, ChevronDown, HelpCircle
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import demoVideo from "@/assets/demo-app-video.mp4";
+import partnerRecruitVideo from "@/assets/video-partner-recruit.mp4";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -471,13 +471,13 @@ const PartnerRegister = () => {
             <p className="text-sm text-muted-foreground mb-8 max-w-lg mx-auto">
               Guarda il video per scoprire come i nostri Partner chiudono vendite e guadagnano commissioni high-ticket.
             </p>
-            <div className="rounded-2xl overflow-hidden border border-border/30 glass">
+            <div className="rounded-2xl overflow-hidden border border-border/30 glass max-w-[360px] mx-auto">
               <video
                 controls
                 playsInline
                 preload="metadata"
-                className="w-full aspect-video bg-card"
-                src={demoVideo}
+                className="w-full aspect-[9/16] bg-card object-cover"
+                src={partnerRecruitVideo}
               />
             </div>
           </div>
