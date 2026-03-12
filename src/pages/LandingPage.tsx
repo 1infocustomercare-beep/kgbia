@@ -292,9 +292,9 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Ogni mese, <span className="text-vibrant-gradient">regali migliaia</span> di euro
           </motion.h2>
-          <motion.p className="text-foreground/45 max-w-[500px] mx-auto leading-[1.7] text-sm"
+          <motion.p className="text-foreground/45 max-w-[550px] mx-auto leading-[1.7] text-sm"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Le piattaforme di delivery assorbono fino al 30% del tuo fatturato.
+            Marketplace con commissioni al 30%, software separati per ogni funzione, dati dispersi. Il risultato? Margini erosi e zero controllo sul tuo business.
           </motion.p>
         </div>
 
