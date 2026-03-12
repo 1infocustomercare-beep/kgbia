@@ -195,6 +195,6 @@ function App() { return (
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
-);
+); }
 
 export default App;
