@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Building, User, Palette, Globe, Settings, Save } from "lucide-react";
+import { Building, User, Palette, Globe, Settings, Save, Database, Loader2 } from "lucide-react";
 import { useIndustry } from "@/hooks/useIndustry";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
