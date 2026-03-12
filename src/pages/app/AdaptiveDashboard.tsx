@@ -139,8 +139,8 @@ function GenericDashboard() {
 export default function AdaptiveDashboard() {
   const { industry } = useIndustry();
 
+  // Food uses /dashboard exclusively – this shouldn't be reached, but just in case
   switch (industry) {
-    case "food": return <FoodDashboard />;
     case "ncc": return <NCCDashboard />;
     default: return <GenericDashboard />;
   }
