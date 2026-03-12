@@ -6,7 +6,7 @@ import {
   Key, HeadphonesIcon, CheckCircle2, XCircle, AlertCircle,
   Cpu, Wifi, ChevronRight, Save, Bot, Send, Bell,
   ShieldCheck, Lock, ExternalLink, Download, FileText, FileSpreadsheet,
-  CreditCard, Ban, Unlock, Calendar, Clock, Eye
+  CreditCard, Ban, Unlock, Calendar, Clock, Eye, Film
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -50,7 +50,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents" | "media";
 
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
@@ -317,6 +317,7 @@ const SuperAdminDashboard = () => {
     { id: "billing", label: "Fatture", icon: <DollarSign className="w-5 h-5" /> },
     { id: "mary", label: "AI-Mary", icon: <Bot className="w-5 h-5" /> },
     { id: "agents", label: "🤖 Agenti IA", icon: <Cpu className="w-5 h-5" /> },
+    { id: "media", label: "Media", icon: <Film className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => {
@@ -345,7 +346,7 @@ const SuperAdminDashboard = () => {
       {/* Tab bar */}
       <div className="flex gap-1.5 px-4 py-3 overflow-x-auto scrollbar-hide">
         {tabs.map((tab) => (
-          <button key={tab.id} onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : setActiveTab(tab.id)}
+          <button key={tab.id} onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors min-h-[44px] ${
               activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
             }`}>

@@ -14,6 +14,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import heroLanding from "@/assets/hero-landing.jpg";
+import videoHero from "@/assets/video-hero-empire.mp4";
+import videoIndustries from "@/assets/video-industries.mp4";
+import videoFeatures from "@/assets/video-features.mp4";
+import videoPartner from "@/assets/video-partner-pitch.mp4";
 
 /* ═══════════════════════════════════════════
    HELPERS
@@ -399,6 +403,39 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════════════════════════════════════════
+          VIDEO HERO — Business Transformation
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-8">
+          <SectionLabel text="Scopri Empire" icon={<Play className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            La Tecnologia che <span className="text-shimmer">Trasforma il Business</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Dashboard IA, gestione flotta, menu digitali, CRM avanzato — tutto in un ecosistema white-label personalizzabile. Creiamo qualsiasi cosa tu possa immaginare.
+          </motion.p>
+        </div>
+        <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
+          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+          transition={{ duration: 0.6 }}>
+          <div className="absolute -inset-8 bg-primary/[0.08] rounded-[60px] blur-[80px] pointer-events-none" />
+          <video
+            src={videoHero}
+            autoPlay muted loop playsInline
+            className="w-full aspect-video object-cover rounded-2xl"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
+          <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
+            <div className="px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-sm border border-primary/10">
+              <span className="text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase">Dashboard IA • CRM • Automazioni</span>
+            </div>
+          </div>
+        </motion.div>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
           SETTORI
          ═══════════════════════════════════════════ */}
       <Section id="industries">
@@ -452,6 +489,46 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
+          VIDEO INDUSTRIES — Multi-Sector Showcase
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.6 }} className="text-center lg:text-left order-2 lg:order-1">
+            <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
+            <h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
+              Un Solo Sistema per <span className="text-shimmer">Ogni Realtà</span>
+            </h2>
+            <p className="text-foreground/40 text-sm leading-[1.7] mb-6 max-w-md mx-auto lg:mx-0">
+              Dalla ristorazione gourmet al transfer di lusso, dal salone di bellezza allo studio medico. 
+              Empire si adatta automaticamente alla tua industria con moduli, terminologia e flussi dedicati.
+            </p>
+            <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto lg:mx-0">
+              {[
+                { emoji: "🍽️", label: "Food & Ristorazione" },
+                { emoji: "🚗", label: "NCC & Transfer" },
+                { emoji: "💇", label: "Beauty & Wellness" },
+                { emoji: "🏋️", label: "Fitness & Sport" },
+              ].map((s, i) => (
+                <motion.div key={i} className="flex items-center gap-2 p-2.5 rounded-xl bg-primary/[0.04] border border-primary/[0.06]"
+                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
+                  <span className="text-base">{s.emoji}</span>
+                  <span className="text-[0.6rem] font-heading font-semibold text-foreground/60">{s.label}</span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.6 }} className="order-1 lg:order-2">
+            <div className="relative rounded-2xl overflow-hidden glow-card">
+              <video src={videoIndustries} autoPlay muted loop playsInline className="w-full aspect-video object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-l from-background/50 via-transparent to-transparent pointer-events-none" />
+            </div>
+          </motion.div>
+        </div>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
           PROBLEMA
          ═══════════════════════════════════════════ */}
       <Section id="problem">
@@ -482,6 +559,45 @@ const LandingPage = () => {
             </motion.div>
           ))}
         </motion.div>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
+          VIDEO FEATURES — Platform Capabilities
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.6 }}>
+            <div className="relative rounded-2xl overflow-hidden glow-card">
+              <video src={videoFeatures} autoPlay muted loop playsInline className="w-full aspect-video object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-transparent pointer-events-none" />
+            </div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.6 }} className="text-center lg:text-left">
+            <SectionLabel text="Perché Empire" icon={<Cpu className="w-3 h-3 text-primary" />} />
+            <h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
+              Creiamo <span className="text-shimmer">Qualsiasi Cosa</span><br />Tu Possa Immaginare
+            </h2>
+            <div className="space-y-4 text-left max-w-md mx-auto lg:mx-0">
+              {[
+                { title: "Gestione Telefonica Umana", desc: "Servizio reception e booking telefonico professionale dedicato alla tua attività" },
+                { title: "WhatsApp Business Automatizzato", desc: "Conferme, reminder, promozioni e assistenza clienti 24/7 via WhatsApp" },
+                { title: "Intelligenza Artificiale Integrata", desc: "Catalogo generato in 60s, suggerimenti upselling, analytics predittivi" },
+                { title: "Qualsiasi Integrazione Custom", desc: "API esterne, POS, gestionali esistenti — integriamo tutto nel tuo ecosistema" },
+              ].map((f, i) => (
+                <motion.div key={i} className="flex gap-3 items-start group"
+                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+                  <div className="w-2 h-2 min-w-[8px] rounded-full bg-primary mt-2" />
+                  <div>
+                    <p className="text-xs sm:text-sm font-semibold text-foreground">{f.title}</p>
+                    <p className="text-[0.65rem] text-foreground/35 mt-0.5">{f.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
       </Section>
 
       {/* ═══════════════════════════════════════════
@@ -885,6 +1001,29 @@ const LandingPage = () => {
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           Dopo l'attivazione: €0/mese · Solo <span className="text-primary font-bold">2%</span> sulle transazioni per infrastruttura, IA e aggiornamenti continui.
         </motion.p>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
+          VIDEO PARTNER — Sales Pitch
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-8">
+          <SectionLabel text="Video Presentazione" icon={<Play className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Scopri l'Opportunità <span className="text-shimmer">Partner Empire</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[480px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Guarda come i nostri partner presentano Empire ai business owner — e chiudono vendite da €2.997 ogni giorno.
+          </motion.p>
+        </div>
+        <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
+          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+          transition={{ duration: 0.6 }}>
+          <video src={videoPartner} autoPlay muted loop playsInline className="w-full aspect-video object-cover rounded-2xl" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
+        </motion.div>
       </Section>
 
       {/* ═══════════════════════════════════════════
