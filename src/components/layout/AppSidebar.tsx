@@ -2,7 +2,9 @@ import {
   BookOpen, ShoppingBag, ChefHat, LayoutGrid, Calendar, Star,
   Users, Wallet, Package, ClipboardCheck, Car, Route, MapPin,
   BarChart3, Settings, Target, MessageSquare, Store, CreditCard,
-  Home, Briefcase, Receipt, PenTool, Sparkles, UserCog
+  Home, Briefcase, Receipt, PenTool, Sparkles, UserCog, Wrench,
+  Zap, Leaf, Heart, Camera, Truck, Umbrella, Cog, FileText,
+  Clock, GraduationCap, Baby, Scale
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -17,7 +19,9 @@ const ICON_MAP: Record<string, any> = {
   BookOpen, ShoppingBag, ChefHat, LayoutGrid, Calendar, Star,
   Users, Wallet, Package, ClipboardCheck, Car, Route, MapPin,
   BarChart3, Settings, Target, MessageSquare, Store, CreditCard,
-  Home, Briefcase, Receipt, PenTool, Sparkles, UserCog,
+  Home, Briefcase, Receipt, PenTool, Sparkles, UserCog, Wrench,
+  Zap, Leaf, Heart, Camera, Truck, Umbrella, Cog, FileText,
+  Clock, GraduationCap, Baby, Scale,
 };
 
 // Modules per industry
@@ -30,7 +34,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
     { title: "Tavoli", icon: "LayoutGrid", url: "/app/tables" },
     { title: "Prenotazioni", icon: "Calendar", url: "/app/reservations" },
     { title: "Recensioni", icon: "Star", url: "/app/reviews" },
-    { title: "CRM Clienti", icon: "Users", url: "/app/crm" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
     { title: "Inventario", icon: "Package", url: "/app/inventory" },
     { title: "HACCP", icon: "ClipboardCheck", url: "/app/haccp" },
   ],
@@ -39,50 +43,138 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
     { title: "Flotta", icon: "Car", url: "/app/fleet" },
     { title: "Tratte", icon: "Route", url: "/app/routes" },
     { title: "Prenotazioni", icon: "Calendar", url: "/app/bookings" },
-    { title: "Destinazioni", icon: "MapPin", url: "/app/destinations" },
     { title: "Autisti", icon: "Users", url: "/app/drivers" },
     { title: "Recensioni", icon: "Star", url: "/app/reviews" },
   ],
   beauty: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Appuntamenti", icon: "Calendar", url: "/app/appointments" },
-    { title: "Servizi", icon: "Sparkles", url: "/app/services" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
-    { title: "Operatori", icon: "UserCog", url: "/app/operators" },
-    { title: "Prodotti", icon: "Package", url: "/app/products" },
   ],
   healthcare: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Agenda", icon: "Calendar", url: "/app/appointments" },
-    { title: "Pazienti", icon: "Users", url: "/app/patients" },
-    { title: "Prestazioni", icon: "ClipboardCheck", url: "/app/treatments" },
-    { title: "Fatturazione", icon: "Receipt", url: "/app/billing" },
+    { title: "Pazienti", icon: "Users", url: "/app/clients" },
   ],
   retail: [
     { title: "Dashboard", icon: "Home", url: "/app" },
-    { title: "Catalogo", icon: "Store", url: "/app/catalog" },
     { title: "Ordini", icon: "ShoppingBag", url: "/app/orders" },
-    { title: "Magazzino", icon: "Package", url: "/app/inventory" },
+    { title: "Inventario", icon: "Package", url: "/app/inventory" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
   ],
   fitness: [
     { title: "Dashboard", icon: "Home", url: "/app" },
-    { title: "Corsi", icon: "Calendar", url: "/app/classes" },
-    { title: "Membri", icon: "Users", url: "/app/members" },
-    { title: "Trainer", icon: "UserCog", url: "/app/trainers" },
-    { title: "Abbonamenti", icon: "CreditCard", url: "/app/subscriptions" },
+    { title: "Corsi", icon: "Calendar", url: "/app/appointments" },
+    { title: "Membri", icon: "Users", url: "/app/clients" },
   ],
   hospitality: [
     { title: "Dashboard", icon: "Home", url: "/app" },
-    { title: "Camere", icon: "LayoutGrid", url: "/app/rooms" },
     { title: "Prenotazioni", icon: "Calendar", url: "/app/reservations" },
-    { title: "Ospiti", icon: "Users", url: "/app/guests" },
-    { title: "Housekeeping", icon: "Sparkles", url: "/app/housekeeping" },
+    { title: "Ospiti", icon: "Users", url: "/app/clients" },
+  ],
+  beach: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Spiaggia Live", icon: "Umbrella", url: "/app/beach-map" },
+    { title: "Prenotazioni", icon: "Calendar", url: "/app/beach-bookings" },
+    { title: "Ospiti", icon: "Users", url: "/app/clients" },
+  ],
+  plumber: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Interventi", icon: "Wrench", url: "/app/interventions" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+    { title: "Magazzino", icon: "Package", url: "/app/inventory" },
+  ],
+  electrician: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Lavori", icon: "Zap", url: "/app/interventions" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+    { title: "Materiali", icon: "Package", url: "/app/inventory" },
+  ],
+  agriturismo: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Prenotazioni", icon: "Calendar", url: "/app/reservations" },
+    { title: "Ospiti", icon: "Users", url: "/app/clients" },
+  ],
+  cleaning: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Servizi", icon: "ClipboardCheck", url: "/app/interventions" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+  ],
+  legal: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Pratiche", icon: "FileText", url: "/app/interventions" },
+    { title: "Appuntamenti", icon: "Calendar", url: "/app/appointments" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+  ],
+  accounting: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Scadenze", icon: "Clock", url: "/app/interventions" },
+    { title: "Appuntamenti", icon: "Calendar", url: "/app/appointments" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+  ],
+  garage: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Lavorazioni", icon: "Wrench", url: "/app/interventions" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+    { title: "Ricambi", icon: "Package", url: "/app/inventory" },
+  ],
+  photography: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Shooting", icon: "Camera", url: "/app/appointments" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+  ],
+  construction: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Cantieri", icon: "Wrench", url: "/app/interventions" },
+    { title: "Committenti", icon: "Users", url: "/app/clients" },
+    { title: "Materiali", icon: "Package", url: "/app/inventory" },
+  ],
+  gardening: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Lavori", icon: "Leaf", url: "/app/interventions" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+    { title: "Materiali", icon: "Package", url: "/app/inventory" },
+  ],
+  veterinary: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Visite", icon: "Calendar", url: "/app/appointments" },
+    { title: "Proprietari", icon: "Users", url: "/app/clients" },
+  ],
+  tattoo: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Appuntamenti", icon: "Calendar", url: "/app/appointments" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+  ],
+  childcare: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Prenotazioni", icon: "Calendar", url: "/app/appointments" },
+    { title: "Famiglie", icon: "Users", url: "/app/clients" },
+  ],
+  education: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Corsi", icon: "GraduationCap", url: "/app/appointments" },
+    { title: "Studenti", icon: "Users", url: "/app/clients" },
+  ],
+  events: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Eventi", icon: "Calendar", url: "/app/interventions" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+  ],
+  logistics: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Spedizioni", icon: "Truck", url: "/app/interventions" },
+    { title: "Flotta", icon: "Car", url: "/app/fleet" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
+  ],
+  custom: [
+    { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Ordini", icon: "ClipboardCheck", url: "/app/interventions" },
+    { title: "Clienti", icon: "Users", url: "/app/clients" },
   ],
 };
 
 const COMMON_NAV = [
-  { title: "Staff", icon: "Briefcase", url: "/app/staff" },
+  { title: "Team", icon: "Briefcase", url: "/app/team" },
   { title: "Payroll", icon: "Receipt", url: "/app/payroll" },
   { title: "Finanza", icon: "BarChart3", url: "/app/finance" },
   { title: "Leads", icon: "Target", url: "/app/leads" },
@@ -96,10 +188,10 @@ export function AppSidebar() {
   const location = useLocation();
   const { industry, company } = useIndustry();
 
-  const industryItems = INDUSTRY_NAV[industry] || INDUSTRY_NAV.food;
+  const industryItems = INDUSTRY_NAV[industry] || INDUSTRY_NAV.custom;
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border">
+    <Sidebar collapsible="icon" className="border-r border-border hidden md:flex">
       <SidebarContent>
         {/* Company name */}
         {!collapsed && (
@@ -120,7 +212,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {industryItems.map((item) => {
                 const Icon = ICON_MAP[item.icon] || Home;
-                const active = location.pathname === item.url;
+                const active = item.url === "/app" ? location.pathname === "/app" : location.pathname.startsWith(item.url);
                 return (
                   <SidebarMenuItem key={item.url}>
                     <SidebarMenuButton asChild>
@@ -150,7 +242,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {COMMON_NAV.map((item) => {
                 const Icon = ICON_MAP[item.icon] || Settings;
-                const active = location.pathname === item.url;
+                const active = location.pathname.startsWith(item.url);
                 return (
                   <SidebarMenuItem key={item.url}>
                     <SidebarMenuButton asChild>
