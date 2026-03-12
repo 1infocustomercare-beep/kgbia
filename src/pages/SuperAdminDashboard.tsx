@@ -50,7 +50,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents";
 
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
@@ -316,6 +316,7 @@ const SuperAdminDashboard = () => {
     { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-5 h-5" /> },
     { id: "billing", label: "Fatture", icon: <DollarSign className="w-5 h-5" /> },
     { id: "mary", label: "AI-Mary", icon: <Bot className="w-5 h-5" /> },
+    { id: "agents", label: "🤖 Agenti IA", icon: <Cpu className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => {
@@ -344,7 +345,7 @@ const SuperAdminDashboard = () => {
       {/* Tab bar */}
       <div className="flex gap-1.5 px-4 py-3 overflow-x-auto scrollbar-hide">
         {tabs.map((tab) => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+          <button key={tab.id} onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors min-h-[44px] ${
               activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
             }`}>

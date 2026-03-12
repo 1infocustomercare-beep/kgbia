@@ -62,6 +62,7 @@ const AutomationsPage = lazy(() => import("./pages/app/AutomationsPage"));
 // Demo pages
 const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
 const DemoDirectoryPage = lazy(() => import("./pages/demo/DemoDirectoryPage"));
+const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 
 const queryClient = new QueryClient();
 
@@ -110,6 +111,11 @@ const App = () => (
                 <Route path="/superadmin" element={
                   <ProtectedRoute requiredRole="super_admin">
                     <SuperAdminDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/superadmin/agents" element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <AgentsPage />
                   </ProtectedRoute>
                 } />
                 <Route path="/staff" element={

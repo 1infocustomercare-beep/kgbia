@@ -1,12 +1,33 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// ─── AI Usage Tracking Helper ───
+async function trackAIUsage(agentName: string, modelUsed: string, startTime: number, status: string) {
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !serviceRoleKey) return;
+    const sb = createClient(supabaseUrl, serviceRoleKey);
+    await sb.from("ai_usage_logs").insert({
+      agent_name: agentName,
+      model_used: modelUsed,
+      duration_ms: Date.now() - startTime,
+      status,
+    });
+  } catch (e) {
+    console.error("Failed to track AI usage:", e);
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  const startTime = Date.now();
 
   try {
     const { action, imageBase64, dishDescription, dishCategory } = await req.json();
@@ -14,7 +35,7 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     if (action === "ocr") {
-      // OCR: Extract menu items from image
+      const modelUsed = "google/gemini-2.5-flash";
       const messages: any[] = [
         {
           role: "system",
@@ -35,13 +56,11 @@ serve(async (req) => {
           Authorization: `Bearer ${LOVABLE_API_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages,
-        }),
+        body: JSON.stringify({ model: modelUsed, messages }),
       });
 
       if (!response.ok) {
+        await trackAIUsage("ai-menu-ocr", modelUsed, startTime, "error");
         const status = response.status;
         if (status === 429) {
           return new Response(JSON.stringify({ error: "Troppi richieste. Riprova tra poco." }), {
@@ -61,16 +80,13 @@ serve(async (req) => {
       const data = await response.json();
       const content = data.choices?.[0]?.message?.content || "[]";
       
-      // Try to extract JSON from the response
       let dishes = [];
       try {
         const jsonMatch = content.match(/\[[\s\S]*\]/);
-        if (jsonMatch) {
-          dishes = JSON.parse(jsonMatch[0]);
-        }
-      } catch {
-        console.error("Failed to parse OCR result:", content);
-      }
+        if (jsonMatch) { dishes = JSON.parse(jsonMatch[0]); }
+      } catch { console.error("Failed to parse OCR result:", content); }
+
+      await trackAIUsage("ai-menu-ocr", modelUsed, startTime, "success");
 
       return new Response(JSON.stringify({ dishes }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -78,7 +94,7 @@ serve(async (req) => {
     }
 
     if (action === "generate-image") {
-      // Category-adaptive styling for food photography
+      const modelUsed = "google/gemini-2.5-flash-image";
       const cat = (dishCategory || "").toLowerCase();
       
       const categoryStyles: Record<string, string> = {
@@ -99,13 +115,9 @@ serve(async (req) => {
         fritti: "golden crispy texture in sharp focus, served in paper cone or rustic basket, sea salt crystals visible, lemon wedge, casual Italian street food energy",
       };
 
-      // Find matching style or use default
       let styleDirections = "shot from 45-degree angle on an elegant dark ceramic plate, restaurant table setting with soft warm candlelight, extremely shallow depth of field with creamy bokeh background, garnished beautifully, steam rising if hot dish";
       for (const [key, style] of Object.entries(categoryStyles)) {
-        if (cat.includes(key)) {
-          styleDirections = style;
-          break;
-        }
+        if (cat.includes(key)) { styleDirections = style; break; }
       }
 
       const prompt = `Generate a hyper-realistic, ultra professional food photography image of this Italian restaurant dish: "${dishDescription}". Photography direction: ${styleDirections}. Technical: vibrant natural colors, 8K quality, Michelin-star presentation, the food must look absolutely irresistible and mouthwatering. Ultra high resolution.`;
@@ -117,13 +129,14 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.5-flash-image",
+          model: modelUsed,
           messages: [{ role: "user", content: prompt }],
           modalities: ["image", "text"],
         }),
       });
 
       if (!response.ok) {
+        await trackAIUsage("ai-menu-image", modelUsed, startTime, "error");
         const status = response.status;
         if (status === 429) {
           return new Response(JSON.stringify({ error: "Rate limit. Riprova tra poco." }), {
@@ -141,14 +154,11 @@ serve(async (req) => {
       const data = await response.json();
       const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url || null;
 
-      // If we got a base64 image, upload to storage
       if (imageUrl && imageUrl.startsWith("data:")) {
         const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
         const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-        const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2.49.1");
         const supabase = createClient(supabaseUrl, serviceKey);
 
-        // Extract base64 data
         const base64Match = imageUrl.match(/^data:image\/(\w+);base64,(.+)$/);
         if (base64Match) {
           const ext = base64Match[1] === "jpeg" ? "jpg" : base64Match[1];
@@ -161,9 +171,8 @@ serve(async (req) => {
             .upload(fileName, bytes, { contentType: `image/${base64Match[1]}`, upsert: true });
 
           if (!uploadError) {
-            const { data: publicUrl } = supabase.storage
-              .from("restaurant-logos")
-              .getPublicUrl(fileName);
+            const { data: publicUrl } = supabase.storage.from("restaurant-logos").getPublicUrl(fileName);
+            await trackAIUsage("ai-menu-image", modelUsed, startTime, "success");
             return new Response(JSON.stringify({ imageUrl: publicUrl.publicUrl }), {
               headers: { ...corsHeaders, "Content-Type": "application/json" },
             });
@@ -171,6 +180,8 @@ serve(async (req) => {
           console.error("Upload error:", uploadError);
         }
       }
+
+      await trackAIUsage("ai-menu-image", modelUsed, startTime, "success");
 
       return new Response(JSON.stringify({ imageUrl }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

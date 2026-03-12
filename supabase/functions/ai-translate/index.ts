@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,8 +12,29 @@ const LANGUAGE_MAP: Record<string, string> = {
   ru: "Russian", pt: "Portuguese", ko: "Korean",
 };
 
+// ─── AI Usage Tracking Helper ───
+async function trackAIUsage(agentName: string, modelUsed: string, startTime: number, status: string) {
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !serviceRoleKey) return;
+    const sb = createClient(supabaseUrl, serviceRoleKey);
+    await sb.from("ai_usage_logs").insert({
+      agent_name: agentName,
+      model_used: modelUsed,
+      duration_ms: Date.now() - startTime,
+      status,
+    });
+  } catch (e) {
+    console.error("Failed to track AI usage:", e);
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  const startTime = Date.now();
+  const modelUsed = "google/gemini-3-flash-preview";
 
   try {
     const { menuItems, targetLanguages } = await req.json();
@@ -27,9 +49,7 @@ serve(async (req) => {
     }
 
     const itemsForTranslation = menuItems.slice(0, 50).map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      description: item.description || "",
+      id: item.id, name: item.name, description: item.description || "",
     }));
 
     const prompt = `Traduci questi piatti di un menu di ristorante italiano nelle seguenti lingue: ${langNames.join(", ")}.
@@ -49,7 +69,7 @@ Le traduzioni devono essere naturali e appetitose, non letterali. Mantieni i nom
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: modelUsed,
         messages: [
           { role: "system", content: "Sei un traduttore esperto di gastronomia italiana. Traduci in modo naturale e appetitoso." },
           { role: "user", content: prompt },
@@ -58,6 +78,7 @@ Le traduzioni devono essere naturali e appetitose, non letterali. Mantieni i nom
     });
 
     if (!response.ok) {
+      await trackAIUsage("ai-translate", modelUsed, startTime, "error");
       const status = response.status;
       if (status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit. Riprova tra poco." }), {
@@ -78,18 +99,17 @@ Le traduzioni devono essere naturali e appetitose, non letterali. Mantieni i nom
     let translations = [];
     try {
       const jsonMatch = content.match(/\[[\s\S]*\]/);
-      if (jsonMatch) {
-        translations = JSON.parse(jsonMatch[0]);
-      }
-    } catch {
-      console.error("Failed to parse translations:", content);
-    }
+      if (jsonMatch) { translations = JSON.parse(jsonMatch[0]); }
+    } catch { console.error("Failed to parse translations:", content); }
+
+    await trackAIUsage("ai-translate", modelUsed, startTime, "success");
 
     return new Response(JSON.stringify({ translations }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
   } catch (e) {
+    await trackAIUsage("ai-translate", modelUsed, startTime, "error");
     console.error("ai-translate error:", e);
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },

@@ -14,6 +14,92 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_agent_configs: {
+        Row: {
+          agent_name: string
+          allowed_industries: string[] | null
+          color: string | null
+          created_at: string | null
+          description: string | null
+          display_name: string | null
+          icon: string | null
+          id: string
+          is_enabled: boolean | null
+          max_calls_per_hour: number | null
+          max_monthly_budget_usd: number | null
+          system_prompt_override: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          agent_name: string
+          allowed_industries?: string[] | null
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_name?: string | null
+          icon?: string | null
+          id?: string
+          is_enabled?: boolean | null
+          max_calls_per_hour?: number | null
+          max_monthly_budget_usd?: number | null
+          system_prompt_override?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          agent_name?: string
+          allowed_industries?: string[] | null
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_name?: string | null
+          icon?: string | null
+          id?: string
+          is_enabled?: boolean | null
+          max_calls_per_hour?: number | null
+          max_monthly_budget_usd?: number | null
+          system_prompt_override?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ai_alerts: {
+        Row: {
+          agent_name: string | null
+          alert_type: string
+          company_id: string | null
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string
+        }
+        Insert: {
+          agent_name?: string | null
+          alert_type?: string
+          company_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+        }
+        Update: {
+          agent_name?: string | null
+          alert_type?: string
+          company_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_alerts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_token_history: {
         Row: {
           action: string
@@ -70,6 +156,69 @@ export type Database = {
             foreignKeyName: "ai_tokens_restaurant_id_fkey"
             columns: ["restaurant_id"]
             isOneToOne: true
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_usage_logs: {
+        Row: {
+          agent_name: string
+          company_id: string | null
+          cost_usd: number | null
+          created_at: string | null
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          input_tokens: number | null
+          is_test: boolean | null
+          model_used: string | null
+          output_tokens: number | null
+          restaurant_id: string | null
+          status: string | null
+        }
+        Insert: {
+          agent_name: string
+          company_id?: string | null
+          cost_usd?: number | null
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          input_tokens?: number | null
+          is_test?: boolean | null
+          model_used?: string | null
+          output_tokens?: number | null
+          restaurant_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          agent_name?: string
+          company_id?: string | null
+          cost_usd?: number | null
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          input_tokens?: number | null
+          is_test?: boolean | null
+          model_used?: string | null
+          output_tokens?: number | null
+          restaurant_id?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_usage_logs_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_usage_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
             referencedRelation: "restaurants"
             referencedColumns: ["id"]
           },
