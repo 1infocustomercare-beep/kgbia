@@ -75,6 +75,103 @@ export type Database = {
           },
         ]
       }
+      appointments: {
+        Row: {
+          client_id: string | null
+          client_name: string
+          client_phone: string | null
+          company_id: string
+          created_at: string | null
+          duration_minutes: number | null
+          id: string
+          notes: string | null
+          price: number | null
+          scheduled_at: string
+          service_id: string | null
+          service_name: string | null
+          staff_name: string | null
+          status: string | null
+        }
+        Insert: {
+          client_id?: string | null
+          client_name: string
+          client_phone?: string | null
+          company_id: string
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          price?: number | null
+          scheduled_at: string
+          service_id?: string | null
+          service_name?: string | null
+          staff_name?: string | null
+          status?: string | null
+        }
+        Update: {
+          client_id?: string | null
+          client_name?: string
+          client_phone?: string | null
+          company_id?: string
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          price?: number | null
+          scheduled_at?: string
+          service_id?: string | null
+          service_name?: string | null
+          staff_name?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automations: {
+        Row: {
+          automation_type: string
+          company_id: string
+          id: string
+          is_active: boolean | null
+          sent_count: number | null
+          template_body: string | null
+          template_subject: string | null
+        }
+        Insert: {
+          automation_type: string
+          company_id: string
+          id?: string
+          is_active?: boolean | null
+          sent_count?: number | null
+          template_body?: string | null
+          template_subject?: string | null
+        }
+        Update: {
+          automation_type?: string
+          company_id?: string
+          id?: string
+          is_active?: boolean | null
+          sent_count?: number | null
+          template_body?: string | null
+          template_subject?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automations_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       b2b_invoices: {
         Row: {
           codice_univoco: string | null
@@ -145,6 +242,161 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      beach_bookings: {
+        Row: {
+          booking_date: string
+          client_name: string
+          client_phone: string | null
+          company_id: string
+          created_at: string | null
+          extras_json: Json | null
+          id: string
+          period: string | null
+          spot_id: string | null
+          status: string | null
+          total: number | null
+        }
+        Insert: {
+          booking_date: string
+          client_name: string
+          client_phone?: string | null
+          company_id: string
+          created_at?: string | null
+          extras_json?: Json | null
+          id?: string
+          period?: string | null
+          spot_id?: string | null
+          status?: string | null
+          total?: number | null
+        }
+        Update: {
+          booking_date?: string
+          client_name?: string
+          client_phone?: string | null
+          company_id?: string
+          created_at?: string | null
+          extras_json?: Json | null
+          id?: string
+          period?: string | null
+          spot_id?: string | null
+          status?: string | null
+          total?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "beach_bookings_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "beach_bookings_spot_id_fkey"
+            columns: ["spot_id"]
+            isOneToOne: false
+            referencedRelation: "beach_spots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      beach_passes: {
+        Row: {
+          client_name: string
+          client_phone: string | null
+          company_id: string
+          end_date: string | null
+          id: string
+          is_active: boolean | null
+          pass_type: string | null
+          price: number | null
+          spot_id: string | null
+          start_date: string | null
+        }
+        Insert: {
+          client_name: string
+          client_phone?: string | null
+          company_id: string
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          pass_type?: string | null
+          price?: number | null
+          spot_id?: string | null
+          start_date?: string | null
+        }
+        Update: {
+          client_name?: string
+          client_phone?: string | null
+          company_id?: string
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          pass_type?: string | null
+          price?: number | null
+          spot_id?: string | null
+          start_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "beach_passes_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "beach_passes_spot_id_fkey"
+            columns: ["spot_id"]
+            isOneToOne: false
+            referencedRelation: "beach_spots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      beach_spots: {
+        Row: {
+          company_id: string
+          id: string
+          is_active: boolean | null
+          price_afternoon: number | null
+          price_daily: number | null
+          price_morning: number | null
+          row_letter: string
+          spot_number: number
+          spot_type: string | null
+        }
+        Insert: {
+          company_id: string
+          id?: string
+          is_active?: boolean | null
+          price_afternoon?: number | null
+          price_daily?: number | null
+          price_morning?: number | null
+          row_letter: string
+          spot_number: number
+          spot_type?: string | null
+        }
+        Update: {
+          company_id?: string
+          id?: string
+          is_active?: boolean | null
+          price_afternoon?: number | null
+          price_daily?: number | null
+          price_morning?: number | null
+          row_letter?: string
+          spot_number?: number
+          spot_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "beach_spots_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
@@ -292,18 +544,22 @@ export type Database = {
           city: string | null
           created_at: string
           email: string | null
+          font_family: string | null
           id: string
           industry: string
           is_active: boolean
           is_blocked: boolean
           logo_url: string | null
+          modules_config: Json | null
           modules_enabled: string[] | null
           name: string
+          opening_hours: Json | null
           owner_id: string | null
           phone: string | null
           primary_color: string | null
           secondary_color: string | null
           slug: string
+          social_links: Json | null
           subscription_plan: string
           tagline: string | null
           updated_at: string
@@ -314,18 +570,22 @@ export type Database = {
           city?: string | null
           created_at?: string
           email?: string | null
+          font_family?: string | null
           id?: string
           industry?: string
           is_active?: boolean
           is_blocked?: boolean
           logo_url?: string | null
+          modules_config?: Json | null
           modules_enabled?: string[] | null
           name: string
+          opening_hours?: Json | null
           owner_id?: string | null
           phone?: string | null
           primary_color?: string | null
           secondary_color?: string | null
           slug: string
+          social_links?: Json | null
           subscription_plan?: string
           tagline?: string | null
           updated_at?: string
@@ -336,18 +596,22 @@ export type Database = {
           city?: string | null
           created_at?: string
           email?: string | null
+          font_family?: string | null
           id?: string
           industry?: string
           is_active?: boolean
           is_blocked?: boolean
           logo_url?: string | null
+          modules_config?: Json | null
           modules_enabled?: string[] | null
           name?: string
+          opening_hours?: Json | null
           owner_id?: string | null
           phone?: string | null
           primary_color?: string | null
           secondary_color?: string | null
           slug?: string
+          social_links?: Json | null
           subscription_plan?: string
           tagline?: string | null
           updated_at?: string
@@ -418,6 +682,59 @@ export type Database = {
             columns: ["module_id"]
             isOneToOne: false
             referencedRelation: "marketplace_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crm_clients: {
+        Row: {
+          address: string | null
+          city: string | null
+          company_id: string
+          created_at: string | null
+          email: string | null
+          first_name: string
+          id: string
+          last_name: string | null
+          notes: string | null
+          notes_technical: string | null
+          phone: string | null
+          total_spent: number | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          company_id: string
+          created_at?: string | null
+          email?: string | null
+          first_name: string
+          id?: string
+          last_name?: string | null
+          notes?: string | null
+          notes_technical?: string | null
+          phone?: string | null
+          total_spent?: number | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          company_id?: string
+          created_at?: string | null
+          email?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string | null
+          notes?: string | null
+          notes_technical?: string | null
+          phone?: string | null
+          total_spent?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_clients_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
@@ -777,6 +1094,74 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "haccp_logs_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interventions: {
+        Row: {
+          address: string | null
+          client_id: string | null
+          client_name: string
+          client_phone: string | null
+          company_id: string
+          created_at: string | null
+          estimated_price: number | null
+          final_price: number | null
+          id: string
+          intervention_type: string
+          notes: string | null
+          photos_json: Json | null
+          scheduled_at: string | null
+          status: string | null
+          technician_name: string | null
+          updated_at: string | null
+          urgency: string | null
+        }
+        Insert: {
+          address?: string | null
+          client_id?: string | null
+          client_name: string
+          client_phone?: string | null
+          company_id: string
+          created_at?: string | null
+          estimated_price?: number | null
+          final_price?: number | null
+          id?: string
+          intervention_type: string
+          notes?: string | null
+          photos_json?: Json | null
+          scheduled_at?: string | null
+          status?: string | null
+          technician_name?: string | null
+          updated_at?: string | null
+          urgency?: string | null
+        }
+        Update: {
+          address?: string | null
+          client_id?: string | null
+          client_name?: string
+          client_phone?: string | null
+          company_id?: string
+          created_at?: string | null
+          estimated_price?: number | null
+          final_price?: number | null
+          id?: string
+          intervention_type?: string
+          notes?: string | null
+          photos_json?: Json | null
+          scheduled_at?: string | null
+          status?: string | null
+          technician_name?: string | null
+          updated_at?: string | null
+          urgency?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interventions_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
@@ -2144,6 +2529,47 @@ export type Database = {
           },
         ]
       }
+      services: {
+        Row: {
+          category: string | null
+          color: string | null
+          company_id: string
+          duration_minutes: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          price: number | null
+        }
+        Insert: {
+          category?: string | null
+          color?: string | null
+          company_id: string
+          duration_minutes?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          price?: number | null
+        }
+        Update: {
+          category?: string | null
+          color?: string | null
+          company_id?: string
+          duration_minutes?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          price?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shifts: {
         Row: {
           break_minutes: number | null
@@ -2285,6 +2711,47 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "staff_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      staff_shifts: {
+        Row: {
+          company_id: string
+          end_time: string
+          id: string
+          notes: string | null
+          shift_date: string
+          staff_name: string
+          start_time: string
+          user_id: string | null
+        }
+        Insert: {
+          company_id: string
+          end_time: string
+          id?: string
+          notes?: string | null
+          shift_date: string
+          staff_name: string
+          start_time: string
+          user_id?: string | null
+        }
+        Update: {
+          company_id?: string
+          end_time?: string
+          id?: string
+          notes?: string | null
+          shift_date?: string
+          staff_name?: string
+          start_time?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_shifts_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
