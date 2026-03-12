@@ -44,14 +44,18 @@ export default function OnboardingPage() {
 
     setLoading(true);
     try {
+      const slug = form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") + "-" + Date.now().toString(36);
+
       // Use create-company edge function for full provisioning (demo data, subscription, etc.)
       const { data, error: fnError } = await supabase.functions.invoke("create-company", {
         body: {
           name: form.name,
+          slug,
           industry: form.industry,
           phone: form.phone || null,
           city: form.city || null,
           plan: form.plan,
+          primary_color: INDUSTRY_CONFIGS[form.industry as IndustryId]?.defaultPrimaryColor || "#C8963E",
         },
       });
 
