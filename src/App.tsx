@@ -1,4 +1,5 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useCallback } from "react";
+import SplashScreen from "@/components/SplashScreen";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -78,8 +79,16 @@ const PageLoader = () => (
   </div>
 );
 
-function App() { return (
+function App() {
+  const [splashDone, setSplashDone] = useState(() => sessionStorage.getItem("empire_splash") === "done");
+  const handleSplashComplete = useCallback(() => {
+    sessionStorage.setItem("empire_splash", "done");
+    setSplashDone(true);
+  }, []);
+
+  return (
   <QueryClientProvider client={queryClient}>
+    {!splashDone && <SplashScreen onComplete={handleSplashComplete} />}
     <TooltipProvider>
       <AuthProvider>
         <CartProvider>
