@@ -117,11 +117,39 @@ const AdminLogin = () => {
     }
 
     const { error } = await signIn(email, password);
-      if (error) {
+    if (error) {
       setError(error.message);
       setLoading(false);
       return;
     }
+
+    // After login, check if this user signed up as partner but hasn't been assigned the role yet
+    // (happens when email confirmation was required)
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user?.user_metadata?.partner_signup) {
+      const { data: existingRole } = await supabase
+        .from("user_roles")
+        .select("id")
+        .eq("user_id", session.user.id)
+        .eq("role", "partner")
+        .maybeSingle();
+
+      if (!existingRole) {
+        await supabase.functions.invoke("assign-partner-role", {
+          body: {
+            user_id: session.user.id,
+            team_leader_id: session.user.user_metadata.team_leader_id || null,
+          },
+        });
+        // Clear the metadata flag
+        await supabase.auth.updateUser({
+          data: { partner_signup: null, team_leader_id: null },
+        });
+        window.location.href = "/partner";
+        return;
+      }
+    }
+
     setLoading(false);
   };
 
