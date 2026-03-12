@@ -80,11 +80,8 @@ const PageLoader = () => (
 );
 
 function App() {
-  const [splashDone, setSplashDone] = useState(() => sessionStorage.getItem("empire_splash") === "done");
-  const handleSplashComplete = useCallback(() => {
-    sessionStorage.setItem("empire_splash", "done");
-    setSplashDone(true);
-  }, []);
+  const [showSplash, setShowSplash] = useState(true);
+
 
   return (
   <QueryClientProvider client={queryClient}>
