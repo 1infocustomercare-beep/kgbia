@@ -522,6 +522,45 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
+          VIDEO FEATURES — Platform Capabilities
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.6 }}>
+            <div className="relative rounded-2xl overflow-hidden glow-card">
+              <video src={videoFeatures} autoPlay muted loop playsInline className="w-full aspect-video object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-transparent pointer-events-none" />
+            </div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.6 }} className="text-center lg:text-left">
+            <SectionLabel text="Perché Empire" icon={<Cpu className="w-3 h-3 text-primary" />} />
+            <h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
+              Creiamo <span className="text-shimmer">Qualsiasi Cosa</span><br />Tu Possa Immaginare
+            </h2>
+            <div className="space-y-4 text-left max-w-md mx-auto lg:mx-0">
+              {[
+                { title: "Gestione Telefonica Umana", desc: "Servizio reception e booking telefonico professionale dedicato alla tua attività" },
+                { title: "WhatsApp Business Automatizzato", desc: "Conferme, reminder, promozioni e assistenza clienti 24/7 via WhatsApp" },
+                { title: "Intelligenza Artificiale Integrata", desc: "Catalogo generato in 60s, suggerimenti upselling, analytics predittivi" },
+                { title: "Qualsiasi Integrazione Custom", desc: "API esterne, POS, gestionali esistenti — integriamo tutto nel tuo ecosistema" },
+              ].map((f, i) => (
+                <motion.div key={i} className="flex gap-3 items-start group"
+                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+                  <div className="w-2 h-2 min-w-[8px] rounded-full bg-primary mt-2" />
+                  <div>
+                    <p className="text-xs sm:text-sm font-semibold text-foreground">{f.title}</p>
+                    <p className="text-[0.65rem] text-foreground/35 mt-0.5">{f.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
           SERVIZI
          ═══════════════════════════════════════════ */}
       <Section id="services">
