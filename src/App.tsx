@@ -55,7 +55,9 @@ const AppointmentsPage = lazy(() => import("./pages/app/AppointmentsPage"));
 const ClientsCRMPage = lazy(() => import("./pages/app/ClientsCRMPage"));
 const InterventionsPage = lazy(() => import("./pages/app/InterventionsPage"));
 const BeachMapPage = lazy(() => import("./pages/app/BeachMapPage"));
+const NCCBeachBookingsPage = lazy(() => import("./pages/app/NCCBeachBookingsPage"));
 const TeamPage = lazy(() => import("./pages/app/TeamPage"));
+const AutomationsPage = lazy(() => import("./pages/app/AutomationsPage"));
 
 const queryClient = new QueryClient();
 
