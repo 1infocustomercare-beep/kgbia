@@ -350,18 +350,18 @@ export default function NCCDemoPage() {
           <p className="text-center text-muted-foreground mb-8">Compila il modulo e ti confermeremo entro pochi minuti</p>
           <Card className="border-border/50">
             <CardContent className="p-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><Label>Nome Completo *</Label><Input placeholder="Mario Rossi" value={bookingForm.name} onChange={e => setBookingForm(p => ({ ...p, name: e.target.value }))} /></div>
-                <div><Label>Telefono</Label><Input placeholder="+39 333 1234567" value={bookingForm.phone} onChange={e => setBookingForm(p => ({ ...p, phone: e.target.value }))} /></div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div><Label className="text-xs">Nome Completo *</Label><Input placeholder="Mario Rossi" value={bookingForm.name} onChange={e => setBookingForm(p => ({ ...p, name: e.target.value }))} className="h-10" /></div>
+                <div><Label className="text-xs">Telefono</Label><Input placeholder="+39 333 1234567" value={bookingForm.phone} onChange={e => setBookingForm(p => ({ ...p, phone: e.target.value }))} className="h-10" /></div>
               </div>
-              <div><Label>Email</Label><Input type="email" placeholder="mario@email.com" value={bookingForm.email} onChange={e => setBookingForm(p => ({ ...p, email: e.target.value }))} /></div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><Label>Punto di Ritiro *</Label><Input value={bookingForm.pickup} onChange={e => setBookingForm(p => ({ ...p, pickup: e.target.value }))} placeholder="Es. Aeroporto Fiumicino" /></div>
-                <div><Label>Destinazione *</Label><Input value={bookingForm.dropoff} onChange={e => setBookingForm(p => ({ ...p, dropoff: e.target.value }))} placeholder="Es. Hotel Roma Centro" /></div>
+              <div><Label className="text-xs">Email</Label><Input type="email" placeholder="mario@email.com" value={bookingForm.email} onChange={e => setBookingForm(p => ({ ...p, email: e.target.value }))} className="h-10" /></div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div><Label className="text-xs">Punto di Ritiro *</Label><Input value={bookingForm.pickup} onChange={e => setBookingForm(p => ({ ...p, pickup: e.target.value }))} placeholder="Es. Aeroporto Fiumicino" className="h-10" /></div>
+                <div><Label className="text-xs">Destinazione *</Label><Input value={bookingForm.dropoff} onChange={e => setBookingForm(p => ({ ...p, dropoff: e.target.value }))} placeholder="Es. Hotel Roma Centro" className="h-10" /></div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><Label>Data e Ora *</Label><Input type="datetime-local" value={bookingForm.date} onChange={e => setBookingForm(p => ({ ...p, date: e.target.value }))} /></div>
-                <div><Label>Passeggeri</Label><Input type="number" min="1" max="50" value={bookingForm.passengers} onChange={e => setBookingForm(p => ({ ...p, passengers: e.target.value }))} /></div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div><Label className="text-xs">Data e Ora *</Label><Input type="datetime-local" value={bookingForm.date} onChange={e => setBookingForm(p => ({ ...p, date: e.target.value }))} className="h-10" /></div>
+                <div><Label className="text-xs">Passeggeri</Label><Input type="number" min="1" max="50" value={bookingForm.passengers} onChange={e => setBookingForm(p => ({ ...p, passengers: e.target.value }))} className="h-10" /></div>
               </div>
               <div><Label>Note aggiuntive</Label><Textarea value={bookingForm.notes} onChange={e => setBookingForm(p => ({ ...p, notes: e.target.value }))} placeholder="Numero volo, seggiolino bambini, bagagli extra..." rows={3} /></div>
               <Button onClick={handleBooking} size="lg" className="w-full" disabled={submitting}>

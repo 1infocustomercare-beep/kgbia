@@ -44,32 +44,19 @@ export default function OnboardingPage() {
 
     setLoading(true);
     try {
-      const slug = form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") + "-" + Date.now().toString(36);
-
-      // Create company
-      const { data: company, error: compError } = await supabase
-        .from("companies")
-        .insert({
+      // Use create-company edge function for full provisioning (demo data, subscription, etc.)
+      const { data, error: fnError } = await supabase.functions.invoke("create-company", {
+        body: {
           name: form.name,
-          slug,
           industry: form.industry,
-          owner_id: user.id,
           phone: form.phone || null,
           city: form.city || null,
-          subscription_plan: form.plan,
-          primary_color: INDUSTRY_CONFIGS[form.industry as IndustryId]?.defaultPrimaryColor || "#C8963E",
-        } as any)
-        .select("id")
-        .single();
+          plan: form.plan,
+        },
+      });
 
-      if (compError) throw compError;
-
-      // Create membership
-      await supabase.from("company_memberships").insert({
-        company_id: (company as any).id,
-        user_id: user.id,
-        role: "admin",
-      } as any);
+      if (fnError) throw new Error(fnError.message || "Errore nella creazione");
+      if (data?.error) throw new Error(data.error);
 
       toast.success("Azienda creata con successo! Trial 90 giorni attivo.");
       navigate("/app");

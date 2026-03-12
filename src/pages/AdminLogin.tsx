@@ -33,12 +33,12 @@ const AdminLogin = () => {
     if (authLoading || !user) return;
     if (roles.includes("super_admin")) {
       navigate("/superadmin", { replace: true });
-    } else if (roles.includes("partner")) {
+    } else if (roles.includes("partner") || roles.includes("team_leader")) {
       navigate("/partner", { replace: true });
     } else if (roles.includes("staff")) {
       navigate("/staff", { replace: true });
     } else {
-      navigate("/dashboard", { replace: true });
+      navigate("/app", { replace: true });
     }
   }, [user, roles, authLoading, navigate]);
 
