@@ -301,9 +301,9 @@ const LandingPage = () => {
         <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-5"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           {[
-            { icon: <Banknote className="w-7 h-7" />, amount: "€7.500", label: "Margini erosi / mese", sub: "Su 1000 ordini a €25" },
-            { icon: <DollarSign className="w-7 h-7" />, amount: "€90.000", label: "Dispersi ogni anno", sub: "Capitale che alimenta i competitor" },
-            { icon: <Target className="w-7 h-7" />, amount: "€0", label: "Proprietà clienti", sub: "Il marketplace possiede i TUOI dati" },
+            { icon: <Banknote className="w-7 h-7" />, amount: "€7.500", label: "Margini erosi / mese", sub: "Commissioni marketplace + software multipli" },
+            { icon: <DollarSign className="w-7 h-7" />, amount: "4-5", label: "Software da pagare", sub: "Gestionale, contabilità, CRM, marketing, HR" },
+            { icon: <Target className="w-7 h-7" />, amount: "0%", label: "Controllo sui dati", sub: "I tuoi clienti, le tue vendite — in mano ad altri" },
           ].map((item, i) => (
             <motion.div key={i}
               className="group relative p-8 rounded-3xl luxury-card hover:-translate-y-2 transition-all duration-500 text-center"
