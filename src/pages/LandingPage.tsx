@@ -375,10 +375,10 @@ const LandingPage = () => {
           <div className="hidden lg:block absolute top-[36px] left-[calc(12.5%+36px)] right-[calc(12.5%+36px)] h-[1px] bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 z-0" />
 
           {[
-            { step: "01", title: "Discovery & Setup", desc: "Analizziamo il tuo ristorante e configuriamo la suite in 24 ore." },
-            { step: "02", title: "AI Menu & Branding", desc: "L'IA crea il menu digitale e personalizza la tua app con il tuo brand." },
-            { step: "03", title: "Lancio & Formazione", desc: "Attiviamo la PWA, formiamo lo staff e installiamo i QR Code." },
-            { step: "04", title: "Crescita Continua", desc: "Monitoriamo le performance e ottimizziamo i margini costantemente." },
+            { step: "01", title: "Scegli il Settore", desc: "Seleziona la tua industry: Food, NCC, Beauty, Healthcare, Retail, Fitness o Hospitality. La suite si adatta." },
+            { step: "02", title: "AI Setup & Branding", desc: "L'IA configura moduli, terminologia e catalogo. Personalizza logo, colori e dominio in 5 minuti." },
+            { step: "03", title: "Lancio & Formazione", desc: "Attiviamo la PWA, formiamo lo staff sulle dashboard operative e configuriamo i pagamenti Stripe." },
+            { step: "04", title: "Crescita Autonoma", desc: "CRM, marketing push, analytics e AI Concierge lavorano per te. Monitora tutto da un'unica dashboard." },
           ].map((s, i) => (
             <motion.div key={i} className="relative text-center z-10" variants={popIn}>
               <div className="relative w-[72px] h-[72px] rounded-full bg-background border-2 border-primary/20 flex items-center justify-center mx-auto mb-5 group">
