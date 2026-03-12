@@ -70,6 +70,7 @@ const AdminLogin = () => {
           emailRedirectTo: window.location.origin,
         },
       });
+      if (error) {
         setError(error.message);
         setLoading(false);
         return;
