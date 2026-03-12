@@ -718,21 +718,14 @@ const LandingPage = () => {
 
           <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="order-1 lg:order-2">
-            <div className="flex justify-center items-end gap-2 sm:gap-5 relative">
+            <div className="flex justify-center items-end gap-2 sm:gap-4 relative">
               <div className="absolute -inset-16 bg-primary/[0.06] rounded-[80px] blur-[100px] pointer-events-none" />
               {[
-                { label: "Cliente", path: "/r/impero-roma", delay: 0 },
-                { label: "Gestionale", path: "/app", delay: 0.1 },
-                { label: "Operativo", path: "/kitchen/impero-roma", delay: 0.2 },
+                { label: "Cliente", img: mockupCliente, delay: 0 },
+                { label: "Gestionale", img: mockupAdmin, delay: 0.1 },
+                { label: "Operativo", img: mockupCucina, delay: 0.2 },
               ].map((phone, i) => {
                 const isCenter = i === 1;
-                const w = isCenter ? "w-[110px] sm:w-[170px]" : "w-[90px] sm:w-[140px]";
-                const h = isCenter ? "h-[224px] sm:h-[348px]" : "h-[184px] sm:h-[286px]";
-                const iframeW = 393;
-                const iframeH = 852;
-                // Scale iframe to fit the frame: mobile uses smaller frames
-                const mobileFrameW = isCenter ? 110 : 90;
-                const smFrameW = isCenter ? 170 : 140;
                 return (
                   <motion.div key={i}
                     className="relative"
@@ -742,30 +735,24 @@ const LandingPage = () => {
                     transition={{ delay: 0.2 + phone.delay, duration: 0.8, ease: smoothEase }}
                     whileHover={{ y: isCenter ? -16 : -6, scale: 1.03 }}
                   >
-                    <div className={`relative ${w} ${h} rounded-[18px] sm:rounded-[26px] border-[2px] border-foreground/15 bg-foreground/5 shadow-[0_20px_60px_hsla(0,0%,0%,0.5)] overflow-hidden`}>
+                    <div className={`relative ${isCenter ? "w-[110px] sm:w-[160px]" : "w-[90px] sm:w-[130px]"} ${isCenter ? "h-[224px] sm:h-[326px]" : "h-[184px] sm:h-[265px]"} rounded-[18px] sm:rounded-[24px] border-[2px] border-foreground/15 bg-foreground/5 shadow-[0_20px_60px_hsla(0,0%,0%,0.5)] overflow-hidden`}>
                       {/* Dynamic Island */}
-                      <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[12px] sm:w-[56px] sm:h-[15px] bg-foreground rounded-full z-20" />
+                      <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[36px] h-[11px] sm:w-[50px] sm:h-[14px] bg-foreground rounded-full z-20" />
                       {/* Screen */}
-                      <div className="absolute inset-[2px] rounded-[16px] sm:rounded-[24px] overflow-hidden bg-background">
-                        <iframe
-                          src={`${window.location.origin}${phone.path}`}
-                          className="border-0 pointer-events-none"
-                          style={{
-                            width: iframeW,
-                            height: iframeH,
-                            transform: `scale(${(mobileFrameW - 4) / iframeW})`,
-                            transformOrigin: "top left",
-                          }}
-                          title={`Preview ${phone.label}`}
-                          loading="lazy"
-                          tabIndex={-1}
-                        />
+                      <div className="absolute inset-[2px] rounded-[16px] sm:rounded-[22px] overflow-hidden">
+                        <img src={phone.img} alt={phone.label} className="w-full h-full object-cover object-top" loading="lazy" />
                       </div>
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none z-10" />
                       {/* Home indicator */}
-                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[40px] h-[3px] bg-foreground/25 rounded-full z-20" />
+                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[3px] bg-foreground/25 rounded-full z-20" />
                     </div>
                     <p className="text-center text-[0.5rem] sm:text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/50 mt-2">{phone.label}</p>
                   </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
                 );
               })}
             </div>
