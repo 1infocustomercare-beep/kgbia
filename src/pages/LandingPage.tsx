@@ -18,6 +18,9 @@ import videoHero from "@/assets/video-hero-empire.mp4";
 import videoIndustries from "@/assets/video-industries.mp4";
 import videoFeatures from "@/assets/video-features.mp4";
 import videoPartner from "@/assets/video-partner-pitch.mp4";
+import mockupCliente from "@/assets/mockup-cliente.jpg";
+import mockupAdmin from "@/assets/mockup-admin.jpg";
+import mockupCucina from "@/assets/mockup-cucina.jpg";
 
 /* ═══════════════════════════════════════════
    HELPERS
