@@ -96,8 +96,8 @@ const Orb = ({ color, size, x, y, gx, gy, parallaxFactor }: {
   gy: ReturnType<typeof useMotionValue>;
   parallaxFactor: number;
 }) => {
-  const px = useSpring(useTransform(gx, [-1, 1], [-30 * parallaxFactor, 30 * parallaxFactor]), { stiffness: 50, damping: 30 });
-  const py = useSpring(useTransform(gy, [-1, 1], [-30 * parallaxFactor, 30 * parallaxFactor]), { stiffness: 50, damping: 30 });
+  const px = useSpring(useTransform(gx, [-1, 1], [-30 * parallaxFactor, 30 * parallaxFactor] as number[]), { stiffness: 50, damping: 30 });
+  const py = useSpring(useTransform(gy, [-1, 1], [-30 * parallaxFactor, 30 * parallaxFactor] as number[]), { stiffness: 50, damping: 30 });
   return (
     <motion.div
       className="absolute rounded-full blur-[80px]"
