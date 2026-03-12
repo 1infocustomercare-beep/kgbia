@@ -342,11 +342,11 @@
   .text-shimmer {
     background: linear-gradient(
       90deg,
-      hsl(217, 91%, 65%) 0%,
-      hsl(190, 80%, 60%) 25%,
+      hsl(265, 85%, 70%) 0%,
+      hsl(290, 80%, 65%) 25%,
       hsl(210, 40%, 97%) 50%,
-      hsl(38, 95%, 60%) 75%,
-      hsl(217, 91%, 65%) 100%
+      hsl(320, 75%, 60%) 75%,
+      hsl(265, 85%, 70%) 100%
     );
     background-size: 200% auto;
     -webkit-background-clip: text;
