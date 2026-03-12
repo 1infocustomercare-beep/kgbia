@@ -489,6 +489,46 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
+          VIDEO INDUSTRIES — Multi-Sector Showcase
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.6 }} className="text-center lg:text-left order-2 lg:order-1">
+            <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
+            <h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
+              Un Solo Sistema per <span className="text-shimmer">Ogni Realtà</span>
+            </h2>
+            <p className="text-foreground/40 text-sm leading-[1.7] mb-6 max-w-md mx-auto lg:mx-0">
+              Dalla ristorazione gourmet al transfer di lusso, dal salone di bellezza allo studio medico. 
+              Empire si adatta automaticamente alla tua industria con moduli, terminologia e flussi dedicati.
+            </p>
+            <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto lg:mx-0">
+              {[
+                { emoji: "🍽️", label: "Food & Ristorazione" },
+                { emoji: "🚗", label: "NCC & Transfer" },
+                { emoji: "💇", label: "Beauty & Wellness" },
+                { emoji: "🏋️", label: "Fitness & Sport" },
+              ].map((s, i) => (
+                <motion.div key={i} className="flex items-center gap-2 p-2.5 rounded-xl bg-primary/[0.04] border border-primary/[0.06]"
+                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
+                  <span className="text-base">{s.emoji}</span>
+                  <span className="text-[0.6rem] font-heading font-semibold text-foreground/60">{s.label}</span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.6 }} className="order-1 lg:order-2">
+            <div className="relative rounded-2xl overflow-hidden glow-card">
+              <video src={videoIndustries} autoPlay muted loop playsInline className="w-full aspect-video object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-l from-background/50 via-transparent to-transparent pointer-events-none" />
+            </div>
+          </motion.div>
+        </div>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
           PROBLEMA
          ═══════════════════════════════════════════ */}
       <Section id="problem">
