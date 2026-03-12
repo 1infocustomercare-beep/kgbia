@@ -85,7 +85,7 @@ function App() {
 
   return (
   <QueryClientProvider client={queryClient}>
-    {!splashDone && <SplashScreen onComplete={handleSplashComplete} />}
+    {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
     <TooltipProvider>
       <AuthProvider>
         <CartProvider>
