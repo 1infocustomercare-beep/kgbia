@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Building, User, Palette, Globe, Settings, Save } from "lucide-react";
+import { Building, User, Palette, Globe, Settings, Save, Database, Loader2 } from "lucide-react";
 import { useIndustry } from "@/hooks/useIndustry";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -156,6 +156,7 @@ export default function NCCSettingsPage() {
           <TabsTrigger value="profile" className="text-xs sm:text-sm"><User className="w-3.5 h-3.5 mr-1 hidden sm:inline" />Profilo</TabsTrigger>
           <TabsTrigger value="branding" className="text-xs sm:text-sm"><Palette className="w-3.5 h-3.5 mr-1 hidden sm:inline" />Brand</TabsTrigger>
           <TabsTrigger value="seo" className="text-xs sm:text-sm"><Globe className="w-3.5 h-3.5 mr-1 hidden sm:inline" />SEO</TabsTrigger>
+          <TabsTrigger value="seed" className="text-xs sm:text-sm"><Database className="w-3.5 h-3.5 mr-1 hidden sm:inline" />Seed Dati</TabsTrigger>
         </TabsList>
 
         {/* ── Azienda ── */}
@@ -245,7 +246,7 @@ export default function NCCSettingsPage() {
         </TabsContent>
 
         {/* ── SEO ── */}
-        <TabsContent value="seo" className="mt-6">
+        <TabsContent value="seo" className="mt-6 space-y-6">
           <Card className="border-border/40">
             <CardHeader><CardTitle className="text-sm">SEO & Open Graph</CardTitle></CardHeader>
             <CardContent className="space-y-4">
@@ -263,7 +264,54 @@ export default function NCCSettingsPage() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* ── Seed Data ── */}
+        <TabsContent value="seed" className="mt-6">
+          <SeedDataTab />
+        </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+function SeedDataTab() {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+
+  const runSeed = async () => {
+    setLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { toast.error("Devi essere autenticato"); setLoading(false); return; }
+      
+      const res = await supabase.functions.invoke("seed-telese-data");
+      if (res.error) throw res.error;
+      setResult(res.data);
+      toast.success("Dati Telese Viaggi importati con successo!");
+    } catch (e: any) {
+      toast.error("Errore: " + (e.message || "Sconosciuto"));
+    }
+    setLoading(false);
+  };
+
+  return (
+    <Card className="border-border/40">
+      <CardHeader><CardTitle className="text-sm">Importa Dati Demo Telese Viaggi</CardTitle></CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-muted-foreground">
+          Questo importerà veicoli, tratte, destinazioni barca, autisti, prezzi, recensioni e prenotazioni demo
+          basati sui dati reali di Autonoleggio Telese snc.
+        </p>
+        <p className="text-xs text-destructive">⚠️ Attenzione: sovrascriverà i dati esistenti della tua azienda NCC.</p>
+        <Button onClick={runSeed} disabled={loading} className="h-11 min-h-[44px]">
+          {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Importando...</> : <><Database className="w-4 h-4 mr-2" />Importa Dati Telese</>}
+        </Button>
+        {result && (
+          <div className="p-3 rounded-lg bg-green-950/30 border border-green-500/30 text-sm text-green-300">
+            ✅ Importati: {result.summary?.vehicles} veicoli, {result.summary?.routes} tratte, {result.summary?.destinations} destinazioni, {result.summary?.drivers} autisti, {result.summary?.bookings} prenotazioni, {result.summary?.reviews} recensioni
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
