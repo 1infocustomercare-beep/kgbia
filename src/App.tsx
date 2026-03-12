@@ -158,6 +158,9 @@ const App = () => (
                   <Route path="fleet" element={<NCCFleetPage />} />
                   <Route path="routes" element={<NCCRoutesPage />} />
                   <Route path="bookings" element={<NCCBookingsPage />} />
+                  <Route path="drivers" element={<NCCDriversPage />} />
+                  <Route path="pricing" element={<NCCPricingPage />} />
+                  <Route path="cross-selling" element={<NCCCrossSellingPage />} />
                   {/* Multi-sector modules */}
                   <Route path="appointments" element={<AppointmentsPage />} />
                   <Route path="clients" element={<ClientsCRMPage />} />

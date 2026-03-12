@@ -31,8 +31,10 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Flotta", icon: "Car", url: "/app/fleet" },
     { title: "Tratte", icon: "Route", url: "/app/routes" },
+    { title: "Prezzi", icon: "CreditCard", url: "/app/pricing" },
     { title: "Prenotazioni", icon: "Calendar", url: "/app/bookings" },
     { title: "Autisti", icon: "Users", url: "/app/drivers" },
+    { title: "Cross-Selling", icon: "Target", url: "/app/cross-selling" },
     { title: "Recensioni", icon: "Star", url: "/app/reviews" },
   ],
   beauty: [
