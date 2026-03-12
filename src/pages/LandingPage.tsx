@@ -403,6 +403,39 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════════════════════════════════════════
+          VIDEO HERO — Business Transformation
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-8">
+          <SectionLabel text="Scopri Empire" icon={<Play className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            La Tecnologia che <span className="text-shimmer">Trasforma il Business</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Dashboard IA, gestione flotta, menu digitali, CRM avanzato — tutto in un ecosistema white-label personalizzabile. Creiamo qualsiasi cosa tu possa immaginare.
+          </motion.p>
+        </div>
+        <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
+          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+          transition={{ duration: 0.6 }}>
+          <div className="absolute -inset-8 bg-primary/[0.08] rounded-[60px] blur-[80px] pointer-events-none" />
+          <video
+            src={videoHero}
+            autoPlay muted loop playsInline
+            className="w-full aspect-video object-cover rounded-2xl"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
+          <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
+            <div className="px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-sm border border-primary/10">
+              <span className="text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase">Dashboard IA • CRM • Automazioni</span>
+            </div>
+          </div>
+        </motion.div>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
           SETTORI
          ═══════════════════════════════════════════ */}
       <Section id="industries">
