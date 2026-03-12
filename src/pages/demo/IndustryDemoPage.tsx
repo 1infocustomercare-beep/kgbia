@@ -198,7 +198,7 @@ function AnimSection({ id, children, className = "", delay = 0, style }: { id?: 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
   return (
-    <section id={id} ref={ref} className={className}>
+    <section id={id} ref={ref} className={className} style={style}>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
