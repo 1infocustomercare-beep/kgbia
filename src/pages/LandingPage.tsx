@@ -14,6 +14,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import heroLanding from "@/assets/hero-landing.jpg";
+import videoHero from "@/assets/video-hero-empire.mp4";
+import videoIndustries from "@/assets/video-industries.mp4";
+import videoFeatures from "@/assets/video-features.mp4";
+import videoPartner from "@/assets/video-partner-pitch.mp4";
 
 /* ═══════════════════════════════════════════
    HELPERS
