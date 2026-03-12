@@ -1,10 +1,26 @@
-import { Outlet } from "react-router-dom";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Outlet, Navigate } from "react-router-dom";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { useIndustry } from "@/hooks/useIndustry";
 
 export default function AppLayout() {
+  const { industry, loading } = useIndustry();
+
+  // Food users must use /dashboard exclusively – redirect them away from /app
+  if (!loading && industry === "food") {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <SidebarProvider>
       <div className="min-h-[100dvh] flex w-full bg-background">

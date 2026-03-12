@@ -26,18 +26,7 @@ const ICON_MAP: Record<string, any> = {
 
 // Modules per industry
 const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[]> = {
-  food: [
-    { title: "Dashboard", icon: "Home", url: "/app" },
-    { title: "Menu", icon: "BookOpen", url: "/app/menu" },
-    { title: "Ordini", icon: "ShoppingBag", url: "/app/orders" },
-    { title: "Cucina", icon: "ChefHat", url: "/app/kitchen" },
-    { title: "Tavoli", icon: "LayoutGrid", url: "/app/tables" },
-    { title: "Prenotazioni", icon: "Calendar", url: "/app/reservations" },
-    { title: "Recensioni", icon: "Star", url: "/app/reviews" },
-    { title: "Clienti", icon: "Users", url: "/app/clients" },
-    { title: "Inventario", icon: "Package", url: "/app/inventory" },
-    { title: "HACCP", icon: "ClipboardCheck", url: "/app/haccp" },
-  ],
+  // Food uses /dashboard exclusively – no /app nav needed
   ncc: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Flotta", icon: "Car", url: "/app/fleet" },

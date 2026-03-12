@@ -13,12 +13,7 @@ const ICON_MAP: Record<string, any> = {
 type NavItem = { label: string; icon: string; path: string };
 
 const BOTTOM_NAV: Record<string, NavItem[]> = {
-  food: [
-    { label: "Home", icon: "Home", path: "/app" },
-    { label: "Ordini", icon: "ShoppingBag", path: "/app/orders" },
-    { label: "Menu", icon: "BookOpen", path: "/app/menu" },
-    { label: "Prenotazioni", icon: "Calendar", path: "/app/reservations" },
-  ],
+  // Food uses /dashboard exclusively – no /app bottom nav needed
   ncc: [
     { label: "Home", icon: "Home", path: "/app" },
     { label: "Corse", icon: "Calendar", path: "/app/bookings" },
