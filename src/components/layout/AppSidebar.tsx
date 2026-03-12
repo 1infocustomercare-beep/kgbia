@@ -175,6 +175,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
 
 const COMMON_NAV = [
   { title: "Team", icon: "Briefcase", url: "/app/team" },
+  { title: "Automazioni", icon: "Sparkles", url: "/app/automations" },
   { title: "Payroll", icon: "Receipt", url: "/app/payroll" },
   { title: "Finanza", icon: "BarChart3", url: "/app/finance" },
   { title: "Leads", icon: "Target", url: "/app/leads" },
