@@ -6,7 +6,7 @@ import {
   Key, HeadphonesIcon, CheckCircle2, XCircle, AlertCircle,
   Cpu, Wifi, ChevronRight, Save, Bot, Send, Bell,
   ShieldCheck, Lock, ExternalLink, Download, FileText, FileSpreadsheet,
-  CreditCard, Ban, Unlock, Calendar, Clock, Eye
+  CreditCard, Ban, Unlock, Calendar, Clock, Eye, Film
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
