@@ -112,7 +112,7 @@ export function AppSidebar() {
         )}
 
         {/* Industry-specific modules */}
-        <SidebarGroup defaultOpen>
+        <SidebarGroup>
           <SidebarGroupLabel>
             {collapsed ? "" : "Moduli"}
           </SidebarGroupLabel>
