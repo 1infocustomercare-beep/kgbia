@@ -399,8 +399,8 @@ const AdminLogin = () => {
           className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           {isSignUp
-            ? "Hai già un account Partner? Accedi"
-            : (isPartnerMode ? "Nuovo qui? Registrati come Partner" : "Nuovo ristorante? Crea account")}
+            ? (isPartnerMode ? "Hai già un account Partner? Accedi" : "Hai già un account? Accedi")
+            : (isPartnerMode ? "Nuovo qui? Registrati come Partner" : "Nuovo qui? Crea account")}
         </button>
       </motion.div>
     </div>
