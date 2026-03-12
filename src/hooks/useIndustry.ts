@@ -40,12 +40,16 @@ export function useIndustry() {
         .limit(1)
         .maybeSingle();
 
-      if (membership?.company_id) {
-        const { data: companyData } = await supabase
+      const membershipData = membership as any;
+
+      if (membershipData?.company_id) {
+        const { data: companyRaw } = await supabase
           .from("companies" as any)
           .select("*")
-          .eq("id", membership.company_id)
+          .eq("id", membershipData.company_id)
           .single();
+
+        const companyData = companyRaw as any;
 
         if (companyData) {
           setCompany({

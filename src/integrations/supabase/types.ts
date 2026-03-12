@@ -187,6 +187,107 @@ export type Database = {
           },
         ]
       }
+      companies: {
+        Row: {
+          address: string | null
+          blocked_reason: string | null
+          city: string | null
+          created_at: string
+          email: string | null
+          id: string
+          industry: string
+          is_active: boolean
+          is_blocked: boolean
+          logo_url: string | null
+          modules_enabled: string[] | null
+          name: string
+          owner_id: string | null
+          phone: string | null
+          primary_color: string | null
+          secondary_color: string | null
+          slug: string
+          subscription_plan: string
+          tagline: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          blocked_reason?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          industry?: string
+          is_active?: boolean
+          is_blocked?: boolean
+          logo_url?: string | null
+          modules_enabled?: string[] | null
+          name: string
+          owner_id?: string | null
+          phone?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          slug: string
+          subscription_plan?: string
+          tagline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          blocked_reason?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          industry?: string
+          is_active?: boolean
+          is_blocked?: boolean
+          logo_url?: string | null
+          modules_enabled?: string[] | null
+          name?: string
+          owner_id?: string | null
+          phone?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          slug?: string
+          subscription_plan?: string
+          tagline?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      company_memberships: {
+        Row: {
+          company_id: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_memberships_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_activity: {
         Row: {
           created_at: string
@@ -402,6 +503,50 @@ export type Database = {
           },
         ]
       }
+      haccp_logs: {
+        Row: {
+          check_type: string
+          checked_at: string
+          company_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          operator_name: string
+          result: string
+          temperature: number | null
+        }
+        Insert: {
+          check_type: string
+          checked_at?: string
+          company_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          operator_name: string
+          result?: string
+          temperature?: number | null
+        }
+        Update: {
+          check_type?: string
+          checked_at?: string
+          company_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          operator_name?: string
+          result?: string
+          temperature?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "haccp_logs_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kitchen_access_pins: {
         Row: {
           created_at: string
@@ -436,6 +581,59 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          assigned_to: string | null
+          company_id: string
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          source: string | null
+          status: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          assigned_to?: string | null
+          company_id: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          source?: string | null
+          status?: string
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          assigned_to?: string | null
+          company_id?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          source?: string | null
+          status?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
@@ -1338,6 +1536,59 @@ export type Database = {
           },
         ]
       }
+      staff: {
+        Row: {
+          company_id: string
+          created_at: string
+          email: string | null
+          full_name: string
+          hourly_rate: number | null
+          id: string
+          is_active: boolean
+          monthly_salary: number | null
+          phone: string | null
+          role: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          email?: string | null
+          full_name: string
+          hourly_rate?: number | null
+          id?: string
+          is_active?: boolean
+          monthly_salary?: number | null
+          phone?: string | null
+          role?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          hourly_rate?: number | null
+          id?: string
+          is_active?: boolean
+          monthly_salary?: number | null
+          phone?: string | null
+          role?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1427,6 +1678,7 @@ export type Database = {
           stripe_account_id: string
         }[]
       }
+      get_user_company: { Args: { p_user_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

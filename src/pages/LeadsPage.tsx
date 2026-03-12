@@ -67,7 +67,7 @@ export default function LeadsPage() {
       .eq("company_id", companyId)
       .order("created_at", { ascending: false });
 
-    if (!error && data) setLeads(data as Lead[]);
+    if (!error && data) setLeads(data as unknown as Lead[]);
     setLoading(false);
   };
 
