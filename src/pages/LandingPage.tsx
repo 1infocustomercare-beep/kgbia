@@ -637,9 +637,9 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Costruisci il Tuo <span className="text-vibrant-gradient">Impero</span>
           </motion.h2>
-          <motion.p className="text-foreground/45 max-w-[500px] mx-auto leading-[1.7] text-sm"
+          <motion.p className="text-foreground/45 max-w-[550px] mx-auto leading-[1.7] text-sm"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            €997 per ogni vendita. Zero rischi. Pagamenti istantanei.
+            Vendi la suite Empire ai business del tuo territorio. €997 per vendita, bonus mensili progressivi e pagamenti istantanei su Stripe Connect.
           </motion.p>
         </div>
 
