@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Crown, ChefHat, ArrowLeft, Users } from "lucide-react";
@@ -8,12 +8,12 @@ import { toast } from "@/hooks/use-toast";
 
 type LoginMode = "choose" | "owner" | "kitchen" | "partner";
 
-/* Animated blob */
-const Blob = ({ className = "", color = "bg-primary" }: { className?: string; color?: string }) => {
-  return <div className={`absolute rounded-full blur-[140px] opacity-[0.18] pointer-events-none ${color} ${className}`} />;
-};
-
-// Prevent ref warnings from parent components
+/* Animated blob - forwardRef to prevent React ref warnings */
+const Blob = forwardRef<HTMLDivElement, { className?: string; color?: string }>(
+  ({ className = "", color = "bg-primary" }, ref) => (
+    <div ref={ref} className={`absolute rounded-full blur-[140px] opacity-[0.18] pointer-events-none ${color} ${className}`} />
+  )
+);
 Blob.displayName = "Blob";
 
 const AdminLogin = () => {
