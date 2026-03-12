@@ -118,10 +118,10 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   const { gx, gy } = useGyro();
 
   // Parallax for background layers
-  const bgX = useSpring(useTransform(gx, [-1, 1], [15, -15]), { stiffness: 60, damping: 25 });
-  const bgY = useSpring(useTransform(gy, [-1, 1], [15, -15]), { stiffness: 60, damping: 25 });
-  const gridX = useSpring(useTransform(gx, [-1, 1], [-8, 8]), { stiffness: 40, damping: 20 });
-  const gridY = useSpring(useTransform(gy, [-1, 1], [-8, 8]), { stiffness: 40, damping: 20 });
+  const bgX = useSpring(useTransform(gx, (v: number) => v * -15), { stiffness: 60, damping: 25 });
+  const bgY = useSpring(useTransform(gy, (v: number) => v * -15), { stiffness: 60, damping: 25 });
+  const gridX = useSpring(useTransform(gx, (v: number) => v * 8), { stiffness: 40, damping: 20 });
+  const gridY = useSpring(useTransform(gy, (v: number) => v * 8), { stiffness: 40, damping: 20 });
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("reveal"), 2200);
