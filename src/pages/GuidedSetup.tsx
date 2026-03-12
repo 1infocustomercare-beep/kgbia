@@ -1,16 +1,27 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ChefHat, Truck, ShoppingBag, TableProperties, Palette, Check, ArrowRight, ArrowLeft, Sparkles, Upload } from "lucide-react";
+import { ChefHat, Truck, ShoppingBag, TableProperties, Palette, Check, ArrowRight, ArrowLeft, Sparkles, Upload, Car, Scissors, Heart, Store, Dumbbell, Building, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { BUSINESS_TYPE_OPTIONS, getBusinessTypeConfig, type BusinessType } from "@/lib/business-type";
 import { getMenuPreset } from "@/lib/menu-presets";
 import { extractDominantColor, hslToHex } from "@/lib/color-extract";
+import { INDUSTRIES, ACTIVE_INDUSTRIES } from "@/data/industries";
+import { type IndustryId, INDUSTRY_CONFIGS } from "@/config/industry-config";
 
-type Step = "type" | "channels" | "brand" | "done";
-const STEPS: Step[] = ["type", "channels", "brand", "done"];
+type Step = "industry" | "type" | "channels" | "brand" | "done";
+
+const INDUSTRY_ICONS: Record<string, React.ReactNode> = {
+  food: <ChefHat className="w-6 h-6" />,
+  ncc: <Car className="w-6 h-6" />,
+  beauty: <Scissors className="w-6 h-6" />,
+  healthcare: <Heart className="w-6 h-6" />,
+  retail: <Store className="w-6 h-6" />,
+  fitness: <Dumbbell className="w-6 h-6" />,
+  hospitality: <Building className="w-6 h-6" />,
+};
 
 const BUSINESS_ICONS: Record<BusinessType, string> = {
   restaurant: "🍽️",
@@ -23,8 +34,10 @@ const BUSINESS_ICONS: Record<BusinessType, string> = {
 export default function GuidedSetup() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [step, setStep] = useState<Step>("type");
   const [saving, setSaving] = useState(false);
+
+  // Industry state
+  const [industry, setIndustry] = useState<IndustryId>("food");
 
   // Form state
   const [name, setName] = useState("");
@@ -39,8 +52,24 @@ export default function GuidedSetup() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
-  const stepIndex = STEPS.indexOf(step);
+  const isFood = industry === "food";
+
+  // Dynamic steps based on industry
+  const steps: Step[] = isFood
+    ? ["industry", "type", "channels", "brand", "done"]
+    : ["industry", "type", "brand", "done"];
+
+  const [step, setStep] = useState<Step>("industry");
+  const stepIndex = steps.indexOf(step);
+  const totalVisibleSteps = steps.length - 1; // exclude "done"
+
   const config = getBusinessTypeConfig(businessType);
+  const industryConfig = INDUSTRY_CONFIGS[industry];
+
+  const handleIndustryChange = (id: IndustryId) => {
+    setIndustry(id);
+    setPrimaryColor(INDUSTRY_CONFIGS[id].defaultPrimaryColor);
+  };
 
   const handleBusinessTypeChange = (bt: BusinessType) => {
     setBusinessType(bt);
@@ -67,12 +96,35 @@ export default function GuidedSetup() {
 
     const finalSlug = slug.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
 
-    // 1. Create restaurant
+    try {
+      if (isFood) {
+        await createFoodBusiness(finalSlug);
+      } else {
+        await createCompanyBusiness(finalSlug);
+      }
+    } catch (err: any) {
+      toast({ title: "Errore", description: err?.message || "Riprova", variant: "destructive" });
+      setSaving(false);
+      return;
+    }
+
+    toast({
+      title: "🎉 Attività creata!",
+      description: `${name} è pronto — settore ${industryConfig.label}`,
+    });
+    setStep("done");
+    setSaving(false);
+
+    setTimeout(() => navigate(isFood ? "/dashboard" : "/app"), 1800);
+  };
+
+  const createFoodBusiness = async (finalSlug: string) => {
+    // 1. Create restaurant (existing flow)
     const { data: newRest, error } = await supabase.from("restaurants").insert({
       name: name.trim(),
       slug: finalSlug,
       city: city.trim() || null,
-      owner_id: user.id,
+      owner_id: user!.id,
       business_type: businessType as any,
       delivery_enabled: delivery,
       takeaway_enabled: takeaway,
@@ -81,15 +133,10 @@ export default function GuidedSetup() {
       tagline: tagline.trim() || config.copy.reservationKicker,
     } as any).select("id").single();
 
-    if (error || !newRest) {
-      toast({ title: "Errore", description: error?.message || "Riprova", variant: "destructive" });
-      setSaving(false);
-      return;
-    }
-
+    if (error || !newRest) throw error || new Error("Creazione fallita");
     const restaurantId = newRest.id;
 
-    // 2. Upload logo if provided
+    // 2. Upload logo
     if (logoFile) {
       const ext = logoFile.name.split(".").pop() || "png";
       const path = `${restaurantId}/logo.${ext}`;
@@ -105,7 +152,7 @@ export default function GuidedSetup() {
       }
     }
 
-    // 3. Auto-seed menu items from preset
+    // 3. Auto-seed menu items
     const preset = getMenuPreset(businessType);
     const menuRows = preset.map(item => ({
       restaurant_id: restaurantId,
@@ -122,27 +169,65 @@ export default function GuidedSetup() {
     // 4. Set user role
     await supabase
       .from("user_roles")
-      .upsert({ user_id: user.id, role: "restaurant_admin" as any }, { onConflict: "user_id,role" });
+      .upsert({ user_id: user!.id, role: "restaurant_admin" as any }, { onConflict: "user_id,role" });
+  };
 
-    toast({ title: "🎉 Attività creata!", description: `${name} è pronto con il preset ${config.label}` });
-    setStep("done");
-    setSaving(false);
+  const createCompanyBusiness = async (finalSlug: string) => {
+    // 1. Create company
+    const { data: newCompany, error } = await supabase.from("companies").insert({
+      name: name.trim(),
+      slug: finalSlug,
+      city: city.trim() || null,
+      owner_id: user!.id,
+      industry: industry,
+      primary_color: primaryColor,
+      tagline: tagline.trim() || `Benvenuti — ${industryConfig.label}`,
+      modules_enabled: industryConfig.modules.filter(m => m.enabled).map(m => m.id),
+      subscription_plan: "essential",
+    }).select("id").single();
 
-    // Navigate to dashboard after short delay
-    setTimeout(() => navigate("/dashboard"), 1800);
+    if (error || !newCompany) throw error || new Error("Creazione fallita");
+    const companyId = newCompany.id;
+
+    // 2. Create membership
+    await supabase.from("company_memberships").insert({
+      company_id: companyId,
+      user_id: user!.id,
+      role: "admin",
+    });
+
+    // 3. Upload logo to business-assets bucket
+    if (logoFile) {
+      const ext = logoFile.name.split(".").pop() || "png";
+      const path = `${companyId}/logo.${ext}`;
+      const { error: uploadErr } = await supabase.storage.from("business-assets").upload(path, logoFile, { upsert: true });
+      if (!uploadErr) {
+        const { data: urlData } = supabase.storage.from("business-assets").getPublicUrl(path);
+        let hex = primaryColor;
+        try {
+          const hsl = await extractDominantColor(urlData.publicUrl);
+          hex = hslToHex(hsl);
+        } catch {}
+        await supabase.from("companies").update({ logo_url: urlData.publicUrl, primary_color: hex }).eq("id", companyId);
+      }
+    }
+
+    // 4. Set user role
+    await supabase
+      .from("user_roles")
+      .upsert({ user_id: user!.id, role: "restaurant_admin" as any }, { onConflict: "user_id,role" });
   };
 
   const nextStep = () => {
-    const idx = STEPS.indexOf(step);
-    if (idx < STEPS.length - 1) setStep(STEPS[idx + 1]);
+    if (stepIndex < steps.length - 1) setStep(steps[stepIndex + 1]);
   };
 
   const prevStep = () => {
-    const idx = STEPS.indexOf(step);
-    if (idx > 0) setStep(STEPS[idx - 1]);
+    if (stepIndex > 0) setStep(steps[stepIndex - 1]);
   };
 
   const canProceed =
+    step === "industry" ? true :
     step === "type" ? !!name.trim() && !!slug.trim() :
     step === "channels" ? true :
     step === "brand" ? true : false;
@@ -152,23 +237,77 @@ export default function GuidedSetup() {
       {/* Progress */}
       <div className="px-6 pt-6 pb-2 safe-top">
         <div className="flex gap-2">
-          {STEPS.slice(0, 3).map((s, i) => (
+          {steps.slice(0, totalVisibleSteps).map((s, i) => (
             <div key={s} className={`flex-1 h-1.5 rounded-full transition-colors ${i <= stepIndex ? "bg-primary" : "bg-muted"}`} />
           ))}
         </div>
         <p className="text-[10px] text-muted-foreground mt-2 uppercase tracking-wider">
-          Passo {Math.min(stepIndex + 1, 3)} di 3
+          Passo {Math.min(stepIndex + 1, totalVisibleSteps)} di {totalVisibleSteps}
         </p>
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 pb-32">
         <AnimatePresence mode="wait">
-          {/* STEP 1: Business Type */}
+          {/* STEP 0: Industry Selection */}
+          {step === "industry" && (
+            <motion.div key="industry" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} className="space-y-5 pt-4">
+              <div>
+                <h1 className="text-2xl font-display font-bold text-foreground">In che settore operi?</h1>
+                <p className="text-sm text-muted-foreground mt-1">Scegli il tuo settore e configureremo tutto automaticamente.</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                {INDUSTRIES.map(ind => {
+                  const isActive = !ind.comingSoon;
+                  const isSelected = industry === ind.id;
+                  return (
+                    <motion.button
+                      key={ind.id}
+                      onClick={() => isActive && handleIndustryChange(ind.id)}
+                      disabled={!isActive}
+                      className={`relative p-4 rounded-2xl border text-left transition-all ${
+                        isSelected && isActive
+                          ? "border-primary bg-primary/10 ring-2 ring-primary/30"
+                          : isActive
+                          ? "border-border/50 bg-card hover:border-primary/20"
+                          : "border-border/30 bg-muted/30 opacity-60 cursor-not-allowed"
+                      }`}
+                      whileTap={isActive ? { scale: 0.97 } : undefined}
+                    >
+                      {!isActive && (
+                        <div className="absolute top-2 right-2">
+                          <Lock className="w-3.5 h-3.5 text-muted-foreground" />
+                        </div>
+                      )}
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-2 ${
+                        isSelected ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+                      }`}>
+                        {INDUSTRY_ICONS[ind.id]}
+                      </div>
+                      <p className="text-sm font-bold text-foreground">{ind.label}</p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight line-clamp-2">{ind.description}</p>
+                      {!isActive && (
+                        <span className="inline-block mt-1.5 text-[9px] font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                          Prossimamente
+                        </span>
+                      )}
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+
+          {/* STEP 1: Business Info + Type (food-specific sub-types) */}
           {step === "type" && (
             <motion.div key="type" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} className="space-y-5 pt-4">
               <div>
-                <h1 className="text-2xl font-display font-bold text-foreground">Che tipo di attività hai?</h1>
-                <p className="text-sm text-muted-foreground mt-1">Scegli il preset e personalizza tutto dopo.</p>
+                <h1 className="text-2xl font-display font-bold text-foreground">
+                  {isFood ? "Che tipo di attività hai?" : `Configura la tua ${industryConfig.terminology.company}`}
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {isFood ? "Scegli il preset e personalizza tutto dopo." : "Inserisci i dati base della tua attività."}
+                </p>
               </div>
 
               <div className="space-y-3">
@@ -176,11 +315,11 @@ export default function GuidedSetup() {
                   type="text"
                   value={name}
                   onChange={e => { setName(e.target.value); setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")); }}
-                  placeholder="Nome della tua attività"
+                  placeholder={`Nome della tua ${industryConfig.terminology.company.toLowerCase()}`}
                   className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base min-h-[44px]"
                 />
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">/r/</span>
+                  <span className="text-xs text-muted-foreground">{isFood ? "/r/" : "/c/"}</span>
                   <input
                     type="text"
                     value={slug}
@@ -198,28 +337,48 @@ export default function GuidedSetup() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                {BUSINESS_TYPE_OPTIONS.map(opt => (
-                  <motion.button
-                    key={opt.value}
-                    onClick={() => handleBusinessTypeChange(opt.value)}
-                    className={`p-4 rounded-2xl border text-left transition-all ${
-                      businessType === opt.value
-                        ? "border-primary bg-primary/10 ring-2 ring-primary/30"
-                        : "border-border/50 bg-card hover:border-primary/20"
-                    }`}
-                    whileTap={{ scale: 0.97 }}
-                  >
-                    <span className="text-2xl">{BUSINESS_ICONS[opt.value]}</span>
-                    <p className="text-sm font-bold text-foreground mt-2">{opt.label}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">{opt.description}</p>
-                  </motion.button>
-                ))}
-              </div>
+              {/* Food-specific business sub-type selector */}
+              {isFood && (
+                <div className="grid grid-cols-2 gap-3">
+                  {BUSINESS_TYPE_OPTIONS.map(opt => (
+                    <motion.button
+                      key={opt.value}
+                      onClick={() => handleBusinessTypeChange(opt.value)}
+                      className={`p-4 rounded-2xl border text-left transition-all ${
+                        businessType === opt.value
+                          ? "border-primary bg-primary/10 ring-2 ring-primary/30"
+                          : "border-border/50 bg-card hover:border-primary/20"
+                      }`}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      <span className="text-2xl">{BUSINESS_ICONS[opt.value]}</span>
+                      <p className="text-sm font-bold text-foreground mt-2">{opt.label}</p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">{opt.description}</p>
+                    </motion.button>
+                  ))}
+                </div>
+              )}
+
+              {/* Non-food: show modules preview */}
+              {!isFood && (
+                <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
+                  <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider">Moduli inclusi — {industryConfig.label}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {industryConfig.modules.filter(m => m.enabled).map(mod => (
+                      <span key={mod.id} className="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-medium">
+                        {mod.label}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">
+                    {industryConfig.modules.filter(m => m.enabled).length} moduli attivi — configurabili nelle Impostazioni
+                  </p>
+                </div>
+              )}
             </motion.div>
           )}
 
-          {/* STEP 2: Channels */}
+          {/* STEP 2: Channels (Food only) */}
           {step === "channels" && (
             <motion.div key="channels" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} className="space-y-5 pt-4">
               <div>
@@ -297,22 +456,40 @@ export default function GuidedSetup() {
                   type="text"
                   value={tagline}
                   onChange={e => setTagline(e.target.value)}
-                  placeholder={config.copy.reservationKicker}
+                  placeholder={isFood ? config.copy.reservationKicker : `Benvenuti — ${industryConfig.label}`}
                   className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base min-h-[44px]"
                 />
               </div>
 
-              {/* Preview preset */}
+              {/* Preview */}
               <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-2">
-                <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider">Menu auto-generato: {config.label}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {[...new Set(getMenuPreset(businessType).map(i => i.category))].map(cat => (
-                    <span key={cat} className="px-2 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-medium">
-                      {cat}
-                    </span>
-                  ))}
-                </div>
-                <p className="text-[10px] text-muted-foreground">{getMenuPreset(businessType).length} prodotti pronti — modificabili nello Studio</p>
+                {isFood ? (
+                  <>
+                    <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider">Menu auto-generato: {config.label}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[...new Set(getMenuPreset(businessType).map(i => i.category))].map(cat => (
+                        <span key={cat} className="px-2 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-medium">
+                          {cat}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">{getMenuPreset(businessType).length} prodotti pronti — modificabili nello Studio</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider">Configurazione: {industryConfig.label}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {industryConfig.features.map(f => (
+                        <span key={f} className="px-2 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-medium">
+                          {f.replace(/_/g, " ")}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      Tutto configurabile dal pannello Impostazioni
+                    </p>
+                  </>
+                )}
               </div>
             </motion.div>
           )}
