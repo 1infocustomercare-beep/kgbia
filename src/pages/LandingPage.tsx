@@ -332,6 +332,7 @@ const LandingPage = () => {
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Dalla gestione ordini al payroll, dal CRM alla fatturazione elettronica. Ogni modulo si adatta automaticamente al tuo settore.
           </motion.p>
+        </div>
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
