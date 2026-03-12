@@ -7,7 +7,7 @@ import {
   Play, ChevronDown, HelpCircle
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import demoVideo from "@/assets/demo-app-video.mp4";
+import partnerRecruitVideo from "@/assets/video-partner-recruit.mp4";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
