@@ -113,6 +113,11 @@ const App = () => (
                     <SuperAdminDashboard />
                   </ProtectedRoute>
                 } />
+                <Route path="/superadmin/agents" element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <AgentsPage />
+                  </ProtectedRoute>
+                } />
                 <Route path="/staff" element={
                   <ProtectedRoute requiredRole="staff">
                     <StaffPanel />

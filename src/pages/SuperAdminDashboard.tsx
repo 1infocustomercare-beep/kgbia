@@ -316,6 +316,7 @@ const SuperAdminDashboard = () => {
     { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-5 h-5" /> },
     { id: "billing", label: "Fatture", icon: <DollarSign className="w-5 h-5" /> },
     { id: "mary", label: "AI-Mary", icon: <Bot className="w-5 h-5" /> },
+    { id: "agents", label: "🤖 Agenti IA", icon: <Cpu className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => {
