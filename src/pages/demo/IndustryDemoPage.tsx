@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS, type DemoService } from "@/data/demo-industries";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
+import NCCPublicSite from "@/pages/public/NCCPublicSite";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
