@@ -32,7 +32,7 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     if (blockRole === "super_admin" || roles.includes("super_admin")) {
       return <Navigate to="/superadmin" replace />;
     }
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   // Check required role (super_admin bypasses all except blockRole, team_leader can access partner routes)
@@ -41,7 +41,7 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     if (requiredRole === "partner" && roles.includes("team_leader")) {
       return <>{children}</>;
     }
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   return <>{children}</>;

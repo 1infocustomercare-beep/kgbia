@@ -128,10 +128,10 @@ export default function NCCDemoPage() {
     <div className="min-h-screen bg-background">
       {/* ── Nav ─────────────────────────────────────────── */}
       <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {company.logo_url && <img src={company.logo_url} alt="" className="h-8 w-8 rounded-lg object-cover" />}
-            <span className="font-bold text-lg font-heading">{company.name}</span>
+        <div className="container mx-auto px-4 h-14 md:h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2 min-w-0">
+            {company.logo_url && <img src={company.logo_url} alt="" className="h-7 w-7 md:h-8 md:w-8 rounded-lg object-cover flex-shrink-0" />}
+            <span className="font-bold text-sm md:text-lg font-heading truncate">{company.name}</span>
           </div>
           <div className="hidden md:flex gap-6 text-sm">
             <a href="#servizi" className="hover:text-primary transition-colors">Servizi</a>
@@ -140,18 +140,18 @@ export default function NCCDemoPage() {
             {destinations.length > 0 && <a href="#destinazioni" className="hover:text-primary transition-colors">Tour</a>}
             <a href="#recensioni" className="hover:text-primary transition-colors">Recensioni</a>
           </div>
-          <Button size="sm" asChild><a href="#prenota">Prenota Ora</a></Button>
+          <Button size="sm" className="text-xs md:text-sm flex-shrink-0" asChild><a href="#prenota">Prenota</a></Button>
         </div>
       </nav>
 
       {/* ── Hero ────────────────────────────────────────── */}
-      <section className="pt-24 pb-16 md:pt-32 md:pb-24 px-4 relative overflow-hidden">
+      <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
         <div className="container mx-auto text-center max-w-3xl relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
             <Star className="w-4 h-4 fill-primary" /> {avgRating} — {reviews.length > 0 ? `${reviews.length}+ recensioni` : "Servizio eccellente"}
           </motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="text-4xl md:text-6xl font-bold font-heading mb-4 leading-tight">
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="text-3xl md:text-6xl font-bold font-heading mb-4 leading-tight">
             {company.tagline || "Il tuo viaggio, la nostra eccellenza"}
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -350,18 +350,18 @@ export default function NCCDemoPage() {
           <p className="text-center text-muted-foreground mb-8">Compila il modulo e ti confermeremo entro pochi minuti</p>
           <Card className="border-border/50">
             <CardContent className="p-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><Label>Nome Completo *</Label><Input placeholder="Mario Rossi" value={bookingForm.name} onChange={e => setBookingForm(p => ({ ...p, name: e.target.value }))} /></div>
-                <div><Label>Telefono</Label><Input placeholder="+39 333 1234567" value={bookingForm.phone} onChange={e => setBookingForm(p => ({ ...p, phone: e.target.value }))} /></div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div><Label className="text-xs">Nome Completo *</Label><Input placeholder="Mario Rossi" value={bookingForm.name} onChange={e => setBookingForm(p => ({ ...p, name: e.target.value }))} className="h-10" /></div>
+                <div><Label className="text-xs">Telefono</Label><Input placeholder="+39 333 1234567" value={bookingForm.phone} onChange={e => setBookingForm(p => ({ ...p, phone: e.target.value }))} className="h-10" /></div>
               </div>
-              <div><Label>Email</Label><Input type="email" placeholder="mario@email.com" value={bookingForm.email} onChange={e => setBookingForm(p => ({ ...p, email: e.target.value }))} /></div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><Label>Punto di Ritiro *</Label><Input value={bookingForm.pickup} onChange={e => setBookingForm(p => ({ ...p, pickup: e.target.value }))} placeholder="Es. Aeroporto Fiumicino" /></div>
-                <div><Label>Destinazione *</Label><Input value={bookingForm.dropoff} onChange={e => setBookingForm(p => ({ ...p, dropoff: e.target.value }))} placeholder="Es. Hotel Roma Centro" /></div>
+              <div><Label className="text-xs">Email</Label><Input type="email" placeholder="mario@email.com" value={bookingForm.email} onChange={e => setBookingForm(p => ({ ...p, email: e.target.value }))} className="h-10" /></div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div><Label className="text-xs">Punto di Ritiro *</Label><Input value={bookingForm.pickup} onChange={e => setBookingForm(p => ({ ...p, pickup: e.target.value }))} placeholder="Es. Aeroporto Fiumicino" className="h-10" /></div>
+                <div><Label className="text-xs">Destinazione *</Label><Input value={bookingForm.dropoff} onChange={e => setBookingForm(p => ({ ...p, dropoff: e.target.value }))} placeholder="Es. Hotel Roma Centro" className="h-10" /></div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><Label>Data e Ora *</Label><Input type="datetime-local" value={bookingForm.date} onChange={e => setBookingForm(p => ({ ...p, date: e.target.value }))} /></div>
-                <div><Label>Passeggeri</Label><Input type="number" min="1" max="50" value={bookingForm.passengers} onChange={e => setBookingForm(p => ({ ...p, passengers: e.target.value }))} /></div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div><Label className="text-xs">Data e Ora *</Label><Input type="datetime-local" value={bookingForm.date} onChange={e => setBookingForm(p => ({ ...p, date: e.target.value }))} className="h-10" /></div>
+                <div><Label className="text-xs">Passeggeri</Label><Input type="number" min="1" max="50" value={bookingForm.passengers} onChange={e => setBookingForm(p => ({ ...p, passengers: e.target.value }))} className="h-10" /></div>
               </div>
               <div><Label>Note aggiuntive</Label><Textarea value={bookingForm.notes} onChange={e => setBookingForm(p => ({ ...p, notes: e.target.value }))} placeholder="Numero volo, seggiolino bambini, bagagli extra..." rows={3} /></div>
               <Button onClick={handleBooking} size="lg" className="w-full" disabled={submitting}>
