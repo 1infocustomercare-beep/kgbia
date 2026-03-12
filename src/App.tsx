@@ -59,6 +59,10 @@ const NCCBeachBookingsPage = lazy(() => import("./pages/app/NCCBeachBookingsPage
 const TeamPage = lazy(() => import("./pages/app/TeamPage"));
 const AutomationsPage = lazy(() => import("./pages/app/AutomationsPage"));
 
+// Demo pages
+const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
+const DemoDirectoryPage = lazy(() => import("./pages/demo/DemoDirectoryPage"));
+
 const queryClient = new QueryClient();
 
 const PageLoader = () => (
@@ -82,6 +86,8 @@ const App = () => (
                 <Route path="/home" element={<LandingPage />} />
                 <Route path="/marketing" element={<MarketingPage />} />
                 <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
+                <Route path="/demo" element={<DemoDirectoryPage />} />
+                <Route path="/demo/:slug" element={<IndustryDemoPage />} />
                 <Route path="/r/:slug" element={<RestaurantPage />} />
                 <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
                 <Route path="/admin" element={<AdminLogin />} />
