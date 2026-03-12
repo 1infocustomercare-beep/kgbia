@@ -39,10 +39,35 @@ const AdminLogin = () => {
     } else if (roles.includes("staff")) {
       navigate("/staff", { replace: true });
     } else if ((roles.includes("partner") || roles.includes("team_leader")) && !roles.includes("restaurant_admin")) {
-      // Pure partner/team_leader users → partner dashboard
       navigate("/partner", { replace: true });
     } else if (roles.includes("restaurant_admin")) {
-      navigate("/app", { replace: true });
+      // Check if user has a restaurant (food) or a company (other industry)
+      const checkDestination = async () => {
+        // First check company membership for non-food industries
+        const { data: membership } = await supabase
+          .from("company_memberships")
+          .select("company_id")
+          .eq("user_id", user.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (membership?.company_id) {
+          const { data: company } = await supabase
+            .from("companies")
+            .select("industry")
+            .eq("id", membership.company_id)
+            .single();
+
+          if (company && company.industry !== "food") {
+            navigate("/app", { replace: true });
+            return;
+          }
+        }
+
+        // Food industry or restaurant fallback → rich dashboard
+        navigate("/dashboard", { replace: true });
+      };
+      checkDestination();
     } else if (roles.includes("partner") || roles.includes("team_leader")) {
       navigate("/partner", { replace: true });
     } else {
