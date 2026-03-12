@@ -327,17 +327,25 @@ const LandingPage = () => {
 
         <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {industries.map((ind, i) => (
-            <motion.div key={i}
-              className="group relative p-5 sm:p-6 rounded-2xl future-card hover:-translate-y-1.5 transition-all duration-500 text-center"
-              variants={fadeScale}>
-              <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 group-hover:shadow-lg transition-all duration-500`}>
-                {ind.icon}
-              </div>
-              <h3 className="font-heading text-xs sm:text-sm font-bold text-foreground mb-1">{ind.title}</h3>
-              <p className="text-[0.6rem] sm:text-[0.65rem] text-foreground/35 leading-[1.5]">{ind.desc}</p>
-            </motion.div>
-          ))}
+          {industries.map((ind, i) => {
+            const slug = DEMO_SLUGS[ind.id];
+            const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+            return (
+              <motion.div key={i}
+                className="group relative p-5 sm:p-6 rounded-2xl future-card hover:-translate-y-1.5 transition-all duration-500 text-center cursor-pointer"
+                variants={fadeScale}
+                onClick={() => navigate(demoPath)}>
+                <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 group-hover:shadow-lg transition-all duration-500`}>
+                  {ind.icon}
+                </div>
+                <h3 className="font-heading text-xs sm:text-sm font-bold text-foreground mb-1">{ind.title}</h3>
+                <p className="text-[0.6rem] sm:text-[0.65rem] text-foreground/35 leading-[1.5]">{ind.desc}</p>
+                <span className="mt-2 inline-flex items-center gap-1 text-[0.6rem] font-semibold text-primary/60 group-hover:text-primary transition-colors">
+                  Vedi Demo <ArrowRight className="w-3 h-3" />
+                </span>
+              </motion.div>
+            );
+          })}
           <motion.div
             className="group relative p-5 sm:p-6 rounded-2xl border border-dashed border-primary/15 hover:border-primary/30 transition-all duration-500 text-center flex flex-col items-center justify-center cursor-pointer"
             variants={fadeScale}
