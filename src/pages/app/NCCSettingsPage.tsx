@@ -156,6 +156,7 @@ export default function NCCSettingsPage() {
           <TabsTrigger value="profile" className="text-xs sm:text-sm"><User className="w-3.5 h-3.5 mr-1 hidden sm:inline" />Profilo</TabsTrigger>
           <TabsTrigger value="branding" className="text-xs sm:text-sm"><Palette className="w-3.5 h-3.5 mr-1 hidden sm:inline" />Brand</TabsTrigger>
           <TabsTrigger value="seo" className="text-xs sm:text-sm"><Globe className="w-3.5 h-3.5 mr-1 hidden sm:inline" />SEO</TabsTrigger>
+          <TabsTrigger value="seed" className="text-xs sm:text-sm"><Database className="w-3.5 h-3.5 mr-1 hidden sm:inline" />Seed Dati</TabsTrigger>
         </TabsList>
 
         {/* ── Azienda ── */}
