@@ -18,10 +18,13 @@ import {
   Wifi, Snowflake, MessageCircle, Sparkles, Heart, Menu, X,
   Tv, Coffee, Baby, Waves, UtensilsCrossed, Camera, Compass
 } from "lucide-react";
-import heroMercedes from "@/assets/ncc-hero-mercedes.jpg";
-import destPompei from "@/assets/ncc-dest-pompei.jpg";
-import destCostiera from "@/assets/ncc-dest-costiera.jpg";
-import destCapri from "@/assets/ncc-dest-capri.jpg";
+import heroMercedes from "@/assets/ncc-hero-mercedes-new.png";
+import destPompei from "@/assets/ncc-dest-pompei-new.png";
+import destCostiera from "@/assets/ncc-costiera-aerial.jpg";
+import destCapri from "@/assets/ncc-dest-sorrento.png";
+import videoNccHero from "@/assets/video-ncc-hero.mp4";
+import fleetShowcase from "@/assets/ncc-fleet-showcase.jpg";
+import boatCapri from "@/assets/ncc-boat-capri.jpg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
