@@ -964,6 +964,29 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
+          VIDEO PARTNER — Sales Pitch
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-8">
+          <SectionLabel text="Video Presentazione" icon={<Play className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Scopri l'Opportunità <span className="text-shimmer">Partner Empire</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[480px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Guarda come i nostri partner presentano Empire ai business owner — e chiudono vendite da €2.997 ogni giorno.
+          </motion.p>
+        </div>
+        <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
+          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+          transition={{ duration: 0.6 }}>
+          <video src={videoPartner} autoPlay muted loop playsInline className="w-full aspect-video object-cover rounded-2xl" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
+        </motion.div>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
           PARTNER PROGRAM
          ═══════════════════════════════════════════ */}
       <Section id="partner">
