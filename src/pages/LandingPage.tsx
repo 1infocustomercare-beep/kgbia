@@ -12,6 +12,7 @@ import {
   Layers, Globe, Radio
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { DEMO_SLUGS } from "@/data/demo-industries";
 import mockupCliente from "@/assets/mockup-cliente.jpg";
 import mockupAdmin from "@/assets/mockup-admin.jpg";
 import mockupCucina from "@/assets/mockup-cucina.jpg";
