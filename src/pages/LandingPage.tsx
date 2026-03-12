@@ -97,34 +97,37 @@ const LandingPage = () => {
 
   /* ═══ DATA ═══ */
   const services = [
-    { icon: <Brain className="w-6 h-6" />, title: "AI Menu Creator", desc: "Carica una foto del menu. L'IA estrae testi, prezzi e genera foto professionali in 60 secondi.", tag: "IA" },
-    { icon: <Smartphone className="w-6 h-6" />, title: "PWA White Label", desc: "App installabile con il TUO brand. Logo, colori, dominio. Zero commissioni marketplace.", tag: "APP" },
-    { icon: <ChefHat className="w-6 h-6" />, title: "Kitchen View", desc: "Dashboard cucina real-time, notifiche sonore, stati ordine. Zero errori, zero perdite.", tag: "OPS" },
-    { icon: <Shield className="w-6 h-6" />, title: "Review Shield™", desc: "Recensioni 1-3★ nel tuo archivio privato. Solo 4-5★ costruiscono la reputazione.", tag: "BRAND" },
-    { icon: <Lock className="w-6 h-6" />, title: "Vault Fiscale", desc: "Chiavi API criptate AES-256. Standard bancario. Nessuno accede ai tuoi dati.", tag: "FISCO" },
-    { icon: <Wallet className="w-6 h-6" />, title: "Wallet & Loyalty", desc: "Pass sconto digitali + programma fedeltà automatizzato per aumentare il ritorno.", tag: "GROWTH" },
+    { icon: <Brain className="w-6 h-6" />, title: "AI Menu & Catalogo", desc: "Carica una foto del tuo menu o listino. L'IA estrae testi, prezzi, allergeni e genera immagini professionali in 60 secondi. Traduzione multilingua automatica inclusa.", tag: "IA" },
+    { icon: <Smartphone className="w-6 h-6" />, title: "PWA White Label", desc: "App installabile come nativa con il TUO brand — logo, colori, dominio personalizzato. Ordini online, prenotazioni, catalogo prodotti. Zero commissioni marketplace.", tag: "APP" },
+    { icon: <ChefHat className="w-6 h-6" />, title: "Kitchen View & Operations", desc: "Dashboard operativa real-time con notifiche sonore, stati ordine live e stampa ticket. Per cucine, magazzini o centri operativi — zero errori garantiti.", tag: "OPS" },
+    { icon: <Shield className="w-6 h-6" />, title: "Review Shield™ & Reputazione", desc: "Filtro intelligente recensioni: le negative restano private, le 4-5★ costruiscono la tua reputazione su Google. CRM clienti con blacklist e segmentazione automatica.", tag: "BRAND" },
+    { icon: <Users className="w-6 h-6" />, title: "Staff, Turni & Payroll", desc: "Gestione completa del personale: profili, turni, timbrature, buste paga, straordinari. Tutto centralizzato con calcolo automatico delle ore lavorate.", tag: "HR" },
+    { icon: <BarChart3 className="w-6 h-6" />, title: "Finance, Fatture & HACCP", desc: "Dashboard finanziaria completa, fatturazione B2B elettronica, fee piattaforma trasparenti e registro HACCP digitale con conformità automatica.", tag: "FINANCE" },
+    { icon: <Wallet className="w-6 h-6" />, title: "Wallet Pass & Loyalty", desc: "Pass sconto digitali nel wallet del cliente. Programma fedeltà automatizzato con push notification e campagne marketing mirate che aumentano il ritorno del 40%.", tag: "GROWTH" },
+    { icon: <MapPin className="w-6 h-6" />, title: "Mappa Tavoli & Prenotazioni", desc: "Gestisci la sala con drag-and-drop visuale o il calendario prenotazioni. Flotta veicoli, tratte e assegnazione autisti per il settore NCC.", tag: "GESTIONE" },
+    { icon: <Bot className="w-6 h-6" />, title: "AI Concierge & Social Manager", desc: "Assistente AI integrato per supporto clienti e decisioni strategiche. Gestione post social multi-piattaforma con pubblicazione programmata.", tag: "AI+" },
   ];
 
   const metrics = [
-    { value: 200, suffix: "+", label: "Ristoranti Attivi" },
-    { value: 98, suffix: "%", label: "Client Satisfaction" },
-    { value: 45, suffix: "%", prefix: "+", label: "Aumento Ordini" },
-    { value: 2, suffix: "M€", label: "Risparmiati/Anno" },
+    { value: 200, suffix: "+", label: "Attività Gestite" },
+    { value: 98, suffix: "%", label: "Soddisfazione Clienti" },
+    { value: 45, suffix: "%", prefix: "+", label: "Aumento Revenue" },
+    { value: 7, suffix: "", label: "Settori Supportati" },
   ];
 
   const testimonials = [
-    { name: "Marco Pellegrini", role: "Trattoria da Marco · Roma", quote: "In 3 mesi ho spostato il 60% degli ordini dalla piattaforma alla mia app. Risparmio €3.200/mese netti.", metric: "−€3.200/mese" },
-    { name: "Giulia Ferretti", role: "Osteria Ferretti · Milano", quote: "Kitchen View ha eliminato gli errori in cucina. Prima perdevamo 4-5 ordini a settimana. Ora zero.", metric: "Zero errori" },
-    { name: "Antonio Russo", role: "Pizzeria Verace · Napoli", quote: "Review Shield è geniale. Su Google ho solo 4.8★. I clienti nuovi arrivano grazie al rating perfetto.", metric: "4.8★ Google" },
+    { name: "Marco Pellegrini", role: "Trattoria da Marco · Roma", quote: "In 3 mesi ho spostato il 60% degli ordini dal marketplace alla mia app. Risparmio €3.200/mese netti. La Kitchen View ha azzerato gli errori in cucina.", metric: "−€3.200/mese" },
+    { name: "Giulia Ferretti", role: "Salone Bellezza Ferretti · Milano", quote: "Gestisco appuntamenti, clienti e paghe del personale da un'unica dashboard. Prima usavo 4 software diversi. Ora tutto è in un solo posto.", metric: "−4 software" },
+    { name: "Antonio De Luca", role: "NCC Premium · Napoli", quote: "Flotta, prenotazioni, autisti e fatturazione — tutto automatizzato. I clienti prenotano online e ricevono conferma istantanea. Revenue +35% in 60 giorni.", metric: "+35% revenue" },
   ];
 
   const faqs = [
-    { q: "È difficile da usare?", a: "No. Se sai usare Instagram, sai usare Empire. L'interfaccia è progettata per ristoratori. L'IA fa il lavoro pesante: carica una foto del menu e in 60 secondi hai il catalogo digitale completo." },
-    { q: "Come arrivano i soldi?", a: "I pagamenti arrivano direttamente sul TUO conto Stripe. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico — 15× meno dei marketplace." },
-    { q: "Quanto costa davvero?", a: "€2.997 una tantum (o 3 rate da €1.099). Dopodiché €0/mese per sempre. Solo il 2% sulle transazioni per infrastruttura, IA e aggiornamenti." },
-    { q: "La fiscalità è sicura?", a: "Le chiavi API fiscali sono criptate AES-256 nel Vault privato. Nessuno può vederle, nemmeno il nostro team." },
-    { q: "Cosa succede ai clienti del marketplace?", a: "Li recuperi. Con QR Code sui tavoli e link diretto, i clienti ordinano dalla TUA app. Ogni ordine = 28% netto recuperato." },
-    { q: "Come funziona il Partner Program?", a: "Diventi Partner gratis. €997 per vendita + bonus fino a €1.500/mese. Pagamenti istantanei via Stripe Connect." },
+    { q: "Per quali settori funziona?", a: "Empire è una piattaforma multi-settore: Ristorazione, NCC & Trasporto, Beauty & Wellness, Healthcare, Retail, Fitness e Hospitality. La suite si adatta automaticamente al tuo settore con terminologia, moduli e funzionalità specifiche." },
+    { q: "È difficile da usare?", a: "Assolutamente no. Se sai usare Instagram, sai usare Empire. L'interfaccia si adatta al tuo settore e l'IA fa il lavoro pesante: dal menu digitale alla gestione turni, tutto è guidato e intuitivo." },
+    { q: "Come arrivano i pagamenti?", a: "I pagamenti dei clienti arrivano direttamente sul TUO conto tramite Stripe Connect. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico per infrastruttura e IA — 15× meno dei marketplace." },
+    { q: "Quanto costa e cosa include?", a: "€2.997 una tantum (o 3 rate da €1.099). Include: PWA personalizzata, AI, CRM, Staff & Payroll, Finance, HACCP, Loyalty, Social Manager, Kitchen View e tutti i moduli del tuo settore. Dopo: €0/mese, solo 2% sulle transazioni." },
+    { q: "La sicurezza dei dati è garantita?", a: "Sì. Crittografia AES-256 per i dati fiscali, GDPR compliance nativa, RLS (Row Level Security) su ogni tabella e backup automatici. I tuoi dati sono più sicuri che in banca." },
+    { q: "Come funziona il Partner Program?", a: "Diventi Partner gratis e guadagni €997 per ogni vendita, con bonus mensili fino a €1.500 e override da Team Leader di €50 per vendita del tuo team. Pagamenti istantanei via Stripe Connect." },
   ];
 
   const navLinks = [
