@@ -79,8 +79,16 @@ const PageLoader = () => (
   </div>
 );
 
-function App() { return (
+function App() {
+  const [splashDone, setSplashDone] = useState(() => sessionStorage.getItem("empire_splash") === "done");
+  const handleSplashComplete = useCallback(() => {
+    sessionStorage.setItem("empire_splash", "done");
+    setSplashDone(true);
+  }, []);
+
+  return (
   <QueryClientProvider client={queryClient}>
+    {!splashDone && <SplashScreen onComplete={handleSplashComplete} />}
     <TooltipProvider>
       <AuthProvider>
         <CartProvider>
