@@ -25,6 +25,8 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const GuidedSetup = lazy(() => import("./pages/GuidedSetup"));
 const MarketingPage = lazy(() => import("./pages/MarketingPage"));
+const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
+const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
 
 // App layout + adaptive pages
 const AppLayout = lazy(() => import("./components/layout/AppLayout"));
@@ -36,6 +38,15 @@ const SettingsPage = lazy(() => import("./pages/app/SettingsPage"));
 const NCCFleetPage = lazy(() => import("./pages/app/NCCFleetPage"));
 const NCCRoutesPage = lazy(() => import("./pages/app/NCCRoutesPage"));
 const NCCBookingsPage = lazy(() => import("./pages/app/NCCBookingsPage"));
+const MenuPage = lazy(() => import("./pages/app/MenuPage"));
+const OrdersPage = lazy(() => import("./pages/app/OrdersPage"));
+const InventoryPage = lazy(() => import("./pages/app/InventoryPage"));
+const PayrollPage = lazy(() => import("./pages/app/PayrollPage"));
+const FinancePage = lazy(() => import("./pages/app/FinancePage"));
+const SocialPage = lazy(() => import("./pages/app/SocialPage"));
+const ReservationsPage = lazy(() => import("./pages/app/ReservationsPage"));
+const ReviewsPage = lazy(() => import("./pages/app/ReviewsPage"));
+const GenericModulePage = lazy(() => import("./pages/app/GenericModulePage"));
 
 const queryClient = new QueryClient();
 
@@ -59,6 +70,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/home" element={<LandingPage />} />
                 <Route path="/marketing" element={<MarketingPage />} />
+                <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
                 <Route path="/r/:slug" element={<RestaurantPage />} />
                 <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
                 <Route path="/admin" element={<AdminLogin />} />
@@ -66,6 +78,11 @@ const App = () => (
                 <Route path="/partner/register" element={<PartnerRegister />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
+
+                {/* Onboarding */}
+                <Route path="/onboarding" element={
+                  <ProtectedRoute><OnboardingPage /></ProtectedRoute>
+                } />
 
                 {/* Legacy protected routes (kept intact) */}
                 <Route path="/dashboard" element={
@@ -89,32 +106,37 @@ const App = () => (
                   </ProtectedRoute>
                 } />
                 <Route path="/admin/dashboard" element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
+                  <ProtectedRoute><AdminDashboard /></ProtectedRoute>
                 } />
                 <Route path="/setup" element={
-                  <ProtectedRoute>
-                    <GuidedSetup />
-                  </ProtectedRoute>
+                  <ProtectedRoute><GuidedSetup /></ProtectedRoute>
                 } />
 
-                {/* ═══ New Adaptive App Routes (industry-aware) ═══ */}
+                {/* ═══ Adaptive App Routes (industry-aware) ═══ */}
                 <Route path="/app" element={
-                  <ProtectedRoute>
-                    <AppLayout />
-                  </ProtectedRoute>
+                  <ProtectedRoute><AppLayout /></ProtectedRoute>
                 }>
                   <Route index element={<AdaptiveDashboard />} />
-                  {/* Common modules */}
-                  <Route path="leads" element={<LeadsPage />} />
-                  <Route path="staff" element={<StaffPage />} />
-                  <Route path="haccp" element={<HACCPPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
+                  {/* Food modules */}
+                  <Route path="menu" element={<MenuPage />} />
+                  <Route path="orders" element={<OrdersPage />} />
+                  <Route path="reservations" element={<ReservationsPage />} />
+                  <Route path="reviews" element={<ReviewsPage />} />
+                  <Route path="inventory" element={<InventoryPage />} />
                   {/* NCC modules */}
                   <Route path="fleet" element={<NCCFleetPage />} />
                   <Route path="routes" element={<NCCRoutesPage />} />
                   <Route path="bookings" element={<NCCBookingsPage />} />
+                  {/* Common modules */}
+                  <Route path="leads" element={<LeadsPage />} />
+                  <Route path="staff" element={<StaffPage />} />
+                  <Route path="haccp" element={<HACCPPage />} />
+                  <Route path="payroll" element={<PayrollPage />} />
+                  <Route path="finance" element={<FinancePage />} />
+                  <Route path="social" element={<SocialPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                  {/* Catch-all for industry modules in development */}
+                  <Route path="*" element={<GenericModulePage />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />
