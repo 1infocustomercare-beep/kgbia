@@ -245,7 +245,7 @@ export default function NCCSettingsPage() {
         </TabsContent>
 
         {/* ── SEO ── */}
-        <TabsContent value="seo" className="mt-6">
+        <TabsContent value="seo" className="mt-6 space-y-6">
           <Card className="border-border/40">
             <CardHeader><CardTitle className="text-sm">SEO & Open Graph</CardTitle></CardHeader>
             <CardContent className="space-y-4">
