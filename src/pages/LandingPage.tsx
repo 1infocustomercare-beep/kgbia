@@ -602,28 +602,76 @@ const LandingPage = () => {
 
           <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="order-1 lg:order-2">
-            <div className="flex justify-center items-end gap-3 sm:gap-5 relative perspective-1000">
+            <div className="flex justify-center items-end gap-4 sm:gap-6 relative">
               <div className="absolute -inset-16 bg-primary/[0.06] rounded-[80px] blur-[100px] pointer-events-none" />
               {[
-                { label: "Cliente", img: mockupCliente, h: "h-[280px] sm:h-[370px]", delay: 0 },
-                { label: "Gestionale", img: mockupAdmin, h: "h-[320px] sm:h-[410px]", delay: 0.1 },
-                { label: "Operativo", img: mockupCucina, h: "h-[280px] sm:h-[370px]", delay: 0.2 },
-              ].map((phone, i) => (
-                <motion.div key={i}
-                  className={`relative w-[100px] sm:w-[130px] ${phone.h} rounded-[18px] sm:rounded-[22px] overflow-hidden border border-foreground/[0.06] bg-card shadow-[0_20px_60px_hsla(0,0%,0%,0.6)]`}
-                  initial={{ y: 30 + i * 10, opacity: 0 }}
-                  whileInView={{ y: i === 1 ? -10 : 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 + phone.delay, duration: 0.8, ease: smoothEase }}
-                  whileHover={{ y: i === 1 ? -16 : -6, scale: 1.02 }}
-                >
-                  <img src={phone.img} alt={phone.label} className="w-full h-full object-cover object-top" loading="lazy" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-0 right-0 text-center text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/50">{phone.label}</span>
-                  {/* Scan line effect */}
-                  <div className="absolute inset-x-0 h-px bg-primary/20 animate-scan" />
-                </motion.div>
-              ))}
+                { label: "Cliente", path: "/r/impero-roma", scale: 0.9, delay: 0 },
+                { label: "Gestionale", path: "/app", scale: 1, delay: 0.1 },
+                { label: "Operativo", path: "/kitchen/impero-roma", scale: 0.9, delay: 0.2 },
+              ].map((phone, i) => {
+                const isCenter = i === 1;
+                const frameW = isCenter ? 160 : 130;
+                const frameH = isCenter ? 326 : 280;
+                const smFrameW = isCenter ? 190 : 155;
+                const smFrameH = isCenter ? 388 : 334;
+                const iframeW = 393;
+                const iframeH = 852;
+                return (
+                  <motion.div key={i}
+                    className="relative group"
+                    initial={{ y: 30 + i * 10, opacity: 0 }}
+                    whileInView={{ y: isCenter ? -12 : 0, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 + phone.delay, duration: 0.8, ease: smoothEase }}
+                    whileHover={{ y: isCenter ? -18 : -8, scale: 1.03 }}
+                  >
+                    {/* Phone body */}
+                    <div
+                      className="relative rounded-[22px] sm:rounded-[28px] border-[2.5px] border-foreground/15 bg-foreground/5 shadow-[0_20px_60px_hsla(0,0%,0%,0.5)] overflow-hidden"
+                      style={{ width: frameW, height: frameH }}
+                    >
+                      {/* Dynamic Island */}
+                      <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[50px] h-[14px] sm:w-[60px] sm:h-[16px] bg-foreground rounded-full z-20" />
+
+                      {/* Screen with live iframe */}
+                      <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden bg-background">
+                        <iframe
+                          src={`${window.location.origin}${phone.path}`}
+                          className="border-0 pointer-events-none"
+                          style={{
+                            width: iframeW,
+                            height: iframeH,
+                            transform: `scale(${(frameW - 4) / iframeW})`,
+                            transformOrigin: "top left",
+                          }}
+                          title={`Preview ${phone.label}`}
+                          loading="lazy"
+                          tabIndex={-1}
+                        />
+                      </div>
+
+                      {/* Home indicator */}
+                      <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[50px] h-[3px] bg-foreground/25 rounded-full z-20" />
+                    </div>
+
+                    {/* Label */}
+                    <p className="text-center text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/50 mt-2.5">{phone.label}</p>
+
+                    {/* Responsive size override */}
+                    <style>{`
+                      @media (min-width: 640px) {
+                        .group:nth-child(${i + 1}) > div:first-child {
+                          width: ${smFrameW}px !important;
+                          height: ${smFrameH}px !important;
+                        }
+                        .group:nth-child(${i + 1}) > div:first-child iframe {
+                          transform: scale(${(smFrameW - 4) / iframeW}) !important;
+                        }
+                      }
+                    `}</style>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </div>
