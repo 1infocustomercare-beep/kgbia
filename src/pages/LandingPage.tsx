@@ -18,6 +18,9 @@ import videoHero from "@/assets/video-hero-empire.mp4";
 import videoIndustries from "@/assets/video-industries.mp4";
 import videoFeatures from "@/assets/video-features.mp4";
 import videoPartner from "@/assets/video-partner-pitch.mp4";
+import mockupCliente from "@/assets/mockup-cliente.jpg";
+import mockupAdmin from "@/assets/mockup-admin.jpg";
+import mockupCucina from "@/assets/mockup-cucina.jpg";
 
 /* ═══════════════════════════════════════════
    HELPERS
@@ -715,73 +718,36 @@ const LandingPage = () => {
 
           <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="order-1 lg:order-2">
-            <div className="flex justify-center items-end gap-4 sm:gap-6 relative">
+            <div className="flex justify-center items-end gap-2 sm:gap-4 relative">
               <div className="absolute -inset-16 bg-primary/[0.06] rounded-[80px] blur-[100px] pointer-events-none" />
               {[
-                { label: "Cliente", path: "/r/impero-roma", scale: 0.9, delay: 0 },
-                { label: "Gestionale", path: "/app", scale: 1, delay: 0.1 },
-                { label: "Operativo", path: "/kitchen/impero-roma", scale: 0.9, delay: 0.2 },
+                { label: "Cliente", img: mockupCliente, delay: 0 },
+                { label: "Gestionale", img: mockupAdmin, delay: 0.1 },
+                { label: "Operativo", img: mockupCucina, delay: 0.2 },
               ].map((phone, i) => {
                 const isCenter = i === 1;
-                const frameW = isCenter ? 160 : 130;
-                const frameH = isCenter ? 326 : 280;
-                const smFrameW = isCenter ? 190 : 155;
-                const smFrameH = isCenter ? 388 : 334;
-                const iframeW = 393;
-                const iframeH = 852;
                 return (
                   <motion.div key={i}
-                    className="relative group"
+                    className="relative"
                     initial={{ y: 30 + i * 10, opacity: 0 }}
-                    whileInView={{ y: isCenter ? -12 : 0, opacity: 1 }}
+                    whileInView={{ y: isCenter ? -10 : 0, opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 + phone.delay, duration: 0.8, ease: smoothEase }}
-                    whileHover={{ y: isCenter ? -18 : -8, scale: 1.03 }}
+                    whileHover={{ y: isCenter ? -16 : -6, scale: 1.03 }}
                   >
-                    {/* Phone body */}
-                    <div
-                      className="relative rounded-[22px] sm:rounded-[28px] border-[2.5px] border-foreground/15 bg-foreground/5 shadow-[0_20px_60px_hsla(0,0%,0%,0.5)] overflow-hidden"
-                      style={{ width: frameW, height: frameH }}
-                    >
+                    <div className={`relative ${isCenter ? "w-[110px] sm:w-[160px]" : "w-[90px] sm:w-[130px]"} ${isCenter ? "h-[224px] sm:h-[326px]" : "h-[184px] sm:h-[265px]"} rounded-[18px] sm:rounded-[24px] border-[2px] border-foreground/15 bg-foreground/5 shadow-[0_20px_60px_hsla(0,0%,0%,0.5)] overflow-hidden`}>
                       {/* Dynamic Island */}
-                      <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[50px] h-[14px] sm:w-[60px] sm:h-[16px] bg-foreground rounded-full z-20" />
-
-                      {/* Screen with live iframe */}
-                      <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden bg-background">
-                        <iframe
-                          src={`${window.location.origin}${phone.path}`}
-                          className="border-0 pointer-events-none"
-                          style={{
-                            width: iframeW,
-                            height: iframeH,
-                            transform: `scale(${(frameW - 4) / iframeW})`,
-                            transformOrigin: "top left",
-                          }}
-                          title={`Preview ${phone.label}`}
-                          loading="lazy"
-                          tabIndex={-1}
-                        />
+                      <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[36px] h-[11px] sm:w-[50px] sm:h-[14px] bg-foreground rounded-full z-20" />
+                      {/* Screen */}
+                      <div className="absolute inset-[2px] rounded-[16px] sm:rounded-[22px] overflow-hidden">
+                        <img src={phone.img} alt={phone.label} className="w-full h-full object-cover object-top" loading="lazy" />
                       </div>
-
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none z-10" />
                       {/* Home indicator */}
-                      <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[50px] h-[3px] bg-foreground/25 rounded-full z-20" />
+                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[3px] bg-foreground/25 rounded-full z-20" />
                     </div>
-
-                    {/* Label */}
-                    <p className="text-center text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/50 mt-2.5">{phone.label}</p>
-
-                    {/* Responsive size override */}
-                    <style>{`
-                      @media (min-width: 640px) {
-                        .group:nth-child(${i + 1}) > div:first-child {
-                          width: ${smFrameW}px !important;
-                          height: ${smFrameH}px !important;
-                        }
-                        .group:nth-child(${i + 1}) > div:first-child iframe {
-                          transform: scale(${(smFrameW - 4) / iframeW}) !important;
-                        }
-                      }
-                    `}</style>
+                    <p className="text-center text-[0.5rem] sm:text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/50 mt-2">{phone.label}</p>
                   </motion.div>
                 );
               })}
