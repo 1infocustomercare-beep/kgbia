@@ -22,11 +22,6 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     return <Navigate to="/admin" replace />;
   }
 
-  // Redirect partners/team_leaders to their dashboard if they land on a non-partner route
-  if ((roles.includes("partner") || roles.includes("team_leader")) && requiredRole !== "partner") {
-    return <Navigate to="/partner" replace />;
-  }
-
   // Block specific roles from accessing this route
   if (blockRole && roles.includes(blockRole)) {
     if (blockRole === "super_admin" || roles.includes("super_admin")) {
@@ -35,11 +30,27 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     return <Navigate to="/app" replace />;
   }
 
-  // Check required role (super_admin bypasses all except blockRole, team_leader can access partner routes)
+  // Redirect partners/team_leaders to their dashboard ONLY if:
+  // 1. The route requires a non-partner role (or no role at all with no specific requirement)
+  // 2. The user ONLY has partner/team_leader roles (not also restaurant_admin)
+  if (
+    (roles.includes("partner") || roles.includes("team_leader")) &&
+    requiredRole !== "partner" &&
+    !roles.includes("restaurant_admin") &&
+    !roles.includes("super_admin")
+  ) {
+    return <Navigate to="/partner" replace />;
+  }
+
+  // Check required role (super_admin bypasses all, team_leader can access partner routes)
   if (requiredRole && !roles.includes(requiredRole) && !roles.includes("super_admin")) {
     // team_leader can access partner routes
     if (requiredRole === "partner" && roles.includes("team_leader")) {
       return <>{children}</>;
+    }
+    // partner-only users trying to access restaurant_admin routes → redirect to partner
+    if (roles.includes("partner") || roles.includes("team_leader")) {
+      return <Navigate to="/partner" replace />;
     }
     return <Navigate to="/app" replace />;
   }

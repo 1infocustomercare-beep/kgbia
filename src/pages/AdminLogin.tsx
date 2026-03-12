@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Crown, ChefHat, ArrowLeft, Users } from "lucide-react";
@@ -8,10 +8,13 @@ import { toast } from "@/hooks/use-toast";
 
 type LoginMode = "choose" | "owner" | "kitchen" | "partner";
 
-/* Animated blob */
-const Blob = ({ className = "", color = "bg-primary" }: { className?: string; color?: string }) => (
-  <div className={`absolute rounded-full blur-[140px] opacity-[0.18] pointer-events-none ${color} ${className}`} />
+/* Animated blob - forwardRef to prevent React ref warnings */
+const Blob = forwardRef<HTMLDivElement, { className?: string; color?: string }>(
+  ({ className = "", color = "bg-primary" }, ref) => (
+    <div ref={ref} className={`absolute rounded-full blur-[140px] opacity-[0.18] pointer-events-none ${color} ${className}`} />
+  )
 );
+Blob.displayName = "Blob";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -33,10 +36,15 @@ const AdminLogin = () => {
     if (authLoading || !user) return;
     if (roles.includes("super_admin")) {
       navigate("/superadmin", { replace: true });
-    } else if (roles.includes("partner") || roles.includes("team_leader")) {
-      navigate("/partner", { replace: true });
     } else if (roles.includes("staff")) {
       navigate("/staff", { replace: true });
+    } else if ((roles.includes("partner") || roles.includes("team_leader")) && !roles.includes("restaurant_admin")) {
+      // Pure partner/team_leader users → partner dashboard
+      navigate("/partner", { replace: true });
+    } else if (roles.includes("restaurant_admin")) {
+      navigate("/app", { replace: true });
+    } else if (roles.includes("partner") || roles.includes("team_leader")) {
+      navigate("/partner", { replace: true });
     } else {
       navigate("/app", { replace: true });
     }
@@ -48,31 +56,62 @@ const AdminLogin = () => {
     setLoading(true);
 
     if (isSignUp) {
-      const { error } = await signUp(email, password, fullName);
+      const signUpOptions: any = { full_name: fullName };
+      // Store partner intent in user metadata for post-confirmation role assignment
+      if (mode === "partner") {
+        signUpOptions.partner_signup = true;
+        if (refCode) signUpOptions.team_leader_id = refCode;
+      }
+
+      const { error } = await supabase.auth.signUp({
+        email, password,
+        options: {
+          data: signUpOptions,
+          emailRedirectTo: window.location.origin,
+        },
+      });
       if (error) {
         setError(error.message);
-      } else {
-        // If signing up as partner, swap the role via edge function
-        if (mode === "partner") {
-          // Wait a moment for the user to be fully created
-          await new Promise(r => setTimeout(r, 1500));
-          const { data: { session } } = await supabase.auth.getSession();
-          if (session?.user) {
-            await supabase.functions.invoke("assign-partner-role", {
-              body: { user_id: session.user.id, team_leader_id: refCode || null },
-            });
-            // Refresh roles
-            window.location.href = "/partner";
-            return;
+        setLoading(false);
+        return;
+      }
+
+      // If signing up as partner, try to assign role immediately or after confirmation
+      if (mode === "partner") {
+        // Poll for session up to 5 seconds (handles auto-confirm or fast email verify)
+        let session = null;
+        for (let i = 0; i < 10; i++) {
+          await new Promise(r => setTimeout(r, 500));
+          const { data } = await supabase.auth.getSession();
+          if (data.session?.user) {
+            session = data.session;
+            break;
           }
         }
+
+        if (session?.user) {
+          await supabase.functions.invoke("assign-partner-role", {
+            body: { user_id: session.user.id, team_leader_id: refCode || null },
+          });
+          window.location.href = "/partner";
+          return;
+        }
+
+        // Email confirmation required - show message
         toast({
-          title: mode === "partner" ? "Account Partner creato!" : "Account creato con successo!",
-          description: mode === "partner"
-            ? (refCode ? "Sei stato aggiunto al team! Benvenuto nel programma Partner Empire." : "Benvenuto nel programma Partner Empire.")
-            : "Benvenuto nella piattaforma Empire.",
+          title: "Account Partner creato!",
+          description: "Controlla la tua email per confermare l'account. Dopo la conferma, accedi per entrare nella dashboard Partner.",
         });
+        setIsSignUp(false); // Switch to login view
+        setLoading(false);
+        return;
       }
+
+      toast({
+        title: "Account creato con successo!",
+        description: "Controlla la tua email per confermare l'account, poi accedi.",
+      });
+      setIsSignUp(false);
       setLoading(false);
       return;
     }
@@ -83,6 +122,34 @@ const AdminLogin = () => {
       setLoading(false);
       return;
     }
+
+    // After login, check if this user signed up as partner but hasn't been assigned the role yet
+    // (happens when email confirmation was required)
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user?.user_metadata?.partner_signup) {
+      const { data: existingRole } = await supabase
+        .from("user_roles")
+        .select("id")
+        .eq("user_id", session.user.id)
+        .eq("role", "partner")
+        .maybeSingle();
+
+      if (!existingRole) {
+        await supabase.functions.invoke("assign-partner-role", {
+          body: {
+            user_id: session.user.id,
+            team_leader_id: session.user.user_metadata.team_leader_id || null,
+          },
+        });
+        // Clear the metadata flag
+        await supabase.auth.updateUser({
+          data: { partner_signup: null, team_leader_id: null },
+        });
+        window.location.href = "/partner";
+        return;
+      }
+    }
+
     setLoading(false);
   };
 
@@ -378,8 +445,8 @@ const AdminLogin = () => {
           className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           {isSignUp
-            ? "Hai già un account Partner? Accedi"
-            : (isPartnerMode ? "Nuovo qui? Registrati come Partner" : "Nuovo ristorante? Crea account")}
+            ? (isPartnerMode ? "Hai già un account Partner? Accedi" : "Hai già un account? Accedi")
+            : (isPartnerMode ? "Nuovo qui? Registrati come Partner" : "Nuovo qui? Crea account")}
         </button>
       </motion.div>
     </div>
