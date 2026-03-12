@@ -715,46 +715,42 @@ const LandingPage = () => {
 
           <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="order-1 lg:order-2">
-            <div className="flex justify-center items-end gap-4 sm:gap-6 relative">
+            <div className="flex justify-center items-end gap-2 sm:gap-5 relative">
               <div className="absolute -inset-16 bg-primary/[0.06] rounded-[80px] blur-[100px] pointer-events-none" />
               {[
-                { label: "Cliente", path: "/r/impero-roma", scale: 0.9, delay: 0 },
-                { label: "Gestionale", path: "/app", scale: 1, delay: 0.1 },
-                { label: "Operativo", path: "/kitchen/impero-roma", scale: 0.9, delay: 0.2 },
+                { label: "Cliente", path: "/r/impero-roma", delay: 0 },
+                { label: "Gestionale", path: "/app", delay: 0.1 },
+                { label: "Operativo", path: "/kitchen/impero-roma", delay: 0.2 },
               ].map((phone, i) => {
                 const isCenter = i === 1;
-                const frameW = isCenter ? 160 : 130;
-                const frameH = isCenter ? 326 : 280;
-                const smFrameW = isCenter ? 190 : 155;
-                const smFrameH = isCenter ? 388 : 334;
+                const w = isCenter ? "w-[110px] sm:w-[170px]" : "w-[90px] sm:w-[140px]";
+                const h = isCenter ? "h-[224px] sm:h-[348px]" : "h-[184px] sm:h-[286px]";
                 const iframeW = 393;
                 const iframeH = 852;
+                // Scale iframe to fit the frame: mobile uses smaller frames
+                const mobileFrameW = isCenter ? 110 : 90;
+                const smFrameW = isCenter ? 170 : 140;
                 return (
                   <motion.div key={i}
-                    className="relative group"
+                    className="relative"
                     initial={{ y: 30 + i * 10, opacity: 0 }}
-                    whileInView={{ y: isCenter ? -12 : 0, opacity: 1 }}
+                    whileInView={{ y: isCenter ? -10 : 0, opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 + phone.delay, duration: 0.8, ease: smoothEase }}
-                    whileHover={{ y: isCenter ? -18 : -8, scale: 1.03 }}
+                    whileHover={{ y: isCenter ? -16 : -6, scale: 1.03 }}
                   >
-                    {/* Phone body */}
-                    <div
-                      className="relative rounded-[22px] sm:rounded-[28px] border-[2.5px] border-foreground/15 bg-foreground/5 shadow-[0_20px_60px_hsla(0,0%,0%,0.5)] overflow-hidden"
-                      style={{ width: frameW, height: frameH }}
-                    >
+                    <div className={`relative ${w} ${h} rounded-[18px] sm:rounded-[26px] border-[2px] border-foreground/15 bg-foreground/5 shadow-[0_20px_60px_hsla(0,0%,0%,0.5)] overflow-hidden`}>
                       {/* Dynamic Island */}
-                      <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[50px] h-[14px] sm:w-[60px] sm:h-[16px] bg-foreground rounded-full z-20" />
-
-                      {/* Screen with live iframe */}
-                      <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden bg-background">
+                      <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[12px] sm:w-[56px] sm:h-[15px] bg-foreground rounded-full z-20" />
+                      {/* Screen */}
+                      <div className="absolute inset-[2px] rounded-[16px] sm:rounded-[24px] overflow-hidden bg-background">
                         <iframe
                           src={`${window.location.origin}${phone.path}`}
                           className="border-0 pointer-events-none"
                           style={{
                             width: iframeW,
                             height: iframeH,
-                            transform: `scale(${(frameW - 4) / iframeW})`,
+                            transform: `scale(${(mobileFrameW - 4) / iframeW})`,
                             transformOrigin: "top left",
                           }}
                           title={`Preview ${phone.label}`}
@@ -762,26 +758,10 @@ const LandingPage = () => {
                           tabIndex={-1}
                         />
                       </div>
-
                       {/* Home indicator */}
-                      <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[50px] h-[3px] bg-foreground/25 rounded-full z-20" />
+                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[40px] h-[3px] bg-foreground/25 rounded-full z-20" />
                     </div>
-
-                    {/* Label */}
-                    <p className="text-center text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/50 mt-2.5">{phone.label}</p>
-
-                    {/* Responsive size override */}
-                    <style>{`
-                      @media (min-width: 640px) {
-                        .group:nth-child(${i + 1}) > div:first-child {
-                          width: ${smFrameW}px !important;
-                          height: ${smFrameH}px !important;
-                        }
-                        .group:nth-child(${i + 1}) > div:first-child iframe {
-                          transform: scale(${(smFrameW - 4) / iframeW}) !important;
-                        }
-                      }
-                    `}</style>
+                    <p className="text-center text-[0.5rem] sm:text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/50 mt-2">{phone.label}</p>
                   </motion.div>
                 );
               })}
