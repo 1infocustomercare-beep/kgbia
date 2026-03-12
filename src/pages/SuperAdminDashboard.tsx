@@ -50,7 +50,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents" | "media";
 
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
