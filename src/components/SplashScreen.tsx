@@ -46,10 +46,10 @@ const SpecularPanel = ({ gx, gy, delay, children, className = "" }: {
   className?: string;
 }) => {
   const [anchored, setAnchored] = useState(false);
-  const reflectX = useSpring(useTransform(gx, [-1, 1], [-120, 120]), { stiffness: 80, damping: 20 });
-  const reflectY = useSpring(useTransform(gy, [-1, 1], [-120, 120]), { stiffness: 80, damping: 20 });
-  const tiltX = useSpring(useTransform(gy, [-1, 1], [4, -4]), { stiffness: 120, damping: 25 });
-  const tiltY = useSpring(useTransform(gx, [-1, 1], [-4, 4]), { stiffness: 120, damping: 25 });
+  const reflectX = useSpring(useTransform(gx, [-1, 1], [-120, 120] as number[]), { stiffness: 80, damping: 20 });
+  const reflectY = useSpring(useTransform(gy, [-1, 1], [-120, 120] as number[]), { stiffness: 80, damping: 20 });
+  const tiltX = useSpring(useTransform(gy, [-1, 1], [4, -4] as number[]), { stiffness: 120, damping: 25 });
+  const tiltY = useSpring(useTransform(gx, [-1, 1], [-4, 4] as number[]), { stiffness: 120, damping: 25 });
 
   return (
     <motion.div
