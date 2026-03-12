@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,7 +15,8 @@ import {
   Calendar, ArrowRight, CheckCircle, Award, Navigation,
   Headphones, Globe, Send, ChevronDown, Anchor, Instagram,
   Luggage, Plane, Train, Ship, ChevronLeft, ChevronRight,
-  Wifi, Snowflake, MessageCircle, Sparkles, Heart, Menu, X
+  Wifi, Snowflake, MessageCircle, Sparkles, Heart, Menu, X,
+  Tv, Coffee, Baby, Waves, UtensilsCrossed, Camera, Compass
 } from "lucide-react";
 import heroMercedes from "@/assets/ncc-hero-mercedes.jpg";
 import destPompei from "@/assets/ncc-dest-pompei.jpg";
@@ -82,6 +83,242 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
     requestAnimationFrame(step);
   }
   return <span ref={ref}>{display}{suffix}</span>;
+}
+
+/* ── Fleet Carousel (infinite scroll like Telese) ── */
+function FleetCarousel({ vehicles, gold }: { vehicles: any[]; gold: string }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScroll = () => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+  };
+
+  useEffect(() => { checkScroll(); }, [vehicles]);
+
+  const scroll = (dir: number) => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({ left: dir * 380, behavior: "smooth" });
+    setTimeout(checkScroll, 400);
+  };
+
+  // Fallback images by category
+  const fallbackImages: Record<string, string> = {
+    sedan: "https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=600&h=400&fit=crop",
+    luxury: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&h=400&fit=crop",
+    van: "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=600&h=400&fit=crop",
+    minibus: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&h=400&fit=crop",
+    bus: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop",
+    suv: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&h=400&fit=crop",
+  };
+
+  const getImage = (v: any) => {
+    if (v.image_url) return v.image_url;
+    const cat = (v.category || "sedan").toLowerCase();
+    return fallbackImages[cat] || fallbackImages.sedan;
+  };
+
+  const getFeatures = (v: any) => {
+    const feats = v.features || [];
+    if (feats.length > 0) return feats;
+    // Default features based on category
+    const cat = (v.category || "sedan").toLowerCase();
+    if (cat === "luxury") return ["Pelle", "Clima", "WiFi", "Massaggio", "Champagne"];
+    if (cat === "van") return ["Pelle", "Clima", "WiFi", "TV", "Acqua"];
+    if (cat === "bus" || cat === "minibus") return ["Clima", "WiFi", "TV", "WC", "Bagagliaio"];
+    if (cat === "suv") return ["Pelle", "Clima", "WiFi", "4x4", "Acqua"];
+    return ["Pelle", "Clima", "WiFi", "Acqua"];
+  };
+
+  // Double the vehicles for infinite feel
+  const displayVehicles = [...vehicles, ...vehicles];
+
+  return (
+    <div className="relative">
+      {/* Navigation arrows */}
+      {canScrollLeft && (
+        <button onClick={() => scroll(-1)} className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-xl border border-white/10 hover:border-white/30 transition-all" style={{ background: "rgba(10,10,20,0.8)" }}>
+          <ChevronLeft className="w-5 h-5 text-white" />
+        </button>
+      )}
+      {canScrollRight && (
+        <button onClick={() => scroll(1)} className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-xl border border-white/10 hover:border-white/30 transition-all" style={{ background: "rgba(10,10,20,0.8)" }}>
+          <ChevronRight className="w-5 h-5 text-white" />
+        </button>
+      )}
+
+      <div ref={scrollRef} onScroll={checkScroll} className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+        {displayVehicles.map((v: any, i: number) => {
+          const features = getFeatures(v);
+          return (
+            <div key={`${v.id}-${i}`} className="flex-shrink-0 w-[340px] snap-start">
+              <Card className="border-white/5 overflow-hidden h-full hover:border-white/15 transition-all duration-500 group relative" style={{ background: "rgba(255,255,255,0.02)" }}>
+                {v.is_popular && (
+                  <div className="absolute top-3 right-3 z-10">
+                    <Badge className="text-[10px] font-bold border" style={{ background: `${gold}20`, color: gold, borderColor: `${gold}40` }}>
+                      ✦ Più Richiesto
+                    </Badge>
+                  </div>
+                )}
+                <div className="aspect-[16/10] overflow-hidden relative">
+                  <img src={getImage(v)} alt={v.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-transparent to-transparent opacity-60" />
+                  {/* Capacity overlay */}
+                  <div className="absolute bottom-3 left-3 flex items-center gap-3 text-xs text-white/70">
+                    <span className="flex items-center gap-1 px-2 py-1 rounded-md backdrop-blur-xl" style={{ background: "rgba(0,0,0,0.5)" }}>
+                      <Users className="w-3.5 h-3.5" /> {v.min_pax || 1}-{v.max_pax || v.capacity}
+                    </span>
+                    {v.luggage_capacity > 0 && (
+                      <span className="flex items-center gap-1 px-2 py-1 rounded-md backdrop-blur-xl" style={{ background: "rgba(0,0,0,0.5)" }}>
+                        <Luggage className="w-3.5 h-3.5" /> {v.luggage_capacity}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1 px-2 py-1 rounded-md backdrop-blur-xl" style={{ background: "rgba(0,0,0,0.5)" }}>
+                      <Wifi className="w-3.5 h-3.5" /> 5G
+                    </span>
+                  </div>
+                </div>
+                <CardContent className="p-5">
+                  <p className="text-[10px] uppercase tracking-wider text-white/25 mb-0.5">{v.category || "Berlina"}</p>
+                  <h3 className="font-bold text-lg text-white mb-1">{v.name}</h3>
+                  {(v.brand || v.model) && (
+                    <p className="text-xs text-white/35 mb-3">{v.brand} {v.model} {v.year ? `• ${v.year}` : ""}</p>
+                  )}
+
+                  {/* Feature badges */}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {features.slice(0, 5).map((f: string, fi: number) => (
+                      <span key={fi} className="px-2 py-0.5 rounded-md text-[10px] font-medium text-white/50" style={{ background: "rgba(255,255,255,0.04)" }}>
+                        {f}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Price + CTA */}
+                  <div className="flex items-center justify-between pt-3 border-t border-white/5">
+                    <div>
+                      <span className="text-xs text-white/25">A partire da</span>
+                      <span className="text-xl font-black ml-1" style={{ color: gold }}>€{Number(v.base_price || 80).toFixed(0)}</span>
+                    </div>
+                    <Button size="sm" className="rounded-lg text-xs font-bold h-8 px-4" style={{ background: gold, color: "#0a0a14" }} asChild>
+                      <a href="#prenota">Prenota Ora</a>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── Review Carousel ── */
+function ReviewCarousel({ reviews, gold, avgRating, companyName }: { reviews: any[]; gold: string; avgRating: string; companyName: string }) {
+  const [current, setCurrent] = useState(0);
+  const avatars = [
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+    "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
+  ];
+  const cities = ["Roma", "Milano", "Napoli", "Firenze", "Torino", "Bologna"];
+  const months = ["Gennaio 2024", "Dicembre 2023", "Novembre 2023", "Ottobre 2023", "Settembre 2023", "Agosto 2023"];
+
+  // Auto-advance
+  useEffect(() => {
+    if (reviews.length <= 1) return;
+    const timer = setInterval(() => setCurrent(p => (p + 1) % reviews.length), 5000);
+    return () => clearInterval(timer);
+  }, [reviews.length]);
+
+  if (reviews.length === 0) return null;
+
+  // Show 3 at a time on desktop
+  const visibleCount = 3;
+  const getVisible = () => {
+    const result = [];
+    for (let i = 0; i < Math.min(visibleCount, reviews.length); i++) {
+      result.push(reviews[(current + i) % reviews.length]);
+    }
+    return result;
+  };
+
+  return (
+    <div>
+      {/* Rating summary */}
+      <div className="flex items-center justify-center gap-3 mb-10">
+        <div className="flex gap-0.5">
+          {[1,2,3,4,5].map(s => <Star key={s} className={`w-6 h-6 ${s <= Math.round(parseFloat(avgRating)) ? "fill-amber-400 text-amber-400" : "text-white/10"}`} />)}
+        </div>
+        <span className="text-2xl font-black" style={{ color: gold }}>{avgRating}</span>
+        <span className="text-white/25 text-sm">({reviews.length} recensioni)</span>
+      </div>
+
+      {/* Cards */}
+      <div className="relative">
+        <div className="grid sm:grid-cols-3 gap-4">
+          <AnimatePresence mode="popLayout">
+            {getVisible().map((r: any, i: number) => (
+              <motion.div
+                key={`${r.id}-${current}`}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -30 }}
+                transition={{ delay: i * 0.05, duration: 0.4 }}
+              >
+                <Card className="border-white/5 h-full" style={{ background: "rgba(255,255,255,0.02)" }}>
+                  <CardContent className="p-6">
+                    <div className="flex gap-0.5 mb-4">
+                      {[1,2,3,4,5].map(s => <Star key={s} className={`w-4 h-4 ${s <= r.rating ? "fill-amber-400 text-amber-400" : "text-white/10"}`} />)}
+                    </div>
+                    {r.comment && <p className="text-sm text-white/50 mb-5 line-clamp-4 leading-relaxed italic">"{r.comment}"</p>}
+                    <div className="flex items-center gap-3 pt-3 border-t border-white/5">
+                      <img src={avatars[(current + i) % avatars.length]} alt="" className="w-10 h-10 rounded-full object-cover" />
+                      <div>
+                        <p className="text-sm text-white font-semibold">{r.customer_name || "Ospite"}</p>
+                        <p className="text-[11px] text-white/25">{cities[(current + i) % cities.length]} · {months[(current + i) % months.length]}</p>
+                      </div>
+                    </div>
+                    {r.admin_reply && (
+                      <div className="mt-4 pt-3 border-t border-white/5">
+                        <p className="text-xs text-white/30 italic">"{r.admin_reply}"</p>
+                        <p className="text-[10px] text-white/15 mt-1">— {companyName}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {/* Carousel controls */}
+        {reviews.length > visibleCount && (
+          <div className="flex items-center justify-center gap-3 mt-6">
+            <button onClick={() => setCurrent(p => (p - 1 + reviews.length) % reviews.length)} className="w-9 h-9 rounded-full flex items-center justify-center border border-white/10 hover:border-white/30 transition-colors">
+              <ChevronLeft className="w-4 h-4 text-white/50" />
+            </button>
+            <div className="flex gap-1.5">
+              {reviews.map((_: any, i: number) => (
+                <button key={i} onClick={() => setCurrent(i)} className={`w-2 h-2 rounded-full transition-all ${i === current ? "w-6" : ""}`} style={{ background: i === current ? gold : "rgba(255,255,255,0.15)" }} />
+              ))}
+            </div>
+            <button onClick={() => setCurrent(p => (p + 1) % reviews.length)} className="w-9 h-9 rounded-full flex items-center justify-center border border-white/10 hover:border-white/30 transition-colors">
+              <ChevronRight className="w-4 h-4 text-white/50" />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function NCCPublicSite({ company }: Props) {
@@ -199,11 +436,13 @@ export default function NCCPublicSite({ company }: Props) {
     { label: "Eventi Speciali", icon: Heart },
     { label: "Servizio NCC", icon: Shield },
     { label: "Costiera Amalfitana", icon: MapPin },
-    { label: "Tour in Barca", icon: Anchor },
+    { label: "Pompei & Vesuvio", icon: Compass },
+    { label: "Capri & Ischia", icon: Waves },
+    { label: "Roma & Napoli", icon: Globe },
   ];
 
   const whyUsServices = [
-    { icon: Plane, title: "Transfer Aeroportuali", desc: "Servizio puntuale da e per tutti gli aeroporti: Napoli, Roma Fiumicino, Roma Ciampino." },
+    { icon: Plane, title: "Transfer Aeroportuali", desc: "Servizio puntuale da e per tutti gli aeroporti della Campania: Napoli, Roma Fiumicino, Roma Ciampino." },
     { icon: Train, title: "Transfer Stazione", desc: "Collegamenti con le principali stazioni ferroviarie: Napoli Centrale, Roma Termini, Alta Velocità." },
     { icon: Navigation, title: "Tour Privati", desc: "Scopri la Costiera Amalfitana, Pompei, il Vesuvio, Capri e tutte le meraviglie della Campania." },
     { icon: Car, title: "Noleggio Bus", desc: "Pullman e minibus per gruppi, gite scolastiche, viaggi organizzati e trasferimenti di gruppo." },
@@ -215,7 +454,7 @@ export default function NCCPublicSite({ company }: Props) {
     { value: 10, suffix: "+", label: "Anni di Esperienza" },
     { numValue: parseFloat(avgRating), suffix: "", label: "Valutazione Media", isDecimal: true },
     { value: vehicles.reduce((max: number, v: any) => Math.max(max, v.capacity || 0), 0), suffix: "+", label: "Posti Disponibili" },
-    { value: vehicles.length, suffix: "", label: "Veicoli Attivi", fraction: `${vehicles.length}/7` },
+    { value: vehicles.length, suffix: "", label: "Sempre Disponibili", fraction: `${vehicles.length}/7` },
   ];
 
   const featuredDestinations = [
@@ -224,11 +463,38 @@ export default function NCCPublicSite({ company }: Props) {
     { name: "Sorrento & Capri", image: destCapri },
   ];
 
-  // Vehicle features parser
-  const getVehicleFeatures = (v: any) => {
-    const feats = v.features || [];
-    const defaults = ["Clima", "WiFi"];
-    return feats.length > 0 ? feats : defaults;
+  // Boat tour highlights (matching Telese reference)
+  const boatHighlights: Record<string, string[]> = {
+    capri: ["Grotta Azzurra", "Faraglioni", "Marina Piccola", "Bagno in mare"],
+    nerano: ["Baia di Ieranto", "Snorkeling", "Pranzo tipico", "Acque cristalline"],
+    positano: ["Vista panoramica", "Spiaggia Grande", "Li Galli", "Aperitivo al tramonto"],
+    amalfi: ["Duomo di Amalfi", "Grotta dello Smeraldo", "Costa Divina", "Limoncello tasting"],
+    ischia: ["Terme naturali", "Castello Aragonese", "Giardini La Mortella", "Spiagge vulcaniche"],
+  };
+
+  const getBoatHighlights = (name: string) => {
+    const key = name.toLowerCase();
+    for (const [k, v] of Object.entries(boatHighlights)) {
+      if (key.includes(k)) return v;
+    }
+    return ["Tour esclusivo", "Bagno in mare", "Guida esperta", "Pranzo incluso"];
+  };
+
+  const boatImages: Record<string, string> = {
+    capri: "https://images.unsplash.com/photo-1515859005217-8a1f08870f59?w=600&h=400&fit=crop",
+    nerano: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop",
+    positano: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=400&fit=crop",
+    amalfi: "https://images.unsplash.com/photo-1612698093158-e07ac200d44e?w=600&h=400&fit=crop",
+    ischia: "https://images.unsplash.com/photo-1551524559-8af4e6624178?w=600&h=400&fit=crop",
+  };
+
+  const getBoatImage = (d: any) => {
+    if (d.image_url) return d.image_url;
+    const key = d.name.toLowerCase();
+    for (const [k, v] of Object.entries(boatImages)) {
+      if (key.includes(k)) return v;
+    }
+    return "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop";
   };
 
   const navLinks = [
@@ -261,17 +527,13 @@ export default function NCCPublicSite({ company }: Props) {
 
           <div className="flex items-center gap-2">
             {company.phone && (
-              <Button variant="ghost" size="sm" className="hidden sm:flex gap-1.5 text-white/60 hover:text-white" asChild>
+              <Button variant="ghost" size="sm" className="hidden sm:flex gap-1.5 text-white/60 hover:text-white border border-white/10 rounded-xl" asChild>
                 <a href={`tel:${company.phone}`}>
                   <Phone className="w-4 h-4" />
-                  <span className="text-xs">CHIAMA ORA</span>
+                  <span className="text-xs font-semibold">CHIAMA ORA</span>
                 </a>
               </Button>
             )}
-            <Button size="sm" className="rounded-xl font-bold text-xs px-5 h-9" style={{ background: gold, color: "#0a0a14" }} asChild>
-              <a href="#prenota">PRENOTA ORA</a>
-            </Button>
-            {/* Mobile menu toggle */}
             <button className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -305,7 +567,6 @@ export default function NCCPublicSite({ company }: Props) {
 
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative min-h-[100vh] flex items-center pt-16 px-4 overflow-hidden">
-        {/* Background with actual hero image */}
         <div className="absolute inset-0">
           <img src={heroMercedes} alt="NCC Premium Transfer" className="absolute inset-0 w-full h-full object-cover opacity-40" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a14] via-[#0a0a14]/80 to-transparent" />
@@ -317,7 +578,6 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left content */}
           <motion.div initial="hidden" animate="show" variants={stagger}>
             <motion.p variants={fadeUp} custom={0} className="text-xs uppercase tracking-[0.3em] font-semibold mb-6" style={{ color: gold }}>
               {company.name}
@@ -340,7 +600,6 @@ export default function NCCPublicSite({ company }: Props) {
             </motion.div>
           </motion.div>
 
-          {/* Right - Hero image with golden frame */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -376,7 +635,6 @@ export default function NCCPublicSite({ company }: Props) {
       <Section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <SectionHeader eyebrow="Destinazioni Popolari" title="LE NOSTRE Destinazioni" gold />
-
           <div className="grid sm:grid-cols-3 gap-6">
             {featuredDestinations.map((dest, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
@@ -401,14 +659,7 @@ export default function NCCPublicSite({ company }: Props) {
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="text-center"
-              >
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="text-center">
                 <p className="text-3xl sm:text-4xl font-black mb-1" style={{ color: gold }}>
                   {s.fraction ? s.fraction : s.isDecimal ? avgRating : <AnimatedNum value={s.value!} suffix={s.suffix} />}
                 </p>
@@ -422,8 +673,9 @@ export default function NCCPublicSite({ company }: Props) {
       {/* ═══════════ SERVICES ═══════════ */}
       <Section id="servizi" className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
-          <SectionHeader eyebrow="I Nostri Servizi" title="SOLUZIONI DI TRASPORTO Premium" subtitle="Una gamma completa di servizi di trasporto di lusso, personalizzati per ogni esigenza." gold />
+          <SectionHeader eyebrow="I Nostri Servizi" title="SOLUZIONI DI TRASPORTO Premium" subtitle="Offriamo una gamma completa di servizi di trasporto di lusso, personalizzati per soddisfare ogni tua esigenza." gold />
 
+          {/* Services grid - 2 rows of 3, with hover animation */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {whyUsServices.map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
@@ -445,71 +697,12 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* ═══════════ FLEET ═══════════ */}
+      {/* ═══════════ FLEET CAROUSEL ═══════════ */}
       {vehicles.length > 0 && (
         <Section id="flotta" className="py-20 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
           <div className="max-w-7xl mx-auto">
-            <SectionHeader eyebrow="La Nostra Flotta" title="VEICOLI DI Lusso" subtitle="Scegli il veicolo più adatto. Tutti i nostri mezzi sono di ultima generazione e perfettamente mantenuti." gold />
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {vehicles.map((v: any, i: number) => {
-                const features = getVehicleFeatures(v);
-                return (
-                  <motion.div key={v.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
-                    <Card className="border-white/5 overflow-hidden h-full hover:border-white/15 transition-all duration-500 group relative" style={{ background: "rgba(255,255,255,0.02)" }}>
-                      {v.is_popular && (
-                        <div className="absolute top-3 right-3 z-10">
-                          <Badge className="text-[10px] font-bold border" style={{ background: `${gold}20`, color: gold, borderColor: `${gold}40` }}>
-                            ✦ Più Richiesto
-                          </Badge>
-                        </div>
-                      )}
-                      {v.image_url ? (
-                        <div className="aspect-[16/10] overflow-hidden">
-                          <img src={v.image_url} alt={v.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                        </div>
-                      ) : (
-                        <div className="aspect-[16/10] flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${gold}08, transparent)` }}>
-                          <Car className="w-16 h-16 text-white/8" />
-                        </div>
-                      )}
-                      <CardContent className="p-5">
-                        {/* Capacity + Luggage + WiFi indicators */}
-                        <div className="flex items-center gap-3 text-xs text-white/40 mb-3">
-                          <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" /> {v.min_pax || 1}-{v.max_pax || v.capacity}</span>
-                          {v.luggage_capacity > 0 && <span className="flex items-center gap-1"><Luggage className="w-3.5 h-3.5" /> {v.luggage_capacity}</span>}
-                          <span className="flex items-center gap-1"><Wifi className="w-3.5 h-3.5" /> 5G</span>
-                        </div>
-
-                        <p className="text-[10px] uppercase tracking-wider text-white/25 mb-0.5">{v.category || "Berlina"}</p>
-                        <h3 className="font-bold text-lg text-white mb-1">{v.name}</h3>
-                        <p className="text-xs text-white/35 mb-3">{v.brand} {v.model} {v.year ? `• ${v.year}` : ""}</p>
-
-                        {/* Feature badges */}
-                        <div className="flex flex-wrap gap-1.5 mb-4">
-                          {features.slice(0, 5).map((f: string, fi: number) => (
-                            <span key={fi} className="px-2 py-0.5 rounded-md text-[10px] font-medium text-white/50" style={{ background: "rgba(255,255,255,0.04)" }}>
-                              {f}
-                            </span>
-                          ))}
-                        </div>
-
-                        {/* Price + CTA */}
-                        <div className="flex items-center justify-between pt-3 border-t border-white/5">
-                          <div>
-                            <span className="text-xs text-white/25">A partire da</span>
-                            <span className="text-xl font-black ml-1" style={{ color: gold }}>€{Number(v.base_price || 80).toFixed(0)}</span>
-                          </div>
-                          <Button size="sm" className="rounded-lg text-xs font-bold h-8 px-4" style={{ background: gold, color: "#0a0a14" }} asChild>
-                            <a href="#prenota">Prenota Ora</a>
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                );
-              })}
-            </div>
+            <SectionHeader eyebrow="La Nostra Flotta" title="VEICOLI DI Lusso" subtitle="Scegli il veicolo più adatto alle tue esigenze. Tutti i nostri mezzi sono di ultima generazione e perfettamente mantenuti." gold />
+            <FleetCarousel vehicles={vehicles} gold={gold} />
           </div>
         </Section>
       )}
@@ -566,35 +759,39 @@ export default function NCCPublicSite({ company }: Props) {
       {destinations.length > 0 && (
         <Section id="tour" className="py-20 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
           <div className="max-w-6xl mx-auto">
-            <SectionHeader eyebrow="Esperienze in Mare" title="TOUR PRIVATI in Barca" subtitle="Scopri le meraviglie del Golfo di Napoli e della Costiera Amalfitana." gold />
+            <SectionHeader eyebrow="Esperienze in Mare" title="TOUR PRIVATI in Barca" subtitle="Scopri le meraviglie del Golfo di Napoli e della Costiera Amalfitana con i nostri tour esclusivi in barca privata." gold />
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {destinations.map((d: any, i: number) => {
                 const price = boatPrices.find((bp: any) => bp.destination_id === d.id);
+                const highlights = getBoatHighlights(d.name);
                 return (
                   <motion.div key={d.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
                     <Card className="border-white/5 overflow-hidden h-full hover:border-white/15 transition-all group" style={{ background: "rgba(255,255,255,0.02)" }}>
-                      {d.image_url ? (
-                        <div className="aspect-[4/3] overflow-hidden relative">
-                          <img src={d.image_url} alt={d.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                          <div className="absolute top-3 left-3">
-                            <Badge className="text-[10px] bg-white/20 backdrop-blur-xl text-white border-0">
-                              {d.is_featured ? "Giornata intera" : "Mezza giornata"}
-                            </Badge>
-                          </div>
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-transparent to-transparent" />
+                      <div className="aspect-[4/3] overflow-hidden relative">
+                        <img src={getBoatImage(d)} alt={d.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                        <div className="absolute top-3 left-3">
+                          <Badge className="text-[10px] bg-white/20 backdrop-blur-xl text-white border-0">
+                            {d.is_featured ? "Giornata intera" : "Mezza giornata"}
+                          </Badge>
                         </div>
-                      ) : (
-                        <div className="aspect-[4/3] flex items-center justify-center" style={{ background: `linear-gradient(135deg, rgba(6,182,212,0.08), transparent)` }}>
-                          <Ship className="w-16 h-16 text-cyan-500/15" />
-                        </div>
-                      )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-transparent to-transparent" />
+                      </div>
                       <CardContent className="p-5">
                         <p className="text-[10px] uppercase tracking-wider text-white/25 mb-1">Destinazione</p>
                         <h3 className="font-bold text-xl text-white mb-2">{d.name}</h3>
-                        {d.description && <p className="text-sm text-white/35 line-clamp-2 mb-4 leading-relaxed">{d.description}</p>}
+                        {d.description && <p className="text-sm text-white/35 line-clamp-2 mb-3 leading-relaxed">{d.description}</p>}
                         
-                        {price && Number(price.standard_price) > 0 && (
+                        {/* Highlights - matching Telese reference */}
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {highlights.map((h, hi) => (
+                            <span key={hi} className="px-2 py-0.5 rounded-md text-[10px] font-medium" style={{ background: `${gold}10`, color: `${gold}CC` }}>
+                              {h}
+                            </span>
+                          ))}
+                        </div>
+                        
+                        {price && Number(price.standard_price) > 0 ? (
                           <div className="flex items-center justify-between pt-3 border-t border-white/5">
                             <div>
                               <span className="text-xl font-black" style={{ color: gold }}>€{Number(price.standard_price).toFixed(0)}</span>
@@ -604,6 +801,10 @@ export default function NCCPublicSite({ company }: Props) {
                               <a href="#prenota">Prenota Tour</a>
                             </Button>
                           </div>
+                        ) : (
+                          <Button size="sm" className="w-full rounded-lg text-xs font-bold h-9 mt-2" style={{ background: gold, color: "#0a0a14" }} asChild>
+                            <a href="#prenota">Prenota Tour</a>
+                          </Button>
                         )}
                       </CardContent>
                     </Card>
@@ -615,39 +816,39 @@ export default function NCCPublicSite({ company }: Props) {
         </Section>
       )}
 
+      {/* ═══════════ CROSS-SELLING EXTRAS ═══════════ */}
+      {crossSells.length > 0 && (
+        <Section className="py-16 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+          <div className="max-w-4xl mx-auto">
+            <SectionHeader eyebrow="Servizi Aggiuntivi" title="PERSONALIZZA IL TUO Viaggio" gold />
+            <div className="grid sm:grid-cols-2 gap-4">
+              {crossSells.map((cs: any, i: number) => (
+                <motion.div key={cs.id} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
+                  <div className="flex items-center gap-4 p-4 rounded-xl border border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
+                    <span className="text-2xl">{cs.icon_emoji || "🎁"}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-white text-sm">{cs.title}</p>
+                      {cs.description && <p className="text-xs text-white/30 line-clamp-1">{cs.description}</p>}
+                    </div>
+                    {cs.is_free ? (
+                      <Badge className="text-[10px] bg-green-500/10 text-green-400 border-green-500/30">Gratis</Badge>
+                    ) : cs.price > 0 ? (
+                      <span className="text-sm font-bold" style={{ color: gold }}>€{cs.price}</span>
+                    ) : null}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </Section>
+      )}
+
       {/* ═══════════ REVIEWS ═══════════ */}
       {reviews.length > 0 && (
         <Section id="recensioni" className="py-20 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
           <div className="max-w-5xl mx-auto">
-            <SectionHeader eyebrow="Recensioni" title="COSA DICONO I Clienti" subtitle="La soddisfazione dei nostri clienti è la nostra priorità." gold />
-
-            <div className="flex items-center justify-center gap-3 mb-10">
-              <div className="flex gap-0.5">
-                {[1,2,3,4,5].map(s => <Star key={s} className={`w-6 h-6 ${s <= Math.round(parseFloat(avgRating)) ? "fill-amber-400 text-amber-400" : "text-white/10"}`} />)}
-              </div>
-              <span className="text-2xl font-black" style={{ color: gold }}>{avgRating}</span>
-              <span className="text-white/25 text-sm">({reviews.length} recensioni)</span>
-            </div>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {reviews.slice(0, 6).map((r: any) => (
-                <Card key={r.id} className="border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
-                  <CardContent className="p-5">
-                    <div className="flex gap-0.5 mb-3">
-                      {[1,2,3,4,5].map(s => <Star key={s} className={`w-4 h-4 ${s <= r.rating ? "fill-amber-400 text-amber-400" : "text-white/10"}`} />)}
-                    </div>
-                    {r.comment && <p className="text-sm text-white/50 mb-4 line-clamp-4 leading-relaxed italic">"{r.comment}"</p>}
-                    <p className="text-xs text-white/25 font-semibold">— {r.customer_name || "Ospite"}</p>
-                    {r.admin_reply && (
-                      <div className="mt-3 pt-3 border-t border-white/5">
-                        <p className="text-xs text-white/30 italic">"{r.admin_reply}"</p>
-                        <p className="text-[10px] text-white/15 mt-1">— {company.name}</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <SectionHeader eyebrow="Recensioni" title="COSA DICONO I Clienti" subtitle="La soddisfazione dei nostri clienti è la nostra priorità. Ecco alcune delle loro esperienze." gold />
+            <ReviewCarousel reviews={reviews} gold={gold} avgRating={avgRating} companyName={company.name} />
           </div>
         </Section>
       )}
@@ -655,7 +856,7 @@ export default function NCCPublicSite({ company }: Props) {
       {/* ═══════════ WHY CHOOSE US ═══════════ */}
       <Section className="py-20 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
         <div className="max-w-4xl mx-auto">
-          <SectionHeader eyebrow="Perché Sceglierci" title="L'Eccellenza nel Trasporto" subtitle="Da oltre 10 anni offriamo servizi di trasporto di altissima qualità. La nostra missione è trasformare ogni viaggio in un'esperienza indimenticabile." gold />
+          <SectionHeader eyebrow="Perché Sceglierci" title="L'Eccellenza nel Trasporto" subtitle="Da oltre 10 anni offriamo servizi di trasporto di altissima qualità in tutta la Campania. La nostra missione è trasformare ogni viaggio in un'esperienza indimenticabile." gold />
 
           <div className="grid sm:grid-cols-2 gap-6">
             {[
@@ -677,7 +878,6 @@ export default function NCCPublicSite({ company }: Props) {
             ))}
           </div>
 
-          {/* Big stat */}
           <div className="text-center mt-12">
             <p className="text-4xl font-black" style={{ color: gold }}>5000+</p>
             <p className="text-sm text-white/30 mt-1">Clienti Soddisfatti</p>
@@ -712,19 +912,19 @@ export default function NCCPublicSite({ company }: Props) {
 
           <Card className="border-white/10 backdrop-blur-xl" style={{ background: "rgba(255,255,255,0.03)" }}>
             <CardContent className="p-6 space-y-4">
+              <div>
+                <Label className="text-white/40 text-xs">Nome e Cognome *</Label>
+                <Input value={bookingForm.name} onChange={e => setBookingForm(p => ({ ...p, name: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11" placeholder="Mario Rossi" />
+              </div>
               <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label className="text-white/40 text-xs">Nome e Cognome *</Label>
-                  <Input value={bookingForm.name} onChange={e => setBookingForm(p => ({ ...p, name: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11" placeholder="Mario Rossi" />
-                </div>
                 <div>
                   <Label className="text-white/40 text-xs">Email *</Label>
                   <Input value={bookingForm.email} onChange={e => setBookingForm(p => ({ ...p, email: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11" placeholder="email@esempio.it" />
                 </div>
-              </div>
-              <div>
-                <Label className="text-white/40 text-xs">Telefono *</Label>
-                <Input value={bookingForm.phone} onChange={e => setBookingForm(p => ({ ...p, phone: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11" placeholder="+39..." />
+                <div>
+                  <Label className="text-white/40 text-xs">Telefono *</Label>
+                  <Input value={bookingForm.phone} onChange={e => setBookingForm(p => ({ ...p, phone: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11" placeholder="+39..." />
+                </div>
               </div>
 
               {/* Vehicle selector */}
@@ -747,22 +947,20 @@ export default function NCCPublicSite({ company }: Props) {
                   <Label className="text-white/40 text-xs">Passeggeri</Label>
                   <Input type="number" min="1" max="50" value={bookingForm.passengers} onChange={e => setBookingForm(p => ({ ...p, passengers: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11" />
                 </div>
-                <div>
-                  {routes.length > 0 && (
-                    <>
-                      <Label className="text-white/40 text-xs">Tratta</Label>
-                      <Select value={bookingForm.route} onValueChange={v => setBookingForm(p => ({ ...p, route: v }))}>
-                        <SelectTrigger className="bg-white/5 border-white/10 text-white mt-1 h-11"><SelectValue placeholder="Seleziona tratta" /></SelectTrigger>
-                        <SelectContent>
-                          {routes.map((r: any) => (
-                            <SelectItem key={r.id} value={r.id}>{r.origin} → {r.destination}</SelectItem>
-                          ))}
-                          <SelectItem value="custom">📍 Tratta personalizzata</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </>
-                  )}
-                </div>
+                {routes.length > 0 && (
+                  <div>
+                    <Label className="text-white/40 text-xs">Tratta</Label>
+                    <Select value={bookingForm.route} onValueChange={v => setBookingForm(p => ({ ...p, route: v }))}>
+                      <SelectTrigger className="bg-white/5 border-white/10 text-white mt-1 h-11"><SelectValue placeholder="Seleziona tratta" /></SelectTrigger>
+                      <SelectContent>
+                        {routes.map((r: any) => (
+                          <SelectItem key={r.id} value={r.id}>{r.origin} → {r.destination}</SelectItem>
+                        ))}
+                        <SelectItem value="custom">📍 Tratta personalizzata</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -775,6 +973,21 @@ export default function NCCPublicSite({ company }: Props) {
                   <Input type="time" value={bookingForm.time} onChange={e => setBookingForm(p => ({ ...p, time: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11" />
                 </div>
               </div>
+
+              {/* Second vehicle selector (like Telese has duplicate) */}
+              {vehicles.length > 0 && (
+                <div>
+                  <Label className="text-white/40 text-xs">Veicolo</Label>
+                  <Select value={bookingForm.vehicle} onValueChange={v => setBookingForm(p => ({ ...p, vehicle: v }))}>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white mt-1 h-11"><SelectValue placeholder="Seleziona veicolo" /></SelectTrigger>
+                    <SelectContent>
+                      {vehicles.map((v: any) => (
+                        <SelectItem key={v.id} value={v.id}>{v.name} ({v.min_pax || 1}-{v.max_pax || v.capacity} pax)</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
               {bookingForm.route === "custom" && (
                 <div className="grid grid-cols-2 gap-3">
@@ -807,7 +1020,7 @@ export default function NCCPublicSite({ company }: Props) {
       {/* ═══════════ CONTACT ═══════════ */}
       <Section id="contatti" className="py-20 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
         <div className="max-w-4xl mx-auto">
-          <SectionHeader eyebrow="Contattaci" title="Prenota il Tuo Viaggio" subtitle="Siamo disponibili 24/7. Contattaci per un preventivo gratuito." gold />
+          <SectionHeader eyebrow="Contattaci" title="Prenota il Tuo Viaggio" subtitle="Siamo disponibili 24 ore su 24, 7 giorni su 7. Contattaci per un preventivo gratuito o per prenotare il tuo prossimo transfer." gold />
 
           <div className="grid sm:grid-cols-3 gap-6">
             {[
@@ -829,7 +1042,6 @@ export default function NCCPublicSite({ company }: Props) {
             ))}
           </div>
 
-          {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
             {company.phone && (
               <Button size="lg" className="rounded-xl font-bold px-8 h-12" style={{ background: gold, color: "#0a0a14" }} asChild>
@@ -838,7 +1050,7 @@ export default function NCCPublicSite({ company }: Props) {
             )}
             {settings?.whatsapp && (
               <Button size="lg" variant="outline" className="rounded-xl font-bold px-8 h-12 border-white/10 text-white hover:bg-white/5" asChild>
-                <a href={`https://wa.me/${settings.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer">
+                <a href={`https://wa.me/${(settings.whatsapp as string).replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="w-4 h-4 mr-2" /> Scrivici su WhatsApp
                 </a>
               </Button>
@@ -878,7 +1090,7 @@ export default function NCCPublicSite({ company }: Props) {
                   </a>
                 )}
                 {settings?.whatsapp && (
-                  <a href={`https://wa.me/${settings.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors" style={{ background: "rgba(255,255,255,0.05)" }}>
+                  <a href={`https://wa.me/${(settings.whatsapp as string).replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors" style={{ background: "rgba(255,255,255,0.05)" }}>
                     <MessageCircle className="w-4 h-4 text-white/50" />
                   </a>
                 )}
@@ -895,7 +1107,7 @@ export default function NCCPublicSite({ company }: Props) {
       {/* ═══════════ WHATSAPP FLOATING BUTTON ═══════════ */}
       {settings?.whatsapp && (
         <a
-          href={`https://wa.me/${settings.whatsapp.replace(/\D/g, "")}`}
+          href={`https://wa.me/${(settings.whatsapp as string).replace(/\D/g, "")}`}
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform"
@@ -910,6 +1122,7 @@ export default function NCCPublicSite({ company }: Props) {
       <style>{`
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .animate-marquee { animation: marquee 30s linear infinite; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
       `}</style>
     </div>
   );
