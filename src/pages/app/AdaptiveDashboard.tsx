@@ -403,7 +403,7 @@ function GenericDashboard() {
   );
 }
 
-/* ── Dashboard Shell (shared header + ambient) ──────────── */
+/* ── Dashboard Shell (shared header + ambient + live preview) */
 function DashboardShell({
   industry, title, subtitle, children,
 }: {
@@ -411,6 +411,8 @@ function DashboardShell({
 }) {
   const accent = INDUSTRY_ACCENT[industry] || INDUSTRY_ACCENT.custom;
   const HeroIcon = INDUSTRY_HERO_ICON[industry] || Star;
+  const { company } = useIndustry();
+  const [previewExpanded, setPreviewExpanded] = useState(false);
 
   return (
     <div className="space-y-6 relative">
@@ -429,7 +431,33 @@ function DashboardShell({
           </div>
         </div>
       </motion.div>
-      <div className="relative z-10">{children}</div>
+
+      {/* Main content + Live Preview side by side on desktop */}
+      <div className="relative z-10 flex gap-6">
+        <div className="flex-1 min-w-0">{children}</div>
+
+        {/* Live iPhone Preview - hidden on mobile, visible on lg+ */}
+        {company?.slug && (
+          <div className="hidden lg:flex flex-col items-center shrink-0">
+            <LiveSitePreview
+              slug={company.slug}
+              primaryColor={company.primary_color}
+              companyName={company.name}
+              onExpand={() => setPreviewExpanded(true)}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Expanded overlay */}
+      {company?.slug && (
+        <SitePreviewOverlay
+          slug={company.slug}
+          companyName={company.name}
+          open={previewExpanded}
+          onClose={() => setPreviewExpanded(false)}
+        />
+      )}
     </div>
   );
 }
