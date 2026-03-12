@@ -234,7 +234,7 @@ function StatusBadge({ status }: { status: "active" | "standby" | "error" | "dis
 
 // ─── Main Page ───
 export default function AgentsPage() {
-  const { user, roles } = useAuth();
+  const { user, roles, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [selectedAgent, setSelectedAgent] = useState<AgentDef | null>(null);
   const [chartMode, setChartMode] = useState<"calls" | "cost">("calls");
@@ -245,12 +245,20 @@ export default function AgentsPage() {
 
   const mock = useMemo(() => generateMockData(), []);
 
-  // Redirect if not super_admin
+  // Redirect if not super_admin (wait for auth to load first)
   useEffect(() => {
-    if (!roles.includes("super_admin")) {
+    if (!authLoading && !roles.includes("super_admin")) {
       navigate("/app");
     }
-  }, [roles, navigate]);
+  }, [roles, authLoading, navigate]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   // Query real agent configs
   const { data: agentConfigs } = useQuery({
