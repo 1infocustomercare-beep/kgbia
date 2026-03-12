@@ -781,9 +781,7 @@ const LandingPage = () => {
                 </div>
                 <span className="font-heading font-bold text-foreground tracking-[0.15em] uppercase text-xs">Empire<span className="text-primary">.AI</span></span>
               </div>
-              <p className="text-xs text-foreground/35 leading-[1.7] max-w-[260px] mb-5">
-                L'unico Asset Digitale di Proprietà che libera i ristoratori dalle commissioni predatorie.
-              </p>
+              <p className="text-xs text-foreground/35 leading-[1.7] max-w-[260px] mb-5">La piattaforma AI multi-settore che gestisce il tuo business — dal primo cliente all'ultimo bilancio.</p>
               <div className="flex gap-2">
                 {["In", "𝕏", "IG"].map((s, i) => (
                   <div key={i} className="w-8 h-8 rounded-full border border-border/20 flex items-center justify-center text-xs text-foreground/40 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all cursor-pointer">{s}</div>
