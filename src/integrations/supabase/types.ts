@@ -550,6 +550,44 @@ export type Database = {
           },
         ]
       }
+      boat_prices: {
+        Row: {
+          children_price: number | null
+          created_at: string
+          destination_id: string
+          group_price: number | null
+          id: string
+          standard_price: number | null
+          updated_at: string
+        }
+        Insert: {
+          children_price?: number | null
+          created_at?: string
+          destination_id: string
+          group_price?: number | null
+          id?: string
+          standard_price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          children_price?: number | null
+          created_at?: string
+          destination_id?: string
+          group_price?: number | null
+          id?: string
+          standard_price?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boat_prices_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: true
+            referencedRelation: "ncc_destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       business_subscriptions: {
         Row: {
           cancel_at_period_end: boolean
@@ -835,6 +873,103 @@ export type Database = {
           },
         ]
       }
+      company_settings: {
+        Row: {
+          bookings_enabled: boolean | null
+          company_id: string
+          confirmation_message: string | null
+          created_at: string
+          currency: string | null
+          deposit_percentage: number | null
+          email_template: string | null
+          facebook_url: string | null
+          hours: string | null
+          id: string
+          instagram_url: string | null
+          require_deposit: boolean | null
+          updated_at: string
+          vat: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          bookings_enabled?: boolean | null
+          company_id: string
+          confirmation_message?: string | null
+          created_at?: string
+          currency?: string | null
+          deposit_percentage?: number | null
+          email_template?: string | null
+          facebook_url?: string | null
+          hours?: string | null
+          id?: string
+          instagram_url?: string | null
+          require_deposit?: boolean | null
+          updated_at?: string
+          vat?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          bookings_enabled?: boolean | null
+          company_id?: string
+          confirmation_message?: string | null
+          created_at?: string
+          currency?: string | null
+          deposit_percentage?: number | null
+          email_template?: string | null
+          facebook_url?: string | null
+          hours?: string | null
+          id?: string
+          instagram_url?: string | null
+          require_deposit?: boolean | null
+          updated_at?: string
+          vat?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_settings_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: true
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_blocks: {
+        Row: {
+          company_id: string
+          field_key: string
+          id: string
+          section: string
+          updated_at: string
+          value: string | null
+        }
+        Insert: {
+          company_id: string
+          field_key: string
+          id?: string
+          section: string
+          updated_at?: string
+          value?: string | null
+        }
+        Update: {
+          company_id?: string
+          field_key?: string
+          id?: string
+          section?: string
+          updated_at?: string
+          value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_blocks_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crm_clients: {
         Row: {
           address: string | null
@@ -881,6 +1016,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "crm_clients_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cross_sells: {
+        Row: {
+          company_id: string
+          created_at: string
+          description: string | null
+          icon_emoji: string | null
+          id: string
+          is_active: boolean | null
+          is_free: boolean | null
+          price: number | null
+          shown_to: string | null
+          sort_order: number | null
+          title: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          description?: string | null
+          icon_emoji?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_free?: boolean | null
+          price?: number | null
+          shown_to?: string | null
+          sort_order?: number | null
+          title: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          description?: string | null
+          icon_emoji?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_free?: boolean | null
+          price?: number | null
+          shown_to?: string | null
+          sort_order?: number | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cross_sells_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
@@ -1006,6 +1191,157 @@ export type Database = {
         }
         Relationships: []
       }
+      drivers: {
+        Row: {
+          company_id: string
+          cqc_expiry: string | null
+          created_at: string
+          email: string | null
+          first_name: string
+          has_cqc: boolean | null
+          id: string
+          languages: string[] | null
+          last_name: string
+          license_expiry: string
+          license_number: string
+          notes: string | null
+          phone: string
+          photo_url: string | null
+          preferred_vehicle_id: string | null
+          rating_avg: number | null
+          status: string
+        }
+        Insert: {
+          company_id: string
+          cqc_expiry?: string | null
+          created_at?: string
+          email?: string | null
+          first_name: string
+          has_cqc?: boolean | null
+          id?: string
+          languages?: string[] | null
+          last_name: string
+          license_expiry: string
+          license_number: string
+          notes?: string | null
+          phone: string
+          photo_url?: string | null
+          preferred_vehicle_id?: string | null
+          rating_avg?: number | null
+          status?: string
+        }
+        Update: {
+          company_id?: string
+          cqc_expiry?: string | null
+          created_at?: string
+          email?: string | null
+          first_name?: string
+          has_cqc?: boolean | null
+          id?: string
+          languages?: string[] | null
+          last_name?: string
+          license_expiry?: string
+          license_number?: string
+          notes?: string | null
+          phone?: string
+          photo_url?: string | null
+          preferred_vehicle_id?: string | null
+          rating_avg?: number | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drivers_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drivers_preferred_vehicle_id_fkey"
+            columns: ["preferred_vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "fleet_vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      extra_prices: {
+        Row: {
+          company_id: string
+          created_at: string
+          id: string
+          is_percentage: boolean | null
+          key: string
+          label: string
+          value: number
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          id?: string
+          is_percentage?: boolean | null
+          key: string
+          label?: string
+          value?: number
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          id?: string
+          is_percentage?: boolean | null
+          key?: string
+          label?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extra_prices_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      faq_items: {
+        Row: {
+          answer: string
+          company_id: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          question: string
+          sort_order: number | null
+        }
+        Insert: {
+          answer: string
+          company_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          question: string
+          sort_order?: number | null
+        }
+        Update: {
+          answer?: string
+          company_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          question?: string
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faq_items_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feature_requests: {
         Row: {
           company_id: string
@@ -1105,14 +1441,23 @@ export type Database = {
           category: string
           company_id: string
           created_at: string
+          description: string | null
           features: string[] | null
           id: string
           image_url: string | null
+          insurance_expiry: string | null
           is_active: boolean
+          is_popular: boolean | null
           license_plate: string | null
+          luggage_capacity: number | null
+          maintenance_notes: string | null
+          max_pax: number | null
+          min_pax: number | null
           model: string | null
           name: string
+          plate: string | null
           price_per_km: number | null
+          revision_expiry: string | null
           updated_at: string
           year: number | null
         }
@@ -1123,14 +1468,23 @@ export type Database = {
           category?: string
           company_id: string
           created_at?: string
+          description?: string | null
           features?: string[] | null
           id?: string
           image_url?: string | null
+          insurance_expiry?: string | null
           is_active?: boolean
+          is_popular?: boolean | null
           license_plate?: string | null
+          luggage_capacity?: number | null
+          maintenance_notes?: string | null
+          max_pax?: number | null
+          min_pax?: number | null
           model?: string | null
           name: string
+          plate?: string | null
           price_per_km?: number | null
+          revision_expiry?: string | null
           updated_at?: string
           year?: number | null
         }
@@ -1141,14 +1495,23 @@ export type Database = {
           category?: string
           company_id?: string
           created_at?: string
+          description?: string | null
           features?: string[] | null
           id?: string
           image_url?: string | null
+          insurance_expiry?: string | null
           is_active?: boolean
+          is_popular?: boolean | null
           license_plate?: string | null
+          luggage_capacity?: number | null
+          maintenance_notes?: string | null
+          max_pax?: number | null
+          min_pax?: number | null
           model?: string | null
           name?: string
+          plate?: string | null
           price_per_km?: number | null
+          revision_expiry?: string | null
           updated_at?: string
           year?: number | null
         }
@@ -1544,57 +1907,90 @@ export type Database = {
       }
       ncc_bookings: {
         Row: {
+          admin_notes: string | null
+          client_email: string | null
           company_id: string
           created_at: string
+          created_by: string | null
+          custom_destination: string | null
+          custom_origin: string | null
           customer_email: string | null
           customer_name: string
           customer_phone: string | null
+          deposit: number | null
           driver_id: string | null
+          driver_notes: string | null
           dropoff_address: string
+          flight_code: string | null
           id: string
+          luggage: number | null
           notes: string | null
           passengers: number
+          payment_method: string | null
           pickup_address: string
           pickup_datetime: string
           route_id: string | null
+          service_type: string | null
           status: string
           total_price: number | null
           updated_at: string
           vehicle_id: string | null
         }
         Insert: {
+          admin_notes?: string | null
+          client_email?: string | null
           company_id: string
           created_at?: string
+          created_by?: string | null
+          custom_destination?: string | null
+          custom_origin?: string | null
           customer_email?: string | null
           customer_name: string
           customer_phone?: string | null
+          deposit?: number | null
           driver_id?: string | null
+          driver_notes?: string | null
           dropoff_address: string
+          flight_code?: string | null
           id?: string
+          luggage?: number | null
           notes?: string | null
           passengers?: number
+          payment_method?: string | null
           pickup_address: string
           pickup_datetime: string
           route_id?: string | null
+          service_type?: string | null
           status?: string
           total_price?: number | null
           updated_at?: string
           vehicle_id?: string | null
         }
         Update: {
+          admin_notes?: string | null
+          client_email?: string | null
           company_id?: string
           created_at?: string
+          created_by?: string | null
+          custom_destination?: string | null
+          custom_origin?: string | null
           customer_email?: string | null
           customer_name?: string
           customer_phone?: string | null
+          deposit?: number | null
           driver_id?: string | null
+          driver_notes?: string | null
           dropoff_address?: string
+          flight_code?: string | null
           id?: string
+          luggage?: number | null
           notes?: string | null
           passengers?: number
+          payment_method?: string | null
           pickup_address?: string
           pickup_datetime?: string
           route_id?: string | null
+          service_type?: string | null
           status?: string
           total_price?: number | null
           updated_at?: string
@@ -1671,6 +2067,7 @@ export type Database = {
       }
       ncc_reviews: {
         Row: {
+          admin_reply: string | null
           booking_id: string | null
           comment: string | null
           company_id: string
@@ -1679,8 +2076,10 @@ export type Database = {
           id: string
           is_public: boolean
           rating: number
+          status: string | null
         }
         Insert: {
+          admin_reply?: string | null
           booking_id?: string | null
           comment?: string | null
           company_id: string
@@ -1689,8 +2088,10 @@ export type Database = {
           id?: string
           is_public?: boolean
           rating: number
+          status?: string | null
         }
         Update: {
+          admin_reply?: string | null
           booking_id?: string | null
           comment?: string | null
           company_id?: string
@@ -1699,6 +2100,7 @@ export type Database = {
           id?: string
           is_public?: boolean
           rating?: number
+          status?: string | null
         }
         Relationships: [
           {
@@ -1727,7 +2129,9 @@ export type Database = {
           duration_min: number | null
           id: string
           is_active: boolean
+          notes: string | null
           origin: string
+          transport_type: string | null
         }
         Insert: {
           base_price?: number
@@ -1738,7 +2142,9 @@ export type Database = {
           duration_min?: number | null
           id?: string
           is_active?: boolean
+          notes?: string | null
           origin: string
+          transport_type?: string | null
         }
         Update: {
           base_price?: number
@@ -1749,7 +2155,9 @@ export type Database = {
           duration_min?: number | null
           id?: string
           is_active?: boolean
+          notes?: string | null
           origin?: string
+          transport_type?: string | null
         }
         Relationships: [
           {
@@ -2674,6 +3082,131 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      route_prices: {
+        Row: {
+          base_price: number
+          created_at: string
+          id: string
+          route_id: string
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          base_price?: number
+          created_at?: string
+          id?: string
+          route_id: string
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          base_price?: number
+          created_at?: string
+          id?: string
+          route_id?: string
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "route_prices_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "ncc_routes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "route_prices_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "fleet_vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seasonal_prices: {
+        Row: {
+          created_at: string
+          id: string
+          month: number
+          price: number
+          route_id: string
+          vehicle_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          month: number
+          price?: number
+          route_id: string
+          vehicle_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          month?: number
+          price?: number
+          route_id?: string
+          vehicle_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seasonal_prices_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "ncc_routes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seasonal_prices_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "fleet_vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seo_settings: {
+        Row: {
+          company_id: string
+          created_at: string
+          id: string
+          keywords: string | null
+          meta_description: string | null
+          meta_title: string | null
+          og_image_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          id?: string
+          keywords?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          id?: string
+          keywords?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seo_settings_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: true
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
