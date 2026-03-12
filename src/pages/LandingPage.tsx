@@ -14,9 +14,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import heroLanding from "@/assets/hero-landing.jpg";
-import mockupCliente from "@/assets/mockup-cliente.jpg";
-import mockupAdmin from "@/assets/mockup-admin.jpg";
-import mockupCucina from "@/assets/mockup-cucina.jpg";
 
 /* ═══════════════════════════════════════════
    HELPERS
