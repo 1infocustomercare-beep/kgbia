@@ -26,6 +26,7 @@ const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const GuidedSetup = lazy(() => import("./pages/GuidedSetup"));
 const MarketingPage = lazy(() => import("./pages/MarketingPage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
+const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
 
 // App layout + adaptive pages
