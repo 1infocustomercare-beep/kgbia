@@ -12,6 +12,7 @@ import {
   Layers, Globe, Radio
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { DEMO_SLUGS } from "@/data/demo-industries";
 import mockupCliente from "@/assets/mockup-cliente.jpg";
 import mockupAdmin from "@/assets/mockup-admin.jpg";
 import mockupCucina from "@/assets/mockup-cucina.jpg";
@@ -106,13 +107,13 @@ const LandingPage = () => {
   /* ═══ DATA ═══ */
 
   const industries = [
-    { icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-orange-500 to-amber-400" },
-    { icon: <Car className="w-5 h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer, limousine", gradient: "from-blue-500 to-cyan-400" },
-    { icon: <Scissors className="w-5 h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA, barbieri", gradient: "from-pink-500 to-rose-400" },
-    { icon: <Heart className="w-5 h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-emerald-500 to-green-400" },
-    { icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-yellow-500 to-amber-400" },
-    { icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-red-500 to-orange-400" },
-    { icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-sky-500 to-blue-400" },
+    { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-orange-500 to-amber-400" },
+    { id: "ncc" as const, icon: <Car className="w-5 h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer, limousine", gradient: "from-blue-500 to-cyan-400" },
+    { id: "beauty" as const, icon: <Scissors className="w-5 h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA, barbieri", gradient: "from-pink-500 to-rose-400" },
+    { id: "healthcare" as const, icon: <Heart className="w-5 h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-emerald-500 to-green-400" },
+    { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-yellow-500 to-amber-400" },
+    { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-red-500 to-orange-400" },
+    { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-sky-500 to-blue-400" },
   ];
 
   const services = [
@@ -327,17 +328,25 @@ const LandingPage = () => {
 
         <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {industries.map((ind, i) => (
-            <motion.div key={i}
-              className="group relative p-5 sm:p-6 rounded-2xl future-card hover:-translate-y-1.5 transition-all duration-500 text-center"
-              variants={fadeScale}>
-              <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 group-hover:shadow-lg transition-all duration-500`}>
-                {ind.icon}
-              </div>
-              <h3 className="font-heading text-xs sm:text-sm font-bold text-foreground mb-1">{ind.title}</h3>
-              <p className="text-[0.6rem] sm:text-[0.65rem] text-foreground/35 leading-[1.5]">{ind.desc}</p>
-            </motion.div>
-          ))}
+          {industries.map((ind, i) => {
+            const slug = DEMO_SLUGS[ind.id];
+            const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+            return (
+              <motion.div key={i}
+                className="group relative p-5 sm:p-6 rounded-2xl future-card hover:-translate-y-1.5 transition-all duration-500 text-center cursor-pointer"
+                variants={fadeScale}
+                onClick={() => navigate(demoPath)}>
+                <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 group-hover:shadow-lg transition-all duration-500`}>
+                  {ind.icon}
+                </div>
+                <h3 className="font-heading text-xs sm:text-sm font-bold text-foreground mb-1">{ind.title}</h3>
+                <p className="text-[0.6rem] sm:text-[0.65rem] text-foreground/35 leading-[1.5]">{ind.desc}</p>
+                <span className="mt-2 inline-flex items-center gap-1 text-[0.6rem] font-semibold text-primary/60 group-hover:text-primary transition-colors">
+                  Vedi Demo <ArrowRight className="w-3 h-3" />
+                </span>
+              </motion.div>
+            );
+          })}
           <motion.div
             className="group relative p-5 sm:p-6 rounded-2xl border border-dashed border-primary/15 hover:border-primary/30 transition-all duration-500 text-center flex flex-col items-center justify-center cursor-pointer"
             variants={fadeScale}
