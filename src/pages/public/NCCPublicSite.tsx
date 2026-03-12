@@ -18,10 +18,13 @@ import {
   Wifi, Snowflake, MessageCircle, Sparkles, Heart, Menu, X,
   Tv, Coffee, Baby, Waves, UtensilsCrossed, Camera, Compass
 } from "lucide-react";
-import heroMercedes from "@/assets/ncc-hero-mercedes.jpg";
-import destPompei from "@/assets/ncc-dest-pompei.jpg";
-import destCostiera from "@/assets/ncc-dest-costiera.jpg";
-import destCapri from "@/assets/ncc-dest-capri.jpg";
+import heroMercedes from "@/assets/ncc-hero-mercedes-new.png";
+import destPompei from "@/assets/ncc-dest-pompei-new.png";
+import destCostiera from "@/assets/ncc-costiera-aerial.jpg";
+import destCapri from "@/assets/ncc-dest-sorrento.png";
+import videoNccHero from "@/assets/video-ncc-hero.mp4";
+import fleetShowcase from "@/assets/ncc-fleet-showcase.jpg";
+import boatCapri from "@/assets/ncc-boat-capri.jpg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -481,7 +484,7 @@ export default function NCCPublicSite({ company }: Props) {
   };
 
   const boatImages: Record<string, string> = {
-    capri: "https://images.unsplash.com/photo-1515859005217-8a1f08870f59?w=600&h=400&fit=crop",
+    capri: boatCapri,
     nerano: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop",
     positano: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=400&fit=crop",
     amalfi: "https://images.unsplash.com/photo-1612698093158-e07ac200d44e?w=600&h=400&fit=crop",
@@ -568,7 +571,10 @@ export default function NCCPublicSite({ company }: Props) {
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative min-h-[100vh] flex items-center pt-16 px-4 overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroMercedes} alt="NCC Premium Transfer" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+          <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-30">
+            <source src={videoNccHero} type="video/mp4" />
+          </video>
+          <img src={heroMercedes} alt="NCC Premium Transfer" className="absolute inset-0 w-full h-full object-cover opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a14] via-[#0a0a14]/80 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-transparent to-[#0a0a14]/30" />
           <div className="absolute inset-0 opacity-[0.02]" style={{
@@ -973,21 +979,6 @@ export default function NCCPublicSite({ company }: Props) {
                   <Input type="time" value={bookingForm.time} onChange={e => setBookingForm(p => ({ ...p, time: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11" />
                 </div>
               </div>
-
-              {/* Second vehicle selector (like Telese has duplicate) */}
-              {vehicles.length > 0 && (
-                <div>
-                  <Label className="text-white/40 text-xs">Veicolo</Label>
-                  <Select value={bookingForm.vehicle} onValueChange={v => setBookingForm(p => ({ ...p, vehicle: v }))}>
-                    <SelectTrigger className="bg-white/5 border-white/10 text-white mt-1 h-11"><SelectValue placeholder="Seleziona veicolo" /></SelectTrigger>
-                    <SelectContent>
-                      {vehicles.map((v: any) => (
-                        <SelectItem key={v.id} value={v.id}>{v.name} ({v.min_pax || 1}-{v.max_pax || v.capacity} pax)</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
 
               {bookingForm.route === "custom" && (
                 <div className="grid grid-cols-2 gap-3">
