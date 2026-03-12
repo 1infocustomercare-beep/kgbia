@@ -759,7 +759,7 @@ const LandingPage = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button onClick={() => navigate("/admin")}
                 className="w-full sm:w-auto px-10 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase hover:-translate-y-1 hover:shadow-[0_20px_60px_hsla(263,70%,58%,0.35)] transition-all flex items-center justify-center gap-2.5">
-                Sono un Ristoratore <ArrowRight className="w-4 h-4" />
+                Attiva il Tuo Business <ArrowRight className="w-4 h-4" />
               </button>
               <button onClick={() => navigate("/partner/register")}
                 className="w-full sm:w-auto px-10 py-4 rounded-full border border-border/25 text-foreground/80 font-bold text-sm font-heading tracking-wide hover:border-primary/30 hover:text-foreground transition-all">
