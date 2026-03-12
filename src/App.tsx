@@ -82,6 +82,12 @@ const App = () => (
                     <GuidedSetup />
                   </ProtectedRoute>
                 } />
+                <Route path="/marketing" element={<MarketingPage />} />
+                <Route path="/leads" element={
+                  <ProtectedRoute>
+                    <LeadsPage />
+                  </ProtectedRoute>
+                } />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
                 <Route path="*" element={<NotFound />} />
