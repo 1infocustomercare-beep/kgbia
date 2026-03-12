@@ -605,7 +605,7 @@ const LandingPage = () => {
             <p className="text-4xl font-heading font-bold text-foreground mt-3">€1.099<span className="text-base text-foreground/40 font-normal">/mese</span></p>
             <p className="text-xs text-foreground/40 mt-1">Totale: €3.297 · IVA inclusa</p>
             <ul className="mt-8 space-y-3 mb-8">
-              {["Tutte le funzionalità incluse", "Massima flessibilità di pagamento", "Attivazione immediata", "Chiusura senza vincoli"].map((f, i) => (
+              {["Tutti i 30+ moduli inclusi", "Adattamento automatico al settore", "Attivazione immediata", "Chiusura senza vincoli"].map((f, i) => (
                 <li key={i} className="flex items-center gap-3 text-sm text-foreground/50">
                   <div className="w-4 h-4 rounded-full bg-foreground/[0.06] flex items-center justify-center flex-shrink-0">
                     <Check className="w-2.5 h-2.5 text-foreground/40" />
