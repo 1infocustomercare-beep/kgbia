@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,12 @@ import {
   Calendar, ArrowRight, CheckCircle, Award, Navigation,
   Headphones, Globe, Send, ChevronDown, Anchor, Instagram,
   Luggage, Plane, Train, Ship, ChevronLeft, ChevronRight,
-  Wifi, Snowflake, MessageCircle, Sparkles, Heart
+  Wifi, Snowflake, MessageCircle, Sparkles, Heart, Menu, X
 } from "lucide-react";
+import heroMercedes from "@/assets/ncc-hero-mercedes.jpg";
+import destPompei from "@/assets/ncc-dest-pompei.jpg";
+import destCostiera from "@/assets/ncc-dest-costiera.jpg";
+import destCapri from "@/assets/ncc-dest-capri.jpg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -59,6 +63,25 @@ function SectionHeader({ eyebrow, title, subtitle, gold = false }: { eyebrow?: s
       {subtitle && <p className="text-white/40 max-w-lg mx-auto text-sm sm:text-base">{subtitle}</p>}
     </div>
   );
+}
+
+/* ── Animated Number ── */
+function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  const [display, setDisplay] = useState(0);
+  if (isInView && display === 0 && value > 0) {
+    let start = 0;
+    const dur = 1800;
+    const step = (ts: number) => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      setDisplay(Math.floor(p * value));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  return <span ref={ref}>{display}{suffix}</span>;
 }
 
 export default function NCCPublicSite({ company }: Props) {
@@ -179,20 +202,26 @@ export default function NCCPublicSite({ company }: Props) {
     { label: "Tour in Barca", icon: Anchor },
   ];
 
-  const whyUs = [
-    { icon: Shield, title: "Sicurezza Garantita", desc: "Veicoli revisionati, assicurazione completa e autisti certificati NCC." },
-    { icon: Clock, title: "Puntualità Assoluta", desc: "Monitoraggio voli in tempo reale. Saremo sempre pronti ad accoglierti." },
-    { icon: Award, title: "Flotta Premium", desc: "Solo veicoli di ultima generazione con massimo comfort e pulizia." },
-    { icon: Headphones, title: "Assistenza H24", desc: "Supporto clienti 7/7, 24h — rispondiamo in meno di 5 minuti." },
-    { icon: Globe, title: "Multilingue", desc: "Autisti che parlano italiano, inglese e altre lingue europee." },
-    { icon: Navigation, title: "Prezzo Fisso", desc: "Nessun sovrapprezzo per traffico, pedaggi o attese." },
+  const whyUsServices = [
+    { icon: Plane, title: "Transfer Aeroportuali", desc: "Servizio puntuale da e per tutti gli aeroporti: Napoli, Roma Fiumicino, Roma Ciampino." },
+    { icon: Train, title: "Transfer Stazione", desc: "Collegamenti con le principali stazioni ferroviarie: Napoli Centrale, Roma Termini, Alta Velocità." },
+    { icon: Navigation, title: "Tour Privati", desc: "Scopri la Costiera Amalfitana, Pompei, il Vesuvio, Capri e tutte le meraviglie della Campania." },
+    { icon: Car, title: "Noleggio Bus", desc: "Pullman e minibus per gruppi, gite scolastiche, viaggi organizzati e trasferimenti di gruppo." },
+    { icon: Heart, title: "Eventi Speciali", desc: "Matrimoni, cerimonie, eventi aziendali e occasioni speciali con veicoli di lusso." },
+    { icon: Shield, title: "Servizio NCC", desc: "Noleggio con conducente professionale per ogni esigenza di trasporto personalizzato." },
   ];
 
   const stats = [
-    { value: "10+", label: "Anni di Esperienza" },
-    { value: avgRating, label: "Valutazione Media" },
-    { value: `${vehicles.reduce((max: number, v: any) => Math.max(max, v.capacity || 0), 0)}+`, label: "Posti Disponibili" },
-    { value: `${vehicles.length}`, label: "Veicoli Attivi" },
+    { value: 10, suffix: "+", label: "Anni di Esperienza" },
+    { numValue: parseFloat(avgRating), suffix: "", label: "Valutazione Media", isDecimal: true },
+    { value: vehicles.reduce((max: number, v: any) => Math.max(max, v.capacity || 0), 0), suffix: "+", label: "Posti Disponibili" },
+    { value: vehicles.length, suffix: "", label: "Veicoli Attivi", fraction: `${vehicles.length}/7` },
+  ];
+
+  const featuredDestinations = [
+    { name: "Pompei & Napoli", image: destPompei },
+    { name: "Costiera Amalfitana", image: destCostiera },
+    { name: "Sorrento & Capri", image: destCapri },
   ];
 
   // Vehicle features parser
@@ -201,6 +230,14 @@ export default function NCCPublicSite({ company }: Props) {
     const defaults = ["Clima", "WiFi"];
     return feats.length > 0 ? feats : defaults;
   };
+
+  const navLinks = [
+    { href: "#servizi", label: "Servizi" },
+    { href: "#flotta", label: "Flotta" },
+    ...(destinations.length > 0 ? [{ href: "#tour", label: "Tour Barca" }] : []),
+    { href: "#recensioni", label: "Recensioni" },
+    { href: "#contatti", label: "Contatti" },
+  ];
 
   return (
     <div className="min-h-screen text-white overflow-x-hidden" style={{ background: "#0a0a14" }}>
@@ -217,11 +254,9 @@ export default function NCCPublicSite({ company }: Props) {
           </div>
 
           <div className="hidden md:flex gap-8 text-sm text-white/50">
-            <a href="#servizi" className="hover:text-white transition-colors">Servizi</a>
-            <a href="#flotta" className="hover:text-white transition-colors">Flotta</a>
-            {destinations.length > 0 && <a href="#tour" className="hover:text-white transition-colors">Tour Barca</a>}
-            <a href="#recensioni" className="hover:text-white transition-colors">Recensioni</a>
-            <a href="#contatti" className="hover:text-white transition-colors">Contatti</a>
+            {navLinks.map(l => (
+              <a key={l.href} href={l.href} className="hover:text-white transition-colors">{l.label}</a>
+            ))}
           </div>
 
           <div className="flex items-center gap-2">
@@ -236,18 +271,45 @@ export default function NCCPublicSite({ company }: Props) {
             <Button size="sm" className="rounded-xl font-bold text-xs px-5 h-9" style={{ background: gold, color: "#0a0a14" }} asChild>
               <a href="#prenota">PRENOTA ORA</a>
             </Button>
+            {/* Mobile menu toggle */}
+            <button className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="md:hidden overflow-hidden border-t"
+              style={{ borderColor: "rgba(255,255,255,0.05)", background: "rgba(10,10,20,0.95)" }}
+            >
+              <div className="px-4 py-4 space-y-3">
+                {navLinks.map(l => (
+                  <a key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm text-white/60 hover:text-white transition-colors">{l.label}</a>
+                ))}
+                {company.phone && (
+                  <a href={`tel:${company.phone}`} className="flex items-center gap-2 py-2 text-sm" style={{ color: gold }}>
+                    <Phone className="w-4 h-4" /> {company.phone}
+                  </a>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative min-h-[100vh] flex items-center pt-16 px-4 overflow-hidden">
-        {/* Background elements */}
+        {/* Background with actual hero image */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 70% 50%, rgba(${parseInt(gold.slice(1,3),16)}, ${parseInt(gold.slice(3,5),16)}, ${parseInt(gold.slice(5,7),16)}, 0.06) 0%, transparent 60%)` }} />
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] opacity-10" style={{ background: gold }} />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-[120px] opacity-5" style={{ background: gold }} />
-          {/* Subtle grid */}
+          <img src={heroMercedes} alt="NCC Premium Transfer" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a14] via-[#0a0a14]/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-transparent to-[#0a0a14]/30" />
           <div className="absolute inset-0 opacity-[0.02]" style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)`,
             backgroundSize: "80px 80px",
@@ -267,18 +329,18 @@ export default function NCCPublicSite({ company }: Props) {
             </motion.h1>
 
             <motion.p variants={fadeUp} custom={2} className="text-base sm:text-lg text-white/45 mb-8 max-w-md leading-relaxed">
-              Servizio NCC privato. Transfer aeroportuali, tour esclusivi e noleggio con conducente.
+              Servizio NCC privato nel Sud Italia. Transfer aeroportuali, tour esclusivi e noleggio con conducente.
               {company.city && ` Base: ${company.city}.`}
             </motion.p>
 
             <motion.div variants={fadeUp} custom={3}>
               <Button size="lg" className="rounded-xl font-bold text-sm px-10 h-14 shadow-2xl" style={{ background: gold, color: "#0a0a14", boxShadow: `0 20px 40px -10px ${gold}40` }} asChild>
-                <a href="#prenota">PRENOTA ORA</a>
+                <a href="#prenota">Prenota Ora</a>
               </Button>
             </motion.div>
           </motion.div>
 
-          {/* Right - Hero image placeholder with golden border */}
+          {/* Right - Hero image with golden frame */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -286,10 +348,8 @@ export default function NCCPublicSite({ company }: Props) {
             className="hidden lg:block"
           >
             <div className="relative rounded-2xl overflow-hidden border-2 shadow-2xl" style={{ borderColor: `${gold}30` }}>
-              <div className="aspect-[4/3] bg-gradient-to-br from-amber-900/20 to-transparent flex items-center justify-center">
-                <Car className="w-24 h-24 text-white/10" />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-transparent to-transparent" />
+              <img src={heroMercedes} alt={`${company.name} Mercedes`} className="aspect-[4/3] w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14]/60 via-transparent to-transparent" />
             </div>
           </motion.div>
         </div>
@@ -312,8 +372,32 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
       </section>
 
+      {/* ═══════════ FEATURED DESTINATIONS ═══════════ */}
+      <Section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <SectionHeader eyebrow="Destinazioni Popolari" title="LE NOSTRE Destinazioni" gold />
+
+          <div className="grid sm:grid-cols-3 gap-6">
+            {featuredDestinations.map((dest, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+                <a href="#prenota" className="group block relative rounded-2xl overflow-hidden aspect-[4/3] border border-white/5 hover:border-white/20 transition-all">
+                  <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-[#0a0a14]/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <h3 className="font-bold text-xl text-white mb-2">{dest.name}</h3>
+                    <span className="inline-flex items-center gap-1 text-sm font-semibold" style={{ color: gold }}>
+                      Prenota <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </div>
+                </a>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </Section>
+
       {/* ═══════════ STATS BAR ═══════════ */}
-      <Section className="py-16 px-4">
+      <Section className="py-16 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((s, i) => (
@@ -325,7 +409,9 @@ export default function NCCPublicSite({ company }: Props) {
                 transition={{ delay: i * 0.1 }}
                 className="text-center"
               >
-                <p className="text-3xl sm:text-4xl font-black mb-1" style={{ color: gold }}>{s.value}</p>
+                <p className="text-3xl sm:text-4xl font-black mb-1" style={{ color: gold }}>
+                  {s.fraction ? s.fraction : s.isDecimal ? avgRating : <AnimatedNum value={s.value!} suffix={s.suffix} />}
+                </p>
                 <p className="text-xs text-white/30 uppercase tracking-wider">{s.label}</p>
               </motion.div>
             ))}
@@ -339,7 +425,7 @@ export default function NCCPublicSite({ company }: Props) {
           <SectionHeader eyebrow="I Nostri Servizi" title="SOLUZIONI DI TRASPORTO Premium" subtitle="Una gamma completa di servizi di trasporto di lusso, personalizzati per ogni esigenza." gold />
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {whyUs.map((item, i) => (
+            {whyUsServices.map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
                 <Card className="border-white/5 h-full hover:border-white/10 transition-all duration-500 group" style={{ background: "rgba(255,255,255,0.02)" }}>
                   <CardContent className="p-6">
@@ -348,6 +434,9 @@ export default function NCCPublicSite({ company }: Props) {
                     </div>
                     <h3 className="font-bold text-white text-base mb-2">{item.title}</h3>
                     <p className="text-sm text-white/35 leading-relaxed">{item.desc}</p>
+                    <p className="mt-3 text-xs font-semibold inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: gold }}>
+                      Scopri di più <ArrowRight className="w-3 h-3" />
+                    </p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -360,7 +449,7 @@ export default function NCCPublicSite({ company }: Props) {
       {vehicles.length > 0 && (
         <Section id="flotta" className="py-20 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
           <div className="max-w-7xl mx-auto">
-            <SectionHeader eyebrow="La Nostra Flotta" title="VEICOLI DI Lusso" subtitle="Scegli il veicolo più adatto. Tutti i nostri mezzi sono di ultima generazione." gold />
+            <SectionHeader eyebrow="La Nostra Flotta" title="VEICOLI DI Lusso" subtitle="Scegli il veicolo più adatto. Tutti i nostri mezzi sono di ultima generazione e perfettamente mantenuti." gold />
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {vehicles.map((v: any, i: number) => {
@@ -566,14 +655,14 @@ export default function NCCPublicSite({ company }: Props) {
       {/* ═══════════ WHY CHOOSE US ═══════════ */}
       <Section className="py-20 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
         <div className="max-w-4xl mx-auto">
-          <SectionHeader eyebrow="Perché Sceglierci" title="L'Eccellenza nel Trasporto" subtitle="La nostra missione è trasformare ogni viaggio in un'esperienza indimenticabile." gold />
+          <SectionHeader eyebrow="Perché Sceglierci" title="L'Eccellenza nel Trasporto" subtitle="Da oltre 10 anni offriamo servizi di trasporto di altissima qualità. La nostra missione è trasformare ogni viaggio in un'esperienza indimenticabile." gold />
 
           <div className="grid sm:grid-cols-2 gap-6">
             {[
               { icon: Shield, title: "Sicurezza Garantita", desc: "Tutti i nostri veicoli sono regolarmente revisionati e assicurati. Autisti professionisti con anni di esperienza." },
-              { icon: Clock, title: "Puntualità Svizzera", desc: "Monitoriamo i voli e i treni in tempo reale. Non dovrai mai aspettare." },
-              { icon: Award, title: "Qualità Premium", desc: "Flotta di veicoli di lusso di ultima generazione. Comfort e eleganza per ogni viaggio." },
-              { icon: Headphones, title: "Servizio Personalizzato", desc: "Ogni cliente è unico. Personalizziamo ogni servizio in base alle tue esigenze." },
+              { icon: Clock, title: "Puntualità Svizzera", desc: "Monitoriamo i voli e i treni in tempo reale. Non dovrai mai aspettare, saremo sempre pronti ad accoglierti." },
+              { icon: Award, title: "Qualità Premium", desc: "Flotta di veicoli di lusso di ultima generazione. Comfort e eleganza per ogni tipo di viaggio." },
+              { icon: Headphones, title: "Servizio Personalizzato", desc: "Ogni cliente è unico. Personalizziamo ogni servizio in base alle tue esigenze specifiche." },
             ].map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 className="flex gap-4 p-5 rounded-xl border border-white/5" style={{ background: "rgba(255,255,255,0.015)" }}>
@@ -796,24 +885,32 @@ export default function NCCPublicSite({ company }: Props) {
               </div>
             </div>
           </div>
-          <div className="border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/15" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-            <p>© {new Date().getFullYear()} {company.name}. Tutti i diritti riservati.</p>
-            <p>Powered by Empire Platform</p>
+          <div className="text-center pt-6 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+            <p className="text-xs text-white/15">© {new Date().getFullYear()} {company.name}. Tutti i diritti riservati.</p>
+            <p className="text-[10px] text-white/10 mt-1">Powered by Empire AI</p>
           </div>
         </div>
       </footer>
 
-      {/* ═══════════ FLOATING WHATSAPP ═══════════ */}
+      {/* ═══════════ WHATSAPP FLOATING BUTTON ═══════════ */}
       {settings?.whatsapp && (
         <a
           href={`https://wa.me/${settings.whatsapp.replace(/\D/g, "")}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-green-500 flex items-center justify-center shadow-2xl shadow-green-500/30 hover:scale-110 transition-transform"
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform"
+          style={{ background: "#25D366", boxShadow: "0 8px 24px rgba(37,211,102,0.4)" }}
+          aria-label="WhatsApp"
         >
           <MessageCircle className="w-6 h-6 text-white" />
         </a>
       )}
+
+      {/* Marquee CSS */}
+      <style>{`
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { animation: marquee 30s linear infinite; }
+      `}</style>
     </div>
   );
 }
