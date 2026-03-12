@@ -187,6 +187,48 @@ export type Database = {
           },
         ]
       }
+      clock_entries: {
+        Row: {
+          clock_in: string
+          clock_out: string | null
+          company_id: string
+          created_at: string
+          id: string
+          staff_id: string
+        }
+        Insert: {
+          clock_in?: string
+          clock_out?: string | null
+          company_id: string
+          created_at?: string
+          id?: string
+          staff_id: string
+        }
+        Update: {
+          clock_in?: string
+          clock_out?: string | null
+          company_id?: string
+          created_at?: string
+          id?: string
+          staff_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clock_entries_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clock_entries_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "staff"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       companies: {
         Row: {
           address: string | null
@@ -284,6 +326,42 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_modules: {
+        Row: {
+          activated_at: string
+          company_id: string
+          id: string
+          module_id: string
+        }
+        Insert: {
+          activated_at?: string
+          company_id: string
+          id?: string
+          module_id: string
+        }
+        Update: {
+          activated_at?: string
+          company_id?: string
+          id?: string
+          module_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_modules_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_modules_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_modules"
             referencedColumns: ["id"]
           },
         ]
@@ -406,6 +484,44 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_requests: {
+        Row: {
+          company_id: string
+          created_at: string
+          description: string | null
+          id: string
+          status: string
+          title: string
+          votes: number | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          status?: string
+          title: string
+          votes?: number | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          status?: string
+          title?: string
+          votes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_requests_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fisco_configs: {
         Row: {
           api_key_encrypted: string | null
@@ -455,6 +571,71 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: true
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fleet_vehicles: {
+        Row: {
+          base_price: number | null
+          brand: string | null
+          capacity: number
+          category: string
+          company_id: string
+          created_at: string
+          features: string[] | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          license_plate: string | null
+          model: string | null
+          name: string
+          price_per_km: number | null
+          updated_at: string
+          year: number | null
+        }
+        Insert: {
+          base_price?: number | null
+          brand?: string | null
+          capacity?: number
+          category?: string
+          company_id: string
+          created_at?: string
+          features?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          license_plate?: string | null
+          model?: string | null
+          name: string
+          price_per_km?: number | null
+          updated_at?: string
+          year?: number | null
+        }
+        Update: {
+          base_price?: number | null
+          brand?: string | null
+          capacity?: number
+          category?: string
+          company_id?: string
+          created_at?: string
+          features?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          license_plate?: string | null
+          model?: string | null
+          name?: string
+          price_per_km?: number | null
+          updated_at?: string
+          year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fleet_vehicles_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
@@ -638,6 +819,39 @@ export type Database = {
           },
         ]
       }
+      marketplace_modules: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          name: string
+          price: number
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          price?: number
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          price?: number
+        }
+        Relationships: []
+      }
       menu_items: {
         Row: {
           allergens: string[] | null
@@ -734,6 +948,225 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ncc_bookings: {
+        Row: {
+          company_id: string
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string | null
+          driver_id: string | null
+          dropoff_address: string
+          id: string
+          notes: string | null
+          passengers: number
+          pickup_address: string
+          pickup_datetime: string
+          route_id: string | null
+          status: string
+          total_price: number | null
+          updated_at: string
+          vehicle_id: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          customer_phone?: string | null
+          driver_id?: string | null
+          dropoff_address: string
+          id?: string
+          notes?: string | null
+          passengers?: number
+          pickup_address: string
+          pickup_datetime: string
+          route_id?: string | null
+          status?: string
+          total_price?: number | null
+          updated_at?: string
+          vehicle_id?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string | null
+          driver_id?: string | null
+          dropoff_address?: string
+          id?: string
+          notes?: string | null
+          passengers?: number
+          pickup_address?: string
+          pickup_datetime?: string
+          route_id?: string | null
+          status?: string
+          total_price?: number | null
+          updated_at?: string
+          vehicle_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ncc_bookings_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ncc_bookings_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ncc_bookings_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "ncc_routes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ncc_bookings_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "fleet_vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ncc_destinations: {
+        Row: {
+          company_id: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_featured: boolean
+          name: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean
+          name: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ncc_destinations_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ncc_reviews: {
+        Row: {
+          booking_id: string | null
+          comment: string | null
+          company_id: string
+          created_at: string
+          customer_name: string | null
+          id: string
+          is_public: boolean
+          rating: number
+        }
+        Insert: {
+          booking_id?: string | null
+          comment?: string | null
+          company_id: string
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          is_public?: boolean
+          rating: number
+        }
+        Update: {
+          booking_id?: string | null
+          comment?: string | null
+          company_id?: string
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          is_public?: boolean
+          rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ncc_reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "ncc_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ncc_reviews_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ncc_routes: {
+        Row: {
+          base_price: number
+          company_id: string
+          created_at: string
+          destination: string
+          distance_km: number | null
+          duration_min: number | null
+          id: string
+          is_active: boolean
+          origin: string
+        }
+        Insert: {
+          base_price?: number
+          company_id: string
+          created_at?: string
+          destination: string
+          distance_km?: number | null
+          duration_min?: number | null
+          id?: string
+          is_active?: boolean
+          origin: string
+        }
+        Update: {
+          base_price?: number
+          company_id?: string
+          created_at?: string
+          destination?: string
+          distance_km?: number | null
+          duration_min?: number | null
+          id?: string
+          is_active?: boolean
+          origin?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ncc_routes_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
@@ -976,6 +1409,66 @@ export type Database = {
         }
         Relationships: []
       }
+      payroll: {
+        Row: {
+          company_id: string
+          created_at: string
+          deductions: number | null
+          gross_pay: number | null
+          hours_worked: number | null
+          id: string
+          net_pay: number | null
+          overtime_hours: number | null
+          paid_at: string | null
+          period: string
+          staff_id: string
+          status: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          deductions?: number | null
+          gross_pay?: number | null
+          hours_worked?: number | null
+          id?: string
+          net_pay?: number | null
+          overtime_hours?: number | null
+          paid_at?: string | null
+          period: string
+          staff_id: string
+          status?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          deductions?: number | null
+          gross_pay?: number | null
+          hours_worked?: number | null
+          id?: string
+          net_pay?: number | null
+          overtime_hours?: number | null
+          paid_at?: string | null
+          period?: string
+          staff_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payroll_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "staff"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       performance_bonuses: {
         Row: {
           bonus_amount: number
@@ -1053,6 +1546,65 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string | null
+          company_id: string
+          cost: number | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          min_stock: number | null
+          name: string
+          price: number
+          sku: string | null
+          stock: number
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          company_id: string
+          cost?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          min_stock?: number | null
+          name: string
+          price?: number
+          sku?: string | null
+          stock?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          company_id?: string
+          cost?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          min_stock?: number | null
+          name?: string
+          price?: number
+          sku?: string | null
+          stock?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
@@ -1532,6 +2084,101 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shifts: {
+        Row: {
+          break_minutes: number | null
+          company_id: string
+          created_at: string
+          end_time: string
+          id: string
+          notes: string | null
+          shift_date: string
+          staff_id: string
+          start_time: string
+        }
+        Insert: {
+          break_minutes?: number | null
+          company_id: string
+          created_at?: string
+          end_time: string
+          id?: string
+          notes?: string | null
+          shift_date: string
+          staff_id: string
+          start_time: string
+        }
+        Update: {
+          break_minutes?: number | null
+          company_id?: string
+          created_at?: string
+          end_time?: string
+          id?: string
+          notes?: string | null
+          shift_date?: string
+          staff_id?: string
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shifts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "staff"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_posts: {
+        Row: {
+          company_id: string
+          content: string
+          created_at: string
+          id: string
+          image_url: string | null
+          platform: string
+          published_at: string | null
+          scheduled_at: string | null
+          status: string
+        }
+        Insert: {
+          company_id: string
+          content: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          platform?: string
+          published_at?: string | null
+          scheduled_at?: string | null
+          status?: string
+        }
+        Update: {
+          company_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          platform?: string
+          published_at?: string | null
+          scheduled_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_posts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
