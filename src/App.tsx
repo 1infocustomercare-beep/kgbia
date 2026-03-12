@@ -48,6 +48,15 @@ const ReservationsPage = lazy(() => import("./pages/app/ReservationsPage"));
 const ReviewsPage = lazy(() => import("./pages/app/ReviewsPage"));
 const GenericModulePage = lazy(() => import("./pages/app/GenericModulePage"));
 
+// New pages
+const KitchenPage = lazy(() => import("./pages/app/KitchenPage"));
+const TablesPage = lazy(() => import("./pages/app/TablesPage"));
+const AppointmentsPage = lazy(() => import("./pages/app/AppointmentsPage"));
+const ClientsCRMPage = lazy(() => import("./pages/app/ClientsCRMPage"));
+const InterventionsPage = lazy(() => import("./pages/app/InterventionsPage"));
+const BeachMapPage = lazy(() => import("./pages/app/BeachMapPage"));
+const TeamPage = lazy(() => import("./pages/app/TeamPage"));
+
 const queryClient = new QueryClient();
 
 const PageLoader = () => (
@@ -120,6 +129,8 @@ const App = () => (
                   {/* Food modules */}
                   <Route path="menu" element={<MenuPage />} />
                   <Route path="orders" element={<OrdersPage />} />
+                  <Route path="kitchen" element={<KitchenPage />} />
+                  <Route path="tables" element={<TablesPage />} />
                   <Route path="reservations" element={<ReservationsPage />} />
                   <Route path="reviews" element={<ReviewsPage />} />
                   <Route path="inventory" element={<InventoryPage />} />
@@ -127,6 +138,12 @@ const App = () => (
                   <Route path="fleet" element={<NCCFleetPage />} />
                   <Route path="routes" element={<NCCRoutesPage />} />
                   <Route path="bookings" element={<NCCBookingsPage />} />
+                  {/* Multi-sector modules */}
+                  <Route path="appointments" element={<AppointmentsPage />} />
+                  <Route path="clients" element={<ClientsCRMPage />} />
+                  <Route path="interventions" element={<InterventionsPage />} />
+                  <Route path="beach-map" element={<BeachMapPage />} />
+                  <Route path="team" element={<TeamPage />} />
                   {/* Common modules */}
                   <Route path="leads" element={<LeadsPage />} />
                   <Route path="staff" element={<StaffPage />} />
