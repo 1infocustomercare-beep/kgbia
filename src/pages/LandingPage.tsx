@@ -217,16 +217,16 @@ const LandingPage = () => {
             <motion.h1
               className="text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-heading font-bold text-foreground tracking-[-0.02em]"
               initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.1, delay: 0.15, ease: smoothEase }}>
-              Il Futuro della
+              La Suite AI Che
               <br />
-              <span className="text-vibrant-gradient">Ristorazione è Qui</span>
+              <span className="text-vibrant-gradient">Gestisce il Tuo Business</span>
             </motion.h1>
 
             {/* Subtitle */}
             <motion.p className="mt-6 text-base sm:text-lg text-foreground/50 max-w-[600px] leading-[1.8] font-light"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}>
-              La suite all-in-one che libera il tuo ristorante dalle commissioni predatorie.
-              <span className="text-foreground/70 font-normal"> PWA di proprietà, AI menu creator, kitchen view real-time.</span>
+              Un'unica piattaforma per ristorazione, NCC, beauty, healthcare, retail e hospitality.
+              <span className="text-foreground/70 font-normal"> PWA di proprietà, AI integrata, staff & payroll, CRM, finance e 30+ moduli — tutto incluso.</span>
             </motion.p>
 
             {/* CTAs */}
