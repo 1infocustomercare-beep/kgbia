@@ -97,37 +97,34 @@ const LandingPage = () => {
 
   /* ═══ DATA ═══ */
   const services = [
-    { icon: <Brain className="w-6 h-6" />, title: "AI Menu & Catalogo", desc: "Carica una foto del tuo menu o listino. L'IA estrae testi, prezzi, allergeni e genera immagini professionali in 60 secondi. Traduzione multilingua automatica inclusa.", tag: "IA" },
-    { icon: <Smartphone className="w-6 h-6" />, title: "PWA White Label", desc: "App installabile come nativa con il TUO brand — logo, colori, dominio personalizzato. Ordini online, prenotazioni, catalogo prodotti. Zero commissioni marketplace.", tag: "APP" },
-    { icon: <ChefHat className="w-6 h-6" />, title: "Kitchen View & Operations", desc: "Dashboard operativa real-time con notifiche sonore, stati ordine live e stampa ticket. Per cucine, magazzini o centri operativi — zero errori garantiti.", tag: "OPS" },
-    { icon: <Shield className="w-6 h-6" />, title: "Review Shield™ & Reputazione", desc: "Filtro intelligente recensioni: le negative restano private, le 4-5★ costruiscono la tua reputazione su Google. CRM clienti con blacklist e segmentazione automatica.", tag: "BRAND" },
-    { icon: <Users className="w-6 h-6" />, title: "Staff, Turni & Payroll", desc: "Gestione completa del personale: profili, turni, timbrature, buste paga, straordinari. Tutto centralizzato con calcolo automatico delle ore lavorate.", tag: "HR" },
-    { icon: <BarChart3 className="w-6 h-6" />, title: "Finance, Fatture & HACCP", desc: "Dashboard finanziaria completa, fatturazione B2B elettronica, fee piattaforma trasparenti e registro HACCP digitale con conformità automatica.", tag: "FINANCE" },
-    { icon: <Wallet className="w-6 h-6" />, title: "Wallet Pass & Loyalty", desc: "Pass sconto digitali nel wallet del cliente. Programma fedeltà automatizzato con push notification e campagne marketing mirate che aumentano il ritorno del 40%.", tag: "GROWTH" },
-    { icon: <MapPin className="w-6 h-6" />, title: "Mappa Tavoli & Prenotazioni", desc: "Gestisci la sala con drag-and-drop visuale o il calendario prenotazioni. Flotta veicoli, tratte e assegnazione autisti per il settore NCC.", tag: "GESTIONE" },
-    { icon: <Bot className="w-6 h-6" />, title: "AI Concierge & Social Manager", desc: "Assistente AI integrato per supporto clienti e decisioni strategiche. Gestione post social multi-piattaforma con pubblicazione programmata.", tag: "AI+" },
+    { icon: <Brain className="w-6 h-6" />, title: "AI Menu Creator", desc: "Carica una foto del menu. L'IA estrae testi, prezzi e genera foto professionali in 60 secondi.", tag: "IA" },
+    { icon: <Smartphone className="w-6 h-6" />, title: "PWA White Label", desc: "App installabile con il TUO brand. Logo, colori, dominio. Zero commissioni marketplace.", tag: "APP" },
+    { icon: <ChefHat className="w-6 h-6" />, title: "Kitchen View", desc: "Dashboard cucina real-time, notifiche sonore, stati ordine. Zero errori, zero perdite.", tag: "OPS" },
+    { icon: <Shield className="w-6 h-6" />, title: "Review Shield™", desc: "Recensioni 1-3★ nel tuo archivio privato. Solo 4-5★ costruiscono la reputazione.", tag: "BRAND" },
+    { icon: <Lock className="w-6 h-6" />, title: "Vault Fiscale", desc: "Chiavi API criptate AES-256. Standard bancario. Nessuno accede ai tuoi dati.", tag: "FISCO" },
+    { icon: <Wallet className="w-6 h-6" />, title: "Wallet & Loyalty", desc: "Pass sconto digitali + programma fedeltà automatizzato per aumentare il ritorno.", tag: "GROWTH" },
   ];
 
   const metrics = [
-    { value: 200, suffix: "+", label: "Attività Gestite" },
-    { value: 98, suffix: "%", label: "Soddisfazione Clienti" },
-    { value: 45, suffix: "%", prefix: "+", label: "Aumento Revenue" },
-    { value: 7, suffix: "", label: "Settori Supportati" },
+    { value: 200, suffix: "+", label: "Ristoranti Attivi" },
+    { value: 98, suffix: "%", label: "Client Satisfaction" },
+    { value: 45, suffix: "%", prefix: "+", label: "Aumento Ordini" },
+    { value: 2, suffix: "M€", label: "Risparmiati/Anno" },
   ];
 
   const testimonials = [
-    { name: "Marco Pellegrini", role: "Trattoria da Marco · Roma", quote: "In 3 mesi ho spostato il 60% degli ordini dal marketplace alla mia app. Risparmio €3.200/mese netti. La Kitchen View ha azzerato gli errori in cucina.", metric: "−€3.200/mese" },
-    { name: "Giulia Ferretti", role: "Salone Bellezza Ferretti · Milano", quote: "Gestisco appuntamenti, clienti e paghe del personale da un'unica dashboard. Prima usavo 4 software diversi. Ora tutto è in un solo posto.", metric: "−4 software" },
-    { name: "Antonio De Luca", role: "NCC Premium · Napoli", quote: "Flotta, prenotazioni, autisti e fatturazione — tutto automatizzato. I clienti prenotano online e ricevono conferma istantanea. Revenue +35% in 60 giorni.", metric: "+35% revenue" },
+    { name: "Marco Pellegrini", role: "Trattoria da Marco · Roma", quote: "In 3 mesi ho spostato il 60% degli ordini dalla piattaforma alla mia app. Risparmio €3.200/mese netti.", metric: "−€3.200/mese" },
+    { name: "Giulia Ferretti", role: "Osteria Ferretti · Milano", quote: "Kitchen View ha eliminato gli errori in cucina. Prima perdevamo 4-5 ordini a settimana. Ora zero.", metric: "Zero errori" },
+    { name: "Antonio Russo", role: "Pizzeria Verace · Napoli", quote: "Review Shield è geniale. Su Google ho solo 4.8★. I clienti nuovi arrivano grazie al rating perfetto.", metric: "4.8★ Google" },
   ];
 
   const faqs = [
-    { q: "Per quali settori funziona?", a: "Empire è una piattaforma multi-settore: Ristorazione, NCC & Trasporto, Beauty & Wellness, Healthcare, Retail, Fitness e Hospitality. La suite si adatta automaticamente al tuo settore con terminologia, moduli e funzionalità specifiche." },
-    { q: "È difficile da usare?", a: "Assolutamente no. Se sai usare Instagram, sai usare Empire. L'interfaccia si adatta al tuo settore e l'IA fa il lavoro pesante: dal menu digitale alla gestione turni, tutto è guidato e intuitivo." },
-    { q: "Come arrivano i pagamenti?", a: "I pagamenti dei clienti arrivano direttamente sul TUO conto tramite Stripe Connect. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico per infrastruttura e IA — 15× meno dei marketplace." },
-    { q: "Quanto costa e cosa include?", a: "€2.997 una tantum (o 3 rate da €1.099). Include: PWA personalizzata, AI, CRM, Staff & Payroll, Finance, HACCP, Loyalty, Social Manager, Kitchen View e tutti i moduli del tuo settore. Dopo: €0/mese, solo 2% sulle transazioni." },
-    { q: "La sicurezza dei dati è garantita?", a: "Sì. Crittografia AES-256 per i dati fiscali, GDPR compliance nativa, RLS (Row Level Security) su ogni tabella e backup automatici. I tuoi dati sono più sicuri che in banca." },
-    { q: "Come funziona il Partner Program?", a: "Diventi Partner gratis e guadagni €997 per ogni vendita, con bonus mensili fino a €1.500 e override da Team Leader di €50 per vendita del tuo team. Pagamenti istantanei via Stripe Connect." },
+    { q: "È difficile da usare?", a: "No. Se sai usare Instagram, sai usare Empire. L'interfaccia è progettata per ristoratori. L'IA fa il lavoro pesante: carica una foto del menu e in 60 secondi hai il catalogo digitale completo." },
+    { q: "Come arrivano i soldi?", a: "I pagamenti arrivano direttamente sul TUO conto Stripe. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico — 15× meno dei marketplace." },
+    { q: "Quanto costa davvero?", a: "€2.997 una tantum (o 3 rate da €1.099). Dopodiché €0/mese per sempre. Solo il 2% sulle transazioni per infrastruttura, IA e aggiornamenti." },
+    { q: "La fiscalità è sicura?", a: "Le chiavi API fiscali sono criptate AES-256 nel Vault privato. Nessuno può vederle, nemmeno il nostro team." },
+    { q: "Cosa succede ai clienti del marketplace?", a: "Li recuperi. Con QR Code sui tavoli e link diretto, i clienti ordinano dalla TUA app. Ogni ordine = 28% netto recuperato." },
+    { q: "Come funziona il Partner Program?", a: "Diventi Partner gratis. €997 per vendita + bonus fino a €1.500/mese. Pagamenti istantanei via Stripe Connect." },
   ];
 
   const navLinks = [
@@ -210,23 +207,23 @@ const LandingPage = () => {
             <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/20 bg-primary/[0.06] mb-8"
               initial={{ opacity: 0, y: 30, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.8 }}>
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-dot" />
-              <span className="text-[0.7rem] font-heading font-medium text-primary/90 tracking-[2px] uppercase">AI-Powered Business Management Suite</span>
+              <span className="text-[0.7rem] font-heading font-medium text-primary/90 tracking-[2px] uppercase">AI-Powered Restaurant Suite</span>
             </motion.div>
 
             {/* Headline */}
             <motion.h1
               className="text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-heading font-bold text-foreground tracking-[-0.02em]"
               initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.1, delay: 0.15, ease: smoothEase }}>
-              La Suite AI Che
+              Il Futuro della
               <br />
-              <span className="text-vibrant-gradient">Gestisce il Tuo Business</span>
+              <span className="text-vibrant-gradient">Ristorazione è Qui</span>
             </motion.h1>
 
             {/* Subtitle */}
             <motion.p className="mt-6 text-base sm:text-lg text-foreground/50 max-w-[600px] leading-[1.8] font-light"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}>
-              Un'unica piattaforma per ristorazione, NCC, beauty, healthcare, retail e hospitality.
-              <span className="text-foreground/70 font-normal"> PWA di proprietà, AI integrata, staff & payroll, CRM, finance e 30+ moduli — tutto incluso.</span>
+              La suite all-in-one che libera il tuo ristorante dalle commissioni predatorie.
+              <span className="text-foreground/70 font-normal"> PWA di proprietà, AI menu creator, kitchen view real-time.</span>
             </motion.p>
 
             {/* CTAs */}
@@ -292,18 +289,18 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Ogni mese, <span className="text-vibrant-gradient">regali migliaia</span> di euro
           </motion.h2>
-          <motion.p className="text-foreground/45 max-w-[550px] mx-auto leading-[1.7] text-sm"
+          <motion.p className="text-foreground/45 max-w-[500px] mx-auto leading-[1.7] text-sm"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Marketplace con commissioni al 30%, software separati per ogni funzione, dati dispersi. Il risultato? Margini erosi e zero controllo sul tuo business.
+            Le piattaforme di delivery assorbono fino al 30% del tuo fatturato.
           </motion.p>
         </div>
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-5"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           {[
-            { icon: <Banknote className="w-7 h-7" />, amount: "€7.500", label: "Margini erosi / mese", sub: "Commissioni marketplace + software multipli" },
-            { icon: <DollarSign className="w-7 h-7" />, amount: "4-5", label: "Software da pagare", sub: "Gestionale, contabilità, CRM, marketing, HR" },
-            { icon: <Target className="w-7 h-7" />, amount: "0%", label: "Controllo sui dati", sub: "I tuoi clienti, le tue vendite — in mano ad altri" },
+            { icon: <Banknote className="w-7 h-7" />, amount: "€7.500", label: "Margini erosi / mese", sub: "Su 1000 ordini a €25" },
+            { icon: <DollarSign className="w-7 h-7" />, amount: "€90.000", label: "Dispersi ogni anno", sub: "Capitale che alimenta i competitor" },
+            { icon: <Target className="w-7 h-7" />, amount: "€0", label: "Proprietà clienti", sub: "Il marketplace possiede i TUOI dati" },
           ].map((item, i) => (
             <motion.div key={i}
               className="group relative p-8 rounded-3xl luxury-card hover:-translate-y-2 transition-all duration-500 text-center"
@@ -325,13 +322,9 @@ const LandingPage = () => {
           <SectionLabel text="L'Arsenale" />
           <motion.h2 className="text-[clamp(1.8rem,4vw,3rem)] font-heading font-bold text-foreground leading-[1.1] mb-4"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            30+ Moduli in un'Unica<br className="hidden sm:block" />
-            <span className="text-vibrant-gradient">Piattaforma Intelligente</span>
+            Tutto Ciò Che Serve al Tuo<br className="hidden sm:block" />
+            <span className="text-vibrant-gradient">Impero Digitale</span>
           </motion.h2>
-          <motion.p className="text-foreground/45 max-w-[550px] mx-auto leading-[1.7] text-sm"
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Dalla gestione ordini al payroll, dal CRM alla fatturazione elettronica. Ogni modulo si adatta automaticamente al tuo settore.
-          </motion.p>
         </div>
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
@@ -376,10 +369,10 @@ const LandingPage = () => {
           <div className="hidden lg:block absolute top-[36px] left-[calc(12.5%+36px)] right-[calc(12.5%+36px)] h-[1px] bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 z-0" />
 
           {[
-            { step: "01", title: "Scegli il Settore", desc: "Seleziona la tua industry: Food, NCC, Beauty, Healthcare, Retail, Fitness o Hospitality. La suite si adatta." },
-            { step: "02", title: "AI Setup & Branding", desc: "L'IA configura moduli, terminologia e catalogo. Personalizza logo, colori e dominio in 5 minuti." },
-            { step: "03", title: "Lancio & Formazione", desc: "Attiviamo la PWA, formiamo lo staff sulle dashboard operative e configuriamo i pagamenti Stripe." },
-            { step: "04", title: "Crescita Autonoma", desc: "CRM, marketing push, analytics e AI Concierge lavorano per te. Monitora tutto da un'unica dashboard." },
+            { step: "01", title: "Discovery & Setup", desc: "Analizziamo il tuo ristorante e configuriamo la suite in 24 ore." },
+            { step: "02", title: "AI Menu & Branding", desc: "L'IA crea il menu digitale e personalizza la tua app con il tuo brand." },
+            { step: "03", title: "Lancio & Formazione", desc: "Attiviamo la PWA, formiamo lo staff e installiamo i QR Code." },
+            { step: "04", title: "Crescita Continua", desc: "Monitoriamo le performance e ottimizziamo i margini costantemente." },
           ].map((s, i) => (
             <motion.div key={i} className="relative text-center z-10" variants={popIn}>
               <div className="relative w-[72px] h-[72px] rounded-full bg-background border-2 border-primary/20 flex items-center justify-center mx-auto mb-5 group">
@@ -401,17 +394,17 @@ const LandingPage = () => {
           <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="Ecosistema" />
             <h2 className="text-[clamp(1.8rem,4vw,3rem)] font-heading font-bold text-foreground leading-[1.1] mb-5">
-              Un Solo Ecosistema,<br /><span className="text-vibrant-gradient">Infinite Possibilità</span>
+              Tre App,<br /><span className="text-vibrant-gradient">Un Solo Impero</span>
             </h2>
             <p className="text-foreground/45 leading-[1.7] max-w-lg mb-8 text-sm">
-              Un pannello admin completo, un'app cliente white-label e una dashboard operativa — tutto interconnesso e adattivo al tuo settore.
+              Cliente, Admin e Cucina — un ecosistema white-label completo, di tua proprietà.
             </p>
             <div className="space-y-4 mb-8">
               {[
-                { title: "Ordini & Prenotazioni", desc: "Menu digitale, booking online, catalogo servizi — tutto con pagamento Stripe integrato" },
-                { title: "Staff, Turni & Payroll", desc: "Gestione personale completa: profili, timbrature, straordinari e buste paga automatiche" },
-                { title: "CRM, Loyalty & Push Marketing", desc: "Segmentazione clienti, wallet pass, notifiche push e campagne social automatizzate" },
-                { title: "Finance, HACCP & Inventario", desc: "Dashboard finanziaria, fatture B2B, conformità sanitaria e gestione scorte con alert" },
+                { title: "Ordini Online", desc: "Menu interattivo con pagamento Stripe integrato" },
+                { title: "Programma Fedeltà", desc: "Wallet pass, reward e offerte personalizzate AI" },
+                { title: "Push & Chat", desc: "Comunicazione diretta e campagne marketing push" },
+                { title: "Kitchen View", desc: "Ordini real-time in cucina, zero errori garantiti" },
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-4 items-start"
                   initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
@@ -583,7 +576,7 @@ const LandingPage = () => {
             <p className="text-5xl font-heading font-bold text-foreground mt-3">€2.997</p>
             <p className="text-xs text-foreground/40 mt-1">IVA 22% inclusa · Una volta sola</p>
             <ul className="mt-8 space-y-3 mb-8">
-              {["PWA White Label di Proprietà", "AI Menu + Catalogo + OCR", "Kitchen View & Dashboard Ops", "Staff, Turni & Payroll Automatico", "CRM Clienti + Loyalty + Push", "Finance + Fatture B2B + HACCP", "Inventario & Alert Scorte", "Social Media Manager AI", "Review Shield™ + Reputazione", "Assistenza Prioritaria a Vita"].map((f, i) => (
+              {["Asset Digitale di Proprietà", "AI Menu Creator + OCR", "Kitchen View real-time", "Vault Fiscale AES-256", "Panic Mode + Review Shield", "PWA White Label", "Chat Privata + Push", "Mappa Tavoli", "Assistenza a vita", "Zero canoni mensili"].map((f, i) => (
                 <li key={i} className="flex items-center gap-3 text-sm text-foreground/60">
                   <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Check className="w-2.5 h-2.5 text-primary" />
@@ -606,7 +599,7 @@ const LandingPage = () => {
             <p className="text-4xl font-heading font-bold text-foreground mt-3">€1.099<span className="text-base text-foreground/40 font-normal">/mese</span></p>
             <p className="text-xs text-foreground/40 mt-1">Totale: €3.297 · IVA inclusa</p>
             <ul className="mt-8 space-y-3 mb-8">
-              {["Tutti i 30+ moduli inclusi", "Adattamento automatico al settore", "Attivazione immediata", "Chiusura senza vincoli"].map((f, i) => (
+              {["Tutte le funzionalità incluse", "Massima flessibilità di pagamento", "Attivazione immediata", "Chiusura senza vincoli"].map((f, i) => (
                 <li key={i} className="flex items-center gap-3 text-sm text-foreground/50">
                   <div className="w-4 h-4 rounded-full bg-foreground/[0.06] flex items-center justify-center flex-shrink-0">
                     <Check className="w-2.5 h-2.5 text-foreground/40" />
@@ -638,9 +631,9 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Costruisci il Tuo <span className="text-vibrant-gradient">Impero</span>
           </motion.h2>
-          <motion.p className="text-foreground/45 max-w-[550px] mx-auto leading-[1.7] text-sm"
+          <motion.p className="text-foreground/45 max-w-[500px] mx-auto leading-[1.7] text-sm"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Vendi la suite Empire ai business del tuo territorio. €997 per vendita, bonus mensili progressivi e pagamenti istantanei su Stripe Connect.
+            €997 per ogni vendita. Zero rischi. Pagamenti istantanei.
           </motion.p>
         </div>
 
@@ -755,12 +748,12 @@ const LandingPage = () => {
               Pronto a Dominare il <span className="text-vibrant-gradient">Digitale?</span>
             </h2>
             <p className="text-sm text-foreground/40 max-w-md mx-auto mb-8">
-              Ristoranti, saloni, NCC, cliniche, negozi, palestre e hotel — stanno tutti digitalizzando. Tu cosa aspetti?
+              I tuoi competitor stanno costruendo il loro impero digitale. Inizia il tuo oggi.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button onClick={() => navigate("/admin")}
                 className="w-full sm:w-auto px-10 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase hover:-translate-y-1 hover:shadow-[0_20px_60px_hsla(263,70%,58%,0.35)] transition-all flex items-center justify-center gap-2.5">
-                Attiva il Tuo Business <ArrowRight className="w-4 h-4" />
+                Sono un Ristoratore <ArrowRight className="w-4 h-4" />
               </button>
               <button onClick={() => navigate("/partner/register")}
                 className="w-full sm:w-auto px-10 py-4 rounded-full border border-border/25 text-foreground/80 font-bold text-sm font-heading tracking-wide hover:border-primary/30 hover:text-foreground transition-all">
@@ -782,7 +775,9 @@ const LandingPage = () => {
                 </div>
                 <span className="font-heading font-bold text-foreground tracking-[0.15em] uppercase text-xs">Empire<span className="text-primary">.AI</span></span>
               </div>
-              <p className="text-xs text-foreground/35 leading-[1.7] max-w-[260px] mb-5">La piattaforma AI multi-settore che gestisce il tuo business — dal primo cliente all'ultimo bilancio.</p>
+              <p className="text-xs text-foreground/35 leading-[1.7] max-w-[260px] mb-5">
+                L'unico Asset Digitale di Proprietà che libera i ristoratori dalle commissioni predatorie.
+              </p>
               <div className="flex gap-2">
                 {["In", "𝕏", "IG"].map((s, i) => (
                   <div key={i} className="w-8 h-8 rounded-full border border-border/20 flex items-center justify-center text-xs text-foreground/40 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all cursor-pointer">{s}</div>
