@@ -231,10 +231,18 @@ const LandingPage = () => {
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex items-center justify-between h-11">
           <a href="#hero" className="flex items-center gap-2 group">
             <motion.div
-              className="w-7 h-7 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_20px_hsla(217,91%,60%,0.2)]"
-              whileHover={{ rotate: 5, scale: 1.05 }}
+              className="relative w-8 h-8 rounded-xl bg-vibrant-gradient flex items-center justify-center shadow-[0_0_25px_hsla(217,91%,60%,0.3)] overflow-hidden"
+              whileHover={{ rotate: 8, scale: 1.1 }}
+              animate={{ boxShadow: ["0 0 20px hsla(217,91%,60%,0.2)", "0 0 35px hsla(217,91%,60%,0.45)", "0 0 20px hsla(217,91%,60%,0.2)"] }}
+              transition={{ boxShadow: { duration: 2.5, repeat: Infinity, ease: "easeInOut" } }}
             >
-              <Crown className="w-3.5 h-3.5 text-primary-foreground" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/20 via-transparent to-white/10 pointer-events-none" />
+              <motion.div
+                animate={{ rotateY: [0, 360] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+              >
+                <Crown className="w-4 h-4 text-primary-foreground drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]" />
+              </motion.div>
             </motion.div>
             <span className="font-heading font-bold text-xs tracking-[0.15em] uppercase text-foreground">
               Empire<span className="text-shimmer">.AI</span>
