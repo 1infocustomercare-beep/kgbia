@@ -145,7 +145,9 @@ const App = () => (
                   <Route path="clients" element={<ClientsCRMPage />} />
                   <Route path="interventions" element={<InterventionsPage />} />
                   <Route path="beach-map" element={<BeachMapPage />} />
+                  <Route path="beach-bookings" element={<NCCBeachBookingsPage />} />
                   <Route path="team" element={<TeamPage />} />
+                  <Route path="automations" element={<AutomationsPage />} />
                   {/* Common modules */}
                   <Route path="leads" element={<LeadsPage />} />
                   <Route path="staff" element={<StaffPage />} />
