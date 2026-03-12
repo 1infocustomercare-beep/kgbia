@@ -54,28 +54,46 @@ const AdminLogin = () => {
       const { error } = await signUp(email, password, fullName);
       if (error) {
         setError(error.message);
-      } else {
-        // If signing up as partner, swap the role via edge function
-        if (mode === "partner") {
-          // Wait a moment for the user to be fully created
-          await new Promise(r => setTimeout(r, 1500));
-          const { data: { session } } = await supabase.auth.getSession();
-          if (session?.user) {
-            await supabase.functions.invoke("assign-partner-role", {
-              body: { user_id: session.user.id, team_leader_id: refCode || null },
-            });
-            // Refresh roles
-            window.location.href = "/partner";
-            return;
+        setLoading(false);
+        return;
+      }
+
+      // If signing up as partner, try to assign role immediately or after confirmation
+      if (mode === "partner") {
+        // Poll for session up to 5 seconds (handles auto-confirm or fast email verify)
+        let session = null;
+        for (let i = 0; i < 10; i++) {
+          await new Promise(r => setTimeout(r, 500));
+          const { data } = await supabase.auth.getSession();
+          if (data.session?.user) {
+            session = data.session;
+            break;
           }
         }
+
+        if (session?.user) {
+          await supabase.functions.invoke("assign-partner-role", {
+            body: { user_id: session.user.id, team_leader_id: refCode || null },
+          });
+          window.location.href = "/partner";
+          return;
+        }
+
+        // Email confirmation required - show message
         toast({
-          title: mode === "partner" ? "Account Partner creato!" : "Account creato con successo!",
-          description: mode === "partner"
-            ? (refCode ? "Sei stato aggiunto al team! Benvenuto nel programma Partner Empire." : "Benvenuto nel programma Partner Empire.")
-            : "Benvenuto nella piattaforma Empire.",
+          title: "Account Partner creato!",
+          description: "Controlla la tua email per confermare l'account. Dopo la conferma, accedi per entrare nella dashboard Partner.",
         });
+        setIsSignUp(false); // Switch to login view
+        setLoading(false);
+        return;
       }
+
+      toast({
+        title: "Account creato con successo!",
+        description: "Controlla la tua email per confermare l'account, poi accedi.",
+      });
+      setIsSignUp(false);
       setLoading(false);
       return;
     }
