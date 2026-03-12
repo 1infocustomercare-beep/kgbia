@@ -145,7 +145,7 @@ export default function NCCDemoPage() {
       </nav>
 
       {/* ── Hero ────────────────────────────────────────── */}
-      <section className="pt-24 pb-16 md:pt-32 md:pb-24 px-4 relative overflow-hidden">
+      <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
         <div className="container mx-auto text-center max-w-3xl relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
