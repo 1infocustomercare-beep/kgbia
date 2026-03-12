@@ -378,23 +378,6 @@ const LandingPage = () => {
               <span className="text-foreground/65 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie. Tutto in un unico ecosistema che si evolve ogni giorno.</span>
             </motion.p>
 
-            {/* Rotating industry badge */}
-            <motion.div className="mt-5 h-8 flex items-center gap-2"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-              <span className="text-[0.65rem] text-foreground/30 font-heading tracking-wider uppercase">Perfetto per</span>
-              <AnimatePresence mode="wait">
-                <motion.span key={activeIndustry}
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -10, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/[0.08] border border-primary/10 text-[0.7rem] font-heading font-semibold text-primary"
-                >
-                  <span>{industries[activeIndustry].emoji}</span>
-                  {industries[activeIndustry].title}
-                </motion.span>
-              </AnimatePresence>
-            </motion.div>
 
             {/* CTA */}
             <motion.div className="mt-9 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto"
