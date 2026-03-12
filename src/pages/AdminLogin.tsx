@@ -56,8 +56,20 @@ const AdminLogin = () => {
     setLoading(true);
 
     if (isSignUp) {
-      const { error } = await signUp(email, password, fullName);
-      if (error) {
+      const signUpOptions: any = { full_name: fullName };
+      // Store partner intent in user metadata for post-confirmation role assignment
+      if (mode === "partner") {
+        signUpOptions.partner_signup = true;
+        if (refCode) signUpOptions.team_leader_id = refCode;
+      }
+
+      const { error } = await supabase.auth.signUp({
+        email, password,
+        options: {
+          data: signUpOptions,
+          emailRedirectTo: window.location.origin,
+        },
+      });
         setError(error.message);
         setLoading(false);
         return;
