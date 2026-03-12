@@ -335,6 +335,7 @@ export default function IndustryDemoPage() {
     return <NCCPublicSite company={fakeNccCompany} />;
   }
 
+  return (
     <div className="min-h-screen text-white overflow-x-hidden" style={{ background: `linear-gradient(180deg, ${theme.bgFrom} 0%, ${theme.bgTo} 100%)` }}>
 
       {/* ═══════ NAVBAR ═══════ */}
