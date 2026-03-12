@@ -78,7 +78,7 @@ const PageLoader = () => (
   </div>
 );
 
-const App = () => (
+function App() { return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
