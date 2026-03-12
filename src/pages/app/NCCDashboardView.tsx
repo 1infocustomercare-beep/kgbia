@@ -22,7 +22,7 @@ type DateFilter = "today" | "week" | "month" | "year";
 const containerVariants = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const cardVariants = {
   hidden: { opacity: 0, y: 20, scale: 0.97 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 260, damping: 24 } },
+  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 260, damping: 24 } },
 };
 
 function getDateRange(filter: DateFilter) {
