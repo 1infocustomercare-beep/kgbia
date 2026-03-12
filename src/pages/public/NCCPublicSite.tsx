@@ -27,11 +27,11 @@ const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 interface Props { company: any; }
 
 /* ── Animated Section ── */
-function Section({ id, children, className = "" }: { id?: string; children: React.ReactNode; className?: string }) {
+function Section({ id, children, className = "", style }: { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   return (
-    <section id={id} ref={ref} className={className}>
+    <section id={id} ref={ref} className={className} style={style}>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
