@@ -194,7 +194,7 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; pr
   return <span ref={ref}>{prefix}{display.toLocaleString("it-IT")}{suffix}</span>;
 };
 
-function AnimSection({ id, children, className = "", delay = 0 }: { id?: string; children: React.ReactNode; className?: string; delay?: number }) {
+function AnimSection({ id, children, className = "", delay = 0, style }: { id?: string; children: React.ReactNode; className?: string; delay?: number; style?: React.CSSProperties }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
   return (
