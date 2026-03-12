@@ -41,7 +41,7 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
     if (requiredRole === "partner" && roles.includes("team_leader")) {
       return <>{children}</>;
     }
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   return <>{children}</>;
