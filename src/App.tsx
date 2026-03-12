@@ -86,6 +86,8 @@ const App = () => (
                 <Route path="/home" element={<LandingPage />} />
                 <Route path="/marketing" element={<MarketingPage />} />
                 <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
+                <Route path="/demo" element={<DemoDirectoryPage />} />
+                <Route path="/demo/:slug" element={<IndustryDemoPage />} />
                 <Route path="/r/:slug" element={<RestaurantPage />} />
                 <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
                 <Route path="/admin" element={<AdminLogin />} />
