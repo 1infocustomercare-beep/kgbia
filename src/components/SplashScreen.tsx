@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring, type MotionValue } from "framer-motion";
 import { Crown } from "lucide-react";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
