@@ -142,7 +142,7 @@ export function AppSidebar() {
         </SidebarGroup>
 
         {/* Common modules */}
-        <SidebarGroup defaultOpen>
+        <SidebarGroup>
           <SidebarGroupLabel>
             {collapsed ? "" : "Gestione"}
           </SidebarGroupLabel>
