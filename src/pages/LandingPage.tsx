@@ -200,41 +200,40 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
-      <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${navScrolled ? "bg-background/80 backdrop-blur-2xl border-b border-primary/[0.06] py-2" : "py-3.5"}`}>
-        <div className="max-w-[1100px] mx-auto px-5 sm:px-6 flex items-center justify-between">
-          <a href="#hero" className="flex items-center gap-2.5 group">
+      <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${navScrolled ? "bg-background/70 backdrop-blur-xl border-b border-border/10 py-1.5" : "py-2.5"}`}>
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex items-center justify-between h-11">
+          <a href="#hero" className="flex items-center gap-2 group">
             <motion.div
-              className="w-9 h-9 rounded-xl bg-vibrant-gradient flex items-center justify-center shadow-[0_0_25px_hsla(263,70%,58%,0.3)] group-hover:shadow-[0_0_40px_hsla(263,70%,58%,0.5)] transition-shadow"
+              className="w-7 h-7 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_20px_hsla(263,70%,58%,0.25)]"
               whileHover={{ rotate: 5, scale: 1.05 }}
             >
-              <Crown className="w-4 h-4 text-primary-foreground" />
+              <Crown className="w-3.5 h-3.5 text-primary-foreground" />
             </motion.div>
-            <span className="font-heading font-bold text-sm tracking-[0.15em] uppercase text-foreground">
+            <span className="font-heading font-bold text-xs tracking-[0.15em] uppercase text-foreground">
               Empire<span className="text-shimmer">.AI</span>
             </span>
           </a>
 
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-7">
             {navLinks.map(link => (
               <a key={link.href} href={link.href}
-                className="relative text-[0.8rem] font-medium text-foreground/40 hover:text-foreground transition-colors duration-300 tracking-wide group">
+                className="relative text-[0.75rem] font-medium text-foreground/40 hover:text-foreground transition-colors duration-300 tracking-wide group">
                 {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-vibrant-gradient group-hover:w-full transition-all duration-300" />
+                <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-vibrant-gradient group-hover:w-full transition-all duration-300" />
               </a>
             ))}
             <motion.button
               onClick={() => scrollTo("contact")}
-              className="relative px-6 py-2.5 rounded-full bg-vibrant-gradient text-primary-foreground text-xs font-bold font-heading tracking-wider uppercase overflow-hidden"
-              whileHover={{ scale: 1.03, boxShadow: "0 10px 40px hsla(263,70%,58%,0.35)" }}
+              className="px-5 py-1.5 rounded-full bg-vibrant-gradient text-primary-foreground text-[0.7rem] font-bold font-heading tracking-wider uppercase"
+              whileHover={{ scale: 1.03, boxShadow: "0 8px 30px hsla(263,70%,58%,0.3)" }}
               whileTap={{ scale: 0.97 }}
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] hover:translate-x-[200%] transition-transform duration-700" />
-              <span className="relative">Inizia Ora</span>
+              Inizia Ora
             </motion.button>
           </div>
 
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 text-foreground" aria-label="Menu">
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-1.5 text-foreground" aria-label="Menu">
+            {mobileMenuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
           </button>
         </div>
 
@@ -242,15 +241,15 @@ const LandingPage = () => {
           {mobileMenuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
               className="lg:hidden bg-background/95 backdrop-blur-2xl border-t border-border/10 overflow-hidden">
-              <div className="flex flex-col items-center gap-1 py-5 px-5">
+              <div className="flex flex-col items-center gap-0.5 py-3 px-5">
                 {navLinks.map(link => (
                   <a key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-3 text-sm font-medium text-foreground/50 hover:text-foreground transition-colors font-heading tracking-widest uppercase">
+                    className="w-full text-center py-2.5 text-xs font-medium text-foreground/50 hover:text-foreground transition-colors font-heading tracking-widest uppercase">
                     {link.label}
                   </a>
                 ))}
                 <button onClick={() => { scrollTo("contact"); setMobileMenuOpen(false); }}
-                  className="mt-3 w-full py-3 rounded-xl bg-vibrant-gradient text-primary-foreground text-sm font-bold tracking-widest uppercase font-heading">
+                  className="mt-2 w-full py-2.5 rounded-xl bg-vibrant-gradient text-primary-foreground text-xs font-bold tracking-widest uppercase font-heading">
                   Inizia Ora
                 </button>
               </div>
