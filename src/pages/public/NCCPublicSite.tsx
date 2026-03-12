@@ -571,7 +571,10 @@ export default function NCCPublicSite({ company }: Props) {
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative min-h-[100vh] flex items-center pt-16 px-4 overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroMercedes} alt="NCC Premium Transfer" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+          <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-30">
+            <source src={videoNccHero} type="video/mp4" />
+          </video>
+          <img src={heroMercedes} alt="NCC Premium Transfer" className="absolute inset-0 w-full h-full object-cover opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a14] via-[#0a0a14]/80 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-transparent to-[#0a0a14]/30" />
           <div className="absolute inset-0 opacity-[0.02]" style={{
