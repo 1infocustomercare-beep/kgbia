@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useIndustry } from "@/hooks/useIndustry";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -13,6 +14,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { type IndustryId } from "@/config/industry-config";
+import { LiveSitePreview } from "@/components/app/LiveSitePreview";
+import { SitePreviewOverlay } from "@/components/app/SitePreviewOverlay";
 
 /* ── Animation variants ─────────────────────────────────── */
 const containerVariants = {
