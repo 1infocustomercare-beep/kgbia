@@ -290,28 +290,70 @@ const LandingPage = () => {
          ═══════════════════════════════════════════ */}
       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-20 pb-16"
         style={{ opacity: heroOpacity }}>
+
+        {/* Background layers */}
         <div className="absolute inset-0">
-          <img src={heroLanding} alt="" className="w-full h-full object-cover opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/80 to-background" />
+          <img src={heroLanding} alt="" className="w-full h-full object-cover opacity-15" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/80 to-background" />
         </div>
 
-        <div className="absolute inset-0 cyber-grid opacity-20" />
+        {/* Futuristic perspective grid floor */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute bottom-0 left-0 right-0 h-[70vh] origin-bottom animate-grid-warp"
+            style={{
+              backgroundImage: `linear-gradient(hsla(265, 85%, 65%, 0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 85%, 65%, 0.08) 1px, transparent 1px)`,
+              backgroundSize: "40px 40px",
+            }}
+          />
+          {/* Horizon glow */}
+          <div className="absolute bottom-[35vh] left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265, 85%, 65%, 0.3) 50%, transparent 90%)" }} />
+          <div className="absolute bottom-[34vh] left-0 right-0 h-20 blur-[40px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265, 85%, 65%, 0.5) 30%, hsla(280, 80%, 60%, 0.4) 50%, hsla(320, 75%, 55%, 0.3) 70%, transparent 90%)" }} />
+        </div>
 
-        {/* Subtle light beam */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[40vh] bg-gradient-to-b from-primary/40 via-primary/10 to-transparent" />
+        {/* Pulsing concentric rings */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <div className="w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] relative">
+            <div className="absolute inset-0 rounded-full border border-primary/20 animate-pulse-ring" />
+            <div className="absolute inset-0 rounded-full border border-primary/15 animate-pulse-ring-delay" />
+            <div className="absolute inset-0 rounded-full border border-primary/10 animate-pulse-ring-delay2" />
+          </div>
+        </div>
 
+        {/* Orbiting dots */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden sm:block">
+          <div className="relative w-0 h-0">
+            {[
+              { radius: "160px", speed: "10s", color: "hsl(265, 85%, 65%)", size: 6 },
+              { radius: "220px", speed: "15s", color: "hsl(280, 80%, 60%)", size: 4 },
+              { radius: "280px", speed: "20s", color: "hsl(320, 75%, 55%)", size: 3 },
+              { radius: "120px", speed: "8s", color: "hsl(265, 85%, 70%)", size: 5 },
+            ].map((dot, i) => (
+              <div key={i} className="absolute animate-orbit-dot" style={{ "--orbit-radius": dot.radius, "--orbit-speed": dot.speed, animationDirection: i % 2 === 0 ? "normal" : "reverse" } as React.CSSProperties}>
+                <div className="rounded-full" style={{ width: dot.size, height: dot.size, background: dot.color, boxShadow: `0 0 12px ${dot.color}` }} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Central morphing glow */}
         <motion.div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] animate-morph opacity-10 blur-[120px]"
-          style={{ background: "linear-gradient(135deg, hsl(217, 91%, 60%), hsl(190, 80%, 50%))" }}
-          animate={{ scale: [1, 1.08, 1], rotate: [0, 3, 0] }}
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] animate-morph opacity-15 blur-[120px]"
+          style={{ background: "linear-gradient(135deg, hsl(265, 85%, 60%), hsl(280, 80%, 55%), hsl(320, 70%, 50%))" }}
+          animate={{ scale: [1, 1.1, 1], rotate: [0, 5, 0] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
+
+        {/* Cyber grid overlay */}
+        <div className="absolute inset-0 cyber-grid opacity-25" />
+
+        {/* Light beam */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[40vh] bg-gradient-to-b from-primary/50 via-primary/15 to-transparent" />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Badge */}
-            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm mb-7"
+            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/20 bg-primary/[0.06] backdrop-blur-sm mb-7"
               initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.6 }}>
               <div className="relative flex items-center gap-1.5">
                 <span className="absolute w-2 h-2 rounded-full bg-primary animate-ping" />
@@ -320,7 +362,7 @@ const LandingPage = () => {
               <span className="text-[0.65rem] font-heading font-semibold text-primary/90 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
-            {/* Headline */}
+            {/* Headline with staggered word reveal */}
             <motion.h1
               className="text-[2.5rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold text-foreground tracking-[-0.03em]"
               initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.15, ease: smoothEase }}>
@@ -360,7 +402,7 @@ const LandingPage = () => {
               <motion.button
                 onClick={() => scrollTo("pricing")}
                 className="group relative w-full sm:w-auto px-8 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
-                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(217,91%,60%,0.25)" }}
+                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(265,85%,65%,0.3)" }}
                 whileTap={{ scale: 0.97 }}
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/15 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
