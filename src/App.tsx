@@ -25,7 +25,17 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const GuidedSetup = lazy(() => import("./pages/GuidedSetup"));
 const MarketingPage = lazy(() => import("./pages/MarketingPage"));
+
+// App layout + adaptive pages
+const AppLayout = lazy(() => import("./components/layout/AppLayout"));
+const AdaptiveDashboard = lazy(() => import("./pages/app/AdaptiveDashboard"));
 const LeadsPage = lazy(() => import("./pages/LeadsPage"));
+const StaffPage = lazy(() => import("./pages/app/StaffPage"));
+const HACCPPage = lazy(() => import("./pages/app/HACCPPage"));
+const SettingsPage = lazy(() => import("./pages/app/SettingsPage"));
+const NCCFleetPage = lazy(() => import("./pages/app/NCCFleetPage"));
+const NCCRoutesPage = lazy(() => import("./pages/app/NCCRoutesPage"));
+const NCCBookingsPage = lazy(() => import("./pages/app/NCCBookingsPage"));
 
 const queryClient = new QueryClient();
 
@@ -45,11 +55,19 @@ const App = () => (
           <BrowserRouter>
             <Suspense fallback={<PageLoader />}>
               <Routes>
+                {/* Public routes */}
                 <Route path="/" element={<Index />} />
                 <Route path="/home" element={<LandingPage />} />
+                <Route path="/marketing" element={<MarketingPage />} />
                 <Route path="/r/:slug" element={<RestaurantPage />} />
                 <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
                 <Route path="/admin" element={<AdminLogin />} />
+                <Route path="/kitchen" element={<KitchenView />} />
+                <Route path="/partner/register" element={<PartnerRegister />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/cookie-policy" element={<CookiePolicy />} />
+
+                {/* Legacy protected routes (kept intact) */}
                 <Route path="/dashboard" element={
                   <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
                     <AdminDashboard />
@@ -65,13 +83,11 @@ const App = () => (
                     <StaffPanel />
                   </ProtectedRoute>
                 } />
-                <Route path="/kitchen" element={<KitchenView />} />
                 <Route path="/partner" element={
                   <ProtectedRoute requiredRole="partner">
                     <PartnerDashboard />
                   </ProtectedRoute>
                 } />
-                <Route path="/partner/register" element={<PartnerRegister />} />
                 <Route path="/admin/dashboard" element={
                   <ProtectedRoute>
                     <AdminDashboard />
@@ -82,14 +98,25 @@ const App = () => (
                     <GuidedSetup />
                   </ProtectedRoute>
                 } />
-                <Route path="/marketing" element={<MarketingPage />} />
-                <Route path="/leads" element={
+
+                {/* ═══ New Adaptive App Routes (industry-aware) ═══ */}
+                <Route path="/app" element={
                   <ProtectedRoute>
-                    <LeadsPage />
+                    <AppLayout />
                   </ProtectedRoute>
-                } />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
-                <Route path="/cookie-policy" element={<CookiePolicy />} />
+                }>
+                  <Route index element={<AdaptiveDashboard />} />
+                  {/* Common modules */}
+                  <Route path="leads" element={<LeadsPage />} />
+                  <Route path="staff" element={<StaffPage />} />
+                  <Route path="haccp" element={<HACCPPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                  {/* NCC modules */}
+                  <Route path="fleet" element={<NCCFleetPage />} />
+                  <Route path="routes" element={<NCCRoutesPage />} />
+                  <Route path="bookings" element={<NCCBookingsPage />} />
+                </Route>
+
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
