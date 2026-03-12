@@ -1,12 +1,35 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// ─── AI Usage Tracking Helper ───
+async function trackAIUsage(agentName: string, modelUsed: string, startTime: number, status: string, restaurantId?: string) {
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !serviceRoleKey) return;
+    const sb = createClient(supabaseUrl, serviceRoleKey);
+    await sb.from("ai_usage_logs").insert({
+      agent_name: agentName,
+      model_used: modelUsed,
+      duration_ms: Date.now() - startTime,
+      status,
+      restaurant_id: restaurantId || null,
+    });
+  } catch (e) {
+    console.error("Failed to track AI usage:", e);
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  const startTime = Date.now();
+  const modelUsed = "google/gemini-3-flash-preview";
 
   try {
     const { restaurantId, orders, menuItems } = await req.json();
@@ -39,7 +62,7 @@ Rispondi SOLO in JSON con questo formato:
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: modelUsed,
         messages: [
           { role: "system", content: "Sei un consulente esperto di gestione ristoranti e inventory management. Rispondi sempre in JSON valido." },
           { role: "user", content: prompt },
@@ -48,6 +71,7 @@ Rispondi SOLO in JSON con questo formato:
     });
 
     if (!response.ok) {
+      await trackAIUsage("ai-inventory", modelUsed, startTime, "error", restaurantId);
       const status = response.status;
       if (status === 429) {
         return new Response(JSON.stringify({ error: "Troppi richieste AI. Riprova tra poco." }), {
@@ -68,18 +92,17 @@ Rispondi SOLO in JSON con questo formato:
     let result = { alerts: [], dailySpecial: null, insights: "" };
     try {
       const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        result = JSON.parse(jsonMatch[0]);
-      }
-    } catch {
-      console.error("Failed to parse inventory result:", content);
-    }
+      if (jsonMatch) { result = JSON.parse(jsonMatch[0]); }
+    } catch { console.error("Failed to parse inventory result:", content); }
+
+    await trackAIUsage("ai-inventory", modelUsed, startTime, "success", restaurantId);
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
   } catch (e) {
+    await trackAIUsage("ai-inventory", modelUsed, startTime, "error");
     console.error("ai-inventory error:", e);
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
