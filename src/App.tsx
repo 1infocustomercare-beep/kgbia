@@ -26,6 +26,7 @@ const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const GuidedSetup = lazy(() => import("./pages/GuidedSetup"));
 const MarketingPage = lazy(() => import("./pages/MarketingPage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
+const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
 
 // App layout + adaptive pages
@@ -87,6 +88,7 @@ const App = () => (
                 <Route path="/home" element={<LandingPage />} />
                 <Route path="/marketing" element={<MarketingPage />} />
                 <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
+                <Route path="/b/:slug" element={<BusinessPage />} />
                 <Route path="/demo" element={<DemoDirectoryPage />} />
                 <Route path="/demo/:slug" element={<IndustryDemoPage />} />
                 <Route path="/r/:slug" element={<RestaurantPage />} />
