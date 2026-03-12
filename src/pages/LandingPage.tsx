@@ -400,17 +400,17 @@ const LandingPage = () => {
           <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <SectionLabel text="Ecosistema" />
             <h2 className="text-[clamp(1.8rem,4vw,3rem)] font-heading font-bold text-foreground leading-[1.1] mb-5">
-              Tre App,<br /><span className="text-vibrant-gradient">Un Solo Impero</span>
+              Un Solo Ecosistema,<br /><span className="text-vibrant-gradient">Infinite Possibilità</span>
             </h2>
             <p className="text-foreground/45 leading-[1.7] max-w-lg mb-8 text-sm">
-              Cliente, Admin e Cucina — un ecosistema white-label completo, di tua proprietà.
+              Un pannello admin completo, un'app cliente white-label e una dashboard operativa — tutto interconnesso e adattivo al tuo settore.
             </p>
             <div className="space-y-4 mb-8">
               {[
-                { title: "Ordini Online", desc: "Menu interattivo con pagamento Stripe integrato" },
-                { title: "Programma Fedeltà", desc: "Wallet pass, reward e offerte personalizzate AI" },
-                { title: "Push & Chat", desc: "Comunicazione diretta e campagne marketing push" },
-                { title: "Kitchen View", desc: "Ordini real-time in cucina, zero errori garantiti" },
+                { title: "Ordini & Prenotazioni", desc: "Menu digitale, booking online, catalogo servizi — tutto con pagamento Stripe integrato" },
+                { title: "Staff, Turni & Payroll", desc: "Gestione personale completa: profili, timbrature, straordinari e buste paga automatiche" },
+                { title: "CRM, Loyalty & Push Marketing", desc: "Segmentazione clienti, wallet pass, notifiche push e campagne social automatizzate" },
+                { title: "Finance, HACCP & Inventario", desc: "Dashboard finanziaria, fatture B2B, conformità sanitaria e gestione scorte con alert" },
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-4 items-start"
                   initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
