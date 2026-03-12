@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, lazy, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +10,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+
+// Sector-specific premium sites
+const NCCPublicSite = lazy(() => import("@/pages/public/NCCPublicSite"));
+const BeautyPublicSite = lazy(() => import("@/pages/public/BeautyPublicSite"));
+const BeachPublicSite = lazy(() => import("@/pages/public/BeachPublicSite"));
+const TradesPublicSite = lazy(() => import("@/pages/public/TradesPublicSite"));
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import {
@@ -279,6 +285,16 @@ export default function BusinessPage() {
         </div>
       </div>
     );
+  }
+
+  // Dispatch to sector-specific premium sites
+  const SECTOR_SITES: Record<string, boolean> = { ncc: true, beauty: true, beach: true, plumber: true, electrician: true, cleaning: true, garage: true, construction: true, gardening: true };
+  if (SECTOR_SITES[industry]) {
+    const SiteLoader = () => <div className="min-h-screen bg-black flex items-center justify-center"><div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" /></div>;
+    if (industry === "ncc") return <Suspense fallback={<SiteLoader />}><NCCPublicSite company={company} /></Suspense>;
+    if (industry === "beauty") return <Suspense fallback={<SiteLoader />}><BeautyPublicSite company={company} /></Suspense>;
+    if (industry === "beach") return <Suspense fallback={<SiteLoader />}><BeachPublicSite company={company} /></Suspense>;
+    if (["plumber", "electrician", "cleaning", "garage", "construction", "gardening"].includes(industry)) return <Suspense fallback={<SiteLoader />}><TradesPublicSite company={company} /></Suspense>;
   }
 
   const openingHours = company.opening_hours as Record<string, string> | null;
