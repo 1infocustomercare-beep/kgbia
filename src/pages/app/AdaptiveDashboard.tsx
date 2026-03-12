@@ -1,71 +1,136 @@
 import { useIndustry } from "@/hooks/useIndustry";
 import { Card, CardContent } from "@/components/ui/card";
-import { TrendingUp, ShoppingBag, Users, DollarSign, Car, Calendar, Scissors, Heart } from "lucide-react";
+import { TrendingUp, ShoppingBag, Users, DollarSign, Car, Calendar, Loader2, AlertTriangle, Package } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const KPICard = ({ label, value, icon: Icon, color }: { label: string; value: string; icon: any; color: string }) => (
+const KPICard = ({ label, value, icon: Icon, color, loading }: { label: string; value: string; icon: any; color: string; loading?: boolean }) => (
   <Card className="glass border-border/50">
     <CardContent className="p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={`w-4 h-4 ${color}`} />
         <span className="text-xs text-muted-foreground">{label}</span>
       </div>
-      <p className="text-2xl font-bold">{value}</p>
+      {loading ? <Skeleton className="h-8 w-20" /> : <p className="text-2xl font-bold">{value}</p>}
     </CardContent>
   </Card>
 );
 
 function FoodDashboard() {
+  const { companyId } = useIndustry();
+
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ["food-dashboard", companyId],
+    enabled: !!companyId,
+    refetchInterval: 30000,
+    queryFn: async () => {
+      const today = new Date().toISOString().split("T")[0];
+      const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+
+      const [ordersToday, revenueWeek, pendingRes, lowStock] = await Promise.all([
+        supabase.from("orders").select("id", { count: "exact", head: true })
+          .eq("restaurant_id", companyId!).gte("created_at", today),
+        supabase.from("orders").select("total").eq("restaurant_id", companyId!).gte("created_at", weekAgo),
+        supabase.from("reservations").select("id", { count: "exact", head: true })
+          .eq("restaurant_id", companyId!).eq("status", "pending"),
+        supabase.from("products").select("id", { count: "exact", head: true })
+          .eq("company_id", companyId!).lt("stock", 5),
+      ]);
+
+      const weekRevenue = (revenueWeek.data || []).reduce((s, o) => s + (o.total || 0), 0);
+
+      return {
+        ordersToday: ordersToday.count || 0,
+        revenueWeek: weekRevenue,
+        pendingRes: pendingRes.count || 0,
+        lowStock: lowStock.count || 0,
+      };
+    },
+  });
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold font-heading">Dashboard Ristorazione</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KPICard label="Ordini Oggi" value="24" icon={ShoppingBag} color="text-blue-400" />
-        <KPICard label="Revenue Oggi" value="€1.250" icon={DollarSign} color="text-green-400" />
-        <KPICard label="Clienti Attivi" value="156" icon={Users} color="text-purple-400" />
-        <KPICard label="Crescita" value="+12%" icon={TrendingUp} color="text-primary" />
+      <h1 className="text-xl sm:text-2xl font-bold font-heading">Dashboard Ristorazione</h1>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <KPICard label="Ordini Oggi" value={String(stats?.ordersToday ?? 0)} icon={ShoppingBag} color="text-blue-400" loading={isLoading} />
+        <KPICard label="Revenue Settimana" value={`€${(stats?.revenueWeek ?? 0).toLocaleString("it-IT")}`} icon={DollarSign} color="text-green-400" loading={isLoading} />
+        <KPICard label="Prenotazioni Pending" value={String(stats?.pendingRes ?? 0)} icon={Calendar} color="text-purple-400" loading={isLoading} />
+        <KPICard label="Scorte Basse" value={String(stats?.lowStock ?? 0)} icon={Package} color="text-orange-400" loading={isLoading} />
       </div>
-      <Card className="glass border-border/50">
-        <CardContent className="p-6">
-          <p className="text-muted-foreground text-center py-8">
-            Grafici e analytics dettagliati disponibili nella sezione Finanza.
-          </p>
-        </CardContent>
-      </Card>
     </div>
   );
 }
 
 function NCCDashboard() {
+  const { companyId } = useIndustry();
+
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ["ncc-dashboard", companyId],
+    enabled: !!companyId,
+    refetchInterval: 30000,
+    queryFn: async () => {
+      const today = new Date().toISOString().split("T")[0];
+      const [bookingsToday, vehicles, revenue] = await Promise.all([
+        supabase.from("ncc_bookings").select("id", { count: "exact", head: true })
+          .eq("company_id", companyId!).gte("created_at", today),
+        supabase.from("fleet_vehicles").select("id", { count: "exact", head: true })
+          .eq("company_id", companyId!).eq("is_active", true),
+        supabase.from("ncc_bookings").select("total_price")
+          .eq("company_id", companyId!).gte("created_at", today),
+      ]);
+
+      return {
+        bookingsToday: bookingsToday.count || 0,
+        activeVehicles: vehicles.count || 0,
+        revenueToday: (revenue.data || []).reduce((s, b) => s + (b.total_price || 0), 0),
+      };
+    },
+  });
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold font-heading">Dashboard NCC</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KPICard label="Prenotazioni Oggi" value="8" icon={Calendar} color="text-blue-400" />
-        <KPICard label="Revenue Oggi" value="€890" icon={DollarSign} color="text-green-400" />
-        <KPICard label="Veicoli Attivi" value="12" icon={Car} color="text-purple-400" />
-        <KPICard label="Crescita" value="+18%" icon={TrendingUp} color="text-primary" />
+      <h1 className="text-xl sm:text-2xl font-bold font-heading">Dashboard NCC</h1>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <KPICard label="Prenotazioni Oggi" value={String(stats?.bookingsToday ?? 0)} icon={Calendar} color="text-blue-400" loading={isLoading} />
+        <KPICard label="Revenue Oggi" value={`€${(stats?.revenueToday ?? 0).toLocaleString("it-IT")}`} icon={DollarSign} color="text-green-400" loading={isLoading} />
+        <KPICard label="Veicoli Attivi" value={String(stats?.activeVehicles ?? 0)} icon={Car} color="text-purple-400" loading={isLoading} />
+        <KPICard label="Crescita" value="—" icon={TrendingUp} color="text-primary" loading={isLoading} />
       </div>
-      <Card className="glass border-border/50">
-        <CardContent className="p-6">
-          <p className="text-muted-foreground text-center py-8">
-            Panoramica prenotazioni, flotta e performance autisti.
-          </p>
-        </CardContent>
-      </Card>
     </div>
   );
 }
 
 function GenericDashboard() {
-  const { config, terminology } = useIndustry();
+  const { config, terminology, companyId } = useIndustry();
+
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ["generic-dashboard", companyId],
+    enabled: !!companyId,
+    refetchInterval: 30000,
+    queryFn: async () => {
+      const [clients, appointments] = await Promise.all([
+        supabase.from("crm_clients").select("id", { count: "exact", head: true }).eq("company_id", companyId!),
+        supabase.from("appointments").select("id", { count: "exact", head: true })
+          .eq("company_id", companyId!).eq("status", "confirmed"),
+      ]);
+      return {
+        clients: clients.count || 0,
+        appointments: appointments.count || 0,
+      };
+    },
+  });
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold font-heading">Dashboard {config.label}</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KPICard label={`${terminology.orders} Oggi`} value="15" icon={Calendar} color="text-blue-400" />
-        <KPICard label="Revenue Oggi" value="€720" icon={DollarSign} color="text-green-400" />
-        <KPICard label={terminology.customers} value="89" icon={Users} color="text-purple-400" />
-        <KPICard label="Crescita" value="+9%" icon={TrendingUp} color="text-primary" />
+      <h1 className="text-xl sm:text-2xl font-bold font-heading">
+        {terminology.dashboard || "Dashboard"} {config.emoji}
+      </h1>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <KPICard label={terminology.orders} value={String(stats?.appointments ?? 0)} icon={Calendar} color="text-blue-400" loading={isLoading} />
+        <KPICard label={terminology.clients || terminology.customers} value={String(stats?.clients ?? 0)} icon={Users} color="text-purple-400" loading={isLoading} />
+        <KPICard label="Revenue" value="—" icon={DollarSign} color="text-green-400" loading={isLoading} />
+        <KPICard label="Crescita" value="—" icon={TrendingUp} color="text-primary" loading={isLoading} />
       </div>
     </div>
   );
