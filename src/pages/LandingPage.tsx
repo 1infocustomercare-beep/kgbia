@@ -582,7 +582,7 @@ const LandingPage = () => {
             <p className="text-5xl font-heading font-bold text-foreground mt-3">€2.997</p>
             <p className="text-xs text-foreground/40 mt-1">IVA 22% inclusa · Una volta sola</p>
             <ul className="mt-8 space-y-3 mb-8">
-              {["Asset Digitale di Proprietà", "AI Menu Creator + OCR", "Kitchen View real-time", "Vault Fiscale AES-256", "Panic Mode + Review Shield", "PWA White Label", "Chat Privata + Push", "Mappa Tavoli", "Assistenza a vita", "Zero canoni mensili"].map((f, i) => (
+              {["PWA White Label di Proprietà", "AI Menu + Catalogo + OCR", "Kitchen View & Dashboard Ops", "Staff, Turni & Payroll Automatico", "CRM Clienti + Loyalty + Push", "Finance + Fatture B2B + HACCP", "Inventario & Alert Scorte", "Social Media Manager AI", "Review Shield™ + Reputazione", "Assistenza Prioritaria a Vita"].map((f, i) => (
                 <li key={i} className="flex items-center gap-3 text-sm text-foreground/60">
                   <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Check className="w-2.5 h-2.5 text-primary" />
