@@ -116,7 +116,7 @@ const AdminLogin = () => {
     }
 
     const { error } = await signIn(email, password);
-    if (error) {
+      if (error) {
       setError(error.message);
       setLoading(false);
       return;
