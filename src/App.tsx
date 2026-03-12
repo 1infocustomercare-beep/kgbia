@@ -125,6 +125,11 @@ const App = () => (
                     <AgentsPage />
                   </ProtectedRoute>
                 } />
+                <Route path="/superadmin/media" element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <MediaVaultPage />
+                  </ProtectedRoute>
+                } />
                 <Route path="/staff" element={
                   <ProtectedRoute requiredRole="staff">
                     <StaffPanel />
