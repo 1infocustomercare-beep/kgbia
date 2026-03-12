@@ -14,6 +14,7 @@ import {
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
   SidebarFooter, useSidebar,
 } from "@/components/ui/sidebar";
+import { motion } from "framer-motion";
 
 const ICON_MAP: Record<string, any> = {
   BookOpen, ShoppingBag, ChefHat, LayoutGrid, Calendar, Star,
@@ -26,7 +27,6 @@ const ICON_MAP: Record<string, any> = {
 
 // Modules per industry
 const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[]> = {
-  // Food uses /dashboard exclusively – no /app nav needed
   ncc: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Flotta", icon: "Car", url: "/app/fleet" },
@@ -176,21 +176,33 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
-  const { industry, company } = useIndustry();
+  const { industry, company, config } = useIndustry();
 
   const industryItems = INDUSTRY_NAV[industry] || INDUSTRY_NAV.custom;
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border hidden md:flex">
+    <Sidebar collapsible="icon" className="border-r border-border/40 hidden md:flex">
       <SidebarContent>
-        {/* Company name */}
+        {/* Company header */}
         {!collapsed && (
-          <div className="px-4 py-4 border-b border-border">
-            <h2 className="font-heading font-bold text-sm text-foreground truncate">
-              {company?.name || "Empire"}
-            </h2>
-            <p className="text-xs text-muted-foreground capitalize">{industry}</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="px-4 py-4 border-b border-border/30"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm bg-primary/10 border border-primary/20">
+                {config.emoji}
+              </div>
+              <div className="min-w-0">
+                <h2 className="font-heading font-bold text-sm text-foreground truncate">
+                  {company?.name || "Empire"}
+                </h2>
+                <p className="text-[10px] text-muted-foreground capitalize tracking-wide">{config.label}</p>
+              </div>
+            </div>
+          </motion.div>
         )}
 
         {/* Industry-specific modules */}
@@ -200,7 +212,7 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {industryItems.map((item) => {
+              {industryItems.map((item, i) => {
                 const Icon = ICON_MAP[item.icon] || Home;
                 const active = item.url === "/app" ? location.pathname === "/app" : location.pathname.startsWith(item.url);
                 return (
@@ -209,9 +221,16 @@ export function AppSidebar() {
                       <NavLink
                         to={item.url}
                         end={item.url === "/app"}
-                        className={`hover:bg-muted/50 ${active ? "bg-primary/10 text-primary" : ""}`}
+                        className={`relative hover:bg-secondary/50 transition-all duration-200 ${active ? "bg-primary/10 text-primary" : ""}`}
                         activeClassName="bg-primary/10 text-primary font-medium"
                       >
+                        {active && (
+                          <motion.div
+                            layoutId="sidebarActiveIndicator"
+                            className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full bg-primary"
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                          />
+                        )}
                         <Icon className="mr-2 h-4 w-4 flex-shrink-0" />
                         {!collapsed && <span>{item.title}</span>}
                       </NavLink>
@@ -238,9 +257,16 @@ export function AppSidebar() {
                     <SidebarMenuButton asChild>
                       <NavLink
                         to={item.url}
-                        className={`hover:bg-muted/50 ${active ? "bg-primary/10 text-primary" : ""}`}
+                        className={`relative hover:bg-secondary/50 transition-all duration-200 ${active ? "bg-primary/10 text-primary" : ""}`}
                         activeClassName="bg-primary/10 text-primary font-medium"
                       >
+                        {active && (
+                          <motion.div
+                            layoutId="sidebarActiveIndicatorCommon"
+                            className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full bg-primary"
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                          />
+                        )}
                         <Icon className="mr-2 h-4 w-4 flex-shrink-0" />
                         {!collapsed && <span>{item.title}</span>}
                       </NavLink>
