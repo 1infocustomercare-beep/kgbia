@@ -128,10 +128,10 @@ export default function NCCDemoPage() {
     <div className="min-h-screen bg-background">
       {/* ── Nav ─────────────────────────────────────────── */}
       <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {company.logo_url && <img src={company.logo_url} alt="" className="h-8 w-8 rounded-lg object-cover" />}
-            <span className="font-bold text-lg font-heading">{company.name}</span>
+        <div className="container mx-auto px-4 h-14 md:h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2 min-w-0">
+            {company.logo_url && <img src={company.logo_url} alt="" className="h-7 w-7 md:h-8 md:w-8 rounded-lg object-cover flex-shrink-0" />}
+            <span className="font-bold text-sm md:text-lg font-heading truncate">{company.name}</span>
           </div>
           <div className="hidden md:flex gap-6 text-sm">
             <a href="#servizi" className="hover:text-primary transition-colors">Servizi</a>
@@ -140,7 +140,7 @@ export default function NCCDemoPage() {
             {destinations.length > 0 && <a href="#destinazioni" className="hover:text-primary transition-colors">Tour</a>}
             <a href="#recensioni" className="hover:text-primary transition-colors">Recensioni</a>
           </div>
-          <Button size="sm" asChild><a href="#prenota">Prenota Ora</a></Button>
+          <Button size="sm" className="text-xs md:text-sm flex-shrink-0" asChild><a href="#prenota">Prenota</a></Button>
         </div>
       </nav>
 
