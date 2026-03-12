@@ -980,21 +980,6 @@ export default function NCCPublicSite({ company }: Props) {
                 </div>
               </div>
 
-              {/* Second vehicle selector (like Telese has duplicate) */}
-              {vehicles.length > 0 && (
-                <div>
-                  <Label className="text-white/40 text-xs">Veicolo</Label>
-                  <Select value={bookingForm.vehicle} onValueChange={v => setBookingForm(p => ({ ...p, vehicle: v }))}>
-                    <SelectTrigger className="bg-white/5 border-white/10 text-white mt-1 h-11"><SelectValue placeholder="Seleziona veicolo" /></SelectTrigger>
-                    <SelectContent>
-                      {vehicles.map((v: any) => (
-                        <SelectItem key={v.id} value={v.id}>{v.name} ({v.min_pax || 1}-{v.max_pax || v.capacity} pax)</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
               {bookingForm.route === "custom" && (
                 <div className="grid grid-cols-2 gap-3">
                   <div>
