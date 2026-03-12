@@ -210,7 +210,7 @@ const LandingPage = () => {
             <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/20 bg-primary/[0.06] mb-8"
               initial={{ opacity: 0, y: 30, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.8 }}>
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-dot" />
-              <span className="text-[0.7rem] font-heading font-medium text-primary/90 tracking-[2px] uppercase">AI-Powered Restaurant Suite</span>
+              <span className="text-[0.7rem] font-heading font-medium text-primary/90 tracking-[2px] uppercase">AI-Powered Business Management Suite</span>
             </motion.div>
 
             {/* Headline */}
