@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
-import { motion, AnimatePresence, useInView, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
   Crown, Check, Star, Zap, Shield, Smartphone,
   TrendingUp, X, Sparkles, Lock, Menu, Target, DollarSign, Brain,
@@ -9,7 +9,9 @@ import {
   BarChart3, QrCode, Bell, Wallet, MapPin, Eye, Bot,
   Palette, Mail, Car, Scissors, Heart, Store, Dumbbell, Building,
   Calendar, Package, CreditCard, Route, ClipboardCheck, Headphones,
-  Layers, Globe, Radio, MonitorSmartphone, Cpu, Fingerprint
+  Layers, Globe, Radio, MonitorSmartphone, Cpu, Fingerprint,
+  ChevronRight, CircleCheck, Minus, Activity, ServerCog, Gauge,
+  Workflow, ScanLine, Database, Wifi, Timer, LineChart
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
@@ -78,11 +80,23 @@ const popIn = { hidden: { opacity: 0, scale: 0.88 }, visible: { opacity: 1, scal
 /* ═══ Floating Particle ═══ */
 const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => (
   <motion.div
-    className="absolute rounded-full bg-primary/20"
+    className="absolute rounded-full bg-primary/15"
     style={{ width: size, height: size, left: x, top: y }}
-    animate={{ y: [0, -20, 0], opacity: [0.2, 0.6, 0.2] }}
+    animate={{ y: [0, -20, 0], opacity: [0.15, 0.5, 0.15] }}
     transition={{ duration: 4 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
   />
+);
+
+/* ═══ Comparison Row ═══ */
+const CompRow = ({ label, empire, others }: { label: string; empire: string; others: string }) => (
+  <motion.div className="grid grid-cols-3 py-3 border-b border-border/30 items-center text-xs sm:text-sm"
+    initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+    <span className="text-foreground/50 font-medium">{label}</span>
+    <span className="text-center text-foreground font-bold flex items-center justify-center gap-1.5">
+      <CircleCheck className="w-3.5 h-3.5 text-primary" /> {empire}
+    </span>
+    <span className="text-center text-foreground/30">{others}</span>
+  </motion.div>
 );
 
 /* ═══════════════════════════════════════════
@@ -97,6 +111,7 @@ const LandingPage = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [activeIndustry, setActiveIndustry] = useState(0);
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -110,9 +125,13 @@ const LandingPage = () => {
     return () => window.removeEventListener("scroll", h);
   }, []);
 
-  // Auto-rotate testimonials
   useEffect(() => {
     const timer = setInterval(() => setActiveTestimonial(p => (p + 1) % 6), 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => setActiveIndustry(p => (p + 1) % 7), 3000);
     return () => clearInterval(timer);
   }, []);
 
@@ -129,30 +148,30 @@ const LandingPage = () => {
   /* ═══ DATA ═══ */
 
   const industries = [
-    { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-orange-500 to-amber-400", emoji: "🍽️" },
-    { id: "ncc" as const, icon: <Car className="w-5 h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer, limousine", gradient: "from-amber-400 to-yellow-500", emoji: "🚘" },
-    { id: "beauty" as const, icon: <Scissors className="w-5 h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA, barbieri", gradient: "from-pink-500 to-rose-400", emoji: "💅" },
-    { id: "healthcare" as const, icon: <Heart className="w-5 h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-emerald-500 to-teal-400", emoji: "🏥" },
-    { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-violet-500 to-purple-400", emoji: "🛍️" },
-    { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-lime-500 to-green-400", emoji: "💪" },
-    { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-amber-400 to-orange-400", emoji: "🏨" },
+    { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-orange-500 to-amber-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live" },
+    { id: "ncc" as const, icon: <Car className="w-5 h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer, limousine", gradient: "from-sky-500 to-blue-500", emoji: "🚘", modules: "Flotta · Tratte · Booking · Autisti" },
+    { id: "beauty" as const, icon: <Scissors className="w-5 h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA, barbieri", gradient: "from-pink-500 to-rose-400", emoji: "💅", modules: "Agenda · Clienti · Reminder · Trattamenti" },
+    { id: "healthcare" as const, icon: <Heart className="w-5 h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-emerald-500 to-teal-400", emoji: "🏥", modules: "Schede Paziente · Agenda · Fatturazione" },
+    { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-cyan-500 to-blue-400", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni" },
+    { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-lime-500 to-green-400", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti" },
+    { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-amber-400 to-orange-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge" },
   ];
 
   const services = [
-    { icon: <Brain className="w-5 h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni.", tag: "IA", color: "from-violet-500 to-purple-600" },
-    { icon: <Smartphone className="w-5 h-5" />, title: "App White Label", desc: "App professionale installabile con il TUO brand, colori e dominio. Nessun logo di terzi.", tag: "APP", color: "from-blue-500 to-cyan-500" },
-    { icon: <Calendar className="w-5 h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini, prenotazioni corse o camere da un unico pannello.", tag: "OPS", color: "from-emerald-500 to-green-500" },
-    { icon: <Shield className="w-5 h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano nel tuo archivio privato. Solo le migliori costruiscono la tua reputazione.", tag: "BRAND", color: "from-amber-500 to-orange-500" },
-    { icon: <Users className="w-5 h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà. Trasforma i visitatori in clienti ricorrenti.", tag: "GROWTH", color: "from-pink-500 to-rose-500" },
-    { icon: <BarChart3 className="w-5 h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, performance staff, trend. Fatturazione elettronica integrata.", tag: "FINANCE", color: "from-cyan-500 to-teal-500" },
-    { icon: <Package className="w-5 h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, ricevi alert automatici, registra controlli igienico-sanitari.", tag: "OPS", color: "from-indigo-500 to-blue-600" },
-    { icon: <Palette className="w-5 h-5" />, title: "Social & Marketing", desc: "Crea e programma post social. Campagne push notification e promozioni mirate.", tag: "MARKETING", color: "from-fuchsia-500 to-pink-500" },
-    { icon: <Lock className="w-5 h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR compliant, backup automatici, accessi multi-ruolo.", tag: "SECURITY", color: "from-slate-500 to-gray-600" },
+    { icon: <Brain className="w-5 h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni quotidiane.", tag: "IA", color: "from-blue-500 to-cyan-500" },
+    { icon: <Smartphone className="w-5 h-5" />, title: "App White Label", desc: "App professionale installabile con il TUO brand, colori e dominio. Nessun logo di terzi, mai.", tag: "APP", color: "from-sky-500 to-blue-500" },
+    { icon: <Calendar className="w-5 h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini, prenotazioni corse o camere da un unico pannello centralizzato.", tag: "OPS", color: "from-emerald-500 to-green-500" },
+    { icon: <Shield className="w-5 h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano nel tuo archivio privato. Solo le migliori costruiscono la tua reputazione online.", tag: "BRAND", color: "from-amber-500 to-orange-500" },
+    { icon: <Users className="w-5 h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà digitale. Trasforma i visitatori in clienti ricorrenti.", tag: "GROWTH", color: "from-pink-500 to-rose-500" },
+    { icon: <BarChart3 className="w-5 h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, performance staff, trend e fatturazione elettronica integrata.", tag: "FINANCE", color: "from-cyan-500 to-teal-500" },
+    { icon: <Package className="w-5 h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, ricevi alert automatici, registra controlli igienico-sanitari e conformità.", tag: "OPS", color: "from-indigo-500 to-blue-600" },
+    { icon: <Bell className="w-5 h-5" />, title: "Marketing Automation", desc: "Push notification, campagne email/WhatsApp, promozioni mirate e segmentazione clienti avanzata.", tag: "MARKETING", color: "from-fuchsia-500 to-pink-500" },
+    { icon: <Lock className="w-5 h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR compliant, backup automatici, accessi multi-ruolo e audit trail.", tag: "SECURITY", color: "from-slate-500 to-gray-600" },
   ];
 
   const metrics = [
     { value: 200, suffix: "+", label: "Attività Attive" },
-    { value: 7, suffix: "", label: "Settori Coperti" },
+    { value: 25, suffix: "+", label: "Settori Coperti" },
     { value: 45, suffix: "%", prefix: "+", label: "Aumento Fatturato" },
     { value: 98, suffix: "%", label: "Soddisfazione" },
   ];
@@ -167,12 +186,14 @@ const LandingPage = () => {
   ];
 
   const faqs = [
-    { q: "Per quali settori funziona Empire?", a: "Empire è multi-settore: ristoranti, NCC, saloni di bellezza, studi medici, negozi, palestre e hotel. Ogni settore ha moduli, terminologia e flussi dedicati che si attivano automaticamente." },
-    { q: "È difficile da usare?", a: "No. Se sai usare Instagram, sai usare Empire. L'interfaccia si adatta al tuo settore. L'IA fa il lavoro pesante: carica una foto e in 60 secondi hai il tuo catalogo digitale." },
+    { q: "Per quali settori funziona Empire?", a: "Empire copre oltre 25 settori: ristoranti, NCC, saloni di bellezza, studi medici, negozi, palestre, hotel, idraulici, elettricisti, agriturismi, lidi, e molti altri. Ogni settore ha moduli, terminologia e flussi dedicati che si attivano automaticamente." },
+    { q: "È difficile da usare?", a: "No. Se sai usare Instagram, sai usare Empire. L'interfaccia si adatta al tuo settore. L'IA fa il lavoro pesante: carica una foto e in 60 secondi hai il tuo catalogo digitale completo." },
     { q: "Come funzionano i pagamenti?", a: "I pagamenti arrivano direttamente sul TUO conto via Stripe Connect. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico — 15× meno delle piattaforme tradizionali." },
     { q: "Quanto costa davvero?", a: "€2.997 una tantum (o 3 rate da €1.099). Dopodiché €0/mese per sempre. Solo il 2% sulle transazioni. Nessun vincolo, nessun costo nascosto." },
-    { q: "I miei dati sono al sicuro?", a: "Sì. Crittografia AES-256, conformità GDPR, backup automatici e accessi multi-ruolo. Standard enterprise anche per la piccola attività." },
-    { q: "Come funziona il Partner Program?", a: "Diventi Partner gratis. Guadagni €997 per ogni vendita + bonus fino a €1.500/mese. Pagamenti istantanei via Stripe Connect. Nessun rischio, nessun investimento." },
+    { q: "I miei dati sono al sicuro?", a: "Sì. Crittografia AES-256, conformità GDPR, backup automatici e accessi multi-ruolo. Standard enterprise anche per la piccola attività. I tuoi dati sono di tua proprietà." },
+    { q: "Come funziona il Partner Program?", a: "Diventi Partner gratis. Guadagni €997 per ogni vendita + bonus fino a €1.500/mese. Pagamenti istantanei via Stripe Connect. Nessun rischio, nessun investimento iniziale." },
+    { q: "Quanto tempo serve per essere operativi?", a: "24 ore. Il nostro team configura tutto: branding, menu/catalogo, integrazioni. Formazione inclusa. Sei operativo dal giorno 1." },
+    { q: "Posso personalizzare tutto?", a: "Assolutamente. Logo, colori, dominio, moduli attivi, flussi operativi, notifiche, template email — tutto è personalizzabile senza toccare codice." },
   ];
 
   const navLinks = [
@@ -182,21 +203,27 @@ const LandingPage = () => {
     { href: "#partner", label: "Partner" },
   ];
 
+  const whyUs = [
+    { icon: <Cpu className="w-5 h-5" />, title: "Tecnologia Proprietaria", desc: "Stack tecnologico sviluppato internamente. Non rivendiamo software altrui." },
+    { icon: <Workflow className="w-5 h-5" />, title: "Automazione Totale", desc: "Ogni processo ripetitivo viene eliminato. Dal primo contatto alla fatturazione." },
+    { icon: <Gauge className="w-5 h-5" />, title: "Performance Garantite", desc: "99.9% uptime, <200ms latenza, scaling automatico fino a milioni di utenti." },
+    { icon: <ServerCog className="w-5 h-5" />, title: "Aggiornamenti Continui", desc: "Nuove funzionalità ogni settimana. Il tuo sistema non invecchia mai." },
+    { icon: <Database className="w-5 h-5" />, title: "I Tuoi Dati, Per Sempre", desc: "Proprietà totale dei dati. Esporta tutto in qualsiasi momento. Zero lock-in." },
+    { icon: <Headphones className="w-5 h-5" />, title: "Supporto Dedicato", desc: "Team italiano disponibile 7/7. Non un chatbot, persone vere che risolvono." },
+  ];
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden relative">
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 aurora-mesh opacity-30" />
-        <div className="absolute w-[700px] h-[700px] rounded-full blur-[200px] opacity-[0.07] bg-primary -top-[200px] left-1/2 -translate-x-1/2 animate-blob-float" />
-        <div className="absolute w-[500px] h-[500px] rounded-full blur-[180px] opacity-[0.04] bg-accent top-[60vh] -right-[100px] animate-blob-float-reverse" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[160px] opacity-[0.03] bg-primary bottom-[10vh] -left-[100px] animate-blob-float-slow" />
-        {/* Particles */}
-        <Particle delay={0} size={3} x="10%" y="30%" />
+        <div className="absolute inset-0 aurora-mesh opacity-20" />
+        <div className="absolute w-[600px] h-[600px] rounded-full blur-[200px] opacity-[0.04] bg-primary -top-[200px] left-1/3 animate-blob-float" />
+        <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.03] bg-accent top-[60vh] -right-[100px] animate-blob-float-reverse" />
+        <Particle delay={0} size={2} x="10%" y="30%" />
         <Particle delay={1} size={2} x="85%" y="20%" />
-        <Particle delay={2} size={4} x="70%" y="60%" />
+        <Particle delay={2} size={3} x="70%" y="60%" />
         <Particle delay={0.5} size={2} x="25%" y="75%" />
-        <Particle delay={1.5} size={3} x="50%" y="45%" />
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
@@ -204,7 +231,7 @@ const LandingPage = () => {
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex items-center justify-between h-11">
           <a href="#hero" className="flex items-center gap-2 group">
             <motion.div
-              className="w-7 h-7 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_20px_hsla(263,70%,58%,0.25)]"
+              className="w-7 h-7 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_20px_hsla(217,91%,60%,0.2)]"
               whileHover={{ rotate: 5, scale: 1.05 }}
             >
               <Crown className="w-3.5 h-3.5 text-primary-foreground" />
@@ -225,7 +252,7 @@ const LandingPage = () => {
             <motion.button
               onClick={() => scrollTo("contact")}
               className="px-5 py-1.5 rounded-full bg-vibrant-gradient text-primary-foreground text-[0.7rem] font-bold font-heading tracking-wider uppercase"
-              whileHover={{ scale: 1.03, boxShadow: "0 8px 30px hsla(263,70%,58%,0.3)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 8px 30px hsla(217,91%,60%,0.25)" }}
               whileTap={{ scale: 0.97 }}
             >
               Inizia Ora
@@ -233,7 +260,7 @@ const LandingPage = () => {
           </div>
 
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-1.5 text-foreground" aria-label="Menu">
-            {mobileMenuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
 
@@ -259,69 +286,81 @@ const LandingPage = () => {
       </nav>
 
       {/* ═══════════════════════════════════════════
-          HERO — Cinematic
+          HERO
          ═══════════════════════════════════════════ */}
       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-20 pb-16"
         style={{ opacity: heroOpacity }}>
-        {/* Hero background image */}
         <div className="absolute inset-0">
-          <img src={heroLanding} alt="" className="w-full h-full object-cover opacity-30" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
+          <img src={heroLanding} alt="" className="w-full h-full object-cover opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/80 to-background" />
         </div>
 
-        {/* Cyber grid */}
-        <div className="absolute inset-0 cyber-grid opacity-30" />
+        <div className="absolute inset-0 cyber-grid opacity-20" />
 
-        {/* Spotlight */}
-        <div className="absolute top-1/2 left-1/2 w-[900px] h-[900px] -translate-x-1/2 -translate-y-1/2">
-          <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,hsla(263,70%,58%,0.12)_0%,transparent_60%)] animate-spotlight" />
-        </div>
+        {/* Subtle light beam */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[40vh] bg-gradient-to-b from-primary/40 via-primary/10 to-transparent" />
 
-        {/* Morphing glow orb */}
         <motion.div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] animate-morph opacity-20 blur-[100px]"
-          style={{ background: "linear-gradient(135deg, hsl(263, 85%, 60%), hsl(330, 80%, 60%))" }}
-          animate={{ scale: [1, 1.1, 1], rotate: [0, 5, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] animate-morph opacity-10 blur-[120px]"
+          style={{ background: "linear-gradient(135deg, hsl(217, 91%, 60%), hsl(190, 80%, 50%))" }}
+          animate={{ scale: [1, 1.08, 1], rotate: [0, 3, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
-          <div className="flex flex-col items-center text-center max-w-[850px] mx-auto">
+          <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Badge */}
-            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/15 bg-primary/[0.06] backdrop-blur-sm mb-7"
+            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm mb-7"
               initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.6 }}>
               <div className="relative flex items-center gap-1.5">
                 <span className="absolute w-2 h-2 rounded-full bg-primary animate-ping" />
                 <span className="relative w-2 h-2 rounded-full bg-primary" />
               </div>
-              <span className="text-[0.65rem] font-heading font-semibold text-primary/90 tracking-[2px] uppercase">Piattaforma AI Multi-Settore</span>
-              <span className="text-[0.6rem] px-2 py-0.5 rounded-full bg-primary/15 text-primary font-bold">2026</span>
+              <span className="text-[0.65rem] font-heading font-semibold text-primary/90 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
             {/* Headline */}
             <motion.h1
-              className="text-[2.5rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[4.8rem] font-heading font-bold text-foreground tracking-[-0.03em]"
+              className="text-[2.5rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold text-foreground tracking-[-0.03em]"
               initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.15, ease: smoothEase }}>
-              Il Tuo Business
+              Modernizziamo
               <br />
-              <span className="text-shimmer">Merita un Impero</span>
+              <span className="text-shimmer">Qualsiasi Business</span>
             </motion.h1>
 
             {/* Sub */}
-            <motion.p className="mt-6 text-base sm:text-lg text-foreground/45 max-w-[560px] leading-[1.8] font-light"
+            <motion.p className="mt-6 text-base sm:text-lg text-foreground/45 max-w-[600px] leading-[1.8] font-light"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.7 }}>
-              Ristorante, salone, studio medico, NCC o negozio — 
-              <span className="text-foreground/65 font-normal"> un ecosistema digitale completo con IA integrata. Zero commissioni predatorie.</span>
+              La piattaforma AI più completa al mondo. 
+              <span className="text-foreground/65 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie. Tutto in un unico ecosistema che si evolve ogni giorno.</span>
             </motion.p>
+
+            {/* Rotating industry badge */}
+            <motion.div className="mt-5 h-8 flex items-center gap-2"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+              <span className="text-[0.65rem] text-foreground/30 font-heading tracking-wider uppercase">Perfetto per</span>
+              <AnimatePresence mode="wait">
+                <motion.span key={activeIndustry}
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -10, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/[0.08] border border-primary/10 text-[0.7rem] font-heading font-semibold text-primary"
+                >
+                  <span>{industries[activeIndustry].emoji}</span>
+                  {industries[activeIndustry].title}
+                </motion.span>
+              </AnimatePresence>
+            </motion.div>
 
             {/* CTA */}
             <motion.div className="mt-9 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
               <motion.button
                 onClick={() => scrollTo("pricing")}
                 className="group relative w-full sm:w-auto px-8 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
-                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(263,70%,58%,0.35)" }}
+                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(217,91%,60%,0.25)" }}
                 whileTap={{ scale: 0.97 }}
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/15 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
@@ -331,7 +370,7 @@ const LandingPage = () => {
               </motion.button>
               <motion.button
                 onClick={() => navigate("/r/impero-roma")}
-                className="w-full sm:w-auto px-8 py-4 rounded-full border border-primary/15 text-foreground/70 text-sm font-semibold font-heading tracking-wide hover:border-primary/30 hover:text-foreground hover:bg-primary/[0.04] transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
+                className="w-full sm:w-auto px-8 py-4 rounded-full border border-foreground/10 text-foreground/70 text-sm font-semibold font-heading tracking-wide hover:border-primary/30 hover:text-foreground hover:bg-primary/[0.04] transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
                 whileHover={{ scale: 1.02 }}
               >
                 <Play className="w-4 h-4 text-primary" /> Vedi Demo Live
@@ -344,24 +383,11 @@ const LandingPage = () => {
               {metrics.map((m, i) => (
                 <motion.div key={i} className="counter-card rounded-2xl p-4 sm:p-5 text-center group hover:border-primary/15 transition-all"
                   whileHover={{ y: -2 }}>
-                  <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient">
+                  <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient animate-count-glow">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
                   <p className="text-[0.6rem] text-foreground/35 mt-1.5 tracking-[2px] uppercase font-heading">{m.label}</p>
                 </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Scrolling industry icons */}
-            <motion.div className="mt-10 flex items-center gap-3"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
-              {industries.map((ind, i) => (
-                <motion.span key={i} className="text-lg"
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{ duration: 2, delay: i * 0.15, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  {ind.emoji}
-                </motion.span>
               ))}
             </motion.div>
           </div>
@@ -379,7 +405,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y border-primary/[0.06] overflow-hidden bg-background/50 backdrop-blur-sm">
+      <div className="relative py-5 border-y border-border/30 overflow-hidden bg-background/50 backdrop-blur-sm">
         <div className="flex animate-marquee-scroll whitespace-nowrap">
           {[...Array(2)].map((_, repeat) => (
             <div key={repeat} className="flex items-center gap-12 px-6">
@@ -392,10 +418,12 @@ const LandingPage = () => {
                 { icon: <Cpu className="w-3 h-3" />, text: "AI-Powered" },
                 { icon: <MapPin className="w-3 h-3" />, text: "Made in Italy" },
                 { icon: <Fingerprint className="w-3 h-3" />, text: "White Label" },
-                { icon: <Globe className="w-3 h-3" />, text: "7 Industrie" },
+                { icon: <Globe className="w-3 h-3" />, text: "25+ Settori" },
+                { icon: <Timer className="w-3 h-3" />, text: "Attivo in 24h" },
+                { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali" },
               ].map((t, i) => (
                 <span key={i} className="text-[0.6rem] text-foreground/20 font-heading tracking-[3px] uppercase flex items-center gap-2">
-                  <span className="text-primary/25">{t.icon}</span>
+                  <span className="text-primary/30">{t.icon}</span>
                   {t.text}
                 </span>
               ))}
@@ -412,26 +440,22 @@ const LandingPage = () => {
           <SectionLabel text="Scopri Empire" icon={<Play className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            La Tecnologia che <span className="text-shimmer">Trasforma il Business</span>
+            Non Siamo un Software. <span className="text-shimmer">Siamo il Futuro.</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.7]"
+          <motion.p className="text-foreground/40 max-w-[520px] mx-auto text-sm leading-[1.7]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Dashboard IA, gestione flotta, menu digitali, CRM avanzato — tutto in un ecosistema white-label personalizzabile. Creiamo qualsiasi cosa tu possa immaginare.
+            Dashboard IA, gestione flotta, menu digitali, CRM avanzato, automazioni, fatturazione, analytics — tutto in un ecosistema white-label che si evolve ogni settimana.
           </motion.p>
         </div>
         <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
           initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
           transition={{ duration: 0.6 }}>
-          <div className="absolute -inset-8 bg-primary/[0.08] rounded-[60px] blur-[80px] pointer-events-none" />
-          <video
-            src={videoHero}
-            autoPlay muted loop playsInline
-            className="w-full aspect-video object-cover rounded-2xl"
-          />
+          <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
+          <video src={videoHero} autoPlay muted loop playsInline className="w-full aspect-video object-cover rounded-2xl" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
           <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
             <div className="px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-sm border border-primary/10">
-              <span className="text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase">Dashboard IA • CRM • Automazioni</span>
+              <span className="text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase">Dashboard IA • CRM • Automazioni • Fatturazione</span>
             </div>
           </div>
         </motion.div>
@@ -445,11 +469,11 @@ const LandingPage = () => {
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Una Piattaforma, <span className="text-shimmer">Ogni Settore</span>
+            Qualsiasi Settore. <span className="text-shimmer">Un Unico Sistema.</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[500px] mx-auto leading-[1.7] text-sm"
+          <motion.p className="text-foreground/40 max-w-[550px] mx-auto leading-[1.7] text-sm"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Empire si adatta automaticamente alla tua industria: terminologia, moduli e dashboard cambiano in base al settore.
+            Empire si adatta automaticamente alla tua industria. Terminologia, moduli, dashboard e flussi operativi cambiano in base al settore — senza configurazioni manuali.
           </motion.p>
         </div>
 
@@ -465,11 +489,12 @@ const LandingPage = () => {
                 onClick={() => navigate(demoPath)}
                 whileHover={{ y: -6 }}
               >
-                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-500`}>
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 group-hover:shadow-lg transition-all duration-500`}>
                   {ind.icon}
                 </div>
                 <h3 className="font-heading text-xs sm:text-sm font-bold text-foreground mb-1">{ind.title}</h3>
-                <p className="text-[0.6rem] sm:text-[0.65rem] text-foreground/35 leading-[1.5]">{ind.desc}</p>
+                <p className="text-[0.6rem] sm:text-[0.65rem] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
+                <p className="text-[0.5rem] text-primary/50 font-heading tracking-wider">{ind.modules}</p>
                 <motion.span className="mt-3 inline-flex items-center gap-1.5 text-[0.6rem] font-bold text-primary/60 group-hover:text-primary transition-colors"
                   whileHover={{ x: 3 }}>
                   Vedi Demo <ArrowRight className="w-3 h-3" />
@@ -478,44 +503,48 @@ const LandingPage = () => {
             );
           })}
           <motion.div
-            className="group relative p-5 sm:p-6 rounded-2xl border border-dashed border-primary/10 hover:border-primary/25 transition-all duration-500 text-center flex flex-col items-center justify-center cursor-pointer"
+            className="group relative p-5 sm:p-6 rounded-2xl border border-dashed border-foreground/10 hover:border-primary/25 transition-all duration-500 text-center flex flex-col items-center justify-center cursor-pointer"
             variants={fadeScale}
             onClick={() => scrollTo("contact")}
             whileHover={{ y: -4 }}
           >
-            <Sparkles className="w-6 h-6 text-primary/25 mb-2 group-hover:text-primary/60 transition-colors" />
-            <p className="text-xs font-heading font-semibold text-foreground/35 group-hover:text-foreground/60 transition-colors">Il tuo settore?</p>
-            <p className="text-[0.6rem] text-primary/40 mt-1">Contattaci →</p>
+            <Sparkles className="w-6 h-6 text-foreground/15 mb-2 group-hover:text-primary/60 transition-colors" />
+            <p className="text-xs font-heading font-semibold text-foreground/35 group-hover:text-foreground/60 transition-colors">+18 altri settori</p>
+            <p className="text-[0.6rem] text-primary/40 mt-1">Scopri tutti →</p>
           </motion.div>
         </motion.div>
       </Section>
 
       {/* ═══════════════════════════════════════════
-          VIDEO INDUSTRIES — Multi-Sector Showcase
+          VIDEO INDUSTRIES + WHY US
          ═══════════════════════════════════════════ */}
       <Section>
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="text-center lg:text-left order-2 lg:order-1">
-            <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
+            <SectionLabel text="Perché Empire" icon={<Crown className="w-3 h-3 text-accent" />} />
             <h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
-              Un Solo Sistema per <span className="text-shimmer">Ogni Realtà</span>
+              I Più Completi. <span className="text-shimmer">I Più Avanzati.</span>
             </h2>
             <p className="text-foreground/40 text-sm leading-[1.7] mb-6 max-w-md mx-auto lg:mx-0">
-              Dalla ristorazione gourmet al transfer di lusso, dal salone di bellezza allo studio medico. 
-              Empire si adatta automaticamente alla tua industria con moduli, terminologia e flussi dedicati.
+              Non siamo un gestionale generico. Siamo un ecosistema AI che modernizza, digitalizza e automatizza qualsiasi tipo di attività. Sempre in evoluzione, sempre un passo avanti.
             </p>
-            <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto lg:mx-0">
+            <div className="space-y-3 max-w-md mx-auto lg:mx-0">
               {[
-                { emoji: "🍽️", label: "Food & Ristorazione" },
-                { emoji: "🚗", label: "NCC & Transfer" },
-                { emoji: "💇", label: "Beauty & Wellness" },
-                { emoji: "🏋️", label: "Fitness & Sport" },
-              ].map((s, i) => (
-                <motion.div key={i} className="flex items-center gap-2 p-2.5 rounded-xl bg-primary/[0.04] border border-primary/[0.06]"
-                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-                  <span className="text-base">{s.emoji}</span>
-                  <span className="text-[0.6rem] font-heading font-semibold text-foreground/60">{s.label}</span>
+                { title: "25+ Settori Supportati", desc: "Ogni industria ha moduli dedicati che si attivano automaticamente" },
+                { title: "Aggiornamenti Settimanali", desc: "Nuove funzionalità ogni settimana senza costi aggiuntivi" },
+                { title: "IA Integrata Ovunque", desc: "Generazione catalogo, analytics predittivi, automazioni intelligenti" },
+                { title: "100% White Label", desc: "Il tuo brand, i tuoi colori, il tuo dominio. Zero marchi terzi" },
+              ].map((f, i) => (
+                <motion.div key={i} className="flex gap-3 items-start group"
+                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+                  <div className="w-5 h-5 min-w-[20px] rounded-full bg-primary/15 flex items-center justify-center mt-0.5">
+                    <Check className="w-3 h-3 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-xs sm:text-sm font-semibold text-foreground">{f.title}</p>
+                    <p className="text-[0.65rem] text-foreground/35 mt-0.5">{f.desc}</p>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -528,6 +557,31 @@ const LandingPage = () => {
             </div>
           </motion.div>
         </div>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
+          WHY EMPIRE — Grid
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-12">
+          <SectionLabel text="Vantaggi" icon={<Zap className="w-3 h-3 text-accent" />} />
+          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Perché Siamo <span className="text-shimmer">N°1 al Mondo</span>
+          </motion.h2>
+        </div>
+        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {whyUs.map((item, i) => (
+            <motion.div key={i} className="group p-6 rounded-2xl glow-card" variants={fadeUp} whileHover={{ y: -4 }}>
+              <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-500">
+                {item.icon}
+              </div>
+              <h3 className="font-heading text-sm font-bold text-foreground mb-2">{item.title}</h3>
+              <p className="text-xs text-foreground/40 leading-[1.7]">{item.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
       </Section>
 
       {/* ═══════════════════════════════════════════
@@ -545,9 +599,9 @@ const LandingPage = () => {
         <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {[
-            { icon: <Banknote className="w-6 h-6" />, amount: "30%", label: "Margini erosi dai marketplace", sub: "Commissioni predatorie su ogni transazione", gradient: "from-red-500 to-orange-500" },
-            { icon: <DollarSign className="w-6 h-6" />, amount: "€500+", label: "Canoni mensili software", sub: "5 abbonamenti separati per funzioni base", gradient: "from-amber-500 to-yellow-500" },
-            { icon: <Target className="w-6 h-6" />, amount: "0%", label: "Controllo sui dati clienti", sub: "I tuoi clienti appartengono alla piattaforma", gradient: "from-purple-500 to-pink-500" },
+            { icon: <Banknote className="w-6 h-6" />, amount: "30%", label: "Margini erosi dai marketplace", sub: "Commissioni predatorie su ogni singola transazione", gradient: "from-red-500 to-orange-500" },
+            { icon: <DollarSign className="w-6 h-6" />, amount: "€500+", label: "Canoni mensili software", sub: "5 abbonamenti separati per funzioni che Empire include gratis", gradient: "from-amber-500 to-yellow-500" },
+            { icon: <Target className="w-6 h-6" />, amount: "0%", label: "Controllo sui dati clienti", sub: "I tuoi clienti appartengono alla piattaforma, non a te", gradient: "from-rose-500 to-pink-500" },
           ].map((item, i) => (
             <motion.div key={i}
               className="group relative p-7 sm:p-8 rounded-2xl glow-card text-center"
@@ -564,7 +618,37 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          VIDEO FEATURES — Platform Capabilities
+          COMPARISON TABLE — Empire vs Others
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-10">
+          <SectionLabel text="Confronto" icon={<Activity className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Empire vs <span className="text-shimmer">Tutto il Resto</span>
+          </motion.h2>
+        </div>
+        <motion.div className="max-w-2xl mx-auto p-6 sm:p-8 rounded-2xl glow-card"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          {/* Header */}
+          <div className="grid grid-cols-3 pb-3 border-b border-border/50 mb-1">
+            <span className="text-[0.6rem] font-heading text-foreground/30 tracking-wider uppercase">Funzionalità</span>
+            <span className="text-center text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase">Empire.AI</span>
+            <span className="text-center text-[0.6rem] font-heading text-foreground/30 tracking-wider uppercase">Altri</span>
+          </div>
+          <CompRow label="Costo mensile" empire="€0/mese" others="€200-500/mese" />
+          <CompRow label="Commissioni" empire="Solo 2%" others="15-30%" />
+          <CompRow label="Settori supportati" empire="25+" others="1-3" />
+          <CompRow label="App White Label" empire="Inclusa" others="€extra/mese" />
+          <CompRow label="IA Integrata" empire="Completa" others="Base o assente" />
+          <CompRow label="Proprietà dati" empire="100% tuoi" others="Del provider" />
+          <CompRow label="Aggiornamenti" empire="Settimanali" others="Trimestrali" />
+          <CompRow label="Supporto" empire="7/7 dedicato" others="Email lenta" />
+        </motion.div>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
+          VIDEO FEATURES
          ═══════════════════════════════════════════ */}
       <Section>
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -577,16 +661,16 @@ const LandingPage = () => {
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="text-center lg:text-left">
-            <SectionLabel text="Perché Empire" icon={<Cpu className="w-3 h-3 text-primary" />} />
+            <SectionLabel text="Capacità" icon={<Cpu className="w-3 h-3 text-primary" />} />
             <h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
               Creiamo <span className="text-shimmer">Qualsiasi Cosa</span><br />Tu Possa Immaginare
             </h2>
             <div className="space-y-4 text-left max-w-md mx-auto lg:mx-0">
               {[
-                { title: "Gestione Telefonica Umana", desc: "Servizio reception e booking telefonico professionale dedicato alla tua attività" },
-                { title: "WhatsApp Business Automatizzato", desc: "Conferme, reminder, promozioni e assistenza clienti 24/7 via WhatsApp" },
+                { title: "Gestione Telefonica Umana", desc: "Servizio reception e booking telefonico professionale dedicato" },
+                { title: "WhatsApp Business Automatizzato", desc: "Conferme, reminder, promozioni e assistenza clienti 24/7" },
                 { title: "Intelligenza Artificiale Integrata", desc: "Catalogo generato in 60s, suggerimenti upselling, analytics predittivi" },
-                { title: "Qualsiasi Integrazione Custom", desc: "API esterne, POS, gestionali esistenti — integriamo tutto nel tuo ecosistema" },
+                { title: "Qualsiasi Integrazione Custom", desc: "API esterne, POS, gestionali esistenti — integriamo tutto" },
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-3 items-start group"
                   initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
@@ -613,6 +697,10 @@ const LandingPage = () => {
             Tutto Ciò Che Serve,<br className="hidden sm:block" />
             <span className="text-shimmer">in un Unico Posto</span>
           </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Ogni modulo è stato progettato per eliminare un problema specifico. Nessun software esterno, nessun costo aggiuntivo.
+          </motion.p>
         </div>
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
@@ -684,7 +772,7 @@ const LandingPage = () => {
               Ecosistema Completo,<br /><span className="text-shimmer">di Tua Proprietà</span>
             </h2>
             <p className="text-foreground/40 leading-[1.7] max-w-lg mx-auto lg:mx-0 mb-7 text-sm">
-              App cliente, pannello gestionale e vista operativa — tutto white-label con il tuo brand. Dal menu digitale alla gestione flotta.
+              App cliente, pannello gestionale e vista operativa — tutto white-label con il tuo brand. Dal menu digitale alla gestione flotta, dal CRM alla fatturazione.
             </p>
             <div className="space-y-4 mb-8 text-left max-w-md mx-auto lg:mx-0">
               {[
@@ -708,7 +796,7 @@ const LandingPage = () => {
             <motion.button
               onClick={() => navigate("/r/impero-roma")}
               className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-              whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(263,70%,58%,0.3)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(217,91%,60%,0.2)" }}
               whileTap={{ scale: 0.97 }}
             >
               Prova la Demo <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
@@ -718,7 +806,7 @@ const LandingPage = () => {
           <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="order-1 lg:order-2">
             <div className="flex justify-center items-end gap-2 sm:gap-4 relative">
-              <div className="absolute -inset-16 bg-primary/[0.06] rounded-[80px] blur-[100px] pointer-events-none" />
+              <div className="absolute -inset-16 bg-primary/[0.04] rounded-[80px] blur-[100px] pointer-events-none" />
               {[
                 { label: "Cliente", img: mockupCliente, delay: 0 },
                 { label: "Gestionale", img: mockupAdmin, delay: 0.1 },
@@ -735,15 +823,11 @@ const LandingPage = () => {
                     whileHover={{ y: isCenter ? -16 : -6, scale: 1.03 }}
                   >
                     <div className={`relative ${isCenter ? "w-[110px] sm:w-[160px]" : "w-[90px] sm:w-[130px]"} ${isCenter ? "h-[224px] sm:h-[326px]" : "h-[184px] sm:h-[265px]"} rounded-[18px] sm:rounded-[24px] border-[2px] border-foreground/15 bg-foreground/5 shadow-[0_20px_60px_hsla(0,0%,0%,0.5)] overflow-hidden`}>
-                      {/* Dynamic Island */}
                       <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[36px] h-[11px] sm:w-[50px] sm:h-[14px] bg-foreground rounded-full z-20" />
-                      {/* Screen */}
                       <div className="absolute inset-[2px] rounded-[16px] sm:rounded-[22px] overflow-hidden">
                         <img src={phone.img} alt={phone.label} className="w-full h-full object-cover object-top" loading="lazy" />
                       </div>
-                      {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none z-10" />
-                      {/* Home indicator */}
                       <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[3px] bg-foreground/25 rounded-full z-20" />
                     </div>
                     <p className="text-center text-[0.5rem] sm:text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/50 mt-2">{phone.label}</p>
@@ -783,7 +867,7 @@ const LandingPage = () => {
             </div>
           ))}
 
-          <div className="space-y-3.5 pt-6 border-t border-primary/[0.08]">
+          <div className="space-y-3.5 pt-6 border-t border-border/30">
             <div>
               <div className="flex justify-between text-xs mb-2">
                 <span className="text-foreground/35">Piattaforme terze (30%)</span>
@@ -806,7 +890,7 @@ const LandingPage = () => {
             </div>
           </div>
 
-          <div className="p-6 rounded-xl bg-gradient-to-br from-primary/[0.08] to-accent/[0.04] border border-primary/10 space-y-3">
+          <div className="p-6 rounded-xl bg-gradient-to-br from-primary/[0.06] to-accent/[0.03] border border-primary/10 space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-xs text-foreground/50 font-heading">Risparmi / mese</span>
               <span className="text-2xl font-heading font-bold text-primary">€{monthlySaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}</span>
@@ -824,18 +908,17 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          TESTIMONIALS — Carousel
+          TESTIMONIALS
          ═══════════════════════════════════════════ */}
       <Section id="testimonials">
         <div className="text-center mb-12">
-          <SectionLabel text="Storie di Successo" icon={<Star className="w-3 h-3 text-primary" />} />
+          <SectionLabel text="Storie di Successo" icon={<Star className="w-3 h-3 text-accent" />} />
           <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Risultati Reali, <span className="text-shimmer">Settori Diversi</span>
           </motion.h2>
         </div>
 
-        {/* Featured testimonial */}
         <div className="max-w-2xl mx-auto mb-8">
           <AnimatePresence mode="wait">
             <motion.div
@@ -847,7 +930,7 @@ const LandingPage = () => {
               className="p-8 sm:p-10 rounded-2xl glow-card text-center"
             >
               <div className="flex gap-0.5 justify-center mb-4">
-                {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-4 h-4 text-primary fill-primary" />)}
+                {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-4 h-4 text-accent fill-accent" />)}
               </div>
               <span className="text-4xl mb-4 block">{testimonials[activeTestimonial].emoji}</span>
               <blockquote className="text-base sm:text-lg text-foreground/60 leading-[1.7] mb-5 italic">
@@ -869,7 +952,6 @@ const LandingPage = () => {
           </AnimatePresence>
         </div>
 
-        {/* Dots */}
         <div className="flex justify-center gap-2">
           {testimonials.map((_, i) => (
             <button key={i} onClick={() => setActiveTestimonial(i)}
@@ -884,7 +966,7 @@ const LandingPage = () => {
          ═══════════════════════════════════════════ */}
       <Section id="pricing">
         <div className="text-center mb-12">
-          <SectionLabel text="Investimento" icon={<Gem className="w-3 h-3 text-primary" />} />
+          <SectionLabel text="Investimento" icon={<Gem className="w-3 h-3 text-accent" />} />
           <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Un Solo Pagamento,<br /><span className="text-shimmer">Valore Per Sempre</span>
@@ -898,7 +980,7 @@ const LandingPage = () => {
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {/* Main plan */}
-          <motion.div className="relative p-7 sm:p-9 rounded-2xl overflow-hidden border border-primary/20 bg-gradient-to-b from-primary/[0.08] to-background"
+          <motion.div className="relative p-7 sm:p-9 rounded-2xl overflow-hidden border border-primary/20 bg-gradient-to-b from-primary/[0.06] to-background"
             variants={fadeScale} whileHover={{ y: -4 }}>
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
             <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-vibrant-gradient text-[0.55rem] font-bold text-primary-foreground tracking-[2px] font-heading uppercase">Più Scelto</div>
@@ -910,12 +992,13 @@ const LandingPage = () => {
                 "Asset Digitale di Tua Proprietà",
                 "App White Label completa",
                 "AI Engine — catalogo in 60s",
-                "Moduli adattivi per settore",
+                "25+ settori con moduli dedicati",
                 "CRM, Loyalty & Push Notification",
                 "Analytics & Fatturazione",
                 "Review Shield™",
                 "Sicurezza AES-256 & GDPR",
-                "Assistenza dedicata a vita",
+                "Aggiornamenti settimanali inclusi",
+                "Assistenza dedicata 7/7 a vita",
                 "Zero canoni mensili per sempre",
               ].map((f, i) => (
                 <li key={i} className="flex items-center gap-3 text-xs sm:text-sm text-foreground/50">
@@ -928,7 +1011,7 @@ const LandingPage = () => {
             </ul>
             <motion.button onClick={() => navigate("/admin")}
               className="w-full py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase"
-              whileHover={{ scale: 1.02, boxShadow: "0 15px 50px hsla(263,70%,58%,0.35)" }}
+              whileHover={{ scale: 1.02, boxShadow: "0 15px 50px hsla(217,91%,60%,0.25)" }}
               whileTap={{ scale: 0.97 }}
             >
               Inizia il Tuo Impero
@@ -969,19 +1052,15 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          VIDEO PARTNER — Sales Pitch
+          VIDEO PARTNER
          ═══════════════════════════════════════════ */}
       <Section>
         <div className="text-center mb-8">
-          <SectionLabel text="Video Presentazione" icon={<Play className="w-3 h-3 text-primary" />} />
+          <SectionLabel text="Opportunità" icon={<Play className="w-3 h-3 text-accent" />} />
           <motion.h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Scopri l'Opportunità <span className="text-shimmer">Partner Empire</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[480px] mx-auto text-sm leading-[1.7]"
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Guarda come i nostri partner presentano Empire ai business owner — e chiudono vendite da €2.997 ogni giorno.
-          </motion.p>
         </div>
         <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
           initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
@@ -996,7 +1075,7 @@ const LandingPage = () => {
          ═══════════════════════════════════════════ */}
       <Section id="partner">
         <div className="text-center mb-12">
-          <SectionLabel text="Partner Program" icon={<Handshake className="w-3 h-3 text-primary" />} />
+          <SectionLabel text="Partner Program" icon={<Handshake className="w-3 h-3 text-accent" />} />
           <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Guadagna Vendendo <span className="text-shimmer">Empire</span>
@@ -1054,7 +1133,7 @@ const LandingPage = () => {
           <div className="space-y-3 text-sm">
             <div className="flex justify-between"><span className="text-foreground/35 text-xs">5× Commissioni</span><span className="font-bold text-foreground text-sm">€4.985</span></div>
             <div className="flex justify-between"><span className="text-foreground/35 text-xs">Bonus Elite (5+)</span><span className="font-bold text-foreground text-sm">€1.500</span></div>
-            <div className="flex justify-between pt-3 border-t border-primary/[0.06]">
+            <div className="flex justify-between pt-3 border-t border-border/30">
               <span className="font-semibold text-foreground text-sm">Totale mensile</span>
               <span className="text-2xl font-heading font-bold text-vibrant-gradient">€6.485</span>
             </div>
@@ -1065,7 +1144,7 @@ const LandingPage = () => {
           <motion.button
             onClick={() => navigate("/partner/register")}
             className="px-8 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(263,70%,58%,0.35)" }}
+            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(217,91%,60%,0.2)" }}
             whileTap={{ scale: 0.97 }}
           >
             Diventa Partner <ArrowRight className="w-4 h-4" />
@@ -1085,7 +1164,7 @@ const LandingPage = () => {
               Domande<br /><span className="text-shimmer">Frequenti</span>
             </h2>
             <p className="text-sm text-foreground/35 leading-[1.7] max-w-xs mx-auto lg:mx-0">
-              Tutto su Empire: settori, costi, sicurezza e partnership.
+              Tutto su Empire: settori, costi, sicurezza, capacità e partnership.
             </p>
           </motion.div>
 
@@ -1118,32 +1197,31 @@ const LandingPage = () => {
 
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
-        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.1] to-accent/[0.04] border border-primary/10 overflow-hidden">
-          <div className="absolute inset-0 aurora-mesh opacity-30" />
-          <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-[radial-gradient(circle_at_30%_30%,hsla(263,70%,58%,0.08)_0%,transparent_50%)] animate-blob-float-slow pointer-events-none" />
+        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.08] to-accent/[0.03] border border-primary/10 overflow-hidden">
+          <div className="absolute inset-0 aurora-mesh opacity-20" />
           <div className="relative z-10">
             <motion.div
               initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
             >
-              <Crown className="w-12 h-12 mx-auto text-primary mb-6 drop-shadow-[0_0_40px_hsla(263,70%,58%,0.3)]" />
+              <Crown className="w-12 h-12 mx-auto text-primary mb-6 drop-shadow-[0_0_40px_hsla(217,91%,60%,0.3)]" />
             </motion.div>
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
             </h2>
             <p className="text-sm text-foreground/35 max-w-md mx-auto mb-8">
-              Ristoranti, saloni, studi medici, NCC, negozi, palestre, hotel — i competitor si stanno digitalizzando. Non restare indietro.
+              25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando. Non restare indietro.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <motion.button onClick={() => navigate("/admin")}
                 className="w-full sm:w-auto px-9 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(263,70%,58%,0.35)" }}
+                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(217,91%,60%,0.25)" }}
                 whileTap={{ scale: 0.97 }}
               >
                 Sono un Imprenditore <ArrowRight className="w-4 h-4" />
               </motion.button>
               <motion.button onClick={() => navigate("/partner/register")}
-                className="w-full sm:w-auto px-9 py-4 rounded-full border border-primary/15 text-foreground/70 font-bold text-sm font-heading tracking-wide hover:border-primary/30 hover:text-foreground transition-all backdrop-blur-sm"
+                className="w-full sm:w-auto px-9 py-4 rounded-full border border-foreground/10 text-foreground/70 font-bold text-sm font-heading tracking-wide hover:border-primary/30 hover:text-foreground transition-all backdrop-blur-sm"
                 whileHover={{ scale: 1.02 }}
               >
                 Diventa Partner
@@ -1154,23 +1232,23 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer id="contact" className="border-t border-primary/[0.06] py-14 pb-8 px-5 sm:px-6">
+      <footer id="contact" className="border-t border-border/30 py-14 pb-8 px-5 sm:px-6">
         <div className="max-w-[1100px] mx-auto">
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-10 mb-12">
             <div className="col-span-2 sm:col-span-1">
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_15px_hsla(263,70%,58%,0.2)]">
+                <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_15px_hsla(217,91%,60%,0.15)]">
                   <Crown className="w-3.5 h-3.5 text-primary-foreground" />
                 </div>
                 <span className="font-heading font-bold text-foreground tracking-[0.12em] uppercase text-xs">Empire<span className="text-primary">.AI</span></span>
               </div>
               <p className="text-[0.65rem] text-foreground/30 leading-[1.7] max-w-[240px] mb-5">
-                La piattaforma AI multi-settore che trasforma qualsiasi attività in un impero digitale di proprietà.
+                La piattaforma AI più completa al mondo. Modernizziamo qualsiasi business con tecnologia proprietaria e automazione intelligente.
               </p>
               <div className="flex gap-2">
                 {["In", "𝕏", "IG"].map((s, i) => (
                   <motion.div key={i}
-                    className="w-8 h-8 rounded-lg border border-primary/[0.08] flex items-center justify-center text-[0.6rem] text-foreground/30 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all cursor-pointer"
+                    className="w-8 h-8 rounded-lg border border-foreground/[0.06] flex items-center justify-center text-[0.6rem] text-foreground/30 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all cursor-pointer"
                     whileHover={{ scale: 1.1 }}
                   >
                     {s}
@@ -1187,6 +1265,7 @@ const LandingPage = () => {
                 <p>Beauty & Wellness</p>
                 <p>Healthcare</p>
                 <p>Retail, Fitness, Hospitality</p>
+                <p>+18 altri settori</p>
               </div>
             </div>
 
@@ -1215,8 +1294,8 @@ const LandingPage = () => {
             </div>
           </div>
 
-          <div className="border-t border-primary/[0.06] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[0.6rem] text-foreground/20">
-            <p>© 2026 Empire AI · Piattaforma Multi-Settore</p>
+          <div className="border-t border-border/30 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[0.6rem] text-foreground/20">
+            <p>© 2026 Empire AI · Piattaforma Multi-Settore · Sempre in Evoluzione</p>
             <div className="flex gap-5">
               <a href="/privacy" className="hover:text-foreground/40 transition-colors">Privacy</a>
               <a href="/cookie-policy" className="hover:text-foreground/40 transition-colors">Cookie</a>
@@ -1227,7 +1306,7 @@ const LandingPage = () => {
       </footer>
 
       {/* ═══════ STICKY CTA MOBILE ═══════ */}
-      <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] bg-background/80 backdrop-blur-2xl border-t border-primary/[0.06] md:hidden"
+      <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] bg-background/80 backdrop-blur-2xl border-t border-border/20 md:hidden"
         initial={{ y: 100 }} animate={{ y: 0 }} transition={{ delay: 2, type: "spring", damping: 25 }}>
         <div className="flex gap-2">
           <motion.button onClick={() => scrollTo("pricing")}
