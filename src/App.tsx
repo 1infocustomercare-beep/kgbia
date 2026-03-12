@@ -39,6 +39,10 @@ const SettingsPage = lazy(() => import("./pages/app/SettingsPage"));
 const NCCFleetPage = lazy(() => import("./pages/app/NCCFleetPage"));
 const NCCRoutesPage = lazy(() => import("./pages/app/NCCRoutesPage"));
 const NCCBookingsPage = lazy(() => import("./pages/app/NCCBookingsPage"));
+const NCCDriversPage = lazy(() => import("./pages/app/NCCDriversPage"));
+const NCCPricingPage = lazy(() => import("./pages/app/NCCPricingPage"));
+const NCCCrossSellingPage = lazy(() => import("./pages/app/NCCCrossSellingPage"));
+const NCCSettingsPage = lazy(() => import("./pages/app/NCCSettingsPage"));
 const MenuPage = lazy(() => import("./pages/app/MenuPage"));
 const OrdersPage = lazy(() => import("./pages/app/OrdersPage"));
 const InventoryPage = lazy(() => import("./pages/app/InventoryPage"));
@@ -154,6 +158,9 @@ const App = () => (
                   <Route path="fleet" element={<NCCFleetPage />} />
                   <Route path="routes" element={<NCCRoutesPage />} />
                   <Route path="bookings" element={<NCCBookingsPage />} />
+                  <Route path="drivers" element={<NCCDriversPage />} />
+                  <Route path="pricing" element={<NCCPricingPage />} />
+                  <Route path="cross-selling" element={<NCCCrossSellingPage />} />
                   {/* Multi-sector modules */}
                   <Route path="appointments" element={<AppointmentsPage />} />
                   <Route path="clients" element={<ClientsCRMPage />} />
