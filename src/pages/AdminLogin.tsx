@@ -36,10 +36,15 @@ const AdminLogin = () => {
     if (authLoading || !user) return;
     if (roles.includes("super_admin")) {
       navigate("/superadmin", { replace: true });
-    } else if (roles.includes("partner") || roles.includes("team_leader")) {
-      navigate("/partner", { replace: true });
     } else if (roles.includes("staff")) {
       navigate("/staff", { replace: true });
+    } else if ((roles.includes("partner") || roles.includes("team_leader")) && !roles.includes("restaurant_admin")) {
+      // Pure partner/team_leader users → partner dashboard
+      navigate("/partner", { replace: true });
+    } else if (roles.includes("restaurant_admin")) {
+      navigate("/app", { replace: true });
+    } else if (roles.includes("partner") || roles.includes("team_leader")) {
+      navigate("/partner", { replace: true });
     } else {
       navigate("/app", { replace: true });
     }
