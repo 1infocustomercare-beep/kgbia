@@ -59,6 +59,10 @@ const NCCBeachBookingsPage = lazy(() => import("./pages/app/NCCBeachBookingsPage
 const TeamPage = lazy(() => import("./pages/app/TeamPage"));
 const AutomationsPage = lazy(() => import("./pages/app/AutomationsPage"));
 
+// Demo pages
+const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
+const DemoDirectoryPage = lazy(() => import("./pages/demo/DemoDirectoryPage"));
+
 const queryClient = new QueryClient();
 
 const PageLoader = () => (
