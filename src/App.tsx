@@ -55,7 +55,9 @@ const AppointmentsPage = lazy(() => import("./pages/app/AppointmentsPage"));
 const ClientsCRMPage = lazy(() => import("./pages/app/ClientsCRMPage"));
 const InterventionsPage = lazy(() => import("./pages/app/InterventionsPage"));
 const BeachMapPage = lazy(() => import("./pages/app/BeachMapPage"));
+const NCCBeachBookingsPage = lazy(() => import("./pages/app/NCCBeachBookingsPage"));
 const TeamPage = lazy(() => import("./pages/app/TeamPage"));
+const AutomationsPage = lazy(() => import("./pages/app/AutomationsPage"));
 
 const queryClient = new QueryClient();
 
@@ -143,7 +145,9 @@ const App = () => (
                   <Route path="clients" element={<ClientsCRMPage />} />
                   <Route path="interventions" element={<InterventionsPage />} />
                   <Route path="beach-map" element={<BeachMapPage />} />
+                  <Route path="beach-bookings" element={<NCCBeachBookingsPage />} />
                   <Route path="team" element={<TeamPage />} />
+                  <Route path="automations" element={<AutomationsPage />} />
                   {/* Common modules */}
                   <Route path="leads" element={<LeadsPage />} />
                   <Route path="staff" element={<StaffPage />} />

@@ -2621,6 +2621,62 @@ export type Database = {
           },
         ]
       }
+      shootings: {
+        Row: {
+          client_name: string
+          client_phone: string | null
+          company_id: string
+          created_at: string | null
+          duration_hours: number | null
+          gallery_link: string | null
+          id: string
+          location: string | null
+          notes: string | null
+          price: number | null
+          shoot_date: string | null
+          shooting_type: string | null
+          status: string | null
+        }
+        Insert: {
+          client_name: string
+          client_phone?: string | null
+          company_id: string
+          created_at?: string | null
+          duration_hours?: number | null
+          gallery_link?: string | null
+          id?: string
+          location?: string | null
+          notes?: string | null
+          price?: number | null
+          shoot_date?: string | null
+          shooting_type?: string | null
+          status?: string | null
+        }
+        Update: {
+          client_name?: string
+          client_phone?: string | null
+          company_id?: string
+          created_at?: string | null
+          duration_hours?: number | null
+          gallery_link?: string | null
+          id?: string
+          location?: string | null
+          notes?: string | null
+          price?: number | null
+          shoot_date?: string | null
+          shooting_type?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shootings_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       social_posts: {
         Row: {
           company_id: string
