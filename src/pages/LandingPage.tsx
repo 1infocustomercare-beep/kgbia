@@ -56,17 +56,21 @@ const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode
 );
 Section.displayName = "Section";
 
-const SectionLabel = ({ text, icon }: { text: string; icon?: React.ReactNode }) => (
-  <motion.div
-    className="inline-flex items-center gap-2.5 mb-5"
-    initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-  >
-    <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm">
-      {icon || <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-dot" />}
-      <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/80">{text}</span>
-    </div>
-  </motion.div>
+const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.ReactNode }>(
+  ({ text, icon }, ref) => (
+    <motion.div
+      ref={ref}
+      className="inline-flex items-center gap-2.5 mb-5"
+      initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+    >
+      <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm">
+        {icon || <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-dot" />}
+        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/80">{text}</span>
+      </div>
+    </motion.div>
+  )
 );
+SectionLabel.displayName = "SectionLabel";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 const fadeUp = { hidden: { opacity: 0, y: 35 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: smoothEase } } };
