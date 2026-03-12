@@ -325,10 +325,13 @@ const LandingPage = () => {
           <SectionLabel text="L'Arsenale" />
           <motion.h2 className="text-[clamp(1.8rem,4vw,3rem)] font-heading font-bold text-foreground leading-[1.1] mb-4"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Tutto Ciò Che Serve al Tuo<br className="hidden sm:block" />
-            <span className="text-vibrant-gradient">Impero Digitale</span>
+            30+ Moduli in un'Unica<br className="hidden sm:block" />
+            <span className="text-vibrant-gradient">Piattaforma Intelligente</span>
           </motion.h2>
-        </div>
+          <motion.p className="text-foreground/45 max-w-[550px] mx-auto leading-[1.7] text-sm"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Dalla gestione ordini al payroll, dal CRM alla fatturazione elettronica. Ogni modulo si adatta automaticamente al tuo settore.
+          </motion.p>
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
