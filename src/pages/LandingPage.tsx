@@ -754,7 +754,7 @@ const LandingPage = () => {
               Pronto a Dominare il <span className="text-vibrant-gradient">Digitale?</span>
             </h2>
             <p className="text-sm text-foreground/40 max-w-md mx-auto mb-8">
-              I tuoi competitor stanno costruendo il loro impero digitale. Inizia il tuo oggi.
+              Ristoranti, saloni, NCC, cliniche, negozi, palestre e hotel — stanno tutti digitalizzando. Tu cosa aspetti?
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button onClick={() => navigate("/admin")}
