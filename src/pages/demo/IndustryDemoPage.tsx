@@ -314,7 +314,27 @@ export default function IndustryDemoPage() {
     address: "Indirizzo", passengers: "Passeggeri", notes: "Note aggiuntive",
   };
 
-  return (
+  // If NCC industry and we have company data, render the premium NCCPublicSite
+  if (resolvedIndustry === "ncc" && company) {
+    return <NCCPublicSite company={company} />;
+  }
+  // For NCC without DB company, create a fake company object for the premium site
+  if (resolvedIndustry === "ncc" && !company) {
+    const fakeNccCompany = {
+      id: "demo-ncc",
+      name: demoData.companyName,
+      slug: slug || "royal-transfer-roma",
+      industry: "ncc",
+      tagline: demoData.tagline,
+      primary_color: "#D4A017",
+      address: demoData.address,
+      city: demoData.city,
+      phone: demoData.phone,
+      email: demoData.email,
+    };
+    return <NCCPublicSite company={fakeNccCompany} />;
+  }
+
     <div className="min-h-screen text-white overflow-x-hidden" style={{ background: `linear-gradient(180deg, ${theme.bgFrom} 0%, ${theme.bgTo} 100%)` }}>
 
       {/* ═══════ NAVBAR ═══════ */}
