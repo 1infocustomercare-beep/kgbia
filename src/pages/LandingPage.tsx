@@ -86,7 +86,7 @@ const popIn = { hidden: { opacity: 0, scale: 0.88 }, visible: { opacity: 1, scal
 const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => (
   <motion.div
     className="absolute rounded-full"
-    style={{ width: size, height: size, left: x, top: y, background: "hsl(265, 85%, 65%)" }}
+    style={{ width: size, height: size, left: x, top: y, background: "hsl(42, 80%, 55%)" }}
     animate={{ y: [0, -25, 0], opacity: [0.1, 0.45, 0.1], scale: [1, 1.3, 1] }}
     transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
   />
@@ -99,7 +99,7 @@ const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <motion.div
         className="w-2 h-2 rounded-full bg-primary"
-        style={{ boxShadow: "0 0 12px hsla(265, 85%, 65%, 0.6), 0 0 30px hsla(265, 85%, 65%, 0.3)" }}
+        style={{ boxShadow: "0 0 12px hsla(42, 80%, 55%, 0.6), 0 0 30px hsla(217, 85%, 58%, 0.3)" }}
         animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
         transition={{ duration: 2, repeat: Infinity }}
       />
@@ -238,7 +238,7 @@ const LandingPage = () => {
         <div className="absolute w-[700px] h-[700px] rounded-full blur-[250px] opacity-[0.06] bg-primary -top-[200px] left-1/4 animate-float-glow" />
         <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] bg-accent top-[50vh] -right-[100px] animate-float-glow-slow" />
         <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.035] top-[80vh] left-[10%] animate-float-glow-delay"
-          style={{ background: "hsl(320, 75%, 55%)" }} />
+          style={{ background: "hsl(42, 75%, 50%)" }} />
         {/* Cyan tech orb */}
         <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.03] top-[120vh] right-[20%]"
           style={{ background: "hsl(200, 90%, 55%)" }} />
@@ -348,12 +348,12 @@ const LandingPage = () => {
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute bottom-0 left-0 right-0 h-[70vh] origin-bottom animate-grid-warp"
             style={{
-              backgroundImage: `linear-gradient(hsla(265, 85%, 65%, 0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 85%, 65%, 0.08) 1px, transparent 1px)`,
+              backgroundImage: `linear-gradient(hsla(217, 85%, 58%, 0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(217, 85%, 58%, 0.08) 1px, transparent 1px)`,
               backgroundSize: "40px 40px",
             }}
           />
-          <div className="absolute bottom-[35vh] left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265, 85%, 65%, 0.3) 50%, transparent 90%)" }} />
-          <div className="absolute bottom-[34vh] left-0 right-0 h-20 blur-[40px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265, 85%, 65%, 0.5) 30%, hsla(280, 80%, 60%, 0.4) 50%, hsla(320, 75%, 55%, 0.3) 70%, transparent 90%)" }} />
+          <div className="absolute bottom-[35vh] left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(217, 85%, 58%, 0.3) 50%, transparent 90%)" }} />
+          <div className="absolute bottom-[34vh] left-0 right-0 h-20 blur-[40px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(217, 85%, 58%, 0.5) 30%, hsla(42, 80%, 55%, 0.4) 50%, hsla(200, 80%, 55%, 0.3) 70%, transparent 90%)" }} />
         </div>
 
         {/* ═══ LAYER 2: Hexagonal overlay ═══ */}
@@ -362,7 +362,7 @@ const LandingPage = () => {
         {/* ═══ LAYER 3: Plasma energy field ═══ */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <div className="w-[400px] h-[400px] sm:w-[650px] sm:h-[650px] animate-plasma opacity-20 blur-[100px] animate-morph"
-            style={{ background: "conic-gradient(from 0deg, hsl(265, 85%, 60%), hsl(200, 90%, 55%), hsl(320, 75%, 55%), hsl(50, 80%, 55%), hsl(265, 85%, 60%))" }} />
+            style={{ background: "conic-gradient(from 0deg, hsl(217, 85%, 55%), hsl(200, 90%, 55%), hsl(42, 80%, 55%), hsl(200, 80%, 60%), hsl(217, 85%, 55%))" }} />
         </div>
 
         {/* ═══ LAYER 4: Energy rings (alien portal) ═══ */}
@@ -378,11 +378,11 @@ const LandingPage = () => {
         <div className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden sm:block">
           <div className="relative w-0 h-0">
             {[
-              { radius: "160px", speed: "8s", color: "hsl(265, 85%, 65%)", size: 7 },
+              { radius: "160px", speed: "8s", color: "hsl(217, 85%, 58%)", size: 7 },
               { radius: "220px", speed: "12s", color: "hsl(200, 90%, 60%)", size: 5 },
-              { radius: "280px", speed: "18s", color: "hsl(320, 75%, 55%)", size: 4 },
-              { radius: "130px", speed: "6s", color: "hsl(50, 80%, 55%)", size: 6 },
-              { radius: "320px", speed: "22s", color: "hsl(280, 80%, 60%)", size: 3 },
+              { radius: "280px", speed: "18s", color: "hsl(42, 80%, 55%)", size: 4 },
+              { radius: "130px", speed: "6s", color: "hsl(42, 75%, 50%)", size: 6 },
+              { radius: "320px", speed: "22s", color: "hsl(200, 80%, 55%)", size: 3 },
             ].map((dot, i) => (
               <div key={i} className="absolute animate-orbit-dot" style={{ "--orbit-radius": dot.radius, "--orbit-speed": dot.speed, animationDirection: i % 2 === 0 ? "normal" : "reverse" } as React.CSSProperties}>
                 <div className="rounded-full" style={{ width: dot.size, height: dot.size, background: dot.color, boxShadow: `0 0 ${dot.size * 3}px ${dot.color}, 0 0 ${dot.size * 6}px ${dot.color}40` }} />
@@ -404,16 +404,16 @@ const LandingPage = () => {
           <div className="absolute top-[20%] left-[15%] w-[200px] h-[1px] animate-electric origin-left rotate-[30deg]"
             style={{ background: "linear-gradient(90deg, hsla(200, 90%, 60%, 0.6), transparent)" }} />
           <div className="absolute top-[25%] right-[10%] w-[180px] h-[1px] animate-electric origin-right rotate-[-25deg]"
-            style={{ background: "linear-gradient(270deg, hsla(320, 75%, 55%, 0.5), transparent)", animationDelay: "1.5s" }} />
+            style={{ background: "linear-gradient(270deg, hsla(42, 80%, 55%, 0.5), transparent)", animationDelay: "1.5s" }} />
           <div className="absolute bottom-[30%] left-[20%] w-[150px] h-[1px] animate-electric origin-left rotate-[-15deg]"
-            style={{ background: "linear-gradient(90deg, hsla(265, 85%, 65%, 0.5), transparent)", animationDelay: "0.7s" }} />
+            style={{ background: "linear-gradient(90deg, hsla(217, 85%, 58%, 0.5), transparent)", animationDelay: "0.7s" }} />
         </div>
 
         {/* ═══ LAYER 8: Prismatic crown aura (central) ═══ */}
         <div className="absolute top-[28%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <motion.div
             className="w-20 h-20 sm:w-28 sm:h-28 rounded-full animate-crown-aura flex items-center justify-center"
-            style={{ background: "radial-gradient(circle, hsla(265, 85%, 65%, 0.12) 0%, transparent 70%)" }}
+            style={{ background: "radial-gradient(circle, hsla(42, 80%, 55%, 0.12) 0%, transparent 70%)" }}
             animate={{ scale: [1, 1.05, 1], rotate: [0, 360] }}
             transition={{ scale: { duration: 3, repeat: Infinity }, rotate: { duration: 20, repeat: Infinity, ease: "linear" } }}
           >
@@ -422,7 +422,7 @@ const LandingPage = () => {
               transition={{ rotateY: { duration: 6, repeat: Infinity, ease: "linear" }, rotateX: { duration: 4, repeat: Infinity } }}
               style={{ transformStyle: "preserve-3d" }}
             >
-              <Crown className="w-8 h-8 sm:w-12 sm:h-12 text-primary drop-shadow-[0_0_20px_hsla(265,85%,65%,0.6)]" />
+              <Crown className="w-8 h-8 sm:w-12 sm:h-12 text-accent drop-shadow-[0_0_20px_hsla(42,80%,55%,0.6)]" />
             </motion.div>
           </motion.div>
         </div>
@@ -435,7 +435,7 @@ const LandingPage = () => {
           {/* Sweeping holographic light band */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute inset-x-0 h-[200px] animate-holo-sweep"
-              style={{ background: "linear-gradient(180deg, transparent, hsla(265, 85%, 65%, 0.08), hsla(200, 90%, 60%, 0.06), transparent)" }} />
+              style={{ background: "linear-gradient(180deg, transparent, hsla(217, 85%, 58%, 0.08), hsla(42, 80%, 55%, 0.06), transparent)" }} />
           </div>
           
           {/* Glowing intersection nodes */}
@@ -449,19 +449,19 @@ const LandingPage = () => {
               style={{
                 left: node.x, top: node.y, animationDelay: `${node.delay}s`,
                 width: 4, height: 4, borderRadius: "50%",
-                background: i % 3 === 0 ? "hsl(265, 85%, 65%)" : i % 3 === 1 ? "hsl(200, 90%, 60%)" : "hsl(320, 75%, 55%)",
-                boxShadow: `0 0 12px ${i % 3 === 0 ? "hsla(265,85%,65%,0.6)" : i % 3 === 1 ? "hsla(200,90%,60%,0.6)" : "hsla(320,75%,55%,0.5)"}`,
-              }}
+                 background: i % 3 === 0 ? "hsl(217, 85%, 58%)" : i % 3 === 1 ? "hsl(200, 90%, 60%)" : "hsl(42, 80%, 55%)",
+                 boxShadow: `0 0 12px ${i % 3 === 0 ? "hsla(217,85%,58%,0.6)" : i % 3 === 1 ? "hsla(200,90%,60%,0.6)" : "hsla(42,80%,55%,0.5)"}`,
+               }}
             />
           ))}
           
           {/* Corner accent lines */}
-          <div className="absolute top-0 left-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,85%,65%,0.4), transparent)" }} />
-          <div className="absolute top-0 left-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(265,85%,65%,0.4), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(200,90%,60%,0.4), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(200,90%,60%,0.4), transparent)" }} />
-          <div className="absolute bottom-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(320,75%,55%,0.3), transparent)" }} />
-          <div className="absolute bottom-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(320,75%,55%,0.3), transparent)" }} />
+           <div className="absolute top-0 left-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(217,85%,58%,0.4), transparent)" }} />
+           <div className="absolute top-0 left-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(217,85%,58%,0.4), transparent)" }} />
+           <div className="absolute top-0 right-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(200,90%,60%,0.4), transparent)" }} />
+           <div className="absolute top-0 right-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(200,90%,60%,0.4), transparent)" }} />
+           <div className="absolute bottom-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(42,80%,55%,0.3), transparent)" }} />
+           <div className="absolute bottom-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(42,80%,55%,0.3), transparent)" }} />
         </div>
 
         {/* ═══ LAYER 9: Data Rain Columns ═══ */}
@@ -471,7 +471,7 @@ const LandingPage = () => {
               style={{
                 left: `${8 + i * 8}%`,
                 height: "120px",
-                background: `linear-gradient(180deg, transparent, ${i % 3 === 0 ? "hsla(200,90%,60%,0.6)" : i % 2 === 0 ? "hsla(265,85%,65%,0.5)" : "hsla(320,75%,55%,0.4)"}, transparent)`,
+                background: `linear-gradient(180deg, transparent, ${i % 3 === 0 ? "hsla(200,90%,60%,0.6)" : i % 2 === 0 ? "hsla(217,85%,58%,0.5)" : "hsla(42,80%,55%,0.4)"}, transparent)`,
                 "--rain-speed": `${4 + i * 1.2}s`,
                 "--rain-delay": `${i * 0.4}s`,
               } as React.CSSProperties}
@@ -586,7 +586,7 @@ const LandingPage = () => {
                       initial={{ opacity: 0, y: 40, rotateX: -90 }}
                       animate={{ opacity: 1, y: 0, rotateX: 0 }}
                       transition={{ delay: 0.2 + i * 0.04, duration: 0.5, ease: smoothEase }}
-                      style={{ textShadow: "0 0 40px hsla(265, 85%, 65%, 0.15)" }}
+                      style={{ textShadow: "0 0 40px hsla(217, 85%, 58%, 0.15)" }}
                     >{ch}</motion.span>
                   ))}
                 </span>
@@ -1102,7 +1102,7 @@ const LandingPage = () => {
               className="absolute w-1.5 h-1.5 rounded-full bg-primary z-20"
               style={{
                 left: "50%", top: "50%",
-                boxShadow: "0 0 8px hsla(265,85%,65%,0.8)",
+                boxShadow: "0 0 8px hsla(217,85%,58%,0.8)",
               }}
               animate={{
                 x: [0, (Math.cos(i * Math.PI / 3) * 150)],

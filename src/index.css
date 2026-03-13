@@ -6,49 +6,49 @@
 
 @layer base {
   :root {
-    --background: 260 20% 3.5%;
+    --background: 225 25% 3.5%;
     --foreground: 220 30% 96%;
 
-    --card: 260 18% 6%;
+    --card: 225 22% 6%;
     --card-foreground: 220 30% 96%;
 
-    --popover: 260 18% 6%;
+    --popover: 225 22% 6%;
     --popover-foreground: 220 30% 96%;
 
-    --primary: 265 85% 65%;
+    --primary: 217 85% 58%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 260 15% 10%;
+    --secondary: 225 18% 10%;
     --secondary-foreground: 220 25% 85%;
 
-    --muted: 260 12% 8%;
-    --muted-foreground: 250 12% 50%;
+    --muted: 225 15% 8%;
+    --muted-foreground: 220 12% 50%;
 
-    --accent: 280 80% 60%;
+    --accent: 42 80% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 220 30% 98%;
 
-    --border: 260 15% 12%;
-    --input: 260 15% 12%;
-    --ring: 265 85% 65%;
+    --border: 225 18% 12%;
+    --input: 225 18% 12%;
+    --ring: 217 85% 58%;
 
     --radius: 0.75rem;
 
-    --glass: 260 18% 6% / 0.65;
+    --glass: 225 22% 6% / 0.65;
     --glass-border: 220 30% 96% / 0.08;
     --glass-shine: 220 30% 96% / 0.04;
-    --gold-glow: 280 80% 60% / 0.3;
+    --gold-glow: 42 80% 55% / 0.3;
 
-    --sidebar-background: 260 18% 4%;
+    --sidebar-background: 225 22% 4%;
     --sidebar-foreground: 220 25% 85%;
-    --sidebar-primary: 265 85% 65%;
+    --sidebar-primary: 217 85% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 260 15% 10%;
+    --sidebar-accent: 225 18% 10%;
     --sidebar-accent-foreground: 220 25% 85%;
-    --sidebar-border: 260 15% 12%;
-    --sidebar-ring: 265 85% 65%;
+    --sidebar-border: 225 18% 12%;
+    --sidebar-ring: 217 85% 58%;
   }
 }
 
@@ -84,11 +84,11 @@
   }
 
   .gold-glow {
-    box-shadow: 0 0 30px hsla(265, 85%, 65%, 0.3), 0 0 60px hsla(280, 80%, 60%, 0.1);
+    box-shadow: 0 0 30px hsla(217, 85%, 58%, 0.3), 0 0 60px hsla(42, 80%, 55%, 0.1);
   }
 
   .text-gold-gradient {
-    background: linear-gradient(135deg, hsl(265, 85%, 70%), hsl(280, 80%, 60%), hsl(320, 80%, 55%));
+    background: linear-gradient(135deg, hsl(217, 85%, 65%), hsl(42, 80%, 55%), hsl(42, 70%, 45%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -148,18 +148,18 @@
   }
 
   .luxury-border {
-    border: 1px solid hsla(265, 60%, 50%, 0.15);
+    border: 1px solid hsla(217, 70%, 50%, 0.15);
   }
 
   .luxury-card {
-    background: hsla(260, 18%, 7%, 0.7);
+    background: hsla(225, 22%, 7%, 0.7);
     backdrop-filter: blur(24px) saturate(1.3);
     border: 1px solid hsla(210, 40%, 97%, 0.06);
   }
 
   .luxury-card:hover {
-    border-color: hsla(265, 85%, 65%, 0.2);
-    box-shadow: 0 20px 60px hsla(0, 0%, 0%, 0.4), 0 0 40px hsla(265, 85%, 65%, 0.08);
+    border-color: hsla(217, 85%, 58%, 0.2);
+    box-shadow: 0 20px 60px hsla(0, 0%, 0%, 0.4), 0 0 40px hsla(217, 85%, 58%, 0.08);
   }
 
   .text-brand-gradient {
@@ -170,35 +170,35 @@
   }
 
   .text-vibrant-gradient {
-    background: linear-gradient(135deg, hsl(265, 85%, 70%), hsl(290, 80%, 60%), hsl(320, 75%, 55%));
+    background: linear-gradient(135deg, hsl(217, 85%, 65%), hsl(42, 80%, 55%), hsl(42, 70%, 45%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .bg-vibrant-gradient {
-    background: linear-gradient(135deg, hsl(265, 85%, 55%), hsl(280, 75%, 50%), hsl(320, 70%, 50%));
+    background: linear-gradient(135deg, hsl(217, 85%, 50%), hsl(200, 80%, 48%), hsl(42, 75%, 50%));
   }
 
   .vibrant-glow {
-    box-shadow: 0 0 60px hsla(265, 85%, 65%, 0.3), 0 0 120px hsla(280, 80%, 60%, 0.15);
+    box-shadow: 0 0 60px hsla(217, 85%, 58%, 0.3), 0 0 120px hsla(42, 80%, 55%, 0.15);
   }
 
   /* ═══ FUTURISTIC GRID ═══ */
   .cyber-grid {
     background-image:
-      linear-gradient(hsla(265, 85%, 65%, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, hsla(265, 85%, 65%, 0.04) 1px, transparent 1px);
+      linear-gradient(hsla(217, 85%, 58%, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(217, 85%, 58%, 0.04) 1px, transparent 1px);
     background-size: 80px 80px;
   }
 
   /* ═══ PREMIUM HOLOGRAPHIC GRID ═══ */
   .premium-holo-grid {
     background-image:
-      linear-gradient(hsla(265, 85%, 65%, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, hsla(265, 85%, 65%, 0.06) 1px, transparent 1px),
+      linear-gradient(hsla(217, 85%, 58%, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(217, 85%, 58%, 0.06) 1px, transparent 1px),
       linear-gradient(45deg, hsla(200, 90%, 60%, 0.03) 1px, transparent 1px),
-      linear-gradient(-45deg, hsla(320, 75%, 55%, 0.03) 1px, transparent 1px);
+      linear-gradient(-45deg, hsla(42, 80%, 55%, 0.03) 1px, transparent 1px);
     background-size: 60px 60px, 60px 60px, 90px 90px, 90px 90px;
   }
 
@@ -294,7 +294,7 @@
 
   /* ═══ COUNTER CARD ═══ */
   .counter-card {
-    background: hsla(260, 18%, 8%, 0.6);
+    background: hsla(225, 22%, 8%, 0.6);
     backdrop-filter: blur(20px);
     border: 1px solid hsla(210, 40%, 97%, 0.06);
     position: relative;
@@ -305,18 +305,18 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, hsla(265, 85%, 65%, 0.04) 0%, transparent 50%);
+    background: linear-gradient(135deg, hsla(217, 85%, 58%, 0.04) 0%, transparent 50%);
     pointer-events: none;
   }
 
   /* ═══ NEON TEXT ═══ */
   .neon-text {
-    text-shadow: 0 0 20px hsla(265, 85%, 65%, 0.4), 0 0 60px hsla(280, 80%, 60%, 0.15);
+    text-shadow: 0 0 20px hsla(217, 85%, 58%, 0.4), 0 0 60px hsla(42, 80%, 55%, 0.15);
   }
 
   /* ═══ FUTURISTIC CARD ═══ */
   .future-card {
-    background: linear-gradient(135deg, hsla(260, 18%, 9%, 0.8), hsla(260, 18%, 5%, 0.9));
+    background: linear-gradient(135deg, hsla(225, 22%, 9%, 0.8), hsla(225, 22%, 5%, 0.9));
     backdrop-filter: blur(20px) saturate(1.3);
     border: 1px solid hsla(210, 40%, 97%, 0.05);
     position: relative;
@@ -330,16 +330,16 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsla(265, 85%, 65%, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, hsla(217, 85%, 58%, 0.3), transparent);
   }
 
   .future-card:hover {
-    border-color: hsla(265, 85%, 65%, 0.15);
-    box-shadow: 0 25px 80px hsla(0, 0%, 0%, 0.5), 0 0 30px hsla(265, 85%, 65%, 0.08);
+    border-color: hsla(217, 85%, 58%, 0.15);
+    box-shadow: 0 25px 80px hsla(0, 0%, 0%, 0.5), 0 0 30px hsla(217, 85%, 58%, 0.08);
   }
 
   .future-card:hover::after {
-    background: linear-gradient(90deg, transparent, hsla(265, 85%, 65%, 0.6), transparent);
+    background: linear-gradient(90deg, transparent, hsla(217, 85%, 58%, 0.6), transparent);
   }
 
   /* ═══ AURORA MESH ═══ */
@@ -351,11 +351,11 @@
   .aurora-mesh {
     background: linear-gradient(
       -45deg,
-      hsla(265, 50%, 8%, 0.3),
-      hsla(280, 40%, 6%, 0.2),
-      hsla(260, 20%, 5%, 0.4),
-      hsla(320, 40%, 8%, 0.15),
-      hsla(265, 50%, 6%, 0.3)
+      hsla(217, 50%, 8%, 0.3),
+      hsla(225, 40%, 6%, 0.2),
+      hsla(220, 20%, 5%, 0.4),
+      hsla(42, 40%, 8%, 0.12),
+      hsla(217, 50%, 6%, 0.3)
     );
     background-size: 400% 400%;
     animation: aurora 15s ease infinite;
@@ -363,9 +363,9 @@
 
   /* ═══ GLOW CARD ═══ */
   .glow-card {
-    background: linear-gradient(145deg, hsla(260, 20%, 10%, 0.85), hsla(260, 18%, 5%, 0.95));
+    background: linear-gradient(145deg, hsla(225, 24%, 10%, 0.85), hsla(225, 22%, 5%, 0.95));
     backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid hsla(265, 60%, 50%, 0.08);
+    border: 1px solid hsla(217, 70%, 50%, 0.08);
     position: relative;
     overflow: hidden;
     transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -377,7 +377,7 @@
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, hsla(265, 85%, 65%, 0.0), hsla(280, 80%, 60%, 0.0));
+    background: linear-gradient(135deg, hsla(217, 85%, 58%, 0.0), hsla(42, 80%, 55%, 0.0));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -392,22 +392,22 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent 10%, hsla(265, 85%, 65%, 0.15) 50%, transparent 90%);
+    background: linear-gradient(90deg, transparent 10%, hsla(217, 85%, 58%, 0.15) 50%, transparent 90%);
     transition: opacity 0.5s;
   }
 
   .glow-card:hover::before {
-    background: linear-gradient(135deg, hsla(265, 85%, 65%, 0.5), hsla(320, 75%, 55%, 0.25));
+    background: linear-gradient(135deg, hsla(217, 85%, 58%, 0.5), hsla(42, 80%, 55%, 0.25));
   }
 
   .glow-card:hover::after {
-    background: linear-gradient(90deg, transparent 5%, hsla(265, 85%, 65%, 0.5) 50%, transparent 95%);
+    background: linear-gradient(90deg, transparent 5%, hsla(42, 80%, 55%, 0.5) 50%, transparent 95%);
   }
 
   .glow-card:hover {
-    border-color: hsla(265, 85%, 65%, 0.15);
+    border-color: hsla(217, 85%, 58%, 0.15);
     transform: translateY(-4px);
-    box-shadow: 0 25px 80px hsla(0, 0%, 0%, 0.6), 0 0 80px hsla(265, 85%, 65%, 0.1), inset 0 1px 0 hsla(265, 85%, 65%, 0.05);
+    box-shadow: 0 25px 80px hsla(0, 0%, 0%, 0.6), 0 0 80px hsla(217, 85%, 58%, 0.1), inset 0 1px 0 hsla(42, 80%, 55%, 0.05);
   }
 
   /* ═══ SPOTLIGHT ═══ */
@@ -429,11 +429,11 @@
   .text-shimmer {
     background: linear-gradient(
       90deg,
-      hsl(265, 85%, 72%) 0%,
-      hsl(290, 80%, 68%) 20%,
+      hsl(217, 85%, 68%) 0%,
+      hsl(42, 80%, 60%) 20%,
       hsl(0, 0%, 98%) 50%,
-      hsl(320, 75%, 62%) 80%,
-      hsl(265, 85%, 72%) 100%
+      hsl(42, 75%, 55%) 80%,
+      hsl(217, 85%, 68%) 100%
     );
     background-size: 200% auto;
     -webkit-background-clip: text;
@@ -460,7 +460,7 @@
     appearance: none;
     height: 4px;
     border-radius: 999px;
-    background: hsla(260, 15%, 13%, 1);
+    background: hsla(225, 18%, 13%, 1);
     outline: none;
   }
 
@@ -470,14 +470,14 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: linear-gradient(135deg, hsl(265, 85%, 60%), hsl(320, 75%, 55%));
+    background: linear-gradient(135deg, hsl(217, 85%, 55%), hsl(42, 80%, 55%));
     cursor: pointer;
-    box-shadow: 0 0 15px hsla(265, 85%, 65%, 0.4);
+    box-shadow: 0 0 15px hsla(217, 85%, 58%, 0.4);
     transition: box-shadow 0.2s;
   }
 
   input[type="range"]::-webkit-slider-thumb:hover {
-    box-shadow: 0 0 25px hsla(265, 85%, 65%, 0.6);
+    box-shadow: 0 0 25px hsla(217, 85%, 58%, 0.6);
   }
 
   @keyframes blob-float {
@@ -568,8 +568,8 @@
 
   /* ═══ COUNT UP GLOW ═══ */
   @keyframes count-glow {
-    0%, 100% { text-shadow: 0 0 10px hsla(265, 85%, 65%, 0.2); }
-    50% { text-shadow: 0 0 30px hsla(265, 85%, 65%, 0.5), 0 0 60px hsla(280, 80%, 60%, 0.2); }
+    0%, 100% { text-shadow: 0 0 10px hsla(217, 85%, 58%, 0.2); }
+    50% { text-shadow: 0 0 30px hsla(217, 85%, 58%, 0.5), 0 0 60px hsla(42, 80%, 55%, 0.2); }
   }
 
   .animate-count-glow {
@@ -619,7 +619,7 @@
     position: relative;
     height: 1px;
     width: 100%;
-    background: linear-gradient(90deg, transparent 0%, hsla(265, 85%, 65%, 0.2) 20%, hsla(280, 80%, 60%, 0.35) 50%, hsla(265, 85%, 65%, 0.2) 80%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, hsla(217, 85%, 58%, 0.2) 20%, hsla(42, 80%, 55%, 0.35) 50%, hsla(217, 85%, 58%, 0.2) 80%, transparent 100%);
   }
 
   .section-divider::before {
@@ -630,7 +630,7 @@
     transform: translateX(-50%);
     width: 200px;
     height: 16px;
-    background: radial-gradient(ellipse at center, hsla(265, 85%, 65%, 0.15), transparent 70%);
+    background: radial-gradient(ellipse at center, hsla(42, 80%, 55%, 0.15), transparent 70%);
     pointer-events: none;
   }
 
@@ -671,7 +671,7 @@
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(90deg, transparent, hsla(265, 85%, 65%, 0.3), hsla(280, 80%, 60%, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, hsla(217, 85%, 58%, 0.3), hsla(42, 80%, 55%, 0.2), transparent);
     background-size: 300% 100%;
     animation: border-flow 4s ease infinite;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -697,8 +697,8 @@
 
   /* ═══ PREMIUM LABEL ═══ */
   .premium-label {
-    background: linear-gradient(135deg, hsla(260, 20%, 10%, 0.9), hsla(260, 18%, 6%, 0.95));
-    border: 1px solid hsla(265, 60%, 50%, 0.12);
+    background: linear-gradient(135deg, hsla(225, 24%, 10%, 0.9), hsla(225, 22%, 6%, 0.95));
+    border: 1px solid hsla(217, 70%, 50%, 0.12);
     backdrop-filter: blur(12px);
   }
 
@@ -712,25 +712,23 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(105deg, transparent 40%, hsla(265, 85%, 70%, 0.08) 45%, hsla(280, 80%, 65%, 0.05) 50%, transparent 55%);
+    background: linear-gradient(105deg, transparent 40%, hsla(42, 80%, 60%, 0.08) 45%, hsla(217, 85%, 65%, 0.05) 50%, transparent 55%);
     animation: holo-shine 5s ease-in-out infinite;
     pointer-events: none;
   }
 
   /* ═══ HERO ALIEN EFFECTS ═══ */
 
-  /* Plasma energy field */
   @keyframes plasma-shift {
     0%   { filter: hue-rotate(0deg); transform: scale(1) rotate(0deg); }
-    33%  { filter: hue-rotate(30deg); transform: scale(1.08) rotate(2deg); }
-    66%  { filter: hue-rotate(-20deg); transform: scale(0.95) rotate(-1deg); }
+    33%  { filter: hue-rotate(20deg); transform: scale(1.08) rotate(2deg); }
+    66%  { filter: hue-rotate(-15deg); transform: scale(0.95) rotate(-1deg); }
     100% { filter: hue-rotate(0deg); transform: scale(1) rotate(0deg); }
   }
   .animate-plasma {
     animation: plasma-shift 8s ease-in-out infinite;
   }
 
-  /* Vertical laser scan */
   @keyframes laser-scan-v {
     0%   { top: -5%; opacity: 0; }
     10%  { opacity: 1; }
@@ -741,7 +739,6 @@
     animation: laser-scan-v 4s ease-in-out infinite;
   }
 
-  /* Horizontal laser scan */
   @keyframes laser-scan-h {
     0%   { left: -10%; opacity: 0; }
     10%  { opacity: 0.7; }
@@ -752,7 +749,6 @@
     animation: laser-scan-h 5s ease-in-out infinite;
   }
 
-  /* DNA helix spin */
   @keyframes helix-spin {
     0%   { transform: rotateY(0deg); }
     100% { transform: rotateY(360deg); }
@@ -762,7 +758,6 @@
     transform-style: preserve-3d;
   }
 
-  /* Glitch flicker */
   @keyframes glitch-1 {
     0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
     20% { clip-path: inset(20% 0 40% 0); transform: translate(-3px, 1px); }
@@ -774,7 +769,6 @@
     animation: glitch-1 4s steps(1) infinite;
   }
 
-  /* Prismatic rainbow edge */
   @keyframes prismatic {
     0%   { background-position: 0% 50%; }
     50%  { background-position: 100% 50%; }
@@ -782,25 +776,23 @@
   }
   .prismatic-edge {
     background: linear-gradient(90deg,
-      hsla(265, 85%, 65%, 0.6),
+      hsla(217, 85%, 58%, 0.6),
       hsla(200, 90%, 60%, 0.4),
-      hsla(320, 80%, 55%, 0.5),
-      hsla(50, 90%, 60%, 0.3),
-      hsla(265, 85%, 65%, 0.6)
+      hsla(42, 80%, 55%, 0.5),
+      hsla(200, 80%, 60%, 0.3),
+      hsla(217, 85%, 58%, 0.6)
     );
     background-size: 300% 100%;
     animation: prismatic 4s linear infinite;
   }
 
-  /* Hexagonal grid */
   .hex-grid {
     background-image:
-      radial-gradient(circle at 25% 25%, hsla(265, 85%, 65%, 0.04) 1px, transparent 1px),
-      radial-gradient(circle at 75% 75%, hsla(280, 80%, 60%, 0.03) 1px, transparent 1px);
+      radial-gradient(circle at 25% 25%, hsla(217, 85%, 58%, 0.04) 1px, transparent 1px),
+      radial-gradient(circle at 75% 75%, hsla(42, 80%, 55%, 0.03) 1px, transparent 1px);
     background-size: 30px 30px;
   }
 
-  /* Electric arc */
   @keyframes electric-arc {
     0%, 100% { opacity: 0.1; transform: scaleX(0.8); }
     15% { opacity: 0.9; transform: scaleX(1.1); }
@@ -813,18 +805,16 @@
     animation: electric-arc 3s ease-in-out infinite;
   }
 
-  /* Crown holographic aura */
   @keyframes crown-aura {
-    0%   { box-shadow: 0 0 20px hsla(265, 85%, 65%, 0.3), 0 0 40px hsla(280, 80%, 60%, 0.15), 0 0 80px hsla(320, 75%, 55%, 0.08); }
-    33%  { box-shadow: 0 0 30px hsla(200, 90%, 60%, 0.3), 0 0 60px hsla(265, 85%, 65%, 0.2), 0 0 100px hsla(320, 75%, 55%, 0.1); }
-    66%  { box-shadow: 0 0 25px hsla(320, 75%, 55%, 0.35), 0 0 50px hsla(280, 80%, 60%, 0.2), 0 0 90px hsla(265, 85%, 65%, 0.1); }
-    100% { box-shadow: 0 0 20px hsla(265, 85%, 65%, 0.3), 0 0 40px hsla(280, 80%, 60%, 0.15), 0 0 80px hsla(320, 75%, 55%, 0.08); }
+    0%   { box-shadow: 0 0 20px hsla(217, 85%, 58%, 0.3), 0 0 40px hsla(42, 80%, 55%, 0.15), 0 0 80px hsla(42, 70%, 48%, 0.08); }
+    33%  { box-shadow: 0 0 30px hsla(200, 90%, 60%, 0.3), 0 0 60px hsla(217, 85%, 58%, 0.2), 0 0 100px hsla(42, 80%, 55%, 0.1); }
+    66%  { box-shadow: 0 0 25px hsla(42, 80%, 55%, 0.35), 0 0 50px hsla(217, 85%, 58%, 0.2), 0 0 90px hsla(200, 90%, 60%, 0.1); }
+    100% { box-shadow: 0 0 20px hsla(217, 85%, 58%, 0.3), 0 0 40px hsla(42, 80%, 55%, 0.15), 0 0 80px hsla(42, 70%, 48%, 0.08); }
   }
   .animate-crown-aura {
     animation: crown-aura 4s ease-in-out infinite;
   }
 
-  /* Energy ring expansion */
   @keyframes energy-ring {
     0%   { transform: scale(0.3) rotate(0deg); opacity: 0.8; border-width: 2px; }
     100% { transform: scale(3) rotate(180deg); opacity: 0; border-width: 0.5px; }
@@ -852,25 +842,13 @@
     animation-delay: var(--rain-delay, 0s);
   }
 
-  /* ═══ CIRCUIT PULSE ═══ */
-  @keyframes circuit-pulse {
-    0%, 100% { opacity: 0.1; }
-    50% { opacity: 0.6; }
-  }
-
-  @keyframes circuit-flow {
-    0% { stroke-dashoffset: 100; }
-    100% { stroke-dashoffset: 0; }
-  }
-
   .circuit-line {
-    background: linear-gradient(90deg, transparent, hsla(265, 85%, 65%, 0.25), hsla(200, 90%, 60%, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, hsla(217, 85%, 58%, 0.25), hsla(200, 90%, 60%, 0.2), transparent);
     animation: circuit-pulse 3s ease-in-out infinite;
   }
 
-  /* ═══ HOLOGRAPHIC PANEL ═══ */
   .holo-panel {
-    background: linear-gradient(135deg, hsla(265, 40%, 15%, 0.4), hsla(200, 30%, 10%, 0.3));
+    background: linear-gradient(135deg, hsla(217, 40%, 15%, 0.4), hsla(200, 30%, 10%, 0.3));
     backdrop-filter: blur(16px) saturate(1.5);
     border: 1px solid hsla(200, 90%, 60%, 0.12);
     position: relative;
@@ -880,27 +858,17 @@
   .holo-panel::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsla(200, 90%, 60%, 0.5), hsla(265, 85%, 65%, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, hsla(42, 80%, 55%, 0.5), hsla(217, 85%, 58%, 0.3), transparent);
   }
 
   .holo-panel::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, hsla(200, 90%, 60%, 0.2), transparent);
-  }
-
-  /* ═══ NEURAL NETWORK NODE ═══ */
-  @keyframes neural-pulse {
-    0%, 100% { box-shadow: 0 0 4px hsla(265, 85%, 65%, 0.3); transform: scale(1); }
-    50% { box-shadow: 0 0 20px hsla(265, 85%, 65%, 0.7), 0 0 40px hsla(200, 90%, 60%, 0.3); transform: scale(1.3); }
   }
 
   .neural-node {
@@ -908,125 +876,47 @@
     animation-delay: var(--node-delay, 0s);
   }
 
-  @keyframes neural-signal {
-    0% { transform: translateX(0); opacity: 1; }
-    100% { transform: translateX(var(--signal-distance, 100px)); opacity: 0; }
-  }
-
-  .neural-signal {
-    animation: neural-signal 1.5s ease-out infinite;
-    animation-delay: var(--signal-delay, 0s);
-  }
-
-  /* ═══ SCAN LINE CARD EFFECT ═══ */
-  @keyframes card-scan {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(200%); }
-  }
-
-  .scan-card::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 40%;
-    background: linear-gradient(180deg, transparent, hsla(200, 90%, 60%, 0.04), transparent);
-    animation: card-scan 4s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  /* ═══ TECH READOUT ═══ */
-  @keyframes readout-blink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0.3; }
-  }
-
-  .tech-readout {
-    font-family: 'Space Grotesk', monospace;
-    font-variant-numeric: tabular-nums;
-  }
-
-  @keyframes typing-cursor {
-    0%, 100% { border-right-color: hsla(200, 90%, 60%, 0.8); }
-    50% { border-right-color: transparent; }
-  }
-
-  .typing-cursor {
-    border-right: 2px solid hsla(200, 90%, 60%, 0.8);
-    animation: typing-cursor 1s step-end infinite;
-  }
-
-  /* ═══ HOLOGRAPHIC BADGE ═══ */
-  @keyframes holo-rotate {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+  @keyframes neural-pulse {
+    0%, 100% { box-shadow: 0 0 4px hsla(217, 85%, 58%, 0.3); transform: scale(1); }
+    50% { box-shadow: 0 0 20px hsla(217, 85%, 58%, 0.7), 0 0 40px hsla(42, 80%, 55%, 0.3); transform: scale(1.3); }
   }
 
   .holo-badge {
     background: linear-gradient(90deg,
-      hsla(265, 85%, 65%, 0.15),
-      hsla(200, 90%, 60%, 0.2),
-      hsla(320, 75%, 55%, 0.15),
-      hsla(265, 85%, 65%, 0.15)
+      hsla(217, 85%, 58%, 0.15),
+      hsla(42, 80%, 55%, 0.2),
+      hsla(200, 80%, 60%, 0.15),
+      hsla(217, 85%, 58%, 0.15)
     );
     background-size: 200% 100%;
     animation: holo-rotate 3s linear infinite;
-    border: 1px solid hsla(200, 90%, 60%, 0.15);
-  }
-
-  /* ═══ FUTURISTIC SECTION CONNECTOR ═══ */
-  .section-connector {
-    position: relative;
-    height: 60px;
-    overflow: hidden;
+    border: 1px solid hsla(42, 80%, 55%, 0.15);
   }
 
   .section-connector::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 4px;
-    height: 4px;
+    width: 4px; height: 4px;
     border-radius: 50%;
-    background: hsl(265, 85%, 65%);
-    box-shadow: 0 0 12px hsla(265, 85%, 65%, 0.6), 0 0 30px hsla(265, 85%, 65%, 0.3);
+    background: hsl(42, 80%, 55%);
+    box-shadow: 0 0 12px hsla(42, 80%, 55%, 0.6), 0 0 30px hsla(217, 85%, 58%, 0.3);
   }
 
   .section-connector::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 50%;
+    top: 0; left: 50%;
     transform: translateX(-50%);
-    width: 1px;
-    height: 100%;
-    background: linear-gradient(180deg, transparent, hsla(265, 85%, 65%, 0.3), transparent);
-  }
-
-  /* ═══ GLITCH TEXT V2 ═══ */
-  @keyframes glitch-shift {
-    0%, 92%, 100% { transform: translate(0); }
-    93% { transform: translate(-3px, 1px); }
-    95% { transform: translate(3px, -1px); }
-    97% { transform: translate(-1px, 2px); }
-  }
-
-  .glitch-text {
-    animation: glitch-shift 5s ease-in-out infinite;
-  }
-
-  /* ═══ FUTURISTIC GRID LINE ═══ */
-  @keyframes grid-line-flow {
-    0% { background-position: 0 0; }
-    100% { background-position: 60px 60px; }
+    width: 1px; height: 100%;
+    background: linear-gradient(180deg, transparent, hsla(217, 85%, 58%, 0.3), transparent);
   }
 
   .animated-grid-bg {
     background-image:
-      linear-gradient(hsla(265, 85%, 65%, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, hsla(265, 85%, 65%, 0.04) 1px, transparent 1px);
+      linear-gradient(hsla(217, 85%, 58%, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(217, 85%, 58%, 0.04) 1px, transparent 1px);
     background-size: 60px 60px;
     animation: grid-line-flow 4s linear infinite;
   }
