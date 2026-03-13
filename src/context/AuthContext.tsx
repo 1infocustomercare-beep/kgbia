@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     // Safety timeout: force loading=false after 3s to prevent infinite spinner
-    const safetyTimer = setTimeout(() => setLoading(false), 3000);
+    const safetyTimer = setTimeout(() => setLoading(false), 1500);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
