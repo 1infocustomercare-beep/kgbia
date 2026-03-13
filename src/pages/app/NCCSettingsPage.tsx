@@ -126,7 +126,7 @@ export default function NCCSettingsPage() {
 
   const saveProfile = async () => {
     if (!user) return;
-    await supabase.from("profiles").update({ full_name: profileForm.full_name || null }).eq("user_id", user.id);
+    await (supabase as any).from("profiles").upsert({ user_id: user.id, full_name: profileForm.full_name || null }, { onConflict: "user_id" });
     toast.success("Profilo aggiornato!");
   };
 
