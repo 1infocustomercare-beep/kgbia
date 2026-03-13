@@ -4,7 +4,7 @@ import {
   BarChart3, Settings, Target, MessageSquare, Store, CreditCard,
   Home, Briefcase, Receipt, PenTool, Sparkles, UserCog, Wrench,
   Zap, Leaf, Heart, Camera, Truck, Umbrella, Cog, FileText,
-  Clock, GraduationCap, Baby, Scale, Lightbulb
+  Clock, GraduationCap, Baby, Scale, Lightbulb, Shield
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
