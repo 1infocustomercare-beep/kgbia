@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode, forwardRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
@@ -19,8 +19,34 @@ interface AuthContextType {
   signOut: () => Promise<void>;
 }
 
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const AUTH_LOADING_TIMEOUT_MS = 3000;
+
+const normalizeAuthErrorMessage = (message: string) => {
+  const lower = message.toLowerCase();
+
+  if (lower.includes("email not confirmed")) {
+    return "Email non confermata. Controlla la tua casella e conferma l'account prima di accedere.";
+  }
+
+  if (lower.includes("invalid login credentials")) {
+    return "Credenziali non valide. Verifica email e password.";
+  }
+
+  if (lower.includes("user not found") || lower.includes("invalid email or password")) {
+    return "Utente non trovato o password errata.";
+  }
+
+  if (lower.includes("already registered")) {
+    return "Questa email risulta già registrata. Prova ad accedere.";
+  }
+
+  return message;
+};
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
@@ -28,13 +54,13 @@ export const useAuth = () => {
   return ctx;
 };
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }, _ref) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState<AppRole[]>([]);
 
-  const fetchRoles = async (userId: string) => {
+  const fetchRoles = async (userId: string): Promise<AppRole[]> => {
     try {
       const { data, error } = await supabase
         .from("user_roles")
@@ -43,14 +69,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) {
         console.error("Failed to fetch user roles", error);
-        setRoles([]);
-        return;
+        return [];
       }
 
-      setRoles((data ?? []).map((r: any) => r.role as AppRole));
+      return (data ?? []).map((r: { role: AppRole }) => r.role);
     } catch (error) {
       console.error("Unexpected role fetch error", error);
-      setRoles([]);
+      return [];
     }
   };
 
@@ -60,44 +85,56 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    const safetyTimer = setTimeout(() => setLoading(false), AUTH_LOADING_TIMEOUT_MS);
+    let isMounted = true;
+    const safetyTimer = setTimeout(() => {
+      if (isMounted) setLoading(false);
+    }, AUTH_LOADING_TIMEOUT_MS);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       applySessionState(nextSession);
-      setLoading(false);
 
       if (nextSession?.user) {
-        setTimeout(() => {
-          void fetchRoles(nextSession.user.id);
+        setLoading(true);
+        window.setTimeout(async () => {
+          const fetchedRoles = await fetchRoles(nextSession.user.id);
+          if (!isMounted) return;
+          setRoles(fetchedRoles);
+          setLoading(false);
         }, 0);
       } else {
         setRoles([]);
+        setLoading(false);
       }
     });
 
     void (async () => {
       try {
+        setLoading(true);
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
 
         applySessionState(data.session);
 
         if (data.session?.user) {
-          await fetchRoles(data.session.user.id);
-        } else {
+          const fetchedRoles = await fetchRoles(data.session.user.id);
+          if (isMounted) setRoles(fetchedRoles);
+        } else if (isMounted) {
           setRoles([]);
         }
       } catch (error) {
         console.error("Failed to restore auth session", error);
-        setSession(null);
-        setUser(null);
-        setRoles([]);
+        if (isMounted) {
+          setSession(null);
+          setUser(null);
+          setRoles([]);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     })();
 
     return () => {
+      isMounted = false;
       clearTimeout(safetyTimer);
       subscription.unsubscribe();
     };
@@ -106,11 +143,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signIn = async (email: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      return { error: error ? new Error(error.message) : null, session: data.session ?? null };
+
+      if (error) {
+        return { error: new Error(normalizeAuthErrorMessage(error.message)), session: null };
+      }
+
+      return { error: null, session: data.session ?? null };
     } catch (error) {
       console.error("Sign in failed", error);
       return {
-        error: error instanceof Error ? error : new Error("Errore durante l'accesso."),
+        error: error instanceof Error ? new Error(normalizeAuthErrorMessage(error.message)) : new Error("Errore durante l'accesso."),
         session: null,
       };
     }
@@ -127,10 +169,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         },
       });
 
-      return { error: error ? new Error(error.message) : null };
+      return { error: error ? new Error(normalizeAuthErrorMessage(error.message)) : null };
     } catch (error) {
       console.error("Sign up failed", error);
-      return { error: error instanceof Error ? error : new Error("Errore durante la registrazione.") };
+      return {
+        error: error instanceof Error ? new Error(normalizeAuthErrorMessage(error.message)) : new Error("Errore durante la registrazione."),
+      };
     }
   };
 
@@ -167,4 +211,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
+});
+
+AuthProvider.displayName = "AuthProvider";

@@ -19,11 +19,11 @@ Blob.displayName = "Blob";
 
 const INDUSTRY_LIST = Object.values(INDUSTRY_CONFIGS).map(c => ({ id: c.id, label: c.label, emoji: c.emoji }));
 
-const AdminLogin = () => {
+const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const refCode = searchParams.get("ref");
-  const { user, roles, loading: authLoading, signIn, signUp } = useAuth();
+  const { user, roles, loading: authLoading, signIn } = useAuth();
   const [mode, setMode] = useState<LoginMode>(refCode ? "partner" : "choose");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,6 +38,28 @@ const AdminLogin = () => {
   const [isSignUp, setIsSignUp] = useState(!!refCode);
   const [kitchenPin, setKitchenPin] = useState("");
   const [forgotSent, setForgotSent] = useState(false);
+
+  const normalizeAuthErrorMessage = (message: string) => {
+    const lower = message.toLowerCase();
+
+    if (lower.includes("email not confirmed")) {
+      return "Email non confermata. Controlla la tua casella e conferma l'account prima di accedere.";
+    }
+
+    if (lower.includes("invalid login credentials")) {
+      return "Credenziali non valide. Verifica email e password.";
+    }
+
+    if (lower.includes("user not found") || lower.includes("invalid email or password")) {
+      return "Utente non trovato o password errata.";
+    }
+
+    if (lower.includes("already registered")) {
+      return "Questa email è già registrata. Prova ad accedere.";
+    }
+
+    return message;
+  };
 
   // Auto-redirect if already logged in
   useEffect(() => {
@@ -88,7 +110,7 @@ const AdminLogin = () => {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     if (error) {
-      setError(error.message);
+      setError(normalizeAuthErrorMessage(error.message));
     } else {
       setForgotSent(true);
     }
@@ -121,7 +143,7 @@ const AdminLogin = () => {
         });
 
         if (error) {
-          setError(error.message);
+          setError(normalizeAuthErrorMessage(error.message));
           return;
         }
 
@@ -138,7 +160,7 @@ const AdminLogin = () => {
 
       const { error, session } = await signIn(email, password);
       if (error) {
-        setError(error.message);
+        setError(normalizeAuthErrorMessage(error.message));
         return;
       }
 
@@ -167,7 +189,7 @@ const AdminLogin = () => {
       }
     } catch (error) {
       console.error("Owner login/signup failed", error);
-      setError(error instanceof Error ? error.message : "Errore durante l'autenticazione.");
+      setError(error instanceof Error ? normalizeAuthErrorMessage(error.message) : "Errore durante l'autenticazione.");
     } finally {
       setLoading(false);
     }
@@ -520,6 +542,8 @@ const AdminLogin = () => {
       </motion.div>
     </div>
   );
-};
+});
+
+AdminLogin.displayName = "AdminLogin";
 
 export default AdminLogin;
