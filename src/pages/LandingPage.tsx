@@ -348,12 +348,12 @@ const LandingPage = () => {
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute bottom-0 left-0 right-0 h-[70vh] origin-bottom animate-grid-warp"
             style={{
-              backgroundImage: `linear-gradient(hsla(265, 85%, 65%, 0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 85%, 65%, 0.08) 1px, transparent 1px)`,
+              backgroundImage: `linear-gradient(hsla(217, 85%, 58%, 0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(217, 85%, 58%, 0.08) 1px, transparent 1px)`,
               backgroundSize: "40px 40px",
             }}
           />
-          <div className="absolute bottom-[35vh] left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265, 85%, 65%, 0.3) 50%, transparent 90%)" }} />
-          <div className="absolute bottom-[34vh] left-0 right-0 h-20 blur-[40px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265, 85%, 65%, 0.5) 30%, hsla(280, 80%, 60%, 0.4) 50%, hsla(320, 75%, 55%, 0.3) 70%, transparent 90%)" }} />
+          <div className="absolute bottom-[35vh] left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(217, 85%, 58%, 0.3) 50%, transparent 90%)" }} />
+          <div className="absolute bottom-[34vh] left-0 right-0 h-20 blur-[40px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(217, 85%, 58%, 0.5) 30%, hsla(42, 80%, 55%, 0.4) 50%, hsla(200, 80%, 55%, 0.3) 70%, transparent 90%)" }} />
         </div>
 
         {/* ═══ LAYER 2: Hexagonal overlay ═══ */}
