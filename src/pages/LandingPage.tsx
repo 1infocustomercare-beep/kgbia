@@ -492,7 +492,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Non Siamo un Software. <span className="text-shimmer">Siamo il Futuro.</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[520px] mx-auto text-sm leading-[1.7]"
+          <motion.p className="text-foreground/50 max-w-[520px] mx-auto text-sm leading-[1.7]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Dashboard IA, gestione flotta, menu digitali, CRM avanzato, automazioni, fatturazione, analytics — tutto in un ecosistema white-label che si evolve ogni settimana.
           </motion.p>
