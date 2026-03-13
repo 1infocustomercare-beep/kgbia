@@ -421,7 +421,7 @@ const LandingPage = () => {
               transition={{ rotateY: { duration: 6, repeat: Infinity, ease: "linear" }, rotateX: { duration: 4, repeat: Infinity } }}
               style={{ transformStyle: "preserve-3d" }}
             >
-              <Crown className="w-8 h-8 sm:w-12 sm:h-12 text-accent drop-shadow-[0_0_20px_hsla(42,80%,55%,0.6)]" />
+              <Crown className="w-8 h-8 sm:w-12 sm:h-12 text-accent drop-shadow-[0_0_20px_hsla(265,70%,60%,0.6)]" />
             </motion.div>
           </motion.div>
         </div>
