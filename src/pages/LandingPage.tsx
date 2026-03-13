@@ -88,7 +88,7 @@ const popIn = { hidden: { opacity: 0, scale: 0.88 }, visible: { opacity: 1, scal
 const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => (
   <motion.div
     className="absolute rounded-full"
-    style={{ width: size, height: size, left: x, top: y, background: delay % 2 === 0 ? "hsl(42, 80%, 55%)" : "hsl(265, 70%, 60%)" }}
+    style={{ width: size, height: size, left: x, top: y, background: delay % 2 === 0 ? "hsl(265, 70%, 60%)" : "hsl(280, 50%, 65%)" }}
     animate={{ y: [0, -25, 0], opacity: [0.1, 0.35, 0.1], scale: [1, 1.3, 1] }}
     transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
   />
