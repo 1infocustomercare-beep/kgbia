@@ -49,9 +49,9 @@ export default function BackButton({
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3, duration: 0.4 }}
-        className={`fixed top-20 left-4 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-300 ${themeStyles[theme]} ${className}`}
+        className={`fixed top-[72px] left-3 z-[60] flex items-center gap-1.5 px-3 py-2 rounded-full border text-xs font-medium transition-all duration-300 shadow-lg ${themeStyles[theme]} ${className}`}
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-3.5 h-3.5" />
         <span className="hidden sm:inline">{label}</span>
       </motion.button>
     );
