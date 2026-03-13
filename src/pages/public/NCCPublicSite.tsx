@@ -465,10 +465,18 @@ export default function NCCPublicSite({ company }: Props) {
             </motion.div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="hidden lg:block">
+          <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="hidden lg:block relative">
+            {/* Video principale */}
             <div className="relative rounded-[20px] overflow-hidden shadow-2xl" style={{ border: `3px solid ${gold}30` }}>
-              <img src={heroMercedesImg} alt={`${company.name} Transfer`} className="w-full object-cover aspect-[4/3]" />
+              <video
+                src={nccHeroVideo}
+                autoPlay muted loop playsInline
+                className="w-full object-cover aspect-[4/3]"
+                poster={heroMercedesImg}
+              />
             </div>
+            {/* Premium floating badge — auto-rotating luxury images */}
+            <PremiumBadge />
           </motion.div>
         </div>
 
