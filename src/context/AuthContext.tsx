@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode, forwardRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
+import { clearIndustryCache } from "@/hooks/useIndustry";
 
 type AppRole = "super_admin" | "staff" | "restaurant_admin" | "customer" | "partner" | "team_leader";
 
