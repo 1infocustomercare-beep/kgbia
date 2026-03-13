@@ -697,8 +697,8 @@
 
   /* ═══ PREMIUM LABEL ═══ */
   .premium-label {
-    background: linear-gradient(135deg, hsla(260, 20%, 10%, 0.9), hsla(260, 18%, 6%, 0.95));
-    border: 1px solid hsla(265, 60%, 50%, 0.12);
+    background: linear-gradient(135deg, hsla(225, 24%, 10%, 0.9), hsla(225, 22%, 6%, 0.95));
+    border: 1px solid hsla(217, 70%, 50%, 0.12);
     backdrop-filter: blur(12px);
   }
 
@@ -712,7 +712,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(105deg, transparent 40%, hsla(265, 85%, 70%, 0.08) 45%, hsla(280, 80%, 65%, 0.05) 50%, transparent 55%);
+    background: linear-gradient(105deg, transparent 40%, hsla(42, 80%, 60%, 0.08) 45%, hsla(217, 85%, 65%, 0.05) 50%, transparent 55%);
     animation: holo-shine 5s ease-in-out infinite;
     pointer-events: none;
   }
