@@ -100,75 +100,77 @@ const AdminLogin = () => {
     setError("");
     setLoading(true);
 
-    if (isSignUp) {
-      const signUpOptions: any = { full_name: fullName };
-      if (mode === "partner") {
-        signUpOptions.partner_signup = true;
-        signUpOptions.partner_phone = partnerPhone;
-        signUpOptions.partner_city = partnerCity;
-        signUpOptions.partner_sector = partnerSector;
-        if (refCode) signUpOptions.team_leader_id = refCode;
-      }
-
-      const { error } = await supabase.auth.signUp({
-        email, password,
-        options: {
-          data: signUpOptions,
-          emailRedirectTo: window.location.origin,
-        },
-      });
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-        return;
-      }
-
-      if (mode === "partner") {
-        let session = null;
-        for (let i = 0; i < 10; i++) {
-          await new Promise(r => setTimeout(r, 500));
-          const { data } = await supabase.auth.getSession();
-          if (data.session?.user) { session = data.session; break; }
+    try {
+      if (isSignUp) {
+        const signUpOptions: Record<string, unknown> = { full_name: fullName };
+        if (mode === "partner") {
+          signUpOptions.partner_signup = true;
+          signUpOptions.partner_phone = partnerPhone;
+          signUpOptions.partner_city = partnerCity;
+          signUpOptions.partner_sector = partnerSector;
+          if (refCode) signUpOptions.team_leader_id = refCode;
         }
 
-        if (session?.user) {
-          await supabase.functions.invoke("assign-partner-role", {
-            body: { user_id: session.user.id, team_leader_id: refCode || null },
-          });
-          window.location.href = "/partner";
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: signUpOptions,
+            emailRedirectTo: window.location.origin,
+          },
+        });
+
+        if (error) {
+          setError(error.message);
           return;
         }
 
-        toast({ title: "Account Partner creato!", description: "Controlla la tua email per confermare l'account." });
+        if (mode === "partner") {
+          toast({ title: "Account Partner creato!", description: "Controlla la tua email per confermare l'account, poi accedi." });
+          setIsSignUp(false);
+          return;
+        }
+
+        toast({ title: "Account creato!", description: "Controlla la tua email per confermare, poi accedi." });
         setIsSignUp(false);
-        setLoading(false);
         return;
       }
 
-      toast({ title: "Account creato!", description: "Controlla la tua email per confermare, poi accedi." });
-      setIsSignUp(false);
+      const { error, session } = await signIn(email, password);
+      if (error) {
+        setError(error.message);
+        return;
+      }
+
+      if (session?.user?.user_metadata?.partner_signup) {
+        const { data: existingRole, error: roleError } = await supabase
+          .from("user_roles")
+          .select("id")
+          .eq("user_id", session.user.id)
+          .eq("role", "partner")
+          .maybeSingle();
+
+        if (roleError) throw roleError;
+
+        if (!existingRole) {
+          const { error: assignError } = await supabase.functions.invoke("assign-partner-role", {
+            body: { user_id: session.user.id, team_leader_id: session.user.user_metadata.team_leader_id || null },
+          });
+          if (assignError) throw assignError;
+
+          const { error: updateError } = await supabase.auth.updateUser({ data: { partner_signup: null, team_leader_id: null } });
+          if (updateError) throw updateError;
+
+          window.location.href = "/partner";
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Owner login/signup failed", error);
+      setError(error instanceof Error ? error.message : "Errore durante l'autenticazione.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const { error } = await signIn(email, password);
-    if (error) { setError(error.message); setLoading(false); return; }
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user?.user_metadata?.partner_signup) {
-      const { data: existingRole } = await supabase
-        .from("user_roles").select("id").eq("user_id", session.user.id).eq("role", "partner").maybeSingle();
-
-      if (!existingRole) {
-        await supabase.functions.invoke("assign-partner-role", {
-          body: { user_id: session.user.id, team_leader_id: session.user.user_metadata.team_leader_id || null },
-        });
-        await supabase.auth.updateUser({ data: { partner_signup: null, team_leader_id: null } });
-        window.location.href = "/partner";
-        return;
-      }
-    }
-    setLoading(false);
   };
 
   const handleKitchenAccess = async (e: React.FormEvent) => {
