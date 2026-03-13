@@ -89,18 +89,17 @@ function PremiumBadge() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1.2, duration: 0.6 }}
-      className="absolute -bottom-6 -left-6 z-20"
-      style={{ width: 160 }}
+      className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 z-20 w-[120px] sm:w-[150px]"
     >
       <div
-        className="rounded-2xl overflow-hidden shadow-2xl"
+        className="rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl"
         style={{
           background: "#111",
-          border: `2px solid ${NCC.gold}50`,
-          boxShadow: `0 12px 40px rgba(0,0,0,0.6), 0 0 20px ${NCC.gold}15`,
+          border: `1.5px solid ${NCC.gold}40`,
+          boxShadow: `0 8px 30px rgba(0,0,0,0.5), 0 0 15px ${NCC.gold}10`,
         }}
       >
-        <div className="relative h-[90px] overflow-hidden">
+        <div className="relative h-[65px] sm:h-[85px] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.img
               key={idx}
@@ -114,16 +113,16 @@ function PremiumBadge() {
             />
           </AnimatePresence>
         </div>
-        <div className="px-3 py-2 flex items-center gap-2">
+        <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex items-center gap-1.5 sm:gap-2">
           <div
-            className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+            className="w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center flex-shrink-0"
             style={{ background: `${NCC.gold}20` }}
           >
-            <Award className="w-3 h-3" style={{ color: NCC.gold }} />
+            <Award className="w-2.5 h-2.5 sm:w-3 sm:h-3" style={{ color: NCC.gold }} />
           </div>
           <div className="min-w-0">
-            <p className="text-[9px] uppercase tracking-wider font-bold" style={{ color: NCC.gold }}>Premium</p>
-            <p className="text-[10px] text-white/60 truncate">{img.label}</p>
+            <p className="text-[8px] sm:text-[9px] uppercase tracking-wider font-bold" style={{ color: NCC.gold }}>Premium</p>
+            <p className="text-[9px] sm:text-[10px] text-white/60 truncate">{img.label}</p>
           </div>
         </div>
       </div>
@@ -527,9 +526,9 @@ export default function NCCPublicSite({ company }: Props) {
             </motion.div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="hidden lg:block relative">
+          <motion.div initial={{ opacity: 0, y: 40, x: 0 }} animate={{ opacity: 1, y: 0, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="relative mt-8 lg:mt-0">
             {/* Video principale */}
-            <div className="relative rounded-[20px] overflow-hidden shadow-2xl" style={{ border: `3px solid ${gold}30` }}>
+            <div className="relative rounded-2xl sm:rounded-[20px] overflow-hidden shadow-2xl max-w-md mx-auto lg:max-w-none" style={{ border: `3px solid ${gold}30` }}>
               <video
                 src={nccHeroVideo}
                 autoPlay muted loop playsInline
