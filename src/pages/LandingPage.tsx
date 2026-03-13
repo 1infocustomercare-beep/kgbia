@@ -168,46 +168,46 @@ const LandingPage = () => {
   const [sectorSheetOpen, setSectorSheetOpen] = useState(false);
 
   const industries = [
-    { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-orange-500 to-amber-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live" },
-    { id: "ncc" as const, icon: <Car className="w-5 h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer, limousine", gradient: "from-sky-500 to-blue-500", emoji: "🚘", modules: "Flotta · Tratte · Booking · Autisti" },
-    { id: "beauty" as const, icon: <Scissors className="w-5 h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA, barbieri", gradient: "from-pink-500 to-rose-400", emoji: "💅", modules: "Agenda · Clienti · Reminder · Trattamenti" },
-    { id: "healthcare" as const, icon: <Heart className="w-5 h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-emerald-500 to-teal-400", emoji: "🏥", modules: "Schede Paziente · Agenda · Fatturazione" },
-    { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-cyan-500 to-blue-400", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni" },
-    { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-lime-500 to-green-400", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti" },
-    { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-amber-400 to-orange-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge" },
+    { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-violet-500 to-purple-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live" },
+    { id: "ncc" as const, icon: <Car className="w-5 h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer, limousine", gradient: "from-purple-500 to-indigo-400", emoji: "🚘", modules: "Flotta · Tratte · Booking · Autisti" },
+    { id: "beauty" as const, icon: <Scissors className="w-5 h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA, barbieri", gradient: "from-fuchsia-500/80 to-violet-400", emoji: "💅", modules: "Agenda · Clienti · Reminder · Trattamenti" },
+    { id: "healthcare" as const, icon: <Heart className="w-5 h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-indigo-400 to-violet-500", emoji: "🏥", modules: "Schede Paziente · Agenda · Fatturazione" },
+    { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-purple-400 to-fuchsia-400/80", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni" },
+    { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-violet-400 to-indigo-500", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti" },
+    { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-purple-500/80 to-violet-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge" },
   ];
 
   const extraSectors = [
-    { icon: "🎓", title: "Formazione & Coaching", desc: "Corsi, tutoring, certificazioni", gradient: "from-indigo-500 to-violet-400" },
-    { icon: "🏖️", title: "Stabilimenti Balneari", desc: "Ombrelloni, lettini, bar spiaggia", gradient: "from-cyan-400 to-sky-400" },
-    { icon: "🐾", title: "Veterinari & Pet Care", desc: "Cliniche, toelettature, pensioni", gradient: "from-amber-500 to-yellow-400" },
-    { icon: "🔧", title: "Artigiani & Impiantisti", desc: "Idraulici, elettricisti, caldaisti", gradient: "from-blue-600 to-indigo-400" },
-    { icon: "🎨", title: "Studi Creativi", desc: "Fotografi, designer, architetti", gradient: "from-fuchsia-500 to-pink-400" },
-    { icon: "🏋️", title: "CrossFit & Functional", desc: "Box, classi, WOD, membership", gradient: "from-red-500 to-orange-400" },
-    { icon: "🧘", title: "Yoga & Pilates", desc: "Studi, ritiri, classi online", gradient: "from-teal-400 to-green-300" },
-    { icon: "🚿", title: "Lavanderie & Stirerie", desc: "Ritiro, consegna, abbonamenti", gradient: "from-blue-400 to-cyan-300" },
-    { icon: "🎵", title: "Scuole di Musica", desc: "Lezioni, sale prove, eventi", gradient: "from-purple-500 to-pink-400" },
-    { icon: "🏠", title: "Agenzie Immobiliari", desc: "Annunci, visite, CRM clienti", gradient: "from-emerald-600 to-teal-400" },
-    { icon: "⚖️", title: "Studi Legali", desc: "Pratiche, clienti, parcelle", gradient: "from-slate-500 to-gray-400" },
-    { icon: "🏗️", title: "Edilizia & Costruzioni", desc: "Cantieri, preventivi, SAL", gradient: "from-orange-600 to-amber-400" },
+    { icon: "🎓", title: "Formazione & Coaching", desc: "Corsi, tutoring, certificazioni", gradient: "from-violet-500 to-purple-400" },
+    { icon: "🏖️", title: "Stabilimenti Balneari", desc: "Ombrelloni, lettini, bar spiaggia", gradient: "from-indigo-400 to-violet-400" },
+    { icon: "🐾", title: "Veterinari & Pet Care", desc: "Cliniche, toelettature, pensioni", gradient: "from-purple-400 to-fuchsia-400/80" },
+    { icon: "🔧", title: "Artigiani & Impiantisti", desc: "Idraulici, elettricisti, caldaisti", gradient: "from-indigo-500 to-purple-400" },
+    { icon: "🎨", title: "Studi Creativi", desc: "Fotografi, designer, architetti", gradient: "from-fuchsia-500/80 to-violet-400" },
+    { icon: "🏋️", title: "CrossFit & Functional", desc: "Box, classi, WOD, membership", gradient: "from-purple-500 to-indigo-400" },
+    { icon: "🧘", title: "Yoga & Pilates", desc: "Studi, ritiri, classi online", gradient: "from-violet-400 to-purple-300" },
+    { icon: "🚿", title: "Lavanderie & Stirerie", desc: "Ritiro, consegna, abbonamenti", gradient: "from-indigo-400 to-violet-300" },
+    { icon: "🎵", title: "Scuole di Musica", desc: "Lezioni, sale prove, eventi", gradient: "from-purple-500 to-violet-400" },
+    { icon: "🏠", title: "Agenzie Immobiliari", desc: "Annunci, visite, CRM clienti", gradient: "from-indigo-500 to-violet-500" },
+    { icon: "⚖️", title: "Studi Legali", desc: "Pratiche, clienti, parcelle", gradient: "from-slate-500 to-violet-400/60" },
+    { icon: "🏗️", title: "Edilizia & Costruzioni", desc: "Cantieri, preventivi, SAL", gradient: "from-purple-500/80 to-indigo-400" },
     { icon: "🎭", title: "Eventi & Catering", desc: "Booking, menu, staff, logistica", gradient: "from-violet-500 to-purple-400" },
-    { icon: "🚗", title: "Autofficine & Carrozzerie", desc: "Interventi, ricambi, preventivi", gradient: "from-gray-500 to-zinc-400" },
-    { icon: "📦", title: "Logistica & Spedizioni", desc: "Tracking, magazzino, consegne", gradient: "from-yellow-500 to-orange-400" },
-    { icon: "🌿", title: "Giardinaggio & Vivaisti", desc: "Interventi, manutenzione, vendita", gradient: "from-green-500 to-lime-400" },
-    { icon: "🎪", title: "Intrattenimento", desc: "Parchi, escape room, bowling", gradient: "from-pink-500 to-red-400" },
-    { icon: "🏫", title: "Asili & Doposcuola", desc: "Iscrizioni, presenze, comunicazioni", gradient: "from-sky-400 to-blue-300" },
+    { icon: "🚗", title: "Autofficine & Carrozzerie", desc: "Interventi, ricambi, preventivi", gradient: "from-indigo-400/80 to-violet-400/60" },
+    { icon: "📦", title: "Logistica & Spedizioni", desc: "Tracking, magazzino, consegne", gradient: "from-purple-400 to-indigo-400" },
+    { icon: "🌿", title: "Giardinaggio & Vivaisti", desc: "Interventi, manutenzione, vendita", gradient: "from-violet-400 to-purple-400" },
+    { icon: "🎪", title: "Intrattenimento", desc: "Parchi, escape room, bowling", gradient: "from-fuchsia-400/80 to-violet-400" },
+    { icon: "🏫", title: "Asili & Doposcuola", desc: "Iscrizioni, presenze, comunicazioni", gradient: "from-indigo-400 to-purple-300" },
   ];
 
   const services = [
     { icon: <Brain className="w-4 h-4 sm:w-5 sm:h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni quotidiane.", tag: "IA", color: "from-primary to-accent" },
-    { icon: <Smartphone className="w-4 h-4 sm:w-5 sm:h-5" />, title: "App White Label", desc: "App professionale installabile con il TUO brand, colori e dominio. Nessun logo di terzi, mai.", tag: "APP", color: "from-sky-500 to-primary" },
-    { icon: <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini, prenotazioni corse o camere da un unico pannello centralizzato.", tag: "OPS", color: "from-emerald-500 to-teal-500" },
-    { icon: <Shield className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano nel tuo archivio privato. Solo le migliori costruiscono la tua reputazione online.", tag: "BRAND", color: "from-amber-500 to-orange-500" },
-    { icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà digitale. Trasforma i visitatori in clienti ricorrenti.", tag: "GROWTH", color: "from-pink-500 to-rose-500" },
-    { icon: <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, performance staff, trend e fatturazione elettronica integrata.", tag: "FINANCE", color: "from-cyan-500 to-teal-500" },
-    { icon: <Package className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, ricevi alert automatici, registra controlli igienico-sanitari e conformità.", tag: "OPS", color: "from-indigo-500 to-primary" },
-    { icon: <Bell className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Marketing Automation", desc: "Push notification, campagne email/WhatsApp, promozioni mirate e segmentazione clienti avanzata.", tag: "MARKETING", color: "from-accent to-pink-500" },
-    { icon: <Lock className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR compliant, backup automatici, accessi multi-ruolo e audit trail.", tag: "SECURITY", color: "from-slate-500 to-gray-600" },
+    { icon: <Smartphone className="w-4 h-4 sm:w-5 sm:h-5" />, title: "App White Label", desc: "App professionale installabile con il TUO brand, colori e dominio. Nessun logo di terzi, mai.", tag: "APP", color: "from-violet-500 to-primary" },
+    { icon: <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini, prenotazioni corse o camere da un unico pannello centralizzato.", tag: "OPS", color: "from-indigo-400 to-violet-500" },
+    { icon: <Shield className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano nel tuo archivio privato. Solo le migliori costruiscono la tua reputazione online.", tag: "BRAND", color: "from-purple-400 to-violet-500" },
+    { icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà digitale. Trasforma i visitatori in clienti ricorrenti.", tag: "GROWTH", color: "from-fuchsia-500/80 to-purple-500" },
+    { icon: <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, performance staff, trend e fatturazione elettronica integrata.", tag: "FINANCE", color: "from-indigo-500 to-violet-400" },
+    { icon: <Package className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, ricevi alert automatici, registra controlli igienico-sanitari e conformità.", tag: "OPS", color: "from-purple-500 to-primary" },
+    { icon: <Bell className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Marketing Automation", desc: "Push notification, campagne email/WhatsApp, promozioni mirate e segmentazione clienti avanzata.", tag: "MARKETING", color: "from-accent to-violet-500" },
+    { icon: <Lock className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR compliant, backup automatici, accessi multi-ruolo e audit trail.", tag: "SECURITY", color: "from-violet-400/60 to-indigo-400/60" },
   ];
 
   const metrics = [
@@ -258,34 +258,13 @@ const LandingPage = () => {
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 aurora-mesh opacity-25" />
-        {/* Large violet ambient orbs */}
-        <div className="absolute w-[700px] h-[700px] rounded-full blur-[250px] opacity-[0.06] bg-primary -top-[200px] left-1/4 animate-float-glow" />
-        <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] bg-accent top-[50vh] -right-[100px] animate-float-glow-slow" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.035] top-[80vh] left-[10%] animate-float-glow-delay"
-          style={{ background: "hsl(280, 45%, 60%)" }} />
-        <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.03] top-[120vh] right-[20%]"
-          style={{ background: "hsl(265, 60%, 50%)" }} />
-        {/* Particles */}
+        {/* Subtle violet ambient orbs */}
+        <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.04] bg-primary -top-[200px] left-1/4" />
+        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.03] bg-accent top-[50vh] -right-[100px]" />
+        {/* Particles - reduced */}
         <Particle delay={0} size={2} x="10%" y="30%" />
-        <Particle delay={1} size={3} x="85%" y="20%" />
-        <Particle delay={2} size={3} x="70%" y="60%" />
-        <Particle delay={0.5} size={2} x="25%" y="75%" />
+        <Particle delay={2} size={2} x="70%" y="60%" />
         <Particle delay={1.5} size={2} x="50%" y="45%" />
-        <Particle delay={3} size={2} x="90%" y="80%" />
-        <Particle delay={2.2} size={2} x="15%" y="55%" />
-        <Particle delay={0.8} size={3} x="60%" y="15%" />
-        {/* Subtle global data rain */}
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={`global-rain-${i}`} className="absolute top-0 w-px opacity-[0.08]"
-            style={{
-              left: `${15 + i * 18}%`,
-              height: "80px",
-              background: "linear-gradient(180deg, transparent, hsla(265, 70%, 60%, 0.3), transparent)",
-              animation: `data-rain ${6 + i * 2}s linear infinite`,
-              animationDelay: `${i * 1.5}s`,
-            }} />
-        ))}
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
