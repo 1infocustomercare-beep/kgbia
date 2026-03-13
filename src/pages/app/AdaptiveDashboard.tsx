@@ -444,6 +444,7 @@ function DashboardShell({
               primaryColor={company.primary_color}
               companyName={company.name}
               onExpand={() => setPreviewExpanded(true)}
+              industry={industry}
             />
           </div>
         )}
@@ -456,6 +457,7 @@ function DashboardShell({
           companyName={company.name}
           open={previewExpanded}
           onClose={() => setPreviewExpanded(false)}
+          industry={industry}
         />
       )}
     </div>
