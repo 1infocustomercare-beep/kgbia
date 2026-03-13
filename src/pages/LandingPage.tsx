@@ -239,6 +239,9 @@ const LandingPage = () => {
         <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] bg-accent top-[50vh] -right-[100px] animate-float-glow-slow" />
         <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.035] top-[80vh] left-[10%] animate-float-glow-delay"
           style={{ background: "hsl(320, 75%, 55%)" }} />
+        {/* Cyan tech orb */}
+        <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.03] top-[120vh] right-[20%]"
+          style={{ background: "hsl(200, 90%, 55%)" }} />
         {/* Particles */}
         <Particle delay={0} size={2} x="10%" y="30%" />
         <Particle delay={1} size={3} x="85%" y="20%" />
@@ -246,6 +249,19 @@ const LandingPage = () => {
         <Particle delay={0.5} size={2} x="25%" y="75%" />
         <Particle delay={1.5} size={2} x="50%" y="45%" />
         <Particle delay={3} size={2} x="90%" y="80%" />
+        <Particle delay={2.2} size={2} x="15%" y="55%" />
+        <Particle delay={0.8} size={3} x="60%" y="15%" />
+        {/* Subtle global data rain */}
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={`global-rain-${i}`} className="absolute top-0 w-px opacity-[0.12]"
+            style={{
+              left: `${15 + i * 18}%`,
+              height: "80px",
+              background: "linear-gradient(180deg, transparent, hsla(200, 90%, 60%, 0.4), transparent)",
+              animation: `data-rain ${6 + i * 2}s linear infinite`,
+              animationDelay: `${i * 1.5}s`,
+            }} />
+        ))}
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
