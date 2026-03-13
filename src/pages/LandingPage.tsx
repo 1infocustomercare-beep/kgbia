@@ -346,41 +346,45 @@ const LandingPage = () => {
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute bottom-0 left-0 right-0 h-[50vh] origin-bottom"
             style={{
-              backgroundImage: `linear-gradient(hsla(265, 70%, 60%, 0.04) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 70%, 60%, 0.04) 1px, transparent 1px)`,
+              backgroundImage: `linear-gradient(hsla(42, 80%, 55%, 0.03) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 70%, 60%, 0.03) 1px, transparent 1px)`,
               backgroundSize: "60px 60px",
             }}
           />
-          <div className="absolute bottom-[25vh] left-0 right-0 h-[1px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 15%, hsla(265, 70%, 60%, 0.2) 50%, transparent 85%)" }} />
+          <div className="absolute bottom-[25vh] left-0 right-0 h-[1px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 15%, hsla(42, 80%, 55%, 0.2) 50%, transparent 85%)" }} />
         </div>
 
-        {/* ═══ LAYER 2: Single soft ambient glow ═══ */}
+        {/* ═══ LAYER 2: Dual ambient glow — violet + gold ═══ */}
         <div className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <div className="w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full blur-[200px] opacity-[0.08]"
             style={{ background: "radial-gradient(circle, hsl(265, 70%, 55%), transparent 70%)" }} />
         </div>
+        <div className="absolute top-[30%] left-[35%] -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <div className="w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] rounded-full blur-[180px] opacity-[0.06]"
+            style={{ background: "radial-gradient(circle, hsl(42, 80%, 55%), transparent 70%)" }} />
+        </div>
 
-        {/* ═══ LAYER 3: Crown icon — elegant, subtle pulse ═══ */}
+        {/* ═══ LAYER 3: Crown icon — gold pulse ═══ */}
         <div className="absolute top-[22%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <motion.div
             className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center"
-            style={{ background: "radial-gradient(circle, hsla(265, 70%, 60%, 0.08) 0%, transparent 70%)" }}
+            style={{ background: "radial-gradient(circle, hsla(42, 80%, 55%, 0.1) 0%, transparent 70%)" }}
             animate={{ scale: [1, 1.03, 1] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
-            <Crown className="w-7 h-7 sm:w-9 sm:h-9 text-primary/60 drop-shadow-[0_0_20px_hsla(265,70%,60%,0.3)]" />
+            <Crown className="w-7 h-7 sm:w-9 sm:h-9 drop-shadow-[0_0_20px_hsla(42,80%,55%,0.4)]" style={{ color: "hsl(42, 80%, 60%)" }} />
           </motion.div>
         </div>
 
-        {/* ═══ LAYER 4: Subtle corner accents ═══ */}
+        {/* ═══ LAYER 4: Gold corner accents ═══ */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,70%,60%,0.2), transparent)" }} />
-          <div className="absolute top-0 left-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(265,70%,60%,0.2), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(42,80%,55%,0.25), transparent)" }} />
+          <div className="absolute top-0 left-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(42,80%,55%,0.25), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(42,80%,55%,0.25), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(42,80%,55%,0.25), transparent)" }} />
         </div>
 
-        {/* ═══ Single vertical light beam ═══ */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[30vh] bg-gradient-to-b from-primary/30 via-primary/10 to-transparent" />
+        {/* ═══ Gold vertical light beam ═══ */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[30vh]" style={{ background: "linear-gradient(180deg, hsla(42, 80%, 55%, 0.3), hsla(265, 70%, 60%, 0.1), transparent)" }} />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
