@@ -92,11 +92,12 @@ const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: strin
 );
 
 /* ═══ Section Divider ═══ */
-const SectionDivider = () => (
-  <div className="relative py-1">
+const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
+  <div ref={ref} className="relative py-1">
     <div className="section-divider" />
   </div>
-);
+));
+SectionDivider.displayName = "SectionDivider";
 
 /* ═══ Comparison Row ═══ */
 const CompRow = ({ label, empire, others }: { label: string; empire: string; others: string }) => (

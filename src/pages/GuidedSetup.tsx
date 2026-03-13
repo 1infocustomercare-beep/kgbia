@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ChefHat, Truck, ShoppingBag, TableProperties, Palette, Check, ArrowRight, ArrowLeft, Sparkles, Upload, Car, Scissors, Heart, Store, Dumbbell, Building, Lock } from "lucide-react";
+import { ChefHat, Truck, ShoppingBag, TableProperties, Palette, Check, ArrowRight, ArrowLeft, Sparkles, Upload, Car, Scissors, Heart, Store, Dumbbell, Building } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -258,39 +258,26 @@ export default function GuidedSetup() {
 
               <div className="grid grid-cols-2 gap-3">
                 {INDUSTRIES.map(ind => {
-                  const isActive = !ind.comingSoon;
                   const isSelected = industry === ind.id;
+                  const cfg = INDUSTRY_CONFIGS[ind.id];
                   return (
                     <motion.button
                       key={ind.id}
-                      onClick={() => isActive && handleIndustryChange(ind.id)}
-                      disabled={!isActive}
+                      onClick={() => handleIndustryChange(ind.id)}
                       className={`relative p-4 rounded-2xl border text-left transition-all ${
-                        isSelected && isActive
+                        isSelected
                           ? "border-primary bg-primary/10 ring-2 ring-primary/30"
-                          : isActive
-                          ? "border-border/50 bg-card hover:border-primary/20"
-                          : "border-border/30 bg-muted/30 opacity-60 cursor-not-allowed"
+                          : "border-border/50 bg-card hover:border-primary/20"
                       }`}
-                      whileTap={isActive ? { scale: 0.97 } : undefined}
+                      whileTap={{ scale: 0.97 }}
                     >
-                      {!isActive && (
-                        <div className="absolute top-2 right-2">
-                          <Lock className="w-3.5 h-3.5 text-muted-foreground" />
-                        </div>
-                      )}
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-2 ${
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-2 text-lg ${
                         isSelected ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
                       }`}>
-                        {INDUSTRY_ICONS[ind.id]}
+                        {cfg?.emoji || INDUSTRY_ICONS[ind.id] || "🏢"}
                       </div>
                       <p className="text-sm font-bold text-foreground">{ind.label}</p>
                       <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight line-clamp-2">{ind.description}</p>
-                      {!isActive && (
-                        <span className="inline-block mt-1.5 text-[9px] font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                          Prossimamente
-                        </span>
-                      )}
                     </motion.button>
                   );
                 })}

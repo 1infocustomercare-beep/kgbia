@@ -14,6 +14,27 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { generateQRDataUrl, downloadQR } from "@/lib/qr";
+import { Eye, EyeOff } from "lucide-react";
+
+// Masked PIN display component
+function PinDisplay({ pin }: { pin: any }) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="flex items-center justify-between p-2.5 rounded-xl bg-card border border-border/30">
+      <span className="text-sm font-mono font-semibold text-foreground tracking-widest">
+        {visible ? pin.pin_code : "●".repeat(pin.pin_code?.length || 4)}
+      </span>
+      <div className="flex items-center gap-2">
+        <button onClick={() => setVisible(v => !v)} className="p-1.5 rounded-lg hover:bg-muted transition-colors">
+          {visible ? <EyeOff className="w-3.5 h-3.5 text-muted-foreground" /> : <Eye className="w-3.5 h-3.5 text-muted-foreground" />}
+        </button>
+        <span className="text-[10px] text-green-400 font-medium flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-green-400" /> Attivo
+        </span>
+      </div>
+    </div>
+  );
+}
 
 type OrdersSection = "orders" | "tables" | "traffic" | "reservations";
 
@@ -190,12 +211,7 @@ const OrdersTab = ({
               <Key className="w-3 h-3" /> PIN Staff
             </p>
             {existingPins.map(pin => (
-              <div key={pin.id} className="flex items-center justify-between p-2.5 rounded-xl bg-card border border-border/30">
-                <span className="text-sm font-mono font-semibold text-foreground tracking-widest">{pin.pin_code}</span>
-                <span className="text-[10px] text-green-400 font-medium flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400" /> Attivo
-                </span>
-              </div>
+              <PinDisplay key={pin.id} pin={pin} />
             ))}
             <div className="flex gap-2">
               <input type="text" inputMode="numeric" placeholder="Nuovo PIN (4-6 cifre)" value={kitchenPin}

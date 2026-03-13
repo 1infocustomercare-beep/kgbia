@@ -195,8 +195,23 @@ export default function LuxuryPublicSite({ company }: Props) {
 
       {/* ═══ HERO ═══ */}
       <section id="hero" ref={heroRef} className="relative min-h-[90vh] flex items-center justify-center pt-20 px-5">
-        {/* Background effects */}
-        <div className="absolute inset-0" style={{ background: p.heroBg }} />
+        {/* Hero background image (from site config or fallback) */}
+        {(siteConfig?.hero_image_url || siteConfig?.hero_video_url) ? (
+          siteConfig?.hero_video_url ? (
+            <video src={siteConfig.hero_video_url} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+          ) : (
+            <img src={siteConfig.hero_image_url} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          )
+        ) : (
+          <img
+            src={`https://source.unsplash.com/1920x1080/?${encodeURIComponent(config.label + " professional business")}`}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          />
+        )}
+        {/* Overlay — max 50% opacity for visibility */}
+        <div className="absolute inset-0 opacity-50" style={{ background: p.heroBg }} />
         <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 30% 30%, hsl(${p.accent} / 0.15), transparent 60%)` }} />
         {/* Grid texture */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
