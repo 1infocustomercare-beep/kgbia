@@ -481,7 +481,7 @@ const LandingPage = () => {
                 { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali" },
               ].map((t, i) => (
                 <span key={i} className="text-[0.6rem] text-foreground/20 font-heading tracking-[3px] uppercase flex items-center gap-2">
-                  <span className="text-primary/30">{t.icon}</span>
+                  <span className="text-gold/35">{t.icon}</span>
                   {t.text}
                 </span>
               ))}
