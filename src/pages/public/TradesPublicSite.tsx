@@ -45,9 +45,9 @@ const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode
 Section.displayName = "Section";
 
 const HERO_VIDEOS: Record<string, string> = {
-  electrician: "https://videos.pexels.com/video-files/8488208/8488208-uhd_1440_2560_30fps.mp4",
-  plumber: "https://videos.pexels.com/video-files/15959642/15959642-uhd_2560_1440_60fps.mp4",
-  default: "https://videos.pexels.com/video-files/8488372/8488372-uhd_1440_2560_30fps.mp4",
+  electrician: "https://videos.pexels.com/video-files/5532771/5532771-uhd_2560_1440_25fps.mp4",
+  plumber: "https://videos.pexels.com/video-files/6538938/6538938-uhd_2560_1440_25fps.mp4",
+  default: "https://videos.pexels.com/video-files/5532771/5532771-uhd_2560_1440_25fps.mp4",
 };
 export default function TradesPublicSite({ company }: Props) {
   const companyId = company.id;
