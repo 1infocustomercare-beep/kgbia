@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ExternalLink, Smartphone, Monitor, Tablet, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useCallback, useEffect } from "react";
+import { buildPublicSiteUrl } from "@/lib/public-site-path";
 
 interface SitePreviewOverlayProps {
   slug: string;
@@ -23,8 +24,7 @@ export function SitePreviewOverlay({ slug, companyName, open, onClose, industry 
   const [device, setDevice] = useState<DeviceMode>("mobile");
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const [iframeError, setIframeError] = useState(false);
-  const isFood = industry === "food" || !industry;
-  const previewUrl = `${window.location.origin}/${isFood ? "r" : "b"}/${slug}`;
+  const previewUrl = buildPublicSiteUrl(slug, industry);
   const size = DEVICE_SIZES[device];
 
   // Reset states when overlay opens

@@ -64,6 +64,7 @@ export default function WebHubPage() {
               primaryColor={company.primary_color}
               companyName={company.name}
               onExpand={() => setFullPreview(true)}
+              industry={company.industry}
             />
           )}
         </div>
