@@ -95,7 +95,7 @@ export default function BakeryPublicSite({ company }: Props) {
 
   useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
 
-  const HERO_VIDEO = "https://videos.pexels.com/video-files/3191572/3191572-uhd_2560_1440_25fps.mp4";
+  const HERO_VIDEO = "https://videos.pexels.com/video-files/7405929/7405929-uhd_2560_1440_24fps.mp4";
   const tickerItems = ["Pane Fresco", "Cornetti", "Focaccia", "Torte Artigianali", "Lievito Madre", "Farine Bio", "Biscotti", "Dolci Tipici", "Pizza al Taglio", "Cannoli"];
   const navLinks = ["Vetrina", "Chi Siamo", "Pre-ordina", "Contatti"];
 
