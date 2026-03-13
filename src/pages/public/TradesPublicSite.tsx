@@ -26,17 +26,26 @@ const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 
 interface Props { company: any; }
 
-export default function TradesPublicSite({ company }: Props) {
-  const companyId = company.id;
-  const industry = (company.industry || "plumber") as IndustryId;
-  const config = getIndustryConfig(industry);
-  const isElectrician = industry === "electrician";
-  const isPlumber = industry === "plumber";
-  const accentColor = isElectrician ? "amber" : isPlumber ? "slate" : "orange";
-  const accentBg = isElectrician ? "bg-amber-500" : isPlumber ? "bg-slate-600" : "bg-orange-500";
-  const accentText = isElectrician ? "text-amber-400" : isPlumber ? "text-blue-400" : "text-orange-400";
-  const accentBgLight = isElectrician ? "bg-amber-500/10" : isPlumber ? "bg-blue-500/10" : "bg-orange-500/10";
-  const HeroIcon = isElectrician ? Zap : isPlumber ? Droplets : Wrench;
+const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
+  ({ id, children, className = "", style }, _ref) => {
+    const localRef = useRef(null);
+    const isInView = useInView(localRef, { once: true, margin: "-60px" });
+    return (
+      <section id={id} ref={localRef} className={className} style={style}>
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+          {children}
+        </motion.div>
+      </section>
+    );
+  }
+);
+Section.displayName = "Section";
+
+const HERO_VIDEOS: Record<string, string> = {
+  electrician: "https://videos.pexels.com/video-files/5090753/5090753-uhd_2560_1440_30fps.mp4",
+  plumber: "https://videos.pexels.com/video-files/6538940/6538940-uhd_2560_1440_25fps.mp4",
+  default: "https://videos.pexels.com/video-files/2800369/2800369-uhd_2560_1440_25fps.mp4",
+};
 
   const [form, setForm] = useState({ name: "", phone: "", email: "", type: "", urgency: "normal", address: "", notes: "" });
   const [submitting, setSubmitting] = useState(false);
