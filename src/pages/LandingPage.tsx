@@ -412,7 +412,7 @@ const LandingPage = () => {
         <div className="absolute top-[28%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <motion.div
             className="w-20 h-20 sm:w-28 sm:h-28 rounded-full animate-crown-aura flex items-center justify-center"
-            style={{ background: "radial-gradient(circle, hsla(42, 80%, 55%, 0.12) 0%, transparent 70%)" }}
+            style={{ background: "radial-gradient(circle, hsla(265, 70%, 60%, 0.12) 0%, transparent 70%)" }}
             animate={{ scale: [1, 1.05, 1], rotate: [0, 360] }}
             transition={{ scale: { duration: 3, repeat: Infinity }, rotate: { duration: 20, repeat: Infinity, ease: "linear" } }}
           >
