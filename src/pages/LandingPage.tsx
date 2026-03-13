@@ -362,7 +362,7 @@ const LandingPage = () => {
         </div>
         <div className="absolute top-[30%] left-[35%] -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <div className="w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] rounded-full blur-[180px] opacity-[0.06]"
-            style={{ background: "radial-gradient(circle, hsl(42, 80%, 55%), transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, hsl(280, 50%, 60%), transparent 70%)" }} />
         </div>
 
         {/* ═══ LAYER 3: Crown icon — gold pulse ═══ */}
