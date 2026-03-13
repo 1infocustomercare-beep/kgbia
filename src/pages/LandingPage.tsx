@@ -217,17 +217,23 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative">
+    <div className="min-h-screen bg-background overflow-x-hidden relative noise-overlay">
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 aurora-mesh opacity-20" />
-        <div className="absolute w-[600px] h-[600px] rounded-full blur-[200px] opacity-[0.04] bg-primary -top-[200px] left-1/3 animate-blob-float" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.03] bg-accent top-[60vh] -right-[100px] animate-blob-float-reverse" />
+        <div className="absolute inset-0 aurora-mesh opacity-25" />
+        {/* Large violet ambient orbs */}
+        <div className="absolute w-[700px] h-[700px] rounded-full blur-[250px] opacity-[0.06] bg-primary -top-[200px] left-1/4 animate-float-glow" />
+        <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] bg-accent top-[50vh] -right-[100px] animate-float-glow-slow" />
+        <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.035] top-[80vh] left-[10%] animate-float-glow-delay"
+          style={{ background: "hsl(320, 75%, 55%)" }} />
+        {/* Particles */}
         <Particle delay={0} size={2} x="10%" y="30%" />
-        <Particle delay={1} size={2} x="85%" y="20%" />
+        <Particle delay={1} size={3} x="85%" y="20%" />
         <Particle delay={2} size={3} x="70%" y="60%" />
         <Particle delay={0.5} size={2} x="25%" y="75%" />
+        <Particle delay={1.5} size={2} x="50%" y="45%" />
+        <Particle delay={3} size={2} x="90%" y="80%" />
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
