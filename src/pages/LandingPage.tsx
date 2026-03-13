@@ -1012,26 +1012,49 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8"
+        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 justify-items-center"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {[
             { img: mockupCliente, title: "App Cliente", desc: "Prenota, ordina, paga e ricevi notifiche. Un'esperienza premium per i clienti di qualsiasi settore.", tag: "FRONT-END", features: ["Prenotazioni & Ordini", "Loyalty & Cashback", "Push Notification", "Chat Diretta"] },
-            { img: mockupAdmin, title: "Dashboard Admin", desc: "Pannello completo con analytics IA, CRM, gestione team, fatturazione e marketing automation per ogni settore.", tag: "BACK-OFFICE", features: ["Analytics predittivi", "CRM & Segmentazione", "Fatturazione elettronica", "Marketing automatizzato"] },
-            { img: mockupCucina, title: "Pannello Operativo", desc: "Vista operativa real-time: gestisci interventi, appuntamenti, flotta, staff e postazioni dal campo.", tag: "OPERATIONS", features: ["Live tracking operativo", "Gestione turni & team", "Compliance & controlli", "Notifiche smart"] },
+            { img: mockupAdmin, title: "Dashboard Admin", desc: "Analytics IA, CRM, gestione team, fatturazione e marketing automation per ogni settore.", tag: "BACK-OFFICE", features: ["Analytics predittivi", "CRM & Segmentazione", "Fatturazione elettronica", "Marketing automatizzato"] },
+            { img: mockupCucina, title: "Pannello Operativo", desc: "Vista operativa real-time: interventi, appuntamenti, flotta, staff e postazioni.", tag: "OPERATIONS", features: ["Live tracking operativo", "Gestione turni & team", "Compliance & controlli", "Notifiche smart"] },
           ].map((mock, i) => (
-            <motion.div key={i} className="group" variants={fadeScale}>
-              <div className="relative rounded-2xl overflow-hidden glow-card mb-5">
-                <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full holo-badge text-[0.5rem] font-heading font-bold text-primary/70 tracking-[2px]">{mock.tag}</div>
-                <img src={mock.img} alt={mock.title} className="w-full aspect-[4/3] object-cover group-hover:scale-[1.03] transition-transform duration-700" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="font-heading text-base font-bold text-foreground mb-1">{mock.title}</h3>
-                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{mock.desc}</p>
+            <motion.div key={i} className="group flex flex-col items-center" variants={fadeScale}>
+              {/* iPhone frame */}
+              <div className="relative mb-5">
+                {/* Ambient glow */}
+                <div className="absolute -inset-4 rounded-[52px] opacity-15 blur-2xl pointer-events-none bg-primary group-hover:opacity-25 transition-opacity duration-700" />
+                
+                {/* Phone body */}
+                <div className="relative w-[200px] h-[410px] rounded-[38px] border-[3px] border-foreground/15 bg-foreground/5 shadow-[0_16px_50px_hsla(0,0%,0%,0.45)] overflow-hidden transition-all duration-500 group-hover:shadow-[0_20px_60px_hsla(265,70%,60%,0.15)]">
+                  {/* Dynamic Island */}
+                  <div className="absolute top-[8px] left-1/2 -translate-x-1/2 w-[70px] h-[20px] bg-foreground/80 rounded-full z-20" />
+                  
+                  {/* Tag badge */}
+                  <div className="absolute top-[34px] left-1/2 -translate-x-1/2 z-20 px-2 py-0.5 rounded-full border border-primary/20 bg-background/70 backdrop-blur-sm">
+                    <span className="text-[0.45rem] font-heading font-bold text-primary/70 tracking-[2px]">{mock.tag}</span>
+                  </div>
+
+                  {/* Screen */}
+                  <div className="absolute inset-[3px] rounded-[34px] overflow-hidden bg-background">
+                    <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top group-hover:scale-[1.05] transition-transform duration-700" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent pointer-events-none" />
+                    {/* Title overlay */}
+                    <div className="absolute bottom-8 left-4 right-4 z-10">
+                      <h3 className="font-heading text-sm font-bold text-foreground mb-1">{mock.title}</h3>
+                      <p className="text-[0.55rem] text-foreground/45 leading-[1.5]">{mock.desc}</p>
+                    </div>
+                  </div>
+
+                  {/* Home indicator */}
+                  <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[80px] h-[4px] bg-foreground/20 rounded-full z-20" />
                 </div>
               </div>
-              <div className="space-y-2 px-1">
+
+              {/* Features below */}
+              <div className="space-y-2 w-full max-w-[200px]">
                 {mock.features.map((f, j) => (
-                  <div key={j} className="flex items-center gap-2.5 text-xs text-foreground/40">
+                  <div key={j} className="flex items-center gap-2 text-[0.65rem] text-foreground/40">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
                     {f}
                   </div>
