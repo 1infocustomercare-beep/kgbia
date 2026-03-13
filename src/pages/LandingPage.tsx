@@ -471,7 +471,7 @@ const LandingPage = () => {
               style={{
                 left: `${8 + i * 8}%`,
                 height: "120px",
-                background: `linear-gradient(180deg, transparent, ${i % 3 === 0 ? "hsla(200,90%,60%,0.6)" : i % 2 === 0 ? "hsla(265,85%,65%,0.5)" : "hsla(320,75%,55%,0.4)"}, transparent)`,
+                background: `linear-gradient(180deg, transparent, ${i % 3 === 0 ? "hsla(200,90%,60%,0.6)" : i % 2 === 0 ? "hsla(217,85%,58%,0.5)" : "hsla(42,80%,55%,0.4)"}, transparent)`,
                 "--rain-speed": `${4 + i * 1.2}s`,
                 "--rain-delay": `${i * 0.4}s`,
               } as React.CSSProperties}
