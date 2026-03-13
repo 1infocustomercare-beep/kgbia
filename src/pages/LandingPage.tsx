@@ -1194,14 +1194,14 @@ const LandingPage = () => {
               Ecosistema Completo,<br /><span className="text-shimmer">di Tua Proprietà</span>
             </h2>
             <p className="text-foreground/40 leading-[1.7] max-w-lg mx-auto lg:mx-0 mb-7 text-sm">
-              App cliente, pannello gestionale e vista operativa — tutto white-label con il tuo brand. Dal menu digitale alla gestione flotta, dal CRM alla fatturazione.
+              App cliente, pannello gestionale e vista operativa — tutto white-label con il tuo brand. Dal catalogo alla gestione flotta, dal CRM alla fatturazione. Qualsiasi settore.
             </p>
             <div className="space-y-4 mb-8 text-left max-w-md mx-auto lg:mx-0">
               {[
                 { title: "Ordini, Prenotazioni & Appuntamenti", desc: "Un unico sistema per ogni tipo di transazione", icon: <Calendar className="w-3 h-3" /> },
                 { title: "CRM & Programma Fedeltà", desc: "Wallet pass, reward, storico cliente completo", icon: <Wallet className="w-3 h-3" /> },
                 { title: "Comunicazione Diretta", desc: "Push notification, chat, promozioni mirate", icon: <Bell className="w-3 h-3" /> },
-                { title: "Dashboard Operativa Real-Time", desc: "Cucina, autisti, staff — live senza errori", icon: <BarChart3 className="w-3 h-3" /> },
+                { title: "Dashboard Operativa Real-Time", desc: "Staff, autisti, tecnici — live senza errori", icon: <BarChart3 className="w-3 h-3" /> },
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-3.5 items-start group"
                   initial={{ opacity: 0, x: -15 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
