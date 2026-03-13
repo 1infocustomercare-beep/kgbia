@@ -55,7 +55,7 @@ export default function GuidedSetup() {
   const isFood = industry === "food";
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !rolesReady) return;
 
     let isMounted = true;
 
