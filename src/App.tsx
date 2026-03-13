@@ -85,7 +85,10 @@ const PageLoader = () => (
 function App() {
   const [showSplash, setShowSplash] = useState(true);
 
-
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
   return (
   <QueryClientProvider client={queryClient}>
     {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
