@@ -431,12 +431,12 @@ const LandingPage = () => {
             <motion.div className="mt-14 w-full grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
               {metrics.map((m, i) => (
-                <motion.div key={i} className="counter-card rounded-2xl p-4 sm:p-5 text-center group hover:border-primary/15 transition-all"
+                <motion.div key={i} className="counter-card rounded-2xl p-4 sm:p-5 text-center group hover:border-primary/15 transition-all holo-shine"
                   whileHover={{ y: -2 }}>
                   <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient animate-count-glow">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="text-[0.6rem] text-foreground/35 mt-1.5 tracking-[2px] uppercase font-heading">{m.label}</p>
+                  <p className="text-[0.6rem] text-foreground/40 mt-1.5 tracking-[2px] uppercase font-heading">{m.label}</p>
                 </motion.div>
               ))}
             </motion.div>
