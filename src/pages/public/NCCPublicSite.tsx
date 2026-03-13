@@ -1264,6 +1264,8 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
       </footer>
 
+      <AutomationShowcase accentColor={NCC.gold} accentBg="bg-amber-600" sectorName="il trasporto NCC" darkMode={true} />
+
       {/* Styles */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&display=swap');
