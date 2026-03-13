@@ -338,8 +338,8 @@ const LandingPage = () => {
 
         {/* ═══ LAYER 0: Video background — very subtle ═══ */}
         <div className="absolute inset-0">
-          <video src={videoHero} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-[0.08]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background" />
+          <video src={videoHero} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-[0.18]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background" />
         </div>
 
         {/* ═══ LAYER 1: Minimal perspective grid ═══ */}
