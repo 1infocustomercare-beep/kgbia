@@ -12,7 +12,7 @@ export default function WebHubPage() {
   const [fullPreview, setFullPreview] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const isFood = company?.industry === "food" || company?.industry === "restaurant";
+  const isFood = company?.industry === "food";
   const siteUrl = company?.slug
     ? `${window.location.origin}/${isFood ? "r" : "b"}/${company.slug}`
     : null;
