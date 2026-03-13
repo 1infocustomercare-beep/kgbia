@@ -397,9 +397,10 @@ const RestaurantPage = () => {
       </div>
 
       {/* ====== 3. MENU — Le Nostre Specialità ====== */}
-      <section id="menu-section" className="py-12 sm:py-20 lg:py-28 px-4 sm:px-5 bg-card/30">
-        <div className="max-w-6xl mx-auto">
-          <motion.div className="text-center mb-8 sm:mb-12"
+      <section id="menu-section" className="py-10 sm:py-20 lg:py-28 bg-card/30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-5">
+          {/* Section Header */}
+          <motion.div className="text-center mb-8 sm:mb-14"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
@@ -425,46 +426,47 @@ const RestaurantPage = () => {
             </div>
           </motion.div>
 
-          {/* Signature Dishes — Featured Grid */}
+          {/* Signature Dishes — Premium Horizontal Scroll on Mobile */}
           {popularItems.length > 0 && (
             <div className="mb-10 sm:mb-16">
-              <h3 className="text-base sm:text-lg font-display font-semibold text-foreground mb-4 sm:mb-6 flex items-center gap-2">
-                <Star className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> Piatti Signature
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h3 className="text-sm sm:text-lg font-display font-semibold text-foreground flex items-center gap-2">
+                  <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                  <span>Piatti Signature</span>
+                </h3>
+                <span className="text-[10px] text-muted-foreground tracking-wider uppercase hidden sm:inline">Selezionati dallo Chef</span>
+              </div>
+              {/* Mobile: horizontal scroll / Desktop: grid */}
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-5 sm:overflow-visible sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
                 {popularItems.map((item, i) => (
                   <motion.div key={item.id}
-                    className="group relative rounded-2xl overflow-hidden bg-card border border-border/30 hover:border-primary/30 transition-all duration-500 cursor-pointer"
+                    className="group relative flex-shrink-0 w-[75vw] sm:w-auto rounded-2xl overflow-hidden bg-card border border-border/20 hover:border-primary/30 transition-all duration-500 cursor-pointer shadow-sm hover:shadow-md"
                     initial={{ opacity: 0, y: 40, scale: 0.95 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
                     viewport={{ once: true, margin: "-30px" }}
-                    transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                     onClick={() => setSelectedItem(item)}>
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                      <div className="absolute top-3 left-3 flex gap-1.5">
-                        <span className="px-2 py-0.5 rounded-full bg-primary/90 text-primary-foreground text-[10px] font-semibold tracking-wider uppercase">Signature</span>
-                        <span className="px-2 py-0.5 rounded-full glass text-foreground text-[10px] font-medium">{item.category}</span>
+                      <div className="absolute inset-0 bg-gradient-to-t from-card/90 via-transparent to-transparent" />
+                      <div className="absolute top-3 left-3">
+                        <span className="px-2.5 py-1 rounded-full bg-primary/90 text-primary-foreground text-[9px] sm:text-[10px] font-bold tracking-widest uppercase backdrop-blur-sm">★ Signature</span>
                       </div>
+                      {/* Price overlay bottom-left */}
+                      <div className="absolute bottom-3 left-3">
+                        <span className="text-xl sm:text-2xl font-display font-bold text-foreground drop-shadow-lg">€{item.price.toFixed(2)}</span>
+                      </div>
+                      {/* Add button bottom-right — always visible on mobile */}
                       <motion.button
                         onClick={(e) => { e.stopPropagation(); addItem(item); }}
-                        className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        className="absolute bottom-3 right-3 w-11 h-11 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300"
                         whileTap={{ scale: 0.85 }}>
                         <Plus className="w-5 h-5" />
                       </motion.button>
                     </div>
-                    <div className="p-3 sm:p-5">
-                      <h4 className="font-display text-base sm:text-lg font-bold text-foreground">{item.name}</h4>
-                      <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
-                      <div className="flex items-center justify-between mt-2 sm:mt-3">
-                        <span className="text-lg sm:text-xl font-display font-bold text-primary">€{item.price.toFixed(2)}</span>
-                        <motion.button
-                          onClick={(e) => { e.stopPropagation(); addItem(item); }}
-                          className="px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase hover:bg-primary hover:text-primary-foreground transition-colors"
-                          whileTap={{ scale: 0.95 }}>
-                          Aggiungi
-                        </motion.button>
-                      </div>
+                    <div className="p-3 sm:p-4">
+                      <h4 className="font-display text-sm sm:text-base font-bold text-foreground leading-tight">{item.name}</h4>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">{item.description}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -472,50 +474,74 @@ const RestaurantPage = () => {
             </div>
           )}
 
-          {/* Full Menu by Category */}
+          {/* Full Menu — Sticky Category Navigation */}
           <div>
-            <h3 className="text-lg font-display font-semibold text-foreground mb-6">Menu Completo</h3>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-px flex-1 bg-border/40" />
+              <h3 className="text-xs sm:text-sm font-display font-semibold text-muted-foreground tracking-[0.2em] uppercase">Menu Completo</h3>
+              <div className="h-px flex-1 bg-border/40" />
+            </div>
             
-            {/* Category tabs */}
-            <div className="flex gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide pb-3 mb-4 sm:mb-6">
-              {menuCategories.map((cat) => (
-                <button key={cat} onClick={() => setActiveMenuCat(cat)}
-                  className={`flex-shrink-0 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-300
-                    ${effectiveCat === cat ? "bg-primary text-primary-foreground" : "glass border border-border/30 text-muted-foreground hover:text-foreground hover:border-primary/30"}`}>
-                  {cat}
-                </button>
-              ))}
+            {/* Sticky Category Pills */}
+            <div className="sticky top-[60px] z-20 -mx-4 px-4 sm:mx-0 sm:px-0 py-2 bg-background/80 backdrop-blur-xl border-b border-border/20 mb-5 sm:mb-6">
+              <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1">
+                {menuCategories.map((cat) => {
+                  const isActive = effectiveCat === cat;
+                  const catCount = menu.filter(i => i.category === cat).length;
+                  return (
+                    <button key={cat} onClick={() => setActiveMenuCat(cat)}
+                      className={`relative flex-shrink-0 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-300
+                        ${isActive
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "bg-card/80 border border-border/30 text-muted-foreground hover:text-foreground hover:border-primary/30"}`}>
+                      {cat}
+                      <span className={`ml-1.5 text-[9px] ${isActive ? "text-primary-foreground/70" : "text-muted-foreground/50"}`}>
+                        {catCount}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Items grid */}
+            {/* Items Grid — Refined Cards */}
             <AnimatePresence mode="wait">
               <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" key={effectiveCat}
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
+                initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}>
                 {catItems.map((item, i) => (
                   <motion.div key={item.id}
-                    className="group flex gap-4 p-4 rounded-2xl bg-card border border-border/30 hover:border-primary/20 transition-all cursor-pointer"
-                    initial={{ opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ delay: i * 0.06, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    className="group flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl bg-card border border-border/20 hover:border-primary/20 hover:shadow-sm transition-all cursor-pointer"
+                    initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     onClick={() => setSelectedItem(item)}>
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-display font-bold text-foreground text-sm">{item.name}</h4>
-                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{item.description}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="font-display font-bold text-primary">€{item.price.toFixed(2)}</span>
-                      <motion.button
-                        onClick={(e) => { e.stopPropagation(); addItem(item); }}
-                        className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                        whileTap={{ scale: 0.85 }}>
-                        <Plus className="w-4 h-4" />
-                      </motion.button>
+                    {/* Image — consistent rounded square */}
+                    <div className="w-[72px] h-[72px] sm:w-24 sm:h-24 rounded-xl overflow-hidden flex-shrink-0 relative">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      {item.isPopular && (
+                        <div className="absolute top-1 left-1 w-5 h-5 rounded-full bg-primary/90 flex items-center justify-center">
+                          <Star className="w-2.5 h-2.5 text-primary-foreground" />
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                    {/* Content */}
+                    <div className="flex-1 min-w-0 flex flex-col justify-between">
+                      <div>
+                        <h4 className="font-display font-bold text-foreground text-[13px] sm:text-sm leading-tight">{item.name}</h4>
+                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">{item.description}</p>
+                      </div>
+                      <div className="flex items-center justify-between mt-1.5">
+                        <span className="text-base sm:text-lg font-display font-bold text-primary">€{item.price.toFixed(2)}</span>
+                        <motion.button
+                          onClick={(e) => { e.stopPropagation(); addItem(item); }}
+                          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
+                          whileTap={{ scale: 0.85 }}>
+                          <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </motion.button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </motion.div>
             </AnimatePresence>
           </div>
