@@ -1047,7 +1047,7 @@ const LandingPage = () => {
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }}>
             <div className="relative rounded-2xl overflow-hidden glow-card">
-              <video src={videoFeatures} autoPlay muted loop playsInline className="w-full aspect-video object-cover" />
+              <img src={heroAiPlatform} alt="Empire AI Platform" className="w-full aspect-video object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-transparent pointer-events-none" />
             </div>
           </motion.div>
