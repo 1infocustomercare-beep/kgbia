@@ -52,7 +52,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
 
 interface Props { company: any; }
 
-const HERO_VIDEO = "https://videos.pexels.com/video-files/4761446/4761446-uhd_2560_1440_25fps.mp4";
+const HERO_VIDEO = "https://videos.pexels.com/video-files/4761761/4761761-uhd_2560_1440_25fps.mp4";
 const GALLERY = [
   "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=800",
   "https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&cs=tinysrgb&w=800",
