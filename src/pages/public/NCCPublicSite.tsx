@@ -29,7 +29,7 @@ import {
 const NCC = {
   bg: "#0a0a0a",
   bgLight: "#f5f0e8",
-  bgStats: "#e8f4f8",
+  bgStats: "#111111",
   ticker: "#111111",
   gold: "#C9A84C",
   white: "#ffffff",
@@ -86,43 +86,45 @@ function PremiumBadge() {
   const img = premiumImages[idx];
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 1.2, duration: 0.6 }}
-      className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 z-20 w-[120px] sm:w-[150px]"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: 1.2, duration: 0.6, type: "spring" }}
+      className="absolute -bottom-3 -left-2 sm:-bottom-5 sm:-left-5 lg:-bottom-6 lg:-left-6 z-20"
     >
       <div
-        className="rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl"
+        className="rounded-xl overflow-hidden backdrop-blur-md"
         style={{
-          background: "#111",
-          border: `1.5px solid ${NCC.gold}40`,
-          boxShadow: `0 8px 30px rgba(0,0,0,0.5), 0 0 15px ${NCC.gold}10`,
+          width: "clamp(100px, 22vw, 160px)",
+          background: "rgba(10,10,10,0.85)",
+          border: `1px solid ${NCC.gold}50`,
+          boxShadow: `0 12px 40px rgba(0,0,0,0.6), 0 0 20px ${NCC.gold}15`,
         }}
       >
-        <div className="relative h-[65px] sm:h-[85px] overflow-hidden">
+        <div className="relative overflow-hidden" style={{ height: "clamp(55px, 12vw, 90px)" }}>
           <AnimatePresence mode="wait">
             <motion.img
               key={idx}
               src={img.src}
               alt={img.label}
               className="w-full h-full object-cover"
-              initial={{ opacity: 0, scale: 1.1 }}
+              initial={{ opacity: 0, scale: 1.15 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.5 }}
             />
           </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
-        <div className="px-2 py-1.5 sm:px-3 sm:py-2 flex items-center gap-1.5 sm:gap-2">
+        <div className="px-2 py-1.5 flex items-center gap-1.5">
           <div
-            className="w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ background: `${NCC.gold}20` }}
+            className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ background: `${NCC.gold}25` }}
           >
-            <Award className="w-2.5 h-2.5 sm:w-3 sm:h-3" style={{ color: NCC.gold }} />
+            <Award className="w-2.5 h-2.5" style={{ color: NCC.gold }} />
           </div>
           <div className="min-w-0">
-            <p className="text-[8px] sm:text-[9px] uppercase tracking-wider font-bold" style={{ color: NCC.gold }}>Premium</p>
-            <p className="text-[9px] sm:text-[10px] text-white/60 truncate">{img.label}</p>
+            <p className="text-[7px] sm:text-[8px] uppercase tracking-wider font-bold" style={{ color: NCC.gold }}>Premium</p>
+            <p className="text-[8px] sm:text-[9px] text-white/50 truncate">{img.label}</p>
           </div>
         </div>
       </div>
@@ -592,9 +594,10 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* ═══════════ STATS — #e8f4f8 ═══════════ */}
-      <Section className="py-20 px-4" style={{ background: NCC.bgStats }}>
-        <div className="max-w-5xl mx-auto">
+      {/* ═══════════ STATS — dark premium ═══════════ */}
+      <Section className="py-20 px-4 relative overflow-hidden" style={{ background: NCC.bgStats }}>
+        <div className="absolute inset-0 opacity-20" style={{ background: `radial-gradient(ellipse at 50% 50%, ${NCC.gold}15, transparent 70%)` }} />
+        <div className="max-w-5xl mx-auto relative z-10">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { value: 10, suffix: "+", label: "Anni di Esperienza" },
@@ -603,10 +606,10 @@ export default function NCCPublicSite({ company }: Props) {
               { value: 24, suffix: "/7", label: "Sempre Disponibili", isStatic: true },
             ].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1, type: "spring" }} className="text-center">
-                <p className="text-4xl sm:text-5xl font-black mb-2" style={{ color: NCC.textDark }}>
+                <p className="text-4xl sm:text-5xl font-black mb-2" style={{ color: NCC.gold }}>
                   {s.isStatic ? `${s.value}${s.suffix}` : <><AnimatedNum value={s.value} />{s.suffix}</>}
                 </p>
-                <p className="text-xs uppercase tracking-[0.15em] font-medium" style={{ color: NCC.textSecondary }}>{s.label}</p>
+                <p className="text-xs uppercase tracking-[0.15em] font-medium text-white/50">{s.label}</p>
               </motion.div>
             ))}
           </div>
