@@ -29,7 +29,7 @@ import {
 const NCC = {
   bg: "#0a0a0a",
   bgLight: "#f5f0e8",
-  bgStats: "#e8f4f8",
+  bgStats: "#111111",
   ticker: "#111111",
   gold: "#C9A84C",
   white: "#ffffff",
