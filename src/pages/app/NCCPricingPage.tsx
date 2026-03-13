@@ -89,7 +89,7 @@ export default function NCCPricingPage() {
     queryFn: async () => {
       const routeIds = routes.map((r: any) => r.id);
       if (routeIds.length === 0) return {};
-      const { data } = await supabase.from("seasonal_prices").select("*").in("route_id", routeIds).eq("month", parseInt(seasonMonth));
+      const { data } = await (supabase as any).from("seasonal_prices").select("*").in("route_id", routeIds).eq("month", parseInt(seasonMonth));
       const map: Record<string, number> = {};
       (data || []).forEach((sp: any) => { map[`${sp.route_id}_${sp.vehicle_id || "all"}`] = sp.price; });
       return map;
