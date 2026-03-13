@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { type IndustryId } from "@/config/industry-config";
+import BackButton from "@/components/BackButton";
 
 // Sector-specific premium sites
 const NCCPublicSite = lazy(() => import("@/pages/public/NCCPublicSite"));
@@ -87,10 +88,20 @@ export default function BusinessPage() {
 
   // Trades group
   if (TRADES.includes(industry)) {
-    return <Suspense fallback={<SiteLoader />}><TradesPublicSite company={company} /></Suspense>;
+    return (
+      <Suspense fallback={<SiteLoader />}>
+        <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
+        <TradesPublicSite company={company} />
+      </Suspense>
+    );
   }
 
   // Sector-specific or universal fallback
   const Template = TEMPLATE_MAP[industry] || LuxuryPublicSite;
-  return <Suspense fallback={<SiteLoader />}><Template company={company} /></Suspense>;
+  return (
+    <Suspense fallback={<SiteLoader />}>
+      <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
+      <Template company={company} />
+    </Suspense>
+  );
 }

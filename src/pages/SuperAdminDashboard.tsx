@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lazy, Suspense } from "react";
+import BackButton from "@/components/BackButton";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
 import { toast } from "@/hooks/use-toast";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
@@ -384,6 +385,7 @@ const SuperAdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
       <div className="flex items-center justify-between px-4 sm:px-5 pt-4 pb-3 border-b-2 border-primary/40 bg-gradient-to-r from-primary/5 to-transparent">
         <div className="flex items-center gap-3">

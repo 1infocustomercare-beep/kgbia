@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import BackButton from "@/components/BackButton";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChefHat, LogOut, Volume2, VolumeX, Printer } from "lucide-react";
@@ -223,6 +224,7 @@ const KitchenView = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <BackButton to="/home" label="Indietro" variant="floating" theme="light" />
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-border sticky top-0 bg-background z-10">
         <div className="flex items-center gap-3">

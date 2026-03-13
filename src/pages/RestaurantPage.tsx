@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect, FormEvent } from "react";
+import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/gdpr/CookieBanner";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { demoRestaurant, demoMenu, menuCategories as demoCats } from "@/data/demo-restaurant";
@@ -195,6 +196,7 @@ const RestaurantPage = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
+      <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
       {/* TABLE QR BANNER */}
       {tableFromQR && (
         <div className="fixed top-0 inset-x-0 z-[60] bg-primary/90 text-primary-foreground px-4 py-2 flex items-center justify-between text-sm font-medium">

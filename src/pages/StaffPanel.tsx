@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
 import {
   CheckCircle2, XCircle, AlertCircle,
@@ -85,6 +86,7 @@ const StaffPanel = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <BackButton to="/home" label="Indietro" variant="floating" theme="light" />
       <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-border">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center">
