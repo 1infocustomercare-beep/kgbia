@@ -1130,20 +1130,6 @@ export default function NCCPublicSite({ company }: Props) {
                 </div>
               )}
 
-              {/* Second vehicle selector like reference */}
-              {displayVehicles.length > 0 && (
-                <div>
-                  <Label className="text-xs font-medium" style={{ color: NCC.textSecondary }}>Veicolo</Label>
-                  <Select value={bookingForm.vehicle} onValueChange={v => setBookingForm(p => ({ ...p, vehicle: v }))}>
-                    <SelectTrigger className="mt-1.5 h-12 rounded-xl border-gray-200"><SelectValue placeholder="Seleziona veicolo" /></SelectTrigger>
-                    <SelectContent>
-                      {(vehicles.length > 0 ? vehicles : FALLBACK_FLEET).map((v: any) => (
-                        <SelectItem key={v.id} value={v.id}>{v.name} ({v.min_pax || 1}-{v.max_pax || v.capacity} pax)</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
 
               <div>
                 <Label className="text-xs font-medium" style={{ color: NCC.textSecondary }}>Note aggiuntive</Label>
