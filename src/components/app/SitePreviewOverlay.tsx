@@ -8,6 +8,7 @@ interface SitePreviewOverlayProps {
   companyName: string;
   open: boolean;
   onClose: () => void;
+  industry?: string;
 }
 
 type DeviceMode = "mobile" | "tablet" | "desktop";
