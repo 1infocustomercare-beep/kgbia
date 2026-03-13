@@ -26,6 +26,7 @@ import heroPartnerLuxury from "@/assets/hero-partner-luxury.jpg";
 import mockupCliente from "@/assets/mockup-cliente.jpg";
 import mockupAdmin from "@/assets/mockup-admin.jpg";
 import mockupCucina from "@/assets/mockup-cucina.jpg";
+import nccHeroBg from "@/assets/ncc-hero-bg-amalfi.jpg";
 
 /* ═══════════════════════════════════════════
    HELPERS
