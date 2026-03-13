@@ -64,6 +64,9 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // Auto-redirect if already logged in
   useEffect(() => {
     if (authLoading || !user) return;
+    // Wait until roles are actually fetched before deciding redirect
+    if (roles.length === 0) return;
+
     if (roles.includes("super_admin")) {
       navigate("/superadmin", { replace: true });
     } else if (roles.includes("staff")) {
