@@ -1104,36 +1104,32 @@ const LandingPage = () => {
           </motion.h2>
         </div>
 
-        {/* Auto-scroll carousel */}
-        <div className="overflow-hidden -mx-5 sm:mx-0">
-          <div className="flex animate-carousel-scroll-slow whitespace-nowrap py-2">
-            {[...testimonials, ...testimonials].map((t, i) => (
-              <div key={i} className="inline-block w-[300px] sm:w-[380px] flex-shrink-0 mx-2 sm:mx-3 whitespace-normal">
-                <div className="p-6 sm:p-8 rounded-2xl glow-card text-center h-full flex flex-col">
-                  <div className="flex gap-0.5 justify-center mb-3">
-                    {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-3.5 h-3.5 text-accent fill-accent" />)}
-                  </div>
-                  <span className="text-3xl mb-3 block">{t.emoji}</span>
-                  <blockquote className="text-sm text-foreground/60 leading-[1.7] mb-4 italic flex-1">
-                    "{t.quote}"
-                  </blockquote>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/[0.08] text-[0.65rem] text-primary font-bold font-heading tracking-wider mb-3 mx-auto">
-                    <TrendingUp className="w-3 h-3" /> {t.metric}
-                  </div>
-                  <div className="flex items-center justify-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-foreground/60 text-xs font-bold font-heading">
-                      {t.name.charAt(0)}
-                    </div>
-                    <div className="text-left">
-                      <h4 className="font-heading text-xs font-semibold text-foreground">{t.name}</h4>
-                      <p className="text-[0.6rem] text-foreground/35">{t.role}</p>
-                    </div>
-                  </div>
+        {/* Premium Carousel */}
+        <PremiumCarousel speed="slow" itemWidth={320} fullWidth>
+          {testimonials.map((t, i) => (
+            <div key={i} className="p-6 sm:p-8 rounded-2xl glow-card text-center h-full flex flex-col">
+              <div className="flex gap-0.5 justify-center mb-3">
+                {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-3.5 h-3.5 text-accent fill-accent" />)}
+              </div>
+              <span className="text-3xl mb-3 block">{t.emoji}</span>
+              <blockquote className="text-sm text-foreground/60 leading-[1.7] mb-4 italic flex-1">
+                "{t.quote}"
+              </blockquote>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/[0.08] text-[0.65rem] text-primary font-bold font-heading tracking-wider mb-3 mx-auto">
+                <TrendingUp className="w-3 h-3" /> {t.metric}
+              </div>
+              <div className="flex items-center justify-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-foreground/60 text-xs font-bold font-heading">
+                  {t.name.charAt(0)}
+                </div>
+                <div className="text-left">
+                  <h4 className="font-heading text-xs font-semibold text-foreground">{t.name}</h4>
+                  <p className="text-[0.6rem] text-foreground/35">{t.role}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          ))}
+        </PremiumCarousel>
       </Section>
 
       {/* ═══════════════════════════════════════════
