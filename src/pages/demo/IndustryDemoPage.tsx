@@ -337,6 +337,12 @@ export default function IndustryDemoPage() {
     beach: BeachPublicSite,
     food: FoodPublicSite,
     restaurant: FoodPublicSite,
+    plumber: TradesPublicSite,
+    electrician: TradesPublicSite,
+    cleaning: TradesPublicSite,
+    gardening: TradesPublicSite,
+    construction: TradesPublicSite,
+    garage: TradesPublicSite,
   };
 
   const PremiumTemplate = PREMIUM_TEMPLATES[resolvedIndustry];
