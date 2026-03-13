@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import heroMercedesImg from "@/assets/ncc-hero-mercedes-amalfi.jpg";
+import heroBgImg from "@/assets/ncc-hero-bg-amalfi.jpg";
 import { motion, useInView, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -283,9 +285,9 @@ export default function NCCPublicSite({ company }: Props) {
   ];
 
   const featuredDestinations = [
-    { name: "Pompei & Napoli", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=800&fit=crop" },
-    { name: "Costiera Amalfitana", image: "https://images.unsplash.com/photo-1534445867742-43195f401b6c?w=600&h=800&fit=crop" },
-    { name: "Sorrento & Capri", image: "https://images.unsplash.com/photo-1583422409516-2895a77efded?w=600&h=800&fit=crop" },
+    { name: "Pompei & Napoli", image: "https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=600&h=800&fit=crop" },
+    { name: "Costiera Amalfitana", image: "https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=600&h=800&fit=crop" },
+    { name: "Sorrento & Capri", image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=800&fit=crop" },
   ];
 
   const boatHighlights: Record<string, string[]> = {
@@ -429,15 +431,12 @@ export default function NCCPublicSite({ company }: Props) {
 
       {/* ═══════════ HERO — 100vh, video bg + 2 columns ═══════════ */}
       <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
-        {/* Video background */}
-        <video
-          autoPlay muted loop playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          poster="https://images.unsplash.com/photo-1534445867742-43195f401b6c?w=1920&h=1080&fit=crop"
-        >
-          <source src="https://videos.pexels.com/video-files/4168951/4168951-uhd_2560_1440_25fps.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-black/60" />
+        {/* Dark background image — Amalfi coast */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${heroBgImg})` }}
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.5) 100%)" }} />
 
         <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
           <motion.div initial="hidden" animate="show" variants={stagger}>
@@ -464,7 +463,7 @@ export default function NCCPublicSite({ company }: Props) {
 
           <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="hidden lg:block">
             <div className="relative rounded-[20px] overflow-hidden shadow-2xl" style={{ border: `3px solid ${gold}30` }}>
-              <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&h=600&fit=crop" alt={`${company.name} Transfer`} className="w-full object-cover aspect-[4/3]" />
+              <img src={heroMercedesImg} alt={`${company.name} Transfer`} className="w-full object-cover aspect-[4/3]" />
             </div>
           </motion.div>
         </div>
