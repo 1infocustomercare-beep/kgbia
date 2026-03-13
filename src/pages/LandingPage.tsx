@@ -362,7 +362,7 @@ const LandingPage = () => {
         {/* ═══ LAYER 3: Plasma energy field ═══ */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <div className="w-[400px] h-[400px] sm:w-[650px] sm:h-[650px] animate-plasma opacity-20 blur-[100px] animate-morph"
-            style={{ background: "conic-gradient(from 0deg, hsl(265, 85%, 60%), hsl(200, 90%, 55%), hsl(320, 75%, 55%), hsl(50, 80%, 55%), hsl(265, 85%, 60%))" }} />
+            style={{ background: "conic-gradient(from 0deg, hsl(217, 85%, 55%), hsl(200, 90%, 55%), hsl(42, 80%, 55%), hsl(200, 80%, 60%), hsl(217, 85%, 55%))" }} />
         </div>
 
         {/* ═══ LAYER 4: Energy rings (alien portal) ═══ */}
