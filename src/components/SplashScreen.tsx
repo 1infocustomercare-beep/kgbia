@@ -8,88 +8,189 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [phase, setPhase] = useState<"build" | "exit">("build");
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("exit"), 1400);
-    const t2 = setTimeout(onComplete, 2000);
+    const t1 = setTimeout(() => setPhase("exit"), 2200);
+    const t2 = setTimeout(onComplete, 2800);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [onComplete]);
 
   return (
     <motion.div
       className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
-      style={{ backgroundColor: "hsl(var(--background))" }}
-      animate={phase === "exit" ? { opacity: 0 } : { opacity: 1 }}
-      transition={{ duration: 0.6, ease: smoothEase }}
+      style={{ backgroundColor: "hsl(260, 20%, 4%)" }}
+      animate={phase === "exit" ? { opacity: 0, scale: 1.1 } : { opacity: 1, scale: 1 }}
+      transition={{ duration: 0.7, ease: smoothEase }}
     >
-      {/* Ambient orbs */}
+      {/* Deep space ambient layers */}
+      <motion.div
+        className="absolute rounded-full blur-[140px]"
+        style={{ width: 500, height: 500, background: "radial-gradient(circle, hsla(265,85%,65%,0.15), hsla(280,80%,60%,0.05), transparent)" }}
+        animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0.7, 0.3], rotate: [0, 180, 360] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
       <motion.div
         className="absolute rounded-full blur-[100px]"
-        style={{ width: 400, height: 400, background: "hsla(217,91%,60%,0.12)" }}
-        animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        style={{ width: 350, height: 350, left: "65%", top: "25%", background: "radial-gradient(circle, hsla(265,85%,65%,0.1), transparent)" }}
+        animate={{ scale: [1.2, 1, 1.2], opacity: [0.15, 0.4, 0.15] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute rounded-full blur-[80px]"
-        style={{ width: 300, height: 300, left: "60%", top: "30%", background: "hsla(280,80%,55%,0.08)" }}
-        animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.5, 0.2] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute rounded-full blur-[120px]"
+        style={{ width: 280, height: 280, right: "60%", bottom: "20%", background: "radial-gradient(circle, hsla(280,80%,60%,0.08), transparent)" }}
+        animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.3, 0.1] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       />
 
-      {/* Grid */}
+      {/* Perspective grid floor */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.025]"
         style={{
-          backgroundImage: "linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)",
-          backgroundSize: "80px 80px",
+          backgroundImage: "linear-gradient(hsla(265,85%,65%,0.5) 1px, transparent 1px), linear-gradient(90deg, hsla(265,85%,65%,0.5) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+          maskImage: "radial-gradient(ellipse at center, black 20%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse at center, black 20%, transparent 70%)",
         }}
       />
 
+      {/* Scan lines */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, hsla(265,85%,65%,0.015) 3px, hsla(265,85%,65%,0.015) 4px)",
+        }}
+        animate={{ y: [0, 4, 0] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+      />
+
       {/* Vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--background))_80%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsla(260,20%,4%,0.9)_75%)]" />
+
+      {/* Orbital rings */}
+      <motion.div
+        className="absolute w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] rounded-full border border-primary/[0.04] pointer-events-none"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute w-[220px] h-[220px] sm:w-[300px] sm:h-[300px] rounded-full border border-accent/[0.06] pointer-events-none"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute w-[380px] h-[380px] sm:w-[500px] sm:h-[500px] rounded-full pointer-events-none"
+        style={{ border: "1px dashed hsla(265,85%,65%,0.04)" }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+      />
 
       {/* Center content */}
-      <div className="relative flex flex-col items-center gap-5">
-        {/* Logo */}
+      <div className="relative flex flex-col items-center gap-6">
+
+        {/* Outer glow ring */}
         <motion.div
-          className="w-20 h-20 rounded-3xl bg-white/[0.06] backdrop-blur-2xl flex items-center justify-center border border-white/[0.08]"
-          initial={{ opacity: 0, scale: 0.3 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: smoothEase }}
+          className="absolute w-32 h-32 sm:w-36 sm:h-36 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, hsla(265,85%,65%,0.12), transparent 70%)" }}
+          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0.8, 0.5] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* Logo container */}
+        <motion.div
+          className="relative"
+          initial={{ opacity: 0, scale: 0, rotateY: -90 }}
+          animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+          transition={{ duration: 1.2, delay: 0.2, ease: smoothEase }}
         >
-          <motion.div
-            className="w-16 h-16 rounded-2xl bg-vibrant-gradient flex items-center justify-center"
-            animate={{
-              boxShadow: [
-                "0 0 30px hsla(217,91%,60%,0.2)",
-                "0 0 60px hsla(217,91%,60%,0.4)",
-                "0 0 30px hsla(217,91%,60%,0.2)",
-              ],
-            }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          >
+          {/* Hexagonal outer shell */}
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[28px] sm:rounded-[32px] bg-gradient-to-br from-white/[0.06] to-white/[0.02] backdrop-blur-2xl flex items-center justify-center border border-white/[0.08] shadow-[0_0_60px_hsla(265,85%,65%,0.15),inset_0_1px_0_hsla(0,0%,100%,0.05)]">
             <motion.div
-              animate={{ rotateY: [0, 360] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              className="w-[72px] h-[72px] sm:w-[84px] sm:h-[84px] rounded-[20px] sm:rounded-[24px] flex items-center justify-center relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(265,85%,65%), hsl(280,80%,60%), hsl(265,85%,55%))" }}
+              animate={{
+                boxShadow: [
+                  "0 0 30px hsla(265,85%,65%,0.3), 0 0 60px hsla(280,80%,60%,0.1)",
+                  "0 0 50px hsla(265,85%,65%,0.5), 0 0 100px hsla(280,80%,60%,0.2)",
+                  "0 0 30px hsla(265,85%,65%,0.3), 0 0 60px hsla(280,80%,60%,0.1)",
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
-              <Crown className="w-8 h-8 text-primary-foreground drop-shadow-[0_0_12px_rgba(255,255,255,0.5)]" />
+              {/* Inner shine sweep */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: "linear-gradient(105deg, transparent 40%, hsla(0,0%,100%,0.15) 50%, transparent 60%)" }}
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1, repeatDelay: 2 }}
+              />
+              {/* Crown icon */}
+              <motion.div
+                animate={{ rotateY: [0, 360] }}
+                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                style={{ perspective: "600px" }}
+              >
+                <Crown className="w-8 h-8 sm:w-9 sm:h-9 text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]" />
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
+
+          {/* Corner accents */}
+          <motion.div
+            className="absolute -top-1 -right-1 w-3 h-3 border-t border-r border-primary/30 rounded-tr-md"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.8, duration: 0.4 }}
+          />
+          <motion.div
+            className="absolute -bottom-1 -left-1 w-3 h-3 border-b border-l border-accent/30 rounded-bl-md"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.9, duration: 0.4 }}
+          />
         </motion.div>
 
-        {/* Brand */}
+        {/* Brand text */}
         <motion.div
-          className="flex flex-col items-center gap-2"
-          initial={{ opacity: 0, y: 30 }}
+          className="flex flex-col items-center gap-3"
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6, ease: smoothEase }}
+          transition={{ duration: 1, delay: 0.7, ease: smoothEase }}
         >
-          <h1 className="font-heading font-bold text-3xl tracking-[0.2em] uppercase text-foreground">
-            Empire<span className="text-shimmer">.AI</span>
-          </h1>
+          <div className="relative">
+            <h1 className="font-heading font-bold text-3xl sm:text-4xl tracking-[0.25em] uppercase text-foreground">
+              {"EMPIRE".split("").map((letter, i) => (
+                <motion.span
+                  key={i}
+                  className="inline-block"
+                  initial={{ opacity: 0, y: 20, rotateX: -90 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ duration: 0.6, delay: 0.8 + i * 0.08, ease: smoothEase }}
+                >
+                  {letter}
+                </motion.span>
+              ))}
+              <motion.span
+                className="text-shimmer"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.4, duration: 0.5 }}
+              >
+                .AI
+              </motion.span>
+            </h1>
+            {/* Underline accent */}
+            <motion.div
+              className="h-px mt-2 rounded-full mx-auto"
+              style={{ background: "linear-gradient(90deg, transparent, hsl(265,85%,65%), hsl(280,80%,60%), transparent)" }}
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: "100%", opacity: 0.6 }}
+              transition={{ duration: 0.8, delay: 1.5, ease: smoothEase }}
+            />
+          </div>
+
           <motion.p
-            className="text-[0.6rem] tracking-[0.4em] uppercase text-foreground/25 font-heading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1 }}
+            className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.5em] uppercase text-foreground/20 font-heading"
+            initial={{ opacity: 0, letterSpacing: "0.8em" }}
+            animate={{ opacity: 1, letterSpacing: "0.5em" }}
+            transition={{ duration: 1.2, delay: 1.2 }}
           >
             Il Sistema Operativo del Business
           </motion.p>
@@ -97,42 +198,65 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
 
         {/* Loading bar */}
         <motion.div
-          className="w-48 h-[2px] rounded-full bg-foreground/[0.04] overflow-hidden mt-3"
-          initial={{ opacity: 0, scaleX: 0.5 }}
+          className="w-40 sm:w-52 h-[1.5px] rounded-full overflow-hidden mt-2"
+          style={{ background: "hsla(265,85%,65%,0.06)" }}
+          initial={{ opacity: 0, scaleX: 0.3 }}
           animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ delay: 0.8, duration: 0.4 }}
+          transition={{ delay: 1, duration: 0.5 }}
         >
           <motion.div
             className="h-full rounded-full"
-            style={{ background: "linear-gradient(90deg, hsl(var(--primary)), hsla(280,80%,65%,1), hsl(var(--primary)))" }}
+            style={{ background: "linear-gradient(90deg, hsl(265,85%,65%), hsl(280,80%,60%), hsl(265,85%,65%))" }}
             initial={{ width: "0%" }}
             animate={{ width: "100%" }}
-            transition={{ duration: 2, delay: 0.8, ease: smoothEase }}
+            transition={{ duration: 1.8, delay: 1.1, ease: smoothEase }}
           />
+        </motion.div>
+
+        {/* Status dots */}
+        <motion.div
+          className="flex items-center gap-3 mt-1"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4 }}
+        >
+          {["Neural Core", "AI Agents", "Systems"].map((label, i) => (
+            <motion.div key={label} className="flex items-center gap-1.5">
+              <motion.div
+                className="w-1 h-1 rounded-full"
+                style={{ background: "hsl(265,85%,65%)" }}
+                animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+              />
+              <span className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.2em] uppercase text-foreground/15 font-heading">{label}</span>
+            </motion.div>
+          ))}
         </motion.div>
 
         {/* Scanner ring */}
         <motion.div
-          className="absolute -inset-20 rounded-full pointer-events-none"
+          className="absolute -inset-24 sm:-inset-28 rounded-full pointer-events-none"
           style={{
-            background: "conic-gradient(from 0deg, transparent 0%, hsla(217,91%,60%,0.06) 10%, transparent 20%)",
+            background: "conic-gradient(from 0deg, transparent 0%, hsla(265,85%,65%,0.08) 8%, transparent 16%)",
           }}
           animate={{ rotate: 360 }}
-          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
         />
       </div>
 
-      {/* Bottom */}
-      <motion.p
-        className="absolute bottom-8 text-[0.5rem] tracking-[0.5em] uppercase text-foreground/10 font-heading"
+      {/* Bottom branding */}
+      <motion.div
+        className="absolute bottom-6 sm:bottom-8 flex flex-col items-center gap-1"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: 1.8 }}
       >
-        Powered by AI
-      </motion.p>
+        <p className="text-[0.45rem] sm:text-[0.5rem] tracking-[0.6em] uppercase text-foreground/8 font-heading">
+          Powered by Autonomous AI
+        </p>
+      </motion.div>
     </motion.div>
   );
 };
