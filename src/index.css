@@ -776,11 +776,11 @@
   }
   .prismatic-edge {
     background: linear-gradient(90deg,
-      hsla(217, 85%, 58%, 0.6),
-      hsla(200, 90%, 60%, 0.4),
-      hsla(42, 80%, 55%, 0.5),
-      hsla(200, 80%, 60%, 0.3),
-      hsla(217, 85%, 58%, 0.6)
+      hsla(265, 70%, 60%, 0.6),
+      hsla(280, 50%, 65%, 0.4),
+      hsla(300, 35%, 60%, 0.5),
+      hsla(280, 45%, 68%, 0.3),
+      hsla(265, 70%, 60%, 0.6)
     );
     background-size: 300% 100%;
     animation: prismatic 4s linear infinite;
@@ -788,8 +788,8 @@
 
   .hex-grid {
     background-image:
-      radial-gradient(circle at 25% 25%, hsla(217, 85%, 58%, 0.04) 1px, transparent 1px),
-      radial-gradient(circle at 75% 75%, hsla(42, 80%, 55%, 0.03) 1px, transparent 1px);
+      radial-gradient(circle at 25% 25%, hsla(265, 70%, 60%, 0.04) 1px, transparent 1px),
+      radial-gradient(circle at 75% 75%, hsla(280, 45%, 68%, 0.03) 1px, transparent 1px);
     background-size: 30px 30px;
   }
 
