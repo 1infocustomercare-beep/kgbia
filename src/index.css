@@ -712,7 +712,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(105deg, transparent 40%, hsla(42, 80%, 60%, 0.08) 45%, hsla(217, 85%, 65%, 0.05) 50%, transparent 55%);
+    background: linear-gradient(105deg, transparent 40%, hsla(280, 45%, 68%, 0.08) 45%, hsla(265, 70%, 65%, 0.05) 50%, transparent 55%);
     animation: holo-shine 5s ease-in-out infinite;
     pointer-events: none;
   }
