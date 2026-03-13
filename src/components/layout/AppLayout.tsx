@@ -4,17 +4,13 @@ import { AppSidebar } from "@/components/layout/AppSidebar";
 import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { useIndustry } from "@/hooks/useIndustry";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function AppLayout() {
-  const { industry, loading } = useIndustry();
+  const { industry, loading, resolved } = useIndustry();
 
-  // Food users must use /dashboard exclusively
-  if (!loading && industry === "food") {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  if (loading) {
+  // Wait until industry is fully resolved before making routing decisions
+  if (loading || !resolved) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <motion.div
@@ -24,6 +20,11 @@ export default function AppLayout() {
         />
       </div>
     );
+  }
+
+  // Food users must use /dashboard exclusively — only redirect AFTER resolved
+  if (industry === "food") {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return (
