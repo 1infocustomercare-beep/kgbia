@@ -842,25 +842,13 @@
     animation-delay: var(--rain-delay, 0s);
   }
 
-  /* ═══ CIRCUIT PULSE ═══ */
-  @keyframes circuit-pulse {
-    0%, 100% { opacity: 0.1; }
-    50% { opacity: 0.6; }
-  }
-
-  @keyframes circuit-flow {
-    0% { stroke-dashoffset: 100; }
-    100% { stroke-dashoffset: 0; }
-  }
-
   .circuit-line {
-    background: linear-gradient(90deg, transparent, hsla(265, 85%, 65%, 0.25), hsla(200, 90%, 60%, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, hsla(217, 85%, 58%, 0.25), hsla(200, 90%, 60%, 0.2), transparent);
     animation: circuit-pulse 3s ease-in-out infinite;
   }
 
-  /* ═══ HOLOGRAPHIC PANEL ═══ */
   .holo-panel {
-    background: linear-gradient(135deg, hsla(265, 40%, 15%, 0.4), hsla(200, 30%, 10%, 0.3));
+    background: linear-gradient(135deg, hsla(217, 40%, 15%, 0.4), hsla(200, 30%, 10%, 0.3));
     backdrop-filter: blur(16px) saturate(1.5);
     border: 1px solid hsla(200, 90%, 60%, 0.12);
     position: relative;
@@ -870,27 +858,17 @@
   .holo-panel::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsla(200, 90%, 60%, 0.5), hsla(265, 85%, 65%, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, hsla(42, 80%, 55%, 0.5), hsla(217, 85%, 58%, 0.3), transparent);
   }
 
   .holo-panel::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, hsla(200, 90%, 60%, 0.2), transparent);
-  }
-
-  /* ═══ NEURAL NETWORK NODE ═══ */
-  @keyframes neural-pulse {
-    0%, 100% { box-shadow: 0 0 4px hsla(265, 85%, 65%, 0.3); transform: scale(1); }
-    50% { box-shadow: 0 0 20px hsla(265, 85%, 65%, 0.7), 0 0 40px hsla(200, 90%, 60%, 0.3); transform: scale(1.3); }
   }
 
   .neural-node {
@@ -898,125 +876,47 @@
     animation-delay: var(--node-delay, 0s);
   }
 
-  @keyframes neural-signal {
-    0% { transform: translateX(0); opacity: 1; }
-    100% { transform: translateX(var(--signal-distance, 100px)); opacity: 0; }
-  }
-
-  .neural-signal {
-    animation: neural-signal 1.5s ease-out infinite;
-    animation-delay: var(--signal-delay, 0s);
-  }
-
-  /* ═══ SCAN LINE CARD EFFECT ═══ */
-  @keyframes card-scan {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(200%); }
-  }
-
-  .scan-card::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 40%;
-    background: linear-gradient(180deg, transparent, hsla(200, 90%, 60%, 0.04), transparent);
-    animation: card-scan 4s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  /* ═══ TECH READOUT ═══ */
-  @keyframes readout-blink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0.3; }
-  }
-
-  .tech-readout {
-    font-family: 'Space Grotesk', monospace;
-    font-variant-numeric: tabular-nums;
-  }
-
-  @keyframes typing-cursor {
-    0%, 100% { border-right-color: hsla(200, 90%, 60%, 0.8); }
-    50% { border-right-color: transparent; }
-  }
-
-  .typing-cursor {
-    border-right: 2px solid hsla(200, 90%, 60%, 0.8);
-    animation: typing-cursor 1s step-end infinite;
-  }
-
-  /* ═══ HOLOGRAPHIC BADGE ═══ */
-  @keyframes holo-rotate {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+  @keyframes neural-pulse {
+    0%, 100% { box-shadow: 0 0 4px hsla(217, 85%, 58%, 0.3); transform: scale(1); }
+    50% { box-shadow: 0 0 20px hsla(217, 85%, 58%, 0.7), 0 0 40px hsla(42, 80%, 55%, 0.3); transform: scale(1.3); }
   }
 
   .holo-badge {
     background: linear-gradient(90deg,
-      hsla(265, 85%, 65%, 0.15),
-      hsla(200, 90%, 60%, 0.2),
-      hsla(320, 75%, 55%, 0.15),
-      hsla(265, 85%, 65%, 0.15)
+      hsla(217, 85%, 58%, 0.15),
+      hsla(42, 80%, 55%, 0.2),
+      hsla(200, 80%, 60%, 0.15),
+      hsla(217, 85%, 58%, 0.15)
     );
     background-size: 200% 100%;
     animation: holo-rotate 3s linear infinite;
-    border: 1px solid hsla(200, 90%, 60%, 0.15);
-  }
-
-  /* ═══ FUTURISTIC SECTION CONNECTOR ═══ */
-  .section-connector {
-    position: relative;
-    height: 60px;
-    overflow: hidden;
+    border: 1px solid hsla(42, 80%, 55%, 0.15);
   }
 
   .section-connector::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 4px;
-    height: 4px;
+    width: 4px; height: 4px;
     border-radius: 50%;
-    background: hsl(265, 85%, 65%);
-    box-shadow: 0 0 12px hsla(265, 85%, 65%, 0.6), 0 0 30px hsla(265, 85%, 65%, 0.3);
+    background: hsl(42, 80%, 55%);
+    box-shadow: 0 0 12px hsla(42, 80%, 55%, 0.6), 0 0 30px hsla(217, 85%, 58%, 0.3);
   }
 
   .section-connector::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 50%;
+    top: 0; left: 50%;
     transform: translateX(-50%);
-    width: 1px;
-    height: 100%;
-    background: linear-gradient(180deg, transparent, hsla(265, 85%, 65%, 0.3), transparent);
-  }
-
-  /* ═══ GLITCH TEXT V2 ═══ */
-  @keyframes glitch-shift {
-    0%, 92%, 100% { transform: translate(0); }
-    93% { transform: translate(-3px, 1px); }
-    95% { transform: translate(3px, -1px); }
-    97% { transform: translate(-1px, 2px); }
-  }
-
-  .glitch-text {
-    animation: glitch-shift 5s ease-in-out infinite;
-  }
-
-  /* ═══ FUTURISTIC GRID LINE ═══ */
-  @keyframes grid-line-flow {
-    0% { background-position: 0 0; }
-    100% { background-position: 60px 60px; }
+    width: 1px; height: 100%;
+    background: linear-gradient(180deg, transparent, hsla(217, 85%, 58%, 0.3), transparent);
   }
 
   .animated-grid-bg {
     background-image:
-      linear-gradient(hsla(265, 85%, 65%, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, hsla(265, 85%, 65%, 0.04) 1px, transparent 1px);
+      linear-gradient(hsla(217, 85%, 58%, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(217, 85%, 58%, 0.04) 1px, transparent 1px);
     background-size: 60px 60px;
     animation: grid-line-flow 4s linear infinite;
   }
