@@ -429,15 +429,12 @@ export default function NCCPublicSite({ company }: Props) {
 
       {/* ═══════════ HERO — 100vh, video bg + 2 columns ═══════════ */}
       <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
-        {/* Video background — dark cinematic Amalfi coast */}
-        <video
-          autoPlay muted loop playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
-          poster="https://images.unsplash.com/photo-1633321702518-7feccafb94d5?w=1920&h=1080&fit=crop"
-        >
-          <source src="https://videos.pexels.com/video-files/5765013/5765013-uhd_2560_1440_25fps.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
+        {/* Dark background image — Amalfi coast */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1633321702518-7feccafb94d5?w=1920&h=1080&fit=crop&q=80')" }}
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.5) 100%)" }} />
 
         <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
           <motion.div initial="hidden" animate="show" variants={stagger}>
