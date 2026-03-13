@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -85,7 +85,10 @@ const PageLoader = () => (
 function App() {
   const [showSplash, setShowSplash] = useState(true);
 
-
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
   return (
   <QueryClientProvider client={queryClient}>
     {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
