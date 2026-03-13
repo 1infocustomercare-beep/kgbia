@@ -698,6 +698,55 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════════════════════════════════════════
+          IL PROBLEMA — Pain Points
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-10 sm:mb-14">
+          <SectionLabel text="Il Problema" icon={<AlertTriangle className="w-3 h-3 text-accent" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Il Tuo Business Sta <span className="text-shimmer">Perdendo Soldi</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[550px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Ogni giorno senza un sistema moderno è un giorno di clienti persi, processi lenti e margini erosi.
+          </motion.p>
+        </div>
+
+        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {[
+            { icon: <Banknote className="w-5 h-5" />, title: "30% di Commissioni", desc: "Le piattaforme terze divorano i tuoi margini. Su €10.000/mese perdi €3.000 in commissioni.", stat: "-30%", color: "from-red-500 to-orange-500" },
+            { icon: <Users className="w-5 h-5" />, title: "Clienti Non Fidelizzati", desc: "Senza CRM e loyalty, il 70% dei clienti non torna. Paghi per acquisirli ma non li trattieni.", stat: "70%", color: "from-amber-500 to-yellow-500" },
+            { icon: <Smartphone className="w-5 h-5" />, title: "Zero Presenza Digitale", desc: "I tuoi competitor hanno app, ordini online, prenotazioni. Tu stai ancora usando carta e WhatsApp.", stat: "0 App", color: "from-orange-500 to-red-500" },
+            { icon: <ClipboardCheck className="w-5 h-5" />, title: "Processi Manuali", desc: "Ordini a voce, prenotazioni su agenda, contabilità su Excel. Ogni errore costa tempo e denaro.", stat: "4h/giorno", color: "from-rose-500 to-pink-500" },
+            { icon: <Eye className="w-5 h-5" />, title: "Recensioni Incontrollate", desc: "Una sola recensione negativa su Google può costare migliaia di euro in clienti persi.", stat: "-€5K", color: "from-red-600 to-rose-500" },
+            { icon: <Target className="w-5 h-5" />, title: "Marketing Inefficace", desc: "Spendi in pubblicità senza tracciare i risultati. Zero segmentazione, zero automazione, zero ROI.", stat: "0% ROI", color: "from-amber-600 to-orange-500" },
+          ].map((pain, i) => (
+            <motion.div key={i} className="relative p-6 rounded-2xl border border-accent/10 bg-accent/[0.02] group hover:border-accent/20 transition-all"
+              variants={fadeUp} whileHover={{ y: -3 }}>
+              <div className="absolute top-2 right-3 text-[0.5rem] font-heading font-bold text-accent/40 tracking-wider">{pain.stat}</div>
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-4 opacity-80`}>
+                {pain.icon}
+              </div>
+              <h3 className="font-heading text-sm font-semibold text-foreground mb-2">{pain.title}</h3>
+              <p className="text-xs text-foreground/35 leading-[1.7]">{pain.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.div className="mt-10 text-center"
+          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-primary/15 bg-primary/[0.04]">
+            <ArrowDown className="w-4 h-4 text-primary animate-bounce" />
+            <span className="text-xs font-heading font-semibold text-foreground/60">La Soluzione Esiste. <span className="text-primary">Scoprila Ora.</span></span>
+          </div>
+        </motion.div>
+      </Section>
+
+      <SectionDivider />
+
+      {/* ═══════════════════════════════════════════
           VIDEO HERO — Business Transformation
          ═══════════════════════════════════════════ */}
       <Section>
