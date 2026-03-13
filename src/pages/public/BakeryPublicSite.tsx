@@ -21,17 +21,20 @@ const fadeUp = {
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
-function Section({ id, children, className = "", style }: { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-  return (
-    <section id={id} ref={ref} className={className} style={style}>
-      <motion.div initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8 }}>
-        {children}
-      </motion.div>
-    </section>
-  );
-}
+const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
+  ({ id, children, className = "", style }, _ref) => {
+    const localRef = useRef(null);
+    const isInView = useInView(localRef, { once: true, margin: "-60px" });
+    return (
+      <section id={id} ref={localRef} className={className} style={style}>
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+          {children}
+        </motion.div>
+      </section>
+    );
+  }
+);
+Section.displayName = "Section";
 
 interface Props { company: any; }
 
