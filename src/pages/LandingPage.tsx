@@ -803,27 +803,48 @@ const LandingPage = () => {
         <div className="sm:hidden">
           <PremiumCarousel speed="fast" itemWidth={220}>
             {whyUs.map((item, i) => (
-              <div key={i} className="group p-5 rounded-2xl glow-card h-full">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
-                  {item.icon}
+              <div key={i} className="group relative p-5 rounded-2xl h-full overflow-hidden border border-border/10 bg-card/60 backdrop-blur-sm">
+                {/* Top accent line */}
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+                {/* Corner glow */}
+                <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary/[0.06] blur-2xl group-hover:bg-primary/[0.12] transition-all duration-700" />
+                <div className="relative z-10">
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center text-primary mb-3 ring-1 ring-primary/10 group-hover:scale-110 group-hover:ring-primary/25 transition-all duration-500">
+                    {item.icon}
+                  </div>
+                  <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
+                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
                 </div>
-                <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
-                <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
               </div>
             ))}
           </PremiumCarousel>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
-        <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
+        <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-5"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {whyUs.map((item, i) => (
-            <motion.div key={i} className="group p-6 rounded-2xl glow-card" variants={fadeUp} whileHover={{ y: -4 }}>
-              <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-500">
-                {item.icon}
+            <motion.div key={i}
+              className="group relative p-7 rounded-2xl overflow-hidden border border-border/10 bg-card/60 backdrop-blur-sm"
+              variants={fadeUp}
+              whileHover={{ y: -6, transition: { duration: 0.3 } }}
+            >
+              {/* Top accent line */}
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+              {/* Corner glow */}
+              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-primary/[0.05] blur-3xl group-hover:bg-primary/[0.12] transition-all duration-700" />
+              <div className="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-accent/[0.04] blur-2xl group-hover:bg-accent/[0.08] transition-all duration-700" />
+              {/* Number watermark */}
+              <span className="absolute top-3 right-4 text-[3rem] font-heading font-black text-foreground/[0.03] leading-none select-none group-hover:text-primary/[0.06] transition-colors duration-500">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center text-primary mb-5 ring-1 ring-primary/10 group-hover:scale-110 group-hover:rotate-3 group-hover:ring-primary/25 group-hover:shadow-[0_0_20px_hsla(265,85%,65%,0.15)] transition-all duration-500">
+                  {item.icon}
+                </div>
+                <h3 className="font-heading text-sm font-bold text-foreground mb-2">{item.title}</h3>
+                <p className="text-xs text-foreground/40 leading-[1.7]">{item.desc}</p>
               </div>
-              <h3 className="font-heading text-sm font-bold text-foreground mb-2">{item.title}</h3>
-              <p className="text-xs text-foreground/40 leading-[1.7]">{item.desc}</p>
             </motion.div>
           ))}
         </motion.div>
