@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import BackButton from "@/components/BackButton";
 import { motion, AnimatePresence } from "framer-motion";
 import { LayoutDashboard, UtensilsCrossed, ShoppingCart, TrendingUp, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
