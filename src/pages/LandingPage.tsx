@@ -710,14 +710,33 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
          ═══════════════════════════════════════════ */}
       <Section>
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Vantaggi" icon={<Zap className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Perché Siamo <span className="text-shimmer">N°1 al Mondo</span>
           </motion.h2>
         </div>
-        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+
+        {/* ═══ Mobile: Auto-scroll ═══ */}
+        <div className="sm:hidden overflow-hidden -mx-5">
+          <div className="flex animate-carousel-scroll-fast whitespace-nowrap py-2">
+            {[...whyUs, ...whyUs].map((item, i) => (
+              <div key={i} className="inline-block w-[220px] flex-shrink-0 mx-2 whitespace-normal">
+                <div className="group p-5 rounded-2xl glow-card h-full">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
+                    {item.icon}
+                  </div>
+                  <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
+                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ═══ Desktop: Grid ═══ */}
+        <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {whyUs.map((item, i) => (
             <motion.div key={i} className="group p-6 rounded-2xl glow-card" variants={fadeUp} whileHover={{ y: -4 }}>
