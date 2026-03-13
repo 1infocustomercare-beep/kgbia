@@ -698,6 +698,55 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════════════════════════════════════════
+          IL PROBLEMA — Pain Points
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-10 sm:mb-14">
+          <SectionLabel text="Il Problema" icon={<AlertTriangle className="w-3 h-3 text-accent" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Il Tuo Business Sta <span className="text-shimmer">Perdendo Soldi</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[550px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Ogni giorno senza un sistema moderno è un giorno di clienti persi, processi lenti e margini erosi.
+          </motion.p>
+        </div>
+
+        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {[
+            { icon: <Banknote className="w-5 h-5" />, title: "30% di Commissioni", desc: "Le piattaforme terze divorano i tuoi margini. Su €10.000/mese perdi €3.000 in commissioni.", stat: "-30%", color: "from-red-500 to-orange-500" },
+            { icon: <Users className="w-5 h-5" />, title: "Clienti Non Fidelizzati", desc: "Senza CRM e loyalty, il 70% dei clienti non torna. Paghi per acquisirli ma non li trattieni.", stat: "70%", color: "from-amber-500 to-yellow-500" },
+            { icon: <Smartphone className="w-5 h-5" />, title: "Zero Presenza Digitale", desc: "I tuoi competitor hanno app, ordini online, prenotazioni. Tu stai ancora usando carta e WhatsApp.", stat: "0 App", color: "from-orange-500 to-red-500" },
+            { icon: <ClipboardCheck className="w-5 h-5" />, title: "Processi Manuali", desc: "Ordini a voce, prenotazioni su agenda, contabilità su Excel. Ogni errore costa tempo e denaro.", stat: "4h/giorno", color: "from-rose-500 to-pink-500" },
+            { icon: <Eye className="w-5 h-5" />, title: "Recensioni Incontrollate", desc: "Una sola recensione negativa su Google può costare migliaia di euro in clienti persi.", stat: "-€5K", color: "from-red-600 to-rose-500" },
+            { icon: <Target className="w-5 h-5" />, title: "Marketing Inefficace", desc: "Spendi in pubblicità senza tracciare i risultati. Zero segmentazione, zero automazione, zero ROI.", stat: "0% ROI", color: "from-amber-600 to-orange-500" },
+          ].map((pain, i) => (
+            <motion.div key={i} className="relative p-6 rounded-2xl border border-accent/10 bg-accent/[0.02] group hover:border-accent/20 transition-all"
+              variants={fadeUp} whileHover={{ y: -3 }}>
+              <div className="absolute top-2 right-3 text-[0.5rem] font-heading font-bold text-accent/40 tracking-wider">{pain.stat}</div>
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-4 opacity-80`}>
+                {pain.icon}
+              </div>
+              <h3 className="font-heading text-sm font-semibold text-foreground mb-2">{pain.title}</h3>
+              <p className="text-xs text-foreground/35 leading-[1.7]">{pain.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.div className="mt-10 text-center"
+          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-primary/15 bg-primary/[0.04]">
+            <ArrowDown className="w-4 h-4 text-primary animate-bounce" />
+            <span className="text-xs font-heading font-semibold text-foreground/60">La Soluzione Esiste. <span className="text-primary">Scoprila Ora.</span></span>
+          </div>
+        </motion.div>
+      </Section>
+
+      <SectionDivider />
+
+      {/* ═══════════════════════════════════════════
           VIDEO HERO — Business Transformation
          ═══════════════════════════════════════════ */}
       <Section>
@@ -1146,6 +1195,54 @@ const LandingPage = () => {
               <div className="text-primary/50 mb-2 flex justify-center">{spec.icon}</div>
               <p className="text-xs font-heading font-bold text-foreground">{spec.value}</p>
               <p className="text-[0.55rem] text-foreground/30 mt-0.5 tracking-wider uppercase">{spec.label}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </Section>
+
+      <SectionDivider />
+
+      {/* ═══════════════════════════════════════════
+          3 INTERFACCE — Mockup Showcase
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-10 sm:mb-14">
+          <SectionLabel text="Esperienza" icon={<MonitorSmartphone className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            3 Interfacce, <span className="text-shimmer">Un Ecosistema</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[550px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Ogni attore ha la sua interfaccia dedicata. Cliente, proprietario e staff operano in sinergia perfetta.
+          </motion.p>
+        </div>
+
+        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {[
+            { img: mockupCliente, title: "App Cliente", desc: "Ordini, prenotazioni, pagamenti, loyalty wallet, notifiche push. Tutto dal telefono del tuo cliente.", tag: "FRONT-END", features: ["Ordini in tempo reale", "Loyalty & Cashback", "Push Notification", "Chat Diretta"] },
+            { img: mockupAdmin, title: "Dashboard Admin", desc: "Pannello completo con analytics IA, CRM, gestione staff, fatturazione e marketing automation.", tag: "BACK-OFFICE", features: ["Analytics predittivi", "CRM & Segmentazione", "Fatturazione elettronica", "Marketing automatizzato"] },
+            { img: mockupCucina, title: "Pannello Operativo", desc: "Vista cucina, gestione interventi, calendario staff, mappe postazioni. Ottimizzato per operatività.", tag: "OPERATIONS", features: ["Live order tracking", "Gestione turni", "HACCP digitale", "Notifiche smart"] },
+          ].map((mock, i) => (
+            <motion.div key={i} className="group" variants={fadeScale}>
+              <div className="relative rounded-2xl overflow-hidden glow-card mb-5">
+                <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full holo-badge text-[0.5rem] font-heading font-bold text-primary/70 tracking-[2px]">{mock.tag}</div>
+                <img src={mock.img} alt={mock.title} className="w-full aspect-[4/3] object-cover group-hover:scale-[1.03] transition-transform duration-700" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="font-heading text-base font-bold text-foreground mb-1">{mock.title}</h3>
+                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{mock.desc}</p>
+                </div>
+              </div>
+              <div className="space-y-2 px-1">
+                {mock.features.map((f, j) => (
+                  <div key={j} className="flex items-center gap-2.5 text-xs text-foreground/40">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                    {f}
+                  </div>
+                ))}
+              </div>
             </motion.div>
           ))}
         </motion.div>
@@ -1711,6 +1808,88 @@ const LandingPage = () => {
             ))}
           </motion.div>
         </div>
+      </Section>
+
+      <SectionDivider />
+
+      {/* ═══════════════════════════════════════════
+          PERCHÉ SIAMO N°1 — Dense Benefits Grid
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-10 sm:mb-14">
+          <SectionLabel text="Supremazia" icon={<Crown className="w-3 h-3 text-accent" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Perché Siamo <span className="text-shimmer">N°1</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Non è marketing. Sono fatti. Ecco perché nessun competitor può offrire quello che offriamo noi.
+          </motion.p>
+        </div>
+
+        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
+          variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {[
+            { icon: <Brain className="w-4 h-4" />, title: "IA Proprietaria", desc: "Non rivendiamo ChatGPT. Engine AI custom." },
+            { icon: <Globe className="w-4 h-4" />, title: "25+ Settori", desc: "Dal ristorante all'hotel, dalla palestra al medico." },
+            { icon: <Smartphone className="w-4 h-4" />, title: "PWA Nativa", desc: "Installabile come app. No App Store, no costi." },
+            { icon: <Fingerprint className="w-4 h-4" />, title: "100% White Label", desc: "Il tuo brand, zero marchi terzi." },
+            { icon: <Zap className="w-4 h-4" />, title: "Attivo in 24h", desc: "Non mesi. Un giorno e sei operativo." },
+            { icon: <Shield className="w-4 h-4" />, title: "GDPR & AES-256", desc: "Sicurezza enterprise per tutti." },
+            { icon: <Workflow className="w-4 h-4" />, title: "Automazione Totale", desc: "Dal primo contatto alla fattura." },
+            { icon: <Radio className="w-4 h-4" />, title: "Updates Settimanali", desc: "Il sistema si evolve. Sempre gratis." },
+            { icon: <DollarSign className="w-4 h-4" />, title: "Solo 2% Fee", desc: "15× meno di qualsiasi piattaforma." },
+            { icon: <Database className="w-4 h-4" />, title: "Dati Tuoi", desc: "Proprietà totale. Zero lock-in." },
+            { icon: <Bot className="w-4 h-4" />, title: "Concierge AI", desc: "Assistente 24/7 per i tuoi clienti." },
+            { icon: <Headphones className="w-4 h-4" />, title: "Supporto 7/7", desc: "Persone vere, non chatbot." },
+          ].map((b, i) => (
+            <motion.div key={i} className="p-4 rounded-xl holo-panel text-center group hover:border-primary/15 transition-all"
+              variants={popIn} whileHover={{ y: -3 }}>
+              <div className="text-primary/50 mb-2 flex justify-center group-hover:text-primary/80 transition-colors">{b.icon}</div>
+              <h4 className="text-[0.7rem] font-heading font-bold text-foreground mb-1">{b.title}</h4>
+              <p className="text-[0.55rem] text-foreground/30 leading-[1.5]">{b.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </Section>
+
+      <SectionDivider />
+
+      {/* ═══════════════════════════════════════════
+          GARANZIA TOTALE — Risk Reversal
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <motion.div className="relative max-w-2xl mx-auto p-8 sm:p-12 rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background to-accent/[0.03] text-center overflow-hidden"
+          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
+          <div className="absolute inset-0 premium-holo-grid opacity-20 pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[1px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+          <div className="relative z-10">
+            <motion.div
+              initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}>
+              <Shield className="w-14 h-14 mx-auto text-primary mb-5 drop-shadow-[0_0_30px_hsla(265,70%,60%,0.3)]" />
+            </motion.div>
+            <h2 className="text-[clamp(1.5rem,4vw,2.4rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
+              Garanzia <span className="text-shimmer">Soddisfatti o Rimborsati</span>
+            </h2>
+            <p className="text-sm text-foreground/40 max-w-md mx-auto leading-[1.8] mb-6">
+              Se entro 30 giorni dall'attivazione non sei completamente soddisfatto, ti rimborsiamo il 100% senza domande. Zero rischio, zero burocrazia.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+              {[
+                { icon: <Check className="w-4 h-4" />, text: "30 giorni di prova" },
+                { icon: <Check className="w-4 h-4" />, text: "Rimborso 100%" },
+                { icon: <Check className="w-4 h-4" />, text: "Nessuna domanda" },
+              ].map((g, i) => (
+                <div key={i} className="flex items-center gap-2 text-xs text-foreground/50">
+                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">{g.icon}</div>
+                  <span className="font-heading font-semibold">{g.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </Section>
 
       <SectionDivider />
