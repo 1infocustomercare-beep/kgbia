@@ -95,8 +95,8 @@ export default function NCCSettingsPage() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("full_name, avatar_url").eq("user_id", user.id).maybeSingle()
-      .then(({ data }) => { if (data) setProfileForm({ full_name: data.full_name || "", avatar_url: data.avatar_url || "" }); });
+    (supabase as any).from("profiles").select("full_name, avatar_url").eq("user_id", user.id).maybeSingle()
+      .then(({ data }: any) => { if (data) setProfileForm({ full_name: data.full_name || "", avatar_url: data.avatar_url || "" }); });
   }, [user]);
 
   const saveCompany = async () => {
