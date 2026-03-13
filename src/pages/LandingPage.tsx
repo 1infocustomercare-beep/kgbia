@@ -2030,7 +2030,8 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           FAQ
          ═══════════════════════════════════════════ */}
-      <Section>
+      <Section style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,22%,7%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 20%, hsla(265,70%,60%,0.03), transparent 60%)" }} />
         <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-16 items-start">
           <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center lg:text-left">
