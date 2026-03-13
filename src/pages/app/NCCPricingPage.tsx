@@ -70,7 +70,7 @@ export default function NCCPricingPage() {
         return { route_id, vehicle_id, base_price: parseFloat(val) || 0 };
       });
       if (upserts.length === 0) return;
-      const { error } = await supabase.from("route_prices").upsert(upserts, { onConflict: "route_id,vehicle_id" });
+      const { error } = await (supabase as any).from("route_prices").upsert(upserts, { onConflict: "route_id,vehicle_id" });
       if (error) throw error;
     },
     onSuccess: () => {
