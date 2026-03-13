@@ -52,7 +52,9 @@ const AI_TOKEN_COSTS: Record<string, { label: string; cost: number }> = {
 
 export default function SubscriptionPage() {
   const { company } = useIndustry();
-  const { plan, trialEnd, isTrialing, daysLeft } = useSubscription();
+  const { plan, trialEnd, status } = useSubscription(company?.id);
+  const isTrialing = status === "trialing";
+  const daysLeft = trialEnd ? Math.max(0, Math.ceil((new Date(trialEnd).getTime() - Date.now()) / 86400000)) : 0;
   const [aiUsed, setAiUsed] = useState(0);
   const [loading, setLoading] = useState(true);
 

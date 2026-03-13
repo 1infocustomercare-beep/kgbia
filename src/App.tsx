@@ -65,6 +65,8 @@ const BeachMapPage = lazy(() => import("./pages/app/BeachMapPage"));
 const NCCBeachBookingsPage = lazy(() => import("./pages/app/NCCBeachBookingsPage"));
 const TeamPage = lazy(() => import("./pages/app/TeamPage"));
 const AutomationsPage = lazy(() => import("./pages/app/AutomationsPage"));
+const FeatureRequestsPage = lazy(() => import("./pages/app/FeatureRequestsPage"));
+const SubscriptionPage = lazy(() => import("./pages/app/SubscriptionPage"));
 
 // Demo pages
 const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
