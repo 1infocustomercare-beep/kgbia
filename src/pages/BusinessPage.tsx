@@ -23,7 +23,7 @@ const SiteLoader = () => (
   </div>
 );
 
-const TEMPLATE_MAP: Record<string, React.LazyExoticComponent<any>> = {
+const TEMPLATE_MAP: Record<string, React.LazyExoticComponent<React.ComponentType<{ company: any }>>> = {
   ncc: NCCPublicSite,
   beauty: BeautyPublicSite,
   beach: BeachPublicSite,
