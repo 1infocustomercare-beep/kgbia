@@ -338,6 +338,7 @@ export default function IndustryDemoPage() {
 
   return (
     <div className="min-h-screen text-white overflow-x-hidden" style={{ background: `linear-gradient(180deg, ${theme.bgFrom} 0%, ${theme.bgTo} 100%)` }}>
+      <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
 
       {/* ═══════ NAVBAR ═══════ */}
       <nav className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b border-white/5"

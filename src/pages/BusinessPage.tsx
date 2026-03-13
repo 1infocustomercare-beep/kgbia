@@ -93,5 +93,10 @@ export default function BusinessPage() {
 
   // Sector-specific or universal fallback
   const Template = TEMPLATE_MAP[industry] || LuxuryPublicSite;
-  return <Suspense fallback={<SiteLoader />}><Template company={company} /></Suspense>;
+  return (
+    <Suspense fallback={<SiteLoader />}>
+      <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
+      <Template company={company} />
+    </Suspense>
+  );
 }

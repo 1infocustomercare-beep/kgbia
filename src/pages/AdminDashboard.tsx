@@ -312,6 +312,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/50 bg-card/50 safe-top">
         <div className="flex items-center gap-2 min-w-0">

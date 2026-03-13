@@ -269,6 +269,7 @@ const PartnerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header — Vibrant FLAVR style */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/30 glass-strong safe-top">
         <div className="flex items-center gap-2.5">

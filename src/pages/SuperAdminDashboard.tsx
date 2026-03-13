@@ -385,6 +385,7 @@ const SuperAdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
       <div className="flex items-center justify-between px-4 sm:px-5 pt-4 pb-3 border-b-2 border-primary/40 bg-gradient-to-r from-primary/5 to-transparent">
         <div className="flex items-center gap-3">
