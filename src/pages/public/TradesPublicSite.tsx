@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef, useEffect, forwardRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,8 @@ import { toast } from "sonner";
 import {
   Wrench, Zap, Star, Phone, Mail, MapPin, Clock, Calendar,
   Shield, CheckCircle, Send, Award, Users, FileText,
-  Hammer, Lightbulb, Droplets, Settings, AlertTriangle
+  Hammer, Lightbulb, Droplets, Settings, AlertTriangle,
+  Sparkles, ChevronDown, Menu, X
 } from "lucide-react";
 import { type IndustryId, getIndustryConfig } from "@/config/industry-config";
 
@@ -25,6 +26,26 @@ const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 
 interface Props { company: any; }
 
+const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
+  ({ id, children, className = "", style }, _ref) => {
+    const localRef = useRef(null);
+    const isInView = useInView(localRef, { once: true, margin: "-60px" });
+    return (
+      <section id={id} ref={localRef} className={className} style={style}>
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+          {children}
+        </motion.div>
+      </section>
+    );
+  }
+);
+Section.displayName = "Section";
+
+const HERO_VIDEOS: Record<string, string> = {
+  electrician: "https://videos.pexels.com/video-files/5090753/5090753-uhd_2560_1440_30fps.mp4",
+  plumber: "https://videos.pexels.com/video-files/6538940/6538940-uhd_2560_1440_25fps.mp4",
+  default: "https://videos.pexels.com/video-files/2800369/2800369-uhd_2560_1440_25fps.mp4",
+};
 export default function TradesPublicSite({ company }: Props) {
   const companyId = company.id;
   const industry = (company.industry || "plumber") as IndustryId;
@@ -36,6 +57,11 @@ export default function TradesPublicSite({ company }: Props) {
   const accentText = isElectrician ? "text-amber-400" : isPlumber ? "text-blue-400" : "text-orange-400";
   const accentBgLight = isElectrician ? "bg-amber-500/10" : isPlumber ? "bg-blue-500/10" : "bg-orange-500/10";
   const HeroIcon = isElectrician ? Zap : isPlumber ? Droplets : Wrench;
+  const heroVideo = HERO_VIDEOS[industry] || HERO_VIDEOS.default;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navScrolled, setNavScrolled] = useState(false);
+
+  useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
 
   const [form, setForm] = useState({ name: "", phone: "", email: "", type: "", urgency: "normal", address: "", notes: "" });
   const [submitting, setSubmitting] = useState(false);
@@ -104,32 +130,56 @@ export default function TradesPublicSite({ company }: Props) {
     { icon: AlertTriangle, title: "Emergenze H24", desc: "Disponibili per emergenze tutti i giorni, festivi inclusi" },
   ];
 
+  const tickerItems = isElectrician
+    ? ["Impianti Elettrici", "Domotica", "Messa a Norma", "Quadri Elettrici", "Illuminazione LED", "Certificazioni", "Emergenze 24h", "Impianti Fotovoltaici"]
+    : isPlumber
+    ? ["Riparazioni", "Caldaie", "Impianti Idrici", "Scarichi", "Riscaldamento", "Ristrutturazioni Bagno", "Emergenze Allagamento", "Manutenzione"]
+    : ["Riparazioni", "Installazioni", "Manutenzione", "Emergenze", "Preventivi Gratuiti", "Garanzia Lavori", "Interventi Rapidi", "Assistenza H24"];
+
+  const navLinks = [{ href: "#servizi", label: "Servizi" }, { href: "#perche", label: "Garanzie" }, { href: "#prenota", label: "Preventivo" }];
+
   return (
     <div className="min-h-screen bg-[#0c0c10] text-white overflow-x-hidden">
       {/* ═══ NAVBAR ═══ */}
-      <nav className="fixed top-0 w-full z-50 bg-[#0c0c10]/90 backdrop-blur-xl border-b border-white/5">
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${navScrolled ? "py-0" : "py-1"}`} style={{ background: "rgba(12,12,16,0.95)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {company.logo_url ? <img src={company.logo_url} alt="" className="h-9 w-9 rounded-xl object-cover" /> : <HeroIcon className={`w-6 h-6 ${accentText}`} />}
-            <span className="font-bold truncate">{company.name}</span>
+            {company.logo_url ? <motion.img src={company.logo_url} alt="" className="h-9 w-9 rounded-xl object-cover" whileHover={{ scale: 1.1 }} /> : <HeroIcon className={`w-6 h-6 ${accentText}`} />}
+            <div className="min-w-0">
+              <span className="font-bold truncate block">{company.name}</span>
+              <span className="text-[9px] tracking-[0.2em] uppercase block font-semibold text-white/40">{config.label.toUpperCase()}</span>
+            </div>
           </div>
-          <div className="hidden md:flex gap-6 text-sm text-white/60">
-            <a href="#servizi" className="hover:text-white transition-colors">Servizi</a>
-            <a href="#perche" className="hover:text-white transition-colors">Garanzie</a>
-            <a href="#prenota" className="hover:text-white transition-colors">Preventivo</a>
+          <div className="hidden md:flex gap-6 text-sm text-white/50">
+            {navLinks.map(l => <a key={l.href} href={l.href} className="hover:text-white transition-colors">{l.label}</a>)}
           </div>
-          <Button size="sm" className={`${accentBg} hover:opacity-90 text-white rounded-xl font-semibold`} asChild>
-            <a href="#prenota">Richiedi Preventivo</a>
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button size="sm" className={`${accentBg} hover:opacity-90 text-white rounded-xl font-semibold hidden sm:flex`} asChild>
+              <a href="#prenota">Richiedi Preventivo</a>
+            </Button>
+            <button className="md:hidden p-2 rounded-xl hover:bg-white/10 transition-colors" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-hidden" style={{ background: "#0c0c10", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+              <div className="px-5 py-4 space-y-1">
+                {navLinks.map(l => <a key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm text-white/50 border-b border-white/5">{l.label}</a>)}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
-      {/* ═══ HERO ═══ */}
-      <section className="relative min-h-[90vh] flex items-center pt-16 px-4">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/40 via-[#0c0c10] to-[#0c0c10]" />
-          <div className={`absolute top-20 right-10 w-[500px] h-[500px] rounded-full ${isElectrician ? "bg-amber-600/8" : "bg-blue-600/8"} blur-[120px]`} />
-        </div>
+      {/* ═══ HERO — video bg + text reveal ═══ */}
+      <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.15)" }}>
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0c0c10]/80 via-[#0c0c10]/60 to-transparent" />
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "50px 50px" }} />
 
         <motion.div initial="hidden" animate="show" variants={stagger} className="relative z-10 max-w-3xl mx-auto w-full text-center">
           <motion.div variants={fadeUp} custom={0} className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${accentBgLight} border ${isElectrician ? "border-amber-500/20 text-amber-300" : "border-blue-500/20 text-blue-300"} text-sm font-medium mb-8`}>
@@ -137,9 +187,13 @@ export default function TradesPublicSite({ company }: Props) {
           </motion.div>
 
           <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight mb-6 leading-[1.05]">
-            <span className="bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-              {company.tagline || `${config.label}: Qualità e Affidabilità`}
-            </span>
+            {(company.tagline || `${config.label}: Qualità e Affidabilità`).split("").map((char: string, i: number) => (
+              <motion.span key={i} initial={{ opacity: 0, y: 30, rotateX: -90 }} animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ delay: 0.5 + i * 0.03, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="inline-block" style={{ color: i % 5 === 0 ? (isElectrician ? "#fbbf24" : isPlumber ? "#60a5fa" : "#fb923c") : "white" }}>
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
+            ))}
           </motion.h1>
 
           <motion.p variants={fadeUp} custom={2} className="text-lg text-white/50 mb-10 max-w-2xl mx-auto">
@@ -164,7 +218,22 @@ export default function TradesPublicSite({ company }: Props) {
             <span className="flex items-center gap-1.5"><CheckCircle className={`w-4 h-4 ${accentText}`} /> Preventivo Gratuito</span>
           </motion.div>
         </motion.div>
+
+        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <ChevronDown className="w-5 h-5 text-white/20" />
+        </motion.div>
       </section>
+
+      {/* ═══ TICKER ═══ */}
+      <div className="overflow-hidden py-4" style={{ background: "#111" }}>
+        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 18, ease: "linear" }}>
+          {[...tickerItems, ...tickerItems].map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-bold uppercase text-white/20">
+              <HeroIcon className="w-3 h-3" style={{ opacity: 0.5 }} /> {item}
+            </span>
+          ))}
+        </motion.div>
+      </div>
 
       {/* ═══ SERVICES ═══ */}
       <section id="servizi" className="py-20 px-4 border-t border-white/5">

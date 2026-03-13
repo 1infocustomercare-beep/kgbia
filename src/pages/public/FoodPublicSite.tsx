@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useState, useRef, useEffect, forwardRef } from "react";
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,10 @@ import { toast } from "sonner";
 import {
   Star, Phone, Mail, MapPin, Clock, Calendar, ArrowRight,
   ChevronDown, Instagram, UtensilsCrossed, Wine, Flame,
-  Heart, Send, Users, Award, MessageCircle, Leaf
+  Heart, Send, Users, Award, MessageCircle, Leaf, Sparkles, Menu, X
 } from "lucide-react";
+
+const HERO_VIDEO = "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -20,29 +22,64 @@ const fadeUp = {
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
-function Section({ id, children, className = "", style }: { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-  return (
-    <section id={id} ref={ref} className={className} style={style}>
-      <motion.div initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
-        {children}
-      </motion.div>
-    </section>
-  );
-}
+const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
+  ({ id, children, className = "", style }, _ref) => {
+    const localRef = useRef(null);
+    const isInView = useInView(localRef, { once: true, margin: "-60px" });
+    return (
+      <section id={id} ref={localRef} className={className} style={style}>
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+          {children}
+        </motion.div>
+      </section>
+    );
+  }
+);
+Section.displayName = "Section";
 
 function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const [count, setCount] = useState(0);
-  useState(() => {
-    if (!isInView) return;
-    let s = 0; const e = value, dur = 2000, step = e / (dur / 16);
-    const t = setInterval(() => { s += step; if (s >= e) { setCount(e); clearInterval(t); } else setCount(Math.floor(s)); }, 16);
-    return () => clearInterval(t);
-  });
-  return <span ref={ref}>{isInView ? count : 0}{suffix}</span>;
+  useEffect(() => {
+    if (!isInView || value <= 0) return;
+    let start = 0;
+    const step = (ts: number) => { if (!start) start = ts; const p = Math.min((ts - start) / 2000, 1); setCount(Math.floor((1 - Math.pow(1 - p, 3)) * value)); if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }, [isInView, value]);
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
+/* Premium Badge */
+const premiumImages = [
+  { src: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=200", label: "Pasta Fresca" },
+  { src: "https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=200", label: "Atmosfera" },
+  { src: "https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg?auto=compress&cs=tinysrgb&w=200", label: "Fine Dining" },
+  { src: "https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=200", label: "Chef" },
+];
+
+function PremiumBadge() {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => { const t = setInterval(() => setIdx(p => (p + 1) % premiumImages.length), 3500); return () => clearInterval(t); }, []);
+  const img = premiumImages[idx];
+  return (
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4, duration: 0.5 }}
+      className="absolute -bottom-4 right-3 sm:-bottom-5 sm:right-4 z-20">
+      <div className="flex items-center gap-2 rounded-full backdrop-blur-xl pl-0.5 pr-3 py-0.5"
+        style={{ background: "rgba(10,10,10,0.8)", border: "1px solid rgba(212,175,55,0.3)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
+        <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0" style={{ border: "1.5px solid rgba(212,175,55,0.4)" }}>
+          <AnimatePresence mode="wait">
+            <motion.img key={idx} src={img.src} alt={img.label} className="w-full h-full object-cover"
+              initial={{ opacity: 0, scale: 1.2 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }} />
+          </AnimatePresence>
+        </div>
+        <div className="min-w-0">
+          <p className="text-[8px] uppercase tracking-[0.15em] font-bold leading-none" style={{ color: "#D4AF37" }}>Premium</p>
+          <p className="text-[8px] text-white/45 truncate leading-tight mt-0.5">{img.label}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
 }
 
 interface Props { company: any; }
@@ -123,84 +160,128 @@ export default function FoodPublicSite({ company }: Props) {
 
   const navItems = ["Menu", "Chi Siamo", "Prenota", "Contatti"];
 
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navScrolled, setNavScrolled] = useState(false);
+
+  useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
+
+  const tickerItems = ["Antipasti", "Primi Piatti", "Secondi", "Pizza", "Dolci", "Vini Pregiati", "Cucina Tradizionale", "Ingredienti Km0", "Chef Stellato", "Pasta Fresca"];
+
   return (
     <div style={{ fontFamily: "'Playfair Display', serif", background: dark, color: cream }}>
       {/* Google Font */}
       <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
       {/* ── NAVBAR ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl" style={{ background: "rgba(10,10,10,0.85)", borderBottom: `1px solid ${gold}22` }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${navScrolled ? "py-0" : "py-1"}`} style={{ background: dark, borderBottom: `1px solid ${gold}30` }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 sm:h-20">
-          <div className="flex items-center gap-3">
-            {company.logo_url && <img src={company.logo_url} alt={name} className="h-10 w-10 rounded-full object-cover border" style={{ borderColor: gold }} />}
-            <span className="text-lg sm:text-xl font-bold" style={{ color: gold, fontFamily: "'Playfair Display', serif" }}>{name}</span>
+          <div className="flex items-center gap-3 min-w-0">
+            {company.logo_url ? <motion.img src={company.logo_url} alt={name} className="h-9 w-9 rounded-xl object-cover" whileHover={{ scale: 1.1 }} /> :
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${gold}20` }}><UtensilsCrossed className="w-5 h-5" style={{ color: gold }} /></div>}
+            <div className="min-w-0">
+              <span className="font-bold text-base tracking-tight truncate block" style={{ color: gold }}>{name}</span>
+              <span className="text-[9px] tracking-[0.2em] uppercase block font-semibold text-white/50">RISTORANTE PREMIUM</span>
+            </div>
           </div>
           <div className="hidden md:flex items-center gap-8">
             {navItems.map(item => (
-              <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} className="text-sm tracking-widest uppercase transition-colors hover:opacity-100 opacity-70" style={{ color: cream, fontFamily: "Inter, sans-serif" }}>{item}</a>
+              <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} className="text-[13px] tracking-widest uppercase transition-colors hover:opacity-100 opacity-50" style={{ color: cream, fontFamily: "Inter, sans-serif" }}>{item}</a>
             ))}
           </div>
-          {phone && (
-            <a href={`tel:${phone}`} className="hidden md:flex items-center gap-2 text-sm" style={{ color: gold }}>
-              <Phone className="w-4 h-4" /> {phone}
-            </a>
-          )}
-          <button className="md:hidden" onClick={() => setMobileMenu(!mobileMenu)} style={{ color: gold }}>
-            {mobileMenu ? "✕" : "☰"}
-          </button>
+          <div className="flex items-center gap-3">
+            {phone && (
+              <Button size="sm" variant="outline" className="hidden sm:flex gap-2 rounded-full font-bold text-xs h-10 px-5 hover:scale-105 transition-transform" style={{ borderColor: gold, color: gold, background: "transparent", fontFamily: "Inter, sans-serif" }} asChild>
+                <a href={`tel:${phone}`}><Phone className="w-3.5 h-3.5" /> CHIAMA ORA</a>
+              </Button>
+            )}
+            <button className="md:hidden p-2 rounded-xl hover:bg-white/10 transition-colors" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
-        {mobileMenu && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} className="md:hidden px-6 pb-6 space-y-4" style={{ background: dark }}>
-            {navItems.map(item => (
-              <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} onClick={() => setMobileMenu(false)} className="block text-lg" style={{ color: cream }}>{item}</a>
-            ))}
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-hidden" style={{ background: dark, borderTop: `1px solid ${gold}20` }}>
+              <div className="px-5 py-5 space-y-1">
+                {navItems.map(item => (
+                  <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm text-white/50 hover:text-white transition-colors border-b" style={{ borderColor: `${gold}10` }}>{item}</a>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
-      {/* ── HERO ── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${dark}00 0%, ${dark}88 40%, ${dark} 100%)` }} />
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1920)`, filter: "brightness(0.35)" }} />
-        
-        <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}>
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <span className="h-px w-12" style={{ background: gold }} />
-              <UtensilsCrossed className="w-6 h-6" style={{ color: gold }} />
-              <span className="h-px w-12" style={{ background: gold }} />
-            </div>
-            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-bold leading-tight mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
-              {name.split("").map((char, i) => (
-                <motion.span key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 + i * 0.04, duration: 0.5 }} style={{ color: i % 3 === 0 ? gold : cream }}>
-                  {char}
-                </motion.span>
-              ))}
-            </h1>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} className="text-lg sm:text-xl mb-10 opacity-80" style={{ fontFamily: "Inter, sans-serif", color: cream }}>
-              {tagline}
-            </motion.p>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5 }} className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="#prenota">
-                <Button className="px-8 py-6 text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, #B8962E)`, color: dark, border: "none", fontFamily: "Inter, sans-serif" }}>
-                  Prenota un Tavolo
-                </Button>
-              </a>
-              <a href="#menu">
-                <Button variant="outline" className="px-8 py-6 text-lg tracking-wide" style={{ borderColor: gold, color: gold, background: "transparent", fontFamily: "Inter, sans-serif" }}>
-                  Vedi il Menu
-                </Button>
-              </a>
+      {/* ── HERO — video bg + text reveal ── */}
+      <section ref={heroRef} className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.25)" }}>
+          <source src={HERO_VIDEO} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${dark}DD 0%, ${dark}99 40%, ${dark}CC 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle, ${gold}80 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
+
+        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-10 px-4 sm:px-6">
+          <motion.div style={{ y: heroY, opacity: heroOpacity }}>
+            <motion.div initial="hidden" animate="show" variants={stagger}>
+              <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 text-sm font-medium"
+                style={{ background: `${gold}15`, border: `1px solid ${gold}30`, color: gold, fontFamily: "Inter, sans-serif" }}>
+                <Sparkles className="w-4 h-4" /> Cucina d'Eccellenza
+              </motion.div>
+              <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.05] mb-6">
+                {name.split("").map((char, i) => (
+                  <motion.span key={i} initial={{ opacity: 0, y: 30, rotateX: -90 }} animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    transition={{ delay: 0.5 + i * 0.04, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ display: "inline-block", color: i % 4 === 0 ? gold : cream }}>
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+              </motion.h1>
+              <motion.p variants={fadeUp} custom={2} className="text-base sm:text-lg mb-10 max-w-xl" style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Inter, sans-serif" }}>
+                {tagline}
+              </motion.p>
+              <motion.div variants={fadeUp} custom={3} className="flex flex-col sm:flex-row gap-3">
+                <a href="#prenota">
+                  <Button className="px-10 h-14 text-base font-semibold tracking-wide rounded-xl shadow-2xl" style={{ background: `linear-gradient(135deg, ${gold}, #B8962E)`, color: dark, border: "none", fontFamily: "Inter, sans-serif", boxShadow: `0 20px 60px -15px ${gold}55` }}>
+                    <Calendar className="w-5 h-5 mr-2" /> Prenota un Tavolo
+                  </Button>
+                </a>
+                <a href="#menu">
+                  <Button variant="outline" className="px-8 h-14 text-base tracking-wide rounded-xl text-white hover:bg-white/5" style={{ borderColor: "rgba(255,255,255,0.1)", fontFamily: "Inter, sans-serif" }}>
+                    Vedi il Menu
+                  </Button>
+                </a>
+              </motion.div>
             </motion.div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }} className="absolute bottom-10 left-1/2 -translate-x-1/2">
-            <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
-              <ChevronDown className="w-8 h-8 opacity-40" style={{ color: gold }} />
-            </motion.div>
+          {/* Hero image with Premium Badge */}
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4, duration: 0.8 }} className="relative hidden lg:block">
+            <div className="rounded-3xl overflow-hidden shadow-2xl aspect-[3/4]" style={{ border: `1px solid ${gold}20` }}>
+              <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Piatto" className="w-full h-full object-cover" />
+            </div>
+            <PremiumBadge />
           </motion.div>
         </div>
+
+        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <ChevronDown className="w-5 h-5 text-white/30" />
+        </motion.div>
       </section>
+
+      {/* ── TICKER ── */}
+      <div className="overflow-hidden py-4" style={{ background: "#111" }}>
+        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1200] }} transition={{ repeat: Infinity, duration: 20, ease: "linear" }}>
+          {[...tickerItems, ...tickerItems].map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-medium" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "Inter, sans-serif" }}>
+              <UtensilsCrossed className="w-3 h-3" style={{ color: `${gold}60` }} /> {item}
+            </span>
+          ))}
+        </motion.div>
+      </div>
 
       {/* ── STATS BAR ── */}
       <Section className="py-8 border-y" style={{ borderColor: `${gold}22` } as any}>

@@ -152,6 +152,7 @@ export default function HotelPublicSite({ company }: Props) {
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
         <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${BORDEAUX}44 0%, #00000088 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle, ${GOLD}60 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
 
         <div className="relative z-10 max-w-4xl mx-auto px-5 text-center text-white pt-20">
           <motion.div initial="hidden" animate="show" variants={stagger}>
@@ -159,7 +160,15 @@ export default function HotelPublicSite({ company }: Props) {
               {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="w-4 h-4" fill={GOLD} style={{ color: GOLD }} />)}
             </motion.div>
             <motion.p variants={fadeUp} custom={1} className="text-[10px] uppercase tracking-[0.35em] mb-3 opacity-60" style={{ fontFamily: "'Lato', sans-serif", color: GOLD }}>Benvenuti a</motion.p>
-            <motion.h1 variants={fadeUp} custom={2} className="text-4xl sm:text-6xl lg:text-7xl font-bold italic mb-5">{name}</motion.h1>
+            <motion.h1 variants={fadeUp} custom={2} className="text-4xl sm:text-6xl lg:text-7xl font-bold italic mb-5">
+              {name.split("").map((char, i) => (
+                <motion.span key={i} initial={{ opacity: 0, y: 25, rotateX: -90 }} animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ delay: 0.6 + i * 0.04, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ display: "inline-block", color: i % 4 === 0 ? GOLD : "white" }}>
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
+            </motion.h1>
             <motion.p variants={fadeUp} custom={3} className="text-base sm:text-lg opacity-70 mb-8" style={{ fontFamily: "'Lato', sans-serif" }}>{tagline}</motion.p>
             <motion.div variants={fadeUp} custom={4} className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button className="px-8 py-5 text-base rounded-xl shadow-2xl" style={{ background: `linear-gradient(135deg, ${GOLD}, #A88B30)`, color: "#1a1a1a", fontFamily: "'Lato', sans-serif", boxShadow: `0 20px 60px -15px ${GOLD}55` }} onClick={() => scrollTo("prenota")}>Prenota il Soggiorno</Button>

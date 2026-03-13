@@ -133,6 +133,7 @@ export default function RetailPublicSite({ company }: Props) {
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent" />
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(circle, ${accent}40 1px, transparent 1px)`, backgroundSize: "40px 40px" }} />
 
         <div className="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center relative z-10">
           <motion.div style={{ y: heroY }}>
