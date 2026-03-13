@@ -1812,6 +1812,88 @@ const LandingPage = () => {
 
       <SectionDivider />
 
+      {/* ═══════════════════════════════════════════
+          PERCHÉ SIAMO N°1 — Dense Benefits Grid
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-10 sm:mb-14">
+          <SectionLabel text="Supremazia" icon={<Crown className="w-3 h-3 text-accent" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Perché Siamo <span className="text-shimmer">N°1</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Non è marketing. Sono fatti. Ecco perché nessun competitor può offrire quello che offriamo noi.
+          </motion.p>
+        </div>
+
+        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
+          variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {[
+            { icon: <Brain className="w-4 h-4" />, title: "IA Proprietaria", desc: "Non rivendiamo ChatGPT. Engine AI custom." },
+            { icon: <Globe className="w-4 h-4" />, title: "25+ Settori", desc: "Dal ristorante all'hotel, dalla palestra al medico." },
+            { icon: <Smartphone className="w-4 h-4" />, title: "PWA Nativa", desc: "Installabile come app. No App Store, no costi." },
+            { icon: <Fingerprint className="w-4 h-4" />, title: "100% White Label", desc: "Il tuo brand, zero marchi terzi." },
+            { icon: <Zap className="w-4 h-4" />, title: "Attivo in 24h", desc: "Non mesi. Un giorno e sei operativo." },
+            { icon: <Shield className="w-4 h-4" />, title: "GDPR & AES-256", desc: "Sicurezza enterprise per tutti." },
+            { icon: <Workflow className="w-4 h-4" />, title: "Automazione Totale", desc: "Dal primo contatto alla fattura." },
+            { icon: <Radio className="w-4 h-4" />, title: "Updates Settimanali", desc: "Il sistema si evolve. Sempre gratis." },
+            { icon: <DollarSign className="w-4 h-4" />, title: "Solo 2% Fee", desc: "15× meno di qualsiasi piattaforma." },
+            { icon: <Database className="w-4 h-4" />, title: "Dati Tuoi", desc: "Proprietà totale. Zero lock-in." },
+            { icon: <Bot className="w-4 h-4" />, title: "Concierge AI", desc: "Assistente 24/7 per i tuoi clienti." },
+            { icon: <Headphones className="w-4 h-4" />, title: "Supporto 7/7", desc: "Persone vere, non chatbot." },
+          ].map((b, i) => (
+            <motion.div key={i} className="p-4 rounded-xl holo-panel text-center group hover:border-primary/15 transition-all"
+              variants={popIn} whileHover={{ y: -3 }}>
+              <div className="text-primary/50 mb-2 flex justify-center group-hover:text-primary/80 transition-colors">{b.icon}</div>
+              <h4 className="text-[0.7rem] font-heading font-bold text-foreground mb-1">{b.title}</h4>
+              <p className="text-[0.55rem] text-foreground/30 leading-[1.5]">{b.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </Section>
+
+      <SectionDivider />
+
+      {/* ═══════════════════════════════════════════
+          GARANZIA TOTALE — Risk Reversal
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <motion.div className="relative max-w-2xl mx-auto p-8 sm:p-12 rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background to-accent/[0.03] text-center overflow-hidden"
+          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
+          <div className="absolute inset-0 premium-holo-grid opacity-20 pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[1px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+          <div className="relative z-10">
+            <motion.div
+              initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}>
+              <Shield className="w-14 h-14 mx-auto text-primary mb-5 drop-shadow-[0_0_30px_hsla(265,70%,60%,0.3)]" />
+            </motion.div>
+            <h2 className="text-[clamp(1.5rem,4vw,2.4rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
+              Garanzia <span className="text-shimmer">Soddisfatti o Rimborsati</span>
+            </h2>
+            <p className="text-sm text-foreground/40 max-w-md mx-auto leading-[1.8] mb-6">
+              Se entro 30 giorni dall'attivazione non sei completamente soddisfatto, ti rimborsiamo il 100% senza domande. Zero rischio, zero burocrazia.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+              {[
+                { icon: <Check className="w-4 h-4" />, text: "30 giorni di prova" },
+                { icon: <Check className="w-4 h-4" />, text: "Rimborso 100%" },
+                { icon: <Check className="w-4 h-4" />, text: "Nessuna domanda" },
+              ].map((g, i) => (
+                <div key={i} className="flex items-center gap-2 text-xs text-foreground/50">
+                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">{g.icon}</div>
+                  <span className="font-heading font-semibold">{g.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </Section>
+
+      <SectionDivider />
+
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
         <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.1] via-accent/[0.04] to-primary/[0.06] border border-primary/15 overflow-hidden animated-border">
