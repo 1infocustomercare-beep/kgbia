@@ -4,7 +4,7 @@ import {
   BarChart3, Settings, Target, MessageSquare, Store, CreditCard,
   Home, Briefcase, Receipt, PenTool, Sparkles, UserCog, Wrench,
   Zap, Leaf, Heart, Camera, Truck, Umbrella, Cog, FileText,
-  Clock, GraduationCap, Baby, Scale
+  Clock, GraduationCap, Baby, Scale, Lightbulb
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -22,7 +22,7 @@ const ICON_MAP: Record<string, any> = {
   BarChart3, Settings, Target, MessageSquare, Store, CreditCard,
   Home, Briefcase, Receipt, PenTool, Sparkles, UserCog, Wrench,
   Zap, Leaf, Heart, Camera, Truck, Umbrella, Cog, FileText,
-  Clock, GraduationCap, Baby, Scale,
+  Clock, GraduationCap, Baby, Scale, Lightbulb,
 };
 
 // Modules per industry
@@ -173,6 +173,8 @@ const COMMON_NAV = [
   { title: "Finanza", icon: "BarChart3", url: "/app/finance" },
   { title: "Leads", icon: "Target", url: "/app/leads" },
   { title: "Social", icon: "PenTool", url: "/app/social" },
+  { title: "Abbonamento", icon: "CreditCard", url: "/app/subscription" },
+  { title: "Richieste", icon: "Lightbulb", url: "/app/feature-requests" },
   { title: "Impostazioni", icon: "Settings", url: "/app/settings" },
 ];
 

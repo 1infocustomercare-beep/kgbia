@@ -7,11 +7,13 @@ import {
   CreditCard, Ban, Unlock, Calendar, Clock, Eye, Film,
   Cpu, Wifi, CheckCircle2, XCircle, AlertCircle,
   ChevronRight, Filter, Plus, ArrowUpRight, ArrowDownRight,
-  Building2, MapPin, Zap, Activity
+  Building2, MapPin, Zap, Activity, Lightbulb
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { lazy, Suspense } from "react";
+const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
 import { toast } from "@/hooks/use-toast";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 
@@ -58,7 +60,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents" | "media";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents" | "media" | "feature_requests";
 
 const INDUSTRY_COLORS: Record<string, string> = {
   food: "#C8963E", ncc: "#1E3A5F", beauty: "#E91E8C", healthcare: "#10B981",
@@ -364,6 +366,7 @@ const SuperAdminDashboard = () => {
     { id: "billing", label: "Fatture", icon: <DollarSign className="w-5 h-5" /> },
     { id: "mary", label: "AI-Mary", icon: <Bot className="w-5 h-5" /> },
     { id: "agents", label: "Agenti IA", icon: <Cpu className="w-5 h-5" /> },
+    { id: "feature_requests", label: "Richieste", icon: <Lightbulb className="w-5 h-5" /> },
     { id: "media", label: "Media", icon: <Film className="w-5 h-5" /> },
   ];
 
@@ -878,6 +881,13 @@ const SuperAdminDashboard = () => {
               </div>
             </div>
           </motion.div>
+        )}
+
+        {/* ===== FEATURE REQUESTS ===== */}
+        {!loading && activeTab === "feature_requests" && (
+          <Suspense fallback={<div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+            <FeatureRequestsAdminPage />
+          </Suspense>
         )}
       </div>
     </div>

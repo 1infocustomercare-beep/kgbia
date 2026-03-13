@@ -65,6 +65,8 @@ const BeachMapPage = lazy(() => import("./pages/app/BeachMapPage"));
 const NCCBeachBookingsPage = lazy(() => import("./pages/app/NCCBeachBookingsPage"));
 const TeamPage = lazy(() => import("./pages/app/TeamPage"));
 const AutomationsPage = lazy(() => import("./pages/app/AutomationsPage"));
+const FeatureRequestsPage = lazy(() => import("./pages/app/FeatureRequestsPage"));
+const SubscriptionPage = lazy(() => import("./pages/app/SubscriptionPage"));
 
 // Demo pages
 const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
@@ -191,6 +193,8 @@ function App() {
                   <Route path="finance" element={<FinancePage />} />
                   <Route path="social" element={<SocialPage />} />
                   <Route path="settings" element={<SettingsPage />} />
+                  <Route path="feature-requests" element={<FeatureRequestsPage />} />
+                  <Route path="subscription" element={<SubscriptionPage />} />
                   {/* Catch-all for industry modules in development */}
                   <Route path="*" element={<GenericModulePage />} />
                 </Route>

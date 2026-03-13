@@ -1342,32 +1342,91 @@ export type Database = {
           },
         ]
       }
+      feature_request_messages: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string
+          read_at: string | null
+          request_id: string
+          sender_id: string | null
+          sender_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message: string
+          read_at?: string | null
+          request_id: string
+          sender_id?: string | null
+          sender_type?: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string
+          read_at?: string | null
+          request_id?: string
+          sender_id?: string | null
+          sender_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_request_messages_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feature_requests: {
         Row: {
+          admin_notes: string | null
           company_id: string
           created_at: string
+          deployed_at: string | null
           description: string | null
+          estimated_price: number | null
           id: string
+          priority: string | null
+          reply_message: string | null
+          sector: string | null
           status: string
           title: string
+          updated_at: string | null
           votes: number | null
         }
         Insert: {
+          admin_notes?: string | null
           company_id: string
           created_at?: string
+          deployed_at?: string | null
           description?: string | null
+          estimated_price?: number | null
           id?: string
+          priority?: string | null
+          reply_message?: string | null
+          sector?: string | null
           status?: string
           title: string
+          updated_at?: string | null
           votes?: number | null
         }
         Update: {
+          admin_notes?: string | null
           company_id?: string
           created_at?: string
+          deployed_at?: string | null
           description?: string | null
+          estimated_price?: number | null
           id?: string
+          priority?: string | null
+          reply_message?: string | null
+          sector?: string | null
           status?: string
           title?: string
+          updated_at?: string | null
           votes?: number | null
         }
         Relationships: [
@@ -2211,6 +2270,53 @@ export type Database = {
           },
         ]
       }
+      notifications_log: {
+        Row: {
+          channel: string
+          company_id: string
+          id: string
+          is_read: boolean | null
+          message: string
+          recipient: string
+          sent_at: string | null
+          status: string | null
+          template: string | null
+          title: string | null
+        }
+        Insert: {
+          channel?: string
+          company_id: string
+          id?: string
+          is_read?: boolean | null
+          message: string
+          recipient: string
+          sent_at?: string | null
+          status?: string | null
+          template?: string | null
+          title?: string | null
+        }
+        Update: {
+          channel?: string
+          company_id?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          recipient?: string
+          sent_at?: string | null
+          status?: string | null
+          template?: string | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_log_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           created_at: string
@@ -2678,6 +2784,77 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      public_site_config: {
+        Row: {
+          about_text: string | null
+          active_sections: Json | null
+          booking_enabled: boolean | null
+          company_id: string
+          custom_css: string | null
+          font_body: string | null
+          font_heading: string | null
+          google_business_url: string | null
+          headline: string | null
+          hero_image_url: string | null
+          hero_video_url: string | null
+          id: string
+          seo_description: string | null
+          seo_keywords: string | null
+          seo_title: string | null
+          tagline: string | null
+          updated_at: string | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          about_text?: string | null
+          active_sections?: Json | null
+          booking_enabled?: boolean | null
+          company_id: string
+          custom_css?: string | null
+          font_body?: string | null
+          font_heading?: string | null
+          google_business_url?: string | null
+          headline?: string | null
+          hero_image_url?: string | null
+          hero_video_url?: string | null
+          id?: string
+          seo_description?: string | null
+          seo_keywords?: string | null
+          seo_title?: string | null
+          tagline?: string | null
+          updated_at?: string | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          about_text?: string | null
+          active_sections?: Json | null
+          booking_enabled?: boolean | null
+          company_id?: string
+          custom_css?: string | null
+          font_body?: string | null
+          font_heading?: string | null
+          google_business_url?: string | null
+          headline?: string | null
+          hero_image_url?: string | null
+          hero_video_url?: string | null
+          id?: string
+          seo_description?: string | null
+          seo_keywords?: string | null
+          seo_title?: string | null
+          tagline?: string | null
+          updated_at?: string | null
+          whatsapp_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_site_config_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: true
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       push_subscriptions: {
         Row: {
