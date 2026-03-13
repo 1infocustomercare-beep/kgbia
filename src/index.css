@@ -41,6 +41,13 @@
     --glass-shine: 250 20% 96% / 0.04;
     --gold-glow: 265 70% 60% / 0.3;
 
+    /* ═══ GOLD LUXURY TOKENS ═══ */
+    --gold: 42 80% 55%;
+    --gold-light: 45 85% 68%;
+    --gold-dark: 38 75% 42%;
+    --gold-muted: 40 40% 50%;
+    --deep-black: 260 30% 2%;
+
     --sidebar-background: 260 18% 5%;
     --sidebar-foreground: 250 20% 85%;
     --sidebar-primary: 265 70% 60%;
@@ -84,14 +91,39 @@
   }
 
   .gold-glow {
-    box-shadow: 0 0 30px hsla(265, 70%, 60%, 0.3), 0 0 60px hsla(280, 45%, 68%, 0.1);
+    box-shadow: 0 0 30px hsla(42, 80%, 55%, 0.25), 0 0 60px hsla(42, 80%, 55%, 0.1);
   }
 
   .text-gold-gradient {
-    background: linear-gradient(135deg, hsl(265, 70%, 68%), hsl(280, 45%, 68%), hsl(300, 35%, 55%));
+    background: linear-gradient(135deg, hsl(42, 80%, 65%), hsl(45, 85%, 72%), hsl(38, 75%, 55%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .text-gold-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(42, 80%, 60%) 0%,
+      hsl(45, 90%, 75%) 25%,
+      hsl(0, 0%, 98%) 50%,
+      hsl(42, 85%, 70%) 75%,
+      hsl(42, 80%, 60%) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: text-shimmer 3.5s linear infinite;
+  }
+
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, hsl(42, 80%, 50%), hsl(45, 85%, 58%), hsl(38, 75%, 45%));
+  }
+
+  .gold-border-glow {
+    border-color: hsla(42, 80%, 55%, 0.2);
+    box-shadow: 0 0 20px hsla(42, 80%, 55%, 0.08);
   }
 
   @keyframes marquee-scroll {
@@ -671,7 +703,7 @@
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(90deg, transparent, hsla(265, 70%, 60%, 0.3), hsla(280, 45%, 68%, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, hsla(42, 80%, 55%, 0.2), hsla(265, 70%, 60%, 0.3), hsla(42, 80%, 55%, 0.2), transparent);
     background-size: 300% 100%;
     animation: border-flow 4s ease infinite;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
