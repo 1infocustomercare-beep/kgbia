@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useState, useRef, useEffect, forwardRef } from "react";
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,10 @@ import { toast } from "sonner";
 import {
   Star, Phone, Mail, MapPin, Clock, Calendar, ArrowRight,
   ChevronDown, Instagram, UtensilsCrossed, Wine, Flame,
-  Heart, Send, Users, Award, MessageCircle, Leaf
+  Heart, Send, Users, Award, MessageCircle, Leaf, Sparkles, Menu, X
 } from "lucide-react";
+
+const HERO_VIDEO = "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -20,29 +22,64 @@ const fadeUp = {
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
-function Section({ id, children, className = "", style }: { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-  return (
-    <section id={id} ref={ref} className={className} style={style}>
-      <motion.div initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
-        {children}
-      </motion.div>
-    </section>
-  );
-}
+const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
+  ({ id, children, className = "", style }, _ref) => {
+    const localRef = useRef(null);
+    const isInView = useInView(localRef, { once: true, margin: "-60px" });
+    return (
+      <section id={id} ref={localRef} className={className} style={style}>
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+          {children}
+        </motion.div>
+      </section>
+    );
+  }
+);
+Section.displayName = "Section";
 
 function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const [count, setCount] = useState(0);
-  useState(() => {
-    if (!isInView) return;
-    let s = 0; const e = value, dur = 2000, step = e / (dur / 16);
-    const t = setInterval(() => { s += step; if (s >= e) { setCount(e); clearInterval(t); } else setCount(Math.floor(s)); }, 16);
-    return () => clearInterval(t);
-  });
-  return <span ref={ref}>{isInView ? count : 0}{suffix}</span>;
+  useEffect(() => {
+    if (!isInView || value <= 0) return;
+    let start = 0;
+    const step = (ts: number) => { if (!start) start = ts; const p = Math.min((ts - start) / 2000, 1); setCount(Math.floor((1 - Math.pow(1 - p, 3)) * value)); if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }, [isInView, value]);
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
+/* Premium Badge */
+const premiumImages = [
+  { src: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=200", label: "Pasta Fresca" },
+  { src: "https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=200", label: "Atmosfera" },
+  { src: "https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg?auto=compress&cs=tinysrgb&w=200", label: "Fine Dining" },
+  { src: "https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=200", label: "Chef" },
+];
+
+function PremiumBadge() {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => { const t = setInterval(() => setIdx(p => (p + 1) % premiumImages.length), 3500); return () => clearInterval(t); }, []);
+  const img = premiumImages[idx];
+  return (
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4, duration: 0.5 }}
+      className="absolute -bottom-4 right-3 sm:-bottom-5 sm:right-4 z-20">
+      <div className="flex items-center gap-2 rounded-full backdrop-blur-xl pl-0.5 pr-3 py-0.5"
+        style={{ background: "rgba(10,10,10,0.8)", border: "1px solid rgba(212,175,55,0.3)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
+        <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0" style={{ border: "1.5px solid rgba(212,175,55,0.4)" }}>
+          <AnimatePresence mode="wait">
+            <motion.img key={idx} src={img.src} alt={img.label} className="w-full h-full object-cover"
+              initial={{ opacity: 0, scale: 1.2 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }} />
+          </AnimatePresence>
+        </div>
+        <div className="min-w-0">
+          <p className="text-[8px] uppercase tracking-[0.15em] font-bold leading-none" style={{ color: "#D4AF37" }}>Premium</p>
+          <p className="text-[8px] text-white/45 truncate leading-tight mt-0.5">{img.label}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
 }
 
 interface Props { company: any; }
