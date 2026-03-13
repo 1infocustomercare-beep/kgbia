@@ -2,13 +2,19 @@ import { lazy, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { getIndustryConfig, type IndustryId } from "@/config/industry-config";
+import { type IndustryId } from "@/config/industry-config";
 
 // Sector-specific premium sites
 const NCCPublicSite = lazy(() => import("@/pages/public/NCCPublicSite"));
 const BeautyPublicSite = lazy(() => import("@/pages/public/BeautyPublicSite"));
 const BeachPublicSite = lazy(() => import("@/pages/public/BeachPublicSite"));
 const TradesPublicSite = lazy(() => import("@/pages/public/TradesPublicSite"));
+const FoodPublicSite = lazy(() => import("@/pages/public/FoodPublicSite"));
+const HealthcarePublicSite = lazy(() => import("@/pages/public/HealthcarePublicSite"));
+const FitnessPublicSite = lazy(() => import("@/pages/public/FitnessPublicSite"));
+const HotelPublicSite = lazy(() => import("@/pages/public/HotelPublicSite"));
+const BakeryPublicSite = lazy(() => import("@/pages/public/BakeryPublicSite"));
+const RetailPublicSite = lazy(() => import("@/pages/public/RetailPublicSite"));
 const LuxuryPublicSite = lazy(() => import("@/pages/public/LuxuryPublicSite"));
 
 const SiteLoader = () => (
@@ -16,6 +22,21 @@ const SiteLoader = () => (
     <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
   </div>
 );
+
+const TEMPLATE_MAP: Record<string, React.LazyExoticComponent<React.ComponentType<{ company: any }>>> = {
+  ncc: NCCPublicSite,
+  beauty: BeautyPublicSite,
+  beach: BeachPublicSite,
+  food: FoodPublicSite,
+  restaurant: FoodPublicSite,
+  healthcare: HealthcarePublicSite,
+  fitness: FitnessPublicSite,
+  hotel: HotelPublicSite,
+  bakery: BakeryPublicSite,
+  retail: RetailPublicSite,
+};
+
+const TRADES = ["plumber", "electrician", "cleaning", "garage", "construction", "gardening"];
 
 export default function BusinessPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -35,9 +56,7 @@ export default function BusinessPage() {
     enabled: !!slug,
   });
 
-  if (isLoading) {
-    return <SiteLoader />;
-  }
+  if (isLoading) return <SiteLoader />;
 
   if (!company) {
     return (
@@ -52,13 +71,12 @@ export default function BusinessPage() {
 
   const industry = (company.industry || "custom") as IndustryId;
 
-  // Dispatch to sector-specific premium sites
-  if (industry === "ncc") return <Suspense fallback={<SiteLoader />}><NCCPublicSite company={company} /></Suspense>;
-  if (industry === "beauty") return <Suspense fallback={<SiteLoader />}><BeautyPublicSite company={company} /></Suspense>;
-  if (industry === "beach") return <Suspense fallback={<SiteLoader />}><BeachPublicSite company={company} /></Suspense>;
-  if (["plumber", "electrician", "cleaning", "garage", "construction", "gardening"].includes(industry))
+  // Trades group
+  if (TRADES.includes(industry)) {
     return <Suspense fallback={<SiteLoader />}><TradesPublicSite company={company} /></Suspense>;
+  }
 
-  // Universal luxury template for ALL other sectors
-  return <Suspense fallback={<SiteLoader />}><LuxuryPublicSite company={company} /></Suspense>;
+  // Sector-specific or universal fallback
+  const Template = TEMPLATE_MAP[industry] || LuxuryPublicSite;
+  return <Suspense fallback={<SiteLoader />}><Template company={company} /></Suspense>;
 }
