@@ -152,6 +152,7 @@ export default function HotelPublicSite({ company }: Props) {
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
         <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${BORDEAUX}44 0%, #00000088 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle, ${GOLD}60 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
 
         <div className="relative z-10 max-w-4xl mx-auto px-5 text-center text-white pt-20">
           <motion.div initial="hidden" animate="show" variants={stagger}>

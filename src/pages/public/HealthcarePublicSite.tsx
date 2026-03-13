@@ -167,6 +167,7 @@ export default function HealthcarePublicSite({ company }: Props) {
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
         <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${BLUE}EE 0%, ${BLUE}CC 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle, ${TEAL}80 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
 
         <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-10 px-5">
           <motion.div style={{ y: heroY }}>
