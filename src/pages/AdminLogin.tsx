@@ -160,7 +160,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
 
       const { error, session } = await signIn(email, password);
       if (error) {
-        setError(error.message);
+        setError(normalizeAuthErrorMessage(error.message));
         return;
       }
 
