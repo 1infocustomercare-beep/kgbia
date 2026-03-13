@@ -392,7 +392,9 @@ export default function NCCPublicSite({ company }: Props) {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="hidden lg:block">
-            <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&h=600&fit=crop" alt={`${company.name} Transfer`} className="w-full rounded-[20px] shadow-2xl object-cover aspect-[4/3]" />
+            <div className="relative rounded-[20px] overflow-hidden shadow-2xl" style={{ border: `3px solid ${gold}30` }}>
+              <img src="https://images.unsplash.com/photo-1534445867742-43195f401b6c?w=800&h=600&fit=crop" alt={`${company.name} Transfer`} className="w-full object-cover aspect-[4/3]" />
+            </div>
           </motion.div>
         </div>
 
