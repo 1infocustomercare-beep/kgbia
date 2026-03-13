@@ -407,7 +407,7 @@ const SuperAdminDashboard = () => {
       <div className="flex gap-1.5 px-4 py-3 overflow-x-auto scrollbar-hide">
         {tabs.map((tab) => (
           <button key={tab.id}
-            onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : setActiveTab(tab.id)}
+            onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors min-h-[44px] ${
               activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
             }`}>
