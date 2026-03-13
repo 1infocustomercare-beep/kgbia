@@ -1101,7 +1101,7 @@ const LandingPage = () => {
               className="absolute w-1.5 h-1.5 rounded-full bg-primary z-20"
               style={{
                 left: "50%", top: "50%",
-                boxShadow: "0 0 8px hsla(217,85%,58%,0.8)",
+                boxShadow: "0 0 8px hsla(265,70%,60%,0.8)",
               }}
               animate={{
                 x: [0, (Math.cos(i * Math.PI / 3) * 150)],
