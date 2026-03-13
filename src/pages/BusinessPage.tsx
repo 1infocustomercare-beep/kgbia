@@ -300,4 +300,3 @@ export default function BusinessPage() {
   // Universal luxury template for ALL other sectors
   return <Suspense fallback={<SiteLoader />}><LuxuryPublicSite company={company} /></Suspense>;
 }
-}
