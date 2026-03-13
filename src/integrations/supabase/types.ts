@@ -1805,6 +1805,48 @@ export type Database = {
         }
         Relationships: []
       }
+      media_vault: {
+        Row: {
+          created_at: string
+          description: string | null
+          dimensions: string | null
+          id: string
+          is_bundled: boolean
+          name: string
+          section: string | null
+          sort_order: number
+          type: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          dimensions?: string | null
+          id?: string
+          is_bundled?: boolean
+          name: string
+          section?: string | null
+          sort_order?: number
+          type?: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          dimensions?: string | null
+          id?: string
+          is_bundled?: boolean
+          name?: string
+          section?: string | null
+          sort_order?: number
+          type?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       menu_items: {
         Row: {
           allergens: string[] | null
