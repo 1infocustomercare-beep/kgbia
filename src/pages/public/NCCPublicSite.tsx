@@ -567,24 +567,42 @@ export default function NCCPublicSite({ company }: Props) {
       </section>
 
       {/* ═══════════ DESTINAZIONI — light bg ═══════════ */}
-      <Section className="py-24 px-4" style={{ background: NCC.bgLight }}>
+      <Section className="py-16 sm:py-24 px-4" style={{ background: NCC.bgLight }}>
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>DESTINAZIONI POPOLARI</p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif", color: NCC.textDark }}>
+          <div className="text-center mb-10 sm:mb-14">
+            <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-semibold mb-3 sm:mb-4" style={{ color: gold }}>DESTINAZIONI POPOLARI</p>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif", color: NCC.textDark }}>
               LE NOSTRE <span style={{ color: gold }}>Destinazioni</span>
             </h2>
           </div>
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-2 sm:gap-6">
             {featuredDestinations.map((dest, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12 }}>
-                <a href="#prenota" className="group block relative rounded-2xl overflow-hidden aspect-[3/4]">
-                  <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="font-bold text-2xl text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>{dest.name}</h3>
-                    <span className="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style={{ color: gold }}>
-                      PRENOTA <ArrowRight className="w-4 h-4" />
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <a href="#prenota" className="group block relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[2/3] sm:aspect-[3/4]">
+                  <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.2s] ease-out" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+                  {/* Gold line accent */}
+                  <motion.div
+                    className="absolute top-0 left-0 right-0 h-[2px]"
+                    style={{ background: `linear-gradient(90deg, transparent, ${gold}, transparent)` }}
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 + i * 0.15, duration: 0.8 }}
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-6">
+                    <h3 className="font-bold text-sm sm:text-xl lg:text-2xl text-white mb-0.5 sm:mb-2 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>{dest.name}</h3>
+                    <span className="hidden sm:inline-flex items-center gap-2 text-xs sm:text-sm font-semibold group-hover:gap-3 transition-all duration-300" style={{ color: gold }}>
+                      PRENOTA <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                    <span className="sm:hidden flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider" style={{ color: gold }}>
+                      <ArrowRight className="w-3 h-3" />
                     </span>
                   </div>
                 </a>
