@@ -63,9 +63,9 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
       className="inline-flex items-center gap-2.5 mb-5"
       initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
     >
-      <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm">
+      <div className="flex items-center gap-2 px-4 py-2 rounded-full premium-label">
         {icon || <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-dot" />}
-        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/80">{text}</span>
+        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90">{text}</span>
       </div>
     </motion.div>
   )
@@ -84,11 +84,18 @@ const popIn = { hidden: { opacity: 0, scale: 0.88 }, visible: { opacity: 1, scal
 /* ═══ Floating Particle ═══ */
 const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => (
   <motion.div
-    className="absolute rounded-full bg-primary/15"
-    style={{ width: size, height: size, left: x, top: y }}
-    animate={{ y: [0, -20, 0], opacity: [0.15, 0.5, 0.15] }}
-    transition={{ duration: 4 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
+    className="absolute rounded-full"
+    style={{ width: size, height: size, left: x, top: y, background: "hsl(265, 85%, 65%)" }}
+    animate={{ y: [0, -25, 0], opacity: [0.1, 0.45, 0.1], scale: [1, 1.3, 1] }}
+    transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
   />
+);
+
+/* ═══ Section Divider ═══ */
+const SectionDivider = () => (
+  <div className="relative py-1">
+    <div className="section-divider" />
+  </div>
 );
 
 /* ═══ Comparison Row ═══ */
@@ -217,17 +224,23 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative">
+    <div className="min-h-screen bg-background overflow-x-hidden relative noise-overlay">
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 aurora-mesh opacity-20" />
-        <div className="absolute w-[600px] h-[600px] rounded-full blur-[200px] opacity-[0.04] bg-primary -top-[200px] left-1/3 animate-blob-float" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.03] bg-accent top-[60vh] -right-[100px] animate-blob-float-reverse" />
+        <div className="absolute inset-0 aurora-mesh opacity-25" />
+        {/* Large violet ambient orbs */}
+        <div className="absolute w-[700px] h-[700px] rounded-full blur-[250px] opacity-[0.06] bg-primary -top-[200px] left-1/4 animate-float-glow" />
+        <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] bg-accent top-[50vh] -right-[100px] animate-float-glow-slow" />
+        <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.035] top-[80vh] left-[10%] animate-float-glow-delay"
+          style={{ background: "hsl(320, 75%, 55%)" }} />
+        {/* Particles */}
         <Particle delay={0} size={2} x="10%" y="30%" />
-        <Particle delay={1} size={2} x="85%" y="20%" />
+        <Particle delay={1} size={3} x="85%" y="20%" />
         <Particle delay={2} size={3} x="70%" y="60%" />
         <Particle delay={0.5} size={2} x="25%" y="75%" />
+        <Particle delay={1.5} size={2} x="50%" y="45%" />
+        <Particle delay={3} size={2} x="90%" y="80%" />
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
@@ -365,18 +378,18 @@ const LandingPage = () => {
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Badge */}
-            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/20 bg-primary/[0.06] backdrop-blur-sm mb-7"
+            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full premium-label animated-border mb-7"
               initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.6 }}>
               <div className="relative flex items-center gap-1.5">
                 <span className="absolute w-2 h-2 rounded-full bg-primary animate-ping" />
                 <span className="relative w-2 h-2 rounded-full bg-primary" />
               </div>
-              <span className="text-[0.65rem] font-heading font-semibold text-primary/90 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
+              <span className="text-[0.65rem] font-heading font-semibold text-primary tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
             {/* Headline with staggered word reveal */}
             <motion.h1
-              className="text-[2.5rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold text-foreground tracking-[-0.03em]"
+              className="text-[2.5rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold text-foreground tracking-[-0.03em] drop-shadow-[0_0_40px_hsla(265,85%,65%,0.15)]"
               initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.15, ease: smoothEase }}>
               Modernizziamo
               <br />
@@ -384,10 +397,10 @@ const LandingPage = () => {
             </motion.h1>
 
             {/* Sub */}
-            <motion.p className="mt-6 text-base sm:text-lg text-foreground/45 max-w-[600px] leading-[1.8] font-light"
+            <motion.p className="mt-6 text-base sm:text-lg text-foreground/50 max-w-[600px] leading-[1.8] font-light"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.7 }}>
               La piattaforma AI più completa al mondo. 
-              <span className="text-foreground/65 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie. Tutto in un unico ecosistema che si evolve ogni giorno.</span>
+              <span className="text-foreground/70 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie. Tutto in un unico ecosistema che si evolve ogni giorno.</span>
             </motion.p>
 
 
@@ -418,12 +431,12 @@ const LandingPage = () => {
             <motion.div className="mt-14 w-full grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
               {metrics.map((m, i) => (
-                <motion.div key={i} className="counter-card rounded-2xl p-4 sm:p-5 text-center group hover:border-primary/15 transition-all"
+                <motion.div key={i} className="counter-card rounded-2xl p-4 sm:p-5 text-center group hover:border-primary/15 transition-all holo-shine"
                   whileHover={{ y: -2 }}>
                   <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient animate-count-glow">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="text-[0.6rem] text-foreground/35 mt-1.5 tracking-[2px] uppercase font-heading">{m.label}</p>
+                  <p className="text-[0.6rem] text-foreground/40 mt-1.5 tracking-[2px] uppercase font-heading">{m.label}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -442,7 +455,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y border-border/30 overflow-hidden bg-background/50 backdrop-blur-sm">
+      <div className="relative py-5 border-y border-primary/[0.06] overflow-hidden bg-primary/[0.02] backdrop-blur-sm">
         <div className="flex animate-marquee-scroll whitespace-nowrap">
           {[...Array(2)].map((_, repeat) => (
             <div key={repeat} className="flex items-center gap-12 px-6">
@@ -479,7 +492,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Non Siamo un Software. <span className="text-shimmer">Siamo il Futuro.</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[520px] mx-auto text-sm leading-[1.7]"
+          <motion.p className="text-foreground/50 max-w-[520px] mx-auto text-sm leading-[1.7]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Dashboard IA, gestione flotta, menu digitali, CRM avanzato, automazioni, fatturazione, analytics — tutto in un ecosistema white-label che si evolve ogni settimana.
           </motion.p>
@@ -498,6 +511,8 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
           SETTORI
          ═══════════════════════════════════════════ */}
@@ -508,7 +523,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Qualsiasi Settore. <span className="text-shimmer">Un Unico Sistema.</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[550px] mx-auto leading-[1.7] text-sm"
+          <motion.p className="text-foreground/50 max-w-[550px] mx-auto leading-[1.7] text-sm"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Empire si adatta automaticamente alla tua industria. Terminologia, moduli, dashboard e flussi operativi cambiano in base al settore — senza configurazioni manuali.
           </motion.p>
@@ -596,8 +611,9 @@ const LandingPage = () => {
         </div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
-          WHY EMPIRE — Grid
          ═══════════════════════════════════════════ */}
       <Section>
         <div className="text-center mb-12">
@@ -684,6 +700,8 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
           VIDEO FEATURES
          ═══════════════════════════════════════════ */}
@@ -734,7 +752,7 @@ const LandingPage = () => {
             Tutto Ciò Che Serve,<br className="hidden sm:block" />
             <span className="text-shimmer">in un Unico Posto</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.7]"
+          <motion.p className="text-foreground/50 max-w-[500px] mx-auto text-sm leading-[1.7]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Ogni modulo è stato progettato per eliminare un problema specifico. Nessun software esterno, nessun costo aggiuntivo.
           </motion.p>
@@ -761,8 +779,9 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
-          COME FUNZIONA
          ═══════════════════════════════════════════ */}
       <Section id="process">
         <div className="text-center mb-12">
@@ -1088,8 +1107,9 @@ const LandingPage = () => {
         </motion.p>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
-          VIDEO PARTNER
          ═══════════════════════════════════════════ */}
       <Section>
         <div className="text-center mb-8">
@@ -1232,10 +1252,15 @@ const LandingPage = () => {
         </div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
-        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.08] to-accent/[0.03] border border-primary/10 overflow-hidden">
-          <div className="absolute inset-0 aurora-mesh opacity-20" />
+        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.1] via-accent/[0.04] to-primary/[0.06] border border-primary/15 overflow-hidden animated-border">
+          <div className="absolute inset-0 aurora-mesh opacity-30" />
+          {/* Extra ambient glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[40px] blur-[30px] bg-primary/20" />
           <div className="relative z-10">
             <motion.div
               initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
