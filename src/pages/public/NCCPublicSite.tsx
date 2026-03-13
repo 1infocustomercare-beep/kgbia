@@ -434,7 +434,7 @@ export default function NCCPublicSite({ company }: Props) {
         {/* Dark background image — Amalfi coast */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1633321702518-7feccafb94d5?w=1920&h=1080&fit=crop&q=80')" }}
+          style={{ backgroundImage: `url(${heroBgImg})` }}
         />
         <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.5) 100%)" }} />
 
