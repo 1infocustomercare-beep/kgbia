@@ -125,7 +125,8 @@ const EmpireVoiceAgent: React.FC = () => {
     stopAll();
 
     const userMsg: Msg = { role: "user", content: text };
-    setMessages(prev => [...prev, userMsg]);
+    const allMessages = [...messages, userMsg];
+    setMessages(allMessages);
     setIsLoading(true);
     setInputText("");
 
@@ -143,7 +144,7 @@ const EmpireVoiceAgent: React.FC = () => {
 
     try {
       await streamChat({
-        messages: [...messages, userMsg],
+        messages: allMessages,
         mode: msgMode,
         onDelta: upsert,
         onDone: () => {
@@ -155,8 +156,10 @@ const EmpireVoiceAgent: React.FC = () => {
           }
         },
       });
-    } catch {
+    } catch (e) {
+      console.error("Agent stream error:", e);
       setIsLoading(false);
+      setMessages(prev => [...prev, { role: "assistant", content: "Mi scuso, c'è stato un problema di connessione. Riprova tra un momento." }]);
     }
   }, [messages, isLoading, voiceEnabled, stopAll]);
 
@@ -195,19 +198,15 @@ const EmpireVoiceAgent: React.FC = () => {
     setIsListening(true);
   }, [sendMessage, stopAll]);
 
-  // Toggle open
+  // Toggle open — no auto-narration (audio requires user gesture)
   const toggleOpen = useCallback(() => {
     if (isOpen) {
       stopAll();
       setIsOpen(false);
     } else {
       setIsOpen(true);
-      if (messages.length === 0) {
-        // Auto-start narration
-        setTimeout(() => startNarration(), 500);
-      }
     }
-  }, [isOpen, messages.length, startNarration, stopAll]);
+  }, [isOpen, stopAll]);
 
   // Toggle visibility
   if (!isVisible) {
