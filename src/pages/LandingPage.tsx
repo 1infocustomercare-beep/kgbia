@@ -1469,7 +1469,7 @@ const LandingPage = () => {
         <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
           initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
           transition={{ duration: 0.6 }}>
-          <video src={videoPartner} autoPlay muted loop playsInline className="w-full aspect-video object-cover rounded-2xl" />
+          <img src={heroPartnerLuxury} alt="Empire Partner Program" className="w-full aspect-video object-cover rounded-2xl" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
         </motion.div>
       </Section>
