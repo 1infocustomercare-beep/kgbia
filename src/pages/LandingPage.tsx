@@ -435,7 +435,7 @@ const LandingPage = () => {
           {/* Sweeping holographic light band */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute inset-x-0 h-[200px] animate-holo-sweep"
-              style={{ background: "linear-gradient(180deg, transparent, hsla(265, 85%, 65%, 0.08), hsla(200, 90%, 60%, 0.06), transparent)" }} />
+              style={{ background: "linear-gradient(180deg, transparent, hsla(217, 85%, 58%, 0.08), hsla(42, 80%, 55%, 0.06), transparent)" }} />
           </div>
           
           {/* Glowing intersection nodes */}
