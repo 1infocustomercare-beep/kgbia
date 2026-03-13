@@ -389,19 +389,19 @@ const LandingPage = () => {
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
-            {/* Clean badge */}
-            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/10 bg-primary/[0.03] backdrop-blur-sm mb-7"
+            {/* Clean badge — gold accent */}
+            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-gold/10 bg-gold/[0.03] backdrop-blur-sm mb-7"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              <span className="text-[0.6rem] font-heading font-semibold text-primary/70 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+              <span className="text-[0.6rem] font-heading font-semibold text-gold/80 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
-            {/* Headline — clean fade-in */}
+            {/* Headline — gold shimmer */}
             <motion.h1 className="text-[2.2rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em]"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
               <span className="text-foreground">Modernizziamo</span>
               <br />
-              <span className="text-shimmer">Qualsiasi Business</span>
+              <span className="text-gold-shimmer">Qualsiasi Business</span>
             </motion.h1>
 
             {/* Subtitle */}
