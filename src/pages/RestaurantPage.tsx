@@ -472,19 +472,40 @@ const RestaurantPage = () => {
           {/* ── Full Menu — Category Tabs + Compact List ── */}
           <div>
             {/* Sticky Category Bar */}
-            <div className="sticky top-[56px] z-20 -mx-4 px-4 sm:mx-0 sm:px-0 py-2.5 bg-background/90 backdrop-blur-2xl border-b border-border/10 mb-4 sm:mb-5">
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+            <div className="sticky top-[56px] z-20 -mx-4 px-4 sm:mx-0 sm:px-0 py-3 bg-background/80 backdrop-blur-2xl border-b border-border/5 mb-4 sm:mb-5">
+              {/* Desktop: horizontal scroll pills */}
+              <div className="hidden sm:flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
                 {menuCategories.map((cat) => {
                   const isActive = effectiveCat === cat;
                   const catCount = menu.filter(i => i.category === cat).length;
                   return (
                     <button key={cat} onClick={() => setActiveMenuCat(cat)}
-                      className={`relative flex-shrink-0 snap-start px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-[11px] font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-300
+                      className={`relative flex-shrink-0 snap-start px-4 py-2 rounded-full text-[11px] font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-300
                         ${isActive
-                          ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20"
+                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
                           : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
                       {cat}
-                      <span className={`ml-1 text-[8px] sm:text-[9px] ${isActive ? "text-primary-foreground/60" : "text-muted-foreground/40"}`}>{catCount}</span>
+                      <span className={`ml-1.5 text-[9px] ${isActive ? "text-primary-foreground/60" : "text-muted-foreground/40"}`}>{catCount}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              {/* Mobile: 2-column grid of compact category chips */}
+              <div className="grid grid-cols-2 gap-1.5 sm:hidden">
+                {menuCategories.map((cat) => {
+                  const isActive = effectiveCat === cat;
+                  const catCount = menu.filter(i => i.category === cat).length;
+                  return (
+                    <button key={cat} onClick={() => setActiveMenuCat(cat)}
+                      className={`relative flex items-center justify-between gap-1 px-3 py-2 rounded-xl text-[10px] font-bold tracking-wide uppercase whitespace-nowrap transition-all duration-300
+                        ${isActive
+                          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 ring-1 ring-primary/30"
+                          : "bg-card/80 text-muted-foreground border border-border/10 hover:border-primary/15 hover:text-foreground"}`}>
+                      <span className="truncate">{cat}</span>
+                      <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold
+                        ${isActive ? "bg-primary-foreground/20 text-primary-foreground" : "bg-muted/60 text-muted-foreground/50"}`}>
+                        {catCount}
+                      </span>
                     </button>
                   );
                 })}
