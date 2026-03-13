@@ -703,7 +703,16 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
+          AI AGENTS SHOWCASE
+         ═══════════════════════════════════════════ */}
+      <AIAgentsShowcase />
+
+      <SectionDivider />
+
+      {/*
           VIDEO INDUSTRIES + WHY US
          ═══════════════════════════════════════════ */}
       <Section>
