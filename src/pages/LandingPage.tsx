@@ -268,9 +268,9 @@ const LandingPage = () => {
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex items-center justify-between h-11">
           <a href="#hero" className="flex items-center gap-2 group">
             <motion.div
-              className="relative w-8 h-8 rounded-xl bg-vibrant-gradient flex items-center justify-center shadow-[0_0_25px_hsla(217,91%,60%,0.3)] overflow-hidden"
+              className="relative w-8 h-8 rounded-xl bg-vibrant-gradient flex items-center justify-center shadow-[0_0_25px_hsla(265,70%,60%,0.3)] overflow-hidden"
               whileHover={{ rotate: 8, scale: 1.1 }}
-              animate={{ boxShadow: ["0 0 20px hsla(217,91%,60%,0.2)", "0 0 35px hsla(217,91%,60%,0.45)", "0 0 20px hsla(217,91%,60%,0.2)"] }}
+              animate={{ boxShadow: ["0 0 20px hsla(265,70%,60%,0.2)", "0 0 35px hsla(265,70%,60%,0.45)", "0 0 20px hsla(265,70%,60%,0.2)"] }}
               transition={{ boxShadow: { duration: 2.5, repeat: Infinity, ease: "easeInOut" } }}
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-white/20 via-transparent to-white/10 pointer-events-none" />
