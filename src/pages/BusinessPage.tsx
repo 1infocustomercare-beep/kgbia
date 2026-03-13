@@ -5,17 +5,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { type IndustryId } from "@/config/industry-config";
 import BackButton from "@/components/BackButton";
 
-// Sector-specific premium sites
+// Only NCC and Food keep their custom premium sites
 const NCCPublicSite = lazy(() => import("@/pages/public/NCCPublicSite"));
-const BeautyPublicSite = lazy(() => import("@/pages/public/BeautyPublicSite"));
-const BeachPublicSite = lazy(() => import("@/pages/public/BeachPublicSite"));
-const TradesPublicSite = lazy(() => import("@/pages/public/TradesPublicSite"));
 const FoodPublicSite = lazy(() => import("@/pages/public/FoodPublicSite"));
-const HealthcarePublicSite = lazy(() => import("@/pages/public/HealthcarePublicSite"));
-const FitnessPublicSite = lazy(() => import("@/pages/public/FitnessPublicSite"));
-const HotelPublicSite = lazy(() => import("@/pages/public/HotelPublicSite"));
 const BakeryPublicSite = lazy(() => import("@/pages/public/BakeryPublicSite"));
-const RetailPublicSite = lazy(() => import("@/pages/public/RetailPublicSite"));
+// All other sectors use the universal luxury template
 const LuxuryPublicSite = lazy(() => import("@/pages/public/LuxuryPublicSite"));
 
 const SiteLoader = () => (
@@ -26,18 +20,10 @@ const SiteLoader = () => (
 
 const TEMPLATE_MAP: Record<string, React.LazyExoticComponent<React.ComponentType<{ company: any }>>> = {
   ncc: NCCPublicSite,
-  beauty: BeautyPublicSite,
-  beach: BeachPublicSite,
   food: FoodPublicSite,
   restaurant: FoodPublicSite,
-  healthcare: HealthcarePublicSite,
-  fitness: FitnessPublicSite,
-  hotel: HotelPublicSite,
   bakery: BakeryPublicSite,
-  retail: RetailPublicSite,
 };
-
-const TRADES = ["plumber", "electrician", "cleaning", "garage", "construction", "gardening"];
 
 export default function BusinessPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -46,7 +32,6 @@ export default function BusinessPage() {
     queryKey: ["business-page", slug],
     queryFn: async () => {
       if (!slug) return null;
-      // Try companies table first
       const { data: companyData } = await supabase
         .from("companies")
         .select("*")
@@ -55,7 +40,6 @@ export default function BusinessPage() {
         .maybeSingle();
       if (companyData) return companyData as any;
 
-      // Fallback: check restaurants table for food businesses
       const { data: restaurant } = await supabase
         .from("restaurants")
         .select("*")
@@ -86,17 +70,7 @@ export default function BusinessPage() {
 
   const industry = (company.industry || "custom") as IndustryId;
 
-  // Trades group
-  if (TRADES.includes(industry)) {
-    return (
-      <Suspense fallback={<SiteLoader />}>
-        <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
-        <TradesPublicSite company={company} />
-      </Suspense>
-    );
-  }
-
-  // Sector-specific or universal fallback
+  // Use specific template if available, otherwise universal luxury
   const Template = TEMPLATE_MAP[industry] || LuxuryPublicSite;
   return (
     <Suspense fallback={<SiteLoader />}>
