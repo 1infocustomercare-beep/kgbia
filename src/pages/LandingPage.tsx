@@ -454,9 +454,9 @@ const LandingPage = () => {
         {/* Scroll indicator */}
         <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
           animate={{ y: [0, 8, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
-          <span className="text-[8px] text-foreground/15 tracking-[4px] uppercase font-heading">Scopri</span>
-          <div className="w-5 h-8 rounded-full border border-foreground/8 flex items-start justify-center p-1">
-            <motion.div className="w-1 h-1.5 rounded-full bg-primary/40"
+          <span className="text-[8px] text-gold-muted/40 tracking-[4px] uppercase font-heading">Scopri</span>
+          <div className="w-5 h-8 rounded-full border border-gold/15 flex items-start justify-center p-1">
+            <motion.div className="w-1 h-1.5 rounded-full bg-gold/50"
               animate={{ y: [0, 12, 0] }} transition={{ duration: 1.5, repeat: Infinity }} />
           </div>
         </motion.div>
