@@ -1868,7 +1868,7 @@ const LandingPage = () => {
         initial={{ y: 100 }} animate={{ y: 0 }} transition={{ delay: 2, type: "spring", damping: 25 }}>
         <div className="flex gap-2">
           <motion.button onClick={() => scrollTo("pricing")}
-            className="flex-1 py-3.5 rounded-xl bg-gold-gradient text-deep-black font-bold text-sm tracking-wider font-heading uppercase"
+            className="flex-1 py-3.5 rounded-xl bg-vibrant-gradient text-primary-foreground font-bold text-sm tracking-wider font-heading uppercase"
             whileTap={{ scale: 0.97 }}
           >
             Inizia Ora
