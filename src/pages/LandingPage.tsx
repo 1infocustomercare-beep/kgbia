@@ -820,38 +820,7 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
-      {/* ═══════════════════════════════════════════
-          PROBLEMA
-         ═══════════════════════════════════════════ */}
-      <Section id="problem">
-        <div className="text-center mb-12">
-          <SectionLabel text="Il Problema" icon={<AlertTriangle className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Stai Pagando Troppo per <span className="text-vibrant-gradient">Strumenti Sbagliati</span>
-          </motion.h2>
-        </div>
-
-        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-4"
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {[
-            { icon: <Banknote className="w-6 h-6" />, amount: "30%", label: "Margini erosi dai marketplace", sub: "Commissioni predatorie su ogni singola transazione", gradient: "from-red-500 to-orange-500" },
-            { icon: <DollarSign className="w-6 h-6" />, amount: "€500+", label: "Canoni mensili software", sub: "5 abbonamenti separati per funzioni che Empire include gratis", gradient: "from-amber-500 to-yellow-500" },
-            { icon: <Target className="w-6 h-6" />, amount: "0%", label: "Controllo sui dati clienti", sub: "I tuoi clienti appartengono alla piattaforma, non a te", gradient: "from-rose-500 to-pink-500" },
-          ].map((item, i) => (
-            <motion.div key={i}
-              className="group relative p-7 sm:p-8 rounded-2xl glow-card text-center"
-              variants={fadeScale}>
-              <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-5 group-hover:scale-110 transition-transform duration-500`}>
-                {item.icon}
-              </div>
-              <p className="text-4xl sm:text-5xl font-heading font-bold text-vibrant-gradient mb-2">{item.amount}</p>
-              <p className="text-sm font-semibold text-foreground">{item.label}</p>
-              <p className="text-[0.65rem] text-foreground/35 mt-1.5">{item.sub}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </Section>
+      {/* Duplicate pain section removed — already present above */}
 
       {/* ═══════════════════════════════════════════
           COMPARISON TABLE — Empire vs Others
