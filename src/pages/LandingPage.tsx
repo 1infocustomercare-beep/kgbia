@@ -336,322 +336,111 @@ const LandingPage = () => {
       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-16 sm:pt-20 pb-12 sm:pb-16"
         style={{ opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Video background ═══ */}
+        {/* ═══ LAYER 0: Video background — very subtle ═══ */}
         <div className="absolute inset-0">
-          <video src={videoHero} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-[0.15]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/5 via-background/60 to-background" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/40 via-transparent to-background/40" />
+          <video src={videoHero} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-[0.08]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background" />
         </div>
 
-        {/* ═══ LAYER 1: Perspective grid floor ═══ */}
+        {/* ═══ LAYER 1: Minimal perspective grid ═══ */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute bottom-0 left-0 right-0 h-[70vh] origin-bottom animate-grid-warp"
+          <div className="absolute bottom-0 left-0 right-0 h-[50vh] origin-bottom"
             style={{
-              backgroundImage: `linear-gradient(hsla(265, 70%, 60%, 0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 70%, 60%, 0.08) 1px, transparent 1px)`,
-              backgroundSize: "40px 40px",
+              backgroundImage: `linear-gradient(hsla(265, 70%, 60%, 0.04) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 70%, 60%, 0.04) 1px, transparent 1px)`,
+              backgroundSize: "60px 60px",
             }}
           />
-          <div className="absolute bottom-[35vh] left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265, 70%, 60%, 0.3) 50%, transparent 90%)" }} />
-          <div className="absolute bottom-[34vh] left-0 right-0 h-20 blur-[40px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265, 70%, 60%, 0.5) 30%, hsla(280, 45%, 68%, 0.4) 50%, hsla(300, 35%, 55%, 0.3) 70%, transparent 90%)" }} />
+          <div className="absolute bottom-[25vh] left-0 right-0 h-[1px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 15%, hsla(265, 70%, 60%, 0.2) 50%, transparent 85%)" }} />
         </div>
 
-        {/* ═══ LAYER 2: Hexagonal overlay ═══ */}
-        <div className="absolute inset-0 hex-grid opacity-40 pointer-events-none" />
-
-        {/* ═══ LAYER 3: Plasma energy field ═══ */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-          <div className="w-[400px] h-[400px] sm:w-[650px] sm:h-[650px] animate-plasma opacity-20 blur-[100px] animate-morph"
-            style={{ background: "conic-gradient(from 0deg, hsl(265, 70%, 55%), hsl(280, 50%, 60%), hsl(300, 35%, 55%), hsl(280, 45%, 58%), hsl(265, 70%, 55%))" }} />
+        {/* ═══ LAYER 2: Single soft ambient glow ═══ */}
+        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <div className="w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full blur-[200px] opacity-[0.08]"
+            style={{ background: "radial-gradient(circle, hsl(265, 70%, 55%), transparent 70%)" }} />
         </div>
 
-        {/* ═══ LAYER 4: Energy rings (alien portal) ═══ */}
-        <div className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-          <div className="w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] relative">
-            <div className="absolute inset-0 rounded-full border border-primary/25 animate-energy-ring" />
-            <div className="absolute inset-0 rounded-full border border-accent/20 animate-energy-ring-d1" />
-            <div className="absolute inset-0 rounded-full border animate-energy-ring-d2" style={{ borderColor: "hsla(300, 35%, 55%, 0.2)" }} />
-          </div>
-        </div>
-
-        {/* ═══ LAYER 5: Orbiting dots with trails ═══ */}
-        <div className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden sm:block">
-          <div className="relative w-0 h-0">
-            {[
-              { radius: "160px", speed: "8s", color: "hsl(265, 70%, 60%)", size: 7 },
-              { radius: "220px", speed: "12s", color: "hsl(280, 50%, 65%)", size: 5 },
-              { radius: "280px", speed: "18s", color: "hsl(300, 35%, 55%)", size: 4 },
-              { radius: "130px", speed: "6s", color: "hsl(280, 45%, 68%)", size: 6 },
-              { radius: "320px", speed: "22s", color: "hsl(265, 60%, 50%)", size: 3 },
-            ].map((dot, i) => (
-              <div key={i} className="absolute animate-orbit-dot" style={{ "--orbit-radius": dot.radius, "--orbit-speed": dot.speed, animationDirection: i % 2 === 0 ? "normal" : "reverse" } as React.CSSProperties}>
-                <div className="rounded-full" style={{ width: dot.size, height: dot.size, background: dot.color, boxShadow: `0 0 ${dot.size * 3}px ${dot.color}, 0 0 ${dot.size * 6}px ${dot.color}40` }} />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ═══ LAYER 6: Laser scan lines ═══ */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Vertical laser */}
-          <div className="absolute w-full h-[1px] animate-laser-v" style={{ background: "linear-gradient(90deg, transparent, hsla(265, 70%, 60%, 0.4), hsla(280, 45%, 68%, 0.3), transparent)" }} />
-          {/* Horizontal laser */}
-          <div className="absolute top-0 bottom-0 w-[1px] animate-laser-h" style={{ background: "linear-gradient(180deg, transparent, hsla(300, 35%, 55%, 0.3), hsla(265, 70%, 60%, 0.4), transparent)" }} />
-        </div>
-
-        {/* ═══ LAYER 7: Electric arcs ═══ */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-[20%] left-[15%] w-[200px] h-[1px] animate-electric origin-left rotate-[30deg]"
-            style={{ background: "linear-gradient(90deg, hsla(265, 70%, 60%, 0.6), transparent)" }} />
-          <div className="absolute top-[25%] right-[10%] w-[180px] h-[1px] animate-electric origin-right rotate-[-25deg]"
-            style={{ background: "linear-gradient(270deg, hsla(280, 45%, 68%, 0.5), transparent)", animationDelay: "1.5s" }} />
-          <div className="absolute bottom-[30%] left-[20%] w-[150px] h-[1px] animate-electric origin-left rotate-[-15deg]"
-            style={{ background: "linear-gradient(90deg, hsla(265, 70%, 60%, 0.5), transparent)", animationDelay: "0.7s" }} />
-        </div>
-
-        {/* ═══ LAYER 8: Prismatic crown aura (central) ═══ */}
-        <div className="absolute top-[28%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+        {/* ═══ LAYER 3: Crown icon — elegant, subtle pulse ═══ */}
+        <div className="absolute top-[22%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <motion.div
-            className="w-20 h-20 sm:w-28 sm:h-28 rounded-full animate-crown-aura flex items-center justify-center"
-            style={{ background: "radial-gradient(circle, hsla(265, 70%, 60%, 0.12) 0%, transparent 70%)" }}
-            animate={{ scale: [1, 1.05, 1], rotate: [0, 360] }}
-            transition={{ scale: { duration: 3, repeat: Infinity }, rotate: { duration: 20, repeat: Infinity, ease: "linear" } }}
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center"
+            style={{ background: "radial-gradient(circle, hsla(265, 70%, 60%, 0.08) 0%, transparent 70%)" }}
+            animate={{ scale: [1, 1.03, 1] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
-            <motion.div
-              animate={{ rotateY: [0, 360], rotateX: [0, 15, 0, -15, 0] }}
-              transition={{ rotateY: { duration: 6, repeat: Infinity, ease: "linear" }, rotateX: { duration: 4, repeat: Infinity } }}
-              style={{ transformStyle: "preserve-3d" }}
-            >
-              <Crown className="w-8 h-8 sm:w-12 sm:h-12 text-accent drop-shadow-[0_0_20px_hsla(265,70%,60%,0.6)]" />
-            </motion.div>
+            <Crown className="w-7 h-7 sm:w-9 sm:h-9 text-primary/60 drop-shadow-[0_0_20px_hsla(265,70%,60%,0.3)]" />
           </motion.div>
         </div>
 
-        {/* Grid overlay — premium holographic */}
+        {/* ═══ LAYER 4: Subtle corner accents ═══ */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Base holographic grid with pulse */}
-          <div className="absolute inset-0 premium-holo-grid animate-grid-pulse" />
-          
-          {/* Sweeping holographic light band */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute inset-x-0 h-[200px] animate-holo-sweep"
-              style={{ background: "linear-gradient(180deg, transparent, hsla(265, 70%, 60%, 0.08), hsla(280, 45%, 68%, 0.06), transparent)" }} />
-          </div>
-          
-          {/* Glowing intersection nodes */}
-          {[
-            { x: "20%", y: "25%", delay: 0 }, { x: "80%", y: "20%", delay: 1 },
-            { x: "50%", y: "50%", delay: 0.5 }, { x: "15%", y: "70%", delay: 1.5 },
-            { x: "85%", y: "65%", delay: 2 }, { x: "40%", y: "80%", delay: 0.8 },
-            { x: "65%", y: "35%", delay: 1.2 }, { x: "30%", y: "15%", delay: 2.5 },
-          ].map((node, i) => (
-            <div key={i} className="absolute animate-grid-node"
-              style={{
-                left: node.x, top: node.y, animationDelay: `${node.delay}s`,
-                width: 4, height: 4, borderRadius: "50%",
-                 background: i % 3 === 0 ? "hsl(265, 70%, 60%)" : i % 3 === 1 ? "hsl(280, 50%, 65%)" : "hsl(300, 35%, 55%)",
-                 boxShadow: `0 0 12px ${i % 3 === 0 ? "hsla(265,70%,60%,0.6)" : i % 3 === 1 ? "hsla(280,50%,65%,0.6)" : "hsla(300,35%,55%,0.5)"}`,
-               }}
-            />
-          ))}
-          
-          {/* Corner accent lines */}
-           <div className="absolute top-0 left-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,70%,60%,0.4), transparent)" }} />
-           <div className="absolute top-0 left-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.4), transparent)" }} />
-           <div className="absolute top-0 right-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(280,50%,65%,0.4), transparent)" }} />
-           <div className="absolute top-0 right-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(280,50%,65%,0.4), transparent)" }} />
-           <div className="absolute bottom-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(280,45%,68%,0.3), transparent)" }} />
-           <div className="absolute bottom-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(280,45%,68%,0.3), transparent)" }} />
+          <div className="absolute top-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 left-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)" }} />
         </div>
 
-        {/* ═══ LAYER 9: Data Rain Columns ═══ */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.35] hidden sm:block">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className="absolute top-0 w-px animate-data-rain"
-              style={{
-                left: `${8 + i * 8}%`,
-                height: "120px",
-                background: `linear-gradient(180deg, transparent, ${i % 3 === 0 ? "hsla(265,70%,60%,0.5)" : i % 2 === 0 ? "hsla(280,50%,65%,0.4)" : "hsla(300,35%,55%,0.3)"}, transparent)`,
-                "--rain-speed": `${4 + i * 1.2}s`,
-                "--rain-delay": `${i * 0.4}s`,
-              } as React.CSSProperties}
-            />
-          ))}
-        </div>
-
-        {/* ═══ LAYER 10: Floating Holographic Data Panels ═══ */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block">
-          {/* Left panel — System Status */}
-          <motion.div
-            className="absolute top-[22%] left-[3%] holo-panel rounded-lg p-3 w-[140px]"
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: [0.4, 0.7, 0.4], x: 0 }}
-            transition={{ opacity: { duration: 4, repeat: Infinity }, x: { duration: 1 } }}
-          >
-            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-primary/70 mb-2">SYS STATUS</div>
-            <div className="space-y-1.5">
-              {[
-                { label: "AI ENGINE", value: "ACTIVE", color: "text-emerald-400" },
-                { label: "LATENCY", value: "<180ms", color: "text-primary" },
-                { label: "UPTIME", value: "99.99%", color: "text-emerald-400" },
-              ].map((item, i) => (
-                <div key={i} className="flex justify-between items-center">
-                  <span className="text-[6px] text-foreground/25 tracking-wider">{item.label}</span>
-                  <span className={`text-[7px] font-heading font-bold ${item.color}`}>{item.value}</span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-2 h-[1px] w-full bg-gradient-to-r from-primary/30 to-transparent" />
-            <div className="mt-1 flex gap-1">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="h-[10px] flex-1 rounded-[1px]"
-                  style={{
-                    background: `hsla(265, 70%, 60%, ${0.15 + Math.random() * 0.4})`,
-                    height: `${4 + Math.random() * 10}px`,
-                    alignSelf: "flex-end",
-                  }} />
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Right panel — Processing */}
-          <motion.div
-            className="absolute top-[18%] right-[3%] holo-panel rounded-lg p-3 w-[130px]"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: [0.3, 0.65, 0.3], x: 0 }}
-            transition={{ opacity: { duration: 5, repeat: Infinity, delay: 1 }, x: { duration: 1 } }}
-          >
-            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-accent/70 mb-2">AI PROCESS</div>
-            <div className="space-y-1">
-              {["Analyzing sectors...", "Optimizing flows...", "Training models..."].map((text, i) => (
-                <div key={i} className="text-[6px] text-foreground/20 typing-cursor" style={{ animationDelay: `${i * 0.3}s` }}>{text}</div>
-              ))}
-            </div>
-            <div className="mt-2 h-1 rounded-full overflow-hidden bg-foreground/5">
-              <motion.div className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
-                animate={{ width: ["20%", "95%", "20%"] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />
-            </div>
-          </motion.div>
-
-          {/* Bottom-left — Neural Activity */}
-          <motion.div
-            className="absolute bottom-[22%] left-[5%] holo-panel rounded-lg p-2.5 w-[120px]"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: [0.3, 0.55, 0.3], y: 0 }}
-            transition={{ opacity: { duration: 6, repeat: Infinity, delay: 2 }, y: { duration: 1.2 } }}
-          >
-            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-primary/60 mb-1.5">NETWORK</div>
-            <div className="grid grid-cols-6 gap-[3px]">
-              {Array.from({ length: 18 }).map((_, i) => (
-                <motion.div key={i} className="w-[6px] h-[6px] rounded-full"
-                  style={{ background: `hsla(${260 + i * 5}, 60%, 55%, ${0.15 + Math.random() * 0.5})` }}
-                  animate={{ opacity: [0.2, 0.8, 0.2] }}
-                  transition={{ duration: 1.5 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2 }} />
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Dual light beams */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[40vh] bg-gradient-to-b from-primary/50 via-primary/15 to-transparent" />
-        <motion.div className="absolute top-0 left-[30%] w-[1px] h-[25vh] bg-gradient-to-b from-accent/20 via-transparent to-transparent"
-          animate={{ opacity: [0.2, 0.6, 0.2] }} transition={{ duration: 3, repeat: Infinity }} />
-        <motion.div className="absolute top-0 right-[30%] w-[1px] h-[25vh] bg-gradient-to-b from-accent/20 via-transparent to-transparent"
-          animate={{ opacity: [0.2, 0.6, 0.2] }} transition={{ duration: 3, repeat: Infinity, delay: 1.5 }} />
+        {/* ═══ Single vertical light beam ═══ */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[30vh] bg-gradient-to-b from-primary/30 via-primary/10 to-transparent" />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
-            {/* Prismatic badge */}
-            <motion.div className="relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full premium-label mb-7 overflow-hidden"
-              initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.6 }}>
-              {/* Prismatic border animation */}
-              <div className="absolute inset-0 rounded-full p-[1px]">
-                <div className="absolute inset-0 rounded-full prismatic-edge opacity-40" />
-              </div>
-              <div className="relative flex items-center gap-1.5">
-                <span className="absolute w-2 h-2 rounded-full bg-primary animate-ping" />
-                <span className="relative w-2 h-2 rounded-full bg-primary" />
-              </div>
-              <span className="relative text-[0.65rem] font-heading font-semibold text-primary tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
+            {/* Clean badge */}
+            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/10 bg-primary/[0.03] backdrop-blur-sm mb-7"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="text-[0.6rem] font-heading font-semibold text-primary/70 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
-            {/* Headline with per-letter 3D reveal */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.1 }}>
-              <h1 className="text-[2.2rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em]">
-                <span className="inline-block">
-                  {"Modernizziamo".split("").map((ch, i) => (
-                    <motion.span key={i} className="inline-block text-foreground"
-                      initial={{ opacity: 0, y: 40, rotateX: -90 }}
-                      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                      transition={{ delay: 0.2 + i * 0.04, duration: 0.5, ease: smoothEase }}
-                      style={{ textShadow: "0 0 40px hsla(265, 70%, 60%, 0.15)" }}
-                    >{ch}</motion.span>
-                  ))}
-                </span>
-                <br />
-                <span className="inline-block">
-                  {"Qualsiasi".split("").map((ch, i) => (
-                    <motion.span key={`q${i}`} className="inline-block text-shimmer"
-                      initial={{ opacity: 0, y: 40, rotateX: -90 }}
-                      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                      transition={{ delay: 0.7 + i * 0.04, duration: 0.5, ease: smoothEase }}
-                    >{ch}</motion.span>
-                  ))}
-                  {" "}
-                  {"Business".split("").map((ch, i) => (
-                    <motion.span key={`b${i}`} className="inline-block text-shimmer"
-                      initial={{ opacity: 0, y: 40, rotateX: -90 }}
-                      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                      transition={{ delay: 1.1 + i * 0.04, duration: 0.5, ease: smoothEase }}
-                    >{ch}</motion.span>
-                  ))}
-                </span>
-              </h1>
-            </motion.div>
+            {/* Headline — clean fade-in */}
+            <motion.h1 className="text-[2.2rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em]"
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
+              <span className="text-foreground">Modernizziamo</span>
+              <br />
+              <span className="text-shimmer">Qualsiasi Business</span>
+            </motion.h1>
 
-            {/* Glitch subtitle accent */}
-            <motion.p className="mt-5 sm:mt-6 text-sm sm:text-lg text-foreground/50 max-w-[600px] leading-[1.7] sm:leading-[1.8] font-light relative px-2 sm:px-0"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.7 }}>
+            {/* Subtitle */}
+            <motion.p className="mt-5 sm:mt-6 text-sm sm:text-lg text-foreground/45 max-w-[560px] leading-[1.7] sm:leading-[1.8] font-light px-2 sm:px-0"
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
               La piattaforma AI più completa al mondo.
-              <span className="text-foreground/70 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie.</span>
+              <span className="text-foreground/60 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie.</span>
             </motion.p>
 
             {/* CTA */}
-            <motion.div className="mt-7 sm:mt-9 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-2 sm:px-0"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.9 }}>
+            <motion.div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-2 sm:px-0"
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
               <motion.button
                 onClick={() => scrollTo("pricing")}
-                className="group relative w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden animate-crown-aura"
-                whileHover={{ scale: 1.03 }}
+                className="group relative w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsla(265,70%,60%,0.2)" }}
                 whileTap={{ scale: 0.97 }}
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/15 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/10 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
                 <span className="relative flex items-center justify-center gap-2">
-                  Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+                  Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </motion.button>
               <motion.button
                 onClick={() => navigate("/demo")}
-                className="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full border border-foreground/10 text-foreground/70 text-sm font-semibold font-heading tracking-wide hover:border-primary/30 hover:text-foreground hover:bg-primary/[0.04] transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
-                whileHover={{ scale: 1.02 }}
+                className="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full border border-foreground/8 text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:border-primary/20 hover:text-foreground hover:bg-primary/[0.03] transition-all flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.01 }}
               >
-                <Play className="w-4 h-4 text-primary" /> Vedi Demo Live
+                <Play className="w-4 h-4 text-primary/60" /> Vedi Demo Live
               </motion.button>
             </motion.div>
 
-            {/* Metrics with prismatic borders */}
-            <motion.div className="mt-14 w-full grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }}>
+            {/* Metrics — clean minimal cards */}
+            <motion.div className="mt-16 w-full grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
               {metrics.map((m, i) => (
-                <motion.div key={i} className="counter-card rounded-2xl p-4 sm:p-5 text-center group hover:border-primary/15 transition-all holo-shine relative overflow-hidden"
-                  whileHover={{ y: -4, boxShadow: "0 20px 60px hsla(265, 70%, 60%, 0.15)" }}>
-                  {/* Top prismatic line */}
-                  <div className="absolute top-0 left-0 right-0 h-[1px] prismatic-edge opacity-30" />
-                  <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient animate-count-glow">
+                <motion.div key={i} className="rounded-2xl p-4 sm:p-5 text-center border border-foreground/[0.04] bg-foreground/[0.015] backdrop-blur-sm"
+                  whileHover={{ y: -3, borderColor: "hsla(265, 70%, 60%, 0.1)" }}
+                  transition={{ duration: 0.2 }}>
+                  <p className="text-2xl sm:text-3xl font-heading font-bold text-foreground">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="text-[0.6rem] text-foreground/40 mt-1.5 tracking-[2px] uppercase font-heading">{m.label}</p>
+                  <p className="text-[0.6rem] text-foreground/30 mt-1.5 tracking-[2px] uppercase font-heading">{m.label}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -661,9 +450,9 @@ const LandingPage = () => {
         {/* Scroll indicator */}
         <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
           animate={{ y: [0, 8, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
-          <span className="text-[8px] text-foreground/20 tracking-[4px] uppercase font-heading">Scopri</span>
-          <div className="w-5 h-8 rounded-full border border-foreground/10 flex items-start justify-center p-1">
-            <motion.div className="w-1 h-1.5 rounded-full bg-primary/50"
+          <span className="text-[8px] text-foreground/15 tracking-[4px] uppercase font-heading">Scopri</span>
+          <div className="w-5 h-8 rounded-full border border-foreground/8 flex items-start justify-center p-1">
+            <motion.div className="w-1 h-1.5 rounded-full bg-primary/40"
               animate={{ y: [0, 12, 0] }} transition={{ duration: 1.5, repeat: Infinity }} />
           </div>
         </motion.div>
