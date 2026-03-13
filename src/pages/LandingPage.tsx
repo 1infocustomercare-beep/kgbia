@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, forwardRef } from "react";
+import { useState, useEffect, useRef, forwardRef, lazy, Suspense } from "react";
+const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
@@ -1880,6 +1881,10 @@ const LandingPage = () => {
           </motion.button>
         </div>
       </motion.div>
+      {/* ATLAS Voice Agent */}
+      <Suspense fallback={null}>
+        <EmpireVoiceAgent />
+      </Suspense>
     </div>
   );
 };
