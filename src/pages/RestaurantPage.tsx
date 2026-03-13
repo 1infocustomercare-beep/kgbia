@@ -397,23 +397,20 @@ const RestaurantPage = () => {
       </div>
 
       {/* ====== 3. MENU — Le Nostre Specialità ====== */}
-      <section id="menu-section" className="py-10 sm:py-20 lg:py-28 bg-card/30">
+      <section id="menu-section" className="py-10 sm:py-20 lg:py-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-5">
-          {/* Section Header */}
-          <motion.div className="text-center mb-8 sm:mb-14"
-            initial={{ opacity: 0, y: 30 }}
+          {/* Section Header — Minimal & Elegant */}
+          <motion.div className="text-center mb-6 sm:mb-12"
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
-            <motion.span className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary font-medium inline-block"
-              initial={{ opacity: 0, letterSpacing: "0.1em" }}
-              whileInView={{ opacity: 1, letterSpacing: "0.3em" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.15 }}>
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
+            <motion.span className="text-[10px] sm:text-xs tracking-[0.35em] uppercase text-primary/80 font-medium"
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
               Le Nostre Specialità
             </motion.span>
-            <div className="flex items-center justify-center gap-2">
-              <h2 className="mt-3 text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Il Nostro Menù</h2>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">Il Nostro Menù</h2>
               <InfoGuide
                 title="Menù Digitale"
                 description="Sfoglia il nostro menu completo. Puoi aggiungere piatti al carrello e ordinare direttamente dall'app."
@@ -424,49 +421,47 @@ const RestaurantPage = () => {
                 ]}
               />
             </div>
+            <div className="mx-auto mt-3 w-10 h-px bg-primary/40" />
           </motion.div>
 
-          {/* Signature Dishes — Premium Horizontal Scroll on Mobile */}
+          {/* ── Signature Dishes — Cinematic Cards ── */}
           {popularItems.length > 0 && (
-            <div className="mb-10 sm:mb-16">
-              <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <h3 className="text-sm sm:text-lg font-display font-semibold text-foreground flex items-center gap-2">
-                  <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                  <span>Piatti Signature</span>
-                </h3>
-                <span className="text-[10px] text-muted-foreground tracking-wider uppercase hidden sm:inline">Selezionati dallo Chef</span>
+            <div className="mb-8 sm:mb-14">
+              <div className="flex items-center gap-2 mb-4 sm:mb-5">
+                <Crown className="w-4 h-4 text-primary" />
+                <h3 className="text-xs sm:text-sm font-display font-bold text-foreground tracking-wide uppercase">Piatti Signature</h3>
+                <div className="h-px flex-1 bg-border/30 ml-2" />
               </div>
-              {/* Mobile: horizontal scroll / Desktop: grid */}
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-5 sm:overflow-visible sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-3 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 sm:overflow-visible sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory">
                 {popularItems.map((item, i) => (
                   <motion.div key={item.id}
-                    className="group relative flex-shrink-0 w-[75vw] sm:w-auto rounded-2xl overflow-hidden bg-card border border-border/20 hover:border-primary/30 transition-all duration-500 cursor-pointer shadow-sm hover:shadow-md"
-                    initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    className="group relative flex-shrink-0 w-[72vw] sm:w-auto rounded-2xl overflow-hidden cursor-pointer snap-start"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-30px" }}
-                    transition={{ delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ delay: i * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                     onClick={() => setSelectedItem(item)}>
-                    <div className="relative aspect-[4/3] overflow-hidden">
+                    <div className="relative aspect-[3/4] sm:aspect-[4/3] overflow-hidden">
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card/90 via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      {/* Badge */}
                       <div className="absolute top-3 left-3">
-                        <span className="px-2.5 py-1 rounded-full bg-primary/90 text-primary-foreground text-[9px] sm:text-[10px] font-bold tracking-widest uppercase backdrop-blur-sm">★ Signature</span>
+                        <span className="px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold tracking-widest uppercase">★ Chef</span>
                       </div>
-                      {/* Price overlay bottom-left */}
-                      <div className="absolute bottom-3 left-3">
-                        <span className="text-xl sm:text-2xl font-display font-bold text-foreground drop-shadow-lg">€{item.price.toFixed(2)}</span>
+                      {/* Bottom overlay content */}
+                      <div className="absolute bottom-0 left-0 right-0 p-3.5 sm:p-4">
+                        <h4 className="font-display text-sm sm:text-base font-bold text-white leading-tight drop-shadow">{item.name}</h4>
+                        <p className="text-[10px] sm:text-xs text-white/70 mt-0.5 line-clamp-1">{item.description}</p>
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="text-lg sm:text-xl font-display font-bold text-white">€{item.price.toFixed(2)}</span>
+                          <motion.button
+                            onClick={(e) => { e.stopPropagation(); addItem(item); }}
+                            className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg"
+                            whileTap={{ scale: 0.85 }}>
+                            <Plus className="w-4 h-4" />
+                          </motion.button>
+                        </div>
                       </div>
-                      {/* Add button bottom-right — always visible on mobile */}
-                      <motion.button
-                        onClick={(e) => { e.stopPropagation(); addItem(item); }}
-                        className="absolute bottom-3 right-3 w-11 h-11 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300"
-                        whileTap={{ scale: 0.85 }}>
-                        <Plus className="w-5 h-5" />
-                      </motion.button>
-                    </div>
-                    <div className="p-3 sm:p-4">
-                      <h4 className="font-display text-sm sm:text-base font-bold text-foreground leading-tight">{item.name}</h4>
-                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">{item.description}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -474,71 +469,72 @@ const RestaurantPage = () => {
             </div>
           )}
 
-          {/* Full Menu — Sticky Category Navigation */}
+          {/* ── Full Menu — Category Tabs + Compact List ── */}
           <div>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="h-px flex-1 bg-border/40" />
-              <h3 className="text-xs sm:text-sm font-display font-semibold text-muted-foreground tracking-[0.2em] uppercase">Menu Completo</h3>
-              <div className="h-px flex-1 bg-border/40" />
-            </div>
-            
-            {/* Sticky Category Pills */}
-            <div className="sticky top-[60px] z-20 -mx-4 px-4 sm:mx-0 sm:px-0 py-2 bg-background/80 backdrop-blur-xl border-b border-border/20 mb-5 sm:mb-6">
-              <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1">
+            {/* Sticky Category Bar */}
+            <div className="sticky top-[56px] z-20 -mx-4 px-4 sm:mx-0 sm:px-0 py-2.5 bg-background/90 backdrop-blur-2xl border-b border-border/10 mb-4 sm:mb-5">
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
                 {menuCategories.map((cat) => {
                   const isActive = effectiveCat === cat;
                   const catCount = menu.filter(i => i.category === cat).length;
                   return (
                     <button key={cat} onClick={() => setActiveMenuCat(cat)}
-                      className={`relative flex-shrink-0 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-300
+                      className={`relative flex-shrink-0 snap-start px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-[11px] font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-300
                         ${isActive
-                          ? "bg-primary text-primary-foreground shadow-sm"
-                          : "bg-card/80 border border-border/30 text-muted-foreground hover:text-foreground hover:border-primary/30"}`}>
+                          ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20"
+                          : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
                       {cat}
-                      <span className={`ml-1.5 text-[9px] ${isActive ? "text-primary-foreground/70" : "text-muted-foreground/50"}`}>
-                        {catCount}
-                      </span>
+                      <span className={`ml-1 text-[8px] sm:text-[9px] ${isActive ? "text-primary-foreground/60" : "text-muted-foreground/40"}`}>{catCount}</span>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* Items Grid — Refined Cards */}
+            {/* Items — Mobile: compact list / Desktop: elegant grid */}
             <AnimatePresence mode="wait">
-              <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" key={effectiveCat}
-                initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}>
+              <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4" key={effectiveCat}
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>
                 {catItems.map((item, i) => (
                   <motion.div key={item.id}
-                    className="group flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl bg-card border border-border/20 hover:border-primary/20 hover:shadow-sm transition-all cursor-pointer"
-                    initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.04, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className="group flex items-center gap-3 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-card/80 hover:bg-card border border-border/10 hover:border-primary/15 transition-all duration-300 cursor-pointer active:scale-[0.98]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.03, duration: 0.35 }}
                     onClick={() => setSelectedItem(item)}>
-                    {/* Image — consistent rounded square */}
-                    <div className="w-[72px] h-[72px] sm:w-24 sm:h-24 rounded-xl overflow-hidden flex-shrink-0 relative">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    {/* Thumb — round on mobile, rounded-xl on desktop */}
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex-shrink-0 relative ring-1 ring-border/10">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
                       {item.isPopular && (
-                        <div className="absolute top-1 left-1 w-5 h-5 rounded-full bg-primary/90 flex items-center justify-center">
-                          <Star className="w-2.5 h-2.5 text-primary-foreground" />
+                        <div className="absolute top-0.5 left-0.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primary flex items-center justify-center">
+                          <Star className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-primary-foreground fill-primary-foreground" />
                         </div>
                       )}
                     </div>
-                    {/* Content */}
-                    <div className="flex-1 min-w-0 flex flex-col justify-between">
-                      <div>
-                        <h4 className="font-display font-bold text-foreground text-[13px] sm:text-sm leading-tight">{item.name}</h4>
-                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">{item.description}</p>
-                      </div>
-                      <div className="flex items-center justify-between mt-1.5">
-                        <span className="text-base sm:text-lg font-display font-bold text-primary">€{item.price.toFixed(2)}</span>
-                        <motion.button
-                          onClick={(e) => { e.stopPropagation(); addItem(item); }}
-                          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                          whileTap={{ scale: 0.85 }}>
-                          <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </motion.button>
-                      </div>
+                    {/* Info */}
+                    <div className="flex-1 min-w-0 py-0.5">
+                      <h4 className="font-display font-bold text-foreground text-[13px] sm:text-sm leading-snug truncate">{item.name}</h4>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-1 leading-relaxed">{item.description}</p>
+                      {/* Allergens inline */}
+                      {item.allergens && item.allergens.length > 0 && (
+                        <div className="flex gap-0.5 mt-1">
+                          {item.allergens.slice(0, 4).map((a) => (
+                            <span key={a} className="text-[9px]" title={a}>
+                              {a === "glutine" ? "🌾" : a === "uova" ? "🥚" : a === "latticini" ? "🧀" : a === "pesce" ? "🐟" : a === "arachidi" ? "🥜" : a === "frutta a guscio" ? "🌰" : "⚠️"}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {/* Price + Add */}
+                    <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                      <span className="text-sm sm:text-base font-display font-bold text-primary">€{item.price.toFixed(2)}</span>
+                      <motion.button
+                        onClick={(e) => { e.stopPropagation(); addItem(item); }}
+                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+                        whileTap={{ scale: 0.8 }}>
+                        <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      </motion.button>
                     </div>
                   </motion.div>
                 ))}
