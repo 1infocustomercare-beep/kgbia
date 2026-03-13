@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { type IndustryId } from "@/config/industry-config";
+import BackButton from "@/components/BackButton";
 
 // Sector-specific premium sites
 const NCCPublicSite = lazy(() => import("@/pages/public/NCCPublicSite"));
