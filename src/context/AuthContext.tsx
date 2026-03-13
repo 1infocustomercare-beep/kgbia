@@ -8,6 +8,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  rolesReady: boolean;
   roles: AppRole[];
   isSuperAdmin: boolean;
   isStaff: boolean;
@@ -58,21 +59,33 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [rolesReady, setRolesReady] = useState(false);
   const [roles, setRoles] = useState<AppRole[]>([]);
 
   const fetchRoles = async (userId: string): Promise<AppRole[]> => {
     try {
-      const { data, error } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userId);
+      const [{ data, error }, { data: isSuperAdmin, error: superAdminError }] = await Promise.all([
+        supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", userId),
+        supabase.rpc("is_super_admin"),
+      ]);
 
       if (error) {
         console.error("Failed to fetch user roles", error);
-        return [];
       }
 
-      return (data ?? []).map((r: { role: AppRole }) => r.role);
+      if (superAdminError) {
+        console.error("Failed to check super admin status", superAdminError);
+      }
+
+      const roleSet = new Set<AppRole>((data ?? []).map((r: { role: AppRole }) => r.role));
+      if (isSuperAdmin === true) {
+        roleSet.add("super_admin");
+      }
+
+      return Array.from(roleSet);
     } catch (error) {
       console.error("Unexpected role fetch error", error);
       return [];
@@ -87,7 +100,10 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
   useEffect(() => {
     let isMounted = true;
     const safetyTimer = setTimeout(() => {
-      if (isMounted) setLoading(false);
+      if (isMounted) {
+        setRolesReady(true);
+        setLoading(false);
+      }
     }, AUTH_LOADING_TIMEOUT_MS);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
@@ -95,14 +111,17 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
 
       if (nextSession?.user) {
         setLoading(true);
+        setRolesReady(false);
         window.setTimeout(async () => {
           const fetchedRoles = await fetchRoles(nextSession.user.id);
           if (!isMounted) return;
           setRoles(fetchedRoles);
+          setRolesReady(true);
           setLoading(false);
         }, 0);
       } else {
         setRoles([]);
+        setRolesReady(true);
         setLoading(false);
       }
     });
@@ -110,6 +129,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
     void (async () => {
       try {
         setLoading(true);
+        setRolesReady(false);
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
 
@@ -117,9 +137,13 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
 
         if (data.session?.user) {
           const fetchedRoles = await fetchRoles(data.session.user.id);
-          if (isMounted) setRoles(fetchedRoles);
+          if (isMounted) {
+            setRoles(fetchedRoles);
+            setRolesReady(true);
+          }
         } else if (isMounted) {
           setRoles([]);
+          setRolesReady(true);
         }
       } catch (error) {
         console.error("Failed to restore auth session", error);
@@ -127,6 +151,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
           setSession(null);
           setUser(null);
           setRoles([]);
+          setRolesReady(true);
         }
       } finally {
         if (isMounted) setLoading(false);
@@ -187,6 +212,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
       setSession(null);
       setUser(null);
       setRoles([]);
+      setRolesReady(true);
       setLoading(false);
     }
   };
@@ -197,6 +223,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
         user,
         session,
         loading,
+        rolesReady,
         roles,
         isSuperAdmin: roles.includes("super_admin"),
         isStaff: roles.includes("staff"),

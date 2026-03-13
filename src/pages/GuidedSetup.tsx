@@ -33,7 +33,7 @@ const BUSINESS_ICONS: Record<BusinessType, string> = {
 
 export default function GuidedSetup() {
   const navigate = useNavigate();
-  const { user, roles, loading: authLoading } = useAuth();
+  const { user, roles, loading: authLoading, rolesReady } = useAuth();
   const [saving, setSaving] = useState(false);
 
   // Industry state
@@ -55,7 +55,7 @@ export default function GuidedSetup() {
   const isFood = industry === "food";
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !rolesReady) return;
 
     let isMounted = true;
 
@@ -118,7 +118,7 @@ export default function GuidedSetup() {
     return () => {
       isMounted = false;
     };
-  }, [authLoading, user, roles, navigate]);
+  }, [authLoading, user, rolesReady, roles, navigate]);
 
   // Dynamic steps based on industry
   const steps: Step[] = isFood

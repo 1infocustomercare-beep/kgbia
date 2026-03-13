@@ -23,7 +23,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const refCode = searchParams.get("ref");
-  const { user, roles, loading: authLoading, signIn } = useAuth();
+  const { user, roles, loading: authLoading, rolesReady, signIn } = useAuth();
   const [mode, setMode] = useState<LoginMode>(refCode ? "partner" : "choose");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -63,9 +63,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
 
   // Auto-redirect if already logged in
   useEffect(() => {
-    if (authLoading || !user) return;
-    // Wait until roles are actually fetched before deciding redirect
-    if (roles.length === 0) return;
+    if (authLoading || !user || !rolesReady) return;
 
     if (roles.includes("super_admin")) {
       navigate("/superadmin", { replace: true });
@@ -126,7 +124,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
     } else {
       navigate("/app", { replace: true });
     }
-  }, [user, roles, authLoading, navigate]);
+  }, [user, roles, authLoading, rolesReady, navigate]);
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
