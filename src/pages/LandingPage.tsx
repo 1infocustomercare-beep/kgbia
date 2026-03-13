@@ -779,8 +779,9 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
-          COME FUNZIONA
          ═══════════════════════════════════════════ */}
       <Section id="process">
         <div className="text-center mb-12">
