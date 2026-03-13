@@ -392,10 +392,10 @@ const LandingPage = () => {
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Clean badge — gold accent */}
-            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-gold/10 bg-gold/[0.03] backdrop-blur-sm mb-7"
+            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm mb-7"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-              <span className="text-[0.6rem] font-heading font-semibold text-gold/80 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+              <span className="text-[0.6rem] font-heading font-semibold text-primary/80 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
             {/* Headline — gold shimmer */}
