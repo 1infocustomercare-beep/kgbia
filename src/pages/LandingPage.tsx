@@ -165,6 +165,7 @@ const LandingPage = () => {
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   /* ═══ DATA ═══ */
+  const [sectorSheetOpen, setSectorSheetOpen] = useState(false);
 
   const industries = [
     { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-orange-500 to-amber-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live" },
@@ -174,6 +175,27 @@ const LandingPage = () => {
     { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-cyan-500 to-blue-400", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni" },
     { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-lime-500 to-green-400", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti" },
     { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-amber-400 to-orange-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge" },
+  ];
+
+  const extraSectors = [
+    { icon: "🎓", title: "Formazione & Coaching", desc: "Corsi, tutoring, certificazioni", gradient: "from-indigo-500 to-violet-400" },
+    { icon: "🏖️", title: "Stabilimenti Balneari", desc: "Ombrelloni, lettini, bar spiaggia", gradient: "from-cyan-400 to-sky-400" },
+    { icon: "🐾", title: "Veterinari & Pet Care", desc: "Cliniche, toelettature, pensioni", gradient: "from-amber-500 to-yellow-400" },
+    { icon: "🔧", title: "Artigiani & Impiantisti", desc: "Idraulici, elettricisti, caldaisti", gradient: "from-blue-600 to-indigo-400" },
+    { icon: "🎨", title: "Studi Creativi", desc: "Fotografi, designer, architetti", gradient: "from-fuchsia-500 to-pink-400" },
+    { icon: "🏋️", title: "CrossFit & Functional", desc: "Box, classi, WOD, membership", gradient: "from-red-500 to-orange-400" },
+    { icon: "🧘", title: "Yoga & Pilates", desc: "Studi, ritiri, classi online", gradient: "from-teal-400 to-green-300" },
+    { icon: "🚿", title: "Lavanderie & Stirerie", desc: "Ritiro, consegna, abbonamenti", gradient: "from-blue-400 to-cyan-300" },
+    { icon: "🎵", title: "Scuole di Musica", desc: "Lezioni, sale prove, eventi", gradient: "from-purple-500 to-pink-400" },
+    { icon: "🏠", title: "Agenzie Immobiliari", desc: "Annunci, visite, CRM clienti", gradient: "from-emerald-600 to-teal-400" },
+    { icon: "⚖️", title: "Studi Legali", desc: "Pratiche, clienti, parcelle", gradient: "from-slate-500 to-gray-400" },
+    { icon: "🏗️", title: "Edilizia & Costruzioni", desc: "Cantieri, preventivi, SAL", gradient: "from-orange-600 to-amber-400" },
+    { icon: "🎭", title: "Eventi & Catering", desc: "Booking, menu, staff, logistica", gradient: "from-violet-500 to-purple-400" },
+    { icon: "🚗", title: "Autofficine & Carrozzerie", desc: "Interventi, ricambi, preventivi", gradient: "from-gray-500 to-zinc-400" },
+    { icon: "📦", title: "Logistica & Spedizioni", desc: "Tracking, magazzino, consegne", gradient: "from-yellow-500 to-orange-400" },
+    { icon: "🌿", title: "Giardinaggio & Vivaisti", desc: "Interventi, manutenzione, vendita", gradient: "from-green-500 to-lime-400" },
+    { icon: "🎪", title: "Intrattenimento", desc: "Parchi, escape room, bowling", gradient: "from-pink-500 to-red-400" },
+    { icon: "🏫", title: "Asili & Doposcuola", desc: "Iscrizioni, presenze, comunicazioni", gradient: "from-sky-400 to-blue-300" },
   ];
 
   const services = [
