@@ -487,11 +487,11 @@ const LandingPage = () => {
             animate={{ opacity: [0.4, 0.7, 0.4], x: 0 }}
             transition={{ opacity: { duration: 4, repeat: Infinity }, x: { duration: 1 } }}
           >
-            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-cyan-400/70 mb-2">SYS STATUS</div>
+            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-primary/70 mb-2">SYS STATUS</div>
             <div className="space-y-1.5">
               {[
                 { label: "AI ENGINE", value: "ACTIVE", color: "text-emerald-400" },
-                { label: "LATENCY", value: "<180ms", color: "text-cyan-400" },
+                { label: "LATENCY", value: "<180ms", color: "text-primary" },
                 { label: "UPTIME", value: "99.99%", color: "text-emerald-400" },
               ].map((item, i) => (
                 <div key={i} className="flex justify-between items-center">
@@ -500,12 +500,12 @@ const LandingPage = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-2 h-[1px] w-full bg-gradient-to-r from-cyan-400/30 to-transparent" />
+            <div className="mt-2 h-[1px] w-full bg-gradient-to-r from-primary/30 to-transparent" />
             <div className="mt-1 flex gap-1">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="h-[10px] flex-1 rounded-[1px]"
                   style={{
-                    background: `hsla(200, 90%, 60%, ${0.15 + Math.random() * 0.4})`,
+                    background: `hsla(265, 70%, 60%, ${0.15 + Math.random() * 0.4})`,
                     height: `${4 + Math.random() * 10}px`,
                     alignSelf: "flex-end",
                   }} />
