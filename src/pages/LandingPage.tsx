@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
+import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
@@ -702,7 +703,16 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
+          AI AGENTS SHOWCASE
+         ═══════════════════════════════════════════ */}
+      <AIAgentsShowcase />
+
+      <SectionDivider />
+
+      {/*
           VIDEO INDUSTRIES + WHY US
          ═══════════════════════════════════════════ */}
       <Section>
