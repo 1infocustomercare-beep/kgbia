@@ -187,18 +187,18 @@
   /* ═══ FUTURISTIC GRID ═══ */
   .cyber-grid {
     background-image:
-      linear-gradient(hsla(265, 85%, 65%, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, hsla(265, 85%, 65%, 0.04) 1px, transparent 1px);
+      linear-gradient(hsla(217, 85%, 58%, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(217, 85%, 58%, 0.04) 1px, transparent 1px);
     background-size: 80px 80px;
   }
 
   /* ═══ PREMIUM HOLOGRAPHIC GRID ═══ */
   .premium-holo-grid {
     background-image:
-      linear-gradient(hsla(265, 85%, 65%, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, hsla(265, 85%, 65%, 0.06) 1px, transparent 1px),
+      linear-gradient(hsla(217, 85%, 58%, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(217, 85%, 58%, 0.06) 1px, transparent 1px),
       linear-gradient(45deg, hsla(200, 90%, 60%, 0.03) 1px, transparent 1px),
-      linear-gradient(-45deg, hsla(320, 75%, 55%, 0.03) 1px, transparent 1px);
+      linear-gradient(-45deg, hsla(42, 80%, 55%, 0.03) 1px, transparent 1px);
     background-size: 60px 60px, 60px 60px, 90px 90px, 90px 90px;
   }
 
