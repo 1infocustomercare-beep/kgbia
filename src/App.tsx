@@ -148,7 +148,12 @@ function App() {
                     <MediaVaultPage />
                   </ProtectedRoute>
                 } />
-                <Route path="/staff" element={
+                <Route path="/superadmin/brand-assets" element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <BrandAssetsPage />
+                  </ProtectedRoute>
+                } />
+
                   <ProtectedRoute requiredRole="staff">
                     <StaffPanel />
                   </ProtectedRoute>
