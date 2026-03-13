@@ -92,7 +92,7 @@ const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: strin
 );
 
 /* ═══ Section Divider ═══ */
-const SectionDivider = React.forwardRef<HTMLDivElement>((_, ref) => (
+const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
   <div ref={ref} className="relative py-1">
     <div className="section-divider" />
   </div>
