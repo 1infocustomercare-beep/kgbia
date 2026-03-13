@@ -165,6 +165,7 @@ const LandingPage = () => {
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   /* ═══ DATA ═══ */
+  const [sectorSheetOpen, setSectorSheetOpen] = useState(false);
 
   const industries = [
     { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-orange-500 to-amber-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live" },
@@ -174,6 +175,27 @@ const LandingPage = () => {
     { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-cyan-500 to-blue-400", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni" },
     { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-lime-500 to-green-400", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti" },
     { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-amber-400 to-orange-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge" },
+  ];
+
+  const extraSectors = [
+    { icon: "🎓", title: "Formazione & Coaching", desc: "Corsi, tutoring, certificazioni", gradient: "from-indigo-500 to-violet-400" },
+    { icon: "🏖️", title: "Stabilimenti Balneari", desc: "Ombrelloni, lettini, bar spiaggia", gradient: "from-cyan-400 to-sky-400" },
+    { icon: "🐾", title: "Veterinari & Pet Care", desc: "Cliniche, toelettature, pensioni", gradient: "from-amber-500 to-yellow-400" },
+    { icon: "🔧", title: "Artigiani & Impiantisti", desc: "Idraulici, elettricisti, caldaisti", gradient: "from-blue-600 to-indigo-400" },
+    { icon: "🎨", title: "Studi Creativi", desc: "Fotografi, designer, architetti", gradient: "from-fuchsia-500 to-pink-400" },
+    { icon: "🏋️", title: "CrossFit & Functional", desc: "Box, classi, WOD, membership", gradient: "from-red-500 to-orange-400" },
+    { icon: "🧘", title: "Yoga & Pilates", desc: "Studi, ritiri, classi online", gradient: "from-teal-400 to-green-300" },
+    { icon: "🚿", title: "Lavanderie & Stirerie", desc: "Ritiro, consegna, abbonamenti", gradient: "from-blue-400 to-cyan-300" },
+    { icon: "🎵", title: "Scuole di Musica", desc: "Lezioni, sale prove, eventi", gradient: "from-purple-500 to-pink-400" },
+    { icon: "🏠", title: "Agenzie Immobiliari", desc: "Annunci, visite, CRM clienti", gradient: "from-emerald-600 to-teal-400" },
+    { icon: "⚖️", title: "Studi Legali", desc: "Pratiche, clienti, parcelle", gradient: "from-slate-500 to-gray-400" },
+    { icon: "🏗️", title: "Edilizia & Costruzioni", desc: "Cantieri, preventivi, SAL", gradient: "from-orange-600 to-amber-400" },
+    { icon: "🎭", title: "Eventi & Catering", desc: "Booking, menu, staff, logistica", gradient: "from-violet-500 to-purple-400" },
+    { icon: "🚗", title: "Autofficine & Carrozzerie", desc: "Interventi, ricambi, preventivi", gradient: "from-gray-500 to-zinc-400" },
+    { icon: "📦", title: "Logistica & Spedizioni", desc: "Tracking, magazzino, consegne", gradient: "from-yellow-500 to-orange-400" },
+    { icon: "🌿", title: "Giardinaggio & Vivaisti", desc: "Interventi, manutenzione, vendita", gradient: "from-green-500 to-lime-400" },
+    { icon: "🎪", title: "Intrattenimento", desc: "Parchi, escape room, bowling", gradient: "from-pink-500 to-red-400" },
+    { icon: "🏫", title: "Asili & Doposcuola", desc: "Iscrizioni, presenze, comunicazioni", gradient: "from-sky-400 to-blue-300" },
   ];
 
   const services = [
@@ -736,16 +758,132 @@ const LandingPage = () => {
           <motion.div
             className="group cursor-pointer"
             variants={fadeScale}
-            onClick={() => scrollTo("contact")}
+            onClick={() => setSectorSheetOpen(true)}
             whileHover={{ y: -4 }}
           >
-            <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] border-dashed border-foreground/10 hover:border-primary/20 transition-all duration-500 flex flex-col items-center justify-center text-center">
-              <Sparkles className="w-7 h-7 text-foreground/15 mb-3 group-hover:text-primary/60 transition-colors" />
+            <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] border-dashed border-foreground/10 hover:border-primary/20 transition-all duration-500 flex flex-col items-center justify-center text-center overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <motion.div animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
+                <Sparkles className="w-7 h-7 text-foreground/15 mb-3 group-hover:text-primary/60 transition-colors" />
+              </motion.div>
               <p className="text-xs font-heading font-semibold text-foreground/35 group-hover:text-foreground/60 transition-colors">+18 altri settori</p>
-              <p className="text-[0.6rem] text-primary/40 mt-1.5">Scopri tutti →</p>
+              <p className="text-[0.6rem] text-primary/40 mt-1.5">Esplora tutti →</p>
             </div>
           </motion.div>
         </motion.div>
+
+        {/* ═══ Sector Selector Sheet (iPhone style) ═══ */}
+        <AnimatePresence>
+          {sectorSheetOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                onClick={() => setSectorSheetOpen(false)}
+              />
+              {/* Sheet */}
+              <motion.div
+                className="fixed z-50 inset-x-0 bottom-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:w-[420px] sm:max-h-[85vh]"
+                style={{ maxHeight: "85vh" }}
+                initial={{ y: "100%", x: 0, opacity: 0 }}
+                animate={{ y: 0, x: 0, opacity: 1 }}
+                exit={{ y: "100%", opacity: 0 }}
+                transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              >
+                <div className="sm:relative sm:-translate-x-1/2 sm:-translate-y-1/2 rounded-t-[28px] sm:rounded-[28px] overflow-hidden border border-foreground/10"
+                  style={{ background: "hsla(260,20%,6%,0.97)", backdropFilter: "blur(40px)", boxShadow: "0 -10px 60px hsla(0,0%,0%,0.5), 0 0 40px hsla(265,70%,60%,0.08)" }}>
+                  {/* Handle bar */}
+                  <div className="flex justify-center pt-3 pb-1 sm:hidden">
+                    <div className="w-10 h-1 rounded-full" style={{ background: "hsla(0,0%,100%,0.15)" }} />
+                  </div>
+                  {/* Header */}
+                  <div className="px-6 pt-4 pb-3 flex items-center justify-between">
+                    <div>
+                      <h3 className="font-heading font-bold text-foreground text-sm tracking-wide">Tutti i Settori</h3>
+                      <p className="text-[0.6rem] text-foreground/30 mt-0.5">25+ industrie supportate da Empire</p>
+                    </div>
+                    <motion.button
+                      onClick={() => setSectorSheetOpen(false)}
+                      className="w-8 h-8 rounded-full flex items-center justify-center"
+                      style={{ background: "hsla(0,0%,100%,0.06)", border: "1px solid hsla(0,0%,100%,0.08)" }}
+                      whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+                    >
+                      <X className="w-3.5 h-3.5 text-foreground/50" />
+                    </motion.button>
+                  </div>
+                  {/* Accent line */}
+                  <div className="mx-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.2), transparent)" }} />
+                  {/* Scrollable content */}
+                  <div className="overflow-y-auto px-4 py-4 space-y-2" style={{ maxHeight: "60vh" }}>
+                    {/* Active sectors with demos */}
+                    <p className="text-[0.55rem] font-heading font-bold text-primary/50 tracking-[3px] uppercase px-2 mb-2">Con Demo Live</p>
+                    {industries.map((ind, i) => {
+                      const slug = DEMO_SLUGS[ind.id];
+                      const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+                      return (
+                        <motion.div key={`main-${i}`}
+                          className="flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all"
+                          style={{ background: "hsla(0,0%,100%,0.02)", border: "1px solid hsla(0,0%,100%,0.04)" }}
+                          whileHover={{ background: "hsla(265,70%,60%,0.06)", borderColor: "hsla(265,70%,60%,0.15)", scale: 1.01 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => { setSectorSheetOpen(false); navigate(demoPath); }}
+                          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
+                        >
+                          <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white shadow-lg flex-shrink-0`}>
+                            {ind.icon}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-heading font-bold text-foreground truncate">{ind.title}</p>
+                            <p className="text-[0.6rem] text-foreground/30 truncate">{ind.desc}</p>
+                          </div>
+                          <div className="flex items-center gap-1.5 flex-shrink-0">
+                            <span className="text-[0.5rem] font-heading font-bold text-primary/60 tracking-wider uppercase">Demo</span>
+                            <ArrowRight className="w-3 h-3 text-primary/40" />
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                    {/* Divider */}
+                    <div className="py-3">
+                      <div className="h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.12), transparent)" }} />
+                    </div>
+                    {/* Extra sectors */}
+                    <p className="text-[0.55rem] font-heading font-bold text-foreground/25 tracking-[3px] uppercase px-2 mb-2">In Arrivo & Su Richiesta</p>
+                    {extraSectors.map((sec, i) => (
+                      <motion.div key={`extra-${i}`}
+                        className="flex items-center gap-3 p-3 rounded-2xl transition-all"
+                        style={{ background: "hsla(0,0%,100%,0.01)", border: "1px solid hsla(0,0%,100%,0.03)" }}
+                        whileHover={{ background: "hsla(0,0%,100%,0.03)", scale: 1.01 }}
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.02 }}
+                      >
+                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${sec.gradient} flex items-center justify-center text-lg shadow-lg flex-shrink-0 opacity-70`}>
+                          {sec.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-heading font-bold text-foreground/60 truncate">{sec.title}</p>
+                          <p className="text-[0.6rem] text-foreground/20 truncate">{sec.desc}</p>
+                        </div>
+                        <span className="text-[0.5rem] font-heading text-foreground/15 tracking-wider uppercase flex-shrink-0">Presto</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                  {/* Bottom CTA */}
+                  <div className="px-6 py-4" style={{ borderTop: "1px solid hsla(0,0%,100%,0.05)" }}>
+                    <motion.button
+                      onClick={() => { setSectorSheetOpen(false); scrollTo("contact"); }}
+                      className="w-full py-3 rounded-xl font-heading font-bold text-xs tracking-wider uppercase text-primary-foreground"
+                      style={{ background: "linear-gradient(135deg, hsla(265,70%,60%,1), hsla(280,60%,50%,1))", boxShadow: "0 8px 30px hsla(265,70%,60%,0.2)" }}
+                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+                    >
+                      Non trovi il tuo? Contattaci →
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </Section>
 
       <SectionDivider />
