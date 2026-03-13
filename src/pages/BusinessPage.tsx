@@ -88,7 +88,12 @@ export default function BusinessPage() {
 
   // Trades group
   if (TRADES.includes(industry)) {
-    return <Suspense fallback={<SiteLoader />}><TradesPublicSite company={company} /></Suspense>;
+    return (
+      <Suspense fallback={<SiteLoader />}>
+        <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
+        <TradesPublicSite company={company} />
+      </Suspense>
+    );
   }
 
   // Sector-specific or universal fallback
