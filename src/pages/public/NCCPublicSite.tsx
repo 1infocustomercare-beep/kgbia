@@ -594,9 +594,10 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* ═══════════ STATS — #e8f4f8 ═══════════ */}
-      <Section className="py-20 px-4" style={{ background: NCC.bgStats }}>
-        <div className="max-w-5xl mx-auto">
+      {/* ═══════════ STATS — dark premium ═══════════ */}
+      <Section className="py-20 px-4 relative overflow-hidden" style={{ background: NCC.bgStats }}>
+        <div className="absolute inset-0 opacity-20" style={{ background: `radial-gradient(ellipse at 50% 50%, ${NCC.gold}15, transparent 70%)` }} />
+        <div className="max-w-5xl mx-auto relative z-10">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { value: 10, suffix: "+", label: "Anni di Esperienza" },
@@ -605,10 +606,10 @@ export default function NCCPublicSite({ company }: Props) {
               { value: 24, suffix: "/7", label: "Sempre Disponibili", isStatic: true },
             ].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1, type: "spring" }} className="text-center">
-                <p className="text-4xl sm:text-5xl font-black mb-2" style={{ color: NCC.textDark }}>
+                <p className="text-4xl sm:text-5xl font-black mb-2" style={{ color: NCC.gold }}>
                   {s.isStatic ? `${s.value}${s.suffix}` : <><AnimatedNum value={s.value} />{s.suffix}</>}
                 </p>
-                <p className="text-xs uppercase tracking-[0.15em] font-medium" style={{ color: NCC.textSecondary }}>{s.label}</p>
+                <p className="text-xs uppercase tracking-[0.15em] font-medium text-white/50">{s.label}</p>
               </motion.div>
             ))}
           </div>
