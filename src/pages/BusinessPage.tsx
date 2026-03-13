@@ -1,5 +1,6 @@
 import { useState, useMemo, lazy, Suspense } from "react";
 import { useParams } from "react-router-dom";
+const LuxuryPublicSite = lazy(() => import("@/pages/public/LuxuryPublicSite"));
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
