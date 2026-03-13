@@ -238,7 +238,7 @@ const LandingPage = () => {
         <div className="absolute w-[700px] h-[700px] rounded-full blur-[250px] opacity-[0.06] bg-primary -top-[200px] left-1/4 animate-float-glow" />
         <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] bg-accent top-[50vh] -right-[100px] animate-float-glow-slow" />
         <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.035] top-[80vh] left-[10%] animate-float-glow-delay"
-          style={{ background: "hsl(320, 75%, 55%)" }} />
+          style={{ background: "hsl(42, 75%, 50%)" }} />
         {/* Cyan tech orb */}
         <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.03] top-[120vh] right-[20%]"
           style={{ background: "hsl(200, 90%, 55%)" }} />
