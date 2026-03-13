@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import {
   Phone, Clock, Calendar, Dumbbell, Flame, Heart, Zap, Users,
-  Target, Timer, ArrowRight, MessageCircle, Trophy, ChevronDown, Star, MapPin, Mail, Menu, X, ChevronLeft, ChevronRight, Sparkles, Shield
+  Target, Timer, ArrowRight, MessageCircle, Trophy, ChevronDown, Star, MapPin, Mail, Menu, X, ChevronLeft, ChevronRight, Sparkles, Shield, Quote, Award, CheckCircle
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import fallbackHeroVideo from "@/assets/video-features.mp4";
@@ -62,6 +62,21 @@ const GALLERY = [
   "https://images.pexels.com/photos/3253501/pexels-photo-3253501.jpeg?auto=compress&cs=tinysrgb&w=800",
 ];
 
+const FALLBACK_REVIEWS = [
+  { name: "Luca P.", text: "Da quando mi alleno qui la mia vita è cambiata. Trainer preparatissimi e attrezzatura top!", rating: 5, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" },
+  { name: "Sofia R.", text: "Le classi di yoga sono fantastiche. Atmosfera rilassante e istruttrice eccezionale.", rating: 5, photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" },
+  { name: "Andrea M.", text: "CrossFit ad altissimo livello. Programmazione scientifica e community straordinaria.", rating: 5, photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" },
+  { name: "Elena B.", text: "Pulitissima, moderna e con orari flessibili. Il piano PT è stato un investimento incredibile.", rating: 5, photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" },
+];
+
+const FAQ_ITEMS = [
+  { q: "Posso provare prima di iscrivermi?", a: "Certamente! Offriamo una sessione di prova gratuita. Compila il modulo e ti contatteremo per organizzarla." },
+  { q: "Quali sono gli orari di apertura?", a: "Siamo aperti Lun-Ven 6:00-22:00, Sab 8:00-20:00, Dom 9:00-14:00. Il piano Elite include accesso 24/7." },
+  { q: "Posso congelare l'abbonamento?", a: "Sì, con i piani Pro ed Elite puoi sospendere l'abbonamento fino a 30 giorni all'anno per motivi di salute o vacanza." },
+  { q: "Avete personal trainer?", a: "Sì, abbiamo 15+ personal trainer certificati. Puoi prenotare sessioni singole o pacchetti mensili." },
+  { q: "C'è un parcheggio?", a: "Sì, abbiamo un parcheggio gratuito riservato ai soci con oltre 50 posti auto." },
+];
+
 export default function FitnessPublicSite({ company }: Props) {
   const companyId = company.id;
   const name = company.name || "Fitness Club";
@@ -69,10 +84,13 @@ export default function FitnessPublicSite({ company }: Props) {
   const phone = company.phone;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
+  const [reviewIndex, setReviewIndex] = useState(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
+  useEffect(() => { const t = setInterval(() => setReviewIndex(p => (p + 1) % FALLBACK_REVIEWS.length), 5000); return () => clearInterval(t); }, []);
   useEffect(() => {
     const el = scrollRef.current; if (!el) return;
     const t = setInterval(() => { if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 10) el.scrollTo({ left: 0, behavior: "smooth" }); else el.scrollBy({ left: 320, behavior: "smooth" }); }, 4000);
@@ -93,7 +111,7 @@ export default function FitnessPublicSite({ company }: Props) {
     setSubmitting(false);
   };
 
-  const navLinks = [{ href: "#classi", label: "Classi" }, { href: "#piani", label: "Piani" }, { href: "#gallery", label: "Gallery" }, { href: "#iscriviti", label: "Iscriviti" }];
+  const navLinks = [{ href: "#chi-siamo", label: "Chi Siamo" }, { href: "#classi", label: "Classi" }, { href: "#piani", label: "Piani" }, { href: "#recensioni", label: "Recensioni" }, { href: "#iscriviti", label: "Iscriviti" }];
   const tickerItems = ["CrossFit", "Yoga", "HIIT", "Pilates", "Boxing", "Functional", "Spinning", "Zumba", "Calisthenics", "Stretching"];
 
   const classes = [
@@ -140,15 +158,8 @@ export default function FitnessPublicSite({ company }: Props) {
 
       {/* HERO */}
       <section id="hero" className="relative min-h-[100svh] flex items-center overflow-hidden">
-        <HeroVideoBackground
-          primarySrc={HERO_VIDEO}
-          fallbackSrc={fallbackHeroVideo}
-          poster={GALLERY[0]}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: "brightness(0.5) saturate(1.06)" }}
-        />
+        <HeroVideoBackground primarySrc={HERO_VIDEO} fallbackSrc={fallbackHeroVideo} poster={GALLERY[0]} className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.5) saturate(1.06)" }} />
         <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${DARK}88 0%, transparent 50%, ${ORANGE}22 100%)` }} />
-
         <div className="relative z-10 max-w-7xl mx-auto px-5 pt-20 w-full">
           <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-6" style={{ background: `${ORANGE}25`, color: ORANGE, border: `1px solid ${ORANGE}50`, fontFamily: "'Roboto', sans-serif" }}>
@@ -180,17 +191,60 @@ export default function FitnessPublicSite({ company }: Props) {
 
       {/* STATS */}
       <Section className="py-16 px-4" style={{ background: "#111" }}>
-        <div className="max-w-5xl mx-auto grid grid-cols-3 gap-6 text-center">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           {[
             { value: 500, suffix: "+", label: "Iscritti" },
             { value: 20, suffix: "+", label: "Classi / Sett." },
             { value: 15, suffix: "+", label: "Trainer" },
+            { value: 1500, suffix: "mq", label: "Di Struttura" },
           ].map((s, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
               <p className="text-3xl sm:text-4xl font-bold" style={{ color: ORANGE }}><AnimatedNum value={s.value} suffix={s.suffix} /></p>
               <p className="text-[10px] uppercase tracking-widest text-white/30 mt-1" style={{ fontFamily: "'Roboto', sans-serif" }}>{s.label}</p>
             </motion.div>
           ))}
+        </div>
+      </Section>
+
+      {/* CHI SIAMO */}
+      <Section id="chi-siamo" className="py-16 sm:py-24 px-4">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+            <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-3" style={{ color: ORANGE, fontFamily: "'Roboto', sans-serif" }}>LA NOSTRA FILOSOFIA</p>
+            <h2 className="text-3xl sm:text-4xl font-bold uppercase mb-5">Più di una <span style={{ color: ORANGE }}>Palestra</span></h2>
+            <p className="text-base text-white/50 mb-6 leading-relaxed" style={{ fontFamily: "'Roboto', sans-serif" }}>
+              Non siamo solo una palestra — siamo una community di persone che si spingono oltre i propri limiti ogni giorno. Attrezzature all'avanguardia, trainer certificati e programmi personalizzati per ogni livello.
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { icon: Shield, text: "Attrezzatura Premium" },
+                { icon: Users, text: "Community Attiva" },
+                { icon: Award, text: "Trainer Certificati" },
+                { icon: Target, text: "Programmi su Misura" },
+              ].map(({ icon: Icon, text }, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm text-white/50" style={{ fontFamily: "'Roboto', sans-serif" }}>
+                  <Icon className="w-4 h-4" style={{ color: ORANGE }} /> {text}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}>
+            <div className="rounded-2xl overflow-hidden relative aspect-[4/5]">
+              <img src={GALLERY[0]} alt="Gym" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+              <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.8 }}
+                className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full backdrop-blur-xl pl-0.5 pr-3 py-0.5"
+                style={{ background: "rgba(0,0,0,0.7)", border: `1px solid ${ORANGE}40` }}>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${ORANGE}20` }}>
+                  <Flame className="w-4 h-4" style={{ color: ORANGE }} />
+                </div>
+                <div>
+                  <p className="text-[8px] uppercase tracking-[0.15em] font-bold leading-none" style={{ color: ORANGE }}>Premium</p>
+                  <p className="text-[8px] text-white/45 leading-tight mt-0.5">Fitness Club</p>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </Section>
 
@@ -280,6 +334,36 @@ export default function FitnessPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      {/* REVIEWS */}
+      <Section id="recensioni" className="py-16 sm:py-24 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-2" style={{ color: ORANGE, fontFamily: "'Roboto', sans-serif" }}>TESTIMONIANZE</p>
+            <h2 className="text-3xl sm:text-4xl font-bold uppercase">Cosa Dicono i <span style={{ color: ORANGE }}>Nostri Atleti</span></h2>
+          </div>
+          <div className="rounded-2xl p-8 relative overflow-hidden" style={{ background: "#111", border: `1px solid ${ORANGE}15` }}>
+            <AnimatePresence mode="wait">
+              <motion.div key={reviewIndex} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.5 }}>
+                <div className="flex items-center gap-4 mb-4">
+                  <img src={FALLBACK_REVIEWS[reviewIndex].photo} alt="" className="w-14 h-14 rounded-full object-cover" style={{ border: `2px solid ${ORANGE}40` }} />
+                  <div>
+                    <p className="font-bold text-base text-white" style={{ fontFamily: "'Roboto', sans-serif" }}>{FALLBACK_REVIEWS[reviewIndex].name}</p>
+                    <div className="flex gap-0.5">{Array.from({ length: 5 }).map((_, s) => <Star key={s} className="w-3.5 h-3.5" fill="#F59E0B" style={{ color: "#F59E0B" }} />)}</div>
+                  </div>
+                </div>
+                <Quote className="w-8 h-8 mb-3" style={{ color: `${ORANGE}30` }} />
+                <p className="text-lg italic leading-relaxed text-white/60" style={{ fontFamily: "'Roboto', sans-serif" }}>"{FALLBACK_REVIEWS[reviewIndex].text}"</p>
+              </motion.div>
+            </AnimatePresence>
+            <div className="flex gap-2 justify-center mt-6">
+              {FALLBACK_REVIEWS.map((_, i) => (
+                <button key={i} onClick={() => setReviewIndex(i)} className="w-2 h-2 rounded-full transition-all" style={{ background: i === reviewIndex ? ORANGE : "#333", transform: i === reviewIndex ? "scale(1.3)" : "scale(1)" }} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </Section>
+
       {/* JOIN FORM */}
       <Section id="iscriviti" className="py-16 sm:py-24 relative">
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.12)" }}>
@@ -303,12 +387,44 @@ export default function FitnessPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      {/* FAQ */}
+      <Section className="py-16 sm:py-24 px-4" style={{ background: "#050505" }}>
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-2" style={{ color: ORANGE, fontFamily: "'Roboto', sans-serif" }}>DOMANDE FREQUENTI</p>
+            <h2 className="text-3xl sm:text-4xl font-bold uppercase">FAQ</h2>
+          </div>
+          <div className="space-y-3">
+            {FAQ_ITEMS.map((item, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
+                className="rounded-xl overflow-hidden" style={{ background: "#111", border: "1px solid #1a1a1a" }}>
+                <button className="w-full text-left px-5 py-4 flex items-center justify-between gap-3" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                  <span className="font-semibold text-sm text-white" style={{ fontFamily: "'Roboto', sans-serif" }}>{item.q}</span>
+                  <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${openFaq === i ? "rotate-180" : ""}`} style={{ color: ORANGE }} />
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                      <p className="px-5 pb-4 text-sm leading-relaxed text-white/50" style={{ fontFamily: "'Roboto', sans-serif" }}>{item.a}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </Section>
+
       <AutomationShowcase accentColor={ORANGE} accentBg="bg-orange-500" sectorName="palestre e fitness" darkMode={true} />
 
       {/* FOOTER */}
       <footer className="py-8 border-t" style={{ borderColor: "#1a1a1a" }}>
         <div className="max-w-6xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-4" style={{ fontFamily: "'Roboto', sans-serif" }}>
           <p className="text-xs text-white/25">© {new Date().getFullYear()} {name}. Tutti i diritti riservati.</p>
+          <div className="flex gap-6 text-xs text-white/25">
+            {company.address && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{company.address}</span>}
+            {phone && <a href={`tel:${phone}`} className="flex items-center gap-1"><Phone className="w-3 h-3" />{phone}</a>}
+          </div>
           <div className="flex gap-4 text-xs text-white/25"><a href="/privacy">Privacy</a><span>Powered by Empire.AI</span></div>
         </div>
       </footer>

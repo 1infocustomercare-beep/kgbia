@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import {
   Star, Phone, Mail, MapPin, Clock, ShoppingBag,
   Heart, Truck, Shield, ArrowRight, MessageCircle,
-  CreditCard, Award, RefreshCw, Package, ChevronDown, Quote, Instagram, Menu, X, ChevronLeft, ChevronRight, Sparkles
+  CreditCard, Award, RefreshCw, Package, ChevronDown, Quote, Instagram, Menu, X, ChevronLeft, ChevronRight, Sparkles, Users, CheckCircle
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
@@ -66,6 +66,14 @@ const FALLBACK_REVIEWS = [
   { name: "Elena G.", text: "Il negozio più bello della città. Selezione curatissima e staff super competente.", rating: 5, photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" },
 ];
 
+const FAQ_ITEMS = [
+  { q: "Quanto costa la spedizione?", a: "Spedizione gratuita per ordini superiori a €50. Per importi inferiori il costo è di €5.90 in tutta Italia." },
+  { q: "Posso restituire un prodotto?", a: "Sì, offriamo reso gratuito entro 30 giorni dall'acquisto. Basta contattarci e organizzeremo il ritiro." },
+  { q: "Avete un programma fedeltà?", a: "Sì! Ogni acquisto accumula punti Empire. Al raggiungimento delle soglie ricevi sconti esclusivi e anteprime." },
+  { q: "Posso pagare a rate?", a: "Certamente. Offriamo pagamento in 3 rate senza interessi tramite Klarna o PayPal Pay Later." },
+  { q: "Fate personal shopping?", a: "Sì, offriamo un servizio di personal shopping su appuntamento sia in negozio che online via videochiamata." },
+];
+
 export default function RetailPublicSite({ company }: Props) {
   const accent = company.primary_color || "#1a1a1a";
   const companyId = company.id;
@@ -73,6 +81,7 @@ export default function RetailPublicSite({ company }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
   const [reviewIndex, setReviewIndex] = useState(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const phone = company.phone;
   const name = company.name || "Store";
@@ -98,7 +107,7 @@ export default function RetailPublicSite({ company }: Props) {
     setEmail("");
   };
 
-  const navLinks = [{ href: "#collezioni", label: "Collezioni" }, { href: "#negozio", label: "Negozio" }, { href: "#recensioni", label: "Recensioni" }, { href: "#contatti", label: "Contatti" }];
+  const navLinks = [{ href: "#chi-siamo", label: "Chi Siamo" }, { href: "#collezioni", label: "Collezioni" }, { href: "#recensioni", label: "Recensioni" }, { href: "#contatti", label: "Contatti" }];
   const tickerItems = ["Nuovi Arrivi", "Spedizione Gratuita", "Reso Facile", "Made in Italy", "Qualità Premium", "Offerte Esclusive", "Pagamento Sicuro", "Consegna Rapida"];
 
   return (
@@ -132,16 +141,8 @@ export default function RetailPublicSite({ company }: Props) {
 
       {/* HERO */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden" style={{ background: "#f8f8f8" }}>
-        <HeroVideoBackground
-          primarySrc={HERO_VIDEO}
-          fallbackSrc={fallbackHeroVideo}
-          poster={COLLECTIONS[0].img}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: "brightness(0.8) saturate(1.04)", opacity: 0.58 }}
-        />
+        <HeroVideoBackground primarySrc={HERO_VIDEO} fallbackSrc={fallbackHeroVideo} poster={COLLECTIONS[0].img} className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.8) saturate(1.04)", opacity: 0.58 }} />
         <div className="absolute inset-0 bg-gradient-to-r from-white/68 via-white/42 to-transparent" />
-        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `radial-gradient(circle, ${accent}40 1px, transparent 1px)`, backgroundSize: "40px 40px" }} />
-
         <div className="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center relative z-10">
           <motion.div style={{ y: heroY }}>
             <motion.div initial="hidden" animate="show" variants={stagger}>
@@ -149,26 +150,14 @@ export default function RetailPublicSite({ company }: Props) {
               <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-5">{company.tagline || "Shopping Premium"}</motion.h1>
               <motion.p variants={fadeUp} custom={2} className="text-base text-gray-500 mb-8 max-w-lg">Scopri le ultime novità selezionate per te. Qualità premium, stile inconfondibile.</motion.p>
               <motion.div variants={fadeUp} custom={3} className="flex flex-col sm:flex-row gap-3">
-                <Button className="px-8 py-5 text-base text-white rounded-xl shadow-2xl" style={{ background: accent, boxShadow: `0 20px 60px -15px ${accent}44` }} onClick={() => scrollTo("negozio")}>Esplora <ArrowRight className="ml-2 w-4 h-4" /></Button>
+                <Button className="px-8 py-5 text-base text-white rounded-xl shadow-2xl" style={{ background: accent, boxShadow: `0 20px 60px -15px ${accent}44` }} onClick={() => scrollTo("collezioni")}>Esplora <ArrowRight className="ml-2 w-4 h-4" /></Button>
               </motion.div>
             </motion.div>
           </motion.div>
-
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4, duration: 0.8 }} className="relative hidden lg:block">
             <div className="rounded-3xl overflow-hidden shadow-2xl aspect-[3/4]">
               <img src={COLLECTIONS[0].img} alt="Fashion" className="w-full h-full object-cover" />
             </div>
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}
-              className="absolute -bottom-4 right-4 flex items-center gap-2 rounded-full backdrop-blur-xl pl-0.5 pr-3 py-0.5"
-              style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 8px 32px rgba(0,0,0,0.1)" }}>
-              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${accent}10` }}>
-                <ShoppingBag className="w-4 h-4" style={{ color: accent }} />
-              </div>
-              <div>
-                <p className="text-[8px] uppercase tracking-[0.15em] font-bold leading-none" style={{ color: accent }}>Premium</p>
-                <p className="text-[8px] text-gray-400 leading-tight mt-0.5">Selezione Curata</p>
-              </div>
-            </motion.div>
           </motion.div>
         </div>
         <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
@@ -221,8 +210,38 @@ export default function RetailPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      {/* CHI SIAMO */}
+      <Section id="chi-siamo" className="py-16 sm:py-24">
+        <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+            <p className="text-[10px] uppercase tracking-[0.25em] font-bold mb-3" style={{ color: accent }}>LA NOSTRA STORIA</p>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-5">Curatela e <span style={{ color: accent }}>Passione</span></h2>
+            <p className="text-base text-gray-500 mb-6 leading-relaxed">
+              Selezioniamo con cura ogni singolo prodotto che entra nel nostro negozio. La nostra missione è offrire un'esperienza di shopping unica, dove qualità, stile e attenzione al dettaglio si fondono in un ambiente accogliente e raffinato.
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { icon: Heart, text: "Selezione Curata" },
+                { icon: Award, text: "Brand Premium" },
+                { icon: Users, text: "Consulenza Dedicata" },
+                { icon: Package, text: "Made in Italy" },
+              ].map(({ icon: Icon, text }, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm text-gray-500">
+                  <Icon className="w-4 h-4" style={{ color: accent }} /> {text}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}>
+            <div className="rounded-2xl overflow-hidden shadow-lg aspect-[4/5]">
+              <img src={COLLECTIONS[3].img} alt="Store" className="w-full h-full object-cover" />
+            </div>
+          </motion.div>
+        </div>
+      </Section>
+
       {/* COLLECTIONS — auto-carousel */}
-      <Section id="collezioni" className="py-16 sm:py-24">
+      <Section id="collezioni" className="py-16 sm:py-24" style={{ background: "#fafafa" }}>
         <div className="max-w-7xl mx-auto px-5">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10">Le Nostre Collezioni</h2>
           <div className="relative">
@@ -252,7 +271,7 @@ export default function RetailPublicSite({ company }: Props) {
       </Section>
 
       {/* GALLERY */}
-      <Section id="negozio" className="py-16 sm:py-24" style={{ background: "#f8f8f8" }}>
+      <Section id="negozio" className="py-16 sm:py-24">
         <div className="max-w-6xl mx-auto px-5">
           <h2 className="text-3xl font-bold text-center mb-10">Il Nostro Negozio</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -271,11 +290,14 @@ export default function RetailPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* REVIEWS — auto-carousel */}
-      <Section id="recensioni" className="py-16 sm:py-24">
+      {/* REVIEWS */}
+      <Section id="recensioni" className="py-16 sm:py-24" style={{ background: "#fafafa" }}>
         <div className="max-w-5xl mx-auto px-5">
-          <h2 className="text-3xl font-bold text-center mb-10">Cosa Dicono i Clienti</h2>
-          <div className="rounded-2xl p-8 bg-gray-50 mb-8 relative overflow-hidden">
+          <div className="text-center mb-10">
+            <p className="text-[10px] uppercase tracking-[0.25em] font-bold mb-2" style={{ color: accent }}>TESTIMONIANZE</p>
+            <h2 className="text-3xl font-bold">Cosa Dicono i Clienti</h2>
+          </div>
+          <div className="rounded-2xl p-8 bg-white shadow-sm mb-8 relative overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div key={reviewIndex} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.5 }}>
                 <div className="flex items-center gap-4 mb-4">
@@ -298,8 +320,36 @@ export default function RetailPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      {/* FAQ */}
+      <Section className="py-16 sm:py-24">
+        <div className="max-w-3xl mx-auto px-5">
+          <div className="text-center mb-10">
+            <p className="text-[10px] uppercase tracking-[0.25em] font-bold mb-2" style={{ color: accent }}>DOMANDE FREQUENTI</p>
+            <h2 className="text-3xl font-bold">FAQ</h2>
+          </div>
+          <div className="space-y-3">
+            {FAQ_ITEMS.map((item, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
+                className="rounded-xl overflow-hidden bg-gray-50 border border-gray-100">
+                <button className="w-full text-left px-5 py-4 flex items-center justify-between gap-3" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                  <span className="font-semibold text-sm">{item.q}</span>
+                  <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${openFaq === i ? "rotate-180" : ""}`} style={{ color: accent }} />
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                      <p className="px-5 pb-4 text-sm leading-relaxed text-gray-500">{item.a}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </Section>
+
       {/* CONTACT + NEWSLETTER */}
-      <Section id="contatti" className="py-16 sm:py-24">
+      <Section id="contatti" className="py-16 sm:py-24" style={{ background: "#fafafa" }}>
         <div className="max-w-5xl mx-auto px-5 grid md:grid-cols-2 gap-10">
           <div>
             <h2 className="text-3xl font-bold mb-5">Vieni a Trovarci</h2>
@@ -309,28 +359,30 @@ export default function RetailPublicSite({ company }: Props) {
               {company.email && <div className="flex items-center gap-3"><Mail className="w-5 h-5 shrink-0" style={{ color: accent }} /><a href={`mailto:${company.email}`}>{company.email}</a></div>}
               <div className="flex items-center gap-3"><Clock className="w-5 h-5 shrink-0" style={{ color: accent }} /><span>Lun-Sab 10:00-20:00</span></div>
             </div>
+            {socialLinks?.instagram && (
+              <a href={socialLinks.instagram} target="_blank" rel="noopener" className="inline-flex items-center gap-2 mt-4 text-sm font-medium" style={{ color: accent }}>
+                <Instagram className="w-4 h-4" /> Seguici su Instagram
+              </a>
+            )}
           </div>
-          <div className="rounded-2xl p-6" style={{ background: "#f8f8f8" }}>
+          <div className="rounded-2xl p-6" style={{ background: "#fff" }}>
             <h3 className="text-xl font-bold mb-3">Newsletter</h3>
             <p className="text-gray-400 mb-4 text-sm">Ricevi offerte esclusive e anticipazioni.</p>
             <div className="flex gap-2">
               <Input value={email} onChange={e => setEmail(e.target.value)} placeholder="La tua email" className="flex-1" />
-              <Button onClick={handleNewsletter} className="text-white rounded-xl" style={{ background: accent }}>Iscriviti</Button>
+              <Button style={{ background: accent, color: "#fff" }} onClick={handleNewsletter}>Iscriviti</Button>
             </div>
           </div>
         </div>
       </Section>
 
-      <AutomationShowcase accentColor={accent} accentBg="bg-blue-600" sectorName="retail e negozi" darkMode={false} />
+      <AutomationShowcase accentColor={accent} accentBg="bg-gray-800" sectorName="negozi e retail" darkMode={false} />
 
       {/* FOOTER */}
       <footer className="py-8 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
-          <p>© {new Date().getFullYear()} {name}. Tutti i diritti riservati.</p>
-          <div className="flex items-center gap-4">
-            {socialLinks?.instagram && <a href={socialLinks.instagram} target="_blank" rel="noopener"><Instagram className="w-4 h-4" /></a>}
-            <a href="/privacy">Privacy</a><span>Powered by Empire.AI</span>
-          </div>
+        <div className="max-w-6xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-gray-300">© {new Date().getFullYear()} {name}. Tutti i diritti riservati.</p>
+          <div className="flex gap-4 text-xs text-gray-300"><a href="/privacy">Privacy</a><span>Powered by Empire.AI</span></div>
         </div>
       </footer>
 
