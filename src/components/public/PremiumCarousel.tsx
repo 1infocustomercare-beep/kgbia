@@ -79,24 +79,47 @@ export function PremiumCarousel({
       onTouchStart={() => setIsPaused(true)}
       onTouchEnd={() => setTimeout(() => setIsPaused(false), 3500)}
     >
-      {/* Premium edge masks — narrow translucent blur instead of solid black */}
+      {/* Luxury edge treatment — ultra thin translucent masks + animated light rails */}
       <div
-        className="absolute left-0 top-0 bottom-0 w-6 sm:w-16 z-20 pointer-events-none"
+        className="absolute left-0 top-0 bottom-0 w-3 sm:w-10 z-20 pointer-events-none backdrop-blur-[1px]"
         style={{
-          background: `linear-gradient(to right, hsl(var(--background)) 0%, hsl(var(--background) / 0.5) 50%, transparent 100%)`,
+          background: `linear-gradient(to right, hsl(var(--background) / 0.34) 0%, hsl(var(--background) / 0.16) 38%, transparent 100%)`,
         }}
       />
       <div
-        className="absolute right-0 top-0 bottom-0 w-6 sm:w-16 z-20 pointer-events-none"
+        className="absolute right-0 top-0 bottom-0 w-3 sm:w-10 z-20 pointer-events-none backdrop-blur-[1px]"
         style={{
-          background: `linear-gradient(to left, hsl(var(--background)) 0%, hsl(var(--background) / 0.5) 50%, transparent 100%)`,
+          background: `linear-gradient(to left, hsl(var(--background) / 0.34) 0%, hsl(var(--background) / 0.16) 38%, transparent 100%)`,
         }}
       />
-      {/* Subtle edge accent lines */}
-      <div className="absolute left-0 top-[10%] bottom-[10%] w-[1px] z-20 pointer-events-none"
-        style={{ background: `linear-gradient(180deg, transparent, ${accentColor}20, transparent)` }} />
-      <div className="absolute right-0 top-[10%] bottom-[10%] w-[1px] z-20 pointer-events-none"
-        style={{ background: `linear-gradient(180deg, transparent, ${accentColor}20, transparent)` }} />
+
+      <motion.div
+        className="absolute left-0 top-[12%] bottom-[12%] w-px z-30 pointer-events-none"
+        style={{
+          background: `linear-gradient(180deg, transparent 0%, ${accentColor}85 50%, transparent 100%)`,
+          boxShadow: `0 0 18px ${accentColor}55`,
+        }}
+        animate={{ opacity: [0.35, 0.85, 0.35], scaleY: [0.94, 1, 0.94] }}
+        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute right-0 top-[12%] bottom-[12%] w-px z-30 pointer-events-none"
+        style={{
+          background: `linear-gradient(180deg, transparent 0%, ${accentColor}85 50%, transparent 100%)`,
+          boxShadow: `0 0 18px ${accentColor}55`,
+        }}
+        animate={{ opacity: [0.35, 0.85, 0.35], scaleY: [0.94, 1, 0.94] }}
+        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.35 }}
+      />
+
+      <div
+        className="absolute left-0 top-[18%] bottom-[18%] w-[2px] z-20 pointer-events-none blur-[1px]"
+        style={{ background: `linear-gradient(180deg, transparent 0%, ${accentColor}45 50%, transparent 100%)` }}
+      />
+      <div
+        className="absolute right-0 top-[18%] bottom-[18%] w-[2px] z-20 pointer-events-none blur-[1px]"
+        style={{ background: `linear-gradient(180deg, transparent 0%, ${accentColor}45 50%, transparent 100%)` }}
+      />
 
       {/* Scrolling track */}
       <div className={`overflow-hidden ${fullWidth ? "" : "-mx-4 sm:mx-0"}`}>
