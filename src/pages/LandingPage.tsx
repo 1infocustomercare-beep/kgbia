@@ -1880,6 +1880,10 @@ const LandingPage = () => {
           </motion.button>
         </div>
       </motion.div>
+      {/* ATLAS Voice Agent */}
+      <Suspense fallback={null}>
+        <EmpireVoiceAgent />
+      </Suspense>
     </div>
   );
 };
