@@ -845,20 +845,41 @@ const LandingPage = () => {
           SERVIZI
          ═══════════════════════════════════════════ */}
       <Section id="services">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Funzionalità" icon={<Layers className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Tutto Ciò Che Serve,<br className="hidden sm:block" />
             <span className="text-shimmer">in un Unico Posto</span>
           </motion.h2>
-          <motion.p className="text-foreground/50 max-w-[500px] mx-auto text-sm leading-[1.7]"
+          <motion.p className="text-foreground/50 max-w-[500px] mx-auto text-sm leading-[1.7] px-2 sm:px-0"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Ogni modulo è stato progettato per eliminare un problema specifico. Nessun software esterno, nessun costo aggiuntivo.
           </motion.p>
         </div>
 
-        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+        {/* ═══ Mobile: Auto-scroll carousel ═══ */}
+        <div className="sm:hidden overflow-hidden -mx-5">
+          <div className="flex animate-carousel-scroll-slow whitespace-nowrap py-2">
+            {[...services, ...services].map((s, i) => (
+              <div key={i} className="inline-block w-[260px] flex-shrink-0 mx-2 whitespace-normal">
+                <div className="group relative p-5 rounded-2xl glow-card h-full">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white`}>
+                      {s.icon}
+                    </div>
+                    <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/10 text-primary/60 font-bold tracking-[2px] font-heading bg-primary/[0.03]">{s.tag}</span>
+                  </div>
+                  <h3 className="font-heading text-xs font-semibold text-foreground mb-1.5">{s.title}</h3>
+                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ═══ Desktop: Grid ═══ */}
+        <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {services.map((s, i) => (
             <motion.div key={i}
