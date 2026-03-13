@@ -26,6 +26,7 @@ import heroPartnerLuxury from "@/assets/hero-partner-luxury.jpg";
 import mockupCliente from "@/assets/mockup-cliente.jpg";
 import mockupAdmin from "@/assets/mockup-admin.jpg";
 import mockupCucina from "@/assets/mockup-cucina.jpg";
+import nccHeroBg from "@/assets/ncc-hero-bg-amalfi.jpg";
 
 /* ═══════════════════════════════════════════
    HELPERS
@@ -1427,25 +1428,25 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          APP SHOWCASE
+          NCC & LUXURY TRANSPORT SHOWCASE
          ═══════════════════════════════════════════ */}
       <Section id="app">
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center lg:text-left order-2 lg:order-1">
-            <SectionLabel text="Ecosistema" icon={<MonitorSmartphone className="w-3 h-3 text-primary" />} />
+            <SectionLabel text="NCC & Trasporti" icon={<Car className="w-3 h-3 text-primary" />} />
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
-              Ecosistema Completo,<br /><span className="text-shimmer">di Tua Proprietà</span>
+              Trasporto Premium,<br /><span className="text-shimmer">Automatizzato al 100%</span>
             </h2>
             <p className="text-foreground/40 leading-[1.7] max-w-lg mx-auto lg:mx-0 mb-7 text-sm">
-              App cliente, pannello gestionale e vista operativa — tutto white-label con il tuo brand. Dal catalogo alla gestione flotta, dal CRM alla fatturazione. Qualsiasi settore.
+              Gestisci la tua flotta NCC, le prenotazioni e i tuoi autisti con un sistema AI che automatizza tariffe, assegnazioni e comunicazioni con il cliente — tutto brandizzato con la tua identità.
             </p>
             <div className="space-y-4 mb-8 text-left max-w-md mx-auto lg:mx-0">
               {[
-                { title: "Ordini, Prenotazioni & Appuntamenti", desc: "Un unico sistema per ogni tipo di transazione", icon: <Calendar className="w-3 h-3" /> },
-                { title: "CRM & Programma Fedeltà", desc: "Wallet pass, reward, storico cliente completo", icon: <Wallet className="w-3 h-3" /> },
-                { title: "Comunicazione Diretta", desc: "Push notification, chat, promozioni mirate", icon: <Bell className="w-3 h-3" /> },
-                { title: "Dashboard Operativa Real-Time", desc: "Staff, autisti, tecnici — live senza errori", icon: <BarChart3 className="w-3 h-3" /> },
+                { title: "Booking Engine Intelligente", desc: "Prenotazioni online con calcolo tariffe automatico per tratta e veicolo", icon: <Calendar className="w-3 h-3" /> },
+                { title: "Gestione Flotta & Autisti", desc: "Assegna veicoli, monitora scadenze CQC, patenti e revisioni", icon: <Shield className="w-3 h-3" /> },
+                { title: "Tariffe Dinamiche per Tratta", desc: "Prezzi custom per origine-destinazione, extra, notturno e festivi", icon: <TrendingUp className="w-3 h-3" /> },
+                { title: "Notifiche & Tracking Live", desc: "Il cliente riceve conferme, reminder e tracking in tempo reale", icon: <Bell className="w-3 h-3" /> },
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-3.5 items-start group"
                   initial={{ opacity: 0, x: -15 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
@@ -1465,41 +1466,95 @@ const LandingPage = () => {
               whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.2)" }}
               whileTap={{ scale: 0.97 }}
             >
-              Esplora le Demo <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+              Prova la Demo NCC <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
             </motion.button>
           </motion.div>
 
           <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="order-1 lg:order-2">
-            <div className="flex justify-center items-end gap-2 sm:gap-4 relative">
-              <div className="absolute -inset-16 bg-primary/[0.04] rounded-[80px] blur-[100px] pointer-events-none" />
-              {[
-                { label: "Cliente", img: mockupCliente, delay: 0 },
-                { label: "Gestionale", img: mockupAdmin, delay: 0.1 },
-                { label: "Operativo", img: mockupCucina, delay: 0.2 },
-              ].map((phone, i) => {
-                const isCenter = i === 1;
-                return (
-                  <motion.div key={i}
-                    className="relative"
-                    initial={{ y: 30 + i * 10, opacity: 0 }}
-                    whileInView={{ y: isCenter ? -10 : 0, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 + phone.delay, duration: 0.8, ease: smoothEase }}
-                    whileHover={{ y: isCenter ? -16 : -6, scale: 1.03 }}
-                  >
-                    <div className={`relative ${isCenter ? "w-[110px] sm:w-[160px]" : "w-[90px] sm:w-[130px]"} ${isCenter ? "h-[224px] sm:h-[326px]" : "h-[184px] sm:h-[265px]"} rounded-[18px] sm:rounded-[24px] border-[2px] border-foreground/15 bg-foreground/5 shadow-[0_20px_60px_hsla(0,0%,0%,0.5)] overflow-hidden`}>
-                      <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[36px] h-[11px] sm:w-[50px] sm:h-[14px] bg-foreground rounded-full z-20" />
-                      <div className="absolute inset-[2px] rounded-[16px] sm:rounded-[22px] overflow-hidden">
-                        <img src={phone.img} alt={phone.label} className="w-full h-full object-cover object-top" loading="lazy" />
+            <div className="flex justify-center items-center relative">
+              <div className="absolute -inset-16 rounded-[80px] blur-[100px] pointer-events-none" style={{ background: "hsla(265,70%,60%,0.05)" }} />
+              <motion.div
+                className="relative"
+                initial={{ y: 30, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}
+                whileHover={{ y: -8, scale: 1.02 }}
+              >
+                <div className="absolute -inset-6 rounded-[52px] blur-2xl pointer-events-none" style={{ background: "hsla(265,70%,60%,0.08)" }} />
+                <div className="relative w-[220px] sm:w-[280px] h-[450px] sm:h-[570px] rounded-[32px] sm:rounded-[44px] border-[3px] overflow-hidden"
+                  style={{ borderColor: "hsla(265,70%,60%,0.15)", background: "hsla(0,0%,8%,1)", boxShadow: "0 30px 80px hsla(0,0%,0%,0.6), 0 0 40px hsla(265,70%,60%,0.08)" }}>
+                  <div className="absolute top-[10px] left-1/2 -translate-x-1/2 w-[60px] sm:w-[80px] h-[18px] sm:h-[22px] rounded-full z-30" style={{ background: "hsla(0,0%,5%,1)" }} />
+                  <div className="absolute inset-[3px] rounded-[28px] sm:rounded-[40px] overflow-hidden" style={{ background: "#0a0a0a" }}>
+                    {/* Hero image - Amalfi coast */}
+                    <div className="relative w-full h-[45%]">
+                      <img src={nccHeroBg} alt="NCC Luxury Transfer" className="w-full h-full object-cover" loading="lazy" />
+                      <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent, rgba(10,10,10,0.4) 60%, #0a0a0a)" }} />
+                      <div className="absolute bottom-4 left-4 right-4 z-10">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
+                            <Crown className="w-2.5 h-2.5 text-white" />
+                          </div>
+                          <span className="text-[0.5rem] font-heading font-bold text-white/90 tracking-[2px] uppercase">Amalfi Luxury</span>
+                        </div>
+                        <p className="text-[0.45rem] text-white/40">Prenota il tuo transfer privato</p>
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none z-10" />
-                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[3px] bg-foreground/25 rounded-full z-20" />
                     </div>
-                    <p className="text-center text-[0.5rem] sm:text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/50 mt-2">{phone.label}</p>
-                  </motion.div>
-                );
-              })}
+                    {/* Booking form */}
+                    <div className="p-4 space-y-3">
+                      <div className="rounded-xl p-3 space-y-2" style={{ background: "hsla(0,0%,100%,0.04)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-3 h-3" style={{ color: "#C9A84C" }} />
+                          <span className="text-[0.5rem] text-white/60">Napoli Aeroporto → Positano</span>
+                        </div>
+                        <div className="h-px" style={{ background: "hsla(0,0%,100%,0.06)" }} />
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-3 h-3" style={{ color: "#C9A84C" }} />
+                          <span className="text-[0.5rem] text-white/60">15 Mar 2026 · 14:30</span>
+                        </div>
+                        <div className="h-px" style={{ background: "hsla(0,0%,100%,0.06)" }} />
+                        <div className="flex items-center gap-2">
+                          <Users className="w-3 h-3" style={{ color: "#C9A84C" }} />
+                          <span className="text-[0.5rem] text-white/60">3 passeggeri · 2 bagagli</span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        {["Sedan", "SUV", "Van"].map((v, vi) => (
+                          <div key={vi} className="flex-1 rounded-lg p-2 text-center" style={{ background: vi === 1 ? "hsla(45,70%,50%,0.1)" : "hsla(0,0%,100%,0.03)", border: `1px solid ${vi === 1 ? "hsla(45,70%,50%,0.25)" : "hsla(0,0%,100%,0.05)"}` }}>
+                            <span className="text-[0.45rem] font-bold" style={{ color: vi === 1 ? "#C9A84C" : "hsla(0,0%,100%,0.35)" }}>{v}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="rounded-xl py-2.5 text-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
+                        <span className="text-[0.55rem] font-bold text-white tracking-wider uppercase">Prenota · €120</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[60px] sm:w-[80px] h-[4px] rounded-full z-30" style={{ background: "hsla(0,0%,100%,0.15)" }} />
+                </div>
+                {/* Floating confirmation badge */}
+                <motion.div className="absolute -right-3 sm:-right-6 top-1/3 px-3 py-2 rounded-xl backdrop-blur-xl z-40"
+                  style={{ background: "hsla(265,30%,8%,0.85)", border: "1px solid hsla(265,70%,60%,0.2)", boxShadow: "0 8px 30px hsla(0,0%,0%,0.4)" }}
+                  animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "hsla(130,60%,50%,0.15)" }}>
+                      <Check className="w-2.5 h-2.5" style={{ color: "hsla(130,60%,50%,0.8)" }} />
+                    </div>
+                    <div>
+                      <p className="text-[0.5rem] font-bold text-white/80">Confermato</p>
+                      <p className="text-[0.4rem] text-white/30">Autista assegnato</p>
+                    </div>
+                  </div>
+                </motion.div>
+                {/* Floating revenue stat */}
+                <motion.div className="absolute -left-4 sm:-left-8 bottom-1/4 px-3 py-2 rounded-xl backdrop-blur-xl z-40"
+                  style={{ background: "hsla(265,30%,8%,0.85)", border: "1px solid hsla(265,70%,60%,0.15)", boxShadow: "0 8px 30px hsla(0,0%,0%,0.4)" }}
+                  animate={{ y: [0, 5, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}>
+                  <p className="text-[0.45rem] text-white/30 mb-0.5">Revenue mensile</p>
+                  <p className="text-sm font-heading font-bold text-shimmer">€48.200</p>
+                </motion.div>
+              </motion.div>
             </div>
           </motion.div>
         </div>
