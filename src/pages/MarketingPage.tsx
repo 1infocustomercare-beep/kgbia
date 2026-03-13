@@ -99,7 +99,6 @@ const IndustriesSection = () => {
                       <div>
                         <h3 className="font-semibold text-foreground">{ind.label}</h3>
                       </div>
-                      </div>
                     </div>
                     <p className="text-sm text-muted-foreground">{ind.description}</p>
                   </CardContent>
