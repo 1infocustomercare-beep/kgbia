@@ -6,15 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Globe, Palette, Type, QrCode, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
+import { buildPublicSiteUrl } from "@/lib/public-site-path";
 
 export default function WebHubPage() {
   const { company, config } = useIndustry();
   const [fullPreview, setFullPreview] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const isFood = company?.industry === "food";
   const siteUrl = company?.slug
-    ? `${window.location.origin}/${isFood ? "r" : "b"}/${company.slug}`
+    ? buildPublicSiteUrl(company.slug, company.industry)
     : null;
 
   const handleCopy = () => {
