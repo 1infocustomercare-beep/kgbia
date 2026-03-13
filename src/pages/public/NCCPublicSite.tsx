@@ -526,9 +526,9 @@ export default function NCCPublicSite({ company }: Props) {
             </motion.div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="hidden lg:block relative">
+          <motion.div initial={{ opacity: 0, y: 40, x: 0 }} animate={{ opacity: 1, y: 0, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="relative mt-8 lg:mt-0">
             {/* Video principale */}
-            <div className="relative rounded-[20px] overflow-hidden shadow-2xl" style={{ border: `3px solid ${gold}30` }}>
+            <div className="relative rounded-2xl sm:rounded-[20px] overflow-hidden shadow-2xl max-w-md mx-auto lg:max-w-none" style={{ border: `3px solid ${gold}30` }}>
               <video
                 src={nccHeroVideo}
                 autoPlay muted loop playsInline
