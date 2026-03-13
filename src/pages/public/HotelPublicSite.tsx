@@ -372,6 +372,8 @@ export default function HotelPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <AutomationShowcase accentColor={GOLD} accentBg="bg-amber-600" sectorName="hotel e hospitality" darkMode={true} />
+
       {/* FOOTER */}
       <footer className="py-8 border-t" style={{ borderColor: `${GOLD}15`, background: BORDEAUX }}>
         <div className="max-w-6xl mx-auto px-5 text-center text-white/60 text-xs" style={{ fontFamily: "'Lato', sans-serif" }}>

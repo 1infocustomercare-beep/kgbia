@@ -491,6 +491,8 @@ export default function BeautyPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <AutomationShowcase accentColor={PINK} accentBg="bg-pink-500" sectorName="saloni e centri estetici" darkMode={true} />
+
       {/* ═══ FOOTER ═══ */}
       <footer className="py-8 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)", background: "#050505" }}>
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">

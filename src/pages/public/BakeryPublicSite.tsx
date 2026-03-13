@@ -303,6 +303,8 @@ export default function BakeryPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <AutomationShowcase accentColor={brown} accentBg="bg-amber-800" sectorName="panifici e pasticcerie" darkMode={false} />
+
       <footer className="py-8 border-t" style={{ borderColor: `${brown}15`, background: creamBg }}>
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs opacity-40" style={{ fontFamily: "'Nunito', sans-serif", color: brown }}>
           <p>© {new Date().getFullYear()} {name}. Tutti i diritti riservati.</p>

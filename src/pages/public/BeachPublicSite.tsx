@@ -404,6 +404,8 @@ export default function BeachPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <AutomationShowcase accentColor={CYAN} accentBg="bg-cyan-500" sectorName="stabilimenti balneari" darkMode={true} />
+
       {/* FOOTER */}
       <footer className="py-8 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.04)", background: "#050a12" }}>
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">

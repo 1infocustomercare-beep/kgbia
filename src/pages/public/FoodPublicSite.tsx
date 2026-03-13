@@ -484,6 +484,9 @@ export default function FoodPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      {/* ── AUTOMATION SHOWCASE ── */}
+      <AutomationShowcase accentColor={gold} accentBg="bg-amber-600" sectorName="la ristorazione" darkMode={true} />
+
       {/* ── FOOTER ── */}
       <footer className="py-10 border-t" style={{ borderColor: `${gold}15`, background: dark }}>
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ fontFamily: "Inter, sans-serif" }}>

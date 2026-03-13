@@ -303,6 +303,8 @@ export default function FitnessPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <AutomationShowcase accentColor={ORANGE} accentBg="bg-orange-500" sectorName="palestre e fitness" darkMode={true} />
+
       {/* FOOTER */}
       <footer className="py-8 border-t" style={{ borderColor: "#1a1a1a" }}>
         <div className="max-w-6xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-4" style={{ fontFamily: "'Roboto', sans-serif" }}>

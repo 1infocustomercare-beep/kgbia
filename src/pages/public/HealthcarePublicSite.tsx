@@ -400,6 +400,8 @@ export default function HealthcarePublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <AutomationShowcase accentColor={TEAL} accentBg="bg-teal-500" sectorName="studi medici e cliniche" darkMode={false} />
+
       <footer className="py-8 border-t border-gray-100 text-center text-xs text-gray-400">
         <p>© {new Date().getFullYear()} {name}. Tutti i diritti riservati. | Powered by Empire.AI</p>
       </footer>

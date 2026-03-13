@@ -321,6 +321,8 @@ export default function RetailPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <AutomationShowcase accentColor={accent} accentBg="bg-blue-600" sectorName="retail e negozi" darkMode={false} />
+
       {/* FOOTER */}
       <footer className="py-8 border-t border-gray-100">
         <div className="max-w-6xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">

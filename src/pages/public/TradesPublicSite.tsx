@@ -365,6 +365,8 @@ export default function TradesPublicSite({ company }: Props) {
         </div>
       </section>
 
+      <AutomationShowcase accentColor={isElectrician ? "#F59E0B" : isPlumber ? "#3B82F6" : "#F97316"} accentBg={accentBg} sectorName="artigiani e professionisti" darkMode={true} />
+
       {/* ═══ FOOTER ═══ */}
       <footer className="py-10 px-4 border-t border-white/5">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
