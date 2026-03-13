@@ -1,0 +1,417 @@
+import { useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import {
+  Star, Phone, Mail, MapPin, Clock, Calendar, ArrowRight,
+  ChevronDown, Instagram, UtensilsCrossed, Wine, Flame,
+  Heart, Send, Users, Award, MessageCircle, Leaf
+} from "lucide-react";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } }),
+};
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
+
+function Section({ id, children, className = "" }: { id?: string; children: React.ReactNode; className?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  return (
+    <section id={id} ref={ref} className={className}>
+      <motion.div initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+        {children}
+      </motion.div>
+    </section>
+  );
+}
+
+function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  const [count, setCount] = useState(0);
+  useState(() => {
+    if (!isInView) return;
+    let s = 0; const e = value, dur = 2000, step = e / (dur / 16);
+    const t = setInterval(() => { s += step; if (s >= e) { setCount(e); clearInterval(t); } else setCount(Math.floor(s)); }, 16);
+    return () => clearInterval(t);
+  });
+  return <span ref={ref}>{isInView ? count : 0}{suffix}</span>;
+}
+
+interface Props { company: any; }
+
+export default function FoodPublicSite({ company }: Props) {
+  const gold = "#D4AF37";
+  const dark = "#0A0A0A";
+  const cream = "#F5F0E8";
+  const companyId = company.id;
+
+  // Check if this is a restaurant (has restaurant record) or company
+  const { data: restaurant } = useQuery({
+    queryKey: ["food-pub-restaurant", company.slug],
+    queryFn: async () => {
+      const { data } = await supabase.from("restaurants").select("*").eq("slug", company.slug).eq("is_active", true).maybeSingle();
+      return data;
+    },
+  });
+
+  const restaurantId = restaurant?.id;
+
+  const { data: menuItems = [] } = useQuery({
+    queryKey: ["food-pub-menu", restaurantId],
+    queryFn: async () => {
+      if (!restaurantId) return [];
+      const { data } = await supabase.from("menu_items").select("*").eq("restaurant_id", restaurantId).eq("is_active", true).order("sort_order");
+      return data || [];
+    },
+    enabled: !!restaurantId,
+  });
+
+  const { data: reviews = [] } = useQuery({
+    queryKey: ["food-pub-reviews", restaurantId],
+    queryFn: async () => {
+      if (!restaurantId) return [];
+      const { data } = await supabase.from("reviews").select("*").eq("restaurant_id", restaurantId).eq("is_public", true).order("created_at", { ascending: false }).limit(6);
+      return data || [];
+    },
+    enabled: !!restaurantId,
+  });
+
+  const categories = [...new Set(menuItems.map((i: any) => i.category))];
+  const [activeCategory, setActiveCategory] = useState<string>("");
+  const filteredItems = activeCategory ? menuItems.filter((i: any) => i.category === activeCategory) : menuItems;
+
+  const [form, setForm] = useState({ name: "", phone: "", date: "", time: "", guests: "2", notes: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
+
+  const handleReservation = async () => {
+    if (!form.name || !form.phone || !form.date || !form.time) { toast.error("Compila tutti i campi obbligatori"); return; }
+    setSubmitting(true);
+    try {
+      if (restaurantId) {
+        await supabase.from("reservations").insert({
+          restaurant_id: restaurantId,
+          customer_name: form.name,
+          customer_phone: form.phone,
+          reservation_date: form.date,
+          reservation_time: form.time,
+          guests: parseInt(form.guests),
+          notes: form.notes,
+          status: "pending",
+        });
+      }
+      toast.success("Prenotazione ricevuta! Ti confermiamo via WhatsApp.");
+      setForm({ name: "", phone: "", date: "", time: "", guests: "2", notes: "" });
+    } catch { toast.error("Errore, riprova."); }
+    setSubmitting(false);
+  };
+
+  const name = company.name || "Ristorante";
+  const tagline = company.tagline || "Cucina italiana d'eccellenza";
+  const phone = company.phone || restaurant?.phone;
+  const address = company.address || restaurant?.address;
+  const city = company.city || restaurant?.city;
+  const whatsapp = phone ? `https://wa.me/${phone.replace(/\D/g, "")}` : "#";
+
+  const navItems = ["Menu", "Chi Siamo", "Prenota", "Contatti"];
+
+  return (
+    <div style={{ fontFamily: "'Playfair Display', serif", background: dark, color: cream }}>
+      {/* Google Font */}
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+      {/* ── NAVBAR ── */}
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl" style={{ background: "rgba(10,10,10,0.85)", borderBottom: `1px solid ${gold}22` }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 sm:h-20">
+          <div className="flex items-center gap-3">
+            {company.logo_url && <img src={company.logo_url} alt={name} className="h-10 w-10 rounded-full object-cover border" style={{ borderColor: gold }} />}
+            <span className="text-lg sm:text-xl font-bold" style={{ color: gold, fontFamily: "'Playfair Display', serif" }}>{name}</span>
+          </div>
+          <div className="hidden md:flex items-center gap-8">
+            {navItems.map(item => (
+              <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} className="text-sm tracking-widest uppercase transition-colors hover:opacity-100 opacity-70" style={{ color: cream, fontFamily: "Inter, sans-serif" }}>{item}</a>
+            ))}
+          </div>
+          {phone && (
+            <a href={`tel:${phone}`} className="hidden md:flex items-center gap-2 text-sm" style={{ color: gold }}>
+              <Phone className="w-4 h-4" /> {phone}
+            </a>
+          )}
+          <button className="md:hidden" onClick={() => setMobileMenu(!mobileMenu)} style={{ color: gold }}>
+            {mobileMenu ? "✕" : "☰"}
+          </button>
+        </div>
+        {mobileMenu && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} className="md:hidden px-6 pb-6 space-y-4" style={{ background: dark }}>
+            {navItems.map(item => (
+              <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} onClick={() => setMobileMenu(false)} className="block text-lg" style={{ color: cream }}>{item}</a>
+            ))}
+          </motion.div>
+        )}
+      </nav>
+
+      {/* ── HERO ── */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${dark}00 0%, ${dark}88 40%, ${dark} 100%)` }} />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1920)`, filter: "brightness(0.35)" }} />
+        
+        <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
+          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}>
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <span className="h-px w-12" style={{ background: gold }} />
+              <UtensilsCrossed className="w-6 h-6" style={{ color: gold }} />
+              <span className="h-px w-12" style={{ background: gold }} />
+            </div>
+            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-bold leading-tight mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
+              {name.split("").map((char, i) => (
+                <motion.span key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 + i * 0.04, duration: 0.5 }} style={{ color: i % 3 === 0 ? gold : cream }}>
+                  {char}
+                </motion.span>
+              ))}
+            </h1>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} className="text-lg sm:text-xl mb-10 opacity-80" style={{ fontFamily: "Inter, sans-serif", color: cream }}>
+              {tagline}
+            </motion.p>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5 }} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="#prenota">
+                <Button className="px-8 py-6 text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, #B8962E)`, color: dark, border: "none", fontFamily: "Inter, sans-serif" }}>
+                  Prenota un Tavolo
+                </Button>
+              </a>
+              <a href="#menu">
+                <Button variant="outline" className="px-8 py-6 text-lg tracking-wide" style={{ borderColor: gold, color: gold, background: "transparent", fontFamily: "Inter, sans-serif" }}>
+                  Vedi il Menu
+                </Button>
+              </a>
+            </motion.div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }} className="absolute bottom-10 left-1/2 -translate-x-1/2">
+            <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+              <ChevronDown className="w-8 h-8 opacity-40" style={{ color: gold }} />
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── STATS BAR ── */}
+      <Section className="py-8 border-y" style={{ borderColor: `${gold}22` } as any}>
+        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          {[
+            { value: reviews.length * 50 || 200, suffix: "+", label: "Clienti Soddisfatti" },
+            { value: menuItems.length || 30, suffix: "+", label: "Piatti in Menu" },
+            { value: categories.length || 6, suffix: "", label: "Categorie" },
+            { value: 5, suffix: "★", label: "Rating Medio" },
+          ].map((s, i) => (
+            <motion.div key={i} variants={fadeUp} custom={i} initial="hidden" whileInView="show" viewport={{ once: true }}>
+              <div className="text-3xl sm:text-4xl font-bold" style={{ color: gold }}><AnimatedCounter value={s.value} suffix={s.suffix} /></div>
+              <p className="text-xs uppercase tracking-widest mt-1 opacity-50" style={{ fontFamily: "Inter, sans-serif" }}>{s.label}</p>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── CHI SIAMO ── */}
+      <Section id="chi-siamo" className="py-20 sm:py-28">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+          <motion.div variants={fadeUp} custom={0} initial="hidden" whileInView="show" viewport={{ once: true }}>
+            <Badge className="mb-4 text-xs tracking-widest" style={{ background: `${gold}20`, color: gold, border: `1px solid ${gold}40` }}>LA NOSTRA STORIA</Badge>
+            <h2 className="text-3xl sm:text-5xl font-bold mb-6" style={{ color: gold }}>Tradizione & Innovazione</h2>
+            <p className="text-base sm:text-lg leading-relaxed opacity-80 mb-6" style={{ fontFamily: "Inter, sans-serif" }}>
+              Dal cuore dell'Italia, portiamo in tavola sapori autentici rivisitati con creatività contemporanea. Ogni piatto racconta una storia di passione, ingredienti selezionati e maestria culinaria tramandata di generazione in generazione.
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { icon: Leaf, text: "Ingredienti Km0" },
+                { icon: Award, text: "Chef Premiati" },
+                { icon: Heart, text: "Fatto con Amore" },
+                { icon: Wine, text: "Cantina Selezionata" },
+              ].map(({ icon: Icon, text }, i) => (
+                <div key={i} className="flex items-center gap-2 opacity-70">
+                  <Icon className="w-4 h-4" style={{ color: gold }} />
+                  <span className="text-sm" style={{ fontFamily: "Inter, sans-serif" }}>{text}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div variants={fadeUp} custom={2} initial="hidden" whileInView="show" viewport={{ once: true }} className="relative">
+            <div className="rounded-2xl overflow-hidden aspect-[4/5]" style={{ border: `2px solid ${gold}30` }}>
+              <img src="https://images.pexels.com/photos/3338497/pexels-photo-3338497.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Chef" className="w-full h-full object-cover" />
+            </div>
+            <div className="absolute -bottom-6 -left-6 p-4 rounded-xl backdrop-blur-xl" style={{ background: `${dark}CC`, border: `1px solid ${gold}40` }}>
+              <p className="text-3xl font-bold" style={{ color: gold }}>Est. 2015</p>
+              <p className="text-xs opacity-60" style={{ fontFamily: "Inter, sans-serif" }}>Anni di eccellenza</p>
+            </div>
+          </motion.div>
+        </div>
+      </Section>
+
+      {/* ── MENU ── */}
+      <Section id="menu" className="py-20 sm:py-28" style={{ background: `${dark}` } as any}>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <span className="h-px w-16" style={{ background: gold }} />
+              <UtensilsCrossed className="w-5 h-5" style={{ color: gold }} />
+              <span className="h-px w-16" style={{ background: gold }} />
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-bold" style={{ color: gold }}>Il Nostro Menu</h2>
+          </div>
+
+          {categories.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-3 mb-10">
+              <button onClick={() => setActiveCategory("")} className="px-5 py-2 rounded-full text-sm transition-all" style={{ background: !activeCategory ? gold : "transparent", color: !activeCategory ? dark : cream, border: `1px solid ${gold}40`, fontFamily: "Inter, sans-serif" }}>
+                Tutti
+              </button>
+              {categories.map(cat => (
+                <button key={cat} onClick={() => setActiveCategory(cat as string)} className="px-5 py-2 rounded-full text-sm transition-all" style={{ background: activeCategory === cat ? gold : "transparent", color: activeCategory === cat ? dark : cream, border: `1px solid ${gold}40`, fontFamily: "Inter, sans-serif" }}>
+                  {cat as string}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true }} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {(filteredItems.length > 0 ? filteredItems : Array.from({ length: 6 }, (_, i) => ({
+              id: i, name: ["Bruschetta Classica", "Spaghetti Carbonara", "Pizza Margherita", "Risotto ai Funghi", "Tagliata di Manzo", "Tiramisù"][i],
+              description: "Una delizia della tradizione italiana", price: [8, 14, 12, 16, 22, 7][i], category: "Specialità", is_popular: i < 2, image_url: null, allergens: []
+            }))).map((item: any, i) => (
+              <motion.div key={item.id} variants={fadeUp} custom={i}>
+                <Card className="overflow-hidden group cursor-pointer transition-all duration-500 hover:-translate-y-1" style={{ background: "#111", border: `1px solid ${gold}15` }}>
+                  <div className="relative h-48 overflow-hidden">
+                    <img src={item.image_url || `https://images.pexels.com/photos/${[1640777, 1279330, 315755, 312418, 769289, 1126359][i % 6]}/pexels-photo-${[1640777, 1279330, 315755, 312418, 769289, 1126359][i % 6]}.jpeg?auto=compress&cs=tinysrgb&w=600`} alt={item.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    {item.is_popular && (
+                      <Badge className="absolute top-3 right-3 text-xs" style={{ background: gold, color: dark }}>
+                        <Flame className="w-3 h-3 mr-1" /> Popolare
+                      </Badge>
+                    )}
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-bold text-lg" style={{ color: cream }}>{item.name}</h3>
+                      <span className="text-xl font-bold" style={{ color: gold }}>€{item.price}</span>
+                    </div>
+                    <p className="text-sm opacity-60 line-clamp-2" style={{ fontFamily: "Inter, sans-serif", color: cream }}>{item.description}</p>
+                    {item.allergens?.length > 0 && (
+                      <div className="flex gap-1 mt-2">
+                        {item.allergens.slice(0, 4).map((a: string) => (
+                          <span key={a} className="text-xs px-2 py-0.5 rounded-full opacity-60" style={{ background: `${gold}15`, color: gold }}>{a}</span>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </Section>
+
+      {/* ── RECENSIONI ── */}
+      {reviews.length > 0 && (
+        <Section className="py-20 sm:py-28" style={{ background: "#080808" } as any}>
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-5xl font-bold" style={{ color: gold }}>Cosa Dicono di Noi</h2>
+            </div>
+            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true }} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {reviews.map((r: any, i: number) => (
+                <motion.div key={r.id} variants={fadeUp} custom={i}>
+                  <Card className="p-6" style={{ background: "#111", border: `1px solid ${gold}15` }}>
+                    <div className="flex gap-0.5 mb-3">
+                      {Array.from({ length: 5 }).map((_, j) => (
+                        <Star key={j} className="w-4 h-4" fill={j < r.rating ? gold : "transparent"} style={{ color: gold }} />
+                      ))}
+                    </div>
+                    <p className="text-sm opacity-80 mb-4 italic" style={{ fontFamily: "Inter, sans-serif", color: cream }}>"{r.comment}"</p>
+                    <p className="text-sm font-semibold" style={{ color: gold }}>— {r.customer_name}</p>
+                  </Card>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </Section>
+      )}
+
+      {/* ── PRENOTA ── */}
+      <Section id="prenota" className="py-20 sm:py-28 relative">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg?auto=compress&cs=tinysrgb&w=1920)", filter: "brightness(0.15)" }} />
+        <div className="relative z-10 max-w-2xl mx-auto px-6">
+          <div className="text-center mb-10">
+            <Calendar className="w-8 h-8 mx-auto mb-4" style={{ color: gold }} />
+            <h2 className="text-3xl sm:text-5xl font-bold" style={{ color: gold }}>Prenota un Tavolo</h2>
+            <p className="mt-3 opacity-60 text-sm" style={{ fontFamily: "Inter, sans-serif" }}>Riserva il tuo posto per un'esperienza indimenticabile</p>
+          </div>
+          <Card className="p-6 sm:p-8 backdrop-blur-xl" style={{ background: `${dark}DD`, border: `1px solid ${gold}30` }}>
+            <div className="grid sm:grid-cols-2 gap-4" style={{ fontFamily: "Inter, sans-serif" }}>
+              <div><label className="text-xs uppercase tracking-widest mb-1 block" style={{ color: gold }}>Nome *</label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="bg-transparent border-white/20 text-white" placeholder="Il tuo nome" /></div>
+              <div><label className="text-xs uppercase tracking-widest mb-1 block" style={{ color: gold }}>Telefono *</label><Input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="bg-transparent border-white/20 text-white" placeholder="+39..." /></div>
+              <div><label className="text-xs uppercase tracking-widest mb-1 block" style={{ color: gold }}>Data *</label><Input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} className="bg-transparent border-white/20 text-white" /></div>
+              <div><label className="text-xs uppercase tracking-widest mb-1 block" style={{ color: gold }}>Ora *</label><Input type="time" value={form.time} onChange={e => setForm({ ...form, time: e.target.value })} className="bg-transparent border-white/20 text-white" /></div>
+              <div><label className="text-xs uppercase tracking-widest mb-1 block" style={{ color: gold }}>Persone</label>
+                <select value={form.guests} onChange={e => setForm({ ...form, guests: e.target.value })} className="w-full h-10 px-3 rounded-md bg-transparent border border-white/20 text-white text-sm">
+                  {[1,2,3,4,5,6,7,8,10,12].map(n => <option key={n} value={n} className="bg-black">{n} {n === 1 ? "persona" : "persone"}</option>)}
+                </select>
+              </div>
+              <div><label className="text-xs uppercase tracking-widest mb-1 block" style={{ color: gold }}>Note</label><Input value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} className="bg-transparent border-white/20 text-white" placeholder="Allergie, occasioni..." /></div>
+            </div>
+            <Button onClick={handleReservation} disabled={submitting} className="w-full mt-6 py-6 text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, #B8962E)`, color: dark }}>
+              {submitting ? "Invio..." : "Conferma Prenotazione"}
+            </Button>
+          </Card>
+        </div>
+      </Section>
+
+      {/* ── CONTATTI ── */}
+      <Section id="contatti" className="py-20 sm:py-28" style={{ background: "#050505" } as any}>
+        <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-12">
+          <div>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-8" style={{ color: gold }}>Vieni a Trovarci</h2>
+            <div className="space-y-6" style={{ fontFamily: "Inter, sans-serif" }}>
+              {address && <div className="flex items-start gap-3"><MapPin className="w-5 h-5 mt-1 shrink-0" style={{ color: gold }} /><div><p className="font-medium" style={{ color: cream }}>{address}</p>{city && <p className="text-sm opacity-50">{city}</p>}</div></div>}
+              {phone && <div className="flex items-center gap-3"><Phone className="w-5 h-5 shrink-0" style={{ color: gold }} /><a href={`tel:${phone}`} style={{ color: cream }}>{phone}</a></div>}
+              {company.email && <div className="flex items-center gap-3"><Mail className="w-5 h-5 shrink-0" style={{ color: gold }} /><a href={`mailto:${company.email}`} style={{ color: cream }}>{company.email}</a></div>}
+            </div>
+          </div>
+          <div className="rounded-xl overflow-hidden h-64 md:h-auto" style={{ border: `1px solid ${gold}20` }}>
+            <iframe
+              title="Mappa"
+              width="100%" height="100%"
+              style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
+              src={`https://maps.google.com/maps?q=${encodeURIComponent(`${address || ""} ${city || "Roma"}`)}&output=embed`}
+              allowFullScreen
+            />
+          </div>
+        </div>
+      </Section>
+
+      {/* ── FOOTER ── */}
+      <footer className="py-10 border-t" style={{ borderColor: `${gold}15`, background: dark }}>
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ fontFamily: "Inter, sans-serif" }}>
+          <p className="text-xs opacity-40" style={{ color: cream }}>© {new Date().getFullYear()} {name}. Tutti i diritti riservati.</p>
+          <div className="flex items-center gap-4 text-xs opacity-40" style={{ color: cream }}>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/cookie-policy">Cookie Policy</a>
+            <span>Powered by Empire</span>
+          </div>
+        </div>
+      </footer>
+
+      {/* ── WhatsApp FAB ── */}
+      {phone && (
+        <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl" style={{ background: "#25D366" }}>
+          <MessageCircle className="w-7 h-7 text-white" />
+        </a>
+      )}
+    </div>
+  );
+}
