@@ -34,6 +34,7 @@ export function TopBar() {
         className="h-14 flex items-center gap-3 px-4 border-b border-border/50 bg-background/60 backdrop-blur-xl sticky top-0 z-30"
       >
         <SidebarTrigger className="flex-shrink-0" />
+        <BackButton to="/home" label="Home" variant="navbar" theme="light" className="hidden sm:flex" />
 
         {/* Company badge */}
         {company && (
