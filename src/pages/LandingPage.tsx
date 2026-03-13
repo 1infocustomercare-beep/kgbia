@@ -1756,10 +1756,10 @@ const LandingPage = () => {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-10 mb-12">
             <div className="col-span-2 sm:col-span-1">
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_15px_hsla(265,70%,60%,0.15)]">
-                  <Crown className="w-3.5 h-3.5 text-primary-foreground" />
+                <div className="w-8 h-8 rounded-lg bg-gold-gradient flex items-center justify-center shadow-[0_0_15px_hsla(42,80%,55%,0.2)]">
+                  <Crown className="w-3.5 h-3.5 text-deep-black" />
                 </div>
-                <span className="font-heading font-bold text-foreground tracking-[0.12em] uppercase text-xs">Empire<span className="text-primary">.AI</span></span>
+                <span className="font-heading font-bold text-foreground tracking-[0.12em] uppercase text-xs">Empire<span className="text-gold">.AI</span></span>
               </div>
               <p className="text-[0.65rem] text-foreground/30 leading-[1.7] max-w-[240px] mb-5">
                 La piattaforma AI più completa al mondo. Modernizziamo qualsiasi business con tecnologia proprietaria e automazione intelligente.
