@@ -156,7 +156,9 @@ function App() {
                   </ProtectedRoute>
                 } />
                 <Route path="/admin/dashboard" element={
-                  <ProtectedRoute><AdminDashboard /></ProtectedRoute>
+                  <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
+                    <AdminDashboard />
+                  </ProtectedRoute>
                 } />
                 <Route path="/setup" element={
                   <ProtectedRoute><GuidedSetup /></ProtectedRoute>
