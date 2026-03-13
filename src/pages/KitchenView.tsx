@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import BackButton from "@/components/BackButton";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChefHat, LogOut, Volume2, VolumeX, Printer } from "lucide-react";
