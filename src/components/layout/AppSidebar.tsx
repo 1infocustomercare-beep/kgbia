@@ -4,7 +4,7 @@ import {
   BarChart3, Settings, Target, MessageSquare, Store, CreditCard,
   Home, Briefcase, Receipt, PenTool, Sparkles, UserCog, Wrench,
   Zap, Leaf, Heart, Camera, Truck, Umbrella, Cog, FileText,
-  Clock, GraduationCap, Baby, Scale, Lightbulb
+  Clock, GraduationCap, Baby, Scale, Lightbulb, Shield
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -22,7 +22,7 @@ const ICON_MAP: Record<string, any> = {
   BarChart3, Settings, Target, MessageSquare, Store, CreditCard,
   Home, Briefcase, Receipt, PenTool, Sparkles, UserCog, Wrench,
   Zap, Leaf, Heart, Camera, Truck, Umbrella, Cog, FileText,
-  Clock, GraduationCap, Baby, Scale, Lightbulb,
+  Clock, GraduationCap, Baby, Scale, Lightbulb, Shield,
 };
 
 // Modules per industry
@@ -35,6 +35,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
     { title: "Tratte", icon: "Route", url: "/app/routes" },
     { title: "Prezzi", icon: "CreditCard", url: "/app/pricing" },
     { title: "Cross-Selling", icon: "Target", url: "/app/cross-selling" },
+    { title: "Scadenzario", icon: "Shield", url: "/app/ncc-expiry" },
     { title: "Clienti", icon: "UserCog", url: "/app/clients" },
     { title: "Recensioni", icon: "Star", url: "/app/reviews" },
     { title: "Sito Web", icon: "Store", url: "/app/webhub" },
