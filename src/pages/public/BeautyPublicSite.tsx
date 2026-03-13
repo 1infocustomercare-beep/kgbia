@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
+import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -491,6 +492,7 @@ export default function BeautyPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <SectorValueProposition sectorKey="beauty" accentColor={PINK} darkMode={true} sectorLabel="Salone" />
       <AutomationShowcase accentColor={PINK} accentBg="bg-pink-500" sectorName="saloni e centri estetici" darkMode={true} />
 
       {/* ═══ FOOTER ═══ */}

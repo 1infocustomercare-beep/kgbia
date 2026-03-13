@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 // @ts-ignore
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
+import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -485,6 +486,7 @@ export default function FoodPublicSite({ company }: Props) {
       </Section>
 
       {/* ── AUTOMATION SHOWCASE ── */}
+      <SectorValueProposition sectorKey="food" accentColor={gold} darkMode={true} sectorLabel="Ristorante" />
       <AutomationShowcase accentColor={gold} accentBg="bg-amber-600" sectorName="la ristorazione" darkMode={true} />
 
       {/* ── FOOTER ── */}

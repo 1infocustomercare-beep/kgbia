@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
+import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -365,6 +366,7 @@ export default function TradesPublicSite({ company }: Props) {
         </div>
       </section>
 
+      <SectorValueProposition sectorKey="trades" accentColor={isElectrician ? "#F59E0B" : isPlumber ? "#3B82F6" : "#F97316"} darkMode={true} sectorLabel="Attività" />
       <AutomationShowcase accentColor={isElectrician ? "#F59E0B" : isPlumber ? "#3B82F6" : "#F97316"} accentBg={accentBg} sectorName="artigiani e professionisti" darkMode={true} />
 
       {/* ═══ FOOTER ═══ */}

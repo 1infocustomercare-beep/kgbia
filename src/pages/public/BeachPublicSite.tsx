@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
+import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -404,6 +405,7 @@ export default function BeachPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <SectorValueProposition sectorKey="beach" accentColor={CYAN} darkMode={true} sectorLabel="Stabilimento Balneare" />
       <AutomationShowcase accentColor={CYAN} accentBg="bg-cyan-500" sectorName="stabilimenti balneari" darkMode={true} />
 
       {/* FOOTER */}
