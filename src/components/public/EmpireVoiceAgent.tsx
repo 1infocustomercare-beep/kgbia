@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Sparkles, Send, Play, Square } from "lucide-react";
+import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Sparkles, Send, Play, Square, Pause, BookOpen } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -8,11 +8,25 @@ type Msg = { role: "user" | "assistant"; content: string };
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-voice-agent`;
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
 
+// ── Page content extractor ──
+function extractPageContent(): string {
+  const sections: string[] = [];
+  const sectionEls = document.querySelectorAll("section");
+  sectionEls.forEach((sec) => {
+    const text = sec.innerText?.trim();
+    if (text && text.length > 30) {
+      // Take first 600 chars per section to keep token count reasonable
+      sections.push(text.slice(0, 600));
+    }
+  });
+  return sections.slice(0, 10).join("\n\n---\n\n");
+}
+
 // ── Stream chat helper ──
 async function streamChat({
-  messages, mode, onDelta, onDone,
+  messages, mode, pageContent, onDelta, onDone,
 }: {
-  messages: Msg[]; mode?: string;
+  messages: Msg[]; mode?: string; pageContent?: string;
   onDelta: (t: string) => void; onDone: () => void;
 }) {
   const resp = await fetch(CHAT_URL, {
@@ -21,7 +35,7 @@ async function streamChat({
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages, mode }),
+    body: JSON.stringify({ messages, mode, pageContent }),
   });
   if (!resp.ok || !resp.body) throw new Error(`Stream failed: ${resp.status}`);
 
@@ -86,15 +100,19 @@ const EmpireVoiceAgent: React.FC = () => {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [inputText, setInputText] = useState("");
   const [liveTranscript, setLiveTranscript] = useState("");
   const [pulseIntensity, setPulseIntensity] = useState(0);
+  const [isReadingPage, setIsReadingPage] = useState(false);
+  const [autoStarted, setAutoStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const readingAbortRef = useRef(false);
 
   // Auto-scroll messages
   useEffect(() => {
@@ -103,26 +121,42 @@ const EmpireVoiceAgent: React.FC = () => {
 
   // Pulse animation while speaking
   useEffect(() => {
-    if (!isSpeaking) { setPulseIntensity(0); return; }
+    if (!isSpeaking || isPaused) { setPulseIntensity(0); return; }
     const interval = setInterval(() => {
       setPulseIntensity(Math.random() * 0.6 + 0.4);
     }, 150);
     return () => clearInterval(interval);
-  }, [isSpeaking]);
+  }, [isSpeaking, isPaused]);
 
   // Stop everything
   const stopAll = useCallback(() => {
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null; }
+    readingAbortRef.current = true;
     setIsSpeaking(false);
+    setIsPaused(false);
     setIsListening(false);
     setLiveTranscript("");
+    setIsReadingPage(false);
   }, []);
 
+  // Pause/Resume audio
+  const togglePause = useCallback(() => {
+    if (!audioRef.current) return;
+    if (isPaused) {
+      audioRef.current.play();
+      setIsPaused(false);
+    } else {
+      audioRef.current.pause();
+      setIsPaused(true);
+    }
+  }, [isPaused]);
+
   // Send message
-  const sendMessage = useCallback(async (text: string, msgMode?: string) => {
+  const sendMessage = useCallback(async (text: string, msgMode?: string, pageContent?: string) => {
     if (!text.trim() || isLoading) return;
     stopAll();
+    readingAbortRef.current = false;
 
     const userMsg: Msg = { role: "user", content: text };
     const allMessages = [...messages, userMsg];
@@ -146,27 +180,61 @@ const EmpireVoiceAgent: React.FC = () => {
       await streamChat({
         messages: allMessages,
         mode: msgMode,
+        pageContent,
         onDelta: upsert,
         onDone: () => {
           setIsLoading(false);
-          // Speak the response if voice enabled
-          if (voiceEnabled && full.length > 0 && full.length < 1500) {
+          // Speak the response if voice enabled and not aborted
+          if (voiceEnabled && full.length > 0 && full.length < 2000 && !readingAbortRef.current) {
             setIsSpeaking(true);
-            speak(full, audioRef, () => setIsSpeaking(false));
+            speak(full, audioRef, () => {
+              setIsSpeaking(false);
+              setIsReadingPage(false);
+            });
+          } else {
+            setIsReadingPage(false);
           }
         },
       });
     } catch (e) {
       console.error("Agent stream error:", e);
       setIsLoading(false);
+      setIsReadingPage(false);
       setMessages(prev => [...prev, { role: "assistant", content: "Mi scuso, c'è stato un problema di connessione. Riprova tra un momento." }]);
     }
   }, [messages, isLoading, voiceEnabled, stopAll]);
+
+  // Read & explain the entire page
+  const startPageReading = useCallback(() => {
+    const content = extractPageContent();
+    setIsReadingPage(true);
+    sendMessage(
+      "Leggi e spiega questa pagina al visitatore, convincilo che Empire fa al caso suo",
+      "read_page",
+      content
+    );
+  }, [sendMessage]);
 
   // Start narration
   const startNarration = useCallback(() => {
     sendMessage("Presentami Empire in modo coinvolgente", "narrate");
   }, [sendMessage]);
+
+  // Auto-start page reading when agent becomes visible
+  useEffect(() => {
+    if (isVisible && !autoStarted) {
+      setAutoStarted(true);
+      // Small delay so the UI renders first
+      const timer = setTimeout(() => {
+        setIsOpen(true);
+        // Need another small delay for the panel to render before starting
+        setTimeout(() => {
+          startPageReading();
+        }, 600);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, autoStarted, startPageReading]);
 
   // Start listening via SpeechRecognition
   const startListening = useCallback(() => {
@@ -198,7 +266,7 @@ const EmpireVoiceAgent: React.FC = () => {
     setIsListening(true);
   }, [sendMessage, stopAll]);
 
-  // Toggle open — no auto-narration (audio requires user gesture)
+  // Toggle open
   const toggleOpen = useCallback(() => {
     if (isOpen) {
       stopAll();
@@ -279,19 +347,30 @@ const EmpireVoiceAgent: React.FC = () => {
                 <div className="relative">
                   <motion.div
                     className="absolute -inset-1 rounded-full bg-primary/20 blur-sm"
-                    animate={{ opacity: isSpeaking ? pulseIntensity : 0.2, scale: isSpeaking ? 1 + pulseIntensity * 0.3 : 1 }}
+                    animate={{ opacity: isSpeaking && !isPaused ? pulseIntensity : 0.2, scale: isSpeaking && !isPaused ? 1 + pulseIntensity * 0.3 : 1 }}
                     transition={{ duration: 0.15 }}
                   />
                   <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-white" />
                   </div>
                   {/* Status dot */}
-                  <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${isSpeaking ? "bg-green-400" : isListening ? "bg-amber-400" : "bg-primary/60"}`} />
+                  <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${
+                    isPaused ? "bg-amber-400" :
+                    isSpeaking ? "bg-green-400" : 
+                    isListening ? "bg-amber-400" : 
+                    isReadingPage ? "bg-blue-400 animate-pulse" :
+                    "bg-primary/60"
+                  }`} />
                 </div>
                 <div>
                   <h3 className="font-heading text-sm font-bold text-foreground">ATLAS</h3>
                   <p className="text-[0.55rem] text-foreground/40 font-heading tracking-wider uppercase">
-                    {isSpeaking ? "Sta parlando..." : isListening ? "Ti ascolta..." : isLoading ? "Sta pensando..." : "Empire AI Agent"}
+                    {isPaused ? "In pausa" :
+                     isSpeaking ? "Sta parlando..." : 
+                     isReadingPage ? "Legge la pagina..." :
+                     isListening ? "Ti ascolta..." : 
+                     isLoading ? "Sta pensando..." : 
+                     "Empire AI Agent"}
                   </p>
                 </div>
               </div>
@@ -343,7 +422,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     <Sparkles className="w-8 h-8 text-primary" />
                   </motion.div>
                   <p className="text-xs text-foreground/30 text-center max-w-[200px] font-heading">
-                    Ciao! Sono ATLAS, il tuo consulente Empire. Chiedimi tutto.
+                    Ciao! Sono ATLAS, il tuo consulente Empire. Sto leggendo la pagina per te...
                   </p>
                 </div>
               )}
@@ -393,7 +472,7 @@ const EmpireVoiceAgent: React.FC = () => {
             </div>
 
             {/* Voice Wave Visualizer (when speaking) */}
-            {isSpeaking && (
+            {isSpeaking && !isPaused && (
               <div className="flex items-center justify-center gap-[3px] py-2 px-4">
                 {Array.from({ length: 20 }).map((_, i) => (
                   <motion.div
@@ -406,37 +485,65 @@ const EmpireVoiceAgent: React.FC = () => {
               </div>
             )}
 
+            {/* Paused indicator */}
+            {isPaused && (
+              <div className="flex items-center justify-center gap-2 py-2 px-4">
+                <Pause className="w-3.5 h-3.5 text-amber-400/70" />
+                <span className="text-[0.6rem] font-heading text-foreground/30 tracking-wider uppercase">In pausa</span>
+              </div>
+            )}
+
             {/* Input area */}
             <div className="p-3 border-t border-foreground/[0.06]">
               {mode === "voice" ? (
-                <div className="flex items-center justify-center gap-4">
-                  {/* Narrate button */}
+                <div className="flex items-center justify-center gap-3">
+                  {/* Read Page button */}
                   <button
-                    onClick={startNarration}
-                    disabled={isLoading}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary/10 text-primary text-[0.65rem] font-heading font-bold tracking-wider uppercase hover:bg-primary/15 transition-all disabled:opacity-30"
+                    onClick={startPageReading}
+                    disabled={isLoading || isReadingPage}
+                    className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase transition-all disabled:opacity-30 ${
+                      isReadingPage 
+                        ? "bg-primary/20 text-primary border border-primary/20" 
+                        : "bg-primary/10 text-primary hover:bg-primary/15"
+                    }`}
                   >
-                    <Play className="w-3.5 h-3.5" /> Racconta
+                    <BookOpen className="w-3.5 h-3.5" /> Leggi Pagina
                   </button>
+
+                  {/* Pause/Resume button (visible when speaking) */}
+                  {isSpeaking && (
+                    <button
+                      onClick={togglePause}
+                      className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase transition-all ${
+                        isPaused 
+                          ? "bg-green-500/10 text-green-400 hover:bg-green-500/15" 
+                          : "bg-amber-500/10 text-amber-400 hover:bg-amber-500/15"
+                      }`}
+                    >
+                      {isPaused ? <><Play className="w-3.5 h-3.5" /> Riprendi</> : <><Pause className="w-3.5 h-3.5" /> Pausa</>}
+                    </button>
+                  )}
 
                   {/* Mic button */}
-                  <button
-                    onClick={isListening ? stopAll : startListening}
-                    disabled={isLoading || !SpeechRecognition}
-                    className={`w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-lg ${
-                      isListening
-                        ? "bg-red-500/20 border-2 border-red-400 text-red-400"
-                        : "bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30"
-                    } disabled:opacity-30`}
-                  >
-                    {isListening ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-                  </button>
+                  {!isSpeaking && (
+                    <button
+                      onClick={isListening ? stopAll : startListening}
+                      disabled={isLoading || !SpeechRecognition}
+                      className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-lg ${
+                        isListening
+                          ? "bg-red-500/20 border-2 border-red-400 text-red-400"
+                          : "bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30"
+                      } disabled:opacity-30`}
+                    >
+                      {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                    </button>
+                  )}
 
-                  {/* Stop speaking */}
+                  {/* Stop button (when speaking) */}
                   {isSpeaking && (
                     <button
                       onClick={stopAll}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-foreground/[0.05] text-foreground/50 text-[0.65rem] font-heading font-bold tracking-wider uppercase hover:bg-foreground/[0.08] transition-all"
+                      className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-foreground/[0.05] text-foreground/50 text-[0.6rem] font-heading font-bold tracking-wider uppercase hover:bg-foreground/[0.08] transition-all"
                     >
                       <Square className="w-3.5 h-3.5" /> Stop
                     </button>
