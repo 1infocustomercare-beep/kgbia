@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode, forwardRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
+import { clearIndustryCache } from "@/hooks/useIndustry";
 
 type AppRole = "super_admin" | "staff" | "restaurant_admin" | "customer" | "partner" | "team_leader";
 
@@ -205,6 +206,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
 
   const signOut = async () => {
     try {
+      clearIndustryCache();
       await supabase.auth.signOut();
     } catch (error) {
       console.error("Sign out failed", error);
