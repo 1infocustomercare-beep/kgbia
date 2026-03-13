@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ExternalLink, Smartphone, Monitor, Tablet } from "lucide-react";
+import { ArrowLeft, ExternalLink, Smartphone, Monitor, Tablet, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 interface SitePreviewOverlayProps {
   slug: string;
@@ -21,9 +21,61 @@ const DEVICE_SIZES: Record<DeviceMode, { w: number; h: number; label: string }> 
 
 export function SitePreviewOverlay({ slug, companyName, open, onClose, industry }: SitePreviewOverlayProps) {
   const [device, setDevice] = useState<DeviceMode>("mobile");
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+  const [iframeError, setIframeError] = useState(false);
   const isFood = industry === "food" || !industry;
   const previewUrl = `${window.location.origin}/${isFood ? "r" : "b"}/${slug}`;
   const size = DEVICE_SIZES[device];
+
+  // Reset states when overlay opens
+  useEffect(() => {
+    if (open) {
+      setIframeLoaded(false);
+      setIframeError(false);
+    }
+  }, [open, device]);
+
+  const handleIframeLoad = useCallback(() => {
+    setIframeLoaded(true);
+  }, []);
+
+  // Timeout fallback — if iframe doesn't load in 5s, show fallback
+  useEffect(() => {
+    if (!open || iframeLoaded) return;
+    const timer = setTimeout(() => {
+      if (!iframeLoaded) setIframeError(true);
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [open, iframeLoaded]);
+
+  const openExternal = () => window.open(previewUrl, "_blank");
+
+  const renderIframe = () => (
+    <>
+      {!iframeLoaded && !iframeError && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10 bg-background">
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
+          <p className="text-xs text-muted-foreground">Caricamento anteprima...</p>
+        </div>
+      )}
+      {iframeError && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 z-10 bg-background">
+          <p className="text-sm text-muted-foreground text-center px-6">L'anteprima non può essere caricata nell'editor.</p>
+          <Button onClick={openExternal} className="gap-2">
+            <ExternalLink className="w-4 h-4" />
+            Apri in una nuova scheda
+          </Button>
+        </div>
+      )}
+      <iframe
+        src={previewUrl}
+        className="w-full h-full border-0"
+        title="Anteprima sito"
+        onLoad={handleIframeLoad}
+        style={{ opacity: iframeLoaded ? 1 : 0 }}
+      />
+    </>
+  );
 
   return (
     <AnimatePresence>
@@ -70,11 +122,11 @@ export function SitePreviewOverlay({ slug, companyName, open, onClose, industry 
             <Button
               variant="outline"
               size="sm"
-              onClick={() => window.open(previewUrl, "_blank")}
-              className="gap-1.5 hidden sm:flex"
+              onClick={openExternal}
+              className="gap-1.5"
             >
               <ExternalLink className="w-3.5 h-3.5" />
-              Apri
+              <span className="hidden sm:inline">Apri</span>
             </Button>
           </div>
 
@@ -96,17 +148,10 @@ export function SitePreviewOverlay({ slug, companyName, open, onClose, industry 
               {/* iPhone frame for mobile */}
               {device === "mobile" && (
                 <div className="relative w-full h-full rounded-[44px] border-[3px] border-foreground/20 bg-foreground/5 shadow-2xl overflow-hidden">
-                  {/* Dynamic Island */}
                   <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[120px] h-[34px] bg-foreground rounded-full z-20" />
-                  {/* Screen */}
                   <div className="absolute inset-[3px] rounded-[40px] overflow-hidden bg-background">
-                    <iframe
-                      src={previewUrl}
-                      className="w-full h-full border-0"
-                      title="Anteprima sito"
-                    />
+                    {renderIframe()}
                   </div>
-                  {/* Home indicator */}
                   <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[134px] h-[5px] bg-foreground/30 rounded-full z-20" />
                 </div>
               )}
@@ -115,11 +160,7 @@ export function SitePreviewOverlay({ slug, companyName, open, onClose, industry 
               {device === "tablet" && (
                 <div className="relative w-full h-full rounded-[20px] border-[3px] border-foreground/20 bg-foreground/5 shadow-2xl overflow-hidden">
                   <div className="absolute inset-[3px] rounded-[16px] overflow-hidden bg-background">
-                    <iframe
-                      src={previewUrl}
-                      className="w-full h-full border-0"
-                      title="Anteprima sito"
-                    />
+                    {renderIframe()}
                   </div>
                 </div>
               )}
@@ -137,12 +178,9 @@ export function SitePreviewOverlay({ slug, companyName, open, onClose, industry 
                       </div>
                     </div>
                   </div>
-                  <iframe
-                    src={previewUrl}
-                    className="w-full border-0"
-                    style={{ height: "calc(100% - 32px)" }}
-                    title="Anteprima sito"
-                  />
+                  <div className="relative" style={{ height: "calc(100% - 32px)" }}>
+                    {renderIframe()}
+                  </div>
                 </div>
               )}
             </motion.div>
