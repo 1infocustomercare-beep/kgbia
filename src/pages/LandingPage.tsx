@@ -51,9 +51,9 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; pr
   return <span ref={ref}>{prefix}{display.toLocaleString("it-IT")}{suffix}</span>;
 };
 
-const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string }>(
-  ({ id, children, className = "" }, ref) => (
-    <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden ${className}`}>
+const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
+  ({ id, children, className = "", style }, ref) => (
+    <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden ${className}`} style={style}>
       <div className="max-w-[1100px] mx-auto relative z-10">{children}</div>
     </section>
   )
@@ -641,7 +641,10 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           SETTORI
          ═══════════════════════════════════════════ */}
-      <Section id="industries">
+      <Section id="industries" style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,20%,6%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
+        {/* Subtle violet side glows */}
+        <div className="absolute top-0 left-0 w-[300px] h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at left, hsla(265,70%,60%,0.04), transparent 70%)" }} />
+        <div className="absolute top-0 right-0 w-[300px] h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at right, hsla(265,70%,60%,0.04), transparent 70%)" }} />
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
@@ -1568,7 +1571,8 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           NCC & LUXURY TRANSPORT SHOWCASE
          ═══════════════════════════════════════════ */}
-      <Section id="app">
+      <Section id="app" style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,22%,7%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.05), transparent 70%)" }} />
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center lg:text-left order-2 lg:order-1">
@@ -1769,7 +1773,8 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           TESTIMONIALS — Auto-scroll carousel
          ═══════════════════════════════════════════ */}
-      <Section id="testimonials">
+      <Section id="testimonials" style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,20%,6%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] pointer-events-none" style={{ background: "radial-gradient(ellipse, hsla(265,70%,60%,0.04), transparent 70%)" }} />
         {/* Ambient glow */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full opacity-[0.04]"
@@ -2025,7 +2030,8 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           FAQ
          ═══════════════════════════════════════════ */}
-      <Section>
+      <Section style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,22%,7%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 20%, hsla(265,70%,60%,0.03), transparent 60%)" }} />
         <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-16 items-start">
           <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center lg:text-left">
