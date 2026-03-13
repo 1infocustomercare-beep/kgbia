@@ -18,7 +18,7 @@ import storyInterior from "@/assets/story-interior.jpg";
 import storyPasta from "@/assets/story-pasta.jpg";
 import storyWine from "@/assets/story-wine.jpg";
 import storyDish from "@/assets/story-dish.jpg";
-import heroVideo from "@/assets/hero-restaurant.mp4";
+import heroVideo from "@/assets/creative-ristoro.mp4";
 import { Search, Star, Crown, Phone, Mail, MapPin, Clock, ChevronDown, Plus, ShoppingBag, X, Menu as MenuIcon, CalendarDays, Bell, ArrowLeft } from "lucide-react";
 import { InfoGuide } from "@/components/ui/info-guide";
 import { supabase } from "@/integrations/supabase/client";
