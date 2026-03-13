@@ -51,7 +51,7 @@ export default function NCCSettingsPage() {
     queryKey: ["seo-settings", companyId],
     enabled: !!companyId,
     queryFn: async () => {
-      const { data } = await supabase.from("seo_settings").select("*").eq("company_id", companyId!).maybeSingle();
+      const { data } = await (supabase as any).from("seo_settings").select("*").eq("company_id", companyId!).maybeSingle();
       return data;
     },
   });
@@ -95,8 +95,8 @@ export default function NCCSettingsPage() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("full_name, avatar_url").eq("user_id", user.id).maybeSingle()
-      .then(({ data }) => { if (data) setProfileForm({ full_name: data.full_name || "", avatar_url: data.avatar_url || "" }); });
+    (supabase as any).from("profiles").select("full_name, avatar_url").eq("user_id", user.id).maybeSingle()
+      .then(({ data }: any) => { if (data) setProfileForm({ full_name: data.full_name || "", avatar_url: data.avatar_url || "" }); });
   }, [user]);
 
   const saveCompany = async () => {
@@ -126,7 +126,7 @@ export default function NCCSettingsPage() {
 
   const saveProfile = async () => {
     if (!user) return;
-    await supabase.from("profiles").update({ full_name: profileForm.full_name || null }).eq("user_id", user.id);
+    await (supabase as any).from("profiles").upsert({ user_id: user.id, full_name: profileForm.full_name || null }, { onConflict: "user_id" });
     toast.success("Profilo aggiornato!");
   };
 
@@ -138,7 +138,7 @@ export default function NCCSettingsPage() {
 
   const saveSeo = async () => {
     if (!companyId) return;
-    await supabase.from("seo_settings").upsert({
+    await (supabase as any).from("seo_settings").upsert({
       company_id: companyId, meta_title: seoForm.meta_title || null,
       meta_description: seoForm.meta_description || null,
       og_image_url: seoForm.og_image_url || null, keywords: seoForm.keywords || null,
