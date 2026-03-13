@@ -7,7 +7,7 @@ import {
   CreditCard, Ban, Unlock, Calendar, Clock, Eye, Film,
   Cpu, Wifi, CheckCircle2, XCircle, AlertCircle,
   ChevronRight, Filter, Plus, ArrowUpRight, ArrowDownRight,
-  Building2, MapPin, Zap, Activity
+  Building2, MapPin, Zap, Activity, Lightbulb
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
