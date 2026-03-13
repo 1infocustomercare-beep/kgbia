@@ -221,11 +221,15 @@ export default function FoodPublicSite({ company }: Props) {
 
       {/* ── HERO — video bg + text reveal ── */}
       <section ref={heroRef} className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.25)" }}>
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${dark}DD 0%, ${dark}99 40%, ${dark}CC 100%)` }} />
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle, ${gold}80 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
+        <HeroVideoBackground
+          primarySrc={HERO_VIDEO}
+          fallbackSrc={fallbackHeroVideo}
+          poster={foodHeroPoster}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.52) saturate(1.08)" }}
+        />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${dark}88 0%, ${dark}66 40%, ${dark}99 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `radial-gradient(circle, ${gold}80 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
 
         <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-10 px-4 sm:px-6">
           <motion.div style={{ y: heroY, opacity: heroOpacity }}>

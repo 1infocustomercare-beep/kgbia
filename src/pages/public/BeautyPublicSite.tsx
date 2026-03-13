@@ -213,11 +213,15 @@ export default function BeautyPublicSite({ company }: Props) {
 
       {/* ═══ HERO — video bg ═══ */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.25)" }}>
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${DARK}DD 0%, ${DARK}99 40%, ${DARK}CC 100%)` }} />
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle, ${PINK}80 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
+        <HeroVideoBackground
+          primarySrc={HERO_VIDEO}
+          fallbackSrc={fallbackHeroVideo}
+          poster={GALLERY[0]}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.52) saturate(1.08)" }}
+        />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${DARK}88 0%, ${DARK}66 40%, ${DARK}99 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `radial-gradient(circle, ${PINK}80 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
 
         <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-10 px-4">
           <motion.div style={{ y: heroY, opacity: heroOpacity }}>

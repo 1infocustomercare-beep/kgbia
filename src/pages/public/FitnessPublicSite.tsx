@@ -139,10 +139,14 @@ export default function FitnessPublicSite({ company }: Props) {
 
       {/* HERO */}
       <section id="hero" className="relative min-h-[100svh] flex items-center overflow-hidden">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.2)" }}>
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${DARK}DD 0%, transparent 50%, ${ORANGE}22 100%)` }} />
+        <HeroVideoBackground
+          primarySrc={HERO_VIDEO}
+          fallbackSrc={fallbackHeroVideo}
+          poster={GALLERY[0]}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.5) saturate(1.06)" }}
+        />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${DARK}88 0%, transparent 50%, ${ORANGE}22 100%)` }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-5 pt-20 w-full">
           <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>

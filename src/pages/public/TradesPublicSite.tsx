@@ -177,11 +177,14 @@ export default function TradesPublicSite({ company }: Props) {
 
       {/* ═══ HERO — video bg + text reveal ═══ */}
       <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.15)" }}>
-          <source src={heroVideo} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0c0c10]/80 via-[#0c0c10]/60 to-transparent" />
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "50px 50px" }} />
+        <HeroVideoBackground
+          primarySrc={heroVideo}
+          fallbackSrc={fallbackHeroVideo}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.5) saturate(1.06)" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0c0c10]/60 via-[#0c0c10]/45 to-transparent" />
+        <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "50px 50px" }} />
 
         <motion.div initial="hidden" animate="show" variants={stagger} className="relative z-10 max-w-3xl mx-auto w-full text-center">
           <motion.div variants={fadeUp} custom={0} className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${accentBgLight} border ${isElectrician ? "border-amber-500/20 text-amber-300" : "border-blue-500/20 text-blue-300"} text-sm font-medium mb-8`}>

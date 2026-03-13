@@ -164,11 +164,15 @@ export default function BeachPublicSite({ company }: Props) {
 
       {/* HERO */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.3)" }}>
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${DARK}88 0%, ${DARK}CC 60%, ${DARK} 100%)` }} />
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle, ${CYAN}60 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
+        <HeroVideoBackground
+          primarySrc={HERO_VIDEO}
+          fallbackSrc={fallbackHeroVideo}
+          poster={GALLERY[0]}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.55) saturate(1.04)" }}
+        />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${DARK}66 0%, ${DARK}88 60%, ${DARK}AA 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `radial-gradient(circle, ${CYAN}60 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
 
         <motion.div className="relative z-10 max-w-3xl mx-auto px-5 text-center pt-20" style={{ y: heroY }}>
           <motion.div initial="hidden" animate="show" variants={stagger}>

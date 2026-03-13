@@ -165,11 +165,15 @@ export default function HealthcarePublicSite({ company }: Props) {
 
       {/* HERO */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden" style={{ background: `linear-gradient(135deg, ${BLUE} 0%, #0a2847 100%)` }}>
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-20">
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${BLUE}EE 0%, ${BLUE}CC 100%)` }} />
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle, ${TEAL}80 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
+        <HeroVideoBackground
+          primarySrc={HERO_VIDEO}
+          fallbackSrc={fallbackHeroVideo}
+          poster={GALLERY[0]}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.7) saturate(1.03)", opacity: 0.52 }}
+        />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${BLUE}88 0%, ${BLUE}66 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: `radial-gradient(circle, ${TEAL}80 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
 
         <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-10 px-5">
           <motion.div style={{ y: heroY }}>

@@ -140,11 +140,15 @@ export default function BakeryPublicSite({ company }: Props) {
 
       {/* HERO — video bg + text reveal */}
       <section ref={heroRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.3) saturate(0.9)" }}>
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${brown}88 0%, ${brown}CC 60%, ${brown}EE 100%)` }} />
-        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `radial-gradient(circle, ${creamBg}80 1px, transparent 1px)`, backgroundSize: "40px 40px" }} />
+        <HeroVideoBackground
+          primarySrc={HERO_VIDEO}
+          fallbackSrc={fallbackHeroVideo}
+          poster={bakeryHeroPoster}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.5) saturate(1.04)" }}
+        />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${brown}70 0%, ${brown}8A 60%, ${brown}B3 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.09]" style={{ backgroundImage: `radial-gradient(circle, ${creamBg}80 1px, transparent 1px)`, backgroundSize: "40px 40px" }} />
 
         <motion.div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white pt-20" style={{ y: heroY }}>
           <motion.div initial="hidden" animate="show" variants={stagger}>
