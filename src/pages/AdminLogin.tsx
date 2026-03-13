@@ -124,7 +124,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
     } else {
       navigate("/app", { replace: true });
     }
-  }, [user, roles, authLoading, navigate]);
+  }, [user, roles, authLoading, rolesReady, navigate]);
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -118,7 +118,7 @@ export default function GuidedSetup() {
     return () => {
       isMounted = false;
     };
-  }, [authLoading, user, roles, navigate]);
+  }, [authLoading, user, rolesReady, roles, navigate]);
 
   // Dynamic steps based on industry
   const steps: Step[] = isFood

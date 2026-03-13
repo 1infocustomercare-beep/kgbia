@@ -8,9 +8,9 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRouteProps) => {
-  const { user, loading, roles } = useAuth();
+  const { user, loading, roles, rolesReady } = useAuth();
 
-  if (loading) {
+  if (loading || (user && !rolesReady)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />

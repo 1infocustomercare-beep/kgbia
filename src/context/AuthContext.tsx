@@ -223,6 +223,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
         user,
         session,
         loading,
+        rolesReady,
         roles,
         isSuperAdmin: roles.includes("super_admin"),
         isStaff: roles.includes("staff"),
