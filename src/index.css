@@ -703,7 +703,7 @@
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(90deg, transparent, hsla(265, 70%, 60%, 0.3), hsla(280, 45%, 68%, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, hsla(42, 80%, 55%, 0.2), hsla(265, 70%, 60%, 0.3), hsla(42, 80%, 55%, 0.2), transparent);
     background-size: 300% 100%;
     animation: border-flow 4s ease infinite;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
