@@ -46,6 +46,22 @@ const HERO_VIDEOS: Record<string, string> = {
   plumber: "https://videos.pexels.com/video-files/6538940/6538940-uhd_2560_1440_25fps.mp4",
   default: "https://videos.pexels.com/video-files/2800369/2800369-uhd_2560_1440_25fps.mp4",
 };
+export default function TradesPublicSite({ company }: Props) {
+  const companyId = company.id;
+  const industry = (company.industry || "plumber") as IndustryId;
+  const config = getIndustryConfig(industry);
+  const isElectrician = industry === "electrician";
+  const isPlumber = industry === "plumber";
+  const accentColor = isElectrician ? "amber" : isPlumber ? "slate" : "orange";
+  const accentBg = isElectrician ? "bg-amber-500" : isPlumber ? "bg-slate-600" : "bg-orange-500";
+  const accentText = isElectrician ? "text-amber-400" : isPlumber ? "text-blue-400" : "text-orange-400";
+  const accentBgLight = isElectrician ? "bg-amber-500/10" : isPlumber ? "bg-blue-500/10" : "bg-orange-500/10";
+  const HeroIcon = isElectrician ? Zap : isPlumber ? Droplets : Wrench;
+  const heroVideo = HERO_VIDEOS[industry] || HERO_VIDEOS.default;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navScrolled, setNavScrolled] = useState(false);
+
+  useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
 
   const [form, setForm] = useState({ name: "", phone: "", email: "", type: "", urgency: "normal", address: "", notes: "" });
   const [submitting, setSubmitting] = useState(false);
