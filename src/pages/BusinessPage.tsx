@@ -14,6 +14,7 @@ const RetailPublicSite = lazy(() => import("@/pages/public/RetailPublicSite"));
 const FitnessPublicSite = lazy(() => import("@/pages/public/FitnessPublicSite"));
 const HotelPublicSite = lazy(() => import("@/pages/public/HotelPublicSite"));
 const BeachPublicSite = lazy(() => import("@/pages/public/BeachPublicSite"));
+const TradesPublicSite = lazy(() => import("@/pages/public/TradesPublicSite"));
 const LuxuryPublicSite = lazy(() => import("@/pages/public/LuxuryPublicSite"));
 
 const SiteLoader = () => (
@@ -35,6 +36,12 @@ const TEMPLATE_MAP: Record<string, React.LazyExoticComponent<React.ComponentType
   hotel: HotelPublicSite,
   agriturismo: HotelPublicSite,
   beach: BeachPublicSite,
+  plumber: TradesPublicSite,
+  electrician: TradesPublicSite,
+  cleaning: TradesPublicSite,
+  gardening: TradesPublicSite,
+  construction: TradesPublicSite,
+  garage: TradesPublicSite,
 };
 
 export default function BusinessPage() {

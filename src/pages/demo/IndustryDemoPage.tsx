@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect, FormEvent } from "react";
+import { useState, useMemo, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
@@ -7,6 +7,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS, type DemoService } from "@/data/demo-industries";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import NCCPublicSite from "@/pages/public/NCCPublicSite";
+import BeautyPublicSite from "@/pages/public/BeautyPublicSite";
+import HealthcarePublicSite from "@/pages/public/HealthcarePublicSite";
+import RetailPublicSite from "@/pages/public/RetailPublicSite";
+import FitnessPublicSite from "@/pages/public/FitnessPublicSite";
+import HotelPublicSite from "@/pages/public/HotelPublicSite";
+import BeachPublicSite from "@/pages/public/BeachPublicSite";
+import FoodPublicSite from "@/pages/public/FoodPublicSite";
+import TradesPublicSite from "@/pages/public/TradesPublicSite";
+import LuxuryPublicSite from "@/pages/public/LuxuryPublicSite";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -315,25 +324,50 @@ export default function IndustryDemoPage() {
     address: "Indirizzo", passengers: "Passeggeri", notes: "Note aggiuntive",
   };
 
-  // If NCC industry and we have company data, render the premium NCCPublicSite
-  if (resolvedIndustry === "ncc" && company) {
-    return <NCCPublicSite company={company} />;
-  }
-  // For NCC without DB company, create a fake company object for the premium site
-  if (resolvedIndustry === "ncc" && !company) {
-    const fakeNccCompany = {
+  // ═══ PREMIUM TEMPLATE ROUTING ═══
+  // Route sectors with dedicated premium templates to those templates
+  const PREMIUM_TEMPLATES: Record<string, React.ComponentType<{ company: any }>> = {
+    ncc: NCCPublicSite,
+    beauty: BeautyPublicSite,
+    healthcare: HealthcarePublicSite,
+    retail: RetailPublicSite,
+    fitness: FitnessPublicSite,
+    hospitality: HotelPublicSite,
+    hotel: HotelPublicSite,
+    agriturismo: HotelPublicSite,
+    beach: BeachPublicSite,
+    food: FoodPublicSite,
+    restaurant: FoodPublicSite,
+    plumber: TradesPublicSite,
+    electrician: TradesPublicSite,
+    cleaning: TradesPublicSite,
+    gardening: TradesPublicSite,
+    construction: TradesPublicSite,
+    garage: TradesPublicSite,
+  };
+
+  const PremiumTemplate = PREMIUM_TEMPLATES[resolvedIndustry];
+  if (PremiumTemplate) {
+    const demoCompany = company || {
       id: "00000000-0000-0000-0000-000000000001",
       name: demoData.companyName,
-      slug: slug || "royal-transfer-roma",
-      industry: "ncc",
+      slug: slug || "demo",
+      industry: resolvedIndustry,
       tagline: demoData.tagline,
-      primary_color: "#D4A017",
+      primary_color: industryConfig.defaultPrimaryColor,
       address: demoData.address,
       city: demoData.city,
       phone: demoData.phone,
       email: demoData.email,
+      opening_hours: demoData.hours,
+      social_links: {},
     };
-    return <NCCPublicSite company={fakeNccCompany} />;
+    return (
+      <>
+        <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
+        <PremiumTemplate company={demoCompany} />
+      </>
+    );
   }
 
   return (
