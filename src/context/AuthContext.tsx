@@ -14,12 +14,13 @@ interface AuthContextType {
   isRestaurantAdmin: boolean;
   isPartner: boolean;
   isTeamLeader: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: Error | null; session: Session | null }>;
   signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AUTH_LOADING_TIMEOUT_MS = 3000;
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
@@ -34,40 +35,69 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [roles, setRoles] = useState<AppRole[]>([]);
 
   const fetchRoles = async (userId: string) => {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId);
-    if (data) {
-      setRoles(data.map((r: any) => r.role as AppRole));
+    try {
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId);
+
+      if (error) {
+        console.error("Failed to fetch user roles", error);
+        setRoles([]);
+        return;
+      }
+
+      setRoles((data ?? []).map((r: any) => r.role as AppRole));
+    } catch (error) {
+      console.error("Unexpected role fetch error", error);
+      setRoles([]);
+    }
+  };
+
+  const applySession = async (nextSession: Session | null) => {
+    setSession(nextSession);
+    const nextUser = nextSession?.user ?? null;
+    setUser(nextUser);
+
+    if (nextUser) {
+      await fetchRoles(nextUser.id);
+    } else {
+      setRoles([]);
     }
   };
 
   useEffect(() => {
-    // Safety timeout: force loading=false after 3s to prevent infinite spinner
-    const safetyTimer = setTimeout(() => setLoading(false), 1500);
+    const safetyTimer = setTimeout(() => setLoading(false), AUTH_LOADING_TIMEOUT_MS);
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          await fetchRoles(session.user.id);
-        } else {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      void (async () => {
+        try {
+          await applySession(nextSession);
+        } catch (error) {
+          console.error("Auth state change handling failed", error);
+          setSession(null);
+          setUser(null);
           setRoles([]);
+        } finally {
+          setLoading(false);
         }
+      })();
+    });
+
+    void (async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        await applySession(data.session);
+      } catch (error) {
+        console.error("Failed to restore auth session", error);
+        setSession(null);
+        setUser(null);
+        setRoles([]);
+      } finally {
         setLoading(false);
       }
-    );
-
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        await fetchRoles(session.user.id);
-      }
-      setLoading(false);
-    });
+    })();
 
     return () => {
       clearTimeout(safetyTimer);
@@ -76,25 +106,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error ? new Error(error.message) : null };
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      return { error: error ? new Error(error.message) : null, session: data.session ?? null };
+    } catch (error) {
+      console.error("Sign in failed", error);
+      return {
+        error: error instanceof Error ? error : new Error("Errore durante l'accesso."),
+        session: null,
+      };
+    }
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: fullName },
-        emailRedirectTo: window.location.origin,
-      },
-    });
-    return { error: error ? new Error(error.message) : null };
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: fullName },
+          emailRedirectTo: window.location.origin,
+        },
+      });
+
+      return { error: error ? new Error(error.message) : null };
+    } catch (error) {
+      console.error("Sign up failed", error);
+      return { error: error instanceof Error ? error : new Error("Errore durante la registrazione.") };
+    }
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setRoles([]);
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Sign out failed", error);
+    } finally {
+      setSession(null);
+      setUser(null);
+      setRoles([]);
+      setLoading(false);
+    }
   };
 
   return (
