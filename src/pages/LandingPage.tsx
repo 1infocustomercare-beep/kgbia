@@ -449,9 +449,9 @@ const LandingPage = () => {
               style={{
                 left: node.x, top: node.y, animationDelay: `${node.delay}s`,
                 width: 4, height: 4, borderRadius: "50%",
-                background: i % 3 === 0 ? "hsl(265, 85%, 65%)" : i % 3 === 1 ? "hsl(200, 90%, 60%)" : "hsl(320, 75%, 55%)",
-                boxShadow: `0 0 12px ${i % 3 === 0 ? "hsla(265,85%,65%,0.6)" : i % 3 === 1 ? "hsla(200,90%,60%,0.6)" : "hsla(320,75%,55%,0.5)"}`,
-              }}
+                 background: i % 3 === 0 ? "hsl(217, 85%, 58%)" : i % 3 === 1 ? "hsl(200, 90%, 60%)" : "hsl(42, 80%, 55%)",
+                 boxShadow: `0 0 12px ${i % 3 === 0 ? "hsla(217,85%,58%,0.6)" : i % 3 === 1 ? "hsla(200,90%,60%,0.6)" : "hsla(42,80%,55%,0.5)"}`,
+               }}
             />
           ))}
           
