@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
