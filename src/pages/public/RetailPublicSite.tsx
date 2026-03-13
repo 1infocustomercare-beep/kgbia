@@ -50,7 +50,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
 
 interface Props { company: any; }
 
-const HERO_VIDEO = "https://videos.pexels.com/video-files/3205011/3205011-uhd_2560_1440_25fps.mp4";
+const HERO_VIDEO = "https://videos.pexels.com/video-files/3912502/3912502-uhd_2560_1440_25fps.mp4";
 const COLLECTIONS = [
   { name: "Nuovi Arrivi", img: "https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=800", count: 24 },
   { name: "Best Seller", img: "https://images.pexels.com/photos/1884581/pexels-photo-1884581.jpeg?auto=compress&cs=tinysrgb&w=800", count: 18 },
