@@ -63,9 +63,9 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
       className="inline-flex items-center gap-2.5 mb-5"
       initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
     >
-      <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm">
+      <div className="flex items-center gap-2 px-4 py-2 rounded-full premium-label">
         {icon || <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-dot" />}
-        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/80">{text}</span>
+        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90">{text}</span>
       </div>
     </motion.div>
   )
