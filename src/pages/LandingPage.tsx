@@ -1075,15 +1075,20 @@ const LandingPage = () => {
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {services.map((s, i) => (
             <motion.div key={i}
-              className="group relative p-6 rounded-2xl glow-card"
+              className="group relative p-6 rounded-2xl glow-card scan-card"
               variants={fadeUp}
               whileHover={{ y: -4 }}
             >
+              {/* Futuristic corner brackets */}
+              <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-primary/20 rounded-tl-sm pointer-events-none" />
+              <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-primary/20 rounded-tr-sm pointer-events-none" />
+              <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-primary/20 rounded-bl-sm pointer-events-none" />
+              <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/20 rounded-br-sm pointer-events-none" />
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                   {s.icon}
                 </div>
-                <span className="text-[0.55rem] px-2.5 py-1 rounded-full border border-primary/10 text-primary/60 font-bold tracking-[2px] font-heading bg-primary/[0.03]">{s.tag}</span>
+                <span className="text-[0.55rem] px-2.5 py-1 rounded-full holo-badge text-primary/80 font-bold tracking-[2px] font-heading">{s.tag}</span>
               </div>
               <h3 className="font-heading text-sm sm:text-base font-semibold text-foreground mb-2">{s.title}</h3>
               <p className="text-xs sm:text-sm text-foreground/40 leading-[1.7]">{s.desc}</p>
