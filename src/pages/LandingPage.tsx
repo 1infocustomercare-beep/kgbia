@@ -379,14 +379,14 @@ const LandingPage = () => {
 
         {/* ═══ LAYER 4: Gold corner accents ═══ */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(42,80%,55%,0.25), transparent)" }} />
-          <div className="absolute top-0 left-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(42,80%,55%,0.25), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(42,80%,55%,0.25), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(42,80%,55%,0.25), transparent)" }} />
+          <div className="absolute top-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 left-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)" }} />
         </div>
 
-        {/* ═══ Gold vertical light beam ═══ */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[30vh]" style={{ background: "linear-gradient(180deg, hsla(42, 80%, 55%, 0.3), hsla(265, 70%, 60%, 0.1), transparent)" }} />
+        {/* ═══ Violet vertical light beam ═══ */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[30vh]" style={{ background: "linear-gradient(180deg, hsla(265, 70%, 60%, 0.25), hsla(280, 50%, 60%, 0.08), transparent)" }} />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
