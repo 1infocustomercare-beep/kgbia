@@ -377,11 +377,11 @@ const LandingPage = () => {
         <div className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden sm:block">
           <div className="relative w-0 h-0">
             {[
-              { radius: "160px", speed: "8s", color: "hsl(217, 85%, 58%)", size: 7 },
-              { radius: "220px", speed: "12s", color: "hsl(200, 90%, 60%)", size: 5 },
-              { radius: "280px", speed: "18s", color: "hsl(42, 80%, 55%)", size: 4 },
-              { radius: "130px", speed: "6s", color: "hsl(42, 75%, 50%)", size: 6 },
-              { radius: "320px", speed: "22s", color: "hsl(200, 80%, 55%)", size: 3 },
+              { radius: "160px", speed: "8s", color: "hsl(265, 70%, 60%)", size: 7 },
+              { radius: "220px", speed: "12s", color: "hsl(280, 50%, 65%)", size: 5 },
+              { radius: "280px", speed: "18s", color: "hsl(300, 35%, 55%)", size: 4 },
+              { radius: "130px", speed: "6s", color: "hsl(280, 45%, 68%)", size: 6 },
+              { radius: "320px", speed: "22s", color: "hsl(265, 60%, 50%)", size: 3 },
             ].map((dot, i) => (
               <div key={i} className="absolute animate-orbit-dot" style={{ "--orbit-radius": dot.radius, "--orbit-speed": dot.speed, animationDirection: i % 2 === 0 ? "normal" : "reverse" } as React.CSSProperties}>
                 <div className="rounded-full" style={{ width: dot.size, height: dot.size, background: dot.color, boxShadow: `0 0 ${dot.size * 3}px ${dot.color}, 0 0 ${dot.size * 6}px ${dot.color}40` }} />
