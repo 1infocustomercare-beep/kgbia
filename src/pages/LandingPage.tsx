@@ -648,65 +648,96 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: Premium Carousel ═══ */}
+        {/* ═══ Mobile: Premium Carousel — iPhone frames ═══ */}
         <div className="sm:hidden">
-          <PremiumCarousel speed="normal" itemWidth={200}>
+          <PremiumCarousel speed="normal" itemWidth={160}>
             {industries.map((ind, i) => {
               const slug = DEMO_SLUGS[ind.id];
               const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
               return (
-                <div key={i} className="group relative p-5 rounded-2xl glow-card text-center cursor-pointer h-full"
-                  onClick={() => navigate(demoPath)}>
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 transition-all duration-500`}>
-                    {ind.icon}
+                <div key={i} className="group cursor-pointer" onClick={() => navigate(demoPath)}>
+                  {/* iPhone shell */}
+                  <div className="relative w-[160px] h-[290px] rounded-[28px] border-[2.5px] border-foreground/15 bg-foreground/[0.03] shadow-[0_12px_40px_hsla(0,0%,0%,0.4)] overflow-hidden transition-transform duration-500 group-hover:scale-[1.03]">
+                    {/* Notch */}
+                    <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[48px] h-[14px] bg-foreground/80 rounded-full z-20" />
+                    {/* Inner screen */}
+                    <div className="absolute inset-[3px] rounded-[24px] overflow-hidden flex flex-col items-center justify-center text-center p-4 pt-7"
+                      style={{ background: `linear-gradient(160deg, hsl(var(--background)), hsl(var(--card)))` }}>
+                      {/* Gradient glow */}
+                      <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${ind.gradient} opacity-10 rounded-t-[24px]`} />
+                      <div className="relative z-10 flex flex-col items-center">
+                        <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white mb-3 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+                          {ind.icon}
+                        </div>
+                        <h3 className="font-heading text-[11px] font-bold text-foreground mb-1 leading-tight">{ind.title}</h3>
+                        <p className="text-[8px] text-foreground/35 leading-[1.4] mb-2 px-1">{ind.desc}</p>
+                        <p className="text-[7px] text-primary/50 font-heading tracking-wider mb-3">{ind.modules}</p>
+                        <span className="inline-flex items-center gap-1 text-[9px] font-bold text-primary/70 group-hover:text-primary transition-colors">
+                          Demo <ArrowRight className="w-2.5 h-2.5" />
+                        </span>
+                      </div>
+                    </div>
+                    {/* Home indicator */}
+                    <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] bg-foreground/20 rounded-full z-20" />
                   </div>
-                  <h3 className="font-heading text-xs font-bold text-foreground mb-1">{ind.title}</h3>
-                  <p className="text-[0.6rem] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
-                  <p className="text-[0.5rem] text-primary/50 font-heading tracking-wider">{ind.modules}</p>
-                  <span className="mt-2 inline-flex items-center gap-1 text-[0.6rem] font-bold text-primary/60">
-                    Demo <ArrowRight className="w-3 h-3" />
-                  </span>
                 </div>
               );
             })}
           </PremiumCarousel>
         </div>
 
-        {/* ═══ Desktop: Grid ═══ */}
-        <motion.div className="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+        {/* ═══ Desktop: iPhone Grid ═══ */}
+        <motion.div className="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 justify-items-center"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {industries.map((ind, i) => {
             const slug = DEMO_SLUGS[ind.id];
             const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
             return (
               <motion.div key={i}
-                className="group relative p-5 sm:p-6 rounded-2xl glow-card text-center cursor-pointer"
+                className="group cursor-pointer"
                 variants={fadeScale}
                 onClick={() => navigate(demoPath)}
-                whileHover={{ y: -6 }}
+                whileHover={{ y: -8, scale: 1.03 }}
               >
-                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 group-hover:shadow-lg transition-all duration-500`}>
-                  {ind.icon}
+                {/* iPhone shell */}
+                <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] border-foreground/15 bg-foreground/[0.03] shadow-[0_16px_50px_hsla(0,0%,0%,0.45)] overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_20px_60px_hsla(265,85%,65%,0.15)]">
+                  {/* Notch */}
+                  <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-foreground/80 rounded-full z-20" />
+                  {/* Inner screen */}
+                  <div className="absolute inset-[3px] rounded-[28px] overflow-hidden flex flex-col items-center justify-center text-center p-5 pt-8"
+                    style={{ background: `linear-gradient(160deg, hsl(var(--background)), hsl(var(--card)))` }}>
+                    {/* Gradient glow */}
+                    <div className={`absolute top-0 left-0 right-0 h-28 bg-gradient-to-b ${ind.gradient} opacity-[0.08] rounded-t-[28px]`} />
+                    <div className="relative z-10 flex flex-col items-center">
+                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                        {ind.icon}
+                      </div>
+                      <h3 className="font-heading text-sm font-bold text-foreground mb-1.5">{ind.title}</h3>
+                      <p className="text-[10px] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
+                      <p className="text-[8px] text-primary/50 font-heading tracking-wider mb-4">{ind.modules}</p>
+                      <motion.span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-primary/60 group-hover:text-primary transition-colors"
+                        whileHover={{ x: 3 }}>
+                        Vedi Demo <ArrowRight className="w-3 h-3" />
+                      </motion.span>
+                    </div>
+                  </div>
+                  {/* Home indicator */}
+                  <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-foreground/20 rounded-full z-20" />
                 </div>
-                <h3 className="font-heading text-xs sm:text-sm font-bold text-foreground mb-1">{ind.title}</h3>
-                <p className="text-[0.6rem] sm:text-[0.65rem] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
-                <p className="text-[0.5rem] text-primary/50 font-heading tracking-wider">{ind.modules}</p>
-                <motion.span className="mt-3 inline-flex items-center gap-1.5 text-[0.6rem] font-bold text-primary/60 group-hover:text-primary transition-colors"
-                  whileHover={{ x: 3 }}>
-                  Vedi Demo <ArrowRight className="w-3 h-3" />
-                </motion.span>
               </motion.div>
             );
           })}
           <motion.div
-            className="group relative p-5 sm:p-6 rounded-2xl border border-dashed border-foreground/10 hover:border-primary/25 transition-all duration-500 text-center flex flex-col items-center justify-center cursor-pointer"
+            className="group cursor-pointer"
             variants={fadeScale}
             onClick={() => scrollTo("contact")}
             whileHover={{ y: -4 }}
           >
-            <Sparkles className="w-6 h-6 text-foreground/15 mb-2 group-hover:text-primary/60 transition-colors" />
-            <p className="text-xs font-heading font-semibold text-foreground/35 group-hover:text-foreground/60 transition-colors">+18 altri settori</p>
-            <p className="text-[0.6rem] text-primary/40 mt-1">Scopri tutti →</p>
+            <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] border-dashed border-foreground/10 hover:border-primary/20 transition-all duration-500 flex flex-col items-center justify-center text-center">
+              <Sparkles className="w-7 h-7 text-foreground/15 mb-3 group-hover:text-primary/60 transition-colors" />
+              <p className="text-xs font-heading font-semibold text-foreground/35 group-hover:text-foreground/60 transition-colors">+18 altri settori</p>
+              <p className="text-[0.6rem] text-primary/40 mt-1.5">Scopri tutti →</p>
+            </div>
           </motion.div>
         </motion.div>
       </Section>
