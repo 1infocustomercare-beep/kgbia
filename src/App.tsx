@@ -75,6 +75,7 @@ const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
 const DemoDirectoryPage = lazy(() => import("./pages/demo/DemoDirectoryPage"));
 const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
+const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
 
 const queryClient = new QueryClient();
 
