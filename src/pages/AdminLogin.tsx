@@ -82,19 +82,43 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           .limit(1)
           .maybeSingle();
 
+        let companyIndustry: string | null = null;
+
         if (membership?.company_id) {
           const { data: company } = await supabase
             .from("companies")
             .select("industry")
             .eq("id", membership.company_id)
-            .single();
-
-          if (company && company.industry !== "food") {
-            navigate("/app", { replace: true });
-            return;
-          }
+            .maybeSingle();
+          companyIndustry = company?.industry ?? null;
+        } else {
+          const { data: ownedCompany } = await supabase
+            .from("companies")
+            .select("industry")
+            .eq("owner_id", user.id)
+            .limit(1)
+            .maybeSingle();
+          companyIndustry = ownedCompany?.industry ?? null;
         }
-        navigate("/dashboard", { replace: true });
+
+        if (companyIndustry) {
+          navigate(companyIndustry === "food" ? "/dashboard" : "/app", { replace: true });
+          return;
+        }
+
+        const { data: ownedRestaurant } = await supabase
+          .from("restaurants")
+          .select("id")
+          .eq("owner_id", user.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (ownedRestaurant?.id) {
+          navigate("/dashboard", { replace: true });
+          return;
+        }
+
+        navigate("/setup", { replace: true });
       };
       checkDestination();
     } else if (roles.includes("partner") || roles.includes("team_leader")) {

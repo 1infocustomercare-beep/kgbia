@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ChefHat, Truck, ShoppingBag, TableProperties, Palette, Check, ArrowRight, ArrowLeft, Sparkles, Upload, Car, Scissors, Heart, Store, Dumbbell, Building } from "lucide-react";
@@ -33,7 +33,7 @@ const BUSINESS_ICONS: Record<BusinessType, string> = {
 
 export default function GuidedSetup() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, roles, loading: authLoading } = useAuth();
   const [saving, setSaving] = useState(false);
 
   // Industry state
