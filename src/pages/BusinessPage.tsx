@@ -5,11 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { type IndustryId } from "@/config/industry-config";
 import BackButton from "@/components/BackButton";
 
-// Only NCC and Food keep their custom premium sites
 const NCCPublicSite = lazy(() => import("@/pages/public/NCCPublicSite"));
 const FoodPublicSite = lazy(() => import("@/pages/public/FoodPublicSite"));
 const BakeryPublicSite = lazy(() => import("@/pages/public/BakeryPublicSite"));
-// All other sectors use the universal luxury template
+const BeautyPublicSite = lazy(() => import("@/pages/public/BeautyPublicSite"));
+const HealthcarePublicSite = lazy(() => import("@/pages/public/HealthcarePublicSite"));
+const RetailPublicSite = lazy(() => import("@/pages/public/RetailPublicSite"));
+const FitnessPublicSite = lazy(() => import("@/pages/public/FitnessPublicSite"));
+const HotelPublicSite = lazy(() => import("@/pages/public/HotelPublicSite"));
+const BeachPublicSite = lazy(() => import("@/pages/public/BeachPublicSite"));
 const LuxuryPublicSite = lazy(() => import("@/pages/public/LuxuryPublicSite"));
 
 const SiteLoader = () => (
@@ -23,6 +27,14 @@ const TEMPLATE_MAP: Record<string, React.LazyExoticComponent<React.ComponentType
   food: FoodPublicSite,
   restaurant: FoodPublicSite,
   bakery: BakeryPublicSite,
+  beauty: BeautyPublicSite,
+  healthcare: HealthcarePublicSite,
+  retail: RetailPublicSite,
+  fitness: FitnessPublicSite,
+  hospitality: HotelPublicSite,
+  hotel: HotelPublicSite,
+  agriturismo: HotelPublicSite,
+  beach: BeachPublicSite,
 };
 
 export default function BusinessPage() {
@@ -69,9 +81,8 @@ export default function BusinessPage() {
   }
 
   const industry = (company.industry || "custom") as IndustryId;
-
-  // Use specific template if available, otherwise universal luxury
   const Template = TEMPLATE_MAP[industry] || LuxuryPublicSite;
+
   return (
     <Suspense fallback={<SiteLoader />}>
       <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
