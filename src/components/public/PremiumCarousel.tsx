@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback, useEffect, ReactNode } from "react";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 
 interface PremiumCarouselProps {
