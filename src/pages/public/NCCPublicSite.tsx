@@ -80,52 +80,44 @@ const premiumImages = [
 function PremiumBadge() {
   const [idx, setIdx] = useState(0);
   useEffect(() => {
-    const t = setInterval(() => setIdx(p => (p + 1) % premiumImages.length), 3000);
+    const t = setInterval(() => setIdx(p => (p + 1) % premiumImages.length), 3500);
     return () => clearInterval(t);
   }, []);
   const img = premiumImages[idx];
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 1.2, duration: 0.6, type: "spring" }}
-      className="absolute -bottom-3 -left-2 sm:-bottom-5 sm:-left-5 lg:-bottom-6 lg:-left-6 z-20"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.4, duration: 0.5, ease: "easeOut" }}
+      className="absolute -bottom-4 right-3 sm:-bottom-5 sm:right-4 lg:-bottom-6 lg:right-6 z-20"
     >
       <div
-        className="rounded-xl overflow-hidden backdrop-blur-md"
+        className="flex items-center gap-2 rounded-full backdrop-blur-xl pl-0.5 pr-3 py-0.5"
         style={{
-          width: "clamp(100px, 22vw, 160px)",
-          background: "rgba(10,10,10,0.85)",
-          border: `1px solid ${NCC.gold}50`,
-          boxShadow: `0 12px 40px rgba(0,0,0,0.6), 0 0 20px ${NCC.gold}15`,
+          background: "rgba(10,10,10,0.8)",
+          border: `1px solid ${NCC.gold}40`,
+          boxShadow: `0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03)`,
         }}
       >
-        <div className="relative overflow-hidden" style={{ height: "clamp(55px, 12vw, 90px)" }}>
+        {/* Circular image thumbnail */}
+        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden flex-shrink-0 relative" style={{ border: `1.5px solid ${NCC.gold}50` }}>
           <AnimatePresence mode="wait">
             <motion.img
               key={idx}
               src={img.src}
               alt={img.label}
               className="w-full h-full object-cover"
-              initial={{ opacity: 0, scale: 1.15 }}
+              initial={{ opacity: 0, scale: 1.2 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.5 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
             />
           </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
-        <div className="px-2 py-1.5 flex items-center gap-1.5">
-          <div
-            className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ background: `${NCC.gold}25` }}
-          >
-            <Award className="w-2.5 h-2.5" style={{ color: NCC.gold }} />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[7px] sm:text-[8px] uppercase tracking-wider font-bold" style={{ color: NCC.gold }}>Premium</p>
-            <p className="text-[8px] sm:text-[9px] text-white/50 truncate">{img.label}</p>
-          </div>
+        {/* Text */}
+        <div className="min-w-0">
+          <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.15em] font-bold leading-none" style={{ color: NCC.gold }}>Premium</p>
+          <p className="text-[8px] sm:text-[9px] text-white/45 truncate leading-tight mt-0.5">{img.label}</p>
         </div>
       </div>
     </motion.div>
