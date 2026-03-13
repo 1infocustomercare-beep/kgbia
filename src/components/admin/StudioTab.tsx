@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   UtensilsCrossed, Sparkles, Camera, Wand2, Save, X, Edit, Trash2,
   Image as ImageIcon, Plus, Palette, Upload, Globe, Languages, Check,
-  ChevronDown, ChevronUp, Search, Loader2
+  ChevronDown, ChevronUp, Search, Loader2, GripVertical, AlertTriangle,
+  Sun, Moon, Clock, Leaf, Flame, Wheat, Fish, Milk, Egg, TreePine
 } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
 import LivePreview from "@/components/restaurant/LivePreview";
@@ -11,8 +12,42 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { applyBrandTheme, resetBrandTheme, extractDominantColor, hslToHex, DEFAULT_PRIMARY_HEX } from "@/lib/color-extract";
 import type { MenuItem } from "@/types/restaurant";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 
 type StudioSection = "menu" | "ai" | "translate" | "preview";
+
+/* ── EU Allergen Icons ── */
+const EU_ALLERGENS = [
+  { id: "gluten", label: "Glutine", icon: "🌾" },
+  { id: "crustaceans", label: "Crostacei", icon: "🦐" },
+  { id: "eggs", label: "Uova", icon: "🥚" },
+  { id: "fish", label: "Pesce", icon: "🐟" },
+  { id: "peanuts", label: "Arachidi", icon: "🥜" },
+  { id: "soy", label: "Soia", icon: "🫘" },
+  { id: "milk", label: "Latte", icon: "🥛" },
+  { id: "nuts", label: "Frutta a guscio", icon: "🌰" },
+  { id: "celery", label: "Sedano", icon: "🥬" },
+  { id: "mustard", label: "Senape", icon: "🟡" },
+  { id: "sesame", label: "Sesamo", icon: "⚪" },
+  { id: "sulphites", label: "Solfiti", icon: "🍷" },
+  { id: "lupin", label: "Lupini", icon: "🫛" },
+  { id: "molluscs", label: "Molluschi", icon: "🐚" },
+];
+
+const DIET_TAGS = [
+  { id: "vegetarian", label: "Vegetariano", icon: "🥬", color: "bg-green-500/10 text-green-600 border-green-500/30" },
+  { id: "vegan", label: "Vegano", icon: "🌱", color: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30" },
+  { id: "gluten_free", label: "Senza Glutine", icon: "🌾", color: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+  { id: "spicy", label: "Piccante", icon: "🌶️", color: "bg-red-500/10 text-red-600 border-red-500/30" },
+];
+
+const AVAILABILITY_OPTIONS = [
+  { id: "always", label: "Sempre", icon: "✅" },
+  { id: "lunch", label: "Solo Pranzo", icon: "☀️" },
+  { id: "dinner", label: "Solo Cena", icon: "🌙" },
+  { id: "seasonal", label: "Stagionale", icon: "🍂" },
+];
 
 interface StudioTabProps {
   restaurant: any;
@@ -38,9 +73,15 @@ const StudioTab = ({
   settingsLanguages, setSettingsLanguages, logoUploading, handleLogoUpload, handleSaveSettings, userId,
 }: StudioTabProps) => {
   const [section, setSection] = useState<StudioSection>("menu");
-  const [editingItem, setEditingItem] = useState<{ id: string; name: string; description: string; price: number; category: string } | null>(null);
+  const [editingItem, setEditingItem] = useState<{
+    id: string; name: string; description: string; price: number; category: string;
+    allergens: string[]; tags: string[]; availability: string;
+  } | null>(null);
   const [showAddItem, setShowAddItem] = useState(false);
-  const [newItem, setNewItem] = useState({ name: "", description: "", price: 0, category: "Altro" });
+  const [newItem, setNewItem] = useState({
+    name: "", description: "", price: 0, category: "Altro",
+    allergens: [] as string[], tags: [] as string[], availability: "always",
+  });
   const [ocrUploading, setOcrUploading] = useState(false);
   const [ocrResult, setOcrResult] = useState<any[] | null>(null);
   const [ocrImporting, setOcrImporting] = useState(false);
@@ -49,6 +90,7 @@ const StudioTab = ({
   const [translationDone, setTranslationDone] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(new Set());
+  const [draggedItem, setDraggedItem] = useState<string | null>(null);
 
   const allCategories = [...new Set(menuItems.map(i => i.category))];
   const restaurantSlug = restaurant?.slug || "";
@@ -65,6 +107,35 @@ const StudioTab = ({
     });
   };
 
+  const toggleAllergen = (list: string[], id: string) =>
+    list.includes(id) ? list.filter(a => a !== id) : [...list, id];
+
+  const toggleTag = (list: string[], id: string) =>
+    list.includes(id) ? list.filter(t => t !== id) : [...list, id];
+
+  /* ── Drag & Drop for reordering ── */
+  const handleDragStart = (itemId: string) => setDraggedItem(itemId);
+  const handleDragOver = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    if (!draggedItem || draggedItem === targetId) return;
+    setMenuItems(prev => {
+      const items = [...prev];
+      const fromIdx = items.findIndex(i => i.id === draggedItem);
+      const toIdx = items.findIndex(i => i.id === targetId);
+      if (fromIdx < 0 || toIdx < 0) return prev;
+      const [moved] = items.splice(fromIdx, 1);
+      items.splice(toIdx, 0, moved);
+      return items;
+    });
+  };
+  const handleDragEnd = async () => {
+    setDraggedItem(null);
+    // Persist new order
+    for (let i = 0; i < menuItems.length; i++) {
+      await supabase.from("menu_items").update({ sort_order: i }).eq("id", menuItems[i].id);
+    }
+  };
+
   const handleAddMenuItem = async () => {
     if (!restaurant || !newItem.name.trim()) return;
     const { data, error } = await supabase.from("menu_items").insert({
@@ -72,11 +143,12 @@ const StudioTab = ({
       description: newItem.description.trim() || "", price: newItem.price || 0,
       category: newItem.category.trim() || "Altro", sort_order: menuItems.length,
       is_active: true, is_popular: false,
+      allergens: newItem.allergens,
     }).select().single();
     if (error) { toast({ title: "Errore", description: error.message, variant: "destructive" }); return; }
     if (data) {
       setMenuItems(prev => [...prev, { id: data.id, name: data.name, description: data.description || "", price: Number(data.price), image: data.image_url || "", category: data.category, allergens: data.allergens || [], isPopular: data.is_popular }]);
-      setNewItem({ name: "", description: "", price: 0, category: "Altro" });
+      setNewItem({ name: "", description: "", price: 0, category: "Altro", allergens: [], tags: [], availability: "always" });
       setShowAddItem(false);
       toast({ title: "Piatto aggiunto!" });
     }
@@ -87,9 +159,10 @@ const StudioTab = ({
     const { error } = await supabase.from("menu_items").update({
       name: editingItem.name, description: editingItem.description,
       price: editingItem.price, category: editingItem.category,
+      allergens: editingItem.allergens,
     }).eq("id", editingItem.id);
     if (error) { toast({ title: "Errore", description: error.message, variant: "destructive" }); return; }
-    setMenuItems(prev => prev.map(i => i.id === editingItem.id ? { ...i, name: editingItem.name, description: editingItem.description, price: editingItem.price, category: editingItem.category } : i));
+    setMenuItems(prev => prev.map(i => i.id === editingItem.id ? { ...i, name: editingItem.name, description: editingItem.description, price: editingItem.price, category: editingItem.category, allergens: editingItem.allergens } : i));
     setEditingItem(null);
     toast({ title: "Piatto aggiornato" });
   };
@@ -204,17 +277,73 @@ const StudioTab = ({
     ? [...new Set(filteredItems.map(i => i.category))]
     : allCategories;
 
+  /* ── Allergens selector component ── */
+  const AllergensSelector = ({ selected, onChange }: { selected: string[]; onChange: (v: string[]) => void }) => (
+    <div className="space-y-2">
+      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+        <AlertTriangle className="w-3 h-3" /> Allergeni EU
+      </p>
+      <div className="flex flex-wrap gap-1.5">
+        {EU_ALLERGENS.map(a => (
+          <button key={a.id} type="button" onClick={() => onChange(toggleAllergen(selected, a.id))}
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium border transition-all min-h-[28px] ${
+              selected.includes(a.id) ? "bg-destructive/10 text-destructive border-destructive/30" : "bg-secondary/30 text-muted-foreground border-transparent hover:border-border"
+            }`}>
+            <span>{a.icon}</span>
+            <span>{a.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  /* ── Diet Tags selector ── */
+  const TagsSelector = ({ selected, onChange }: { selected: string[]; onChange: (v: string[]) => void }) => (
+    <div className="space-y-2">
+      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Tag Dieta</p>
+      <div className="flex flex-wrap gap-1.5">
+        {DIET_TAGS.map(t => (
+          <button key={t.id} type="button" onClick={() => onChange(toggleTag(selected, t.id))}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium border transition-all min-h-[28px] ${
+              selected.includes(t.id) ? t.color : "bg-secondary/30 text-muted-foreground border-transparent hover:border-border"
+            }`}>
+            <span>{t.icon}</span>
+            <span>{t.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  /* ── Availability selector ── */
+  const AvailabilitySelector = ({ value, onChange }: { value: string; onChange: (v: string) => void }) => (
+    <div className="space-y-2">
+      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+        <Clock className="w-3 h-3" /> Disponibilità
+      </p>
+      <div className="flex flex-wrap gap-1.5">
+        {AVAILABILITY_OPTIONS.map(a => (
+          <button key={a.id} type="button" onClick={() => onChange(a.id)}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium border transition-all min-h-[28px] ${
+              value === a.id ? "bg-primary/10 text-primary border-primary/30" : "bg-secondary/30 text-muted-foreground border-transparent hover:border-border"
+            }`}>
+            <span>{a.icon}</span>
+            <span>{a.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      {/* Sub-tabs — sticky, compact */}
+      {/* Sub-tabs */}
       <div className="flex items-center gap-2">
         <div className="flex-1 flex gap-1.5 bg-secondary/30 p-1 rounded-xl">
         {sections.map(s => (
           <button key={s.id} onClick={() => setSection(s.id)}
             className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-lg text-xs font-semibold transition-all min-h-[40px] ${
-              section === s.id
-                ? "bg-card text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
+              section === s.id ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
             }`}>
             {s.icon}
             <span className="hidden xs:inline">{s.label}</span>
@@ -225,7 +354,7 @@ const StudioTab = ({
           title="Studio Creativo"
           description="Il tuo centro di controllo creativo: gestisci il menu, personalizza il design, usa l'IA per creare foto e traduci in più lingue."
           steps={[
-            "Menu: aggiungi, modifica ed elimina piatti con categorie",
+            "Menu: aggiungi, modifica ed elimina piatti con categorie, allergeni e disponibilità",
             "Design: personalizza logo, colori e anteprima live",
             "IA: carica una foto del menu per creare il catalogo digitale",
             "Lingue: traduci automaticamente in tutte le lingue attive",
@@ -236,17 +365,13 @@ const StudioTab = ({
       {/* ===== MENU MANAGEMENT ===== */}
       {section === "menu" && (
         <div className="space-y-3">
-          {/* Header bar: count + search + add */}
+          {/* Header */}
           <div className="flex items-center gap-2">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
+              <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                 placeholder={`Cerca tra ${menuItems.length} piatti...`}
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/40"
-              />
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/40" />
             </div>
             <motion.button onClick={() => setShowAddItem(!showAddItem)}
               className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold min-h-[44px] flex-shrink-0 shadow-sm"
@@ -256,7 +381,7 @@ const StudioTab = ({
             </motion.button>
           </div>
 
-          {/* Add item form */}
+          {/* Add item form — enhanced with allergens, tags, availability */}
           <AnimatePresence>
             {showAddItem && (
               <motion.div className="p-4 rounded-2xl bg-card border border-primary/20 space-y-3"
@@ -283,10 +408,16 @@ const StudioTab = ({
                     <option value="Altro">+ Nuova categoria</option>
                   </select>
                 </div>
-                {newItem.category === "Altro" && !allCategories.includes(newItem.category) && (
-                  <input type="text" value={newItem.category} onChange={e => setNewItem({ ...newItem, category: e.target.value })}
-                    placeholder="Nome categoria" className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-                )}
+
+                {/* Allergens */}
+                <AllergensSelector selected={newItem.allergens} onChange={a => setNewItem({ ...newItem, allergens: a })} />
+
+                {/* Diet Tags */}
+                <TagsSelector selected={newItem.tags} onChange={t => setNewItem({ ...newItem, tags: t })} />
+
+                {/* Availability */}
+                <AvailabilitySelector value={newItem.availability} onChange={v => setNewItem({ ...newItem, availability: v })} />
+
                 <motion.button onClick={handleAddMenuItem} disabled={!newItem.name.trim()}
                   className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold min-h-[48px] disabled:opacity-40 shadow-sm"
                   whileTap={{ scale: 0.97 }}>
@@ -296,40 +427,76 @@ const StudioTab = ({
             )}
           </AnimatePresence>
 
-          {/* Menu items by category — collapsible */}
+          {/* Edit item modal */}
+          <AnimatePresence>
+            {editingItem && (
+              <motion.div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-background/80 backdrop-blur-sm p-4"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                onClick={() => setEditingItem(null)}>
+                <motion.div className="w-full max-w-md p-5 rounded-2xl bg-card border border-border shadow-2xl space-y-3 max-h-[85vh] overflow-y-auto"
+                  initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }}
+                  onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-semibold text-foreground">Modifica piatto</p>
+                    <button onClick={() => setEditingItem(null)} className="p-1 rounded-lg hover:bg-secondary"><X className="w-4 h-4" /></button>
+                  </div>
+                  <input type="text" value={editingItem.name} onChange={e => setEditingItem({ ...editingItem, name: e.target.value })}
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  <textarea value={editingItem.description} onChange={e => setEditingItem({ ...editingItem, description: e.target.value })}
+                    rows={2} className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">€</span>
+                      <input type="number" step="0.01" value={editingItem.price || ""} onChange={e => setEditingItem({ ...editingItem, price: parseFloat(e.target.value) || 0 })}
+                        className="w-full pl-7 pr-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                    </div>
+                    <select value={editingItem.category} onChange={e => setEditingItem({ ...editingItem, category: e.target.value })}
+                      className="px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] appearance-none">
+                      {allCategories.map(c => <option key={c} value={c}>{c}</option>)}
+                      <option value="Altro">Altra</option>
+                    </select>
+                  </div>
+
+                  <AllergensSelector selected={editingItem.allergens} onChange={a => setEditingItem({ ...editingItem, allergens: a })} />
+                  <TagsSelector selected={editingItem.tags} onChange={t => setEditingItem({ ...editingItem, tags: t })} />
+                  <AvailabilitySelector value={editingItem.availability} onChange={v => setEditingItem({ ...editingItem, availability: v })} />
+
+                  <motion.button onClick={handleEditMenuItem}
+                    className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold min-h-[48px] shadow-sm"
+                    whileTap={{ scale: 0.97 }}>
+                    <Save className="w-4 h-4 inline mr-1.5" />Salva modifiche
+                  </motion.button>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Menu items by category — drag & drop */}
           <div className="space-y-2">
             {filteredCategories.map(cat => {
               const catItems = filteredItems.filter(i => i.category === cat);
               const isCollapsed = collapsedCategories.has(cat);
               return (
                 <div key={cat} className="rounded-2xl bg-card border border-border/40 overflow-hidden">
-                  {/* Category header — tappable */}
-                  <button
-                    onClick={() => toggleCategory(cat)}
-                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-secondary/30 transition-colors min-h-[48px]"
-                  >
+                  <button onClick={() => toggleCategory(cat)}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-secondary/30 transition-colors min-h-[48px]">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-semibold text-foreground">{cat}</span>
-                      <span className="px-2 py-0.5 rounded-full bg-secondary text-[10px] font-medium text-muted-foreground">
-                        {catItems.length}
-                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-secondary text-[10px] font-medium text-muted-foreground">{catItems.length}</span>
                     </div>
                     {isCollapsed ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronUp className="w-4 h-4 text-muted-foreground" />}
                   </button>
 
-                  {/* Items */}
                   <AnimatePresence initial={false}>
                     {!isCollapsed && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
+                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
                         <div className="divide-y divide-border/30">
                           {catItems.map(item => (
-                            <div key={item.id} className="flex items-center gap-3 px-4 py-3">
+                            <div key={item.id} draggable onDragStart={() => handleDragStart(item.id)} onDragOver={(e) => handleDragOver(e, item.id)} onDragEnd={handleDragEnd}
+                              className={`flex items-center gap-3 px-4 py-3 transition-all ${draggedItem === item.id ? "opacity-50 bg-primary/5" : ""}`}>
+                              {/* Drag handle */}
+                              <GripVertical className="w-4 h-4 text-muted-foreground/30 flex-shrink-0 cursor-grab active:cursor-grabbing" />
+
                               {/* Image */}
                               <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-secondary/50">
                                 {item.image ? (
@@ -352,16 +519,28 @@ const StudioTab = ({
                                 {item.description && (
                                   <p className="text-[11px] text-muted-foreground leading-tight truncate mt-0.5">{item.description}</p>
                                 )}
+                                {/* Allergen badges */}
+                                {item.allergens && item.allergens.length > 0 && (
+                                  <div className="flex flex-wrap gap-0.5 mt-1">
+                                    {item.allergens.map(a => {
+                                      const allergen = EU_ALLERGENS.find(eu => eu.id === a);
+                                      return allergen ? (
+                                        <span key={a} className="text-[9px] px-1 py-0.5 rounded bg-destructive/10 text-destructive" title={allergen.label}>{allergen.icon}</span>
+                                      ) : null;
+                                    })}
+                                  </div>
+                                )}
                               </div>
 
                               {/* Price */}
-                              <span className="text-sm font-bold text-primary tabular-nums flex-shrink-0">
-                                €{item.price.toFixed(2)}
-                              </span>
+                              <span className="text-sm font-bold text-primary tabular-nums flex-shrink-0">€{item.price.toFixed(2)}</span>
 
                               {/* Actions */}
                               <div className="flex items-center gap-0.5 flex-shrink-0">
-                                <button onClick={() => setEditingItem({ id: item.id, name: item.name, description: item.description, price: item.price, category: item.category })}
+                                <button onClick={() => setEditingItem({
+                                  id: item.id, name: item.name, description: item.description, price: item.price, category: item.category,
+                                  allergens: item.allergens || [], tags: [], availability: "always"
+                                })}
                                   className="p-2 rounded-lg hover:bg-secondary min-w-[36px] min-h-[36px] flex items-center justify-center">
                                   <Edit className="w-3.5 h-3.5 text-muted-foreground" />
                                 </button>
@@ -411,17 +590,12 @@ const StudioTab = ({
             </div>
             <h3 className="text-base font-bold text-foreground">AI Menu Creator</h3>
             <p className="text-xs text-muted-foreground mt-1">Scatta una foto del menu cartaceo → l'IA lo digitalizza in secondi</p>
-            <p className="text-[10px] text-primary/70 mt-2 font-medium">
-              Token disponibili: {aiTokens}
-            </p>
+            <p className="text-[10px] text-primary/70 mt-2 font-medium">Token disponibili: {aiTokens}</p>
           </div>
 
-          <motion.button
-            onClick={handleOcrUpload}
-            disabled={ocrUploading}
+          <motion.button onClick={handleOcrUpload} disabled={ocrUploading}
             className="w-full p-6 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 transition-all text-center min-h-[120px] disabled:opacity-50"
-            whileTap={{ scale: 0.98 }}
-          >
+            whileTap={{ scale: 0.98 }}>
             {ocrUploading ? (
               <div className="space-y-3">
                 <Loader2 className="w-10 h-10 mx-auto text-primary animate-spin" />
@@ -447,9 +621,7 @@ const StudioTab = ({
                   <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border/40">
                     <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-primary/5">
                       {dish.imageLoading ? (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Loader2 className="w-5 h-5 text-primary animate-spin" />
-                        </div>
+                        <div className="w-full h-full flex items-center justify-center"><Loader2 className="w-5 h-5 text-primary animate-spin" /></div>
                       ) : dish.image_url ? (
                         <img src={dish.image_url} alt={dish.name} className="w-full h-full object-cover" />
                       ) : <div className="w-full h-full flex items-center justify-center"><Wand2 className="w-4 h-4 text-primary/40" /></div>}
@@ -559,9 +731,7 @@ const StudioTab = ({
           <div className="p-4 rounded-2xl bg-card border border-border/40 space-y-2">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tagline</p>
             <input type="text" value={settingsTagline} onChange={e => setSettingsTagline(e.target.value)}
-              placeholder="Es: La vera cucina italiana dal 1985"
-              maxLength={120}
-              onBlur={handleSaveSettings}
+              placeholder="Es: La vera cucina italiana dal 1985" maxLength={120} onBlur={handleSaveSettings}
               className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px] placeholder:text-muted-foreground/40" />
           </div>
 
@@ -578,8 +748,7 @@ const StudioTab = ({
               <div className="flex-1 space-y-2">
                 <input type="text" value={settingsPrimaryColor}
                   onChange={e => { setSettingsPrimaryColor(e.target.value); if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) applyBrandTheme(e.target.value); }}
-                  onBlur={handleSaveSettings}
-                  placeholder="#C8963E" maxLength={7}
+                  onBlur={handleSaveSettings} placeholder="#C8963E" maxLength={7}
                   className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
                 <div className="flex gap-1.5 flex-wrap">
                   {["#C8963E", "#E74C3C", "#2ECC71", "#3498DB", "#9B59B6", "#1ABC9C", "#F39C12", "#E91E63"].map(c => (
@@ -609,52 +778,16 @@ const StudioTab = ({
           </div>
 
           {/* Live Preview */}
-          <LivePreview slug={restaurantSlug} primaryColor={settingsPrimaryColor} />
+          {restaurantSlug && (
+            <div className="p-4 rounded-2xl bg-card border border-border/40 space-y-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <Globe className="w-3.5 h-3.5" /> Anteprima Live
+              </p>
+              <LivePreview slug={restaurantSlug} />
+            </div>
+          )}
         </div>
       )}
-
-      {/* EDIT ITEM MODAL */}
-      <AnimatePresence>
-        {editingItem && (
-          <motion.div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:px-5"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setEditingItem(null)}>
-            <motion.div className="w-full sm:max-w-sm bg-card rounded-t-3xl sm:rounded-2xl border border-border p-5 space-y-4 safe-bottom"
-              initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }} onClick={e => e.stopPropagation()}>
-              {/* Handle bar on mobile */}
-              <div className="w-10 h-1 bg-border/50 rounded-full mx-auto sm:hidden" />
-              <div className="flex items-center justify-between">
-                <h3 className="text-base font-bold text-foreground">Modifica piatto</h3>
-                <button onClick={() => setEditingItem(null)} className="p-2 rounded-full hover:bg-secondary min-w-[36px] min-h-[36px] flex items-center justify-center">
-                  <X className="w-4 h-4 text-muted-foreground" />
-                </button>
-              </div>
-              <div className="space-y-3">
-                <input type="text" value={editingItem.name} onChange={e => setEditingItem({ ...editingItem, name: e.target.value })}
-                  placeholder="Nome" className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-                <textarea value={editingItem.description} onChange={e => setEditingItem({ ...editingItem, description: e.target.value })}
-                  placeholder="Descrizione" rows={3} className="w-full px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">€</span>
-                    <input type="number" step="0.01" value={editingItem.price} onChange={e => setEditingItem({ ...editingItem, price: parseFloat(e.target.value) || 0 })}
-                      placeholder="Prezzo" className="w-full pl-7 pr-3 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-                  </div>
-                  <input type="text" value={editingItem.category} onChange={e => setEditingItem({ ...editingItem, category: e.target.value })}
-                    placeholder="Categoria" className="px-4 py-3 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <motion.button onClick={handleEditMenuItem}
-                  className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm min-h-[48px] flex items-center justify-center gap-2 shadow-sm"
-                  whileTap={{ scale: 0.97 }}>
-                  <Save className="w-4 h-4" /> Salva
-                </motion.button>
-                <button onClick={() => setEditingItem(null)} className="px-5 py-3 rounded-xl bg-secondary/50 text-sm min-h-[48px] font-medium text-muted-foreground">Annulla</button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 };
