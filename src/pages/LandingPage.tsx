@@ -1571,7 +1571,8 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           NCC & LUXURY TRANSPORT SHOWCASE
          ═══════════════════════════════════════════ */}
-      <Section id="app">
+      <Section id="app" style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,22%,7%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.05), transparent 70%)" }} />
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center lg:text-left order-2 lg:order-1">
