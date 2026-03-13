@@ -35,6 +35,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
     { title: "Tratte", icon: "Route", url: "/app/routes" },
     { title: "Prezzi", icon: "CreditCard", url: "/app/pricing" },
     { title: "Cross-Selling", icon: "Target", url: "/app/cross-selling" },
+    { title: "Scadenzario", icon: "Shield", url: "/app/ncc-expiry" },
     { title: "Clienti", icon: "UserCog", url: "/app/clients" },
     { title: "Recensioni", icon: "Star", url: "/app/reviews" },
     { title: "Sito Web", icon: "Store", url: "/app/webhub" },
