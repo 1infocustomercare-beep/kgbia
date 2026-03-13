@@ -59,21 +59,33 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [rolesReady, setRolesReady] = useState(false);
   const [roles, setRoles] = useState<AppRole[]>([]);
 
   const fetchRoles = async (userId: string): Promise<AppRole[]> => {
     try {
-      const { data, error } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userId);
+      const [{ data, error }, { data: isSuperAdmin, error: superAdminError }] = await Promise.all([
+        supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", userId),
+        supabase.rpc("is_super_admin"),
+      ]);
 
       if (error) {
         console.error("Failed to fetch user roles", error);
-        return [];
       }
 
-      return (data ?? []).map((r: { role: AppRole }) => r.role);
+      if (superAdminError) {
+        console.error("Failed to check super admin status", superAdminError);
+      }
+
+      const roleSet = new Set<AppRole>((data ?? []).map((r: { role: AppRole }) => r.role));
+      if (isSuperAdmin === true) {
+        roleSet.add("super_admin");
+      }
+
+      return Array.from(roleSet);
     } catch (error) {
       console.error("Unexpected role fetch error", error);
       return [];
