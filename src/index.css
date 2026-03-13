@@ -806,10 +806,10 @@
   }
 
   @keyframes crown-aura {
-    0%   { box-shadow: 0 0 20px hsla(217, 85%, 58%, 0.3), 0 0 40px hsla(42, 80%, 55%, 0.15), 0 0 80px hsla(42, 70%, 48%, 0.08); }
-    33%  { box-shadow: 0 0 30px hsla(200, 90%, 60%, 0.3), 0 0 60px hsla(217, 85%, 58%, 0.2), 0 0 100px hsla(42, 80%, 55%, 0.1); }
-    66%  { box-shadow: 0 0 25px hsla(42, 80%, 55%, 0.35), 0 0 50px hsla(217, 85%, 58%, 0.2), 0 0 90px hsla(200, 90%, 60%, 0.1); }
-    100% { box-shadow: 0 0 20px hsla(217, 85%, 58%, 0.3), 0 0 40px hsla(42, 80%, 55%, 0.15), 0 0 80px hsla(42, 70%, 48%, 0.08); }
+    0%   { box-shadow: 0 0 20px hsla(265, 70%, 60%, 0.3), 0 0 40px hsla(280, 45%, 68%, 0.15), 0 0 80px hsla(265, 60%, 50%, 0.08); }
+    33%  { box-shadow: 0 0 30px hsla(280, 50%, 65%, 0.3), 0 0 60px hsla(265, 70%, 60%, 0.2), 0 0 100px hsla(280, 45%, 68%, 0.1); }
+    66%  { box-shadow: 0 0 25px hsla(265, 70%, 60%, 0.35), 0 0 50px hsla(280, 45%, 68%, 0.2), 0 0 90px hsla(300, 35%, 55%, 0.1); }
+    100% { box-shadow: 0 0 20px hsla(265, 70%, 60%, 0.3), 0 0 40px hsla(280, 45%, 68%, 0.15), 0 0 80px hsla(265, 60%, 50%, 0.08); }
   }
   .animate-crown-aura {
     animation: crown-aura 4s ease-in-out infinite;
