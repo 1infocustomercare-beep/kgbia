@@ -314,13 +314,14 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           HERO
          ═══════════════════════════════════════════ */}
-      <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-20 pb-16"
+      <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-16 sm:pt-20 pb-12 sm:pb-16"
         style={{ opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Video background ═══ */}
         <div className="absolute inset-0">
-          <video src={videoHero} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-[0.12]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/70 to-background" />
+          <video src={videoHero} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-[0.15]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/5 via-background/60 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/40 via-transparent to-background/40" />
         </div>
 
         {/* ═══ LAYER 1: Perspective grid floor ═══ */}
