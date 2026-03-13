@@ -1760,7 +1760,7 @@ const LandingPage = () => {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-10 mb-12">
             <div className="col-span-2 sm:col-span-1">
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_15px_hsla(217,91%,60%,0.15)]">
+                <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_15px_hsla(265,70%,60%,0.15)]">
                   <Crown className="w-3.5 h-3.5 text-primary-foreground" />
                 </div>
                 <span className="font-heading font-bold text-foreground tracking-[0.12em] uppercase text-xs">Empire<span className="text-primary">.AI</span></span>
