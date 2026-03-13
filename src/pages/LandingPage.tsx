@@ -456,12 +456,12 @@ const LandingPage = () => {
           ))}
           
           {/* Corner accent lines */}
-          <div className="absolute top-0 left-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,85%,65%,0.4), transparent)" }} />
-          <div className="absolute top-0 left-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(265,85%,65%,0.4), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(200,90%,60%,0.4), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(200,90%,60%,0.4), transparent)" }} />
-          <div className="absolute bottom-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(320,75%,55%,0.3), transparent)" }} />
-          <div className="absolute bottom-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(320,75%,55%,0.3), transparent)" }} />
+           <div className="absolute top-0 left-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(217,85%,58%,0.4), transparent)" }} />
+           <div className="absolute top-0 left-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(217,85%,58%,0.4), transparent)" }} />
+           <div className="absolute top-0 right-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(200,90%,60%,0.4), transparent)" }} />
+           <div className="absolute top-0 right-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(200,90%,60%,0.4), transparent)" }} />
+           <div className="absolute bottom-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(42,80%,55%,0.3), transparent)" }} />
+           <div className="absolute bottom-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(42,80%,55%,0.3), transparent)" }} />
         </div>
 
         {/* ═══ LAYER 9: Data Rain Columns ═══ */}
