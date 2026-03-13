@@ -153,7 +153,7 @@ function App() {
                     <BrandAssetsPage />
                   </ProtectedRoute>
                 } />
-
+                <Route path="/staff" element={
                   <ProtectedRoute requiredRole="staff">
                     <StaffPanel />
                   </ProtectedRoute>
