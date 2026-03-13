@@ -1064,10 +1064,10 @@ const LandingPage = () => {
             </h2>
             <div className="space-y-4 text-left max-w-md mx-auto lg:mx-0">
               {[
-                { title: "Gestione Telefonica Umana", desc: "Servizio reception e booking telefonico professionale dedicato" },
-                { title: "WhatsApp Business Automatizzato", desc: "Conferme, reminder, promozioni e assistenza clienti 24/7" },
-                { title: "Intelligenza Artificiale Integrata", desc: "Catalogo generato in 60s, suggerimenti upselling, analytics predittivi" },
-                { title: "Qualsiasi Integrazione Custom", desc: "API esterne, POS, gestionali esistenti — integriamo tutto" },
+                { title: "Gestione Telefonica Professionale", desc: "Reception, prenotazioni e booking telefonico dedicato per ogni settore" },
+                { title: "WhatsApp Business Automatizzato", desc: "Conferme, reminder, promozioni e assistenza clienti 24/7 multi-settore" },
+                { title: "Intelligenza Artificiale Integrata", desc: "Catalogo auto-generato, pricing dinamico, analytics predittivi e suggerimenti IA" },
+                { title: "Integrazioni Illimitate", desc: "POS, gestionali, booking engine, calendari, pagamenti — integriamo qualsiasi sistema" },
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-3 items-start group"
                   initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
