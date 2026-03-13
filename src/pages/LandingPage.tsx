@@ -175,15 +175,15 @@ const LandingPage = () => {
   ];
 
   const services = [
-    { icon: <Brain className="w-5 h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni quotidiane.", tag: "IA", color: "from-blue-500 to-cyan-500" },
-    { icon: <Smartphone className="w-5 h-5" />, title: "App White Label", desc: "App professionale installabile con il TUO brand, colori e dominio. Nessun logo di terzi, mai.", tag: "APP", color: "from-sky-500 to-blue-500" },
-    { icon: <Calendar className="w-5 h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini, prenotazioni corse o camere da un unico pannello centralizzato.", tag: "OPS", color: "from-emerald-500 to-green-500" },
-    { icon: <Shield className="w-5 h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano nel tuo archivio privato. Solo le migliori costruiscono la tua reputazione online.", tag: "BRAND", color: "from-amber-500 to-orange-500" },
-    { icon: <Users className="w-5 h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà digitale. Trasforma i visitatori in clienti ricorrenti.", tag: "GROWTH", color: "from-pink-500 to-rose-500" },
-    { icon: <BarChart3 className="w-5 h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, performance staff, trend e fatturazione elettronica integrata.", tag: "FINANCE", color: "from-cyan-500 to-teal-500" },
-    { icon: <Package className="w-5 h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, ricevi alert automatici, registra controlli igienico-sanitari e conformità.", tag: "OPS", color: "from-indigo-500 to-blue-600" },
-    { icon: <Bell className="w-5 h-5" />, title: "Marketing Automation", desc: "Push notification, campagne email/WhatsApp, promozioni mirate e segmentazione clienti avanzata.", tag: "MARKETING", color: "from-fuchsia-500 to-pink-500" },
-    { icon: <Lock className="w-5 h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR compliant, backup automatici, accessi multi-ruolo e audit trail.", tag: "SECURITY", color: "from-slate-500 to-gray-600" },
+    { icon: <Brain className="w-4 h-4 sm:w-5 sm:h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni quotidiane.", tag: "IA", color: "from-primary to-accent" },
+    { icon: <Smartphone className="w-4 h-4 sm:w-5 sm:h-5" />, title: "App White Label", desc: "App professionale installabile con il TUO brand, colori e dominio. Nessun logo di terzi, mai.", tag: "APP", color: "from-sky-500 to-primary" },
+    { icon: <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini, prenotazioni corse o camere da un unico pannello centralizzato.", tag: "OPS", color: "from-emerald-500 to-teal-500" },
+    { icon: <Shield className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano nel tuo archivio privato. Solo le migliori costruiscono la tua reputazione online.", tag: "BRAND", color: "from-amber-500 to-orange-500" },
+    { icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà digitale. Trasforma i visitatori in clienti ricorrenti.", tag: "GROWTH", color: "from-pink-500 to-rose-500" },
+    { icon: <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, performance staff, trend e fatturazione elettronica integrata.", tag: "FINANCE", color: "from-cyan-500 to-teal-500" },
+    { icon: <Package className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, ricevi alert automatici, registra controlli igienico-sanitari e conformità.", tag: "OPS", color: "from-indigo-500 to-primary" },
+    { icon: <Bell className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Marketing Automation", desc: "Push notification, campagne email/WhatsApp, promozioni mirate e segmentazione clienti avanzata.", tag: "MARKETING", color: "from-accent to-pink-500" },
+    { icon: <Lock className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR compliant, backup automatici, accessi multi-ruolo e audit trail.", tag: "SECURITY", color: "from-slate-500 to-gray-600" },
   ];
 
   const metrics = [
@@ -1129,22 +1129,28 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: Premium Carousel ═══ */}
+        {/* ═══ Mobile: 2-col compact grid ═══ */}
         <div className="sm:hidden">
-          <PremiumCarousel speed="normal" itemWidth={260}>
+          <motion.div className="grid grid-cols-2 gap-2.5"
+            variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-30px" }}>
             {services.map((s, i) => (
-              <div key={i} className="group relative p-5 rounded-2xl glow-card scan-card h-full">
-                <div className="flex items-center justify-between mb-3">
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white`}>
+              <motion.div key={i} variants={fadeUp}
+                className="group relative p-3.5 rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur-sm hover:border-primary/20 transition-all duration-500 overflow-hidden">
+                {/* Ambient glow */}
+                <div className={`absolute -top-6 -right-6 w-16 h-16 rounded-full bg-gradient-to-br ${s.color} opacity-[0.06] blur-xl group-hover:opacity-[0.12] transition-opacity duration-500 pointer-events-none`} />
+                <div className="flex items-center gap-2 mb-2.5">
+                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-lg`}>
                     {s.icon}
                   </div>
-                  <span className="text-[0.5rem] px-2 py-0.5 rounded-full holo-badge text-primary/80 font-bold tracking-[2px] font-heading">{s.tag}</span>
+                  <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
                 </div>
-                <h3 className="font-heading text-xs font-semibold text-foreground mb-1.5">{s.title}</h3>
-                <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{s.desc}</p>
-              </div>
+                <h3 className="font-heading text-[0.7rem] font-semibold text-foreground mb-1 leading-tight">{s.title}</h3>
+                <p className="text-[0.58rem] text-foreground/35 leading-[1.5]">{s.desc}</p>
+                {/* Bottom accent */}
+                <div className="absolute bottom-0 left-3 right-3 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </motion.div>
             ))}
-          </PremiumCarousel>
+          </motion.div>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
@@ -1152,20 +1158,22 @@ const LandingPage = () => {
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {services.map((s, i) => (
             <motion.div key={i}
-              className="group relative p-6 rounded-2xl glow-card scan-card"
+              className="group relative p-5 sm:p-6 rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur-sm hover:border-primary/20 hover:bg-primary/[0.02] transition-all duration-500 overflow-hidden"
               variants={fadeUp}
-              whileHover={{ y: -4 }}
+              whileHover={{ y: -4, scale: 1.01 }}
             >
-              {/* Futuristic corner brackets */}
-              <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-primary/20 rounded-tl-sm pointer-events-none" />
-              <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-primary/20 rounded-tr-sm pointer-events-none" />
-              <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-primary/20 rounded-bl-sm pointer-events-none" />
-              <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/20 rounded-br-sm pointer-events-none" />
+              {/* Ambient corner glow */}
+              <div className={`absolute -top-8 -right-8 w-24 h-24 rounded-full bg-gradient-to-br ${s.color} opacity-[0.04] blur-2xl group-hover:opacity-[0.1] transition-opacity duration-500 pointer-events-none`} />
+              {/* Corner brackets on hover */}
+              <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-primary/15 rounded-tl-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-primary/15 rounded-tr-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-primary/15 rounded-bl-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/15 rounded-br-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="flex items-center justify-between mb-4">
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-lg group-hover:shadow-primary/20 group-hover:scale-110 transition-all duration-500`}>
                   {s.icon}
                 </div>
-                <span className="text-[0.55rem] px-2.5 py-1 rounded-full holo-badge text-primary/80 font-bold tracking-[2px] font-heading">{s.tag}</span>
+                <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[2px] font-heading">{s.tag}</span>
               </div>
               <h3 className="font-heading text-sm sm:text-base font-semibold text-foreground mb-2">{s.title}</h3>
               <p className="text-xs sm:text-sm text-foreground/40 leading-[1.7]">{s.desc}</p>
