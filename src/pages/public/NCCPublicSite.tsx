@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import heroMercedesImg from "@/assets/ncc-hero-mercedes-amalfi.jpg";
+import heroBgImg from "@/assets/ncc-hero-bg-amalfi.jpg";
 import { motion, useInView, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
