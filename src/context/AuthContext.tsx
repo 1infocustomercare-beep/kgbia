@@ -54,41 +54,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const applySession = async (nextSession: Session | null) => {
+  const applySessionState = (nextSession: Session | null) => {
     setSession(nextSession);
-    const nextUser = nextSession?.user ?? null;
-    setUser(nextUser);
-
-    if (nextUser) {
-      await fetchRoles(nextUser.id);
-    } else {
-      setRoles([]);
-    }
+    setUser(nextSession?.user ?? null);
   };
 
   useEffect(() => {
     const safetyTimer = setTimeout(() => setLoading(false), AUTH_LOADING_TIMEOUT_MS);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      void (async () => {
-        try {
-          await applySession(nextSession);
-        } catch (error) {
-          console.error("Auth state change handling failed", error);
-          setSession(null);
-          setUser(null);
-          setRoles([]);
-        } finally {
-          setLoading(false);
-        }
-      })();
+      applySessionState(nextSession);
+      setLoading(false);
+
+      if (nextSession?.user) {
+        setTimeout(() => {
+          void fetchRoles(nextSession.user.id);
+        }, 0);
+      } else {
+        setRoles([]);
+      }
     });
 
     void (async () => {
       try {
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
-        await applySession(data.session);
+
+        applySessionState(data.session);
+
+        if (data.session?.user) {
+          await fetchRoles(data.session.user.id);
+        } else {
+          setRoles([]);
+        }
       } catch (error) {
         console.error("Failed to restore auth session", error);
         setSession(null);
