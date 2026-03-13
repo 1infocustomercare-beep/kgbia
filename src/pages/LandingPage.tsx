@@ -552,7 +552,7 @@ const LandingPage = () => {
           </motion.h2>
           <motion.p className="text-foreground/50 max-w-[520px] mx-auto text-sm leading-[1.7]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Dashboard IA, gestione flotta, menu digitali, CRM avanzato, automazioni, fatturazione, analytics — tutto in un ecosistema white-label che si evolve ogni settimana.
+            Dashboard IA, gestione flotta, prenotazioni, cataloghi digitali, CRM avanzato, automazioni, fatturazione, analytics — tutto in un ecosistema white-label per qualsiasi settore.
           </motion.p>
         </div>
         <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
@@ -820,38 +820,7 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
-      {/* ═══════════════════════════════════════════
-          PROBLEMA
-         ═══════════════════════════════════════════ */}
-      <Section id="problem">
-        <div className="text-center mb-12">
-          <SectionLabel text="Il Problema" icon={<AlertTriangle className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Stai Pagando Troppo per <span className="text-vibrant-gradient">Strumenti Sbagliati</span>
-          </motion.h2>
-        </div>
-
-        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-4"
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {[
-            { icon: <Banknote className="w-6 h-6" />, amount: "30%", label: "Margini erosi dai marketplace", sub: "Commissioni predatorie su ogni singola transazione", gradient: "from-red-500 to-orange-500" },
-            { icon: <DollarSign className="w-6 h-6" />, amount: "€500+", label: "Canoni mensili software", sub: "5 abbonamenti separati per funzioni che Empire include gratis", gradient: "from-amber-500 to-yellow-500" },
-            { icon: <Target className="w-6 h-6" />, amount: "0%", label: "Controllo sui dati clienti", sub: "I tuoi clienti appartengono alla piattaforma, non a te", gradient: "from-rose-500 to-pink-500" },
-          ].map((item, i) => (
-            <motion.div key={i}
-              className="group relative p-7 sm:p-8 rounded-2xl glow-card text-center"
-              variants={fadeScale}>
-              <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-5 group-hover:scale-110 transition-transform duration-500`}>
-                {item.icon}
-              </div>
-              <p className="text-4xl sm:text-5xl font-heading font-bold text-vibrant-gradient mb-2">{item.amount}</p>
-              <p className="text-sm font-semibold text-foreground">{item.label}</p>
-              <p className="text-[0.65rem] text-foreground/35 mt-1.5">{item.sub}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </Section>
+      {/* Duplicate pain section removed — already present above */}
 
       {/* ═══════════════════════════════════════════
           COMPARISON TABLE — Empire vs Others
@@ -915,7 +884,7 @@ const LandingPage = () => {
             { x: "80%", y: "25%", label: "ORDINI", size: 10, primary: false },
             { x: "15%", y: "70%", label: "ANALYTICS", size: 10, primary: false },
             { x: "85%", y: "70%", label: "PAGAMENTI", size: 10, primary: false },
-            { x: "35%", y: "15%", label: "MENU", size: 8, primary: false },
+            { x: "35%", y: "15%", label: "CATALOGO", size: 8, primary: false },
             { x: "65%", y: "15%", label: "BOOKING", size: 8, primary: false },
             { x: "35%", y: "85%", label: "STAFF", size: 8, primary: false },
             { x: "65%", y: "85%", label: "MARKETING", size: 8, primary: false },
@@ -1046,9 +1015,9 @@ const LandingPage = () => {
         <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {[
-            { img: mockupCliente, title: "App Cliente", desc: "Ordini, prenotazioni, pagamenti, loyalty wallet, notifiche push. Tutto dal telefono del tuo cliente.", tag: "FRONT-END", features: ["Ordini in tempo reale", "Loyalty & Cashback", "Push Notification", "Chat Diretta"] },
-            { img: mockupAdmin, title: "Dashboard Admin", desc: "Pannello completo con analytics IA, CRM, gestione staff, fatturazione e marketing automation.", tag: "BACK-OFFICE", features: ["Analytics predittivi", "CRM & Segmentazione", "Fatturazione elettronica", "Marketing automatizzato"] },
-            { img: mockupCucina, title: "Pannello Operativo", desc: "Vista cucina, gestione interventi, calendario staff, mappe postazioni. Ottimizzato per operatività.", tag: "OPERATIONS", features: ["Live order tracking", "Gestione turni", "HACCP digitale", "Notifiche smart"] },
+            { img: mockupCliente, title: "App Cliente", desc: "Prenota, ordina, paga e ricevi notifiche. Un'esperienza premium per i clienti di qualsiasi settore.", tag: "FRONT-END", features: ["Prenotazioni & Ordini", "Loyalty & Cashback", "Push Notification", "Chat Diretta"] },
+            { img: mockupAdmin, title: "Dashboard Admin", desc: "Pannello completo con analytics IA, CRM, gestione team, fatturazione e marketing automation per ogni settore.", tag: "BACK-OFFICE", features: ["Analytics predittivi", "CRM & Segmentazione", "Fatturazione elettronica", "Marketing automatizzato"] },
+            { img: mockupCucina, title: "Pannello Operativo", desc: "Vista operativa real-time: gestisci interventi, appuntamenti, flotta, staff e postazioni dal campo.", tag: "OPERATIONS", features: ["Live tracking operativo", "Gestione turni & team", "Compliance & controlli", "Notifiche smart"] },
           ].map((mock, i) => (
             <motion.div key={i} className="group" variants={fadeScale}>
               <div className="relative rounded-2xl overflow-hidden glow-card mb-5">
@@ -1095,10 +1064,10 @@ const LandingPage = () => {
             </h2>
             <div className="space-y-4 text-left max-w-md mx-auto lg:mx-0">
               {[
-                { title: "Gestione Telefonica Umana", desc: "Servizio reception e booking telefonico professionale dedicato" },
-                { title: "WhatsApp Business Automatizzato", desc: "Conferme, reminder, promozioni e assistenza clienti 24/7" },
-                { title: "Intelligenza Artificiale Integrata", desc: "Catalogo generato in 60s, suggerimenti upselling, analytics predittivi" },
-                { title: "Qualsiasi Integrazione Custom", desc: "API esterne, POS, gestionali esistenti — integriamo tutto" },
+                { title: "Gestione Telefonica Professionale", desc: "Reception, prenotazioni e booking telefonico dedicato per ogni settore" },
+                { title: "WhatsApp Business Automatizzato", desc: "Conferme, reminder, promozioni e assistenza clienti 24/7 multi-settore" },
+                { title: "Intelligenza Artificiale Integrata", desc: "Catalogo auto-generato, pricing dinamico, analytics predittivi e suggerimenti IA" },
+                { title: "Integrazioni Illimitate", desc: "POS, gestionali, booking engine, calendari, pagamenti — integriamo qualsiasi sistema" },
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-3 items-start group"
                   initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
@@ -1225,14 +1194,14 @@ const LandingPage = () => {
               Ecosistema Completo,<br /><span className="text-shimmer">di Tua Proprietà</span>
             </h2>
             <p className="text-foreground/40 leading-[1.7] max-w-lg mx-auto lg:mx-0 mb-7 text-sm">
-              App cliente, pannello gestionale e vista operativa — tutto white-label con il tuo brand. Dal menu digitale alla gestione flotta, dal CRM alla fatturazione.
+              App cliente, pannello gestionale e vista operativa — tutto white-label con il tuo brand. Dal catalogo alla gestione flotta, dal CRM alla fatturazione. Qualsiasi settore.
             </p>
             <div className="space-y-4 mb-8 text-left max-w-md mx-auto lg:mx-0">
               {[
                 { title: "Ordini, Prenotazioni & Appuntamenti", desc: "Un unico sistema per ogni tipo di transazione", icon: <Calendar className="w-3 h-3" /> },
                 { title: "CRM & Programma Fedeltà", desc: "Wallet pass, reward, storico cliente completo", icon: <Wallet className="w-3 h-3" /> },
                 { title: "Comunicazione Diretta", desc: "Push notification, chat, promozioni mirate", icon: <Bell className="w-3 h-3" /> },
-                { title: "Dashboard Operativa Real-Time", desc: "Cucina, autisti, staff — live senza errori", icon: <BarChart3 className="w-3 h-3" /> },
+                { title: "Dashboard Operativa Real-Time", desc: "Staff, autisti, tecnici — live senza errori", icon: <BarChart3 className="w-3 h-3" /> },
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-3.5 items-start group"
                   initial={{ opacity: 0, x: -15 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
@@ -1247,12 +1216,12 @@ const LandingPage = () => {
               ))}
             </div>
             <motion.button
-              onClick={() => navigate("/r/impero-roma")}
+              onClick={() => navigate("/demo")}
               className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
               whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.2)" }}
               whileTap={{ scale: 0.97 }}
             >
-              Prova la Demo <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+              Esplora le Demo <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
             </motion.button>
           </motion.div>
 
@@ -1866,7 +1835,7 @@ const LandingPage = () => {
           >
             Inizia Ora
           </motion.button>
-          <motion.button onClick={() => navigate("/r/impero-roma")}
+          <motion.button onClick={() => navigate("/demo")}
             className="px-4 py-3.5 rounded-xl border border-primary/15 text-primary"
             whileTap={{ scale: 0.95 }}
           >
