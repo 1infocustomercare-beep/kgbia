@@ -348,11 +348,11 @@ const LandingPage = () => {
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute bottom-0 left-0 right-0 h-[50vh] origin-bottom"
             style={{
-              backgroundImage: `linear-gradient(hsla(42, 80%, 55%, 0.03) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 70%, 60%, 0.03) 1px, transparent 1px)`,
+              backgroundImage: `linear-gradient(hsla(265, 70%, 60%, 0.03) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 70%, 60%, 0.03) 1px, transparent 1px)`,
               backgroundSize: "60px 60px",
             }}
           />
-          <div className="absolute bottom-[25vh] left-0 right-0 h-[1px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 15%, hsla(42, 80%, 55%, 0.2) 50%, transparent 85%)" }} />
+          <div className="absolute bottom-[25vh] left-0 right-0 h-[1px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 15%, hsla(265, 70%, 60%, 0.15) 50%, transparent 85%)" }} />
         </div>
 
         {/* ═══ LAYER 2: Dual ambient glow — violet + gold ═══ */}
