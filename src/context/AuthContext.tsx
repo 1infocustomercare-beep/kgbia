@@ -100,7 +100,10 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
   useEffect(() => {
     let isMounted = true;
     const safetyTimer = setTimeout(() => {
-      if (isMounted) setLoading(false);
+      if (isMounted) {
+        setRolesReady(true);
+        setLoading(false);
+      }
     }, AUTH_LOADING_TIMEOUT_MS);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
