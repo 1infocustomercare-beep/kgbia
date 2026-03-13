@@ -127,6 +127,7 @@ export default function NCCDemoPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
       {/* ── Nav ─────────────────────────────────────────── */}
       <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
         <div className="container mx-auto px-4 h-14 md:h-16 flex items-center justify-between">
