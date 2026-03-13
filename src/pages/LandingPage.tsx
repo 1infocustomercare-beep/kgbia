@@ -252,11 +252,11 @@ const LandingPage = () => {
         <Particle delay={0.8} size={3} x="60%" y="15%" />
         {/* Subtle global data rain */}
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={`global-rain-${i}`} className="absolute top-0 w-px opacity-[0.12]"
+          <div key={`global-rain-${i}`} className="absolute top-0 w-px opacity-[0.08]"
             style={{
               left: `${15 + i * 18}%`,
               height: "80px",
-              background: "linear-gradient(180deg, transparent, hsla(200, 90%, 60%, 0.4), transparent)",
+              background: "linear-gradient(180deg, transparent, hsla(265, 70%, 60%, 0.3), transparent)",
               animation: `data-rain ${6 + i * 2}s linear infinite`,
               animationDelay: `${i * 1.5}s`,
             }} />
