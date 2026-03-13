@@ -523,7 +523,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Qualsiasi Settore. <span className="text-shimmer">Un Unico Sistema.</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[550px] mx-auto leading-[1.7] text-sm"
+          <motion.p className="text-foreground/50 max-w-[550px] mx-auto leading-[1.7] text-sm"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Empire si adatta automaticamente alla tua industria. Terminologia, moduli, dashboard e flussi operativi cambiano in base al settore — senza configurazioni manuali.
           </motion.p>
