@@ -416,8 +416,8 @@ const LandingPage = () => {
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
               <motion.button
                 onClick={() => scrollTo("pricing")}
-                className="group relative w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
-                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsla(265,70%,60%,0.2)" }}
+                className="group relative w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-gold-gradient text-deep-black font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsla(42,80%,55%,0.25)" }}
                 whileTap={{ scale: 0.97 }}
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/10 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
