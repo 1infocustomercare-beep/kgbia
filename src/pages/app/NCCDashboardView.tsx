@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Car, Calendar, DollarSign, Clock, Users, AlertTriangle,
-  ArrowUpRight, MapPin, TrendingUp, UserCheck, Navigation, CheckCircle2, XCircle, Loader2
+  ArrowUpRight, MapPin, TrendingUp, UserCheck, Navigation, CheckCircle2, XCircle,
+  Plus, Route, Shield, CreditCard, Star, Settings, Briefcase, BarChart3,
+  ChevronRight, Phone, FileText, Sparkles
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -19,10 +21,10 @@ import {
 
 type DateFilter = "today" | "week" | "month" | "year";
 
-const containerVariants = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
+const containerVariants = { hidden: {}, show: { transition: { staggerChildren: 0.04 } } };
 const cardVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.97 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 260, damping: 24 } },
+  hidden: { opacity: 0, y: 12, scale: 0.98 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 300, damping: 26 } },
 };
 
 function getDateRange(filter: DateFilter) {
@@ -43,17 +45,28 @@ function getTodayRange() {
   return { start: start.toISOString(), end: end.toISOString() };
 }
 
-const ACCENT = "43 74% 49%";
 const CHART_COLORS = ["#D4A017", "#3B82F6", "#10B981", "#EF4444", "#8B5CF6", "#F59E0B"];
 const MONTHS_IT = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; icon: any; bg: string }> = {
-  pending: { label: "Prenotate", color: "text-yellow-400", icon: Clock, bg: "bg-yellow-500/10" },
-  confirmed: { label: "Confermate", color: "text-blue-400", icon: CheckCircle2, bg: "bg-blue-500/10" },
-  in_progress: { label: "In Corso", color: "text-emerald-400", icon: Navigation, bg: "bg-emerald-500/10" },
-  completed: { label: "Completate", color: "text-green-400", icon: CheckCircle2, bg: "bg-green-500/10" },
-  cancelled: { label: "Annullate", color: "text-red-400", icon: XCircle, bg: "bg-red-500/10" },
+const STATUS_CONFIG: Record<string, { label: string; color: string; icon: any; bg: string; dot: string }> = {
+  pending: { label: "In Attesa", color: "text-amber-400", icon: Clock, bg: "bg-amber-500/10", dot: "bg-amber-400" },
+  confirmed: { label: "Confermate", color: "text-blue-400", icon: CheckCircle2, bg: "bg-blue-500/10", dot: "bg-blue-400" },
+  in_progress: { label: "In Corso", color: "text-purple-400", icon: Navigation, bg: "bg-purple-500/10", dot: "bg-purple-400" },
+  completed: { label: "Completate", color: "text-emerald-400", icon: CheckCircle2, bg: "bg-emerald-500/10", dot: "bg-emerald-400" },
+  cancelled: { label: "Annullate", color: "text-red-400", icon: XCircle, bg: "bg-red-500/10", dot: "bg-red-400" },
 };
+
+/* ═══ QUICK ACTIONS ═══ */
+const QUICK_ACTIONS = [
+  { label: "Nuova Corsa", icon: Plus, path: "/app/bookings", accent: "bg-primary/15 text-primary" },
+  { label: "Flotta", icon: Car, path: "/app/fleet", accent: "bg-blue-500/10 text-blue-400" },
+  { label: "Autisti", icon: Users, path: "/app/drivers", accent: "bg-emerald-500/10 text-emerald-400" },
+  { label: "Tratte", icon: Route, path: "/app/routes", accent: "bg-purple-500/10 text-purple-400" },
+  { label: "Prezzi", icon: CreditCard, path: "/app/pricing", accent: "bg-amber-500/10 text-amber-400" },
+  { label: "Scadenze", icon: Shield, path: "/app/ncc-expiry", accent: "bg-red-500/10 text-red-400" },
+  { label: "Recensioni", icon: Star, path: "/app/reviews", accent: "bg-yellow-500/10 text-yellow-400" },
+  { label: "Finanza", icon: BarChart3, path: "/app/finance", accent: "bg-cyan-500/10 text-cyan-400" },
+];
 
 export default function NCCDashboardView() {
   const { companyId } = useIndustry();
@@ -64,14 +77,14 @@ export default function NCCDashboardView() {
   const todayRange = getTodayRange();
   const yearStart = new Date(); yearStart.setMonth(0, 1); yearStart.setHours(0, 0, 0, 0);
 
-  // ═══ TODAY'S RIDES BY STATUS ═══
+  // ═══ TODAY'S RIDES ═══
   const { data: todayRides, isLoading: todayLoading } = useQuery({
     queryKey: ["ncc-today-rides", companyId],
     enabled: !!companyId,
     refetchInterval: 15000,
     queryFn: async () => {
       const { data } = await supabase.from("ncc_bookings")
-        .select("id, status, total_price, customer_name, pickup_datetime, pickup_address, dropoff_address, driver_id, route:ncc_routes(origin, destination), vehicle:fleet_vehicles(name), driver:drivers(first_name, last_name)")
+        .select("id, status, total_price, customer_name, customer_phone, pickup_datetime, pickup_address, dropoff_address, passengers, driver_id, route:ncc_routes(origin, destination), vehicle:fleet_vehicles(name), driver:drivers(first_name, last_name)")
         .eq("company_id", companyId!)
         .gte("pickup_datetime", todayRange.start)
         .lte("pickup_datetime", todayRange.end)
@@ -80,12 +93,10 @@ export default function NCCDashboardView() {
       const rides = (data as any[]) || [];
       const byStatus: Record<string, number> = { pending: 0, confirmed: 0, in_progress: 0, completed: 0, cancelled: 0 };
       let dailyEarnings = 0;
-
       rides.forEach(r => {
         byStatus[r.status] = (byStatus[r.status] || 0) + 1;
         if (r.status === "completed") dailyEarnings += r.total_price || 0;
       });
-
       return { rides, byStatus, dailyEarnings, total: rides.length };
     },
   });
@@ -97,8 +108,7 @@ export default function NCCDashboardView() {
     refetchInterval: 30000,
     queryFn: async () => {
       const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0, 0, 0, 0);
-
-      const [vehicles, routes, bookingsFiltered, bookingsWeek, driversAvail, unassigned, bookingsYear] = await Promise.all([
+      const [vehicles, routes, bookingsFiltered, bookingsWeek, driversAvail, unassigned, bookingsYear, reviews] = await Promise.all([
         supabase.from("fleet_vehicles").select("id", { count: "exact", head: true }).eq("company_id", companyId!).eq("is_active", true),
         supabase.from("ncc_routes").select("id", { count: "exact", head: true }).eq("company_id", companyId!).eq("is_active", true),
         supabase.from("ncc_bookings").select("total_price").eq("company_id", companyId!).gte("created_at", start),
@@ -106,10 +116,14 @@ export default function NCCDashboardView() {
         supabase.from("drivers").select("id", { count: "exact", head: true }).eq("company_id", companyId!).eq("status", "available"),
         supabase.from("ncc_bookings").select("id", { count: "exact", head: true }).eq("company_id", companyId!).is("driver_id", null).neq("status", "cancelled"),
         supabase.from("ncc_bookings").select("total_price").eq("company_id", companyId!).gte("created_at", yearStart.toISOString()),
+        supabase.from("ncc_reviews").select("rating").eq("company_id", companyId!),
       ]);
 
       const revenue = (bookingsFiltered.data || []).reduce((s, b) => s + (b.total_price || 0), 0);
       const yearRevenue = (bookingsYear.data || []).reduce((s, b) => s + (b.total_price || 0), 0);
+      const avgRating = (reviews.data || []).length > 0
+        ? ((reviews.data || []).reduce((s, r) => s + (r.rating || 0), 0) / (reviews.data || []).length).toFixed(1)
+        : "—";
 
       return {
         vehicles: vehicles.count || 0,
@@ -119,47 +133,43 @@ export default function NCCDashboardView() {
         bookingsWeek: bookingsWeek.count || 0,
         driversAvail: driversAvail.count || 0,
         unassigned: unassigned.count || 0,
+        avgRating,
+        totalReviews: (reviews.data || []).length,
       };
     },
   });
 
-  // ═══ DRIVERS WITH STATUS (for live map) ═══
+  // ═══ DRIVERS LIVE ═══
   const { data: drivers = [] } = useQuery({
     queryKey: ["ncc-drivers-live", companyId],
     enabled: !!companyId,
     refetchInterval: 20000,
     queryFn: async () => {
       const { data } = await supabase.from("drivers")
-        .select("id, first_name, last_name, status, phone, preferred_vehicle_id, photo_url")
+        .select("id, first_name, last_name, status, phone")
         .eq("company_id", companyId!)
         .order("first_name");
       return (data || []) as any[];
     },
   });
 
-  // Alerts
+  // ═══ ALERTS ═══
   const { data: alerts } = useQuery({
     queryKey: ["ncc-alerts", companyId],
     enabled: !!companyId,
     queryFn: async () => {
       const in60 = new Date(); in60.setDate(in60.getDate() + 60);
       const in30 = new Date(); in30.setDate(in30.getDate() + 30);
-
       const [licenseExpiring, revisionExpiring, unassignedBookings] = await Promise.all([
         supabase.from("drivers").select("id", { count: "exact", head: true }).eq("company_id", companyId!).lte("license_expiry", in60.toISOString().split("T")[0]),
         supabase.from("fleet_vehicles").select("id", { count: "exact", head: true }).eq("company_id", companyId!).lte("revision_expiry", in30.toISOString().split("T")[0]),
         supabase.from("ncc_bookings").select("id", { count: "exact", head: true }).eq("company_id", companyId!).is("driver_id", null).neq("status", "cancelled"),
       ]);
-
-      return {
-        licenseExpiring: licenseExpiring.count || 0,
-        revisionExpiring: revisionExpiring.count || 0,
-        unassigned: unassignedBookings.count || 0,
-      };
+      return { licenseExpiring: licenseExpiring.count || 0, revisionExpiring: revisionExpiring.count || 0, unassigned: unassignedBookings.count || 0 };
     },
   });
 
-  // Revenue chart
+  // ═══ REVENUE CHART ═══
   const { data: revenueByMonth = [] } = useQuery({
     queryKey: ["ncc-rev-chart", companyId],
     enabled: !!companyId,
@@ -177,7 +187,6 @@ export default function NCCDashboardView() {
         const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
         map[key] = (map[key] || 0) + (b.total_price || 0);
       });
-
       const result = [];
       for (let i = 5; i >= 0; i--) {
         const d = new Date(); d.setMonth(d.getMonth() - i);
@@ -188,7 +197,7 @@ export default function NCCDashboardView() {
     },
   });
 
-  // Top routes
+  // ═══ TOP ROUTES ═══
   const { data: topRoutes = [] } = useQuery({
     queryKey: ["ncc-top-routes", companyId],
     enabled: !!companyId,
@@ -206,42 +215,17 @@ export default function NCCDashboardView() {
           countMap[b.route_id].count++;
         }
       });
-
       return Object.values(countMap).sort((a, b) => b.count - a.count).slice(0, 5);
     },
   });
 
   const hasAlerts = alerts && (alerts.licenseExpiring > 0 || alerts.revisionExpiring > 0 || alerts.unassigned > 0);
-
-  const KPI = ({ label, value, icon: Icon, accent = ACCENT, loading = false, subtitle, onClick }: any) => (
-    <motion.div variants={cardVariants}>
-      <Card
-        className={`border-border/40 bg-card/60 backdrop-blur-xl hover:border-border/80 transition-all ${onClick ? "cursor-pointer" : ""}`}
-        onClick={onClick}
-      >
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `hsla(${accent} / 0.12)` }}>
-              <Icon className="w-4.5 h-4.5" style={{ color: `hsl(${accent})` }} />
-            </div>
-            {onClick && <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground" />}
-          </div>
-          {loading ? <Skeleton className="h-7 w-16" /> : (
-            <>
-              <p className="text-2xl font-bold tracking-tight">{value}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
-              {subtitle && <p className="text-[10px] text-muted-foreground/60 mt-1">{subtitle}</p>}
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
+  const totalAlerts = (alerts?.licenseExpiring || 0) + (alerts?.revisionExpiring || 0) + (alerts?.unassigned || 0);
 
   const driverStatusColor = (status: string) => {
     switch (status) {
       case "available": return "bg-emerald-500";
-      case "busy": return "bg-yellow-500";
+      case "busy": return "bg-amber-500";
       case "off_duty": return "bg-muted-foreground/40";
       default: return "bg-muted-foreground/40";
     }
@@ -249,7 +233,7 @@ export default function NCCDashboardView() {
 
   const driverStatusLabel = (status: string) => {
     switch (status) {
-      case "available": return "Disponibile";
+      case "available": return "Libero";
       case "busy": return "In servizio";
       case "off_duty": return "Non in turno";
       default: return status;
@@ -257,44 +241,180 @@ export default function NCCDashboardView() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header + Date Filter */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-heading">Dashboard NCC</h1>
-          <p className="text-sm text-muted-foreground">Gestione flotta, autisti e prenotazioni</p>
+    <div className="space-y-4 sm:space-y-6 pb-20 md:pb-4">
+      {/* ═══ HEADER ═══ */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold font-heading">Dashboard</h1>
+            <p className="text-xs text-muted-foreground">
+              {new Date().toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" })}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {hasAlerts && (
+              <button
+                onClick={() => navigate("/app/ncc-expiry")}
+                className="relative w-9 h-9 rounded-xl bg-red-500/10 flex items-center justify-center"
+              >
+                <AlertTriangle className="w-4 h-4 text-red-400" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-[9px] text-white font-bold flex items-center justify-center">
+                  {totalAlerts}
+                </span>
+              </button>
+            )}
+            <button
+              onClick={() => navigate("/app/settings")}
+              className="w-9 h-9 rounded-xl bg-secondary/50 flex items-center justify-center"
+            >
+              <Settings className="w-4 h-4 text-muted-foreground" />
+            </button>
+          </div>
         </div>
-        <div className="flex gap-1 bg-secondary/50 rounded-lg p-1">
-          {([["today", "Oggi"], ["week", "Settimana"], ["month", "Mese"], ["year", "Anno"]] as const).map(([k, l]) => (
-            <Button
+
+        {/* Date filter */}
+        <div className="flex gap-1 bg-secondary/40 rounded-lg p-0.5">
+          {([["today", "Oggi"], ["week", "Sett."], ["month", "Mese"], ["year", "Anno"]] as const).map(([k, l]) => (
+            <button
               key={k}
-              size="sm"
-              variant={dateFilter === k ? "default" : "ghost"}
-              className={`text-xs h-8 min-h-[32px] ${dateFilter === k ? "bg-primary text-primary-foreground" : ""}`}
+              className={`flex-1 text-[11px] font-medium py-1.5 rounded-md transition-all ${
+                dateFilter === k
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
               onClick={() => setDateFilter(k)}
-            >{l}</Button>
+            >{l}</button>
           ))}
         </div>
       </div>
 
-      {/* Alert Box */}
+      {/* ═══ HERO KPIs — 2x2 grid mobile ═══ */}
+      <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-2 gap-2.5 sm:gap-3">
+        {/* Revenue */}
+        <motion.div variants={cardVariants}>
+          <Card className="border-primary/20 bg-primary/5 backdrop-blur">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-primary/15 flex items-center justify-center">
+                  <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+                </div>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Fatturato</span>
+              </div>
+              {isLoading ? <Skeleton className="h-6 w-16" /> : (
+                <p className="text-lg sm:text-xl font-bold text-primary">
+                  €{(stats?.revenue ?? 0).toLocaleString("it-IT")}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Today's earnings */}
+        <motion.div variants={cardVariants}>
+          <Card className="border-border/40 bg-card/60 backdrop-blur">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                  <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
+                </div>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Oggi</span>
+              </div>
+              {todayLoading ? <Skeleton className="h-6 w-16" /> : (
+                <p className="text-lg sm:text-xl font-bold">
+                  €{(todayRides?.dailyEarnings ?? 0).toLocaleString("it-IT")}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Vehicles */}
+        <motion.div variants={cardVariants}>
+          <Card className="border-border/40 bg-card/60 backdrop-blur cursor-pointer hover:border-border/80 transition-all" onClick={() => navigate("/app/fleet")}>
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <Car className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400" />
+                </div>
+                <ArrowUpRight className="w-3 h-3 text-muted-foreground/50 ml-auto" />
+              </div>
+              {isLoading ? <Skeleton className="h-6 w-8" /> : (
+                <>
+                  <p className="text-lg sm:text-xl font-bold">{stats?.vehicles ?? 0}</p>
+                  <p className="text-[10px] text-muted-foreground">Veicoli attivi</p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Drivers */}
+        <motion.div variants={cardVariants}>
+          <Card className="border-border/40 bg-card/60 backdrop-blur cursor-pointer hover:border-border/80 transition-all" onClick={() => navigate("/app/drivers")}>
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-400" />
+                </div>
+                <ArrowUpRight className="w-3 h-3 text-muted-foreground/50 ml-auto" />
+              </div>
+              {isLoading ? <Skeleton className="h-6 w-8" /> : (
+                <>
+                  <p className="text-lg sm:text-xl font-bold">{stats?.driversAvail ?? 0}</p>
+                  <p className="text-[10px] text-muted-foreground">Autisti liberi</p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+      </motion.div>
+
+      {/* ═══ QUICK ACTIONS — horizontal scroll mobile ═══ */}
+      <div>
+        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Azioni rapide</h2>
+        <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+          {QUICK_ACTIONS.map(a => {
+            const Icon = a.icon;
+            return (
+              <button
+                key={a.path + a.label}
+                onClick={() => navigate(a.path)}
+                className="flex flex-col items-center gap-1.5 min-w-[64px] flex-shrink-0"
+              >
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${a.accent} transition-transform active:scale-95`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-medium text-muted-foreground text-center leading-tight">{a.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ═══ ALERT BANNER ═══ */}
       {hasAlerts && (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="border-destructive/50 bg-destructive/10">
-            <CardContent className="p-4 space-y-2">
+        <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
+          <Card className="border-red-500/30 bg-red-500/5">
+            <CardContent className="p-3 space-y-1.5">
+              {alerts!.unassigned > 0 && (
+                <button onClick={() => navigate("/app/bookings")} className="flex items-center gap-2 text-xs text-amber-300 hover:text-amber-100 w-full text-left">
+                  <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span>{alerts!.unassigned} prenotazioni senza autista</span>
+                  <ChevronRight className="w-3.5 h-3.5 ml-auto flex-shrink-0" />
+                </button>
+              )}
               {alerts!.licenseExpiring > 0 && (
-                <button onClick={() => navigate("/app/drivers")} className="flex items-center gap-2 text-sm text-yellow-300 hover:text-yellow-100 w-full text-left">
-                  <AlertTriangle className="w-4 h-4" />⚠️ {alerts!.licenseExpiring} patenti in scadenza entro 60 giorni
+                <button onClick={() => navigate("/app/ncc-expiry")} className="flex items-center gap-2 text-xs text-yellow-300 hover:text-yellow-100 w-full text-left">
+                  <Shield className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span>{alerts!.licenseExpiring} patenti in scadenza</span>
+                  <ChevronRight className="w-3.5 h-3.5 ml-auto flex-shrink-0" />
                 </button>
               )}
               {alerts!.revisionExpiring > 0 && (
-                <button onClick={() => navigate("/app/fleet")} className="flex items-center gap-2 text-sm text-yellow-300 hover:text-yellow-100 w-full text-left">
-                  <AlertTriangle className="w-4 h-4" />⚠️ {alerts!.revisionExpiring} revisioni veicoli in scadenza entro 30 giorni
-                </button>
-              )}
-              {alerts!.unassigned > 0 && (
-                <button onClick={() => navigate("/app/bookings")} className="flex items-center gap-2 text-sm text-yellow-300 hover:text-yellow-100 w-full text-left">
-                  <AlertTriangle className="w-4 h-4" />⚠️ {alerts!.unassigned} prenotazioni senza autista assegnato
+                <button onClick={() => navigate("/app/fleet")} className="flex items-center gap-2 text-xs text-orange-300 hover:text-orange-100 w-full text-left">
+                  <Car className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span>{alerts!.revisionExpiring} revisioni veicoli in scadenza</span>
+                  <ChevronRight className="w-3.5 h-3.5 ml-auto flex-shrink-0" />
                 </button>
               )}
             </CardContent>
@@ -302,275 +422,285 @@ export default function NCCDashboardView() {
         </motion.div>
       )}
 
-      {/* ═══ CORSE DEL GIORNO + GUADAGNO ═══ */}
+      {/* ═══ TODAY'S STATUS PILLS ═══ */}
       <div>
-        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-          📅 Corse di Oggi — {new Date().toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" })}
-        </h2>
-        <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {/* Daily earnings - prominent */}
-          <motion.div variants={cardVariants} className="col-span-2 sm:col-span-1">
-            <Card className="border-primary/30 bg-primary/5 backdrop-blur-xl">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center">
-                    <DollarSign className="w-5 h-5 text-primary" />
-                  </div>
-                </div>
-                {todayLoading ? <Skeleton className="h-7 w-20" /> : (
-                  <>
-                    <p className="text-2xl font-bold tracking-tight text-primary">
-                      €{(todayRides?.dailyEarnings ?? 0).toLocaleString("it-IT")}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Guadagno Oggi</p>
-                    <p className="text-[10px] text-muted-foreground/60 mt-1">{todayRides?.total ?? 0} corse totali</p>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Status cards */}
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            Corse di oggi
+          </h2>
+          <span className="text-xs font-bold text-foreground">
+            {todayRides?.total ?? 0} totali
+          </span>
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
           {Object.entries(STATUS_CONFIG).map(([key, cfg]) => {
             const count = todayRides?.byStatus[key] ?? 0;
-            const IconComp = cfg.icon;
+            const Icon = cfg.icon;
             return (
-              <motion.div key={key} variants={cardVariants}>
-                <Card
-                  className={`border-border/40 bg-card/60 backdrop-blur-xl hover:border-border/80 transition-all cursor-pointer ${count > 0 ? "" : "opacity-60"}`}
-                  onClick={() => navigate("/app/bookings")}
-                >
-                  <CardContent className="p-4">
-                    <div className={`w-8 h-8 rounded-lg ${cfg.bg} flex items-center justify-center mb-2`}>
-                      <IconComp className={`w-4 h-4 ${cfg.color}`} />
-                    </div>
-                    {todayLoading ? <Skeleton className="h-6 w-8" /> : (
-                      <>
-                        <p className="text-xl font-bold">{count}</p>
-                        <p className="text-[11px] text-muted-foreground">{cfg.label}</p>
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
+              <button
+                key={key}
+                onClick={() => navigate("/app/bookings")}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all flex-shrink-0 ${
+                  count > 0 ? `${cfg.bg} border-current/10` : "bg-secondary/30 border-border/30 opacity-50"
+                }`}
+              >
+                <div className={`w-2 h-2 rounded-full ${cfg.dot}`} />
+                <span className={`text-xs font-semibold ${count > 0 ? cfg.color : "text-muted-foreground"}`}>{count}</span>
+                <span className="text-[10px] text-muted-foreground">{cfg.label}</span>
+              </button>
             );
           })}
-        </motion.div>
+        </div>
       </div>
 
-      {/* ═══ TODAY'S RIDE LIST + DRIVER MAP ═══ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Today's rides timeline */}
-        <Card className="border-border/40 bg-card/60">
-          <CardHeader className="pb-2">
+      {/* ═══ TODAY'S RIDE TIMELINE ═══ */}
+      <Card className="border-border/40 bg-card/60">
+        <CardHeader className="pb-2 px-3 sm:px-6 pt-3 sm:pt-4">
+          <div className="flex items-center justify-between">
             <CardTitle className="text-sm flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-primary" /> Corse di Oggi
+              <Calendar className="w-4 h-4 text-primary" /> Programma Oggi
             </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {todayLoading ? (
-              <div className="space-y-3">
-                {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full rounded-lg" />)}
-              </div>
-            ) : (todayRides?.rides.length ?? 0) === 0 ? (
-              <div className="py-8 text-center">
-                <Car className="w-10 h-10 mx-auto text-muted-foreground/30 mb-2" />
-                <p className="text-sm text-muted-foreground">Nessuna corsa programmata oggi</p>
-              </div>
-            ) : (
-              <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
-                {todayRides!.rides.map((ride: any) => {
-                  const cfg = STATUS_CONFIG[ride.status] || STATUS_CONFIG.pending;
-                  const time = new Date(ride.pickup_datetime).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
-                  const origin = ride.route?.origin || ride.pickup_address || "—";
-                  const dest = ride.route?.destination || ride.dropoff_address || "—";
-                  return (
-                    <div
-                      key={ride.id}
-                      className="flex items-start gap-3 p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors cursor-pointer"
-                      onClick={() => navigate("/app/bookings")}
-                    >
-                      <div className={`w-10 h-10 rounded-lg ${cfg.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                        <cfg.icon className={`w-4 h-4 ${cfg.color}`} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-sm">{time}</span>
-                          <Badge variant="outline" className={`text-[10px] ${cfg.color} border-current/20`}>
-                            {cfg.label}
-                          </Badge>
-                        </div>
-                        <p className="text-xs text-muted-foreground truncate mt-0.5">
-                          {origin} → {dest}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-foreground/70">{ride.customer_name}</span>
-                          {ride.driver ? (
-                            <Badge variant="secondary" className="text-[10px]">🚗 {ride.driver.first_name}</Badge>
-                          ) : (
-                            <Badge variant="destructive" className="text-[10px]">⚠ No autista</Badge>
-                          )}
-                          {ride.total_price > 0 && (
-                            <span className="text-[10px] font-semibold text-primary ml-auto">€{ride.total_price}</span>
-                          )}
-                        </div>
+            <Button size="sm" variant="ghost" className="text-xs h-7" onClick={() => navigate("/app/bookings")}>
+              Tutte <ChevronRight className="w-3 h-3 ml-1" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="px-3 sm:px-6 pb-3">
+          {todayLoading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full rounded-lg" />)}
+            </div>
+          ) : (todayRides?.rides.length ?? 0) === 0 ? (
+            <div className="py-6 text-center">
+              <Car className="w-8 h-8 mx-auto text-muted-foreground/20 mb-2" />
+              <p className="text-xs text-muted-foreground">Nessuna corsa programmata</p>
+              <Button size="sm" variant="outline" className="mt-3 text-xs h-8" onClick={() => navigate("/app/bookings")}>
+                <Plus className="w-3 h-3 mr-1" /> Nuova Prenotazione
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-1.5 max-h-[300px] sm:max-h-[400px] overflow-y-auto">
+              {todayRides!.rides.map((ride: any) => {
+                const cfg = STATUS_CONFIG[ride.status] || STATUS_CONFIG.pending;
+                const time = new Date(ride.pickup_datetime).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+                const origin = ride.route?.origin || ride.pickup_address?.split(",")[0] || "—";
+                const dest = ride.route?.destination || ride.dropoff_address?.split(",")[0] || "—";
+                return (
+                  <div
+                    key={ride.id}
+                    className="flex items-center gap-2.5 p-2.5 rounded-lg bg-secondary/20 hover:bg-secondary/40 transition-colors cursor-pointer"
+                    onClick={() => navigate("/app/bookings")}
+                  >
+                    {/* Time */}
+                    <div className="text-center flex-shrink-0 w-12">
+                      <p className="text-sm font-bold">{time}</p>
+                      <div className={`w-2 h-2 rounded-full mx-auto mt-0.5 ${cfg.dot}`} />
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold truncate">{origin} → {dest}</p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="text-[10px] text-muted-foreground truncate">{ride.customer_name}</span>
+                        {ride.passengers > 1 && (
+                          <span className="text-[10px] text-muted-foreground">• {ride.passengers} pax</span>
+                        )}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </CardContent>
-        </Card>
 
-        {/* ═══ LIVE DRIVER MAP ═══ */}
-        <Card className="border-border/40 bg-card/60">
-          <CardHeader className="pb-2">
+                    {/* Right side */}
+                    <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
+                      {ride.total_price > 0 && (
+                        <span className="text-xs font-bold text-primary">€{ride.total_price}</span>
+                      )}
+                      {ride.driver ? (
+                        <span className="text-[9px] text-emerald-400">{ride.driver.first_name}</span>
+                      ) : (
+                        <span className="text-[9px] text-red-400">⚠ No autista</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* ═══ DRIVERS LIVE ═══ */}
+      <Card className="border-border/40 bg-card/60">
+        <CardHeader className="pb-2 px-3 sm:px-6 pt-3 sm:pt-4">
+          <div className="flex items-center justify-between">
             <CardTitle className="text-sm flex items-center gap-2">
-              <Navigation className="w-4 h-4 text-primary" /> Mappa Autisti Live
-              <span className="ml-auto flex items-center gap-1 text-[10px] text-emerald-400 font-normal">
+              <Users className="w-4 h-4 text-primary" /> Autisti
+              <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-normal">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live
               </span>
             </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* Map placeholder */}
-            <div className="relative w-full h-[180px] sm:h-[200px] rounded-xl overflow-hidden bg-secondary/50 mb-4">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div
-                  className="absolute inset-0 opacity-[0.04]"
-                  style={{
-                    backgroundImage: "linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)",
-                    backgroundSize: "40px 40px",
-                  }}
-                />
-                {/* Simulated driver pins */}
-                {drivers.slice(0, 6).map((d: any, i: number) => {
-                  const positions = [
-                    { top: "25%", left: "30%" }, { top: "45%", left: "60%" }, { top: "65%", left: "25%" },
-                    { top: "35%", left: "75%" }, { top: "55%", left: "45%" }, { top: "20%", left: "55%" },
-                  ];
-                  const pos = positions[i] || positions[0];
-                  return (
-                    <motion.div
-                      key={d.id}
-                      className="absolute flex flex-col items-center"
-                      style={pos}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: i * 0.1, type: "spring" }}
-                    >
-                      <div className="relative">
-                        <div className={`w-8 h-8 rounded-full border-2 border-background flex items-center justify-center text-[10px] font-bold text-primary-foreground ${d.status === "available" ? "bg-emerald-500" : d.status === "busy" ? "bg-yellow-500" : "bg-muted-foreground"}`}>
-                          {d.first_name[0]}{d.last_name[0]}
-                        </div>
-                        <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${driverStatusColor(d.status)}`} />
-                      </div>
-                      <span className="text-[9px] mt-1 text-foreground/60 bg-background/80 px-1 rounded">{d.first_name}</span>
-                    </motion.div>
-                  );
-                })}
-                {drivers.length === 0 && (
-                  <p className="text-xs text-muted-foreground z-10">Nessun autista registrato</p>
-                )}
-              </div>
+            <Button size="sm" variant="ghost" className="text-xs h-7" onClick={() => navigate("/app/drivers")}>
+              Gestisci <ChevronRight className="w-3 h-3 ml-1" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="px-3 sm:px-6 pb-3">
+          {drivers.length === 0 ? (
+            <div className="py-4 text-center">
+              <Users className="w-6 h-6 mx-auto text-muted-foreground/20 mb-1" />
+              <p className="text-xs text-muted-foreground">Nessun autista registrato</p>
             </div>
-
-            {/* Driver list */}
-            <div className="space-y-1.5">
+          ) : (
+            <div className="space-y-1">
               {drivers.map((d: any) => (
-                <div key={d.id} className="flex items-center gap-2 p-2 rounded-lg hover:bg-secondary/40 transition-colors">
+                <div key={d.id} className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-secondary/30 transition-colors">
                   <div className="relative">
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-primary-foreground ${d.status === "available" ? "bg-emerald-600" : d.status === "busy" ? "bg-yellow-600" : "bg-muted-foreground"}`}>
-                      {d.first_name[0]}{d.last_name[0]}
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white ${
+                      d.status === "available" ? "bg-emerald-600" : d.status === "busy" ? "bg-amber-600" : "bg-muted-foreground"
+                    }`}>
+                      {d.first_name?.[0]}{d.last_name?.[0]}
                     </div>
+                    <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-card ${driverStatusColor(d.status)}`} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium truncate">{d.first_name} {d.last_name}</p>
                   </div>
-                  <Badge variant="outline" className={`text-[10px] ${d.status === "available" ? "text-emerald-400 border-emerald-400/30" : d.status === "busy" ? "text-yellow-400 border-yellow-400/30" : "text-muted-foreground"}`}>
+                  <Badge variant="outline" className={`text-[9px] h-5 ${
+                    d.status === "available" ? "text-emerald-400 border-emerald-400/20" :
+                    d.status === "busy" ? "text-amber-400 border-amber-400/20" :
+                    "text-muted-foreground border-border"
+                  }`}>
                     {driverStatusLabel(d.status)}
                   </Badge>
+                  {d.phone && (
+                    <a href={`tel:${d.phone}`} className="w-7 h-7 rounded-lg bg-secondary/50 flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-3 h-3 text-muted-foreground" />
+                    </a>
+                  )}
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </CardContent>
+      </Card>
 
-      {/* ═══ STANDARD KPIs ═══ */}
-      <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <KPI label="Veicoli Attivi" value={stats?.vehicles ?? 0} icon={Car} loading={isLoading} onClick={() => navigate("/app/fleet")} />
-        <KPI label="Tratte Attive" value={stats?.routes ?? 0} icon={MapPin} accent="210 80% 50%" loading={isLoading} onClick={() => navigate("/app/routes")} />
-        <KPI label={`Fatturato ${dateFilter === "today" ? "Oggi" : dateFilter === "week" ? "Settimana" : dateFilter === "month" ? "Mese" : "Anno"}`} value={`€${(stats?.revenue ?? 0).toLocaleString("it-IT")}`} icon={DollarSign} accent="160 60% 45%" loading={isLoading} />
-        <KPI label="Prenotazioni Settimana" value={stats?.bookingsWeek ?? 0} icon={Calendar} loading={isLoading} onClick={() => navigate("/app/bookings")} />
+      {/* ═══ STATS ROW ═══ */}
+      <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-3 gap-2">
+        <motion.div variants={cardVariants}>
+          <Card className="border-border/40 bg-card/60 cursor-pointer" onClick={() => navigate("/app/routes")}>
+            <CardContent className="p-3 text-center">
+              <MapPin className="w-4 h-4 text-blue-400 mx-auto mb-1" />
+              {isLoading ? <Skeleton className="h-5 w-6 mx-auto" /> : <p className="text-base font-bold">{stats?.routes ?? 0}</p>}
+              <p className="text-[9px] text-muted-foreground">Tratte</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div variants={cardVariants}>
+          <Card className="border-border/40 bg-card/60 cursor-pointer" onClick={() => navigate("/app/bookings")}>
+            <CardContent className="p-3 text-center">
+              <Calendar className="w-4 h-4 text-purple-400 mx-auto mb-1" />
+              {isLoading ? <Skeleton className="h-5 w-6 mx-auto" /> : <p className="text-base font-bold">{stats?.bookingsWeek ?? 0}</p>}
+              <p className="text-[9px] text-muted-foreground">Sett.</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div variants={cardVariants}>
+          <Card className="border-border/40 bg-card/60 cursor-pointer" onClick={() => navigate("/app/reviews")}>
+            <CardContent className="p-3 text-center">
+              <Star className="w-4 h-4 text-yellow-400 mx-auto mb-1" />
+              {isLoading ? <Skeleton className="h-5 w-6 mx-auto" /> : (
+                <p className="text-base font-bold">{stats?.avgRating ?? "—"}</p>
+              )}
+              <p className="text-[9px] text-muted-foreground">{stats?.totalReviews ?? 0} rec.</p>
+            </CardContent>
+          </Card>
+        </motion.div>
       </motion.div>
 
-      <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <KPI label="Autisti Disponibili" value={stats?.driversAvail ?? 0} icon={UserCheck} accent="160 60% 45%" loading={isLoading} onClick={() => navigate("/app/drivers")} />
-        <KPI label="Fatturato Annuale" value={`€${(stats?.yearRevenue ?? 0).toLocaleString("it-IT")}`} icon={TrendingUp} accent="263 70% 58%" loading={isLoading} />
-        <KPI
-          label="Non Assegnate"
-          value={stats?.unassigned ?? 0}
-          icon={AlertTriangle}
-          accent={stats?.unassigned ? "0 80% 55%" : "43 74% 49%"}
-          loading={isLoading}
-          subtitle={stats?.unassigned ? "Da assegnare autista" : undefined}
-          onClick={() => navigate("/app/bookings")}
-        />
-        <KPI label="Conversione" value="—" icon={TrendingUp} accent="263 70% 58%" loading={isLoading} />
-      </motion.div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card className="border-border/40 bg-card/60">
-          <CardHeader className="pb-2"><CardTitle className="text-sm">Fatturato Ultimi 6 Mesi</CardTitle></CardHeader>
-          <CardContent>
-            <div className="h-[200px] sm:h-[250px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={revenueByMonth}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-                  <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-                  <Tooltip formatter={(v: number) => [`€${v.toLocaleString("it-IT")}`, "Fatturato"]} contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
-                  <Bar dataKey="revenue" fill="#D4A017" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+      {/* ═══ UNASSIGNED ALERT ═══ */}
+      {(stats?.unassigned ?? 0) > 0 && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <button
+            onClick={() => navigate("/app/bookings")}
+            className="w-full flex items-center gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20"
+          >
+            <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
+            <div className="text-left flex-1">
+              <p className="text-xs font-semibold text-amber-300">{stats?.unassigned} corse senza autista</p>
+              <p className="text-[10px] text-muted-foreground">Assegna un autista per confermare</p>
             </div>
-          </CardContent>
-        </Card>
+            <ChevronRight className="w-4 h-4 text-amber-400/60" />
+          </button>
+        </motion.div>
+      )}
 
-        <Card className="border-border/40 bg-card/60">
-          <CardHeader className="pb-2"><CardTitle className="text-sm">Top 5 Tratte</CardTitle></CardHeader>
-          <CardContent>
-            <div className="h-[200px] sm:h-[250px]">
-              {topRoutes.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie data={topRoutes} dataKey="count" nameKey="name" cx="50%" cy="50%" outerRadius={80} label={({ count }: any) => `${count}`}>
-                      {topRoutes.map((_: any, i: number) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
-                    </Pie>
-                    <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 11 }} />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-full flex items-center justify-center text-sm text-muted-foreground">Nessun dato disponibile</div>
+      {/* ═══ REVENUE CHART ═══ */}
+      <Card className="border-border/40 bg-card/60">
+        <CardHeader className="pb-1 px-3 sm:px-6 pt-3 sm:pt-4">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 text-primary" /> Fatturato 6 Mesi
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="px-1 sm:px-4 pb-3">
+          <div className="h-[180px] sm:h-[220px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={revenueByMonth}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
+                <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} width={40} />
+                <Tooltip
+                  formatter={(v: number) => [`€${v.toLocaleString("it-IT")}`, "Fatturato"]}
+                  contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 11 }}
+                />
+                <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ═══ TOP ROUTES ═══ */}
+      <Card className="border-border/40 bg-card/60">
+        <CardHeader className="pb-2 px-3 sm:px-6 pt-3 sm:pt-4">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Route className="w-4 h-4 text-primary" /> Tratte Più Richieste
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="px-3 sm:px-6 pb-3">
+          {topRoutes.length > 0 ? (
+            <div className="space-y-2">
+              {topRoutes.map((r: any, i: number) => (
+                <div key={i} className="flex items-center gap-2.5">
+                  <div className="w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-bold" style={{ background: CHART_COLORS[i % CHART_COLORS.length] + "20", color: CHART_COLORS[i % CHART_COLORS.length] }}>
+                    {i + 1}
+                  </div>
+                  <span className="text-xs text-foreground/80 flex-1 truncate">{r.name}</span>
+                  <Badge variant="secondary" className="text-[10px] h-5">{r.count} corse</Badge>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground text-center py-4">Nessun dato disponibile</p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* ═══ YEAR REVENUE SUMMARY ═══ */}
+      <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Fatturato Annuale {new Date().getFullYear()}</p>
+              {isLoading ? <Skeleton className="h-7 w-24 mt-1" /> : (
+                <p className="text-xl sm:text-2xl font-bold text-primary mt-0.5">
+                  €{(stats?.yearRevenue ?? 0).toLocaleString("it-IT")}
+                </p>
               )}
             </div>
-            {topRoutes.length > 0 && (
-              <div className="mt-2 space-y-1">
-                {topRoutes.map((r: any, i: number) => (
-                  <div key={i} className="flex items-center gap-2 text-xs">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: CHART_COLORS[i % CHART_COLORS.length] }} />
-                    <span className="truncate text-muted-foreground">{r.name}</span>
-                    <span className="ml-auto font-medium">{r.count}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-primary" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
