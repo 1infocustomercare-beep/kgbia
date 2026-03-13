@@ -206,6 +206,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
 
   const signOut = async () => {
     try {
+      clearIndustryCache();
       await supabase.auth.signOut();
     } catch (error) {
       console.error("Sign out failed", error);
