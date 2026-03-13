@@ -1713,11 +1713,11 @@ const LandingPage = () => {
 
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
-        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.1] via-accent/[0.04] to-primary/[0.06] border border-primary/15 overflow-hidden animated-border">
+        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-gold/[0.06] via-deep-black/80 to-primary/[0.04] border border-gold/15 overflow-hidden animated-border">
           <div className="absolute inset-0 aurora-mesh opacity-30" />
-          {/* Extra ambient glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[40px] blur-[30px] bg-primary/20" />
+          {/* Gold ambient glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[2px]" style={{ background: "linear-gradient(90deg, transparent, hsla(42,80%,55%,0.5), transparent)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[40px] blur-[30px]" style={{ background: "hsla(42, 80%, 55%, 0.15)" }} />
           <div className="relative z-10">
             <motion.div
               initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
