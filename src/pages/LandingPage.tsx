@@ -94,8 +94,16 @@ const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: strin
 
 /* ═══ Section Divider ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
-  <div ref={ref} className="relative py-1">
+  <div ref={ref} className="section-connector">
     <div className="section-divider" />
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <motion.div
+        className="w-2 h-2 rounded-full bg-primary"
+        style={{ boxShadow: "0 0 12px hsla(265, 85%, 65%, 0.6), 0 0 30px hsla(265, 85%, 65%, 0.3)" }}
+        animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      />
+    </div>
   </div>
 ));
 SectionDivider.displayName = "SectionDivider";
@@ -124,7 +132,7 @@ const LandingPage = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeIndustry, setActiveIndustry] = useState(0);
-  const [premiumGrid, setPremiumGrid] = useState(true);
+  const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -231,6 +239,9 @@ const LandingPage = () => {
         <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] bg-accent top-[50vh] -right-[100px] animate-float-glow-slow" />
         <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.035] top-[80vh] left-[10%] animate-float-glow-delay"
           style={{ background: "hsl(320, 75%, 55%)" }} />
+        {/* Cyan tech orb */}
+        <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.03] top-[120vh] right-[20%]"
+          style={{ background: "hsl(200, 90%, 55%)" }} />
         {/* Particles */}
         <Particle delay={0} size={2} x="10%" y="30%" />
         <Particle delay={1} size={3} x="85%" y="20%" />
@@ -238,6 +249,19 @@ const LandingPage = () => {
         <Particle delay={0.5} size={2} x="25%" y="75%" />
         <Particle delay={1.5} size={2} x="50%" y="45%" />
         <Particle delay={3} size={2} x="90%" y="80%" />
+        <Particle delay={2.2} size={2} x="15%" y="55%" />
+        <Particle delay={0.8} size={3} x="60%" y="15%" />
+        {/* Subtle global data rain */}
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={`global-rain-${i}`} className="absolute top-0 w-px opacity-[0.12]"
+            style={{
+              left: `${15 + i * 18}%`,
+              height: "80px",
+              background: "linear-gradient(180deg, transparent, hsla(200, 90%, 60%, 0.4), transparent)",
+              animation: `data-rain ${6 + i * 2}s linear infinite`,
+              animationDelay: `${i * 1.5}s`,
+            }} />
+        ))}
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
@@ -403,58 +427,131 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
-        {/* Grid overlay — toggle between premium and classic */}
-        {premiumGrid ? (
-          <div className="absolute inset-0 pointer-events-none">
-            {/* Base holographic grid with pulse */}
-            <div className="absolute inset-0 premium-holo-grid animate-grid-pulse" />
-            
-            {/* Sweeping holographic light band */}
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute inset-x-0 h-[200px] animate-holo-sweep"
-                style={{ background: "linear-gradient(180deg, transparent, hsla(265, 85%, 65%, 0.08), hsla(200, 90%, 60%, 0.06), transparent)" }} />
-            </div>
-            
-            {/* Glowing intersection nodes */}
-            {[
-              { x: "20%", y: "25%", delay: 0 }, { x: "80%", y: "20%", delay: 1 },
-              { x: "50%", y: "50%", delay: 0.5 }, { x: "15%", y: "70%", delay: 1.5 },
-              { x: "85%", y: "65%", delay: 2 }, { x: "40%", y: "80%", delay: 0.8 },
-              { x: "65%", y: "35%", delay: 1.2 }, { x: "30%", y: "15%", delay: 2.5 },
-            ].map((node, i) => (
-              <div key={i} className="absolute animate-grid-node"
-                style={{
-                  left: node.x, top: node.y, animationDelay: `${node.delay}s`,
-                  width: 4, height: 4, borderRadius: "50%",
-                  background: i % 3 === 0 ? "hsl(265, 85%, 65%)" : i % 3 === 1 ? "hsl(200, 90%, 60%)" : "hsl(320, 75%, 55%)",
-                  boxShadow: `0 0 12px ${i % 3 === 0 ? "hsla(265,85%,65%,0.6)" : i % 3 === 1 ? "hsla(200,90%,60%,0.6)" : "hsla(320,75%,55%,0.5)"}`,
-                }}
-              />
-            ))}
-            
-            {/* Corner accent lines */}
-            <div className="absolute top-0 left-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,85%,65%,0.4), transparent)" }} />
-            <div className="absolute top-0 left-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(265,85%,65%,0.4), transparent)" }} />
-            <div className="absolute top-0 right-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(200,90%,60%,0.4), transparent)" }} />
-            <div className="absolute top-0 right-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(200,90%,60%,0.4), transparent)" }} />
-            <div className="absolute bottom-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(320,75%,55%,0.3), transparent)" }} />
-            <div className="absolute bottom-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(320,75%,55%,0.3), transparent)" }} />
+        {/* Grid overlay — premium holographic */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Base holographic grid with pulse */}
+          <div className="absolute inset-0 premium-holo-grid animate-grid-pulse" />
+          
+          {/* Sweeping holographic light band */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute inset-x-0 h-[200px] animate-holo-sweep"
+              style={{ background: "linear-gradient(180deg, transparent, hsla(265, 85%, 65%, 0.08), hsla(200, 90%, 60%, 0.06), transparent)" }} />
           </div>
-        ) : (
-          <div className="absolute inset-0 cyber-grid opacity-20" />
-        )}
+          
+          {/* Glowing intersection nodes */}
+          {[
+            { x: "20%", y: "25%", delay: 0 }, { x: "80%", y: "20%", delay: 1 },
+            { x: "50%", y: "50%", delay: 0.5 }, { x: "15%", y: "70%", delay: 1.5 },
+            { x: "85%", y: "65%", delay: 2 }, { x: "40%", y: "80%", delay: 0.8 },
+            { x: "65%", y: "35%", delay: 1.2 }, { x: "30%", y: "15%", delay: 2.5 },
+          ].map((node, i) => (
+            <div key={i} className="absolute animate-grid-node"
+              style={{
+                left: node.x, top: node.y, animationDelay: `${node.delay}s`,
+                width: 4, height: 4, borderRadius: "50%",
+                background: i % 3 === 0 ? "hsl(265, 85%, 65%)" : i % 3 === 1 ? "hsl(200, 90%, 60%)" : "hsl(320, 75%, 55%)",
+                boxShadow: `0 0 12px ${i % 3 === 0 ? "hsla(265,85%,65%,0.6)" : i % 3 === 1 ? "hsla(200,90%,60%,0.6)" : "hsla(320,75%,55%,0.5)"}`,
+              }}
+            />
+          ))}
+          
+          {/* Corner accent lines */}
+          <div className="absolute top-0 left-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,85%,65%,0.4), transparent)" }} />
+          <div className="absolute top-0 left-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(265,85%,65%,0.4), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(200,90%,60%,0.4), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(200,90%,60%,0.4), transparent)" }} />
+          <div className="absolute bottom-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(320,75%,55%,0.3), transparent)" }} />
+          <div className="absolute bottom-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(320,75%,55%,0.3), transparent)" }} />
+        </div>
 
-        {/* Grid style toggle — DEV only */}
-        <button onClick={() => setPremiumGrid(p => !p)}
-          className="absolute top-3 right-3 z-50 px-3 py-1.5 rounded-full text-[0.6rem] font-mono font-bold uppercase tracking-wider backdrop-blur-md border transition-all duration-300"
-          style={{
-            background: premiumGrid ? "hsla(265,85%,65%,0.15)" : "hsla(0,0%,100%,0.05)",
-            borderColor: premiumGrid ? "hsla(265,85%,65%,0.3)" : "hsla(0,0%,100%,0.1)",
-            color: premiumGrid ? "hsl(265,85%,75%)" : "hsla(0,0%,100%,0.5)",
-          }}
-        >
-          {premiumGrid ? "✦ Premium Grid" : "◻ Classic Grid"}
-        </button>
+        {/* ═══ LAYER 9: Data Rain Columns ═══ */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.35] hidden sm:block">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="absolute top-0 w-px animate-data-rain"
+              style={{
+                left: `${8 + i * 8}%`,
+                height: "120px",
+                background: `linear-gradient(180deg, transparent, ${i % 3 === 0 ? "hsla(200,90%,60%,0.6)" : i % 2 === 0 ? "hsla(265,85%,65%,0.5)" : "hsla(320,75%,55%,0.4)"}, transparent)`,
+                "--rain-speed": `${4 + i * 1.2}s`,
+                "--rain-delay": `${i * 0.4}s`,
+              } as React.CSSProperties}
+            />
+          ))}
+        </div>
+
+        {/* ═══ LAYER 10: Floating Holographic Data Panels ═══ */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block">
+          {/* Left panel — System Status */}
+          <motion.div
+            className="absolute top-[22%] left-[3%] holo-panel rounded-lg p-3 w-[140px]"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: [0.4, 0.7, 0.4], x: 0 }}
+            transition={{ opacity: { duration: 4, repeat: Infinity }, x: { duration: 1 } }}
+          >
+            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-cyan-400/70 mb-2">SYS STATUS</div>
+            <div className="space-y-1.5">
+              {[
+                { label: "AI ENGINE", value: "ACTIVE", color: "text-emerald-400" },
+                { label: "LATENCY", value: "<180ms", color: "text-cyan-400" },
+                { label: "UPTIME", value: "99.99%", color: "text-emerald-400" },
+              ].map((item, i) => (
+                <div key={i} className="flex justify-between items-center">
+                  <span className="text-[6px] text-foreground/25 tracking-wider">{item.label}</span>
+                  <span className={`text-[7px] font-heading font-bold ${item.color}`}>{item.value}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-2 h-[1px] w-full bg-gradient-to-r from-cyan-400/30 to-transparent" />
+            <div className="mt-1 flex gap-1">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="h-[10px] flex-1 rounded-[1px]"
+                  style={{
+                    background: `hsla(200, 90%, 60%, ${0.15 + Math.random() * 0.4})`,
+                    height: `${4 + Math.random() * 10}px`,
+                    alignSelf: "flex-end",
+                  }} />
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right panel — Processing */}
+          <motion.div
+            className="absolute top-[18%] right-[3%] holo-panel rounded-lg p-3 w-[130px]"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: [0.3, 0.65, 0.3], x: 0 }}
+            transition={{ opacity: { duration: 5, repeat: Infinity, delay: 1 }, x: { duration: 1 } }}
+          >
+            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-violet-400/70 mb-2">AI PROCESS</div>
+            <div className="space-y-1">
+              {["Analyzing sectors...", "Optimizing flows...", "Training models..."].map((text, i) => (
+                <div key={i} className="text-[6px] text-foreground/20 typing-cursor" style={{ animationDelay: `${i * 0.3}s` }}>{text}</div>
+              ))}
+            </div>
+            <div className="mt-2 h-1 rounded-full overflow-hidden bg-foreground/5">
+              <motion.div className="h-full bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full"
+                animate={{ width: ["20%", "95%", "20%"] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />
+            </div>
+          </motion.div>
+
+          {/* Bottom-left — Neural Activity */}
+          <motion.div
+            className="absolute bottom-[22%] left-[5%] holo-panel rounded-lg p-2.5 w-[120px]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: [0.3, 0.55, 0.3], y: 0 }}
+            transition={{ opacity: { duration: 6, repeat: Infinity, delay: 2 }, y: { duration: 1.2 } }}
+          >
+            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-emerald-400/60 mb-1.5">NETWORK</div>
+            <div className="grid grid-cols-6 gap-[3px]">
+              {Array.from({ length: 18 }).map((_, i) => (
+                <motion.div key={i} className="w-[6px] h-[6px] rounded-full"
+                  style={{ background: `hsla(${160 + i * 10}, 80%, 55%, ${0.15 + Math.random() * 0.5})` }}
+                  animate={{ opacity: [0.2, 0.8, 0.2] }}
+                  transition={{ duration: 1.5 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2 }} />
+              ))}
+            </div>
+          </motion.div>
+        </div>
 
         {/* Dual light beams */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[40vh] bg-gradient-to-b from-primary/50 via-primary/15 to-transparent" />
@@ -916,6 +1013,148 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
+          TECH DNA — Neural Network Visualization
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-10 sm:mb-14">
+          <SectionLabel text="Tecnologia" icon={<Cpu className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Il DNA Tecnologico di <span className="text-shimmer">Empire</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[550px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Un'architettura neurale che connette ogni modulo in tempo reale. Non software separati — un organismo digitale vivente.
+          </motion.p>
+        </div>
+
+        {/* Neural Network Visualization */}
+        <motion.div className="relative max-w-3xl mx-auto h-[280px] sm:h-[350px] rounded-2xl overflow-hidden holo-panel"
+          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
+          
+          {/* Animated grid background */}
+          <div className="absolute inset-0 animated-grid-bg opacity-30" />
+          
+          {/* Neural nodes */}
+          {[
+            { x: "50%", y: "50%", label: "AI CORE", size: 16, primary: true },
+            { x: "20%", y: "25%", label: "CRM", size: 10, primary: false },
+            { x: "80%", y: "25%", label: "ORDINI", size: 10, primary: false },
+            { x: "15%", y: "70%", label: "ANALYTICS", size: 10, primary: false },
+            { x: "85%", y: "70%", label: "PAGAMENTI", size: 10, primary: false },
+            { x: "35%", y: "15%", label: "MENU", size: 8, primary: false },
+            { x: "65%", y: "15%", label: "BOOKING", size: 8, primary: false },
+            { x: "35%", y: "85%", label: "STAFF", size: 8, primary: false },
+            { x: "65%", y: "85%", label: "MARKETING", size: 8, primary: false },
+          ].map((node, i) => (
+            <motion.div key={i} className="absolute flex flex-col items-center z-10"
+              style={{ left: node.x, top: node.y, transform: "translate(-50%, -50%)" }}
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 + i * 0.08, type: "spring", stiffness: 200 }}>
+              <div
+                className={`rounded-full neural-node ${node.primary ? "bg-gradient-to-br from-primary to-accent" : "bg-gradient-to-br from-primary/40 to-accent/20"}`}
+                style={{
+                  width: node.size * (node.primary ? 1.5 : 1),
+                  height: node.size * (node.primary ? 1.5 : 1),
+                  "--node-delay": `${i * 0.3}s`,
+                  boxShadow: node.primary
+                    ? "0 0 30px hsla(265,85%,65%,0.6), 0 0 60px hsla(265,85%,65%,0.3)"
+                    : "0 0 12px hsla(265,85%,65%,0.3)",
+                } as React.CSSProperties}
+              />
+              <span className={`mt-1.5 text-[6px] sm:text-[8px] font-heading font-bold tracking-[2px] uppercase ${node.primary ? "text-primary" : "text-foreground/30"}`}>
+                {node.label}
+              </span>
+            </motion.div>
+          ))}
+
+          {/* Connection lines (SVG) */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            {[
+              { x1: "50%", y1: "50%", x2: "20%", y2: "25%" },
+              { x1: "50%", y1: "50%", x2: "80%", y2: "25%" },
+              { x1: "50%", y1: "50%", x2: "15%", y2: "70%" },
+              { x1: "50%", y1: "50%", x2: "85%", y2: "70%" },
+              { x1: "50%", y1: "50%", x2: "35%", y2: "15%" },
+              { x1: "50%", y1: "50%", x2: "65%", y2: "15%" },
+              { x1: "50%", y1: "50%", x2: "35%", y2: "85%" },
+              { x1: "50%", y1: "50%", x2: "65%", y2: "85%" },
+            ].map((line, i) => (
+              <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
+                stroke="url(#neural-gradient)" strokeWidth="1" opacity="0.25"
+                strokeDasharray="4 4">
+                <animate attributeName="stroke-dashoffset" from="8" to="0" dur={`${1.5 + i * 0.2}s`} repeatCount="indefinite" />
+              </line>
+            ))}
+            <defs>
+              <linearGradient id="neural-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="hsla(265, 85%, 65%, 0.6)" />
+                <stop offset="100%" stopColor="hsla(200, 90%, 60%, 0.4)" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          {/* Floating data packets along connections */}
+          {Array.from({ length: 6 }).map((_, i) => (
+            <motion.div key={`packet-${i}`}
+              className="absolute w-1.5 h-1.5 rounded-full bg-primary z-20"
+              style={{
+                left: "50%", top: "50%",
+                boxShadow: "0 0 8px hsla(265,85%,65%,0.8)",
+              }}
+              animate={{
+                x: [0, (Math.cos(i * Math.PI / 3) * 150)],
+                y: [0, (Math.sin(i * Math.PI / 3) * 120)],
+                opacity: [1, 0],
+                scale: [1, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                delay: i * 0.4,
+                ease: "easeOut",
+              }}
+            />
+          ))}
+
+          {/* HUD corners */}
+          <div className="absolute top-3 left-3 w-6 h-6 border-t border-l border-primary/30 rounded-tl" />
+          <div className="absolute top-3 right-3 w-6 h-6 border-t border-r border-primary/30 rounded-tr" />
+          <div className="absolute bottom-3 left-3 w-6 h-6 border-b border-l border-primary/30 rounded-bl" />
+          <div className="absolute bottom-3 right-3 w-6 h-6 border-b border-r border-primary/30 rounded-br" />
+
+          {/* Tech readout overlays */}
+          <div className="absolute top-3 left-10 text-[6px] sm:text-[8px] font-heading font-bold text-primary/40 tracking-[3px] uppercase">
+            NEURAL MESH v4.2
+          </div>
+          <div className="absolute bottom-3 right-10 text-[6px] sm:text-[8px] font-heading text-foreground/15 tracking-wider">
+            NODES: 9 • LATENCY: &lt;2ms • STATUS: <span className="text-emerald-400/60">OPTIMAL</span>
+          </div>
+        </motion.div>
+
+        {/* Tech specs row */}
+        <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8 max-w-3xl mx-auto"
+          variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          {[
+            { label: "Architettura", value: "Edge-First", icon: <Wifi className="w-3.5 h-3.5" /> },
+            { label: "Crittografia", value: "AES-256", icon: <Lock className="w-3.5 h-3.5" /> },
+            { label: "Deploy", value: "< 24h", icon: <Zap className="w-3.5 h-3.5" /> },
+            { label: "Evoluzione", value: "Settimanale", icon: <Radio className="w-3.5 h-3.5" /> },
+          ].map((spec, i) => (
+            <motion.div key={i} className="p-4 rounded-xl holo-panel text-center" variants={popIn}>
+              <div className="text-primary/50 mb-2 flex justify-center">{spec.icon}</div>
+              <p className="text-xs font-heading font-bold text-foreground">{spec.value}</p>
+              <p className="text-[0.55rem] text-foreground/30 mt-0.5 tracking-wider uppercase">{spec.label}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </Section>
+
+      <SectionDivider />
+
+      {/* ═══════════════════════════════════════════
           VIDEO FEATURES
          ═══════════════════════════════════════════ */}
       <Section>
@@ -975,12 +1214,12 @@ const LandingPage = () => {
         <div className="sm:hidden">
           <PremiumCarousel speed="normal" itemWidth={260}>
             {services.map((s, i) => (
-              <div key={i} className="group relative p-5 rounded-2xl glow-card h-full">
+              <div key={i} className="group relative p-5 rounded-2xl glow-card scan-card h-full">
                 <div className="flex items-center justify-between mb-3">
                   <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white`}>
                     {s.icon}
                   </div>
-                  <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/10 text-primary/60 font-bold tracking-[2px] font-heading bg-primary/[0.03]">{s.tag}</span>
+                  <span className="text-[0.5rem] px-2 py-0.5 rounded-full holo-badge text-primary/80 font-bold tracking-[2px] font-heading">{s.tag}</span>
                 </div>
                 <h3 className="font-heading text-xs font-semibold text-foreground mb-1.5">{s.title}</h3>
                 <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{s.desc}</p>
@@ -994,15 +1233,20 @@ const LandingPage = () => {
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {services.map((s, i) => (
             <motion.div key={i}
-              className="group relative p-6 rounded-2xl glow-card"
+              className="group relative p-6 rounded-2xl glow-card scan-card"
               variants={fadeUp}
               whileHover={{ y: -4 }}
             >
+              {/* Futuristic corner brackets */}
+              <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-primary/20 rounded-tl-sm pointer-events-none" />
+              <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-primary/20 rounded-tr-sm pointer-events-none" />
+              <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-primary/20 rounded-bl-sm pointer-events-none" />
+              <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/20 rounded-br-sm pointer-events-none" />
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                   {s.icon}
                 </div>
-                <span className="text-[0.55rem] px-2.5 py-1 rounded-full border border-primary/10 text-primary/60 font-bold tracking-[2px] font-heading bg-primary/[0.03]">{s.tag}</span>
+                <span className="text-[0.55rem] px-2.5 py-1 rounded-full holo-badge text-primary/80 font-bold tracking-[2px] font-heading">{s.tag}</span>
               </div>
               <h3 className="font-heading text-sm sm:text-base font-semibold text-foreground mb-2">{s.title}</h3>
               <p className="text-xs sm:text-sm text-foreground/40 leading-[1.7]">{s.desc}</p>
