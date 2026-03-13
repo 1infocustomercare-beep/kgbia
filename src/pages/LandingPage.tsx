@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
+import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
   Crown, Check, Star, Zap, Shield, Smartphone,
@@ -596,30 +597,28 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: Auto-scroll carousel ═══ */}
-        <div className="sm:hidden overflow-hidden -mx-5">
-          <div className="flex animate-carousel-scroll whitespace-nowrap py-2">
-            {[...industries, ...industries].map((ind, i) => {
+        {/* ═══ Mobile: Premium Carousel ═══ */}
+        <div className="sm:hidden">
+          <PremiumCarousel speed="normal" itemWidth={200}>
+            {industries.map((ind, i) => {
               const slug = DEMO_SLUGS[ind.id];
               const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
               return (
-                <div key={i} className="inline-block w-[200px] flex-shrink-0 mx-2 whitespace-normal">
-                  <div className="group relative p-5 rounded-2xl glow-card text-center cursor-pointer h-full"
-                    onClick={() => navigate(demoPath)}>
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 transition-all duration-500`}>
-                      {ind.icon}
-                    </div>
-                    <h3 className="font-heading text-xs font-bold text-foreground mb-1">{ind.title}</h3>
-                    <p className="text-[0.6rem] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
-                    <p className="text-[0.5rem] text-primary/50 font-heading tracking-wider">{ind.modules}</p>
-                    <span className="mt-2 inline-flex items-center gap-1 text-[0.6rem] font-bold text-primary/60">
-                      Demo <ArrowRight className="w-3 h-3" />
-                    </span>
+                <div key={i} className="group relative p-5 rounded-2xl glow-card text-center cursor-pointer h-full"
+                  onClick={() => navigate(demoPath)}>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 transition-all duration-500`}>
+                    {ind.icon}
                   </div>
+                  <h3 className="font-heading text-xs font-bold text-foreground mb-1">{ind.title}</h3>
+                  <p className="text-[0.6rem] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
+                  <p className="text-[0.5rem] text-primary/50 font-heading tracking-wider">{ind.modules}</p>
+                  <span className="mt-2 inline-flex items-center gap-1 text-[0.6rem] font-bold text-primary/60">
+                    Demo <ArrowRight className="w-3 h-3" />
+                  </span>
                 </div>
               );
             })}
-          </div>
+          </PremiumCarousel>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
@@ -718,21 +717,19 @@ const LandingPage = () => {
           </motion.h2>
         </div>
 
-        {/* ═══ Mobile: Auto-scroll ═══ */}
-        <div className="sm:hidden overflow-hidden -mx-5">
-          <div className="flex animate-carousel-scroll-fast whitespace-nowrap py-2">
-            {[...whyUs, ...whyUs].map((item, i) => (
-              <div key={i} className="inline-block w-[220px] flex-shrink-0 mx-2 whitespace-normal">
-                <div className="group p-5 rounded-2xl glow-card h-full">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
-                    {item.icon}
-                  </div>
-                  <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
-                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
+        {/* ═══ Mobile: Premium Carousel ═══ */}
+        <div className="sm:hidden">
+          <PremiumCarousel speed="fast" itemWidth={220}>
+            {whyUs.map((item, i) => (
+              <div key={i} className="group p-5 rounded-2xl glow-card h-full">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
+                  {item.icon}
                 </div>
+                <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
+                <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
               </div>
             ))}
-          </div>
+          </PremiumCarousel>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
@@ -871,24 +868,22 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: Auto-scroll carousel ═══ */}
-        <div className="sm:hidden overflow-hidden -mx-5">
-          <div className="flex animate-carousel-scroll-slow whitespace-nowrap py-2">
-            {[...services, ...services].map((s, i) => (
-              <div key={i} className="inline-block w-[260px] flex-shrink-0 mx-2 whitespace-normal">
-                <div className="group relative p-5 rounded-2xl glow-card h-full">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white`}>
-                      {s.icon}
-                    </div>
-                    <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/10 text-primary/60 font-bold tracking-[2px] font-heading bg-primary/[0.03]">{s.tag}</span>
+        {/* ═══ Mobile: Premium Carousel ═══ */}
+        <div className="sm:hidden">
+          <PremiumCarousel speed="normal" itemWidth={260}>
+            {services.map((s, i) => (
+              <div key={i} className="group relative p-5 rounded-2xl glow-card h-full">
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white`}>
+                    {s.icon}
                   </div>
-                  <h3 className="font-heading text-xs font-semibold text-foreground mb-1.5">{s.title}</h3>
-                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{s.desc}</p>
+                  <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/10 text-primary/60 font-bold tracking-[2px] font-heading bg-primary/[0.03]">{s.tag}</span>
                 </div>
+                <h3 className="font-heading text-xs font-semibold text-foreground mb-1.5">{s.title}</h3>
+                <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{s.desc}</p>
               </div>
             ))}
-          </div>
+          </PremiumCarousel>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
@@ -1109,36 +1104,32 @@ const LandingPage = () => {
           </motion.h2>
         </div>
 
-        {/* Auto-scroll carousel */}
-        <div className="overflow-hidden -mx-5 sm:mx-0">
-          <div className="flex animate-carousel-scroll-slow whitespace-nowrap py-2">
-            {[...testimonials, ...testimonials].map((t, i) => (
-              <div key={i} className="inline-block w-[300px] sm:w-[380px] flex-shrink-0 mx-2 sm:mx-3 whitespace-normal">
-                <div className="p-6 sm:p-8 rounded-2xl glow-card text-center h-full flex flex-col">
-                  <div className="flex gap-0.5 justify-center mb-3">
-                    {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-3.5 h-3.5 text-accent fill-accent" />)}
-                  </div>
-                  <span className="text-3xl mb-3 block">{t.emoji}</span>
-                  <blockquote className="text-sm text-foreground/60 leading-[1.7] mb-4 italic flex-1">
-                    "{t.quote}"
-                  </blockquote>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/[0.08] text-[0.65rem] text-primary font-bold font-heading tracking-wider mb-3 mx-auto">
-                    <TrendingUp className="w-3 h-3" /> {t.metric}
-                  </div>
-                  <div className="flex items-center justify-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-foreground/60 text-xs font-bold font-heading">
-                      {t.name.charAt(0)}
-                    </div>
-                    <div className="text-left">
-                      <h4 className="font-heading text-xs font-semibold text-foreground">{t.name}</h4>
-                      <p className="text-[0.6rem] text-foreground/35">{t.role}</p>
-                    </div>
-                  </div>
+        {/* Premium Carousel */}
+        <PremiumCarousel speed="slow" itemWidth={320} fullWidth>
+          {testimonials.map((t, i) => (
+            <div key={i} className="p-6 sm:p-8 rounded-2xl glow-card text-center h-full flex flex-col">
+              <div className="flex gap-0.5 justify-center mb-3">
+                {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-3.5 h-3.5 text-accent fill-accent" />)}
+              </div>
+              <span className="text-3xl mb-3 block">{t.emoji}</span>
+              <blockquote className="text-sm text-foreground/60 leading-[1.7] mb-4 italic flex-1">
+                "{t.quote}"
+              </blockquote>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/[0.08] text-[0.65rem] text-primary font-bold font-heading tracking-wider mb-3 mx-auto">
+                <TrendingUp className="w-3 h-3" /> {t.metric}
+              </div>
+              <div className="flex items-center justify-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-foreground/60 text-xs font-bold font-heading">
+                  {t.name.charAt(0)}
+                </div>
+                <div className="text-left">
+                  <h4 className="font-heading text-xs font-semibold text-foreground">{t.name}</h4>
+                  <p className="text-[0.6rem] text-foreground/35">{t.role}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          ))}
+        </PremiumCarousel>
       </Section>
 
       {/* ═══════════════════════════════════════════
