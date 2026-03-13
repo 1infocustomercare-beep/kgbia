@@ -12,6 +12,8 @@ import {
   Bed, Wifi, Coffee, UtensilsCrossed, Waves, Sparkles,
   Users, Award, Heart, MessageCircle, CheckCircle, Tv, Car, ChevronDown, Quote, Menu, X, ChevronLeft, ChevronRight, Shield
 } from "lucide-react";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 
 const BORDEAUX = "#6B2D3E";
 const GOLD = "#C8A951";
@@ -148,11 +150,15 @@ export default function HotelPublicSite({ company }: Props) {
 
       {/* HERO */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.35)" }}>
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${BORDEAUX}44 0%, #00000088 100%)` }} />
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle, ${GOLD}60 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
+        <HeroVideoBackground
+          primarySrc={HERO_VIDEO}
+          fallbackSrc={fallbackHeroVideo}
+          poster={GALLERY[0]}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.52) saturate(1.04)" }}
+        />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${BORDEAUX}33 0%, #00000066 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `radial-gradient(circle, ${GOLD}60 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
 
         <div className="relative z-10 max-w-4xl mx-auto px-5 text-center text-white pt-20">
           <motion.div initial="hidden" animate="show" variants={stagger}>

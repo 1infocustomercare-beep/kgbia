@@ -12,6 +12,8 @@ import {
   Heart, Truck, Shield, ArrowRight, MessageCircle,
   CreditCard, Award, RefreshCw, Package, ChevronDown, Quote, Instagram, Menu, X, ChevronLeft, ChevronRight, Sparkles
 } from "lucide-react";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -129,11 +131,15 @@ export default function RetailPublicSite({ company }: Props) {
 
       {/* HERO */}
       <section id="hero" ref={heroRef} className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden" style={{ background: "#f8f8f8" }}>
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-30">
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent" />
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(circle, ${accent}40 1px, transparent 1px)`, backgroundSize: "40px 40px" }} />
+        <HeroVideoBackground
+          primarySrc={HERO_VIDEO}
+          fallbackSrc={fallbackHeroVideo}
+          poster={COLLECTIONS[0].img}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.8) saturate(1.04)", opacity: 0.58 }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/68 via-white/42 to-transparent" />
+        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `radial-gradient(circle, ${accent}40 1px, transparent 1px)`, backgroundSize: "40px 40px" }} />
 
         <div className="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center relative z-10">
           <motion.div style={{ y: heroY }}>
