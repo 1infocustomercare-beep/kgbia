@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import heroMercedesImg from "@/assets/ncc-hero-mercedes-amalfi.jpg";
 import heroBgImg from "@/assets/ncc-hero-bg-amalfi.jpg";
 import nccPremiumInterior from "@/assets/ncc-premium-interior.jpg";
