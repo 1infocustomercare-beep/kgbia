@@ -122,7 +122,6 @@ const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [activeIndustry, setActiveIndustry] = useState(0);
 
   const heroRef = useRef<HTMLElement>(null);
