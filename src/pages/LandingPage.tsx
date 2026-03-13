@@ -122,7 +122,6 @@ const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [activeIndustry, setActiveIndustry] = useState(0);
 
   const heroRef = useRef<HTMLElement>(null);
@@ -135,11 +134,6 @@ const LandingPage = () => {
     const h = () => setNavScrolled(window.scrollY > 60);
     window.addEventListener("scroll", h, { passive: true });
     return () => window.removeEventListener("scroll", h);
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => setActiveTestimonial(p => (p + 1) % 6), 5000);
-    return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
@@ -314,13 +308,14 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           HERO
          ═══════════════════════════════════════════ */}
-      <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-20 pb-16"
+      <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-16 sm:pt-20 pb-12 sm:pb-16"
         style={{ opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Video background ═══ */}
         <div className="absolute inset-0">
-          <video src={videoHero} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-[0.12]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/70 to-background" />
+          <video src={videoHero} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-[0.15]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/5 via-background/60 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/40 via-transparent to-background/40" />
         </div>
 
         {/* ═══ LAYER 1: Perspective grid floor ═══ */}
@@ -435,7 +430,7 @@ const LandingPage = () => {
 
             {/* Headline with per-letter 3D reveal */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.1 }}>
-              <h1 className="text-[2.5rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em]">
+              <h1 className="text-[2.2rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em]">
                 <span className="inline-block">
                   {"Modernizziamo".split("").map((ch, i) => (
                     <motion.span key={i} className="inline-block text-foreground"
@@ -468,18 +463,18 @@ const LandingPage = () => {
             </motion.div>
 
             {/* Glitch subtitle accent */}
-            <motion.p className="mt-6 text-base sm:text-lg text-foreground/50 max-w-[600px] leading-[1.8] font-light relative"
+            <motion.p className="mt-5 sm:mt-6 text-sm sm:text-lg text-foreground/50 max-w-[600px] leading-[1.7] sm:leading-[1.8] font-light relative px-2 sm:px-0"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.7 }}>
               La piattaforma AI più completa al mondo.
-              <span className="text-foreground/70 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie. Tutto in un unico ecosistema che si evolve ogni giorno.</span>
+              <span className="text-foreground/70 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie.</span>
             </motion.p>
 
             {/* CTA */}
-            <motion.div className="mt-9 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto"
+            <motion.div className="mt-7 sm:mt-9 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-2 sm:px-0"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.9 }}>
               <motion.button
                 onClick={() => scrollTo("pricing")}
-                className="group relative w-full sm:w-auto px-8 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden animate-crown-aura"
+                className="group relative w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden animate-crown-aura"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
               >
@@ -490,7 +485,7 @@ const LandingPage = () => {
               </motion.button>
               <motion.button
                 onClick={() => navigate("/r/impero-roma")}
-                className="w-full sm:w-auto px-8 py-4 rounded-full border border-foreground/10 text-foreground/70 text-sm font-semibold font-heading tracking-wide hover:border-primary/30 hover:text-foreground hover:bg-primary/[0.04] transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
+                className="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full border border-foreground/10 text-foreground/70 text-sm font-semibold font-heading tracking-wide hover:border-primary/30 hover:text-foreground hover:bg-primary/[0.04] transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
                 whileHover={{ scale: 1.02 }}
               >
                 <Play className="w-4 h-4 text-primary" /> Vedi Demo Live
@@ -589,19 +584,46 @@ const LandingPage = () => {
           SETTORI
          ═══════════════════════════════════════════ */}
       <Section id="industries">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Qualsiasi Settore. <span className="text-shimmer">Un Unico Sistema.</span>
           </motion.h2>
-          <motion.p className="text-foreground/50 max-w-[550px] mx-auto leading-[1.7] text-sm"
+          <motion.p className="text-foreground/50 max-w-[550px] mx-auto leading-[1.7] text-sm px-2 sm:px-0"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Empire si adatta automaticamente alla tua industria. Terminologia, moduli, dashboard e flussi operativi cambiano in base al settore — senza configurazioni manuali.
+            Empire si adatta automaticamente alla tua industria. Terminologia, moduli, dashboard e flussi operativi cambiano in base al settore.
           </motion.p>
         </div>
 
-        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+        {/* ═══ Mobile: Auto-scroll carousel ═══ */}
+        <div className="sm:hidden overflow-hidden -mx-5">
+          <div className="flex animate-carousel-scroll whitespace-nowrap py-2">
+            {[...industries, ...industries].map((ind, i) => {
+              const slug = DEMO_SLUGS[ind.id];
+              const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+              return (
+                <div key={i} className="inline-block w-[200px] flex-shrink-0 mx-2 whitespace-normal">
+                  <div className="group relative p-5 rounded-2xl glow-card text-center cursor-pointer h-full"
+                    onClick={() => navigate(demoPath)}>
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 transition-all duration-500`}>
+                      {ind.icon}
+                    </div>
+                    <h3 className="font-heading text-xs font-bold text-foreground mb-1">{ind.title}</h3>
+                    <p className="text-[0.6rem] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
+                    <p className="text-[0.5rem] text-primary/50 font-heading tracking-wider">{ind.modules}</p>
+                    <span className="mt-2 inline-flex items-center gap-1 text-[0.6rem] font-bold text-primary/60">
+                      Demo <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ═══ Desktop: Grid ═══ */}
+        <motion.div className="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {industries.map((ind, i) => {
             const slug = DEMO_SLUGS[ind.id];
@@ -688,14 +710,33 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
          ═══════════════════════════════════════════ */}
       <Section>
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Vantaggi" icon={<Zap className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Perché Siamo <span className="text-shimmer">N°1 al Mondo</span>
           </motion.h2>
         </div>
-        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+
+        {/* ═══ Mobile: Auto-scroll ═══ */}
+        <div className="sm:hidden overflow-hidden -mx-5">
+          <div className="flex animate-carousel-scroll-fast whitespace-nowrap py-2">
+            {[...whyUs, ...whyUs].map((item, i) => (
+              <div key={i} className="inline-block w-[220px] flex-shrink-0 mx-2 whitespace-normal">
+                <div className="group p-5 rounded-2xl glow-card h-full">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
+                    {item.icon}
+                  </div>
+                  <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
+                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ═══ Desktop: Grid ═══ */}
+        <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {whyUs.map((item, i) => (
             <motion.div key={i} className="group p-6 rounded-2xl glow-card" variants={fadeUp} whileHover={{ y: -4 }}>
@@ -817,20 +858,41 @@ const LandingPage = () => {
           SERVIZI
          ═══════════════════════════════════════════ */}
       <Section id="services">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Funzionalità" icon={<Layers className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Tutto Ciò Che Serve,<br className="hidden sm:block" />
             <span className="text-shimmer">in un Unico Posto</span>
           </motion.h2>
-          <motion.p className="text-foreground/50 max-w-[500px] mx-auto text-sm leading-[1.7]"
+          <motion.p className="text-foreground/50 max-w-[500px] mx-auto text-sm leading-[1.7] px-2 sm:px-0"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Ogni modulo è stato progettato per eliminare un problema specifico. Nessun software esterno, nessun costo aggiuntivo.
           </motion.p>
         </div>
 
-        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+        {/* ═══ Mobile: Auto-scroll carousel ═══ */}
+        <div className="sm:hidden overflow-hidden -mx-5">
+          <div className="flex animate-carousel-scroll-slow whitespace-nowrap py-2">
+            {[...services, ...services].map((s, i) => (
+              <div key={i} className="inline-block w-[260px] flex-shrink-0 mx-2 whitespace-normal">
+                <div className="group relative p-5 rounded-2xl glow-card h-full">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white`}>
+                      {s.icon}
+                    </div>
+                    <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/10 text-primary/60 font-bold tracking-[2px] font-heading bg-primary/[0.03]">{s.tag}</span>
+                  </div>
+                  <h3 className="font-heading text-xs font-semibold text-foreground mb-1.5">{s.title}</h3>
+                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ═══ Desktop: Grid ═══ */}
+        <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {services.map((s, i) => (
             <motion.div key={i}
@@ -1036,56 +1098,46 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          TESTIMONIALS
+          TESTIMONIALS — Auto-scroll carousel
          ═══════════════════════════════════════════ */}
       <Section id="testimonials">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Storie di Successo" icon={<Star className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Risultati Reali, <span className="text-shimmer">Settori Diversi</span>
           </motion.h2>
         </div>
 
-        <div className="max-w-2xl mx-auto mb-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTestimonial}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
-              className="p-8 sm:p-10 rounded-2xl glow-card text-center"
-            >
-              <div className="flex gap-0.5 justify-center mb-4">
-                {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-4 h-4 text-accent fill-accent" />)}
-              </div>
-              <span className="text-4xl mb-4 block">{testimonials[activeTestimonial].emoji}</span>
-              <blockquote className="text-base sm:text-lg text-foreground/60 leading-[1.7] mb-5 italic">
-                "{testimonials[activeTestimonial].quote}"
-              </blockquote>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/[0.08] text-xs text-primary font-bold font-heading tracking-wider mb-4">
-                <TrendingUp className="w-3 h-3" /> {testimonials[activeTestimonial].metric}
-              </div>
-              <div className="flex items-center justify-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-foreground/60 text-sm font-bold font-heading">
-                  {testimonials[activeTestimonial].name.charAt(0)}
-                </div>
-                <div className="text-left">
-                  <h4 className="font-heading text-sm font-semibold text-foreground">{testimonials[activeTestimonial].name}</h4>
-                  <p className="text-[0.65rem] text-foreground/35">{testimonials[activeTestimonial].role}</p>
+        {/* Auto-scroll carousel */}
+        <div className="overflow-hidden -mx-5 sm:mx-0">
+          <div className="flex animate-carousel-scroll-slow whitespace-nowrap py-2">
+            {[...testimonials, ...testimonials].map((t, i) => (
+              <div key={i} className="inline-block w-[300px] sm:w-[380px] flex-shrink-0 mx-2 sm:mx-3 whitespace-normal">
+                <div className="p-6 sm:p-8 rounded-2xl glow-card text-center h-full flex flex-col">
+                  <div className="flex gap-0.5 justify-center mb-3">
+                    {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-3.5 h-3.5 text-accent fill-accent" />)}
+                  </div>
+                  <span className="text-3xl mb-3 block">{t.emoji}</span>
+                  <blockquote className="text-sm text-foreground/60 leading-[1.7] mb-4 italic flex-1">
+                    "{t.quote}"
+                  </blockquote>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/[0.08] text-[0.65rem] text-primary font-bold font-heading tracking-wider mb-3 mx-auto">
+                    <TrendingUp className="w-3 h-3" /> {t.metric}
+                  </div>
+                  <div className="flex items-center justify-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-foreground/60 text-xs font-bold font-heading">
+                      {t.name.charAt(0)}
+                    </div>
+                    <div className="text-left">
+                      <h4 className="font-heading text-xs font-semibold text-foreground">{t.name}</h4>
+                      <p className="text-[0.6rem] text-foreground/35">{t.role}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="flex justify-center gap-2">
-          {testimonials.map((_, i) => (
-            <button key={i} onClick={() => setActiveTestimonial(i)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? "w-6 bg-primary" : "bg-foreground/10 hover:bg-foreground/20"}`}
-            />
-          ))}
+            ))}
+          </div>
         </div>
       </Section>
 

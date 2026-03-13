@@ -103,6 +103,40 @@
     animation: marquee-scroll 30s linear infinite;
   }
 
+  /* ═══ AUTO-SCROLL CAROUSEL ═══ */
+  @keyframes carousel-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .animate-carousel-scroll {
+    animation: carousel-scroll 25s linear infinite;
+  }
+
+  .animate-carousel-scroll-slow {
+    animation: carousel-scroll 40s linear infinite;
+  }
+
+  .animate-carousel-scroll-fast {
+    animation: carousel-scroll 18s linear infinite;
+  }
+
+  .animate-carousel-scroll:hover,
+  .animate-carousel-scroll-slow:hover,
+  .animate-carousel-scroll-fast:hover {
+    animation-play-state: paused;
+  }
+
+  /* ═══ VERTICAL FLOAT STAGGER ═══ */
+  @keyframes luxury-float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-8px) scale(1.02); }
+  }
+
+  .animate-luxury-float {
+    animation: luxury-float 4s ease-in-out infinite;
+  }
+
   @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
