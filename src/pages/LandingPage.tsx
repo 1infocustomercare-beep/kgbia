@@ -369,11 +369,11 @@ const LandingPage = () => {
         <div className="absolute top-[22%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <motion.div
             className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center"
-            style={{ background: "radial-gradient(circle, hsla(42, 80%, 55%, 0.1) 0%, transparent 70%)" }}
+            style={{ background: "radial-gradient(circle, hsla(265, 70%, 60%, 0.12) 0%, transparent 70%)" }}
             animate={{ scale: [1, 1.03, 1] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
-            <Crown className="w-7 h-7 sm:w-9 sm:h-9 drop-shadow-[0_0_20px_hsla(42,80%,55%,0.4)]" style={{ color: "hsl(42, 80%, 60%)" }} />
+            <Crown className="w-7 h-7 sm:w-9 sm:h-9 drop-shadow-[0_0_20px_hsla(265,70%,60%,0.4)]" style={{ color: "hsl(265, 70%, 65%)" }} />
           </motion.div>
         </div>
 
