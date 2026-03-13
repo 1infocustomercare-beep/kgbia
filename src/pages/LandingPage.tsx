@@ -713,7 +713,7 @@ const LandingPage = () => {
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="order-1 lg:order-2">
             <div className="relative rounded-2xl overflow-hidden glow-card">
-              <video src={videoIndustries} autoPlay muted loop playsInline className="w-full aspect-video object-cover" />
+              <img src={heroTechCommand} alt="Empire AI Command Center" className="w-full aspect-video object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-l from-background/50 via-transparent to-transparent pointer-events-none" />
             </div>
           </motion.div>
