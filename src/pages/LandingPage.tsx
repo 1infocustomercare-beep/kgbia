@@ -520,14 +520,14 @@ const LandingPage = () => {
             animate={{ opacity: [0.3, 0.65, 0.3], x: 0 }}
             transition={{ opacity: { duration: 5, repeat: Infinity, delay: 1 }, x: { duration: 1 } }}
           >
-            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-violet-400/70 mb-2">AI PROCESS</div>
+            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-accent/70 mb-2">AI PROCESS</div>
             <div className="space-y-1">
               {["Analyzing sectors...", "Optimizing flows...", "Training models..."].map((text, i) => (
                 <div key={i} className="text-[6px] text-foreground/20 typing-cursor" style={{ animationDelay: `${i * 0.3}s` }}>{text}</div>
               ))}
             </div>
             <div className="mt-2 h-1 rounded-full overflow-hidden bg-foreground/5">
-              <motion.div className="h-full bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full"
+              <motion.div className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
                 animate={{ width: ["20%", "95%", "20%"] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />
             </div>
