@@ -877,20 +877,20 @@
   }
 
   @keyframes neural-pulse {
-    0%, 100% { box-shadow: 0 0 4px hsla(217, 85%, 58%, 0.3); transform: scale(1); }
-    50% { box-shadow: 0 0 20px hsla(217, 85%, 58%, 0.7), 0 0 40px hsla(42, 80%, 55%, 0.3); transform: scale(1.3); }
+    0%, 100% { box-shadow: 0 0 4px hsla(265, 70%, 60%, 0.3); transform: scale(1); }
+    50% { box-shadow: 0 0 20px hsla(265, 70%, 60%, 0.7), 0 0 40px hsla(280, 45%, 68%, 0.3); transform: scale(1.3); }
   }
 
   .holo-badge {
     background: linear-gradient(90deg,
-      hsla(217, 85%, 58%, 0.15),
-      hsla(42, 80%, 55%, 0.2),
-      hsla(200, 80%, 60%, 0.15),
-      hsla(217, 85%, 58%, 0.15)
+      hsla(265, 70%, 60%, 0.15),
+      hsla(280, 45%, 68%, 0.2),
+      hsla(300, 35%, 60%, 0.15),
+      hsla(265, 70%, 60%, 0.15)
     );
     background-size: 200% 100%;
     animation: holo-rotate 3s linear infinite;
-    border: 1px solid hsla(42, 80%, 55%, 0.15);
+    border: 1px solid hsla(280, 45%, 68%, 0.15);
   }
 
   .section-connector::before {
@@ -900,8 +900,8 @@
     transform: translate(-50%, -50%);
     width: 4px; height: 4px;
     border-radius: 50%;
-    background: hsl(42, 80%, 55%);
-    box-shadow: 0 0 12px hsla(42, 80%, 55%, 0.6), 0 0 30px hsla(217, 85%, 58%, 0.3);
+    background: hsl(265, 70%, 60%);
+    box-shadow: 0 0 12px hsla(265, 70%, 60%, 0.6), 0 0 30px hsla(280, 45%, 68%, 0.3);
   }
 
   .section-connector::after {
@@ -910,13 +910,13 @@
     top: 0; left: 50%;
     transform: translateX(-50%);
     width: 1px; height: 100%;
-    background: linear-gradient(180deg, transparent, hsla(217, 85%, 58%, 0.3), transparent);
+    background: linear-gradient(180deg, transparent, hsla(265, 70%, 60%, 0.3), transparent);
   }
 
   .animated-grid-bg {
     background-image:
-      linear-gradient(hsla(217, 85%, 58%, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, hsla(217, 85%, 58%, 0.04) 1px, transparent 1px);
+      linear-gradient(hsla(265, 70%, 60%, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(265, 70%, 60%, 0.04) 1px, transparent 1px);
     background-size: 60px 60px;
     animation: grid-line-flow 4s linear infinite;
   }
