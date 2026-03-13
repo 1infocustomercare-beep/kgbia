@@ -868,24 +868,22 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: Auto-scroll carousel ═══ */}
-        <div className="sm:hidden overflow-hidden -mx-5">
-          <div className="flex animate-carousel-scroll-slow whitespace-nowrap py-2">
-            {[...services, ...services].map((s, i) => (
-              <div key={i} className="inline-block w-[260px] flex-shrink-0 mx-2 whitespace-normal">
-                <div className="group relative p-5 rounded-2xl glow-card h-full">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white`}>
-                      {s.icon}
-                    </div>
-                    <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/10 text-primary/60 font-bold tracking-[2px] font-heading bg-primary/[0.03]">{s.tag}</span>
+        {/* ═══ Mobile: Premium Carousel ═══ */}
+        <div className="sm:hidden">
+          <PremiumCarousel speed="normal" itemWidth={260}>
+            {services.map((s, i) => (
+              <div key={i} className="group relative p-5 rounded-2xl glow-card h-full">
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white`}>
+                    {s.icon}
                   </div>
-                  <h3 className="font-heading text-xs font-semibold text-foreground mb-1.5">{s.title}</h3>
-                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{s.desc}</p>
+                  <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/10 text-primary/60 font-bold tracking-[2px] font-heading bg-primary/[0.03]">{s.tag}</span>
                 </div>
+                <h3 className="font-heading text-xs font-semibold text-foreground mb-1.5">{s.title}</h3>
+                <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{s.desc}</p>
               </div>
             ))}
-          </div>
+          </PremiumCarousel>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
