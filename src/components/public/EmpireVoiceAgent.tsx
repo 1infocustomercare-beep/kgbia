@@ -125,7 +125,8 @@ const EmpireVoiceAgent: React.FC = () => {
     stopAll();
 
     const userMsg: Msg = { role: "user", content: text };
-    setMessages(prev => [...prev, userMsg]);
+    const allMessages = [...messages, userMsg];
+    setMessages(allMessages);
     setIsLoading(true);
     setInputText("");
 
@@ -143,7 +144,7 @@ const EmpireVoiceAgent: React.FC = () => {
 
     try {
       await streamChat({
-        messages: [...messages, userMsg],
+        messages: allMessages,
         mode: msgMode,
         onDelta: upsert,
         onDone: () => {
@@ -155,8 +156,10 @@ const EmpireVoiceAgent: React.FC = () => {
           }
         },
       });
-    } catch {
+    } catch (e) {
+      console.error("Agent stream error:", e);
       setIsLoading(false);
+      setMessages(prev => [...prev, { role: "assistant", content: "Mi scuso, c'è stato un problema di connessione. Riprova tra un momento." }]);
     }
   }, [messages, isLoading, voiceEnabled, stopAll]);
 
