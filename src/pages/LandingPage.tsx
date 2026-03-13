@@ -1996,74 +1996,135 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer id="contact" className="border-t border-border/30 py-14 pb-8 px-5 sm:px-6">
-        <div className="max-w-[1100px] mx-auto">
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-10 mb-12">
-            <div className="col-span-2 sm:col-span-1">
-              <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_15px_hsla(265,70%,60%,0.2)]">
-                  <Crown className="w-3.5 h-3.5 text-primary-foreground" />
+      <footer id="contact" className="relative py-20 pb-10 px-5 sm:px-6 overflow-hidden"
+        style={{ background: "linear-gradient(180deg, hsla(260,25%,6%,1) 0%, hsla(265,30%,3%,1) 60%, hsla(260,20%,2%,1) 100%)" }}>
+        {/* Top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.3) 30%, hsla(280,45%,68%,0.4) 50%, hsla(265,70%,60%,0.3) 70%, transparent 95%)" }} />
+        {/* Subtle ambient glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[120px] blur-[80px] pointer-events-none" style={{ background: "hsla(265,70%,60%,0.06)" }} />
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 premium-holo-grid opacity-[0.03] pointer-events-none" />
+
+        <div className="relative z-10 max-w-[1100px] mx-auto">
+          {/* Top row: Logo + Newsletter */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 mb-16">
+            <motion.div className="flex items-center gap-3" initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+              <div className="relative">
+                <div className="absolute -inset-1 rounded-xl blur-md" style={{ background: "hsla(265,70%,60%,0.15)" }} />
+                <div className="relative w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsla(265,70%,60%,1), hsla(280,60%,50%,1))", boxShadow: "0 0 25px hsla(265,70%,60%,0.25)" }}>
+                  <Crown className="w-4 h-4 text-white" />
                 </div>
-                <span className="font-heading font-bold text-foreground tracking-[0.12em] uppercase text-xs">Empire<span className="text-primary">.AI</span></span>
               </div>
-              <p className="text-[0.65rem] text-foreground/30 leading-[1.7] max-w-[240px] mb-5">
-                La piattaforma AI più completa al mondo. Modernizziamo qualsiasi business con tecnologia proprietaria e automazione intelligente.
-              </p>
-              <div className="flex gap-2">
+              <div>
+                <span className="font-heading font-bold tracking-[0.2em] uppercase text-sm text-white">EMPIRE</span>
+                <span className="text-[0.55rem] tracking-[0.3em] uppercase block" style={{ background: "linear-gradient(90deg, hsla(265,70%,65%,1), hsla(280,50%,75%,1))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>AUTONOMOUS AI</span>
+              </div>
+            </motion.div>
+            <motion.p className="text-[0.7rem] text-white/25 max-w-[340px] leading-[1.8] font-light"
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+              La piattaforma AI autonoma più completa al mondo. Tecnologia proprietaria che trasforma qualsiasi business in un impero digitale.
+            </motion.p>
+          </div>
+
+          {/* Main grid */}
+          <motion.div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-12 mb-16"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ staggerChildren: 0.1 }}>
+            <div>
+              <h4 className="font-heading text-[0.55rem] font-bold text-white/50 mb-5 tracking-[4px] uppercase flex items-center gap-2">
+                <span className="w-4 h-px" style={{ background: "hsla(265,70%,60%,0.4)" }} />
+                Settori
+              </h4>
+              <div className="space-y-3 text-[0.65rem]">
+                {["Food & Ristorazione", "NCC & Trasporto", "Beauty & Wellness", "Healthcare & Medical", "Retail & E-commerce", "Fitness & Sport"].map((s, i) => (
+                  <p key={i} className="text-white/25 hover:text-white/60 transition-colors cursor-default flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full" style={{ background: "hsla(265,70%,60%,0.4)" }} />
+                    {s}
+                  </p>
+                ))}
+                <p className="text-[0.6rem] font-heading font-semibold mt-2" style={{ color: "hsla(265,70%,65%,0.5)" }}>+19 altri settori</p>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-heading text-[0.55rem] font-bold text-white/50 mb-5 tracking-[4px] uppercase flex items-center gap-2">
+                <span className="w-4 h-px" style={{ background: "hsla(265,70%,60%,0.4)" }} />
+                Piattaforma
+              </h4>
+              <div className="space-y-3 text-[0.65rem]">
+                {[
+                  { label: "Funzionalità", href: "#services" },
+                  { label: "Automazioni IA", href: "#capacita" },
+                  { label: "ROI Calculator", href: "#calculator" },
+                  { label: "Piani & Prezzi", href: "#pricing" },
+                  { label: "Partner Program", href: "#partner" },
+                  { label: "Demo Live", href: "/demo" },
+                ].map((link, i) => (
+                  <a key={i} href={link.href} className="block text-white/25 hover:text-white/60 transition-colors flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full" style={{ background: "hsla(265,70%,60%,0.4)" }} />
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-heading text-[0.55rem] font-bold text-white/50 mb-5 tracking-[4px] uppercase flex items-center gap-2">
+                <span className="w-4 h-px" style={{ background: "hsla(265,70%,60%,0.4)" }} />
+                Tecnologia
+              </h4>
+              <div className="space-y-3 text-[0.65rem]">
+                {["Engine AI Proprietario", "Automazione End-to-End", "PWA White-Label", "Analytics Predittivi", "GDPR & AES-256", "API & Integrazioni"].map((s, i) => (
+                  <p key={i} className="text-white/25 hover:text-white/60 transition-colors cursor-default flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full" style={{ background: "hsla(265,70%,60%,0.4)" }} />
+                    {s}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-heading text-[0.55rem] font-bold text-white/50 mb-5 tracking-[4px] uppercase flex items-center gap-2">
+                <span className="w-4 h-px" style={{ background: "hsla(265,70%,60%,0.4)" }} />
+                Contatti
+              </h4>
+              <div className="space-y-3 text-[0.65rem]">
+                <p className="text-white/25 flex items-center gap-2.5"><Mail className="w-3.5 h-3.5" style={{ color: "hsla(265,70%,60%,0.5)" }} /> info@empire-suite.it</p>
+                <p className="text-white/25 flex items-center gap-2.5"><MapPin className="w-3.5 h-3.5" style={{ color: "hsla(265,70%,60%,0.5)" }} /> Roma, Italia</p>
+                <div className="pt-3">
+                  <a href="/privacy" className="block text-white/20 hover:text-white/50 transition-colors mb-2">Privacy Policy</a>
+                  <a href="/cookie-policy" className="block text-white/20 hover:text-white/50 transition-colors">Cookie Policy</a>
+                </div>
+              </div>
+              {/* Social icons */}
+              <div className="flex gap-2.5 mt-5">
                 {["In", "𝕏", "IG"].map((s, i) => (
                   <motion.div key={i}
-                    className="w-8 h-8 rounded-lg border border-foreground/[0.06] flex items-center justify-center text-[0.6rem] text-foreground/30 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all cursor-pointer"
-                    whileHover={{ scale: 1.1 }}
+                    className="w-9 h-9 rounded-lg flex items-center justify-center text-[0.6rem] text-white/20 cursor-pointer transition-all duration-300"
+                    style={{ border: "1px solid hsla(265,70%,60%,0.1)", background: "hsla(265,70%,60%,0.03)" }}
+                    whileHover={{ scale: 1.1, borderColor: "hsla(265,70%,60%,0.4)", color: "hsla(265,70%,65%,1)", background: "hsla(265,70%,60%,0.08)" }}
                   >
                     {s}
                   </motion.div>
                 ))}
               </div>
             </div>
+          </motion.div>
 
-            <div>
-              <h4 className="font-heading text-[0.6rem] font-semibold text-foreground/40 mb-4 tracking-[3px] uppercase">Settori</h4>
-              <div className="space-y-2.5 text-[0.65rem] text-foreground/30">
-                <p>Food & Ristorazione</p>
-                <p>NCC & Trasporto</p>
-                <p>Beauty & Wellness</p>
-                <p>Healthcare</p>
-                <p>Retail, Fitness, Hospitality</p>
-                <p>+18 altri settori</p>
+          {/* Bottom bar */}
+          <div className="relative pt-8">
+            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.12), transparent)" }} />
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.6rem] text-white/15">
+              <p className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsla(130,60%,50%,0.5)", boxShadow: "0 0 6px hsla(130,60%,50%,0.3)" }} />
+                <span className="text-white/25">Tutti i sistemi operativi</span>
+                <span className="mx-2">·</span>
+                © 2026 Empire AI · Piattaforma Multi-Settore
+              </p>
+              <div className="flex gap-6">
+                <a href="/privacy" className="hover:text-white/40 transition-colors">Privacy</a>
+                <a href="/cookie-policy" className="hover:text-white/40 transition-colors">Cookie</a>
+                <span>P.IVA IT12345678901</span>
               </div>
-            </div>
-
-            <div>
-              <h4 className="font-heading text-[0.6rem] font-semibold text-foreground/40 mb-4 tracking-[3px] uppercase">Risorse</h4>
-              <div className="space-y-2.5 text-[0.65rem]">
-                {[
-                  { label: "Funzionalità", href: "#services" },
-                  { label: "ROI Calculator", href: "#calculator" },
-                  { label: "Prezzi", href: "#pricing" },
-                  { label: "Partner Program", href: "#partner" },
-                ].map((link, i) => (
-                  <a key={i} href={link.href} className="block text-foreground/30 hover:text-primary transition-colors">{link.label}</a>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-heading text-[0.6rem] font-semibold text-foreground/40 mb-4 tracking-[3px] uppercase">Contatti & Legale</h4>
-              <div className="space-y-2.5 text-[0.65rem]">
-                <p className="text-foreground/30 flex items-center gap-2"><Mail className="w-3 h-3" /> info@empire-suite.it</p>
-                <p className="text-foreground/30 flex items-center gap-2"><MapPin className="w-3 h-3" /> Roma, Italia</p>
-                <a href="/privacy" className="block text-foreground/30 hover:text-primary transition-colors mt-3">Privacy Policy</a>
-                <a href="/cookie-policy" className="block text-foreground/30 hover:text-primary transition-colors">Cookie Policy</a>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-border/30 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[0.6rem] text-foreground/20">
-            <p>© 2026 Empire AI · Piattaforma Multi-Settore · Sempre in Evoluzione</p>
-            <div className="flex gap-5">
-              <a href="/privacy" className="hover:text-foreground/40 transition-colors">Privacy</a>
-              <a href="/cookie-policy" className="hover:text-foreground/40 transition-colors">Cookie</a>
-              <span>P.IVA IT12345678901</span>
             </div>
           </div>
         </div>
