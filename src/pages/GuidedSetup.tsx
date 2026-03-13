@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ChefHat, Truck, ShoppingBag, TableProperties, Palette, Check, ArrowRight, ArrowLeft, Sparkles, Upload, Car, Scissors, Heart, Store, Dumbbell, Building } from "lucide-react";
@@ -33,7 +33,7 @@ const BUSINESS_ICONS: Record<BusinessType, string> = {
 
 export default function GuidedSetup() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, roles, loading: authLoading } = useAuth();
   const [saving, setSaving] = useState(false);
 
   // Industry state
@@ -53,6 +53,72 @@ export default function GuidedSetup() {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const isFood = industry === "food";
+
+  useEffect(() => {
+    if (authLoading || !user) return;
+
+    let isMounted = true;
+
+    const redirectIfAlreadyConfigured = async () => {
+      try {
+        if (roles.includes("super_admin")) {
+          navigate("/superadmin", { replace: true });
+          return;
+        }
+
+        const [{ data: membership }, { data: ownedCompany }, { data: ownedRestaurant }] = await Promise.all([
+          supabase
+            .from("company_memberships")
+            .select("company_id")
+            .eq("user_id", user.id)
+            .limit(1)
+            .maybeSingle(),
+          supabase
+            .from("companies")
+            .select("industry")
+            .eq("owner_id", user.id)
+            .limit(1)
+            .maybeSingle(),
+          supabase
+            .from("restaurants")
+            .select("id")
+            .eq("owner_id", user.id)
+            .limit(1)
+            .maybeSingle(),
+        ]);
+
+        if (!isMounted) return;
+
+        let companyIndustry: string | null = ownedCompany?.industry ?? null;
+
+        if (!companyIndustry && membership?.company_id) {
+          const { data: memberCompany } = await supabase
+            .from("companies")
+            .select("industry")
+            .eq("id", membership.company_id)
+            .maybeSingle();
+          companyIndustry = memberCompany?.industry ?? null;
+        }
+
+        if (companyIndustry) {
+          navigate(companyIndustry === "food" ? "/dashboard" : "/app", { replace: true });
+          return;
+        }
+
+        if (ownedRestaurant?.id) {
+          navigate("/dashboard", { replace: true });
+        }
+      } catch (error) {
+        console.error("Failed to validate setup access", error);
+      }
+    };
+
+    void redirectIfAlreadyConfigured();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [authLoading, user, roles, navigate]);
 
   // Dynamic steps based on industry
   const steps: Step[] = isFood
