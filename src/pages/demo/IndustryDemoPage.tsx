@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect, FormEvent } from "react";
+import BackButton from "@/components/BackButton";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
