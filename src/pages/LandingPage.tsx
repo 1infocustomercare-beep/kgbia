@@ -1135,33 +1135,151 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-          VIDEO FEATURES
+          CREIAMO QUALSIASI COSA — Mega Conversion Section
          ═══════════════════════════════════════════ */}
       <Section>
+        <div className="text-center mb-12 sm:mb-16">
+          <SectionLabel text="Potere Illimitato" icon={<Sparkles className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.8rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.05] mb-5"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Creiamo <span className="text-shimmer">Qualsiasi Cosa</span><br />
+            Tu Possa Immaginare
+          </motion.h2>
+          <motion.p className="text-foreground/45 max-w-[600px] mx-auto text-sm sm:text-base leading-[1.8]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Non vendiamo un prodotto standard. <strong className="text-foreground/70">Costruiamo da zero</strong> la piattaforma perfetta per il tuo business.
+            Ogni funzione, ogni automazione, ogni dettaglio — esattamente come lo vuoi tu.
+          </motion.p>
+        </div>
+
+        {/* ═══ Hero Promise Cards ═══ */}
+        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-12 sm:mb-16"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {[
+            {
+              icon: <Palette className="w-6 h-6" />,
+              title: "Personalizzazione Totale",
+              desc: "Logo, colori, layout, flussi, moduli — ogni pixel rispecchia la tua identità. Nessun template generico, solo il tuo brand al 100%.",
+              highlight: "Il TUO brand, zero compromessi",
+            },
+            {
+              icon: <Workflow className="w-6 h-6" />,
+              title: "Automazione Infinita",
+              desc: "Booking, fatturazione, reminder, marketing, gestione staff, analytics — automatizziamo qualsiasi processo tu possa immaginare.",
+              highlight: "Se puoi pensarlo, noi lo automatizziamo",
+            },
+            {
+              icon: <Cpu className="w-6 h-6" />,
+              title: "Sviluppo Su Misura",
+              desc: "Hai bisogno di qualcosa che non esiste? Lo creiamo. Integrazioni custom, moduli dedicati, logiche proprietarie — tutto possibile.",
+              highlight: "Se non esiste, lo costruiamo noi",
+            },
+          ].map((card, i) => (
+            <motion.div key={i} className="relative p-6 sm:p-8 rounded-2xl border border-primary/10 bg-gradient-to-b from-primary/[0.04] to-transparent overflow-hidden group"
+              variants={fadeScale} whileHover={{ y: -6, scale: 1.01 }}>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                style={{ background: "radial-gradient(circle at 50% 0%, hsla(265,70%,60%,0.08), transparent 60%)" }} />
+              <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-500">
+                {card.icon}
+              </div>
+              <h3 className="font-heading text-base sm:text-lg font-bold text-foreground mb-3">{card.title}</h3>
+              <p className="text-xs sm:text-sm text-foreground/40 leading-[1.7] mb-4">{card.desc}</p>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/[0.06] border border-primary/10">
+                <Sparkles className="w-3 h-3 text-primary" />
+                <span className="text-[0.6rem] sm:text-[0.65rem] font-heading font-semibold text-primary/80 tracking-wider">{card.highlight}</span>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* ═══ Massive Capability Grid ═══ */}
+        <motion.div className="mb-12 sm:mb-16"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+          <div className="text-center mb-8">
+            <h3 className="font-heading text-lg sm:text-xl font-bold text-foreground mb-2">Tutto Ciò Che Puoi Immaginare</h3>
+            <p className="text-xs text-foreground/30">E molto di più. Ogni funzione è inclusa, ogni settore è coperto.</p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
+            {[
+              "App cliente white-label", "Dashboard admin IA", "Pannello operativo live",
+              "Prenotazioni online", "Booking appuntamenti", "Gestione flotta veicoli",
+              "Mappa ombrelloni", "Calendario interventi", "Menu digitale QR",
+              "Fatturazione elettronica", "CRM & segmentazione", "Programma fedeltà",
+              "Push notification", "Email marketing", "WhatsApp automatico",
+              "Gestione turni staff", "Paghe & presenze", "Analytics predittivi",
+              "Inventario smart", "HACCP digitale", "Review Shield™",
+              "Chat diretta clienti", "Pagamenti integrati", "GPS tracking live",
+              "Pricing dinamico", "Scadenzario documenti", "Report finanziari",
+              "Cross-selling IA", "Landing page SEO", "Social media hub",
+              "Ricevute automatiche", "Blacklist clienti", "Mappa tavoli",
+              "Agenda drag & drop", "Schede paziente", "Catalogo IA auto-generato",
+            ].map((feature, i) => (
+              <motion.div key={i}
+                className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-foreground/[0.05] bg-foreground/[0.015] hover:border-primary/15 hover:bg-primary/[0.03] transition-all duration-300 group"
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: Math.min(i * 0.02, 0.5) }}
+              >
+                <CircleCheck className="w-3.5 h-3.5 text-primary/40 group-hover:text-primary/70 transition-colors flex-shrink-0" />
+                <span className="text-[0.6rem] sm:text-[0.65rem] text-foreground/45 group-hover:text-foreground/65 transition-colors">{feature}</span>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.p className="text-center mt-5 text-[0.65rem] text-foreground/20 italic"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            ...e qualsiasi funzione specifica tu abbia bisogno. Se non c'è, la costruiamo per te.
+          </motion.p>
+        </motion.div>
+
+        {/* ═══ Automation Power Showcase ═══ */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }}>
             <div className="relative rounded-2xl overflow-hidden glow-card">
               <img src={heroAiPlatform} alt="Empire AI Platform" className="w-full aspect-video object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-transparent pointer-events-none" />
+              {/* Floating stats */}
+              <div className="absolute bottom-4 right-4 flex gap-2">
+                {[
+                  { val: "25+", label: "Settori" },
+                  { val: "100+", label: "Moduli" },
+                  { val: "∞", label: "Possibilità" },
+                ].map((s, i) => (
+                  <motion.div key={i} className="px-3 py-2 rounded-lg bg-background/80 backdrop-blur-xl border border-primary/15 text-center"
+                    initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 + i * 0.1 }}>
+                    <p className="text-sm font-heading font-bold text-primary">{s.val}</p>
+                    <p className="text-[0.45rem] text-foreground/40 tracking-wider uppercase">{s.label}</p>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
+
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="text-center lg:text-left">
-            <SectionLabel text="Capacità" icon={<Cpu className="w-3 h-3 text-primary" />} />
-            <h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
-              Creiamo <span className="text-shimmer">Qualsiasi Cosa</span><br />Tu Possa Immaginare
-            </h2>
+            <h3 className="text-[clamp(1.4rem,3.5vw,2.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
+              Non Ci Sono <span className="text-shimmer">Limiti</span>
+            </h3>
+            <p className="text-foreground/40 text-sm leading-[1.8] mb-6 max-w-lg mx-auto lg:mx-0">
+              Ogni business è unico. Per questo non ti diamo un pacchetto standard: <strong className="text-foreground/60">analizziamo il tuo caso</strong>, progettiamo la soluzione perfetta e la costruiamo su misura. Automazioni, integrazioni, IA — tutto ciò che serve per dominare il tuo mercato.
+            </p>
             <div className="space-y-4 text-left max-w-md mx-auto lg:mx-0">
               {[
-                { title: "Gestione Telefonica Professionale", desc: "Reception, prenotazioni e booking telefonico dedicato per ogni settore" },
-                { title: "WhatsApp Business Automatizzato", desc: "Conferme, reminder, promozioni e assistenza clienti 24/7 multi-settore" },
-                { title: "Intelligenza Artificiale Integrata", desc: "Catalogo auto-generato, pricing dinamico, analytics predittivi e suggerimenti IA" },
-                { title: "Integrazioni Illimitate", desc: "POS, gestionali, booking engine, calendari, pagamenti — integriamo qualsiasi sistema" },
+                { title: "Gestione Telefonica & Reception IA", desc: "Rispondiamo al telefono, prenotiamo, confermiamo — 24/7 senza pause", icon: <Headphones className="w-3.5 h-3.5" /> },
+                { title: "WhatsApp & Email Automatizzati", desc: "Conferme, reminder, promozioni, follow-up — tutto in autopilot", icon: <Mail className="w-3.5 h-3.5" /> },
+                { title: "Intelligenza Artificiale Integrata", desc: "Catalogo auto-generato, pricing dinamico, analytics predittivi, suggerimenti", icon: <Brain className="w-3.5 h-3.5" /> },
+                { title: "Integrazioni Illimitate", desc: "POS, gestionali, booking, calendari, pagamenti — integriamo qualsiasi sistema", icon: <Layers className="w-3.5 h-3.5" /> },
+                { title: "Funzionalità Custom Su Richiesta", desc: "Hai un'idea? La realizziamo. Nessun limite tecnico, nessun 'non si può fare'", icon: <Rocket className="w-3.5 h-3.5" /> },
               ].map((f, i) => (
-                <motion.div key={i} className="flex gap-3 items-start group"
-                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                  <div className="w-2 h-2 min-w-[8px] rounded-full bg-primary mt-2" />
+                <motion.div key={i} className="flex gap-3.5 items-start group"
+                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
+                  <div className="w-8 h-8 min-w-[32px] rounded-xl bg-primary/10 flex items-center justify-center mt-0.5 group-hover:bg-primary/20 transition-colors">
+                    <span className="text-primary">{f.icon}</span>
+                  </div>
                   <div>
                     <p className="text-xs sm:text-sm font-semibold text-foreground">{f.title}</p>
                     <p className="text-[0.65rem] text-foreground/35 mt-0.5">{f.desc}</p>
@@ -1171,7 +1289,35 @@ const LandingPage = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* ═══ Bottom Conversion Banner ═══ */}
+        <motion.div className="mt-14 sm:mt-20 relative p-8 sm:p-10 rounded-2xl border border-primary/15 bg-gradient-to-r from-primary/[0.06] via-background to-accent/[0.04] text-center overflow-hidden"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <div className="absolute inset-0 premium-holo-grid opacity-10 pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <div className="relative z-10">
+            <p className="text-[0.6rem] font-heading font-bold text-primary/60 tracking-[4px] uppercase mb-3">LA PROMESSA EMPIRE</p>
+            <h3 className="text-lg sm:text-2xl font-heading font-bold text-foreground mb-3 leading-tight">
+              "Se puoi immaginarlo, noi possiamo costruirlo.<br className="hidden sm:block" />
+              <span className="text-shimmer">E lo automatizziamo anche."</span>
+            </h3>
+            <p className="text-xs text-foreground/35 max-w-lg mx-auto mb-6">
+              Non sei limitato a funzionalità pre-definite. Il nostro team sviluppa qualsiasi funzione, integrazione o automazione tu abbia bisogno.
+              Il tuo business merita una soluzione costruita su misura, non un compromesso.
+            </p>
+            <motion.button
+              onClick={() => scrollTo("pricing")}
+              className="px-8 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
+              whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Costruisci il Tuo Sistema <ArrowRight className="w-4 h-4" />
+            </motion.button>
+          </div>
+        </motion.div>
       </Section>
+
+      <SectionDivider />
 
       {/* ═══════════════════════════════════════════
           SERVIZI
