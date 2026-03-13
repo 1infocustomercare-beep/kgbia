@@ -641,7 +641,10 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           SETTORI
          ═══════════════════════════════════════════ */}
-      <Section id="industries">
+      <Section id="industries" style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,20%,6%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
+        {/* Subtle violet side glows */}
+        <div className="absolute top-0 left-0 w-[300px] h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at left, hsla(265,70%,60%,0.04), transparent 70%)" }} />
+        <div className="absolute top-0 right-0 w-[300px] h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at right, hsla(265,70%,60%,0.04), transparent 70%)" }} />
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
