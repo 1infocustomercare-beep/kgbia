@@ -401,11 +401,11 @@ const LandingPage = () => {
         {/* ═══ LAYER 7: Electric arcs ═══ */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-[20%] left-[15%] w-[200px] h-[1px] animate-electric origin-left rotate-[30deg]"
-            style={{ background: "linear-gradient(90deg, hsla(200, 90%, 60%, 0.6), transparent)" }} />
+            style={{ background: "linear-gradient(90deg, hsla(265, 70%, 60%, 0.6), transparent)" }} />
           <div className="absolute top-[25%] right-[10%] w-[180px] h-[1px] animate-electric origin-right rotate-[-25deg]"
-            style={{ background: "linear-gradient(270deg, hsla(42, 80%, 55%, 0.5), transparent)", animationDelay: "1.5s" }} />
+            style={{ background: "linear-gradient(270deg, hsla(280, 45%, 68%, 0.5), transparent)", animationDelay: "1.5s" }} />
           <div className="absolute bottom-[30%] left-[20%] w-[150px] h-[1px] animate-electric origin-left rotate-[-15deg]"
-            style={{ background: "linear-gradient(90deg, hsla(217, 85%, 58%, 0.5), transparent)", animationDelay: "0.7s" }} />
+            style={{ background: "linear-gradient(90deg, hsla(265, 70%, 60%, 0.5), transparent)", animationDelay: "0.7s" }} />
         </div>
 
         {/* ═══ LAYER 8: Prismatic crown aura (central) ═══ */}
