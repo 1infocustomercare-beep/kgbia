@@ -1,11 +1,11 @@
 {
-  "name": "Empire Restaurant Suite",
-  "short_name": "Empire",
-  "description": "Ordina i migliori piatti dal tuo ristorante preferito",
+  "name": "Empire.AI — La Piattaforma AI per le Imprese Italiane",
+  "short_name": "Empire.AI",
+  "description": "Piattaforma SaaS multi-settore con AI per digitalizzare la tua impresa",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0D0B09",
-  "theme_color": "#0D0B09",
+  "background_color": "#0c0a1a",
+  "theme_color": "#7c3aed",
   "orientation": "portrait",
   "icons": [
     {
