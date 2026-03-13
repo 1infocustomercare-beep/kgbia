@@ -143,7 +143,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
         });
 
         if (error) {
-          setError(error.message);
+          setError(normalizeAuthErrorMessage(error.message));
           return;
         }
 
