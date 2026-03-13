@@ -110,7 +110,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     if (error) {
-      setError(error.message);
+      setError(normalizeAuthErrorMessage(error.message));
     } else {
       setForgotSent(true);
     }
