@@ -85,6 +85,16 @@ export default function LuxuryPublicSite({ company }: Props) {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
+  /* ── Fetch site config ── */
+  const { data: siteConfig } = useQuery({
+    queryKey: ["public-site-config", companyId],
+    queryFn: async () => {
+      const { data } = await supabase.from("public_site_config" as any).select("*").eq("company_id", companyId!).maybeSingle();
+      return data as any;
+    },
+    enabled: !!companyId,
+  });
+
   /* ── Fetch reviews ── */
   const { data: reviews = [] } = useQuery({
     queryKey: ["luxury-reviews", companyId],
