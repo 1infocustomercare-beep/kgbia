@@ -177,7 +177,15 @@ export default function HealthcarePublicSite({ company }: Props) {
                   <span key={b} className="text-[10px] px-3 py-1 rounded-full font-semibold uppercase tracking-wider" style={{ background: `${TEAL}25`, color: "#fff", border: `1px solid ${TEAL}40` }}>{b}</span>
                 ))}
               </motion.div>
-              <motion.h1 variants={fadeUp} custom={1} className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-5">{tagline}</motion.h1>
+              <motion.h1 variants={fadeUp} custom={1} className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-5">
+                {tagline.split("").map((char, i) => (
+                  <motion.span key={i} initial={{ opacity: 0, y: 20, rotateX: -60 }} animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    transition={{ delay: 0.5 + i * 0.025, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ display: "inline-block", color: i % 6 === 0 ? TEAL : "white" }}>
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+              </motion.h1>
               <motion.p variants={fadeUp} custom={2} className="text-base text-white/60 mb-8" style={{ fontFamily: "'Open Sans', sans-serif" }}>Professionalità, tecnologia e cura del paziente al centro di ogni visita.</motion.p>
               <motion.div variants={fadeUp} custom={3} className="flex flex-col sm:flex-row gap-3">
                 <Button className="px-8 py-5 text-base font-semibold text-white rounded-xl shadow-2xl" style={{ background: TEAL, boxShadow: `0 20px 60px -15px ${TEAL}55` }} onClick={() => scrollTo("prenota")}>Prenota Visita <ArrowRight className="w-4 h-4 ml-2" /></Button>
