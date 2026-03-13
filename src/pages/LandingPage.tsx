@@ -540,11 +540,11 @@ const LandingPage = () => {
             animate={{ opacity: [0.3, 0.55, 0.3], y: 0 }}
             transition={{ opacity: { duration: 6, repeat: Infinity, delay: 2 }, y: { duration: 1.2 } }}
           >
-            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-emerald-400/60 mb-1.5">NETWORK</div>
+            <div className="text-[7px] font-heading font-bold tracking-[3px] uppercase text-primary/60 mb-1.5">NETWORK</div>
             <div className="grid grid-cols-6 gap-[3px]">
               {Array.from({ length: 18 }).map((_, i) => (
                 <motion.div key={i} className="w-[6px] h-[6px] rounded-full"
-                  style={{ background: `hsla(${160 + i * 10}, 80%, 55%, ${0.15 + Math.random() * 0.5})` }}
+                  style={{ background: `hsla(${260 + i * 5}, 60%, 55%, ${0.15 + Math.random() * 0.5})` }}
                   animate={{ opacity: [0.2, 0.8, 0.2] }}
                   transition={{ duration: 1.5 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2 }} />
               ))}
