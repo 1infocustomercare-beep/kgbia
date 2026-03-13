@@ -322,7 +322,7 @@ export default function IndustryDemoPage() {
   // For NCC without DB company, create a fake company object for the premium site
   if (resolvedIndustry === "ncc" && !company) {
     const fakeNccCompany = {
-      id: "demo-ncc",
+      id: "00000000-0000-0000-0000-000000000001",
       name: demoData.companyName,
       slug: slug || "royal-transfer-roma",
       industry: "ncc",
