@@ -289,14 +289,16 @@ export default function BusinessPage() {
   }
 
   // Dispatch to sector-specific premium sites
-  const SECTOR_SITES: Record<string, boolean> = { ncc: true, beauty: true, beach: true, plumber: true, electrician: true, cleaning: true, garage: true, construction: true, gardening: true };
-  if (SECTOR_SITES[industry]) {
-    const SiteLoader = () => <div className="min-h-screen bg-black flex items-center justify-center"><div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" /></div>;
-    if (industry === "ncc") return <Suspense fallback={<SiteLoader />}><NCCPublicSite company={company} /></Suspense>;
-    if (industry === "beauty") return <Suspense fallback={<SiteLoader />}><BeautyPublicSite company={company} /></Suspense>;
-    if (industry === "beach") return <Suspense fallback={<SiteLoader />}><BeachPublicSite company={company} /></Suspense>;
-    if (["plumber", "electrician", "cleaning", "garage", "construction", "gardening"].includes(industry)) return <Suspense fallback={<SiteLoader />}><TradesPublicSite company={company} /></Suspense>;
-  }
+  const SiteLoader = () => <div className="min-h-screen bg-black flex items-center justify-center"><div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" /></div>;
+  
+  // Dedicated premium templates
+  if (industry === "ncc") return <Suspense fallback={<SiteLoader />}><NCCPublicSite company={company} /></Suspense>;
+  if (industry === "beauty") return <Suspense fallback={<SiteLoader />}><BeautyPublicSite company={company} /></Suspense>;
+  if (industry === "beach") return <Suspense fallback={<SiteLoader />}><BeachPublicSite company={company} /></Suspense>;
+  if (["plumber", "electrician", "cleaning", "garage", "construction", "gardening"].includes(industry)) return <Suspense fallback={<SiteLoader />}><TradesPublicSite company={company} /></Suspense>;
+  
+  // Universal luxury template for ALL other sectors
+  return <Suspense fallback={<SiteLoader />}><LuxuryPublicSite company={company} /></Suspense>;
 
   const openingHours = company.opening_hours as Record<string, string> | null;
 
