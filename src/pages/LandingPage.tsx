@@ -597,30 +597,28 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: Auto-scroll carousel ═══ */}
-        <div className="sm:hidden overflow-hidden -mx-5">
-          <div className="flex animate-carousel-scroll whitespace-nowrap py-2">
-            {[...industries, ...industries].map((ind, i) => {
+        {/* ═══ Mobile: Premium Carousel ═══ */}
+        <div className="sm:hidden">
+          <PremiumCarousel speed="normal" itemWidth={200}>
+            {industries.map((ind, i) => {
               const slug = DEMO_SLUGS[ind.id];
               const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
               return (
-                <div key={i} className="inline-block w-[200px] flex-shrink-0 mx-2 whitespace-normal">
-                  <div className="group relative p-5 rounded-2xl glow-card text-center cursor-pointer h-full"
-                    onClick={() => navigate(demoPath)}>
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 transition-all duration-500`}>
-                      {ind.icon}
-                    </div>
-                    <h3 className="font-heading text-xs font-bold text-foreground mb-1">{ind.title}</h3>
-                    <p className="text-[0.6rem] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
-                    <p className="text-[0.5rem] text-primary/50 font-heading tracking-wider">{ind.modules}</p>
-                    <span className="mt-2 inline-flex items-center gap-1 text-[0.6rem] font-bold text-primary/60">
-                      Demo <ArrowRight className="w-3 h-3" />
-                    </span>
+                <div key={i} className="group relative p-5 rounded-2xl glow-card text-center cursor-pointer h-full"
+                  onClick={() => navigate(demoPath)}>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 transition-all duration-500`}>
+                    {ind.icon}
                   </div>
+                  <h3 className="font-heading text-xs font-bold text-foreground mb-1">{ind.title}</h3>
+                  <p className="text-[0.6rem] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
+                  <p className="text-[0.5rem] text-primary/50 font-heading tracking-wider">{ind.modules}</p>
+                  <span className="mt-2 inline-flex items-center gap-1 text-[0.6rem] font-bold text-primary/60">
+                    Demo <ArrowRight className="w-3 h-3" />
+                  </span>
                 </div>
               );
             })}
-          </div>
+          </PremiumCarousel>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
