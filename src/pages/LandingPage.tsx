@@ -124,7 +124,7 @@ const LandingPage = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeIndustry, setActiveIndustry] = useState(0);
-  const [premiumGrid, setPremiumGrid] = useState(true);
+  const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
