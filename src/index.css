@@ -358,17 +358,17 @@
   .text-shimmer {
     background: linear-gradient(
       90deg,
-      hsl(265, 85%, 70%) 0%,
-      hsl(290, 80%, 65%) 25%,
-      hsl(210, 40%, 97%) 50%,
-      hsl(320, 75%, 60%) 75%,
-      hsl(265, 85%, 70%) 100%
+      hsl(265, 85%, 72%) 0%,
+      hsl(290, 80%, 68%) 20%,
+      hsl(0, 0%, 98%) 50%,
+      hsl(320, 75%, 62%) 80%,
+      hsl(265, 85%, 72%) 100%
     );
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: text-shimmer 4s linear infinite;
+    animation: text-shimmer 3.5s linear infinite;
   }
 
   /* ═══ MORPHING BLOB ═══ */
