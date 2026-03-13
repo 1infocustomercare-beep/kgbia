@@ -1528,7 +1528,7 @@ const LandingPage = () => {
             </ul>
             <motion.button onClick={() => navigate("/admin")}
               className="w-full py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase"
-              whileHover={{ scale: 1.02, boxShadow: "0 15px 50px hsla(217,91%,60%,0.25)" }}
+              whileHover={{ scale: 1.02, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
               whileTap={{ scale: 0.97 }}
             >
               Inizia il Tuo Impero
