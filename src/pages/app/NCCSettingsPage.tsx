@@ -51,7 +51,7 @@ export default function NCCSettingsPage() {
     queryKey: ["seo-settings", companyId],
     enabled: !!companyId,
     queryFn: async () => {
-      const { data } = await supabase.from("seo_settings").select("*").eq("company_id", companyId!).maybeSingle();
+      const { data } = await (supabase as any).from("seo_settings").select("*").eq("company_id", companyId!).maybeSingle();
       return data;
     },
   });
