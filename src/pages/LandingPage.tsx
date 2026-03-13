@@ -1107,8 +1107,9 @@ const LandingPage = () => {
         </motion.p>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
-          VIDEO PARTNER
          ═══════════════════════════════════════════ */}
       <Section>
         <div className="text-center mb-8">
