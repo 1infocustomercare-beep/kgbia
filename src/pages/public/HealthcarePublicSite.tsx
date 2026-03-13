@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -398,6 +399,8 @@ export default function HealthcarePublicSite({ company }: Props) {
           {company.email && <div className="flex flex-col items-center gap-2"><Mail className="w-5 h-5" style={{ color: TEAL }} /><a href={`mailto:${company.email}`} className="text-sm opacity-60">{company.email}</a></div>}
         </div>
       </Section>
+
+      <AutomationShowcase accentColor={TEAL} accentBg="bg-teal-500" sectorName="studi medici e cliniche" darkMode={false} />
 
       <footer className="py-8 border-t border-gray-100 text-center text-xs text-gray-400">
         <p>© {new Date().getFullYear()} {name}. Tutti i diritti riservati. | Powered by Empire.AI</p>

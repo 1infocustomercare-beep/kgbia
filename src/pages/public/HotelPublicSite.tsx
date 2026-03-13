@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -370,6 +371,8 @@ export default function HotelPublicSite({ company }: Props) {
           </Card>
         </div>
       </Section>
+
+      <AutomationShowcase accentColor={GOLD} accentBg="bg-amber-600" sectorName="hotel e hospitality" darkMode={true} />
 
       {/* FOOTER */}
       <footer className="py-8 border-t" style={{ borderColor: `${GOLD}15`, background: BORDEAUX }}>

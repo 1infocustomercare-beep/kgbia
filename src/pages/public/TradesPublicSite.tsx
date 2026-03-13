@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -363,6 +364,8 @@ export default function TradesPublicSite({ company }: Props) {
           </Card>
         </div>
       </section>
+
+      <AutomationShowcase accentColor={isElectrician ? "#F59E0B" : isPlumber ? "#3B82F6" : "#F97316"} accentBg={accentBg} sectorName="artigiani e professionisti" darkMode={true} />
 
       {/* ═══ FOOTER ═══ */}
       <footer className="py-10 px-4 border-t border-white/5">

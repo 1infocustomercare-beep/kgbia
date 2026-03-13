@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -319,6 +320,8 @@ export default function RetailPublicSite({ company }: Props) {
           </div>
         </div>
       </Section>
+
+      <AutomationShowcase accentColor={accent} accentBg="bg-blue-600" sectorName="retail e negozi" darkMode={false} />
 
       {/* FOOTER */}
       <footer className="py-8 border-t border-gray-100">

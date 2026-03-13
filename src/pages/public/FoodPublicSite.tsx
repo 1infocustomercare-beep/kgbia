@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+// @ts-ignore
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -481,6 +483,9 @@ export default function FoodPublicSite({ company }: Props) {
           </div>
         </div>
       </Section>
+
+      {/* ── AUTOMATION SHOWCASE ── */}
+      <AutomationShowcase accentColor={gold} accentBg="bg-amber-600" sectorName="la ristorazione" darkMode={true} />
 
       {/* ── FOOTER ── */}
       <footer className="py-10 border-t" style={{ borderColor: `${gold}15`, background: dark }}>

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -301,6 +302,8 @@ export default function FitnessPublicSite({ company }: Props) {
           </Card>
         </div>
       </Section>
+
+      <AutomationShowcase accentColor={ORANGE} accentBg="bg-orange-500" sectorName="palestre e fitness" darkMode={true} />
 
       {/* FOOTER */}
       <footer className="py-8 border-t" style={{ borderColor: "#1a1a1a" }}>

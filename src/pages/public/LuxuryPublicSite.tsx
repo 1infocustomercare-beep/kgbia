@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -605,6 +606,8 @@ export default function LuxuryPublicSite({ company }: Props) {
           Powered by Empire.AI
         </p>
       </footer>
+
+      <AutomationShowcase accentColor={p.accent} accentBg="bg-primary" sectorName={config.label.toLowerCase()} darkMode={isDark} />
 
       {/* ═══ FLOATING WHATSAPP ═══ */}
       {(company.phone || socialLinks?.whatsapp) && (

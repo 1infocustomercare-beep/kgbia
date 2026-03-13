@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -402,6 +403,8 @@ export default function BeachPublicSite({ company }: Props) {
           </div>
         </div>
       </Section>
+
+      <AutomationShowcase accentColor={CYAN} accentBg="bg-cyan-500" sectorName="stabilimenti balneari" darkMode={true} />
 
       {/* FOOTER */}
       <footer className="py-8 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.04)", background: "#050a12" }}>

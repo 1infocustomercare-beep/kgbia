@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -489,6 +490,8 @@ export default function BeautyPublicSite({ company }: Props) {
           {company.email && <div className="flex flex-col items-center gap-2"><Mail className="w-5 h-5" style={{ color: PINK }} /><a href={`mailto:${company.email}`} className="text-sm text-white/50 hover:text-white">{company.email}</a></div>}
         </div>
       </Section>
+
+      <AutomationShowcase accentColor={PINK} accentBg="bg-pink-500" sectorName="saloni e centri estetici" darkMode={true} />
 
       {/* ═══ FOOTER ═══ */}
       <footer className="py-8 px-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)", background: "#050505" }}>
