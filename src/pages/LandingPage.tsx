@@ -51,9 +51,9 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; pr
   return <span ref={ref}>{prefix}{display.toLocaleString("it-IT")}{suffix}</span>;
 };
 
-const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string }>(
-  ({ id, children, className = "" }, ref) => (
-    <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden ${className}`}>
+const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
+  ({ id, children, className = "", style }, ref) => (
+    <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden ${className}`} style={style}>
       <div className="max-w-[1100px] mx-auto relative z-10">{children}</div>
     </section>
   )
