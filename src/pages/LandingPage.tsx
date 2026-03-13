@@ -1773,7 +1773,8 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           TESTIMONIALS — Auto-scroll carousel
          ═══════════════════════════════════════════ */}
-      <Section id="testimonials">
+      <Section id="testimonials" style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,20%,6%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] pointer-events-none" style={{ background: "radial-gradient(ellipse, hsla(265,70%,60%,0.04), transparent 70%)" }} />
         {/* Ambient glow */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full opacity-[0.04]"
