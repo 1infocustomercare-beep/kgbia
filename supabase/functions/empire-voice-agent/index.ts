@@ -79,7 +79,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, mode } = await req.json();
+    const { messages, mode, pageContent } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -92,6 +92,28 @@ serve(async (req) => {
       systemMessages.push({
         role: "system",
         content: "L'utente ha appena aperto la landing page di Empire. Fai una presentazione vocale breve (max 4 frasi) accattivante e persuasiva di Empire, come se stessi parlando direttamente con un imprenditore. Sii energico ma professionale."
+      });
+    }
+
+    if (mode === "read_page" && pageContent) {
+      systemMessages.push({
+        role: "system",
+        content: `L'utente sta visitando la home page di Empire. Ecco il contenuto della pagina che sta vedendo:
+
+---
+${pageContent}
+---
+
+Il tuo compito è LEGGERE e SPIEGARE questa pagina in modo persuasivo e coinvolgente, come un consulente di vendita di alto livello che guida il visitatore attraverso i contenuti. 
+
+REGOLE:
+- Fai un riassunto fluido e narrativo (max 8-10 frasi), NON un elenco puntato
+- Collega le sezioni in modo logico: "Come hai visto nella prima sezione... e poi noterai che..."
+- Sottolinea i vantaggi più importanti per un imprenditore
+- Concludi con una call to action forte: prenotare una demo o iniziare subito
+- Parla in prima persona plurale ("noi di Empire") e dai del "tu" al visitatore
+- Sii energico, professionale e convincente
+- NON ripetere il testo parola per parola, INTERPRETALO e SPIEGALO con parole tue`
       });
     }
 
