@@ -552,7 +552,7 @@ const LandingPage = () => {
           </motion.h2>
           <motion.p className="text-foreground/50 max-w-[520px] mx-auto text-sm leading-[1.7]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Dashboard IA, gestione flotta, menu digitali, CRM avanzato, automazioni, fatturazione, analytics — tutto in un ecosistema white-label che si evolve ogni settimana.
+            Dashboard IA, gestione flotta, prenotazioni, cataloghi digitali, CRM avanzato, automazioni, fatturazione, analytics — tutto in un ecosistema white-label per qualsiasi settore.
           </motion.p>
         </div>
         <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
