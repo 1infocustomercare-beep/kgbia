@@ -1089,8 +1089,8 @@ const LandingPage = () => {
             ))}
             <defs>
               <linearGradient id="neural-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="hsla(265, 85%, 65%, 0.6)" />
-                <stop offset="100%" stopColor="hsla(200, 90%, 60%, 0.4)" />
+                <stop offset="0%" stopColor="hsla(265, 70%, 60%, 0.6)" />
+                <stop offset="100%" stopColor="hsla(280, 50%, 65%, 0.4)" />
               </linearGradient>
             </defs>
           </svg>
