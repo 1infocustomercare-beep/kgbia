@@ -103,6 +103,7 @@ export function TopBar() {
         <SitePreviewOverlay
           slug={company.slug}
           companyName={company.name}
+          industry={company.industry}
           open={sitePreviewOpen}
           onClose={() => setSitePreviewOpen(false)}
         />

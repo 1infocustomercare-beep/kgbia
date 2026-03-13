@@ -8,6 +8,7 @@ interface SitePreviewOverlayProps {
   companyName: string;
   open: boolean;
   onClose: () => void;
+  industry?: string;
 }
 
 type DeviceMode = "mobile" | "tablet" | "desktop";
@@ -18,9 +19,10 @@ const DEVICE_SIZES: Record<DeviceMode, { w: number; h: number; label: string }> 
   desktop: { w: 1280, h: 800, label: "Desktop" },
 };
 
-export function SitePreviewOverlay({ slug, companyName, open, onClose }: SitePreviewOverlayProps) {
+export function SitePreviewOverlay({ slug, companyName, open, onClose, industry }: SitePreviewOverlayProps) {
   const [device, setDevice] = useState<DeviceMode>("mobile");
-  const previewUrl = `${window.location.origin}/b/${slug}`;
+  const isFood = industry === "food" || !industry;
+  const previewUrl = `${window.location.origin}/${isFood ? "r" : "b"}/${slug}`;
   const size = DEVICE_SIZES[device];
 
   return (

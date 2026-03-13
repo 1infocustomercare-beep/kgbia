@@ -45,13 +45,27 @@ export default function BusinessPage() {
     queryKey: ["business-page", slug],
     queryFn: async () => {
       if (!slug) return null;
-      const { data } = await supabase
+      // Try companies table first
+      const { data: companyData } = await supabase
         .from("companies")
         .select("*")
         .eq("slug", slug)
         .eq("is_active", true)
         .maybeSingle();
-      return data as any;
+      if (companyData) return companyData as any;
+
+      // Fallback: check restaurants table for food businesses
+      const { data: restaurant } = await supabase
+        .from("restaurants")
+        .select("*")
+        .eq("slug", slug)
+        .eq("is_active", true)
+        .maybeSingle();
+      if (restaurant) {
+        return { ...restaurant, industry: "food" } as any;
+      }
+
+      return null;
     },
     enabled: !!slug,
   });
