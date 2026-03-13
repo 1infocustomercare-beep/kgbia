@@ -50,9 +50,25 @@ const normalizeAuthErrorMessage = (message: string) => {
   return message;
 };
 
+const AUTH_FALLBACK: AuthContextType = {
+  user: null,
+  session: null,
+  loading: true,
+  rolesReady: false,
+  roles: [],
+  isSuperAdmin: false,
+  isStaff: false,
+  isRestaurantAdmin: false,
+  isPartner: false,
+  isTeamLeader: false,
+  signIn: async () => ({ error: new Error("AuthProvider not mounted"), session: null }),
+  signUp: async () => ({ error: new Error("AuthProvider not mounted") }),
+  signOut: async () => {},
+};
+
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  if (!ctx) return AUTH_FALLBACK;
   return ctx;
 };
 
