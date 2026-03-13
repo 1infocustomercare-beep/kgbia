@@ -111,14 +111,17 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
 
       if (nextSession?.user) {
         setLoading(true);
+        setRolesReady(false);
         window.setTimeout(async () => {
           const fetchedRoles = await fetchRoles(nextSession.user.id);
           if (!isMounted) return;
           setRoles(fetchedRoles);
+          setRolesReady(true);
           setLoading(false);
         }, 0);
       } else {
         setRoles([]);
+        setRolesReady(true);
         setLoading(false);
       }
     });
