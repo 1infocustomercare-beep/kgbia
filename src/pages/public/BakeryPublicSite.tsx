@@ -184,7 +184,6 @@ export default function BakeryPublicSite({ company }: Props) {
           ))}
         </motion.div>
       </div>
-      </section>
 
       {/* VETRINA */}
       <Section id="vetrina" className="py-20 sm:py-28">
