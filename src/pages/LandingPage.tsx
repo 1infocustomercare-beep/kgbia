@@ -369,7 +369,7 @@ const LandingPage = () => {
           <div className="w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] relative">
             <div className="absolute inset-0 rounded-full border border-primary/25 animate-energy-ring" />
             <div className="absolute inset-0 rounded-full border border-accent/20 animate-energy-ring-d1" />
-            <div className="absolute inset-0 rounded-full border animate-energy-ring-d2" style={{ borderColor: "hsla(200, 90%, 60%, 0.2)" }} />
+            <div className="absolute inset-0 rounded-full border animate-energy-ring-d2" style={{ borderColor: "hsla(300, 35%, 55%, 0.2)" }} />
           </div>
         </div>
 
