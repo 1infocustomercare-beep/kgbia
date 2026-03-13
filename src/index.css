@@ -42,10 +42,10 @@
     --gold-glow: 265 70% 60% / 0.3;
 
     /* ═══ GOLD LUXURY TOKENS ═══ */
-    --gold: 42 80% 55%;
-    --gold-light: 45 85% 68%;
-    --gold-dark: 38 75% 42%;
-    --gold-muted: 40 40% 50%;
+    --gold: 35 45% 50%;
+    --gold-light: 38 40% 62%;
+    --gold-dark: 32 50% 38%;
+    --gold-muted: 35 25% 45%;
     --deep-black: 260 30% 2%;
 
     --sidebar-background: 260 18% 5%;
@@ -91,11 +91,11 @@
   }
 
   .gold-glow {
-    box-shadow: 0 0 30px hsla(42, 80%, 55%, 0.25), 0 0 60px hsla(42, 80%, 55%, 0.1);
+    box-shadow: 0 0 30px hsla(35, 45%, 50%, 0.2), 0 0 60px hsla(265, 70%, 60%, 0.08);
   }
 
   .text-gold-gradient {
-    background: linear-gradient(135deg, hsl(42, 80%, 65%), hsl(45, 85%, 72%), hsl(38, 75%, 55%));
+    background: linear-gradient(135deg, hsl(35, 45%, 58%), hsl(38, 40%, 65%), hsl(32, 50%, 50%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -103,27 +103,23 @@
 
   .text-gold-shimmer {
     background: linear-gradient(
-      90deg,
-      hsl(42, 80%, 60%) 0%,
-      hsl(45, 90%, 75%) 25%,
-      hsl(0, 0%, 98%) 50%,
-      hsl(42, 85%, 70%) 75%,
-      hsl(42, 80%, 60%) 100%
+      135deg,
+      hsl(35, 45%, 55%) 0%,
+      hsl(38, 40%, 65%) 40%,
+      hsl(32, 50%, 50%) 100%
     );
-    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: text-shimmer 3.5s linear infinite;
   }
 
   .bg-gold-gradient {
-    background: linear-gradient(135deg, hsl(42, 80%, 50%), hsl(45, 85%, 58%), hsl(38, 75%, 45%));
+    background: linear-gradient(135deg, hsl(265, 70%, 55%), hsl(280, 50%, 58%), hsl(265, 65%, 50%));
   }
 
   .gold-border-glow {
-    border-color: hsla(42, 80%, 55%, 0.2);
-    box-shadow: 0 0 20px hsla(42, 80%, 55%, 0.08);
+    border-color: hsla(265, 70%, 60%, 0.15);
+    box-shadow: 0 0 20px hsla(265, 70%, 60%, 0.06);
   }
 
   @keyframes marquee-scroll {
@@ -460,18 +456,14 @@
 
   .text-shimmer {
     background: linear-gradient(
-      90deg,
+      135deg,
       hsl(265, 70%, 68%) 0%,
-      hsl(280, 45%, 75%) 20%,
-      hsl(0, 0%, 98%) 50%,
-      hsl(280, 50%, 70%) 80%,
-      hsl(265, 70%, 68%) 100%
+      hsl(280, 50%, 72%) 50%,
+      hsl(265, 65%, 65%) 100%
     );
-    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: text-shimmer 3.5s linear infinite;
   }
 
   /* ═══ MORPHING BLOB ═══ */

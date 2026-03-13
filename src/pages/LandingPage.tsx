@@ -88,7 +88,7 @@ const popIn = { hidden: { opacity: 0, scale: 0.88 }, visible: { opacity: 1, scal
 const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => (
   <motion.div
     className="absolute rounded-full"
-    style={{ width: size, height: size, left: x, top: y, background: delay % 2 === 0 ? "hsl(42, 80%, 55%)" : "hsl(265, 70%, 60%)" }}
+    style={{ width: size, height: size, left: x, top: y, background: delay % 2 === 0 ? "hsl(265, 70%, 60%)" : "hsl(280, 50%, 65%)" }}
     animate={{ y: [0, -25, 0], opacity: [0.1, 0.35, 0.1], scale: [1, 1.3, 1] }}
     transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
   />
@@ -97,11 +97,11 @@ const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: strin
 /* ═══ Section Divider ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
   <div ref={ref} className="section-connector">
-    <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(42, 80%, 55%, 0.15) 20%, hsla(265, 70%, 60%, 0.3) 50%, hsla(42, 80%, 55%, 0.15) 80%, transparent 100%)" }} />
+    <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(265, 70%, 60%, 0.1) 20%, hsla(265, 70%, 60%, 0.25) 50%, hsla(265, 70%, 60%, 0.1) 80%, transparent 100%)" }} />
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <motion.div
         className="w-2 h-2 rounded-full"
-        style={{ background: "hsl(42, 80%, 55%)", boxShadow: "0 0 12px hsla(42, 80%, 55%, 0.6), 0 0 30px hsla(265, 70%, 60%, 0.3)" }}
+        style={{ background: "hsl(265, 70%, 60%)", boxShadow: "0 0 12px hsla(265, 70%, 60%, 0.5), 0 0 30px hsla(280, 50%, 65%, 0.2)" }}
         animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
         transition={{ duration: 2, repeat: Infinity }}
       />
@@ -348,11 +348,11 @@ const LandingPage = () => {
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute bottom-0 left-0 right-0 h-[50vh] origin-bottom"
             style={{
-              backgroundImage: `linear-gradient(hsla(42, 80%, 55%, 0.03) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 70%, 60%, 0.03) 1px, transparent 1px)`,
+              backgroundImage: `linear-gradient(hsla(265, 70%, 60%, 0.03) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 70%, 60%, 0.03) 1px, transparent 1px)`,
               backgroundSize: "60px 60px",
             }}
           />
-          <div className="absolute bottom-[25vh] left-0 right-0 h-[1px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 15%, hsla(42, 80%, 55%, 0.2) 50%, transparent 85%)" }} />
+          <div className="absolute bottom-[25vh] left-0 right-0 h-[1px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 15%, hsla(265, 70%, 60%, 0.15) 50%, transparent 85%)" }} />
         </div>
 
         {/* ═══ LAYER 2: Dual ambient glow — violet + gold ═══ */}
@@ -362,40 +362,40 @@ const LandingPage = () => {
         </div>
         <div className="absolute top-[30%] left-[35%] -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <div className="w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] rounded-full blur-[180px] opacity-[0.06]"
-            style={{ background: "radial-gradient(circle, hsl(42, 80%, 55%), transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, hsl(280, 50%, 60%), transparent 70%)" }} />
         </div>
 
         {/* ═══ LAYER 3: Crown icon — gold pulse ═══ */}
         <div className="absolute top-[22%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <motion.div
             className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center"
-            style={{ background: "radial-gradient(circle, hsla(42, 80%, 55%, 0.1) 0%, transparent 70%)" }}
+            style={{ background: "radial-gradient(circle, hsla(265, 70%, 60%, 0.12) 0%, transparent 70%)" }}
             animate={{ scale: [1, 1.03, 1] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
-            <Crown className="w-7 h-7 sm:w-9 sm:h-9 drop-shadow-[0_0_20px_hsla(42,80%,55%,0.4)]" style={{ color: "hsl(42, 80%, 60%)" }} />
+            <Crown className="w-7 h-7 sm:w-9 sm:h-9 drop-shadow-[0_0_20px_hsla(265,70%,60%,0.4)]" style={{ color: "hsl(265, 70%, 65%)" }} />
           </motion.div>
         </div>
 
         {/* ═══ LAYER 4: Gold corner accents ═══ */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(42,80%,55%,0.25), transparent)" }} />
-          <div className="absolute top-0 left-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(42,80%,55%,0.25), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(42,80%,55%,0.25), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(42,80%,55%,0.25), transparent)" }} />
+          <div className="absolute top-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 left-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)" }} />
         </div>
 
-        {/* ═══ Gold vertical light beam ═══ */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[30vh]" style={{ background: "linear-gradient(180deg, hsla(42, 80%, 55%, 0.3), hsla(265, 70%, 60%, 0.1), transparent)" }} />
+        {/* ═══ Violet vertical light beam ═══ */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[30vh]" style={{ background: "linear-gradient(180deg, hsla(265, 70%, 60%, 0.25), hsla(280, 50%, 60%, 0.08), transparent)" }} />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Clean badge — gold accent */}
-            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-gold/10 bg-gold/[0.03] backdrop-blur-sm mb-7"
+            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm mb-7"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-              <span className="text-[0.6rem] font-heading font-semibold text-gold/80 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+              <span className="text-[0.6rem] font-heading font-semibold text-primary/80 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
             {/* Headline — gold shimmer */}
@@ -418,8 +418,8 @@ const LandingPage = () => {
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
               <motion.button
                 onClick={() => scrollTo("pricing")}
-                className="group relative w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-gold-gradient text-deep-black font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
-                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsla(42,80%,55%,0.25)" }}
+                className="group relative w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsla(265,70%,60%,0.25)" }}
                 whileTap={{ scale: 0.97 }}
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/10 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
@@ -440,10 +440,10 @@ const LandingPage = () => {
             <motion.div className="mt-16 w-full grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
               {metrics.map((m, i) => (
-                <motion.div key={i} className="rounded-2xl p-4 sm:p-5 text-center border border-gold/[0.08] bg-deep-black/40 backdrop-blur-sm"
-                  whileHover={{ y: -3, borderColor: "hsla(42, 80%, 55%, 0.15)" }}
+                <motion.div key={i} className="rounded-2xl p-4 sm:p-5 text-center border border-primary/[0.1] bg-deep-black/40 backdrop-blur-sm"
+                  whileHover={{ y: -3, borderColor: "hsla(265, 70%, 60%, 0.2)" }}
                   transition={{ duration: 0.2 }}>
-                  <p className="text-2xl sm:text-3xl font-heading font-bold text-gold-gradient">
+                  <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
                   <p className="text-[0.6rem] text-foreground/30 mt-1.5 tracking-[2px] uppercase font-heading">{m.label}</p>
@@ -456,16 +456,16 @@ const LandingPage = () => {
         {/* Scroll indicator */}
         <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
           animate={{ y: [0, 8, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
-          <span className="text-[8px] text-gold-muted/40 tracking-[4px] uppercase font-heading">Scopri</span>
-          <div className="w-5 h-8 rounded-full border border-gold/15 flex items-start justify-center p-1">
-            <motion.div className="w-1 h-1.5 rounded-full bg-gold/50"
+          <span className="text-[8px] text-foreground/25 tracking-[4px] uppercase font-heading">Scopri</span>
+          <div className="w-5 h-8 rounded-full border border-primary/15 flex items-start justify-center p-1">
+            <motion.div className="w-1 h-1.5 rounded-full bg-primary/50"
               animate={{ y: [0, 12, 0] }} transition={{ duration: 1.5, repeat: Infinity }} />
           </div>
         </motion.div>
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y border-gold/[0.08] overflow-hidden bg-deep-black/60 backdrop-blur-sm">
+      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden bg-deep-black/60 backdrop-blur-sm">
         <div className="flex animate-marquee-scroll whitespace-nowrap">
           {[...Array(2)].map((_, repeat) => (
             <div key={repeat} className="flex items-center gap-12 px-6">
@@ -483,7 +483,7 @@ const LandingPage = () => {
                 { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali" },
               ].map((t, i) => (
                 <span key={i} className="text-[0.6rem] text-foreground/20 font-heading tracking-[3px] uppercase flex items-center gap-2">
-                  <span className="text-gold/35">{t.icon}</span>
+                  <span className="text-primary/35">{t.icon}</span>
                   {t.text}
                 </span>
               ))}
@@ -624,7 +624,7 @@ const LandingPage = () => {
                             <span className="relative z-10 drop-shadow-md">{ind.icon}</span>
                           </div>
                           {/* Gold accent dot */}
-                          <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 shadow-[0_0_6px_rgba(217,170,56,0.6)] z-30" />
+                          <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-gradient-to-br from-primary/60 to-accent/60 shadow-[0_0_6px_hsla(265,70%,60%,0.5)] z-30" />
                         </div>
                         <h3 className="font-heading text-[11px] font-bold text-foreground mb-1 leading-tight">{ind.title}</h3>
                         <p className="text-[8px] text-foreground/35 leading-[1.4] mb-2 px-1">{ind.desc}</p>
@@ -678,7 +678,7 @@ const LandingPage = () => {
                           <span className="relative z-10 drop-shadow-md">{ind.icon}</span>
                         </div>
                         {/* Gold accent dot */}
-                        <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 shadow-[0_0_8px_rgba(217,170,56,0.6)] z-30" />
+                        <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-primary/60 to-accent/60 shadow-[0_0_8px_hsla(265,70%,60%,0.5)] z-30" />
                       </div>
                       <h3 className="font-heading text-sm font-bold text-foreground mb-1.5">{ind.title}</h3>
                       <p className="text-[10px] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
@@ -1450,11 +1450,11 @@ const LandingPage = () => {
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {/* Main plan */}
-          <motion.div className="relative p-7 sm:p-9 rounded-2xl overflow-hidden border border-gold/20 bg-gradient-to-b from-gold/[0.04] via-deep-black/60 to-background"
+          <motion.div className="relative p-7 sm:p-9 rounded-2xl overflow-hidden border border-primary/20 bg-gradient-to-b from-primary/[0.06] via-deep-black/60 to-background"
             variants={fadeScale} whileHover={{ y: -4 }}>
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gold-gradient" />
-            <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-gold-gradient text-[0.55rem] font-bold text-deep-black tracking-[2px] font-heading uppercase">Più Scelto</div>
-            <span className="text-[0.6rem] font-heading font-semibold text-gold/70 tracking-[3px] uppercase">Pagamento Unico</span>
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
+            <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-vibrant-gradient text-[0.55rem] font-bold text-primary-foreground tracking-[2px] font-heading uppercase">Più Scelto</div>
+            <span className="text-[0.6rem] font-heading font-semibold text-primary/70 tracking-[3px] uppercase">Pagamento Unico</span>
             <p className="text-5xl sm:text-6xl font-heading font-bold text-foreground mt-3">€2.997</p>
             <p className="text-[0.65rem] text-foreground/35 mt-1.5">IVA 22% inclusa · Una volta sola</p>
             <ul className="mt-7 space-y-3 mb-7">
@@ -1480,8 +1480,8 @@ const LandingPage = () => {
               ))}
             </ul>
             <motion.button onClick={() => navigate("/admin")}
-              className="w-full py-4 rounded-full bg-gold-gradient text-deep-black font-bold text-sm font-heading tracking-wider uppercase"
-              whileHover={{ scale: 1.02, boxShadow: "0 15px 50px hsla(42,80%,55%,0.3)" }}
+              className="w-full py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase"
+              whileHover={{ scale: 1.02, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
               whileTap={{ scale: 0.97 }}
             >
               Inizia il Tuo Impero
@@ -1752,28 +1752,28 @@ const LandingPage = () => {
 
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
-        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-gold/[0.06] via-deep-black/80 to-primary/[0.04] border border-gold/15 overflow-hidden animated-border">
+        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.08] via-deep-black/80 to-accent/[0.04] border border-primary/15 overflow-hidden animated-border">
           <div className="absolute inset-0 aurora-mesh opacity-30" />
-          {/* Gold ambient glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[2px]" style={{ background: "linear-gradient(90deg, transparent, hsla(42,80%,55%,0.5), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[40px] blur-[30px]" style={{ background: "hsla(42, 80%, 55%, 0.15)" }} />
+          {/* Violet ambient glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[2px]" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.4), transparent)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[40px] blur-[30px]" style={{ background: "hsla(265, 70%, 60%, 0.12)" }} />
           <div className="relative z-10">
             <motion.div
               initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
             >
-              <Crown className="w-12 h-12 mx-auto mb-6" style={{ color: "hsl(42, 80%, 60%)", filter: "drop-shadow(0 0 40px hsla(42,80%,55%,0.3))" }} />
+              <Crown className="w-12 h-12 mx-auto mb-6 text-primary" style={{ filter: "drop-shadow(0 0 40px hsla(265,70%,60%,0.3))" }} />
             </motion.div>
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
-              Pronto a Costruire il Tuo <span className="text-gold-shimmer">Impero?</span>
+              Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
             </h2>
             <p className="text-sm text-foreground/35 max-w-md mx-auto mb-8">
               25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando. Non restare indietro.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <motion.button onClick={() => navigate("/admin")}
-                className="w-full sm:w-auto px-9 py-4 rounded-full bg-gold-gradient text-deep-black font-bold text-sm font-heading tracking-wider uppercase flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(42,80%,55%,0.3)" }}
+                className="w-full sm:w-auto px-9 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(265,70%,60%,0.25)" }}
                 whileTap={{ scale: 0.97 }}
               >
                 Sono un Imprenditore <ArrowRight className="w-4 h-4" />
@@ -1795,10 +1795,10 @@ const LandingPage = () => {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-10 mb-12">
             <div className="col-span-2 sm:col-span-1">
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-gold-gradient flex items-center justify-center shadow-[0_0_15px_hsla(42,80%,55%,0.2)]">
-                  <Crown className="w-3.5 h-3.5 text-deep-black" />
+                <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center shadow-[0_0_15px_hsla(265,70%,60%,0.2)]">
+                  <Crown className="w-3.5 h-3.5 text-primary-foreground" />
                 </div>
-                <span className="font-heading font-bold text-foreground tracking-[0.12em] uppercase text-xs">Empire<span className="text-gold">.AI</span></span>
+                <span className="font-heading font-bold text-foreground tracking-[0.12em] uppercase text-xs">Empire<span className="text-primary">.AI</span></span>
               </div>
               <p className="text-[0.65rem] text-foreground/30 leading-[1.7] max-w-[240px] mb-5">
                 La piattaforma AI più completa al mondo. Modernizziamo qualsiasi business con tecnologia proprietaria e automazione intelligente.
@@ -1868,7 +1868,7 @@ const LandingPage = () => {
         initial={{ y: 100 }} animate={{ y: 0 }} transition={{ delay: 2, type: "spring", damping: 25 }}>
         <div className="flex gap-2">
           <motion.button onClick={() => scrollTo("pricing")}
-            className="flex-1 py-3.5 rounded-xl bg-gold-gradient text-deep-black font-bold text-sm tracking-wider font-heading uppercase"
+            className="flex-1 py-3.5 rounded-xl bg-vibrant-gradient text-primary-foreground font-bold text-sm tracking-wider font-heading uppercase"
             whileTap={{ scale: 0.97 }}
           >
             Inizia Ora
