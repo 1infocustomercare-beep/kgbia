@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ChefHat, Truck, ShoppingBag, TableProperties, Palette, Check, ArrowRight, ArrowLeft, Sparkles, Upload, Car, Scissors, Heart, Store, Dumbbell, Building, Lock } from "lucide-react";
+import { ChefHat, Truck, ShoppingBag, TableProperties, Palette, Check, ArrowRight, ArrowLeft, Sparkles, Upload, Car, Scissors, Heart, Store, Dumbbell, Building } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
