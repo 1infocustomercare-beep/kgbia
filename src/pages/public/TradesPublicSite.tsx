@@ -366,6 +366,7 @@ export default function TradesPublicSite({ company }: Props) {
         </div>
       </section>
 
+      <SectorValueProposition sectorKey="trades" accentColor={isElectrician ? "#F59E0B" : isPlumber ? "#3B82F6" : "#F97316"} darkMode={true} sectorLabel="Attività" />
       <AutomationShowcase accentColor={isElectrician ? "#F59E0B" : isPlumber ? "#3B82F6" : "#F97316"} accentBg={accentBg} sectorName="artigiani e professionisti" darkMode={true} />
 
       {/* ═══ FOOTER ═══ */}

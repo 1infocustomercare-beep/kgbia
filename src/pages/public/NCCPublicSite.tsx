@@ -1265,6 +1265,7 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
       </footer>
 
+      <SectorValueProposition sectorKey="ncc" accentColor={NCC.gold} darkMode={true} sectorLabel="Servizio NCC" />
       <AutomationShowcase accentColor={NCC.gold} accentBg="bg-amber-600" sectorName="il trasporto NCC" darkMode={true} />
 
       {/* Styles */}

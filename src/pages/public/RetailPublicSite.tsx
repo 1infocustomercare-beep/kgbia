@@ -377,6 +377,7 @@ export default function RetailPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <SectorValueProposition sectorKey="retail" accentColor={accent} darkMode={false} sectorLabel="Negozio" />
       <AutomationShowcase accentColor={accent} accentBg="bg-gray-800" sectorName="negozi e retail" darkMode={false} />
 
       {/* FOOTER */}

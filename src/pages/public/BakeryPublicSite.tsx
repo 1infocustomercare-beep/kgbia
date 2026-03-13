@@ -422,6 +422,7 @@ export default function BakeryPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <SectorValueProposition sectorKey="bakery" accentColor={brown} darkMode={false} sectorLabel="Panificio" />
       <AutomationShowcase accentColor={brown} accentBg="bg-amber-800" sectorName="panifici e pasticcerie" darkMode={false} />
 
       {/* CONTATTI + FOOTER */}

@@ -405,6 +405,7 @@ export default function BeachPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <SectorValueProposition sectorKey="beach" accentColor={CYAN} darkMode={true} sectorLabel="Stabilimento Balneare" />
       <AutomationShowcase accentColor={CYAN} accentBg="bg-cyan-500" sectorName="stabilimenti balneari" darkMode={true} />
 
       {/* FOOTER */}

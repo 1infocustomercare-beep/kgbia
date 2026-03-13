@@ -486,6 +486,7 @@ export default function FoodPublicSite({ company }: Props) {
       </Section>
 
       {/* ── AUTOMATION SHOWCASE ── */}
+      <SectorValueProposition sectorKey="food" accentColor={gold} darkMode={true} sectorLabel="Ristorante" />
       <AutomationShowcase accentColor={gold} accentBg="bg-amber-600" sectorName="la ristorazione" darkMode={true} />
 
       {/* ── FOOTER ── */}

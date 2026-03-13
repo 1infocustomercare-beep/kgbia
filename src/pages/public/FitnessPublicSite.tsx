@@ -416,6 +416,7 @@ export default function FitnessPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <SectorValueProposition sectorKey="fitness" accentColor={ORANGE} darkMode={true} sectorLabel="Palestra" />
       <AutomationShowcase accentColor={ORANGE} accentBg="bg-orange-500" sectorName="palestre e fitness" darkMode={true} />
 
       {/* FOOTER */}

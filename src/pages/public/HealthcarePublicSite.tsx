@@ -401,6 +401,7 @@ export default function HealthcarePublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <SectorValueProposition sectorKey="healthcare" accentColor={TEAL} darkMode={false} sectorLabel="Studio Medico" />
       <AutomationShowcase accentColor={TEAL} accentBg="bg-teal-500" sectorName="studi medici e cliniche" darkMode={false} />
 
       <footer className="py-8 border-t border-gray-100 text-center text-xs text-gray-400">

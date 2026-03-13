@@ -373,6 +373,7 @@ export default function HotelPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <SectorValueProposition sectorKey="hotel" accentColor={GOLD} darkMode={true} sectorLabel="Hotel" />
       <AutomationShowcase accentColor={GOLD} accentBg="bg-amber-600" sectorName="hotel e hospitality" darkMode={true} />
 
       {/* FOOTER */}

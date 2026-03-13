@@ -492,6 +492,7 @@ export default function BeautyPublicSite({ company }: Props) {
         </div>
       </Section>
 
+      <SectorValueProposition sectorKey="beauty" accentColor={PINK} darkMode={true} sectorLabel="Salone" />
       <AutomationShowcase accentColor={PINK} accentBg="bg-pink-500" sectorName="saloni e centri estetici" darkMode={true} />
 
       {/* ═══ FOOTER ═══ */}
