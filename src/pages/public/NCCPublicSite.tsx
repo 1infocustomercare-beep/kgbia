@@ -109,21 +109,31 @@ function TiltCard({ children, className = "", style }: { children: React.ReactNo
 
 /* ── Fleet Card Data (fallbacks) ── */
 const FALLBACK_FLEET = [
-  { id: "fb-1", name: "Mercedes E-Class", category: "Berlina", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 80, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Acqua"], image_url: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&h=400&fit=crop" },
-  { id: "fb-2", name: "Mercedes V-Class", category: "Minivan", capacity: 7, min_pax: 1, max_pax: 7, luggage_capacity: 7, base_price: 120, is_popular: true, features: ["Pelle", "Clima", "WiFi", "TV", "Acqua"], image_url: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&h=400&fit=crop" },
-  { id: "fb-3", name: "Bus Gran Turismo", category: "Pullman", capacity: 50, min_pax: 20, max_pax: 50, luggage_capacity: 50, base_price: 350, is_popular: false, features: ["Clima", "WiFi", "TV", "WC"], image_url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&h=400&fit=crop" },
-  { id: "fb-4", name: "BMW X5", category: "SUV Premium", capacity: 4, min_pax: 1, max_pax: 4, luggage_capacity: 4, base_price: 100, is_popular: false, features: ["Pelle", "Clima", "WiFi", "4x4"], image_url: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&h=400&fit=crop" },
-  { id: "fb-5", name: "Mercedes S-Class", category: "Sedan Luxury", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 150, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Massaggio", "Champagne"], image_url: "https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=600&h=400&fit=crop" },
-  { id: "fb-6", name: "Mercedes Sprinter", category: "Minibus", capacity: 16, min_pax: 8, max_pax: 16, luggage_capacity: 16, base_price: 200, is_popular: false, features: ["Clima", "WiFi", "USB", "Bagagliaio"], image_url: "https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=600&h=400&fit=crop" },
+  { id: "fb-1", name: "Mercedes E-Class o similare", category: "Berlina", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 80, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Acqua"], image_url: "https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=600&h=400&fit=crop" },
+  { id: "fb-2", name: "Mercedes V-Class o similare", category: "Minivan", capacity: 7, min_pax: 1, max_pax: 7, luggage_capacity: 7, base_price: 120, is_popular: true, features: ["Pelle", "Clima", "WiFi", "TV", "Acqua"], image_url: "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=600&h=400&fit=crop" },
+  { id: "fb-3", name: "Bus Gran Turismo", category: "Pullman", capacity: 50, min_pax: 20, max_pax: 50, luggage_capacity: 50, base_price: 350, is_popular: false, features: ["Clima", "WiFi", "TV", "WC", "Bagagliaio"], image_url: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop" },
+  { id: "fb-4", name: "BMW X5 o similare", category: "SUV Premium", capacity: 4, min_pax: 1, max_pax: 4, luggage_capacity: 4, base_price: 100, is_popular: false, features: ["Pelle", "Clima", "WiFi", "4x4", "Acqua"], image_url: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&h=400&fit=crop" },
+  { id: "fb-5", name: "Mercedes S-Class o similare", category: "Sedan Luxury", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 150, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Massaggio", "Champagne"], image_url: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&h=400&fit=crop" },
+  { id: "fb-6", name: "Mercedes Sprinter o similare", category: "Minibus", capacity: 16, min_pax: 8, max_pax: 16, luggage_capacity: 16, base_price: 200, is_popular: false, features: ["Clima", "WiFi", "USB", "Bagagliaio", "Acqua"], image_url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&h=400&fit=crop" },
 ];
 
 const FALLBACK_REVIEWS = [
-  { id: "fr-1", rating: 5, customer_name: "Marco Rossi", comment: "Servizio eccezionale! Autista puntuale, auto impeccabile.", city: "Roma" },
-  { id: "fr-2", rating: 5, customer_name: "Laura Bianchi", comment: "Tour Costiera Amalfitana indimenticabile, guida competente.", city: "Milano" },
-  { id: "fr-3", rating: 5, customer_name: "Giovanni Verdi", comment: "Matrimonio impeccabile, auto elegantissima, giorno speciale.", city: "Napoli" },
-  { id: "fr-4", rating: 5, customer_name: "Anna Ferrari", comment: "Transfer Napoli-Positano perfetto, autista gentilissimo.", city: "Firenze" },
-  { id: "fr-5", rating: 5, customer_name: "Paolo Esposito", comment: "Pullman gita aziendale, organizzazione perfetta.", city: "Torino" },
+  { id: "fr-1", rating: 5, customer_name: "Marco Rossi", comment: "Servizio eccezionale! Autista puntuale e professionale. L'auto era impeccabile. Consiglio vivamente per transfer aeroportuali.", city: "Roma", date: "Gennaio 2024", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" },
+  { id: "fr-2", rating: 5, customer_name: "Laura Bianchi", comment: "Tour della Costiera Amalfitana indimenticabile. Guida competente e molto disponibile. Esperienza di lusso a prezzi ragionevoli.", city: "Milano", date: "Dicembre 2023", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" },
+  { id: "fr-3", rating: 5, customer_name: "Giovanni Verdi", comment: "Utilizzato per il mio matrimonio. Servizio impeccabile, auto elegantissima. Hanno reso il giorno speciale ancora più speciale.", city: "Napoli", date: "Novembre 2023", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" },
+  { id: "fr-4", rating: 5, customer_name: "Anna Ferrari", comment: "Transfer da Napoli a Positano senza stress. Autista gentilissimo che ci ha anche dato consigli sui ristoranti. Top!", city: "Firenze", date: "Ottobre 2023", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" },
+  { id: "fr-5", rating: 5, customer_name: "Paolo Esposito", comment: "Noleggiato un pullman per la gita aziendale. Organizzazione perfetta, autista esperto. Tutti soddisfatti!", city: "Torino", date: "Settembre 2023", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" },
 ];
+
+const REVIEW_PHOTOS = [
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
+];
+
+const REVIEW_DATES = ["Gennaio 2024", "Dicembre 2023", "Novembre 2023", "Ottobre 2023", "Settembre 2023"];
 
 /* ════════════════════════════════════════════════════════════
    MAIN COMPONENT
@@ -135,11 +145,20 @@ export default function NCCPublicSite({ company }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
+  const [reviewIndex, setReviewIndex] = useState(0);
 
   useEffect(() => {
     const onScroll = () => setNavScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Auto-advance review carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setReviewIndex(prev => (prev + 1) % 5);
+    }, 5000);
+    return () => clearInterval(timer);
   }, []);
 
   // ── Data Queries ──
@@ -245,7 +264,7 @@ export default function NCCPublicSite({ company }: Props) {
   const avgRating = reviews.length > 0 ? (reviews.reduce((a: number, r: any) => a + r.rating, 0) / reviews.length).toFixed(1) : "5.0";
   const socialLinks = company.social_links as Record<string, string> | null;
 
-  const tickerItems = ["Transfer Aeroportuali", "Transfer Stazione", "Tour Privati", "Noleggio Bus", "Costiera Amalfitana", "Pompei", "Capri"];
+  const tickerItems = ["Transfer Aeroportuali", "Transfer Stazione", "Tour Privati", "Noleggio Bus", "Eventi Speciali", "Servizio NCC", "Costiera Amalfitana", "Pompei & Vesuvio", "Capri & Ischia", "Roma & Napoli"];
 
   const navLinks = [
     { href: "#servizi", label: "Servizi" },
@@ -255,12 +274,12 @@ export default function NCCPublicSite({ company }: Props) {
   ];
 
   const whyUsServices = [
-    { icon: Plane, title: "Transfer Aeroportuali", desc: "Napoli, Roma Fiumicino, Roma Ciampino. Servizio puntuale 24/7." },
-    { icon: Train, title: "Transfer Stazione", desc: "Napoli Centrale, Roma Termini, Alta Velocità. Tracking in tempo reale." },
-    { icon: Navigation, title: "Tour Privati", desc: "Costiera Amalfitana, Pompei, Vesuvio, Capri. Scopri le meraviglie." },
-    { icon: Car, title: "Noleggio Bus", desc: "Pullman e minibus per gruppi, gite scolastiche, viaggi organizzati." },
-    { icon: Heart, title: "Eventi Speciali", desc: "Matrimoni, cerimonie, eventi aziendali con veicoli di lusso." },
-    { icon: Shield, title: "Servizio NCC", desc: "Conducente professionale per trasporto personalizzato premium." },
+    { icon: Plane, title: "Transfer Aeroportuali", desc: "Servizio puntuale da e per tutti gli aeroporti della Campania: Napoli, Roma Fiumicino, Roma Ciampino." },
+    { icon: Train, title: "Transfer Stazione", desc: "Collegamenti con le principali stazioni ferroviarie: Napoli Centrale, Roma Termini, Alta Velocità." },
+    { icon: Navigation, title: "Tour Privati", desc: "Scopri la Costiera Amalfitana, Pompei, il Vesuvio, Capri e tutte le meraviglie della Campania." },
+    { icon: Car, title: "Noleggio Bus", desc: "Pullman e minibus per gruppi, gite scolastiche, viaggi organizzati e trasferimenti di gruppo." },
+    { icon: Heart, title: "Eventi Speciali", desc: "Matrimoni, cerimonie, eventi aziendali e occasioni speciali con veicoli di lusso." },
+    { icon: Shield, title: "Servizio NCC", desc: "Noleggio con conducente professionale per ogni esigenza di trasporto personalizzato." },
   ];
 
   const featuredDestinations = [
@@ -276,6 +295,20 @@ export default function NCCPublicSite({ company }: Props) {
     amalfi: ["Duomo di Amalfi", "Grotta dello Smeraldo", "Costa Divina", "Limoncello tasting"],
     ischia: ["Terme naturali", "Castello Aragonese", "Giardini La Mortella", "Spiagge vulcaniche"],
   };
+  const boatDescriptions: Record<string, string> = {
+    capri: "L'isola dei sogni: Grotta Azzurra, Faraglioni e Marina Piccola in un tour esclusivo.",
+    nerano: "La baia segreta della Costiera: acque cristalline, snorkeling e pranzo tipico.",
+    positano: "La perla verticale della Costiera Amalfitana vista dal mare: un'esperienza unica.",
+    amalfi: "Naviga lungo la Divina Costiera fino alla storica Repubblica Marinara.",
+    ischia: "L'isola verde: terme naturali, giardini tropicali e spiagge incontaminate.",
+  };
+  const boatDurations: Record<string, string> = {
+    capri: "Giornata intera",
+    nerano: "Mezza giornata",
+    positano: "Giornata intera",
+    amalfi: "Giornata intera",
+    ischia: "Giornata intera",
+  };
   const getBoatHighlights = (name: string) => {
     const key = name.toLowerCase();
     for (const [k, v] of Object.entries(boatHighlights)) {
@@ -283,8 +316,22 @@ export default function NCCPublicSite({ company }: Props) {
     }
     return ["Tour esclusivo", "Bagno in mare", "Guida esperta", "Pranzo incluso"];
   };
+  const getBoatDescription = (name: string) => {
+    const key = name.toLowerCase();
+    for (const [k, v] of Object.entries(boatDescriptions)) {
+      if (key.includes(k)) return v;
+    }
+    return "Un'esperienza esclusiva alla scoperta delle meraviglie del mare.";
+  };
+  const getBoatDuration = (name: string) => {
+    const key = name.toLowerCase();
+    for (const [k, v] of Object.entries(boatDurations)) {
+      if (key.includes(k)) return v;
+    }
+    return "Giornata intera";
+  };
   const boatImages: Record<string, string> = {
-    capri: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop",
+    capri: "https://images.unsplash.com/photo-1515859005217-8a1f08870f59?w=600&h=400&fit=crop",
     nerano: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop",
     positano: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=400&fit=crop",
     amalfi: "https://images.unsplash.com/photo-1612698093158-e07ac200d44e?w=600&h=400&fit=crop",
@@ -303,6 +350,20 @@ export default function NCCPublicSite({ company }: Props) {
   const scrollFleet = (dir: number) => {
     scrollRef.current?.scrollBy({ left: dir * 360, behavior: "smooth" });
   };
+
+  // Auto-scroll fleet carousel
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const timer = setInterval(() => {
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 10) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: 340, behavior: "smooth" });
+      }
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [displayVehicles]);
 
   const reviewCities = ["Roma", "Milano", "Napoli", "Firenze", "Torino"];
 
@@ -366,17 +427,27 @@ export default function NCCPublicSite({ company }: Props) {
         </AnimatePresence>
       </nav>
 
-      {/* ═══════════ HERO — 100vh, 2 columns ═══════════ */}
-      <section className="relative min-h-[100svh] flex items-center pt-16 px-4" style={{ background: NCC.bg }}>
-        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      {/* ═══════════ HERO — 100vh, video bg + 2 columns ═══════════ */}
+      <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
+        {/* Video background */}
+        <video
+          autoPlay muted loop playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          poster="https://images.unsplash.com/photo-1534445867742-43195f401b6c?w=1920&h=1080&fit=crop"
+        >
+          <source src="https://videos.pexels.com/video-files/4168951/4168951-uhd_2560_1440_25fps.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/60" />
+
+        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
           <motion.div initial="hidden" animate="show" variants={stagger}>
-            <motion.p variants={fadeUp} custom={0} className="text-[12px] uppercase tracking-[4px] font-bold mb-6" style={{ color: NCC.gold }}>
+            <motion.p variants={fadeUp} custom={0} className="text-[12px] uppercase tracking-[4px] font-bold mb-6" style={{ color: gold }}>
               {company.name}
             </motion.p>
 
             <motion.h1 variants={fadeUp} custom={1} className="font-black tracking-tight mb-7 leading-[0.95]" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(48px, 8vw, 96px)", fontWeight: 900 }}>
               <span className="text-white block">LUXURY</span>
-              <span style={{ color: NCC.gold }} className="block">NCC TRANSPORT</span>
+              <span style={{ color: gold }} className="block">NCC TRANSPORT</span>
             </motion.h1>
 
             <motion.p variants={fadeUp} custom={2} className="text-lg mb-10 max-w-[480px] leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
@@ -385,7 +456,7 @@ export default function NCCPublicSite({ company }: Props) {
             </motion.p>
 
             <motion.div variants={fadeUp} custom={3}>
-              <Button size="lg" className="rounded-full font-bold text-sm uppercase hover:scale-105 transition-transform" style={{ background: NCC.gold, color: "#000", padding: "16px 32px", fontSize: "14px", fontWeight: 700 }} asChild>
+              <Button size="lg" className="rounded-full font-bold text-sm uppercase hover:scale-105 transition-transform" style={{ background: gold, color: "#000", padding: "16px 32px", fontSize: "14px", fontWeight: 700 }} asChild>
                 <a href="#prenota">PRENOTA ORA</a>
               </Button>
             </motion.div>
@@ -393,24 +464,24 @@ export default function NCCPublicSite({ company }: Props) {
 
           <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="hidden lg:block">
             <div className="relative rounded-[20px] overflow-hidden shadow-2xl" style={{ border: `3px solid ${gold}30` }}>
-              <img src="https://images.unsplash.com/photo-1534445867742-43195f401b6c?w=800&h=600&fit=crop" alt={`${company.name} Transfer`} className="w-full object-cover aspect-[4/3]" />
+              <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&h=600&fit=crop" alt={`${company.name} Transfer`} className="w-full object-cover aspect-[4/3]" />
             </div>
           </motion.div>
         </div>
 
         {/* WhatsApp floating */}
         {settings?.whatsapp && (
-          <motion.a href={`https://wa.me/${(settings.whatsapp as string).replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl" style={{ background: "#25D366", boxShadow: "0 8px 30px rgba(37,211,102,0.4)" }} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.95 }} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1, type: "spring" }}>
+          <motion.a href={`https://wa.me/${(settings.whatsapp as string).replace(/\D/g, "")}?text=Ciao%20ho%20bisogno%20di%20maggiori%20informazioni`} target="_blank" rel="noopener noreferrer" className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl" style={{ background: "#25D366", boxShadow: "0 8px 30px rgba(37,211,102,0.4)" }} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.95 }} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1, type: "spring" }}>
             <MessageCircle className="w-6 h-6 text-white" />
           </motion.a>
         )}
 
-        <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
+        <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
           <ChevronDown className="w-5 h-5 text-white/15" />
         </motion.div>
       </section>
 
-      {/* ═══════════ TICKER ═══════════ */}
+      {/* ═══════════ TICKER — infinite marquee ═══════════ */}
       <section className="py-4 overflow-hidden border-y" style={{ background: NCC.ticker, borderColor: `rgba(201,168,76,0.3)` }}>
         <div className="flex animate-ncc-marquee">
           {[...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
@@ -425,9 +496,9 @@ export default function NCCPublicSite({ company }: Props) {
       <Section className="py-24 px-4" style={{ background: NCC.bgLight }}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: NCC.gold }}>DESTINAZIONI POPOLARI</p>
+            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>DESTINAZIONI POPOLARI</p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif", color: NCC.textDark }}>
-              LE NOSTRE <span style={{ color: NCC.gold }}>Destinazioni</span>
+              LE NOSTRE <span style={{ color: gold }}>Destinazioni</span>
             </h2>
           </div>
           <div className="grid sm:grid-cols-3 gap-6">
@@ -438,7 +509,7 @@ export default function NCCPublicSite({ company }: Props) {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <h3 className="font-bold text-2xl text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>{dest.name}</h3>
-                    <span className="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style={{ color: NCC.gold }}>
+                    <span className="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style={{ color: gold }}>
                       PRENOTA <ArrowRight className="w-4 h-4" />
                     </span>
                   </div>
@@ -454,10 +525,10 @@ export default function NCCPublicSite({ company }: Props) {
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { value: 10, suffix: "+", label: "ANNI ESPERIENZA" },
-              { value: 5, suffix: ".0", label: "VALUTAZIONE MEDIA", isStatic: true },
-              { value: 50, suffix: "+", label: "POSTI DISPONIBILI" },
-              { value: 24, suffix: "/7", label: "SEMPRE DISPONIBILI", isStatic: true },
+              { value: 10, suffix: "+", label: "Anni di Esperienza" },
+              { value: 5, suffix: ".0", label: "Valutazione Media", isStatic: true },
+              { value: 50, suffix: "+", label: "Posti Disponibili" },
+              { value: 24, suffix: "/7", label: "Sempre Disponibili", isStatic: true },
             ].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1, type: "spring" }} className="text-center">
                 <p className="text-4xl sm:text-5xl font-black mb-2" style={{ color: NCC.textDark }}>
@@ -470,47 +541,56 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* ═══════════ SERVIZI — light bg, white cards ═══════════ */}
+      {/* ═══════════ SERVIZI — INFINITE AUTO-SCROLL CAROUSEL ═══════════ */}
       <Section id="servizi" className="py-24 px-4" style={{ background: NCC.bgLight }}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: NCC.gold }}>I NOSTRI SERVIZI</p>
+            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>I Nostri Servizi</p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif", color: NCC.textDark }}>
-              SOLUZIONI DI TRASPORTO <span style={{ color: NCC.gold }}>Premium</span>
+              SOLUZIONI DI TRASPORTO <span style={{ color: gold }}>Premium</span>
             </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-base" style={{ color: NCC.textSecondary }}>
+              Offriamo una gamma completa di servizi di trasporto di lusso, personalizzati per soddisfare ogni tua esigenza.
+            </p>
           </div>
+        </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {whyUsServices.map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}>
+        {/* Auto-scrolling service cards carousel */}
+        <div className="overflow-hidden">
+          <div className="flex animate-ncc-services-marquee">
+            {[...whyUsServices, ...whyUsServices, ...whyUsServices, ...whyUsServices].map((item, i) => (
+              <div key={i} className="flex-shrink-0 w-[320px] mx-3">
                 <div className="bg-white rounded-2xl p-6 h-full hover:shadow-xl transition-shadow duration-500 group" style={{ borderRadius: "16px" }}>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${NCC.gold}15` }}>
-                    <item.icon className="w-5 h-5" style={{ color: NCC.gold }} />
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${gold}15` }}>
+                    <item.icon className="w-5 h-5" style={{ color: gold }} />
                   </div>
                   <h3 className="font-bold text-base mb-2" style={{ color: NCC.textDark }}>{item.title}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: NCC.textSecondary }}>{item.desc}</p>
-                  <p className="mt-4 text-xs font-semibold inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: NCC.gold }}>
-                    SCOPRI DI PIU <ArrowRight className="w-3 h-3" />
+                  <p className="mt-4 text-xs font-semibold inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: gold }}>
+                    Scopri di più <ArrowRight className="w-3 h-3" />
                   </p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </Section>
 
-      {/* ═══════════ FLEET CAROUSEL — dark bg ═══════════ */}
+      {/* ═══════════ FLEET AUTO-SCROLL CAROUSEL — dark bg ═══════════ */}
       <Section id="flotta" className="py-24 px-4" style={{ background: NCC.bg }}>
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: NCC.gold }}>La Nostra Flotta</p>
+          <div className="text-center mb-4">
+            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>La Nostra Flotta</p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
               <span className="text-white">VEICOLI DI </span>
-              <span style={{ color: NCC.gold }}>LUSSO</span>
+              <span style={{ color: gold }}>Lusso</span>
             </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-base text-white/40">
+              Scegli il veicolo più adatto alle tue esigenze. Tutti i nostri mezzi sono di ultima generazione e perfettamente mantenuti.
+            </p>
           </div>
 
-          <div className="relative">
+          <div className="relative mt-10">
             <button onClick={() => scrollFleet(-1)} className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full flex items-center justify-center border hover:scale-110 transition-all" style={{ background: "rgba(10,10,10,0.85)", borderColor: "rgba(255,255,255,0.1)" }}>
               <ChevronLeft className="w-5 h-5 text-white" />
             </button>
@@ -519,17 +599,17 @@ export default function NCCPublicSite({ company }: Props) {
             </button>
 
             <div ref={scrollRef} className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: "none" }}>
-              {displayVehicles.map((v: any, i: number) => {
+              {[...displayVehicles, ...displayVehicles].map((v: any, i: number) => {
                 const features = v.features?.length > 0 ? v.features : ["Pelle", "Clima", "WiFi", "Acqua"];
                 const img = v.image_url || FALLBACK_FLEET.find(f => f.category.toLowerCase() === (v.category || "").toLowerCase())?.image_url || "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&h=400&fit=crop";
                 const isPopular = v.is_popular || (v.category || "").toLowerCase().includes("minivan") || (v.category || "").toLowerCase().includes("van");
 
                 return (
-                  <motion.div key={v.id || i} className="flex-shrink-0 w-[320px] snap-start" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
+                  <motion.div key={`${v.id || i}-${i}`} className="flex-shrink-0 w-[320px] snap-start" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (i % displayVehicles.length) * 0.05 }}>
                     <div className="rounded-2xl overflow-hidden h-full relative" style={{ background: NCC.darkCard, border: `1px solid rgba(201,168,76,0.3)` }}>
                       {isPopular && (
-                        <div className="absolute top-3 right-3 z-10 px-3 py-1 rounded-full text-[10px] font-bold uppercase" style={{ background: NCC.gold, color: "#000" }}>
-                          Più Richiesto
+                        <div className="absolute top-3 right-3 z-10 px-3 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1" style={{ background: gold, color: "#000" }}>
+                          ✦ Più Richiesto
                         </div>
                       )}
                       <div className="h-[220px] overflow-hidden relative">
@@ -549,7 +629,7 @@ export default function NCCPublicSite({ company }: Props) {
                         </div>
                       </div>
                       <div className="p-5">
-                        <p className="text-[11px] uppercase tracking-wider mb-1" style={{ color: NCC.gold }}>{v.category || "Berlina"}</p>
+                        <p className="text-[11px] uppercase tracking-wider mb-1" style={{ color: gold }}>{v.category || "Berlina"}</p>
                         <h3 className="font-bold text-xl text-white mb-3">{v.name}</h3>
                         <div className="flex flex-wrap gap-1.5 mb-4">
                           {(features as string[]).slice(0, 5).map((f: string, fi: number) => (
@@ -558,10 +638,10 @@ export default function NCCPublicSite({ company }: Props) {
                         </div>
                         <div className="pt-3 border-t" style={{ borderColor: "rgba(201,168,76,0.2)" }}>
                           <p className="text-[10px] text-white/30 uppercase">A partire da</p>
-                          <p className="text-2xl font-bold" style={{ color: NCC.gold }}>€{Number(v.base_price || 80).toFixed(0)}</p>
+                          <p className="text-2xl font-bold" style={{ color: gold }}>€{Number(v.base_price || 80).toFixed(0)}</p>
                         </div>
-                        <Button className="w-full mt-4 rounded-full font-bold text-sm uppercase hover:scale-[1.02] transition-transform" style={{ background: NCC.gold, color: "#000" }} asChild>
-                          <a href="#prenota">PRENOTA ORA</a>
+                        <Button className="w-full mt-4 rounded-full font-bold text-sm uppercase hover:scale-[1.02] transition-transform" style={{ background: gold, color: "#000" }} asChild>
+                          <a href="#prenota">Prenota Ora</a>
                         </Button>
                       </div>
                     </div>
@@ -578,9 +658,9 @@ export default function NCCPublicSite({ company }: Props) {
         <Section id="tratte" className="py-24 px-4" style={{ background: NCC.bgLight }}>
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-14">
-              <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: NCC.gold }}>TRATTE & TARIFFE</p>
+              <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>TRATTE & TARIFFE</p>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif", color: NCC.textDark }}>
-                PREZZI FISSI <span style={{ color: NCC.gold }}>Trasparenti</span>
+                PREZZI FISSI <span style={{ color: gold }}>Trasparenti</span>
               </h2>
             </div>
             <div className="grid sm:grid-cols-2 gap-3">
@@ -592,8 +672,8 @@ export default function NCCPublicSite({ company }: Props) {
                   <motion.div key={r.id} initial={{ opacity: 0, x: -15 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.04 }}>
                     <div className="bg-white rounded-2xl p-4 hover:shadow-lg transition-shadow group">
                       <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ background: `${NCC.gold}15` }}>
-                          <TypeIcon className="w-4 h-4" style={{ color: NCC.gold }} />
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ background: `${gold}15` }}>
+                          <TypeIcon className="w-4 h-4" style={{ color: gold }} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-semibold truncate" style={{ color: NCC.textDark }}>{r.origin}</p>
@@ -607,7 +687,7 @@ export default function NCCPublicSite({ company }: Props) {
                           </div>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <p className="text-xl font-black" style={{ color: NCC.gold }}>€{Number(r.base_price).toFixed(0)}</p>
+                          <p className="text-xl font-black" style={{ color: gold }}>€{Number(r.base_price).toFixed(0)}</p>
                           <p className="text-[10px]" style={{ color: NCC.textSecondary }}>da</p>
                         </div>
                       </div>
@@ -620,49 +700,58 @@ export default function NCCPublicSite({ company }: Props) {
         </Section>
       )}
 
-      {/* ═══════════ BOAT TOURS ═══════════ */}
+      {/* ═══════════ BOAT TOURS — with badges & descriptions ═══════════ */}
       {destinations.length > 0 && (
         <Section id="tour" className="py-24 px-4" style={{ background: NCC.bg }}>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-14">
-              <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: NCC.gold }}>ESPERIENZE IN MARE</p>
+              <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>Esperienze in Mare</p>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-                <span className="text-white">TOUR PRIVATI IN </span><span style={{ color: NCC.gold }}>Barca</span>
+                <span className="text-white">TOUR PRIVATI </span><span className="text-white/50"> in </span><span style={{ color: gold }}>Barca</span>
               </h2>
+              <p className="mt-4 max-w-2xl mx-auto text-base text-white/40">
+                Scopri le meraviglie del Golfo di Napoli e della Costiera Amalfitana con i nostri tour esclusivi in barca privata.
+              </p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {destinations.map((d: any, i: number) => {
                 const price = boatPrices.find((bp: any) => bp.destination_id === d.id);
                 const highlights = getBoatHighlights(d.name);
+                const duration = getBoatDuration(d.name);
+                const description = d.description || getBoatDescription(d.name);
                 return (
                   <motion.div key={d.id} initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                     <TiltCard>
                       <div className="rounded-2xl overflow-hidden h-full" style={{ background: NCC.darkCard, border: `1px solid ${NCC.cardBorder}` }}>
                         <div className="aspect-[4/3] overflow-hidden relative">
-                          <img src={getBoatImage(d)} alt={d.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                          <img src={getBoatImage(d)} alt={d.name} className="w-full h-full object-cover hover:scale-110 transition-transform duration-1000" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                          {/* Duration badge */}
+                          <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase" style={{ background: `${gold}DD`, color: "#000" }}>
+                            {duration}
+                          </div>
                         </div>
                         <div className="p-5">
                           <p className="text-[10px] uppercase tracking-wider text-white/20 mb-1">Destinazione</p>
                           <h3 className="font-bold text-xl text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>{d.name}</h3>
-                          {d.description && <p className="text-sm text-white/30 line-clamp-2 mb-3">{d.description}</p>}
+                          <p className="text-sm text-white/40 line-clamp-2 mb-3">{description}</p>
                           <div className="flex flex-wrap gap-1.5 mb-4">
                             {highlights.map((h, hi) => (
-                              <span key={hi} className="px-2 py-0.5 rounded-md text-[10px] font-medium" style={{ background: `${NCC.gold}10`, color: `${NCC.gold}BB` }}>{h}</span>
+                              <span key={hi} className="px-2 py-0.5 rounded-md text-[10px] font-medium" style={{ background: `${gold}10`, color: `${gold}BB` }}>{h}</span>
                             ))}
                           </div>
                           {price && Number(price.standard_price) > 0 ? (
                             <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: NCC.cardBorder }}>
                               <div>
-                                <span className="text-xl font-black" style={{ color: NCC.gold }}>€{Number(price.standard_price).toFixed(0)}</span>
+                                <span className="text-xl font-black" style={{ color: gold }}>€{Number(price.standard_price).toFixed(0)}</span>
                                 <span className="text-xs text-white/20 ml-1">/ persona</span>
                               </div>
-                              <Button size="sm" className="rounded-full text-xs font-bold h-9 px-5" style={{ background: NCC.gold, color: "#000" }} asChild>
+                              <Button size="sm" className="rounded-full text-xs font-bold h-9 px-5" style={{ background: gold, color: "#000" }} asChild>
                                 <a href="#prenota">Prenota</a>
                               </Button>
                             </div>
                           ) : (
-                            <Button size="sm" className="w-full rounded-full text-xs font-bold h-9 mt-2" style={{ background: NCC.gold, color: "#000" }} asChild>
+                            <Button size="sm" className="w-full rounded-full text-xs font-bold h-9 mt-2" style={{ background: gold, color: "#000" }} asChild>
                               <a href="#prenota">Prenota Tour</a>
                             </Button>
                           )}
@@ -682,9 +771,9 @@ export default function NCCPublicSite({ company }: Props) {
         <Section className="py-20 px-4" style={{ background: NCC.bgLight }}>
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-14">
-              <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: NCC.gold }}>SERVIZI AGGIUNTIVI</p>
+              <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>SERVIZI AGGIUNTIVI</p>
               <h2 className="text-3xl sm:text-4xl font-black" style={{ fontFamily: "'Playfair Display', serif", color: NCC.textDark }}>
-                PERSONALIZZA IL TUO <span style={{ color: NCC.gold }}>Viaggio</span>
+                PERSONALIZZA IL TUO <span style={{ color: gold }}>Viaggio</span>
               </h2>
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
@@ -699,7 +788,7 @@ export default function NCCPublicSite({ company }: Props) {
                     {cs.is_free ? (
                       <Badge className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20">Gratis</Badge>
                     ) : cs.price > 0 ? (
-                      <span className="text-sm font-bold" style={{ color: NCC.gold }}>€{cs.price}</span>
+                      <span className="text-sm font-bold" style={{ color: gold }}>€{cs.price}</span>
                     ) : null}
                   </div>
                 </motion.div>
@@ -709,37 +798,96 @@ export default function NCCPublicSite({ company }: Props) {
         </Section>
       )}
 
-      {/* ═══════════ REVIEWS — dark bg ═══════════ */}
+      {/* ═══════════ REVIEWS — CAROUSEL with photos ═══════════ */}
       <Section id="recensioni" className="py-24 px-4" style={{ background: NCC.bg }}>
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: NCC.gold }}>Recensioni</p>
+            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>Recensioni</p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-              <span className="text-white">COSA DICONO I </span><span style={{ color: NCC.gold }}>Clienti</span>
+              <span className="text-white">COSA DICONO I </span><span style={{ color: gold }}>Clienti</span>
             </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-base text-white/40">
+              La soddisfazione dei nostri clienti è la nostra priorità. Ecco alcune delle loro esperienze.
+            </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {displayReviews.slice(0, 5).map((r: any, i: number) => (
-              <motion.div key={r.id || i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-                <div className="rounded-2xl p-6 h-full" style={{ background: NCC.darkCard, border: `1px solid ${NCC.cardBorder}` }}>
-                  <div className="flex gap-0.5 mb-4">
-                    {[1,2,3,4,5].map(s => <Star key={s} className={`w-4 h-4 ${s <= r.rating ? "fill-amber-400 text-amber-400" : "text-white/10"}`} />)}
+          {/* Carousel */}
+          <div className="relative">
+            <button 
+              onClick={() => setReviewIndex(prev => prev === 0 ? displayReviews.length - 1 : prev - 1)} 
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-11 h-11 rounded-full flex items-center justify-center border hover:scale-110 transition-all hidden sm:flex" 
+              style={{ background: "rgba(10,10,10,0.85)", borderColor: "rgba(255,255,255,0.1)" }}
+              aria-label="Previous slide"
+            >
+              <ChevronLeft className="w-5 h-5 text-white" />
+            </button>
+            <button 
+              onClick={() => setReviewIndex(prev => (prev + 1) % displayReviews.length)} 
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-11 h-11 rounded-full flex items-center justify-center border hover:scale-110 transition-all hidden sm:flex" 
+              style={{ background: "rgba(10,10,10,0.85)", borderColor: "rgba(255,255,255,0.1)" }}
+              aria-label="Next slide"
+            >
+              <ChevronRight className="w-5 h-5 text-white" />
+            </button>
+
+            <div className="overflow-hidden rounded-2xl">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={reviewIndex}
+                  initial={{ opacity: 0, x: 80 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -80 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="rounded-2xl p-8 sm:p-12 text-center"
+                  style={{ background: NCC.darkCard, border: `1px solid ${NCC.cardBorder}` }}
+                >
+                  <div className="flex justify-center gap-1 mb-6">
+                    {[1,2,3,4,5].map(s => <Star key={s} className={`w-5 h-5 ${s <= (displayReviews[reviewIndex % displayReviews.length] as any)?.rating ? "fill-amber-400 text-amber-400" : "text-white/10"}`} />)}
                   </div>
-                  {r.comment && <p className="text-sm text-white/50 mb-5 leading-relaxed italic">"{r.comment}"</p>}
-                  <div className="pt-4 border-t" style={{ borderColor: NCC.cardBorder }}>
-                    <p className="text-sm text-white font-semibold">{r.customer_name || "Ospite"}</p>
-                    <p className="text-[11px] text-white/20">{(r as any).city || reviewCities[i % reviewCities.length]}</p>
-                  </div>
-                  {r.admin_reply && (
-                    <div className="mt-4 pt-3 border-t" style={{ borderColor: NCC.cardBorder }}>
-                      <p className="text-xs text-white/25 italic">"{r.admin_reply}"</p>
-                      <p className="text-[10px] text-white/10 mt-1">— {company.name}</p>
+                  <p className="text-lg sm:text-xl text-white/70 mb-8 leading-relaxed italic max-w-2xl mx-auto">
+                    "{(displayReviews[reviewIndex % displayReviews.length] as any)?.comment}"
+                  </p>
+                  <div className="flex items-center justify-center gap-4">
+                    <img 
+                      src={(displayReviews[reviewIndex % displayReviews.length] as any)?.photo || REVIEW_PHOTOS[reviewIndex % REVIEW_PHOTOS.length]} 
+                      alt={(displayReviews[reviewIndex % displayReviews.length] as any)?.customer_name} 
+                      className="w-14 h-14 rounded-full object-cover border-2"
+                      style={{ borderColor: `${gold}40` }}
+                    />
+                    <div className="text-left">
+                      <p className="text-base text-white font-semibold">
+                        {(displayReviews[reviewIndex % displayReviews.length] as any)?.customer_name || "Ospite"}
+                      </p>
+                      <p className="text-sm text-white/30">
+                        {(displayReviews[reviewIndex % displayReviews.length] as any)?.city || reviewCities[reviewIndex % reviewCities.length]} · {(displayReviews[reviewIndex % displayReviews.length] as any)?.date || REVIEW_DATES[reviewIndex % REVIEW_DATES.length]}
+                      </p>
                     </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Dots */}
+            <div className="flex justify-center gap-2 mt-6">
+              {displayReviews.slice(0, Math.min(displayReviews.length, 5)).map((_: any, i: number) => (
+                <button 
+                  key={i} 
+                  onClick={() => setReviewIndex(i)} 
+                  className="w-2.5 h-2.5 rounded-full transition-all duration-300"
+                  style={{ background: i === reviewIndex % displayReviews.length ? gold : "rgba(255,255,255,0.15)" }}
+                />
+              ))}
+            </div>
+
+            {/* Mobile prev/next */}
+            <div className="flex sm:hidden justify-center gap-4 mt-4">
+              <button onClick={() => setReviewIndex(prev => prev === 0 ? displayReviews.length - 1 : prev - 1)} className="px-4 py-2 rounded-full text-xs font-semibold border" style={{ borderColor: "rgba(255,255,255,0.1)", color: "white" }}>
+                <ChevronLeft className="w-4 h-4 inline mr-1" />Previous slide
+              </button>
+              <button onClick={() => setReviewIndex(prev => (prev + 1) % displayReviews.length)} className="px-4 py-2 rounded-full text-xs font-semibold border" style={{ borderColor: "rgba(255,255,255,0.1)", color: "white" }}>
+                Next slide<ChevronRight className="w-4 h-4 inline ml-1" />
+              </button>
+            </div>
           </div>
         </div>
       </Section>
@@ -748,22 +896,26 @@ export default function NCCPublicSite({ company }: Props) {
       <Section className="py-24 px-4" style={{ background: NCC.bgLight }}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
+            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>Perché Sceglierci</p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif", color: NCC.textDark }}>
-              L'Eccellenza nel <span style={{ color: NCC.gold }}>Trasporto</span>
+              L'Eccellenza nel <span style={{ color: gold }}>Trasporto</span>
             </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-base" style={{ color: NCC.textSecondary }}>
+              Da oltre 10 anni offriamo servizi di trasporto di altissima qualità in tutta la Campania. La nostra missione è trasformare ogni viaggio in un'esperienza indimenticabile.
+            </p>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-5">
             {[
               { icon: Shield, title: "Sicurezza Garantita", desc: "Tutti i nostri veicoli sono regolarmente revisionati e assicurati. Autisti professionisti con anni di esperienza." },
-              { icon: Clock, title: "Puntualità Svizzera", desc: "Monitoriamo i voli e i treni in tempo reale. Non dovrai mai aspettare, saremo sempre pronti." },
-              { icon: Award, title: "Qualità Premium", desc: "Flotta di veicoli di lusso di ultima generazione. Comfort e eleganza per ogni viaggio." },
-              { icon: Headphones, title: "Servizio Personalizzato", desc: "Ogni cliente è unico. Personalizziamo ogni servizio in base alle tue esigenze." },
+              { icon: Clock, title: "Puntualità Svizzera", desc: "Monitoriamo i voli e i treni in tempo reale. Non dovrai mai aspettare, saremo sempre pronti ad accoglierti." },
+              { icon: Award, title: "Qualità Premium", desc: "Flotta di veicoli di lusso di ultima generazione. Comfort e eleganza per ogni tipo di viaggio." },
+              { icon: Headphones, title: "Servizio Personalizzato", desc: "Ogni cliente è unico. Personalizziamo ogni servizio in base alle tue esigenze specifiche." },
             ].map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <div className="flex gap-4 p-6 rounded-2xl bg-white hover:shadow-lg transition-shadow group">
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ background: `${NCC.gold}15` }}>
-                    <item.icon className="w-5 h-5" style={{ color: NCC.gold }} />
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ background: `${gold}15` }}>
+                    <item.icon className="w-5 h-5" style={{ color: gold }} />
                   </div>
                   <div>
                     <h3 className="font-bold mb-1.5" style={{ color: NCC.textDark }}>{item.title}</h3>
@@ -775,10 +927,10 @@ export default function NCCPublicSite({ company }: Props) {
           </div>
 
           <motion.div initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="text-center mt-14">
-            <p className="text-5xl font-black" style={{ color: NCC.gold }}>5000+</p>
+            <p className="text-5xl font-black" style={{ color: gold }}>5000+</p>
             <p className="text-sm mt-2" style={{ color: NCC.textSecondary }}>Clienti Soddisfatti</p>
-            <Button className="mt-6 rounded-full font-bold text-sm uppercase px-8 hover:scale-105 transition-transform" style={{ background: NCC.gold, color: "#000" }} asChild>
-              <a href="#prenota">Prenota Ora</a>
+            <Button className="mt-6 rounded-full font-bold text-sm uppercase px-8 hover:scale-105 transition-transform" style={{ background: gold, color: "#000" }} asChild>
+              <a href="#prenota">Prenota ora</a>
             </Button>
           </motion.div>
         </div>
@@ -790,7 +942,7 @@ export default function NCCPublicSite({ company }: Props) {
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-14">
               <h2 className="text-3xl sm:text-4xl font-black" style={{ fontFamily: "'Playfair Display', serif" }}>
-                <span className="text-white">Domande </span><span style={{ color: NCC.gold }}>Frequenti</span>
+                <span className="text-white">Domande </span><span style={{ color: gold }}>Frequenti</span>
               </h2>
             </div>
             <div className="space-y-3">
@@ -811,9 +963,9 @@ export default function NCCPublicSite({ company }: Props) {
       <Section id="prenota" className="py-24 px-4" style={{ background: NCC.bgLight }}>
         <div className="max-w-xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: NCC.gold }}>PRENOTA ORA</p>
+            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>Prenota ora</p>
             <h2 className="text-3xl sm:text-4xl font-black" style={{ fontFamily: "'Playfair Display', serif", color: NCC.textDark }}>
-              RICHIEDI UNA <span style={{ color: NCC.gold }}>Prenotazione</span>
+              RICHIEDI UNA <span style={{ color: gold }}>Prenotazione</span>
             </h2>
           </div>
 
@@ -825,7 +977,7 @@ export default function NCCPublicSite({ company }: Props) {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-xs font-medium" style={{ color: NCC.textSecondary }}>Email</Label>
+                  <Label className="text-xs font-medium" style={{ color: NCC.textSecondary }}>Email *</Label>
                   <Input value={bookingForm.email} onChange={e => setBookingForm(p => ({ ...p, email: e.target.value }))} className="mt-1.5 h-12 rounded-xl border-gray-200" placeholder="email@esempio.it" />
                 </div>
                 <div>
@@ -875,7 +1027,7 @@ export default function NCCPublicSite({ company }: Props) {
                   <Input type="date" value={bookingForm.date} onChange={e => setBookingForm(p => ({ ...p, date: e.target.value }))} className="mt-1.5 h-12 rounded-xl border-gray-200" />
                 </div>
                 <div>
-                  <Label className="text-xs font-medium" style={{ color: NCC.textSecondary }}>Orario</Label>
+                  <Label className="text-xs font-medium" style={{ color: NCC.textSecondary }}>Orario *</Label>
                   <Input type="time" value={bookingForm.time} onChange={e => setBookingForm(p => ({ ...p, time: e.target.value }))} className="mt-1.5 h-12 rounded-xl border-gray-200" />
                 </div>
               </div>
@@ -893,6 +1045,21 @@ export default function NCCPublicSite({ company }: Props) {
                 </div>
               )}
 
+              {/* Second vehicle selector like reference */}
+              {displayVehicles.length > 0 && (
+                <div>
+                  <Label className="text-xs font-medium" style={{ color: NCC.textSecondary }}>Veicolo</Label>
+                  <Select value={bookingForm.vehicle} onValueChange={v => setBookingForm(p => ({ ...p, vehicle: v }))}>
+                    <SelectTrigger className="mt-1.5 h-12 rounded-xl border-gray-200"><SelectValue placeholder="Seleziona veicolo" /></SelectTrigger>
+                    <SelectContent>
+                      {(vehicles.length > 0 ? vehicles : FALLBACK_FLEET).map((v: any) => (
+                        <SelectItem key={v.id} value={v.id}>{v.name} ({v.min_pax || 1}-{v.max_pax || v.capacity} pax)</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
               <div>
                 <Label className="text-xs font-medium" style={{ color: NCC.textSecondary }}>Note aggiuntive</Label>
                 <Textarea value={bookingForm.notes} onChange={e => setBookingForm(p => ({ ...p, notes: e.target.value }))} className="mt-1.5 min-h-[80px] rounded-xl border-gray-200" placeholder="Richieste speciali, seggiolini, soste..." />
@@ -902,7 +1069,7 @@ export default function NCCPublicSite({ company }: Props) {
                 onClick={handleBooking}
                 disabled={submitting}
                 className="w-full h-14 text-base font-bold rounded-full uppercase hover:scale-[1.02] transition-transform"
-                style={{ background: NCC.gold, color: "#000" }}
+                style={{ background: gold, color: "#000" }}
               >
                 {submitting ? "Invio in corso..." : "Invia Prenotazione"}
                 <Send className="w-4 h-4 ml-2" />
@@ -917,10 +1084,13 @@ export default function NCCPublicSite({ company }: Props) {
       <Section id="contatti" className="py-24 px-4" style={{ background: NCC.bg }}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: NCC.gold }}>CONTATTACI</p>
+            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>Contattaci</p>
             <h2 className="text-3xl sm:text-4xl font-black" style={{ fontFamily: "'Playfair Display', serif" }}>
-              <span className="text-white">Prenota il Tuo </span><span style={{ color: NCC.gold }}>Viaggio</span>
+              <span className="text-white">Prenota il Tuo </span><span style={{ color: gold }}>Viaggio</span>
             </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-base text-white/40">
+              Siamo disponibili 24 ore su 24, 7 giorni su 7. Contattaci per un preventivo gratuito o per prenotare il tuo prossimo transfer.
+            </p>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-6">
@@ -931,8 +1101,8 @@ export default function NCCPublicSite({ company }: Props) {
             ].map((c, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <div className="text-center p-7 rounded-2xl" style={{ background: NCC.darkCard, border: `1px solid ${NCC.cardBorder}` }}>
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: `${NCC.gold}15` }}>
-                    <c.icon className="w-5 h-5" style={{ color: NCC.gold }} />
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: `${gold}15` }}>
+                    <c.icon className="w-5 h-5" style={{ color: gold }} />
                   </div>
                   <p className="text-xs text-white/30 mb-2 uppercase tracking-wider">{c.label}</p>
                   {c.href ? (
@@ -947,14 +1117,14 @@ export default function NCCPublicSite({ company }: Props) {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
             {company.phone && (
-              <Button size="lg" className="rounded-full font-bold px-8 hover:scale-105 transition-transform" style={{ background: NCC.gold, color: "#000" }} asChild>
+              <Button size="lg" className="rounded-full font-bold px-8 hover:scale-105 transition-transform" style={{ background: gold, color: "#000" }} asChild>
                 <a href={`tel:${company.phone}`}><Phone className="w-4 h-4 mr-2" /> Chiama Ora</a>
               </Button>
             )}
             {settings?.whatsapp && (
               <Button size="lg" className="rounded-full font-bold px-8 hover:scale-105 transition-transform" style={{ background: "#25D366", color: "#fff" }} asChild>
                 <a href={`https://wa.me/${(settings.whatsapp as string).replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
+                  <MessageCircle className="w-4 h-4 mr-2" /> Scrivici su WhatsApp
                 </a>
               </Button>
             )}
@@ -974,7 +1144,7 @@ export default function NCCPublicSite({ company }: Props) {
                 {company.logo_url && <img src={company.logo_url} alt="" className="h-10 w-10 rounded-xl object-cover" />}
                 <div>
                   <span className="font-bold text-base block">{company.name}</span>
-                  <span className="text-[9px] tracking-[0.2em] uppercase font-semibold" style={{ color: NCC.gold }}>Premium Transfer</span>
+                  <span className="text-[9px] tracking-[0.2em] uppercase font-semibold" style={{ color: gold }}>Premium Transfer</span>
                 </div>
               </div>
               <p className="text-sm text-white/20 leading-relaxed">{company.tagline || "Servizio NCC premium nel Sud Italia"}</p>
@@ -1027,6 +1197,9 @@ export default function NCCPublicSite({ company }: Props) {
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&display=swap');
         @keyframes ncc-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .animate-ncc-marquee { animation: ncc-marquee 20s linear infinite; }
+        @keyframes ncc-services-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-ncc-services-marquee { animation: ncc-services-scroll 30s linear infinite; }
+        .animate-ncc-services-marquee:hover { animation-play-state: paused; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         html { scroll-behavior: smooth; }
       `}</style>
