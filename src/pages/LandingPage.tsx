@@ -1835,7 +1835,7 @@ const LandingPage = () => {
           >
             Inizia Ora
           </motion.button>
-          <motion.button onClick={() => navigate("/r/impero-roma")}
+          <motion.button onClick={() => navigate("/demo")}
             className="px-4 py-3.5 rounded-xl border border-primary/15 text-primary"
             whileTap={{ scale: 0.95 }}
           >
