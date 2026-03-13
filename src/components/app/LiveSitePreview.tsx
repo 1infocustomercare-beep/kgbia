@@ -8,11 +8,13 @@ interface LiveSitePreviewProps {
   primaryColor?: string | null;
   companyName: string;
   onExpand?: () => void;
+  industry?: string;
 }
 
-export function LiveSitePreview({ slug, primaryColor, companyName, onExpand }: LiveSitePreviewProps) {
+export function LiveSitePreview({ slug, primaryColor, companyName, onExpand, industry }: LiveSitePreviewProps) {
   const [key, setKey] = useState(0);
-  const previewUrl = `${window.location.origin}/b/${slug}`;
+  const isFood = industry === "food" || !industry;
+  const previewUrl = `${window.location.origin}/${isFood ? "r" : "b"}/${slug}`;
   const accent = primaryColor || "hsl(var(--primary))";
 
   return (

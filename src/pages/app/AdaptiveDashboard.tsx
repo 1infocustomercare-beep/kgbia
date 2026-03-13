@@ -456,6 +456,7 @@ function DashboardShell({
           companyName={company.name}
           open={previewExpanded}
           onClose={() => setPreviewExpanded(false)}
+          industry={industry}
         />
       )}
     </div>

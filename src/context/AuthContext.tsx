@@ -107,12 +107,23 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
       }
     }, AUTH_LOADING_TIMEOUT_MS);
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+    let lastUserId: string | null = null;
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
       applySessionState(nextSession);
 
+      // Skip role re-fetch on token refresh if same user (prevents flickering)
+      if (event === 'TOKEN_REFRESHED' && nextSession?.user?.id === lastUserId) {
+        return;
+      }
+
       if (nextSession?.user) {
-        setLoading(true);
-        setRolesReady(false);
+        lastUserId = nextSession.user.id;
+        // Only show loading on initial sign-in, not on token refresh
+        if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+          setLoading(true);
+          setRolesReady(false);
+        }
         window.setTimeout(async () => {
           const fetchedRoles = await fetchRoles(nextSession.user.id);
           if (!isMounted) return;
@@ -121,6 +132,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
           setLoading(false);
         }, 0);
       } else {
+        lastUserId = null;
         setRoles([]);
         setRolesReady(true);
         setLoading(false);
