@@ -198,19 +198,15 @@ const EmpireVoiceAgent: React.FC = () => {
     setIsListening(true);
   }, [sendMessage, stopAll]);
 
-  // Toggle open
+  // Toggle open — no auto-narration (audio requires user gesture)
   const toggleOpen = useCallback(() => {
     if (isOpen) {
       stopAll();
       setIsOpen(false);
     } else {
       setIsOpen(true);
-      if (messages.length === 0) {
-        // Auto-start narration
-        setTimeout(() => startNarration(), 500);
-      }
     }
-  }, [isOpen, messages.length, startNarration, stopAll]);
+  }, [isOpen, stopAll]);
 
   // Toggle visibility
   if (!isVisible) {
