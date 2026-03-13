@@ -1085,56 +1085,46 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          TESTIMONIALS
+          TESTIMONIALS — Auto-scroll carousel
          ═══════════════════════════════════════════ */}
       <Section id="testimonials">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Storie di Successo" icon={<Star className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Risultati Reali, <span className="text-shimmer">Settori Diversi</span>
           </motion.h2>
         </div>
 
-        <div className="max-w-2xl mx-auto mb-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTestimonial}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
-              className="p-8 sm:p-10 rounded-2xl glow-card text-center"
-            >
-              <div className="flex gap-0.5 justify-center mb-4">
-                {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-4 h-4 text-accent fill-accent" />)}
-              </div>
-              <span className="text-4xl mb-4 block">{testimonials[activeTestimonial].emoji}</span>
-              <blockquote className="text-base sm:text-lg text-foreground/60 leading-[1.7] mb-5 italic">
-                "{testimonials[activeTestimonial].quote}"
-              </blockquote>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/[0.08] text-xs text-primary font-bold font-heading tracking-wider mb-4">
-                <TrendingUp className="w-3 h-3" /> {testimonials[activeTestimonial].metric}
-              </div>
-              <div className="flex items-center justify-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-foreground/60 text-sm font-bold font-heading">
-                  {testimonials[activeTestimonial].name.charAt(0)}
-                </div>
-                <div className="text-left">
-                  <h4 className="font-heading text-sm font-semibold text-foreground">{testimonials[activeTestimonial].name}</h4>
-                  <p className="text-[0.65rem] text-foreground/35">{testimonials[activeTestimonial].role}</p>
+        {/* Auto-scroll carousel */}
+        <div className="overflow-hidden -mx-5 sm:mx-0">
+          <div className="flex animate-carousel-scroll-slow whitespace-nowrap py-2">
+            {[...testimonials, ...testimonials].map((t, i) => (
+              <div key={i} className="inline-block w-[300px] sm:w-[380px] flex-shrink-0 mx-2 sm:mx-3 whitespace-normal">
+                <div className="p-6 sm:p-8 rounded-2xl glow-card text-center h-full flex flex-col">
+                  <div className="flex gap-0.5 justify-center mb-3">
+                    {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-3.5 h-3.5 text-accent fill-accent" />)}
+                  </div>
+                  <span className="text-3xl mb-3 block">{t.emoji}</span>
+                  <blockquote className="text-sm text-foreground/60 leading-[1.7] mb-4 italic flex-1">
+                    "{t.quote}"
+                  </blockquote>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/[0.08] text-[0.65rem] text-primary font-bold font-heading tracking-wider mb-3 mx-auto">
+                    <TrendingUp className="w-3 h-3" /> {t.metric}
+                  </div>
+                  <div className="flex items-center justify-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-foreground/60 text-xs font-bold font-heading">
+                      {t.name.charAt(0)}
+                    </div>
+                    <div className="text-left">
+                      <h4 className="font-heading text-xs font-semibold text-foreground">{t.name}</h4>
+                      <p className="text-[0.6rem] text-foreground/35">{t.role}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="flex justify-center gap-2">
-          {testimonials.map((_, i) => (
-            <button key={i} onClick={() => setActiveTestimonial(i)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? "w-6 bg-primary" : "bg-foreground/10 hover:bg-foreground/20"}`}
-            />
-          ))}
+            ))}
+          </div>
         </div>
       </Section>
 
