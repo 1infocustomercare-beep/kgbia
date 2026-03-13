@@ -884,7 +884,7 @@ const LandingPage = () => {
             { x: "80%", y: "25%", label: "ORDINI", size: 10, primary: false },
             { x: "15%", y: "70%", label: "ANALYTICS", size: 10, primary: false },
             { x: "85%", y: "70%", label: "PAGAMENTI", size: 10, primary: false },
-            { x: "35%", y: "15%", label: "MENU", size: 8, primary: false },
+            { x: "35%", y: "15%", label: "CATALOGO", size: 8, primary: false },
             { x: "65%", y: "15%", label: "BOOKING", size: 8, primary: false },
             { x: "35%", y: "85%", label: "STAFF", size: 8, primary: false },
             { x: "65%", y: "85%", label: "MARKETING", size: 8, primary: false },
