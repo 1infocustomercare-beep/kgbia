@@ -61,7 +61,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents" | "media" | "feature_requests";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents" | "media" | "feature_requests" | "brand";
 
 const INDUSTRY_COLORS: Record<string, string> = {
   food: "#C8963E", ncc: "#1E3A5F", beauty: "#E91E8C", healthcare: "#10B981",
@@ -369,6 +369,7 @@ const SuperAdminDashboard = () => {
     { id: "agents", label: "Agenti IA", icon: <Cpu className="w-5 h-5" /> },
     { id: "feature_requests", label: "Richieste", icon: <Lightbulb className="w-5 h-5" /> },
     { id: "media", label: "Media", icon: <Film className="w-5 h-5" /> },
+    { id: "brand" as SuperTab, label: "Brand", icon: <Crown className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => { await signOut(); navigate("/admin"); };
@@ -406,7 +407,7 @@ const SuperAdminDashboard = () => {
       <div className="flex gap-1.5 px-4 py-3 overflow-x-auto scrollbar-hide">
         {tabs.map((tab) => (
           <button key={tab.id}
-            onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : setActiveTab(tab.id)}
+            onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors min-h-[44px] ${
               activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
             }`}>

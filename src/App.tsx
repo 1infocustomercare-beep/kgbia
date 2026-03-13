@@ -75,6 +75,7 @@ const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
 const DemoDirectoryPage = lazy(() => import("./pages/demo/DemoDirectoryPage"));
 const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
+const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
 
 const queryClient = new QueryClient();
 
@@ -145,6 +146,11 @@ function App() {
                 <Route path="/superadmin/media" element={
                   <ProtectedRoute requiredRole="super_admin">
                     <MediaVaultPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/superadmin/brand-assets" element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <BrandAssetsPage />
                   </ProtectedRoute>
                 } />
                 <Route path="/staff" element={
