@@ -1252,10 +1252,15 @@ const LandingPage = () => {
         </div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
-        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.08] to-accent/[0.03] border border-primary/10 overflow-hidden">
-          <div className="absolute inset-0 aurora-mesh opacity-20" />
+        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.1] via-accent/[0.04] to-primary/[0.06] border border-primary/15 overflow-hidden animated-border">
+          <div className="absolute inset-0 aurora-mesh opacity-30" />
+          {/* Extra ambient glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[40px] blur-[30px] bg-primary/20" />
           <div className="relative z-10">
             <motion.div
               initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
