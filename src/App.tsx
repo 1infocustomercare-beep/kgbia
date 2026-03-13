@@ -29,6 +29,7 @@ const MarketingPage = lazy(() => import("./pages/MarketingPage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
 const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 // App layout + adaptive pages
 const AppLayout = lazy(() => import("./components/layout/AppLayout"));
@@ -109,6 +110,7 @@ function App() {
                 <Route path="/partner/register" element={<PartnerRegister />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
 
                 {/* Onboarding */}
                 <Route path="/onboarding" element={
