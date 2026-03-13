@@ -611,8 +611,9 @@ const LandingPage = () => {
         </div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
-          WHY EMPIRE — Grid
          ═══════════════════════════════════════════ */}
       <Section>
         <div className="text-center mb-12">
