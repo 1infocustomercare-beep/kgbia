@@ -23,9 +23,12 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
   }
 
   // Block specific roles from accessing this route
-  // Exception: super_admin who also has the required role (e.g. restaurant_admin) can access
+  // super_admin is always blocked when explicitly set as blockRole
   if (blockRole && roles.includes(blockRole)) {
-    if (requiredRole && roles.includes(requiredRole)) {
+    const canBypassBlockedRole =
+      blockRole !== "super_admin" && !!requiredRole && roles.includes(requiredRole);
+
+    if (canBypassBlockedRole) {
       // User has both blocked role AND required role — allow access
     } else if (blockRole === "super_admin" || roles.includes("super_admin")) {
       return <Navigate to="/superadmin" replace />;
