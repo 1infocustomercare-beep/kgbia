@@ -189,7 +189,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       }
     } catch (error) {
       console.error("Owner login/signup failed", error);
-      setError(error instanceof Error ? error.message : "Errore durante l'autenticazione.");
+      setError(error instanceof Error ? normalizeAuthErrorMessage(error.message) : "Errore durante l'autenticazione.");
     } finally {
       setLoading(false);
     }
