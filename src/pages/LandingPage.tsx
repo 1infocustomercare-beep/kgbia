@@ -624,7 +624,7 @@ const LandingPage = () => {
                             <span className="relative z-10 drop-shadow-md">{ind.icon}</span>
                           </div>
                           {/* Gold accent dot */}
-                          <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 shadow-[0_0_6px_rgba(217,170,56,0.6)] z-30" />
+                          <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-gradient-to-br from-primary/60 to-accent/60 shadow-[0_0_6px_hsla(265,70%,60%,0.5)] z-30" />
                         </div>
                         <h3 className="font-heading text-[11px] font-bold text-foreground mb-1 leading-tight">{ind.title}</h3>
                         <p className="text-[8px] text-foreground/35 leading-[1.4] mb-2 px-1">{ind.desc}</p>
