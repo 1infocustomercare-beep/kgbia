@@ -1,10 +1,10 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { useIndustry } from "@/hooks/useIndustry";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AppLayout() {
   const { industry, loading, resolved } = useIndustry();
@@ -27,6 +27,8 @@ export default function AppLayout() {
     return <Navigate to="/dashboard" replace />;
   }
 
+  const location = useLocation();
+
   return (
     <SidebarProvider>
       <div className="min-h-[100dvh] flex w-full bg-background relative overflow-hidden">
@@ -36,14 +38,19 @@ export default function AppLayout() {
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0 relative z-10">
           <TopBar />
-          <motion.main
-            className="flex-1 p-3 md:p-6 overflow-auto pb-20 md:pb-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <Outlet />
-          </motion.main>
+          <main className="flex-1 p-3 md:p-6 overflow-auto pb-20 md:pb-6">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+              >
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
+          </main>
         </div>
         <BottomNav />
       </div>
