@@ -1327,7 +1327,7 @@ const LandingPage = () => {
             <motion.button
               onClick={() => navigate("/r/impero-roma")}
               className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-              whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(217,91%,60%,0.2)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.2)" }}
               whileTap={{ scale: 0.97 }}
             >
               Prova la Demo <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
