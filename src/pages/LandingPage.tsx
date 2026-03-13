@@ -258,14 +258,9 @@ const LandingPage = () => {
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 aurora-mesh opacity-25" />
-        {/* Large violet ambient orbs */}
-        <div className="absolute w-[700px] h-[700px] rounded-full blur-[250px] opacity-[0.06] bg-primary -top-[200px] left-1/4 animate-float-glow" />
-        <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] bg-accent top-[50vh] -right-[100px] animate-float-glow-slow" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.035] top-[80vh] left-[10%] animate-float-glow-delay"
-          style={{ background: "hsl(280, 45%, 60%)" }} />
-        <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.03] top-[120vh] right-[20%]"
-          style={{ background: "hsl(265, 60%, 50%)" }} />
+        {/* Subtle violet ambient orbs */}
+        <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.04] bg-primary -top-[200px] left-1/4" />
+        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.03] bg-accent top-[50vh] -right-[100px]" />
         {/* Particles - reduced */}
         <Particle delay={0} size={2} x="10%" y="30%" />
         <Particle delay={2} size={2} x="70%" y="60%" />
