@@ -1723,10 +1723,10 @@ const LandingPage = () => {
               initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
             >
-              <Crown className="w-12 h-12 mx-auto text-primary mb-6 drop-shadow-[0_0_40px_hsla(265,70%,60%,0.3)]" />
+              <Crown className="w-12 h-12 mx-auto mb-6" style={{ color: "hsl(42, 80%, 60%)", filter: "drop-shadow(0 0 40px hsla(42,80%,55%,0.3))" }} />
             </motion.div>
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
-              Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
+              Pronto a Costruire il Tuo <span className="text-gold-shimmer">Impero?</span>
             </h2>
             <p className="text-sm text-foreground/35 max-w-md mx-auto mb-8">
               25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando. Non restare indietro.
