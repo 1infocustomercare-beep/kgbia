@@ -193,6 +193,8 @@ function App() {
                   <Route path="finance" element={<FinancePage />} />
                   <Route path="social" element={<SocialPage />} />
                   <Route path="settings" element={<SettingsPage />} />
+                  <Route path="feature-requests" element={<FeatureRequestsPage />} />
+                  <Route path="subscription" element={<SubscriptionPage />} />
                   {/* Catch-all for industry modules in development */}
                   <Route path="*" element={<GenericModulePage />} />
                 </Route>

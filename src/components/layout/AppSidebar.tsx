@@ -173,6 +173,8 @@ const COMMON_NAV = [
   { title: "Finanza", icon: "BarChart3", url: "/app/finance" },
   { title: "Leads", icon: "Target", url: "/app/leads" },
   { title: "Social", icon: "PenTool", url: "/app/social" },
+  { title: "Abbonamento", icon: "CreditCard", url: "/app/subscription" },
+  { title: "Richieste", icon: "Lightbulb", url: "/app/feature-requests" },
   { title: "Impostazioni", icon: "Settings", url: "/app/settings" },
 ];
 
