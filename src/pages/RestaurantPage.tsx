@@ -18,7 +18,7 @@ import storyInterior from "@/assets/story-interior.jpg";
 import storyPasta from "@/assets/story-pasta.jpg";
 import storyWine from "@/assets/story-wine.jpg";
 import storyDish from "@/assets/story-dish.jpg";
-import heroVideo from "@/assets/hero-restaurant.mp4";
+import heroVideo from "@/assets/creative-ristoro.mp4";
 import { Search, Star, Crown, Phone, Mail, MapPin, Clock, ChevronDown, Plus, ShoppingBag, X, Menu as MenuIcon, CalendarDays, Bell, ArrowLeft } from "lucide-react";
 import { InfoGuide } from "@/components/ui/info-guide";
 import { supabase } from "@/integrations/supabase/client";
@@ -293,7 +293,7 @@ const RestaurantPage = () => {
       {/* ====== 1. HERO — Full Screen with Video/Image ====== */}
       <section id="home" ref={heroRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <motion.div className="absolute inset-0" style={{ scale: heroScale }}>
-          <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+          <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/30 to-background/80" />
 

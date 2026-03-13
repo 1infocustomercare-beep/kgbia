@@ -9,6 +9,8 @@ import videoFeatures from "@/assets/video-features.mp4";
 import videoPartner from "@/assets/video-partner-pitch.mp4";
 import videoPartnerRecruit from "@/assets/video-partner-recruit.mp4";
 import videoNccHero from "@/assets/video-ncc-hero.mp4";
+import videoCreativeRistoro from "@/assets/creative-ristoro.mp4";
+import heroRestaurant from "@/assets/hero-restaurant.mp4";
 import heroLanding from "@/assets/hero-landing.jpg";
 import mockupCliente from "@/assets/mockup-cliente.jpg";
 import mockupAdmin from "@/assets/mockup-admin.jpg";
@@ -21,6 +23,8 @@ const BUNDLED_MAP: Record<string, string> = {
   "/bundled/video-partner-pitch.mp4": videoPartner,
   "/bundled/video-partner-recruit.mp4": videoPartnerRecruit,
   "/bundled/video-ncc-hero.mp4": videoNccHero,
+  "/bundled/creative-ristoro.mp4": videoCreativeRistoro,
+  "/bundled/hero-restaurant.mp4": heroRestaurant,
   "/bundled/hero-landing.jpg": heroLanding,
   "/bundled/mockup-cliente.jpg": mockupCliente,
   "/bundled/mockup-admin.jpg": mockupAdmin,
