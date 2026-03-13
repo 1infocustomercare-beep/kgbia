@@ -138,7 +138,7 @@ export default function NCCSettingsPage() {
 
   const saveSeo = async () => {
     if (!companyId) return;
-    await supabase.from("seo_settings").upsert({
+    await (supabase as any).from("seo_settings").upsert({
       company_id: companyId, meta_title: seoForm.meta_title || null,
       meta_description: seoForm.meta_description || null,
       og_image_url: seoForm.og_image_url || null, keywords: seoForm.keywords || null,

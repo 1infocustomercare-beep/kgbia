@@ -108,7 +108,7 @@ export default function NCCPricingPage() {
         };
       });
       if (upserts.length === 0) return;
-      const { error } = await supabase.from("seasonal_prices").upsert(upserts, { onConflict: "route_id,vehicle_id,month" });
+      const { error } = await (supabase as any).from("seasonal_prices").upsert(upserts, { onConflict: "route_id,vehicle_id,month" });
       if (error) throw error;
     },
     onSuccess: () => {

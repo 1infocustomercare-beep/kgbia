@@ -29,13 +29,15 @@ const ICON_MAP: Record<string, any> = {
 const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[]> = {
   ncc: [
     { title: "Dashboard", icon: "Home", url: "/app" },
+    { title: "Prenotazioni", icon: "Calendar", url: "/app/bookings" },
     { title: "Flotta", icon: "Car", url: "/app/fleet" },
+    { title: "Autisti", icon: "Users", url: "/app/drivers" },
     { title: "Tratte", icon: "Route", url: "/app/routes" },
     { title: "Prezzi", icon: "CreditCard", url: "/app/pricing" },
-    { title: "Prenotazioni", icon: "Calendar", url: "/app/bookings" },
-    { title: "Autisti", icon: "Users", url: "/app/drivers" },
     { title: "Cross-Selling", icon: "Target", url: "/app/cross-selling" },
+    { title: "Clienti", icon: "UserCog", url: "/app/clients" },
     { title: "Recensioni", icon: "Star", url: "/app/reviews" },
+    { title: "Sito Web", icon: "Store", url: "/app/settings" },
   ],
   beauty: [
     { title: "Dashboard", icon: "Home", url: "/app" },
