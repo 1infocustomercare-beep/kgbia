@@ -297,7 +297,7 @@ const LandingPage = () => {
             <motion.button
               onClick={() => scrollTo("contact")}
               className="px-5 py-1.5 rounded-full bg-vibrant-gradient text-primary-foreground text-[0.7rem] font-bold font-heading tracking-wider uppercase"
-              whileHover={{ scale: 1.03, boxShadow: "0 8px 30px hsla(217,91%,60%,0.25)" }}
+              whileHover={{ scale: 1.03, boxShadow: "0 8px 30px hsla(265,70%,60%,0.25)" }}
               whileTap={{ scale: 0.97 }}
             >
               Inizia Ora
