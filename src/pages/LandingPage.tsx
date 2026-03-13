@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
+import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
   Crown, Check, Star, Zap, Shield, Smartphone,
