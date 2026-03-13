@@ -15,6 +15,11 @@ import heroLanding from "@/assets/hero-landing.jpg";
 import mockupCliente from "@/assets/mockup-cliente.jpg";
 import mockupAdmin from "@/assets/mockup-admin.jpg";
 import mockupCucina from "@/assets/mockup-cucina.jpg";
+import empireLogoIcon from "@/assets/empire-logo-icon.png";
+import empireLogoFull from "@/assets/empire-logo-full.png";
+import heroTechCommand from "@/assets/hero-tech-command.jpg";
+import heroAiPlatform from "@/assets/hero-ai-platform.jpg";
+import heroPartnerLuxury from "@/assets/hero-partner-luxury.jpg";
 
 const BUNDLED_MAP: Record<string, string> = {
   "/bundled/video-hero-empire.mp4": videoHero,
@@ -29,6 +34,11 @@ const BUNDLED_MAP: Record<string, string> = {
   "/bundled/mockup-cliente.jpg": mockupCliente,
   "/bundled/mockup-admin.jpg": mockupAdmin,
   "/bundled/mockup-cucina.jpg": mockupCucina,
+  "/bundled/empire-logo-icon.png": empireLogoIcon,
+  "/bundled/empire-logo-full.png": empireLogoFull,
+  "/bundled/hero-tech-command.jpg": heroTechCommand,
+  "/bundled/hero-ai-platform.jpg": heroAiPlatform,
+  "/bundled/hero-partner-luxury.jpg": heroPartnerLuxury,
 };
 
 export interface MediaItem {
