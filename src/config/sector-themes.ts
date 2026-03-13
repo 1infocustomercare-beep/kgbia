@@ -566,8 +566,16 @@ const ADDITIONAL_PALETTES: Record<string, Partial<SectorTheme["palette"]>> = {
   custom: {},
 };
 
+// Industry aliases for theme lookup
+const INDUSTRY_ALIASES: Record<string, string> = {
+  hospitality: "hotel",
+  cleaning: "plumber",
+  garage: "plumber",
+};
+
 export function getSectorTheme(industry: string): SectorTheme {
-  if (SECTOR_THEMES[industry]) return SECTOR_THEMES[industry];
+  const resolved = INDUSTRY_ALIASES[industry] || industry;
+  if (SECTOR_THEMES[resolved]) return SECTOR_THEMES[resolved];
   
   const overrides = ADDITIONAL_PALETTES[industry];
   const base = { ...SECTOR_THEMES.default };
