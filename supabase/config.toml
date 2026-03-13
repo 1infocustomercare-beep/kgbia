@@ -41,3 +41,9 @@ verify_jwt = false
 
 [functions.create-company]
 verify_jwt = false
+
+[functions.empire-voice-agent]
+verify_jwt = false
+
+[functions.empire-tts]
+verify_jwt = false
