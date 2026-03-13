@@ -378,13 +378,13 @@ const LandingPage = () => {
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Badge */}
-            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/20 bg-primary/[0.06] backdrop-blur-sm mb-7"
+            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full premium-label animated-border mb-7"
               initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.6 }}>
               <div className="relative flex items-center gap-1.5">
                 <span className="absolute w-2 h-2 rounded-full bg-primary animate-ping" />
                 <span className="relative w-2 h-2 rounded-full bg-primary" />
               </div>
-              <span className="text-[0.65rem] font-heading font-semibold text-primary/90 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
+              <span className="text-[0.65rem] font-heading font-semibold text-primary tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
             {/* Headline with staggered word reveal */}
