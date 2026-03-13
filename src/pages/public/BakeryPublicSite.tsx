@@ -83,41 +83,107 @@ export default function BakeryPublicSite({ company }: Props) {
 
   const allergenIcons = ["🌾 Glutine", "🥚 Uova", "🥛 Latte", "🥜 Frutta a guscio", "🫘 Soia"];
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navScrolled, setNavScrolled] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+
+  useEffect(() => { const fn = () => setNavScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
+
+  const HERO_VIDEO = "https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_30fps.mp4";
+  const tickerItems = ["Pane Fresco", "Cornetti", "Focaccia", "Torte Artigianali", "Lievito Madre", "Farine Bio", "Biscotti", "Dolci Tipici", "Pizza al Taglio", "Cannoli"];
+  const navLinks = ["Vetrina", "Chi Siamo", "Pre-ordina", "Contatti"];
+
   return (
     <div style={{ fontFamily: "'Dancing Script', cursive", background: creamBg, color: brown }}>
       <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet" />
 
       {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl shadow-sm" style={{ background: `${creamBg}EE`, borderBottom: `2px solid ${brown}15` }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${navScrolled ? "shadow-lg" : ""}`} style={{ background: `${creamBg}F5`, backdropFilter: "blur(20px)", borderBottom: `2px solid ${brown}15` }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 sm:h-20">
           <div className="flex items-center gap-3">
-            {company.logo_url && <img src={company.logo_url} alt={name} className="h-10 w-10 rounded-full object-cover" />}
-            <span className="text-2xl font-bold" style={{ color: brown }}>{name}</span>
+            {company.logo_url ? <motion.img src={company.logo_url} alt={name} className="h-10 w-10 rounded-full object-cover" whileHover={{ scale: 1.1 }} /> :
+              <div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: `${pink}20` }}><Wheat className="w-5 h-5" style={{ color: brown }} /></div>}
+            <div className="min-w-0">
+              <span className="text-xl font-bold truncate block" style={{ color: brown }}>{name}</span>
+              <span className="text-[9px] tracking-[0.2em] uppercase block font-semibold" style={{ color: pink, fontFamily: "'Nunito', sans-serif" }}>PANIFICIO ARTIGIANALE</span>
+            </div>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            {["Vetrina", "Chi Siamo", "Pre-ordina", "Contatti"].map(item => (
-              <a key={item} href={`#${item.toLowerCase().replace("-", "")}`} className="text-sm tracking-wider" style={{ color: "#8B6F47", fontFamily: "'Nunito', sans-serif" }}>{item}</a>
+            {navLinks.map(item => (
+              <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} className="text-sm tracking-wider font-medium hover:opacity-100 opacity-60 transition" style={{ color: brown, fontFamily: "'Nunito', sans-serif" }}>{item}</a>
             ))}
           </div>
-          {phone && <a href={`tel:${phone}`} className="hidden md:flex items-center gap-2 text-sm font-semibold" style={{ color: brown }}><Phone className="w-4 h-4" /></a>}
+          <div className="flex items-center gap-3">
+            {phone && <Button size="sm" className="hidden sm:flex gap-2 rounded-full font-bold text-xs h-10 px-5" style={{ background: brown, color: creamBg, fontFamily: "'Nunito', sans-serif" }} asChild>
+              <a href={`tel:${phone}`}><Phone className="w-3.5 h-3.5" /> CHIAMA</a>
+            </Button>}
+            <button className="md:hidden p-2 rounded-xl" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-hidden" style={{ background: creamBg, borderTop: `1px solid ${brown}15` }}>
+              <div className="px-5 py-4 space-y-1">
+                {navLinks.map(item => <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm border-b" style={{ borderColor: `${brown}10`, color: brown, fontFamily: "'Nunito', sans-serif" }}>{item}</a>)}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
-      {/* HERO */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden pt-20">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(https://images.pexels.com/photos/1070946/pexels-photo-1070946.jpeg?auto=compress&cs=tinysrgb&w=1920)", filter: "brightness(0.4)" }} />
-        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${brown}44 0%, ${brown}CC 100%)` }} />
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-            <Wheat className="w-12 h-12 mx-auto mb-6" style={{ color: creamBg }} />
-            <h1 className="text-5xl sm:text-7xl font-bold mb-4">{tagline}</h1>
-            <p className="text-lg sm:text-xl opacity-80 mb-10" style={{ fontFamily: "'Nunito', sans-serif" }}>Tradizione artigianale dal {company.founded_year || 1985}</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="#vetrina"><Button className="px-10 py-6 text-lg font-semibold" style={{ background: creamBg, color: brown, fontFamily: "'Nunito', sans-serif" }}>Scopri i Prodotti</Button></a>
-              <a href="#preordina"><Button variant="outline" className="px-10 py-6 text-lg" style={{ borderColor: creamBg, color: creamBg, fontFamily: "'Nunito', sans-serif" }}>Pre-ordina una Torta</Button></a>
-            </div>
+      {/* HERO — video bg + text reveal */}
+      <section ref={heroRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.3) saturate(0.9)" }}>
+          <source src={HERO_VIDEO} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${brown}88 0%, ${brown}CC 60%, ${brown}EE 100%)` }} />
+        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `radial-gradient(circle, ${creamBg}80 1px, transparent 1px)`, backgroundSize: "40px 40px" }} />
+
+        <motion.div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white pt-20" style={{ y: heroY }}>
+          <motion.div initial="hidden" animate="show" variants={stagger}>
+            <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-sm font-medium"
+              style={{ background: `${creamBg}15`, border: `1px solid ${creamBg}30`, color: creamBg, fontFamily: "'Nunito', sans-serif" }}>
+              <Sparkles className="w-4 h-4" /> Panificio Artigianale
+            </motion.div>
+            <motion.div variants={fadeUp} custom={1}>
+              <Wheat className="w-10 h-10 mx-auto mb-4" style={{ color: creamBg }} />
+            </motion.div>
+            <motion.h1 variants={fadeUp} custom={2} className="text-5xl sm:text-7xl lg:text-8xl font-bold mb-5 leading-[1.05]">
+              {tagline.split("").map((char, i) => (
+                <motion.span key={i} initial={{ opacity: 0, y: 30, rotateX: -90 }} animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ delay: 0.6 + i * 0.03, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ display: "inline-block", color: i % 5 === 0 ? pink : creamBg }}>
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
+            </motion.h1>
+            <motion.p variants={fadeUp} custom={3} className="text-lg sm:text-xl opacity-70 mb-10" style={{ fontFamily: "'Nunito', sans-serif", color: creamBg }}>Tradizione artigianale dal {company.founded_year || 1985}</motion.p>
+            <motion.div variants={fadeUp} custom={4} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="#vetrina"><Button className="px-10 h-14 text-base font-semibold rounded-xl shadow-2xl" style={{ background: creamBg, color: brown, fontFamily: "'Nunito', sans-serif", boxShadow: `0 20px 60px -15px rgba(0,0,0,0.4)` }}>Scopri i Prodotti</Button></a>
+              <a href="#preordina"><Button variant="outline" className="px-10 h-14 text-base rounded-xl hover:bg-white/10" style={{ borderColor: `${creamBg}50`, color: creamBg, fontFamily: "'Nunito', sans-serif" }}>Pre-ordina una Torta</Button></a>
+            </motion.div>
           </motion.div>
-        </div>
+        </motion.div>
+
+        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <ChevronDown className="w-5 h-5" style={{ color: `${creamBg}50` }} />
+        </motion.div>
+      </section>
+
+      {/* TICKER */}
+      <div className="overflow-hidden py-4" style={{ background: brown }}>
+        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 18, ease: "linear" }}>
+          {[...tickerItems, ...tickerItems].map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-medium" style={{ color: `${creamBg}40`, fontFamily: "'Nunito', sans-serif" }}>
+              <Wheat className="w-3 h-3" style={{ color: `${pink}60` }} /> {item}
+            </span>
+          ))}
+        </motion.div>
+      </div>
       </section>
 
       {/* VETRINA */}
