@@ -1,6 +1,10 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import heroMercedesImg from "@/assets/ncc-hero-mercedes-amalfi.jpg";
 import heroBgImg from "@/assets/ncc-hero-bg-amalfi.jpg";
+import nccPremiumInterior from "@/assets/ncc-premium-interior.jpg";
+import nccPremiumHotel from "@/assets/ncc-premium-hotel.jpg";
+import nccPremiumCoast from "@/assets/ncc-premium-coast.jpg";
+import nccHeroVideo from "@/assets/video-ncc-hero.mp4";
 import { motion, useInView, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
