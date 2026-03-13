@@ -507,24 +507,30 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+        <motion.div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {[
-            { icon: <Banknote className="w-5 h-5" />, title: "30% di Commissioni", desc: "Le piattaforme terze divorano i tuoi margini. Su €10.000/mese perdi €3.000 in commissioni.", stat: "-30%", color: "from-red-500 to-orange-500" },
-            { icon: <Users className="w-5 h-5" />, title: "Clienti Non Fidelizzati", desc: "Senza CRM e loyalty, il 70% dei clienti non torna. Paghi per acquisirli ma non li trattieni.", stat: "70%", color: "from-amber-500 to-yellow-500" },
-            { icon: <Smartphone className="w-5 h-5" />, title: "Zero Presenza Digitale", desc: "I tuoi competitor hanno app, ordini online, prenotazioni. Tu stai ancora usando carta e WhatsApp.", stat: "0 App", color: "from-orange-500 to-red-500" },
-            { icon: <ClipboardCheck className="w-5 h-5" />, title: "Processi Manuali", desc: "Ordini a voce, prenotazioni su agenda, contabilità su Excel. Ogni errore costa tempo e denaro.", stat: "4h/giorno", color: "from-rose-500 to-pink-500" },
-            { icon: <Eye className="w-5 h-5" />, title: "Recensioni Incontrollate", desc: "Una sola recensione negativa su Google può costare migliaia di euro in clienti persi.", stat: "-€5K", color: "from-red-600 to-rose-500" },
-            { icon: <Target className="w-5 h-5" />, title: "Marketing Inefficace", desc: "Spendi in pubblicità senza tracciare i risultati. Zero segmentazione, zero automazione, zero ROI.", stat: "0% ROI", color: "from-amber-600 to-orange-500" },
+            { icon: <Banknote className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Commissioni", desc: "Piattaforme terze che divorano i margini. Su €10K/mese, €3K vanno in fee.", stat: "-30%", color: "from-red-500/80 to-orange-500/80" },
+            { icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Clienti Persi", desc: "Senza CRM e loyalty il 70% non torna. Li acquisisci e li perdi.", stat: "70%", color: "from-amber-500/80 to-yellow-500/80" },
+            { icon: <Smartphone className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Zero Digitale", desc: "Competitor con app e booking online. Tu ancora con carta e WhatsApp.", stat: "0", color: "from-orange-500/80 to-red-500/80" },
+            { icon: <ClipboardCheck className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Processi Manuali", desc: "Ordini a voce, agenda cartacea, Excel. Ogni errore costa tempo e denaro.", stat: "4h/g", color: "from-rose-500/80 to-pink-500/80" },
+            { icon: <Eye className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Reputazione", desc: "Una recensione negativa costa migliaia in clienti persi.", stat: "-€5K", color: "from-red-600/80 to-rose-500/80" },
+            { icon: <Target className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Marketing Cieco", desc: "Pubblicità senza tracking. Zero segmentazione, zero automazione.", stat: "0%", color: "from-amber-600/80 to-orange-500/80" },
           ].map((pain, i) => (
-            <motion.div key={i} className="relative p-6 rounded-2xl border border-accent/10 bg-accent/[0.02] group hover:border-accent/20 transition-all"
-              variants={fadeUp} whileHover={{ y: -3 }}>
-              <div className="absolute top-2 right-3 text-[0.5rem] font-heading font-bold text-accent/40 tracking-wider">{pain.stat}</div>
-              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-4 opacity-80`}>
+            <motion.div key={i} className="relative p-4 sm:p-6 rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur-sm group hover:border-primary/20 hover:bg-primary/[0.03] transition-all duration-500"
+              variants={fadeUp} whileHover={{ y: -4, scale: 1.02 }}>
+              {/* Stat badge */}
+              <div className="absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-background border border-foreground/10 text-[0.55rem] sm:text-[0.6rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg">
+                {pain.stat}
+              </div>
+              {/* Icon */}
+              <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-3 sm:mb-4 shadow-lg group-hover:shadow-primary/20 transition-shadow duration-500`}>
                 {pain.icon}
               </div>
-              <h3 className="font-heading text-sm font-semibold text-foreground mb-2">{pain.title}</h3>
-              <p className="text-xs text-foreground/35 leading-[1.7]">{pain.desc}</p>
+              <h3 className="font-heading text-xs sm:text-sm font-semibold text-foreground mb-1 sm:mb-2">{pain.title}</h3>
+              <p className="text-[0.65rem] sm:text-xs text-foreground/35 leading-[1.6] sm:leading-[1.7]">{pain.desc}</p>
+              {/* Bottom accent line */}
+              <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </motion.div>
           ))}
         </motion.div>
