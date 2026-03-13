@@ -436,7 +436,7 @@ const LandingPage = () => {
 
             {/* Headline with per-letter 3D reveal */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.1 }}>
-              <h1 className="text-[2.5rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em]">
+              <h1 className="text-[2.2rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em]">
                 <span className="inline-block">
                   {"Modernizziamo".split("").map((ch, i) => (
                     <motion.span key={i} className="inline-block text-foreground"
