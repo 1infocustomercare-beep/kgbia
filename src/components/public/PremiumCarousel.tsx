@@ -30,10 +30,9 @@ export function PremiumCarousel({
 
   const speeds: Record<string, number> = { fast: 55, normal: 38, slow: 25 };
   const pxPerSec = speeds[speed];
-  const gap = 16;
+  const gap = 20;
   const singleSetWidth = children.length * (itemWidth + gap);
 
-  // Sync ref with state for animation loop
   useEffect(() => { pausedRef.current = isPaused; }, [isPaused]);
 
   const tick = useCallback((ts: number) => {
@@ -68,7 +67,6 @@ export function PremiumCarousel({
     }
   };
 
-  // Triple duplicate for seamless loop
   const tripled = [...children, ...children, ...children];
 
   return (
@@ -79,54 +77,12 @@ export function PremiumCarousel({
       onTouchStart={() => setIsPaused(true)}
       onTouchEnd={() => setTimeout(() => setIsPaused(false), 3500)}
     >
-      {/* Luxury edge treatment — ultra thin translucent masks + animated light rails */}
-      <div
-        className="absolute left-0 top-0 bottom-0 w-3 sm:w-10 z-20 pointer-events-none backdrop-blur-[1px]"
-        style={{
-          background: `linear-gradient(to right, hsl(var(--background) / 0.34) 0%, hsl(var(--background) / 0.16) 38%, transparent 100%)`,
-        }}
-      />
-      <div
-        className="absolute right-0 top-0 bottom-0 w-3 sm:w-10 z-20 pointer-events-none backdrop-blur-[1px]"
-        style={{
-          background: `linear-gradient(to left, hsl(var(--background) / 0.34) 0%, hsl(var(--background) / 0.16) 38%, transparent 100%)`,
-        }}
-      />
-
-      <motion.div
-        className="absolute left-0 top-[12%] bottom-[12%] w-px z-30 pointer-events-none"
-        style={{
-          background: `linear-gradient(180deg, transparent 0%, ${accentColor}85 50%, transparent 100%)`,
-          boxShadow: `0 0 18px ${accentColor}55`,
-        }}
-        animate={{ opacity: [0.35, 0.85, 0.35], scaleY: [0.94, 1, 0.94] }}
-        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute right-0 top-[12%] bottom-[12%] w-px z-30 pointer-events-none"
-        style={{
-          background: `linear-gradient(180deg, transparent 0%, ${accentColor}85 50%, transparent 100%)`,
-          boxShadow: `0 0 18px ${accentColor}55`,
-        }}
-        animate={{ opacity: [0.35, 0.85, 0.35], scaleY: [0.94, 1, 0.94] }}
-        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.35 }}
-      />
-
-      <div
-        className="absolute left-0 top-[18%] bottom-[18%] w-[2px] z-20 pointer-events-none blur-[1px]"
-        style={{ background: `linear-gradient(180deg, transparent 0%, ${accentColor}45 50%, transparent 100%)` }}
-      />
-      <div
-        className="absolute right-0 top-[18%] bottom-[18%] w-[2px] z-20 pointer-events-none blur-[1px]"
-        style={{ background: `linear-gradient(180deg, transparent 0%, ${accentColor}45 50%, transparent 100%)` }}
-      />
-
-      {/* Scrolling track */}
+      {/* Clean scrolling track — NO edge masks, NO gradients */}
       <div className={`overflow-hidden ${fullWidth ? "" : "-mx-4 sm:mx-0"}`}>
         <div
           ref={trackRef}
           className="flex will-change-transform"
-          style={{ gap: `${gap}px`, padding: "12px 0" }}
+          style={{ gap: `${gap}px`, padding: "16px 0" }}
         >
           {tripled.map((child, i) => (
             <div
@@ -140,21 +96,27 @@ export function PremiumCarousel({
         </div>
       </div>
 
-      {/* Floating glassmorphism controls */}
+      {/* Luxury floating controls — pill glassmorphism */}
       {showControls && (
-        <div className="flex justify-center mt-5">
-          <div
-            className="inline-flex items-center gap-1 p-1 rounded-full backdrop-blur-2xl border"
+        <div className="flex justify-center mt-6">
+          <motion.div
+            className="inline-flex items-center gap-1.5 px-2 py-1.5 rounded-full backdrop-blur-2xl"
             style={{
-              background: `linear-gradient(135deg, hsl(var(--background) / 0.8), hsl(var(--background) / 0.6))`,
-              borderColor: `${accentColor}15`,
-              boxShadow: `0 8px 32px hsl(var(--background) / 0.5), 0 0 0 1px ${accentColor}08`,
+              background: `linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))`,
+              border: `1px solid rgba(255,255,255,0.08)`,
+              boxShadow: `0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05)`,
             }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
           >
             <button
               onClick={() => jump("left")}
-              className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-90"
-              style={{ color: accentColor }}
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90"
+              style={{ 
+                color: accentColor,
+                background: "rgba(255,255,255,0.04)",
+              }}
               aria-label="Precedente"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -162,29 +124,33 @@ export function PremiumCarousel({
 
             <button
               onClick={() => setIsPaused(!isPaused)}
-              className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-90"
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90"
               style={{
-                background: isPaused ? `${accentColor}15` : "transparent",
+                background: isPaused ? `${accentColor}20` : "rgba(255,255,255,0.04)",
                 color: accentColor,
+                boxShadow: isPaused ? `0 0 12px ${accentColor}25` : "none",
               }}
               aria-label={isPaused ? "Play" : "Pause"}
             >
               {isPaused ? (
-                <Play className="w-3 h-3 ml-0.5" />
+                <Play className="w-3.5 h-3.5 ml-0.5" />
               ) : (
-                <Pause className="w-3 h-3" />
+                <Pause className="w-3.5 h-3.5" />
               )}
             </button>
 
             <button
               onClick={() => jump("right")}
-              className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-90"
-              style={{ color: accentColor }}
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90"
+              style={{ 
+                color: accentColor,
+                background: "rgba(255,255,255,0.04)",
+              }}
               aria-label="Successivo"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>
