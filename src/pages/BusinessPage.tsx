@@ -1,31 +1,16 @@
-import { useState, useMemo, lazy, Suspense } from "react";
+import { useState, lazy, Suspense } from "react";
 import { useParams } from "react-router-dom";
-const LuxuryPublicSite = lazy(() => import("@/pages/public/LuxuryPublicSite"));
-import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getIndustryConfig, type IndustryId } from "@/config/industry-config";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Sector-specific premium sites
 const NCCPublicSite = lazy(() => import("@/pages/public/NCCPublicSite"));
 const BeautyPublicSite = lazy(() => import("@/pages/public/BeautyPublicSite"));
 const BeachPublicSite = lazy(() => import("@/pages/public/BeachPublicSite"));
 const TradesPublicSite = lazy(() => import("@/pages/public/TradesPublicSite"));
-import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
-import {
-  Phone, Mail, MapPin, Clock, Star, ArrowRight, CheckCircle,
-  Car, Calendar, Users, Scissors, Umbrella, Wrench, Zap,
-  Heart, Shield, Camera, Leaf, Send, ChevronDown, Globe,
-  Sparkles, Award, Navigation, Music, Wifi, Baby, GraduationCap,
-  Scale, Truck, Package
-} from "lucide-react";
+const LuxuryPublicSite = lazy(() => import("@/pages/public/LuxuryPublicSite"));
 
 /* ── Fade-in animation ───────────────────────────────────── */
 const fadeUp = {
