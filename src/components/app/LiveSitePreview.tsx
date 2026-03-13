@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, RotateCcw, Smartphone, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { buildPublicSiteUrl } from "@/lib/public-site-path";
 
 interface LiveSitePreviewProps {
   slug: string;
@@ -13,8 +14,7 @@ interface LiveSitePreviewProps {
 
 export function LiveSitePreview({ slug, primaryColor, companyName, onExpand, industry }: LiveSitePreviewProps) {
   const [key, setKey] = useState(0);
-  const isFood = industry === "food" || !industry;
-  const previewUrl = `${window.location.origin}/${isFood ? "r" : "b"}/${slug}`;
+  const previewUrl = buildPublicSiteUrl(slug, industry);
   const accent = primaryColor || "hsl(var(--primary))";
 
   return (

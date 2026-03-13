@@ -128,18 +128,18 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
       applySessionState(nextSession);
 
-      // Skip role re-fetch on token refresh if same user (prevents flickering)
-      if (event === 'TOKEN_REFRESHED' && nextSession?.user?.id === lastUserId) {
+      const isSameUser = !!nextSession?.user?.id && nextSession.user.id === lastUserId;
+
+      // Ignore noisy same-user events to prevent UI flashing and redundant role fetches
+      if (isSameUser && (event === "TOKEN_REFRESHED" || event === "SIGNED_IN" || event === "INITIAL_SESSION")) {
         return;
       }
 
       if (nextSession?.user) {
         lastUserId = nextSession.user.id;
-        // Only show loading on initial sign-in, not on token refresh
-        if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-          setLoading(true);
-          setRolesReady(false);
-        }
+        setLoading(true);
+        setRolesReady(false);
+
         window.setTimeout(async () => {
           const fetchedRoles = await fetchRoles(nextSession.user.id);
           if (!isMounted) return;
