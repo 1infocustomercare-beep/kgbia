@@ -1203,6 +1203,54 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
+          3 INTERFACCE — Mockup Showcase
+         ═══════════════════════════════════════════ */}
+      <Section>
+        <div className="text-center mb-10 sm:mb-14">
+          <SectionLabel text="Esperienza" icon={<MonitorSmartphone className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            3 Interfacce, <span className="text-shimmer">Un Ecosistema</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[550px] mx-auto text-sm leading-[1.7]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Ogni attore ha la sua interfaccia dedicata. Cliente, proprietario e staff operano in sinergia perfetta.
+          </motion.p>
+        </div>
+
+        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {[
+            { img: mockupCliente, title: "App Cliente", desc: "Ordini, prenotazioni, pagamenti, loyalty wallet, notifiche push. Tutto dal telefono del tuo cliente.", tag: "FRONT-END", features: ["Ordini in tempo reale", "Loyalty & Cashback", "Push Notification", "Chat Diretta"] },
+            { img: mockupAdmin, title: "Dashboard Admin", desc: "Pannello completo con analytics IA, CRM, gestione staff, fatturazione e marketing automation.", tag: "BACK-OFFICE", features: ["Analytics predittivi", "CRM & Segmentazione", "Fatturazione elettronica", "Marketing automatizzato"] },
+            { img: mockupCucina, title: "Pannello Operativo", desc: "Vista cucina, gestione interventi, calendario staff, mappe postazioni. Ottimizzato per operatività.", tag: "OPERATIONS", features: ["Live order tracking", "Gestione turni", "HACCP digitale", "Notifiche smart"] },
+          ].map((mock, i) => (
+            <motion.div key={i} className="group" variants={fadeScale}>
+              <div className="relative rounded-2xl overflow-hidden glow-card mb-5">
+                <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full holo-badge text-[0.5rem] font-heading font-bold text-primary/70 tracking-[2px]">{mock.tag}</div>
+                <img src={mock.img} alt={mock.title} className="w-full aspect-[4/3] object-cover group-hover:scale-[1.03] transition-transform duration-700" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="font-heading text-base font-bold text-foreground mb-1">{mock.title}</h3>
+                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{mock.desc}</p>
+                </div>
+              </div>
+              <div className="space-y-2 px-1">
+                {mock.features.map((f, j) => (
+                  <div key={j} className="flex items-center gap-2.5 text-xs text-foreground/40">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                    {f}
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </Section>
+
+      <SectionDivider />
+
+      {/* ═══════════════════════════════════════════
           VIDEO FEATURES
          ═══════════════════════════════════════════ */}
       <Section>
