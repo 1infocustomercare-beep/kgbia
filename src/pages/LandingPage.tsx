@@ -717,21 +717,19 @@ const LandingPage = () => {
           </motion.h2>
         </div>
 
-        {/* ═══ Mobile: Auto-scroll ═══ */}
-        <div className="sm:hidden overflow-hidden -mx-5">
-          <div className="flex animate-carousel-scroll-fast whitespace-nowrap py-2">
-            {[...whyUs, ...whyUs].map((item, i) => (
-              <div key={i} className="inline-block w-[220px] flex-shrink-0 mx-2 whitespace-normal">
-                <div className="group p-5 rounded-2xl glow-card h-full">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
-                    {item.icon}
-                  </div>
-                  <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
-                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
+        {/* ═══ Mobile: Premium Carousel ═══ */}
+        <div className="sm:hidden">
+          <PremiumCarousel speed="fast" itemWidth={220}>
+            {whyUs.map((item, i) => (
+              <div key={i} className="group p-5 rounded-2xl glow-card h-full">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3">
+                  {item.icon}
                 </div>
+                <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
+                <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
               </div>
             ))}
-          </div>
+          </PremiumCarousel>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
