@@ -403,8 +403,58 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
-        {/* Cyber grid overlay */}
-        <div className="absolute inset-0 cyber-grid opacity-20" />
+        {/* Grid overlay — toggle between premium and classic */}
+        {premiumGrid ? (
+          <div className="absolute inset-0 pointer-events-none">
+            {/* Base holographic grid with pulse */}
+            <div className="absolute inset-0 premium-holo-grid animate-grid-pulse" />
+            
+            {/* Sweeping holographic light band */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute inset-x-0 h-[200px] animate-holo-sweep"
+                style={{ background: "linear-gradient(180deg, transparent, hsla(265, 85%, 65%, 0.08), hsla(200, 90%, 60%, 0.06), transparent)" }} />
+            </div>
+            
+            {/* Glowing intersection nodes */}
+            {[
+              { x: "20%", y: "25%", delay: 0 }, { x: "80%", y: "20%", delay: 1 },
+              { x: "50%", y: "50%", delay: 0.5 }, { x: "15%", y: "70%", delay: 1.5 },
+              { x: "85%", y: "65%", delay: 2 }, { x: "40%", y: "80%", delay: 0.8 },
+              { x: "65%", y: "35%", delay: 1.2 }, { x: "30%", y: "15%", delay: 2.5 },
+            ].map((node, i) => (
+              <div key={i} className="absolute animate-grid-node"
+                style={{
+                  left: node.x, top: node.y, animationDelay: `${node.delay}s`,
+                  width: 4, height: 4, borderRadius: "50%",
+                  background: i % 3 === 0 ? "hsl(265, 85%, 65%)" : i % 3 === 1 ? "hsl(200, 90%, 60%)" : "hsl(320, 75%, 55%)",
+                  boxShadow: `0 0 12px ${i % 3 === 0 ? "hsla(265,85%,65%,0.6)" : i % 3 === 1 ? "hsla(200,90%,60%,0.6)" : "hsla(320,75%,55%,0.5)"}`,
+                }}
+              />
+            ))}
+            
+            {/* Corner accent lines */}
+            <div className="absolute top-0 left-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,85%,65%,0.4), transparent)" }} />
+            <div className="absolute top-0 left-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(265,85%,65%,0.4), transparent)" }} />
+            <div className="absolute top-0 right-0 w-[120px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(200,90%,60%,0.4), transparent)" }} />
+            <div className="absolute top-0 right-0 w-[1px] h-[120px]" style={{ background: "linear-gradient(180deg, hsla(200,90%,60%,0.4), transparent)" }} />
+            <div className="absolute bottom-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(320,75%,55%,0.3), transparent)" }} />
+            <div className="absolute bottom-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(320,75%,55%,0.3), transparent)" }} />
+          </div>
+        ) : (
+          <div className="absolute inset-0 cyber-grid opacity-20" />
+        )}
+
+        {/* Grid style toggle — DEV only */}
+        <button onClick={() => setPremiumGrid(p => !p)}
+          className="absolute top-3 right-3 z-50 px-3 py-1.5 rounded-full text-[0.6rem] font-mono font-bold uppercase tracking-wider backdrop-blur-md border transition-all duration-300"
+          style={{
+            background: premiumGrid ? "hsla(265,85%,65%,0.15)" : "hsla(0,0%,100%,0.05)",
+            borderColor: premiumGrid ? "hsla(265,85%,65%,0.3)" : "hsla(0,0%,100%,0.1)",
+            color: premiumGrid ? "hsl(265,85%,75%)" : "hsla(0,0%,100%,0.5)",
+          }}
+        >
+          {premiumGrid ? "✦ Premium Grid" : "◻ Classic Grid"}
+        </button>
 
         {/* Dual light beams */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[40vh] bg-gradient-to-b from-primary/50 via-primary/15 to-transparent" />
