@@ -645,7 +645,7 @@ const LandingPage = () => {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }}>
               {metrics.map((m, i) => (
                 <motion.div key={i} className="counter-card rounded-2xl p-4 sm:p-5 text-center group hover:border-primary/15 transition-all holo-shine relative overflow-hidden"
-                  whileHover={{ y: -4, boxShadow: "0 20px 60px hsla(265, 85%, 65%, 0.15)" }}>
+                  whileHover={{ y: -4, boxShadow: "0 20px 60px hsla(265, 70%, 60%, 0.15)" }}>
                   {/* Top prismatic line */}
                   <div className="absolute top-0 left-0 right-0 h-[1px] prismatic-edge opacity-30" />
                   <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient animate-count-glow">
