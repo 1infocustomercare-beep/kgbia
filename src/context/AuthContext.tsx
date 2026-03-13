@@ -212,6 +212,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
       setSession(null);
       setUser(null);
       setRoles([]);
+      setRolesReady(true);
       setLoading(false);
     }
   };
