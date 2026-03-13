@@ -137,11 +137,6 @@ const LandingPage = () => {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => setActiveTestimonial(p => (p + 1) % 6), 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
     const timer = setInterval(() => setActiveIndustry(p => (p + 1) % 7), 3000);
     return () => clearInterval(timer);
   }, []);
