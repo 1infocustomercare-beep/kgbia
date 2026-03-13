@@ -1,6 +1,10 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import heroMercedesImg from "@/assets/ncc-hero-mercedes-amalfi.jpg";
 import heroBgImg from "@/assets/ncc-hero-bg-amalfi.jpg";
+import nccPremiumInterior from "@/assets/ncc-premium-interior.jpg";
+import nccPremiumHotel from "@/assets/ncc-premium-hotel.jpg";
+import nccPremiumCoast from "@/assets/ncc-premium-coast.jpg";
+import nccHeroVideo from "@/assets/video-ncc-hero.mp4";
 import { motion, useInView, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -64,6 +68,68 @@ const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode
     );
   }
 );
+
+/* ── Premium Badge — floating auto-rotating luxury gallery ── */
+const premiumImages = [
+  { src: nccPremiumInterior, label: "Interni Premium" },
+  { src: nccPremiumHotel, label: "Servizio Hotel" },
+  { src: nccPremiumCoast, label: "Costiera Amalfitana" },
+  { src: heroMercedesImg, label: "Mercedes V-Class" },
+];
+
+function PremiumBadge() {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIdx(p => (p + 1) % premiumImages.length), 3000);
+    return () => clearInterval(t);
+  }, []);
+  const img = premiumImages[idx];
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.2, duration: 0.6 }}
+      className="absolute -bottom-6 -left-6 z-20"
+      style={{ width: 160 }}
+    >
+      <div
+        className="rounded-2xl overflow-hidden shadow-2xl"
+        style={{
+          background: "#111",
+          border: `2px solid ${NCC.gold}50`,
+          boxShadow: `0 12px 40px rgba(0,0,0,0.6), 0 0 20px ${NCC.gold}15`,
+        }}
+      >
+        <div className="relative h-[90px] overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={idx}
+              src={img.src}
+              alt={img.label}
+              className="w-full h-full object-cover"
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.5 }}
+            />
+          </AnimatePresence>
+        </div>
+        <div className="px-3 py-2 flex items-center gap-2">
+          <div
+            className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ background: `${NCC.gold}20` }}
+          >
+            <Award className="w-3 h-3" style={{ color: NCC.gold }} />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[9px] uppercase tracking-wider font-bold" style={{ color: NCC.gold }}>Premium</p>
+            <p className="text-[10px] text-white/60 truncate">{img.label}</p>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 Section.displayName = "Section";
 
 /* ── Animated Number ── */
@@ -461,10 +527,18 @@ export default function NCCPublicSite({ company }: Props) {
             </motion.div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="hidden lg:block">
+          <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="hidden lg:block relative">
+            {/* Video principale */}
             <div className="relative rounded-[20px] overflow-hidden shadow-2xl" style={{ border: `3px solid ${gold}30` }}>
-              <img src={heroMercedesImg} alt={`${company.name} Transfer`} className="w-full object-cover aspect-[4/3]" />
+              <video
+                src={nccHeroVideo}
+                autoPlay muted loop playsInline
+                className="w-full object-cover aspect-[4/3]"
+                poster={heroMercedesImg}
+              />
             </div>
+            {/* Premium floating badge — auto-rotating luxury images */}
+            <PremiumBadge />
           </motion.div>
         </div>
 
