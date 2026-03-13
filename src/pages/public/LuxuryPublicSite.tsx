@@ -228,15 +228,15 @@ export default function LuxuryPublicSite({ company }: Props) {
             {/* Headline */}
             <motion.h1 variants={fadeUp} custom={2}
               className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6"
-              style={{ fontFamily: theme.fonts.heading }}>
-              {company.name}
+              style={{ fontFamily: siteConfig?.font_heading || theme.fonts.heading }}>
+              {siteConfig?.headline || company.name}
             </motion.h1>
 
             {/* Tagline */}
             <motion.p variants={fadeUp} custom={3}
               className="text-lg sm:text-xl max-w-xl mx-auto mb-10 leading-relaxed"
               style={{ color: p.textMuted }}>
-              {company.tagline || theme.hero.subheadline}
+              {siteConfig?.tagline || company.tagline || theme.hero.subheadline}
             </motion.p>
 
             {/* CTAs */}
