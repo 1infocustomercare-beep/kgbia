@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef, useEffect, forwardRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,8 @@ import { toast } from "sonner";
 import {
   Wrench, Zap, Star, Phone, Mail, MapPin, Clock, Calendar,
   Shield, CheckCircle, Send, Award, Users, FileText,
-  Hammer, Lightbulb, Droplets, Settings, AlertTriangle
+  Hammer, Lightbulb, Droplets, Settings, AlertTriangle,
+  Sparkles, ChevronDown, Menu, X
 } from "lucide-react";
 import { type IndustryId, getIndustryConfig } from "@/config/industry-config";
 
