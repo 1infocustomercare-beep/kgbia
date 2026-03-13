@@ -1015,9 +1015,9 @@ const LandingPage = () => {
         <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {[
-            { img: mockupCliente, title: "App Cliente", desc: "Ordini, prenotazioni, pagamenti, loyalty wallet, notifiche push. Tutto dal telefono del tuo cliente.", tag: "FRONT-END", features: ["Ordini in tempo reale", "Loyalty & Cashback", "Push Notification", "Chat Diretta"] },
-            { img: mockupAdmin, title: "Dashboard Admin", desc: "Pannello completo con analytics IA, CRM, gestione staff, fatturazione e marketing automation.", tag: "BACK-OFFICE", features: ["Analytics predittivi", "CRM & Segmentazione", "Fatturazione elettronica", "Marketing automatizzato"] },
-            { img: mockupCucina, title: "Pannello Operativo", desc: "Vista cucina, gestione interventi, calendario staff, mappe postazioni. Ottimizzato per operatività.", tag: "OPERATIONS", features: ["Live order tracking", "Gestione turni", "HACCP digitale", "Notifiche smart"] },
+            { img: mockupCliente, title: "App Cliente", desc: "Prenota, ordina, paga e ricevi notifiche. Un'esperienza premium per i clienti di qualsiasi settore.", tag: "FRONT-END", features: ["Prenotazioni & Ordini", "Loyalty & Cashback", "Push Notification", "Chat Diretta"] },
+            { img: mockupAdmin, title: "Dashboard Admin", desc: "Pannello completo con analytics IA, CRM, gestione team, fatturazione e marketing automation per ogni settore.", tag: "BACK-OFFICE", features: ["Analytics predittivi", "CRM & Segmentazione", "Fatturazione elettronica", "Marketing automatizzato"] },
+            { img: mockupCucina, title: "Pannello Operativo", desc: "Vista operativa real-time: gestisci interventi, appuntamenti, flotta, staff e postazioni dal campo.", tag: "OPERATIONS", features: ["Live tracking operativo", "Gestione turni & team", "Compliance & controlli", "Notifiche smart"] },
           ].map((mock, i) => (
             <motion.div key={i} className="group" variants={fadeScale}>
               <div className="relative rounded-2xl overflow-hidden glow-card mb-5">
