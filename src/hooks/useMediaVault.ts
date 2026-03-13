@@ -23,6 +23,8 @@ const BUNDLED_MAP: Record<string, string> = {
   "/bundled/video-partner-pitch.mp4": videoPartner,
   "/bundled/video-partner-recruit.mp4": videoPartnerRecruit,
   "/bundled/video-ncc-hero.mp4": videoNccHero,
+  "/bundled/creative-ristoro.mp4": videoCreativeRistoro,
+  "/bundled/hero-restaurant.mp4": heroRestaurant,
   "/bundled/hero-landing.jpg": heroLanding,
   "/bundled/mockup-cliente.jpg": mockupCliente,
   "/bundled/mockup-admin.jpg": mockupAdmin,

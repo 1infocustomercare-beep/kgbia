@@ -293,7 +293,7 @@ const RestaurantPage = () => {
       {/* ====== 1. HERO — Full Screen with Video/Image ====== */}
       <section id="home" ref={heroRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <motion.div className="absolute inset-0" style={{ scale: heroScale }}>
-          <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+          <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/30 to-background/80" />
 
