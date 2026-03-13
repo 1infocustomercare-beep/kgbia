@@ -268,24 +268,61 @@ const LandingPage = () => {
       {/* ═══════ NAVIGATION ═══════ */}
       <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${navScrolled ? "bg-background/70 backdrop-blur-xl border-b border-border/10 py-1.5" : "py-2.5"}`}>
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex items-center justify-between h-11">
-          <a href="#hero" className="flex items-center gap-2 group">
+          <a href="#hero" className="flex items-center gap-3 group relative">
+            {/* Outer glow ring */}
             <motion.div
-              className="relative w-8 h-8 rounded-xl bg-vibrant-gradient flex items-center justify-center shadow-[0_0_25px_hsla(265,70%,60%,0.3)] overflow-hidden"
-              whileHover={{ rotate: 8, scale: 1.1 }}
-              animate={{ boxShadow: ["0 0 20px hsla(265,70%,60%,0.2)", "0 0 35px hsla(265,70%,60%,0.45)", "0 0 20px hsla(265,70%,60%,0.2)"] }}
-              transition={{ boxShadow: { duration: 2.5, repeat: Infinity, ease: "easeInOut" } }}
+              className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.15), transparent 70%)" }}
+            />
+            {/* Icon container */}
+            <motion.div
+              className="relative w-9 h-9 rounded-xl flex items-center justify-center overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, hsla(265,70%,60%,1), hsla(280,60%,50%,1), hsla(300,50%,45%,1))",
+                boxShadow: "0 0 20px hsla(265,70%,60%,0.3), inset 0 1px 1px rgba(255,255,255,0.2)",
+              }}
+              whileHover={{ rotate: 12, scale: 1.15 }}
+              animate={{
+                boxShadow: [
+                  "0 0 15px hsla(265,70%,60%,0.2), inset 0 1px 1px rgba(255,255,255,0.2)",
+                  "0 0 30px hsla(265,70%,60%,0.5), inset 0 1px 1px rgba(255,255,255,0.3)",
+                  "0 0 15px hsla(265,70%,60%,0.2), inset 0 1px 1px rgba(255,255,255,0.2)",
+                ],
+              }}
+              transition={{ boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" } }}
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/20 via-transparent to-white/10 pointer-events-none" />
+              {/* Scanning light sweep */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)" }}
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+              />
+              {/* Subtle inner border */}
+              <div className="absolute inset-px rounded-[10px] border border-white/10 pointer-events-none" />
               <motion.div
                 animate={{ rotateY: [0, 360] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
               >
-                <Crown className="w-4 h-4 text-primary-foreground drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]" />
+                <Crown className="w-[18px] h-[18px] text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
               </motion.div>
             </motion.div>
-            <span className="font-heading font-bold text-xs tracking-[0.15em] uppercase text-foreground">
-              Empire<span className="text-shimmer">.AI</span>
-            </span>
+            {/* Text */}
+            <div className="flex flex-col leading-none">
+              <span className="font-heading font-bold text-[0.8rem] tracking-[0.2em] uppercase text-foreground">
+                EMPIRE
+              </span>
+              <span className="text-[0.55rem] tracking-[0.35em] uppercase font-medium"
+                style={{
+                  background: "linear-gradient(90deg, hsla(265,70%,65%,1), hsla(280,50%,75%,1), hsla(265,70%,65%,1))",
+                  backgroundSize: "200% 100%",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  animation: "gradient-shift 4s ease infinite",
+                }}>
+                AUTONOMOUS AI
+              </span>
+            </div>
           </a>
 
           <div className="hidden lg:flex items-center gap-7">
