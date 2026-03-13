@@ -752,7 +752,7 @@ const LandingPage = () => {
             Tutto Ciò Che Serve,<br className="hidden sm:block" />
             <span className="text-shimmer">in un Unico Posto</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.7]"
+          <motion.p className="text-foreground/50 max-w-[500px] mx-auto text-sm leading-[1.7]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Ogni modulo è stato progettato per eliminare un problema specifico. Nessun software esterno, nessun costo aggiuntivo.
           </motion.p>
