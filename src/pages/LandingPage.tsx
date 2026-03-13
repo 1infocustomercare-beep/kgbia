@@ -389,7 +389,7 @@ const LandingPage = () => {
 
             {/* Headline with staggered word reveal */}
             <motion.h1
-              className="text-[2.5rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold text-foreground tracking-[-0.03em]"
+              className="text-[2.5rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold text-foreground tracking-[-0.03em] drop-shadow-[0_0_40px_hsla(265,85%,65%,0.15)]"
               initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.15, ease: smoothEase }}>
               Modernizziamo
               <br />
@@ -397,10 +397,10 @@ const LandingPage = () => {
             </motion.h1>
 
             {/* Sub */}
-            <motion.p className="mt-6 text-base sm:text-lg text-foreground/45 max-w-[600px] leading-[1.8] font-light"
+            <motion.p className="mt-6 text-base sm:text-lg text-foreground/50 max-w-[600px] leading-[1.8] font-light"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.7 }}>
               La piattaforma AI più completa al mondo. 
-              <span className="text-foreground/65 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie. Tutto in un unico ecosistema che si evolve ogni giorno.</span>
+              <span className="text-foreground/70 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie. Tutto in un unico ecosistema che si evolve ogni giorno.</span>
             </motion.p>
 
 
