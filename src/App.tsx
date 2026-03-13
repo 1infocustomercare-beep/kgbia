@@ -1,4 +1,5 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
+import SplashScreen from "@/components/SplashScreen";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -82,8 +83,17 @@ const PageLoader = () => (
 );
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  // Safety timeout: force dismiss after 2s no matter what
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
   <QueryClientProvider client={queryClient}>
+    {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
     <TooltipProvider>
       <AuthProvider>
         <CartProvider>
