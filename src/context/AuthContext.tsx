@@ -129,6 +129,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
     void (async () => {
       try {
         setLoading(true);
+        setRolesReady(false);
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
 
@@ -136,9 +137,13 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
 
         if (data.session?.user) {
           const fetchedRoles = await fetchRoles(data.session.user.id);
-          if (isMounted) setRoles(fetchedRoles);
+          if (isMounted) {
+            setRoles(fetchedRoles);
+            setRolesReady(true);
+          }
         } else if (isMounted) {
           setRoles([]);
+          setRolesReady(true);
         }
       } catch (error) {
         console.error("Failed to restore auth session", error);
@@ -146,6 +151,7 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
           setSession(null);
           setUser(null);
           setRoles([]);
+          setRolesReady(true);
         }
       } finally {
         if (isMounted) setLoading(false);
