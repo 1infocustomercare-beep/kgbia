@@ -90,7 +90,7 @@ const IndustriesSection = () => {
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: i * 0.08 }}
               >
-                <Card className={`glass border-border/50 hover:border-primary/40 transition-all duration-300 ${ind.comingSoon ? "opacity-60" : ""}`}>
+                <Card className="glass border-border/50 hover:border-primary/40 transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `hsl(${ind.color} / 0.15)` }}>
@@ -98,7 +98,7 @@ const IndustriesSection = () => {
                       </div>
                       <div>
                         <h3 className="font-semibold text-foreground">{ind.label}</h3>
-                        {ind.comingSoon && <span className="text-xs text-primary">Coming Soon</span>}
+                      </div>
                       </div>
                     </div>
                     <p className="text-sm text-muted-foreground">{ind.description}</p>
