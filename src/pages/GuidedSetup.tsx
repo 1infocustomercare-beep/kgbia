@@ -54,6 +54,72 @@ export default function GuidedSetup() {
 
   const isFood = industry === "food";
 
+  useEffect(() => {
+    if (authLoading || !user) return;
+
+    let isMounted = true;
+
+    const redirectIfAlreadyConfigured = async () => {
+      try {
+        if (roles.includes("super_admin")) {
+          navigate("/superadmin", { replace: true });
+          return;
+        }
+
+        const [{ data: membership }, { data: ownedCompany }, { data: ownedRestaurant }] = await Promise.all([
+          supabase
+            .from("company_memberships")
+            .select("company_id")
+            .eq("user_id", user.id)
+            .limit(1)
+            .maybeSingle(),
+          supabase
+            .from("companies")
+            .select("industry")
+            .eq("owner_id", user.id)
+            .limit(1)
+            .maybeSingle(),
+          supabase
+            .from("restaurants")
+            .select("id")
+            .eq("owner_id", user.id)
+            .limit(1)
+            .maybeSingle(),
+        ]);
+
+        if (!isMounted) return;
+
+        let companyIndustry: string | null = ownedCompany?.industry ?? null;
+
+        if (!companyIndustry && membership?.company_id) {
+          const { data: memberCompany } = await supabase
+            .from("companies")
+            .select("industry")
+            .eq("id", membership.company_id)
+            .maybeSingle();
+          companyIndustry = memberCompany?.industry ?? null;
+        }
+
+        if (companyIndustry) {
+          navigate(companyIndustry === "food" ? "/dashboard" : "/app", { replace: true });
+          return;
+        }
+
+        if (ownedRestaurant?.id) {
+          navigate("/dashboard", { replace: true });
+        }
+      } catch (error) {
+        console.error("Failed to validate setup access", error);
+      }
+    };
+
+    void redirectIfAlreadyConfigured();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [authLoading, user, roles, navigate]);
+
   // Dynamic steps based on industry
   const steps: Step[] = isFood
     ? ["industry", "type", "channels", "brand", "done"]
