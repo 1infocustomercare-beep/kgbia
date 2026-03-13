@@ -322,25 +322,44 @@ export default function IndustryDemoPage() {
     address: "Indirizzo", passengers: "Passeggeri", notes: "Note aggiuntive",
   };
 
-  // If NCC industry and we have company data, render the premium NCCPublicSite
-  if (resolvedIndustry === "ncc" && company) {
-    return <NCCPublicSite company={company} />;
-  }
-  // For NCC without DB company, create a fake company object for the premium site
-  if (resolvedIndustry === "ncc" && !company) {
-    const fakeNccCompany = {
+  // ═══ PREMIUM TEMPLATE ROUTING ═══
+  // Route sectors with dedicated premium templates to those templates
+  const PREMIUM_TEMPLATES: Record<string, React.ComponentType<{ company: any }>> = {
+    ncc: NCCPublicSite,
+    beauty: BeautyPublicSite,
+    healthcare: HealthcarePublicSite,
+    retail: RetailPublicSite,
+    fitness: FitnessPublicSite,
+    hospitality: HotelPublicSite,
+    hotel: HotelPublicSite,
+    agriturismo: HotelPublicSite,
+    beach: BeachPublicSite,
+    food: FoodPublicSite,
+    restaurant: FoodPublicSite,
+  };
+
+  const PremiumTemplate = PREMIUM_TEMPLATES[resolvedIndustry];
+  if (PremiumTemplate) {
+    const demoCompany = company || {
       id: "00000000-0000-0000-0000-000000000001",
       name: demoData.companyName,
-      slug: slug || "royal-transfer-roma",
-      industry: "ncc",
+      slug: slug || "demo",
+      industry: resolvedIndustry,
       tagline: demoData.tagline,
-      primary_color: "#D4A017",
+      primary_color: industryConfig.defaultPrimaryColor,
       address: demoData.address,
       city: demoData.city,
       phone: demoData.phone,
       email: demoData.email,
+      opening_hours: demoData.hours,
+      social_links: {},
     };
-    return <NCCPublicSite company={fakeNccCompany} />;
+    return (
+      <>
+        <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
+        <PremiumTemplate company={demoCompany} />
+      </>
+    );
   }
 
   return (
