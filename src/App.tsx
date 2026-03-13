@@ -54,6 +54,7 @@ const SocialPage = lazy(() => import("./pages/app/SocialPage"));
 const ReservationsPage = lazy(() => import("./pages/app/ReservationsPage"));
 const ReviewsPage = lazy(() => import("./pages/app/ReviewsPage"));
 const GenericModulePage = lazy(() => import("./pages/app/GenericModulePage"));
+const WebHubPage = lazy(() => import("./pages/app/WebHubPage"));
 
 // New pages
 const KitchenPage = lazy(() => import("./pages/app/KitchenPage"));
