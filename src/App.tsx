@@ -29,6 +29,7 @@ const MarketingPage = lazy(() => import("./pages/MarketingPage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
 const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 // App layout + adaptive pages
 const AppLayout = lazy(() => import("./components/layout/AppLayout"));
