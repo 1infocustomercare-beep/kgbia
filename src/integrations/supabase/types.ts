@@ -132,6 +132,44 @@ export type Database = {
           },
         ]
       }
+      ai_token_usage: {
+        Row: {
+          company_id: string
+          created_at: string | null
+          feature: string
+          id: string
+          month: number
+          tokens_used: number
+          year: number
+        }
+        Insert: {
+          company_id: string
+          created_at?: string | null
+          feature: string
+          id?: string
+          month: number
+          tokens_used: number
+          year: number
+        }
+        Update: {
+          company_id?: string
+          created_at?: string | null
+          feature?: string
+          id?: string
+          month?: number
+          tokens_used?: number
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_token_usage_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_tokens: {
         Row: {
           balance: number
@@ -3712,6 +3750,156 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscription_modules: {
+        Row: {
+          compatible_sectors: string[] | null
+          created_at: string | null
+          description: string | null
+          display_name: string
+          icon: string | null
+          id: string
+          is_base_feature: boolean | null
+          name: string
+          price_monthly: number | null
+          stripe_price_id: string | null
+        }
+        Insert: {
+          compatible_sectors?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          display_name: string
+          icon?: string | null
+          id?: string
+          is_base_feature?: boolean | null
+          name: string
+          price_monthly?: number | null
+          stripe_price_id?: string | null
+        }
+        Update: {
+          compatible_sectors?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          display_name?: string
+          icon?: string | null
+          id?: string
+          is_base_feature?: boolean | null
+          name?: string
+          price_monthly?: number | null
+          stripe_price_id?: string | null
+        }
+        Relationships: []
+      }
+      subscription_plans: {
+        Row: {
+          ai_tokens: number | null
+          base_features: Json | null
+          created_at: string | null
+          custom_domain: boolean | null
+          display_name: string
+          id: string
+          max_team_members: number | null
+          name: string
+          price_monthly: number
+          price_yearly: number
+          priority_support: boolean | null
+          stripe_price_id_monthly: string | null
+          stripe_price_id_yearly: string | null
+        }
+        Insert: {
+          ai_tokens?: number | null
+          base_features?: Json | null
+          created_at?: string | null
+          custom_domain?: boolean | null
+          display_name: string
+          id?: string
+          max_team_members?: number | null
+          name: string
+          price_monthly?: number
+          price_yearly?: number
+          priority_support?: boolean | null
+          stripe_price_id_monthly?: string | null
+          stripe_price_id_yearly?: string | null
+        }
+        Update: {
+          ai_tokens?: number | null
+          base_features?: Json | null
+          created_at?: string | null
+          custom_domain?: boolean | null
+          display_name?: string
+          id?: string
+          max_team_members?: number | null
+          name?: string
+          price_monthly?: number
+          price_yearly?: number
+          priority_support?: boolean | null
+          stripe_price_id_monthly?: string | null
+          stripe_price_id_yearly?: string | null
+        }
+        Relationships: []
+      }
+      tenant_subscriptions: {
+        Row: {
+          active_modules: string[] | null
+          billing_cycle: string | null
+          company_id: string
+          created_at: string | null
+          id: string
+          plan_id: string
+          renews_at: string | null
+          started_at: string | null
+          status: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          trial_ends_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          active_modules?: string[] | null
+          billing_cycle?: string | null
+          company_id: string
+          created_at?: string | null
+          id?: string
+          plan_id: string
+          renews_at?: string | null
+          started_at?: string | null
+          status?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          trial_ends_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          active_modules?: string[] | null
+          billing_cycle?: string | null
+          company_id?: string
+          created_at?: string | null
+          id?: string
+          plan_id?: string
+          renews_at?: string | null
+          started_at?: string | null
+          status?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          trial_ends_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_subscriptions_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
             referencedColumns: ["id"]
           },
         ]
