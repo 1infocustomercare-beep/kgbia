@@ -542,6 +542,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       </motion.div>
     </div>
   );
-};
+});
+
+AdminLogin.displayName = "AdminLogin";
 
 export default AdminLogin;
