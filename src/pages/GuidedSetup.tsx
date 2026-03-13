@@ -33,7 +33,7 @@ const BUSINESS_ICONS: Record<BusinessType, string> = {
 
 export default function GuidedSetup() {
   const navigate = useNavigate();
-  const { user, roles, loading: authLoading } = useAuth();
+  const { user, roles, loading: authLoading, rolesReady } = useAuth();
   const [saving, setSaving] = useState(false);
 
   // Industry state

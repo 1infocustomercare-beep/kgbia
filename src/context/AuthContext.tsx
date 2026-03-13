@@ -8,6 +8,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  rolesReady: boolean;
   roles: AppRole[];
   isSuperAdmin: boolean;
   isStaff: boolean;

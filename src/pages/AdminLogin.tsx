@@ -23,7 +23,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const refCode = searchParams.get("ref");
-  const { user, roles, loading: authLoading, signIn } = useAuth();
+  const { user, roles, loading: authLoading, rolesReady, signIn } = useAuth();
   const [mode, setMode] = useState<LoginMode>(refCode ? "partner" : "choose");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
