@@ -1411,10 +1411,10 @@ const LandingPage = () => {
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {/* Main plan */}
-          <motion.div className="relative p-7 sm:p-9 rounded-2xl overflow-hidden border border-primary/20 bg-gradient-to-b from-primary/[0.06] to-background"
+          <motion.div className="relative p-7 sm:p-9 rounded-2xl overflow-hidden border border-gold/20 bg-gradient-to-b from-gold/[0.04] via-deep-black/60 to-background"
             variants={fadeScale} whileHover={{ y: -4 }}>
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
-            <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-vibrant-gradient text-[0.55rem] font-bold text-primary-foreground tracking-[2px] font-heading uppercase">Più Scelto</div>
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gold-gradient" />
+            <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-gold-gradient text-[0.55rem] font-bold text-deep-black tracking-[2px] font-heading uppercase">Più Scelto</div>
             <span className="text-[0.6rem] font-heading font-semibold text-primary/60 tracking-[3px] uppercase">Pagamento Unico</span>
             <p className="text-5xl sm:text-6xl font-heading font-bold text-foreground mt-3">€2.997</p>
             <p className="text-[0.65rem] text-foreground/35 mt-1.5">IVA 22% inclusa · Una volta sola</p>
