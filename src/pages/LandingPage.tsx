@@ -1662,7 +1662,7 @@ const LandingPage = () => {
           <motion.button
             onClick={() => navigate("/partner/register")}
             className="px-8 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(217,91%,60%,0.2)" }}
+            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.2)" }}
             whileTap={{ scale: 0.97 }}
           >
             Diventa Partner <ArrowRight className="w-4 h-4" />
