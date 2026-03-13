@@ -94,8 +94,16 @@ const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: strin
 
 /* ═══ Section Divider ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
-  <div ref={ref} className="relative py-1">
+  <div ref={ref} className="section-connector">
     <div className="section-divider" />
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <motion.div
+        className="w-2 h-2 rounded-full bg-primary"
+        style={{ boxShadow: "0 0 12px hsla(265, 85%, 65%, 0.6), 0 0 30px hsla(265, 85%, 65%, 0.3)" }}
+        animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      />
+    </div>
   </div>
 ));
 SectionDivider.displayName = "SectionDivider";
