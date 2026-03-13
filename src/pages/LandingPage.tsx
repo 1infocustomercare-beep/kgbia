@@ -393,9 +393,9 @@ const LandingPage = () => {
         {/* ═══ LAYER 6: Laser scan lines ═══ */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {/* Vertical laser */}
-          <div className="absolute w-full h-[1px] animate-laser-v" style={{ background: "linear-gradient(90deg, transparent, hsla(265, 85%, 65%, 0.4), hsla(200, 90%, 60%, 0.3), transparent)" }} />
+          <div className="absolute w-full h-[1px] animate-laser-v" style={{ background: "linear-gradient(90deg, transparent, hsla(265, 70%, 60%, 0.4), hsla(280, 45%, 68%, 0.3), transparent)" }} />
           {/* Horizontal laser */}
-          <div className="absolute top-0 bottom-0 w-[1px] animate-laser-h" style={{ background: "linear-gradient(180deg, transparent, hsla(320, 75%, 55%, 0.3), hsla(265, 85%, 65%, 0.4), transparent)" }} />
+          <div className="absolute top-0 bottom-0 w-[1px] animate-laser-h" style={{ background: "linear-gradient(180deg, transparent, hsla(300, 35%, 55%, 0.3), hsla(265, 70%, 60%, 0.4), transparent)" }} />
         </div>
 
         {/* ═══ LAYER 7: Electric arcs ═══ */}
