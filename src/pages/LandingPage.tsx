@@ -590,19 +590,46 @@ const LandingPage = () => {
           SETTORI
          ═══════════════════════════════════════════ */}
       <Section id="industries">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Qualsiasi Settore. <span className="text-shimmer">Un Unico Sistema.</span>
           </motion.h2>
-          <motion.p className="text-foreground/50 max-w-[550px] mx-auto leading-[1.7] text-sm"
+          <motion.p className="text-foreground/50 max-w-[550px] mx-auto leading-[1.7] text-sm px-2 sm:px-0"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Empire si adatta automaticamente alla tua industria. Terminologia, moduli, dashboard e flussi operativi cambiano in base al settore — senza configurazioni manuali.
+            Empire si adatta automaticamente alla tua industria. Terminologia, moduli, dashboard e flussi operativi cambiano in base al settore.
           </motion.p>
         </div>
 
-        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+        {/* ═══ Mobile: Auto-scroll carousel ═══ */}
+        <div className="sm:hidden overflow-hidden -mx-5">
+          <div className="flex animate-carousel-scroll whitespace-nowrap py-2">
+            {[...industries, ...industries].map((ind, i) => {
+              const slug = DEMO_SLUGS[ind.id];
+              const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+              return (
+                <div key={i} className="inline-block w-[200px] flex-shrink-0 mx-2 whitespace-normal">
+                  <div className="group relative p-5 rounded-2xl glow-card text-center cursor-pointer h-full"
+                    onClick={() => navigate(demoPath)}>
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-primary-foreground mx-auto mb-3 group-hover:scale-110 transition-all duration-500`}>
+                      {ind.icon}
+                    </div>
+                    <h3 className="font-heading text-xs font-bold text-foreground mb-1">{ind.title}</h3>
+                    <p className="text-[0.6rem] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
+                    <p className="text-[0.5rem] text-primary/50 font-heading tracking-wider">{ind.modules}</p>
+                    <span className="mt-2 inline-flex items-center gap-1 text-[0.6rem] font-bold text-primary/60">
+                      Demo <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ═══ Desktop: Grid ═══ */}
+        <motion.div className="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {industries.map((ind, i) => {
             const slug = DEMO_SLUGS[ind.id];
