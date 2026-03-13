@@ -1328,35 +1328,59 @@ const LandingPage = () => {
           TESTIMONIALS — Auto-scroll carousel
          ═══════════════════════════════════════════ */}
       <Section id="testimonials">
-        <div className="text-center mb-10 sm:mb-12">
-          <SectionLabel text="Storie di Successo" icon={<Star className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+        {/* Ambient glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full opacity-[0.04]"
+            style={{ background: "radial-gradient(circle, hsl(265,70%,60%), transparent 70%)" }} />
+        </div>
+
+        <div className="text-center mb-14 sm:mb-16">
+          <SectionLabel text="Storie di Successo" icon={<Star className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Risultati Reali, <span className="text-shimmer">Settori Diversi</span>
           </motion.h2>
+          <motion.p className="text-foreground/35 max-w-[440px] mx-auto text-sm leading-relaxed"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "-30px" }}>
+            Imprenditori come te che hanno trasformato il loro business
+          </motion.p>
         </div>
 
-        {/* Premium Carousel */}
-        <PremiumCarousel speed="slow" itemWidth={320} fullWidth>
+        <PremiumCarousel speed="slow" itemWidth={340} fullWidth>
           {testimonials.map((t, i) => (
-            <div key={i} className="p-6 sm:p-8 rounded-2xl glow-card text-center h-full flex flex-col">
-              <div className="flex gap-0.5 justify-center mb-3">
-                {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="w-3.5 h-3.5 text-accent fill-accent" />)}
-              </div>
-              <span className="text-3xl mb-3 block">{t.emoji}</span>
-              <blockquote className="text-sm text-foreground/60 leading-[1.7] mb-4 italic flex-1">
-                "{t.quote}"
-              </blockquote>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/[0.08] text-[0.65rem] text-primary font-bold font-heading tracking-wider mb-3 mx-auto">
-                <TrendingUp className="w-3 h-3" /> {t.metric}
-              </div>
-              <div className="flex items-center justify-center gap-2.5">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/25 to-accent/15 flex items-center justify-center text-foreground/60 text-xs font-bold font-heading">
-                  {t.name.charAt(0)}
+            <div key={i} className="group relative h-full">
+              {/* Card */}
+              <div className="relative p-7 sm:p-8 rounded-2xl h-full flex flex-col border border-border/40 bg-card/60 backdrop-blur-sm transition-all duration-500 group-hover:border-primary/20 group-hover:shadow-[0_0_40px_-12px_hsla(265,70%,60%,0.12)]">
+                {/* Top accent line */}
+                <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+                
+                {/* Quote icon */}
+                <div className="mb-5">
+                  <Quote className="w-5 h-5 text-primary/25" />
                 </div>
-                <div className="text-left">
-                  <h4 className="font-heading text-xs font-semibold text-foreground">{t.name}</h4>
-                  <p className="text-[0.6rem] text-foreground/35">{t.role}</p>
+
+                {/* Testimonial text */}
+                <blockquote className="text-[0.8rem] sm:text-sm text-foreground/55 leading-[1.85] mb-6 flex-1">
+                  {t.quote}
+                </blockquote>
+
+                {/* Metric badge */}
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-primary/[0.06] border border-primary/10 text-[0.65rem] text-primary font-semibold font-heading tracking-wider mb-5 self-start">
+                  <TrendingUp className="w-3 h-3" /> {t.metric}
+                </div>
+
+                {/* Divider */}
+                <div className="h-px bg-border/30 mb-5" />
+
+                {/* Author */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full border border-primary/15 bg-primary/[0.05] flex items-center justify-center text-foreground/50 text-xs font-bold font-heading">
+                    {t.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h4 className="font-heading text-xs font-semibold text-foreground/80">{t.name}</h4>
+                    <p className="text-[0.6rem] text-foreground/30 mt-0.5">{t.role}</p>
+                  </div>
                 </div>
               </div>
             </div>
