@@ -14,6 +14,9 @@ import {
   MessageCircle, AlertTriangle, ShoppingBag, Sparkles,
   ChevronDown, Menu, X
 } from "lucide-react";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
+import bakeryHeroPoster from "@/assets/bakery-croissant.jpg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },

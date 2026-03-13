@@ -12,6 +12,8 @@ import {
   Heart, Truck, Shield, ArrowRight, MessageCircle,
   CreditCard, Award, RefreshCw, Package, ChevronDown, Quote, Instagram, Menu, X, ChevronLeft, ChevronRight, Sparkles
 } from "lucide-react";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },

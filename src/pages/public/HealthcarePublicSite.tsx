@@ -13,6 +13,8 @@ import {
   Shield, Heart, CheckCircle, Send, Stethoscope, Users,
   Award, Video, FileText, MessageCircle, Activity, ChevronDown, Quote, Menu, X, ChevronLeft, ChevronRight, Sparkles
 } from "lucide-react";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 
 const TEAL = "#00B4A0";
 const BLUE = "#0D3159";

@@ -13,6 +13,9 @@ import {
   ChevronDown, Instagram, UtensilsCrossed, Wine, Flame,
   Heart, Send, Users, Award, MessageCircle, Leaf, Sparkles, Menu, X
 } from "lucide-react";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
+import foodHeroPoster from "@/assets/dish-pasta.jpg";
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4";
 

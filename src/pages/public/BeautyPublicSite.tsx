@@ -14,6 +14,8 @@ import {
   Heart, Sparkles, CheckCircle, Send, ChevronDown, Instagram,
   Users, Award, Quote, ArrowRight, MessageCircle, Menu, X, ChevronLeft, ChevronRight
 } from "lucide-react";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 
 const PINK = "#D4618C";
 const DARK = "#0f0812";

@@ -15,6 +15,8 @@ import {
   Sun, Waves, CheckCircle, Send, ChevronDown,
   Users, CreditCard, Coffee, MessageCircle, Quote, Menu, X, ChevronLeft, ChevronRight, Sparkles, Award
 } from "lucide-react";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 
 const CYAN = "#00BCD4";
 const DARK = "#071018";

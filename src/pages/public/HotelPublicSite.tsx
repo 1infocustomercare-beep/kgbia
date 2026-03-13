@@ -12,6 +12,8 @@ import {
   Bed, Wifi, Coffee, UtensilsCrossed, Waves, Sparkles,
   Users, Award, Heart, MessageCircle, CheckCircle, Tv, Car, ChevronDown, Quote, Menu, X, ChevronLeft, ChevronRight, Shield
 } from "lucide-react";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 
 const BORDEAUX = "#6B2D3E";
 const GOLD = "#C8A951";

@@ -17,6 +17,8 @@ import {
   Sparkles, ChevronDown, Menu, X
 } from "lucide-react";
 import { type IndustryId, getIndustryConfig } from "@/config/industry-config";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },

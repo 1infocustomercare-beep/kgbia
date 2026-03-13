@@ -11,6 +11,8 @@ import {
   Phone, Clock, Calendar, Dumbbell, Flame, Heart, Zap, Users,
   Target, Timer, ArrowRight, MessageCircle, Trophy, ChevronDown, Star, MapPin, Mail, Menu, X, ChevronLeft, ChevronRight, Sparkles, Shield
 } from "lucide-react";
+import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import fallbackHeroVideo from "@/assets/video-features.mp4";
 
 const ORANGE = "#FF6B00";
 const DARK = "#0a0a0a";
