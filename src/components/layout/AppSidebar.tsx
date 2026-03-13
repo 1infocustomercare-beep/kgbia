@@ -37,7 +37,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
     { title: "Cross-Selling", icon: "Target", url: "/app/cross-selling" },
     { title: "Clienti", icon: "UserCog", url: "/app/clients" },
     { title: "Recensioni", icon: "Star", url: "/app/reviews" },
-    { title: "Sito Web", icon: "Store", url: "/app/settings" },
+    { title: "Sito Web", icon: "Store", url: "/app/webhub" },
   ],
   beauty: [
     { title: "Dashboard", icon: "Home", url: "/app" },

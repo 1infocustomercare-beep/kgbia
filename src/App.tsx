@@ -54,6 +54,7 @@ const SocialPage = lazy(() => import("./pages/app/SocialPage"));
 const ReservationsPage = lazy(() => import("./pages/app/ReservationsPage"));
 const ReviewsPage = lazy(() => import("./pages/app/ReviewsPage"));
 const GenericModulePage = lazy(() => import("./pages/app/GenericModulePage"));
+const WebHubPage = lazy(() => import("./pages/app/WebHubPage"));
 
 // New pages
 const KitchenPage = lazy(() => import("./pages/app/KitchenPage"));
@@ -200,6 +201,7 @@ function App() {
                   <Route path="finance" element={<FinancePage />} />
                   <Route path="social" element={<SocialPage />} />
                   <Route path="settings" element={<SettingsPage />} />
+                  <Route path="webhub" element={<WebHubPage />} />
                   <Route path="feature-requests" element={<FeatureRequestsPage />} />
                   <Route path="subscription" element={<SubscriptionPage />} />
                   {/* Catch-all for industry modules in development */}
