@@ -9,6 +9,8 @@ import videoFeatures from "@/assets/video-features.mp4";
 import videoPartner from "@/assets/video-partner-pitch.mp4";
 import videoPartnerRecruit from "@/assets/video-partner-recruit.mp4";
 import videoNccHero from "@/assets/video-ncc-hero.mp4";
+import videoCreativeRistoro from "@/assets/creative-ristoro.mp4";
+import heroRestaurant from "@/assets/hero-restaurant.mp4";
 import heroLanding from "@/assets/hero-landing.jpg";
 import mockupCliente from "@/assets/mockup-cliente.jpg";
 import mockupAdmin from "@/assets/mockup-admin.jpg";
