@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, forwardRef } from "react";
 import type { CartItem, MenuItem } from "@/types/restaurant";
 
 interface CartContextType {
@@ -11,9 +11,13 @@ interface CartContextType {
   clearCart: () => void;
 }
 
+interface CartProviderProps {
+  children: React.ReactNode;
+}
+
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider = forwardRef<unknown, CartProviderProps>(({ children }, _ref) => {
   const [items, setItems] = useState<CartItem[]>([]);
 
   const addItem = useCallback((item: MenuItem) => {
@@ -48,7 +52,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </CartContext.Provider>
   );
-};
+});
+
+CartProvider.displayName = "CartProvider";
 
 export const useCart = () => {
   const ctx = useContext(CartContext);
