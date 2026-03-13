@@ -700,6 +700,8 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
+      <SectionDivider />
+
       {/* ═══════════════════════════════════════════
           VIDEO FEATURES
          ═══════════════════════════════════════════ */}
