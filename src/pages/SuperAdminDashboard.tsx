@@ -881,6 +881,13 @@ const SuperAdminDashboard = () => {
             </div>
           </motion.div>
         )}
+
+        {/* ===== FEATURE REQUESTS ===== */}
+        {!loading && activeTab === "feature_requests" && (
+          <Suspense fallback={<div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+            <FeatureRequestsAdminPage />
+          </Suspense>
+        )}
       </div>
     </div>
   );
