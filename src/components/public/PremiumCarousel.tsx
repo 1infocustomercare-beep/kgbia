@@ -78,19 +78,24 @@ export function PremiumCarousel({
       onTouchStart={() => setIsPaused(true)}
       onTouchEnd={() => setTimeout(() => setIsPaused(false), 3500)}
     >
-      {/* Premium edge masks */}
+      {/* Premium edge masks — narrow translucent blur instead of solid black */}
       <div
-        className="absolute left-0 top-0 bottom-0 w-10 sm:w-24 z-20 pointer-events-none"
+        className="absolute left-0 top-0 bottom-0 w-6 sm:w-16 z-20 pointer-events-none"
         style={{
-          background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background) / 0.6), transparent)`,
+          background: `linear-gradient(to right, hsl(var(--background)) 0%, hsl(var(--background) / 0.5) 50%, transparent 100%)`,
         }}
       />
       <div
-        className="absolute right-0 top-0 bottom-0 w-10 sm:w-24 z-20 pointer-events-none"
+        className="absolute right-0 top-0 bottom-0 w-6 sm:w-16 z-20 pointer-events-none"
         style={{
-          background: `linear-gradient(to left, hsl(var(--background)), hsl(var(--background) / 0.6), transparent)`,
+          background: `linear-gradient(to left, hsl(var(--background)) 0%, hsl(var(--background) / 0.5) 50%, transparent 100%)`,
         }}
       />
+      {/* Subtle edge accent lines */}
+      <div className="absolute left-0 top-[10%] bottom-[10%] w-[1px] z-20 pointer-events-none"
+        style={{ background: `linear-gradient(180deg, transparent, ${accentColor}20, transparent)` }} />
+      <div className="absolute right-0 top-[10%] bottom-[10%] w-[1px] z-20 pointer-events-none"
+        style={{ background: `linear-gradient(180deg, transparent, ${accentColor}20, transparent)` }} />
 
       {/* Scrolling track */}
       <div className={`overflow-hidden ${fullWidth ? "" : "-mx-4 sm:mx-0"}`}>
