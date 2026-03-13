@@ -110,6 +110,7 @@ function App() {
                 <Route path="/partner/register" element={<PartnerRegister />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
 
                 {/* Onboarding */}
                 <Route path="/onboarding" element={
