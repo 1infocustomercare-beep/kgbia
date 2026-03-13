@@ -633,7 +633,7 @@ const LandingPage = () => {
                 </span>
               </motion.button>
               <motion.button
-                onClick={() => navigate("/r/impero-roma")}
+                onClick={() => navigate("/demo")}
                 className="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full border border-foreground/10 text-foreground/70 text-sm font-semibold font-heading tracking-wide hover:border-primary/30 hover:text-foreground hover:bg-primary/[0.04] transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
                 whileHover={{ scale: 1.02 }}
               >
