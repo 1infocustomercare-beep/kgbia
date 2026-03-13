@@ -607,6 +607,8 @@ export default function LuxuryPublicSite({ company }: Props) {
         </p>
       </footer>
 
+      <AutomationShowcase accentColor={p.accent} accentBg="bg-primary" sectorName={config.label.toLowerCase()} darkMode={isDark} />
+
       {/* ═══ FLOATING WHATSAPP ═══ */}
       {(company.phone || socialLinks?.whatsapp) && (
         <a
