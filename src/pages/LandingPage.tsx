@@ -266,26 +266,10 @@ const LandingPage = () => {
           style={{ background: "hsl(280, 45%, 60%)" }} />
         <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.03] top-[120vh] right-[20%]"
           style={{ background: "hsl(265, 60%, 50%)" }} />
-        {/* Particles */}
+        {/* Particles - reduced */}
         <Particle delay={0} size={2} x="10%" y="30%" />
-        <Particle delay={1} size={3} x="85%" y="20%" />
-        <Particle delay={2} size={3} x="70%" y="60%" />
-        <Particle delay={0.5} size={2} x="25%" y="75%" />
+        <Particle delay={2} size={2} x="70%" y="60%" />
         <Particle delay={1.5} size={2} x="50%" y="45%" />
-        <Particle delay={3} size={2} x="90%" y="80%" />
-        <Particle delay={2.2} size={2} x="15%" y="55%" />
-        <Particle delay={0.8} size={3} x="60%" y="15%" />
-        {/* Subtle global data rain */}
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={`global-rain-${i}`} className="absolute top-0 w-px opacity-[0.08]"
-            style={{
-              left: `${15 + i * 18}%`,
-              height: "80px",
-              background: "linear-gradient(180deg, transparent, hsla(265, 70%, 60%, 0.3), transparent)",
-              animation: `data-rain ${6 + i * 2}s linear infinite`,
-              animationDelay: `${i * 1.5}s`,
-            }} />
-        ))}
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
