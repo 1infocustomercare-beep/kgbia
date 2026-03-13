@@ -586,7 +586,7 @@ const LandingPage = () => {
                       initial={{ opacity: 0, y: 40, rotateX: -90 }}
                       animate={{ opacity: 1, y: 0, rotateX: 0 }}
                       transition={{ delay: 0.2 + i * 0.04, duration: 0.5, ease: smoothEase }}
-                      style={{ textShadow: "0 0 40px hsla(265, 85%, 65%, 0.15)" }}
+                      style={{ textShadow: "0 0 40px hsla(217, 85%, 58%, 0.15)" }}
                     >{ch}</motion.span>
                   ))}
                 </span>
