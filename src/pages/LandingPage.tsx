@@ -1733,8 +1733,8 @@ const LandingPage = () => {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <motion.button onClick={() => navigate("/admin")}
-                className="w-full sm:w-auto px-9 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(265,70%,60%,0.25)" }}
+                className="w-full sm:w-auto px-9 py-4 rounded-full bg-gold-gradient text-deep-black font-bold text-sm font-heading tracking-wider uppercase flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(42,80%,55%,0.3)" }}
                 whileTap={{ scale: 0.97 }}
               >
                 Sono un Imprenditore <ArrowRight className="w-4 h-4" />
