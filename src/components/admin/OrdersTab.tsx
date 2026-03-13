@@ -190,12 +190,7 @@ const OrdersTab = ({
               <Key className="w-3 h-3" /> PIN Staff
             </p>
             {existingPins.map(pin => (
-              <div key={pin.id} className="flex items-center justify-between p-2.5 rounded-xl bg-card border border-border/30">
-                <span className="text-sm font-mono font-semibold text-foreground tracking-widest">{pin.pin_code}</span>
-                <span className="text-[10px] text-green-400 font-medium flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400" /> Attivo
-                </span>
-              </div>
+              <PinDisplay key={pin.id} pin={pin} />
             ))}
             <div className="flex gap-2">
               <input type="text" inputMode="numeric" placeholder="Nuovo PIN (4-6 cifre)" value={kitchenPin}
