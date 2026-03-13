@@ -92,7 +92,7 @@ function PremiumBadge() {
 
 interface Props { company: any; }
 
-const HERO_VIDEO = "https://videos.pexels.com/video-files/3998269/3998269-uhd_2560_1440_25fps.mp4";
+const HERO_VIDEO = "https://videos.pexels.com/video-files/6724687/6724687-uhd_2560_1440_25fps.mp4";
 const GALLERY = [
   "https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg?auto=compress&cs=tinysrgb&w=800",
   "https://images.pexels.com/photos/3997391/pexels-photo-3997391.jpeg?auto=compress&cs=tinysrgb&w=800",

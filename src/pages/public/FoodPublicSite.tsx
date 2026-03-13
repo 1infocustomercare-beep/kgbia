@@ -19,7 +19,7 @@ import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import foodHeroPoster from "@/assets/dish-pasta.jpg";
 
-const HERO_VIDEO = "https://videos.pexels.com/video-files/3298572/3298572-uhd_2560_1440_25fps.mp4";
+const HERO_VIDEO = "https://videos.pexels.com/video-files/8626672/8626672-uhd_2560_1440_25fps.mp4";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
