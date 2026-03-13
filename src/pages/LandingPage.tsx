@@ -1752,28 +1752,28 @@ const LandingPage = () => {
 
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
-        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-gold/[0.06] via-deep-black/80 to-primary/[0.04] border border-gold/15 overflow-hidden animated-border">
+        <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.08] via-deep-black/80 to-accent/[0.04] border border-primary/15 overflow-hidden animated-border">
           <div className="absolute inset-0 aurora-mesh opacity-30" />
-          {/* Gold ambient glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[2px]" style={{ background: "linear-gradient(90deg, transparent, hsla(42,80%,55%,0.5), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[40px] blur-[30px]" style={{ background: "hsla(42, 80%, 55%, 0.15)" }} />
+          {/* Violet ambient glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[2px]" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.4), transparent)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[40px] blur-[30px]" style={{ background: "hsla(265, 70%, 60%, 0.12)" }} />
           <div className="relative z-10">
             <motion.div
               initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
             >
-              <Crown className="w-12 h-12 mx-auto mb-6" style={{ color: "hsl(42, 80%, 60%)", filter: "drop-shadow(0 0 40px hsla(42,80%,55%,0.3))" }} />
+              <Crown className="w-12 h-12 mx-auto mb-6 text-primary" style={{ filter: "drop-shadow(0 0 40px hsla(265,70%,60%,0.3))" }} />
             </motion.div>
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
-              Pronto a Costruire il Tuo <span className="text-gold-shimmer">Impero?</span>
+              Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
             </h2>
             <p className="text-sm text-foreground/35 max-w-md mx-auto mb-8">
               25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando. Non restare indietro.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <motion.button onClick={() => navigate("/admin")}
-                className="w-full sm:w-auto px-9 py-4 rounded-full bg-gold-gradient text-deep-black font-bold text-sm font-heading tracking-wider uppercase flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(42,80%,55%,0.3)" }}
+                className="w-full sm:w-auto px-9 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(265,70%,60%,0.25)" }}
                 whileTap={{ scale: 0.97 }}
               >
                 Sono un Imprenditore <ArrowRight className="w-4 h-4" />
