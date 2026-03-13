@@ -604,8 +604,19 @@ const LandingPage = () => {
                       {/* Gradient glow */}
                       <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${ind.gradient} opacity-10 rounded-t-[24px]`} />
                       <div className="relative z-10 flex flex-col items-center">
-                        <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white mb-3 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-                          {ind.icon}
+                        <div className="relative mb-3">
+                          {/* Outer glow ring */}
+                          <div className={`absolute -inset-1.5 rounded-2xl bg-gradient-to-br ${ind.gradient} opacity-30 blur-md group-hover:opacity-60 transition-opacity duration-700 animate-pulse`} />
+                          {/* Logo container */}
+                          <div className={`relative w-12 h-12 rounded-2xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white shadow-[0_4px_20px_rgba(0,0,0,0.3)] group-hover:scale-110 transition-all duration-500 overflow-hidden`}>
+                            {/* Shimmer sweep */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                            {/* Inner border luxury */}
+                            <div className="absolute inset-[1.5px] rounded-[14px] border border-white/20" />
+                            <span className="relative z-10 drop-shadow-md">{ind.icon}</span>
+                          </div>
+                          {/* Gold accent dot */}
+                          <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 shadow-[0_0_6px_rgba(217,170,56,0.6)] z-30" />
                         </div>
                         <h3 className="font-heading text-[11px] font-bold text-foreground mb-1 leading-tight">{ind.title}</h3>
                         <p className="text-[8px] text-foreground/35 leading-[1.4] mb-2 px-1">{ind.desc}</p>
