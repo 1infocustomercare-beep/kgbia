@@ -18,9 +18,9 @@ import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
 import heroLanding from "@/assets/hero-landing.jpg";
 import videoHero from "@/assets/video-hero-empire.mp4";
-import videoIndustries from "@/assets/video-industries.mp4";
-import videoFeatures from "@/assets/video-features.mp4";
-import videoPartner from "@/assets/video-partner-pitch.mp4";
+import heroTechCommand from "@/assets/hero-tech-command.jpg";
+import heroAiPlatform from "@/assets/hero-ai-platform.jpg";
+import heroPartnerLuxury from "@/assets/hero-partner-luxury.jpg";
 import mockupCliente from "@/assets/mockup-cliente.jpg";
 import mockupAdmin from "@/assets/mockup-admin.jpg";
 import mockupCucina from "@/assets/mockup-cucina.jpg";
@@ -713,7 +713,7 @@ const LandingPage = () => {
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="order-1 lg:order-2">
             <div className="relative rounded-2xl overflow-hidden glow-card">
-              <video src={videoIndustries} autoPlay muted loop playsInline className="w-full aspect-video object-cover" />
+              <img src={heroTechCommand} alt="Empire AI Command Center" className="w-full aspect-video object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-l from-background/50 via-transparent to-transparent pointer-events-none" />
             </div>
           </motion.div>
@@ -1047,7 +1047,7 @@ const LandingPage = () => {
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }}>
             <div className="relative rounded-2xl overflow-hidden glow-card">
-              <video src={videoFeatures} autoPlay muted loop playsInline className="w-full aspect-video object-cover" />
+              <img src={heroAiPlatform} alt="Empire AI Platform" className="w-full aspect-video object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-transparent pointer-events-none" />
             </div>
           </motion.div>
@@ -1469,7 +1469,7 @@ const LandingPage = () => {
         <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
           initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
           transition={{ duration: 0.6 }}>
-          <video src={videoPartner} autoPlay muted loop playsInline className="w-full aspect-video object-cover rounded-2xl" />
+          <img src={heroPartnerLuxury} alt="Empire Partner Program" className="w-full aspect-video object-cover rounded-2xl" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
         </motion.div>
       </Section>
