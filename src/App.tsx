@@ -221,6 +221,14 @@ function App() {
                   <Route path="webhub" element={<WebHubPage />} />
                   <Route path="feature-requests" element={<FeatureRequestsPage />} />
                   <Route path="subscription" element={<SubscriptionPage />} />
+                  {/* Part 6 — AI Marketplace + Sector pages */}
+                  <Route path="ai-marketplace" element={<AIMarketplacePage />} />
+                  <Route path="kitchen-display" element={<KitchenDisplayPage />} />
+                  <Route path="live-map" element={<LiveFleetMapPage />} />
+                  <Route path="loyalty" element={<LoyaltyPage />} />
+                  <Route path="telemedicine" element={<TelemedicinePage />} />
+                  <Route path="project-timeline" element={<ProjectTimelinePage />} />
+                  <Route path="field-dispatch" element={<FieldDispatchPage />} />
                   {/* Catch-all for industry modules in development */}
                   <Route path="*" element={<GenericModulePage />} />
                 </Route>
