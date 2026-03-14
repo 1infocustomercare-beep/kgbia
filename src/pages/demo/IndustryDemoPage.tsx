@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
+const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -366,6 +367,9 @@ export default function IndustryDemoPage() {
       <>
         <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
         <PremiumTemplate company={demoCompany} />
+        <Suspense fallback={null}>
+          <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={demoCompany.primary_color || industryConfig.defaultPrimaryColor} />
+        </Suspense>
       </>
     );
   }
@@ -880,6 +884,10 @@ export default function IndustryDemoPage() {
           <span className="hidden sm:inline">{demoData.bookingLabel}</span>
         </motion.button>
       </div>
+
+      <Suspense fallback={null}>
+        <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={theme.accent} />
+      </Suspense>
     </div>
   );
 }
