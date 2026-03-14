@@ -41,7 +41,8 @@ const pillars = [
 
 const milestones = [
   { sales: 2, monthly: "€1.994", label: "Stipendio Dirigente", icon: <Star className="w-4 h-4" /> },
-  { sales: 4, monthly: "€4.488", label: "€3.988 + €500 Bonus + Team Leader", icon: <Gift className="w-4 h-4" /> },
+  { sales: 3, monthly: "€3.491", label: "€2.991 + €500 Bonus", icon: <Gift className="w-4 h-4" /> },
+  { sales: 4, monthly: "€3.988", label: "€3.988 + Sblocco Team Leader", icon: <Crown className="w-4 h-4" /> },
   { sales: 5, monthly: "€6.485", label: "€4.985 + €1.500 Bonus", icon: <Trophy className="w-4 h-4" /> },
   { sales: 10, monthly: "€11.470", label: "Libertà Finanziaria", icon: <Crown className="w-4 h-4" /> },
 ];

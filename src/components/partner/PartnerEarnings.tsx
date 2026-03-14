@@ -196,7 +196,7 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
           </div>
         </div>
         <p className="text-[10px] text-muted-foreground text-center mt-1">
-          Override €50 dalla 4ª vendita per membro · Bonus: €500 per 3 vendite/mese · €1.500 per 5 vendite/mese
+          Override €50 dalla 5ª vendita per membro · Bonus: €500 per 3 vendite/mese · €1.500 per 5 vendite/mese
         </p>
       </div>
 

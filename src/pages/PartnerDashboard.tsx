@@ -603,7 +603,7 @@ const PartnerDashboard = () => {
                   €{totalOverrides.toLocaleString()}
                 </motion.p>
                 <div className="flex items-center gap-3 mt-2">
-                  <span className="text-[10px] text-sky-400 font-medium">€50 × vendite idonee (dalla 5ª)</span>
+                  <span className="text-[10px] text-sky-400 font-medium">€50 × vendite idonee (dalla 5ª per membro)</span>
                   <span className="text-[10px] text-muted-foreground">·</span>
                   <span className="text-[10px] text-muted-foreground">{teamMembers.length} partner attivi</span>
                 </div>
