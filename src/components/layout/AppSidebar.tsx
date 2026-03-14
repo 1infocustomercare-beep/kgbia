@@ -31,6 +31,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Prenotazioni", icon: "Calendar", url: "/app/bookings" },
     { title: "Flotta", icon: "Car", url: "/app/fleet" },
+    { title: "Flotta Live", icon: "MapPin", url: "/app/live-map" },
     { title: "Autisti", icon: "Users", url: "/app/drivers" },
     { title: "Tratte", icon: "Route", url: "/app/routes" },
     { title: "Prezzi", icon: "CreditCard", url: "/app/pricing" },
@@ -44,11 +45,13 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Appuntamenti", icon: "Calendar", url: "/app/appointments" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
+    { title: "Fedeltà", icon: "Star", url: "/app/loyalty" },
   ],
   healthcare: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Agenda", icon: "Calendar", url: "/app/appointments" },
     { title: "Pazienti", icon: "Users", url: "/app/clients" },
+    { title: "Telemedicina", icon: "Heart", url: "/app/telemedicine" },
   ],
   retail: [
     { title: "Dashboard", icon: "Home", url: "/app" },
@@ -75,12 +78,14 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
   plumber: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Interventi", icon: "Wrench", url: "/app/interventions" },
+    { title: "Dispatch", icon: "MapPin", url: "/app/field-dispatch" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
     { title: "Magazzino", icon: "Package", url: "/app/inventory" },
   ],
   electrician: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Lavori", icon: "Zap", url: "/app/interventions" },
+    { title: "Dispatch", icon: "MapPin", url: "/app/field-dispatch" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
     { title: "Materiali", icon: "Package", url: "/app/inventory" },
   ],
@@ -92,6 +97,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
   cleaning: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Servizi", icon: "ClipboardCheck", url: "/app/interventions" },
+    { title: "Dispatch", icon: "MapPin", url: "/app/field-dispatch" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
   ],
   legal: [
@@ -120,12 +126,14 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
   construction: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Cantieri", icon: "Wrench", url: "/app/interventions" },
+    { title: "Timeline", icon: "Calendar", url: "/app/project-timeline" },
     { title: "Committenti", icon: "Users", url: "/app/clients" },
     { title: "Materiali", icon: "Package", url: "/app/inventory" },
   ],
   gardening: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Lavori", icon: "Leaf", url: "/app/interventions" },
+    { title: "Dispatch", icon: "MapPin", url: "/app/field-dispatch" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
     { title: "Materiali", icon: "Package", url: "/app/inventory" },
   ],
@@ -168,6 +176,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
 };
 
 const COMMON_NAV = [
+  { title: "AI Marketplace", icon: "Sparkles", url: "/app/ai-marketplace" },
   { title: "Team", icon: "Briefcase", url: "/app/team" },
   { title: "Automazioni", icon: "Sparkles", url: "/app/automations" },
   { title: "Payroll", icon: "Receipt", url: "/app/payroll" },

@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import { type IndustryId } from "@/config/industry-config";
 import { LiveSitePreview } from "@/components/app/LiveSitePreview";
 import { SitePreviewOverlay } from "@/components/app/SitePreviewOverlay";
+import { AIInsightsWidget } from "@/components/app/AIInsightsWidget";
 
 /* ── Animation variants ─────────────────────────────────── */
 const containerVariants = {
@@ -434,7 +435,10 @@ function DashboardShell({
 
       {/* Main content + Live Preview side by side on desktop */}
       <div className="relative z-10 flex gap-6">
-        <div className="flex-1 min-w-0">{children}</div>
+        <div className="flex-1 min-w-0 space-y-4">
+          {children}
+          <AIInsightsWidget sector={industry} />
+        </div>
 
         {/* Live iPhone Preview - hidden on mobile, visible on lg+ */}
         {company?.slug && (
