@@ -1787,57 +1787,64 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* Grid — 2 col mobile, 3 tablet, 4 desktop — compact cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {allSectors.slice(0, showAllSectors ? allSectors.length : INITIAL_SHOW).map((id, idx) => {
-            const cfg = INDUSTRY_CONFIGS[id];
-            const demo = DEMO_INDUSTRY_DATA[id];
-            return (
-              <motion.div key={id}
-                className="rounded-xl border border-white/[0.06] p-3 hover:border-white/15 transition-all duration-500 cursor-pointer group relative overflow-hidden"
-                style={{ background: `linear-gradient(135deg, ${cfg.defaultPrimaryColor}10, transparent 70%)` }}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-30px" }}
-                transition={{ duration: 0.35, delay: idx * 0.025 }}
-                onClick={() => navigate(`/demo/${id}`)}
-              >
-                {/* Glow accent */}
-                <div className="absolute top-0 right-0 w-16 h-16 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-y-1/2 translate-x-1/2"
-                  style={{ background: `radial-gradient(circle, ${cfg.defaultPrimaryColor}20, transparent 70%)` }} />
+        {/* Grid — each sector = 1 iPhone preview with unique screen style */}
+        {(() => {
+          // Rotate screen types so each sector shows a different interface
+          const screenTypes = [
+            { label: "Home", type: "hero" },
+            { label: "Catalogo", type: "services" },
+            { label: "Prenota", type: "booking" },
+            { label: "Dashboard", type: "dashboard" },
+            { label: "Analytics", type: "analytics" },
+            { label: "Clienti", type: "crm" },
+            { label: "Notifiche", type: "notifications" },
+            { label: "Settings", type: "settings" },
+          ];
+          const visibleSectors = allSectors.slice(0, showAllSectors ? allSectors.length : INITIAL_SHOW);
+          return (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 justify-items-center">
+              {visibleSectors.map((id, idx) => {
+                const cfg = INDUSTRY_CONFIGS[id];
+                const demo = DEMO_INDUSTRY_DATA[id];
+                const sectorStyle = getSectorStyle(id);
+                const screenType = screenTypes[idx % screenTypes.length];
+                return (
+                  <motion.div key={id}
+                    className="flex flex-col items-center cursor-pointer group"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-30px" }}
+                    transition={{ duration: 0.4, delay: idx * 0.04 }}
+                    onClick={() => navigate(`/demo/${id}`)}
+                  >
+                    {/* Sector label above phone */}
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <span className="text-sm">{cfg.emoji}</span>
+                      <span className="text-[10px] font-bold text-foreground/70 truncate max-w-[100px]">{cfg.label}</span>
+                    </div>
 
-                {/* Emoji + Label */}
-                <div className="flex items-center gap-2 mb-2.5">
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
-                    style={{ background: `${cfg.defaultPrimaryColor}12`, border: `1px solid ${cfg.defaultPrimaryColor}18` }}>
-                    {cfg.emoji}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-[11px] font-bold text-foreground truncate leading-tight">{cfg.label}</h3>
-                    <p className="text-[9px] text-foreground/30 truncate">{demo.companyName}</p>
-                  </div>
-                </div>
+                    {/* Single iPhone preview */}
+                    <IPhoneFrame
+                      screen={screenType}
+                      color={cfg.defaultPrimaryColor}
+                      emoji={cfg.emoji}
+                      companyName={demo.companyName}
+                      services={demo.services}
+                      index={idx}
+                      sectorStyle={sectorStyle}
+                    />
 
-                {/* Mini feature pills */}
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {(cfg.modules || []).slice(0, 3).map((mod, i) => (
-                    <span key={i} className="text-[8px] px-1.5 py-0.5 rounded-full border border-white/[0.06] text-foreground/35 bg-white/[0.02] truncate max-w-[80px]">
-                      {typeof mod === 'string' ? mod : mod.label}
-                    </span>
-                  ))}
-                </div>
-
-                {/* CTA row */}
-                <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-medium group-hover:text-foreground/70 transition-colors" style={{ color: cfg.defaultPrimaryColor + 'aa' }}>
-                    Vedi Demo
-                  </span>
-                  <ChevronRight className="w-3 h-3 text-foreground/15 group-hover:text-foreground/40 group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+                    {/* Screen type badge */}
+                    <div className="mt-1 px-2.5 py-0.5 rounded-full text-[7px] font-bold tracking-wider uppercase border group-hover:scale-105 transition-transform"
+                      style={{ color: cfg.defaultPrimaryColor + 'cc', borderColor: cfg.defaultPrimaryColor + '25', background: cfg.defaultPrimaryColor + '08' }}>
+                      {screenType.label}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          );
+        })()}
 
         {/* Show more / less */}
         {allSectors.length > INITIAL_SHOW && (
