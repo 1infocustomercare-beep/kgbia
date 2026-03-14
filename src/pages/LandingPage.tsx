@@ -945,7 +945,7 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: Auto-scrolling horizontal carousel ═══ */}
+        {/* ═══ Pain Points — DNA helix staggered list ═══ */}
         {(() => {
           const painData = [
             { icon: <Banknote className="w-4 h-4" />, title: "Commissioni", desc: "Piattaforme terze che divorano i margini. Su €10K/mese, €3K vanno in fee.", stat: "-30%", color: "from-red-500/80 to-orange-500/80" },
@@ -957,28 +957,69 @@ const LandingPage = () => {
           ];
           return (
             <>
-              {/* Mobile carousel */}
-              <div className="sm:hidden">
-                <PremiumCarousel speed="slow" itemWidth={200} showControls={false}>
-                  {painData.map((pain, i) => (
-                    <div key={i} className="w-[200px]">
-                      <PremiumCard glow scan delay={i} className="p-4 h-full">
-                        <motion.div className="absolute -top-2.5 right-3 px-2.5 py-0.5 rounded-full bg-background border border-primary/15 text-[0.55rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg z-20 overflow-hidden"
-                          animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
-                          transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>
-                          <span className="relative z-10">{pain.stat}</span>
+              {/* Mobile: DNA helix vertical list */}
+              <div className="sm:hidden relative">
+                {/* Central DNA spine */}
+                <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2" style={{ background: "linear-gradient(180deg, transparent, hsla(265,70%,60%,0.15) 10%, hsla(265,70%,60%,0.15) 90%, transparent)" }} />
+                
+                <div className="flex flex-col gap-5">
+                  {painData.map((pain, i) => {
+                    const isLeft = i % 2 === 0;
+                    return (
+                      <motion.div
+                        key={i}
+                        className={`relative flex ${isLeft ? "justify-start pr-[52%]" : "justify-end pl-[52%]"}`}
+                        initial={{ opacity: 0, x: isLeft ? -40 : 40, scale: 0.9 }}
+                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                        viewport={{ once: true, margin: "-30px" }}
+                        transition={{ duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        {/* DNA node on spine */}
+                        <motion.div
+                          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
+                          initial={{ scale: 0 }}
+                          whileInView={{ scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.12 + 0.2, type: "spring", stiffness: 400, damping: 15 }}
+                        >
+                          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "hsla(265,80%,65%,0.5)", boxShadow: "0 0 8px hsla(265,80%,65%,0.3)" }} />
                         </motion.div>
-                        <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
-                          {pain.icon}
-                        </PremiumIcon>
-                        <div className="mt-3">
-                          <h3 className="font-heading text-xs font-semibold text-foreground mb-1">{pain.title}</h3>
-                          <p className="text-[0.65rem] text-foreground/35 leading-[1.6]">{pain.desc}</p>
-                        </div>
-                      </PremiumCard>
-                    </div>
-                  ))}
-                </PremiumCarousel>
+                        
+                        {/* Connector line from card to spine */}
+                        <motion.div
+                          className={`absolute top-1/2 h-px -translate-y-1/2 ${isLeft ? "right-[48%] left-auto w-[6%]" : "left-[48%] right-auto w-[6%]"}`}
+                          style={{ background: "hsla(265,70%,60%,0.2)" }}
+                          initial={{ scaleX: 0 }}
+                          whileInView={{ scaleX: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.12 + 0.1, duration: 0.3 }}
+                        />
+
+                        <PremiumCard glow scan delay={i} className="p-3.5 w-full">
+                          <div className="flex items-start gap-2.5">
+                            <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.2}>
+                              {pain.icon}
+                            </PremiumIcon>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-2 mb-1">
+                                <h3 className="font-heading text-xs font-semibold text-foreground">{pain.title}</h3>
+                                <motion.span
+                                  className="text-[0.55rem] font-heading font-bold tracking-wider px-2 py-0.5 rounded-full border border-primary/15"
+                                  style={{ color: "hsla(35,45%,55%,0.6)" }}
+                                  animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
+                                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}
+                                >
+                                  {pain.stat}
+                                </motion.span>
+                              </div>
+                              <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{pain.desc}</p>
+                            </div>
+                          </div>
+                        </PremiumCard>
+                      </motion.div>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Desktop: Staggered grid with enhanced animations */}
