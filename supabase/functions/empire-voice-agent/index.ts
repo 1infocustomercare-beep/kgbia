@@ -240,18 +240,44 @@ Funzionalità: menu digitale, ordini, prenotazioni torte/eventi, gestione produz
 FACCIAMO TUTTO NOI SU MISURA.`,
 };
 
+const LANDING_SECTION_LABELS: Record<string, string> = {
+  hero: "Hero",
+  industries: "Settori",
+  services: "Funzionalità",
+  process: "Processo",
+  app: "App",
+  calculator: "ROI",
+  testimonials: "Testimonianze",
+  pricing: "Prezzi",
+  partner: "Partner",
+  contact: "Contatto",
+};
+
+const ATLAS_STABILITY_PROMPT = `## REGOLE ANTI-CONFUSIONE
+- Usa SEMPRE la cronologia completa per mantenere coerenza.
+- Non contraddirti tra una risposta e l'altra.
+- Se manca un dettaglio, fai 1 domanda rapida di chiarimento invece di inventare.
+- Risposte vocali corte: massimo 2-3 frasi, poi una mini call-to-action.
+- Tono: persuasivo, intelligente, reattivo, professionale.`;
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { messages, mode, pageContent, sectionId } = await req.json();
+    const payload = await req.json();
+    const messages = Array.isArray(payload?.messages) ? payload.messages : [];
+    const mode = payload?.mode as string | undefined;
+    const pageContent = payload?.pageContent as string | undefined;
+    const sectionId = payload?.sectionId as string | undefined;
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const systemMessages = [
-      { role: "system", content: EMPIRE_SYSTEM_PROMPT }
+      { role: "system", content: EMPIRE_SYSTEM_PROMPT },
+      { role: "system", content: ATLAS_STABILITY_PROMPT },
     ];
 
     if (mode === "narrate") {
@@ -262,7 +288,22 @@ serve(async (req) => {
 IMPORTANTE: Usa uno SCENARIO VIVIDO per far immaginare il futuro:
 "Immagina domani mattina: apri il telefono e vedi che durante la notte l'IA ha gestito 3 prenotazioni, risposto a 2 clienti, e lanciato una campagna marketing. Tu non hai fatto nulla. Questo è Empire."
 
-Sii energico, professionale, e fai SOGNARE.`
+Sii energico, professionale, e fai SOGNARE.`,
+      });
+    }
+
+    if (mode === "landing-assistant") {
+      const sectionLabel = LANDING_SECTION_LABELS[sectionId ?? ""] ?? "Home";
+
+      systemMessages.push({
+        role: "system",
+        content: `## MODALITÀ: ASSISTENTE LIVE HOME PAGE (MOBILE-FIRST)
+- L'utente è in sezione: ${sectionLabel}.
+- Devi essere reattivo: vai subito al punto in 2-3 frasi.
+- Struttura risposta: 1) valore pratico immediato, 2) scenario "Immagina che...", 3) mini CTA.
+- Niente tecnicismi inutili: linguaggio semplice ma premium.
+- Se la domanda è vaga, chiarisci con UNA domanda secca e poi proponi subito un passo concreto.
+- Devi risultare sempre sicuro, intelligente, persuasivo e coerente con i messaggi precedenti.`,
       });
     }
 
@@ -278,7 +319,7 @@ ${pageContent}
 LEGGILO e SPIEGALO in modo persuasivo (max 8-10 frasi). NON elenco puntato — narrativa fluida.
 Usa SCENARI IMMAGINARI: "Immagina che domani il tuo business funzionasse così..."
 Sottolinea che FACCIAMO TUTTO NOI SU MISURA — il cliente non deve fare nulla.
-Concludi con call to action forte.`
+Concludi con call to action forte.`,
       });
     }
 
@@ -313,7 +354,7 @@ ${sectorPrompt}
 - Visionario ma concreto — fai sognare con i piedi per terra
 - Professionale ma caldo
 - Sicuro e appassionato
-- Empatico con le sfide del cliente`
+- Empatico con le sfide del cliente`,
       });
     }
 
@@ -326,6 +367,7 @@ ${sectorPrompt}
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [...systemMessages, ...messages],
+        temperature: 0.45,
         stream: true,
       }),
     });

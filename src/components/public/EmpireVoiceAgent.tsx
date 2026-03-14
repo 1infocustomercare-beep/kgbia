@@ -26,6 +26,19 @@ const SECTION_SCRIPTS: Record<string, string> = {
 
 const SECTION_ORDER = ["hero", "industries", "services", "process", "app", "calculator", "testimonials", "pricing", "partner", "contact"];
 
+const normalizeTextForSpeech = (text: string) =>
+  text
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/#{1,6}\s?/g, "")
+    .replace(/\[(.*?)\]\((.*?)\)/g, "$1")
+    .replace(/[>*_~]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 700);
+
 // ── TTS helper ──
 async function speakText(
   text: string,
@@ -34,6 +47,9 @@ async function speakText(
 ): Promise<boolean> {
   if (abortRef.current) return false;
 
+  const normalizedText = normalizeTextForSpeech(text);
+  if (!normalizedText) return false;
+
   try {
     const resp = await fetch(TTS_URL, {
       method: "POST",
@@ -41,22 +57,30 @@ async function speakText(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text: normalizedText }),
     });
 
-    if (!resp.ok) return false;
-    if (abortRef.current) return false;
+    if (!resp.ok || abortRef.current) return false;
 
     const { audioContent } = await resp.json();
     if (!audioContent || abortRef.current) return false;
 
     return await new Promise<boolean>((resolve) => {
       const audio = new Audio(`data:audio/mpeg;base64,${audioContent}`);
+      audio.preload = "auto";
+
       if (audioRef.current) audioRef.current.pause();
       audioRef.current = audio;
 
       audio.onended = () => resolve(true);
       audio.onerror = () => resolve(false);
+
+      if (abortRef.current) {
+        audio.pause();
+        resolve(false);
+        return;
+      }
+
       audio.play().catch(() => resolve(false));
     });
   } catch {
@@ -79,31 +103,81 @@ async function streamChat({
     },
     body: JSON.stringify({ messages, mode, pageContent, sectionId }),
   });
-  if (!resp.ok || !resp.body) throw new Error(`Stream failed: ${resp.status}`);
+
+  if (!resp.ok) {
+    let errorMessage = `Richiesta fallita (${resp.status})`;
+    try {
+      const errorBody = await resp.json();
+      errorMessage = errorBody?.error || errorMessage;
+    } catch {
+      // noop
+    }
+    throw new Error(errorMessage);
+  }
+
+  if (!resp.body) {
+    throw new Error("Nessun flusso di risposta ricevuto");
+  }
 
   const reader = resp.body.getReader();
   const decoder = new TextDecoder();
-  let buf = "";
-  let done = false;
+  let textBuffer = "";
+  let streamDone = false;
 
-  while (!done) {
-    const { done: d, value } = await reader.read();
-    if (d) break;
-    buf += decoder.decode(value, { stream: true });
-    let idx: number;
-    while ((idx = buf.indexOf("\n")) !== -1) {
-      let line = buf.slice(0, idx);
-      buf = buf.slice(idx + 1);
+  while (!streamDone) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    textBuffer += decoder.decode(value, { stream: true });
+
+    let newlineIndex: number;
+    while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+      let line = textBuffer.slice(0, newlineIndex);
+      textBuffer = textBuffer.slice(newlineIndex + 1);
+
       if (line.endsWith("\r")) line = line.slice(0, -1);
+      if (line.startsWith(":")) continue;
+      if (line.trim() === "") continue;
       if (!line.startsWith("data: ")) continue;
-      const json = line.slice(6).trim();
-      if (json === "[DONE]") { done = true; break; }
+
+      const jsonStr = line.slice(6).trim();
+      if (jsonStr === "[DONE]") {
+        streamDone = true;
+        break;
+      }
+
       try {
-        const c = JSON.parse(json).choices?.[0]?.delta?.content;
-        if (c) onDelta(c);
-      } catch { buf = line + "\n" + buf; break; }
+        const parsed = JSON.parse(jsonStr);
+        const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+        if (content) onDelta(content);
+      } catch {
+        textBuffer = line + "\n" + textBuffer;
+        break;
+      }
     }
   }
+
+  if (textBuffer.trim()) {
+    for (let rawLine of textBuffer.split("\n")) {
+      if (!rawLine) continue;
+      if (rawLine.endsWith("\r")) rawLine = rawLine.slice(0, -1);
+      if (rawLine.startsWith(":")) continue;
+      if (rawLine.trim() === "") continue;
+      if (!rawLine.startsWith("data: ")) continue;
+
+      const jsonStr = rawLine.slice(6).trim();
+      if (jsonStr === "[DONE]") continue;
+
+      try {
+        const parsed = JSON.parse(jsonStr);
+        const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+        if (content) onDelta(content);
+      } catch {
+        // ignore leftover partial
+      }
+    }
+  }
+
   onDone();
 }
 
@@ -126,6 +200,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("hero");
   const [narratedSections, setNarratedSections] = useState<Set<string>>(new Set());
   const [autoNarrating, setAutoNarrating] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<InstanceType<NonNullable<typeof SpeechRecognition>> | null>(null);
@@ -138,11 +213,32 @@ const EmpireVoiceAgent: React.FC = () => {
   const sectionQueueRef = useRef<string[]>([]);
   const queueProcessingRef = useRef(false);
   const narrationAttemptsRef = useRef<Record<string, number>>({});
+  const introStartedRef = useRef(false);
 
   // Sync refs
   useEffect(() => { messagesRef.current = messages; }, [messages]);
   useEffect(() => { voiceEnabledRef.current = voiceEnabled; }, [voiceEnabled]);
   useEffect(() => { autoNarratingRef.current = autoNarrating; }, [autoNarrating]);
+
+  useEffect(() => {
+    if (!SpeechRecognition) setMode("chat");
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(pointer: coarse)");
+    const updateTouchState = () => setIsTouchDevice(mediaQuery.matches);
+    updateTouchState();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateTouchState);
+      return () => mediaQuery.removeEventListener("change", updateTouchState);
+    }
+
+    mediaQuery.addListener(updateTouchState);
+    return () => mediaQuery.removeListener(updateTouchState);
+  }, []);
 
   // Auto-scroll chat
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
@@ -262,7 +358,14 @@ const EmpireVoiceAgent: React.FC = () => {
     void processNarrationQueue();
   }, [processNarrationQueue]);
 
-  // ── Stop everything ──
+  const startIntroNarration = useCallback(() => {
+    if (introStartedRef.current || !voiceEnabledRef.current) return;
+
+    introStartedRef.current = true;
+    autoNarratingRef.current = true;
+    setAutoNarrating(true);
+    enqueueSectionNarration("hero", true);
+  }, [enqueueSectionNarration]);
   const stopAll = useCallback(() => {
     abortRef.current = true;
     autoNarratingRef.current = false;
@@ -301,17 +404,19 @@ const EmpireVoiceAgent: React.FC = () => {
     enqueueSectionNarration(currentSection);
   }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
-  // ── Auto-start: show button only (chat stays CLOSED) ──
+  // ── Auto-start: show button, autoplay only on desktop ──
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-      autoNarratingRef.current = true;
-      setAutoNarrating(true);
-      enqueueSectionNarration("hero", true);
-    }, 2500);
+    }, 1600);
 
     return () => clearTimeout(timer);
-  }, [enqueueSectionNarration]);
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible || isTouchDevice) return;
+    startIntroNarration();
+  }, [isVisible, isTouchDevice, startIntroNarration]);
 
   // ── Send user message (chat / voice) ──
   const sendMessage = useCallback(async (text: string) => {
@@ -340,28 +445,47 @@ const EmpireVoiceAgent: React.FC = () => {
     try {
       await streamChat({
         messages: allMessages,
+        mode: "landing-assistant",
+        sectionId: currentSection,
         onDelta: upsert,
-        onDone: () => {
+        onDone: async () => {
           setIsLoading(false);
-          if (voiceEnabledRef.current && full.length > 0 && full.length < 2000 && !abortRef.current) {
-            setIsSpeaking(true);
-            speakText(full, audioRef, abortRef).then(() => {
-              if (!abortRef.current) setIsSpeaking(false);
-            });
-          }
+          const shouldSpeak = voiceEnabledRef.current && full.length > 0 && full.length < 2000 && !abortRef.current;
+          if (!shouldSpeak) return;
+
+          setIsSpeaking(true);
+          await speakText(full, audioRef, abortRef);
+          if (!abortRef.current) setIsSpeaking(false);
         },
       });
-    } catch {
+    } catch (error) {
       setIsLoading(false);
-      setMessages((prev) => [...prev, { role: "assistant", content: "Mi scuso, c'è stato un problema. Riprova tra un momento." }]);
+      const fallbackMessage = "Mi scuso, c'è stato un problema. Riprova tra un momento.";
+      const message = error instanceof Error ? error.message : fallbackMessage;
+      setMessages((prev) => [...prev, { role: "assistant", content: message || fallbackMessage }]);
     }
-  }, [isLoading, stopAll]);
+  }, [currentSection, isLoading, stopAll]);
 
   // ── Voice recognition ──
-  const startListening = useCallback(() => {
-    if (!SpeechRecognition) return;
+  const startListening = useCallback(async () => {
+    if (!SpeechRecognition) {
+      setMode("chat");
+      return;
+    }
+
     stopAll();
     abortRef.current = false;
+
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Per usare la voce su mobile, abilita l'accesso al microfono del browser e riprova." }
+      ]);
+      return;
+    }
+
     const recognition = new SpeechRecognition();
     recognition.lang = "it-IT";
     recognition.interimResults = true;
@@ -381,14 +505,23 @@ const EmpireVoiceAgent: React.FC = () => {
     };
     recognition.onerror = () => { setIsListening(false); setLiveTranscript(""); };
     recognition.onend = () => { setIsListening(false); setLiveTranscript(""); };
-    recognition.start();
-    setIsListening(true);
+
+    try {
+      recognition.start();
+      setIsListening(true);
+    } catch {
+      setIsListening(false);
+    }
   }, [sendMessage, stopAll]);
 
   // ── Toggle panel (does NOT stop audio — voice keeps playing) ──
   const toggleOpen = useCallback(() => {
-    setIsOpen((prev) => !prev);
-  }, []);
+    setIsOpen((prev) => {
+      const next = !prev;
+      if (next) startIntroNarration();
+      return next;
+    });
+  }, [startIntroNarration]);
 
   // ── Render ──
   return (
@@ -509,8 +642,10 @@ const EmpireVoiceAgent: React.FC = () => {
                   >
                     <img src={voiceAgentAvatar} alt="Assistente" className="w-8 h-8 rounded-full object-cover" />
                   </motion.div>
-                  <p className="text-xs text-foreground/30 text-center max-w-[200px]">
-                    Ciao! Sono ATLAS. Ti guido attraverso Empire mentre scorri la pagina.
+                  <p className="text-xs text-foreground/30 text-center max-w-[220px] leading-relaxed">
+                    {isTouchDevice && !autoNarrating
+                      ? "Tocca il pulsante audio: attivo subito la guida vocale italiana in tempo reale."
+                      : "Ciao! Sono ATLAS. Ti guido attraverso Empire mentre scorri la pagina."}
                   </p>
                 </div>
               )}
