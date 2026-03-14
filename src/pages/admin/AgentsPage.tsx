@@ -739,12 +739,16 @@ export default function AgentsPage() {
       {/* Header */}
       <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border px-4 md:px-6 py-4">
         <div className="flex items-center justify-between max-w-[1600px] mx-auto">
-          <div>
-            <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-              <Brain className="w-6 h-6 text-primary" />
-              Intelligence Hub — Agenti IA
-            </h1>
-            <p className="text-sm text-muted-foreground mt-0.5">Gestisci, modifica, testa e monitora tutti gli agenti IA</p>
+          <div className="flex items-center gap-3">
+            <BackButton variant="inline" fallback="/superadmin" />
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2">
+                <Brain className="w-6 h-6 text-primary" />
+                Intelligence Hub — Agenti IA
+              </h1>
+              <p className="text-sm text-muted-foreground mt-0.5">Gestisci, modifica, testa e monitora tutti gli agenti IA</p>
+            </div>
+          </div>
           </div>
           <div className="flex items-center gap-2">
             <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 animate-pulse">
