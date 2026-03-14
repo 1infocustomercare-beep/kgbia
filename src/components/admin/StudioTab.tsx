@@ -655,6 +655,23 @@ const StudioTab = ({
         </div>
       )}
 
+      {/* ===== FOOD PHOTO GENERATOR ===== */}
+      {section === "foodphoto" && restaurant && (
+        <FoodPhotoGenerator
+          restaurantId={restaurant.id}
+          aiTokens={aiTokens}
+          setAiTokens={setAiTokens}
+          onPhotoGenerated={(url, name) => {
+            // If there's a menu item with matching name, update its image
+            const matchItem = menuItems.find(i => i.name.toLowerCase() === name.toLowerCase());
+            if (matchItem) {
+              supabase.from("menu_items").update({ image_url: url }).eq("id", matchItem.id).then(() => {
+                setMenuItems(prev => prev.map(i => i.id === matchItem.id ? { ...i, image: url } : i));
+              });
+            }
+          }}
+        />
+      )
       {/* ===== TRANSLATE ===== */}
       {section === "translate" && (
         <div className="space-y-4">
