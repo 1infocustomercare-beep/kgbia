@@ -1821,7 +1821,7 @@ const LandingPage = () => {
                     transition={{ delay: i * 0.12 + 0.35, duration: 0.35 }}
                   />
 
-                  <PremiumCard glow scan delay={i} className="p-4 sm:p-4.5">
+                  <PremiumCard glow scan delay={i} className="p-4 sm:p-4">
                     <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
                       <span className="text-primary">{card.icon}</span>
                     </PremiumIcon>
