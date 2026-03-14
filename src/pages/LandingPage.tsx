@@ -3564,14 +3564,15 @@ const LandingPage = () => {
                 const sectorStyle = getSectorStyle(id);
                 const screenType = SECTOR_BEST_SCREEN[id] || fallbackScreenTypes[idx % fallbackScreenTypes.length];
                 const clr = cfg.defaultPrimaryColor;
+                const isExpanded = expandedSector === id;
                 return (
                   <motion.div key={id}
-                    className="flex flex-col items-center cursor-pointer group relative"
+                    className={`flex flex-col items-center group relative ${isExpanded ? 'col-span-2 sm:col-span-3 lg:col-span-4' : ''}`}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-30px" }}
                     transition={{ duration: 0.5, delay: idx * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                    onClick={() => navigate(`/demo/${id}`)}
+                    layout
                   >
                     {/* Ambient glow behind card */}
                     <div className="absolute -inset-2 rounded-3xl blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"
@@ -3584,30 +3585,131 @@ const LandingPage = () => {
                       <span className="text-[9px] font-bold tracking-wider uppercase truncate max-w-[90px]" style={{ color: `${clr}dd` }}>{cfg.label}</span>
                     </div>
 
-                    {/* iPhone preview — with hover lift */}
-                    <div className="transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.03]">
-                      <IPhoneFrame
-                        screen={screenType}
-                        color={clr}
-                        emoji={cfg.emoji}
-                        companyName={demo.companyName}
-                        services={demo.services}
-                        index={idx}
-                        sectorStyle={sectorStyle}
-                        industryId={id}
-                      />
-                    </div>
+                    <AnimatePresence mode="wait">
+                      {!isExpanded ? (
+                        /* ── Collapsed: single iPhone preview ── */
+                        <motion.div
+                          key="collapsed"
+                          className="cursor-pointer transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.03]"
+                          onClick={() => setExpandedSector(id)}
+                          initial={{ opacity: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <IPhoneFrame
+                            screen={screenType}
+                            color={clr}
+                            emoji={cfg.emoji}
+                            companyName={demo.companyName}
+                            services={demo.services}
+                            index={idx}
+                            sectorStyle={sectorStyle}
+                            industryId={id}
+                          />
+                        </motion.div>
+                      ) : (
+                        /* ── Expanded: all 8 screens ── */
+                        <motion.div
+                          key="expanded"
+                          className="w-full"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        >
+                          {/* Expanded container with glassmorphism */}
+                          <div className="rounded-2xl border backdrop-blur-md p-4 sm:p-6"
+                            style={{ borderColor: `${clr}20`, background: `linear-gradient(135deg, hsla(0,0%,100%,0.02), ${clr}08)` }}>
+                            
+                            {/* All screens grid */}
+                            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4 justify-items-center mb-4">
+                              {[
+                                { label: "Home", type: "hero" },
+                                { label: "Catalogo", type: "services" },
+                                { label: "Prenota", type: "booking" },
+                                { label: "Dashboard", type: "dashboard" },
+                                { label: "Analytics", type: "analytics" },
+                                { label: "Clienti", type: "crm" },
+                                { label: "Notifiche", type: "notifications" },
+                                { label: "Settings", type: "settings" },
+                              ].map((screen, si) => (
+                                <motion.div key={screen.type} className="flex flex-col items-center"
+                                  initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                                  transition={{ duration: 0.4, delay: si * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                                >
+                                  <div className="transform scale-[0.65] sm:scale-75 origin-top">
+                                    <IPhoneFrame
+                                      screen={screen}
+                                      color={clr}
+                                      emoji={cfg.emoji}
+                                      companyName={demo.companyName}
+                                      services={demo.services}
+                                      index={si}
+                                      sectorStyle={sectorStyle}
+                                      industryId={id}
+                                    />
+                                  </div>
+                                  <span className="text-[7px] font-bold tracking-widest uppercase mt-1"
+                                    style={{ color: `${clr}aa` }}>{screen.label}</span>
+                                </motion.div>
+                              ))}
+                            </div>
+
+                            {/* Action buttons */}
+                            <div className="flex items-center justify-center gap-3">
+                              <motion.button
+                                onClick={() => navigate(`/demo/${id}`)}
+                                className="px-4 py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-wider uppercase flex items-center gap-2 transition-all duration-300 hover:scale-105"
+                                style={{
+                                  background: `linear-gradient(135deg, ${clr}, ${clr}cc)`,
+                                  color: "white",
+                                  boxShadow: `0 4px 20px ${clr}40`,
+                                }}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5 }}
+                              >
+                                <Eye className="w-3.5 h-3.5" /> Prova Demo Live
+                              </motion.button>
+                              <motion.button
+                                onClick={() => setExpandedSector(null)}
+                                className="px-4 py-2 rounded-xl text-[10px] sm:text-xs font-semibold border text-foreground/50 hover:text-foreground hover:border-foreground/25 transition-all duration-300"
+                                style={{ borderColor: `${clr}20` }}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.55 }}
+                              >
+                                Chiudi
+                              </motion.button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
 
                     {/* Screen type badge — glowing pill */}
-                    <div className="mt-2 px-3 py-1 rounded-full text-[7px] font-bold tracking-widest uppercase border transition-all duration-300 group-hover:shadow-lg"
-                      style={{
-                        color: `${clr}cc`,
-                        borderColor: `${clr}30`,
-                        background: `linear-gradient(135deg, ${clr}06, ${clr}12)`,
-                        boxShadow: `0 0 0 0 ${clr}00`,
-                      }}>
-                      {screenType.label}
-                    </div>
+                    {!isExpanded && (
+                      <div className="mt-2 flex items-center gap-1.5">
+                        <div className="px-3 py-1 rounded-full text-[7px] font-bold tracking-widest uppercase border transition-all duration-300 group-hover:shadow-lg cursor-pointer"
+                          onClick={(e) => { e.stopPropagation(); setExpandedSector(id); }}
+                          style={{
+                            color: `${clr}cc`,
+                            borderColor: `${clr}30`,
+                            background: `linear-gradient(135deg, ${clr}06, ${clr}12)`,
+                          }}>
+                          {screenType.label}
+                        </div>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setExpandedSector(id); }}
+                          className="w-5 h-5 rounded-full flex items-center justify-center border transition-all duration-300 hover:scale-110"
+                          style={{ borderColor: `${clr}30`, background: `${clr}10`, color: `${clr}cc` }}
+                          title="Vedi tutte le schermate"
+                        >
+                          <Layers className="w-2.5 h-2.5" />
+                        </button>
+                      </div>
+                    )}
                   </motion.div>
                 );
               })}
