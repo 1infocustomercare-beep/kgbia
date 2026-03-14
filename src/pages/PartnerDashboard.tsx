@@ -484,7 +484,7 @@ const PartnerDashboard = () => {
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       { label: "Cliente", emoji: "👤", href: `/r/${demoRestaurant.slug}` },
-                      { label: "Admin", emoji: "⚙️", href: `/dashboard` },
+                      { label: "Admin", emoji: "⚙️", href: `/r/${demoRestaurant.slug}?view=admin` },
                       { label: "Cucina", emoji: "👨‍🍳", href: `/kitchen` },
                     ].map((link, i) => (
                       <a key={i} href={link.href} target="_blank" rel="noopener noreferrer"
