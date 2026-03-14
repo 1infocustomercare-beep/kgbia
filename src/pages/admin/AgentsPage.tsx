@@ -7,7 +7,8 @@ import {
   XCircle, Info, ChevronRight, Clock, Hash, Search, Filter,
   ArrowUpRight, ArrowDownRight, Medal, ChevronDown, X, Send,
   ToggleLeft, ToggleRight, Check, Loader2, Sparkles, Mic, Volume2, Phone, MessageSquare,
-  Pencil, Save, Trash2, Plus, Power, PowerOff, Copy
+  Pencil, Save, Trash2, Plus, Power, PowerOff, Copy,
+  Bell, ShieldCheck, FileText, Car, Scissors, Heart, Wrench, ChefHat
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
