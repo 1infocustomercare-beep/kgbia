@@ -1191,9 +1191,9 @@ const LandingPage = () => {
                 {/* Corner glow */}
                 <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary/[0.06] blur-2xl group-hover:bg-primary/[0.12] transition-all duration-700" />
                 <div className="relative z-10">
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center text-primary mb-3 ring-1 ring-primary/10 group-hover:scale-110 group-hover:ring-primary/25 transition-all duration-500">
-                    {item.icon}
-                  </div>
+                  <PremiumIcon gradient="from-primary/25 to-accent/15" size="md" delay={i * 0.4}>
+                    <span className="text-primary">{item.icon}</span>
+                  </PremiumIcon>
                   <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
                   <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
                 </div>
