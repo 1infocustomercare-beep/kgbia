@@ -798,48 +798,162 @@ export default function AgentsPage() {
           </div>
         )}
 
-        {/* Charts */}
+        {/* Charts — Futuristic DNA Panel */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2 bg-card border border-border rounded-xl p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-sm">📊 Uso AI per Giorno</h3>
-              <div className="flex bg-muted rounded-lg p-0.5">
-                <button className={`px-3 py-1 text-xs rounded-md transition ${chartMode === "calls" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`} onClick={() => setChartMode("calls")}>Chiamate</button>
-                <button className={`px-3 py-1 text-xs rounded-md transition ${chartMode === "cost" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`} onClick={() => setChartMode("cost")}>Costo €</button>
+          {/* Main Chart */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, type: "spring" }}
+            className="lg:col-span-2 relative overflow-hidden rounded-xl"
+            style={{
+              background: "linear-gradient(135deg, hsl(var(--card)), hsl(var(--card)) 60%, hsl(var(--primary) / 0.04))",
+              border: "1px solid hsl(var(--primary) / 0.15)",
+            }}
+          >
+            {/* DNA helix accent top */}
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.5), hsl(var(--accent) / 0.4), transparent)" }} />
+            {/* Scanning beam */}
+            <motion.div
+              className="absolute top-0 left-0 w-full h-full pointer-events-none"
+              style={{ background: "linear-gradient(180deg, hsl(var(--primary) / 0.03) 0%, transparent 8%, transparent 92%, hsl(var(--primary) / 0.03) 100%)" }}
+            />
+            {/* Corner HUD accents */}
+            <div className="absolute top-2 left-2 w-4 h-4 border-l border-t border-primary/25 rounded-tl-sm" />
+            <div className="absolute top-2 right-2 w-4 h-4 border-r border-t border-primary/25 rounded-tr-sm" />
+            <div className="absolute bottom-2 left-2 w-4 h-4 border-l border-b border-primary/25 rounded-bl-sm" />
+            <div className="absolute bottom-2 right-2 w-4 h-4 border-r border-b border-primary/25 rounded-br-sm" />
+
+            <div className="relative p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "hsl(var(--primary) / 0.12)", border: "1px solid hsl(var(--primary) / 0.2)" }}>
+                    <BarChart3 className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm text-foreground">Attività AI Giornaliera</h3>
+                    <p className="text-[10px] text-muted-foreground">Ultimi 14 giorni — analisi in tempo reale</p>
+                  </div>
+                </div>
+                <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid hsl(var(--primary) / 0.2)" }}>
+                  <button
+                    className={`px-3.5 py-1.5 text-xs font-medium transition-all ${chartMode === "calls" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "text-muted-foreground hover:text-foreground bg-card"}`}
+                    onClick={() => setChartMode("calls")}
+                  >
+                    <Activity className="w-3 h-3 inline mr-1" />Chiamate
+                  </button>
+                  <button
+                    className={`px-3.5 py-1.5 text-xs font-medium transition-all ${chartMode === "cost" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "text-muted-foreground hover:text-foreground bg-card"}`}
+                    onClick={() => setChartMode("cost")}
+                  >
+                    <DollarSign className="w-3 h-3 inline mr-1" />Costo €
+                  </button>
+                </div>
+              </div>
+              <ResponsiveContainer width="100%" height={200}>
+                <AreaChart data={mock.dailyData}>
+                  <defs>
+                    {AGENTS.slice(0, 5).map((a, i) => (
+                      <linearGradient key={a.name} id={`grad-${a.name}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={PIE_COLORS[i % PIE_COLORS.length]} stopOpacity={0.4} />
+                        <stop offset="100%" stopColor={PIE_COLORS[i % PIE_COLORS.length]} stopOpacity={0.02} />
+                      </linearGradient>
+                    ))}
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.4} />
+                  <XAxis dataKey="day" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 9 }} axisLine={{ stroke: "hsl(var(--border))" }} tickLine={false} />
+                  <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 9 }} axisLine={false} tickLine={false} width={35} />
+                  <RechartsTooltip
+                    contentStyle={{
+                      background: "hsl(var(--card) / 0.95)",
+                      backdropFilter: "blur(12px)",
+                      border: "1px solid hsl(var(--primary) / 0.2)",
+                      borderRadius: 10,
+                      color: "hsl(var(--foreground))",
+                      fontSize: 11,
+                      boxShadow: "0 8px 32px hsl(var(--primary) / 0.1)",
+                    }}
+                  />
+                  {AGENTS.slice(0, 5).map((a, i) => (
+                    <Area
+                      key={a.name}
+                      dataKey={a.name}
+                      stackId="a"
+                      fill={`url(#grad-${a.name})`}
+                      stroke={PIE_COLORS[i % PIE_COLORS.length]}
+                      strokeWidth={1.5}
+                      name={a.displayName.split(" — ")[0]}
+                    />
+                  ))}
+                </AreaChart>
+              </ResponsiveContainer>
+              {/* Mini legend */}
+              <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 justify-center">
+                {AGENTS.slice(0, 5).map((a, i) => (
+                  <span key={a.name} className="text-[9px] flex items-center gap-1 text-muted-foreground">
+                    <span className="w-2 h-2 rounded-full shadow-sm" style={{ background: PIE_COLORS[i % PIE_COLORS.length], boxShadow: `0 0 6px ${PIE_COLORS[i % PIE_COLORS.length]}44` }} />
+                    {a.displayName.split(" — ")[0].split(" ").slice(0, 2).join(" ")}
+                  </span>
+                ))}
               </div>
             </div>
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={mock.dailyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="day" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} />
-                <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} />
-                <RechartsTooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, color: "hsl(var(--foreground))" }} />
-                <Legend wrapperStyle={{ fontSize: 10 }} />
-                {AGENTS.map((a, i) => (
-                  <Bar key={a.name} dataKey={a.name} stackId="a" fill={PIE_COLORS[i % PIE_COLORS.length]} name={a.displayName.split(" — ")[0]} />
+          </motion.div>
+
+          {/* Pie Chart */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
+            className="relative overflow-hidden rounded-xl"
+            style={{
+              background: "linear-gradient(160deg, hsl(var(--card)), hsl(var(--card)) 70%, hsl(var(--accent) / 0.04))",
+              border: "1px solid hsl(var(--accent) / 0.15)",
+            }}
+          >
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--accent) / 0.5), hsl(var(--primary) / 0.4), transparent)" }} />
+            <div className="absolute top-2 left-2 w-4 h-4 border-l border-t border-accent/25 rounded-tl-sm" />
+            <div className="absolute top-2 right-2 w-4 h-4 border-r border-t border-accent/25 rounded-tr-sm" />
+
+            <div className="relative p-5">
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "hsl(var(--accent) / 0.12)", border: "1px solid hsl(var(--accent) / 0.2)" }}>
+                  <Activity className="w-4 h-4 text-accent" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-foreground">Distribuzione Agenti</h3>
+                  <p className="text-[10px] text-muted-foreground">Chiamate per agente — mese corrente</p>
+                </div>
+              </div>
+              <ResponsiveContainer width="100%" height={180}>
+                <PieChart>
+                  <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={72} paddingAngle={3} dataKey="value" strokeWidth={0}>
+                    {pieData.map((entry, i) => (
+                      <Cell key={i} fill={entry.color} style={{ filter: `drop-shadow(0 0 4px ${entry.color}33)` }} />
+                    ))}
+                  </Pie>
+                  <RechartsTooltip
+                    contentStyle={{
+                      background: "hsl(var(--card) / 0.95)",
+                      backdropFilter: "blur(12px)",
+                      border: "1px solid hsl(var(--accent) / 0.2)",
+                      borderRadius: 10,
+                      color: "hsl(var(--foreground))",
+                      fontSize: 11,
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-1 mt-2">
+                {pieData.slice(0, 8).map((p, i) => (
+                  <span key={i} className="text-[9px] flex items-center gap-1.5 text-muted-foreground truncate">
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ background: p.color, boxShadow: `0 0 6px ${p.color}44` }} />
+                    <span className="truncate">{p.name.split(" ").slice(0, 2).join(" ")}</span>
+                    <span className="ml-auto text-foreground/60 font-mono text-[8px]">{p.value}</span>
+                  </span>
                 ))}
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-4">
-            <h3 className="font-semibold text-sm mb-3">🥧 Distribuzione per Agente</h3>
-            <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
-                <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value">
-                  {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-                </Pie>
-                <RechartsTooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, color: "hsl(var(--foreground))" }} />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {pieData.map((p, i) => (
-                <span key={i} className="text-[10px] flex items-center gap-1 text-muted-foreground">
-                  <span className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-                  {p.name.split(" ")[0]}
-                </span>
-              ))}
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Agent Grid */}
