@@ -59,6 +59,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#1a0a00",
     bgTo: "#0d0d0d",
     heroEmoji: "🍽️",
+    heroVideo: "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <QrCode className="w-5 h-5" />, title: "Menu Digitale QR", desc: "I clienti scansionano e ordinano dal tavolo" },
       { icon: <BarChart3 className="w-5 h-5" />, title: "Dashboard Vendite", desc: "Revenue, piatti top e trend in tempo reale" },
