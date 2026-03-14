@@ -1580,22 +1580,21 @@ const LandingPage = () => {
             { icon: <Workflow className="w-5 h-5" />, title: "Automazione Totale", desc: "Booking, fatture, reminder, marketing — tutto in autopilot.", accent: "Zero lavoro manuale" },
             { icon: <Rocket className="w-5 h-5" />, title: "Sviluppo Custom", desc: "Moduli dedicati, integrazioni, logiche proprietarie su richiesta.", accent: "Nessun limite" },
           ].map((card, i) => (
-            <motion.div key={i}
-              className="relative p-6 rounded-2xl border border-primary/10 overflow-hidden group"
-              style={{ background: "hsla(265,20%,10%,0.5)" }}
-              variants={fadeScale}
-              whileHover={{ y: -5, borderColor: "hsla(265,70%,60%,0.2)" }}
-            >
-              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.2), transparent)" }} />
-              <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent)" }} />
-              <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
-                <span className="text-primary">{card.icon}</span>
-              </PremiumIcon>
-              <div className="mt-4"></div>
-              <h3 className="font-heading text-sm font-bold text-foreground mb-2">{card.title}</h3>
-              <p className="text-[0.7rem] text-foreground/35 leading-[1.7] mb-3">{card.desc}</p>
-              <span className="text-[0.6rem] font-heading font-semibold text-primary/60 tracking-wider">{card.accent}</span>
+            <motion.div key={i} variants={fadeScale}>
+              <PremiumCard glow scan delay={i} className="p-6">
+                <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
+                  <span className="text-primary">{card.icon}</span>
+                </PremiumIcon>
+                <div className="mt-4"></div>
+                <h3 className="font-heading text-sm font-bold text-foreground mb-2">{card.title}</h3>
+                <p className="text-[0.7rem] text-foreground/35 leading-[1.7] mb-3">{card.desc}</p>
+                <motion.span className="text-[0.6rem] font-heading font-semibold text-primary/60 tracking-wider inline-flex items-center gap-1.5"
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.8 }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                  {card.accent}
+                </motion.span>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
