@@ -122,66 +122,75 @@ const NeuralCellsBackground = () => {
   }, [cells]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.45 }}>
+    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.7 }}>
       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-        {/* Connection lines — breathing */}
+        <defs>
+          <filter id="pulseGlow">
+            <feGaussianBlur stdDeviation="0.3" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+
+        {/* Connection lines — breathing, thicker */}
         {connections.map(({ a, b }, i) => (
           <motion.line
             key={`ln${i}`}
             x1={cells[a].x} y1={cells[a].y}
             x2={cells[b].x} y2={cells[b].y}
-            stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.25)" : "hsla(265,70%,65%,0.2)"}
-            strokeWidth="0.1"
+            stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.35)" : "hsla(265,70%,65%,0.28)"}
+            strokeWidth="0.15"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0.05, 0.25, 0.05] }}
-            transition={{ duration: 6 + (i % 4) * 2, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }}
+            animate={{ opacity: [0.08, 0.35, 0.08] }}
+            transition={{ duration: 5 + (i % 4) * 2, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
           />
         ))}
 
-        {/* Violet data pulses — traveling along connections */}
+        {/* Violet data pulses — larger, glowing */}
         {connections.filter((_, i) => i % 2 === 0).map(({ a, b }, i) => (
           <motion.circle
             key={`vp${i}`}
-            r="0.18"
-            fill="hsla(265,85%,72%,0.8)"
+            r="0.25"
+            fill="hsla(265,90%,72%,0.9)"
+            filter="url(#pulseGlow)"
             initial={{ cx: cells[a].x, cy: cells[a].y, opacity: 0 }}
             animate={{
               cx: [cells[a].x, cells[b].x],
               cy: [cells[a].y, cells[b].y],
-              opacity: [0, 0.8, 0],
+              opacity: [0, 0.9, 0],
             }}
-            transition={{ duration: 2.5 + Math.random() * 2, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }}
+            transition={{ duration: 2 + Math.random() * 2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
           />
         ))}
 
-        {/* Gold data pulses — rarer, opposite direction */}
-        {connections.filter((_, i) => i % 5 === 0).map(({ a, b }, i) => (
+        {/* Gold data pulses — opposite direction */}
+        {connections.filter((_, i) => i % 4 === 0).map(({ a, b }, i) => (
           <motion.circle
             key={`gp${i}`}
-            r="0.14"
-            fill="hsla(38,55%,58%,0.85)"
+            r="0.2"
+            fill="hsla(38,60%,58%,0.9)"
+            filter="url(#pulseGlow)"
             initial={{ cx: cells[b].x, cy: cells[b].y, opacity: 0 }}
             animate={{
               cx: [cells[b].x, cells[a].x],
               cy: [cells[b].y, cells[a].y],
-              opacity: [0, 0.7, 0],
+              opacity: [0, 0.85, 0],
             }}
-            transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: 2 + i * 1, ease: "easeInOut" }}
+            transition={{ duration: 2.5 + Math.random() * 2, repeat: Infinity, delay: 1.5 + i * 0.8, ease: "easeInOut" }}
           />
         ))}
 
-        {/* Junction nodes — tiny breathing dots at intersections */}
-        {cells.filter((_, i) => i % 3 === 0).map((cell) => (
+        {/* Junction nodes — breathing dots */}
+        {cells.filter((_, i) => i % 2 === 0).map((cell) => (
           <motion.circle
             key={`node${cell.id}`}
             cx={cell.x} cy={cell.y}
-            r="0.3"
-            fill="hsla(265,75%,68%,0.35)"
+            r="0.25"
+            fill="hsla(265,80%,70%,0.4)"
             animate={{
-              r: [0.2, 0.45, 0.2],
-              opacity: [0.15, 0.4, 0.15],
+              r: [0.15, 0.4, 0.15],
+              opacity: [0.2, 0.55, 0.2],
             }}
-            transition={{ duration: 4, repeat: Infinity, delay: cell.delay, ease: "easeInOut" }}
+            transition={{ duration: 3.5, repeat: Infinity, delay: cell.delay, ease: "easeInOut" }}
           />
         ))}
       </svg>
