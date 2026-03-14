@@ -27,6 +27,9 @@ import mockupCliente from "@/assets/mockup-cliente.jpg";
 import mockupAdmin from "@/assets/mockup-admin.jpg";
 import mockupCucina from "@/assets/mockup-cucina.jpg";
 import nccHeroBg from "@/assets/ncc-hero-bg-amalfi.jpg";
+import nccPremiumCoast from "@/assets/ncc-premium-coast.jpg";
+import nccPremiumInterior from "@/assets/ncc-premium-interior.jpg";
+import nccFleetShowcase from "@/assets/ncc-fleet-showcase.jpg";
 
 /* ═══════════════════════════════════════════
    HELPERS
@@ -1558,12 +1561,12 @@ const LandingPage = () => {
               ))}
             </div>
             <motion.button
-              onClick={() => navigate("/demo")}
+              onClick={() => navigate("/b/amalfi-luxury-transfer")}
               className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
               whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.2)" }}
               whileTap={{ scale: 0.97 }}
             >
-              Prova la Demo NCC <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+              Scopri Amalfi Luxury Transfer <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
             </motion.button>
           </motion.div>
 
@@ -1585,7 +1588,7 @@ const LandingPage = () => {
                       <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[44px] h-[12px] rounded-full z-30" style={{ background: "hsla(0,0%,5%,1)" }} />
                       <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden" style={{ background: "#0a0a0a" }}>
                         <div className="relative w-full h-[35%]">
-                          <img src={nccHeroBg} alt="NCC Booking" className="w-full h-full object-cover" loading="lazy" />
+                          <img src={nccPremiumCoast} alt="NCC Booking" className="w-full h-full object-cover" loading="lazy" />
                           <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent, #0a0a0a)" }} />
                           <div className="absolute bottom-2 left-2 z-10">
                             <div className="flex items-center gap-1 mb-0.5">
