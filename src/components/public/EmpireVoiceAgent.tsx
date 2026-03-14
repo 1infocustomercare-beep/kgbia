@@ -397,7 +397,7 @@ const EmpireVoiceAgent: React.FC = () => {
       <AnimatePresence>
         {isVisible && (
           <motion.button
-            className="fixed bottom-20 sm:bottom-6 right-4 z-[201] group"
+            className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-4 z-[201] group touch-manipulation"
             onClick={toggleOpen}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -405,8 +405,8 @@ const EmpireVoiceAgent: React.FC = () => {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
           >
-            <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-lg border border-white/10">
-              {isOpen ? <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center"><X className="w-6 h-6 text-white" /></div> : <img src={voiceAgentAvatar} alt="Assistente" className="w-full h-full object-cover" />}
+            <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden shadow-lg border border-white/10">
+              {isOpen ? <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center"><X className="w-5 h-5 sm:w-6 sm:h-6 text-white" /></div> : <img src={voiceAgentAvatar} alt="Assistente" className="w-full h-full object-cover" />}
               {isSpeaking && !isPaused && !isOpen && (
                 <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
               )}
@@ -419,10 +419,11 @@ const EmpireVoiceAgent: React.FC = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-0 sm:bottom-4 right-0 sm:right-4 z-[200] w-full sm:w-[380px] max-h-[85vh] sm:max-h-[600px] flex flex-col rounded-t-2xl sm:rounded-2xl border border-foreground/[0.08] bg-background/95 backdrop-blur-2xl shadow-[0_0_60px_hsla(265,85%,65%,0.15)]"
-            initial={{ opacity: 0, y: 100, scale: 0.9 }}
+            className="fixed bottom-0 right-0 z-[200] w-full sm:w-[380px] sm:bottom-4 sm:right-4 max-h-[70dvh] sm:max-h-[600px] flex flex-col rounded-t-2xl sm:rounded-2xl border border-foreground/[0.08] bg-background/95 backdrop-blur-2xl shadow-[0_0_60px_hsla(265,85%,65%,0.15)]"
+            style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+            initial={{ opacity: 0, y: 100, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 100, scale: 0.9 }}
+            exit={{ opacity: 0, y: 100, scale: 0.95 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
             {/* Header */}
@@ -498,7 +499,7 @@ const EmpireVoiceAgent: React.FC = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[200px] max-h-[400px]">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 min-h-[120px] max-h-[300px] sm:max-h-[400px] overscroll-contain">
               {messages.length === 0 && !isLoading && (
                 <div className="flex flex-col items-center justify-center h-full gap-3 py-8">
                   <motion.div
@@ -609,7 +610,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     <button
                       onClick={isListening ? stopAll : startListening}
                       disabled={isLoading || !SpeechRecognition}
-                      className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-lg ${
+                      className={`w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation ${
                         isListening
                           ? "bg-red-500/20 border-2 border-red-400 text-red-400"
                           : "bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30"
