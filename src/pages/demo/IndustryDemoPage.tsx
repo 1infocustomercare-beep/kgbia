@@ -860,15 +860,7 @@ export default function IndustryDemoPage() {
         </div>
       </AnimSection>
 
-      {/* ═══════ PHONE SHOWCASE ═══════ */}
-      <AnimSection className="py-16 px-4" style={{ background: `linear-gradient(180deg, ${theme.bgTo}, ${theme.bgFrom})` }}>
-        <div className="max-w-4xl mx-auto text-center mb-10">
-          <p className="text-[10px] font-bold tracking-[4px] uppercase mb-2" style={{ color: theme.accent }}>Preview App</p>
-          <h3 className="text-xl sm:text-2xl font-bold text-white/90">Le Tue 4 Interfacce</h3>
-          <p className="text-xs text-white/35 mt-2">Home · Catalogo · Prenotazioni · Dashboard IA</p>
-        </div>
-        <IndustryPhoneShowcase industryId={resolvedIndustry} />
-      </AnimSection>
+      {/* Phone showcase moved to after hero */}
 
       {/* ═══════ FOOTER ═══════ */}
       <footer className="border-t border-white/5 py-8 px-4 text-center">
