@@ -370,6 +370,21 @@ const CompRow = ({ label, empire, others }: { label: string; empire: string; oth
 type PlanTier = "starter" | "professional" | "enterprise";
 type PricingMode = "monthly" | "package";
 
+/* ── Sector config for pricing ── */
+type PricingSector = "food" | "ncc" | "beauty" | "healthcare" | "retail" | "fitness" | "hospitality" | "trades" | "other";
+
+const PRICING_SECTORS: { id: PricingSector; label: string; emoji: string }[] = [
+  { id: "food", label: "Food & Ristorazione", emoji: "🍽️" },
+  { id: "beauty", label: "Beauty & Wellness", emoji: "💇" },
+  { id: "ncc", label: "NCC & Trasporti", emoji: "🚘" },
+  { id: "healthcare", label: "Salute & Cliniche", emoji: "🏥" },
+  { id: "retail", label: "Retail & Negozi", emoji: "🛍️" },
+  { id: "fitness", label: "Fitness & Palestre", emoji: "🏋️" },
+  { id: "hospitality", label: "Hotel & Ospitalità", emoji: "🏨" },
+  { id: "trades", label: "Artigiani & Servizi", emoji: "🔧" },
+  { id: "other", label: "Altro settore", emoji: "🏢" },
+];
+
 interface AiAddon {
   id: string;
   name: string;
@@ -377,19 +392,53 @@ interface AiAddon {
   price: number;
   icon: React.ReactNode;
   popular?: boolean;
-  sectors?: string;
+  sectors: PricingSector[];
 }
 
+const ALL_SECTORS: PricingSector[] = ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality", "trades", "other"];
+
 const AI_ADDONS: AiAddon[] = [
-  { id: "concierge", name: "Concierge AI", desc: "Receptionist 24/7 multi-canale", price: 99, icon: <Bot className="w-4 h-4" />, popular: true, sectors: "Tutti" },
-  { id: "analytics", name: "Analytics Brain", desc: "Previsioni fatturato e churn", price: 149, icon: <LineChart className="w-4 h-4" />, sectors: "Tutti" },
-  { id: "social", name: "Social Manager AI", desc: "Piano editoriale automatico", price: 79, icon: <Globe className="w-4 h-4" />, popular: true, sectors: "Tutti" },
-  { id: "sales", name: "Sales Closer AI", desc: "Lead scoring e follow-up auto", price: 129, icon: <Target className="w-4 h-4" />, sectors: "Tutti" },
-  { id: "document", name: "Document AI", desc: "Fatture e preventivi automatici", price: 49, icon: <ClipboardCheck className="w-4 h-4" />, sectors: "Tutti" },
-  { id: "compliance", name: "Compliance Guardian", desc: "GDPR, scadenze, audit trail", price: 59, icon: <Shield className="w-4 h-4" />, sectors: "Tutti" },
-  { id: "ops-food", name: "Operations — Food", desc: "KDS, food cost, HACCP", price: 149, icon: <ChefHat className="w-4 h-4" />, sectors: "Food" },
-  { id: "ops-ncc", name: "Operations — NCC", desc: "Fleet, dynamic pricing, dispatch", price: 199, icon: <Car className="w-4 h-4" />, sectors: "NCC" },
+  { id: "concierge", name: "Concierge AI", desc: "Receptionist 24/7 multi-canale", price: 99, icon: <Bot className="w-4 h-4" />, popular: true, sectors: ALL_SECTORS },
+  { id: "analytics", name: "Analytics Brain", desc: "Previsioni fatturato e churn", price: 149, icon: <LineChart className="w-4 h-4" />, sectors: ALL_SECTORS },
+  { id: "social", name: "Social Manager AI", desc: "Piano editoriale automatico", price: 79, icon: <Globe className="w-4 h-4" />, popular: true, sectors: ALL_SECTORS },
+  { id: "sales", name: "Sales Closer AI", desc: "Lead scoring e follow-up auto", price: 129, icon: <Target className="w-4 h-4" />, sectors: ALL_SECTORS },
+  { id: "document", name: "Document AI", desc: "Fatture e preventivi automatici", price: 49, icon: <ClipboardCheck className="w-4 h-4" />, sectors: ALL_SECTORS },
+  { id: "compliance", name: "Compliance Guardian", desc: "GDPR, scadenze, audit trail", price: 59, icon: <Shield className="w-4 h-4" />, sectors: ALL_SECTORS },
+  { id: "ops-food", name: "Operations — Food", desc: "KDS, food cost, HACCP", price: 149, icon: <ChefHat className="w-4 h-4" />, sectors: ["food"] },
+  { id: "ops-ncc", name: "Operations — NCC", desc: "Fleet, dynamic pricing, dispatch", price: 199, icon: <Car className="w-4 h-4" />, sectors: ["ncc"] },
+  { id: "ops-beauty", name: "Operations — Beauty", desc: "Agenda smart, prodotti, fidelity", price: 129, icon: <Scissors className="w-4 h-4" />, sectors: ["beauty"] },
+  { id: "ops-health", name: "Operations — Health", desc: "Cartelle, telemedicina, recall", price: 179, icon: <Heart className="w-4 h-4" />, sectors: ["healthcare"] },
+  { id: "ops-retail", name: "Operations — Retail", desc: "Inventario, POS, promozioni", price: 139, icon: <Store className="w-4 h-4" />, sectors: ["retail"] },
+  { id: "ops-fitness", name: "Operations — Fitness", desc: "Classi, abbonamenti, check-in", price: 119, icon: <Dumbbell className="w-4 h-4" />, sectors: ["fitness"] },
+  { id: "ops-hotel", name: "Operations — Hotel", desc: "Rooms, check-in/out, housekeeping", price: 189, icon: <Building className="w-4 h-4" />, sectors: ["hospitality"] },
+  { id: "ops-trades", name: "Operations — Artigiani", desc: "Interventi, preventivi, dispatch", price: 109, icon: <ClipboardCheck className="w-4 h-4" />, sectors: ["trades"] },
 ];
+
+/** Get sector-specific included agent IDs per package tier */
+const SECTOR_INCLUDED_AGENTS: Record<PricingSector, { growth: string[]; empire: string[] }> = {
+  food:        { growth: ["concierge", "ops-food"],  empire: ["concierge", "ops-food", "analytics", "social", "sales"] },
+  ncc:         { growth: ["concierge", "ops-ncc"],   empire: ["concierge", "ops-ncc", "analytics", "sales", "document"] },
+  beauty:      { growth: ["concierge", "ops-beauty"],empire: ["concierge", "ops-beauty", "analytics", "social", "sales"] },
+  healthcare:  { growth: ["concierge", "ops-health"],empire: ["concierge", "ops-health", "analytics", "compliance", "document"] },
+  retail:      { growth: ["concierge", "ops-retail"],empire: ["concierge", "ops-retail", "analytics", "social", "sales"] },
+  fitness:     { growth: ["concierge", "ops-fitness"],empire: ["concierge", "ops-fitness", "analytics", "social", "sales"] },
+  hospitality: { growth: ["concierge", "ops-hotel"], empire: ["concierge", "ops-hotel", "analytics", "social", "sales"] },
+  trades:      { growth: ["concierge", "ops-trades"],empire: ["concierge", "ops-trades", "analytics", "document", "sales"] },
+  other:       { growth: ["concierge", "analytics"], empire: ["concierge", "analytics", "social", "sales", "document"] },
+};
+
+/** Sector-specific features to show in packages */
+const SECTOR_FEATURES: Record<PricingSector, string[]> = {
+  food: ["Menu QR & Ordinazioni digitali", "Kitchen Display System", "HACCP & Food Cost", "Prenotazioni tavoli", "Delivery & Takeaway"],
+  ncc: ["Gestione Flotta & GPS", "Pricing dinamico tratte", "Booking online automatico", "Dispatch autisti", "Fatturazione automatica"],
+  beauty: ["Agenda appuntamenti smart", "Schede clienti & preferenze", "Promozioni automatiche", "Gestione prodotti & magazzino", "Fidelity card digitale"],
+  healthcare: ["Cartelle pazienti digitali", "Telemedicina integrata", "Recall automatici", "Prescrizioni digitali", "Compliance sanitaria"],
+  retail: ["Inventario in tempo reale", "POS integrato", "Promozioni & coupon", "E-commerce integrato", "Analisi vendite"],
+  fitness: ["Gestione classi & corsi", "Abbonamenti & check-in", "Schede allenamento", "Booking lezioni", "Community & social"],
+  hospitality: ["Gestione camere & tariffe", "Check-in/out digitale", "Housekeeping tracker", "Revenue management", "Booking engine"],
+  trades: ["Gestione interventi", "Preventivi automatici", "Dispatch tecnici", "Foto & documenti cantiere", "Fatturazione elettronica"],
+  other: ["Dashboard personalizzata", "CRM Clienti completo", "Automazioni intelligenti", "Reportistica avanzata", "Multi-lingua"],
+};
 
 const PLAN_TIERS: { id: PlanTier; name: string; price: number; desc: string; badge?: string; features: string[]; includedAgents: number }[] = [
   {
