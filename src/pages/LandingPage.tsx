@@ -660,6 +660,30 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
             </span>
           </button>
         </motion.div>
+
+        {/* Sector Selector Dropdown */}
+        <motion.div className="max-w-sm mx-auto mt-4" initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <p className="text-[0.55rem] font-heading text-foreground/30 tracking-[2px] uppercase text-center mb-2">Il tuo settore</p>
+          <div className="relative">
+            <select
+              value={selectedSector}
+              onChange={(e) => { setSelectedSector(e.target.value as PricingSector); setSelectedAddons(new Set()); }}
+              className="w-full appearance-none px-4 py-3 rounded-xl border border-border/30 bg-background/60 backdrop-blur-sm text-foreground text-sm font-heading font-semibold text-center cursor-pointer focus:outline-none focus:border-primary/40 transition-colors"
+            >
+              {PRICING_SECTORS.map(s => (
+                <option key={s.id} value={s.id}>{s.emoji} {s.label}</option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30 pointer-events-none" />
+          </div>
+          {sectorFeatures.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-1.5 mt-2.5">
+              {sectorFeatures.slice(0, 3).map((f, i) => (
+                <span key={i} className="px-2 py-0.5 rounded-full text-[0.5rem] bg-primary/[0.08] text-primary/70 font-medium">{f}</span>
+              ))}
+            </div>
+          )}
+        </motion.div>
       </div>
 
       <AnimatePresence mode="wait">
