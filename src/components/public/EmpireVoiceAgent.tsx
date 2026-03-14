@@ -1,11 +1,14 @@
-// ATLAS Voice Agent v4 — Instant mobile launch + Web Speech API fallback
+// ATLAS Voice Agent v5 — ElevenLabs Conversational AI SDK + fallback
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause } from "lucide-react";
+import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause, Phone, PhoneOff } from "lucide-react";
 import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
+import { useConversation } from "@elevenlabs/react";
+import { supabase } from "@/integrations/supabase/client";
 
 type Msg = { role: "user" | "assistant"; content: string };
+type VoiceMode = "legacy" | "elevenlabs";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-voice-agent`;
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
@@ -308,6 +311,11 @@ const EmpireVoiceAgent: React.FC = () => {
   const [mobilePromptShown, setMobilePromptShown] = useState(false);
   const [userInteracted, setUserInteracted] = useState(false);
 
+  // ElevenLabs Conversational AI states
+  const [voiceMode, setVoiceMode] = useState<VoiceMode>("legacy");
+  const [elevenlabsConnecting, setElevenlabsConnecting] = useState(false);
+  const [elevenlabsAvailable, setElevenlabsAvailable] = useState<boolean | null>(null);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<InstanceType<NonNullable<typeof SpeechRecognition>> | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -321,6 +329,80 @@ const EmpireVoiceAgent: React.FC = () => {
   const narrationAttemptsRef = useRef<Record<string, number>>({});
   const introStartedRef = useRef(false);
   const useBrowserFallbackRef = useRef(false);
+
+  // ── ElevenLabs Conversational AI hook ──
+  const conversation = useConversation({
+    onConnect: () => {
+      console.log("ElevenLabs ConvAI connected");
+      setMessages(prev => [...prev, { role: "assistant", content: "🎙️ Connesso! Parla pure, ti ascolto..." }]);
+    },
+    onDisconnect: () => {
+      console.log("ElevenLabs ConvAI disconnected");
+      setVoiceMode("legacy");
+    },
+    onMessage: (message: any) => {
+      if (message?.type === "user_transcript") {
+        const text = message?.user_transcription_event?.user_transcript;
+        if (text) setMessages(prev => [...prev, { role: "user", content: text }]);
+      } else if (message?.type === "agent_response") {
+        const text = message?.agent_response_event?.agent_response;
+        if (text) setMessages(prev => [...prev, { role: "assistant", content: text }]);
+      }
+    },
+    onError: (error) => {
+      console.error("ElevenLabs ConvAI error:", error);
+      setVoiceMode("legacy");
+    },
+  });
+
+  // Check if ElevenLabs ConvAI is available on mount
+  useEffect(() => {
+    const checkElevenlabs = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("elevenlabs-conversation-token", {
+          body: {},
+        });
+        setElevenlabsAvailable(!error && !!data?.token);
+      } catch {
+        setElevenlabsAvailable(false);
+      }
+    };
+    checkElevenlabs();
+  }, []);
+
+  // Start ElevenLabs conversation
+  const startElevenlabsConversation = useCallback(async () => {
+    setElevenlabsConnecting(true);
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      const { data, error } = await supabase.functions.invoke("elevenlabs-conversation-token", {
+        body: {},
+      });
+
+      if (error || !data?.token) {
+        throw new Error("Token non ricevuto");
+      }
+
+      await conversation.startSession({
+        conversationToken: data.token,
+        connectionType: "webrtc",
+      });
+
+      setVoiceMode("elevenlabs");
+    } catch (err) {
+      console.error("Failed to start ElevenLabs conversation:", err);
+      setMessages(prev => [...prev, { role: "assistant", content: "Non riesco a connettermi all'agente vocale. Usa la modalità classica." }]);
+      setVoiceMode("legacy");
+    } finally {
+      setElevenlabsConnecting(false);
+    }
+  }, [conversation]);
+
+  const stopElevenlabsConversation = useCallback(async () => {
+    await conversation.endSession();
+    setVoiceMode("legacy");
+  }, [conversation]);
 
   // Sync refs
   useEffect(() => { messagesRef.current = messages; }, [messages]);
@@ -756,12 +838,14 @@ const EmpireVoiceAgent: React.FC = () => {
                 <div>
                   <h3 className="text-sm font-bold text-foreground">Laura</h3>
                   <p className="text-[0.55rem] text-foreground/40 tracking-wider uppercase">
-                    {isPaused ? "⏸ In pausa" :
-                     isSpeaking ? "🔊 Sta parlando..." :
-                     isListening ? "🎙️ Ti ascolta..." :
-                     isLoading ? "💭 Sta pensando..." :
-                     autoNarrating ? `📍 ${currentSection}` :
-                     "Empire AI Agent"}
+                    {voiceMode === "elevenlabs" && conversation.status === "connected"
+                      ? conversation.isSpeaking ? "🔊 Conversazione attiva" : "🎙️ Ti ascolta..."
+                      : isPaused ? "⏸ In pausa"
+                      : isSpeaking ? "🔊 Sta parlando..."
+                      : isListening ? "🎙️ Ti ascolta..."
+                      : isLoading ? "💭 Sta pensando..."
+                      : autoNarrating ? `📍 ${currentSection}`
+                      : "Empire AI Agent"}
                   </p>
                 </div>
               </div>
@@ -866,22 +950,23 @@ const EmpireVoiceAgent: React.FC = () => {
             </div>
 
             {/* Voice Wave Visualizer */}
-            {isSpeaking && !isPaused && (
+            {(isSpeaking && !isPaused) || (voiceMode === "elevenlabs" && conversation.status === "connected") ? (
               <div className="flex items-center justify-center gap-[3px] py-2 px-4">
                 {Array.from({ length: 20 }).map((_, i) => {
                   const peak = 8 + ((i * 7) % 14);
                   const speed = 0.6 + ((i % 4) * 0.12);
+                  const isActive = voiceMode === "elevenlabs" ? conversation.isSpeaking : true;
                   return (
                     <motion.div
                       key={i}
                       className="w-[3px] rounded-full bg-primary/50"
-                      animate={{ height: [4, peak, 4] }}
-                      transition={{ duration: speed, repeat: Infinity, delay: i * 0.03, ease: "easeInOut" }}
+                      animate={isActive ? { height: [4, peak, 4] } : { height: 4 }}
+                      transition={{ duration: speed, repeat: isActive ? Infinity : 0, delay: i * 0.03, ease: "easeInOut" }}
                     />
                   );
                 })}
               </div>
-            )}
+            ) : null}
 
             {/* Paused indicator */}
             {isPaused && (
@@ -895,43 +980,86 @@ const EmpireVoiceAgent: React.FC = () => {
             <div className="p-3 border-t border-foreground/[0.06]">
               {mode === "voice" ? (
                 <div className="flex items-center justify-center gap-3">
-                  {/* Pause / Resume */}
-                  {isSpeaking && (
-                    <button
-                      onClick={togglePause}
-                      className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[0.6rem] font-bold tracking-wider uppercase transition-all ${
-                        isPaused
-                          ? "bg-green-500/10 text-green-400 hover:bg-green-500/15"
-                          : "bg-amber-500/10 text-amber-400 hover:bg-amber-500/15"
-                      }`}
-                    >
-                      {isPaused ? <><Play className="w-3.5 h-3.5" /> Riprendi</> : <><Pause className="w-3.5 h-3.5" /> Pausa</>}
-                    </button>
-                  )}
+                  {/* ElevenLabs ConvAI Mode */}
+                  {voiceMode === "elevenlabs" && conversation.status === "connected" ? (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <motion.div
+                          className="w-2.5 h-2.5 rounded-full bg-emerald-400"
+                          animate={{ opacity: [0.4, 1, 0.4] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        />
+                        <span className="text-[0.6rem] text-foreground/50 uppercase tracking-wider font-medium">
+                          {conversation.isSpeaking ? "🔊 Laura parla..." : "🎙️ Ti ascolta..."}
+                        </span>
+                      </div>
+                      <button
+                        onClick={stopElevenlabsConversation}
+                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-destructive/10 text-destructive text-[0.6rem] font-bold tracking-wider uppercase hover:bg-destructive/20 transition-all"
+                      >
+                        <PhoneOff className="w-3.5 h-3.5" /> Chiudi
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      {/* Pause / Resume */}
+                      {isSpeaking && (
+                        <button
+                          onClick={togglePause}
+                          className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[0.6rem] font-bold tracking-wider uppercase transition-all ${
+                            isPaused
+                              ? "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15"
+                              : "bg-amber-500/10 text-amber-400 hover:bg-amber-500/15"
+                          }`}
+                        >
+                          {isPaused ? <><Play className="w-3.5 h-3.5" /> Riprendi</> : <><Pause className="w-3.5 h-3.5" /> Pausa</>}
+                        </button>
+                      )}
 
-                  {/* Mic button */}
-                  {!isSpeaking && (
-                    <button
-                      onClick={isListening ? stopAll : startListening}
-                      disabled={isLoading || !SpeechRecognition}
-                      className={`w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation ${
-                        isListening
-                          ? "bg-red-500/20 border-2 border-red-400 text-red-400"
-                          : "bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30"
-                      } disabled:opacity-30`}
-                    >
-                      {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-                    </button>
-                  )}
+                      {/* ElevenLabs ConvAI button (primary) */}
+                      {!isSpeaking && elevenlabsAvailable && (
+                        <button
+                          onClick={startElevenlabsConversation}
+                          disabled={elevenlabsConnecting || isLoading}
+                          className="w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30 disabled:opacity-30"
+                          title="Conversazione vocale IA"
+                        >
+                          {elevenlabsConnecting ? (
+                            <motion.div className="w-5 h-5 border-2 border-white/60 border-t-white rounded-full" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+                          ) : (
+                            <Phone className="w-5 h-5" />
+                          )}
+                        </button>
+                      )}
 
-                  {/* Stop */}
-                  {isSpeaking && (
-                    <button
-                      onClick={stopAll}
-                      className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-foreground/[0.05] text-foreground/50 text-[0.6rem] font-bold tracking-wider uppercase hover:bg-foreground/[0.08] transition-all"
-                    >
-                      <Square className="w-3.5 h-3.5" /> Stop
-                    </button>
+                      {/* Legacy Mic button (fallback or secondary) */}
+                      {!isSpeaking && (
+                        <button
+                          onClick={isListening ? stopAll : startListening}
+                          disabled={isLoading || !SpeechRecognition}
+                          className={`${elevenlabsAvailable ? "w-10 h-10" : "w-14 h-14"} rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation ${
+                            isListening
+                              ? "bg-destructive/20 border-2 border-destructive text-destructive"
+                              : elevenlabsAvailable
+                                ? "bg-secondary text-foreground/60 hover:bg-secondary/80"
+                                : "bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30"
+                          } disabled:opacity-30`}
+                          title={elevenlabsAvailable ? "Domanda singola" : "Parla"}
+                        >
+                          {isListening ? <MicOff className="w-4 h-4" /> : <Mic className={elevenlabsAvailable ? "w-4 h-4" : "w-5 h-5"} />}
+                        </button>
+                      )}
+
+                      {/* Stop */}
+                      {isSpeaking && (
+                        <button
+                          onClick={stopAll}
+                          className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-foreground/[0.05] text-foreground/50 text-[0.6rem] font-bold tracking-wider uppercase hover:bg-foreground/[0.08] transition-all"
+                        >
+                          <Square className="w-3.5 h-3.5" /> Stop
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               ) : (

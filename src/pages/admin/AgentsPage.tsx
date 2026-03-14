@@ -923,6 +923,9 @@ export default function AgentsPage() {
             </table>
           </div>
         </div>
+
+        {/* ─── ElevenLabs Conversational AI Config ─── */}
+        <ElevenLabsConvAIConfig />
       </div>
 
       {/* ─── Agent Detail Sheet (Full Edit) ─── */}
@@ -1127,6 +1130,137 @@ export default function AgentsPage() {
         </SheetContent>
       </Sheet>
     </div>
+  );
+}
+
+// ─── ElevenLabs Conversational AI Config Panel ───
+function ElevenLabsConvAIConfig() {
+  const queryClient = useQueryClient();
+  const [agentId, setAgentId] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const { data: config, isLoading } = useQuery({
+    queryKey: ["elevenlabs-convai-config"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("ai_agent_configs")
+        .select("*")
+        .eq("agent_name", "elevenlabs-convai")
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  useEffect(() => {
+    if (config?.system_prompt_override) {
+      try {
+        const parsed = JSON.parse(config.system_prompt_override);
+        setAgentId(parsed.agent_id || "");
+      } catch {
+        setAgentId(config.system_prompt_override || "");
+      }
+    }
+  }, [config]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const configPayload = JSON.stringify({ agent_id: agentId.trim() });
+      if (config) {
+        await supabase.from("ai_agent_configs").update({
+          system_prompt_override: configPayload,
+          is_enabled: !!agentId.trim(),
+          updated_at: new Date().toISOString(),
+        }).eq("id", config.id);
+      } else {
+        await supabase.from("ai_agent_configs").insert({
+          agent_name: "elevenlabs-convai",
+          display_name: "ElevenLabs Conversational AI",
+          description: "Agente vocale ATLAS via WebRTC — ElevenLabs SDK",
+          icon: "Mic",
+          color: "#8B5CF6",
+          is_enabled: !!agentId.trim(),
+          system_prompt_override: configPayload,
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ["elevenlabs-convai-config"] });
+      toast({ title: "✅ Configurazione ElevenLabs salvata" });
+    } catch (e: any) {
+      toast({ title: "❌ Errore", description: e.message, variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      className="bg-card border border-border rounded-xl overflow-hidden">
+      <div className="p-4 border-b border-border flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-[hsl(var(--primary))]/10 flex items-center justify-center">
+          <Mic className="w-5 h-5 text-primary" />
+        </div>
+        <div className="flex-1">
+          <h3 className="font-semibold text-sm flex items-center gap-2">
+            🎙 ElevenLabs Conversational AI
+          </h3>
+          <p className="text-xs text-muted-foreground">Configura l'agente vocale ATLAS con WebRTC — bassa latenza, qualità premium</p>
+        </div>
+        <Badge className={config?.is_enabled ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : "bg-muted text-muted-foreground"}>
+          {config?.is_enabled ? "Attivo" : "Non configurato"}
+        </Badge>
+      </div>
+
+      <div className="p-4 space-y-4">
+        <div>
+          <Label className="text-xs text-muted-foreground">ElevenLabs Agent ID</Label>
+          <p className="text-[10px] text-muted-foreground mb-1.5">
+            Trovi l'Agent ID nella dashboard ElevenLabs → Conversational AI → Il tuo agente → Settings
+          </p>
+          <div className="flex gap-2">
+            <Input
+              placeholder="es. abc123def456..."
+              value={agentId}
+              onChange={e => setAgentId(e.target.value)}
+              className="flex-1 font-mono text-xs"
+            />
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              className="gap-1.5"
+              size="sm"
+            >
+              {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+              Salva
+            </Button>
+          </div>
+        </div>
+
+        <div className="bg-muted/50 rounded-lg p-3 space-y-2">
+          <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+            <Info className="w-3.5 h-3.5 text-primary" /> Come configurare
+          </h4>
+          <ol className="text-[11px] text-muted-foreground space-y-1 list-decimal list-inside">
+            <li>Vai su <span className="font-medium text-foreground">elevenlabs.io</span> → Conversational AI</li>
+            <li>Crea un nuovo agente o usa quello esistente (ATLAS / Laura)</li>
+            <li>Copia l'<span className="font-medium text-foreground">Agent ID</span> dalla pagina Settings dell'agente</li>
+            <li>Incollalo qui sopra e clicca <span className="font-medium text-foreground">Salva</span></li>
+            <li>L'API Key ElevenLabs è già configurata nel backend ✅</li>
+          </ol>
+        </div>
+
+        {config?.is_enabled && agentId && (
+          <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-3">
+            <p className="text-xs text-emerald-400 flex items-center gap-1.5">
+              <Check className="w-3.5 h-3.5" />
+              Agente attivo — L'SDK WebRTC è integrato nel componente Voice Agent della Landing Page
+            </p>
+            <p className="text-[10px] text-muted-foreground mt-1">
+              Agent ID: <code className="font-mono text-foreground bg-muted px-1 rounded">{agentId.slice(0, 12)}...</code>
+            </p>
+          </div>
+        )}
+      </div>
+    </motion.div>
   );
 }
 
