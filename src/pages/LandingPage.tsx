@@ -27,6 +27,9 @@ import mockupCliente from "@/assets/mockup-cliente.jpg";
 import mockupAdmin from "@/assets/mockup-admin.jpg";
 import mockupCucina from "@/assets/mockup-cucina.jpg";
 import nccHeroBg from "@/assets/ncc-hero-bg-amalfi.jpg";
+import nccPremiumCoast from "@/assets/ncc-premium-coast.jpg";
+import nccPremiumInterior from "@/assets/ncc-premium-interior.jpg";
+import nccFleetShowcase from "@/assets/ncc-fleet-showcase.jpg";
 
 /* ═══════════════════════════════════════════
    HELPERS
