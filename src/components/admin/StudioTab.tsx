@@ -270,8 +270,9 @@ const StudioTab = ({
 
   const sections: { id: StudioSection; label: string; icon: React.ReactNode }[] = [
     { id: "menu", label: "Menu", icon: <UtensilsCrossed className="w-4 h-4" /> },
+    { id: "ai", label: "OCR", icon: <Camera className="w-4 h-4" /> },
+    { id: "foodphoto", label: "📸 Foto", icon: <Sparkles className="w-4 h-4" /> },
     { id: "preview", label: "Design", icon: <Palette className="w-4 h-4" /> },
-    { id: "ai", label: "IA", icon: <Sparkles className="w-4 h-4" /> },
     { id: "translate", label: "Lingue", icon: <Languages className="w-4 h-4" /> },
   ];
 
