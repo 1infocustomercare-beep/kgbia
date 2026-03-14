@@ -144,6 +144,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#0a1a0a",
     bgTo: "#0d0d0d",
     heroEmoji: "💪",
+    heroVideo: "https://videos.pexels.com/video-files/4761437/4761437-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Calendar className="w-5 h-5" />, title: "Prenotazione Corsi", desc: "Iscrizione online a lezioni e personal" },
       { icon: <Users className="w-5 h-5" />, title: "Gestione Iscritti", desc: "Abbonamenti, scadenze e check-in" },
