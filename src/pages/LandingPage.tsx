@@ -122,66 +122,75 @@ const NeuralCellsBackground = () => {
   }, [cells]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.45 }}>
+    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.7 }}>
       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-        {/* Connection lines — breathing */}
+        <defs>
+          <filter id="pulseGlow">
+            <feGaussianBlur stdDeviation="0.3" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+
+        {/* Connection lines — breathing, thicker */}
         {connections.map(({ a, b }, i) => (
           <motion.line
             key={`ln${i}`}
             x1={cells[a].x} y1={cells[a].y}
             x2={cells[b].x} y2={cells[b].y}
-            stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.25)" : "hsla(265,70%,65%,0.2)"}
-            strokeWidth="0.1"
+            stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.35)" : "hsla(265,70%,65%,0.28)"}
+            strokeWidth="0.15"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0.05, 0.25, 0.05] }}
-            transition={{ duration: 6 + (i % 4) * 2, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }}
+            animate={{ opacity: [0.08, 0.35, 0.08] }}
+            transition={{ duration: 5 + (i % 4) * 2, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
           />
         ))}
 
-        {/* Violet data pulses — traveling along connections */}
+        {/* Violet data pulses — larger, glowing */}
         {connections.filter((_, i) => i % 2 === 0).map(({ a, b }, i) => (
           <motion.circle
             key={`vp${i}`}
-            r="0.18"
-            fill="hsla(265,85%,72%,0.8)"
+            r="0.25"
+            fill="hsla(265,90%,72%,0.9)"
+            filter="url(#pulseGlow)"
             initial={{ cx: cells[a].x, cy: cells[a].y, opacity: 0 }}
             animate={{
               cx: [cells[a].x, cells[b].x],
               cy: [cells[a].y, cells[b].y],
-              opacity: [0, 0.8, 0],
+              opacity: [0, 0.9, 0],
             }}
-            transition={{ duration: 2.5 + Math.random() * 2, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }}
+            transition={{ duration: 2 + Math.random() * 2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
           />
         ))}
 
-        {/* Gold data pulses — rarer, opposite direction */}
-        {connections.filter((_, i) => i % 5 === 0).map(({ a, b }, i) => (
+        {/* Gold data pulses — opposite direction */}
+        {connections.filter((_, i) => i % 4 === 0).map(({ a, b }, i) => (
           <motion.circle
             key={`gp${i}`}
-            r="0.14"
-            fill="hsla(38,55%,58%,0.85)"
+            r="0.2"
+            fill="hsla(38,60%,58%,0.9)"
+            filter="url(#pulseGlow)"
             initial={{ cx: cells[b].x, cy: cells[b].y, opacity: 0 }}
             animate={{
               cx: [cells[b].x, cells[a].x],
               cy: [cells[b].y, cells[a].y],
-              opacity: [0, 0.7, 0],
+              opacity: [0, 0.85, 0],
             }}
-            transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: 2 + i * 1, ease: "easeInOut" }}
+            transition={{ duration: 2.5 + Math.random() * 2, repeat: Infinity, delay: 1.5 + i * 0.8, ease: "easeInOut" }}
           />
         ))}
 
-        {/* Junction nodes — tiny breathing dots at intersections */}
-        {cells.filter((_, i) => i % 3 === 0).map((cell) => (
+        {/* Junction nodes — breathing dots */}
+        {cells.filter((_, i) => i % 2 === 0).map((cell) => (
           <motion.circle
             key={`node${cell.id}`}
             cx={cell.x} cy={cell.y}
-            r="0.3"
-            fill="hsla(265,75%,68%,0.35)"
+            r="0.25"
+            fill="hsla(265,80%,70%,0.4)"
             animate={{
-              r: [0.2, 0.45, 0.2],
-              opacity: [0.15, 0.4, 0.15],
+              r: [0.15, 0.4, 0.15],
+              opacity: [0.2, 0.55, 0.2],
             }}
-            transition={{ duration: 4, repeat: Infinity, delay: cell.delay, ease: "easeInOut" }}
+            transition={{ duration: 3.5, repeat: Infinity, delay: cell.delay, ease: "easeInOut" }}
           />
         ))}
       </svg>
@@ -957,68 +966,55 @@ const LandingPage = () => {
           ];
           return (
             <>
-              {/* Mobile: DNA helix vertical list */}
+              {/* Mobile: compact DNA helix list */}
               <div className="sm:hidden relative">
                 {/* Central DNA spine */}
-                <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2" style={{ background: "linear-gradient(180deg, transparent, hsla(265,70%,60%,0.15) 10%, hsla(265,70%,60%,0.15) 90%, transparent)" }} />
+                <motion.div
+                  className="absolute left-[22px] top-0 bottom-0 w-px"
+                  style={{ background: "linear-gradient(180deg, transparent, hsla(265,70%,60%,0.25) 8%, hsla(265,70%,60%,0.25) 92%, transparent)" }}
+                  initial={{ scaleY: 0, originY: 0 }}
+                  whileInView={{ scaleY: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                />
                 
-                <div className="flex flex-col gap-5">
-                  {painData.map((pain, i) => {
-                    const isLeft = i % 2 === 0;
-                    return (
+                <div className="flex flex-col gap-3">
+                  {painData.map((pain, i) => (
+                    <motion.div
+                      key={i}
+                      className="relative flex items-start gap-3 pl-0"
+                      initial={{ opacity: 0, x: -30, scale: 0.92 }}
+                      whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                      viewport={{ once: true, margin: "-20px" }}
+                      transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      {/* DNA node on spine */}
                       <motion.div
-                        key={i}
-                        className={`relative flex ${isLeft ? "justify-start pr-[52%]" : "justify-end pl-[52%]"}`}
-                        initial={{ opacity: 0, x: isLeft ? -40 : 40, scale: 0.9 }}
-                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                        viewport={{ once: true, margin: "-30px" }}
-                        transition={{ duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative z-10 flex-shrink-0 mt-3"
+                        initial={{ scale: 0 }}
+                        whileInView={{ scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1 + 0.15, type: "spring", stiffness: 500, damping: 15 }}
                       >
-                        {/* DNA node on spine */}
-                        <motion.div
-                          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
-                          initial={{ scale: 0 }}
-                          whileInView={{ scale: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: i * 0.12 + 0.2, type: "spring", stiffness: 400, damping: 15 }}
-                        >
-                          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "hsla(265,80%,65%,0.5)", boxShadow: "0 0 8px hsla(265,80%,65%,0.3)" }} />
-                        </motion.div>
-                        
-                        {/* Connector line from card to spine */}
-                        <motion.div
-                          className={`absolute top-1/2 h-px -translate-y-1/2 ${isLeft ? "right-[48%] left-auto w-[6%]" : "left-[48%] right-auto w-[6%]"}`}
-                          style={{ background: "hsla(265,70%,60%,0.2)" }}
-                          initial={{ scaleX: 0 }}
-                          whileInView={{ scaleX: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: i * 0.12 + 0.1, duration: 0.3 }}
-                        />
-
-                        <PremiumCard glow scan delay={i} className="p-3.5 w-full">
-                          <div className="flex items-start gap-2.5">
-                            <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.2}>
-                              {pain.icon}
-                            </PremiumIcon>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between gap-2 mb-1">
-                                <h3 className="font-heading text-xs font-semibold text-foreground">{pain.title}</h3>
-                                <motion.span
-                                  className="text-[0.55rem] font-heading font-bold tracking-wider px-2 py-0.5 rounded-full border border-primary/15"
-                                  style={{ color: "hsla(35,45%,55%,0.6)" }}
-                                  animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
-                                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}
-                                >
-                                  {pain.stat}
-                                </motion.span>
-                              </div>
-                              <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{pain.desc}</p>
-                            </div>
-                          </div>
-                        </PremiumCard>
+                        <div className="w-[10px] h-[10px] rounded-full" style={{ background: `linear-gradient(135deg, hsla(265,80%,65%,0.7), hsla(38,50%,55%,0.5))`, boxShadow: "0 0 10px hsla(265,80%,65%,0.4)" }} />
                       </motion.div>
-                    );
-                  })}
+                      
+                      {/* Compact card */}
+                      <div className="flex-1 min-w-0 rounded-xl border px-3 py-2.5" style={{
+                        background: "linear-gradient(145deg, hsla(260,18%,18%,0.6), hsla(260,16%,14%,0.5))",
+                        borderColor: "hsla(265,50%,60%,0.1)",
+                      }}>
+                        <div className="flex items-center gap-2">
+                          <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${pain.color} flex items-center justify-center text-white flex-shrink-0`}>
+                            {pain.icon}
+                          </div>
+                          <h3 className="font-heading text-xs font-semibold text-foreground flex-1">{pain.title}</h3>
+                          <span className="text-[0.55rem] font-heading font-bold tracking-wider px-1.5 py-0.5 rounded-full border border-primary/15" style={{ color: "hsla(35,45%,55%,0.6)" }}>{pain.stat}</span>
+                        </div>
+                        <p className="text-[0.6rem] text-foreground/35 leading-[1.5] mt-1 ml-9">{pain.desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
 
