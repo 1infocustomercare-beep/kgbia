@@ -767,11 +767,13 @@ const LandingPage = () => {
                 {pain.stat}
               </div>
               {/* Icon */}
-              <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-3 sm:mb-4 shadow-lg group-hover:shadow-primary/20 transition-shadow duration-500`}>
+              <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
                 {pain.icon}
-              </div>
+              </PremiumIcon>
+              <div className="mt-3 sm:mt-4">
               <h3 className="font-heading text-xs sm:text-sm font-semibold text-foreground mb-1 sm:mb-2">{pain.title}</h3>
               <p className="text-[0.65rem] sm:text-xs text-foreground/35 leading-[1.6] sm:leading-[1.7]">{pain.desc}</p>
+              </div>
               {/* Bottom accent line */}
               <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </motion.div>
