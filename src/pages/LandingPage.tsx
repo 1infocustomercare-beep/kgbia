@@ -1672,60 +1672,67 @@ const LandingPage = () => {
               <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(var(--background)), transparent)" }} />
               <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(var(--background)), transparent)" }} />
               
-              <div className="flex gap-6 sm:gap-8"
+              <div className="flex gap-5 sm:gap-6"
                 style={{
                   animation: "carousel-scroll 35s linear infinite",
                   width: "max-content",
                 }}>
-                {[...mockups, ...mockups].map((mock, i) => (
-                  <div key={i} className="group flex flex-col items-center flex-shrink-0 w-[220px]">
+                {[...mockups, ...mockups].map((mock, i) => {
+                  const tagColors: Record<string, string> = {
+                    "FRONT-END": "hsl(var(--primary))",
+                    "BACK-OFFICE": "hsl(var(--accent))",
+                    "OPERATIONS": "hsl(160, 60%, 45%)",
+                  };
+                  const tagColor = tagColors[mock.tag] || "hsl(var(--primary))";
+                  return (
+                  <div key={i} className="group flex flex-col items-center flex-shrink-0 w-[195px]">
                     {/* iPhone frame */}
-                    <div className="relative mb-5">
+                    <div className="relative mb-4">
                       {/* Ambient glow */}
-                      <div className="absolute -inset-4 rounded-[52px] opacity-15 blur-2xl pointer-events-none bg-primary group-hover:opacity-25 transition-opacity duration-700" />
+                      <div className="absolute -inset-3 rounded-[46px] opacity-10 blur-xl pointer-events-none group-hover:opacity-20 transition-opacity duration-700" style={{ background: tagColor }} />
                       
                       {/* Phone body */}
-                      <div className="relative w-[200px] h-[410px] rounded-[38px] border-[3px] border-foreground/15 bg-foreground/5 shadow-[0_16px_50px_hsla(0,0%,0%,0.45)] overflow-hidden transition-all duration-500 group-hover:shadow-[0_20px_60px_hsla(265,70%,60%,0.15)]">
+                      <div className="relative w-[185px] h-[380px] rounded-[34px] border-[2.5px] border-foreground/12 shadow-[0_12px_40px_hsla(0,0%,0%,0.5)] overflow-hidden transition-all duration-500 group-hover:shadow-[0_16px_50px_hsla(265,70%,60%,0.12)]" style={{ background: "hsl(var(--card))" }}>
                         {/* Dynamic Island */}
-                        <div className="absolute top-[8px] left-1/2 -translate-x-1/2 w-[70px] h-[20px] bg-foreground/80 rounded-full z-20" />
+                        <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[60px] h-[18px] bg-foreground/80 rounded-full z-20" />
                         
-                        {/* Tag badge */}
-                        <div className="absolute top-[34px] left-1/2 -translate-x-1/2 z-20 px-2 py-0.5 rounded-full border border-primary/20 bg-background/70 backdrop-blur-sm">
-                          <span className="text-[0.45rem] font-heading font-bold text-primary/70 tracking-[2px]">{mock.tag}</span>
-                        </div>
-
-                        {/* Sector badge */}
-                        <div className="absolute top-[54px] left-1/2 -translate-x-1/2 z-20 px-2 py-0.5 rounded-full bg-primary/10 backdrop-blur-sm">
-                          <span className="text-[0.4rem] font-heading text-primary/60 tracking-wider">{mock.sector}</span>
-                        </div>
-
                         {/* Screen */}
-                        <div className="absolute inset-[3px] rounded-[34px] overflow-hidden bg-background">
-                          <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top group-hover:scale-[1.05] transition-transform duration-700" loading="lazy" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent pointer-events-none" />
-                          {/* Title overlay */}
-                          <div className="absolute bottom-8 left-4 right-4 z-10">
-                            <h3 className="font-heading text-sm font-bold text-foreground mb-1">{mock.title}</h3>
-                            <p className="text-[0.55rem] text-foreground/45 leading-[1.5]">{mock.desc}</p>
+                        <div className="absolute inset-[2px] rounded-[31px] overflow-hidden" style={{ background: "hsl(var(--background))" }}>
+                          <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top group-hover:scale-[1.04] transition-transform duration-700" loading="lazy" />
+                          
+                          {/* Content overlay — clean gradient */}
+                          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.85) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
+                          
+                          {/* Tag + Sector — top bar */}
+                          <div className="absolute top-[30px] left-3 right-3 z-20 flex items-center gap-1.5">
+                            <span className="px-2 py-[2px] rounded-md text-[0.42rem] font-bold tracking-[1.5px] uppercase" style={{ background: `${tagColor}22`, color: tagColor, border: `1px solid ${tagColor}30` }}>
+                              {mock.tag}
+                            </span>
+                            <span className="text-[0.4rem] text-white/50 tracking-wider">{mock.sector}</span>
+                          </div>
+
+                          {/* Bottom content card */}
+                          <div className="absolute bottom-5 left-2.5 right-2.5 z-10">
+                            <h3 className="font-heading text-[0.8rem] font-bold text-white mb-1 drop-shadow-lg">{mock.title}</h3>
+                            <p className="text-[0.5rem] text-white/60 leading-[1.6] mb-2.5 line-clamp-2">{mock.desc}</p>
+                            {/* Feature pills inside phone */}
+                            <div className="flex flex-wrap gap-[3px]">
+                              {mock.features.slice(0, 4).map((f, j) => (
+                                <span key={j} className="px-1.5 py-[2px] rounded-md text-[0.4rem] font-medium text-white/70 backdrop-blur-sm" style={{ background: "hsla(0,0%,100%,0.08)", border: "1px solid hsla(0,0%,100%,0.1)" }}>
+                                  {f}
+                                </span>
+                              ))}
+                            </div>
                           </div>
                         </div>
 
                         {/* Home indicator */}
-                        <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[80px] h-[4px] bg-foreground/20 rounded-full z-20" />
+                        <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[70px] h-[3px] bg-foreground/15 rounded-full z-20" />
                       </div>
                     </div>
-
-                    {/* Features below */}
-                    <div className="space-y-2 w-full max-w-[200px]">
-                      {mock.features.map((f, j) => (
-                        <div key={j} className="flex items-center gap-2 text-[0.65rem] text-foreground/40">
-                          <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
-                          {f}
-                        </div>
-                      ))}
-                    </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );
