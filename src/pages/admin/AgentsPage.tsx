@@ -1198,9 +1198,17 @@ export default function AgentsPage() {
 
         {/* Agent Grid */}
         <div>
-          <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-primary" /> Tutti gli Agenti ({AGENTS.length})
-          </h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-primary" /> Agenti ({AGENTS.length})
+            </h2>
+            <Button size="sm" className="h-7 text-[9px] gap-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground"
+              disabled={bulkActivateAll.isPending}
+              onClick={() => bulkActivateAll.mutate()}>
+              {bulkActivateAll.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
+              Attiva Tutti · {ALL_INDUSTRIES.length} Settori
+            </Button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
             {AGENTS.map((agent, idx) => {
               const enabled = isAgentEnabled(agent.name);
