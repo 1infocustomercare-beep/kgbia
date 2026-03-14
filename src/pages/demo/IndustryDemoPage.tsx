@@ -110,6 +110,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#0a1a1a",
     bgTo: "#0d0d0d",
     heroEmoji: "🏥",
+    heroVideo: "https://videos.pexels.com/video-files/7579658/7579658-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Calendar className="w-5 h-5" />, title: "Agenda Medica", desc: "Prenotazioni online con slot per specialità" },
       { icon: <FileText className="w-5 h-5" />, title: "Cartelle Pazienti", desc: "Storico visite, referti e prescrizioni" },
