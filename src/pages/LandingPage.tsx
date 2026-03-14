@@ -635,16 +635,16 @@ const LandingPage = () => {
           />
         </div>
 
-        {/* ═══ LAYER 2: Horizontal light streaks ═══ */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-          <motion.div className="absolute top-[35%] left-0 right-0 h-[1px]"
-            style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265,70%,60%,0.08) 35%, hsla(280,50%,65%,0.12) 50%, hsla(265,70%,60%,0.08) 65%, transparent 90%)" }}
-            animate={{ opacity: [0.2, 0.4, 0.2] }}
+        {/* ═══ LAYER 2: Horizontal light streaks — behind content, blurred ═══ */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-[1]" style={{ filter: "blur(1.5px)" }}>
+          <motion.div className="absolute top-[35%] left-0 right-0 h-[2px]"
+            style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.15) 30%, hsla(280,50%,65%,0.25) 50%, hsla(265,70%,60%,0.15) 70%, transparent 95%)" }}
+            animate={{ opacity: [0.4, 0.7, 0.4] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           />
-          <motion.div className="absolute top-[65%] left-0 right-0 h-[1px]"
-            style={{ background: "linear-gradient(90deg, transparent 20%, hsla(265,70%,60%,0.05) 40%, hsla(280,50%,65%,0.08) 60%, transparent 80%)" }}
-            animate={{ opacity: [0.15, 0.3, 0.15] }}
+          <motion.div className="absolute top-[65%] left-0 right-0 h-[2px]"
+            style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265,70%,60%,0.1) 35%, hsla(280,50%,65%,0.18) 55%, transparent 90%)" }}
+            animate={{ opacity: [0.3, 0.5, 0.3] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
           />
         </div>
