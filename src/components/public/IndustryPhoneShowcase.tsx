@@ -838,7 +838,7 @@ export function IPhoneFrame({
 
   return (
     <motion.div
-      className="flex-shrink-0 w-[130px] sm:w-[155px]"
+      className="flex-shrink-0 w-[105px] sm:w-[155px]"
       initial={{ opacity: 0, y: 40 + (isCenter ? 0 : 15), scale: 0.9 }}
       whileInView={{ opacity: 1, y: isCenter ? -8 : 0, scale: 1 }}
       viewport={{ once: true }}
