@@ -136,6 +136,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const narratedRef = useRef<Set<string>>(new Set());
   const sectionQueueRef = useRef<string[]>([]);
   const queueProcessingRef = useRef(false);
+  const narrationAttemptsRef = useRef<Record<string, number>>({});
 
   // Sync refs
   useEffect(() => { messagesRef.current = messages; }, [messages]);
