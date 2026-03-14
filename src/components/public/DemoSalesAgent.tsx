@@ -264,6 +264,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
     abortRef.current = true;
     audioRef.current?.pause();
     recognitionRef.current?.stop();
+    window.speechSynthesis?.cancel();
     setIsSpeaking(false);
     setIsPaused(false);
     setIsListening(false);
