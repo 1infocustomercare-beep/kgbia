@@ -145,49 +145,55 @@ const EmpireVoiceAgent: React.FC = () => {
   // Auto-scroll chat
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
-  // ── Intersection Observer — track visible section ──
+  // ── Intersection Observer — stable tracking of known landing sections ──
   useEffect(() => {
-    const sectionIds = ["hero", "industries", "services", "process", "app", "calculator", "testimonials", "pricing", "partner"];
-    const observers: IntersectionObserver[] = [];
+    const observedIds = SECTION_ORDER.filter((id) => !!document.getElementById(id));
+    if (observedIds.length === 0) return;
 
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
-              setCurrentSection(id);
-            }
-          });
-        },
-        { threshold: [0.3, 0.6] }
-      );
-      obs.observe(el);
-      observers.push(obs);
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const mostVisible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-    // Also detect "tech" and "pain" sections by checking nearby elements
-    const allSections = document.querySelectorAll("section[id]");
-    allSections.forEach((sec) => {
-      const id = sec.getAttribute("id");
-      if (id && !sectionIds.includes(id)) {
-        const obs = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting && entry.intersectionRatio > 0.3 && id) {
-                setCurrentSection(id);
-              }
-            });
-          },
-          { threshold: [0.3] }
-        );
-        obs.observe(sec);
-        observers.push(obs);
+        if (!mostVisible) return;
+
+        const sectionId = mostVisible.target.getAttribute("id");
+        if (sectionId && sectionId !== currentSection) {
+          setCurrentSection(sectionId);
+        }
+      },
+      {
+        threshold: [0.25, 0.4, 0.6],
+        rootMargin: "-10% 0px -45% 0px",
       }
+    );
+
+    observedIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
     });
 
-    return () => observers.forEach((o) => o.disconnect());
+    return () => observer.disconnect();
+  }, [currentSection]);
+
+  // ── Follow click navigation (menu links / CTA with #section) ──
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+
+      const anchor = target.closest("a[href^='#']") as HTMLAnchorElement | null;
+      if (!anchor) return;
+
+      const id = anchor.getAttribute("href")?.replace("#", "")?.trim();
+      if (!id || !SECTION_SCRIPTS[id]) return;
+
+      setCurrentSection(id);
+    };
+
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
   }, []);
 
   // ── Stop everything ──
