@@ -610,7 +610,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     <button
                       onClick={isListening ? stopAll : startListening}
                       disabled={isLoading || !SpeechRecognition}
-                      className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-lg ${
+                      className={`w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation ${
                         isListening
                           ? "bg-red-500/20 border-2 border-red-400 text-red-400"
                           : "bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30"
