@@ -6,56 +6,56 @@
 
 @layer base {
   :root {
-    --background: 255 14% 11%;
+    --background: 252 12% 14%;
     --foreground: 250 20% 96%;
 
-    --card: 258 12% 14%;
+    --card: 255 10% 17%;
     --card-foreground: 250 20% 96%;
 
-    --popover: 258 12% 14%;
+    --popover: 255 10% 17%;
     --popover-foreground: 250 20% 96%;
 
-    --primary: 265 70% 60%;
+    --primary: 265 65% 62%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 256 10% 18%;
-    --secondary-foreground: 250 20% 88%;
+    --secondary: 254 9% 22%;
+    --secondary-foreground: 250 20% 90%;
 
-    --muted: 256 10% 16%;
-    --muted-foreground: 250 10% 58%;
+    --muted: 254 9% 20%;
+    --muted-foreground: 250 10% 62%;
 
-    --accent: 280 45% 68%;
+    --accent: 278 40% 70%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 250 20% 98%;
 
-    --border: 256 10% 20%;
-    --input: 256 10% 20%;
-    --ring: 265 70% 60%;
+    --border: 254 9% 24%;
+    --input: 254 9% 24%;
+    --ring: 265 65% 62%;
 
     --radius: 0.75rem;
 
-    --glass: 256 12% 14% / 0.7;
-    --glass-border: 250 20% 96% / 0.1;
-    --glass-shine: 250 20% 96% / 0.05;
-    --gold-glow: 265 70% 60% / 0.3;
+    --glass: 254 10% 18% / 0.65;
+    --glass-border: 250 20% 96% / 0.12;
+    --glass-shine: 250 20% 96% / 0.06;
+    --gold-glow: 265 65% 62% / 0.25;
 
     /* ═══ GOLD LUXURY TOKENS ═══ */
-    --gold: 35 45% 50%;
-    --gold-light: 38 40% 62%;
-    --gold-dark: 32 50% 38%;
-    --gold-muted: 35 25% 45%;
-    --deep-black: 255 18% 6%;
+    --gold: 38 50% 55%;
+    --gold-light: 40 45% 66%;
+    --gold-dark: 34 52% 42%;
+    --gold-muted: 36 28% 48%;
+    --deep-black: 252 14% 8%;
 
-    --sidebar-background: 255 14% 8%;
-    --sidebar-foreground: 250 20% 85%;
-    --sidebar-primary: 265 70% 60%;
+    --sidebar-background: 252 12% 11%;
+    --sidebar-foreground: 250 20% 87%;
+    --sidebar-primary: 265 65% 62%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 256 10% 15%;
-    --sidebar-accent-foreground: 250 20% 85%;
-    --sidebar-border: 256 10% 17%;
-    --sidebar-ring: 265 70% 60%;
+    --sidebar-accent: 254 9% 18%;
+    --sidebar-accent-foreground: 250 20% 87%;
+    --sidebar-border: 254 9% 20%;
+    --sidebar-ring: 265 65% 62%;
   }
 }
 
