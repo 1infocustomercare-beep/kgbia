@@ -736,28 +736,23 @@ const LandingPage = () => {
                   {/* Notch */}
                   <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-foreground/80 rounded-full z-20" />
                   {/* Inner screen */}
-                  <div className="absolute inset-[3px] rounded-[28px] overflow-hidden flex flex-col items-center justify-center text-center p-5 pt-8"
+                <div className="absolute inset-[3px] rounded-[28px] overflow-hidden flex flex-col items-center text-center"
                     style={{ background: `linear-gradient(160deg, hsl(var(--background)), hsl(var(--card)))` }}>
-                    {/* Gradient glow */}
-                    <div className={`absolute top-0 left-0 right-0 h-28 bg-gradient-to-b ${ind.gradient} opacity-[0.08] rounded-t-[28px]`} />
-                    <div className="relative z-10 flex flex-col items-center">
-                      <div className="relative mb-4">
-                        {/* Outer glow ring */}
-                        <div className={`absolute -inset-2 rounded-2xl bg-gradient-to-br ${ind.gradient} opacity-25 blur-lg group-hover:opacity-50 transition-opacity duration-700 animate-pulse`} />
-                        {/* Logo container */}
-                        <div className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white shadow-[0_6px_24px_rgba(0,0,0,0.35)] group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 overflow-hidden`}>
-                          {/* Shimmer sweep */}
+                    {/* Cartoon image */}
+                    <div className="relative w-full h-[150px] overflow-hidden rounded-t-[28px]">
+                      <img src={ind.image} alt={ind.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                    </div>
+                    <div className="relative z-10 flex flex-col items-center px-4 -mt-5">
+                      <div className="relative mb-3">
+                        <div className={`absolute -inset-1.5 rounded-2xl bg-gradient-to-br ${ind.gradient} opacity-30 blur-md group-hover:opacity-60 transition-opacity duration-700`} />
+                        <div className={`relative w-11 h-11 rounded-2xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-all duration-500 overflow-hidden`}>
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                          {/* Inner border luxury */}
-                          <div className="absolute inset-[2px] rounded-[14px] border border-white/20" />
                           <span className="relative z-10 drop-shadow-md">{ind.icon}</span>
                         </div>
-                        {/* Gold accent dot */}
-                        <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-primary/60 to-accent/60 shadow-[0_0_8px_hsla(265,70%,60%,0.5)] z-30" />
                       </div>
-                      <h3 className="font-heading text-sm font-bold text-foreground mb-1.5">{ind.title}</h3>
-                      <p className="text-[10px] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
-                      <p className="text-[8px] text-primary/50 font-heading tracking-wider mb-4">{ind.modules}</p>
+                      <h3 className="font-heading text-sm font-bold text-foreground mb-1">{ind.title}</h3>
+                      <p className="text-[8px] text-primary/50 font-heading tracking-wider mb-3">{ind.modules}</p>
                       <motion.span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-primary/60 group-hover:text-primary transition-colors"
                         whileHover={{ x: 3 }}>
                         Vedi Demo <ArrowRight className="w-3 h-3" />
