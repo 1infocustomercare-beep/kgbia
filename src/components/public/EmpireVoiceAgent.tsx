@@ -516,8 +516,12 @@ const EmpireVoiceAgent: React.FC = () => {
 
   // ── Toggle panel (does NOT stop audio — voice keeps playing) ──
   const toggleOpen = useCallback(() => {
-    setIsOpen((prev) => !prev);
-  }, []);
+    setIsOpen((prev) => {
+      const next = !prev;
+      if (next) startIntroNarration();
+      return next;
+    });
+  }, [startIntroNarration]);
 
   // ── Render ──
   return (
