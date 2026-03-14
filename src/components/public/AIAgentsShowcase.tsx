@@ -121,36 +121,41 @@ export function AIAgentsShowcase() {
     <section ref={sectionRef} className="relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden">
       {/* ── DNA Helix Background ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-[800px] h-[800px] rounded-full blur-[300px] opacity-[0.06] bg-primary top-0 left-1/2 -translate-x-1/2" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.04] bg-accent bottom-0 right-0" />
+        <div className="absolute w-[800px] h-[800px] rounded-full blur-[250px] opacity-[0.12] bg-primary top-0 left-1/2 -translate-x-1/2" />
+        <div className="absolute w-[500px] h-[500px] rounded-full blur-[180px] opacity-[0.09] bg-accent bottom-0 right-0" />
+        <div className="absolute w-[300px] h-[600px] rounded-full blur-[200px] opacity-[0.07] bg-primary/80 top-1/3 left-0" />
         
         {/* DNA Double Helix SVG */}
         <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1200 2400">
           <defs>
             <linearGradient id="dna-s1" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0" />
-              <stop offset="30%" stopColor="hsl(var(--primary))" stopOpacity="0.2" />
-              <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.35" />
-              <stop offset="70%" stopColor="hsl(var(--primary))" stopOpacity="0.2" />
+              <stop offset="20%" stopColor="hsl(var(--primary))" stopOpacity="0.35" />
+              <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.55" />
+              <stop offset="80%" stopColor="hsl(var(--primary))" stopOpacity="0.35" />
               <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="dna-s2" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0" />
-              <stop offset="30%" stopColor="hsl(var(--accent))" stopOpacity="0.15" />
-              <stop offset="50%" stopColor="hsl(var(--accent))" stopOpacity="0.25" />
-              <stop offset="70%" stopColor="hsl(var(--accent))" stopOpacity="0.15" />
+              <stop offset="20%" stopColor="hsl(var(--accent))" stopOpacity="0.3" />
+              <stop offset="50%" stopColor="hsl(var(--accent))" stopOpacity="0.45" />
+              <stop offset="80%" stopColor="hsl(var(--accent))" stopOpacity="0.3" />
               <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="dna-rung" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.1" />
-              <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.1" />
+              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.2" />
+              <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.2" />
             </linearGradient>
+            <filter id="dna-glow">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
           </defs>
           {/* Left helix strand */}
           <motion.path
             d={`M 150 0 ${Array.from({ length: 20 }, (_, i) => `Q ${150 + Math.sin(i * 0.55) * 140} ${i * 120 + 60}, ${150 + Math.sin((i + 1) * 0.55) * 140} ${(i + 1) * 120}`).join(' ')}`}
-            fill="none" stroke="url(#dna-s1)" strokeWidth="2"
+            fill="none" stroke="url(#dna-s1)" strokeWidth="2.5" filter="url(#dna-glow)"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={isInView ? { pathLength: 1, opacity: 1 } : {}}
             transition={{ duration: 2.5, ease: "easeInOut" }}
@@ -158,41 +163,41 @@ export function AIAgentsShowcase() {
           {/* Right helix strand */}
           <motion.path
             d={`M 1050 0 ${Array.from({ length: 20 }, (_, i) => `Q ${1050 - Math.sin(i * 0.55) * 140} ${i * 120 + 60}, ${1050 - Math.sin((i + 1) * 0.55) * 140} ${(i + 1) * 120}`).join(' ')}`}
-            fill="none" stroke="url(#dna-s2)" strokeWidth="2"
+            fill="none" stroke="url(#dna-s2)" strokeWidth="2.5" filter="url(#dna-glow)"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={isInView ? { pathLength: 1, opacity: 1 } : {}}
             transition={{ duration: 2.5, delay: 0.2, ease: "easeInOut" }}
           />
           {/* Rungs */}
-          {Array.from({ length: 14 }, (_, i) => (
+          {Array.from({ length: 18 }, (_, i) => (
             <motion.line
               key={`rung-${i}`}
-              x1="120" y1={140 + i * 160} x2="1080" y2={140 + i * 160}
-              stroke="url(#dna-rung)" strokeWidth="0.6" strokeDasharray="3 10"
+              x1="100" y1={100 + i * 130} x2="1100" y2={100 + i * 130}
+              stroke="url(#dna-rung)" strokeWidth="1" strokeDasharray="4 8"
               initial={{ opacity: 0, scaleX: 0 }}
               animate={isInView ? { opacity: 1, scaleX: 1 } : {}}
-              transition={{ delay: 0.6 + i * 0.1, duration: 0.5 }}
+              transition={{ delay: 0.6 + i * 0.08, duration: 0.5 }}
               style={{ transformOrigin: "center" }}
             />
           ))}
           {/* Floating data nodes */}
-          {Array.from({ length: 24 }, (_, i) => (
+          {Array.from({ length: 30 }, (_, i) => (
             <motion.circle
               key={`node-${i}`}
-              cx={80 + (i % 8) * 140} cy={60 + Math.floor(i / 8) * 300 + (i % 3) * 100}
-              r="2" fill="hsl(var(--primary))"
+              cx={60 + (i % 10) * 110} cy={50 + Math.floor(i / 10) * 400 + (i % 3) * 120}
+              r="3" fill="hsl(var(--primary))"
               initial={{ opacity: 0, scale: 0 }}
-              animate={isInView ? { opacity: [0, 0.5, 0.2, 0.5], scale: [0, 1, 0.7, 1] } : {}}
-              transition={{ delay: 0.8 + i * 0.06, duration: 5, repeat: Infinity, repeatType: "reverse" }}
+              animate={isInView ? { opacity: [0, 0.6, 0.25, 0.6], scale: [0, 1.2, 0.8, 1.2] } : {}}
+              transition={{ delay: 0.8 + i * 0.05, duration: 5, repeat: Infinity, repeatType: "reverse" }}
             />
           ))}
         </svg>
         
         {/* Neural grid dots */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.02]" xmlns="http://www.w3.org/2000/svg">
+        <svg className="absolute inset-0 w-full h-full opacity-[0.045]" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <pattern id="neural-grid-agents" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-              <circle cx="30" cy="30" r="0.8" fill="hsl(var(--primary))" />
+            <pattern id="neural-grid-agents" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+              <circle cx="25" cy="25" r="1" fill="hsl(var(--primary))" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#neural-grid-agents)" />
@@ -350,40 +355,91 @@ export function AIAgentsShowcase() {
           </div>
         </div>
 
-        {/* ══════ SECTOR CAPABILITIES MATRIX ══════ */}
+        {/* ══════ SECTOR CAPABILITIES — DNA ASSEMBLY ══════ */}
         <div className="mb-16 sm:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-8"
+            className="text-center mb-6"
           >
-            <h3 className="text-[clamp(1.3rem,3.5vw,2.2rem)] font-heading font-bold text-foreground leading-[1.1] mb-3">
+            <h3 className="text-[clamp(1.3rem,3.5vw,2.2rem)] font-heading font-bold text-foreground leading-[1.1] mb-2">
               IA Dedicata Per <span className="text-shimmer">Ogni Settore</span>
             </h3>
-            <p className="text-foreground/40 text-sm max-w-[500px] mx-auto">
+            <p className="text-foreground/40 text-xs max-w-[450px] mx-auto">
               Ogni settore ha agenti specializzati che parlano la lingua del tuo business
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
-            {sectorCapabilities.map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 25 }}
-                className="group relative rounded-xl border border-foreground/[0.06] bg-card/30 backdrop-blur-sm p-3 overflow-hidden hover:border-primary/15 transition-all duration-400"
-              >
-                <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${s.color} opacity-0 group-hover:opacity-60 transition-opacity duration-500`} />
-                <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${s.color} flex items-center justify-center text-white mb-2 shadow-md`}>
-                  {s.icon}
-                </div>
-                <h4 className="font-heading font-bold text-xs text-foreground mb-0.5">{s.sector}</h4>
-                <p className="text-[0.58rem] text-foreground/35 leading-[1.4]">{s.features}</p>
-              </motion.div>
-            ))}
+          <div className="relative">
+            {/* Central DNA spine for sectors */}
+            <motion.div
+              className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 hidden sm:block z-0"
+              style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--primary) / 0.4), hsl(var(--accent) / 0.3), transparent)" }}
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            />
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 relative z-10">
+              {sectorCapabilities.map((s, i) => {
+                const isLeft = i % 2 === 0;
+                const row = Math.floor(i / 4);
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{
+                      opacity: 0,
+                      x: isLeft ? -50 : 50,
+                      y: 20,
+                      rotateY: isLeft ? -15 : 15,
+                      rotateZ: isLeft ? -3 : 3,
+                      scale: 0.8,
+                    }}
+                    whileInView={{
+                      opacity: 1,
+                      x: 0,
+                      y: 0,
+                      rotateY: 0,
+                      rotateZ: 0,
+                      scale: 1,
+                    }}
+                    viewport={{ once: true, margin: "-30px" }}
+                    transition={{
+                      delay: i * 0.1,
+                      duration: 0.6,
+                      type: "spring",
+                      stiffness: 140,
+                      damping: 16,
+                    }}
+                    className="group relative"
+                    style={{ perspective: "800px" }}
+                  >
+                    {/* DNA connector dot */}
+                    <motion.div
+                      className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary/30 shadow-[0_0_8px_hsl(var(--primary)/0.4)] z-20 hidden sm:block"
+                      style={{ [isLeft ? "right" : "left"]: "-5px" }}
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: [0, 1.5, 1] }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 + 0.4, duration: 0.35 }}
+                    />
+
+                    <div className="relative rounded-lg border border-foreground/[0.06] bg-card/30 backdrop-blur-sm p-2 sm:p-2.5 overflow-hidden hover:border-primary/20 transition-all duration-400 hover:shadow-[0_0_15px_hsl(var(--primary)/0.08)]">
+                      <div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r ${s.color} opacity-0 group-hover:opacity-60 transition-opacity duration-500`} />
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <div className={`w-5 h-5 min-w-[20px] rounded bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-sm`}>
+                          <span className="scale-[0.7]">{s.icon}</span>
+                        </div>
+                        <h4 className="font-heading font-bold text-[0.65rem] text-foreground leading-tight truncate">{s.sector}</h4>
+                      </div>
+                      <p className="text-[0.5rem] text-foreground/35 leading-[1.35] line-clamp-2">{s.features}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
