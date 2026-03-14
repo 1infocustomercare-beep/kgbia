@@ -255,17 +255,14 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, [currentSection, isSpeaking, isPaused, narrateSection]);
 
-  // ── Auto-start: show agent and begin narrating ──
+  // ── Auto-start: show button only (chat stays CLOSED) ──
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-      setTimeout(() => {
-        setIsOpen(true);
-        setAutoNarrating(true);
-        // Start with hero narration
-        narrateSection("hero");
-      }, 800);
-    }, 2000);
+      // Auto-narrate hero WITHOUT opening the chat panel
+      setAutoNarrating(true);
+      narrateSection("hero");
+    }, 2500);
     return () => clearTimeout(timer);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
