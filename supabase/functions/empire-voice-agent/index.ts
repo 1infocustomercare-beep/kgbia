@@ -240,6 +240,26 @@ Funzionalità: menu digitale, ordini, prenotazioni torte/eventi, gestione produz
 FACCIAMO TUTTO NOI SU MISURA.`,
 };
 
+const LANDING_SECTION_LABELS: Record<string, string> = {
+  hero: "Hero",
+  industries: "Settori",
+  services: "Funzionalità",
+  process: "Processo",
+  app: "App",
+  calculator: "ROI",
+  testimonials: "Testimonianze",
+  pricing: "Prezzi",
+  partner: "Partner",
+  contact: "Contatto",
+};
+
+const ATLAS_STABILITY_PROMPT = `## REGOLE ANTI-CONFUSIONE
+- Usa SEMPRE la cronologia completa per mantenere coerenza.
+- Non contraddirti tra una risposta e l'altra.
+- Se manca un dettaglio, fai 1 domanda rapida di chiarimento invece di inventare.
+- Risposte vocali corte: massimo 2-3 frasi, poi una mini call-to-action.
+- Tono: persuasivo, intelligente, reattivo, professionale.`;
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
