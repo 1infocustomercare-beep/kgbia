@@ -463,38 +463,84 @@ export function AIAgentsShowcase() {
             </p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {autonomousProcesses.map((p, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, type: "spring", stiffness: 200, damping: 25 }}
-                className="group relative rounded-xl border border-foreground/[0.05] bg-card/25 backdrop-blur-sm p-4 hover:border-primary/15 transition-all duration-500"
-              >
-                <motion.div
-                  className="absolute top-0 right-0 w-10 h-10"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5 + i * 0.1 }}
-                >
-                  <div className="absolute top-0 right-0 w-[1px] h-5 bg-gradient-to-b from-primary/30 to-transparent" />
-                  <div className="absolute top-0 right-0 h-[1px] w-5 bg-gradient-to-l from-primary/30 to-transparent" />
-                </motion.div>
+          <div className="relative">
+            {/* Central DNA spine */}
+            <motion.div
+              className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 hidden lg:block z-0"
+              style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--primary) / 0.35), hsl(var(--accent) / 0.25), transparent)" }}
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            />
 
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 min-w-[32px] rounded-lg bg-primary/[0.08] border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors duration-400">
-                    {p.icon}
-                  </div>
-                  <div>
-                    <h4 className="font-heading font-bold text-xs text-foreground mb-0.5">{p.title}</h4>
-                    <p className="text-[0.65rem] text-foreground/40 leading-[1.5]">{p.desc}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 relative z-10">
+              {autonomousProcesses.map((p, i) => {
+                const isLeft = i % 2 === 0;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{
+                      opacity: 0,
+                      x: isLeft ? -40 : 40,
+                      y: 15,
+                      rotateY: isLeft ? -12 : 12,
+                      scale: 0.85,
+                    }}
+                    whileInView={{
+                      opacity: 1,
+                      x: 0,
+                      y: 0,
+                      rotateY: 0,
+                      scale: 1,
+                    }}
+                    viewport={{ once: true, margin: "-30px" }}
+                    transition={{
+                      delay: i * 0.09,
+                      duration: 0.55,
+                      type: "spring",
+                      stiffness: 150,
+                      damping: 17,
+                    }}
+                    className="group relative"
+                    style={{ perspective: "800px" }}
+                  >
+                    {/* DNA connector dot */}
+                    <motion.div
+                      className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary/25 shadow-[0_0_8px_hsl(var(--primary)/0.35)] z-20 hidden lg:block"
+                      style={{ [isLeft ? "right" : "left"]: "-5px" }}
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: [0, 1.4, 1] }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.09 + 0.35, duration: 0.3 }}
+                    />
+
+                    <div className="relative rounded-lg border border-foreground/[0.05] bg-card/25 backdrop-blur-sm p-2.5 overflow-hidden hover:border-primary/15 transition-all duration-400 hover:shadow-[0_0_12px_hsl(var(--primary)/0.06)]">
+                      <motion.div
+                        className="absolute top-0 right-0 w-6 h-6"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.4 + i * 0.08 }}
+                      >
+                        <div className="absolute top-0 right-0 w-[1px] h-3 bg-gradient-to-b from-primary/25 to-transparent" />
+                        <div className="absolute top-0 right-0 h-[1px] w-3 bg-gradient-to-l from-primary/25 to-transparent" />
+                      </motion.div>
+
+                      <div className="flex items-start gap-2">
+                        <div className="w-6 h-6 min-w-[24px] rounded bg-primary/[0.08] border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors duration-400">
+                          <span className="scale-[0.8]">{p.icon}</span>
+                        </div>
+                        <div>
+                          <h4 className="font-heading font-bold text-[0.65rem] text-foreground mb-0.5 leading-tight">{p.title}</h4>
+                          <p className="text-[0.5rem] text-foreground/35 leading-[1.4] line-clamp-2">{p.desc}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
