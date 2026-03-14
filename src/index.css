@@ -188,18 +188,40 @@
   }
 
   .luxury-border {
-    border: 1px solid hsla(265, 60%, 50%, 0.15);
+    border: 1px solid hsla(265, 60%, 55%, 0.18);
   }
 
   .luxury-card {
-    background: hsla(260, 18%, 7%, 0.7);
-    backdrop-filter: blur(24px) saturate(1.3);
-    border: 1px solid hsla(250, 20%, 96%, 0.06);
+    background: linear-gradient(145deg, hsla(260, 16%, 18%, 0.7), hsla(260, 14%, 14%, 0.6));
+    backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid hsla(265, 50%, 60%, 0.1);
+    position: relative;
+    overflow: hidden;
   }
 
   .luxury-card:hover {
-    border-color: hsla(265, 70%, 60%, 0.2);
-    box-shadow: 0 20px 60px hsla(0, 0%, 0%, 0.4), 0 0 40px hsla(265, 70%, 60%, 0.08);
+    border-color: hsla(265, 70%, 65%, 0.25);
+    box-shadow: 0 20px 60px hsla(0, 0%, 0%, 0.3), 0 0 40px hsla(265, 70%, 60%, 0.1);
+  }
+
+  /* ═══ PREMIUM CARD GLASS ═══ */
+  .premium-card-glass {
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .premium-card-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, hsla(265, 50%, 70%, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  .premium-card-glass:hover::before {
+    opacity: 1;
   }
 
   .text-brand-gradient {
