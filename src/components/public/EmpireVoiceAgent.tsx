@@ -189,7 +189,18 @@ const EmpireVoiceAgent: React.FC = () => {
       const id = anchor.getAttribute("href")?.replace("#", "")?.trim();
       if (!id || !SECTION_SCRIPTS[id]) return;
 
-      setCurrentSection(id);
+      setCurrentSection((prev) => (prev === id ? prev : id));
+
+      if (!autoNarratingRef.current) return;
+
+      narratedRef.current.delete(id);
+      setNarratedSections(new Set(narratedRef.current));
+
+      if (!sectionQueueRef.current.includes(id)) {
+        sectionQueueRef.current.push(id);
+      }
+
+      void processNarrationQueue();
     };
 
     document.addEventListener("click", onClick);
