@@ -311,6 +311,11 @@ const EmpireVoiceAgent: React.FC = () => {
   const [mobilePromptShown, setMobilePromptShown] = useState(false);
   const [userInteracted, setUserInteracted] = useState(false);
 
+  // ElevenLabs Conversational AI states
+  const [voiceMode, setVoiceMode] = useState<VoiceMode>("legacy");
+  const [elevenlabsConnecting, setElevenlabsConnecting] = useState(false);
+  const [elevenlabsAvailable, setElevenlabsAvailable] = useState<boolean | null>(null);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<InstanceType<NonNullable<typeof SpeechRecognition>> | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -324,6 +329,80 @@ const EmpireVoiceAgent: React.FC = () => {
   const narrationAttemptsRef = useRef<Record<string, number>>({});
   const introStartedRef = useRef(false);
   const useBrowserFallbackRef = useRef(false);
+
+  // ── ElevenLabs Conversational AI hook ──
+  const conversation = useConversation({
+    onConnect: () => {
+      console.log("ElevenLabs ConvAI connected");
+      setMessages(prev => [...prev, { role: "assistant", content: "🎙️ Connesso! Parla pure, ti ascolto..." }]);
+    },
+    onDisconnect: () => {
+      console.log("ElevenLabs ConvAI disconnected");
+      setVoiceMode("legacy");
+    },
+    onMessage: (message) => {
+      if (message.type === "user_transcript") {
+        const text = (message as any).user_transcription_event?.user_transcript;
+        if (text) setMessages(prev => [...prev, { role: "user", content: text }]);
+      } else if (message.type === "agent_response") {
+        const text = (message as any).agent_response_event?.agent_response;
+        if (text) setMessages(prev => [...prev, { role: "assistant", content: text }]);
+      }
+    },
+    onError: (error) => {
+      console.error("ElevenLabs ConvAI error:", error);
+      setVoiceMode("legacy");
+    },
+  });
+
+  // Check if ElevenLabs ConvAI is available on mount
+  useEffect(() => {
+    const checkElevenlabs = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("elevenlabs-conversation-token", {
+          body: {},
+        });
+        setElevenlabsAvailable(!error && !!data?.token);
+      } catch {
+        setElevenlabsAvailable(false);
+      }
+    };
+    checkElevenlabs();
+  }, []);
+
+  // Start ElevenLabs conversation
+  const startElevenlabsConversation = useCallback(async () => {
+    setElevenlabsConnecting(true);
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      const { data, error } = await supabase.functions.invoke("elevenlabs-conversation-token", {
+        body: {},
+      });
+
+      if (error || !data?.token) {
+        throw new Error("Token non ricevuto");
+      }
+
+      await conversation.startSession({
+        conversationToken: data.token,
+        connectionType: "webrtc",
+      });
+
+      setVoiceMode("elevenlabs");
+    } catch (err) {
+      console.error("Failed to start ElevenLabs conversation:", err);
+      setMessages(prev => [...prev, { role: "assistant", content: "Non riesco a connettermi all'agente vocale. Usa la modalità classica." }]);
+      setVoiceMode("legacy");
+    } finally {
+      setElevenlabsConnecting(false);
+    }
+  }, [conversation]);
+
+  const stopElevenlabsConversation = useCallback(async () => {
+    await conversation.endSession();
+    setVoiceMode("legacy");
+  }, [conversation]);
 
   // Sync refs
   useEffect(() => { messagesRef.current = messages; }, [messages]);
