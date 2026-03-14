@@ -1,7 +1,8 @@
 // ATLAS Voice Agent v3 — Scroll-tracking auto-narration
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Sparkles, Send, Play, Square, Pause } from "lucide-react";
+import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause } from "lucide-react";
+import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
