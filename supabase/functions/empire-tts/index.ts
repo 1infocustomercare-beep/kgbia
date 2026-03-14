@@ -22,8 +22,8 @@ serve(async (req) => {
       });
     }
 
-    // Use "Daniel" voice - professional Italian male voice
-    const voiceId = "onwK4e9ZLuTAKqWW03F9";
+    // Use "Sarah" voice - warm, natural feminine voice, excellent for Italian
+    const voiceId = "EXAVITQu4vr4xnSDxMaL";
 
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
@@ -37,11 +37,11 @@ serve(async (req) => {
           text: text.slice(0, 4000),
           model_id: "eleven_multilingual_v2",
           voice_settings: {
-            stability: 0.55,
-            similarity_boost: 0.78,
-            style: 0.35,
+            stability: 0.5,
+            similarity_boost: 0.75,
+            style: 0.45,
             use_speaker_boost: true,
-            speed: 1.05,
+            speed: 1.0,
           },
         }),
       }
