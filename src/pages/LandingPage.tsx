@@ -674,9 +674,21 @@ const LandingPage = () => {
           <div className="absolute top-0 right-0 w-px h-[120px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.4), transparent)" }} />
         </div>
 
-        {/* ═══ LAYER 5: Central vertical beam — subtle, behind content ═══ */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-[20vh] z-[1]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)", filter: "blur(1px)" }} />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[2px] blur-sm z-[1]" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.12), transparent)" }} />
+        {/* ═══ LAYER 5: Futuristic crown arc — non intrusive ═══ */}
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[260px] sm:w-[340px] h-[110px] sm:h-[130px] pointer-events-none z-[1]">
+          <motion.div
+            className="absolute inset-0 rounded-[999px]"
+            style={{ borderTop: "1px solid hsla(265,70%,60%,0.22)", borderLeft: "1px solid transparent", borderRight: "1px solid transparent" }}
+            animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.03, 1] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[180px] sm:w-[220px] h-[36px] sm:h-[44px] rounded-full blur-md"
+            style={{ background: "radial-gradient(ellipse at center, hsla(265,70%,60%,0.14), transparent 70%)" }}
+            animate={{ opacity: [0.2, 0.35, 0.2] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+          />
+        </div>
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
