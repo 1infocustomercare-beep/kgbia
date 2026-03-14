@@ -215,7 +215,7 @@ const REVIEW_DATES = ["Gennaio 2024", "Dicembre 2023", "Novembre 2023", "Ottobre
 /* ════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ════════════════════════════════════════════════════════════ */
-export default function NCCPublicSite({ company }: Props) {
+export default function NCCPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const gold = company.primary_color || NCC.gold;
   const [bookingForm, setBookingForm] = useState({ name: "", phone: "", email: "", route: "", vehicle: "", pickup: "", dropoff: "", date: "", time: "", passengers: "1", luggage: "1", flight: "", notes: "" });
