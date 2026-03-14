@@ -1820,9 +1820,9 @@ const LandingPage = () => {
 
                 {/* Mini feature pills */}
                 <div className="flex flex-wrap gap-1 mb-3">
-                  {(cfg.defaultModules || []).slice(0, 3).map((mod, i) => (
+                  {(cfg.modules || []).slice(0, 3).map((mod, i) => (
                     <span key={i} className="text-[8px] px-1.5 py-0.5 rounded-full border border-white/[0.06] text-foreground/35 bg-white/[0.02] truncate max-w-[80px]">
-                      {mod}
+                      {typeof mod === 'string' ? mod : mod.label}
                     </span>
                   ))}
                 </div>
