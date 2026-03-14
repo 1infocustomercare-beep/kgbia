@@ -87,7 +87,7 @@ function NeuralMeshBg() {
             <motion.text
               x={node.x} y={node.y + (node.size ? 3.5 : 2.5)}
               textAnchor="middle"
-              fill="hsla(265,85%,65%,0.15)"
+              fill="hsla(265,85%,65%,0.35)"
               fontSize="1.1"
               fontFamily="monospace"
               letterSpacing="0.15"
