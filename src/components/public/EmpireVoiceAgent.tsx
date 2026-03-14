@@ -440,7 +440,7 @@ const EmpireVoiceAgent: React.FC = () => {
                 </button>
                 {/* Close */}
                 <button
-                  onClick={() => { stopAll(); setIsOpen(false); }}
+                  onClick={() => setIsOpen(false)}
                   className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05] transition-all"
                 >
                   <X className="w-4 h-4" />
