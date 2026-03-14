@@ -213,7 +213,7 @@ const EmpireVoiceAgent: React.FC = () => {
     queueProcessingRef.current = true;
 
     while (sectionQueueRef.current.length > 0) {
-      if (abortRef.current || !autoNarratingRef.current) break;
+      if (abortRef.current) break;
 
       const sectionId = sectionQueueRef.current.shift();
       if (!sectionId) continue;
