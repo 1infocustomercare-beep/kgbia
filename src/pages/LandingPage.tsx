@@ -2419,11 +2419,14 @@ const LandingPage = () => {
             { icon: <Bot className="w-4 h-4" />, title: "Concierge AI", desc: "Assistente 24/7 per i tuoi clienti." },
             { icon: <Headphones className="w-4 h-4" />, title: "Supporto 7/7", desc: "Persone vere, non chatbot." },
           ].map((b, i) => (
-            <motion.div key={i} className="p-4 rounded-xl holo-panel text-center group hover:border-primary/15 transition-all"
-              variants={popIn} whileHover={{ y: -3 }}>
-              <div className="text-primary/50 mb-2 flex justify-center group-hover:text-primary/80 transition-colors">{b.icon}</div>
-              <h4 className="text-[0.7rem] font-heading font-bold text-foreground mb-1">{b.title}</h4>
-              <p className="text-[0.55rem] text-foreground/30 leading-[1.5]">{b.desc}</p>
+            <motion.div key={i} variants={popIn}>
+              <PremiumCard scan delay={i * 0.3} className="p-4 text-center">
+                <motion.div className="text-primary/50 mb-2 flex justify-center group-hover/card:text-primary/80 transition-colors"
+                  animate={{ y: [0, -2, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{b.icon}</motion.div>
+                <h4 className="text-[0.7rem] font-heading font-bold text-foreground mb-1">{b.title}</h4>
+                <p className="text-[0.55rem] text-foreground/30 leading-[1.5]">{b.desc}</p>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
