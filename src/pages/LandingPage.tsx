@@ -1087,7 +1087,7 @@ const LandingPage = () => {
           initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
           transition={{ duration: 0.6 }}>
           <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
-          <video src={videoHero} autoPlay muted loop playsInline className="w-full aspect-video object-cover rounded-2xl" />
+          <FunnelDNAVisual />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
           <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
             <div className="px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-sm border border-primary/10">
