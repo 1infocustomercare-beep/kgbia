@@ -77,6 +77,15 @@ const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
 const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
 
+// Part 6 — AI Marketplace + Sector pages
+const AIMarketplacePage = lazy(() => import("./pages/app/AIMarketplacePage"));
+const KitchenDisplayPage = lazy(() => import("./pages/app/KitchenDisplayPage"));
+const LiveFleetMapPage = lazy(() => import("./pages/app/LiveFleetMapPage"));
+const LoyaltyPage = lazy(() => import("./pages/app/LoyaltyPage"));
+const TelemedicinePage = lazy(() => import("./pages/app/TelemedicinePage"));
+const ProjectTimelinePage = lazy(() => import("./pages/app/ProjectTimelinePage"));
+const FieldDispatchPage = lazy(() => import("./pages/app/FieldDispatchPage"));
+
 const queryClient = new QueryClient();
 
 const PageLoader = () => (
