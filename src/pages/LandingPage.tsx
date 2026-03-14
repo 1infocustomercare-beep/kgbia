@@ -149,11 +149,11 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     style={{ background: "hsla(265,20%,8%,0.6)", backdropFilter: "blur(8px)" }}
     whileHover={hover ? { y: -5, borderColor: "hsla(265,70%,60%,0.2)", transition: { duration: 0.3 } } : undefined}
   >
-    {/* Top accent line */}
-    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.25), transparent)" }} />
-    {/* Corner accents */}
-    <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-primary/15 rounded-tl-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
-    <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/15 rounded-br-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    {/* Top accent line — gold hint */}
+    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,50%,0.18), hsla(265,70%,60%,0.15), transparent)" }} />
+    {/* Corner accents — gold */}
+    <div className="absolute top-2 left-2 w-3 h-3 border-t border-l rounded-tl-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,50%,0.2)" }} />
+    <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r rounded-br-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,50%,0.2)" }} />
     {/* Scanning beam */}
     {scan && (
       <motion.div
