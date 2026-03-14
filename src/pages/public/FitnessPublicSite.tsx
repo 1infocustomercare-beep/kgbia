@@ -388,31 +388,15 @@ export default function FitnessPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* FAQ */}
-      <Section className="py-16 sm:py-24 px-4" style={{ background: "#050505" }}>
-        <div className="max-w-3xl mx-auto">
+      {/* FAQ — Premium */}
+      <Section className="py-16 sm:py-24 px-4 relative overflow-hidden" style={{ background: "#050505" }}>
+        <FloatingOrbs color={ORANGE} count={2} />
+        <div className="max-w-3xl mx-auto relative z-10">
           <div className="text-center mb-10">
             <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-2" style={{ color: ORANGE, fontFamily: "'Roboto', sans-serif" }}>DOMANDE FREQUENTI</p>
             <h2 className="text-3xl sm:text-4xl font-bold uppercase">FAQ</h2>
           </div>
-          <div className="space-y-3">
-            {FAQ_ITEMS.map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-                className="rounded-xl overflow-hidden" style={{ background: "#111", border: "1px solid #1a1a1a" }}>
-                <button className="w-full text-left px-5 py-4 flex items-center justify-between gap-3" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                  <span className="font-semibold text-sm text-white" style={{ fontFamily: "'Roboto', sans-serif" }}>{item.q}</span>
-                  <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${openFaq === i ? "rotate-180" : ""}`} style={{ color: ORANGE }} />
-                </button>
-                <AnimatePresence>
-                  {openFaq === i && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                      <p className="px-5 pb-4 text-sm leading-relaxed text-white/50" style={{ fontFamily: "'Roboto', sans-serif" }}>{item.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </div>
+          <PremiumFAQ items={FAQ_ITEMS} accentColor={ORANGE} />
         </div>
       </Section>
 

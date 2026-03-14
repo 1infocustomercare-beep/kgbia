@@ -278,36 +278,33 @@ export default function FoodPublicSite({ company }: Props) {
           </motion.div>
         </div>
 
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <ChevronDown className="w-5 h-5 text-white/30" />
-        </motion.div>
+        <ScrollIndicator />
       </section>
 
-      {/* ── TICKER ── */}
-      <div className="overflow-hidden py-4" style={{ background: "#111" }}>
-        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1200] }} transition={{ repeat: Infinity, duration: 20, ease: "linear" }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-medium" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "Inter, sans-serif" }}>
+      {/* ── TICKER — Premium Marquee ── */}
+      <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
+        <AmbientGlow color={gold} position="top" />
+        <MarqueeCarousel speed={40} pauseOnHover items={
+          tickerItems.map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-medium mx-6 whitespace-nowrap" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "Inter, sans-serif" }}>
               <UtensilsCrossed className="w-3 h-3" style={{ color: `${gold}60` }} /> {item}
             </span>
-          ))}
-        </motion.div>
+          ))
+        } />
       </div>
 
-      {/* ── STATS BAR ── */}
-      <Section className="py-8 border-y" style={{ borderColor: `${gold}22` } as any}>
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {[
+      <NeonDivider color={gold} />
+
+      {/* ── STATS BAR — Premium Glass ── */}
+      <Section className="py-12 sm:py-16 relative overflow-hidden" style={{ background: "#111" }}>
+        <FloatingOrbs color={gold} count={3} />
+        <div className="max-w-5xl mx-auto px-6 relative z-10">
+          <PremiumStatsBar accentColor={gold} stats={[
             { value: reviews.length * 50 || 200, suffix: "+", label: "Clienti Soddisfatti" },
             { value: menuItems.length || 30, suffix: "+", label: "Piatti in Menu" },
-            { value: categories.length || 6, suffix: "", label: "Categorie" },
+            { value: categories.length || 6, label: "Categorie" },
             { value: 5, suffix: "★", label: "Rating Medio" },
-          ].map((s, i) => (
-            <motion.div key={i} variants={fadeUp} custom={i} initial="hidden" whileInView="show" viewport={{ once: true }}>
-              <div className="text-3xl sm:text-4xl font-bold" style={{ color: gold }}><AnimatedCounter value={s.value} suffix={s.suffix} /></div>
-              <p className="text-xs uppercase tracking-widest mt-1 opacity-50" style={{ fontFamily: "Inter, sans-serif" }}>{s.label}</p>
-            </motion.div>
-          ))}
+          ]} />
         </div>
       </Section>
 

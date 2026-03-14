@@ -201,36 +201,31 @@ export default function BakeryPublicSite({ company }: Props) {
             </motion.div>
           </motion.div>
         </motion.div>
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <ChevronDown className="w-5 h-5" style={{ color: `${creamBg}50` }} />
-        </motion.div>
+        <ScrollIndicator color={`${creamBg}50`} />
       </section>
 
-      {/* TICKER */}
-      <div className="overflow-hidden py-4" style={{ background: brown }}>
-        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 18, ease: "linear" }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-medium" style={{ color: `${creamBg}40`, fontFamily: "'Nunito', sans-serif" }}>
+      {/* TICKER — Premium Marquee */}
+      <div className="overflow-hidden py-5" style={{ background: brown }}>
+        <MarqueeCarousel speed={35} pauseOnHover items={
+          tickerItems.map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-medium mx-6 whitespace-nowrap" style={{ color: `${creamBg}40`, fontFamily: "'Nunito', sans-serif" }}>
               <Wheat className="w-3 h-3" style={{ color: `${pink}60` }} /> {item}
             </span>
-          ))}
-        </motion.div>
+          ))
+        } />
       </div>
 
-      {/* STATS */}
+      <NeonDivider color={pink} />
+
+      {/* STATS — Premium */}
       <Section className="py-16 px-4" style={{ background: "#fff" } as any}>
-        <div className="max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-          {[
+        <div className="max-w-5xl mx-auto">
+          <PremiumStatsBarLight accentColor={brown} textColor={brown} stats={[
             { value: 38, suffix: "+", label: "Anni di Tradizione" },
             { value: 50, suffix: "+", label: "Prodotti al Giorno" },
             { value: 100, suffix: "%", label: "Ingredienti Naturali" },
             { value: 3000, suffix: "+", label: "Clienti Felici" },
-          ].map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-              <p className="text-3xl sm:text-4xl font-bold" style={{ color: brown }}><AnimatedNum value={s.value} suffix={s.suffix} /></p>
-              <p className="text-[11px] uppercase tracking-[0.15em] mt-2" style={{ color: pink, fontFamily: "'Nunito', sans-serif" }}>{s.label}</p>
-            </motion.div>
-          ))}
+          ]} />
         </div>
       </Section>
 

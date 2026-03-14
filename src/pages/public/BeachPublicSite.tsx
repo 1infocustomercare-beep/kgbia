@@ -211,35 +211,32 @@ export default function BeachPublicSite({ company }: Props) {
           </div>
         </motion.div>
 
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <ChevronDown className="w-5 h-5 text-white/20" />
-        </motion.div>
+        <ScrollIndicator />
       </section>
 
-      {/* TICKER */}
-      <div className="overflow-hidden py-4" style={{ background: "#0d1e2d" }}>
-        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 18, ease: "linear" }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-medium text-white/25">
+      {/* TICKER — Premium Marquee */}
+      <div className="overflow-hidden py-5 relative" style={{ background: "#0d1e2d" }}>
+        <AmbientGlow color={CYAN} position="top" />
+        <MarqueeCarousel speed={35} pauseOnHover items={
+          tickerItems.map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-medium mx-6 whitespace-nowrap text-white/25">
               <Waves className="w-3 h-3" style={{ color: `${CYAN}50` }} /> {item}
             </span>
-          ))}
-        </motion.div>
+          ))
+        } />
       </div>
 
-      {/* STATS */}
-      <Section className="py-16 px-4" style={{ background: "#0d1e2d" }}>
-        <div className="max-w-5xl mx-auto grid grid-cols-3 gap-6 text-center">
-          {[
+      <NeonDivider color={CYAN} />
+
+      {/* STATS — Premium Glass */}
+      <Section className="py-16 px-4 relative overflow-hidden" style={{ background: "#0d1e2d" }}>
+        <FloatingOrbs color={CYAN} count={3} />
+        <div className="max-w-5xl mx-auto relative z-10">
+          <PremiumStatsBar accentColor={CYAN} stats={[
             { value: totalSpots || 120, suffix: "+", label: "Postazioni" },
-            { value: rows || 8, suffix: "", label: "File" },
+            { value: rows || 8, label: "File" },
             { value: minPrice || 25, suffix: "€", label: "Da / Giorno" },
-          ].map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
-              <p className="text-3xl sm:text-4xl font-bold" style={{ color: CYAN }}><AnimatedNum value={s.value} suffix={s.suffix} /></p>
-              <p className="text-[10px] uppercase tracking-widest text-white/25 mt-1">{s.label}</p>
-            </motion.div>
-          ))}
+          ]} />
         </div>
       </Section>
 
