@@ -923,6 +923,9 @@ export default function AgentsPage() {
             </table>
           </div>
         </div>
+
+        {/* ─── ElevenLabs Conversational AI Config ─── */}
+        <ElevenLabsConvAIConfig />
       </div>
 
       {/* ─── Agent Detail Sheet (Full Edit) ─── */}
