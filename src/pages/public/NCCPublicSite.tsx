@@ -505,40 +505,40 @@ export default function NCCPublicSite({ company }: Props) {
       </nav>
 
       {/* ═══════════ HERO — 100vh, video bg + 2 columns ═══════════ */}
-      <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
+      <section className="relative min-h-[100svh] flex items-center pt-24 sm:pt-20 pb-8 px-4 overflow-hidden">
         {/* Dark background image — Amalfi coast */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${heroBgImg})` }}
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.5) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.75) 40%, rgba(0,0,0,0.55) 100%)" }} />
 
-        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
+        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-8 lg:gap-16 items-center relative z-10">
           <motion.div initial="hidden" animate="show" variants={stagger}>
-            <motion.p variants={fadeUp} custom={0} className="text-[12px] uppercase tracking-[4px] font-bold mb-6" style={{ color: gold }}>
+            <motion.p variants={fadeUp} custom={0} className="text-[10px] sm:text-[12px] uppercase tracking-[3px] sm:tracking-[4px] font-bold mb-4 sm:mb-6" style={{ color: gold }}>
               {company.name}
             </motion.p>
 
-            <motion.h1 variants={fadeUp} custom={1} className="font-black tracking-tight mb-7 leading-[0.95]" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(48px, 8vw, 96px)", fontWeight: 900 }}>
+            <motion.h1 variants={fadeUp} custom={1} className="font-black tracking-tight mb-5 sm:mb-7 leading-[0.95]" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(36px, 7vw, 96px)", fontWeight: 900 }}>
               <span className="text-white block">LUXURY</span>
               <span style={{ color: gold }} className="block">NCC TRANSPORT</span>
             </motion.h1>
 
-            <motion.p variants={fadeUp} custom={2} className="text-lg mb-10 max-w-[480px] leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
+            <motion.p variants={fadeUp} custom={2} className="text-base sm:text-lg mb-8 sm:mb-10 max-w-[480px] leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
               Servizio NCC privato nel Sud Italia. Transfer aeroportuali, tour esclusivi e noleggio con conducente.
               {company.city && ` Base: ${company.city}.`}
             </motion.p>
 
             <motion.div variants={fadeUp} custom={3}>
-              <Button size="lg" className="rounded-full font-bold text-sm uppercase hover:scale-105 transition-transform" style={{ background: gold, color: "#000", padding: "16px 32px", fontSize: "14px", fontWeight: 700 }} asChild>
+              <Button size="lg" className="rounded-full font-bold text-sm uppercase hover:scale-105 transition-transform" style={{ background: gold, color: "#000", padding: "14px 28px", fontSize: "13px", fontWeight: 700 }} asChild>
                 <a href="#prenota">PRENOTA ORA</a>
               </Button>
             </motion.div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 40, x: 0 }} animate={{ opacity: 1, y: 0, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="relative mt-8 lg:mt-0">
+          <motion.div initial={{ opacity: 0, y: 40, x: 0 }} animate={{ opacity: 1, y: 0, x: 0 }} transition={{ delay: 0.5, duration: 1 }} className="relative mt-4 lg:mt-0">
             {/* Video principale */}
-            <div className="relative rounded-2xl sm:rounded-[20px] overflow-hidden shadow-2xl max-w-md mx-auto lg:max-w-none" style={{ border: `3px solid ${gold}30` }}>
+            <div className="relative rounded-2xl sm:rounded-[20px] overflow-hidden shadow-2xl max-w-sm sm:max-w-md mx-auto lg:max-w-none" style={{ border: `3px solid ${gold}30` }}>
               <video
                 src={nccHeroVideo}
                 autoPlay muted loop playsInline
