@@ -950,22 +950,23 @@ const EmpireVoiceAgent: React.FC = () => {
             </div>
 
             {/* Voice Wave Visualizer */}
-            {isSpeaking && !isPaused && (
+            {(isSpeaking && !isPaused) || (voiceMode === "elevenlabs" && conversation.status === "connected") ? (
               <div className="flex items-center justify-center gap-[3px] py-2 px-4">
                 {Array.from({ length: 20 }).map((_, i) => {
                   const peak = 8 + ((i * 7) % 14);
                   const speed = 0.6 + ((i % 4) * 0.12);
+                  const isActive = voiceMode === "elevenlabs" ? conversation.isSpeaking : true;
                   return (
                     <motion.div
                       key={i}
                       className="w-[3px] rounded-full bg-primary/50"
-                      animate={{ height: [4, peak, 4] }}
-                      transition={{ duration: speed, repeat: Infinity, delay: i * 0.03, ease: "easeInOut" }}
+                      animate={isActive ? { height: [4, peak, 4] } : { height: 4 }}
+                      transition={{ duration: speed, repeat: isActive ? Infinity : 0, delay: i * 0.03, ease: "easeInOut" }}
                     />
                   );
                 })}
               </div>
-            )}
+            ) : null}
 
             {/* Paused indicator */}
             {isPaused && (
