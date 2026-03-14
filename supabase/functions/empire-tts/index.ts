@@ -22,8 +22,8 @@ serve(async (req) => {
       });
     }
 
-    // Use "Sarah" voice - warm, natural feminine voice, excellent for Italian
-    const voiceId = "EXAVITQu4vr4xnSDxMaL";
+    // Use "Laura" voice - natural Italian feminine voice with native accent
+    const voiceId = "FGY2WhTYpPnrIDTdsKH5";
 
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
