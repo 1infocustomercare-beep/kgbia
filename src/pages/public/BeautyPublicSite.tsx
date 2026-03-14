@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
+import { MarqueeCarousel, PremiumSectionHeader, PremiumStatsBar, ReviewsMarquee, AmbientGlow, GlassServiceCard } from "@/components/public/PremiumSiteKit";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -265,68 +266,56 @@ export default function BeautyPublicSite({ company }: Props) {
         </motion.div>
       </section>
 
-      {/* ═══ TICKER ═══ */}
-      <div className="overflow-hidden py-4" style={{ background: "#111" }}>
-        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1200] }} transition={{ repeat: Infinity, duration: 20, ease: "linear" }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-medium" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "'Inter', sans-serif" }}>
+      {/* ═══ TICKER — Premium Marquee ═══ */}
+      <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
+        <AmbientGlow color={PINK} position="top" />
+        <MarqueeCarousel speed={40} pauseOnHover items={
+          tickerItems.map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-medium mx-6 whitespace-nowrap" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "'Inter', sans-serif" }}>
               <Sparkles className="w-3 h-3" style={{ color: `${PINK}60` }} /> {item}
             </span>
-          ))}
-        </motion.div>
+          ))
+        } />
       </div>
 
-      {/* ═══ STATS ═══ */}
+      {/* ═══ STATS — Premium Glass ═══ */}
       <Section className="py-16 sm:py-20 px-4" style={{ background: "#111" }}>
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-            {[
-              { value: 2500, suffix: "+", label: "Clienti Soddisfatte" },
-              { value: 15, suffix: "+", label: "Anni di Esperienza" },
-              { value: 98, suffix: "%", label: "Tasso di Ritorno" },
-              { value: 50, suffix: "+", label: "Trattamenti Premium" },
-            ].map((stat, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                <p className="text-3xl sm:text-4xl font-bold" style={{ color: PINK }}><AnimatedNum value={stat.value} suffix={stat.suffix} /></p>
-                <p className="text-[11px] uppercase tracking-[0.15em] mt-2 text-white/30" style={{ fontFamily: "'Inter', sans-serif" }}>{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
+          <PremiumStatsBar accentColor={PINK} stats={[
+            { value: 2500, suffix: "+", label: "Clienti Soddisfatte" },
+            { value: 15, suffix: "+", label: "Anni di Esperienza" },
+            { value: 98, suffix: "%", label: "Tasso di Ritorno" },
+            { value: 50, suffix: "+", label: "Trattamenti Premium" },
+          ]} />
         </div>
       </Section>
 
-      {/* ═══ SERVICES — auto-scrolling carousel ═══ */}
-      <Section id="servizi" className="py-16 sm:py-24 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-medium mb-3" style={{ color: PINK, fontFamily: "'Inter', sans-serif" }}>I Nostri Servizi</p>
-            <h2 className="text-3xl sm:text-4xl font-bold">Trattamenti Esclusivi</h2>
-          </div>
-          <div className="relative">
-            <div ref={scrollRef} className="flex gap-5 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4" style={{ scrollbarWidth: "none" }}>
-              {services.map((s, i) => (
-                <motion.div key={i} className="group relative rounded-2xl overflow-hidden flex-shrink-0 w-[280px] sm:w-[320px] snap-start cursor-pointer"
-                  style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
-                  whileHover={{ y: -5, transition: { duration: 0.3 } }}>
-                  <div className="relative h-52 overflow-hidden">
-                    <img src={s.img} alt={s.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f0812] via-transparent to-transparent" />
-                    <span className="absolute top-3 left-3 text-2xl">{s.icon}</span>
-                    <Badge className="absolute top-3 right-3 text-[9px]" style={{ background: `${PINK}25`, color: PINK, border: `1px solid ${PINK}40` }}>Premium</Badge>
-                  </div>
-                  <div className="p-5">
-                    <h3 className="font-semibold text-base mb-1">{s.name}</h3>
-                    <p className="text-sm text-white/40" style={{ fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            <button onClick={() => scrollRef.current?.scrollBy({ left: -320, behavior: "smooth" })} className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-xl z-10 hover:scale-110 transition" style={{ background: "rgba(0,0,0,0.7)", border: `1px solid ${PINK}30` }}>
-              <ChevronLeft className="w-5 h-5" style={{ color: PINK }} />
-            </button>
-            <button onClick={() => scrollRef.current?.scrollBy({ left: 320, behavior: "smooth" })} className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-xl z-10 hover:scale-110 transition" style={{ background: "rgba(0,0,0,0.7)", border: `1px solid ${PINK}30` }}>
-              <ChevronRight className="w-5 h-5" style={{ color: PINK }} />
-            </button>
+      {/* ═══ SERVICES — Auto-scroll Premium Marquee ═══ */}
+      <Section id="servizi" className="py-16 sm:py-24 px-4 relative overflow-hidden">
+        <AmbientGlow color={PINK} position="both" />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <PremiumSectionHeader badge="I Nostri Servizi" title="Trattamenti" highlight="Esclusivi" accentColor={PINK} subtitle="Scopri i nostri servizi premium, studiati per esaltare la tua bellezza naturale." />
+          <div className="mt-12">
+            <MarqueeCarousel speed={50} pauseOnHover items={
+              services.map((s, i) => (
+                <div key={i} className="w-[280px] sm:w-[320px] mx-2 sm:mx-3 flex-shrink-0">
+                  <motion.div className="group relative rounded-3xl overflow-hidden cursor-pointer h-full"
+                    style={{ background: "rgba(255,255,255,0.02)", border: `1px solid rgba(255,255,255,0.06)`, backdropFilter: "blur(12px)" }}
+                    whileHover={{ y: -6, scale: 1.02 }} transition={{ duration: 0.4 }}>
+                    <div className="relative h-52 overflow-hidden rounded-t-3xl">
+                      <img src={s.img} alt={s.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0f0812] via-transparent to-transparent" />
+                      <span className="absolute top-3 left-3 text-2xl">{s.icon}</span>
+                      <Badge className="absolute top-3 right-3 text-[9px] rounded-full px-3" style={{ background: `${PINK}25`, color: PINK, border: `1px solid ${PINK}40` }}>Premium</Badge>
+                    </div>
+                    <div className="p-5">
+                      <h3 className="font-semibold text-base mb-1">{s.name}</h3>
+                      <p className="text-sm text-white/40" style={{ fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
+                    </div>
+                  </motion.div>
+                </div>
+              ))
+            } />
           </div>
         </div>
       </Section>
@@ -355,14 +344,12 @@ export default function BeautyPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* ═══ WHY US ═══ */}
-      <Section className="py-16 sm:py-24 px-4" style={{ background: `linear-gradient(180deg, ${DARK} 0%, #1a1018 100%)` }}>
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-medium mb-3" style={{ color: PINK, fontFamily: "'Inter', sans-serif" }}>Perché Noi</p>
-            <h2 className="text-3xl sm:text-4xl font-bold">La Differenza</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* ═══ WHY US — Glassmorphism Cards ═══ */}
+      <Section className="py-16 sm:py-24 px-4 relative overflow-hidden" style={{ background: `linear-gradient(180deg, ${DARK} 0%, #1a1018 100%)` }}>
+        <AmbientGlow color={PINK} position="both" />
+        <div className="max-w-5xl mx-auto relative z-10">
+          <PremiumSectionHeader badge="Perché Noi" title="La" highlight="Differenza" accentColor={PINK} />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
             {[
               { icon: Award, title: "Professionisti Certificati", desc: "Team con anni di esperienza e formazione continua" },
               { icon: Sparkles, title: "Prodotti Premium", desc: "Solo brand di alta qualità e cruelty-free" },
@@ -371,68 +358,22 @@ export default function BeautyPublicSite({ company }: Props) {
               { icon: Clock, title: "Orari Flessibili", desc: "Aperti 6 giorni su 7, anche pausa pranzo" },
               { icon: CheckCircle, title: "Soddisfazione Garantita", desc: "Non sei soddisfatta? Ti rifacciamo il trattamento" },
             ].map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-                className="p-5 rounded-2xl hover:border-white/10 transition-colors" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
-                whileHover={{ y: -3 }}>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: `${PINK}15` }}>
-                  <item.icon className="w-5 h-5" style={{ color: PINK }} />
-                </div>
-                <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
-                <p className="text-xs text-white/40" style={{ fontFamily: "'Inter', sans-serif" }}>{item.desc}</p>
-              </motion.div>
+              <GlassServiceCard key={i} icon={<item.icon className="w-5 h-5" style={{ color: PINK }} />} title={item.title} description={item.desc} accentColor={PINK} />
             ))}
           </div>
         </div>
       </Section>
 
-      {/* ═══ TESTIMONIALS — auto-carousel ═══ */}
-      <Section id="recensioni" className="py-16 sm:py-24 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-medium mb-3" style={{ color: PINK, fontFamily: "'Inter', sans-serif" }}>Recensioni</p>
-            <h2 className="text-3xl sm:text-4xl font-bold">Cosa Dicono di Noi</h2>
+      {/* ═══ TESTIMONIALS — Auto-scrolling Premium Marquee ═══ */}
+      <Section id="recensioni" className="py-16 sm:py-24 relative overflow-hidden">
+        <AmbientGlow color={PINK} position="both" />
+        <div className="relative z-10">
+          <div className="px-4 mb-12">
+            <PremiumSectionHeader badge="Recensioni" title="Cosa Dicono" highlight="di Noi" accentColor={PINK} />
           </div>
-
-          {/* Featured review — auto-cycling */}
-          <div className="mb-10 rounded-2xl p-8 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${PINK}15` }}>
-            <AnimatePresence mode="wait">
-              <motion.div key={reviewIndex} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.5 }}>
-                <div className="flex items-center gap-4 mb-4">
-                  <img src={FALLBACK_REVIEWS[reviewIndex].photo} alt="" className="w-14 h-14 rounded-full object-cover" style={{ border: `2px solid ${PINK}40` }} />
-                  <div>
-                    <p className="font-semibold text-base">{FALLBACK_REVIEWS[reviewIndex].name}</p>
-                    <p className="text-xs text-white/40" style={{ fontFamily: "'Inter', sans-serif" }}>{FALLBACK_REVIEWS[reviewIndex].city}</p>
-                  </div>
-                  <div className="ml-auto flex gap-0.5">
-                    {Array.from({ length: 5 }).map((_, s) => <Star key={s} className="w-4 h-4" fill={PINK} style={{ color: PINK }} />)}
-                  </div>
-                </div>
-                <Quote className="w-8 h-8 mb-3" style={{ color: `${PINK}25` }} />
-                <p className="text-lg italic leading-relaxed text-white/60" style={{ fontFamily: "'Inter', sans-serif" }}>"{FALLBACK_REVIEWS[reviewIndex].text}"</p>
-              </motion.div>
-            </AnimatePresence>
-            {/* Progress dots */}
-            <div className="flex gap-2 justify-center mt-6">
-              {FALLBACK_REVIEWS.map((_, i) => (
-                <button key={i} onClick={() => setReviewIndex(i)} className="w-2 h-2 rounded-full transition-all" style={{ background: i === reviewIndex ? PINK : "rgba(255,255,255,0.15)", transform: i === reviewIndex ? "scale(1.3)" : "scale(1)" }} />
-              ))}
-            </div>
-          </div>
-
-          {/* Mini review cards */}
-          <div className="grid sm:grid-cols-3 gap-4">
-            {FALLBACK_REVIEWS.slice(0, 3).map((t, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="p-5 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                <div className="flex gap-0.5 mb-3">{Array.from({ length: 5 }).map((_, s) => <Star key={s} className="w-3.5 h-3.5" fill={PINK} style={{ color: PINK }} />)}</div>
-                <p className="text-sm mb-4 leading-relaxed text-white/50" style={{ fontFamily: "'Inter', sans-serif" }}>"{t.text}"</p>
-                <div className="flex items-center gap-2">
-                  <img src={t.photo} alt="" className="w-7 h-7 rounded-full object-cover" />
-                  <p className="text-sm font-semibold">— {t.name}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <ReviewsMarquee accentColor={PINK} speed={45} reviews={FALLBACK_REVIEWS.map(r => ({
+            name: r.name, text: r.text, rating: r.rating, photo: r.photo, city: r.city, accentColor: PINK,
+          }))} />
         </div>
       </Section>
 
