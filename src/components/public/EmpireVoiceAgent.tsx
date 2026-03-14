@@ -1,4 +1,4 @@
-// ATLAS Voice Agent v3 — Scroll-tracking auto-narration
+// ATLAS Voice Agent v4 — Instant mobile launch + Web Speech API fallback
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause } from "lucide-react";
@@ -10,7 +10,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-voice-agent`;
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
 
-// ── Section narration scripts (short, persuasive, natural) ──
+// ── Section narration scripts ──
 const SECTION_SCRIPTS: Record<string, string> = {
   hero: "Benvenuto in Empire — il sistema operativo che trasforma qualsiasi attività in un business digitale di nuova generazione. Pronto a scoprire come?",
   industries: "Venticinque settori, un'unica piattaforma. Dal ristorante al medico, dall'NCC al beauty — ogni modulo è costruito su misura per il tuo business.",
@@ -39,16 +39,103 @@ const normalizeTextForSpeech = (text: string) =>
     .trim()
     .slice(0, 700);
 
-// ── TTS helper ──
+// ── Best Italian female voice from Web Speech API ──
+let cachedItalianVoice: SpeechSynthesisVoice | null = null;
+
+function getBestItalianFemaleVoice(): SpeechSynthesisVoice | null {
+  if (cachedItalianVoice) return cachedItalianVoice;
+  
+  const voices = window.speechSynthesis?.getVoices() || [];
+  
+  // Priority order for natural-sounding Italian female voices
+  const priorities = [
+    // iOS / macOS premium voices
+    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /alice/i.test(v.name),
+    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /federica/i.test(v.name),
+    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /elsa/i.test(v.name),
+    // Google / Android premium
+    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /google.*italiano.*female/i.test(v.name),
+    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /google/i.test(v.name),
+    // Microsoft voices
+    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /elsa|isabella|cosimo/i.test(v.name),
+    // Any Italian female
+    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /femal|donna|woman/i.test(v.name),
+    // Any Italian voice
+    (v: SpeechSynthesisVoice) => v.lang.startsWith("it"),
+  ];
+  
+  for (const test of priorities) {
+    const match = voices.find(test);
+    if (match) {
+      cachedItalianVoice = match;
+      return match;
+    }
+  }
+  return null;
+}
+
+// Preload voices
+if (typeof window !== "undefined" && window.speechSynthesis) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => {
+    cachedItalianVoice = null;
+    getBestItalianFemaleVoice();
+  };
+}
+
+// ── Web Speech API fallback TTS ──
+function speakWithBrowserTTS(
+  text: string,
+  abortRef: React.MutableRefObject<boolean>,
+): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (!window.speechSynthesis || abortRef.current) {
+      resolve(false);
+      return;
+    }
+    
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voice = getBestItalianFemaleVoice();
+    
+    if (voice) {
+      utterance.voice = voice;
+    }
+    utterance.lang = "it-IT";
+    utterance.rate = 0.95;
+    utterance.pitch = 1.05;
+    utterance.volume = 1;
+    
+    utterance.onend = () => resolve(true);
+    utterance.onerror = () => resolve(false);
+    
+    if (abortRef.current) {
+      resolve(false);
+      return;
+    }
+    
+    window.speechSynthesis.speak(utterance);
+  });
+}
+
+// ── TTS helper with ElevenLabs + browser fallback ──
 async function speakText(
   text: string,
   audioRef: React.MutableRefObject<HTMLAudioElement | null>,
   abortRef: React.MutableRefObject<boolean>,
+  useBrowserFallbackRef: React.MutableRefObject<boolean>,
 ): Promise<boolean> {
   if (abortRef.current) return false;
 
   const normalizedText = normalizeTextForSpeech(text);
   if (!normalizedText) return false;
+
+  // If we already know ElevenLabs is down, go straight to browser TTS
+  if (useBrowserFallbackRef.current) {
+    return speakWithBrowserTTS(normalizedText, abortRef);
+  }
 
   try {
     const resp = await fetch(TTS_URL, {
@@ -60,20 +147,33 @@ async function speakText(
       body: JSON.stringify({ text: normalizedText }),
     });
 
-    if (!resp.ok || abortRef.current) return false;
+    if (!resp.ok || abortRef.current) {
+      // ElevenLabs failed — switch to browser fallback permanently for this session
+      console.warn("ElevenLabs TTS failed, switching to browser voice");
+      useBrowserFallbackRef.current = true;
+      return speakWithBrowserTTS(normalizedText, abortRef);
+    }
 
-    const { audioContent } = await resp.json();
-    if (!audioContent || abortRef.current) return false;
+    const data = await resp.json();
+    
+    if (data.error || !data.audioContent || abortRef.current) {
+      useBrowserFallbackRef.current = true;
+      return speakWithBrowserTTS(normalizedText, abortRef);
+    }
 
     return await new Promise<boolean>((resolve) => {
-      const audio = new Audio(`data:audio/mpeg;base64,${audioContent}`);
+      const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
       audio.preload = "auto";
 
       if (audioRef.current) audioRef.current.pause();
       audioRef.current = audio;
 
       audio.onended = () => resolve(true);
-      audio.onerror = () => resolve(false);
+      audio.onerror = () => {
+        // Audio decode error — fallback
+        useBrowserFallbackRef.current = true;
+        speakWithBrowserTTS(normalizedText, abortRef).then(resolve);
+      };
 
       if (abortRef.current) {
         audio.pause();
@@ -81,10 +181,14 @@ async function speakText(
         return;
       }
 
-      audio.play().catch(() => resolve(false));
+      audio.play().catch(() => {
+        // Autoplay blocked — try browser TTS
+        speakWithBrowserTTS(normalizedText, abortRef).then(resolve);
+      });
     });
   } catch {
-    return false;
+    useBrowserFallbackRef.current = true;
+    return speakWithBrowserTTS(normalizedText, abortRef);
   }
 }
 
@@ -201,6 +305,8 @@ const EmpireVoiceAgent: React.FC = () => {
   const [narratedSections, setNarratedSections] = useState<Set<string>>(new Set());
   const [autoNarrating, setAutoNarrating] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [mobilePromptShown, setMobilePromptShown] = useState(false);
+  const [userInteracted, setUserInteracted] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<InstanceType<NonNullable<typeof SpeechRecognition>> | null>(null);
@@ -214,6 +320,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const queueProcessingRef = useRef(false);
   const narrationAttemptsRef = useRef<Record<string, number>>({});
   const introStartedRef = useRef(false);
+  const useBrowserFallbackRef = useRef(false);
 
   // Sync refs
   useEffect(() => { messagesRef.current = messages; }, [messages]);
@@ -226,7 +333,6 @@ const EmpireVoiceAgent: React.FC = () => {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-
     const mediaQuery = window.matchMedia("(pointer: coarse)");
     const updateTouchState = () => setIsTouchDevice(mediaQuery.matches);
     updateTouchState();
@@ -235,7 +341,6 @@ const EmpireVoiceAgent: React.FC = () => {
       mediaQuery.addEventListener("change", updateTouchState);
       return () => mediaQuery.removeEventListener("change", updateTouchState);
     }
-
     mediaQuery.addListener(updateTouchState);
     return () => mediaQuery.removeListener(updateTouchState);
   }, []);
@@ -243,7 +348,7 @@ const EmpireVoiceAgent: React.FC = () => {
   // Auto-scroll chat
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
-  // ── Intersection Observer — stable tracking of known landing sections ──
+  // ── Intersection Observer ──
   useEffect(() => {
     const observedIds = SECTION_ORDER.filter((id) => !!document.getElementById(id));
     if (observedIds.length === 0) return;
@@ -255,16 +360,11 @@ const EmpireVoiceAgent: React.FC = () => {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
         if (!mostVisible) return;
-
         const sectionId = mostVisible.target.getAttribute("id");
         if (!sectionId) return;
-
         setCurrentSection((prev) => (prev === sectionId ? prev : sectionId));
       },
-      {
-        threshold: [0.25, 0.4, 0.6],
-        rootMargin: "-10% 0px -45% 0px",
-      }
+      { threshold: [0.25, 0.4, 0.6], rootMargin: "-10% 0px -45% 0px" }
     );
 
     observedIds.forEach((id) => {
@@ -275,29 +375,24 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // ── Follow click navigation (menu links / CTA with #section) ──
+  // ── Follow click navigation ──
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       if (!target) return;
-
       const anchor = target.closest("a[href^='#']") as HTMLAnchorElement | null;
       if (!anchor) return;
-
       const id = anchor.getAttribute("href")?.replace("#", "")?.trim();
       if (!id || !SECTION_SCRIPTS[id]) return;
 
       setCurrentSection((prev) => (prev === id ? prev : id));
-
       if (!autoNarratingRef.current) return;
 
       narratedRef.current.delete(id);
       setNarratedSections(new Set(narratedRef.current));
-
       if (!sectionQueueRef.current.includes(id)) {
         sectionQueueRef.current.push(id);
       }
-
       void processNarrationQueue();
     };
 
@@ -305,7 +400,7 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => document.removeEventListener("click", onClick);
   }, []);
 
-  // ── Queue processor for robust section narration (no freezes) ──
+  // ── Queue processor ──
   const processNarrationQueue = useCallback(async () => {
     if (queueProcessingRef.current) return;
     queueProcessingRef.current = true;
@@ -327,7 +422,7 @@ const EmpireVoiceAgent: React.FC = () => {
       setIsPaused(false);
       abortRef.current = false;
 
-      const played = await speakText(script, audioRef, abortRef);
+      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef);
 
       if (played && !abortRef.current) {
         narrationAttemptsRef.current[sectionId] = 0;
@@ -366,12 +461,18 @@ const EmpireVoiceAgent: React.FC = () => {
     setAutoNarrating(true);
     enqueueSectionNarration("hero", true);
   }, [enqueueSectionNarration]);
+
   const stopAll = useCallback(() => {
     abortRef.current = true;
     autoNarratingRef.current = false;
     sectionQueueRef.current = [];
     queueProcessingRef.current = false;
     narrationAttemptsRef.current = {};
+
+    // Stop browser TTS
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
 
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null; }
@@ -385,14 +486,22 @@ const EmpireVoiceAgent: React.FC = () => {
 
   // ── Pause / Resume ──
   const togglePause = useCallback(() => {
-    if (!audioRef.current) return;
-
-    if (isPaused) {
-      audioRef.current.play().catch(() => undefined);
-      setIsPaused(false);
-    } else {
-      audioRef.current.pause();
-      setIsPaused(true);
+    if (audioRef.current) {
+      if (isPaused) {
+        audioRef.current.play().catch(() => undefined);
+        setIsPaused(false);
+      } else {
+        audioRef.current.pause();
+        setIsPaused(true);
+      }
+    } else if (window.speechSynthesis) {
+      if (isPaused) {
+        window.speechSynthesis.resume();
+        setIsPaused(false);
+      } else {
+        window.speechSynthesis.pause();
+        setIsPaused(true);
+      }
     }
   }, [isPaused]);
 
@@ -400,25 +509,39 @@ const EmpireVoiceAgent: React.FC = () => {
   useEffect(() => {
     if (!autoNarrating) return;
     if (!currentSection || !SECTION_SCRIPTS[currentSection]) return;
-
     enqueueSectionNarration(currentSection);
   }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
-  // ── Auto-start: show button, autoplay only on desktop ──
+  // ── Instant visibility (300ms) ──
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 1600);
-
+      // On mobile, show the prompt overlay immediately
+      if (window.matchMedia("(pointer: coarse)").matches) {
+        setMobilePromptShown(true);
+      }
+    }, 300);
     return () => clearTimeout(timer);
   }, []);
 
+  // ── Desktop auto-start ──
   useEffect(() => {
     if (!isVisible || isTouchDevice) return;
     startIntroNarration();
   }, [isVisible, isTouchDevice, startIntroNarration]);
 
-  // ── Send user message (chat / voice) ──
+  // ── Mobile: start speaking after user's first tap anywhere on the prompt ──
+  const handleMobileActivate = useCallback(() => {
+    setUserInteracted(true);
+    setMobilePromptShown(false);
+    setIsOpen(true);
+    // Small delay to ensure audio context is unlocked by user gesture
+    setTimeout(() => {
+      startIntroNarration();
+    }, 50);
+  }, [startIntroNarration]);
+
+  // ── Send user message ──
   const sendMessage = useCallback(async (text: string) => {
     if (!text.trim() || isLoading) return;
     stopAll();
@@ -454,7 +577,7 @@ const EmpireVoiceAgent: React.FC = () => {
           if (!shouldSpeak) return;
 
           setIsSpeaking(true);
-          await speakText(full, audioRef, abortRef);
+          await speakText(full, audioRef, abortRef, useBrowserFallbackRef);
           if (!abortRef.current) setIsSpeaking(false);
         },
       });
@@ -514,11 +637,14 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [sendMessage, stopAll]);
 
-  // ── Toggle panel (does NOT stop audio — voice keeps playing) ──
+  // ── Toggle panel ──
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => {
       const next = !prev;
-      if (next) startIntroNarration();
+      if (next) {
+        setUserInteracted(true);
+        startIntroNarration();
+      }
       return next;
     });
   }, [startIntroNarration]);
@@ -526,9 +652,54 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── Render ──
   return (
     <>
-      {/* Floating Avatar Button — always visible, toggles chat open/close */}
+      {/* Mobile activation prompt — full-screen tap-to-start overlay */}
       <AnimatePresence>
-        {isVisible && (
+        {mobilePromptShown && isTouchDevice && !userInteracted && (
+          <motion.div
+            className="fixed inset-0 z-[300] flex items-end justify-center pb-32"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={handleMobileActivate} />
+            
+            {/* Prompt card */}
+            <motion.button
+              onClick={handleMobileActivate}
+              className="relative z-10 flex items-center gap-4 px-6 py-4 rounded-2xl bg-background/95 border border-primary/20 shadow-[0_0_40px_hsla(265,85%,65%,0.25)] touch-manipulation"
+              initial={{ y: 40, scale: 0.9 }}
+              animate={{ y: 0, scale: 1 }}
+              exit={{ y: 40, scale: 0.9 }}
+              transition={{ type: "spring", damping: 20, stiffness: 300 }}
+            >
+              <div className="relative">
+                <motion.div
+                  className="absolute -inset-2 rounded-full bg-primary/30 blur-md"
+                  animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+                <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-primary/40">
+                  <img src={voiceAgentAvatar} alt="Assistente" className="w-full h-full object-cover" />
+                </div>
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-bold text-foreground">Ciao! Sono Laura 👋</p>
+                <p className="text-xs text-foreground/50 mt-0.5">Tocca per attivare la guida vocale</p>
+                <div className="flex items-center gap-1.5 mt-1.5">
+                  <Volume2 className="w-3 h-3 text-primary/70" />
+                  <span className="text-[0.6rem] text-primary/70 font-medium tracking-wide uppercase">Audio italiano</span>
+                </div>
+              </div>
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Avatar Button */}
+      <AnimatePresence>
+        {isVisible && !mobilePromptShown && (
           <motion.button
             className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-4 z-[201] group touch-manipulation"
             onClick={toggleOpen}
@@ -583,7 +754,7 @@ const EmpireVoiceAgent: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-foreground">ATLAS</h3>
+                  <h3 className="text-sm font-bold text-foreground">Laura</h3>
                   <p className="text-[0.55rem] text-foreground/40 tracking-wider uppercase">
                     {isPaused ? "⏸ In pausa" :
                      isSpeaking ? "🔊 Sta parlando..." :
@@ -643,9 +814,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     <img src={voiceAgentAvatar} alt="Assistente" className="w-8 h-8 rounded-full object-cover" />
                   </motion.div>
                   <p className="text-xs text-foreground/30 text-center max-w-[220px] leading-relaxed">
-                    {isTouchDevice && !autoNarrating
-                      ? "Tocca il pulsante audio: attivo subito la guida vocale italiana in tempo reale."
-                      : "Ciao! Sono ATLAS. Ti guido attraverso Empire mentre scorri la pagina."}
+                    Ciao! Sono Laura, la tua guida vocale. Ti accompagno nella scoperta di Empire.
                   </p>
                 </div>
               )}
