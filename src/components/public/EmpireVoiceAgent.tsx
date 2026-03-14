@@ -1,3 +1,4 @@
+// ATLAS Voice Agent v2
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Sparkles, Send, Play, Square, Pause, BookOpen } from "lucide-react";
