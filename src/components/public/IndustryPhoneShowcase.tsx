@@ -1381,12 +1381,7 @@ export function IPhoneFrame({
                 </div>
                 {/* Metric pills */}
                 <div className="grid grid-cols-2 gap-1 mb-1.5">
-                  {[
-                    { label: "Conversione", val: "12.4%", delta: "+2.1%" },
-                    { label: "Clienti attivi", val: "234", delta: "+18" },
-                    { label: "Ticket medio", val: "€47", delta: "+€5" },
-                    { label: "Retention", val: "89%", delta: "+3%" },
-                  ].map((m, i) => (
+                  {sectorStyle.analyticsMetrics.map((m, i) => (
                     <div key={i} className="p-1 rounded-md" style={{ backgroundColor: `${color}08`, border: `0.5px solid ${color}10` }}>
                       <p className="text-[4px] text-white/25 uppercase tracking-wider">{m.label}</p>
                       <div className="flex items-baseline gap-1">
