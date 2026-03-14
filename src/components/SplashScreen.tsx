@@ -46,7 +46,7 @@ function NeuralMeshBg() {
             <motion.circle
               key={`p${i}`}
               r="0.3"
-              fill="hsla(265,85%,70%,0.6)"
+              fill="hsla(265,85%,70%,0.9)"
               initial={{ cx: na.x, cy: na.y, opacity: 0 }}
               animate={{
                 cx: [na.x, nb.x, na.x],
