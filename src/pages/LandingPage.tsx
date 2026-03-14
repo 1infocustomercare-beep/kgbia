@@ -131,7 +131,7 @@ const NeuralCellsBackground = () => {
   const goldConns = isMobile ? connections.filter((_, i) => i % 8 === 0) : connections.filter((_, i) => i % 4 === 0);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: isMobile ? 0.5 : 0.7 }}>
+    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.7 }}>
       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="pulseGlow">
