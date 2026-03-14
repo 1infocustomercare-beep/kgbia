@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { MarqueeCarousel, AmbientGlow, FloatingOrbs, NeonDivider, ScrollIndicator, PremiumFAQ } from "@/components/public/PremiumSiteKit";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -226,21 +227,22 @@ export default function TradesPublicSite({ company }: Props) {
           </motion.div>
         </motion.div>
 
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <ChevronDown className="w-5 h-5 text-white/20" />
-        </motion.div>
+        <ScrollIndicator />
       </section>
 
-      {/* ═══ TICKER ═══ */}
-      <div className="overflow-hidden py-4" style={{ background: "#111" }}>
-        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 18, ease: "linear" }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-bold uppercase text-white/20">
+      {/* ═══ TICKER — Premium Marquee ═══ */}
+      <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
+        <AmbientGlow color={isElectrician ? "#fbbf24" : "#60a5fa"} position="top" />
+        <MarqueeCarousel speed={30} pauseOnHover items={
+          tickerItems.map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-bold uppercase mx-6 whitespace-nowrap text-white/20">
               <HeroIcon className="w-3 h-3" style={{ opacity: 0.5 }} /> {item}
             </span>
-          ))}
-        </motion.div>
+          ))
+        } />
       </div>
+
+      <NeonDivider color={isElectrician ? "#fbbf24" : "#60a5fa"} />
 
       {/* ═══ SERVICES ═══ */}
       <section id="servizi" className="py-20 px-4 border-t border-white/5">

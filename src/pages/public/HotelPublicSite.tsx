@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { MarqueeCarousel, NeonDivider, PremiumStatsBarLight, FloatingOrbs, ScrollIndicator } from "@/components/public/PremiumSiteKit";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -198,36 +199,31 @@ export default function HotelPublicSite({ company }: Props) {
           </div>
         </motion.div>
 
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <ChevronDown className="w-5 h-5 text-white/30" />
-        </motion.div>
+        <ScrollIndicator />
       </section>
 
-      {/* TICKER */}
-      <div className="overflow-hidden py-4" style={{ background: BORDEAUX }}>
-        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 20, ease: "linear" }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-medium text-white/30" style={{ fontFamily: "'Lato', sans-serif" }}>
+      {/* TICKER — Premium Marquee */}
+      <div className="overflow-hidden py-5" style={{ background: BORDEAUX }}>
+        <MarqueeCarousel speed={40} pauseOnHover items={
+          tickerItems.map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-medium mx-6 whitespace-nowrap text-white/30" style={{ fontFamily: "'Lato', sans-serif" }}>
               <Sparkles className="w-3 h-3" style={{ color: `${GOLD}60` }} /> {item}
             </span>
-          ))}
-        </motion.div>
+          ))
+        } />
       </div>
 
-      {/* STATS */}
+      <NeonDivider color={GOLD} />
+
+      {/* STATS — Premium */}
       <Section className="py-16 px-4" style={{ background: "#fff" }}>
-        <div className="max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-          {[
+        <div className="max-w-5xl mx-auto">
+          <PremiumStatsBarLight accentColor={BORDEAUX} textColor="#2a1f2d" stats={[
             { value: 5000, suffix: "+", label: "Ospiti Soddisfatti" },
             { value: 50, suffix: "+", label: "Camere & Suite" },
             { value: 25, suffix: "+", label: "Anni di Eccellenza" },
             { value: 98, suffix: "%", label: "Tasso di Ritorno" },
-          ].map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-              <p className="text-3xl sm:text-4xl font-bold" style={{ color: BORDEAUX }}><AnimatedNum value={s.value} suffix={s.suffix} /></p>
-              <p className="text-[11px] uppercase tracking-[0.15em] mt-2" style={{ color: GOLD, fontFamily: "'Lato', sans-serif" }}>{s.label}</p>
-            </motion.div>
-          ))}
+          ]} />
         </div>
       </Section>
 

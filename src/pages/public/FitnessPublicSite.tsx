@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { MarqueeCarousel, AmbientGlow, FloatingOrbs, NeonDivider, ScrollIndicator, PremiumStatsBar, PremiumFAQ } from "@/components/public/PremiumSiteKit";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -179,31 +180,30 @@ export default function FitnessPublicSite({ company }: Props) {
         </div>
       </section>
 
-      {/* TICKER */}
-      <div className="overflow-hidden py-4" style={{ background: "#111" }}>
-        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 15, ease: "linear" }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-bold uppercase text-white/20" style={{ fontFamily: "'Roboto', sans-serif" }}>
+      {/* TICKER — Premium Marquee */}
+      <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
+        <AmbientGlow color={ORANGE} position="top" />
+        <MarqueeCarousel speed={30} pauseOnHover items={
+          tickerItems.map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-bold uppercase mx-6 whitespace-nowrap text-white/20" style={{ fontFamily: "'Roboto', sans-serif" }}>
               <Dumbbell className="w-3 h-3" style={{ color: `${ORANGE}50` }} /> {item}
             </span>
-          ))}
-        </motion.div>
+          ))
+        } />
       </div>
 
-      {/* STATS */}
-      <Section className="py-16 px-4" style={{ background: "#111" }}>
-        <div className="max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-          {[
+      <NeonDivider color={ORANGE} />
+
+      {/* STATS — Premium Glass */}
+      <Section className="py-16 px-4 relative overflow-hidden" style={{ background: "#111" }}>
+        <FloatingOrbs color={ORANGE} count={3} />
+        <div className="max-w-5xl mx-auto relative z-10">
+          <PremiumStatsBar accentColor={ORANGE} stats={[
             { value: 500, suffix: "+", label: "Iscritti" },
             { value: 20, suffix: "+", label: "Classi / Sett." },
             { value: 15, suffix: "+", label: "Trainer" },
             { value: 1500, suffix: "mq", label: "Di Struttura" },
-          ].map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
-              <p className="text-3xl sm:text-4xl font-bold" style={{ color: ORANGE }}><AnimatedNum value={s.value} suffix={s.suffix} /></p>
-              <p className="text-[10px] uppercase tracking-widest text-white/30 mt-1" style={{ fontFamily: "'Roboto', sans-serif" }}>{s.label}</p>
-            </motion.div>
-          ))}
+          ]} />
         </div>
       </Section>
 
@@ -388,31 +388,15 @@ export default function FitnessPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* FAQ */}
-      <Section className="py-16 sm:py-24 px-4" style={{ background: "#050505" }}>
-        <div className="max-w-3xl mx-auto">
+      {/* FAQ — Premium */}
+      <Section className="py-16 sm:py-24 px-4 relative overflow-hidden" style={{ background: "#050505" }}>
+        <FloatingOrbs color={ORANGE} count={2} />
+        <div className="max-w-3xl mx-auto relative z-10">
           <div className="text-center mb-10">
             <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-2" style={{ color: ORANGE, fontFamily: "'Roboto', sans-serif" }}>DOMANDE FREQUENTI</p>
             <h2 className="text-3xl sm:text-4xl font-bold uppercase">FAQ</h2>
           </div>
-          <div className="space-y-3">
-            {FAQ_ITEMS.map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-                className="rounded-xl overflow-hidden" style={{ background: "#111", border: "1px solid #1a1a1a" }}>
-                <button className="w-full text-left px-5 py-4 flex items-center justify-between gap-3" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                  <span className="font-semibold text-sm text-white" style={{ fontFamily: "'Roboto', sans-serif" }}>{item.q}</span>
-                  <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${openFaq === i ? "rotate-180" : ""}`} style={{ color: ORANGE }} />
-                </button>
-                <AnimatePresence>
-                  {openFaq === i && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                      <p className="px-5 pb-4 text-sm leading-relaxed text-white/50" style={{ fontFamily: "'Roboto', sans-serif" }}>{item.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </div>
+          <PremiumFAQ items={FAQ_ITEMS} accentColor={ORANGE} />
         </div>
       </Section>
 

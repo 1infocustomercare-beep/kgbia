@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { MarqueeCarousel, AmbientGlow, FloatingOrbs, NeonDivider, ScrollIndicator, PremiumStatsBarLight, PremiumSectionHeader, PremiumFAQ } from "@/components/public/PremiumSiteKit";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -221,36 +222,31 @@ export default function HealthcarePublicSite({ company }: Props) {
           </motion.div>
         </div>
 
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <ChevronDown className="w-5 h-5 text-white/30" />
-        </motion.div>
+        <ScrollIndicator />
       </section>
 
-      {/* TICKER */}
-      <div className="overflow-hidden py-4" style={{ background: BLUE }}>
-        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1200] }} transition={{ repeat: Infinity, duration: 20, ease: "linear" }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-medium text-white/30">
+      {/* TICKER — Premium Marquee */}
+      <div className="overflow-hidden py-5 relative" style={{ background: BLUE }}>
+        <MarqueeCarousel speed={40} pauseOnHover items={
+          tickerItems.map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-medium mx-6 whitespace-nowrap text-white/30">
               <Stethoscope className="w-3 h-3" style={{ color: `${TEAL}60` }} /> {item}
             </span>
-          ))}
-        </motion.div>
+          ))
+        } />
       </div>
 
-      {/* STATS */}
+      <NeonDivider color={TEAL} />
+
+      {/* STATS — Premium */}
       <Section className="py-16 px-4" style={{ background: "#fff" }}>
-        <div className="max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-          {[
+        <div className="max-w-5xl mx-auto">
+          <PremiumStatsBarLight accentColor={TEAL} textColor={BLUE} stats={[
             { value: 10000, suffix: "+", label: "Pazienti Assistiti" },
             { value: 20, suffix: "+", label: "Anni di Esperienza" },
             { value: 15, suffix: "+", label: "Specializzazioni" },
             { value: 99, suffix: "%", label: "Soddisfazione" },
-          ].map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-              <p className="text-3xl sm:text-4xl font-extrabold" style={{ color: BLUE }}><AnimatedNum value={s.value} suffix={s.suffix} /></p>
-              <p className="text-[11px] uppercase tracking-[0.15em] mt-2" style={{ color: TEAL }}>{s.label}</p>
-            </motion.div>
-          ))}
+          ]} />
         </div>
       </Section>
 
