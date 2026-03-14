@@ -76,9 +76,9 @@ function NeuralMeshBg() {
             {/* Dot */}
             <motion.circle
               cx={node.x} cy={node.y} r={node.size ? 1.2 : 0.6}
-              fill={i === 0 ? "hsla(265,85%,65%,0.5)" : "hsla(265,85%,65%,0.2)"}
-              stroke="hsla(265,85%,65%,0.15)"
-              strokeWidth="0.1"
+              fill={i === 0 ? "hsla(265,85%,65%,0.8)" : "hsla(265,85%,65%,0.45)"}
+              stroke="hsla(265,85%,65%,0.3)"
+              strokeWidth="0.15"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 + i * 0.08, ease: smoothEase }}
