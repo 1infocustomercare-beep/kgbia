@@ -95,8 +95,13 @@ SectionLabel.displayName = "SectionLabel";
 
 /* ═══ Neural Cells Background — flowing DNA data network ═══ */
 const NeuralCellsBackground = () => {
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
-  const CELL_COUNT = isMobile ? 18 : 40;
+  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 640);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  const CELL_COUNT = isMobile ? 22 : 40;
 
   const cells = useMemo(() =>
     Array.from({ length: CELL_COUNT }, (_, i) => ({
@@ -126,7 +131,7 @@ const NeuralCellsBackground = () => {
   const goldConns = isMobile ? connections.filter((_, i) => i % 8 === 0) : connections.filter((_, i) => i % 4 === 0);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: isMobile ? 0.5 : 0.7 }}>
+    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.7 }}>
       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="pulseGlow">
@@ -1763,8 +1768,8 @@ const LandingPage = () => {
         <div className="relative mb-14">
           {/* DNA background */}
           <div className="absolute inset-0 pointer-events-none -z-[1]">
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[220px] opacity-100">
-              <svg className="w-full h-full" viewBox="0 0 1200 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-full sm:h-[220px] opacity-100">
+               <svg className="w-full h-full" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <linearGradient id="lp-dna-a" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0" />
@@ -1778,7 +1783,7 @@ const LandingPage = () => {
                   </linearGradient>
                 </defs>
                 <motion.path
-                  d="M 0 80 C 200 10, 400 150, 600 80 C 800 10, 1000 150, 1200 80"
+                  d="M 0 120 C 200 30, 400 210, 600 120 C 800 30, 1000 210, 1200 120"
                   fill="none"
                   stroke="url(#lp-dna-a)"
                   strokeWidth="2"
@@ -1788,7 +1793,7 @@ const LandingPage = () => {
                   transition={{ duration: 1.2, ease: "easeOut" }}
                 />
                 <motion.path
-                  d="M 0 160 C 200 230, 400 90, 600 160 C 800 230, 1000 90, 1200 160"
+                  d="M 0 300 C 200 390, 400 210, 600 300 C 800 390, 1000 210, 1200 300"
                   fill="none"
                   stroke="url(#lp-dna-b)"
                   strokeWidth="2"
@@ -1797,9 +1802,47 @@ const LandingPage = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
                 />
+                {/* Extra helix strands for depth */}
+                <motion.path
+                  d="M 0 200 C 300 120, 600 320, 900 200 C 1000 150, 1100 250, 1200 200"
+                  fill="none"
+                  stroke="url(#lp-dna-a)"
+                  strokeWidth="1"
+                  strokeOpacity="0.4"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 0.4 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
+                />
+                <motion.path
+                  d="M 0 400 C 300 480, 600 320, 900 400 C 1000 450, 1100 350, 1200 400"
+                  fill="none"
+                  stroke="url(#lp-dna-b)"
+                  strokeWidth="1"
+                  strokeOpacity="0.3"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 0.3 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.5, delay: 0.4, ease: "easeOut" }}
+                />
+                {/* Cross-links between helixes */}
+                {[100, 250, 400, 550, 700, 850, 1000, 1150].map((x, ci) => (
+                  <motion.line
+                    key={`xlink-${ci}`}
+                    x1={x} y1={120 + Math.sin(x / 200 * Math.PI) * 90}
+                    x2={x} y2={300 + Math.sin(x / 200 * Math.PI + Math.PI) * 90}
+                    stroke="url(#lp-dna-a)"
+                    strokeWidth="0.5"
+                    strokeOpacity="0.2"
+                    initial={{ pathLength: 0 }}
+                    whileInView={{ pathLength: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.6 + ci * 0.08, duration: 0.4 }}
+                  />
+                ))}
               </svg>
             </div>
-            <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 hidden sm:block" style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--primary)/0.35), transparent)" }} />
+            <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2" style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--primary)/0.35), transparent)" }} />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
@@ -1820,7 +1863,7 @@ const LandingPage = () => {
                   style={{ perspective: "900px" }}
                 >
                   <motion.div
-                    className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] z-20 hidden sm:block"
+                    className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] z-20 sm:block"
                     style={i === 0 ? { right: "-5px" } : i === 2 ? { left: "-5px" } : { left: "50%", transform: "translate(-50%, -50%)" }}
                     initial={{ scale: 0 }}
                     whileInView={{ scale: [0, 1.45, 1] }}
