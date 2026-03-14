@@ -110,8 +110,8 @@ const salesSteps: SalesStep[] = [
   {
     id: "close",
     title: "Chiudi il Contratto",
-    subtitle: "€2.997 una tantum — ROI in 1-2 mesi",
-    script: "\"€2.997 una tantum o 3 rate da €1.099. Poi €0/mese per sempre. Solo il 2% sulle transazioni. Al tuo volume, il ROI arriva in meno di 2 mesi.\"",
+    subtitle: "3 pacchetti da €1.997 a €7.997",
+    script: "\"Abbiamo 3 pacchetti: Digital Start a €1.997, Growth AI a €4.997, o Empire Domination a €7.997 con ZERO commissioni e ZERO canone per sempre. Rateizzazione disponibile: 3 rate TAN 0% o 6 rate TAN 5.9%. Al tuo volume, il ROI arriva in meno di 2 mesi.\"",
     objection: "\"Devo pensarci\" → \"Capisco. Ma ogni mese che aspetti, perdi €3.000+ in commissioni marketplace. Ti blocco il prezzo per 48 ore?\"",
     closer: "🏆 Stretta di mano. Benvenuto nella famiglia Empire!",
     icon: <Star className="w-5 h-5" />,

@@ -29,11 +29,11 @@ const partnerSchema = z.object({
 type FormData = z.infer<typeof partnerSchema>;
 
 const benefits = [
-  { icon: <Trophy className="w-5 h-5" />, title: "€997 / vendita", desc: "Commissione diretta per ogni contratto chiuso" },
+  { icon: <Trophy className="w-5 h-5" />, title: "€997 / vendita", desc: "Commissione fissa per ogni pacchetto chiuso (€1.997-€7.997)" },
   { icon: <Award className="w-5 h-5" />, title: "Bonus fino a €1.500/mese", desc: "Acceleratori su 3 e 5 vendite mensili" },
   { icon: <CreditCard className="w-5 h-5" />, title: "Payout istantaneo", desc: "Pagamenti automatici via Stripe Connect" },
   { icon: <Rocket className="w-5 h-5" />, title: "Sandbox Demo", desc: "Demo pre-configurata per chiudere vendite" },
-  { icon: <Users className="w-5 h-5" />, title: "Team Leader", desc: "Override €50/vendita dalla 4ª vendita di ogni membro" },
+  { icon: <Users className="w-5 h-5" />, title: "Team Leader", desc: "Override €50/vendita dalla 5ª vendita di ogni membro" },
   { icon: <Gift className="w-5 h-5" />, title: "Zero costi di ingresso", desc: "Nessun investimento iniziale richiesto" },
 ];
 
@@ -269,7 +269,7 @@ const PartnerRegister = () => {
                 Diventa Partner <span className="text-gold-gradient">Empire</span>
               </h1>
               <p className="text-sm text-muted-foreground">
-                €997 per vendita · Zero costi di ingresso
+                €997 per vendita · 3 pacchetti da €1.997 a €7.997
               </p>
             </div>
 
@@ -497,10 +497,10 @@ const PartnerRegister = () => {
               <Accordion type="single" collapsible className="space-y-1">
                 {[
                   { q: "Quanto costa diventare Partner?", a: "Zero. Non ci sono costi di ingresso, fee mensili o vincoli. Guadagni solo quando vendi." },
-                  { q: "Quanto posso guadagnare per ogni vendita?", a: "La commissione base è di €997 per contratto chiuso. Con i bonus acceleratori puoi arrivare a €1.500 extra al mese raggiungendo 3 o 5 vendite." },
-                  { q: "Come funziona il payout?", a: "I pagamenti avvengono in automatico tramite Stripe Connect. Appena il ristoratore paga, la tua commissione viene accreditata direttamente sul tuo conto." },
+                  { q: "Quanto posso guadagnare per ogni vendita?", a: "La commissione base è di €997 per ogni pacchetto chiuso (Digital Start €1.997, Growth AI €4.997, Empire Domination €7.997). Con i bonus acceleratori puoi arrivare a €1.500 extra al mese raggiungendo 3 o 5 vendite." },
+                  { q: "Come funziona il payout?", a: "I pagamenti avvengono in automatico tramite Stripe Connect. Appena il cliente paga, la tua commissione viene accreditata direttamente sul tuo conto." },
                   { q: "Cos'è la Sandbox Demo?", a: "È un ambiente demo completo e pre-configurato che puoi mostrare ai prospect. Include menu, ordini, cucina e dashboard — tutto funzionante, con dati finti realistici." },
-                  { q: "Posso costruire un team?", a: "Sì! Dopo 3 vendite diventi Team Leader e guadagni un override di €50 a partire dalla 4ª vendita di ogni membro del tuo team. Puoi reclutare nuovi partner con il tuo link referral." },
+                  { q: "Posso costruire un team?", a: "Sì! Dopo 4 vendite personali e 2 sub-partner reclutati diventi Team Leader e guadagni un override di €50 a partire dalla 5ª vendita di ogni membro del tuo team." },
                   { q: "Serve esperienza nel settore?", a: "No. Forniamo script di vendita, materiali di marketing, obiezioni con risposte pronte e una demo che parla da sola. Ti basta la motivazione." },
                   { q: "Posso farlo part-time?", a: "Assolutamente. Molti partner vendono nei ritagli di tempo. Non ci sono obiettivi minimi obbligatori." },
                 ].map((faq, i) => (

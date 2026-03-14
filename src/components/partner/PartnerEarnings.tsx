@@ -99,8 +99,8 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
           description="Storico completo delle tue vendite, commissioni e payout. Collega il tuo account Stripe Connect per ricevere i pagamenti."
           steps={[
             "Collega Stripe Connect per attivare i pagamenti",
-            "Ogni vendita completata genera €997 di commissione",
-            "I payout vengono elaborati automaticamente",
+            "Ogni vendita genera €997 di commissione (qualsiasi pacchetto)",
+            "3 pacchetti: Digital Start €1.997 · Growth AI €4.997 · Empire €7.997",
           ]}
         />
       </div>
@@ -125,7 +125,7 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
         ) : (
           <div className="space-y-2">
             <p className="text-xs text-muted-foreground">
-              Collega il tuo conto bancario per ricevere le commissioni di €997 per ogni vendita chiusa.
+              Collega il tuo conto bancario per ricevere €997 di commissione per ogni pacchetto venduto.
             </p>
             <motion.button
               onClick={handleConnectStripe}
@@ -156,45 +156,42 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
 
       {/* Split Breakdown Visual */}
       <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
-        <h3 className="text-sm font-bold text-foreground">Split per Vendita (€2.997)</h3>
-        <div className="space-y-2">
-          <div>
-            <div className="flex items-center justify-between text-xs mb-1">
-              <span className="text-muted-foreground flex items-center gap-1.5">
-                <Crown className="w-3.5 h-3.5 text-primary" /> Platform Revenue
-              </span>
-              <span className="font-bold text-foreground">€1.950</span>
+        <h3 className="text-sm font-bold text-foreground">Commissione per Vendita</h3>
+        <p className="text-[11px] text-muted-foreground">Commissione fissa €997 su ogni pacchetto venduto</p>
+        
+        {/* 3 Package splits */}
+        <div className="space-y-3">
+          {[
+            { name: "Digital Start", price: 1997, platform: 950, partner: 997, tl: 50 },
+            { name: "Growth AI", price: 4997, platform: 3950, partner: 997, tl: 50 },
+            { name: "Empire Domination", price: 7997, platform: 6950, partner: 997, tl: 50 },
+          ].map((pkg, i) => (
+            <div key={i} className="p-3 rounded-xl bg-muted/10 border border-border/30 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-foreground">{pkg.name}</span>
+                <span className="text-xs font-display font-bold text-primary">€{pkg.price.toLocaleString("it-IT")}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex-1">
+                  <div className="h-2.5 rounded-full bg-muted overflow-hidden flex">
+                    <motion.div className="h-full bg-gradient-to-r from-primary to-amber-500"
+                      initial={{ width: 0 }} animate={{ width: `${(pkg.platform / pkg.price) * 100}%` }} transition={{ delay: 0.3 + i * 0.2, duration: 0.8 }} />
+                    <motion.div className="h-full bg-gradient-to-r from-emerald-400 to-teal-400"
+                      initial={{ width: 0 }} animate={{ width: `${(pkg.partner / pkg.price) * 100}%` }} transition={{ delay: 0.5 + i * 0.2, duration: 0.8 }} />
+                    <motion.div className="h-full bg-gradient-to-r from-sky-400 to-blue-400"
+                      initial={{ width: 0 }} animate={{ width: `${(pkg.tl / pkg.price) * 100}%` }} transition={{ delay: 0.7 + i * 0.2, duration: 0.8 }} />
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-[9px] text-muted-foreground">
+                <span>Platform €{pkg.platform.toLocaleString("it-IT")}</span>
+                <span className="text-emerald-400 font-bold">Partner €{pkg.partner}</span>
+                <span>TL €{pkg.tl}</span>
+              </div>
             </div>
-            <div className="h-3 rounded-full bg-muted overflow-hidden">
-              <motion.div className="h-full rounded-full bg-gradient-to-r from-primary to-amber-500"
-                initial={{ width: 0 }} animate={{ width: "65%" }} transition={{ delay: 0.3, duration: 0.8 }} />
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center justify-between text-xs mb-1">
-              <span className="text-muted-foreground flex items-center gap-1.5">
-                <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Partner Commission
-              </span>
-              <span className="font-bold text-foreground">€997</span>
-            </div>
-            <div className="h-3 rounded-full bg-muted overflow-hidden">
-              <motion.div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-400"
-                initial={{ width: 0 }} animate={{ width: "33%" }} transition={{ delay: 0.5, duration: 0.8 }} />
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center justify-between text-xs mb-1">
-              <span className="text-muted-foreground flex items-center gap-1.5">
-                <Crown className="w-3.5 h-3.5 text-sky-400" /> Team Leader Override
-              </span>
-              <span className="font-bold text-foreground">€50</span>
-            </div>
-            <div className="h-3 rounded-full bg-muted overflow-hidden">
-              <motion.div className="h-full rounded-full bg-gradient-to-r from-sky-400 to-blue-400"
-                initial={{ width: 0 }} animate={{ width: "2%" }} transition={{ delay: 0.7, duration: 0.8 }} />
-            </div>
-          </div>
+          ))}
         </div>
+        
         <p className="text-[10px] text-muted-foreground text-center mt-1">
           Override €50 dalla 5ª vendita per membro · Bonus: €500 per 3 vendite/mese · €1.500 per 5 vendite/mese
         </p>
