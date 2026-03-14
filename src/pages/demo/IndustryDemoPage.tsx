@@ -457,35 +457,23 @@ export default function IndustryDemoPage() {
       {/* ═══════ HERO ═══════ */}
       <section id="home" className="relative pt-14">
         <div className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden">
-          {/* Animated gradient orbs */}
+          {/* Video Background */}
           <div className="absolute inset-0">
-            <motion.div
-              className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-[120px]"
-              style={{ background: theme.accent, top: "10%", right: "-10%" }}
-              animate={{ x: [0, -30, 0], y: [0, 20, 0] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            <video
+              autoPlay muted loop playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+              src={theme.heroVideo}
             />
-            <motion.div
-              className="absolute w-[400px] h-[400px] rounded-full opacity-10 blur-[100px]"
-              style={{ background: theme.accent, bottom: "10%", left: "-5%" }}
-              animate={{ x: [0, 20, 0], y: [0, -15, 0] }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            {/* Dark overlay with accent tint */}
+            <div className="absolute inset-0 bg-black/60" />
+            <div className="absolute inset-0 opacity-30"
+              style={{ background: `linear-gradient(135deg, ${theme.accent}40 0%, transparent 50%, ${theme.accent}20 100%)` }}
             />
+            {/* Bottom vignette */}
+            <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${theme.bgFrom} 0%, transparent 40%)` }} />
           </div>
 
-          {/* Grid pattern */}
-          <div className="absolute inset-0 opacity-[0.03]"
-            style={{ backgroundImage: `linear-gradient(${theme.accent}40 1px, transparent 1px), linear-gradient(90deg, ${theme.accent}40 1px, transparent 1px)`, backgroundSize: "60px 60px" }}
-          />
-
           <div className="relative text-center px-6 py-20 max-w-3xl mx-auto">
-            <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}>
-              <motion.span className="text-7xl sm:text-8xl block mb-6"
-                animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
-                {theme.heroEmoji}
-              </motion.span>
-            </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}>
