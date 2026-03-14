@@ -93,18 +93,18 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
 );
 SectionLabel.displayName = "SectionLabel";
 
-/* ═══ Neural Cells Background — flowing data streams, no static dots ═══ */
-const CELL_COUNT = 28;
+/* ═══ Neural Cells Background — flowing DNA data network ═══ */
+const CELL_COUNT = 40;
 const NeuralCellsBackground = () => {
   const cells = useMemo(() =>
     Array.from({ length: CELL_COUNT }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      dur: 18 + Math.random() * 25,
-      delay: Math.random() * 10,
-      dx: (Math.random() - 0.5) * 12,
-      dy: (Math.random() - 0.5) * 12,
+      dur: 20 + Math.random() * 20,
+      delay: Math.random() * 6,
+      dx: (Math.random() - 0.5) * 10,
+      dy: (Math.random() - 0.5) * 10,
     })), []
   );
 
@@ -115,73 +115,73 @@ const NeuralCellsBackground = () => {
         const dx = cells[i].x - cells[j].x;
         const dy = cells[i].y - cells[j].y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 25 && dist > 8) conns.push({ a: i, b: j });
+        if (dist < 28 && dist > 6) conns.push({ a: i, b: j });
       }
     }
     return conns;
   }, [cells]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1] opacity-[0.22]">
+    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.45 }}>
       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <linearGradient id="lineGradV" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsla(265,80%,65%,0)" />
-            <stop offset="50%" stopColor="hsla(265,80%,65%,0.3)" />
-            <stop offset="100%" stopColor="hsla(265,80%,65%,0)" />
-          </linearGradient>
-          <linearGradient id="lineGradG" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsla(38,50%,55%,0)" />
-            <stop offset="50%" stopColor="hsla(38,50%,55%,0.25)" />
-            <stop offset="100%" stopColor="hsla(38,50%,55%,0)" />
-          </linearGradient>
-        </defs>
-
-        {/* Flowing connection lines — breathing opacity, no static endpoints */}
+        {/* Connection lines — breathing */}
         {connections.map(({ a, b }, i) => (
           <motion.line
             key={`ln${i}`}
             x1={cells[a].x} y1={cells[a].y}
             x2={cells[b].x} y2={cells[b].y}
-            stroke={i % 5 === 0 ? "url(#lineGradG)" : "url(#lineGradV)"}
-            strokeWidth="0.06"
+            stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.25)" : "hsla(265,70%,65%,0.2)"}
+            strokeWidth="0.1"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.15, 0] }}
-            transition={{ duration: 8 + (i % 5) * 2, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}
+            animate={{ opacity: [0.05, 0.25, 0.05] }}
+            transition={{ duration: 6 + (i % 4) * 2, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }}
           />
         ))}
 
-        {/* Violet data pulses — small, fast, traveling */}
+        {/* Violet data pulses — traveling along connections */}
         {connections.filter((_, i) => i % 2 === 0).map(({ a, b }, i) => (
           <motion.circle
-            key={`pulse${i}`}
-            r="0.12"
-            fill="hsla(265,90%,75%,0.6)"
-            filter="blur(0.15px)"
+            key={`vp${i}`}
+            r="0.18"
+            fill="hsla(265,85%,72%,0.8)"
             initial={{ cx: cells[a].x, cy: cells[a].y, opacity: 0 }}
             animate={{
               cx: [cells[a].x, cells[b].x],
               cy: [cells[a].y, cells[b].y],
-              opacity: [0, 0.6, 0],
+              opacity: [0, 0.8, 0],
             }}
-            transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: 1 + i * 0.6, ease: "easeInOut" }}
+            transition={{ duration: 2.5 + Math.random() * 2, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }}
           />
         ))}
 
         {/* Gold data pulses — rarer, opposite direction */}
-        {connections.filter((_, i) => i % 6 === 0).map(({ a, b }, i) => (
+        {connections.filter((_, i) => i % 5 === 0).map(({ a, b }, i) => (
           <motion.circle
-            key={`gpulse${i}`}
-            r="0.1"
-            fill="hsla(38,55%,58%,0.7)"
-            filter="blur(0.1px)"
+            key={`gp${i}`}
+            r="0.14"
+            fill="hsla(38,55%,58%,0.85)"
             initial={{ cx: cells[b].x, cy: cells[b].y, opacity: 0 }}
             animate={{
               cx: [cells[b].x, cells[a].x],
               cy: [cells[b].y, cells[a].y],
-              opacity: [0, 0.5, 0],
+              opacity: [0, 0.7, 0],
             }}
-            transition={{ duration: 4 + Math.random() * 2, repeat: Infinity, delay: 3 + i * 1.5, ease: "easeInOut" }}
+            transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: 2 + i * 1, ease: "easeInOut" }}
+          />
+        ))}
+
+        {/* Junction nodes — tiny breathing dots at intersections */}
+        {cells.filter((_, i) => i % 3 === 0).map((cell) => (
+          <motion.circle
+            key={`node${cell.id}`}
+            cx={cell.x} cy={cell.y}
+            r="0.3"
+            fill="hsla(265,75%,68%,0.35)"
+            animate={{
+              r: [0.2, 0.45, 0.2],
+              opacity: [0.15, 0.4, 0.15],
+            }}
+            transition={{ duration: 4, repeat: Infinity, delay: cell.delay, ease: "easeInOut" }}
           />
         ))}
       </svg>
