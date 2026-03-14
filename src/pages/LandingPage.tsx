@@ -682,13 +682,23 @@ const LandingPage = () => {
             <motion.div className="mt-16 w-full grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
               {metrics.map((m, i) => (
-                <motion.div key={i} className="rounded-2xl p-4 sm:p-5 text-center border border-primary/[0.1] bg-deep-black/40 backdrop-blur-sm"
-                  whileHover={{ y: -3, borderColor: "hsla(265, 70%, 60%, 0.2)" }}
+                <motion.div key={i} className="relative rounded-2xl p-4 sm:p-5 text-center border border-primary/[0.1] bg-deep-black/40 backdrop-blur-sm overflow-hidden"
+                  whileHover={{ y: -3, borderColor: "hsla(265, 70%, 60%, 0.25)" }}
                   transition={{ duration: 0.2 }}>
-                  <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient">
+                  {/* Scanning line */}
+                  <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.06) 50%, transparent 60%)" }}
+                    animate={{ y: ["-100%", "200%"] }}
+                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 + i, ease: "easeInOut" }}
+                  />
+                  {/* Corner accents */}
+                  <div className="absolute top-1.5 left-1.5 w-3 h-3 border-t border-l border-primary/20 rounded-tl-sm" />
+                  <div className="absolute bottom-1.5 right-1.5 w-3 h-3 border-b border-r border-primary/20 rounded-br-sm" />
+                  <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient relative z-10">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="text-[0.6rem] text-foreground/30 mt-1.5 tracking-[2px] uppercase font-heading">{m.label}</p>
+                  <p className="text-[0.6rem] text-foreground/30 mt-1.5 tracking-[2px] uppercase font-heading relative z-10">{m.label}</p>
                 </motion.div>
               ))}
             </motion.div>
