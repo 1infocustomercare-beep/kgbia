@@ -83,6 +83,17 @@ const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
     serviceIcon: "🚘",
     analyticsTitle: "Revenue Tratte",
     analyticsBars: [60, 85, 45, 92, 70, 88, 55, 95, 78, 82, 68, 90],
+    analyticsMetrics: [
+      { label: "Revenue/transfer", val: "€185", delta: "+€22" },
+      { label: "Occupazione flotta", val: "87%", delta: "+6%" },
+      { label: "Clienti corporate", val: "42", delta: "+8" },
+      { label: "NPS Score", val: "94", delta: "+3" },
+    ],
+    activityFeed: [
+      { icon: "🚗", text: "Transfer NAP→Positano", time: "3m", status: "new" },
+      { icon: "💳", text: "Bonifico €340 Hotel Exc.", time: "12m", status: "ok" },
+      { icon: "✈️", text: "Volo AZ1284 atterrato", time: "25m", status: "new" },
+    ],
     crmClients: [
       { name: "Hotel Excelsior", tag: "Corporate", spent: "€12K" },
       { name: "James W.", tag: "VIP", spent: "€4.2K" },
