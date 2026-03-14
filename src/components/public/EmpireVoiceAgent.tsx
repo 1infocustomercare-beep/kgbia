@@ -1,7 +1,8 @@
 // ATLAS Voice Agent v3 — Scroll-tracking auto-narration
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Sparkles, Send, Play, Square, Pause } from "lucide-react";
+import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause } from "lucide-react";
+import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -404,8 +405,8 @@ const EmpireVoiceAgent: React.FC = () => {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
           >
-            <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg border border-white/10">
-              {isOpen ? <X className="w-6 h-6 text-white" /> : <Sparkles className="w-6 h-6 text-white" />}
+            <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-lg border border-white/10">
+              {isOpen ? <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center"><X className="w-6 h-6 text-white" /></div> : <img src={voiceAgentAvatar} alt="Assistente" className="w-full h-full object-cover" />}
               {isSpeaking && !isPaused && !isOpen && (
                 <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
               )}
@@ -433,8 +434,8 @@ const EmpireVoiceAgent: React.FC = () => {
                     animate={isSpeaking && !isPaused ? { opacity: [0.25, 0.45, 0.25], scale: [1, 1.08, 1] } : { opacity: 0.2, scale: 1 }}
                     transition={{ duration: 1.4, repeat: isSpeaking && !isPaused ? Infinity : 0, ease: "easeInOut" }}
                   />
-                  <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-white" />
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30">
+                    <img src={voiceAgentAvatar} alt="Assistente vocale" className="w-full h-full object-cover" />
                   </div>
                   <div
                     className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${
@@ -505,7 +506,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     animate={{ rotate: [0, 5, -5, 0] }}
                     transition={{ duration: 4, repeat: Infinity }}
                   >
-                    <Sparkles className="w-8 h-8 text-primary" />
+                    <img src={voiceAgentAvatar} alt="Assistente" className="w-8 h-8 rounded-full object-cover" />
                   </motion.div>
                   <p className="text-xs text-foreground/30 text-center max-w-[200px]">
                     Ciao! Sono ATLAS. Ti guido attraverso Empire mentre scorri la pagina.
