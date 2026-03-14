@@ -377,55 +377,68 @@ const LandingPage = () => {
       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-16 sm:pt-20 pb-12 sm:pb-16"
         style={{ opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Video background — very subtle ═══ */}
-        <div className="absolute inset-0">
-          <video src={videoHero} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-[0.18]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background" />
+        {/* ═══ LAYER 0: Deep noir background with subtle animated grain ═══ */}
+        <div className="absolute inset-0" style={{ background: "hsla(260,20%,4%,1)" }}>
+          {/* Cinematic top-down light cone */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[900px] h-[70vh] pointer-events-none"
+            style={{ background: "conic-gradient(from 180deg at 50% 0%, transparent 30%, hsla(265,70%,60%,0.04) 40%, hsla(265,70%,60%,0.06) 50%, hsla(265,70%,60%,0.04) 60%, transparent 70%)" }} />
         </div>
 
-        {/* ═══ LAYER 1: Minimal perspective grid ═══ */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute bottom-0 left-0 right-0 h-[50vh] origin-bottom"
+        {/* ═══ LAYER 1: Futuristic hex grid ═══ */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Perspective grid floor */}
+          <div className="absolute bottom-0 left-0 right-0 h-[40vh]"
             style={{
-              backgroundImage: `linear-gradient(hsla(265, 70%, 60%, 0.03) 1px, transparent 1px), linear-gradient(90deg, hsla(265, 70%, 60%, 0.03) 1px, transparent 1px)`,
-              backgroundSize: "60px 60px",
+              backgroundImage: `linear-gradient(hsla(265,70%,60%,0.035) 1px, transparent 1px), linear-gradient(90deg, hsla(265,70%,60%,0.035) 1px, transparent 1px)`,
+              backgroundSize: "80px 80px",
+              transform: "perspective(500px) rotateX(45deg)",
+              transformOrigin: "bottom center",
+              maskImage: "linear-gradient(to top, hsla(0,0%,0%,0.6) 0%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to top, hsla(0,0%,0%,0.6) 0%, transparent 100%)",
             }}
           />
-          <div className="absolute bottom-[25vh] left-0 right-0 h-[1px] opacity-30" style={{ background: "linear-gradient(90deg, transparent 15%, hsla(265, 70%, 60%, 0.15) 50%, transparent 85%)" }} />
+          {/* Horizontal scan line */}
+          <motion.div className="absolute left-0 right-0 h-px"
+            style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265,70%,60%,0.12) 50%, transparent 90%)" }}
+            animate={{ top: ["20%", "80%", "20%"] }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
         </div>
 
-        {/* ═══ LAYER 2: Dual ambient glow — violet + gold ═══ */}
-        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-          <div className="w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full blur-[200px] opacity-[0.08]"
-            style={{ background: "radial-gradient(circle, hsl(265, 70%, 55%), transparent 70%)" }} />
-        </div>
-        <div className="absolute top-[30%] left-[35%] -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-          <div className="w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] rounded-full blur-[180px] opacity-[0.06]"
-            style={{ background: "radial-gradient(circle, hsl(280, 50%, 60%), transparent 70%)" }} />
-        </div>
-
-        {/* ═══ LAYER 3: Crown icon — gold pulse ═══ */}
-        <div className="absolute top-[22%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-          <motion.div
-            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center"
-            style={{ background: "radial-gradient(circle, hsla(265, 70%, 60%, 0.12) 0%, transparent 70%)" }}
-            animate={{ scale: [1, 1.03, 1] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <Crown className="w-7 h-7 sm:w-9 sm:h-9 drop-shadow-[0_0_20px_hsla(265,70%,60%,0.4)]" style={{ color: "hsl(265, 70%, 65%)" }} />
-          </motion.div>
+        {/* ═══ LAYER 2: Ambient violet nebula ═══ */}
+        <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <motion.div className="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] rounded-full blur-[250px] opacity-[0.06]"
+            style={{ background: "radial-gradient(circle, hsl(265,70%,55%), hsl(280,50%,45%), transparent 70%)" }}
+            animate={{ scale: [1, 1.08, 1], opacity: [0.06, 0.09, 0.06] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
         </div>
 
-        {/* ═══ LAYER 4: Gold corner accents ═══ */}
+        {/* ═══ LAYER 3: Floating orbs ═══ */}
+        <motion.div className="absolute top-[30%] right-[15%] w-2 h-2 rounded-full pointer-events-none"
+          style={{ background: "hsla(265,70%,65%,0.4)", boxShadow: "0 0 20px hsla(265,70%,60%,0.3)" }}
+          animate={{ y: [0, -30, 0], x: [0, 10, 0], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div className="absolute top-[60%] left-[10%] w-1.5 h-1.5 rounded-full pointer-events-none"
+          style={{ background: "hsla(280,50%,70%,0.3)", boxShadow: "0 0 15px hsla(280,50%,60%,0.2)" }}
+          animate={{ y: [0, -20, 0], opacity: [0.2, 0.5, 0.2] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+
+        {/* ═══ LAYER 4: Minimal corner accents ═══ */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(90deg, hsla(265,70%,60%,0.2), transparent)" }} />
-          <div className="absolute top-0 left-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[80px] h-[1px]" style={{ background: "linear-gradient(270deg, hsla(265,70%,60%,0.2), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[1px] h-[80px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)" }} />
+          <div className="absolute top-0 left-0 w-[100px] h-px" style={{ background: "linear-gradient(90deg, hsla(265,70%,60%,0.25), transparent)" }} />
+          <div className="absolute top-0 left-0 w-px h-[100px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.25), transparent)" }} />
+          <div className="absolute top-0 right-0 w-[100px] h-px" style={{ background: "linear-gradient(270deg, hsla(265,70%,60%,0.25), transparent)" }} />
+          <div className="absolute top-0 right-0 w-px h-[100px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.25), transparent)" }} />
+          <div className="absolute bottom-0 left-0 w-[60px] h-px" style={{ background: "linear-gradient(90deg, hsla(265,70%,60%,0.15), transparent)" }} />
+          <div className="absolute bottom-0 right-0 w-[60px] h-px" style={{ background: "linear-gradient(270deg, hsla(265,70%,60%,0.15), transparent)" }} />
         </div>
 
-        {/* ═══ Violet vertical light beam ═══ */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[30vh]" style={{ background: "linear-gradient(180deg, hsla(265, 70%, 60%, 0.25), hsla(280, 50%, 60%, 0.08), transparent)" }} />
+        {/* ═══ LAYER 5: Central light beam ═══ */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-[25vh]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.3), hsla(265,70%,60%,0.05), transparent)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[2px] blur-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.15), transparent)" }} />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
