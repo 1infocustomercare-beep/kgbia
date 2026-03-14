@@ -103,28 +103,76 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
         className={`absolute -inset-2 ${sizeClasses} opacity-0 group-hover/icon:opacity-100 transition-opacity duration-700 blur-xl`}
         style={{ background: `linear-gradient(135deg, hsla(265,70%,60%,0.3), hsla(280,50%,60%,0.2))` }}
       />
+      {/* Outer pulse ring */}
+      <motion.div
+        className={`absolute -inset-1.5 ${sizeClasses} pointer-events-none`}
+        style={{ border: "1px solid hsla(265,80%,70%,0.15)" }}
+        animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
+        transition={{ duration: 3, repeat: Infinity, delay: delay * 0.5, ease: "easeInOut" }}
+      />
       {/* Rotating ring */}
       <motion.div
         className={`absolute -inset-0.5 ${sizeClasses}`}
-        style={{ border: "1px solid transparent", borderTopColor: "hsla(265,80%,70%,0.3)", borderRightColor: "hsla(300,50%,70%,0.15)" }}
+        style={{ border: "1.5px solid transparent", borderTopColor: "hsla(265,80%,70%,0.4)", borderRightColor: "hsla(300,50%,70%,0.2)" }}
         animate={{ rotate: [0, 360] }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear", delay }}
       />
+      {/* Counter ring */}
+      <motion.div
+        className={`absolute inset-0 ${sizeClasses}`}
+        style={{ border: "1px solid transparent", borderBottomColor: "hsla(280,60%,75%,0.2)" }}
+        animate={{ rotate: [360, 0] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "linear", delay: delay + 1 }}
+      />
       {/* Main container */}
       <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
-        style={{ boxShadow: "0 4px 20px hsla(265,70%,60%,0.15)" }}>
+        style={{ boxShadow: "0 4px 20px hsla(265,70%,60%,0.15), inset 0 1px 1px rgba(255,255,255,0.15)" }}>
         {/* Shimmer sweep */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.3) 50%, transparent 65%)" }}
+          style={{ background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%)" }}
           animate={{ x: ["-150%", "250%"] }}
-          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 + delay, ease: "easeInOut" }}
+          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 + delay, ease: "easeInOut" }}
         />
+        {/* Inner glow */}
+        <div className="absolute inset-px rounded-[inherit] border border-white/10 pointer-events-none" />
         <div className="relative z-10">{children}</div>
       </div>
     </motion.div>
   );
 };
+
+/* ═══ Premium Animated Card ═══ */
+const PremiumCard = ({ children, className = "", hover = true, glow = false, scan = false, delay = 0 }: { children: React.ReactNode; className?: string; hover?: boolean; glow?: boolean; scan?: boolean; delay?: number }) => (
+  <motion.div
+    className={`relative rounded-2xl border border-primary/[0.08] overflow-hidden group/card ${className}`}
+    style={{ background: "hsla(265,20%,8%,0.6)", backdropFilter: "blur(8px)" }}
+    whileHover={hover ? { y: -5, borderColor: "hsla(265,70%,60%,0.2)", transition: { duration: 0.3 } } : undefined}
+  >
+    {/* Top accent line */}
+    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.25), transparent)" }} />
+    {/* Corner accents */}
+    <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-primary/15 rounded-tl-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/15 rounded-br-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    {/* Scanning beam */}
+    {scan && (
+      <motion.div
+        className="absolute inset-0 pointer-events-none z-0"
+        style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.04) 50%, transparent 60%)" }}
+        animate={{ y: ["-100%", "200%"] }}
+        transition={{ duration: 4, repeat: Infinity, repeatDelay: 2 + delay, ease: "easeInOut" }}
+      />
+    )}
+    {/* Ambient glow on hover */}
+    {glow && (
+      <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"
+        style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent)" }} />
+    )}
+    {/* Bottom accent */}
+    <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    <div className="relative z-10">{children}</div>
+  </motion.div>
+);
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 const fadeUp = { hidden: { opacity: 0, y: 35 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: smoothEase } } };
@@ -776,22 +824,24 @@ const LandingPage = () => {
             { icon: <Eye className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Reputazione", desc: "Una recensione negativa costa migliaia in clienti persi.", stat: "-€5K", color: "from-red-600/80 to-rose-500/80" },
             { icon: <Target className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Marketing Cieco", desc: "Pubblicità senza tracking. Zero segmentazione, zero automazione.", stat: "0%", color: "from-amber-600/80 to-orange-500/80" },
           ].map((pain, i) => (
-            <motion.div key={i} className="relative p-4 sm:p-6 rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur-sm group hover:border-primary/20 hover:bg-primary/[0.03] transition-all duration-500"
-              variants={fadeUp} whileHover={{ y: -4, scale: 1.02 }}>
-              {/* Stat badge */}
-              <div className="absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-background border border-foreground/10 text-[0.55rem] sm:text-[0.6rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg">
-                {pain.stat}
-              </div>
-              {/* Icon */}
-              <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
-                {pain.icon}
-              </PremiumIcon>
-              <div className="mt-3 sm:mt-4">
-              <h3 className="font-heading text-xs sm:text-sm font-semibold text-foreground mb-1 sm:mb-2">{pain.title}</h3>
-              <p className="text-[0.65rem] sm:text-xs text-foreground/35 leading-[1.6] sm:leading-[1.7]">{pain.desc}</p>
-              </div>
-              {/* Bottom accent line */}
-              <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <motion.div key={i} variants={fadeUp} whileHover={{ scale: 1.02 }}>
+              <PremiumCard glow scan delay={i} className="p-4 sm:p-6">
+                {/* Stat badge */}
+                <motion.div className="absolute -top-2.5 right-3 px-2.5 py-0.5 rounded-full bg-background border border-primary/15 text-[0.55rem] sm:text-[0.6rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg z-20 overflow-hidden"
+                  animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>
+                  <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)" }}
+                    animate={{ x: ["-150%", "250%"] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
+                  <span className="relative z-10">{pain.stat}</span>
+                </motion.div>
+                <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
+                  {pain.icon}
+                </PremiumIcon>
+                <div className="mt-3 sm:mt-4">
+                  <h3 className="font-heading text-xs sm:text-sm font-semibold text-foreground mb-1 sm:mb-2">{pain.title}</h3>
+                  <p className="text-[0.65rem] sm:text-xs text-foreground/35 leading-[1.6] sm:leading-[1.7]">{pain.desc}</p>
+                </div>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
@@ -1208,27 +1258,22 @@ const LandingPage = () => {
         <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-5"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {whyUs.map((item, i) => (
-            <motion.div key={i}
-              className="group relative p-7 rounded-2xl overflow-hidden border border-border/10 bg-card/60 backdrop-blur-sm"
-              variants={fadeUp}
-              whileHover={{ y: -6, transition: { duration: 0.3 } }}
-            >
-              {/* Top accent line */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
-              {/* Corner glow */}
-              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-primary/[0.05] blur-3xl group-hover:bg-primary/[0.12] transition-all duration-700" />
-              <div className="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-accent/[0.04] blur-2xl group-hover:bg-accent/[0.08] transition-all duration-700" />
-              {/* Number watermark */}
-              <span className="absolute top-3 right-4 text-[3rem] font-heading font-black text-foreground/[0.03] leading-none select-none group-hover:text-primary/[0.06] transition-colors duration-500">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div className="relative z-10">
+            <motion.div key={i} variants={fadeUp}>
+              <PremiumCard glow scan delay={i} className="p-7">
+                {/* Number watermark */}
+                <motion.span className="absolute top-3 right-4 text-[3rem] font-heading font-black leading-none select-none"
+                  style={{ color: "hsla(265,70%,60%,0.03)" }}
+                  whileHover={{ color: "hsla(265,70%,60%,0.08)" }}
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 4, repeat: Infinity, delay: i * 0.6 }}>
+                  {String(i + 1).padStart(2, "0")}
+                </motion.span>
                 <PremiumIcon gradient="from-primary/25 to-accent/15" size="lg" delay={i * 0.5}>
                   <span className="text-primary">{item.icon}</span>
                 </PremiumIcon>
-                <h3 className="font-heading text-sm font-bold text-foreground mb-2">{item.title}</h3>
+                <h3 className="font-heading text-sm font-bold text-foreground mb-2 mt-1">{item.title}</h3>
                 <p className="text-xs text-foreground/40 leading-[1.7]">{item.desc}</p>
-              </div>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
@@ -1399,20 +1444,15 @@ const LandingPage = () => {
             { label: "Deploy", value: "< 24h", icon: <Zap className="w-3.5 h-3.5" /> },
             { label: "Evoluzione", value: "Settimanale", icon: <Radio className="w-3.5 h-3.5" /> },
           ].map((spec, i) => (
-            <motion.div key={i} className="relative p-4 rounded-xl holo-panel text-center overflow-hidden" variants={popIn}>
-              {/* Pulse ring */}
-              <motion.div
-                className="absolute inset-0 rounded-xl pointer-events-none"
-                style={{ border: "1px solid hsla(265,70%,60%,0.1)" }}
-                animate={{ opacity: [0.3, 0.7, 0.3] }}
-                transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4 }}
-              />
-              <motion.div className="text-primary mb-2 flex justify-center"
-                animate={{ y: [0, -3, 0] }}
-                transition={{ duration: 3, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }}
-              >{spec.icon}</motion.div>
-              <p className="text-xs font-heading font-bold text-foreground">{spec.value}</p>
-              <p className="text-[0.55rem] text-foreground/30 mt-0.5 tracking-wider uppercase">{spec.label}</p>
+            <motion.div key={i} variants={popIn}>
+              <PremiumCard scan delay={i} className="p-4 text-center">
+                <motion.div className="text-primary mb-2 flex justify-center"
+                  animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }}
+                >{spec.icon}</motion.div>
+                <p className="text-xs font-heading font-bold text-foreground">{spec.value}</p>
+                <p className="text-[0.55rem] text-foreground/30 mt-0.5 tracking-wider uppercase">{spec.label}</p>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
@@ -1540,22 +1580,21 @@ const LandingPage = () => {
             { icon: <Workflow className="w-5 h-5" />, title: "Automazione Totale", desc: "Booking, fatture, reminder, marketing — tutto in autopilot.", accent: "Zero lavoro manuale" },
             { icon: <Rocket className="w-5 h-5" />, title: "Sviluppo Custom", desc: "Moduli dedicati, integrazioni, logiche proprietarie su richiesta.", accent: "Nessun limite" },
           ].map((card, i) => (
-            <motion.div key={i}
-              className="relative p-6 rounded-2xl border border-primary/10 overflow-hidden group"
-              style={{ background: "hsla(265,20%,10%,0.5)" }}
-              variants={fadeScale}
-              whileHover={{ y: -5, borderColor: "hsla(265,70%,60%,0.2)" }}
-            >
-              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.2), transparent)" }} />
-              <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent)" }} />
-              <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
-                <span className="text-primary">{card.icon}</span>
-              </PremiumIcon>
-              <div className="mt-4"></div>
-              <h3 className="font-heading text-sm font-bold text-foreground mb-2">{card.title}</h3>
-              <p className="text-[0.7rem] text-foreground/35 leading-[1.7] mb-3">{card.desc}</p>
-              <span className="text-[0.6rem] font-heading font-semibold text-primary/60 tracking-wider">{card.accent}</span>
+            <motion.div key={i} variants={fadeScale}>
+              <PremiumCard glow scan delay={i} className="p-6">
+                <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
+                  <span className="text-primary">{card.icon}</span>
+                </PremiumIcon>
+                <div className="mt-4"></div>
+                <h3 className="font-heading text-sm font-bold text-foreground mb-2">{card.title}</h3>
+                <p className="text-[0.7rem] text-foreground/35 leading-[1.7] mb-3">{card.desc}</p>
+                <motion.span className="text-[0.6rem] font-heading font-semibold text-primary/60 tracking-wider inline-flex items-center gap-1.5"
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.8 }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                  {card.accent}
+                </motion.span>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
@@ -1669,26 +1708,23 @@ const LandingPage = () => {
         <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {services.map((s, i) => (
-            <motion.div key={i}
-              className="group relative p-5 sm:p-6 rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur-sm hover:border-primary/20 hover:bg-primary/[0.02] transition-all duration-500 overflow-hidden"
-              variants={fadeUp}
-              whileHover={{ y: -4, scale: 1.01 }}
-            >
-              {/* Ambient corner glow */}
-              <div className={`absolute -top-8 -right-8 w-24 h-24 rounded-full bg-gradient-to-br ${s.color} opacity-[0.04] blur-2xl group-hover:opacity-[0.1] transition-opacity duration-500 pointer-events-none`} />
-              {/* Corner brackets on hover */}
-              <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-primary/15 rounded-tl-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-primary/15 rounded-tr-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-primary/15 rounded-bl-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/15 rounded-br-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="flex items-center justify-between mb-4">
-                <PremiumIcon gradient={s.color} size="md" delay={i * 0.3}>
-                  {s.icon}
-                </PremiumIcon>
-                <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[2px] font-heading">{s.tag}</span>
-              </div>
-              <h3 className="font-heading text-sm sm:text-base font-semibold text-foreground mb-2">{s.title}</h3>
-              <p className="text-xs sm:text-sm text-foreground/40 leading-[1.7]">{s.desc}</p>
+            <motion.div key={i} variants={fadeUp} whileHover={{ scale: 1.01 }}>
+              <PremiumCard glow scan delay={i} className="p-5 sm:p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <PremiumIcon gradient={s.color} size="md" delay={i * 0.3}>
+                    {s.icon}
+                  </PremiumIcon>
+                  <motion.span className="text-[0.5rem] px-2.5 py-1 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[2px] font-heading relative overflow-hidden"
+                    animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.25)", "hsla(265,70%,60%,0.1)"] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.4 }}>
+                    <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)" }}
+                      animate={{ x: ["-150%", "250%"] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }} />
+                    <span className="relative z-10">{s.tag}</span>
+                  </motion.span>
+                </div>
+                <h3 className="font-heading text-sm sm:text-base font-semibold text-foreground mb-2">{s.title}</h3>
+                <p className="text-xs sm:text-sm text-foreground/40 leading-[1.7]">{s.desc}</p>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
@@ -1718,11 +1754,25 @@ const LandingPage = () => {
           ].map((s, i) => (
             <motion.div key={i} className="relative text-center z-10" variants={popIn}>
               <motion.div
-                className="relative w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl glow-card flex items-center justify-center mx-auto mb-4"
-                whileHover={{ rotate: 5, scale: 1.05 }}
+                className="relative w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl mx-auto mb-4 overflow-hidden"
+                style={{ background: "hsla(265,20%,8%,0.6)", border: "1px solid hsla(265,70%,60%,0.1)", backdropFilter: "blur(8px)" }}
+                whileHover={{ rotate: 5, scale: 1.08, borderColor: "hsla(265,70%,60%,0.25)" }}
               >
-                <div className="text-primary">{s.icon}</div>
-                <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-vibrant-gradient flex items-center justify-center text-[0.55rem] font-bold text-primary-foreground font-heading">{s.step}</span>
+                {/* Scanning beam */}
+                <motion.div className="absolute inset-0 pointer-events-none"
+                  style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.06) 50%, transparent 60%)" }}
+                  animate={{ y: ["-100%", "200%"] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 + i, ease: "easeInOut" }} />
+                {/* Top accent */}
+                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.25), transparent)" }} />
+                <div className="flex items-center justify-center w-full h-full text-primary relative z-10">{s.icon}</div>
+                <motion.span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-vibrant-gradient flex items-center justify-center text-[0.55rem] font-bold text-primary-foreground font-heading z-20 overflow-hidden"
+                  animate={{ boxShadow: ["0 0 10px hsla(265,70%,60%,0.2)", "0 0 25px hsla(265,70%,60%,0.5)", "0 0 10px hsla(265,70%,60%,0.2)"] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}>
+                  <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%)" }}
+                    animate={{ x: ["-150%", "250%"] }} transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
+                  <span className="relative z-10">{s.step}</span>
+                </motion.span>
               </motion.div>
               <h3 className="font-heading text-xs sm:text-sm font-bold text-foreground mb-1.5">{s.title}</h3>
               <p className="text-[0.65rem] sm:text-xs text-foreground/40 leading-[1.6]">{s.desc}</p>
@@ -2216,11 +2266,18 @@ const LandingPage = () => {
             { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-5 h-5" /> },
             { value: "€1.500", label: "Bonus Elite", icon: <Rocket className="w-5 h-5" /> },
           ].map((s, i) => (
-            <motion.div key={i} className="p-5 sm:p-6 rounded-2xl glow-card text-center"
-              variants={popIn} whileHover={{ y: -4 }}>
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-3">{s.icon}</div>
-              <p className="text-xl sm:text-2xl font-heading font-bold text-vibrant-gradient">{s.value}</p>
-              <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/40 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
+            <motion.div key={i} variants={popIn}>
+              <PremiumCard glow scan delay={i} className="p-5 sm:p-6 text-center">
+                <div className="flex justify-center mb-3">
+                  <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.4}>
+                    <span className="text-primary">{s.icon}</span>
+                  </PremiumIcon>
+                </div>
+                <motion.p className="text-xl sm:text-2xl font-heading font-bold text-vibrant-gradient"
+                  animate={{ textShadow: ["0 0 10px hsla(265,70%,60%,0)", "0 0 20px hsla(265,70%,60%,0.3)", "0 0 10px hsla(265,70%,60%,0)"] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>{s.value}</motion.p>
+                <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/40 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
@@ -2356,11 +2413,14 @@ const LandingPage = () => {
             { icon: <Bot className="w-4 h-4" />, title: "Concierge AI", desc: "Assistente 24/7 per i tuoi clienti." },
             { icon: <Headphones className="w-4 h-4" />, title: "Supporto 7/7", desc: "Persone vere, non chatbot." },
           ].map((b, i) => (
-            <motion.div key={i} className="p-4 rounded-xl holo-panel text-center group hover:border-primary/15 transition-all"
-              variants={popIn} whileHover={{ y: -3 }}>
-              <div className="text-primary/50 mb-2 flex justify-center group-hover:text-primary/80 transition-colors">{b.icon}</div>
-              <h4 className="text-[0.7rem] font-heading font-bold text-foreground mb-1">{b.title}</h4>
-              <p className="text-[0.55rem] text-foreground/30 leading-[1.5]">{b.desc}</p>
+            <motion.div key={i} variants={popIn}>
+              <PremiumCard scan delay={i * 0.3} className="p-4 text-center">
+                <motion.div className="text-primary/50 mb-2 flex justify-center group-hover/card:text-primary/80 transition-colors"
+                  animate={{ y: [0, -2, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{b.icon}</motion.div>
+                <h4 className="text-[0.7rem] font-heading font-bold text-foreground mb-1">{b.title}</h4>
+                <p className="text-[0.55rem] text-foreground/30 leading-[1.5]">{b.desc}</p>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
