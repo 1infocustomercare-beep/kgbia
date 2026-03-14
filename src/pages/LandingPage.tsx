@@ -2219,7 +2219,7 @@ const LandingPage = () => {
               >
                 EMPIRE
               </motion.span>
-              <span className="text-[0.5rem] tracking-[0.45em] uppercase font-semibold"
+              <span className="text-[0.4rem] sm:text-[0.5rem] tracking-[0.45em] uppercase font-semibold"
                 style={{
                   background: "linear-gradient(90deg, hsla(265,70%,65%,1), hsla(300,50%,75%,1), hsla(265,70%,65%,1))",
                   backgroundSize: "200% 100%",
