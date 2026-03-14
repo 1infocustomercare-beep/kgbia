@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function AppLayout() {
   const { industry, loading, resolved } = useIndustry();
+  const location = useLocation();
 
   // Wait until industry is fully resolved before making routing decisions
   if (loading || !resolved) {
@@ -26,8 +27,6 @@ export default function AppLayout() {
   if (industry === "food") {
     return <Navigate to="/dashboard" replace />;
   }
-
-  const location = useLocation();
 
   return (
     <SidebarProvider>
