@@ -1,399 +1,352 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import empireAgentMascot from "@/assets/empire-agent-mascot.png";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
-/* ═══ DNA Helix Points ═══ */
-const DNA_STRANDS = 24;
-const generateHelixPoints = () => {
-  const points: { x1: number; y1: number; x2: number; y2: number; delay: number }[] = [];
-  for (let i = 0; i < DNA_STRANDS; i++) {
-    const t = i / DNA_STRANDS;
-    const y = t * 120 - 10;
-    const xOffset = Math.sin(t * Math.PI * 3) * 18;
-    points.push({
-      x1: 50 + xOffset,
-      y1: y,
-      x2: 50 - xOffset,
-      y2: y,
-      delay: i * 0.04,
-    });
-  }
-  return points;
-};
-
-const helixPoints = generateHelixPoints();
-
-/* ═══ Floating particles ═══ */
-const PARTICLES = Array.from({ length: 30 }, (_, i) => ({
-  id: i,
-  x: Math.random() * 100,
-  y: Math.random() * 100,
-  size: 1 + Math.random() * 2.5,
-  delay: Math.random() * 1.5,
-  duration: 2 + Math.random() * 3,
-}));
-
-/* ═══ Data stream nodes ═══ */
-const DATA_NODES = [
-  { label: "AI AGENTS", x: 20, y: 30 },
-  { label: "ANALYTICS", x: 80, y: 25 },
-  { label: "CRM", x: 15, y: 65 },
-  { label: "AUTOMATION", x: 85, y: 70 },
-  { label: "COMMERCE", x: 30, y: 85 },
-  { label: "OPERATIONS", x: 70, y: 88 },
-];
-
+/**
+ * Premium DNA Neural Transition
+ * Canvas-based neural mesh that forms a DNA helix, then dissolves.
+ * Matches the HeroNeuralCanvas aesthetic (purple + gold nodes/connections).
+ */
 const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
-  const [phase, setPhase] = useState<"dna" | "morph" | "reveal" | "exit">("dna");
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [phase, setPhase] = useState<"assemble" | "pulse" | "dissolve">("assemble");
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("morph"), 800);
-    const t2 = setTimeout(() => setPhase("reveal"), 1800);
-    const t3 = setTimeout(() => setPhase("exit"), 2800);
-    const t4 = setTimeout(onComplete, 3400);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+    const t1 = setTimeout(() => setPhase("pulse"), 1200);
+    const t2 = setTimeout(() => setPhase("dissolve"), 2400);
+    const t3 = setTimeout(onComplete, 3200);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [onComplete]);
+
+  const startCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const dpr = Math.min(window.devicePixelRatio, 2);
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const resize = () => {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    window.addEventListener("resize", resize);
+
+    // ═══ NODES: scattered → DNA helix formation ═══
+    const NODE_COUNT = w < 640 ? 50 : 80;
+    const nodes: {
+      x: number; y: number;       // current position (0–1)
+      sx: number; sy: number;     // start (random scatter)
+      tx: number; ty: number;     // target (DNA helix)
+      r: number;
+      type: "v" | "g";           // violet or gold
+      phase: number;
+    }[] = [];
+
+    // Generate DNA helix target positions
+    const helixNodes = NODE_COUNT;
+    const turns = 3;
+    for (let i = 0; i < helixNodes; i++) {
+      const t = i / helixNodes;
+      const angle = t * Math.PI * 2 * turns;
+      const yPos = 0.1 + t * 0.8;
+      const amplitude = 0.12 + Math.sin(t * Math.PI) * 0.06;
+
+      // Two strands
+      const strand = i % 2 === 0 ? 1 : -1;
+      const xPos = 0.5 + Math.sin(angle) * amplitude * strand;
+
+      const isGold = i % 5 === 0;
+
+      nodes.push({
+        x: Math.random(),
+        y: Math.random(),
+        sx: Math.random(),
+        sy: Math.random(),
+        tx: xPos,
+        ty: yPos,
+        r: isGold ? 2.5 : (i % 3 === 0 ? 2 : 1.2),
+        type: isGold ? "g" : "v",
+        phase: t * Math.PI * 6,
+      });
+    }
+
+    let startTime = performance.now();
+    let animId: number;
+
+    const draw = (now: number) => {
+      const elapsed = (now - startTime) / 1000;
+      ctx.clearRect(0, 0, w, h);
+
+      const currentPhase = phaseRef.current;
+
+      // ═══ Animation progress ═══
+      let assembleProgress: number;
+      let dissolveProgress = 0;
+
+      if (currentPhase === "assemble") {
+        assembleProgress = Math.min(elapsed / 1.2, 1);
+        // Smooth ease out
+        assembleProgress = 1 - Math.pow(1 - assembleProgress, 3);
+      } else if (currentPhase === "pulse") {
+        assembleProgress = 1;
+      } else {
+        assembleProgress = 1;
+        dissolveProgress = Math.min((elapsed - 2.4) / 0.8, 1);
+        dissolveProgress = dissolveProgress * dissolveProgress; // ease in
+      }
+
+      // ═══ Update node positions ═══
+      for (const n of nodes) {
+        if (dissolveProgress > 0) {
+          // Dissolve: explode outward from center
+          const dx = n.tx - 0.5;
+          const dy = n.ty - 0.5;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+          n.x = n.tx + dx * dissolveProgress * 3;
+          n.y = n.ty + dy * dissolveProgress * 3;
+        } else {
+          // Assemble: lerp from scatter to helix
+          n.x = n.sx + (n.tx - n.sx) * assembleProgress;
+          n.y = n.sy + (n.ty - n.sy) * assembleProgress;
+        }
+      }
+
+      const globalAlpha = dissolveProgress > 0 ? 1 - dissolveProgress : Math.min(elapsed / 0.4, 1);
+      ctx.globalAlpha = globalAlpha;
+
+      // ═══ Draw connections ═══
+      const maxDist = 0.1 + (1 - assembleProgress) * 0.08;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDist) {
+            const alpha = (1 - dist / maxDist) * (assembleProgress > 0.5 ? 0.18 : 0.08);
+            const isGold = nodes[i].type === "g" || nodes[j].type === "g";
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x * w, nodes[i].y * h);
+            ctx.lineTo(nodes[j].x * w, nodes[j].y * h);
+            ctx.strokeStyle = isGold
+              ? `hsla(35, 45%, 55%, ${alpha})`
+              : `hsla(265, 70%, 60%, ${alpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // ═══ Draw DNA bridge lines (when assembled) ═══
+      if (assembleProgress > 0.6) {
+        const bridgeAlpha = (assembleProgress - 0.6) / 0.4 * 0.12;
+        for (let i = 0; i < nodes.length - 1; i += 2) {
+          const a = nodes[i];
+          const b = nodes[i + 1];
+          if (Math.abs(a.ty - b.ty) < 0.03) {
+            ctx.beginPath();
+            ctx.moveTo(a.x * w, a.y * h);
+            ctx.lineTo(b.x * w, b.y * h);
+            ctx.strokeStyle = `hsla(265, 60%, 60%, ${bridgeAlpha})`;
+            ctx.lineWidth = 0.4;
+            ctx.setLineDash([3, 4]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+        }
+      }
+
+      // ═══ Draw nodes ═══
+      for (const n of nodes) {
+        const px = n.x * w;
+        const py = n.y * h;
+        const pulse = n.r + Math.sin(elapsed * 3 + n.phase) * 0.5;
+
+        // Outer glow
+        const grad = ctx.createRadialGradient(px, py, 0, px, py, pulse * 4);
+        if (n.type === "g") {
+          grad.addColorStop(0, "hsla(35, 50%, 55%, 0.15)");
+          grad.addColorStop(1, "hsla(35, 50%, 55%, 0)");
+        } else {
+          grad.addColorStop(0, "hsla(265, 70%, 60%, 0.12)");
+          grad.addColorStop(1, "hsla(265, 70%, 60%, 0)");
+        }
+        ctx.beginPath();
+        ctx.arc(px, py, pulse * 4, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        // Core dot
+        ctx.beginPath();
+        ctx.arc(px, py, pulse, 0, Math.PI * 2);
+        ctx.fillStyle = n.type === "g"
+          ? `hsla(35, 50%, 60%, ${0.6 + Math.sin(elapsed * 2 + n.phase) * 0.2})`
+          : `hsla(265, 75%, 65%, ${0.5 + Math.sin(elapsed * 2 + n.phase) * 0.2})`;
+        ctx.fill();
+      }
+
+      // ═══ Data pulses traveling along helix ═══
+      if (assembleProgress > 0.8 && dissolveProgress < 0.5) {
+        const pulseCount = 4;
+        for (let p = 0; p < pulseCount; p++) {
+          const pt = ((elapsed * 0.4 + p / pulseCount) % 1);
+          const idx = Math.floor(pt * (nodes.length - 1));
+          const node = nodes[idx];
+          if (node) {
+            const px = node.x * w;
+            const py = node.y * h;
+            const pulseGrad = ctx.createRadialGradient(px, py, 0, px, py, 8);
+            pulseGrad.addColorStop(0, p % 2 === 0 ? "hsla(265, 90%, 70%, 0.8)" : "hsla(38, 60%, 60%, 0.8)");
+            pulseGrad.addColorStop(1, "transparent");
+            ctx.beginPath();
+            ctx.arc(px, py, 8, 0, Math.PI * 2);
+            ctx.fillStyle = pulseGrad;
+            ctx.fill();
+          }
+        }
+      }
+
+      ctx.globalAlpha = 1;
+      animId = requestAnimationFrame(draw);
+    };
+
+    animId = requestAnimationFrame(draw);
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const cleanup = startCanvas();
+    return cleanup;
+  }, [startCanvas]);
 
   return (
     <AnimatePresence>
-      {phase !== "exit" ? (
+      {phase !== "dissolve" || true ? (
         <motion.div
-          className="fixed inset-0 z-[9998] flex items-center justify-center overflow-hidden"
+          className="fixed inset-0 z-[9998] overflow-hidden"
           style={{ backgroundColor: "hsl(252, 12%, 14%)" }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: smoothEase }}
+          animate={phase === "dissolve" ? { opacity: 0 } : { opacity: 1 }}
+          transition={{ duration: 0.8, ease: smoothEase }}
+          onAnimationComplete={() => {
+            if (phase === "dissolve") onComplete();
+          }}
         >
-          {/* ═══ Background grid ═══ */}
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage: "linear-gradient(hsla(265,85%,65%,0.6) 1px, transparent 1px), linear-gradient(90deg, hsla(265,85%,65%,0.6) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-              maskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",
-              WebkitMaskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",
-            }}
-          />
+          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-          {/* ═══ Ambient glow ═══ */}
+          {/* ═══ Vignette overlay ═══ */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,hsla(252,12%,14%,0.6)_80%)] pointer-events-none" />
+
+          {/* ═══ Center status HUD ═══ */}
           <motion.div
-            className="absolute w-[600px] h-[600px] rounded-full blur-[150px] pointer-events-none"
-            style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.15), hsla(38,50%,55%,0.05), transparent)" }}
-            animate={{
-              scale: phase === "morph" ? [1, 1.5] : phase === "reveal" ? [1.5, 2] : [1, 1.2, 1],
-              opacity: phase === "reveal" ? [0.6, 0] : [0.3, 0.6, 0.3],
-            }}
-            transition={{ duration: phase === "reveal" ? 1 : 3, ease: "easeInOut" }}
-          />
-
-          {/* ═══ DNA HELIX SVG ═══ */}
-          <motion.svg
-            className="absolute w-full h-full"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="xMidYMid slice"
-            animate={
-              phase === "morph"
-                ? { scale: 1.5, opacity: 0.4 }
-                : phase === "reveal"
-                ? { scale: 3, opacity: 0 }
-                : { scale: 1, opacity: 1 }
-            }
-            transition={{ duration: 1, ease: smoothEase }}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: phase === "dissolve" ? 0 : 1 }}
+            transition={{ duration: 0.5 }}
           >
-            {/* Strand paths */}
-            <motion.path
-              d={`M ${helixPoints.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x1} ${p.y1}`).join(" ")}`}
-              fill="none"
-              stroke="hsla(265,80%,65%,0.4)"
-              strokeWidth="0.3"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-            />
-            <motion.path
-              d={`M ${helixPoints.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x2} ${p.y2}`).join(" ")}`}
-              fill="none"
-              stroke="hsla(38,50%,55%,0.3)"
-              strokeWidth="0.3"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 1.2, delay: 0.15, ease: "easeOut" }}
-            />
-
-            {/* Rungs (bridges) */}
-            {helixPoints.filter((_, i) => i % 2 === 0).map((p, i) => (
-              <motion.line
-                key={`rung-${i}`}
-                x1={p.x1} y1={p.y1} x2={p.x2} y2={p.y2}
-                stroke="hsla(265,60%,60%,0.15)"
-                strokeWidth="0.15"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.3 + i * 0.06 }}
-              />
-            ))}
-
-            {/* Helix nodes */}
-            {helixPoints.map((p, i) => (
-              <React.Fragment key={`node-${i}`}>
-                <motion.circle
-                  cx={p.x1} cy={p.y1} r={i % 3 === 0 ? 0.8 : 0.4}
-                  fill={i % 2 === 0 ? "hsla(265,85%,65%,0.8)" : "hsla(265,70%,60%,0.5)"}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.3, delay: p.delay }}
-                />
-                <motion.circle
-                  cx={p.x2} cy={p.y2} r={i % 3 === 0 ? 0.8 : 0.4}
-                  fill={i % 2 === 0 ? "hsla(38,50%,55%,0.7)" : "hsla(38,40%,50%,0.4)"}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.3, delay: p.delay + 0.1 }}
-                />
-              </React.Fragment>
-            ))}
-
-            {/* Data pulses traveling along strands */}
-            {[0, 1, 2].map((i) => (
-              <React.Fragment key={`pulse-${i}`}>
-                <motion.circle
-                  r="0.6"
-                  fill="hsla(265,90%,70%,0.9)"
-                  filter="url(#glow)"
-                  initial={{ cx: helixPoints[0].x1, cy: helixPoints[0].y1, opacity: 0 }}
-                  animate={{
-                    cx: helixPoints.map(p => p.x1),
-                    cy: helixPoints.map(p => p.y1),
-                    opacity: [0, 1, 1, 0],
-                  }}
-                  transition={{ duration: 2, delay: 0.3 + i * 0.6, ease: "easeInOut" }}
-                />
-                <motion.circle
-                  r="0.6"
-                  fill="hsla(38,60%,60%,0.9)"
-                  initial={{ cx: helixPoints[0].x2, cy: helixPoints[0].y2, opacity: 0 }}
-                  animate={{
-                    cx: helixPoints.map(p => p.x2),
-                    cy: helixPoints.map(p => p.y2),
-                    opacity: [0, 1, 1, 0],
-                  }}
-                  transition={{ duration: 2, delay: 0.5 + i * 0.6, ease: "easeInOut" }}
-                />
-              </React.Fragment>
-            ))}
-
-            {/* SVG filter for glow */}
-            <defs>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="0.5" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-          </motion.svg>
-
-          {/* ═══ Data Nodes — appear in morph phase ═══ */}
-          {DATA_NODES.map((node, i) => (
-            <motion.div
-              key={node.label}
-              className="absolute flex items-center gap-1.5 pointer-events-none"
-              style={{ left: `${node.x}%`, top: `${node.y}%` }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={
-                phase === "morph" || phase === "reveal"
-                  ? { opacity: phase === "reveal" ? 0 : 0.7, scale: phase === "reveal" ? 2 : 1 }
-                  : { opacity: 0, scale: 0 }
-              }
-              transition={{ duration: 0.5, delay: i * 0.08, ease: smoothEase }}
-            >
+            <div className="flex flex-col items-center gap-3">
+              {/* Scanning ring */}
               <motion.div
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: i % 2 === 0 ? "hsl(265,85%,65%)" : "hsl(38,50%,55%)" }}
-                animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
-              />
-              <span className="text-[0.4rem] tracking-[0.2em] uppercase font-mono"
-                style={{ color: i % 2 === 0 ? "hsla(265,80%,65%,0.5)" : "hsla(38,50%,55%,0.4)" }}>
-                {node.label}
-              </span>
-            </motion.div>
-          ))}
-
-          {/* ═══ Floating particles ═══ */}
-          {PARTICLES.map((p) => (
-            <motion.div
-              key={p.id}
-              className="absolute rounded-full pointer-events-none"
-              style={{
-                left: `${p.x}%`,
-                top: `${p.y}%`,
-                width: p.size,
-                height: p.size,
-                background: p.id % 3 === 0
-                  ? "hsla(265,85%,65%,0.5)"
-                  : p.id % 3 === 1
-                  ? "hsla(38,50%,55%,0.4)"
-                  : "hsla(280,60%,60%,0.3)",
-              }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={
-                phase === "reveal"
-                  ? { opacity: 0, scale: 3, x: (50 - p.x) * 5, y: (50 - p.y) * 5 }
-                  : { opacity: [0, 0.8, 0], scale: [0.5, 1.2, 0.5] }
-              }
-              transition={{
-                duration: phase === "reveal" ? 0.8 : p.duration,
-                delay: p.delay * 0.3,
-                repeat: phase === "reveal" ? 0 : Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          ))}
-
-          {/* ═══ Center: Mascot morphing from DNA ═══ */}
-          <motion.div
-            className="relative z-20 flex flex-col items-center gap-4"
-            animate={
-              phase === "reveal"
-                ? { scale: 1.1, y: -20 }
-                : phase === "morph"
-                ? { scale: 1 }
-                : { scale: 0.8 }
-            }
-            transition={{ duration: 0.8, ease: smoothEase }}
-          >
-            {/* Agent mascot — fades in during morph */}
-            <motion.div
-              className="relative w-32 h-32 sm:w-44 sm:h-44"
-              initial={{ opacity: 0, scale: 0.3, rotateY: -180 }}
-              animate={
-                phase === "morph" || phase === "reveal"
-                  ? { opacity: 1, scale: 1, rotateY: 0 }
-                  : { opacity: 0, scale: 0.3, rotateY: -180 }
-              }
-              transition={{ duration: 0.9, ease: smoothEase }}
-            >
-              {/* Glow ring */}
-              <motion.div
-                className="absolute inset-[-20%] rounded-full pointer-events-none"
-                style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.2), transparent 70%)" }}
-                animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0.8, 0.4] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-
-              {/* Orbiting DNA fragments around mascot */}
-              {[0, 1, 2, 3, 4, 5].map((i) => (
+                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full pointer-events-none relative"
+                style={{ border: "1px solid hsla(265,70%,60%,0.1)" }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              >
+                {/* Scan beam */}
                 <motion.div
-                  key={i}
-                  className="absolute w-2 h-2 rounded-full pointer-events-none"
+                  className="absolute inset-0 rounded-full pointer-events-none"
                   style={{
-                    background: i % 2 === 0
-                      ? "hsla(265,85%,65%,0.7)"
-                      : "hsla(38,50%,55%,0.6)",
-                    boxShadow: i % 2 === 0
-                      ? "0 0 10px hsla(265,85%,65%,0.4)"
-                      : "0 0 10px hsla(38,50%,55%,0.4)",
-                    top: "50%",
-                    left: "50%",
-                  }}
-                  animate={{
-                    x: Math.cos((i * Math.PI) / 3) * 75,
-                    y: Math.sin((i * Math.PI) / 3) * 75,
-                    scale: [1, 1.3, 1],
-                  }}
-                  transition={{
-                    x: { duration: 0.6, delay: 0.5 + i * 0.08, ease: smoothEase },
-                    y: { duration: 0.6, delay: 0.5 + i * 0.08, ease: smoothEase },
-                    scale: { duration: 2, repeat: Infinity, delay: i * 0.2 },
+                    background: "conic-gradient(from 0deg, transparent 0%, hsla(265,85%,65%,0.08) 10%, transparent 20%)",
                   }}
                 />
-              ))}
+                {/* Inner ring */}
+                <motion.div
+                  className="absolute inset-3 rounded-full"
+                  style={{ border: "1px dashed hsla(38,50%,55%,0.08)" }}
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                />
+              </motion.div>
 
-              {/* Mascot image */}
-              <motion.img
-                src={empireAgentMascot}
-                alt="Empire AI System"
-                className="relative z-10 w-full h-full object-contain"
-                style={{ filter: "drop-shadow(0 0 30px hsla(265,70%,60%,0.4))" }}
-                animate={
-                  phase === "reveal"
-                    ? { y: [0, -8, 0], scale: [1, 1.05, 1] }
-                    : {}
-                }
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </motion.div>
-
-            {/* ═══ System status text ═══ */}
-            <motion.div
-              className="flex flex-col items-center gap-2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                phase === "morph" || phase === "reveal"
-                  ? { opacity: phase === "reveal" ? 0 : 1, y: 0 }
-                  : { opacity: 0, y: 20 }
-              }
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/[0.12] bg-primary/[0.04] backdrop-blur-sm">
+              {/* Status label */}
+              <motion.div
+                className="flex items-center gap-2 px-4 py-1.5 rounded-full"
+                style={{
+                  background: "hsla(265,20%,15%,0.4)",
+                  border: "1px solid hsla(265,60%,60%,0.08)",
+                  backdropFilter: "blur(8px)",
+                }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: phase === "pulse" ? 1 : phase === "assemble" ? 0.6 : 0, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+              >
                 <motion.div
                   className="w-1.5 h-1.5 rounded-full"
                   style={{ background: "hsla(140,70%,50%,0.8)" }}
-                  animate={{ scale: [1, 1.4, 1], opacity: [0.5, 1, 0.5] }}
+                  animate={{ opacity: [0.4, 1, 0.4], scale: [0.8, 1.2, 0.8] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
-                <span className="text-[0.4rem] sm:text-[0.45rem] tracking-[0.3em] uppercase font-mono" style={{ color: "hsla(265,80%,65%,0.4)" }}>
-                  EMPIRE DNA SYSTEM — INITIALIZING AGENTS
+                <span
+                  className="text-[0.4rem] sm:text-[0.45rem] tracking-[0.3em] uppercase font-mono"
+                  style={{ color: "hsla(265,70%,65%,0.35)" }}
+                >
+                  EMPIRE DNA — NEURAL ASSEMBLY
                 </span>
-              </div>
+              </motion.div>
 
-              {/* Progress indicators */}
-              <div className="flex items-center gap-3">
-                {["Neural Core", "AI Fleet", "Data Mesh"].map((label, i) => (
-                  <motion.div key={label} className="flex items-center gap-1">
+              {/* Module indicators */}
+              <motion.div
+                className="flex items-center gap-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: phase === "pulse" ? 0.7 : 0 }}
+                transition={{ duration: 0.4, delay: 1.4 }}
+              >
+                {["CORE", "AGENTS", "MESH"].map((label, i) => (
+                  <div key={label} className="flex items-center gap-1">
                     <motion.div
                       className="w-1 h-1 rounded-full"
-                      style={{ background: i === 0 ? "hsl(265,85%,65%)" : i === 1 ? "hsl(38,50%,55%)" : "hsl(280,70%,60%)" }}
-                      initial={{ opacity: 0 }}
+                      style={{
+                        background: i === 0 ? "hsl(265,85%,65%)" : i === 1 ? "hsl(38,50%,55%)" : "hsl(280,70%,60%)",
+                      }}
                       animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.3 }}
+                      transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.25 }}
                     />
-                    <motion.span
-                      className="text-[0.35rem] tracking-[0.2em] uppercase font-heading"
-                      style={{ color: "hsla(265,80%,65%,0.25)" }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.8 + i * 0.15 }}
+                    <span
+                      className="text-[0.35rem] tracking-[0.15em] uppercase font-heading"
+                      style={{ color: "hsla(265,70%,65%,0.2)" }}
                     >
                       {label}
-                    </motion.span>
-                  </motion.div>
+                    </span>
+                  </div>
                 ))}
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </motion.div>
 
-          {/* ═══ Expanding rings on reveal ═══ */}
-          {phase === "reveal" && (
-            <>
-              {[0, 1, 2].map((i) => (
-                <motion.div
-                  key={`ring-${i}`}
-                  className="absolute w-20 h-20 rounded-full pointer-events-none"
-                  style={{ border: `1px solid ${i % 2 === 0 ? "hsla(265,70%,60%,0.3)" : "hsla(38,50%,55%,0.2)"}` }}
-                  initial={{ scale: 0, opacity: 0.6 }}
-                  animate={{ scale: 15, opacity: 0 }}
-                  transition={{ duration: 1.2, delay: i * 0.15, ease: "easeOut" }}
-                />
-              ))}
-            </>
-          )}
-
-          {/* ═══ Vignette ═══ */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsla(252,12%,14%,0.5)_85%)] pointer-events-none" />
+          {/* ═══ Subtle grid ═══ */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.015]"
+            style={{
+              backgroundImage:
+                "linear-gradient(hsla(265,70%,60%,0.5) 1px, transparent 1px), linear-gradient(90deg, hsla(265,70%,60%,0.5) 1px, transparent 1px)",
+              backgroundSize: "50px 50px",
+              maskImage: "radial-gradient(ellipse at center, black 20%, transparent 70%)",
+              WebkitMaskImage: "radial-gradient(ellipse at center, black 20%, transparent 70%)",
+            }}
+          />
         </motion.div>
       ) : null}
     </AnimatePresence>
