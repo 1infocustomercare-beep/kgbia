@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, forwardRef, lazy, Suspense } from "react";
+import { useState, useEffect, useRef, forwardRef, lazy, Suspense, useMemo } from "react";
 const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
@@ -93,7 +93,124 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
 );
 SectionLabel.displayName = "SectionLabel";
 
-/* ═══ Animated Premium Icon ═══ */
+/* ═══ Neural Cells Background — subtle AI network across entire page ═══ */
+const CELL_COUNT = 35;
+const NeuralCellsBackground = () => {
+  const cells = useMemo(() =>
+    Array.from({ length: CELL_COUNT }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: 1 + Math.random() * 2.5,
+      delay: Math.random() * 8,
+      dur: 12 + Math.random() * 20,
+      dx: (Math.random() - 0.5) * 6,
+      dy: (Math.random() - 0.5) * 6,
+    })), []
+  );
+
+  const connections = useMemo(() => {
+    const conns: { a: number; b: number; dist: number }[] = [];
+    for (let i = 0; i < cells.length; i++) {
+      for (let j = i + 1; j < cells.length; j++) {
+        const dx = cells[i].x - cells[j].x;
+        const dy = cells[i].y - cells[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 22) conns.push({ a: i, b: j, dist });
+      }
+    }
+    return conns;
+  }, [cells]);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[1] opacity-[0.35]">
+      <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="cellGlow">
+            <stop offset="0%" stopColor="hsla(265,85%,70%,0.6)" />
+            <stop offset="100%" stopColor="hsla(265,85%,70%,0)" />
+          </radialGradient>
+        </defs>
+
+        {/* Connection lines */}
+        {connections.map(({ a, b, dist }, i) => (
+          <motion.line
+            key={`ln${i}`}
+            x1={cells[a].x} y1={cells[a].y}
+            x2={cells[b].x} y2={cells[b].y}
+            stroke="hsla(265,70%,60%,0.18)"
+            strokeWidth="0.08"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0.05, 0.18, 0.05] }}
+            transition={{ duration: 6 + Math.random() * 4, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
+          />
+        ))}
+
+        {/* Data pulses traveling along connections */}
+        {connections.filter((_, i) => i % 3 === 0).map(({ a, b }, i) => (
+          <motion.circle
+            key={`pulse${i}`}
+            r="0.2"
+            fill="hsla(265,90%,75%,0.7)"
+            initial={{ cx: cells[a].x, cy: cells[a].y, opacity: 0 }}
+            animate={{
+              cx: [cells[a].x, cells[b].x, cells[a].x],
+              cy: [cells[a].y, cells[b].y, cells[a].y],
+              opacity: [0, 0.7, 0],
+            }}
+            transition={{ duration: 4 + Math.random() * 3, repeat: Infinity, delay: 2 + i * 0.8, ease: "easeInOut" }}
+          />
+        ))}
+
+        {/* Gold data pulses (rarer) */}
+        {connections.filter((_, i) => i % 7 === 0).map(({ a, b }, i) => (
+          <motion.circle
+            key={`gpulse${i}`}
+            r="0.15"
+            fill="hsla(38,50%,55%,0.8)"
+            initial={{ cx: cells[b].x, cy: cells[b].y, opacity: 0 }}
+            animate={{
+              cx: [cells[b].x, cells[a].x, cells[b].x],
+              cy: [cells[b].y, cells[a].y, cells[b].y],
+              opacity: [0, 0.6, 0],
+            }}
+            transition={{ duration: 5 + Math.random() * 3, repeat: Infinity, delay: 4 + i * 1.2, ease: "easeInOut" }}
+          />
+        ))}
+
+        {/* Cell nodes */}
+        {cells.map((cell) => (
+          <g key={`cell${cell.id}`}>
+            {/* Breathing glow */}
+            <motion.circle
+              cx={cell.x} cy={cell.y} r={cell.size * 1.5}
+              fill="url(#cellGlow)"
+              animate={{
+                r: [cell.size * 1.2, cell.size * 2, cell.size * 1.2],
+                opacity: [0.1, 0.25, 0.1],
+              }}
+              transition={{ duration: cell.dur * 0.4, repeat: Infinity, delay: cell.delay, ease: "easeInOut" }}
+            />
+            {/* Core dot */}
+            <motion.circle
+              cx={cell.x} cy={cell.y}
+              r={cell.size * 0.25}
+              fill="hsla(265,80%,70%,0.5)"
+              animate={{
+                cx: [cell.x, cell.x + cell.dx, cell.x],
+                cy: [cell.y, cell.y + cell.dy, cell.y],
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{ duration: cell.dur, repeat: Infinity, delay: cell.delay, ease: "easeInOut" }}
+            />
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+};
+
+
 const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children: React.ReactNode; gradient: string; size?: "sm" | "md" | "lg"; delay?: number }) => {
   const sizeClasses = size === "sm" ? "w-8 h-8 sm:w-10 sm:h-10 rounded-xl" : size === "lg" ? "w-12 h-12 rounded-2xl" : "w-10 h-10 rounded-xl";
   return (
@@ -382,6 +499,9 @@ const LandingPage = () => {
         <Particle delay={2} size={2} x="70%" y="60%" />
         <Particle delay={1.5} size={2} x="50%" y="45%" />
       </div>
+
+      {/* ═══════ NEURAL CELLS BACKGROUND ═══════ */}
+      <NeuralCellsBackground />
 
       {/* ═══════ NAVIGATION ═══════ */}
       <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 pt-[env(safe-area-inset-top)] ${navScrolled ? "pb-1" : "pb-2"}`}>
