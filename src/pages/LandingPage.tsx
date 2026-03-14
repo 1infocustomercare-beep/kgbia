@@ -77,15 +77,15 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
       className="inline-flex items-center gap-2.5 mb-5"
       initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
     >
-      <div className="relative flex items-center gap-2 px-4 py-2 rounded-full premium-label overflow-hidden">
-        {/* Scanning beam */}
+      <div className="relative flex items-center gap-2 px-4 py-2 rounded-full premium-label overflow-hidden" style={{ borderLeft: "1px solid hsla(35,45%,50%,0.15)" }}>
+        {/* Scanning beam — gold tint */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(90deg, transparent 30%, hsla(265,80%,70%,0.15) 50%, transparent 70%)" }}
+          style={{ background: "linear-gradient(90deg, transparent 30%, hsla(35,45%,55%,0.12) 50%, transparent 70%)" }}
           animate={{ x: ["-150%", "250%"] }}
           transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
         />
-        {icon || <motion.span className="w-1.5 h-1.5 rounded-full bg-primary" animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />}
+        {icon || <motion.span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />}
         <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90 relative z-10">{text}</span>
       </div>
     </motion.div>
