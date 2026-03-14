@@ -32,6 +32,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 
 // Agent cartoon images
+import agentHubHero from "@/assets/agent-hub-hero.png";
 import agentEmpireAssistant from "@/assets/agent-empire-assistant.png";
 import agentAtlasVoice from "@/assets/agent-atlas-voice.png";
 import agentConciergeFood from "@/assets/agent-concierge-food.png";
@@ -736,50 +737,130 @@ export default function AgentsPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Header */}
-      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border px-4 md:px-6 py-4">
-        <div className="flex items-center justify-between max-w-[1600px] mx-auto">
-          <div className="flex items-center gap-3">
+      {/* Header — Mobile Optimized */}
+      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border px-3 md:px-6 py-2.5 md:py-4">
+        <div className="flex items-center justify-between max-w-[1600px] mx-auto gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <BackButton variant="inline" />
-            <div>
-              <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <Brain className="w-6 h-6 text-primary" />
-                Intelligence Hub — Agenti IA
+            <div className="min-w-0">
+              <h1 className="text-base md:text-2xl font-bold flex items-center gap-1.5 truncate">
+                <Brain className="w-5 h-5 md:w-6 md:h-6 text-primary shrink-0" />
+                <span className="truncate">Intelligence Hub</span>
               </h1>
-              <p className="text-sm text-muted-foreground mt-0.5">Gestisci, modifica, testa e monitora tutti gli agenti IA</p>
+              <p className="text-[10px] md:text-sm text-muted-foreground mt-0.5 truncate">Gestisci e monitora gli agenti IA</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 animate-pulse">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 animate-pulse text-[10px] md:text-xs h-5 md:h-6 px-1.5 md:px-2">
               {activeCount} attivi
             </Badge>
-            {disabledCount > 0 && (
-              <Badge variant="outline" className="text-muted-foreground">{disabledCount} spenti</Badge>
-            )}
             <Button variant="outline" size="sm" className="gap-1 hidden md:flex" onClick={() => bulkToggle.mutate(true)}>
               <Power className="w-3.5 h-3.5 text-emerald-400" /> Tutti ON
             </Button>
             <Button variant="outline" size="sm" className="gap-1 hidden md:flex" onClick={() => bulkToggle.mutate(false)}>
               <PowerOff className="w-3.5 h-3.5 text-red-400" /> Tutti OFF
             </Button>
-            <Button variant="outline" size="sm" className="gap-1" onClick={() => {
+            <Button variant="outline" size="icon" className="h-7 w-7 md:h-8 md:w-auto md:px-3 md:gap-1" onClick={() => {
               queryClient.invalidateQueries({ queryKey: ["ai-agent-configs"] });
               queryClient.invalidateQueries({ queryKey: ["ai-usage-today"] });
             }}>
-              <RefreshCw className="w-3.5 h-3.5" /> Aggiorna
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span className="hidden md:inline text-xs">Aggiorna</span>
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-4 md:px-6 py-6 space-y-6">
-        {/* KPI Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          <KPICard icon={<Brain className="w-5 h-5 text-primary" />} label="Agenti Totali" value={AGENTS.length.toString()} sub={`${activeCount} attivi / ${disabledCount} spenti`} />
-          <KPICard icon={<DollarSign className="w-5 h-5 text-emerald-400" />} label="Costo Totale Mese" value={`€${totalCostMonth.toFixed(2)}`} sub={<span className="text-emerald-400 flex items-center gap-0.5"><ArrowDownRight className="w-3 h-3" />-8% vs mese prec.</span>} />
-          <KPICard icon={<Medal className="w-5 h-5 text-yellow-400" />} label="Account Top" value={topAccount.name.split(" ").slice(0, 2).join(" ")} sub={`${INDUSTRY_LABELS[topAccount.industry] || topAccount.industry} — €${topAccount.cost}`} />
-          <KPICard icon={<Zap className="w-5 h-5 text-accent" />} label="Chiamate Oggi" value={callsToday.toString()} sub={`✅ ${successRate.toFixed(0)}% successo`} />
-        </div>
+      <div className="max-w-[1600px] mx-auto px-3 md:px-6 py-4 md:py-6 space-y-4 md:space-y-6">
+        {/* Hero Agent Figure + KPI */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-2xl"
+          style={{
+            background: "linear-gradient(135deg, hsl(var(--card)), hsl(var(--primary) / 0.06) 50%, hsl(var(--accent) / 0.04))",
+            border: "1px solid hsl(var(--primary) / 0.15)",
+          }}
+        >
+          {/* Top accent line */}
+          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.6), hsl(var(--accent) / 0.5), transparent)" }} />
+          {/* Corner HUD */}
+          <div className="absolute top-2 left-2 w-3 h-3 border-l border-t border-primary/20 rounded-tl-sm" />
+          <div className="absolute top-2 right-2 w-3 h-3 border-r border-t border-primary/20 rounded-tr-sm" />
+          <div className="absolute bottom-2 left-2 w-3 h-3 border-l border-b border-primary/20 rounded-bl-sm" />
+          <div className="absolute bottom-2 right-2 w-3 h-3 border-r border-b border-primary/20 rounded-br-sm" />
+          {/* Ambient glow */}
+          <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full blur-3xl opacity-20" style={{ background: "hsl(var(--primary))" }} />
+
+          <div className="relative flex flex-col md:flex-row items-center gap-3 md:gap-6 p-4 md:p-6">
+            {/* Animated Agent Character */}
+            <motion.div
+              className="relative w-28 h-28 md:w-36 md:h-36 shrink-0"
+              animate={{
+                y: [0, -8, 0],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              {/* Orbital rings */}
+              <motion.div
+                className="absolute inset-[-12px] md:inset-[-16px] rounded-full border border-primary/15"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              />
+              <motion.div
+                className="absolute inset-[-6px] md:inset-[-8px] rounded-full border border-accent/10"
+                animate={{ rotate: -360 }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+              />
+              {/* Orbiting dots */}
+              <motion.div
+                className="absolute w-2 h-2 rounded-full bg-primary shadow-lg shadow-primary/50"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                style={{ top: -8, left: "50%", transformOrigin: "0 68px" }}
+              />
+              <motion.div
+                className="absolute w-1.5 h-1.5 rounded-full bg-accent shadow-lg shadow-accent/50"
+                animate={{ rotate: -360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                style={{ top: -4, left: "50%", transformOrigin: "0 60px" }}
+              />
+              {/* Glow behind */}
+              <div className="absolute inset-2 rounded-full blur-xl opacity-30" style={{ background: "hsl(var(--primary))" }} />
+              {/* Character */}
+              <motion.img
+                src={agentHubHero}
+                alt="AI Agent Hub"
+                className="w-full h-full object-contain relative z-10 drop-shadow-2xl"
+                animate={{ scale: [1, 1.03, 1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </motion.div>
+
+            {/* KPI Grid */}
+            <div className="flex-1 w-full">
+              <div className="grid grid-cols-2 gap-2 md:gap-3">
+                <KPICard icon={<Brain className="w-4 h-4 md:w-5 md:h-5 text-primary" />} label="Agenti Totali" value={AGENTS.length.toString()} sub={`${activeCount} attivi / ${disabledCount} spenti`} />
+                <KPICard icon={<DollarSign className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />} label="Costo Mese" value={`€${totalCostMonth.toFixed(2)}`} sub={<span className="text-emerald-400 flex items-center gap-0.5"><ArrowDownRight className="w-3 h-3" />-8%</span>} />
+                <KPICard icon={<Medal className="w-4 h-4 md:w-5 md:h-5 text-yellow-400" />} label="Top Account" value={topAccount.name.split(" ").slice(0, 2).join(" ")} sub={`€${topAccount.cost}`} />
+                <KPICard icon={<Zap className="w-4 h-4 md:w-5 md:h-5 text-accent" />} label="Oggi" value={callsToday.toString()} sub={`✅ ${successRate.toFixed(0)}%`} />
+              </div>
+              {/* Mobile bulk toggle */}
+              <div className="flex gap-2 mt-3 md:hidden">
+                <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1" onClick={() => bulkToggle.mutate(true)}>
+                  <Power className="w-3 h-3 text-emerald-400" /> Tutti ON
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1" onClick={() => bulkToggle.mutate(false)}>
+                  <PowerOff className="w-3 h-3 text-red-400" /> Tutti OFF
+                </Button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Alerts */}
         {unresolvedAlerts.length > 0 && (
@@ -1445,12 +1526,12 @@ function ElevenLabsConvAIConfig() {
 function KPICard({ icon, label, value, sub }: { icon: React.ReactNode; label: string; value: string; sub: React.ReactNode }) {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden rounded-xl border border-border bg-card p-4 group hover:border-primary/30 transition-all">
+      className="relative overflow-hidden rounded-lg md:rounded-xl border border-border bg-card p-2.5 md:p-4 group hover:border-primary/30 transition-all">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       <div className="absolute -top-6 -right-6 w-16 h-16 rounded-full blur-xl bg-primary/5 group-hover:bg-primary/10 transition-colors" />
-      <div className="flex items-center gap-2 mb-2">{icon}<span className="text-xs text-muted-foreground">{label}</span></div>
-      <div className="text-2xl font-bold text-foreground">{value}</div>
-      <div className="text-[10px] text-muted-foreground mt-1">{sub}</div>
+      <div className="flex items-center gap-1.5 mb-1 md:mb-2">{icon}<span className="text-[10px] md:text-xs text-muted-foreground truncate">{label}</span></div>
+      <div className="text-lg md:text-2xl font-bold text-foreground truncate">{value}</div>
+      <div className="text-[9px] md:text-[10px] text-muted-foreground mt-0.5 md:mt-1 truncate">{sub}</div>
     </motion.div>
   );
 }
