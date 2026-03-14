@@ -195,10 +195,10 @@ export function AIAgentsShowcase() {
         </svg>
         
         {/* Neural grid dots */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.02]" xmlns="http://www.w3.org/2000/svg">
+        <svg className="absolute inset-0 w-full h-full opacity-[0.045]" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <pattern id="neural-grid-agents" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-              <circle cx="30" cy="30" r="0.8" fill="hsl(var(--primary))" />
+            <pattern id="neural-grid-agents" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+              <circle cx="25" cy="25" r="1" fill="hsl(var(--primary))" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#neural-grid-agents)" />
