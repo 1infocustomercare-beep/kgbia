@@ -853,66 +853,93 @@ export default function AgentsPage() {
               return (
                 <motion.div key={agent.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.04 }}
-                  className={`bg-card border rounded-xl p-4 transition-all cursor-pointer group relative ${
-                    enabled ? "border-border hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5" : "border-border/50 opacity-50 grayscale"
+                  className={`relative overflow-hidden rounded-xl transition-all cursor-pointer group ${
+                    enabled
+                      ? "hover:shadow-xl hover:shadow-primary/10"
+                      : "opacity-40 grayscale"
                   }`}
+                  style={{
+                    background: enabled
+                      ? `linear-gradient(160deg, hsl(var(--card)), ${agent.color}08)`
+                      : "hsl(var(--card))",
+                    border: `1px solid ${enabled ? agent.color + "25" : "hsl(var(--border))"}`,
+                  }}
                   onClick={() => setSelectedAgent(agent)}
+                  whileHover={enabled ? { y: -3, borderColor: agent.color + "55" } : {}}
                 >
-                  {/* Header with cartoon avatar */}
-                  <div className="flex items-start gap-3 mb-3">
-                    <AgentAvatar agent={agent} size={56} />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-sm truncate">{config?.display_name || agent.displayName}</h3>
-                      <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                        <Badge className={`${agent.modelBadgeColor} text-[9px] h-5`}>{agent.model}</Badge>
-                        <StatusBadge status={enabled ? "active" : "disabled"} />
+                  {/* Top gradient accent */}
+                  <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${agent.color}66, transparent)` }} />
+                  {/* Ambient corner glow */}
+                  <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700" style={{ background: agent.color }} />
+
+                  <div className="p-4">
+                    {/* Header with avatar */}
+                    <div className="flex items-start gap-3 mb-3">
+                      <AgentAvatar agent={agent} size={52} />
+                      <div className="flex-1 min-w-0 pt-1">
+                        <h3 className="font-bold text-sm truncate text-foreground">{config?.display_name || agent.displayName}</h3>
+                        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                          <Badge className={`${agent.modelBadgeColor} text-[9px] h-5`}>{agent.model}</Badge>
+                          <StatusBadge status={enabled ? "active" : "disabled"} />
+                        </div>
+                      </div>
+                      <Switch checked={enabled}
+                        onCheckedChange={(checked) => toggleAgent.mutate({ agent_name: agent.name, is_enabled: checked })}
+                        onClick={(e) => e.stopPropagation()} className="mt-1" />
+                    </div>
+
+                    <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{config?.description || agent.description}</p>
+
+                    {/* Industries */}
+                    <div className="flex items-center gap-1 flex-wrap mb-2">
+                      <span className="text-[10px] text-muted-foreground mr-1">🎯</span>
+                      {(config?.allowed_industries || agent.industries).slice(0, 3).map((ind: string) => (
+                        <Badge key={ind} variant="outline" className="text-[9px] h-4 px-1.5"
+                          style={{ borderColor: `${agent.color}30`, color: `${agent.color}cc` }}>
+                          {INDUSTRY_LABELS[ind]?.split(" ")[0] || ind}
+                        </Badge>
+                      ))}
+                      {(config?.allowed_industries || agent.industries).length > 3 && (
+                        <Badge variant="outline" className="text-[9px] h-4 px-1.5">+{(config?.allowed_industries || agent.industries).length - 3}</Badge>
+                      )}
+                    </div>
+
+                    <div className="text-[10px] text-muted-foreground mb-3">⚡ {agent.trigger}</div>
+
+                    {/* Stats row */}
+                    <div className="border-t border-border/50 pt-2 grid grid-cols-3 gap-2 text-center">
+                      <div>
+                        <div className="text-xs font-bold" style={{ color: agent.color }}>€{agent.costPerCall}</div>
+                        <div className="text-[9px] text-muted-foreground">per call</div>
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-foreground">{agentCallsToday}</div>
+                        <div className="text-[9px] text-muted-foreground">oggi</div>
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-foreground">{callsMonth.toLocaleString()}</div>
+                        <div className="text-[9px] text-muted-foreground">mese</div>
                       </div>
                     </div>
-                    <Switch checked={enabled}
-                      onCheckedChange={(checked) => toggleAgent.mutate({ agent_name: agent.name, is_enabled: checked })}
-                      onClick={(e) => e.stopPropagation()} className="mt-1" />
-                  </div>
 
-                  <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{config?.description || agent.description}</p>
-
-                  {/* Industries */}
-                  <div className="flex items-center gap-1 flex-wrap mb-2">
-                    <span className="text-[10px] text-muted-foreground mr-1">🎯</span>
-                    {(config?.allowed_industries || agent.industries).slice(0, 3).map((ind: string) => (
-                      <Badge key={ind} variant="outline" className="text-[9px] h-4 px-1.5">
-                        {INDUSTRY_LABELS[ind]?.split(" ")[0] || ind}
-                      </Badge>
-                    ))}
-                    {(config?.allowed_industries || agent.industries).length > 3 && (
-                      <Badge variant="outline" className="text-[9px] h-4 px-1.5">+{(config?.allowed_industries || agent.industries).length - 3}</Badge>
-                    )}
-                  </div>
-
-                  <div className="text-[10px] text-muted-foreground mb-3">⚡ {agent.trigger}</div>
-
-                  {/* Stats */}
-                  <div className="border-t border-border pt-2 grid grid-cols-3 gap-2 text-center">
-                    <div><div className="text-xs font-bold">€{agent.costPerCall}</div><div className="text-[9px] text-muted-foreground">per call</div></div>
-                    <div><div className="text-xs font-bold">{agentCallsToday}</div><div className="text-[9px] text-muted-foreground">oggi</div></div>
-                    <div><div className="text-xs font-bold">{callsMonth.toLocaleString()}</div><div className="text-[9px] text-muted-foreground">mese</div></div>
-                  </div>
-
-                  {/* Action buttons */}
-                  <div className="flex gap-2 mt-3 pt-2 border-t border-border">
-                    {agent.testable && (
+                    {/* Action buttons */}
+                    <div className="flex gap-2 mt-3 pt-2 border-t border-border/50">
+                      {agent.testable && (
+                        <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
+                          style={{ borderColor: `${agent.color}30` }}
+                          onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
+                          <Play className="w-3 h-3" /> Test
+                        </Button>
+                      )}
                       <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
                         onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
-                        <Play className="w-3 h-3" /> Test
+                        <BarChart3 className="w-3 h-3" /> Analytics
                       </Button>
-                    )}
-                    <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
-                      onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
-                      <BarChart3 className="w-3 h-3" /> Analytics
-                    </Button>
-                    <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
-                      onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
-                      <Pencil className="w-3 h-3" /> Modifica
-                    </Button>
+                      <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
+                        onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
+                        <Pencil className="w-3 h-3" /> Modifica
+                      </Button>
+                    </div>
                   </div>
                 </motion.div>
               );
