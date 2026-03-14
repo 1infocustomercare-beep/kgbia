@@ -2272,11 +2272,18 @@ const LandingPage = () => {
             { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-5 h-5" /> },
             { value: "€1.500", label: "Bonus Elite", icon: <Rocket className="w-5 h-5" /> },
           ].map((s, i) => (
-            <motion.div key={i} className="p-5 sm:p-6 rounded-2xl glow-card text-center"
-              variants={popIn} whileHover={{ y: -4 }}>
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-3">{s.icon}</div>
-              <p className="text-xl sm:text-2xl font-heading font-bold text-vibrant-gradient">{s.value}</p>
-              <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/40 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
+            <motion.div key={i} variants={popIn}>
+              <PremiumCard glow scan delay={i} className="p-5 sm:p-6 text-center">
+                <div className="flex justify-center mb-3">
+                  <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.4}>
+                    <span className="text-primary">{s.icon}</span>
+                  </PremiumIcon>
+                </div>
+                <motion.p className="text-xl sm:text-2xl font-heading font-bold text-vibrant-gradient"
+                  animate={{ textShadow: ["0 0 10px hsla(265,70%,60%,0)", "0 0 20px hsla(265,70%,60%,0.3)", "0 0 10px hsla(265,70%,60%,0)"] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>{s.value}</motion.p>
+                <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/40 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
