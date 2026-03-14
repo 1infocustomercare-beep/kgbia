@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
+import { MarqueeCarousel, PremiumSectionHeader, PremiumStatsBar, ReviewsMarquee, AmbientGlow, GlassServiceCard } from "@/components/public/PremiumSiteKit";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
