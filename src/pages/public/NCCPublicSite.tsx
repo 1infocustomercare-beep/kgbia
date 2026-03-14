@@ -716,8 +716,8 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
 
         {/* Row 1 — scrolls left */}
-        <div className="overflow-hidden mb-5">
-          <div className="flex animate-ncc-marquee" style={{ width: "max-content" }}>
+        <div className="overflow-hidden mb-5 group/row1">
+          <div className="flex animate-ncc-marquee group-hover/row1:[animation-play-state:paused]" style={{ width: "max-content" }}>
             {[...whyUsServices, ...whyUsServices, ...whyUsServices, ...whyUsServices].map((item, i) => (
               <div key={`r1-${i}`} className="flex-shrink-0 w-[280px] sm:w-[320px] mx-2 sm:mx-3">
                 <div
