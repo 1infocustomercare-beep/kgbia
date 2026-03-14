@@ -35,6 +35,39 @@ serve(async (req) => {
     );
     if (error) throw error;
 
+    // Sync profile data from auth user_metadata (phone, city, full_name)
+    try {
+      const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(user_id);
+      if (authUser?.user) {
+        const meta = authUser.user.user_metadata || {};
+        const fullName = meta.full_name || meta.name || null;
+        const email = authUser.user.email || null;
+
+        // Upsert profile
+        const { data: existingProfile } = await supabaseAdmin
+          .from("profiles")
+          .select("id")
+          .eq("user_id", user_id)
+          .maybeSingle();
+
+        if (existingProfile) {
+          // Update if name is missing
+          if (fullName) {
+            await supabaseAdmin.from("profiles").update({ full_name: fullName }).eq("user_id", user_id);
+          }
+        } else {
+          // Create profile
+          await supabaseAdmin.from("profiles").insert({
+            user_id,
+            full_name: fullName,
+            email,
+          });
+        }
+      }
+    } catch (profileErr) {
+      console.error("Profile sync error (non-blocking):", profileErr);
+    }
+
     // If referred by a team leader, add to their team
     if (team_leader_id) {
       // Verify the team_leader_id is actually a team leader
