@@ -1189,10 +1189,10 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/*
-          VIDEO INDUSTRIES + WHY US
+          PERCHÉ EMPIRE — Unified Section
          ═══════════════════════════════════════════ */}
       <Section>
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-14">
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="text-center lg:text-left order-2 lg:order-1">
             <SectionLabel text="Perché Empire" icon={<Crown className="w-3 h-3 text-accent" />} />
@@ -1211,7 +1211,7 @@ const LandingPage = () => {
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-3 items-start group"
                   initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                  <motion.div className="w-5 h-5 min-w-[20px] rounded-full bg-primary/15 flex items-center justify-center mt-0.5 relative overflow-hidden"
+                  <motion.div className="w-5 h-5 min-w-[20px] rounded-full bg-primary/15 flex items-center justify-center mt-0.5"
                     animate={{ boxShadow: ["0 0 0px hsla(265,70%,60%,0)", "0 0 12px hsla(265,70%,60%,0.3)", "0 0 0px hsla(265,70%,60%,0)"] }}
                     transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}>
                     <Check className="w-3 h-3 text-primary" />
@@ -1232,68 +1232,23 @@ const LandingPage = () => {
             </div>
           </motion.div>
         </div>
-      </Section>
 
-      <SectionDivider />
-
-      {/* ═══════════════════════════════════════════
-         ═══════════════════════════════════════════ */}
-      <Section>
-        <div className="text-center mb-10 sm:mb-12">
-          <SectionLabel text="Vantaggi" icon={<Zap className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Perché Siamo <span className="text-shimmer">N°1 al Mondo</span>
-          </motion.h2>
-        </div>
-
-        {/* ═══ Mobile: Premium Carousel ═══ */}
-        <div className="sm:hidden">
-          <PremiumCarousel speed="fast" itemWidth={220}>
-            {whyUs.map((item, i) => (
-              <div key={i} className="group relative p-5 rounded-2xl h-full overflow-hidden border border-border/10 bg-card/60 backdrop-blur-sm">
-                {/* Top accent line */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-                {/* Corner glow */}
-                <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary/[0.06] blur-2xl group-hover:bg-primary/[0.12] transition-all duration-700" />
-                <div className="relative z-10">
-                  <PremiumIcon gradient="from-primary/25 to-accent/15" size="md" delay={i * 0.4}>
-                    <span className="text-primary">{item.icon}</span>
-                  </PremiumIcon>
-                  <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
-                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </PremiumCarousel>
-        </div>
-
-        {/* ═══ Desktop: Grid ═══ */}
-        <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-5"
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+        {/* Benefits Grid — compact 6-col */}
+        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"
+          variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {whyUs.map((item, i) => (
-            <motion.div key={i} variants={fadeUp}>
-              <PremiumCard glow scan delay={i} className="p-7">
-                {/* Number watermark */}
-                <motion.span className="absolute top-3 right-4 text-[3rem] font-heading font-black leading-none select-none"
-                  style={{ color: "hsla(265,70%,60%,0.03)" }}
-                  whileHover={{ color: "hsla(265,70%,60%,0.08)" }}
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 4, repeat: Infinity, delay: i * 0.6 }}>
-                  {String(i + 1).padStart(2, "0")}
-                </motion.span>
-                <PremiumIcon gradient="from-primary/25 to-accent/15" size="lg" delay={i * 0.5}>
-                  <span className="text-primary">{item.icon}</span>
-                </PremiumIcon>
-                <h3 className="font-heading text-sm font-bold text-foreground mb-2 mt-1">{item.title}</h3>
-                <p className="text-xs text-foreground/40 leading-[1.7]">{item.desc}</p>
+            <motion.div key={i} variants={popIn}>
+              <PremiumCard scan delay={i * 0.3} className="p-4 text-center">
+                <motion.div className="text-primary/50 mb-2 flex justify-center"
+                  animate={{ y: [0, -2, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
+                <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
+                <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
               </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
       </Section>
-
-      {/* Duplicate pain section removed — already present above */}
 
       {/* ═══════════════════════════════════════════
           COMPARISON TABLE — Empire vs Others
@@ -1796,35 +1751,34 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          NCC & LUXURY TRANSPORT SHOWCASE
+          NCC & LUXURY TRANSPORT SHOWCASE — Compact
          ═══════════════════════════════════════════ */}
       <Section id="app" style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,22%,7%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.05), transparent 70%)" }} />
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="text-center lg:text-left order-2 lg:order-1">
+            className="text-center lg:text-left">
             <SectionLabel text="NCC & Trasporti" icon={<Car className="w-3 h-3 text-primary" />} />
-            <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
+            <h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
               Trasporto Premium,<br /><span className="text-shimmer">Automatizzato al 100%</span>
             </h2>
             <p className="text-foreground/40 leading-[1.7] max-w-lg mx-auto lg:mx-0 mb-7 text-sm">
-              Gestisci la tua flotta NCC, le prenotazioni e i tuoi autisti con un sistema AI che automatizza tariffe, assegnazioni e comunicazioni con il cliente — tutto brandizzato con la tua identità.
+              Gestisci flotta NCC, prenotazioni e autisti con un sistema AI che automatizza tariffe, assegnazioni e comunicazioni — tutto con il tuo brand.
             </p>
-            <div className="space-y-4 mb-8 text-left max-w-md mx-auto lg:mx-0">
+            <div className="space-y-3 mb-8 text-left max-w-md mx-auto lg:mx-0">
               {[
-                { title: "Booking Engine Intelligente", desc: "Prenotazioni online con calcolo tariffe automatico per tratta e veicolo", icon: <Calendar className="w-3 h-3" /> },
-                { title: "Gestione Flotta & Autisti", desc: "Assegna veicoli, monitora scadenze CQC, patenti e revisioni", icon: <Shield className="w-3 h-3" /> },
-                { title: "Tariffe Dinamiche per Tratta", desc: "Prezzi custom per origine-destinazione, extra, notturno e festivi", icon: <TrendingUp className="w-3 h-3" /> },
-                { title: "Notifiche & Tracking Live", desc: "Il cliente riceve conferme, reminder e tracking in tempo reale", icon: <Bell className="w-3 h-3" /> },
+                { title: "Booking Engine Intelligente", desc: "Prenotazioni con calcolo tariffe automatico per tratta e veicolo", icon: <Calendar className="w-3 h-3" /> },
+                { title: "Gestione Flotta & Autisti", desc: "Monitora scadenze CQC, patenti e revisioni in tempo reale", icon: <Shield className="w-3 h-3" /> },
+                { title: "Tariffe Dinamiche", desc: "Prezzi custom per tratta, extra notturno e festivi", icon: <TrendingUp className="w-3 h-3" /> },
+                { title: "Tracking & Notifiche Live", desc: "Conferme, reminder e tracking in tempo reale per il cliente", icon: <Bell className="w-3 h-3" /> },
               ].map((f, i) => (
-                <motion.div key={i} className="flex gap-3.5 items-start group"
+                <motion.div key={i} className="flex gap-3 items-start group"
                   initial={{ opacity: 0, x: -15 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                  <div className="w-8 h-8 min-w-[32px] rounded-xl bg-primary/10 flex items-center justify-center mt-0.5 group-hover:bg-primary/20 transition-colors">
+                  <div className="w-7 h-7 min-w-[28px] rounded-lg bg-primary/10 flex items-center justify-center mt-0.5 group-hover:bg-primary/20 transition-colors">
                     <span className="text-primary">{f.icon}</span>
                   </div>
                   <div>
-                    <p className="text-xs sm:text-sm text-foreground font-semibold">{f.title}</p>
-                    <p className="text-[0.65rem] text-foreground/35 mt-0.5">{f.desc}</p>
+                    <p className="text-xs font-semibold text-foreground">{f.title}</p>
+                    <p className="text-[0.6rem] text-foreground/35 mt-0.5">{f.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -1835,182 +1789,27 @@ const LandingPage = () => {
               whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.2)" }}
               whileTap={{ scale: 0.97 }}
             >
-              Scopri Amalfi Luxury Transfer <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+              Scopri Demo NCC <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
             </motion.button>
           </motion.div>
 
           <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="order-1 lg:order-2 w-full overflow-hidden">
-            <div className="relative">
-              <div className="absolute -inset-16 rounded-[80px] blur-[100px] pointer-events-none" style={{ background: "hsla(265,70%,60%,0.05)" }} />
-              {/* Fade edges */}
-              <div className="absolute left-0 top-0 bottom-0 w-16 z-30 pointer-events-none" style={{ background: "linear-gradient(to right, hsl(var(--background)), transparent)" }} />
-              <div className="absolute right-0 top-0 bottom-0 w-16 z-30 pointer-events-none" style={{ background: "linear-gradient(to left, hsl(var(--background)), transparent)" }} />
-              <div className="flex gap-5 animate-[ncc-scroll_25s_linear_infinite] hover:[animation-play-state:paused]" style={{ width: "max-content" }}>
-              {/* Duplicate set for infinite loop */}
-              {[0, 1].map((setIdx) => (
-                <div key={setIdx} className="flex gap-5 shrink-0">
-                  {/* iPhone 1 - Booking */}
-                  <div className="relative shrink-0 transition-transform duration-300 hover:scale-105 hover:-translate-y-2">
-                    <div className="relative w-[160px] sm:w-[190px] h-[330px] sm:h-[390px] rounded-[22px] sm:rounded-[28px] border-[2px] overflow-hidden"
-                      style={{ borderColor: "hsla(265,70%,60%,0.15)", background: "hsla(0,0%,8%,1)", boxShadow: "0 20px 60px hsla(0,0%,0%,0.5), 0 0 30px hsla(265,70%,60%,0.06)" }}>
-                      <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[44px] h-[12px] rounded-full z-30" style={{ background: "hsla(0,0%,5%,1)" }} />
-                      <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden" style={{ background: "#0a0a0a" }}>
-                        <div className="relative w-full h-[35%]">
-                          <img src={nccPremiumCoast} alt="NCC Booking" className="w-full h-full object-cover" loading="lazy" />
-                          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent, #0a0a0a)" }} />
-                          <div className="absolute bottom-2 left-2 z-10">
-                            <div className="flex items-center gap-1 mb-0.5">
-                              <div className="w-3 h-3 rounded flex items-center justify-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
-                                <Crown className="w-1.5 h-1.5 text-white" />
-                              </div>
-                              <span className="text-[0.3rem] font-heading font-bold text-white/90 tracking-[1.5px] uppercase">Booking</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="p-2 space-y-1.5">
-                          <div className="rounded-lg p-1.5 space-y-1" style={{ background: "hsla(0,0%,100%,0.04)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
-                            <div className="flex items-center gap-1">
-                              <MapPin className="w-2 h-2 shrink-0" style={{ color: "#C9A84C" }} />
-                              <span className="text-[0.3rem] text-white/60">NAP → Positano</span>
-                            </div>
-                            <div className="h-px" style={{ background: "hsla(0,0%,100%,0.06)" }} />
-                            <div className="flex items-center gap-1">
-                              <Calendar className="w-2 h-2 shrink-0" style={{ color: "#C9A84C" }} />
-                              <span className="text-[0.3rem] text-white/60">15 Mar · 14:30</span>
-                            </div>
-                          </div>
-                          <div className="flex gap-1">
-                            {["Sedan", "SUV", "Van"].map((v, vi) => (
-                              <div key={vi} className="flex-1 rounded-md py-1 text-center" style={{ background: vi === 1 ? "hsla(45,70%,50%,0.1)" : "hsla(0,0%,100%,0.03)", border: `1px solid ${vi === 1 ? "hsla(45,70%,50%,0.25)" : "hsla(0,0%,100%,0.05)"}` }}>
-                                <span className="text-[0.25rem] font-bold" style={{ color: vi === 1 ? "#C9A84C" : "hsla(0,0%,100%,0.35)" }}>{v}</span>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="rounded-lg py-1.5 text-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
-                            <span className="text-[0.35rem] font-bold text-white tracking-wider uppercase">Prenota · €120</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2.5px] rounded-full z-30" style={{ background: "hsla(0,0%,100%,0.15)" }} />
-                    </div>
+            className="w-full">
+            <div className="relative rounded-2xl overflow-hidden glow-card">
+              <img src={nccFleetShowcase} alt="NCC Fleet Management" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent pointer-events-none" />
+              {/* Overlay stats */}
+              <div className="absolute bottom-4 left-4 right-4 flex gap-2">
+                {[
+                  { label: "Flotta", val: "12 veicoli" },
+                  { label: "Rating", val: "4.9★" },
+                  { label: "Revenue", val: "+40%" },
+                ].map((s, i) => (
+                  <div key={i} className="flex-1 px-2 py-2 rounded-lg text-center" style={{ background: "hsla(0,0%,0%,0.6)", backdropFilter: "blur(8px)", border: "1px solid hsla(0,0%,100%,0.08)" }}>
+                    <p className="text-[0.5rem] text-foreground/40 tracking-wider uppercase">{s.label}</p>
+                    <p className="text-[0.65rem] font-heading font-bold text-foreground">{s.val}</p>
                   </div>
-
-                  {/* iPhone 2 - Fleet */}
-                  <div className="relative shrink-0 transition-transform duration-300 hover:scale-105 hover:-translate-y-2">
-                    <div className="absolute -inset-4 rounded-[32px] blur-xl pointer-events-none" style={{ background: "hsla(265,70%,60%,0.07)" }} />
-                    <div className="relative w-[170px] sm:w-[200px] h-[350px] sm:h-[410px] rounded-[24px] sm:rounded-[30px] border-[2px] overflow-hidden"
-                      style={{ borderColor: "hsla(265,70%,60%,0.2)", background: "hsla(0,0%,8%,1)", boxShadow: "0 25px 70px hsla(0,0%,0%,0.6), 0 0 40px hsla(265,70%,60%,0.1)" }}>
-                      <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[50px] h-[13px] rounded-full z-30" style={{ background: "hsla(0,0%,5%,1)" }} />
-                      <div className="absolute inset-[2px] rounded-[22px] sm:rounded-[28px] overflow-hidden" style={{ background: "#0a0a0a" }}>
-                        <div className="p-2.5 pt-7">
-                          <div className="flex items-center justify-between mb-2.5">
-                            <div className="flex items-center gap-1">
-                              <div className="w-3.5 h-3.5 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
-                                <Car className="w-2 h-2 text-white" />
-                              </div>
-                              <span className="text-[0.35rem] font-heading font-bold text-white/90 tracking-[1px] uppercase">Flotta</span>
-                            </div>
-                            <div className="px-1.5 py-0.5 rounded-full" style={{ background: "hsla(130,60%,50%,0.12)" }}>
-                              <span className="text-[0.25rem] font-bold" style={{ color: "hsla(130,60%,50%,0.8)" }}>5 Attivi</span>
-                            </div>
-                          </div>
-                          <div className="space-y-1.5">
-                            {[
-                              { name: "Mercedes S-Class", plate: "NA 892 XL", status: "In servizio", color: "hsla(130,60%,50%,0.8)" },
-                              { name: "BMW Serie 7", plate: "NA 445 KR", status: "Disponibile", color: "hsla(200,70%,50%,0.8)" },
-                              { name: "Mercedes V-Class", plate: "NA 221 TM", status: "In servizio", color: "hsla(130,60%,50%,0.8)" },
-                            ].map((car, ci) => (
-                              <div key={ci} className="rounded-lg p-1.5 flex items-center justify-between" style={{ background: "hsla(0,0%,100%,0.03)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
-                                <div>
-                                  <p className="text-[0.35rem] font-bold text-white/80">{car.name}</p>
-                                  <p className="text-[0.25rem] text-white/30">{car.plate}</p>
-                                </div>
-                                <span className="text-[0.22rem] font-bold px-1 py-0.5 rounded-full" style={{ background: car.color.replace('0.8', '0.1'), color: car.color }}>{car.status}</span>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="mt-2 rounded-lg p-1.5" style={{ background: "hsla(45,70%,50%,0.05)", border: "1px solid hsla(45,70%,50%,0.12)" }}>
-                            <div className="flex items-center gap-1 mb-0.5">
-                              <Users className="w-2 h-2" style={{ color: "#C9A84C" }} />
-                              <span className="text-[0.3rem] font-bold" style={{ color: "#C9A84C" }}>Prossima corsa</span>
-                            </div>
-                            <p className="text-[0.25rem] text-white/50">Marco R. · NAP→POS · 14:30</p>
-                          </div>
-                          <div className="mt-1.5 grid grid-cols-2 gap-1">
-                            <div className="rounded-lg p-1 text-center" style={{ background: "hsla(40,80%,50%,0.08)" }}>
-                              <p className="text-[0.25rem] font-bold" style={{ color: "#C9A84C" }}>CQC</p>
-                              <p className="text-[0.2rem] text-white/30">12 gg</p>
-                            </div>
-                            <div className="rounded-lg p-1 text-center" style={{ background: "hsla(130,60%,50%,0.06)" }}>
-                              <p className="text-[0.25rem] font-bold" style={{ color: "hsla(130,60%,50%,0.7)" }}>Rev.</p>
-                              <p className="text-[0.2rem] text-white/30">89 gg</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[40px] h-[2.5px] rounded-full z-30" style={{ background: "hsla(0,0%,100%,0.15)" }} />
-                    </div>
-                  </div>
-
-                  {/* iPhone 3 - Analytics */}
-                  <div className="relative shrink-0 transition-transform duration-300 hover:scale-105 hover:-translate-y-2">
-                    <div className="relative w-[160px] sm:w-[190px] h-[330px] sm:h-[390px] rounded-[22px] sm:rounded-[28px] border-[2px] overflow-hidden"
-                      style={{ borderColor: "hsla(265,70%,60%,0.15)", background: "hsla(0,0%,8%,1)", boxShadow: "0 20px 60px hsla(0,0%,0%,0.5), 0 0 30px hsla(265,70%,60%,0.06)" }}>
-                      <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[44px] h-[12px] rounded-full z-30" style={{ background: "hsla(0,0%,5%,1)" }} />
-                      <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden" style={{ background: "#0a0a0a" }}>
-                        <div className="p-2.5 pt-6">
-                          <div className="flex items-center gap-1 mb-2.5">
-                            <div className="w-3.5 h-3.5 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
-                              <TrendingUp className="w-2 h-2 text-white" />
-                            </div>
-                            <span className="text-[0.35rem] font-heading font-bold text-white/90 tracking-[1px] uppercase">Analytics</span>
-                          </div>
-                          <div className="rounded-lg p-1.5 mb-1.5" style={{ background: "hsla(0,0%,100%,0.03)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
-                            <p className="text-[0.25rem] text-white/30 mb-0.5">Revenue Mensile</p>
-                            <p className="text-[0.55rem] font-heading font-bold text-shimmer">€48.200</p>
-                            <div className="flex items-center gap-0.5 mt-0.5">
-                              <TrendingUp className="w-1.5 h-1.5" style={{ color: "hsla(130,60%,50%,0.8)" }} />
-                              <span className="text-[0.22rem] font-bold" style={{ color: "hsla(130,60%,50%,0.8)" }}>+23%</span>
-                            </div>
-                          </div>
-                          <div className="rounded-lg p-1.5 mb-1.5" style={{ background: "hsla(0,0%,100%,0.03)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
-                            <p className="text-[0.25rem] text-white/30 mb-1">Corse settimanali</p>
-                            <div className="flex items-end gap-[2px] h-[24px]">
-                              {[45, 60, 35, 80, 65, 90, 72].map((h, bi) => (
-                                <div key={bi} className="flex-1 rounded-sm" style={{ height: `${h}%`, background: bi === 5 ? "linear-gradient(to top, #C9A84C, #B8942F)" : "hsla(265,70%,60%,0.15)" }} />
-                              ))}
-                            </div>
-                            <div className="flex justify-between mt-0.5">
-                              {["L", "M", "M", "G", "V", "S", "D"].map((d, di) => (
-                                <span key={di} className="text-[0.18rem] text-white/20 flex-1 text-center">{d}</span>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-2 gap-1">
-                            <div className="rounded-lg p-1 text-center" style={{ background: "hsla(0,0%,100%,0.03)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
-                              <p className="text-[0.4rem] font-bold text-white/80">142</p>
-                              <p className="text-[0.2rem] text-white/30">Corse</p>
-                            </div>
-                            <div className="rounded-lg p-1 text-center" style={{ background: "hsla(0,0%,100%,0.03)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
-                              <p className="text-[0.4rem] font-bold" style={{ color: "#C9A84C" }}>4.9★</p>
-                              <p className="text-[0.2rem] text-white/30">Rating</p>
-                            </div>
-                          </div>
-                          <div className="mt-1.5 rounded-lg p-1.5 flex items-center gap-1" style={{ background: "hsla(130,60%,50%,0.05)", border: "1px solid hsla(130,60%,50%,0.12)" }}>
-                            <Check className="w-2 h-2 shrink-0" style={{ color: "hsla(130,60%,50%,0.8)" }} />
-                            <div>
-                              <p className="text-[0.25rem] font-bold text-white/70">Nuova prenotazione</p>
-                              <p className="text-[0.2rem] text-white/30">Roma → Amalfi · €280</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2.5px] rounded-full z-30" style={{ background: "hsla(0,0%,100%,0.15)" }} />
-                    </div>
-                  </div>
-                </div>
-              ))}
+                ))}
               </div>
             </div>
           </motion.div>
@@ -2243,24 +2042,6 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-         ═══════════════════════════════════════════ */}
-      <Section>
-        <div className="text-center mb-8">
-          <SectionLabel text="Opportunità" icon={<Play className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Scopri l'Opportunità <span className="text-shimmer">Partner Empire</span>
-          </motion.h2>
-        </div>
-        <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
-          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-          transition={{ duration: 0.6 }}>
-          <img src={heroPartnerLuxury} alt="Empire Partner Program" className="w-full aspect-video object-cover rounded-2xl" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
-        </motion.div>
-      </Section>
-
-      {/* ═══════════════════════════════════════════
           PARTNER PROGRAM
          ═══════════════════════════════════════════ */}
       <Section id="partner">
@@ -2391,53 +2172,6 @@ const LandingPage = () => {
             ))}
           </motion.div>
         </div>
-      </Section>
-
-      <SectionDivider />
-
-      {/* ═══════════════════════════════════════════
-          PERCHÉ SIAMO N°1 — Dense Benefits Grid
-         ═══════════════════════════════════════════ */}
-      <Section>
-        <div className="text-center mb-10 sm:mb-14">
-          <SectionLabel text="Supremazia" icon={<Crown className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Perché Siamo <span className="text-shimmer">N°1</span>
-          </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.7]"
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Non è marketing. Sono fatti. Ecco perché nessun competitor può offrire quello che offriamo noi.
-          </motion.p>
-        </div>
-
-        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
-          variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {[
-            { icon: <Brain className="w-4 h-4" />, title: "IA Proprietaria", desc: "Non rivendiamo ChatGPT. Engine AI custom." },
-            { icon: <Globe className="w-4 h-4" />, title: "25+ Settori", desc: "Dal ristorante all'hotel, dalla palestra al medico." },
-            { icon: <Smartphone className="w-4 h-4" />, title: "PWA Nativa", desc: "Installabile come app. No App Store, no costi." },
-            { icon: <Fingerprint className="w-4 h-4" />, title: "100% White Label", desc: "Il tuo brand, zero marchi terzi." },
-            { icon: <Zap className="w-4 h-4" />, title: "Attivo in 24h", desc: "Non mesi. Un giorno e sei operativo." },
-            { icon: <Shield className="w-4 h-4" />, title: "GDPR & AES-256", desc: "Sicurezza enterprise per tutti." },
-            { icon: <Workflow className="w-4 h-4" />, title: "Automazione Totale", desc: "Dal primo contatto alla fattura." },
-            { icon: <Radio className="w-4 h-4" />, title: "Updates Settimanali", desc: "Il sistema si evolve. Sempre gratis." },
-            { icon: <DollarSign className="w-4 h-4" />, title: "Solo 2% Fee", desc: "15× meno di qualsiasi piattaforma." },
-            { icon: <Database className="w-4 h-4" />, title: "Dati Tuoi", desc: "Proprietà totale. Zero lock-in." },
-            { icon: <Bot className="w-4 h-4" />, title: "Concierge AI", desc: "Assistente 24/7 per i tuoi clienti." },
-            { icon: <Headphones className="w-4 h-4" />, title: "Supporto 7/7", desc: "Persone vere, non chatbot." },
-          ].map((b, i) => (
-            <motion.div key={i} variants={popIn}>
-              <PremiumCard scan delay={i * 0.3} className="p-4 text-center">
-                <motion.div className="text-primary/50 mb-2 flex justify-center group-hover/card:text-primary/80 transition-colors"
-                  animate={{ y: [0, -2, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{b.icon}</motion.div>
-                <h4 className="text-[0.7rem] font-heading font-bold text-foreground mb-1">{b.title}</h4>
-                <p className="text-[0.55rem] text-foreground/30 leading-[1.5]">{b.desc}</p>
-              </PremiumCard>
-            </motion.div>
-          ))}
-        </motion.div>
       </Section>
 
       <SectionDivider />
