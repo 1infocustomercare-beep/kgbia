@@ -31,6 +31,7 @@ import DemoCreditsWallet from "@/components/partner/DemoCreditsWallet";
 import { GuidesToggle } from "@/components/ui/info-guide";
 import InfoGuide from "@/components/ui/info-guide";
 import { RefreshCw, Palette, Pencil, Upload, Save, X as XIcon } from "lucide-react";
+import { AllIndustriesShowcase } from "@/components/public/IndustryPhoneShowcase";
 
 type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault" | "showcase";
 
