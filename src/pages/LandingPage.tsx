@@ -1517,88 +1517,176 @@ const LandingPage = () => {
 
           <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="order-1 lg:order-2">
-            <div className="flex justify-center items-center relative">
+            <div className="flex justify-center items-center gap-3 sm:gap-5 relative">
               <div className="absolute -inset-16 rounded-[80px] blur-[100px] pointer-events-none" style={{ background: "hsla(265,70%,60%,0.05)" }} />
-              <motion.div
-                className="relative"
-                initial={{ y: 30, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}
-                whileHover={{ y: -8, scale: 1.02 }}
-              >
-                <div className="absolute -inset-6 rounded-[52px] blur-2xl pointer-events-none" style={{ background: "hsla(265,70%,60%,0.08)" }} />
-                <div className="relative w-[220px] sm:w-[280px] h-[450px] sm:h-[570px] rounded-[32px] sm:rounded-[44px] border-[3px] overflow-hidden"
-                  style={{ borderColor: "hsla(265,70%,60%,0.15)", background: "hsla(0,0%,8%,1)", boxShadow: "0 30px 80px hsla(0,0%,0%,0.6), 0 0 40px hsla(265,70%,60%,0.08)" }}>
-                  <div className="absolute top-[10px] left-1/2 -translate-x-1/2 w-[60px] sm:w-[80px] h-[18px] sm:h-[22px] rounded-full z-30" style={{ background: "hsla(0,0%,5%,1)" }} />
-                  <div className="absolute inset-[3px] rounded-[28px] sm:rounded-[40px] overflow-hidden" style={{ background: "#0a0a0a" }}>
-                    {/* Hero image - Amalfi coast */}
-                    <div className="relative w-full h-[45%]">
-                      <img src={nccHeroBg} alt="NCC Luxury Transfer" className="w-full h-full object-cover" loading="lazy" />
-                      <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent, rgba(10,10,10,0.4) 60%, #0a0a0a)" }} />
-                      <div className="absolute bottom-4 left-4 right-4 z-10">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
-                            <Crown className="w-2.5 h-2.5 text-white" />
+              
+              {/* iPhone 1 - Booking */}
+              <motion.div className="relative z-10"
+                initial={{ y: 30, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}
+                transition={{ delay: 0.2, duration: 0.7, ease: smoothEase }}
+                whileHover={{ y: -6, scale: 1.04 }}>
+                <div className="relative w-[130px] sm:w-[160px] h-[270px] sm:h-[330px] rounded-[20px] sm:rounded-[26px] border-[2px] overflow-hidden"
+                  style={{ borderColor: "hsla(265,70%,60%,0.15)", background: "hsla(0,0%,8%,1)", boxShadow: "0 20px 60px hsla(0,0%,0%,0.5), 0 0 30px hsla(265,70%,60%,0.06)" }}>
+                  <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[36px] sm:w-[44px] h-[10px] sm:h-[12px] rounded-full z-30" style={{ background: "hsla(0,0%,5%,1)" }} />
+                  <div className="absolute inset-[2px] rounded-[18px] sm:rounded-[24px] overflow-hidden" style={{ background: "#0a0a0a" }}>
+                    <div className="relative w-full h-[35%]">
+                      <img src={nccHeroBg} alt="NCC Booking" className="w-full h-full object-cover" loading="lazy" />
+                      <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent, #0a0a0a)" }} />
+                      <div className="absolute bottom-2 left-2 z-10">
+                        <div className="flex items-center gap-1 mb-0.5">
+                          <div className="w-3 h-3 rounded flex items-center justify-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
+                            <Crown className="w-1.5 h-1.5 text-white" />
                           </div>
-                          <span className="text-[0.5rem] font-heading font-bold text-white/90 tracking-[2px] uppercase">Amalfi Luxury</span>
+                          <span className="text-[0.3rem] font-heading font-bold text-white/90 tracking-[1.5px] uppercase">Booking</span>
                         </div>
-                        <p className="text-[0.45rem] text-white/40">Prenota il tuo transfer privato</p>
                       </div>
                     </div>
-                    {/* Booking form */}
-                    <div className="p-4 space-y-3">
-                      <div className="rounded-xl p-3 space-y-2" style={{ background: "hsla(0,0%,100%,0.04)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-3 h-3" style={{ color: "#C9A84C" }} />
-                          <span className="text-[0.5rem] text-white/60">Napoli Aeroporto → Positano</span>
+                    <div className="p-2 space-y-1.5">
+                      <div className="rounded-lg p-1.5 space-y-1" style={{ background: "hsla(0,0%,100%,0.04)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-2 h-2 shrink-0" style={{ color: "#C9A84C" }} />
+                          <span className="text-[0.3rem] text-white/60">NAP → Positano</span>
                         </div>
                         <div className="h-px" style={{ background: "hsla(0,0%,100%,0.06)" }} />
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-3 h-3" style={{ color: "#C9A84C" }} />
-                          <span className="text-[0.5rem] text-white/60">15 Mar 2026 · 14:30</span>
-                        </div>
-                        <div className="h-px" style={{ background: "hsla(0,0%,100%,0.06)" }} />
-                        <div className="flex items-center gap-2">
-                          <Users className="w-3 h-3" style={{ color: "#C9A84C" }} />
-                          <span className="text-[0.5rem] text-white/60">3 passeggeri · 2 bagagli</span>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-2 h-2 shrink-0" style={{ color: "#C9A84C" }} />
+                          <span className="text-[0.3rem] text-white/60">15 Mar · 14:30</span>
                         </div>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-1">
                         {["Sedan", "SUV", "Van"].map((v, vi) => (
-                          <div key={vi} className="flex-1 rounded-lg p-2 text-center" style={{ background: vi === 1 ? "hsla(45,70%,50%,0.1)" : "hsla(0,0%,100%,0.03)", border: `1px solid ${vi === 1 ? "hsla(45,70%,50%,0.25)" : "hsla(0,0%,100%,0.05)"}` }}>
-                            <span className="text-[0.45rem] font-bold" style={{ color: vi === 1 ? "#C9A84C" : "hsla(0,0%,100%,0.35)" }}>{v}</span>
+                          <div key={vi} className="flex-1 rounded-md py-1 text-center" style={{ background: vi === 1 ? "hsla(45,70%,50%,0.1)" : "hsla(0,0%,100%,0.03)", border: `1px solid ${vi === 1 ? "hsla(45,70%,50%,0.25)" : "hsla(0,0%,100%,0.05)"}` }}>
+                            <span className="text-[0.25rem] font-bold" style={{ color: vi === 1 ? "#C9A84C" : "hsla(0,0%,100%,0.35)" }}>{v}</span>
                           </div>
                         ))}
                       </div>
-                      <div className="rounded-xl py-2.5 text-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
-                        <span className="text-[0.55rem] font-bold text-white tracking-wider uppercase">Prenota · €120</span>
+                      <div className="rounded-lg py-1.5 text-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
+                        <span className="text-[0.35rem] font-bold text-white tracking-wider uppercase">Prenota · €120</span>
                       </div>
                     </div>
                   </div>
-                  <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[60px] sm:w-[80px] h-[4px] rounded-full z-30" style={{ background: "hsla(0,0%,100%,0.15)" }} />
+                  <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2.5px] rounded-full z-30" style={{ background: "hsla(0,0%,100%,0.15)" }} />
                 </div>
-                {/* Floating confirmation badge */}
-                <motion.div className="absolute -right-3 sm:-right-6 top-1/3 px-3 py-2 rounded-xl backdrop-blur-xl z-40"
-                  style={{ background: "hsla(265,30%,8%,0.85)", border: "1px solid hsla(265,70%,60%,0.2)", boxShadow: "0 8px 30px hsla(0,0%,0%,0.4)" }}
-                  animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "hsla(130,60%,50%,0.15)" }}>
-                      <Check className="w-2.5 h-2.5" style={{ color: "hsla(130,60%,50%,0.8)" }} />
-                    </div>
-                    <div>
-                      <p className="text-[0.5rem] font-bold text-white/80">Confermato</p>
-                      <p className="text-[0.4rem] text-white/30">Autista assegnato</p>
+              </motion.div>
+
+              {/* iPhone 2 - Fleet (center, slightly bigger) */}
+              <motion.div className="relative z-20"
+                initial={{ y: 30, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}
+                transition={{ delay: 0.35, duration: 0.7, ease: smoothEase }}
+                whileHover={{ y: -6, scale: 1.04 }}>
+                <div className="absolute -inset-4 rounded-[32px] blur-xl pointer-events-none" style={{ background: "hsla(265,70%,60%,0.07)" }} />
+                <div className="relative w-[140px] sm:w-[175px] h-[290px] sm:h-[360px] rounded-[22px] sm:rounded-[28px] border-[2px] overflow-hidden"
+                  style={{ borderColor: "hsla(265,70%,60%,0.2)", background: "hsla(0,0%,8%,1)", boxShadow: "0 25px 70px hsla(0,0%,0%,0.6), 0 0 40px hsla(265,70%,60%,0.1)" }}>
+                  <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[40px] sm:w-[50px] h-[11px] sm:h-[13px] rounded-full z-30" style={{ background: "hsla(0,0%,5%,1)" }} />
+                  <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden" style={{ background: "#0a0a0a" }}>
+                    <div className="p-2.5 pt-7">
+                      <div className="flex items-center justify-between mb-2.5">
+                        <div className="flex items-center gap-1">
+                          <div className="w-3.5 h-3.5 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
+                            <Car className="w-2 h-2 text-white" />
+                          </div>
+                          <span className="text-[0.35rem] font-heading font-bold text-white/90 tracking-[1px] uppercase">Flotta</span>
+                        </div>
+                        <div className="px-1.5 py-0.5 rounded-full" style={{ background: "hsla(130,60%,50%,0.12)" }}>
+                          <span className="text-[0.25rem] font-bold" style={{ color: "hsla(130,60%,50%,0.8)" }}>5 Attivi</span>
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        {[
+                          { name: "Mercedes S-Class", plate: "NA 892 XL", status: "In servizio", color: "hsla(130,60%,50%,0.8)" },
+                          { name: "BMW Serie 7", plate: "NA 445 KR", status: "Disponibile", color: "hsla(200,70%,50%,0.8)" },
+                          { name: "Mercedes V-Class", plate: "NA 221 TM", status: "In servizio", color: "hsla(130,60%,50%,0.8)" },
+                        ].map((car, ci) => (
+                          <div key={ci} className="rounded-lg p-1.5 flex items-center justify-between" style={{ background: "hsla(0,0%,100%,0.03)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
+                            <div>
+                              <p className="text-[0.35rem] font-bold text-white/80">{car.name}</p>
+                              <p className="text-[0.25rem] text-white/30">{car.plate}</p>
+                            </div>
+                            <span className="text-[0.22rem] font-bold px-1 py-0.5 rounded-full" style={{ background: car.color.replace('0.8', '0.1'), color: car.color }}>{car.status}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-2 rounded-lg p-1.5" style={{ background: "hsla(45,70%,50%,0.05)", border: "1px solid hsla(45,70%,50%,0.12)" }}>
+                        <div className="flex items-center gap-1 mb-0.5">
+                          <Users className="w-2 h-2" style={{ color: "#C9A84C" }} />
+                          <span className="text-[0.3rem] font-bold" style={{ color: "#C9A84C" }}>Prossima corsa</span>
+                        </div>
+                        <p className="text-[0.25rem] text-white/50">Marco R. · NAP→POS · 14:30</p>
+                      </div>
+                      <div className="mt-1.5 grid grid-cols-2 gap-1">
+                        <div className="rounded-lg p-1 text-center" style={{ background: "hsla(40,80%,50%,0.08)" }}>
+                          <p className="text-[0.25rem] font-bold" style={{ color: "#C9A84C" }}>CQC</p>
+                          <p className="text-[0.2rem] text-white/30">12 gg</p>
+                        </div>
+                        <div className="rounded-lg p-1 text-center" style={{ background: "hsla(130,60%,50%,0.06)" }}>
+                          <p className="text-[0.25rem] font-bold" style={{ color: "hsla(130,60%,50%,0.7)" }}>Rev.</p>
+                          <p className="text-[0.2rem] text-white/30">89 gg</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </motion.div>
-                {/* Floating revenue stat */}
-                <motion.div className="absolute -left-4 sm:-left-8 bottom-1/4 px-3 py-2 rounded-xl backdrop-blur-xl z-40"
-                  style={{ background: "hsla(265,30%,8%,0.85)", border: "1px solid hsla(265,70%,60%,0.15)", boxShadow: "0 8px 30px hsla(0,0%,0%,0.4)" }}
-                  animate={{ y: [0, 5, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}>
-                  <p className="text-[0.45rem] text-white/30 mb-0.5">Revenue mensile</p>
-                  <p className="text-sm font-heading font-bold text-shimmer">€48.200</p>
-                </motion.div>
+                  <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[40px] h-[2.5px] rounded-full z-30" style={{ background: "hsla(0,0%,100%,0.15)" }} />
+                </div>
+              </motion.div>
+
+              {/* iPhone 3 - Analytics */}
+              <motion.div className="relative z-10"
+                initial={{ y: 30, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.7, ease: smoothEase }}
+                whileHover={{ y: -6, scale: 1.04 }}>
+                <div className="relative w-[130px] sm:w-[160px] h-[270px] sm:h-[330px] rounded-[20px] sm:rounded-[26px] border-[2px] overflow-hidden"
+                  style={{ borderColor: "hsla(265,70%,60%,0.15)", background: "hsla(0,0%,8%,1)", boxShadow: "0 20px 60px hsla(0,0%,0%,0.5), 0 0 30px hsla(265,70%,60%,0.06)" }}>
+                  <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[36px] sm:w-[44px] h-[10px] sm:h-[12px] rounded-full z-30" style={{ background: "hsla(0,0%,5%,1)" }} />
+                  <div className="absolute inset-[2px] rounded-[18px] sm:rounded-[24px] overflow-hidden" style={{ background: "#0a0a0a" }}>
+                    <div className="p-2.5 pt-6">
+                      <div className="flex items-center gap-1 mb-2.5">
+                        <div className="w-3.5 h-3.5 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #C9A84C, #B8942F)" }}>
+                          <TrendingUp className="w-2 h-2 text-white" />
+                        </div>
+                        <span className="text-[0.35rem] font-heading font-bold text-white/90 tracking-[1px] uppercase">Analytics</span>
+                      </div>
+                      <div className="rounded-lg p-1.5 mb-1.5" style={{ background: "hsla(0,0%,100%,0.03)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
+                        <p className="text-[0.25rem] text-white/30 mb-0.5">Revenue Mensile</p>
+                        <p className="text-[0.55rem] font-heading font-bold text-shimmer">€48.200</p>
+                        <div className="flex items-center gap-0.5 mt-0.5">
+                          <TrendingUp className="w-1.5 h-1.5" style={{ color: "hsla(130,60%,50%,0.8)" }} />
+                          <span className="text-[0.22rem] font-bold" style={{ color: "hsla(130,60%,50%,0.8)" }}>+23%</span>
+                        </div>
+                      </div>
+                      <div className="rounded-lg p-1.5 mb-1.5" style={{ background: "hsla(0,0%,100%,0.03)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
+                        <p className="text-[0.25rem] text-white/30 mb-1">Corse settimanali</p>
+                        <div className="flex items-end gap-[2px] h-[24px]">
+                          {[45, 60, 35, 80, 65, 90, 72].map((h, bi) => (
+                            <div key={bi} className="flex-1 rounded-sm" style={{ height: `${h}%`, background: bi === 5 ? "linear-gradient(to top, #C9A84C, #B8942F)" : "hsla(265,70%,60%,0.15)" }} />
+                          ))}
+                        </div>
+                        <div className="flex justify-between mt-0.5">
+                          {["L", "M", "M", "G", "V", "S", "D"].map((d, di) => (
+                            <span key={di} className="text-[0.18rem] text-white/20 flex-1 text-center">{d}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-1">
+                        <div className="rounded-lg p-1 text-center" style={{ background: "hsla(0,0%,100%,0.03)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
+                          <p className="text-[0.4rem] font-bold text-white/80">142</p>
+                          <p className="text-[0.2rem] text-white/30">Corse</p>
+                        </div>
+                        <div className="rounded-lg p-1 text-center" style={{ background: "hsla(0,0%,100%,0.03)", border: "1px solid hsla(0,0%,100%,0.06)" }}>
+                          <p className="text-[0.4rem] font-bold" style={{ color: "#C9A84C" }}>4.9★</p>
+                          <p className="text-[0.2rem] text-white/30">Rating</p>
+                        </div>
+                      </div>
+                      <div className="mt-1.5 rounded-lg p-1.5 flex items-center gap-1" style={{ background: "hsla(130,60%,50%,0.05)", border: "1px solid hsla(130,60%,50%,0.12)" }}>
+                        <Check className="w-2 h-2 shrink-0" style={{ color: "hsla(130,60%,50%,0.8)" }} />
+                        <div>
+                          <p className="text-[0.25rem] font-bold text-white/70">Nuova prenotazione</p>
+                          <p className="text-[0.2rem] text-white/30">Roma → Amalfi · €280</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[36px] h-[2.5px] rounded-full z-30" style={{ background: "hsla(0,0%,100%,0.15)" }} />
+                </div>
               </motion.div>
             </div>
           </motion.div>
