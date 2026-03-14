@@ -442,7 +442,7 @@ export default function BrandAssetsPage() {
       {preview && (
         <div className="fixed inset-0 z-50 bg-foreground/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setPreview(null)}>
           <div className="relative max-w-4xl w-full max-h-[90vh]" onClick={e => e.stopPropagation()}>
-            <Button variant="ghost" size="icon" className="absolute -top-10 right-0 text-background hover:text-background/80" onClick={() => setPreview(null)}>
+        <Button variant="ghost" size="icon" className="absolute -top-10 right-0 text-primary-foreground hover:text-primary-foreground/80" onClick={() => setPreview(null)}>
               <X className="w-5 h-5" />
             </Button>
             {preview.type === "video" ? (
@@ -451,8 +451,8 @@ export default function BrandAssetsPage() {
               <img src={preview.src} alt={preview.name} className="w-full max-h-[80vh] object-contain rounded-xl" />
             )}
             <div className="mt-3 text-center">
-              <p className="text-sm font-semibold text-background">{preview.name}</p>
-              <p className="text-xs text-background/60">{preview.category}</p>
+              <p className="text-sm font-semibold text-primary-foreground">{preview.name}</p>
+              <p className="text-xs text-primary-foreground/60">{preview.category}</p>
             </div>
           </div>
         </div>
