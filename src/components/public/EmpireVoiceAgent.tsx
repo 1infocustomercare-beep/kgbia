@@ -258,6 +258,7 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── Stop everything ──
   const stopAll = useCallback(() => {
     abortRef.current = true;
+    autoNarratingRef.current = false;
     sectionQueueRef.current = [];
     queueProcessingRef.current = false;
 
