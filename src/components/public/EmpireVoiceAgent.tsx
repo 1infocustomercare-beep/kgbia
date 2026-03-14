@@ -104,8 +104,8 @@ async function streamChat({
 }
 
 // ── SpeechRecognition ──
-const SpeechRecognition = (window as unknown as { SpeechRecognition?: typeof window.SpeechRecognition; webkitSpeechRecognition?: typeof window.SpeechRecognition }).SpeechRecognition
-  || (window as unknown as { webkitSpeechRecognition?: typeof window.SpeechRecognition }).webkitSpeechRecognition;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
 const EmpireVoiceAgent: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
