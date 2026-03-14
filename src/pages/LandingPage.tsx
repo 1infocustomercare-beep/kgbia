@@ -1577,12 +1577,13 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                           setFeatureRequestSending(true);
                           try {
                             const { supabase } = await import("@/integrations/supabase/client");
-                            await supabase.from("feature_requests").insert({
-                              title: `[Landing] Richiesta da ${featureRequestEmail}`,
-                              description: `Settore: ${selectedSector}\nPacchetto: ${selectedPackage}\n\n${featureRequestText}`,
-                              company_id: "00000000-0000-0000-0000-000000000000",
-                              sector: selectedSector,
-                              status: "new",
+                            await supabase.functions.invoke("submit-feature-request", {
+                              body: {
+                                email: featureRequestEmail.trim(),
+                                description: featureRequestText.trim(),
+                                sector: selectedSector,
+                                packageId: selectedPackage,
+                              },
                             });
                             setFeatureRequestSent(true);
                           } catch {
