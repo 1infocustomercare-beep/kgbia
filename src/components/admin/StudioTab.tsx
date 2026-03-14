@@ -15,8 +15,9 @@ import { applyBrandTheme, resetBrandTheme, extractDominantColor, hslToHex, DEFAU
 import type { MenuItem } from "@/types/restaurant";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import cartoonStudioMenu from "@/assets/cartoon-studio-menu.png";
 
-type StudioSection = "menu" | "ai" | "translate" | "preview";
+type StudioSection = "menu" | "ai" | "foodphoto" | "translate" | "preview";
 
 /* ── EU Allergen Icons ── */
 const EU_ALLERGENS = [
