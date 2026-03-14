@@ -30,6 +30,13 @@ import nccHeroBg from "@/assets/ncc-hero-bg-amalfi.jpg";
 import nccPremiumCoast from "@/assets/ncc-premium-coast.jpg";
 import nccPremiumInterior from "@/assets/ncc-premium-interior.jpg";
 import nccFleetShowcase from "@/assets/ncc-fleet-showcase.jpg";
+import cartoonFood from "@/assets/cartoon-sector-food.png";
+import cartoonNcc from "@/assets/cartoon-sector-ncc.png";
+import cartoonBeauty from "@/assets/cartoon-sector-beauty.png";
+import cartoonHealthcare from "@/assets/cartoon-sector-healthcare.png";
+import cartoonRetail from "@/assets/cartoon-sector-retail.png";
+import cartoonFitness from "@/assets/cartoon-sector-fitness.png";
+import cartoonHotel from "@/assets/cartoon-sector-hotel.png";
 
 /* ═══════════════════════════════════════════
    HELPERS
@@ -171,13 +178,13 @@ const LandingPage = () => {
   const [sectorSheetOpen, setSectorSheetOpen] = useState(false);
 
   const industries = [
-    { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-violet-500 to-purple-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live" },
-    { id: "ncc" as const, icon: <Car className="w-5 h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer, limousine", gradient: "from-purple-500 to-indigo-400", emoji: "🚘", modules: "Flotta · Tratte · Booking · Autisti" },
-    { id: "beauty" as const, icon: <Scissors className="w-5 h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA, barbieri", gradient: "from-fuchsia-500/80 to-violet-400", emoji: "💅", modules: "Agenda · Clienti · Reminder · Trattamenti" },
-    { id: "healthcare" as const, icon: <Heart className="w-5 h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-indigo-400 to-violet-500", emoji: "🏥", modules: "Schede Paziente · Agenda · Fatturazione" },
-    { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-purple-400 to-fuchsia-400/80", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni" },
-    { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-violet-400 to-indigo-500", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti" },
-    { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-purple-500/80 to-violet-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge" },
+    { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-violet-500 to-purple-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live", image: cartoonFood },
+    { id: "ncc" as const, icon: <Car className="w-5 h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer, limousine", gradient: "from-purple-500 to-indigo-400", emoji: "🚘", modules: "Flotta · Tratte · Booking · Autisti", image: cartoonNcc },
+    { id: "beauty" as const, icon: <Scissors className="w-5 h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA, barbieri", gradient: "from-fuchsia-500/80 to-violet-400", emoji: "💅", modules: "Agenda · Clienti · Reminder · Trattamenti", image: cartoonBeauty },
+    { id: "healthcare" as const, icon: <Heart className="w-5 h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-indigo-400 to-violet-500", emoji: "🏥", modules: "Schede Paziente · Agenda · Fatturazione", image: cartoonHealthcare },
+    { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-purple-400 to-fuchsia-400/80", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni", image: cartoonRetail },
+    { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-violet-400 to-indigo-500", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti", image: cartoonFitness },
+    { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-purple-500/80 to-violet-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge", image: cartoonHotel },
   ];
 
   const extraSectors = [
@@ -678,43 +685,34 @@ const LandingPage = () => {
               const slug = DEMO_SLUGS[ind.id];
               const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
               return (
-                <div key={i} className="group cursor-pointer" onClick={() => navigate(demoPath)}>
-                  {/* iPhone shell */}
-                  <div className="relative w-[160px] h-[290px] rounded-[28px] border-[2.5px] border-foreground/15 bg-foreground/[0.03] shadow-[0_12px_40px_hsla(0,0%,0%,0.4)] overflow-hidden transition-transform duration-500 group-hover:scale-[1.03]">
-                    {/* Notch */}
-                    <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[48px] h-[14px] bg-foreground/80 rounded-full z-20" />
-                    {/* Inner screen */}
-                    <div className="absolute inset-[3px] rounded-[24px] overflow-hidden flex flex-col items-center justify-center text-center p-4 pt-7"
-                      style={{ background: `linear-gradient(160deg, hsl(var(--background)), hsl(var(--card)))` }}>
-                      {/* Gradient glow */}
-                      <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${ind.gradient} opacity-10 rounded-t-[24px]`} />
-                      <div className="relative z-10 flex flex-col items-center">
-                        <div className="relative mb-3">
-                          {/* Outer glow ring */}
-                          <div className={`absolute -inset-1.5 rounded-2xl bg-gradient-to-br ${ind.gradient} opacity-30 blur-md group-hover:opacity-60 transition-opacity duration-700 animate-pulse`} />
-                          {/* Logo container */}
-                          <div className={`relative w-12 h-12 rounded-2xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white shadow-[0_4px_20px_rgba(0,0,0,0.3)] group-hover:scale-110 transition-all duration-500 overflow-hidden`}>
-                            {/* Shimmer sweep */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                            {/* Inner border luxury */}
-                            <div className="absolute inset-[1.5px] rounded-[14px] border border-white/20" />
-                            <span className="relative z-10 drop-shadow-md">{ind.icon}</span>
-                          </div>
-                          {/* Gold accent dot */}
-                          <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-gradient-to-br from-primary/60 to-accent/60 shadow-[0_0_6px_hsla(265,70%,60%,0.5)] z-30" />
-                        </div>
-                        <h3 className="font-heading text-[11px] font-bold text-foreground mb-1 leading-tight">{ind.title}</h3>
-                        <p className="text-[8px] text-foreground/35 leading-[1.4] mb-2 px-1">{ind.desc}</p>
-                        <p className="text-[7px] text-primary/50 font-heading tracking-wider mb-3">{ind.modules}</p>
-                        <span className="inline-flex items-center gap-1 text-[9px] font-bold text-primary/70 group-hover:text-primary transition-colors">
-                          Demo <ArrowRight className="w-2.5 h-2.5" />
-                        </span>
-                      </div>
-                    </div>
-                    {/* Home indicator */}
-                    <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] bg-foreground/20 rounded-full z-20" />
-                  </div>
-                </div>
+                 <div key={i} className="group cursor-pointer" onClick={() => navigate(demoPath)}>
+                   {/* iPhone shell */}
+                   <div className="relative w-[160px] h-[290px] rounded-[28px] border-[2.5px] border-foreground/15 bg-foreground/[0.03] shadow-[0_12px_40px_hsla(0,0%,0%,0.4)] overflow-hidden transition-transform duration-500 group-hover:scale-[1.03]">
+                     {/* Notch */}
+                     <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[48px] h-[14px] bg-foreground/80 rounded-full z-20" />
+                     {/* Inner screen */}
+                     <div className="absolute inset-[3px] rounded-[24px] overflow-hidden flex flex-col items-center text-center"
+                       style={{ background: `linear-gradient(160deg, hsl(var(--background)), hsl(var(--card)))` }}>
+                       {/* Cartoon image */}
+                       <div className="relative w-full h-[130px] overflow-hidden rounded-t-[24px]">
+                         <img src={ind.image} alt={ind.title} className="w-full h-full object-cover" loading="lazy" />
+                         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+                       </div>
+                       <div className="relative z-10 flex flex-col items-center px-3 -mt-4">
+                         <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white shadow-lg mb-2`}>
+                           <span className="text-[13px]">{ind.icon}</span>
+                         </div>
+                         <h3 className="font-heading text-[11px] font-bold text-foreground mb-1 leading-tight">{ind.title}</h3>
+                         <p className="text-[7px] text-primary/50 font-heading tracking-wider mb-2">{ind.modules}</p>
+                         <span className="inline-flex items-center gap-1 text-[9px] font-bold text-primary/70 group-hover:text-primary transition-colors">
+                           Demo <ArrowRight className="w-2.5 h-2.5" />
+                         </span>
+                       </div>
+                     </div>
+                     {/* Home indicator */}
+                     <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] bg-foreground/20 rounded-full z-20" />
+                   </div>
+                 </div>
               );
             })}
           </PremiumCarousel>
@@ -738,28 +736,23 @@ const LandingPage = () => {
                   {/* Notch */}
                   <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-foreground/80 rounded-full z-20" />
                   {/* Inner screen */}
-                  <div className="absolute inset-[3px] rounded-[28px] overflow-hidden flex flex-col items-center justify-center text-center p-5 pt-8"
+                <div className="absolute inset-[3px] rounded-[28px] overflow-hidden flex flex-col items-center text-center"
                     style={{ background: `linear-gradient(160deg, hsl(var(--background)), hsl(var(--card)))` }}>
-                    {/* Gradient glow */}
-                    <div className={`absolute top-0 left-0 right-0 h-28 bg-gradient-to-b ${ind.gradient} opacity-[0.08] rounded-t-[28px]`} />
-                    <div className="relative z-10 flex flex-col items-center">
-                      <div className="relative mb-4">
-                        {/* Outer glow ring */}
-                        <div className={`absolute -inset-2 rounded-2xl bg-gradient-to-br ${ind.gradient} opacity-25 blur-lg group-hover:opacity-50 transition-opacity duration-700 animate-pulse`} />
-                        {/* Logo container */}
-                        <div className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white shadow-[0_6px_24px_rgba(0,0,0,0.35)] group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 overflow-hidden`}>
-                          {/* Shimmer sweep */}
+                    {/* Cartoon image */}
+                    <div className="relative w-full h-[150px] overflow-hidden rounded-t-[28px]">
+                      <img src={ind.image} alt={ind.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                    </div>
+                    <div className="relative z-10 flex flex-col items-center px-4 -mt-5">
+                      <div className="relative mb-3">
+                        <div className={`absolute -inset-1.5 rounded-2xl bg-gradient-to-br ${ind.gradient} opacity-30 blur-md group-hover:opacity-60 transition-opacity duration-700`} />
+                        <div className={`relative w-11 h-11 rounded-2xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-all duration-500 overflow-hidden`}>
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                          {/* Inner border luxury */}
-                          <div className="absolute inset-[2px] rounded-[14px] border border-white/20" />
                           <span className="relative z-10 drop-shadow-md">{ind.icon}</span>
                         </div>
-                        {/* Gold accent dot */}
-                        <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-primary/60 to-accent/60 shadow-[0_0_8px_hsla(265,70%,60%,0.5)] z-30" />
                       </div>
-                      <h3 className="font-heading text-sm font-bold text-foreground mb-1.5">{ind.title}</h3>
-                      <p className="text-[10px] text-foreground/35 leading-[1.5] mb-2">{ind.desc}</p>
-                      <p className="text-[8px] text-primary/50 font-heading tracking-wider mb-4">{ind.modules}</p>
+                      <h3 className="font-heading text-sm font-bold text-foreground mb-1">{ind.title}</h3>
+                      <p className="text-[8px] text-primary/50 font-heading tracking-wider mb-3">{ind.modules}</p>
                       <motion.span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-primary/60 group-hover:text-primary transition-colors"
                         whileHover={{ x: 3 }}>
                         Vedi Demo <ArrowRight className="w-3 h-3" />
