@@ -706,6 +706,10 @@ const SCREENS = [
   { label: "Catalogo", type: "services" },
   { label: "Prenota", type: "booking" },
   { label: "Dashboard", type: "dashboard" },
+  { label: "Analytics", type: "analytics" },
+  { label: "Clienti", type: "crm" },
+  { label: "Notifiche", type: "notifications" },
+  { label: "Settings", type: "settings" },
 ];
 
 export default function IndustryPhoneShowcase({ industryId, className = "", compact = false }: IndustryPhoneShowcaseProps) {
