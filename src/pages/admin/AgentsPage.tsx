@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { BackButton } from "@/components/BackButton";
+import BackButton from "@/components/BackButton";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Brain, RefreshCw, TrendingUp, DollarSign, Zap, Activity,
