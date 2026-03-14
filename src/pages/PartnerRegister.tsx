@@ -269,7 +269,7 @@ const PartnerRegister = () => {
                 Diventa Partner <span className="text-gold-gradient">Empire</span>
               </h1>
               <p className="text-sm text-muted-foreground">
-                €997 per vendita · Zero costi di ingresso
+                €997 per vendita · 3 pacchetti da €1.997 a €7.997
               </p>
             </div>
 
