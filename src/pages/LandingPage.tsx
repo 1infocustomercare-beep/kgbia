@@ -1863,7 +1863,7 @@ const LandingPage = () => {
                   style={{ perspective: "900px" }}
                 >
                   <motion.div
-                    className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] z-20 hidden sm:block"
+                    className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] z-20 sm:block"
                     style={i === 0 ? { right: "-5px" } : i === 2 ? { left: "-5px" } : { left: "50%", transform: "translate(-50%, -50%)" }}
                     initial={{ scale: 0 }}
                     whileInView={{ scale: [0, 1.45, 1] }}
