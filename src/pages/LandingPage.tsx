@@ -18,7 +18,7 @@ import {
   Palette, Mail, Car, Scissors, Heart, Store, Dumbbell, Building,
   Calendar, Package, CreditCard, Route, ClipboardCheck, Headphones,
   Layers, Globe, Radio, MonitorSmartphone, Cpu, Fingerprint,
-  ChevronRight, CircleCheck, Minus, Activity, ServerCog, Gauge,
+  ChevronRight, ChevronLeft, Pause, CircleCheck, Minus, Activity, ServerCog, Gauge,
   Workflow, ScanLine, Database, Wifi, Timer, LineChart
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
