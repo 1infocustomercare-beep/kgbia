@@ -449,7 +449,7 @@ export function AIAgentsShowcase() {
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-8"
+            className="text-center mb-6"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/[0.06] mb-4">
               <Cpu className="w-3 h-3 text-accent animate-spin" style={{ animationDuration: "8s" }} />
