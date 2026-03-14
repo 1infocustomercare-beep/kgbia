@@ -2458,6 +2458,7 @@ const LandingPage = () => {
                 animate={{ y: [0, -8, 0], rotateZ: [-1, 1, -1] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
+            </motion.div>
 
             {/* CTA */}
             <motion.div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-2 sm:px-0"
