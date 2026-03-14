@@ -689,34 +689,84 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* ═══════════ SERVIZI — INFINITE AUTO-SCROLL CAROUSEL ═══════════ */}
-      <Section id="servizi" className="py-24 px-4" style={{ background: NCC.bgLight }}>
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>I Nostri Servizi</p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif", color: NCC.textDark }}>
-              SOLUZIONI DI TRASPORTO <span style={{ color: gold }}>Premium</span>
-            </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-base" style={{ color: NCC.textSecondary }}>
-              Offriamo una gamma completa di servizi di trasporto di lusso, personalizzati per soddisfare ogni tua esigenza.
-            </p>
+      {/* ═══════════ SERVIZI — PREMIUM DUAL-MARQUEE ═══════════ */}
+      <Section id="servizi" className="py-20 sm:py-28 relative overflow-hidden" style={{ background: NCC.bg }}>
+        {/* Ambient glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full opacity-[0.07]" style={{ background: `radial-gradient(circle, ${NCC.gold}, transparent 70%)` }} />
+          <div className="absolute bottom-0 right-0 w-[400px] h-[300px] rounded-full opacity-[0.05]" style={{ background: `radial-gradient(circle, ${NCC.gold}, transparent 70%)` }} />
+        </div>
+
+        <div className="relative z-10 px-4">
+          <div className="max-w-6xl mx-auto text-center mb-12 sm:mb-16">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+              <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.4em] font-semibold mb-3" style={{ color: gold }}>I Nostri Servizi</p>
+              <h2 className="text-3xl sm:text-4xl lg:text-6xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <span className="text-white">SOLUZIONI DI TRASPORTO </span>
+                <span className="relative inline-block" style={{ color: gold }}>
+                  Premium
+                  <span className="absolute -bottom-2 left-0 w-full h-[2px] animate-shimmer-gold" style={{ background: `linear-gradient(90deg, transparent, ${NCC.gold}, transparent)`, backgroundSize: "200% 100%" }} />
+                </span>
+              </h2>
+              <p className="mt-5 max-w-xl mx-auto text-sm sm:text-base text-white/40 leading-relaxed">
+                Esperienza di viaggio senza paragoni, personalizzata per ogni esigenza.
+              </p>
+            </motion.div>
           </div>
         </div>
 
-        {/* Auto-scrolling service cards carousel */}
-        <div className="overflow-hidden">
-          <div className="flex animate-ncc-services-marquee">
+        {/* Row 1 — scrolls left */}
+        <div className="overflow-hidden mb-5">
+          <div className="flex animate-ncc-marquee" style={{ width: "max-content" }}>
             {[...whyUsServices, ...whyUsServices, ...whyUsServices, ...whyUsServices].map((item, i) => (
-              <div key={i} className="flex-shrink-0 w-[320px] mx-3">
-                <div className="bg-white rounded-2xl p-6 h-full hover:shadow-xl transition-shadow duration-500 group" style={{ borderRadius: "16px" }}>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${gold}15` }}>
+              <div key={`r1-${i}`} className="flex-shrink-0 w-[280px] sm:w-[320px] mx-2 sm:mx-3">
+                <div
+                  className="rounded-2xl p-5 sm:p-6 h-full group cursor-pointer transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1"
+                  style={{
+                    background: "rgba(255,255,255,0.03)",
+                    border: `1px solid rgba(201,168,76,0.15)`,
+                    backdropFilter: "blur(12px)",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = `rgba(201,168,76,0.5)`; e.currentTarget.style.background = "rgba(201,168,76,0.06)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = `rgba(201,168,76,0.15)`; e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
+                >
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3" style={{ background: `${gold}12`, border: `1px solid ${gold}25` }}>
                     <item.icon className="w-5 h-5" style={{ color: gold }} />
                   </div>
-                  <h3 className="font-bold text-base mb-2" style={{ color: NCC.textDark }}>{item.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: NCC.textSecondary }}>{item.desc}</p>
-                  <p className="mt-4 text-xs font-semibold inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: gold }}>
+                  <h3 className="font-bold text-sm sm:text-base mb-2 text-white group-hover:text-white/95 transition-colors">{item.title}</h3>
+                  <p className="text-xs sm:text-sm leading-relaxed text-white/35 group-hover:text-white/50 transition-colors">{item.desc}</p>
+                  <div className="mt-4 flex items-center gap-1 text-[11px] font-semibold opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-300" style={{ color: gold }}>
                     Scopri di più <ArrowRight className="w-3 h-3" />
-                  </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2 — scrolls right (reverse) */}
+        <div className="overflow-hidden">
+          <div className="flex animate-ncc-marquee-reverse" style={{ width: "max-content" }}>
+            {[...whyUsServices.slice(3), ...whyUsServices.slice(0, 3), ...whyUsServices.slice(3), ...whyUsServices.slice(0, 3), ...whyUsServices.slice(3), ...whyUsServices.slice(0, 3), ...whyUsServices.slice(3), ...whyUsServices.slice(0, 3)].map((item, i) => (
+              <div key={`r2-${i}`} className="flex-shrink-0 w-[280px] sm:w-[320px] mx-2 sm:mx-3">
+                <div
+                  className="rounded-2xl p-5 sm:p-6 h-full group cursor-pointer transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1"
+                  style={{
+                    background: "rgba(255,255,255,0.03)",
+                    border: `1px solid rgba(201,168,76,0.12)`,
+                    backdropFilter: "blur(12px)",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = `rgba(201,168,76,0.5)`; e.currentTarget.style.background = "rgba(201,168,76,0.06)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = `rgba(201,168,76,0.12)`; e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
+                >
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-all duration-500 group-hover:scale-110 group-hover:-rotate-3" style={{ background: `${gold}12`, border: `1px solid ${gold}25` }}>
+                    <item.icon className="w-5 h-5" style={{ color: gold }} />
+                  </div>
+                  <h3 className="font-bold text-sm sm:text-base mb-2 text-white">{item.title}</h3>
+                  <p className="text-xs sm:text-sm leading-relaxed text-white/35 group-hover:text-white/50 transition-colors">{item.desc}</p>
+                  <div className="mt-4 flex items-center gap-1 text-[11px] font-semibold opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-300" style={{ color: gold }}>
+                    Scopri di più <ArrowRight className="w-3 h-3" />
+                  </div>
                 </div>
               </div>
             ))}
