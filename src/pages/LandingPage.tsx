@@ -1575,12 +1575,6 @@ const LandingPage = () => {
               <div className="absolute left-0 top-0 bottom-0 w-16 z-30 pointer-events-none" style={{ background: "linear-gradient(to right, hsl(var(--background)), transparent)" }} />
               <div className="absolute right-0 top-0 bottom-0 w-16 z-30 pointer-events-none" style={{ background: "linear-gradient(to left, hsl(var(--background)), transparent)" }} />
               <div className="flex gap-5 animate-[ncc-scroll_25s_linear_infinite] hover:[animation-play-state:paused]" style={{ width: "max-content" }}>
-              
-              {/* iPhone 1 - Booking */}
-              <motion.div className="relative z-10"
-                initial={{ y: 30, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}
-                transition={{ delay: 0.2, duration: 0.7, ease: smoothEase }}
-                whileHover={{ y: -6, scale: 1.04 }}>
               {/* Duplicate set for infinite loop */}
               {[0, 1].map((setIdx) => (
                 <div key={setIdx} className="flex gap-5 shrink-0">
