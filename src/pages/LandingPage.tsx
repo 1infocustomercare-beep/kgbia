@@ -753,77 +753,21 @@ const LandingPage = () => {
       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-20 sm:pt-28 pb-12 sm:pb-16"
         style={{ opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Video background with cinematic overlay ═══ */}
+        {/* ═══ LAYER 0: Neural canvas background ═══ */}
         <div className="absolute inset-0">
-          <video src={videoHero} autoPlay muted loop playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-[0.25]"
-          />
-          {/* Cinematic dark-to-transparent gradient overlays */}
-          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsla(260,18%,7%,0.5) 30%, hsla(260,18%,7%,0.3) 60%, hsl(var(--background)) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 40%, transparent 40%, hsl(var(--background)) 100%)" }} />
+          <HeroNeuralCanvas />
+          {/* Cinematic vignette overlays */}
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsl(var(--background)) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 15%, transparent 85%, hsl(var(--background)) 100%)" }} />
         </div>
 
-        {/* ═══ LAYER 1: Dramatic radial glow — more visible ═══ */}
-        <div className="absolute top-[10%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-          <motion.div className="w-[600px] h-[600px] sm:w-[1000px] sm:h-[1000px] rounded-full blur-[200px]"
-            style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.12), hsla(280,50%,50%,0.06), transparent 70%)" }}
-            animate={{ scale: [1, 1.1, 1], opacity: [0.8, 1, 0.8] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        {/* ═══ LAYER 1: Central glow orb ═══ */}
+        <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <motion.div className="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] rounded-full blur-[180px]"
+            style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.08), hsla(35,45%,50%,0.03), transparent 70%)" }}
+            animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
-        </div>
-
-        {/* ═══ LAYER 2: Horizontal light streaks — behind content, blurred ═══ */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden z-[1]" style={{ filter: "blur(1.5px)" }}>
-          <motion.div className="absolute top-[35%] left-0 right-0 h-[2px]"
-            style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.15) 30%, hsla(280,50%,65%,0.25) 50%, hsla(265,70%,60%,0.15) 70%, transparent 95%)" }}
-            animate={{ opacity: [0.4, 0.7, 0.4] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div className="absolute top-[65%] left-0 right-0 h-[2px]"
-            style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265,70%,60%,0.1) 35%, hsla(280,50%,65%,0.18) 55%, transparent 90%)" }}
-            animate={{ opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          />
-        </div>
-
-        {/* ═══ LAYER 3: Floating orbs — brighter ═══ */}
-        <motion.div className="absolute top-[25%] right-[12%] w-3 h-3 rounded-full pointer-events-none"
-          style={{ background: "hsla(265,70%,65%,0.5)", boxShadow: "0 0 30px hsla(265,70%,60%,0.4), 0 0 60px hsla(265,70%,60%,0.15)" }}
-          animate={{ y: [0, -35, 0], x: [0, 12, 0], opacity: [0.4, 0.8, 0.4] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div className="absolute top-[55%] left-[8%] w-2 h-2 rounded-full pointer-events-none"
-          style={{ background: "hsla(280,50%,70%,0.4)", boxShadow: "0 0 25px hsla(280,50%,60%,0.3)" }}
-          animate={{ y: [0, -25, 0], opacity: [0.3, 0.7, 0.3] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
-        <motion.div className="absolute top-[70%] right-[25%] w-1.5 h-1.5 rounded-full pointer-events-none"
-          style={{ background: "hsla(265,60%,75%,0.35)", boxShadow: "0 0 15px hsla(265,60%,60%,0.2)" }}
-          animate={{ y: [0, -18, 0], opacity: [0.2, 0.6, 0.2] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-
-        {/* ═══ LAYER 4: Subtle floating particles ═══ */}
-        <div className="absolute inset-0 pointer-events-none z-[1]">
-          {[
-            { top: "8%", left: "15%", size: 4, delay: 0 },
-            { top: "22%", right: "10%", size: 3, delay: 1.5 },
-            { top: "70%", left: "8%", size: 2.5, delay: 3 },
-            { top: "55%", right: "18%", size: 3.5, delay: 2 },
-          ].map((p, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                top: p.top, left: (p as any).left, right: (p as any).right,
-                width: p.size, height: p.size,
-                background: "hsla(35,45%,55%,0.3)",
-                boxShadow: "0 0 12px hsla(35,45%,55%,0.15)",
-              }}
-              animate={{ y: [0, -15, 0], opacity: [0.2, 0.5, 0.2] }}
-              transition={{ duration: 5 + i, repeat: Infinity, ease: "easeInOut", delay: p.delay }}
-            />
-          ))}
         </div>
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
