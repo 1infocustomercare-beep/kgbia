@@ -163,6 +163,14 @@ const OrdersTab = ({
 
   return (
     <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      {/* Cartoon illustration */}
+      <div className="flex items-center gap-3 mb-1">
+        <img src={cartoonOrdersKitchen} alt="" className="w-14 h-14 object-contain flex-shrink-0" />
+        <div>
+          <h3 className="text-sm font-display font-bold text-foreground">Ordini & Cucina</h3>
+          <p className="text-[10px] text-muted-foreground">Gestione ordini, tavoli e prenotazioni</p>
+        </div>
+      </div>
       {/* Section tabs */}
       <div className="flex items-center gap-2">
         <div className="flex-1 flex gap-1 bg-secondary/30 p-1 rounded-2xl">

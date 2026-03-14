@@ -671,7 +671,8 @@ const StudioTab = ({
             }
           }}
         />
-      )
+      )}
+
       {/* ===== TRANSLATE ===== */}
       {section === "translate" && (
         <div className="space-y-4">
