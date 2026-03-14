@@ -561,6 +561,53 @@ const PACKAGE_TIERS: PackageTier[] = [
   },
 ];
 
+/** Animated count-up component for savings */
+const SavingsCounter = ({ target, delay = 0 }: { target: number; delay?: number }) => {
+  const [count, setCount] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting && !hasStarted) setHasStarted(true); },
+      { threshold: 0.5 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [hasStarted]);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+    const timeout = setTimeout(() => {
+      const duration = 1800;
+      const steps = 40;
+      const increment = target / steps;
+      let current = 0;
+      const interval = setInterval(() => {
+        current += increment;
+        if (current >= target) { setCount(target); clearInterval(interval); }
+        else setCount(Math.round(current));
+      }, duration / steps);
+      return () => clearInterval(interval);
+    }, delay * 1000);
+    return () => clearTimeout(timeout);
+  }, [hasStarted, target, delay]);
+
+  return (
+    <div ref={ref}>
+      <motion.p
+        className="text-lg font-heading font-bold text-accent"
+        key={count}
+        initial={{ scale: 1 }}
+        animate={count === target ? { scale: [1, 1.08, 1] } : {}}
+        transition={{ duration: 0.3 }}
+      >
+        €{count.toLocaleString("it-IT")}
+      </motion.p>
+    </div>
+  );
+};
+
 const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void }) => {
   const [pricingMode, setPricingMode] = useState<PricingMode>("package");
   const [selectedPlan, setSelectedPlan] = useState<PlanTier>("professional");
