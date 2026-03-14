@@ -353,13 +353,13 @@ SectionDivider.displayName = "SectionDivider";
 
 /* ═══ Comparison Row ═══ */
 const CompRow = ({ label, empire, others }: { label: string; empire: string; others: string }) => (
-  <motion.div className="grid grid-cols-3 py-3 border-b border-border/30 items-center text-xs sm:text-sm"
+  <motion.div className="grid grid-cols-3 py-2 sm:py-3 border-b border-border/30 items-center text-[0.6rem] sm:text-sm"
     initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-    <span className="text-foreground/50 font-medium">{label}</span>
-    <span className="text-center text-foreground font-bold flex items-center justify-center gap-1.5">
-      <CircleCheck className="w-3.5 h-3.5 text-primary" /> {empire}
+    <span className="text-foreground/50 font-medium leading-tight">{label}</span>
+    <span className="text-center text-foreground font-bold flex items-center justify-center gap-1">
+      <CircleCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary shrink-0" /> <span className="leading-tight">{empire}</span>
     </span>
-    <span className="text-center text-foreground/30">{others}</span>
+    <span className="text-center text-foreground/30 leading-tight line-through decoration-red-500/40">{others}</span>
   </motion.div>
 );
 
