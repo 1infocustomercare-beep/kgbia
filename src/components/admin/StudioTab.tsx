@@ -8,14 +8,16 @@ import {
 } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
 import LivePreview from "@/components/restaurant/LivePreview";
+import FoodPhotoGenerator from "@/components/admin/FoodPhotoGenerator";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { applyBrandTheme, resetBrandTheme, extractDominantColor, hslToHex, DEFAULT_PRIMARY_HEX } from "@/lib/color-extract";
 import type { MenuItem } from "@/types/restaurant";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import cartoonStudioMenu from "@/assets/cartoon-studio-menu.png";
 
-type StudioSection = "menu" | "ai" | "translate" | "preview";
+type StudioSection = "menu" | "ai" | "foodphoto" | "translate" | "preview";
 
 /* ── EU Allergen Icons ── */
 const EU_ALLERGENS = [
@@ -268,8 +270,9 @@ const StudioTab = ({
 
   const sections: { id: StudioSection; label: string; icon: React.ReactNode }[] = [
     { id: "menu", label: "Menu", icon: <UtensilsCrossed className="w-4 h-4" /> },
+    { id: "ai", label: "OCR", icon: <Camera className="w-4 h-4" /> },
+    { id: "foodphoto", label: "📸 Foto", icon: <Sparkles className="w-4 h-4" /> },
     { id: "preview", label: "Design", icon: <Palette className="w-4 h-4" /> },
-    { id: "ai", label: "IA", icon: <Sparkles className="w-4 h-4" /> },
     { id: "translate", label: "Lingue", icon: <Languages className="w-4 h-4" /> },
   ];
 
@@ -337,7 +340,14 @@ const StudioTab = ({
 
   return (
     <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      {/* Sub-tabs */}
+      {/* Cartoon illustration */}
+      <div className="flex items-center gap-3 mb-1">
+        <img src={cartoonStudioMenu} alt="" className="w-14 h-14 object-contain flex-shrink-0" />
+        <div>
+          <h3 className="text-sm font-display font-bold text-foreground">Studio Creativo</h3>
+          <p className="text-[10px] text-muted-foreground">Menu, foto IA, design e lingue</p>
+        </div>
+      </div>
       <div className="flex items-center gap-2">
         <div className="flex-1 flex gap-1.5 bg-secondary/30 p-1 rounded-xl">
         {sections.map(s => (
@@ -643,6 +653,24 @@ const StudioTab = ({
             </motion.div>
           )}
         </div>
+      )}
+
+      {/* ===== FOOD PHOTO GENERATOR ===== */}
+      {section === "foodphoto" && restaurant && (
+        <FoodPhotoGenerator
+          restaurantId={restaurant.id}
+          aiTokens={aiTokens}
+          setAiTokens={setAiTokens}
+          onPhotoGenerated={(url, name) => {
+            // If there's a menu item with matching name, update its image
+            const matchItem = menuItems.find(i => i.name.toLowerCase() === name.toLowerCase());
+            if (matchItem) {
+              supabase.from("menu_items").update({ image_url: url }).eq("id", matchItem.id).then(() => {
+                setMenuItems(prev => prev.map(i => i.id === matchItem.id ? { ...i, image: url } : i));
+              });
+            }
+          }}
+        />
       )}
 
       {/* ===== TRANSLATE ===== */}

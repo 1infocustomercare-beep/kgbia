@@ -5,6 +5,7 @@ import InfoGuide from "@/components/ui/info-guide";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import cartoonDashboard from "@/assets/cartoon-dashboard.png";
 
 interface DashboardOverviewProps {
   todayRevenue: number;
@@ -36,9 +37,10 @@ const DashboardOverview = ({
 
   return (
     <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      {/* Greeting */}
-      <div className="py-1 flex items-center justify-between">
-        <div>
+      {/* Cartoon illustration */}
+      <div className="flex items-center gap-3 py-1">
+        <img src={cartoonDashboard} alt="" className="w-16 h-16 object-contain flex-shrink-0" />
+        <div className="min-w-0 flex-1">
           <h2 className="text-lg font-display font-bold text-foreground">{restaurantName}</h2>
           <p className="text-xs text-muted-foreground">Panoramica giornaliera</p>
         </div>
