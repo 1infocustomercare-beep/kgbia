@@ -1760,11 +1760,25 @@ const LandingPage = () => {
           ].map((s, i) => (
             <motion.div key={i} className="relative text-center z-10" variants={popIn}>
               <motion.div
-                className="relative w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl glow-card flex items-center justify-center mx-auto mb-4"
-                whileHover={{ rotate: 5, scale: 1.05 }}
+                className="relative w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl mx-auto mb-4 overflow-hidden"
+                style={{ background: "hsla(265,20%,8%,0.6)", border: "1px solid hsla(265,70%,60%,0.1)", backdropFilter: "blur(8px)" }}
+                whileHover={{ rotate: 5, scale: 1.08, borderColor: "hsla(265,70%,60%,0.25)" }}
               >
-                <div className="text-primary">{s.icon}</div>
-                <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-vibrant-gradient flex items-center justify-center text-[0.55rem] font-bold text-primary-foreground font-heading">{s.step}</span>
+                {/* Scanning beam */}
+                <motion.div className="absolute inset-0 pointer-events-none"
+                  style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.06) 50%, transparent 60%)" }}
+                  animate={{ y: ["-100%", "200%"] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 + i, ease: "easeInOut" }} />
+                {/* Top accent */}
+                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.25), transparent)" }} />
+                <div className="flex items-center justify-center w-full h-full text-primary relative z-10">{s.icon}</div>
+                <motion.span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-vibrant-gradient flex items-center justify-center text-[0.55rem] font-bold text-primary-foreground font-heading z-20 overflow-hidden"
+                  animate={{ boxShadow: ["0 0 10px hsla(265,70%,60%,0.2)", "0 0 25px hsla(265,70%,60%,0.5)", "0 0 10px hsla(265,70%,60%,0.2)"] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}>
+                  <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%)" }}
+                    animate={{ x: ["-150%", "250%"] }} transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
+                  <span className="relative z-10">{s.step}</span>
+                </motion.span>
               </motion.div>
               <h3 className="font-heading text-xs sm:text-sm font-bold text-foreground mb-1.5">{s.title}</h3>
               <p className="text-[0.65rem] sm:text-xs text-foreground/40 leading-[1.6]">{s.desc}</p>
