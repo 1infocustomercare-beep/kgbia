@@ -92,7 +92,7 @@ function PremiumBadge() {
   );
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/3998269/3998269-uhd_2732_1440_25fps.mp4";
 const GALLERY = [
