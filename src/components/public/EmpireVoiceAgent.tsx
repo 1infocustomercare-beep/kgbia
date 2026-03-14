@@ -359,25 +359,13 @@ const EmpireVoiceAgent: React.FC = () => {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
           >
-            {/* Outer glow */}
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              style={{ background: "radial-gradient(circle, hsla(265,85%,65%,0.25), transparent 70%)" }}
-              animate={{ scale: [1, 1.6, 1], opacity: [0.3, 0.7, 0.3] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-[0_0_30px_hsla(265,85%,65%,0.3)] border border-white/10">
+            <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg border border-white/10">
               <Sparkles className="w-6 h-6 text-white" />
+              {/* Small speaking indicator dot */}
+              {isSpeaking && !isPaused && (
+                <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-background animate-pulse" />
+              )}
             </div>
-            {/* Label */}
-            <motion.div
-              className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-full bg-background/90 backdrop-blur border border-primary/20 text-[0.55rem] font-bold text-primary tracking-wider uppercase"
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              {isSpeaking ? "🔊 ATLAS parla..." : "ATLAS AI"}
-            </motion.div>
           </motion.button>
         )}
       </AnimatePresence>
