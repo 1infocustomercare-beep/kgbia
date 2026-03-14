@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { TrendingUp, ShoppingCart, DollarSign, Users, Star, CalendarDays, ChefHat, ExternalLink, Sparkles, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { TrendingUp, ShoppingCart, DollarSign, Users, Star, CalendarDays, ChefHat, ExternalLink, Sparkles, Loader2, Zap, Crown, X } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
