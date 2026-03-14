@@ -1983,42 +1983,101 @@ const LandingPage = () => {
           </motion.h2>
         </div>
 
-        <motion.div className="relative grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-7"
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          <div className="hidden lg:block absolute top-[52px] left-[calc(12.5%+36px)] right-[calc(12.5%+36px)] h-px bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 z-0" />
-          {[
-            { step: "01", title: "Scegli il Settore", desc: "Empire configura moduli e flussi dedicati automaticamente.", icon: <Globe className="w-5 h-5" /> },
-            { step: "02", title: "Personalizza Brand", desc: "Logo, colori, dominio. L'IA genera il catalogo in 60 secondi.", icon: <Palette className="w-5 h-5" /> },
-            { step: "03", title: "Lancia il Sistema", desc: "App attiva, team formato, QR code installati. Operativo in 24h.", icon: <Rocket className="w-5 h-5" /> },
-            { step: "04", title: "Cresci con i Dati", desc: "Analytics real-time, suggerimenti IA, campagne automatizzate.", icon: <TrendingUp className="w-5 h-5" /> },
-          ].map((s, i) => (
-            <motion.div key={i} className="relative text-center z-10" variants={popIn}>
-              <motion.div
-                className="relative w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl mx-auto mb-4 overflow-hidden"
-                style={{ background: "hsla(265,20%,8%,0.6)", border: "1px solid hsla(265,70%,60%,0.1)", backdropFilter: "blur(8px)" }}
-                whileHover={{ rotate: 5, scale: 1.08, borderColor: "hsla(265,70%,60%,0.25)" }}
-              >
-                {/* Scanning beam */}
-                <motion.div className="absolute inset-0 pointer-events-none"
-                  style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.06) 50%, transparent 60%)" }}
-                  animate={{ y: ["-100%", "200%"] }}
-                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 + i, ease: "easeInOut" }} />
-                {/* Top accent */}
-                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.25), transparent)" }} />
-                <div className="flex items-center justify-center w-full h-full text-primary relative z-10">{s.icon}</div>
-                <motion.span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-vibrant-gradient flex items-center justify-center text-[0.55rem] font-bold text-primary-foreground font-heading z-20 overflow-hidden"
-                  animate={{ boxShadow: ["0 0 10px hsla(265,70%,60%,0.2)", "0 0 25px hsla(265,70%,60%,0.5)", "0 0 10px hsla(265,70%,60%,0.2)"] }}
-                  transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}>
-                  <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%)" }}
-                    animate={{ x: ["-150%", "250%"] }} transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
-                  <span className="relative z-10">{s.step}</span>
-                </motion.span>
-              </motion.div>
-              <h3 className="font-heading text-xs sm:text-sm font-bold text-foreground mb-1.5">{s.title}</h3>
-              <p className="text-[0.65rem] sm:text-xs text-foreground/40 leading-[1.6]">{s.desc}</p>
-            </motion.div>
-          ))}
-        </motion.div>
+        <div className="relative mb-1">
+          {/* DNA futuristico informatico — più visibile */}
+          <div className="absolute inset-0 pointer-events-none -z-[1] overflow-hidden">
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[240px] opacity-100">
+              <svg className="w-full h-full" viewBox="0 0 1200 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="process-dna-a" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                    <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.5" />
+                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient id="process-dna-b" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0" />
+                    <stop offset="50%" stopColor="hsl(var(--accent))" stopOpacity="0.38" />
+                    <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <motion.path
+                  d="M 0 78 C 150 18, 300 140, 450 78 C 600 18, 750 140, 900 78 C 1050 18, 1125 96, 1200 78"
+                  fill="none"
+                  stroke="url(#process-dna-a)"
+                  strokeWidth="2"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                />
+                <motion.path
+                  d="M 0 164 C 150 224, 300 102, 450 164 C 600 224, 750 102, 900 164 C 1050 224, 1125 146, 1200 164"
+                  fill="none"
+                  stroke="url(#process-dna-b)"
+                  strokeWidth="2"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
+                />
+              </svg>
+            </div>
+            <div className="hidden lg:block absolute top-[44px] left-[calc(12.5%+28px)] right-[calc(12.5%+28px)] h-px bg-gradient-to-r from-primary/25 via-primary/15 to-primary/25" />
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+            {[
+              { step: "01", title: "Scegli il Settore", desc: "Empire configura moduli e flussi dedicati automaticamente.", icon: <Globe className="w-4 h-4" /> },
+              { step: "02", title: "Personalizza Brand", desc: "Logo, colori, dominio. L'IA genera il catalogo in 60 secondi.", icon: <Palette className="w-4 h-4" /> },
+              { step: "03", title: "Lancia il Sistema", desc: "App attiva, team formato, QR code installati. Operativo in 24h.", icon: <Rocket className="w-4 h-4" /> },
+              { step: "04", title: "Cresci con i Dati", desc: "Analytics real-time, suggerimenti IA, campagne automatizzate.", icon: <TrendingUp className="w-4 h-4" /> },
+            ].map((s, i) => {
+              const dnaWave = i % 2 === 0;
+              return (
+                <motion.div
+                  key={i}
+                  className="relative text-center z-10"
+                  initial={{ opacity: 0, x: dnaWave ? -18 : 18, y: dnaWave ? -22 : 22, rotateY: dnaWave ? -12 : 12, scale: 0.86 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0, rotateY: 0, scale: 1 }}
+                  viewport={{ once: true, margin: "-30px" }}
+                  transition={{ delay: i * 0.12, duration: 0.58, type: "spring", stiffness: 160, damping: 18 }}
+                  style={{ perspective: "900px" }}
+                >
+                  <motion.div
+                    className="absolute top-[42px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] hidden lg:block"
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: [0, 1.45, 1] }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.12 + 0.3, duration: 0.35 }}
+                  />
+
+                  <div className="relative rounded-xl border border-foreground/[0.07] bg-card/35 backdrop-blur-sm p-2.5 sm:p-3 overflow-hidden">
+                    <motion.div
+                      className="relative w-[58px] h-[58px] sm:w-[62px] sm:h-[62px] rounded-xl mx-auto mb-2.5 overflow-hidden"
+                      style={{ background: "hsla(265,20%,8%,0.6)", border: "1px solid hsla(265,70%,60%,0.14)", backdropFilter: "blur(8px)" }}
+                      whileHover={{ rotate: 4, scale: 1.06, borderColor: "hsla(265,70%,60%,0.28)" }}
+                    >
+                      <motion.div className="absolute inset-0 pointer-events-none"
+                        style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.08) 50%, transparent 60%)" }}
+                        animate={{ y: ["-100%", "200%"] }}
+                        transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 1.6 + i * 0.3, ease: "easeInOut" }} />
+                      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.28), transparent)" }} />
+                      <div className="flex items-center justify-center w-full h-full text-primary relative z-10">{s.icon}</div>
+                      <motion.span className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-vibrant-gradient flex items-center justify-center text-[0.5rem] font-bold text-primary-foreground font-heading z-20"
+                        animate={{ boxShadow: ["0 0 8px hsla(265,70%,60%,0.2)", "0 0 20px hsla(265,70%,60%,0.45)", "0 0 8px hsla(265,70%,60%,0.2)"] }}
+                        transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.25 }}>
+                        {s.step}
+                      </motion.span>
+                    </motion.div>
+
+                    <h3 className="font-heading text-[0.68rem] sm:text-xs font-bold text-foreground mb-1">{s.title}</h3>
+                    <p className="text-[0.58rem] sm:text-[0.62rem] text-foreground/40 leading-[1.45]">{s.desc}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
       </Section>
 
       {/* ═══════════════════════════════════════════
