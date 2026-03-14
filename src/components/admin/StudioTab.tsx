@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
 import LivePreview from "@/components/restaurant/LivePreview";
+import FoodPhotoGenerator from "@/components/admin/FoodPhotoGenerator";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { applyBrandTheme, resetBrandTheme, extractDominantColor, hslToHex, DEFAULT_PRIMARY_HEX } from "@/lib/color-extract";
