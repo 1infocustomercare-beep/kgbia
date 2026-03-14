@@ -328,7 +328,7 @@ export default function IndustryDemoPage() {
 
   // ═══ PREMIUM TEMPLATE ROUTING ═══
   // Route sectors with dedicated premium templates to those templates
-  const PREMIUM_TEMPLATES: Record<string, React.ComponentType<{ company: any }>> = {
+  const PREMIUM_TEMPLATES: Record<string, React.ComponentType<{ company: any; afterHero?: React.ReactNode }>> = {
     ncc: NCCPublicSite,
     beauty: BeautyPublicSite,
     healthcare: HealthcarePublicSite,
