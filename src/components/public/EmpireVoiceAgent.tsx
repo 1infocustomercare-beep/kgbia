@@ -159,9 +159,9 @@ const EmpireVoiceAgent: React.FC = () => {
         if (!mostVisible) return;
 
         const sectionId = mostVisible.target.getAttribute("id");
-        if (sectionId && sectionId !== currentSection) {
-          setCurrentSection(sectionId);
-        }
+        if (!sectionId) return;
+
+        setCurrentSection((prev) => (prev === sectionId ? prev : sectionId));
       },
       {
         threshold: [0.25, 0.4, 0.6],
@@ -175,7 +175,7 @@ const EmpireVoiceAgent: React.FC = () => {
     });
 
     return () => observer.disconnect();
-  }, [currentSection]);
+  }, []);
 
   // ── Follow click navigation (menu links / CTA with #section) ──
   useEffect(() => {
