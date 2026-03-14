@@ -12,6 +12,9 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
+  build: {
+    chunkSizeWarningLimit: 2000,
+  },
   plugins: [
     react(),
     mode === "development" && componentTagger(),
