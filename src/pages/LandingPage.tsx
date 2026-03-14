@@ -943,7 +943,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           SETTORI
          ═══════════════════════════════════════════ */}
-      <Section id="industries" style={{ background: "linear-gradient(180deg, hsla(260,16%,10%,1) 0%, hsla(265,18%,9%,1) 50%, hsla(260,16%,10%,1) 100%)" }}>
+      <Section id="industries" style={{ background: "linear-gradient(180deg, hsla(260,14%,13%,1) 0%, hsla(265,16%,12%,1) 50%, hsla(260,14%,13%,1) 100%)" }}>
         {/* Subtle violet side glows */}
         <div className="absolute top-0 left-0 w-[300px] h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at left, hsla(265,70%,60%,0.04), transparent 70%)" }} />
         <div className="absolute top-0 right-0 w-[300px] h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at right, hsla(265,70%,60%,0.04), transparent 70%)" }} />
