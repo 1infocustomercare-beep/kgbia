@@ -971,11 +971,14 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         const isActive = selectedAddons.has(addon.id) || isAutoIncluded;
                         const displayPrice = Math.round(addon.price * 0.7);
                         return (
-                          <motion.div key={addon.id} onClick={() => toggleAddon(addon.id)}
+                          <motion.div key={addon.id} onClick={() => !isAutoIncluded && toggleAddon(addon.id)}
                             className={`relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
                               isActive ? "border border-primary/30 bg-primary/[0.06]" : "border border-border/20 hover:border-primary/15 bg-background/30"
-                            }`} whileTap={{ scale: 0.98 }}>
-                            {addon.popular && !isActive && (
+                            } ${isAutoIncluded ? "opacity-90" : ""}`} whileTap={{ scale: isAutoIncluded ? 1 : 0.98 }}>
+                            {isAutoIncluded && (
+                              <div className="absolute -top-1.5 right-3 px-2 py-0.5 rounded-full bg-accent/20 text-[0.45rem] font-bold text-accent tracking-wider uppercase">Incluso</div>
+                            )}
+                            {addon.popular && !isActive && !isAutoIncluded && (
                               <div className="absolute -top-1.5 right-3 px-2 py-0.5 rounded-full bg-accent/20 text-[0.45rem] font-bold text-accent tracking-wider uppercase">Popular</div>
                             )}
                             <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isActive ? "bg-primary/20 text-primary" : "bg-foreground/[0.05] text-foreground/30"}`}>
@@ -986,8 +989,8 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                               <p className="text-[0.55rem] text-foreground/30 truncate">{addon.desc}</p>
                             </div>
                             <div className="text-right flex-shrink-0">
-                              {isFree ? (
-                                <span className="text-xs font-bold text-accent">Incluso</span>
+                              {isAutoIncluded ? (
+                                <span className="text-xs font-bold text-accent">Incluso ✓</span>
                               ) : (
                                 <div>
                                   <span className={`text-xs font-bold ${isActive ? "text-primary" : "text-foreground/40"}`}>+€{displayPrice}/m</span>
@@ -995,11 +998,13 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                                 </div>
                               )}
                             </div>
-                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                              isActive ? "border-primary bg-primary" : "border-foreground/15"
-                            }`}>
-                              {isActive && <Check className="w-3 h-3 text-primary-foreground" />}
-                            </div>
+                            {!isAutoIncluded && (
+                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                                isActive ? "border-primary bg-primary" : "border-foreground/15"
+                              }`}>
+                                {isActive && <Check className="w-3 h-3 text-primary-foreground" />}
+                              </div>
+                            )}
                           </motion.div>
                         );
                       })}
