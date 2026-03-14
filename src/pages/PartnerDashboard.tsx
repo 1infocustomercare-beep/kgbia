@@ -569,6 +569,19 @@ const PartnerDashboard = () => {
           {activeTab === "earnings" && !demoMode && <PartnerEarnings key="earnings" />}
           {activeTab === "vault" && !demoMode && <AssetVault key="vault" />}
 
+          {activeTab === "showcase" && (
+            <motion.div key="showcase" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
+              <div className="text-center">
+                <h2 className="text-lg font-display font-bold text-foreground">Showcase Settori</h2>
+                <p className="text-xs text-muted-foreground">Preview complete di tutti i settori con link demo per le presentazioni</p>
+              </div>
+              <AllIndustriesShowcase onViewDemo={(id, slug) => {
+                if (id === "food") navigate(`/r/${slug}`);
+                else navigate(`/demo/${slug}`);
+              }} />
+            </motion.div>
+          )}
+
           {/* === TEAM LEADER — Enhanced Interface === */}
           {activeTab === "team" && isTeamLeader && !demoMode && (
             <motion.div key="team" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
