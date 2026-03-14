@@ -371,12 +371,6 @@ function IPhoneFrame({
   index: number;
   sectorStyle: SectorStyle;
 }) {
-  emoji: string;
-  companyName: string;
-  services: { name: string; emoji?: string; price: number }[];
-  index: number;
-  sectorStyle: SectorStyle;
-}) {
   const isCenter = index === 1 || index === 2;
 
   return (
