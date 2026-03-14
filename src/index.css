@@ -971,4 +971,47 @@
     background-size: 128px 128px;
     animation: hero-grain-anim 8s steps(10) infinite;
   }
+
+  /* ═══ PREMIUM SITE KIT ANIMATIONS ═══ */
+  @keyframes premium-marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-33.333%); }
+  }
+  @keyframes premium-marquee-reverse {
+    0% { transform: translateX(-33.333%); }
+    100% { transform: translateX(0); }
+  }
+  @keyframes premium-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes premium-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes premium-pulse-ring {
+    0% { transform: scale(1); opacity: 0.4; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  .premium-glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .premium-glass-strong {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .premium-rounded {
+    border-radius: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .premium-rounded {
+      border-radius: 2rem;
+    }
+  }
 }
