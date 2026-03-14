@@ -942,7 +942,7 @@ export const DEMO_INDUSTRY_DATA: Record<IndustryId, DemoIndustryData> = {
 
 export const DEMO_SLUGS: Record<IndustryId, string> = {
   food: "impero-roma",
-  ncc: "royal-transfer-roma",
+  ncc: "amalfi-luxury-transfer",
   beauty: "glow-beauty-milano",
   healthcare: "studio-salus-torino",
   retail: "bottega-artigiana-firenze",
