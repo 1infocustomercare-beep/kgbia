@@ -407,8 +407,9 @@ function generateMockData() {
     };
   });
   const alerts = [
-    { id: "a1", type: "warning", agent: "empire-assistant", message: "L'account 'Ristorante Da Mario' ha superato l'80% del budget mensile AI", isRead: false, createdAt: new Date(now.getTime() - 3600000).toISOString() },
-    { id: "a2", type: "error", agent: "ai-menu-image", message: "L'agente 'Foto Generator' ha avuto 12 errori nell'ultima ora", isRead: false, createdAt: new Date(now.getTime() - 7200000).toISOString() },
+    { id: "a1", type: "warning" as const, agent: "empire-assistant", message: "L'account 'Ristorante Da Mario' ha superato l'80% del budget mensile AI", isRead: false, createdAt: new Date(now.getTime() - 3600000).toISOString(), severity: "medium" as const, errorCode: "BUDGET_THRESHOLD", diagnostics: { cpuUsage: "32%", memoryUsage: "58%", lastRestart: "2h fa", uptime: "48h 12m" }, suggestedFix: "Aumenta il budget mensile o riduci la frequenza delle chiamate." },
+    { id: "a2", type: "error" as const, agent: "ai-menu-image", message: "L'agente 'Foto Generator' ha avuto 12 errori nell'ultima ora", isRead: false, createdAt: new Date(now.getTime() - 7200000).toISOString(), severity: "critical" as const, errorCode: "RATE_LIMIT_EXCEEDED", diagnostics: { cpuUsage: "89%", memoryUsage: "92%", lastRestart: "6h fa", uptime: "6h 03m", errorRate: "18%", lastError: "TimeoutError: Model response exceeded 30s limit", failedCalls: 12, totalCalls: 67 }, suggestedFix: "Riavvia l'agente e verifica i limiti di rate del modello AI." },
+    { id: "a3", type: "error" as const, agent: "ai-translate", message: "Connessione al modello di traduzione persa — 3 tentativi falliti", isRead: false, createdAt: new Date(now.getTime() - 1800000).toISOString(), severity: "high" as const, errorCode: "CONNECTION_LOST", diagnostics: { cpuUsage: "12%", memoryUsage: "34%", lastRestart: "12h fa", uptime: "12h 45m", errorRate: "100%", lastError: "ConnectionRefusedError: Unable to reach translation endpoint", failedCalls: 3, totalCalls: 3 }, suggestedFix: "Verifica la connettività di rete e riavvia il servizio." },
   ];
   return { dailyData, topAccounts, recentLogs, alerts };
 }
