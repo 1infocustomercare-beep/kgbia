@@ -1955,6 +1955,7 @@ const LandingPage = () => {
   const [avgOrder, setAvgOrder] = useState(25);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
+  const [ctaVisible, setCtaVisible] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeIndustry, setActiveIndustry] = useState(0);
   const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
