@@ -1258,27 +1258,22 @@ const LandingPage = () => {
         <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-5"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {whyUs.map((item, i) => (
-            <motion.div key={i}
-              className="group relative p-7 rounded-2xl overflow-hidden border border-border/10 bg-card/60 backdrop-blur-sm"
-              variants={fadeUp}
-              whileHover={{ y: -6, transition: { duration: 0.3 } }}
-            >
-              {/* Top accent line */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
-              {/* Corner glow */}
-              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-primary/[0.05] blur-3xl group-hover:bg-primary/[0.12] transition-all duration-700" />
-              <div className="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-accent/[0.04] blur-2xl group-hover:bg-accent/[0.08] transition-all duration-700" />
-              {/* Number watermark */}
-              <span className="absolute top-3 right-4 text-[3rem] font-heading font-black text-foreground/[0.03] leading-none select-none group-hover:text-primary/[0.06] transition-colors duration-500">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div className="relative z-10">
+            <motion.div key={i} variants={fadeUp}>
+              <PremiumCard glow scan delay={i} className="p-7">
+                {/* Number watermark */}
+                <motion.span className="absolute top-3 right-4 text-[3rem] font-heading font-black leading-none select-none"
+                  style={{ color: "hsla(265,70%,60%,0.03)" }}
+                  whileHover={{ color: "hsla(265,70%,60%,0.08)" }}
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 4, repeat: Infinity, delay: i * 0.6 }}>
+                  {String(i + 1).padStart(2, "0")}
+                </motion.span>
                 <PremiumIcon gradient="from-primary/25 to-accent/15" size="lg" delay={i * 0.5}>
                   <span className="text-primary">{item.icon}</span>
                 </PremiumIcon>
-                <h3 className="font-heading text-sm font-bold text-foreground mb-2">{item.title}</h3>
+                <h3 className="font-heading text-sm font-bold text-foreground mb-2 mt-1">{item.title}</h3>
                 <p className="text-xs text-foreground/40 leading-[1.7]">{item.desc}</p>
-              </div>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
