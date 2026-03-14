@@ -85,7 +85,26 @@ const SECTOR_PITCHES: Record<string, string[]> = {
 const getSectorPitch = (industry: string): string[] =>
   SECTOR_PITCHES[industry] || SECTOR_PITCHES.default;
 
-// TTS
+// Web Speech API fallback TTS
+function speakWithBrowserTTS(text: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (!window.speechSynthesis) { resolve(false); return; }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "it-IT";
+    utterance.rate = 1.05;
+    utterance.pitch = 1.0;
+    // Try to find an Italian voice
+    const voices = window.speechSynthesis.getVoices();
+    const itVoice = voices.find(v => v.lang.startsWith("it")) || voices[0];
+    if (itVoice) utterance.voice = itVoice;
+    utterance.onend = () => resolve(true);
+    utterance.onerror = () => resolve(false);
+    window.speechSynthesis.speak(utterance);
+  });
+}
+
+// TTS with ElevenLabs + browser fallback
 async function speakText(
   text: string,
   audioRef: React.MutableRefObject<HTMLAudioElement | null>,
@@ -101,19 +120,34 @@ async function speakText(
       },
       body: JSON.stringify({ text }),
     });
-    if (!resp.ok || abortRef.current) return false;
-    const { audioContent } = await resp.json();
-    if (!audioContent || abortRef.current) return false;
+    if (!resp.ok || abortRef.current) {
+      // Fallback to browser TTS
+      if (!abortRef.current) return speakWithBrowserTTS(text);
+      return false;
+    }
+    const data = await resp.json();
+    const audioContent = data?.audioContent;
+    if (!audioContent || abortRef.current) {
+      if (!abortRef.current) return speakWithBrowserTTS(text);
+      return false;
+    }
 
     return await new Promise<boolean>((resolve) => {
       const audio = new Audio(`data:audio/mpeg;base64,${audioContent}`);
       if (audioRef.current) audioRef.current.pause();
       audioRef.current = audio;
       audio.onended = () => resolve(true);
-      audio.onerror = () => resolve(false);
-      audio.play().catch(() => resolve(false));
+      audio.onerror = () => {
+        // Fallback on audio error
+        speakWithBrowserTTS(text).then(resolve);
+      };
+      audio.play().catch(() => {
+        speakWithBrowserTTS(text).then(resolve);
+      });
     });
   } catch {
+    // Fallback to browser TTS
+    if (!abortRef.current) return speakWithBrowserTTS(text);
     return false;
   }
 }
