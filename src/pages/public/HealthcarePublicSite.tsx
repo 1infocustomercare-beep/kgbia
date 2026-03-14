@@ -225,6 +225,8 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
         <ScrollIndicator />
       </section>
 
+      {afterHero}
+
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-5 relative" style={{ background: BLUE }}>
         <MarqueeCarousel speed={40} pauseOnHover items={
