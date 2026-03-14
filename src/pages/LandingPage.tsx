@@ -42,6 +42,7 @@ import cartoonHealthcare from "@/assets/cartoon-sector-healthcare.png";
 import cartoonRetail from "@/assets/cartoon-sector-retail.png";
 import cartoonFitness from "@/assets/cartoon-sector-fitness.png";
 import cartoonHotel from "@/assets/cartoon-sector-hotel.png";
+import empireAgentMascot from "@/assets/empire-agent-mascot.png";
 
 /* ═══════════════════════════════════════════
    HELPERS
@@ -2124,7 +2125,7 @@ const LandingPage = () => {
           />
         )}
 
-        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 flex items-center justify-between h-11 sm:h-14">
+        <div className="relative max-w-[1200px] mx-auto px-3 sm:px-6 flex items-center justify-between h-10 sm:h-14">
           
           {/* ═══ Left Nav Links (desktop) ═══ */}
           <div className="hidden lg:flex items-center gap-0.5 flex-1">
@@ -2157,7 +2158,7 @@ const LandingPage = () => {
             />
             {/* Logo container — futuristic hexagonal */}
             <motion.div
-              className="relative w-11 h-11 rounded-2xl flex items-center justify-center overflow-hidden"
+              className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center overflow-hidden"
               style={{
                 background: "linear-gradient(135deg, hsla(265,75%,58%,1), hsla(280,65%,50%,1), hsla(300,50%,45%,1))",
                 boxShadow: "0 0 28px hsla(265,70%,60%,0.4), 0 0 8px hsla(265,70%,60%,0.2), inset 0 1px 2px rgba(255,255,255,0.3)",
@@ -2213,13 +2214,13 @@ const LandingPage = () => {
             {/* Brand text */}
             <div className="flex flex-col leading-none">
               <motion.span 
-                className="font-heading font-bold text-[0.9rem] tracking-[0.3em] uppercase text-foreground"
+                className="font-heading font-bold text-[0.75rem] sm:text-[0.9rem] tracking-[0.3em] uppercase text-foreground"
                 animate={{ opacity: [0.85, 1, 0.85] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
                 EMPIRE
               </motion.span>
-              <span className="text-[0.5rem] tracking-[0.45em] uppercase font-semibold"
+              <span className="text-[0.4rem] sm:text-[0.5rem] tracking-[0.45em] uppercase font-semibold"
                 style={{
                   background: "linear-gradient(90deg, hsla(265,70%,65%,1), hsla(300,50%,75%,1), hsla(265,70%,65%,1))",
                   backgroundSize: "200% 100%",
@@ -2387,6 +2388,77 @@ const LandingPage = () => {
               La piattaforma AI più completa al mondo.
               <span className="text-foreground/60 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie.</span>
             </motion.p>
+
+            {/* ═══ Empire Agent Mascot — animated floating character ═══ */}
+            <motion.div
+              className="relative mt-6 sm:mt-8 w-40 h-40 sm:w-52 sm:h-52 mx-auto"
+              initial={{ opacity: 0, scale: 0.5, y: 40 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Ambient glow behind mascot */}
+              <motion.div
+                className="absolute inset-[-30%] rounded-full blur-[60px] pointer-events-none"
+                style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.2), hsla(38,50%,55%,0.08), transparent 70%)" }}
+                animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
+              {/* Orbiting rings */}
+              <motion.div
+                className="absolute inset-[-15%] rounded-full border border-dashed pointer-events-none"
+                style={{ borderColor: "hsla(265,60%,60%,0.15)" }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              />
+              <motion.div
+                className="absolute inset-[-8%] rounded-full border pointer-events-none"
+                style={{ borderColor: "hsla(38,50%,55%,0.1)" }}
+                animate={{ rotate: -360 }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+              />
+              {/* Orbiting mini nodes */}
+              {[0, 1, 2, 3].map(i => (
+                <motion.div
+                  key={i}
+                  className="absolute w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full pointer-events-none"
+                  style={{
+                    background: i % 2 === 0
+                      ? "linear-gradient(135deg, hsla(265,80%,65%,0.9), hsla(300,60%,70%,0.7))"
+                      : "linear-gradient(135deg, hsla(38,50%,55%,0.9), hsla(35,60%,65%,0.7))",
+                    boxShadow: i % 2 === 0
+                      ? "0 0 8px hsla(265,80%,65%,0.5)"
+                      : "0 0 8px hsla(38,50%,55%,0.5)",
+                    top: "50%",
+                    left: "50%",
+                  }}
+                  animate={{
+                    x: [
+                      Math.cos((i * Math.PI) / 2) * 85,
+                      Math.cos((i * Math.PI) / 2 + Math.PI / 2) * 85,
+                      Math.cos((i * Math.PI) / 2 + Math.PI) * 85,
+                      Math.cos((i * Math.PI) / 2 + (3 * Math.PI) / 2) * 85,
+                      Math.cos((i * Math.PI) / 2) * 85,
+                    ],
+                    y: [
+                      Math.sin((i * Math.PI) / 2) * 85,
+                      Math.sin((i * Math.PI) / 2 + Math.PI / 2) * 85,
+                      Math.sin((i * Math.PI) / 2 + Math.PI) * 85,
+                      Math.sin((i * Math.PI) / 2 + (3 * Math.PI) / 2) * 85,
+                      Math.sin((i * Math.PI) / 2) * 85,
+                    ],
+                  }}
+                  transition={{ duration: 8 + i * 2, repeat: Infinity, ease: "linear" }}
+                />
+              ))}
+              {/* Floating mascot image */}
+              <motion.img
+                src={empireAgentMascot}
+                alt="Empire AI Agent"
+                className="relative z-10 w-full h-full object-contain drop-shadow-[0_0_30px_hsla(265,70%,60%,0.3)]"
+                animate={{ y: [0, -8, 0], rotateZ: [-1, 1, -1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </motion.div>
 
             {/* CTA */}
             <motion.div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-2 sm:px-0"
