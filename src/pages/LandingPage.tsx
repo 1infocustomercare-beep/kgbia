@@ -3462,6 +3462,7 @@ const LandingPage = () => {
                         services={demo.services}
                         index={idx}
                         sectorStyle={sectorStyle}
+                        industryId={id}
                       />
                     </div>
 

@@ -823,7 +823,7 @@ export function getSectorStyle(id: IndustryId): SectorStyle {
    ═══════════════════════════════════════════ */
 
 export function IPhoneFrame({
-  screen, color, emoji, companyName, services, index, sectorStyle,
+  screen, color, emoji, companyName, services, index, sectorStyle, industryId,
 }: {
   screen: { label: string; type: string; desc?: string };
   color: string;
@@ -832,6 +832,7 @@ export function IPhoneFrame({
   services: { name: string; emoji?: string; price: number }[];
   index: number;
   sectorStyle: SectorStyle;
+  industryId: IndustryId;
 }) {
   const isCenter = index === 1 || index === 2;
 
@@ -907,40 +908,305 @@ export function IPhoneFrame({
               </div>
             )}
 
-            {/* ═══ SERVICES SCREEN ═══ */}
-            {screen.type === "services" && (
-              <div className="h-full p-2.5">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
-                  <p className="text-[8px] font-bold text-white/80 tracking-wide">{INDUSTRY_CONFIGS[services[0]?.emoji ? "food" : "custom"]?.terminology?.items || "Servizi"}</p>
+            {/* ═══ SERVICES SCREEN — Sector-specific layouts ═══ */}
+            {screen.type === "services" && (() => {
+              /* ── Food: Photo-grid menu ── */
+              if (industryId === "food") return (
+                <div className="h-full p-2">
+                  <div className="flex items-center gap-1 mb-1.5">
+                    <span className="text-[7px] font-bold text-white/70">🍽️ Menu</span>
+                    <div className="flex-1" />
+                    <div className="px-1.5 py-0.5 rounded-full text-[4px]" style={{ backgroundColor: `${color}15`, color }}>🔍</div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {services.slice(0, 4).map((s, i) => (
+                      <motion.div key={i} className="rounded-lg overflow-hidden"
+                        style={{ border: `0.5px solid ${color}15` }}
+                        initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.1 }}>
+                        <div className="aspect-[4/3] relative" style={{
+                          background: ['linear-gradient(135deg,#8B4513,#D2691E,#CD853F)','linear-gradient(135deg,#B22222,#DC143C,#FF6347)','linear-gradient(135deg,#DAA520,#F4A460,#FFDEAD)','linear-gradient(135deg,#654321,#8B6914,#B8860B)'][i%4]
+                        }}>
+                          <div className="absolute inset-0 bg-black/20" />
+                          <span className="absolute bottom-1 left-1 text-[12px] drop-shadow-lg">{s.emoji||"🍕"}</span>
+                        </div>
+                        <div className="p-1 bg-black/40">
+                          <p className="text-[6px] font-semibold text-white/90 truncate">{s.name}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[7px] font-bold" style={{ color }}>€{s.price}</span>
+                            <div className="w-3 h-3 rounded-full flex items-center justify-center text-[5px] text-white" style={{ backgroundColor: color }}>+</div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-1">
+              );
+
+              /* ── NCC: Transfer route cards ── */
+              if (industryId === "ncc") return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center gap-1 mb-2">
+                    <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <span className="text-[8px] font-bold text-white/80 tracking-wide">Transfer & Tour</span>
+                  </div>
+                  <div className="space-y-1.5">
+                    {services.slice(0, 4).map((s, i) => (
+                      <motion.div key={i} className="p-2 rounded-xl relative overflow-hidden"
+                        style={{ background: `linear-gradient(135deg, ${color}08, ${color}15)`, border: `0.5px solid ${color}20` }}
+                        initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.1 }}>
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px]"
+                            style={{ background: `linear-gradient(135deg, ${color}30, ${color}15)` }}>
+                            {["✈️","🚗","🏖️","⛵"][i%4]}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[6px] font-bold text-white/85 truncate">{s.name}</p>
+                            <div className="flex items-center gap-0.5 mt-0.5">
+                              <div className="w-1 h-1 rounded-full bg-emerald-400" />
+                              <span className="text-[4px] text-white/30">Disponibile</span>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[8px] font-bold" style={{ color }}>€{s.price}</p>
+                            <p className="text-[4px] text-white/25">per persona</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              );
+
+              /* ── Beauty: Appointment time-slot cards ── */
+              if (industryId === "beauty") return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center gap-1 mb-2">
+                    <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <span className="text-[8px] font-bold text-white/80">Trattamenti</span>
+                  </div>
                   {services.slice(0, 4).map((s, i) => (
-                    <motion.div key={i} className="flex items-center gap-1.5 p-1.5 rounded-lg relative overflow-hidden"
-                      style={{ backgroundColor: sectorStyle.cardBg, border: `0.5px solid ${color}18` }}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3 + i * 0.08 }}>
-                      <span className="text-[10px]">{s.emoji || sectorStyle.serviceIcon}</span>
+                    <motion.div key={i} className="flex items-center gap-1.5 p-1.5 rounded-lg mb-1"
+                      style={{ backgroundColor: `${color}${i===0?'15':'08'}`, border: `0.5px solid ${color}${i===0?'25':'12'}` }}
+                      initial={{ opacity: 0, y: 5 }} whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.08 }}>
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center text-[8px]"
+                        style={{ background: `linear-gradient(135deg, ${sectorStyle.chartColors[i%3]}, ${color})` }}>
+                        {["💅","💇","✨","🧖"][i%4]}
+                      </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[7px] font-semibold text-white/80 truncate">{s.name}</p>
+                        <p className="text-[6px] font-semibold text-white/85 truncate">{s.name}</p>
+                        <div className="flex gap-1 mt-0.5">
+                          {["10:00","11:30","14:00"].slice(0, 2+(i%2)).map((t, j) => (
+                            <span key={j} className="px-1 py-[0.5px] rounded text-[4px] font-medium"
+                              style={{ backgroundColor: j===0?color:`${color}15`, color: j===0?'#fff':`${color}90` }}>{t}</span>
+                          ))}
+                        </div>
                       </div>
                       <span className="text-[7px] font-bold" style={{ color }}>€{s.price}</span>
                     </motion.div>
                   ))}
                 </div>
-                {/* Category tabs */}
-                <div className="flex gap-1 mt-2">
-                  {["Tutti", "Popolari", "Nuovi"].map((t, i) => (
-                    <div key={i} className="px-2 py-0.5 rounded-full text-[5px] font-bold"
-                      style={i === 0 ? { backgroundColor: color, color: "#fff" } : { backgroundColor: `${color}10`, color: `${color}90` }}>
-                      {t}
-                    </div>
+              );
+
+              /* ── Healthcare: Medical service cards ── */
+              if (industryId === "healthcare") return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center gap-1 mb-2">
+                    <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <span className="text-[8px] font-bold text-white/80">Servizi Medici</span>
+                  </div>
+                  {services.slice(0, 4).map((s, i) => (
+                    <motion.div key={i} className="p-1.5 rounded-lg mb-1"
+                      style={{ backgroundColor: sectorStyle.cardBg, border: `0.5px solid ${color}15` }}
+                      initial={{ opacity: 0, x: -8 }} whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.08 }}>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-5 h-5 rounded-md flex items-center justify-center text-[8px]"
+                          style={{ backgroundColor: `${color}20` }}>
+                          {["🩺","🫀","🧬","💉"][i%4]}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[6px] font-semibold text-white/85 truncate">{s.name}</p>
+                          <p className="text-[4px] text-white/30">Dr. {["Rossi","Bianchi","Verdi","Neri"][i]}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[7px] font-bold" style={{ color }}>€{s.price}</span>
+                          <div className="px-1 py-[1px] rounded text-[3px] font-bold mt-0.5"
+                            style={{ backgroundColor: i<2?'#22c55e20':`${color}15`, color: i<2?'#22c55e':`${color}90` }}>
+                            {i<2?'Disponibile':'Su appunt.'}
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
-              </div>
-            )}
+              );
+
+              /* ── Beach: Umbrella map ── */
+              if (industryId === "beach") return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center gap-1 mb-1.5">
+                    <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <span className="text-[8px] font-bold text-white/80">Mappa Spiaggia</span>
+                  </div>
+                  <div className="rounded-lg p-1.5 mb-1.5" style={{ background: `linear-gradient(180deg, #87CEEB15, ${color}10)`, border: `0.5px solid ${color}15` }}>
+                    <div className="grid grid-cols-6 gap-[2px]">
+                      {Array.from({ length: 18 }).map((_, i) => (
+                        <motion.div key={i} className="aspect-square rounded-sm flex items-center justify-center text-[4px]"
+                          style={{ backgroundColor: [2,5,8,11,14].includes(i)?color:[3,7,12].includes(i)?'#ef444440':`${color}10`, color: [2,5,8,11,14].includes(i)?'#fff':'transparent' }}
+                          initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.1+i*0.02 }}>
+                          {[2,5,8,11,14].includes(i)?'☂️':''}
+                        </motion.div>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-0.5"><div className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: color }} /><span className="text-[3px] text-white/30">Libero</span></div>
+                      <div className="flex items-center gap-0.5"><div className="w-1.5 h-1.5 rounded-sm bg-red-500/25" /><span className="text-[3px] text-white/30">Occupato</span></div>
+                    </div>
+                  </div>
+                  {services.slice(0, 3).map((s, i) => (
+                    <motion.div key={i} className="flex items-center gap-1.5 p-1 rounded-md mb-0.5"
+                      style={{ backgroundColor: `${color}06` }}
+                      initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4+i*0.1 }}>
+                      <span className="text-[8px]">{["🏖️","☀️","🍹"][i]}</span>
+                      <span className="text-[6px] text-white/70 flex-1 truncate">{s.name}</span>
+                      <span className="text-[6px] font-bold" style={{ color }}>€{s.price}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              );
+
+              /* ── Retail: Product grid ── */
+              if (industryId === "retail") return (
+                <div className="h-full p-2">
+                  <div className="flex items-center gap-1 mb-1.5">
+                    <span className="text-[7px] font-bold text-white/70">🛍️ Shop</span>
+                    <div className="flex-1" />
+                    <div className="px-1.5 py-0.5 rounded-full text-[4px] bg-white/10 text-white/50">🔍</div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {services.slice(0, 4).map((s, i) => (
+                      <motion.div key={i} className="rounded-lg overflow-hidden"
+                        style={{ border: '0.5px solid rgba(255,255,255,0.08)' }}
+                        initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }} transition={{ delay: 0.2+i*0.1 }}>
+                        <div className="aspect-square relative" style={{
+                          background: ['linear-gradient(135deg,#1a1a2e,#16213e)','linear-gradient(135deg,#2d1b69,#11001c)','linear-gradient(135deg,#1b1b1b,#333)','linear-gradient(135deg,#0f3057,#00587a)'][i%4]
+                        }}>
+                          <span className="absolute inset-0 flex items-center justify-center text-xl opacity-30">{s.emoji||"👗"}</span>
+                          {i===0&&<span className="absolute top-0.5 left-0.5 px-1 py-[1px] rounded text-[3px] font-bold bg-red-500 text-white">-30%</span>}
+                        </div>
+                        <div className="p-1 bg-black/60">
+                          <p className="text-[5px] text-white/70 truncate">{s.name}</p>
+                          <p className="text-[7px] font-bold text-white">€{s.price}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              );
+
+              /* ── Fitness: Class schedule ── */
+              if (industryId === "fitness") return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center gap-1 mb-2">
+                    <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <span className="text-[8px] font-bold text-white/80">Corsi Oggi</span>
+                  </div>
+                  {services.slice(0, 4).map((s, i) => (
+                    <motion.div key={i} className="flex items-center gap-1.5 p-1.5 rounded-xl mb-1 relative overflow-hidden"
+                      style={{ background: i===0?`linear-gradient(135deg,${color}25,${color}10)`:`${color}08`, border: `0.5px solid ${color}${i===0?'30':'12'}` }}
+                      initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }} transition={{ delay: 0.2+i*0.08 }}>
+                      <div className="text-center min-w-[22px]">
+                        <p className="text-[8px] font-bold" style={{ color }}>{["09:00","11:00","15:30","18:00"][i]}</p>
+                        <p className="text-[3px] text-white/20">{["50","45","60","40"][i]}min</p>
+                      </div>
+                      <div className="w-[1px] h-5 bg-white/10" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[6px] font-semibold text-white/85 truncate">{s.name}</p>
+                        <div className="flex items-center gap-0.5 mt-0.5">
+                          <div className="flex -space-x-1">
+                            {[0,1,2].map(j => (
+                              <div key={j} className="w-2 h-2 rounded-full border border-black/40"
+                                style={{ background: `linear-gradient(135deg,${sectorStyle.chartColors[j%3]},${color})` }} />
+                            ))}
+                          </div>
+                          <span className="text-[3px] text-white/25">{8+i*3}/{15+i*2}</span>
+                        </div>
+                      </div>
+                      <span className="text-[7px]">{["🏋️","🧘","🥊","🚴"][i]}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              );
+
+              /* ── Hospitality: Room cards ── */
+              if (industryId === "hospitality") return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center gap-1 mb-2">
+                    <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <span className="text-[8px] font-bold text-white/80">Camere & Suite</span>
+                  </div>
+                  {services.slice(0, 4).map((s, i) => (
+                    <motion.div key={i} className="p-1.5 rounded-lg mb-1 relative overflow-hidden"
+                      style={{ background: `linear-gradient(135deg,${color}${i===0?'15':'06'},transparent)`, border: `0.5px solid ${color}15` }}
+                      initial={{ opacity: 0, y: 5 }} whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }} transition={{ delay: 0.2+i*0.08 }}>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-8 h-6 rounded-md flex items-center justify-center text-[10px]"
+                          style={{ background: `linear-gradient(135deg,${sectorStyle.chartColors[i%3]}30,${color}20)` }}>
+                          {["🛏️","🏰","🌊","🍷"][i]}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[6px] font-semibold text-white/85 truncate">{s.name}</p>
+                          <div className="flex items-center gap-1 mt-0.5">
+                            <span className="text-[4px] text-white/30">{["2 ospiti","4 ospiti","2 ospiti","6 ospiti"][i]}</span>
+                            <span className="text-[4px]" style={{ color: i!==2?'#22c55e':'#ef4444' }}>●</span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[7px] font-bold" style={{ color }}>€{s.price}</p>
+                          <p className="text-[3px] text-white/20">/notte</p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              );
+
+              /* ── Default: Generic service list ── */
+              return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <p className="text-[8px] font-bold text-white/80 tracking-wide">{INDUSTRY_CONFIGS[industryId]?.terminology?.items || "Servizi"}</p>
+                  </div>
+                  <div className="space-y-1">
+                    {services.slice(0, 4).map((s, i) => (
+                      <motion.div key={i} className="flex items-center gap-1.5 p-1.5 rounded-lg"
+                        style={{ backgroundColor: sectorStyle.cardBg, border: `0.5px solid ${color}18` }}
+                        initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }} transition={{ delay: 0.3+i*0.08 }}>
+                        <span className="text-[10px]">{s.emoji||sectorStyle.serviceIcon}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[7px] font-semibold text-white/80 truncate">{s.name}</p>
+                        </div>
+                        <span className="text-[7px] font-bold" style={{ color }}>€{s.price}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                  <div className="flex gap-1 mt-2">
+                    {["Tutti","Popolari","Nuovi"].map((t, i) => (
+                      <div key={i} className="px-2 py-0.5 rounded-full text-[5px] font-bold"
+                        style={i===0?{ backgroundColor: color, color: "#fff" }:{ backgroundColor: `${color}10`, color: `${color}90` }}>{t}</div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* ═══ BOOKING SCREEN ═══ */}
             {screen.type === "booking" && (
@@ -1311,6 +1577,7 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
                 services={demo.services}
                 index={i}
                 sectorStyle={sectorStyle}
+                industryId={industryId}
               />
             ))}
           </div>
@@ -1332,6 +1599,7 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
                 services={demo.services}
                 index={i}
                 sectorStyle={sectorStyle}
+                industryId={industryId}
               />
             </div>
           ))}
