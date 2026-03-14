@@ -16,6 +16,12 @@ interface SectorStyle {
   bookingFields: string[];
   heroSubtext: string;
   serviceIcon: string;
+  // Extended screens data
+  analyticsTitle: string;
+  analyticsBars: number[];
+  crmClients: { name: string; tag: string; spent: string }[];
+  notifications: { icon: string; text: string; time: string }[];
+  settingsToggles: { label: string; on: boolean }[];
 }
 
 const SECTOR_STYLES: Partial<Record<IndustryId, SectorStyle>> = {
