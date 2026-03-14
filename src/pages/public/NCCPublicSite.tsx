@@ -360,9 +360,9 @@ export default function NCCPublicSite({ company }: Props) {
   ];
 
   const featuredDestinations = [
-    { name: "Pompei & Napoli", image: "https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=600&h=800&fit=crop" },
-    { name: "Costiera Amalfitana", image: "https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=600&h=800&fit=crop" },
-    { name: "Sorrento & Capri", image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=800&fit=crop" },
+    { name: "Pompei & Napoli", image: nccDestPompei },
+    { name: "Costiera Amalfitana", image: nccDestCostiera },
+    { name: "Sorrento & Capri", image: nccDestCapri },
   ];
 
   const boatHighlights: Record<string, string[]> = {
