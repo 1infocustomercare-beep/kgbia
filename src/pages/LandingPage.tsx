@@ -682,14 +682,14 @@ const LandingPage = () => {
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Clean badge — gold accent */}
-            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm mb-7"
+            <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm mb-5 sm:mb-7"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              <span className="text-[0.6rem] font-heading font-semibold text-primary/80 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
+              <span className="text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold text-primary/80 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
             {/* Headline — gold shimmer */}
-            <motion.h1 className="text-[2.2rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em]"
+            <motion.h1 className="text-[1.7rem] leading-[1.08] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] font-heading font-bold tracking-[-0.03em] px-4 sm:px-0"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
               <span className="text-foreground">Modernizziamo</span>
               <br />
