@@ -220,6 +220,26 @@ const EmpireVoiceAgent: React.FC = () => {
   useEffect(() => { voiceEnabledRef.current = voiceEnabled; }, [voiceEnabled]);
   useEffect(() => { autoNarratingRef.current = autoNarrating; }, [autoNarrating]);
 
+  useEffect(() => {
+    if (!SpeechRecognition) setMode("chat");
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(pointer: coarse)");
+    const updateTouchState = () => setIsTouchDevice(mediaQuery.matches);
+    updateTouchState();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateTouchState);
+      return () => mediaQuery.removeEventListener("change", updateTouchState);
+    }
+
+    mediaQuery.addListener(updateTouchState);
+    return () => mediaQuery.removeListener(updateTouchState);
+  }, []);
+
   // Auto-scroll chat
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
