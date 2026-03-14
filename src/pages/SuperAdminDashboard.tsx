@@ -440,37 +440,37 @@ const SuperAdminDashboard = () => {
     <div className="min-h-screen bg-background">
       <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
-      <div className="flex items-center justify-between px-4 sm:px-5 pt-4 pb-3 border-b-2 border-primary/40 bg-gradient-to-r from-primary/5 to-transparent">
+      <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b-2 border-primary/40 bg-gradient-to-r from-primary/5 to-transparent">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-primary/20 flex items-center justify-center ring-2 ring-primary/30">
             <Crown className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-base sm:text-lg font-display font-bold text-gold-gradient">Empire Central</h1>
-            <p className="text-[10px] sm:text-xs text-primary/70 font-medium tracking-wider uppercase">👑 Super Admin</p>
+            <h1 className="text-base font-display font-bold text-gold-gradient">Empire Central</h1>
+            <p className="text-[10px] text-primary/70 font-medium tracking-wider uppercase">👑 Super Admin</p>
           </div>
         </div>
         <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
-          <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
+          <LogOut className="w-4 h-4 text-muted-foreground" />
         </button>
       </div>
 
       {/* Tab bar */}
-      <div className="grid grid-cols-4 sm:grid-cols-5 md:flex gap-1 px-3 py-2 sm:px-4 sm:py-3 sm:overflow-x-auto scrollbar-hide">
+      <div className="grid grid-cols-4 gap-1 px-3 py-2">
         {tabs.map((tab) => (
           <button key={tab.id}
             onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : setActiveTab(tab.id)}
-            className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 px-1.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-[0.6rem] sm:text-sm font-medium whitespace-nowrap transition-colors min-h-[44px] ${
+            className={`flex flex-col items-center justify-center gap-0.5 px-1.5 py-2 rounded-xl text-[0.6rem] font-medium whitespace-nowrap transition-colors min-h-[44px] ${
               activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
             }`}>
-            <span className="[&_svg]:w-3.5 [&_svg]:h-3.5 sm:[&_svg]:w-4 sm:[&_svg]:h-4">{tab.icon}</span>
+            <span className="[&_svg]:w-3.5 [&_svg]:h-3.5">{tab.icon}</span>
             <span className="leading-tight">{tab.label}</span>
           </button>
         ))}
       </div>
 
       {/* Content */}
-      <div className="px-4 sm:px-5 pb-8">
+      <div className="px-4 pb-8">
         {loading && (
           <div className="flex items-center justify-center py-20">
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
