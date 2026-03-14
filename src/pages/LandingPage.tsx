@@ -363,6 +363,7 @@ const CompRow = ({ label, empire, others }: { label: string; empire: string; oth
    ═══════════════════════════════════════════ */
 
 type PlanTier = "starter" | "professional" | "enterprise";
+type PricingMode = "monthly" | "package";
 
 interface AiAddon {
   id: string;
@@ -414,28 +415,124 @@ const PLAN_TIERS: { id: PlanTier; name: string; price: number; desc: string; bad
   },
 ];
 
+/* ─── One-Time Packages ─── */
+interface PackageTier {
+  id: string;
+  name: string;
+  price: number;
+  originalPrice: number;
+  monthlyFee: number;
+  commission: string;
+  badge?: string;
+  tagline: string;
+  highlight?: boolean;
+  features: string[];
+  includedAgents: number;
+  extras: string[];
+  savings: string;
+}
+
+const PACKAGE_TIERS: PackageTier[] = [
+  {
+    id: "base",
+    name: "Digital Start",
+    price: 1997,
+    originalPrice: 2880,
+    monthlyFee: 49,
+    commission: "2%",
+    tagline: "Digitalizza la tua attività in 24h",
+    features: [
+      "App White Label completa",
+      "Menu/Catalogo QR illimitato",
+      "Ordini & Prenotazioni",
+      "Dashboard Analytics base",
+      "Supporto Email dedicato",
+      "Setup & Onboarding guidato",
+      "12 mesi di piattaforma inclusi",
+    ],
+    includedAgents: 0,
+    extras: ["Formazione iniziale 1-on-1", "Dominio personalizzato"],
+    savings: "Risparmi €883 vs abbonamento mensile",
+  },
+  {
+    id: "growth",
+    name: "Growth AI",
+    price: 4997,
+    originalPrice: 7200,
+    monthlyFee: 29,
+    commission: "1%",
+    badge: "Più Scelto",
+    highlight: true,
+    tagline: "IA + automazioni per esplodere il fatturato",
+    features: [
+      "Tutto di Digital Start +",
+      "AI Engine completo sbloccato",
+      "CRM & Fidelizzazione avanzata",
+      "Review Shield™ anti-recensioni negative",
+      "Push Notification illimitate",
+      "Traduzioni automatiche 8 lingue",
+      "2 Agenti IA inclusi a scelta",
+      "Commissioni ridotte all'1%",
+      "18 mesi di piattaforma inclusi",
+    ],
+    includedAgents: 2,
+    extras: ["3 sessioni di strategia IA", "Migrazione dati gratuita", "A/B Test landing pages"],
+    savings: "Risparmi €2.203 vs abbonamento mensile",
+  },
+  {
+    id: "empire",
+    name: "Empire Domination",
+    price: 7997,
+    originalPrice: 14400,
+    monthlyFee: 0,
+    commission: "0%",
+    badge: "Zero Commissioni",
+    tagline: "La suite definitiva — nessun costo ricorrente sulle vendite",
+    features: [
+      "Tutto di Growth AI +",
+      "ZERO commissioni sulle transazioni",
+      "ZERO canone mensile per 24 mesi",
+      "5 Agenti IA inclusi a scelta",
+      "Multi-lingua illimitato",
+      "Loyalty Wallet avanzato",
+      "GhostManager™ clienti persi",
+      "Analytics predittivi con IA",
+      "Supporto prioritario 7/7 VIP",
+      "White Label completo — il tuo brand ovunque",
+    ],
+    includedAgents: 5,
+    extras: ["Account Manager dedicato", "6 sessioni strategia trimestrale", "Priorità su nuove funzionalità", "Setup multi-sede incluso"],
+    savings: "Risparmi €6.403 vs abbonamento — e le commissioni sono tue per sempre",
+  },
+];
+
 const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void }) => {
+  const [pricingMode, setPricingMode] = useState<PricingMode>("package");
   const [selectedPlan, setSelectedPlan] = useState<PlanTier>("professional");
+  const [selectedPackage, setSelectedPackage] = useState("growth");
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
   const [showAddons, setShowAddons] = useState(false);
+  const [installments, setInstallments] = useState<3 | 6 | null>(null);
 
   const plan = PLAN_TIERS.find(p => p.id === selectedPlan)!;
+  const pkg = PACKAGE_TIERS.find(p => p.id === selectedPackage)!;
   const addonDiscount = billingCycle === "annual" ? 0.8 : 1;
   const planDiscount = billingCycle === "annual" ? 0.8 : 1;
 
   // Free included agents reduce addon cost
+  const currentIncludedAgents = pricingMode === "monthly" ? plan.includedAgents : pkg.includedAgents;
   const sortedAddons = [...selectedAddons].sort();
-  const freeAgentCount = plan.includedAgents;
-  const paidAddonIds = sortedAddons.slice(freeAgentCount);
-  const addonTotal = paidAddonIds.reduce((sum, id) => {
-    const a = AI_ADDONS.find(x => x.id === id);
-    return sum + (a ? a.price : 0);
-  }, 0) * addonDiscount;
+  const paidAddonIds = sortedAddons.slice(currentIncludedAgents);
+  const addonTotal = pricingMode === "monthly"
+    ? paidAddonIds.reduce((sum, id) => sum + (AI_ADDONS.find(x => x.id === id)?.price || 0), 0) * addonDiscount
+    : paidAddonIds.reduce((sum, id) => sum + (AI_ADDONS.find(x => x.id === id)?.price || 0), 0) * 0.7; // 30% sconto pacchetto
 
   const planPrice = plan.price * planDiscount;
   const totalMonthly = planPrice + addonTotal;
   const savedPerYear = billingCycle === "annual" ? ((plan.price + paidAddonIds.reduce((s, id) => s + (AI_ADDONS.find(x => x.id === id)?.price || 0), 0)) * 12 * 0.2) : 0;
+
+  const packageInstallment = installments ? Math.round(pkg.price / installments) : null;
 
   const toggleAddon = (id: string) => {
     setSelectedAddons(prev => {
@@ -451,204 +548,513 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
         <SectionLabel text="Piani & Prezzi" icon={<Gem className="w-3 h-3 text-accent" />} />
         <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          Costruisci il <span className="text-shimmer">Tuo Piano Perfetto</span>
+          Scegli Come <span className="text-shimmer">Dominare</span> il Tuo Mercato
         </motion.h2>
-        <motion.p className="text-foreground/40 max-w-[400px] mx-auto leading-[1.7] text-xs sm:text-sm"
+        <motion.p className="text-foreground/40 max-w-[440px] mx-auto leading-[1.7] text-xs sm:text-sm"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-          Scegli la base, aggiungi gli agenti IA che servono. Risparmia il 20% con il piano annuale.
+          Pacchetto completo o abbonamento flessibile — in entrambi i casi, il tuo business cambia per sempre.
         </motion.p>
 
-        {/* Billing toggle */}
-        <motion.div className="flex items-center justify-center gap-3 mt-6"
+        {/* Mode Toggle: Package vs Monthly */}
+        <motion.div className="flex items-center justify-center gap-1 mt-6 p-1 rounded-full border border-border/30 bg-background/40 max-w-sm mx-auto"
           initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <button onClick={() => setBillingCycle("monthly")}
-            className={`px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${billingCycle === "monthly" ? "bg-primary/15 text-primary" : "text-foreground/30 hover:text-foreground/50"}`}>
-            Mensile
+          <button onClick={() => setPricingMode("package")}
+            className={`relative flex-1 px-4 py-2.5 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${
+              pricingMode === "package" ? "text-primary-foreground" : "text-foreground/40 hover:text-foreground/60"
+            }`}>
+            {pricingMode === "package" && (
+              <motion.div layoutId="pricingModeIndicator" className="absolute inset-0 rounded-full bg-vibrant-gradient" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+            )}
+            <span className="relative z-10 flex items-center justify-center gap-1.5">
+              <Package className="w-3.5 h-3.5" /> Pacchetto
+            </span>
           </button>
-          <button onClick={() => setBillingCycle("annual")}
-            className={`px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all flex items-center gap-1.5 ${billingCycle === "annual" ? "bg-primary/15 text-primary" : "text-foreground/30 hover:text-foreground/50"}`}>
-            Annuale
-            <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">−20%</span>
+          <button onClick={() => setPricingMode("monthly")}
+            className={`relative flex-1 px-4 py-2.5 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${
+              pricingMode === "monthly" ? "text-primary-foreground" : "text-foreground/40 hover:text-foreground/60"
+            }`}>
+            {pricingMode === "monthly" && (
+              <motion.div layoutId="pricingModeIndicator" className="absolute inset-0 rounded-full bg-vibrant-gradient" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+            )}
+            <span className="relative z-10 flex items-center justify-center gap-1.5">
+              <CreditCard className="w-3.5 h-3.5" /> Mensile
+            </span>
           </button>
         </motion.div>
       </div>
 
-      {/* Plan Cards — stacked on mobile */}
-      <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto mb-6"
-        variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-        {PLAN_TIERS.map((p, i) => {
-          const isSelected = selectedPlan === p.id;
-          const displayPrice = Math.round(p.price * planDiscount);
-          return (
-            <motion.div key={p.id} variants={fadeScale}
-              onClick={() => { setSelectedPlan(p.id); if (p.includedAgents > 0) setShowAddons(true); }}
-              className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
-                isSelected
-                  ? "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(265,70%,60%,0.1)]"
-                  : "border border-border/30 hover:border-primary/20 bg-background/40"
-              }`}>
-              {p.badge && (
-                <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
-                  p.badge === "Max Revenue" ? "bg-gradient-to-r from-accent to-primary text-primary-foreground" : "bg-vibrant-gradient text-primary-foreground"
-                }`}>{p.badge}</div>
-              )}
-              {isSelected && <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />}
+      <AnimatePresence mode="wait">
+        {/* ═══ PACKAGE MODE ═══ */}
+        {pricingMode === "package" && (
+          <motion.div key="packages" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
 
-              <p className="text-[0.6rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
-              <div className="flex items-baseline gap-1 mt-2">
-                <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{displayPrice}</span>
-                <span className="text-xs text-foreground/30">/mese</span>
-              </div>
-              {billingCycle === "annual" && (
-                <p className="text-[0.55rem] text-accent font-semibold mt-0.5">Risparmi €{Math.round(p.price * 12 * 0.2)}/anno</p>
-              )}
-              <p className="text-[0.6rem] text-foreground/35 mt-1.5 leading-relaxed">{p.desc}</p>
-
-              <ul className="mt-4 space-y-2">
-                {p.features.map((f, fi) => (
-                  <li key={fi} className="flex items-start gap-2 text-[0.65rem] sm:text-xs text-foreground/50">
-                    <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${isSelected ? "bg-primary/15" : "bg-foreground/[0.05]"}`}>
-                      <Check className={`w-2.5 h-2.5 ${isSelected ? "text-primary" : "text-foreground/30"}`} />
-                    </div>
-                    <span className={f.startsWith("Tutto") ? "font-semibold text-foreground/60" : ""}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {isSelected && (
-                <motion.div className="absolute bottom-0 left-0 right-0 h-1 bg-vibrant-gradient"
-                  layoutId="planIndicator" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
-              )}
-            </motion.div>
-          );
-        })}
-      </motion.div>
-
-      {/* AI Agents Upsell Section */}
-      <motion.div
-        className="max-w-3xl mx-auto"
-        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-
-        <button onClick={() => setShowAddons(!showAddons)}
-          className="w-full flex items-center justify-between p-4 rounded-xl border border-primary/15 bg-primary/[0.03] hover:bg-primary/[0.06] transition-colors mb-3">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center">
-              <Bot className="w-4 h-4 text-primary-foreground" />
-            </div>
-            <div className="text-left">
-              <p className="text-xs sm:text-sm font-heading font-bold text-foreground">Potenzia con Agenti IA</p>
-              <p className="text-[0.55rem] text-foreground/35">
-                {plan.includedAgents > 0 ? `${plan.includedAgents} inclus${plan.includedAgents > 1 ? "i" : "o"} nel piano · Aggiungi gli altri a prezzo scontato` : "Aggiungi automazioni intelligenti al tuo piano"}
+            {/* Urgency banner */}
+            <motion.div className="max-w-3xl mx-auto mb-5 p-3 rounded-xl border border-accent/20 bg-accent/[0.04] text-center"
+              animate={{ borderColor: ["hsla(35,45%,50%,0.2)", "hsla(35,45%,50%,0.4)", "hsla(35,45%,50%,0.2)"] }}
+              transition={{ duration: 3, repeat: Infinity }}>
+              <p className="text-[0.65rem] sm:text-xs text-accent font-semibold flex items-center justify-center gap-2">
+                <Timer className="w-3.5 h-3.5" />
+                <span>Prezzo lancio valido ancora per pochi giorni — Risparmia fino a <strong>€6.403</strong></span>
               </p>
-            </div>
-          </div>
-          <motion.div animate={{ rotate: showAddons ? 180 : 0 }}>
-            <ChevronDown className="w-5 h-5 text-primary/50" />
-          </motion.div>
-        </button>
+            </motion.div>
 
-        <AnimatePresence>
-          {showAddons && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }} className="overflow-hidden">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pb-4">
-                {AI_ADDONS.map((addon) => {
-                  const isActive = selectedAddons.has(addon.id);
-                  const isFree = isActive && [...selectedAddons].sort().indexOf(addon.id) < freeAgentCount;
-                  const displayPrice = Math.round(addon.price * addonDiscount);
-                  return (
-                    <motion.div key={addon.id}
-                      onClick={() => toggleAddon(addon.id)}
-                      className={`relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
-                        isActive
-                          ? "border border-primary/30 bg-primary/[0.06]"
-                          : "border border-border/20 hover:border-primary/15 bg-background/30"
-                      }`}
-                      whileTap={{ scale: 0.98 }}>
-                      {addon.popular && !isActive && (
-                        <div className="absolute -top-1.5 right-3 px-2 py-0.5 rounded-full bg-accent/20 text-[0.45rem] font-bold text-accent tracking-wider uppercase">Popular</div>
-                      )}
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isActive ? "bg-primary/20 text-primary" : "bg-foreground/[0.05] text-foreground/30"}`}>
-                        {addon.icon}
+            {/* Package Cards */}
+            <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto mb-6"
+              variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+              {PACKAGE_TIERS.map((p) => {
+                const isSelected = selectedPackage === p.id;
+                return (
+                  <motion.div key={p.id} variants={fadeScale}
+                    onClick={() => setSelectedPackage(p.id)}
+                    className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
+                      isSelected
+                        ? p.id === "empire"
+                          ? "border-2 border-accent/40 bg-gradient-to-b from-accent/[0.08] via-background/60 to-background shadow-[0_0_50px_hsla(35,45%,50%,0.12)]"
+                          : "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(265,70%,60%,0.1)]"
+                        : "border border-border/30 hover:border-primary/20 bg-background/40"
+                    }`}>
+                    {p.badge && (
+                      <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
+                        p.id === "empire"
+                          ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black"
+                          : p.badge === "Più Scelto" ? "bg-vibrant-gradient text-primary-foreground"
+                          : "bg-gradient-to-r from-accent to-primary text-primary-foreground"
+                      }`}>{p.badge}</div>
+                    )}
+                    {isSelected && <div className={`absolute top-0 left-0 right-0 h-[2px] ${p.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />}
+
+                    <p className="text-[0.6rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
+
+                    {/* Price */}
+                    <div className="mt-2">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-2xl sm:text-3xl font-heading font-bold text-foreground">€{p.price.toLocaleString("it-IT")}</span>
+                        <span className="text-xs text-foreground/20 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-xs font-semibold truncate ${isActive ? "text-foreground" : "text-foreground/60"}`}>{addon.name}</p>
-                        <p className="text-[0.55rem] text-foreground/30 truncate">{addon.desc}</p>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        {isFree ? (
-                          <span className="text-xs font-bold text-accent">Incluso</span>
-                        ) : (
-                          <span className={`text-xs font-bold ${isActive ? "text-primary" : "text-foreground/40"}`}>+€{displayPrice}/m</span>
-                        )}
-                      </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                        isActive ? "border-primary bg-primary" : "border-foreground/15"
+                      <p className="text-[0.55rem] text-foreground/30 mt-0.5">una tantum</p>
+                    </div>
+
+                    {/* Monthly + Commission highlight */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className={`px-2 py-0.5 rounded-full text-[0.5rem] font-bold ${
+                        p.monthlyFee === 0 ? "bg-accent/20 text-accent" : "bg-primary/10 text-primary"
                       }`}>
-                        {isActive && <Check className="w-3 h-3 text-primary-foreground" />}
+                        {p.monthlyFee === 0 ? "€0/mese" : `poi €${p.monthlyFee}/mese`}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-full text-[0.5rem] font-bold ${
+                        p.commission === "0%" ? "bg-accent/20 text-accent" : "bg-foreground/[0.06] text-foreground/40"
+                      }`}>
+                        {p.commission === "0%" ? "0% commissioni!" : `${p.commission} transazioni`}
+                      </span>
+                    </div>
+
+                    <p className="text-[0.6rem] text-foreground/35 mt-2 leading-relaxed">{p.tagline}</p>
+
+                    <ul className="mt-3 space-y-1.5">
+                      {p.features.map((f, fi) => (
+                        <li key={fi} className="flex items-start gap-2 text-[0.6rem] sm:text-xs text-foreground/50">
+                          <div className={`w-3.5 h-3.5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                            f.includes("ZERO") || f.includes("0%")
+                              ? "bg-accent/20"
+                              : isSelected ? "bg-primary/15" : "bg-foreground/[0.05]"
+                          }`}>
+                            <Check className={`w-2.5 h-2.5 ${
+                              f.includes("ZERO") || f.includes("0%") ? "text-accent" : isSelected ? "text-primary" : "text-foreground/30"
+                            }`} />
+                          </div>
+                          <span className={`${f.startsWith("Tutto") ? "font-semibold text-foreground/60" : ""} ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : ""}`}>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Bonus extras */}
+                    <div className="mt-3 pt-3 border-t border-border/20">
+                      <p className="text-[0.5rem] font-heading font-bold text-accent/60 tracking-[2px] uppercase mb-1.5">
+                        <Gift className="w-3 h-3 inline mr-1" />Bonus inclusi
+                      </p>
+                      {p.extras.map((e, ei) => (
+                        <p key={ei} className="text-[0.55rem] text-foreground/30 flex items-center gap-1.5 mb-0.5">
+                          <Star className="w-2.5 h-2.5 text-accent/40 flex-shrink-0" /> {e}
+                        </p>
+                      ))}
+                    </div>
+
+                    {/* Savings callout */}
+                    <div className={`mt-3 p-2 rounded-lg text-[0.55rem] font-semibold text-center ${
+                      p.id === "empire" ? "bg-accent/10 text-accent" : "bg-primary/[0.06] text-primary/70"
+                    }`}>
+                      {p.savings}
+                    </div>
+
+                    {isSelected && (
+                      <motion.div className={`absolute bottom-0 left-0 right-0 h-1 ${p.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`}
+                        layoutId="pkgIndicator" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                    )}
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+
+            {/* AI Agents Upsell for Packages */}
+            <motion.div className="max-w-4xl mx-auto" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <button onClick={() => setShowAddons(!showAddons)}
+                className="w-full flex items-center justify-between p-4 rounded-xl border border-primary/15 bg-primary/[0.03] hover:bg-primary/[0.06] transition-colors mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center">
+                    <Bot className="w-4 h-4 text-primary-foreground" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs sm:text-sm font-heading font-bold text-foreground">Aggiungi Agenti IA</p>
+                    <p className="text-[0.55rem] text-foreground/35">
+                      {pkg.includedAgents} inclus{pkg.includedAgents > 1 ? "i" : "o"} · Altri con 30% di sconto nel pacchetto
+                    </p>
+                  </div>
+                </div>
+                <motion.div animate={{ rotate: showAddons ? 180 : 0 }}>
+                  <ChevronDown className="w-5 h-5 text-primary/50" />
+                </motion.div>
+              </button>
+              <AnimatePresence>
+                {showAddons && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pb-4">
+                      {AI_ADDONS.map((addon) => {
+                        const isActive = selectedAddons.has(addon.id);
+                        const isFree = isActive && [...selectedAddons].sort().indexOf(addon.id) < pkg.includedAgents;
+                        const displayPrice = Math.round(addon.price * 0.7);
+                        return (
+                          <motion.div key={addon.id} onClick={() => toggleAddon(addon.id)}
+                            className={`relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
+                              isActive ? "border border-primary/30 bg-primary/[0.06]" : "border border-border/20 hover:border-primary/15 bg-background/30"
+                            }`} whileTap={{ scale: 0.98 }}>
+                            {addon.popular && !isActive && (
+                              <div className="absolute -top-1.5 right-3 px-2 py-0.5 rounded-full bg-accent/20 text-[0.45rem] font-bold text-accent tracking-wider uppercase">Popular</div>
+                            )}
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isActive ? "bg-primary/20 text-primary" : "bg-foreground/[0.05] text-foreground/30"}`}>
+                              {addon.icon}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-xs font-semibold truncate ${isActive ? "text-foreground" : "text-foreground/60"}`}>{addon.name}</p>
+                              <p className="text-[0.55rem] text-foreground/30 truncate">{addon.desc}</p>
+                            </div>
+                            <div className="text-right flex-shrink-0">
+                              {isFree ? (
+                                <span className="text-xs font-bold text-accent">Incluso</span>
+                              ) : (
+                                <div>
+                                  <span className={`text-xs font-bold ${isActive ? "text-primary" : "text-foreground/40"}`}>+€{displayPrice}/m</span>
+                                  <p className="text-[0.45rem] text-foreground/20 line-through">€{addon.price}/m</p>
+                                </div>
+                              )}
+                            </div>
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                              isActive ? "border-primary bg-primary" : "border-foreground/15"
+                            }`}>
+                              {isActive && <Check className="w-3 h-3 text-primary-foreground" />}
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Package Summary & CTA */}
+            <motion.div className="max-w-4xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <div className={`relative p-5 sm:p-7 rounded-2xl overflow-hidden border ${
+                pkg.id === "empire" ? "border-accent/25 bg-gradient-to-b from-accent/[0.06] via-background/60 to-background" : "border-primary/20 bg-gradient-to-b from-primary/[0.06] via-background/60 to-background"
+              }`}>
+                <div className={`absolute top-0 left-0 right-0 h-[2px] ${pkg.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />
+
+                <div className="flex flex-col gap-5 relative z-10">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                    <div>
+                      <p className="text-[0.55rem] font-heading text-foreground/40 tracking-[3px] uppercase mb-1">Il Tuo Pacchetto</p>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{pkg.price.toLocaleString("it-IT")}</span>
+                        <span className="text-sm text-foreground/20 line-through">€{pkg.originalPrice.toLocaleString("it-IT")}</span>
                       </div>
-                    </motion.div>
-                  );
-                })}
+                      <div className="flex flex-wrap items-center gap-2 mt-2">
+                        <span className={`px-2 py-0.5 rounded-full text-[0.5rem] font-semibold ${pkg.id === "empire" ? "bg-accent/15 text-accent" : "bg-primary/10 text-primary"}`}>{pkg.name}</span>
+                        {pkg.monthlyFee === 0 && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">€0/mese incluso</span>}
+                        {pkg.commission === "0%" && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold animate-pulse">0% Commissioni per sempre</span>}
+                        {selectedAddons.size > 0 && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/10 text-accent font-semibold">+{selectedAddons.size} Agenti IA</span>}
+                      </div>
+                      {pkg.monthlyFee > 0 && (
+                        <p className="text-[0.55rem] text-foreground/25 mt-2">poi €{pkg.monthlyFee}/mese + {pkg.commission} sulle transazioni · IVA esclusa</p>
+                      )}
+                      {pkg.monthlyFee === 0 && (
+                        <p className="text-[0.55rem] text-accent/60 mt-2 font-semibold">Nessun canone mensile · Nessuna commissione · IVA esclusa</p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-2 sm:items-end">
+                      <motion.button onClick={() => navigate("/admin")}
+                        className={`px-8 py-3.5 rounded-full font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap ${
+                          pkg.id === "empire"
+                            ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black"
+                            : "bg-vibrant-gradient text-primary-foreground"
+                        }`}
+                        whileHover={{ scale: 1.03, boxShadow: pkg.id === "empire" ? "0 15px 50px hsla(35,45%,50%,0.3)" : "0 15px 50px hsla(265,70%,60%,0.25)" }}
+                        whileTap={{ scale: 0.97 }}>
+                        {pkg.id === "empire" ? "Attiva Empire — Domina Ora" : "Attiva Ora — Setup in 24h"}
+                      </motion.button>
+                      <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Pagamento sicuro · Fattura deducibile · Assistenza 7/7</p>
+                    </div>
+                  </div>
+
+                  {/* Installment Options */}
+                  <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-border/15">
+                    <p className="text-[0.55rem] text-foreground/30 mr-1">Paga in comode rate:</p>
+                    <button onClick={() => setInstallments(installments === 3 ? null : 3)}
+                      className={`px-3 py-1.5 rounded-full text-[0.55rem] font-semibold transition-all ${
+                        installments === 3 ? "bg-primary/15 text-primary border border-primary/30" : "bg-foreground/[0.04] text-foreground/35 border border-border/20 hover:border-primary/15"
+                      }`}>
+                      3 rate da €{Math.round(pkg.price / 3)}/mese
+                    </button>
+                    <button onClick={() => setInstallments(installments === 6 ? null : 6)}
+                      className={`px-3 py-1.5 rounded-full text-[0.55rem] font-semibold transition-all ${
+                        installments === 6 ? "bg-primary/15 text-primary border border-primary/30" : "bg-foreground/[0.04] text-foreground/35 border border-border/20 hover:border-primary/15"
+                      }`}>
+                      6 rate da €{Math.round(pkg.price / 6)}/mese
+                    </button>
+                    {installments && (
+                      <motion.span initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                        className="text-[0.5rem] text-accent font-semibold ml-1">
+                        ✓ 0% interessi
+                      </motion.span>
+                    )}
+                  </div>
+                </div>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
 
-      {/* Summary & CTA */}
-      <motion.div className="max-w-3xl mx-auto mt-4"
-        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-        <div className="relative p-5 sm:p-7 rounded-2xl overflow-hidden border border-primary/20 bg-gradient-to-b from-primary/[0.06] via-background/60 to-background">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,75%,0.03) 70%, transparent 100%)" }}
-            animate={{ y: ["-100%", "200%"] }}
-            transition={{ duration: 4, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
-          />
-
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative z-10">
-            <div>
-              <p className="text-[0.55rem] font-heading text-foreground/40 tracking-[3px] uppercase mb-1">Il Tuo Piano</p>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{Math.round(totalMonthly)}</span>
-                <span className="text-sm text-foreground/30">/mese</span>
+            {/* Comparison mini-table */}
+            <motion.div className="max-w-4xl mx-auto mt-6 overflow-x-auto" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+              <div className="min-w-[500px] p-4 rounded-xl border border-border/15 bg-background/30">
+                <p className="text-[0.6rem] font-heading text-foreground/40 tracking-[3px] uppercase mb-3 text-center">Confronto Pacchetti — Perché il pacchetto ti conviene</p>
+                <div className="grid grid-cols-4 gap-2 text-center mb-2">
+                  <div />
+                  {PACKAGE_TIERS.map(p => (
+                    <div key={p.id} className={`text-[0.55rem] font-heading font-bold py-1.5 rounded-lg ${
+                      p.id === selectedPackage ? (p.id === "empire" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary") : "text-foreground/30"
+                    }`}>{p.name}</div>
+                  ))}
+                </div>
+                {[
+                  { label: "Investimento", vals: ["€1.997", "€4.997", "€7.997"] },
+                  { label: "Canone mensile", vals: ["€49/mese", "€29/mese", "€0 per sempre"] },
+                  { label: "Commissioni", vals: ["2%", "1%", "0%"] },
+                  { label: "Agenti IA inclusi", vals: ["0", "2", "5"] },
+                  { label: "Mesi inclusi", vals: ["12", "18", "24"] },
+                  { label: "Account Manager", vals: ["—", "—", "✓ Dedicato"] },
+                  { label: "Risparmio totale", vals: ["€883", "€2.203", "€6.403+"] },
+                ].map((row, ri) => (
+                  <div key={ri} className="grid grid-cols-4 gap-2 py-2 border-t border-border/10 text-[0.55rem] items-center">
+                    <span className="text-foreground/40 font-medium">{row.label}</span>
+                    {row.vals.map((v, vi) => (
+                      <span key={vi} className={`text-center font-semibold ${
+                        vi === 2 && (v.includes("0%") || v.includes("€0") || v.includes("€6.403"))
+                          ? "text-accent font-bold"
+                          : vi === PACKAGE_TIERS.findIndex(p => p.id === selectedPackage) ? "text-foreground" : "text-foreground/30"
+                      }`}>{v}</span>
+                    ))}
+                  </div>
+                ))}
               </div>
-              <div className="flex flex-wrap items-center gap-2 mt-2">
-                <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-primary/10 text-primary font-semibold">{plan.name}</span>
-                {selectedAddons.size > 0 && (
-                  <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/10 text-accent font-semibold">+{selectedAddons.size} Agenti IA</span>
-                )}
-                {savedPerYear > 0 && (
-                  <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">Risparmi €{Math.round(savedPerYear)}/anno</span>
-                )}
-              </div>
-              <p className="text-[0.55rem] text-foreground/25 mt-2">+ 2% sulle transazioni · IVA esclusa · Cancella quando vuoi</p>
-            </div>
+            </motion.div>
+          </motion.div>
+        )}
 
-            <div className="flex flex-col gap-2 sm:items-end">
-              <motion.button onClick={() => navigate("/admin")}
-                className="px-8 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap"
-                whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
-                whileTap={{ scale: 0.97 }}>
-                Attiva Ora — Prova Gratis 14gg
-              </motion.button>
-              <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Nessuna carta richiesta · Setup in 24h · Assistenza 7/7</p>
-            </div>
-          </div>
-        </div>
-      </motion.div>
+        {/* ═══ MONTHLY MODE ═══ */}
+        {pricingMode === "monthly" && (
+          <motion.div key="monthly" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+
+            {/* Billing toggle */}
+            <motion.div className="flex items-center justify-center gap-3 mb-6"
+              initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <button onClick={() => setBillingCycle("monthly")}
+                className={`px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${billingCycle === "monthly" ? "bg-primary/15 text-primary" : "text-foreground/30 hover:text-foreground/50"}`}>
+                Mensile
+              </button>
+              <button onClick={() => setBillingCycle("annual")}
+                className={`px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all flex items-center gap-1.5 ${billingCycle === "annual" ? "bg-primary/15 text-primary" : "text-foreground/30 hover:text-foreground/50"}`}>
+                Annuale
+                <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">−20%</span>
+              </button>
+            </motion.div>
+
+            {/* Upsell nudge toward packages */}
+            <motion.div className="max-w-3xl mx-auto mb-5 p-3 rounded-xl border border-accent/15 bg-accent/[0.03] text-center cursor-pointer hover:bg-accent/[0.06] transition-colors"
+              onClick={() => setPricingMode("package")}
+              whileHover={{ scale: 1.01 }}>
+              <p className="text-[0.6rem] text-accent/70 font-medium flex items-center justify-center gap-2">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>💡 Con un <strong>pacchetto completo</strong> risparmi fino a €6.403 e azzeri le commissioni → <u>Scopri i pacchetti</u></span>
+              </p>
+            </motion.div>
+
+            {/* Plan Cards */}
+            <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto mb-6"
+              variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+              {PLAN_TIERS.map((p) => {
+                const isSelected = selectedPlan === p.id;
+                const displayPrice = Math.round(p.price * planDiscount);
+                return (
+                  <motion.div key={p.id} variants={fadeScale}
+                    onClick={() => { setSelectedPlan(p.id); if (p.includedAgents > 0) setShowAddons(true); }}
+                    className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
+                      isSelected
+                        ? "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(265,70%,60%,0.1)]"
+                        : "border border-border/30 hover:border-primary/20 bg-background/40"
+                    }`}>
+                    {p.badge && (
+                      <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
+                        p.badge === "Max Revenue" ? "bg-gradient-to-r from-accent to-primary text-primary-foreground" : "bg-vibrant-gradient text-primary-foreground"
+                      }`}>{p.badge}</div>
+                    )}
+                    {isSelected && <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />}
+
+                    <p className="text-[0.6rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
+                    <div className="flex items-baseline gap-1 mt-2">
+                      <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{displayPrice}</span>
+                      <span className="text-xs text-foreground/30">/mese</span>
+                    </div>
+                    {billingCycle === "annual" && (
+                      <p className="text-[0.55rem] text-accent font-semibold mt-0.5">Risparmi €{Math.round(p.price * 12 * 0.2)}/anno</p>
+                    )}
+                    <p className="text-[0.6rem] text-foreground/35 mt-1.5 leading-relaxed">{p.desc}</p>
+
+                    <ul className="mt-4 space-y-2">
+                      {p.features.map((f, fi) => (
+                        <li key={fi} className="flex items-start gap-2 text-[0.65rem] sm:text-xs text-foreground/50">
+                          <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${isSelected ? "bg-primary/15" : "bg-foreground/[0.05]"}`}>
+                            <Check className={`w-2.5 h-2.5 ${isSelected ? "text-primary" : "text-foreground/30"}`} />
+                          </div>
+                          <span className={f.startsWith("Tutto") ? "font-semibold text-foreground/60" : ""}>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {isSelected && (
+                      <motion.div className="absolute bottom-0 left-0 right-0 h-1 bg-vibrant-gradient"
+                        layoutId="planIndicator" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                    )}
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+
+            {/* AI Agents Upsell */}
+            <motion.div className="max-w-3xl mx-auto" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <button onClick={() => setShowAddons(!showAddons)}
+                className="w-full flex items-center justify-between p-4 rounded-xl border border-primary/15 bg-primary/[0.03] hover:bg-primary/[0.06] transition-colors mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center">
+                    <Bot className="w-4 h-4 text-primary-foreground" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs sm:text-sm font-heading font-bold text-foreground">Potenzia con Agenti IA</p>
+                    <p className="text-[0.55rem] text-foreground/35">
+                      {plan.includedAgents > 0 ? `${plan.includedAgents} inclus${plan.includedAgents > 1 ? "i" : "o"} nel piano · Aggiungi gli altri a prezzo scontato` : "Aggiungi automazioni intelligenti al tuo piano"}
+                    </p>
+                  </div>
+                </div>
+                <motion.div animate={{ rotate: showAddons ? 180 : 0 }}>
+                  <ChevronDown className="w-5 h-5 text-primary/50" />
+                </motion.div>
+              </button>
+
+              <AnimatePresence>
+                {showAddons && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }} className="overflow-hidden">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pb-4">
+                      {AI_ADDONS.map((addon) => {
+                        const isActive = selectedAddons.has(addon.id);
+                        const isFree = isActive && [...selectedAddons].sort().indexOf(addon.id) < plan.includedAgents;
+                        const displayPrice = Math.round(addon.price * addonDiscount);
+                        return (
+                          <motion.div key={addon.id} onClick={() => toggleAddon(addon.id)}
+                            className={`relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
+                              isActive ? "border border-primary/30 bg-primary/[0.06]" : "border border-border/20 hover:border-primary/15 bg-background/30"
+                            }`} whileTap={{ scale: 0.98 }}>
+                            {addon.popular && !isActive && (
+                              <div className="absolute -top-1.5 right-3 px-2 py-0.5 rounded-full bg-accent/20 text-[0.45rem] font-bold text-accent tracking-wider uppercase">Popular</div>
+                            )}
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isActive ? "bg-primary/20 text-primary" : "bg-foreground/[0.05] text-foreground/30"}`}>
+                              {addon.icon}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-xs font-semibold truncate ${isActive ? "text-foreground" : "text-foreground/60"}`}>{addon.name}</p>
+                              <p className="text-[0.55rem] text-foreground/30 truncate">{addon.desc}</p>
+                            </div>
+                            <div className="text-right flex-shrink-0">
+                              {isFree ? (
+                                <span className="text-xs font-bold text-accent">Incluso</span>
+                              ) : (
+                                <span className={`text-xs font-bold ${isActive ? "text-primary" : "text-foreground/40"}`}>+€{displayPrice}/m</span>
+                              )}
+                            </div>
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                              isActive ? "border-primary bg-primary" : "border-foreground/15"
+                            }`}>
+                              {isActive && <Check className="w-3 h-3 text-primary-foreground" />}
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Monthly Summary & CTA */}
+            <motion.div className="max-w-3xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <div className="relative p-5 sm:p-7 rounded-2xl overflow-hidden border border-primary/20 bg-gradient-to-b from-primary/[0.06] via-background/60 to-background">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative z-10">
+                  <div>
+                    <p className="text-[0.55rem] font-heading text-foreground/40 tracking-[3px] uppercase mb-1">Il Tuo Piano</p>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{Math.round(totalMonthly)}</span>
+                      <span className="text-sm text-foreground/30">/mese</span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2 mt-2">
+                      <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-primary/10 text-primary font-semibold">{plan.name}</span>
+                      {selectedAddons.size > 0 && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/10 text-accent font-semibold">+{selectedAddons.size} Agenti IA</span>}
+                      {savedPerYear > 0 && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">Risparmi €{Math.round(savedPerYear)}/anno</span>}
+                    </div>
+                    <p className="text-[0.55rem] text-foreground/25 mt-2">+ 2% sulle transazioni · IVA esclusa · Cancella quando vuoi</p>
+                  </div>
+                  <div className="flex flex-col gap-2 sm:items-end">
+                    <motion.button onClick={() => navigate("/admin")}
+                      className="px-8 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap"
+                      whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
+                      whileTap={{ scale: 0.97 }}>
+                      Attiva Ora — Prova Gratis 14gg
+                    </motion.button>
+                    <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Nessuna carta richiesta · Setup in 24h · Assistenza 7/7</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Trust badges */}
-      <motion.div className="flex flex-wrap justify-center gap-4 mt-6 max-w-3xl mx-auto"
+      <motion.div className="flex flex-wrap justify-center gap-3 mt-6 max-w-3xl mx-auto"
         initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
         {[
           { icon: <Shield className="w-3.5 h-3.5" />, text: "GDPR Compliant" },
           { icon: <Lock className="w-3.5 h-3.5" />, text: "AES-256" },
           { icon: <Zap className="w-3.5 h-3.5" />, text: "Aggiornamenti settimanali" },
           { icon: <Headphones className="w-3.5 h-3.5" />, text: "Assistenza 7/7" },
+          { icon: <CreditCard className="w-3.5 h-3.5" />, text: "Rate 0% interessi" },
         ].map((b, i) => (
           <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/20 bg-background/30">
             <span className="text-primary/50">{b.icon}</span>
