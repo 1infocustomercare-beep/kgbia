@@ -540,10 +540,10 @@ const PACKAGE_TIERS: PackageTier[] = [
     originalPrice: 14400,
     monthlyFee: 0,
     commission: "0%",
-    badge: "Zero Commissioni",
-    tagline: "La suite definitiva — nessun costo ricorrente sulle vendite",
+    badge: "Tutto Incluso",
+    tagline: "Il pacchetto completo — tutto ciò che serve, senza compromessi",
     features: [
-      "Tutto di Growth AI +",
+      "✅ TUTTO incluso — ogni funzione della piattaforma",
       "ZERO commissioni sulle transazioni",
       "ZERO canone mensile per 24 mesi",
       "5 Agenti IA inclusi a scelta",
@@ -553,9 +553,10 @@ const PACKAGE_TIERS: PackageTier[] = [
       "Analytics predittivi con IA",
       "Supporto prioritario 7/7 VIP",
       "White Label completo — il tuo brand ovunque",
+      "🔧 Possibilità di aggiungere funzioni custom su richiesta",
     ],
     includedAgents: 5,
-    extras: ["Account Manager dedicato", "6 sessioni strategia trimestrale", "Priorità su nuove funzionalità", "Setup multi-sede incluso"],
+    extras: ["Account Manager dedicato", "6 sessioni strategia trimestrale", "Priorità su nuove funzionalità", "Setup multi-sede incluso", "Funzionalità custom su richiesta"],
     savings: "Risparmi €6.403 vs abbonamento — e le commissioni sono tue per sempre",
   },
 ];
@@ -1066,7 +1067,10 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         </motion.div>
                       )}
                       {packageTotalMonthly === 0 && pkg.monthlyFee === 0 && (
-                        <p className="text-[0.6rem] text-accent font-bold mt-1.5">€0/mese — Zero costi ricorrenti!</p>
+                        <div className="mt-1.5">
+                          <p className="text-[0.6rem] text-accent font-bold">€0/mese — Zero costi ricorrenti!</p>
+                          <p className="text-[0.45rem] text-accent/50 mt-0.5">🏆 Pacchetto completo: tutto incluso, niente di nascosto</p>
+                        </div>
                       )}
 
                       {/* Tags */}
@@ -1105,7 +1109,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         />
                         <span className="relative z-10">{pkg.id === "empire" ? "Attiva Empire — Domina Ora" : "Attiva Ora — Setup in 24h"}</span>
                       </motion.button>
-                      <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Pagamento sicuro · Fattura deducibile · Assistenza 7/7</p>
+                      <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Pagamento sicuro · Rateizzabile · Fattura deducibile · Assistenza 7/7</p>
                     </div>
                   </div>
 
@@ -1254,7 +1258,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                           💎 Passa a Empire Domination — risparmi €{(7997 - pkg.price + (pkg.monthlyFee * 24)).toLocaleString("it-IT")} in 2 anni
                         </p>
                         <p className="text-[0.45rem] text-accent/50 text-center mt-0.5">
-                          0% commissioni + €0/mese per 24 mesi · Solo €{Math.round(7997 / 6)}/mese in 6 rate
+                          0% commissioni + €0/mese per 24 mesi · Tutto incluso · Solo €{Math.round(7997 / 6)}/mese in 6 rate
                         </p>
                       </motion.div>
                     )}
@@ -1310,7 +1314,8 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         <div>
                           <p className={`text-[0.6rem] font-heading font-bold tracking-[2px] uppercase ${isEmpire ? "text-accent" : isActive ? "text-primary" : "text-foreground/40"}`}>{p.name}</p>
                           <p className={`text-2xl font-heading font-bold mt-0.5 ${isActive ? "text-foreground" : "text-foreground/50"}`}>€{p.price.toLocaleString("it-IT")}</p>
-                          <p className="text-[0.5rem] text-foreground/25">oppure €{Math.round(p.price / 6)}/mese ×6</p>
+                          <p className="text-[0.5rem] text-foreground/25">oppure da €{Math.round(p.price / 6)}/mese ×6</p>
+                          {isEmpire && <p className="text-[0.4rem] text-accent/70 font-bold mt-0.5">🏆 Tutto Incluso</p>}
                         </div>
                         <div className="text-right">
                           <p className={`text-xs font-heading font-bold ${isEmpire ? "text-accent" : "text-primary/70"}`}>{savings[pi]}</p>
@@ -1380,7 +1385,8 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         <p className={`text-xl font-heading font-bold mt-1 ${
                           p.id === selectedPackage ? "text-foreground" : "text-foreground/40"
                         }`}>€{p.price.toLocaleString("it-IT")}</p>
-                        <p className="text-[0.45rem] text-foreground/25 mt-0.5">oppure €{Math.round(p.price / 6)}/mese ×6</p>
+                        <p className="text-[0.45rem] text-foreground/25 mt-0.5">oppure da €{Math.round(p.price / 6)}/mese ×6</p>
+                        {p.id === "empire" && <p className="text-[0.4rem] text-accent/70 font-bold mt-0.5">🏆 Tutto Incluso</p>}
                       </div>
                     ))}
                   </div>
