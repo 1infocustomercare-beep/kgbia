@@ -509,7 +509,7 @@ const PACKAGE_TIERS: PackageTier[] = [
 const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void }) => {
   const [pricingMode, setPricingMode] = useState<PricingMode>("package");
   const [selectedPlan, setSelectedPlan] = useState<PlanTier>("professional");
-  const [selectedPackage, setSelectedPackage] = useState("growth");
+  const [selectedPackage, setSelectedPackage] = useState("empire");
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
   const [showAddons, setShowAddons] = useState(false);
