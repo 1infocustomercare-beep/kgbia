@@ -123,23 +123,28 @@ function speakWithBrowserTTS(
   });
 }
 
-// ── TTS helper with ElevenLabs + browser fallback ──
+// ── TTS helper — ElevenLabs only for first impact (hero), browser TTS for the rest ──
+const PREMIUM_SECTIONS = new Set(["hero"]); // Only hero gets ElevenLabs premium voice
+
 async function speakText(
   text: string,
   audioRef: React.MutableRefObject<HTMLAudioElement | null>,
   abortRef: React.MutableRefObject<boolean>,
   useBrowserFallbackRef: React.MutableRefObject<boolean>,
+  sectionId?: string,
 ): Promise<boolean> {
   if (abortRef.current) return false;
 
   const normalizedText = normalizeTextForSpeech(text);
   if (!normalizedText) return false;
 
-  // If we already know ElevenLabs is down, go straight to browser TTS
-  if (useBrowserFallbackRef.current) {
+  // Use browser TTS for non-premium sections to save credits
+  const isPremiumSection = sectionId ? PREMIUM_SECTIONS.has(sectionId) : false;
+  if (!isPremiumSection || useBrowserFallbackRef.current) {
     return speakWithBrowserTTS(normalizedText, abortRef);
   }
 
+  // Premium voice (ElevenLabs) — only for first impact
   try {
     const resp = await fetch(TTS_URL, {
       method: "POST",
@@ -151,7 +156,6 @@ async function speakText(
     });
 
     if (!resp.ok || abortRef.current) {
-      // ElevenLabs failed — switch to browser fallback permanently for this session
       console.warn("ElevenLabs TTS failed, switching to browser voice");
       useBrowserFallbackRef.current = true;
       return speakWithBrowserTTS(normalizedText, abortRef);
@@ -173,7 +177,6 @@ async function speakText(
 
       audio.onended = () => resolve(true);
       audio.onerror = () => {
-        // Audio decode error — fallback
         useBrowserFallbackRef.current = true;
         speakWithBrowserTTS(normalizedText, abortRef).then(resolve);
       };
@@ -185,7 +188,6 @@ async function speakText(
       }
 
       audio.play().catch(() => {
-        // Autoplay blocked — try browser TTS
         speakWithBrowserTTS(normalizedText, abortRef).then(resolve);
       });
     });
@@ -504,7 +506,7 @@ const EmpireVoiceAgent: React.FC = () => {
       setIsPaused(false);
       abortRef.current = false;
 
-      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef);
+      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId);
 
       if (played && !abortRef.current) {
         narrationAttemptsRef.current[sectionId] = 0;
