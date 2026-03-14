@@ -21,6 +21,8 @@ interface SectorStyleBase {
 interface SectorStyleExtended extends SectorStyleBase {
   analyticsTitle: string;
   analyticsBars: number[];
+  analyticsMetrics: { label: string; val: string; delta: string }[];
+  activityFeed: { icon: string; text: string; time: string; status: string }[];
   crmClients: { name: string; tag: string; spent: string }[];
   notifications: { icon: string; text: string; time: string }[];
   settingsToggles: { label: string; on: boolean }[];
@@ -40,6 +42,17 @@ const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
     serviceIcon: "🍝",
     analyticsTitle: "Vendite Piatti",
     analyticsBars: [45, 72, 38, 90, 55, 82, 60, 95, 48, 70, 65, 88],
+    analyticsMetrics: [
+      { label: "Scontrino medio", val: "€34.50", delta: "+€3.20" },
+      { label: "Coperti/giorno", val: "86", delta: "+12" },
+      { label: "Food cost", val: "28%", delta: "-1.4%" },
+      { label: "Ritorno clienti", val: "67%", delta: "+5%" },
+    ],
+    activityFeed: [
+      { icon: "🍕", text: "Ordine tavolo 7 — €68", time: "1m", status: "new" },
+      { icon: "💳", text: "Pagamento POS €142", time: "4m", status: "ok" },
+      { icon: "⭐", text: "Review Google 5★", time: "18m", status: "star" },
+    ],
     crmClients: [
       { name: "Marco R.", tag: "VIP", spent: "€1.8K" },
       { name: "Sofia L.", tag: "Habitué", spent: "€920" },
@@ -70,6 +83,17 @@ const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
     serviceIcon: "🚘",
     analyticsTitle: "Revenue Tratte",
     analyticsBars: [60, 85, 45, 92, 70, 88, 55, 95, 78, 82, 68, 90],
+    analyticsMetrics: [
+      { label: "Revenue/transfer", val: "€185", delta: "+€22" },
+      { label: "Occupazione flotta", val: "87%", delta: "+6%" },
+      { label: "Clienti corporate", val: "42", delta: "+8" },
+      { label: "NPS Score", val: "94", delta: "+3" },
+    ],
+    activityFeed: [
+      { icon: "🚗", text: "Transfer NAP→Positano", time: "3m", status: "new" },
+      { icon: "💳", text: "Bonifico €340 Hotel Exc.", time: "12m", status: "ok" },
+      { icon: "✈️", text: "Volo AZ1284 atterrato", time: "25m", status: "new" },
+    ],
     crmClients: [
       { name: "Hotel Excelsior", tag: "Corporate", spent: "€12K" },
       { name: "James W.", tag: "VIP", spent: "€4.2K" },
@@ -98,6 +122,17 @@ const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
     bookingFields: ["Nome", "Servizio", "Data", "Ora"],
     heroSubtext: "Beauty & Wellness",
     serviceIcon: "💅",
+    analyticsMetrics: [
+      { label: "Tasso prenotazione", val: "78%", delta: "+4.2%" },
+      { label: "Clienti fidelizzati", val: "156", delta: "+23" },
+      { label: "Ticket medio", val: "€62", delta: "+€8" },
+      { label: "No-show rate", val: "3.2%", delta: "-1.1%" },
+    ],
+    activityFeed: [
+      { icon: "💇", text: "Appuntamento Giulia M.", time: "2m", status: "new" },
+      { icon: "💳", text: "Pagamento €75 Colore+Piega", time: "8m", status: "ok" },
+      { icon: "⭐", text: "Review 5★ da Valentina", time: "35m", status: "star" },
+    ],
     analyticsTitle: "Performance Servizi",
     analyticsBars: [35, 68, 52, 85, 40, 78, 62, 90, 45, 72, 58, 82],
     crmClients: [
@@ -795,6 +830,17 @@ export function getSectorStyle(id: IndustryId): SectorStyle {
     serviceIcon: cfg.emoji,
     analyticsTitle: "Analytics",
     analyticsBars: [30, 55, 42, 78, 62, 90, 48, 72, 85, 40, 65, 58],
+    analyticsMetrics: [
+      { label: "Conversione", val: "12.4%", delta: "+2.1%" },
+      { label: "Clienti attivi", val: "128", delta: "+12" },
+      { label: "Ticket medio", val: "€38", delta: "+€4" },
+      { label: "Retention", val: "85%", delta: "+2%" },
+    ],
+    activityFeed: [
+      { icon: "🔔", text: "Nuovo ordine ricevuto", time: "2m", status: "new" },
+      { icon: "💳", text: "Pagamento €85 confermato", time: "8m", status: "ok" },
+      { icon: "⭐", text: "Recensione 5★ ricevuta", time: "22m", status: "star" },
+    ],
     crmClients: [
       { name: "Marco R.", tag: "VIP", spent: "€1.2K" },
       { name: "Laura B.", tag: "Nuovo", spent: "€340" },
@@ -1299,17 +1345,14 @@ export function IPhoneFrame({
                 </div>
                 {/* Activity feed with status badges */}
                 <div className="mt-1.5 space-y-0.5">
-                  {[
-                    { t: "Nuovo ordine", status: "new" },
-                    { t: "Pagamento €47", status: "ok" },
-                    { t: "Review 5★", status: "star" },
-                  ].map((item, i) => (
+                  {sectorStyle.activityFeed.map((item, i) => (
                     <motion.div key={i} className="flex items-center gap-1 px-1 py-0.5 rounded text-[5px]"
                       style={{ backgroundColor: `${color}06` }}
                       initial={{ opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.6 + i * 0.08 }}>
                       <div className="w-1 h-1 rounded-full" style={{ backgroundColor: item.status === "ok" ? "#22c55e" : item.status === "star" ? "#fbbf24" : color }} />
-                      <span className="text-white/40 flex-1">{item.t}</span>
-                      <span className="text-[3px] text-white/20">{i + 1}m</span>
+                      <span className="text-[8px] mr-0.5">{item.icon}</span>
+                      <span className="text-white/40 flex-1 truncate">{item.text}</span>
+                      <span className="text-[3px] text-white/20">{item.time}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -1338,12 +1381,7 @@ export function IPhoneFrame({
                 </div>
                 {/* Metric pills */}
                 <div className="grid grid-cols-2 gap-1 mb-1.5">
-                  {[
-                    { label: "Conversione", val: "12.4%", delta: "+2.1%" },
-                    { label: "Clienti attivi", val: "234", delta: "+18" },
-                    { label: "Ticket medio", val: "€47", delta: "+€5" },
-                    { label: "Retention", val: "89%", delta: "+3%" },
-                  ].map((m, i) => (
+                  {sectorStyle.analyticsMetrics.map((m, i) => (
                     <div key={i} className="p-1 rounded-md" style={{ backgroundColor: `${color}08`, border: `0.5px solid ${color}10` }}>
                       <p className="text-[4px] text-white/25 uppercase tracking-wider">{m.label}</p>
                       <div className="flex items-baseline gap-1">
