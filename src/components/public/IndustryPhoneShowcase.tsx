@@ -989,13 +989,9 @@ export function IPhoneFrame({
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
                     <p className="text-[7px] font-bold text-white/70">Dashboard</p>
                   </div>
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3].map(i => (
-                      <div key={i} className="w-1 h-1 rounded-full" style={{ backgroundColor: `${color}40` }} />
-                    ))}
-                  </div>
+                  <div className="px-1.5 py-0.5 rounded-full text-[4px] font-bold" style={{ backgroundColor: `${color}15`, color: `${color}CC` }}>Live ●</div>
                 </div>
-                {/* KPI Grid */}
+                {/* KPI Grid with trend indicators */}
                 <div className="grid grid-cols-2 gap-1">
                   {sectorStyle.kpis.map((kpi, i) => (
                     <motion.div key={i} className="p-1.5 rounded-lg relative overflow-hidden"
@@ -1004,32 +1000,51 @@ export function IPhoneFrame({
                       whileInView={{ scale: 1, opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: 0.4 + i * 0.08 }}>
+                      {/* Shimmer accent */}
+                      <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${color}30, transparent)` }} />
                       <p className="text-[5px] text-white/30 tracking-wider uppercase">{kpi.label}</p>
-                      <p className="text-[9px] font-bold" style={{ color }}>{kpi.val}</p>
+                      <div className="flex items-baseline gap-0.5">
+                        <p className="text-[9px] font-bold" style={{ color }}>{kpi.val}</p>
+                        <span className="text-[4px] text-emerald-400">↑{(3 + i * 2)}%</span>
+                      </div>
                     </motion.div>
                   ))}
                 </div>
-                {/* Chart */}
-                <div className="mt-1.5 h-10 rounded-lg flex items-end gap-[2px] p-1.5"
+                {/* Revenue chart with gradient fill */}
+                <div className="mt-1.5 rounded-lg p-1.5 relative overflow-hidden"
                   style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}08` }}>
-                  {[35, 55, 42, 78, 62, 90, 45, 82, 68].map((h, i) => (
-                    <motion.div key={i} className="flex-1 rounded-t-sm"
-                      style={{ backgroundColor: sectorStyle.chartColors[i % sectorStyle.chartColors.length] + (i === 5 ? "CC" : "55") }}
-                      initial={{ height: 0 }}
-                      whileInView={{ height: `${h}%` }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.5 + i * 0.04, duration: 0.4 }}
-                    />
-                  ))}
+                  <div className="flex items-center justify-between mb-0.5">
+                    <span className="text-[4px] text-white/25 uppercase tracking-wider">Revenue</span>
+                    <span className="text-[5px] font-bold" style={{ color }}>+18%</span>
+                  </div>
+                  <svg viewBox="0 0 120 30" className="w-full h-8">
+                    <defs>
+                      <linearGradient id={`dg-${index}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+                        <stop offset="100%" stopColor={color} stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path d={`M0,28 C10,25 20,20 30,18 C40,16 50,22 60,15 C70,8 80,12 90,6 C100,4 110,8 120,3 L120,30 L0,30 Z`} fill={`url(#dg-${index})`} />
+                    <path d="M0,28 C10,25 20,20 30,18 C40,16 50,22 60,15 C70,8 80,12 90,6 C100,4 110,8 120,3" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+                    <circle cx="120" cy="3" r="2" fill={color}>
+                      <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                  </svg>
                 </div>
-                {/* Activity feed */}
+                {/* Activity feed with status badges */}
                 <div className="mt-1.5 space-y-0.5">
-                  {["Nuovo ordine", "Pagamento", "Review 5★"].map((t, i) => (
-                    <div key={i} className="flex items-center gap-1 px-1 py-0.5 rounded text-[5px]"
-                      style={{ backgroundColor: `${color}06` }}>
-                      <div className="w-1 h-1 rounded-full" style={{ backgroundColor: sectorStyle.chartColors[i % sectorStyle.chartColors.length] }} />
-                      <span className="text-white/40">{t}</span>
-                    </div>
+                  {[
+                    { t: "Nuovo ordine", status: "new" },
+                    { t: "Pagamento €47", status: "ok" },
+                    { t: "Review 5★", status: "star" },
+                  ].map((item, i) => (
+                    <motion.div key={i} className="flex items-center gap-1 px-1 py-0.5 rounded text-[5px]"
+                      style={{ backgroundColor: `${color}06` }}
+                      initial={{ opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.6 + i * 0.08 }}>
+                      <div className="w-1 h-1 rounded-full" style={{ backgroundColor: item.status === "ok" ? "#22c55e" : item.status === "star" ? "#fbbf24" : color }} />
+                      <span className="text-white/40 flex-1">{item.t}</span>
+                      <span className="text-[3px] text-white/20">{i + 1}m</span>
+                    </motion.div>
                   ))}
                 </div>
               </div>
