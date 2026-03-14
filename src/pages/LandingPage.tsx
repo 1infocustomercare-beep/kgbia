@@ -103,28 +103,76 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
         className={`absolute -inset-2 ${sizeClasses} opacity-0 group-hover/icon:opacity-100 transition-opacity duration-700 blur-xl`}
         style={{ background: `linear-gradient(135deg, hsla(265,70%,60%,0.3), hsla(280,50%,60%,0.2))` }}
       />
+      {/* Outer pulse ring */}
+      <motion.div
+        className={`absolute -inset-1.5 ${sizeClasses} pointer-events-none`}
+        style={{ border: "1px solid hsla(265,80%,70%,0.15)" }}
+        animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
+        transition={{ duration: 3, repeat: Infinity, delay: delay * 0.5, ease: "easeInOut" }}
+      />
       {/* Rotating ring */}
       <motion.div
         className={`absolute -inset-0.5 ${sizeClasses}`}
-        style={{ border: "1px solid transparent", borderTopColor: "hsla(265,80%,70%,0.3)", borderRightColor: "hsla(300,50%,70%,0.15)" }}
+        style={{ border: "1.5px solid transparent", borderTopColor: "hsla(265,80%,70%,0.4)", borderRightColor: "hsla(300,50%,70%,0.2)" }}
         animate={{ rotate: [0, 360] }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear", delay }}
       />
+      {/* Counter ring */}
+      <motion.div
+        className={`absolute inset-0 ${sizeClasses}`}
+        style={{ border: "1px solid transparent", borderBottomColor: "hsla(280,60%,75%,0.2)" }}
+        animate={{ rotate: [360, 0] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "linear", delay: delay + 1 }}
+      />
       {/* Main container */}
       <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
-        style={{ boxShadow: "0 4px 20px hsla(265,70%,60%,0.15)" }}>
+        style={{ boxShadow: "0 4px 20px hsla(265,70%,60%,0.15), inset 0 1px 1px rgba(255,255,255,0.15)" }}>
         {/* Shimmer sweep */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.3) 50%, transparent 65%)" }}
+          style={{ background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%)" }}
           animate={{ x: ["-150%", "250%"] }}
-          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 + delay, ease: "easeInOut" }}
+          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 + delay, ease: "easeInOut" }}
         />
+        {/* Inner glow */}
+        <div className="absolute inset-px rounded-[inherit] border border-white/10 pointer-events-none" />
         <div className="relative z-10">{children}</div>
       </div>
     </motion.div>
   );
 };
+
+/* ═══ Premium Animated Card ═══ */
+const PremiumCard = ({ children, className = "", hover = true, glow = false, scan = false, delay = 0 }: { children: React.ReactNode; className?: string; hover?: boolean; glow?: boolean; scan?: boolean; delay?: number }) => (
+  <motion.div
+    className={`relative rounded-2xl border border-primary/[0.08] overflow-hidden group/card ${className}`}
+    style={{ background: "hsla(265,20%,8%,0.6)", backdropFilter: "blur(8px)" }}
+    whileHover={hover ? { y: -5, borderColor: "hsla(265,70%,60%,0.2)", transition: { duration: 0.3 } } : undefined}
+  >
+    {/* Top accent line */}
+    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.25), transparent)" }} />
+    {/* Corner accents */}
+    <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-primary/15 rounded-tl-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/15 rounded-br-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    {/* Scanning beam */}
+    {scan && (
+      <motion.div
+        className="absolute inset-0 pointer-events-none z-0"
+        style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.04) 50%, transparent 60%)" }}
+        animate={{ y: ["-100%", "200%"] }}
+        transition={{ duration: 4, repeat: Infinity, repeatDelay: 2 + delay, ease: "easeInOut" }}
+      />
+    )}
+    {/* Ambient glow on hover */}
+    {glow && (
+      <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"
+        style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent)" }} />
+    )}
+    {/* Bottom accent */}
+    <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    <div className="relative z-10">{children}</div>
+  </motion.div>
+);
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 const fadeUp = { hidden: { opacity: 0, y: 35 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: smoothEase } } };
