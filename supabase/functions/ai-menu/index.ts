@@ -24,13 +24,39 @@ async function trackAIUsage(agentName: string, modelUsed: string, startTime: num
   }
 }
 
+async function uploadBase64Image(imageUrl: string): Promise<string | null> {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabase = createClient(supabaseUrl, serviceKey);
+
+  const base64Match = imageUrl.match(/^data:image\/(\w+);base64,(.+)$/);
+  if (!base64Match) return null;
+
+  const ext = base64Match[1] === "jpeg" ? "jpg" : base64Match[1];
+  const base64Data = base64Match[2];
+  const bytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+  const fileName = `ai-dishes/${crypto.randomUUID()}.${ext}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("restaurant-logos")
+    .upload(fileName, bytes, { contentType: `image/${base64Match[1]}`, upsert: true });
+
+  if (uploadError) {
+    console.error("Upload error:", uploadError);
+    return null;
+  }
+
+  const { data: publicUrl } = supabase.storage.from("restaurant-logos").getPublicUrl(fileName);
+  return publicUrl.publicUrl;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   const startTime = Date.now();
 
   try {
-    const { action, imageBase64, dishDescription, dishCategory } = await req.json();
+    const { action, imageBase64, dishDescription, dishCategory, dishName, userPhotoBase64, plateStyle } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -155,34 +181,96 @@ serve(async (req) => {
       const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url || null;
 
       if (imageUrl && imageUrl.startsWith("data:")) {
-        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-        const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-        const supabase = createClient(supabaseUrl, serviceKey);
-
-        const base64Match = imageUrl.match(/^data:image\/(\w+);base64,(.+)$/);
-        if (base64Match) {
-          const ext = base64Match[1] === "jpeg" ? "jpg" : base64Match[1];
-          const base64Data = base64Match[2];
-          const bytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
-          const fileName = `ai-dishes/${crypto.randomUUID()}.${ext}`;
-
-          const { error: uploadError } = await supabase.storage
-            .from("restaurant-logos")
-            .upload(fileName, bytes, { contentType: `image/${base64Match[1]}`, upsert: true });
-
-          if (!uploadError) {
-            const { data: publicUrl } = supabase.storage.from("restaurant-logos").getPublicUrl(fileName);
-            await trackAIUsage("ai-menu-image", modelUsed, startTime, "success");
-            return new Response(JSON.stringify({ imageUrl: publicUrl.publicUrl }), {
-              headers: { ...corsHeaders, "Content-Type": "application/json" },
-            });
-          }
-          console.error("Upload error:", uploadError);
+        const publicUrl = await uploadBase64Image(imageUrl);
+        if (publicUrl) {
+          await trackAIUsage("ai-menu-image", modelUsed, startTime, "success");
+          return new Response(JSON.stringify({ imageUrl: publicUrl }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
         }
       }
 
       await trackAIUsage("ai-menu-image", modelUsed, startTime, "success");
 
+      return new Response(JSON.stringify({ imageUrl }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ─── NEW: Generate food-porn photo from user's dish photo or description ───
+    if (action === "generate-foodporn") {
+      const modelUsed = "google/gemini-2.5-flash-image";
+      
+      const plateDesc = plateStyle || "elegant white ceramic plate";
+      const dishDesc = dishName || dishDescription || "gourmet Italian dish";
+
+      let messageContent: any[];
+
+      if (userPhotoBase64) {
+        // User uploaded a photo of their actual dish — enhance it to food-porn quality
+        messageContent = [
+          {
+            type: "text",
+            text: `Transform this photo of "${dishDesc}" into an ultra-professional, magazine-quality food photography shot. Keep the SAME dish and ingredients but dramatically improve the presentation: perfect plating on a ${plateDesc}, professional lighting with warm golden tones, shallow depth of field with creamy bokeh, steam rising naturally, garnished with fresh herbs and microgreens, drizzled with olive oil or sauce artistically. Make it look like a Michelin-star restaurant photo shoot. The food must look absolutely irresistible, mouthwatering, and hyper-realistic. 8K quality food-porn style.`
+          },
+          {
+            type: "image_url",
+            image_url: { url: userPhotoBase64 }
+          }
+        ];
+      } else {
+        // No photo — generate from scratch based on description
+        messageContent = [
+          {
+            type: "text",
+            text: `Generate an ultra-professional, magazine-quality food photography image of "${dishDesc}" plated on a ${plateDesc}. Style: hyper-realistic food-porn photography, Michelin-star presentation, professional studio lighting with warm golden tones, extremely shallow depth of field with creamy bokeh background, steam rising naturally, garnished with fresh herbs and microgreens, droplets of olive oil or sauce glistening. The food must look absolutely irresistible and mouthwatering. 8K quality, vibrant natural colors.`
+          }
+        ];
+      }
+
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: modelUsed,
+          messages: [{ role: "user", content: messageContent }],
+          modalities: ["image", "text"],
+        }),
+      });
+
+      if (!response.ok) {
+        await trackAIUsage("ai-foodporn-generator", modelUsed, startTime, "error");
+        const status = response.status;
+        if (status === 429) {
+          return new Response(JSON.stringify({ error: "Rate limit. Riprova tra poco." }), {
+            status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        if (status === 402) {
+          return new Response(JSON.stringify({ error: "Crediti AI esauriti." }), {
+            status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        throw new Error(`Food-porn generation failed: ${status}`);
+      }
+
+      const data = await response.json();
+      const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url || null;
+
+      if (imageUrl && imageUrl.startsWith("data:")) {
+        const publicUrl = await uploadBase64Image(imageUrl);
+        if (publicUrl) {
+          await trackAIUsage("ai-foodporn-generator", modelUsed, startTime, "success");
+          return new Response(JSON.stringify({ imageUrl: publicUrl }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+      }
+
+      await trackAIUsage("ai-foodporn-generator", modelUsed, startTime, "success");
       return new Response(JSON.stringify({ imageUrl }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
