@@ -73,7 +73,7 @@ const FALLBACK_REVIEWS = [
   { name: "Anna F.", text: "Check-up preventivo completo e dettagliato. Staff gentile e molto professionale.", rating: 5, city: "Firenze", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" },
 ];
 
-export default function HealthcarePublicSite({ company }: Props) {
+export default function HealthcarePublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const name = company.name || "Studio Medico";
   const tagline = company.tagline || "La tua salute, la nostra missione";
