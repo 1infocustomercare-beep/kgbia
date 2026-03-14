@@ -5,6 +5,7 @@ import InfoGuide from "@/components/ui/info-guide";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import cartoonDashboard from "@/assets/cartoon-dashboard.png";
 
 interface DashboardOverviewProps {
   todayRevenue: number;
