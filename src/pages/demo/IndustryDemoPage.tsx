@@ -161,6 +161,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#1a140a",
     bgTo: "#0d0d0d",
     heroEmoji: "🏨",
+    heroVideo: "https://videos.pexels.com/video-files/6394054/6394054-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Calendar className="w-5 h-5" />, title: "Booking Engine", desc: "Prenotazioni dirette senza commissioni OTA" },
       { icon: <Building className="w-5 h-5" />, title: "Gestione Camere", desc: "Disponibilità, tariffe e pulizie" },
