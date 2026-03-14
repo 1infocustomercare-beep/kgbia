@@ -123,7 +123,7 @@ export const INDUSTRY_CONFIGS: Record<IndustryId, IndustryConfig> = {
       { id: "reviews", label: "Recensioni", icon: "Star", path: "/reviews", enabled: true },
     ],
     features: ["fleet_management", "route_planning", "booking_system", "driver_assignment", "gps_tracking"],
-    defaultPrimaryColor: "#2563EB",
+    defaultPrimaryColor: "#C9A84C",
   },
   beauty: {
     id: "beauty",
