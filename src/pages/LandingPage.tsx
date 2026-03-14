@@ -1109,7 +1109,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         />
                         <span className="relative z-10">{pkg.id === "empire" ? "Attiva Empire — Domina Ora" : "Attiva Ora — Setup in 24h"}</span>
                       </motion.button>
-                      <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Pagamento sicuro · Fattura deducibile · Assistenza 7/7</p>
+                      <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Pagamento sicuro · Rateizzabile · Fattura deducibile · Assistenza 7/7</p>
                     </div>
                   </div>
 
