@@ -77,14 +77,54 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
       className="inline-flex items-center gap-2.5 mb-5"
       initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
     >
-      <div className="flex items-center gap-2 px-4 py-2 rounded-full premium-label">
-        {icon || <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-dot" />}
-        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90">{text}</span>
+      <div className="relative flex items-center gap-2 px-4 py-2 rounded-full premium-label overflow-hidden">
+        {/* Scanning beam */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(90deg, transparent 30%, hsla(265,80%,70%,0.15) 50%, transparent 70%)" }}
+          animate={{ x: ["-150%", "250%"] }}
+          transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+        />
+        {icon || <motion.span className="w-1.5 h-1.5 rounded-full bg-primary" animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />}
+        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90 relative z-10">{text}</span>
       </div>
     </motion.div>
   )
 );
 SectionLabel.displayName = "SectionLabel";
+
+/* ═══ Animated Premium Icon ═══ */
+const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children: React.ReactNode; gradient: string; size?: "sm" | "md" | "lg"; delay?: number }) => {
+  const sizeClasses = size === "sm" ? "w-8 h-8 sm:w-10 sm:h-10 rounded-xl" : size === "lg" ? "w-12 h-12 rounded-2xl" : "w-10 h-10 rounded-xl";
+  return (
+    <motion.div className="relative group/icon" whileHover={{ scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+      {/* Ambient glow */}
+      <motion.div
+        className={`absolute -inset-2 ${sizeClasses} opacity-0 group-hover/icon:opacity-100 transition-opacity duration-700 blur-xl`}
+        style={{ background: `linear-gradient(135deg, hsla(265,70%,60%,0.3), hsla(280,50%,60%,0.2))` }}
+      />
+      {/* Rotating ring */}
+      <motion.div
+        className={`absolute -inset-0.5 ${sizeClasses}`}
+        style={{ border: "1px solid transparent", borderTopColor: "hsla(265,80%,70%,0.3)", borderRightColor: "hsla(300,50%,70%,0.15)" }}
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear", delay }}
+      />
+      {/* Main container */}
+      <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
+        style={{ boxShadow: "0 4px 20px hsla(265,70%,60%,0.15)" }}>
+        {/* Shimmer sweep */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.3) 50%, transparent 65%)" }}
+          animate={{ x: ["-150%", "250%"] }}
+          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 + delay, ease: "easeInOut" }}
+        />
+        <div className="relative z-10">{children}</div>
+      </div>
+    </motion.div>
+  );
+};
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 const fadeUp = { hidden: { opacity: 0, y: 35 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: smoothEase } } };
