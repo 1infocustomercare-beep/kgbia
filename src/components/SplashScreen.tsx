@@ -32,8 +32,8 @@ function NeuralMeshBg() {
             key={`c${i}`}
             x1={MESH_NODES[a].x} y1={MESH_NODES[a].y}
             x2={MESH_NODES[b].x} y2={MESH_NODES[b].y}
-            stroke="hsla(265,85%,65%,0.08)"
-            strokeWidth="0.15"
+            stroke="hsla(265,85%,65%,0.25)"
+            strokeWidth="0.2"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.3 + i * 0.06, ease: "easeOut" }}
@@ -46,7 +46,7 @@ function NeuralMeshBg() {
             <motion.circle
               key={`p${i}`}
               r="0.3"
-              fill="hsla(265,85%,70%,0.6)"
+              fill="hsla(265,85%,70%,0.9)"
               initial={{ cx: na.x, cy: na.y, opacity: 0 }}
               animate={{
                 cx: [na.x, nb.x, na.x],
@@ -68,7 +68,7 @@ function NeuralMeshBg() {
             {/* Glow */}
             <motion.circle
               cx={node.x} cy={node.y} r={node.size ? 3 : 1.8}
-              fill="hsla(265,85%,65%,0.06)"
+              fill="hsla(265,85%,65%,0.15)"
               initial={{ scale: 0 }}
               animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
               transition={{ duration: 3, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
@@ -76,9 +76,9 @@ function NeuralMeshBg() {
             {/* Dot */}
             <motion.circle
               cx={node.x} cy={node.y} r={node.size ? 1.2 : 0.6}
-              fill={i === 0 ? "hsla(265,85%,65%,0.5)" : "hsla(265,85%,65%,0.2)"}
-              stroke="hsla(265,85%,65%,0.15)"
-              strokeWidth="0.1"
+              fill={i === 0 ? "hsla(265,85%,65%,0.8)" : "hsla(265,85%,65%,0.45)"}
+              stroke="hsla(265,85%,65%,0.3)"
+              strokeWidth="0.15"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 + i * 0.08, ease: smoothEase }}
@@ -87,7 +87,7 @@ function NeuralMeshBg() {
             <motion.text
               x={node.x} y={node.y + (node.size ? 3.5 : 2.5)}
               textAnchor="middle"
-              fill="hsla(265,85%,65%,0.15)"
+              fill="hsla(265,85%,65%,0.35)"
               fontSize="1.1"
               fontFamily="monospace"
               letterSpacing="0.15"
@@ -159,7 +159,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
       />
 
       {/* Vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsla(260,20%,4%,0.85)_75%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,hsla(260,20%,4%,0.7)_80%)]" />
 
       {/* Orbital rings */}
       <motion.div
