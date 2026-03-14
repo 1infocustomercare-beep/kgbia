@@ -278,73 +278,131 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
-      <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${navScrolled ? "bg-background/60 backdrop-blur-2xl border-b border-primary/[0.08] py-1" : "py-3"}`}>
-        {/* Top edge glow line */}
+      <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 ${navScrolled ? "py-1" : "py-3"}`}>
+        {/* Glassmorphism background */}
+        <motion.div 
+          className="absolute inset-0"
+          animate={{ 
+            backgroundColor: navScrolled ? "hsla(265,20%,6%,0.7)" : "hsla(265,20%,6%,0)",
+            backdropFilter: navScrolled ? "blur(24px) saturate(1.4)" : "blur(0px) saturate(1)",
+          }}
+          transition={{ duration: 0.7, ease: "easeInOut" }}
+        />
+        {/* Bottom edge — animated gradient line */}
         <motion.div 
           className="absolute bottom-0 left-0 right-0 h-px"
-          style={{ background: navScrolled ? "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.2), hsla(280,50%,60%,0.15), transparent)" : "transparent" }}
+          style={{ 
+            background: navScrolled 
+              ? "linear-gradient(90deg, transparent 5%, hsla(265,80%,65%,0.4) 30%, hsla(300,60%,70%,0.3) 50%, hsla(265,80%,65%,0.4) 70%, transparent 95%)" 
+              : "transparent" 
+          }}
         />
-        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex items-center justify-between h-12">
-          {/* ═══ Logo ═══ */}
-          <a href="#hero" className="flex items-center gap-3 group relative">
-            {/* Ambient hover glow */}
+        {/* Scanning beam across nav */}
+        {navScrolled && (
+          <motion.div
+            className="absolute bottom-0 left-0 h-px w-32 pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, hsla(265,90%,75%,0.8), transparent)" }}
+            animate={{ x: ["-10vw", "110vw"] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear", repeatDelay: 2 }}
+          />
+        )}
+
+        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
+          
+          {/* ═══ Left Nav Links (desktop) ═══ */}
+          <div className="hidden lg:flex items-center gap-0.5 flex-1">
+            {navLinks.slice(0, Math.ceil(navLinks.length / 2)).map((link, i) => (
+              <motion.a key={link.href} href={link.href}
+                className="relative px-4 py-2 text-[0.7rem] font-medium text-foreground/40 hover:text-foreground transition-all duration-400 tracking-[0.15em] uppercase group rounded-lg"
+                whileHover={{ backgroundColor: "hsla(265,70%,60%,0.06)" }}
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 + 0.2 }}
+              >
+                {link.label}
+                <motion.span 
+                  className="absolute bottom-0.5 left-1/2 -translate-x-1/2 h-[2px] rounded-full origin-center"
+                  style={{ background: "linear-gradient(90deg, hsla(265,80%,65%,0.8), hsla(300,60%,70%,0.6))" }}
+                  initial={{ width: 0 }}
+                  whileHover={{ width: "70%" }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+              </motion.a>
+            ))}
+          </div>
+
+          {/* ═══ Centered Logo ═══ */}
+          <a href="#hero" className="flex items-center gap-2.5 group relative lg:absolute lg:left-1/2 lg:-translate-x-1/2 z-10">
+            {/* Ambient glow behind logo */}
             <motion.div
-              className="absolute -inset-3 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-              style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.12), transparent 70%)" }}
+              className="absolute -inset-6 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+              style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.15), transparent 70%)" }}
             />
-            {/* Crown icon — hexagonal container */}
+            {/* Logo container — futuristic hexagonal */}
             <motion.div
-              className="relative w-10 h-10 rounded-[13px] flex items-center justify-center overflow-hidden"
+              className="relative w-11 h-11 rounded-2xl flex items-center justify-center overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, hsla(265,70%,55%,1), hsla(280,60%,48%,1), hsla(265,80%,45%,1))",
-                boxShadow: "0 0 24px hsla(265,70%,60%,0.35), inset 0 1px 1px rgba(255,255,255,0.25)",
+                background: "linear-gradient(135deg, hsla(265,75%,58%,1), hsla(280,65%,50%,1), hsla(300,50%,45%,1))",
+                boxShadow: "0 0 28px hsla(265,70%,60%,0.4), 0 0 8px hsla(265,70%,60%,0.2), inset 0 1px 2px rgba(255,255,255,0.3)",
               }}
-              whileHover={{ rotate: -8, scale: 1.12 }}
+              whileHover={{ rotate: -6, scale: 1.1 }}
               animate={{
                 boxShadow: [
-                  "0 0 16px hsla(265,70%,60%,0.2), inset 0 1px 1px rgba(255,255,255,0.2)",
-                  "0 0 32px hsla(265,70%,60%,0.5), inset 0 1px 1px rgba(255,255,255,0.35)",
-                  "0 0 16px hsla(265,70%,60%,0.2), inset 0 1px 1px rgba(255,255,255,0.2)",
+                  "0 0 20px hsla(265,70%,60%,0.25), inset 0 1px 1px rgba(255,255,255,0.2)",
+                  "0 0 40px hsla(265,70%,60%,0.55), inset 0 1px 2px rgba(255,255,255,0.4)",
+                  "0 0 20px hsla(265,70%,60%,0.25), inset 0 1px 1px rgba(255,255,255,0.2)",
                 ],
               }}
               transition={{ boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" } }}
             >
-              {/* Orbital ring */}
+              {/* Rotating orbital ring */}
               <motion.div
-                className="absolute inset-0 rounded-[13px] border border-white/[0.15]"
+                className="absolute inset-0 rounded-2xl"
+                style={{ border: "1px solid transparent", borderTopColor: "hsla(265,90%,80%,0.5)", borderRightColor: "hsla(300,60%,75%,0.2)" }}
                 animate={{ rotate: [0, 360] }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                style={{ borderTopColor: "hsla(265,90%,80%,0.5)", borderRightColor: "transparent" }}
+                transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
               />
-              {/* Scanning sweep */}
+              {/* Second counter-rotating ring */}
+              <motion.div
+                className="absolute inset-1 rounded-xl"
+                style={{ border: "1px solid transparent", borderBottomColor: "hsla(300,70%,80%,0.3)", borderLeftColor: "hsla(265,60%,70%,0.15)" }}
+                animate={{ rotate: [360, 0] }}
+                transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+              />
+              {/* Shimmer sweep */}
               <motion.div
                 className="absolute inset-0 pointer-events-none"
-                style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%)" }}
-                animate={{ x: ["-100%", "200%"] }}
-                transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }}
+                style={{ background: "linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)" }}
+                animate={{ x: ["-150%", "250%"] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
               />
-              {/* Inner glass border */}
-              <div className="absolute inset-px rounded-[12px] border border-white/10 pointer-events-none" />
-              {/* Crown with subtle 3D rotation */}
+              {/* Glass inner border */}
+              <div className="absolute inset-px rounded-[15px] border border-white/10 pointer-events-none" />
+              {/* Crown icon */}
               <motion.div
                 animate={{ rotateY: [0, 360] }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
               >
-                <Crown className="w-[19px] h-[19px] text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
+                <Crown className="w-5 h-5 text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.8)]" />
               </motion.div>
-              {/* Active dot indicator */}
-              <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_hsla(140,70%,50%,0.6)] z-10" />
+              {/* Status dot */}
+              <motion.div 
+                className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full z-10"
+                style={{ backgroundColor: "hsla(140,70%,50%,1)", boxShadow: "0 0 8px hsla(140,70%,50%,0.6)" }}
+                animate={{ scale: [1, 1.3, 1], opacity: [0.8, 1, 0.8] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
             </motion.div>
             {/* Brand text */}
             <div className="flex flex-col leading-none">
               <motion.span 
-                className="font-heading font-bold text-[0.85rem] tracking-[0.25em] uppercase text-foreground"
-                animate={{ opacity: [0.9, 1, 0.9] }}
+                className="font-heading font-bold text-[0.9rem] tracking-[0.3em] uppercase text-foreground"
+                animate={{ opacity: [0.85, 1, 0.85] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
                 EMPIRE
               </motion.span>
-              <span className="text-[0.55rem] tracking-[0.4em] uppercase font-semibold flex items-center gap-1"
+              <span className="text-[0.5rem] tracking-[0.45em] uppercase font-semibold"
                 style={{
                   background: "linear-gradient(90deg, hsla(265,70%,65%,1), hsla(300,50%,75%,1), hsla(265,70%,65%,1))",
                   backgroundSize: "200% 100%",
@@ -357,41 +415,52 @@ const LandingPage = () => {
             </div>
           </a>
 
-          {/* ═══ Desktop Nav ═══ */}
-          <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link, i) => (
+          {/* ═══ Right Nav Links + CTA (desktop) ═══ */}
+          <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-end">
+            {navLinks.slice(Math.ceil(navLinks.length / 2)).map((link, i) => (
               <motion.a key={link.href} href={link.href}
-                className="relative px-4 py-1.5 text-[0.72rem] font-medium text-foreground/40 hover:text-foreground transition-colors duration-300 tracking-wide group rounded-lg"
+                className="relative px-4 py-2 text-[0.7rem] font-medium text-foreground/40 hover:text-foreground transition-all duration-400 tracking-[0.15em] uppercase group rounded-lg"
                 whileHover={{ backgroundColor: "hsla(265,70%,60%,0.06)" }}
-                initial={{ opacity: 0, y: -8 }}
+                initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 + 0.3 }}
+                transition={{ delay: i * 0.08 + 0.4 }}
               >
                 {link.label}
                 <motion.span 
-                  className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px bg-primary/50 origin-center"
+                  className="absolute bottom-0.5 left-1/2 -translate-x-1/2 h-[2px] rounded-full origin-center"
+                  style={{ background: "linear-gradient(90deg, hsla(265,80%,65%,0.8), hsla(300,60%,70%,0.6))" }}
                   initial={{ width: 0 }}
-                  whileHover={{ width: "60%" }}
-                  transition={{ duration: 0.3 }}
+                  whileHover={{ width: "70%" }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                 />
               </motion.a>
             ))}
             <motion.button
               onClick={() => scrollTo("contact")}
-              className="ml-3 px-6 py-2 rounded-full text-primary-foreground text-[0.7rem] font-bold font-heading tracking-wider uppercase relative overflow-hidden"
-              style={{ background: "linear-gradient(135deg, hsla(265,70%,55%,1), hsla(280,60%,50%,1))" }}
-              whileHover={{ scale: 1.04, boxShadow: "0 8px 32px hsla(265,70%,60%,0.3)" }}
-              whileTap={{ scale: 0.97 }}
-              initial={{ opacity: 0, y: -8 }}
+              className="ml-4 px-7 py-2.5 rounded-full text-primary-foreground text-[0.68rem] font-bold font-heading tracking-[0.2em] uppercase relative overflow-hidden"
+              style={{ 
+                background: "linear-gradient(135deg, hsla(265,75%,58%,1), hsla(280,65%,50%,1))",
+                boxShadow: "0 4px 20px hsla(265,70%,60%,0.25)",
+              }}
+              whileHover={{ scale: 1.05, boxShadow: "0 8px 36px hsla(265,70%,60%,0.4)" }}
+              whileTap={{ scale: 0.96 }}
+              initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              {/* Button shimmer */}
+              {/* Animated shimmer */}
               <motion.div
                 className="absolute inset-0 pointer-events-none"
-                style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%)" }}
+                style={{ background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.25) 50%, transparent 65%)" }}
                 animate={{ x: ["-100%", "200%"] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+              />
+              {/* Pulsing border glow */}
+              <motion.div
+                className="absolute inset-0 rounded-full pointer-events-none"
+                style={{ border: "1px solid hsla(265,80%,75%,0.3)" }}
+                animate={{ opacity: [0.3, 0.7, 0.3] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />
               <span className="relative z-10">Inizia Ora</span>
             </motion.button>
@@ -418,14 +487,17 @@ const LandingPage = () => {
           {mobileMenuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="lg:hidden bg-background/90 backdrop-blur-2xl border-t border-primary/[0.08] overflow-hidden">
-              <div className="flex flex-col items-center gap-0.5 py-4 px-5">
+              className="lg:hidden overflow-hidden"
+              style={{ backgroundColor: "hsla(265,20%,6%,0.92)", backdropFilter: "blur(24px) saturate(1.4)" }}>
+              {/* Top accent line */}
+              <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, hsla(265,80%,65%,0.3), transparent)" }} />
+              <div className="flex flex-col items-center gap-0.5 py-5 px-5">
                 {navLinks.map((link, i) => (
                   <motion.a key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.06 }}
-                    className="w-full text-center py-3 text-xs font-medium text-foreground/50 hover:text-foreground hover:bg-primary/[0.04] rounded-xl transition-all font-heading tracking-widest uppercase">
+                    className="w-full text-center py-3 text-xs font-medium text-foreground/50 hover:text-foreground hover:bg-primary/[0.06] rounded-xl transition-all font-heading tracking-widest uppercase">
                     {link.label}
                   </motion.a>
                 ))}
@@ -435,7 +507,14 @@ const LandingPage = () => {
                   transition={{ delay: 0.3 }}
                   className="mt-3 w-full py-3 rounded-xl text-primary-foreground text-xs font-bold tracking-widest uppercase font-heading relative overflow-hidden"
                   style={{ background: "linear-gradient(135deg, hsla(265,70%,55%,1), hsla(280,60%,50%,1))" }}>
-                  Inizia Ora
+                  {/* Mobile shimmer */}
+                  <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.2) 50%, transparent 65%)" }}
+                    animate={{ x: ["-100%", "200%"] }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+                  />
+                  <span className="relative z-10">Inizia Ora</span>
                 </motion.button>
               </div>
             </motion.div>
