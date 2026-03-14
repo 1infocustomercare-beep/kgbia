@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import { type IndustryId } from "@/config/industry-config";
 import { LiveSitePreview } from "@/components/app/LiveSitePreview";
 import { SitePreviewOverlay } from "@/components/app/SitePreviewOverlay";
+import { AIInsightsWidget } from "@/components/app/AIInsightsWidget";
 
 /* ── Animation variants ─────────────────────────────────── */
 const containerVariants = {
