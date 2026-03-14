@@ -1679,9 +1679,9 @@ const LandingPage = () => {
               <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-primary/15 rounded-bl-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/15 rounded-br-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="flex items-center justify-between mb-4">
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-lg group-hover:shadow-primary/20 group-hover:scale-110 transition-all duration-500`}>
+                <PremiumIcon gradient={s.color} size="md" delay={i * 0.3}>
                   {s.icon}
-                </div>
+                </PremiumIcon>
                 <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[2px] font-heading">{s.tag}</span>
               </div>
               <h3 className="font-heading text-sm sm:text-base font-semibold text-foreground mb-2">{s.title}</h3>
