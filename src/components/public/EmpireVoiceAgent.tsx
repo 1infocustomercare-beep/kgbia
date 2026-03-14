@@ -541,14 +541,18 @@ const EmpireVoiceAgent: React.FC = () => {
             {/* Voice Wave Visualizer */}
             {isSpeaking && !isPaused && (
               <div className="flex items-center justify-center gap-[3px] py-2 px-4">
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="w-[3px] rounded-full bg-primary/50"
-                    animate={{ height: [4, 4 + Math.random() * 20, 4] }}
-                    transition={{ duration: 0.3 + Math.random() * 0.3, repeat: Infinity, delay: i * 0.03 }}
-                  />
-                ))}
+                {Array.from({ length: 20 }).map((_, i) => {
+                  const peak = 8 + ((i * 7) % 14);
+                  const speed = 0.6 + ((i % 4) * 0.12);
+                  return (
+                    <motion.div
+                      key={i}
+                      className="w-[3px] rounded-full bg-primary/50"
+                      animate={{ height: [4, peak, 4] }}
+                      transition={{ duration: speed, repeat: Infinity, delay: i * 0.03, ease: "easeInOut" }}
+                    />
+                  );
+                })}
               </div>
             )}
 
