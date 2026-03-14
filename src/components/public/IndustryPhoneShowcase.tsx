@@ -320,7 +320,7 @@ const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
   },
 };
 
-function getSectorStyle(id: IndustryId): SectorStyle {
+export function getSectorStyle(id: IndustryId): SectorStyle {
   const cfg = INDUSTRY_CONFIGS[id];
   const base = SECTOR_STYLES[id] || {};
   const defaults: SectorStyle = {
