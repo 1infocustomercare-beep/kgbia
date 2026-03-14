@@ -1783,7 +1783,7 @@ const LandingPage = () => {
                   </linearGradient>
                 </defs>
                 <motion.path
-                  d="M 0 80 C 200 10, 400 150, 600 80 C 800 10, 1000 150, 1200 80"
+                  d="M 0 120 C 200 30, 400 210, 600 120 C 800 30, 1000 210, 1200 120"
                   fill="none"
                   stroke="url(#lp-dna-a)"
                   strokeWidth="2"
@@ -1793,7 +1793,7 @@ const LandingPage = () => {
                   transition={{ duration: 1.2, ease: "easeOut" }}
                 />
                 <motion.path
-                  d="M 0 160 C 200 230, 400 90, 600 160 C 800 230, 1000 90, 1200 160"
+                  d="M 0 300 C 200 390, 400 210, 600 300 C 800 390, 1000 210, 1200 300"
                   fill="none"
                   stroke="url(#lp-dna-b)"
                   strokeWidth="2"
@@ -1802,9 +1802,47 @@ const LandingPage = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
                 />
+                {/* Extra helix strands for depth */}
+                <motion.path
+                  d="M 0 200 C 300 120, 600 320, 900 200 C 1000 150, 1100 250, 1200 200"
+                  fill="none"
+                  stroke="url(#lp-dna-a)"
+                  strokeWidth="1"
+                  strokeOpacity="0.4"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 0.4 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
+                />
+                <motion.path
+                  d="M 0 400 C 300 480, 600 320, 900 400 C 1000 450, 1100 350, 1200 400"
+                  fill="none"
+                  stroke="url(#lp-dna-b)"
+                  strokeWidth="1"
+                  strokeOpacity="0.3"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 0.3 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.5, delay: 0.4, ease: "easeOut" }}
+                />
+                {/* Cross-links between helixes */}
+                {[100, 250, 400, 550, 700, 850, 1000, 1150].map((x, ci) => (
+                  <motion.line
+                    key={`xlink-${ci}`}
+                    x1={x} y1={120 + Math.sin(x / 200 * Math.PI) * 90}
+                    x2={x} y2={300 + Math.sin(x / 200 * Math.PI + Math.PI) * 90}
+                    stroke="url(#lp-dna-a)"
+                    strokeWidth="0.5"
+                    strokeOpacity="0.2"
+                    initial={{ pathLength: 0 }}
+                    whileInView={{ pathLength: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.6 + ci * 0.08, duration: 0.4 }}
+                  />
+                ))}
               </svg>
             </div>
-            <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 hidden sm:block" style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--primary)/0.35), transparent)" }} />
+            <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2" style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--primary)/0.35), transparent)" }} />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
