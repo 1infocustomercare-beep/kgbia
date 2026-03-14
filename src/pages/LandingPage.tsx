@@ -537,6 +537,10 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
   const totalMonthly = planPrice + addonTotal;
   const savedPerYear = billingCycle === "annual" ? ((plan.price + paidAddonIds.reduce((s, id) => s + (AI_ADDONS.find(x => x.id === id)?.price || 0), 0)) * 12 * 0.2) : 0;
 
+  // Package mode: addon monthly cost on top of setup fee
+  const packageAddonMonthly = paidAddonIds.reduce((sum, id) => sum + Math.round((AI_ADDONS.find(x => x.id === id)?.price || 0) * 0.7), 0);
+  const packageTotalSetup = pkg.price;
+  const packageTotalMonthly = pkg.monthlyFee + packageAddonMonthly;
   const packageInstallment = installments ? Math.round(pkg.price / installments) : null;
 
   const toggleAddon = (id: string) => {
@@ -798,53 +802,139 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
               </AnimatePresence>
             </motion.div>
 
-            {/* Package Summary & CTA */}
+            {/* Package Summary & CTA — Dynamic Pricing */}
             <motion.div className="max-w-4xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <div className={`relative p-5 sm:p-7 rounded-2xl overflow-hidden border ${
                 pkg.id === "empire" ? "border-accent/25 bg-gradient-to-b from-accent/[0.06] via-background/60 to-background" : "border-primary/20 bg-gradient-to-b from-primary/[0.06] via-background/60 to-background"
               }`}>
                 <div className={`absolute top-0 left-0 right-0 h-[2px] ${pkg.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />
+                {/* Shimmer */}
+                <motion.div className="absolute inset-0 pointer-events-none"
+                  style={{ background: "linear-gradient(105deg, transparent 30%, hsla(38,55%,60%,0.04) 48%, transparent 65%)" }}
+                  animate={{ x: ["-100%", "250%"] }}
+                  transition={{ duration: 4, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }}
+                />
 
                 <div className="flex flex-col gap-5 relative z-10">
+                  {/* Header: Package name + price */}
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                     <div>
-                      <p className="text-[0.55rem] font-heading text-foreground/40 tracking-[3px] uppercase mb-1">Il Tuo Pacchetto</p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-[0.55rem] font-heading text-foreground/40 tracking-[3px] uppercase">Il Tuo Pacchetto</p>
+                        {selectedAddons.size > 0 && (
+                          <motion.span initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                            className="px-2 py-0.5 rounded-full text-[0.4rem] bg-primary/15 text-primary font-bold">
+                            PERSONALIZZATO
+                          </motion.span>
+                        )}
+                      </div>
+
+                      {/* Setup price */}
                       <div className="flex items-baseline gap-2">
-                        <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{pkg.price.toLocaleString("it-IT")}</span>
+                        <motion.span key={packageTotalSetup} initial={{ scale: 1.1, opacity: 0.5 }} animate={{ scale: 1, opacity: 1 }}
+                          className="text-3xl sm:text-4xl font-heading font-bold text-foreground">
+                          €{packageTotalSetup.toLocaleString("it-IT")}
+                        </motion.span>
                         <span className="text-sm text-foreground/20 line-through">€{pkg.originalPrice.toLocaleString("it-IT")}</span>
+                        <span className="text-[0.5rem] text-foreground/25">setup</span>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2 mt-2">
+
+                      {/* Monthly recurring — updates with addons */}
+                      {packageTotalMonthly > 0 && (
+                        <motion.div key={`monthly-${packageTotalMonthly}`} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
+                          className="mt-1.5 flex items-baseline gap-1.5">
+                          <span className="text-lg font-heading font-bold text-primary">
+                            +€{packageTotalMonthly}/mese
+                          </span>
+                          {packageAddonMonthly > 0 && (
+                            <span className="text-[0.5rem] text-foreground/25">
+                              (€{pkg.monthlyFee} canone + €{packageAddonMonthly} agenti)
+                            </span>
+                          )}
+                        </motion.div>
+                      )}
+                      {packageTotalMonthly === 0 && pkg.monthlyFee === 0 && (
+                        <p className="text-[0.6rem] text-accent font-bold mt-1.5">€0/mese — Zero costi ricorrenti!</p>
+                      )}
+
+                      {/* Tags */}
+                      <div className="flex flex-wrap items-center gap-1.5 mt-2">
                         <span className={`px-2 py-0.5 rounded-full text-[0.5rem] font-semibold ${pkg.id === "empire" ? "bg-accent/15 text-accent" : "bg-primary/10 text-primary"}`}>{pkg.name}</span>
-                        {pkg.monthlyFee === 0 && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">€0/mese incluso</span>}
-                        {pkg.commission === "0%" && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold animate-pulse">0% Commissioni per sempre</span>}
-                        {selectedAddons.size > 0 && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/10 text-accent font-semibold">+{selectedAddons.size} Agenti IA</span>}
+                        {pkg.commission === "0%" && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold animate-pulse">0% Commissioni</span>}
+                        {selectedAddons.size > 0 && (
+                          <motion.span initial={{ scale: 0.9 }} animate={{ scale: 1 }}
+                            className="px-2 py-0.5 rounded-full text-[0.5rem] bg-primary/10 text-primary font-semibold">
+                            +{selectedAddons.size} Agenti IA
+                            {paidAddonIds.length > 0 && ` (${sortedAddons.length - paidAddonIds.length} inclus${sortedAddons.length - paidAddonIds.length > 1 ? "i" : "o"})`}
+                          </motion.span>
+                        )}
                       </div>
-                      {pkg.monthlyFee > 0 && (
-                        <p className="text-[0.55rem] text-foreground/25 mt-2">poi €{pkg.monthlyFee}/mese + {pkg.commission} sulle transazioni · IVA esclusa</p>
-                      )}
-                      {pkg.monthlyFee === 0 && (
-                        <p className="text-[0.55rem] text-accent/60 mt-2 font-semibold">Nessun canone mensile · Nessuna commissione · IVA esclusa</p>
-                      )}
+
+                      {/* Commission info */}
+                      <p className="text-[0.5rem] text-foreground/25 mt-2">
+                        {pkg.commission} sulle transazioni · IVA esclusa
+                      </p>
                     </div>
 
+                    {/* CTA */}
                     <div className="flex flex-col gap-2 sm:items-end">
                       <motion.button onClick={() => navigate("/admin")}
-                        className={`px-8 py-3.5 rounded-full font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap ${
+                        className={`px-8 py-3.5 rounded-full font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap relative overflow-hidden ${
                           pkg.id === "empire"
                             ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black"
                             : "bg-vibrant-gradient text-primary-foreground"
                         }`}
                         whileHover={{ scale: 1.03, boxShadow: pkg.id === "empire" ? "0 15px 50px hsla(35,45%,50%,0.3)" : "0 15px 50px hsla(265,70%,60%,0.25)" }}
                         whileTap={{ scale: 0.97 }}>
-                        {pkg.id === "empire" ? "Attiva Empire — Domina Ora" : "Attiva Ora — Setup in 24h"}
+                        <motion.div className="absolute inset-0 pointer-events-none"
+                          style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)" }}
+                          animate={{ x: ["-200%", "300%"] }}
+                          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+                        />
+                        <span className="relative z-10">{pkg.id === "empire" ? "Attiva Empire — Domina Ora" : "Attiva Ora — Setup in 24h"}</span>
                       </motion.button>
                       <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Pagamento sicuro · Fattura deducibile · Assistenza 7/7</p>
                     </div>
                   </div>
 
-                  {/* Installment Options — expanded */}
+                  {/* Addon summary breakdown if addons selected */}
+                  <AnimatePresence>
+                    {selectedAddons.size > 0 && (
+                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden">
+                        <div className="pt-3 border-t border-border/10">
+                          <p className="text-[0.5rem] font-heading font-bold text-foreground/30 tracking-[2px] uppercase mb-2">Riepilogo Agenti IA</p>
+                          <div className="space-y-1">
+                            {sortedAddons.map((id, idx) => {
+                              const addon = AI_ADDONS.find(x => x.id === id);
+                              if (!addon) return null;
+                              const isFree = idx < pkg.includedAgents;
+                              return (
+                                <div key={id} className="flex items-center justify-between text-[0.55rem]">
+                                  <span className="text-foreground/40">{addon.name}</span>
+                                  {isFree ? (
+                                    <span className="text-accent font-bold">Incluso ✓</span>
+                                  ) : (
+                                    <span className="text-primary font-semibold">+€{Math.round(addon.price * 0.7)}/mese</span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {paidAddonIds.length > 0 && (
+                            <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/10 text-[0.6rem] font-bold">
+                              <span className="text-foreground/50">Totale agenti extra</span>
+                              <span className="text-primary">+€{packageAddonMonthly}/mese</span>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Installment Options */}
                   <div className="pt-3 border-t border-border/15">
-                    <p className="text-[0.6rem] font-heading font-bold text-foreground/50 tracking-[2px] uppercase mb-3">Scegli come pagare</p>
+                    <p className="text-[0.6rem] font-heading font-bold text-foreground/50 tracking-[2px] uppercase mb-3">Scegli come pagare il setup</p>
                     <div className="grid grid-cols-3 gap-2">
                       <button onClick={() => setInstallments(null)}
                         className={`relative p-3 rounded-xl text-center transition-all ${
@@ -880,12 +970,35 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         <p className="text-[0.45rem] text-accent/60 font-semibold mt-1">0% interessi</p>
                       </button>
                     </div>
+
+                    {/* Total cost summary */}
                     {installments && (
-                      <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
-                        className="text-[0.55rem] text-foreground/30 text-center mt-2">
-                        Pagherai {installments} rate da <strong className="text-foreground/60">€{Math.round(pkg.price / installments).toLocaleString("it-IT")}/mese</strong> · Addebito automatico · Nessun costo aggiuntivo
-                      </motion.p>
+                      <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
+                        className="mt-3 p-3 rounded-xl bg-foreground/[0.02] border border-border/10">
+                        <div className="flex items-center justify-between text-[0.6rem]">
+                          <span className="text-foreground/40">Setup ({installments} rate)</span>
+                          <span className="text-foreground/70 font-bold">€{Math.round(pkg.price / installments).toLocaleString("it-IT")}/mese</span>
+                        </div>
+                        {packageTotalMonthly > 0 && (
+                          <div className="flex items-center justify-between text-[0.6rem] mt-1">
+                            <span className="text-foreground/40">Canone + agenti</span>
+                            <span className="text-foreground/70 font-bold">€{packageTotalMonthly}/mese</span>
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between text-[0.7rem] mt-2 pt-2 border-t border-border/10">
+                          <span className="text-foreground/60 font-bold">Totale mensile per {installments} mesi</span>
+                          <motion.span key={`total-${Math.round(pkg.price / installments) + packageTotalMonthly}`}
+                            initial={{ scale: 1.1 }} animate={{ scale: 1 }}
+                            className={`font-heading font-bold ${pkg.id === "empire" ? "text-accent" : "text-primary"}`}>
+                            €{(Math.round(pkg.price / installments) + packageTotalMonthly).toLocaleString("it-IT")}/mese
+                          </motion.span>
+                        </div>
+                        <p className="text-[0.45rem] text-foreground/20 text-center mt-1.5">
+                          Addebito automatico · 0% interessi · Dopo le {installments} rate solo {packageTotalMonthly > 0 ? `€${packageTotalMonthly}/mese` : "€0/mese"}
+                        </p>
+                      </motion.div>
                     )}
+
                     {/* Empire push if not selected */}
                     {pkg.id !== "empire" && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
