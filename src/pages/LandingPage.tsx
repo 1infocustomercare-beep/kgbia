@@ -1147,9 +1147,11 @@ const LandingPage = () => {
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-3 items-start group"
                   initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                  <div className="w-5 h-5 min-w-[20px] rounded-full bg-primary/15 flex items-center justify-center mt-0.5">
+                  <motion.div className="w-5 h-5 min-w-[20px] rounded-full bg-primary/15 flex items-center justify-center mt-0.5 relative overflow-hidden"
+                    animate={{ boxShadow: ["0 0 0px hsla(265,70%,60%,0)", "0 0 12px hsla(265,70%,60%,0.3)", "0 0 0px hsla(265,70%,60%,0)"] }}
+                    transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}>
                     <Check className="w-3 h-3 text-primary" />
-                  </div>
+                  </motion.div>
                   <div>
                     <p className="text-xs sm:text-sm font-semibold text-foreground">{f.title}</p>
                     <p className="text-[0.65rem] text-foreground/35 mt-0.5">{f.desc}</p>
