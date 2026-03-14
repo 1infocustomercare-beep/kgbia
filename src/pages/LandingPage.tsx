@@ -2386,8 +2386,8 @@ const LandingPage = () => {
             {/* Subtitle */}
             <motion.p className="mt-5 sm:mt-6 text-sm sm:text-lg text-foreground/45 max-w-[560px] leading-[1.7] sm:leading-[1.8] font-light px-2 sm:px-0"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-              La piattaforma AI più completa al mondo.
-              <span className="text-foreground/60 font-normal"> 25+ settori, automazione totale, app white-label, zero commissioni predatorie.</span>
+              Un unico ecosistema AI che gestisce, automatizza e scala il tuo business —
+              <span className="text-foreground/60 font-normal"> dal primo cliente all'impero multi-sede. Nessun codice, nessuna commissione nascosta, solo risultati misurabili.</span>
             </motion.p>
 
             {/* ═══ Empire Agent Mascot — Neural DNA Nexus ═══ */}
