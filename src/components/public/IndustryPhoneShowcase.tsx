@@ -21,6 +21,8 @@ interface SectorStyleBase {
 interface SectorStyleExtended extends SectorStyleBase {
   analyticsTitle: string;
   analyticsBars: number[];
+  analyticsMetrics: { label: string; val: string; delta: string }[];
+  activityFeed: { icon: string; text: string; time: string; status: string }[];
   crmClients: { name: string; tag: string; spent: string }[];
   notifications: { icon: string; text: string; time: string }[];
   settingsToggles: { label: string; on: boolean }[];
