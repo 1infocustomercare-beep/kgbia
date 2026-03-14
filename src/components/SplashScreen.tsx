@@ -1,15 +1,115 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from "framer-motion";
 import { Crown } from "lucide-react";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
+/* ═══ Neural mesh background (like Tech DNA section) ═══ */
+const MESH_NODES = [
+  { id: "AI CORE", x: 50, y: 50, size: 14 },
+  { id: "CRM", x: 22, y: 28 },
+  { id: "ORDINI", x: 78, y: 25 },
+  { id: "ANALYTICS", x: 15, y: 65 },
+  { id: "PAGAMENTI", x: 82, y: 68 },
+  { id: "CATALOGO", x: 35, y: 82 },
+  { id: "BOOKING", x: 68, y: 85 },
+  { id: "STAFF", x: 28, y: 48 },
+  { id: "MARKETING", x: 74, y: 46 },
+];
+
+const CONNECTIONS = [
+  [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8],
+  [1, 7], [7, 3], [3, 5], [5, 6], [6, 4], [4, 8], [8, 2], [2, 1],
+];
+
+function NeuralMeshBg() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+        {/* Connection lines */}
+        {CONNECTIONS.map(([a, b], i) => (
+          <motion.line
+            key={`c${i}`}
+            x1={MESH_NODES[a].x} y1={MESH_NODES[a].y}
+            x2={MESH_NODES[b].x} y2={MESH_NODES[b].y}
+            stroke="hsla(265,85%,65%,0.08)"
+            strokeWidth="0.15"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.2, delay: 0.3 + i * 0.06, ease: "easeOut" }}
+          />
+        ))}
+        {/* Data pulses along connections */}
+        {CONNECTIONS.map(([a, b], i) => {
+          const na = MESH_NODES[a], nb = MESH_NODES[b];
+          return (
+            <motion.circle
+              key={`p${i}`}
+              r="0.3"
+              fill="hsla(265,85%,70%,0.6)"
+              initial={{ cx: na.x, cy: na.y, opacity: 0 }}
+              animate={{
+                cx: [na.x, nb.x, na.x],
+                cy: [na.y, nb.y, na.y],
+                opacity: [0, 0.8, 0],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: 1 + i * 0.25,
+                ease: "easeInOut",
+              }}
+            />
+          );
+        })}
+        {/* Nodes */}
+        {MESH_NODES.map((node, i) => (
+          <g key={node.id}>
+            {/* Glow */}
+            <motion.circle
+              cx={node.x} cy={node.y} r={node.size ? 3 : 1.8}
+              fill="hsla(265,85%,65%,0.06)"
+              initial={{ scale: 0 }}
+              animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 3, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
+            />
+            {/* Dot */}
+            <motion.circle
+              cx={node.x} cy={node.y} r={node.size ? 1.2 : 0.6}
+              fill={i === 0 ? "hsla(265,85%,65%,0.5)" : "hsla(265,85%,65%,0.2)"}
+              stroke="hsla(265,85%,65%,0.15)"
+              strokeWidth="0.1"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 + i * 0.08, ease: smoothEase }}
+            />
+            {/* Label */}
+            <motion.text
+              x={node.x} y={node.y + (node.size ? 3.5 : 2.5)}
+              textAnchor="middle"
+              fill="hsla(265,85%,65%,0.15)"
+              fontSize="1.1"
+              fontFamily="monospace"
+              letterSpacing="0.15"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 + i * 0.1 }}
+            >
+              {node.id}
+            </motion.text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
 const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [phase, setPhase] = useState<"build" | "exit">("build");
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("exit"), 2200);
-    const t2 = setTimeout(onComplete, 2800);
+    const t1 = setTimeout(() => setPhase("exit"), 2400);
+    const t2 = setTimeout(onComplete, 3000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [onComplete]);
 
@@ -17,32 +117,29 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
     <motion.div
       className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
       style={{ backgroundColor: "hsl(260, 20%, 4%)" }}
-      animate={phase === "exit" ? { opacity: 0, scale: 1.1 } : { opacity: 1, scale: 1 }}
+      animate={phase === "exit" ? { opacity: 0, scale: 1.08 } : { opacity: 1, scale: 1 }}
       transition={{ duration: 0.7, ease: smoothEase }}
     >
+      {/* ═══ Neural Mesh Background ═══ */}
+      <NeuralMeshBg />
+
       {/* Deep space ambient layers */}
       <motion.div
         className="absolute rounded-full blur-[140px]"
-        style={{ width: 500, height: 500, background: "radial-gradient(circle, hsla(265,85%,65%,0.15), hsla(280,80%,60%,0.05), transparent)" }}
-        animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0.7, 0.3], rotate: [0, 180, 360] }}
+        style={{ width: 500, height: 500, background: "radial-gradient(circle, hsla(265,85%,65%,0.12), hsla(280,80%,60%,0.04), transparent)" }}
+        animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0.6, 0.3], rotate: [0, 180, 360] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         className="absolute rounded-full blur-[100px]"
-        style={{ width: 350, height: 350, left: "65%", top: "25%", background: "radial-gradient(circle, hsla(265,85%,65%,0.1), transparent)" }}
-        animate={{ scale: [1.2, 1, 1.2], opacity: [0.15, 0.4, 0.15] }}
+        style={{ width: 300, height: 300, left: "65%", top: "25%", background: "radial-gradient(circle, hsla(265,85%,65%,0.08), transparent)" }}
+        animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.3, 0.1] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute rounded-full blur-[120px]"
-        style={{ width: 280, height: 280, right: "60%", bottom: "20%", background: "radial-gradient(circle, hsla(280,80%,60%,0.08), transparent)" }}
-        animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.3, 0.1] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       />
 
       {/* Perspective grid floor */}
       <div
-        className="absolute inset-0 opacity-[0.025]"
+        className="absolute inset-0 opacity-[0.02]"
         style={{
           backgroundImage: "linear-gradient(hsla(265,85%,65%,0.5) 1px, transparent 1px), linear-gradient(90deg, hsla(265,85%,65%,0.5) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
@@ -55,14 +152,14 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, hsla(265,85%,65%,0.015) 3px, hsla(265,85%,65%,0.015) 4px)",
+          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, hsla(265,85%,65%,0.01) 3px, hsla(265,85%,65%,0.01) 4px)",
         }}
         animate={{ y: [0, 4, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
       />
 
       {/* Vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsla(260,20%,4%,0.9)_75%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsla(260,20%,4%,0.85)_75%)]" />
 
       {/* Orbital rings */}
       <motion.div
@@ -77,7 +174,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
       />
       <motion.div
         className="absolute w-[380px] h-[380px] sm:w-[500px] sm:h-[500px] rounded-full pointer-events-none"
-        style={{ border: "1px dashed hsla(265,85%,65%,0.04)" }}
+        style={{ border: "1px dashed hsla(265,85%,65%,0.03)" }}
         animate={{ rotate: 360 }}
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
       />
@@ -209,7 +306,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
             style={{ background: "linear-gradient(90deg, hsl(265,85%,65%), hsl(280,80%,60%), hsl(265,85%,65%))" }}
             initial={{ width: "0%" }}
             animate={{ width: "100%" }}
-            transition={{ duration: 1.8, delay: 1.1, ease: smoothEase }}
+            transition={{ duration: 2, delay: 1.1, ease: smoothEase }}
           />
         </motion.div>
 
@@ -233,11 +330,29 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
           ))}
         </motion.div>
 
+        {/* Neural mesh status bar */}
+        <motion.div
+          className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/[0.08] bg-primary/[0.03] backdrop-blur-sm"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.8, duration: 0.6 }}
+        >
+          <motion.div
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ background: "hsla(140,70%,50%,0.8)" }}
+            animate={{ opacity: [0.5, 1, 0.5], boxShadow: ["0 0 4px hsla(140,70%,50%,0.3)", "0 0 8px hsla(140,70%,50%,0.6)", "0 0 4px hsla(140,70%,50%,0.3)"] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <span className="text-[0.4rem] sm:text-[0.45rem] tracking-[0.3em] uppercase text-foreground/20 font-mono">
+            NEURAL MESH v4.2 — NODES: 9 — STATUS: OPTIMAL
+          </span>
+        </motion.div>
+
         {/* Scanner ring */}
         <motion.div
           className="absolute -inset-24 sm:-inset-28 rounded-full pointer-events-none"
           style={{
-            background: "conic-gradient(from 0deg, transparent 0%, hsla(265,85%,65%,0.08) 8%, transparent 16%)",
+            background: "conic-gradient(from 0deg, transparent 0%, hsla(265,85%,65%,0.06) 8%, transparent 16%)",
           }}
           animate={{ rotate: 360 }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
