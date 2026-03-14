@@ -121,8 +121,9 @@ export function AIAgentsShowcase() {
     <section ref={sectionRef} className="relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden">
       {/* ── DNA Helix Background ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-[800px] h-[800px] rounded-full blur-[300px] opacity-[0.06] bg-primary top-0 left-1/2 -translate-x-1/2" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.04] bg-accent bottom-0 right-0" />
+        <div className="absolute w-[800px] h-[800px] rounded-full blur-[250px] opacity-[0.12] bg-primary top-0 left-1/2 -translate-x-1/2" />
+        <div className="absolute w-[500px] h-[500px] rounded-full blur-[180px] opacity-[0.09] bg-accent bottom-0 right-0" />
+        <div className="absolute w-[300px] h-[600px] rounded-full blur-[200px] opacity-[0.07] bg-primary/80 top-1/3 left-0" />
         
         {/* DNA Double Helix SVG */}
         <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1200 2400">
