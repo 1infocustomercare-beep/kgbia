@@ -170,14 +170,14 @@ export function AIAgentsShowcase() {
             transition={{ duration: 2.5, delay: 0.2, ease: "easeInOut" }}
           />
           {/* Rungs */}
-          {Array.from({ length: 14 }, (_, i) => (
+          {Array.from({ length: 18 }, (_, i) => (
             <motion.line
               key={`rung-${i}`}
-              x1="120" y1={140 + i * 160} x2="1080" y2={140 + i * 160}
-              stroke="url(#dna-rung)" strokeWidth="0.6" strokeDasharray="3 10"
+              x1="100" y1={100 + i * 130} x2="1100" y2={100 + i * 130}
+              stroke="url(#dna-rung)" strokeWidth="1" strokeDasharray="4 8"
               initial={{ opacity: 0, scaleX: 0 }}
               animate={isInView ? { opacity: 1, scaleX: 1 } : {}}
-              transition={{ delay: 0.6 + i * 0.1, duration: 0.5 }}
+              transition={{ delay: 0.6 + i * 0.08, duration: 0.5 }}
               style={{ transformOrigin: "center" }}
             />
           ))}
