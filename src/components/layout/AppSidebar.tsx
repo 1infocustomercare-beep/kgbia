@@ -126,12 +126,14 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
   construction: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Cantieri", icon: "Wrench", url: "/app/interventions" },
+    { title: "Timeline", icon: "Calendar", url: "/app/project-timeline" },
     { title: "Committenti", icon: "Users", url: "/app/clients" },
     { title: "Materiali", icon: "Package", url: "/app/inventory" },
   ],
   gardening: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Lavori", icon: "Leaf", url: "/app/interventions" },
+    { title: "Dispatch", icon: "MapPin", url: "/app/field-dispatch" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
     { title: "Materiali", icon: "Package", url: "/app/inventory" },
   ],
