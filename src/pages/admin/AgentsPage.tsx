@@ -490,6 +490,7 @@ export default function AgentsPage() {
   const [searchAccount, setSearchAccount] = useState("");
   const [testPrompt, setTestPrompt] = useState("");
   const [testResult, setTestResult] = useState("");
+  const [expandedAlert, setExpandedAlert] = useState<string | null>(null);
   const [testLoading, setTestLoading] = useState(false);
 
   // Edit states
