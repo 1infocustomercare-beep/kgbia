@@ -99,8 +99,8 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
           description="Storico completo delle tue vendite, commissioni e payout. Collega il tuo account Stripe Connect per ricevere i pagamenti."
           steps={[
             "Collega Stripe Connect per attivare i pagamenti",
-            "Ogni vendita completata genera €997 di commissione",
-            "I payout vengono elaborati automaticamente",
+            "Ogni vendita genera €997 di commissione (qualsiasi pacchetto)",
+            "3 pacchetti: Digital Start €1.997 · Growth AI €4.997 · Empire €7.997",
           ]}
         />
       </div>
