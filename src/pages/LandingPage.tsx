@@ -2570,18 +2570,152 @@ const LandingPage = () => {
                 transition={{ duration: 3, repeat: Infinity, ease: "easeOut", delay: 1.5 }}
               />
 
-              {/* Floating mascot image — centered precisely */}
-              <motion.img
-                src={empireAgentMascot}
-                alt="Empire AI Agent — Sistema SaaS Agentico"
-                className="absolute inset-0 z-10 w-[70%] h-[70%] m-auto object-contain drop-shadow-[0_0_50px_hsla(265,70%,60%,0.5)]"
-                animate={{
-                  y: [0, -8, 0],
-                  rotateZ: [-1, 1, -1],
-                  scale: [1, 1.03, 1],
-                }}
+              {/* Interactive DNA Neural Core — futuristic AI agent */}
+              <motion.div
+                className="absolute inset-0 z-10 w-[75%] h-[75%] m-auto"
+                animate={{ y: [0, -6, 0], scale: [1, 1.02, 1] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              />
+              >
+                <svg viewBox="0 0 200 200" className="w-full h-full" style={{ filter: "drop-shadow(0 0 40px hsla(265,70%,60%,0.4))" }}>
+                  <defs>
+                    <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor="hsla(265,85%,70%,0.4)" />
+                      <stop offset="50%" stopColor="hsla(265,70%,50%,0.15)" />
+                      <stop offset="100%" stopColor="transparent" />
+                    </radialGradient>
+                    <radialGradient id="core-center" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor="hsla(265,90%,75%,0.9)" />
+                      <stop offset="60%" stopColor="hsla(265,80%,55%,0.6)" />
+                      <stop offset="100%" stopColor="hsla(265,70%,40%,0.2)" />
+                    </radialGradient>
+                    <filter id="dna-blur">
+                      <feGaussianBlur stdDeviation="1.5" />
+                    </filter>
+                    <filter id="node-glow-f">
+                      <feGaussianBlur stdDeviation="2" />
+                    </filter>
+                  </defs>
+
+                  {/* Ambient glow */}
+                  <circle cx="100" cy="100" r="80" fill="url(#core-glow)">
+                    <animate attributeName="r" values="75;85;75" dur="4s" repeatCount="indefinite" />
+                  </circle>
+
+                  {/* DNA Double Helix — rotating strands */}
+                  {Array.from({ length: 20 }).map((_, i) => {
+                    const t = i / 20;
+                    const y = 30 + t * 140;
+                    const x1 = 100 + Math.sin(t * Math.PI * 4) * 28;
+                    const x2 = 100 - Math.sin(t * Math.PI * 4) * 28;
+                    const opacity1 = 0.3 + Math.cos(t * Math.PI * 4) * 0.3;
+                    const opacity2 = 0.3 - Math.cos(t * Math.PI * 4) * 0.3;
+                    return (
+                      <g key={`dna-${i}`}>
+                        {/* Strand 1 node */}
+                        <circle cx={x1} cy={y} r="2.5" fill={`hsla(265,85%,70%,${opacity1})`}>
+                          <animate attributeName="cx" values={`${x1};${100 + Math.sin((t + 0.05) * Math.PI * 4) * 28};${x1}`} dur="8s" repeatCount="indefinite" />
+                          <animate attributeName="r" values="2.5;3.2;2.5" dur={`${3 + i * 0.2}s`} repeatCount="indefinite" />
+                        </circle>
+                        {/* Strand 2 node */}
+                        <circle cx={x2} cy={y} r="2.5" fill={`hsla(38,55%,60%,${opacity2})`}>
+                          <animate attributeName="cx" values={`${x2};${100 - Math.sin((t + 0.05) * Math.PI * 4) * 28};${x2}`} dur="8s" repeatCount="indefinite" />
+                          <animate attributeName="r" values="2.5;3;2.5" dur={`${3.5 + i * 0.15}s`} repeatCount="indefinite" />
+                        </circle>
+                        {/* Bridge between strands */}
+                        {i % 2 === 0 && (
+                          <line x1={x1} y1={y} x2={x2} y2={y}
+                            stroke="hsla(265,60%,60%,0.12)" strokeWidth="0.8" strokeDasharray="2 2">
+                            <animate attributeName="stroke-opacity" values="0.08;0.2;0.08" dur={`${4 + i * 0.3}s`} repeatCount="indefinite" />
+                          </line>
+                        )}
+                      </g>
+                    );
+                  })}
+
+                  {/* Central neural core — hexagonal */}
+                  <polygon
+                    points="100,72 124,86 124,114 100,128 76,114 76,86"
+                    fill="hsla(260,20%,10%,0.7)"
+                    stroke="hsla(265,70%,60%,0.35)"
+                    strokeWidth="1"
+                  >
+                    <animate attributeName="stroke-opacity" values="0.25;0.5;0.25" dur="3s" repeatCount="indefinite" />
+                  </polygon>
+
+                  {/* Inner hexagon glow */}
+                  <polygon
+                    points="100,80 116,89 116,111 100,120 84,111 84,89"
+                    fill="url(#core-center)"
+                    stroke="hsla(38,50%,55%,0.25)"
+                    strokeWidth="0.5"
+                  />
+
+                  {/* Crown / AI symbol in center */}
+                  <g transform="translate(100,100)">
+                    {/* Circuit lines radiating from center */}
+                    {[0, 60, 120, 180, 240, 300].map((angle, i) => {
+                      const rad = (angle * Math.PI) / 180;
+                      const x2 = Math.cos(rad) * 18;
+                      const y2 = Math.sin(rad) * 18;
+                      return (
+                        <line key={`circuit-${i}`} x1="0" y1="0" x2={x2} y2={y2}
+                          stroke={i % 2 === 0 ? "hsla(265,80%,70%,0.4)" : "hsla(38,55%,60%,0.35)"}
+                          strokeWidth="0.6">
+                          <animate attributeName="stroke-opacity" values="0.2;0.6;0.2" dur={`${2 + i * 0.4}s`} repeatCount="indefinite" />
+                        </line>
+                      );
+                    })}
+                    {/* Core dot */}
+                    <circle r="5" fill="hsla(265,85%,70%,0.9)">
+                      <animate attributeName="r" values="4;6;4" dur="3s" repeatCount="indefinite" />
+                    </circle>
+                    <circle r="3" fill="hsla(38,55%,65%,0.8)">
+                      <animate attributeName="r" values="2.5;3.5;2.5" dur="2.5s" repeatCount="indefinite" />
+                    </circle>
+                  </g>
+
+                  {/* Orbiting data particles */}
+                  {[0, 1, 2, 3, 4, 5].map(i => (
+                    <circle key={`particle-${i}`} r="1.5"
+                      fill={i % 2 === 0 ? "hsla(265,90%,75%,0.8)" : "hsla(38,60%,65%,0.8)"}>
+                      <animateMotion dur={`${5 + i * 1.2}s`} repeatCount="indefinite" begin={`${i * 0.8}s`}>
+                        <mpath xlinkHref={`#cell-orbit-${i % 3}`} />
+                      </animateMotion>
+                    </circle>
+                  ))}
+
+                  {/* Orbit paths */}
+                  <path id="cell-orbit-0" d="M 100 55 A 45 45 0 1 1 99.99 55" fill="none" stroke="none" />
+                  <path id="cell-orbit-1" d="M 100 65 A 35 35 0 1 1 99.99 65" fill="none" stroke="none" />
+                  <path id="cell-orbit-2" d="M 100 75 A 25 25 0 1 1 99.99 75" fill="none" stroke="none" />
+
+                  {/* Cell membrane rings */}
+                  <circle cx="100" cy="100" r="60" fill="none" stroke="hsla(265,60%,60%,0.1)" strokeWidth="0.5" strokeDasharray="4 6">
+                    <animateTransform attributeName="transform" type="rotate" values="0 100 100;360 100 100" dur="30s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="100" cy="100" r="75" fill="none" stroke="hsla(38,50%,55%,0.08)" strokeWidth="0.4" strokeDasharray="3 8">
+                    <animateTransform attributeName="transform" type="rotate" values="360 100 100;0 100 100" dur="40s" repeatCount="indefinite" />
+                  </circle>
+
+                  {/* Neural synapses — connecting to edges */}
+                  {Array.from({ length: 8 }).map((_, i) => {
+                    const angle = (i / 8) * Math.PI * 2;
+                    const outerX = 100 + Math.cos(angle) * 90;
+                    const outerY = 100 + Math.sin(angle) * 90;
+                    const cpX = 100 + Math.cos(angle + 0.3) * 50;
+                    const cpY = 100 + Math.sin(angle + 0.3) * 50;
+                    return (
+                      <path key={`synapse-${i}`}
+                        d={`M ${outerX} ${outerY} Q ${cpX} ${cpY} 100 100`}
+                        fill="none"
+                        stroke={i % 2 === 0 ? "hsla(265,60%,60%,0.1)" : "hsla(38,50%,55%,0.08)"}
+                        strokeWidth="0.5">
+                        <animate attributeName="stroke-opacity" values="0.05;0.18;0.05" dur={`${3.5 + i * 0.5}s`} repeatCount="indefinite" />
+                      </path>
+                    );
+                  })}
+                </svg>
+              </motion.div>
             </motion.div>
 
             {/* CTA */}
