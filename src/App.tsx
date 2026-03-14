@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import SplashScreen from "@/components/SplashScreen";
+import DNATransition from "@/components/DNATransition";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -96,16 +97,23 @@ const PageLoader = () => (
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [showDNA, setShowDNA] = useState(false);
 
   // Safety timeout: force dismiss after 2s no matter what
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 2000);
+    const timer = setTimeout(() => { setShowSplash(false); setShowDNA(true); }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+    setShowDNA(true);
+  };
+
   return (
   <QueryClientProvider client={queryClient}>
-    {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+    {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+    {showDNA && <DNATransition onComplete={() => setShowDNA(false)} />}
     <TooltipProvider>
       <AuthProvider>
         <CartProvider>
