@@ -15,7 +15,7 @@ import { applyBrandTheme, resetBrandTheme, extractDominantColor, hslToHex, DEFAU
 import type { MenuItem } from "@/types/restaurant";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import cartoonStudioMenu from "@/assets/cartoon-studio-menu.png";
+import cartoonStudioMenu from "@/assets/cartoon-studio-menu-v2.png";
 
 type StudioSection = "menu" | "ai" | "foodphoto" | "translate" | "preview";
 
