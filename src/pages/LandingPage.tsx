@@ -366,7 +366,7 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
-      <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 ${navScrolled ? "py-1" : "py-3"}`}>
+      <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 pt-[env(safe-area-inset-top)] ${navScrolled ? "pb-1" : "pb-2"}`}>
         {/* Glassmorphism background */}
         <motion.div 
           className="absolute inset-0"
@@ -395,7 +395,7 @@ const LandingPage = () => {
           />
         )}
 
-        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
+        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 flex items-center justify-between h-11 sm:h-14">
           
           {/* ═══ Left Nav Links (desktop) ═══ */}
           <div className="hidden lg:flex items-center gap-0.5 flex-1">
@@ -613,7 +613,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           HERO
          ═══════════════════════════════════════════ */}
-      <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-24 sm:pt-28 pb-12 sm:pb-16"
+      <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-20 sm:pt-28 pb-12 sm:pb-16"
         style={{ opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Video background with cinematic overlay ═══ */}
