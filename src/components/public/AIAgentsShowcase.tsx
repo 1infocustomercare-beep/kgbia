@@ -164,7 +164,7 @@ export function AIAgentsShowcase() {
           {/* Right helix strand */}
           <motion.path
             d={`M 1050 0 ${Array.from({ length: 20 }, (_, i) => `Q ${1050 - Math.sin(i * 0.55) * 140} ${i * 120 + 60}, ${1050 - Math.sin((i + 1) * 0.55) * 140} ${(i + 1) * 120}`).join(' ')}`}
-            fill="none" stroke="url(#dna-s2)" strokeWidth="2"
+            fill="none" stroke="url(#dna-s2)" strokeWidth="2.5" filter="url(#dna-glow)"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={isInView ? { pathLength: 1, opacity: 1 } : {}}
             transition={{ duration: 2.5, delay: 0.2, ease: "easeInOut" }}
