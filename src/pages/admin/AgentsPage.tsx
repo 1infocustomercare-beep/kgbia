@@ -411,20 +411,52 @@ function generateMockData() {
   return { dailyData, topAccounts, recentLogs, alerts };
 }
 
-// ─── Agent Avatar with cartoon image ───
+// ─── Agent Avatar — Futuristic holographic style ───
 function AgentAvatar({ agent, size = 48 }: { agent: AgentDef; size?: number }) {
   const imgSrc = AGENT_IMAGES[agent.name] || agent.image;
+  const ringSize = size + 10;
   return (
-    <div
-      className="relative rounded-2xl flex items-center justify-center shrink-0 overflow-hidden"
-      style={{
-        width: size, height: size,
-        background: `linear-gradient(135deg, ${agent.color}15, ${agent.color}30)`,
-        border: `2px solid ${agent.color}44`,
-      }}
-    >
-      <img src={imgSrc} alt={agent.displayName} className="w-full h-full object-cover" />
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
+    <div className="relative shrink-0" style={{ width: ringSize, height: ringSize }}>
+      {/* Outer glow ring */}
+      <motion.div
+        className="absolute inset-0 rounded-2xl"
+        style={{
+          background: `conic-gradient(from 0deg, ${agent.color}00, ${agent.color}55, ${agent.color}00, ${agent.color}33, ${agent.color}00)`,
+          filter: `blur(2px)`,
+        }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+      />
+      {/* Ambient glow */}
+      <div
+        className="absolute inset-1 rounded-[14px] blur-md opacity-40"
+        style={{ background: agent.color }}
+      />
+      {/* Image container */}
+      <div
+        className="absolute inset-[5px] rounded-xl overflow-hidden"
+        style={{
+          background: `linear-gradient(145deg, ${agent.color}20, hsl(var(--card)))`,
+          border: `1.5px solid ${agent.color}55`,
+          boxShadow: `0 0 20px ${agent.color}22, inset 0 1px 0 rgba(255,255,255,0.08)`,
+        }}
+      >
+        <img src={imgSrc} alt={agent.displayName} className="w-full h-full object-cover" />
+        {/* Scanning beam overlay */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: `linear-gradient(180deg, transparent 35%, ${agent.color}18 50%, transparent 65%)` }}
+          animate={{ y: ["-100%", "200%"] }}
+          transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
+        />
+        {/* Top edge light */}
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${agent.color}66, transparent)` }} />
+        {/* Inner ring */}
+        <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10" />
+      </div>
+      {/* Corner HUD accents */}
+      <div className="absolute top-[3px] right-[3px] w-2 h-2 border-t border-r rounded-tr-md" style={{ borderColor: `${agent.color}55` }} />
+      <div className="absolute bottom-[3px] left-[3px] w-2 h-2 border-b border-l rounded-bl-md" style={{ borderColor: `${agent.color}55` }} />
     </div>
   );
 }
