@@ -54,7 +54,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/7579341/7579341-uhd_2560_1440_25fps.mp4";
 const GALLERY = [
