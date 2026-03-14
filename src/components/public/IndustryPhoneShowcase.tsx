@@ -8,7 +8,7 @@ import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
    Each sector gets unique gradients, layouts, KPIs and visual identity
    ═══════════════════════════════════════════ */
 
-interface SectorStyle {
+interface SectorStyleBase {
   heroGradient: string;
   cardBg: string;
   chartColors: string[];
@@ -18,7 +18,18 @@ interface SectorStyle {
   serviceIcon: string;
 }
 
-const SECTOR_STYLES: Partial<Record<IndustryId, SectorStyle>> = {
+interface SectorStyleExtended extends SectorStyleBase {
+  analyticsTitle: string;
+  analyticsBars: number[];
+  crmClients: { name: string; tag: string; spent: string }[];
+  notifications: { icon: string; text: string; time: string }[];
+  settingsToggles: { label: string; on: boolean }[];
+}
+
+// Alias for internal use — always the full type
+type SectorStyle = SectorStyleExtended;
+
+const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
   food: {
     heroGradient: "linear-gradient(135deg, #e85d0422, #ff6b3510)",
     cardBg: "#e85d0412",
@@ -27,6 +38,27 @@ const SECTOR_STYLES: Partial<Record<IndustryId, SectorStyle>> = {
     bookingFields: ["Nome", "Telefono", "Data", "Ospiti"],
     heroSubtext: "Cucina d'autore",
     serviceIcon: "🍝",
+    analyticsTitle: "Vendite Piatti",
+    analyticsBars: [45, 72, 38, 90, 55, 82, 60, 95, 48, 70, 65, 88],
+    crmClients: [
+      { name: "Marco R.", tag: "VIP", spent: "€1.8K" },
+      { name: "Sofia L.", tag: "Habitué", spent: "€920" },
+      { name: "Luca P.", tag: "Nuovo", spent: "€85" },
+      { name: "Elena V.", tag: "Premium", spent: "€2.4K" },
+    ],
+    notifications: [
+      { icon: "🍕", text: "Ordine tavolo 5 pronto", time: "1m" },
+      { icon: "⭐", text: "Recensione 5★ su Google", time: "12m" },
+      { icon: "📦", text: "Scorte pomodori basse", time: "45m" },
+      { icon: "💰", text: "Incasso giornaliero €1.2K", time: "2h" },
+    ],
+    settingsToggles: [
+      { label: "Menu QR attivo", on: true },
+      { label: "Ordini online", on: true },
+      { label: "Notifiche cucina", on: true },
+      { label: "Upselling AI", on: false },
+      { label: "Fidelity card", on: true },
+    ],
   },
   ncc: {
     heroGradient: "linear-gradient(135deg, #C9A84C22, #8B6F2E10)",
@@ -36,6 +68,27 @@ const SECTOR_STYLES: Partial<Record<IndustryId, SectorStyle>> = {
     bookingFields: ["Partenza", "Arrivo", "Data", "Pax"],
     heroSubtext: "Luxury Transfer",
     serviceIcon: "🚘",
+    analyticsTitle: "Revenue Tratte",
+    analyticsBars: [60, 85, 45, 92, 70, 88, 55, 95, 78, 82, 68, 90],
+    crmClients: [
+      { name: "Hotel Excelsior", tag: "Corporate", spent: "€12K" },
+      { name: "James W.", tag: "VIP", spent: "€4.2K" },
+      { name: "Concierge Roma", tag: "Partner", spent: "€8.5K" },
+      { name: "Villa Rufolo", tag: "Premium", spent: "€6.8K" },
+    ],
+    notifications: [
+      { icon: "🚗", text: "Transfer NAP→Amalfi confermato", time: "3m" },
+      { icon: "✈️", text: "Volo cliente atterrato", time: "20m" },
+      { icon: "📋", text: "Revisione Mercedes scade", time: "2g" },
+      { icon: "⭐", text: "Review 5★ TripAdvisor", time: "1h" },
+    ],
+    settingsToggles: [
+      { label: "Booking online", on: true },
+      { label: "GPS tracking", on: true },
+      { label: "Pricing dinamico", on: true },
+      { label: "Alert scadenze", on: true },
+      { label: "Cross-selling", on: false },
+    ],
   },
   beauty: {
     heroGradient: "linear-gradient(135deg, #e91e8c22, #ff69b410)",
@@ -45,6 +98,27 @@ const SECTOR_STYLES: Partial<Record<IndustryId, SectorStyle>> = {
     bookingFields: ["Nome", "Servizio", "Data", "Ora"],
     heroSubtext: "Beauty & Wellness",
     serviceIcon: "💅",
+    analyticsTitle: "Performance Servizi",
+    analyticsBars: [35, 68, 52, 85, 40, 78, 62, 90, 45, 72, 58, 82],
+    crmClients: [
+      { name: "Giulia M.", tag: "Fedele", spent: "€1.4K" },
+      { name: "Valentina R.", tag: "VIP", spent: "€3.2K" },
+      { name: "Chiara S.", tag: "Nuova", spent: "€120" },
+      { name: "Francesca D.", tag: "Premium", spent: "€2.8K" },
+    ],
+    notifications: [
+      { icon: "💇", text: "Appuntamento tra 30min", time: "ora" },
+      { icon: "⭐", text: "Recensione 5★ ricevuta", time: "25m" },
+      { icon: "🎁", text: "Compleanno cliente domani", time: "1h" },
+      { icon: "📊", text: "Report settimanale pronto", time: "3h" },
+    ],
+    settingsToggles: [
+      { label: "Prenotazioni online", on: true },
+      { label: "Reminder WhatsApp", on: true },
+      { label: "Loyalty points", on: true },
+      { label: "Marketing SMS", on: false },
+      { label: "Galleria lavori", on: true },
+    ],
   },
   healthcare: {
     heroGradient: "linear-gradient(135deg, #0d9e7122, #14b8a610)",
@@ -248,7 +322,8 @@ const SECTOR_STYLES: Partial<Record<IndustryId, SectorStyle>> = {
 
 function getSectorStyle(id: IndustryId): SectorStyle {
   const cfg = INDUSTRY_CONFIGS[id];
-  return SECTOR_STYLES[id] || {
+  const base = SECTOR_STYLES[id] || {};
+  const defaults: SectorStyle = {
     heroGradient: `linear-gradient(135deg, ${cfg.defaultPrimaryColor}22, ${cfg.defaultPrimaryColor}10)`,
     cardBg: `${cfg.defaultPrimaryColor}12`,
     chartColors: [cfg.defaultPrimaryColor, cfg.defaultPrimaryColor, cfg.defaultPrimaryColor],
@@ -256,7 +331,29 @@ function getSectorStyle(id: IndustryId): SectorStyle {
     bookingFields: ["Nome", "Telefono", "Data", "Ora"],
     heroSubtext: cfg.label,
     serviceIcon: cfg.emoji,
+    analyticsTitle: "Analytics",
+    analyticsBars: [30, 55, 42, 78, 62, 90, 48, 72, 85, 40, 65, 58],
+    crmClients: [
+      { name: "Marco R.", tag: "VIP", spent: "€1.2K" },
+      { name: "Laura B.", tag: "Nuovo", spent: "€340" },
+      { name: "Giuseppe F.", tag: "Fedele", spent: "€890" },
+      { name: "Anna M.", tag: "Premium", spent: "€2.1K" },
+    ],
+    notifications: [
+      { icon: "🔔", text: "Nuovo ordine ricevuto", time: "2m" },
+      { icon: "⭐", text: "Recensione 5 stelle", time: "15m" },
+      { icon: "💳", text: "Pagamento confermato", time: "32m" },
+      { icon: "📅", text: "Prenotazione domani", time: "1h" },
+    ],
+    settingsToggles: [
+      { label: "Prenotazioni online", on: true },
+      { label: "Notifiche push", on: true },
+      { label: "Pagamenti online", on: true },
+      { label: "Chat clienti", on: false },
+      { label: "Marketing AI", on: true },
+    ],
   };
+  return { ...defaults, ...base };
 }
 
 /* ═══════════════════════════════════════════
@@ -469,7 +566,177 @@ function IPhoneFrame({
               </div>
             )}
 
-            {/* Screen ambient glow */}
+            {/* ═══ ANALYTICS SCREEN ═══ */}
+            {screen.type === "analytics" && (
+              <div className="h-full p-2.5">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                  <p className="text-[8px] font-bold text-white/80 tracking-wide">{sectorStyle.analyticsTitle}</p>
+                </div>
+                {/* Revenue line chart */}
+                <div className="h-12 rounded-lg p-1.5 mb-1.5 relative overflow-hidden" style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}10` }}>
+                  <svg viewBox="0 0 120 40" className="w-full h-full">
+                    <defs>
+                      <linearGradient id={`ag-${index}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+                        <stop offset="100%" stopColor={color} stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path d={`M0,35 ${sectorStyle.analyticsBars.map((v, i) => `L${i * 11},${40 - v * 0.4}`).join(" ")} L120,35 Z`} fill={`url(#ag-${index})`} />
+                    <path d={`M0,35 ${sectorStyle.analyticsBars.map((v, i) => `L${i * 11},${40 - v * 0.4}`).join(" ")}`} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+                {/* Metric pills */}
+                <div className="grid grid-cols-2 gap-1 mb-1.5">
+                  {[
+                    { label: "Conversione", val: "12.4%", delta: "+2.1%" },
+                    { label: "Clienti attivi", val: "234", delta: "+18" },
+                    { label: "Ticket medio", val: "€47", delta: "+€5" },
+                    { label: "Retention", val: "89%", delta: "+3%" },
+                  ].map((m, i) => (
+                    <div key={i} className="p-1 rounded-md" style={{ backgroundColor: `${color}08`, border: `0.5px solid ${color}10` }}>
+                      <p className="text-[4px] text-white/25 uppercase tracking-wider">{m.label}</p>
+                      <div className="flex items-baseline gap-1">
+                        <p className="text-[8px] font-bold" style={{ color }}>{m.val}</p>
+                        <p className="text-[5px] text-emerald-400">{m.delta}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {/* Mini bar chart */}
+                <div className="h-6 rounded-md flex items-end gap-[1.5px] p-1" style={{ backgroundColor: `${color}04` }}>
+                  {sectorStyle.analyticsBars.map((h, i) => (
+                    <motion.div key={i} className="flex-1 rounded-t-sm"
+                      style={{ backgroundColor: `${sectorStyle.chartColors[i % sectorStyle.chartColors.length]}88` }}
+                      initial={{ height: 0 }}
+                      whileInView={{ height: `${h}%` }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.3 + i * 0.03, duration: 0.3 }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ═══ CRM / CLIENTS SCREEN ═══ */}
+            {screen.type === "crm" && (
+              <div className="h-full p-2.5">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <p className="text-[8px] font-bold text-white/80">CRM Clienti</p>
+                  </div>
+                  <div className="px-1.5 py-0.5 rounded-full text-[5px] font-bold" style={{ backgroundColor: `${color}20`, color }}>
+                    {sectorStyle.crmClients.length} attivi
+                  </div>
+                </div>
+                {/* Search bar */}
+                <div className="h-[16px] rounded-lg border px-2 flex items-center mb-1.5"
+                  style={{ backgroundColor: `${color}04`, borderColor: `${color}12` }}>
+                  <span className="text-[5px] text-white/20">🔍 Cerca cliente...</span>
+                </div>
+                {/* Client list */}
+                <div className="space-y-1">
+                  {sectorStyle.crmClients.map((c, i) => (
+                    <motion.div key={i} className="flex items-center gap-1.5 p-1.5 rounded-lg"
+                      style={{ backgroundColor: sectorStyle.cardBg, border: `0.5px solid ${color}12` }}
+                      initial={{ opacity: 0, x: -8 }} whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.08 }}>
+                      {/* Avatar */}
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center text-[6px] font-bold text-white"
+                        style={{ background: `linear-gradient(135deg, ${sectorStyle.chartColors[i % sectorStyle.chartColors.length]}, ${color})` }}>
+                        {c.name[0]}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[6px] font-semibold text-white/80 truncate">{c.name}</p>
+                        <div className="flex gap-1 items-center">
+                          <span className="px-1 py-[0.5px] rounded text-[4px] font-bold" style={{ backgroundColor: `${color}15`, color: `${color}CC` }}>{c.tag}</span>
+                          <span className="text-[4px] text-white/25">Speso: {c.spent}</span>
+                        </div>
+                      </div>
+                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: `${color}60` }} />
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ═══ NOTIFICATIONS SCREEN ═══ */}
+            {screen.type === "notifications" && (
+              <div className="h-full p-2.5">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <p className="text-[8px] font-bold text-white/80">Notifiche</p>
+                  </div>
+                  <motion.div className="w-4 h-4 rounded-full flex items-center justify-center text-[6px] font-bold text-white"
+                    style={{ backgroundColor: color }}
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}>
+                    {sectorStyle.notifications.length}
+                  </motion.div>
+                </div>
+                <div className="space-y-1">
+                  {sectorStyle.notifications.map((n, i) => (
+                    <motion.div key={i} className="flex items-start gap-1.5 p-1.5 rounded-lg relative"
+                      style={{ backgroundColor: i === 0 ? `${color}12` : `${color}06`, border: `0.5px solid ${i === 0 ? `${color}25` : `${color}08`}` }}
+                      initial={{ opacity: 0, y: 5 }} whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }} transition={{ delay: 0.15 + i * 0.1 }}>
+                      <span className="text-[8px]">{n.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[6px] font-semibold text-white/80">{n.text}</p>
+                        <p className="text-[4px] text-white/25 mt-0.5">{n.time} fa</p>
+                      </div>
+                      {i === 0 && <div className="w-1 h-1 rounded-full mt-0.5" style={{ backgroundColor: color }} />}
+                    </motion.div>
+                  ))}
+                </div>
+                {/* Quick action */}
+                <div className="mt-2 flex gap-1">
+                  {["Leggi tutto", "Impostazioni"].map((a, i) => (
+                    <div key={i} className="flex-1 py-1 rounded-md text-center text-[5px] font-bold"
+                      style={i === 0 ? { backgroundColor: color, color: "#fff" } : { backgroundColor: `${color}10`, color: `${color}90` }}>
+                      {a}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ═══ SETTINGS SCREEN ═══ */}
+            {screen.type === "settings" && (
+              <div className="h-full p-2.5">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                  <p className="text-[8px] font-bold text-white/80">Impostazioni</p>
+                </div>
+                {/* Profile mini */}
+                <div className="flex items-center gap-2 p-1.5 rounded-lg mb-2" style={{ backgroundColor: `${color}08`, border: `0.5px solid ${color}12` }}>
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-sm"
+                    style={{ background: `linear-gradient(135deg, ${color}, ${sectorStyle.chartColors[1] || color})` }}>
+                    {sectorStyle.serviceIcon}
+                  </div>
+                  <div>
+                    <p className="text-[7px] font-bold text-white/80">Il Mio Business</p>
+                    <p className="text-[5px] text-white/30">Piano Premium · Attivo</p>
+                  </div>
+                </div>
+                {/* Toggle list */}
+                <div className="space-y-1">
+                  {sectorStyle.settingsToggles.map((t, i) => (
+                    <div key={i} className="flex items-center justify-between p-1.5 rounded-md"
+                      style={{ backgroundColor: `${color}04`, border: `0.5px solid ${color}08` }}>
+                      <span className="text-[6px] text-white/60">{t.label}</span>
+                      <div className="w-5 h-3 rounded-full relative"
+                        style={{ backgroundColor: t.on ? color : "rgba(255,255,255,0.1)" }}>
+                        <motion.div className="absolute top-[1.5px] w-[9px] h-[9px] rounded-full bg-white shadow-sm"
+                          style={{ left: t.on ? 9 : 1.5 }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="absolute inset-0 pointer-events-none"
               style={{ background: `radial-gradient(circle at 50% 30%, ${color}08 0%, transparent 60%)` }} />
           </div>
@@ -502,6 +769,10 @@ const SCREENS = [
   { label: "Catalogo", type: "services" },
   { label: "Prenota", type: "booking" },
   { label: "Dashboard", type: "dashboard" },
+  { label: "Analytics", type: "analytics" },
+  { label: "Clienti", type: "crm" },
+  { label: "Notifiche", type: "notifications" },
+  { label: "Settings", type: "settings" },
 ];
 
 export default function IndustryPhoneShowcase({ industryId, className = "", compact = false }: IndustryPhoneShowcaseProps) {
@@ -534,21 +805,24 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
 
   return (
     <div className={`${className}`}>
-      {/* Desktop: flex row */}
-      <div className={`hidden sm:flex items-end justify-center gap-2 sm:gap-4 ${compact ? "scale-[0.8] origin-center" : ""}`}
-        style={{ perspective: "1000px" }}>
-        {SCREENS.map((screen, i) => (
-          <IPhoneFrame
-            key={screen.type}
-            screen={screen}
-            color={color}
-            emoji={cfg.emoji}
-            companyName={demo.companyName}
-            services={demo.services}
-            index={i}
-            sectorStyle={sectorStyle}
-          />
-        ))}
+      {/* Desktop: horizontal scroll with 8 phones */}
+      <div className={`hidden sm:block relative ${compact ? "scale-[0.85] origin-center" : ""}`}>
+        <div className="overflow-x-auto pb-3 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
+          <div className="flex items-end gap-3 min-w-max justify-center px-2" style={{ perspective: "1000px" }}>
+            {SCREENS.map((screen, i) => (
+              <IPhoneFrame
+                key={screen.type}
+                screen={screen}
+                color={color}
+                emoji={cfg.emoji}
+                companyName={demo.companyName}
+                services={demo.services}
+                index={i}
+                sectorStyle={sectorStyle}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Mobile: horizontal scroll carousel */}
