@@ -2243,24 +2243,6 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-         ═══════════════════════════════════════════ */}
-      <Section>
-        <div className="text-center mb-8">
-          <SectionLabel text="Opportunità" icon={<Play className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Scopri l'Opportunità <span className="text-shimmer">Partner Empire</span>
-          </motion.h2>
-        </div>
-        <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
-          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-          transition={{ duration: 0.6 }}>
-          <img src={heroPartnerLuxury} alt="Empire Partner Program" className="w-full aspect-video object-cover rounded-2xl" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
-        </motion.div>
-      </Section>
-
-      {/* ═══════════════════════════════════════════
           PARTNER PROGRAM
          ═══════════════════════════════════════════ */}
       <Section id="partner">
