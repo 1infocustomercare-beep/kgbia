@@ -42,6 +42,7 @@ import cartoonHealthcare from "@/assets/cartoon-sector-healthcare.png";
 import cartoonRetail from "@/assets/cartoon-sector-retail.png";
 import cartoonFitness from "@/assets/cartoon-sector-fitness.png";
 import cartoonHotel from "@/assets/cartoon-sector-hotel.png";
+import empireAgentMascot from "@/assets/empire-agent-mascot.png";
 
 /* ═══════════════════════════════════════════
    HELPERS
