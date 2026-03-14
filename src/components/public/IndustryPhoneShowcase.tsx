@@ -1345,17 +1345,14 @@ export function IPhoneFrame({
                 </div>
                 {/* Activity feed with status badges */}
                 <div className="mt-1.5 space-y-0.5">
-                  {[
-                    { t: "Nuovo ordine", status: "new" },
-                    { t: "Pagamento €47", status: "ok" },
-                    { t: "Review 5★", status: "star" },
-                  ].map((item, i) => (
+                  {sectorStyle.activityFeed.map((item, i) => (
                     <motion.div key={i} className="flex items-center gap-1 px-1 py-0.5 rounded text-[5px]"
                       style={{ backgroundColor: `${color}06` }}
                       initial={{ opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.6 + i * 0.08 }}>
                       <div className="w-1 h-1 rounded-full" style={{ backgroundColor: item.status === "ok" ? "#22c55e" : item.status === "star" ? "#fbbf24" : color }} />
-                      <span className="text-white/40 flex-1">{item.t}</span>
-                      <span className="text-[3px] text-white/20">{i + 1}m</span>
+                      <span className="text-[8px] mr-0.5">{item.icon}</span>
+                      <span className="text-white/40 flex-1 truncate">{item.text}</span>
+                      <span className="text-[3px] text-white/20">{item.time}</span>
                     </motion.div>
                   ))}
                 </div>
