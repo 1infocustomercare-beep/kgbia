@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Brain, RefreshCw, TrendingUp, DollarSign, Zap, Activity,
@@ -6,13 +6,13 @@ import {
   Settings, Play, Download, FileSpreadsheet, AlertTriangle,
   XCircle, Info, ChevronRight, Clock, Hash, Search, Filter,
   ArrowUpRight, ArrowDownRight, Medal, ChevronDown, X, Send,
-  ToggleLeft, ToggleRight, Check, Loader2, Sparkles
+  ToggleLeft, ToggleRight, Check, Loader2, Sparkles, Mic, Volume2, Phone, MessageSquare
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
   ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Legend, AreaChart, Area
@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-// ─── Agent Definitions (discovered from codebase) ───
+// ─── Agent Definitions (all agents in the platform) ───
 interface AgentDef {
   name: string;
   displayName: string;
@@ -41,6 +41,8 @@ interface AgentDef {
   inputDesc: string;
   outputDesc: string;
   costPerCall: number;
+  testable: boolean;
+  testType: "chat" | "voice" | "custom";
 }
 
 const AGENTS: AgentDef[] = [
@@ -58,6 +60,59 @@ const AGENTS: AgentDef[] = [
     inputDesc: "Messaggi chat + contesto ristorante (menu, ordini, prenotazioni, clienti, tavoli)",
     outputDesc: "Risposta streaming in italiano con dati reali dell'azienda",
     costPerCall: 0.003,
+    testable: true,
+    testType: "chat",
+  },
+  {
+    name: "empire-voice-agent",
+    displayName: "ATLAS — Voice Agent Pubblico",
+    description: "Assistente vocale IA per il sito pubblico Empire. Risponde a domande su funzionalità, pricing, settori supportati e guida i prospect verso la registrazione.",
+    icon: "Mic",
+    color: "#8B5CF6",
+    model: "Gemini 2.5 Flash",
+    modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "supabase/functions/empire-voice-agent/index.ts",
+    trigger: "On-demand (voice chat landing page)",
+    industries: ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality"],
+    inputDesc: "Messaggi vocali/testo da prospect sul sito pubblico",
+    outputDesc: "Risposta testuale + TTS audio via empire-tts",
+    costPerCall: 0.004,
+    testable: true,
+    testType: "chat",
+  },
+  {
+    name: "restaurant-voice-agent",
+    displayName: "Concierge Food — Ordini Vocali",
+    description: "Assistente IA per ristoranti: prende ordini vocali/chat, conosce il menu completo con prezzi, suggerisce piatti e aggiunge automaticamente al carrello del cliente.",
+    icon: "Phone",
+    color: "#10B981",
+    model: "Gemini 2.5 Flash",
+    modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "supabase/functions/restaurant-voice-agent/index.ts",
+    trigger: "On-demand (chat/voce cliente ristorante)",
+    industries: ["food"],
+    inputDesc: "Messaggi cliente + menu completo del ristorante (nome, prezzo, categoria, descrizione)",
+    outputDesc: "Risposta + blocco ```order``` JSON per aggiunta automatica al carrello",
+    costPerCall: 0.004,
+    testable: true,
+    testType: "chat",
+  },
+  {
+    name: "empire-tts",
+    displayName: "Empire TTS — Text-to-Speech",
+    description: "Servizio di sintesi vocale per tutti gli agenti vocali. Converte testo in audio naturale italiano con voce professionale femminile.",
+    icon: "Volume2",
+    color: "#EC4899",
+    model: "Google TTS API",
+    modelBadgeColor: "bg-pink-500/20 text-pink-400",
+    file: "supabase/functions/empire-tts/index.ts",
+    trigger: "Automatico (chiamato da voice agents)",
+    industries: ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality"],
+    inputDesc: "Testo da convertire in audio",
+    outputDesc: "Audio MP3/WAV stream",
+    costPerCall: 0.001,
+    testable: false,
+    testType: "custom",
   },
   {
     name: "ai-menu-ocr",
@@ -73,6 +128,8 @@ const AGENTS: AgentDef[] = [
     inputDesc: "Immagine base64 di un menu cartaceo",
     outputDesc: "JSON array di piatti con nome, descrizione, prezzo, categoria",
     costPerCall: 0.005,
+    testable: false,
+    testType: "custom",
   },
   {
     name: "ai-menu-image",
@@ -88,6 +145,8 @@ const AGENTS: AgentDef[] = [
     inputDesc: "Descrizione piatto + categoria per styling fotografico adattivo",
     outputDesc: "URL immagine generata (upload su Storage)",
     costPerCall: 0.008,
+    testable: false,
+    testType: "custom",
   },
   {
     name: "ai-translate",
@@ -103,6 +162,8 @@ const AGENTS: AgentDef[] = [
     inputDesc: "Array menu items (max 50) + lingue target (en, de, fr, es, zh, ja, ar, ru, pt, ko)",
     outputDesc: "JSON array di traduzioni per ogni piatto nelle lingue richieste",
     costPerCall: 0.004,
+    testable: false,
+    testType: "custom",
   },
   {
     name: "ai-inventory",
@@ -118,11 +179,13 @@ const AGENTS: AgentDef[] = [
     inputDesc: "Restaurant ID + ultimi 50 ordini + menu attivo (nome, categoria, prezzo)",
     outputDesc: "Alert scorte con urgenza, suggerimento Piatto del Giorno, insights testuali",
     costPerCall: 0.003,
+    testable: false,
+    testType: "custom",
   },
 ];
 
 const ICON_MAP: Record<string, any> = {
-  Brain, ScanLine, Camera, Globe, Package, Star, Sparkles
+  Brain, ScanLine, Camera, Globe, Package, Star, Sparkles, Mic, Volume2, Phone, MessageSquare
 };
 
 const INDUSTRY_LABELS: Record<string, string> = {
@@ -130,7 +193,7 @@ const INDUSTRY_LABELS: Record<string, string> = {
   retail: "🛍 Retail", fitness: "💪 Fitness", hospitality: "🏨 Hotel",
 };
 
-const PIE_COLORS = ["#C8963E", "#F97316", "#EF4444", "#3B82F6", "#8B5CF6", "#10B981", "#EC4899"];
+const PIE_COLORS = ["#C8963E", "#8B5CF6", "#10B981", "#EC4899", "#F97316", "#EF4444", "#3B82F6", "#6366F1"];
 
 // ─── Mock data generator ───
 function generateMockData() {
@@ -147,6 +210,9 @@ function generateMockData() {
     return {
       day: day.slice(5),
       "empire-assistant": Math.floor(base * (0.8 + Math.random() * 0.4)),
+      "empire-voice-agent": Math.floor(8 + Math.random() * 12),
+      "restaurant-voice-agent": Math.floor(15 + Math.random() * 25),
+      "empire-tts": Math.floor(20 + Math.random() * 30),
       "ai-menu-ocr": Math.floor(5 + Math.random() * 8),
       "ai-menu-image": Math.floor(10 + Math.random() * 15),
       "ai-translate": Math.floor(3 + Math.random() * 6),
@@ -236,6 +302,7 @@ function StatusBadge({ status }: { status: "active" | "standby" | "error" | "dis
 export default function AgentsPage() {
   const { user, roles, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [selectedAgent, setSelectedAgent] = useState<AgentDef | null>(null);
   const [chartMode, setChartMode] = useState<"calls" | "cost">("calls");
   const [searchAccount, setSearchAccount] = useState("");
@@ -243,10 +310,17 @@ export default function AgentsPage() {
   const [testResult, setTestResult] = useState("");
   const [testLoading, setTestLoading] = useState(false);
 
+  // Editable config state for the sheet
+  const [editEnabled, setEditEnabled] = useState(true);
+  const [editMaxCalls, setEditMaxCalls] = useState(100);
+  const [editMaxBudget, setEditMaxBudget] = useState(20);
+  const [editIndustries, setEditIndustries] = useState<string[]>([]);
+  const [editPromptOverride, setEditPromptOverride] = useState("");
+
   const mock = useMemo(() => generateMockData(), []);
 
-  // Query real agent configs
-  const { data: agentConfigs } = useQuery({
+  // Query real agent configs from DB
+  const { data: agentConfigs, isLoading: configsLoading } = useQuery({
     queryKey: ["ai-agent-configs"],
     queryFn: async () => {
       const { data } = await supabase.from("ai_agent_configs").select("*");
@@ -267,7 +341,136 @@ export default function AgentsPage() {
     },
   });
 
-  // Redirect if not super_admin (wait for auth to load first)
+  // Upsert agent config mutation
+  const upsertConfig = useMutation({
+    mutationFn: async (config: {
+      agent_name: string;
+      is_enabled: boolean;
+      max_calls_per_hour: number;
+      max_monthly_budget_usd: number;
+      allowed_industries: string[];
+      system_prompt_override: string | null;
+      display_name: string;
+      description: string;
+      icon: string;
+      color: string;
+    }) => {
+      // Check if exists
+      const { data: existing } = await supabase
+        .from("ai_agent_configs")
+        .select("id")
+        .eq("agent_name", config.agent_name)
+        .maybeSingle();
+
+      if (existing) {
+        const { error } = await supabase
+          .from("ai_agent_configs")
+          .update({
+            is_enabled: config.is_enabled,
+            max_calls_per_hour: config.max_calls_per_hour,
+            max_monthly_budget_usd: config.max_monthly_budget_usd,
+            allowed_industries: config.allowed_industries,
+            system_prompt_override: config.system_prompt_override,
+            display_name: config.display_name,
+            description: config.description,
+            icon: config.icon,
+            color: config.color,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", existing.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("ai_agent_configs")
+          .insert({
+            agent_name: config.agent_name,
+            is_enabled: config.is_enabled,
+            max_calls_per_hour: config.max_calls_per_hour,
+            max_monthly_budget_usd: config.max_monthly_budget_usd,
+            allowed_industries: config.allowed_industries,
+            system_prompt_override: config.system_prompt_override,
+            display_name: config.display_name,
+            description: config.description,
+            icon: config.icon,
+            color: config.color,
+          });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ai-agent-configs"] });
+      toast({ title: "✅ Configurazione salvata" });
+    },
+    onError: (e: any) => {
+      toast({ title: "❌ Errore", description: e.message, variant: "destructive" });
+    },
+  });
+
+  // Quick toggle mutation
+  const toggleAgent = useMutation({
+    mutationFn: async ({ agent_name, is_enabled }: { agent_name: string; is_enabled: boolean }) => {
+      const { data: existing } = await supabase
+        .from("ai_agent_configs")
+        .select("id")
+        .eq("agent_name", agent_name)
+        .maybeSingle();
+
+      if (existing) {
+        const { error } = await supabase
+          .from("ai_agent_configs")
+          .update({ is_enabled, updated_at: new Date().toISOString() })
+          .eq("id", existing.id);
+        if (error) throw error;
+      } else {
+        const agentDef = AGENTS.find(a => a.name === agent_name)!;
+        const { error } = await supabase
+          .from("ai_agent_configs")
+          .insert({
+            agent_name,
+            is_enabled,
+            display_name: agentDef.displayName,
+            description: agentDef.description,
+            icon: agentDef.icon,
+            color: agentDef.color,
+            allowed_industries: agentDef.industries,
+          });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ai-agent-configs"] });
+      toast({ title: "✅ Stato agente aggiornato" });
+    },
+    onError: (e: any) => {
+      toast({ title: "❌ Errore", description: e.message, variant: "destructive" });
+    },
+  });
+
+  // Get config for a specific agent
+  const getAgentConfig = useCallback((agentName: string) => {
+    return agentConfigs?.find((c: any) => c.agent_name === agentName);
+  }, [agentConfigs]);
+
+  const isAgentEnabled = useCallback((agentName: string) => {
+    const config = getAgentConfig(agentName);
+    return config ? config.is_enabled !== false : true; // default enabled
+  }, [getAgentConfig]);
+
+  // When selecting an agent, populate edit fields
+  useEffect(() => {
+    if (selectedAgent) {
+      const config = getAgentConfig(selectedAgent.name);
+      setEditEnabled(config ? config.is_enabled !== false : true);
+      setEditMaxCalls(config?.max_calls_per_hour ?? 100);
+      setEditMaxBudget(config?.max_monthly_budget_usd ?? 20);
+      setEditIndustries(config?.allowed_industries ?? selectedAgent.industries);
+      setEditPromptOverride(config?.system_prompt_override ?? "");
+      setTestPrompt("");
+      setTestResult("");
+    }
+  }, [selectedAgent, getAgentConfig]);
+
+  // Redirect if not super_admin
   useEffect(() => {
     if (!authLoading && !roles.includes("super_admin")) {
       navigate("/app");
@@ -282,20 +485,19 @@ export default function AgentsPage() {
     );
   }
 
-  // KPI calculations from mock
+  // KPI calculations
+  const activeCount = AGENTS.filter(a => isAgentEnabled(a.name)).length;
+  const disabledCount = AGENTS.length - activeCount;
   const totalCallsMonth = mock.dailyData.reduce((s, d) =>
-    s + d["empire-assistant"] + d["ai-menu-ocr"] + d["ai-menu-image"] + d["ai-translate"] + d["ai-inventory"], 0
+    s + AGENTS.reduce((ss, a) => ss + ((d as any)[a.name] || 0), 0), 0
   );
   const totalCostMonth = mock.topAccounts.reduce((s, a) => s + a.cost, 0);
   const topAccount = mock.topAccounts[0];
-  const callsToday = todayLogs || mock.dailyData[mock.dailyData.length - 1]
-    ? Object.values(mock.dailyData[mock.dailyData.length - 1]).reduce((s: number, v) => typeof v === "number" ? s + v : s, 0)
-    : 0;
+  const callsToday = todayLogs || Object.values(mock.dailyData[mock.dailyData.length - 1]).reduce((s: number, v) => typeof v === "number" ? s + v : s, 0);
   const successRate = mock.recentLogs.filter(l => l.status === "success").length / mock.recentLogs.length * 100;
 
-  // Pie chart data
   const pieData = AGENTS.map((a, i) => ({
-    name: a.displayName,
+    name: a.displayName.split(" — ")[0],
     value: mock.dailyData.reduce((s, d) => s + ((d as any)[a.name] || 0), 0),
     color: PIE_COLORS[i % PIE_COLORS.length],
   }));
@@ -305,6 +507,76 @@ export default function AgentsPage() {
   );
 
   const unresolvedAlerts = mock.alerts.filter(a => !a.isRead);
+
+  const handleSaveConfig = () => {
+    if (!selectedAgent) return;
+    upsertConfig.mutate({
+      agent_name: selectedAgent.name,
+      is_enabled: editEnabled,
+      max_calls_per_hour: editMaxCalls,
+      max_monthly_budget_usd: editMaxBudget,
+      allowed_industries: editIndustries,
+      system_prompt_override: editPromptOverride || null,
+      display_name: selectedAgent.displayName,
+      description: selectedAgent.description,
+      icon: selectedAgent.icon,
+      color: selectedAgent.color,
+    });
+  };
+
+  const handleTest = async () => {
+    if (!selectedAgent || !testPrompt.trim()) return;
+    setTestLoading(true);
+    setTestResult("");
+    try {
+      const functionName = selectedAgent.name === "ai-menu-ocr" || selectedAgent.name === "ai-menu-image"
+        ? "ai-menu" : selectedAgent.name;
+
+      if (selectedAgent.testType === "chat") {
+        const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${functionName}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ messages: [{ role: "user", content: testPrompt }] }),
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${await resp.text()}`);
+
+        const contentType = resp.headers.get("content-type") || "";
+        if (contentType.includes("text/event-stream")) {
+          const reader = resp.body?.getReader();
+          const decoder = new TextDecoder();
+          let result = "";
+          if (reader) {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              const chunk = decoder.decode(value, { stream: true });
+              for (const line of chunk.split("\n")) {
+                if (!line.startsWith("data: ") || line.includes("[DONE]")) continue;
+                try {
+                  const parsed = JSON.parse(line.slice(6));
+                  const c = parsed.choices?.[0]?.delta?.content;
+                  if (c) { result += c; setTestResult(result); }
+                } catch {}
+              }
+            }
+          }
+          if (!result) setTestResult("(Risposta vuota)");
+        } else {
+          const json = await resp.json();
+          setTestResult(JSON.stringify(json, null, 2));
+        }
+      } else {
+        setTestResult("⚠ Questo agente richiede input specifici (immagini, audio, ecc.) e non può essere testato con un prompt di testo semplice.");
+      }
+    } catch (e: any) {
+      setTestResult(`❌ Errore: ${e.message}`);
+    } finally {
+      setTestLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -316,61 +588,35 @@ export default function AgentsPage() {
               <Brain className="w-6 h-6 text-primary" />
               Intelligence Hub — Agenti IA
             </h1>
-            <p className="text-sm text-muted-foreground mt-0.5">Tutti gli agenti attivi sulla piattaforma Empire</p>
+            <p className="text-sm text-muted-foreground mt-0.5">Gestisci, testa e monitora tutti gli agenti IA della piattaforma</p>
           </div>
           <div className="flex items-center gap-2">
             <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 animate-pulse">
-              {AGENTS.length} agenti attivi
+              {activeCount} attivi
             </Badge>
-            <Button variant="outline" size="sm" className="gap-1" onClick={() => window.location.reload()}>
+            {disabledCount > 0 && (
+              <Badge variant="outline" className="text-muted-foreground">
+                {disabledCount} disabilitati
+              </Badge>
+            )}
+            <Button variant="outline" size="sm" className="gap-1" onClick={() => {
+              queryClient.invalidateQueries({ queryKey: ["ai-agent-configs"] });
+              queryClient.invalidateQueries({ queryKey: ["ai-usage-today"] });
+            }}>
               <RefreshCw className="w-3.5 h-3.5" /> Aggiorna
-            </Button>
-            <Button variant="outline" size="sm" className="gap-1" onClick={() => window.print()}>
-              <Download className="w-3.5 h-3.5" /> Report
             </Button>
           </div>
         </div>
       </div>
 
       <div className="max-w-[1600px] mx-auto px-4 md:px-6 py-6 space-y-6">
-        {/* ─── Demo Banner ─── */}
-        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg px-4 py-3 flex items-center gap-2 text-yellow-400 text-sm">
-          <AlertTriangle className="w-4 h-4 shrink-0" />
-          <span>⚠ Modalità Demo — Connetti il tracking reale per dati live. I dati mostrati sono simulati.</span>
-        </div>
-
-        {/* ─── Alerts ─── */}
-        {unresolvedAlerts.length > 0 && (
-          <div className="space-y-2">
-            {unresolvedAlerts.map(alert => (
-              <motion.div
-                key={alert.id}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`rounded-lg px-4 py-3 flex items-center gap-3 text-sm ${
-                  alert.type === "error" ? "bg-red-500/10 border border-red-500/30 text-red-400" :
-                  alert.type === "warning" ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-400" :
-                  "bg-blue-500/10 border border-blue-500/30 text-blue-400"
-                }`}
-              >
-                {alert.type === "error" ? <XCircle className="w-4 h-4 shrink-0" /> :
-                 alert.type === "warning" ? <AlertTriangle className="w-4 h-4 shrink-0" /> :
-                 <Info className="w-4 h-4 shrink-0" />}
-                <span className="flex-1">{alert.message}</span>
-                <span className="text-xs opacity-60">{new Date(alert.createdAt).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span>
-                <Button variant="ghost" size="sm" className="h-6 px-2 text-xs">Dettaglio</Button>
-              </motion.div>
-            ))}
-          </div>
-        )}
-
         {/* ─── KPI Cards ─── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           <KPICard
             icon={<Brain className="w-5 h-5 text-primary" />}
             label="Agenti Totali"
             value={AGENTS.length.toString()}
-            sub={`${AGENTS.length} attivi / 0 standby`}
+            sub={`${activeCount} attivi / ${disabledCount} disabilitati`}
             color="primary"
           />
           <KPICard
@@ -396,9 +642,32 @@ export default function AgentsPage() {
           />
         </div>
 
+        {/* ─── Alerts ─── */}
+        {unresolvedAlerts.length > 0 && (
+          <div className="space-y-2">
+            {unresolvedAlerts.map(alert => (
+              <motion.div
+                key={alert.id}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`rounded-lg px-4 py-3 flex items-center gap-3 text-sm ${
+                  alert.type === "error" ? "bg-red-500/10 border border-red-500/30 text-red-400" :
+                  alert.type === "warning" ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-400" :
+                  "bg-blue-500/10 border border-blue-500/30 text-blue-400"
+                }`}
+              >
+                {alert.type === "error" ? <XCircle className="w-4 h-4 shrink-0" /> :
+                 alert.type === "warning" ? <AlertTriangle className="w-4 h-4 shrink-0" /> :
+                 <Info className="w-4 h-4 shrink-0" />}
+                <span className="flex-1">{alert.message}</span>
+                <span className="text-xs opacity-60">{new Date(alert.createdAt).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
         {/* ─── Charts Row ─── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Stacked Bar Chart */}
           <div className="lg:col-span-2 bg-card border border-border rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-sm">📊 Uso AI per Giorno</h3>
@@ -423,13 +692,12 @@ export default function AgentsPage() {
                 />
                 <Legend wrapperStyle={{ fontSize: 10 }} />
                 {AGENTS.map((a, i) => (
-                  <Bar key={a.name} dataKey={a.name} stackId="a" fill={PIE_COLORS[i]} name={a.displayName.split(" — ")[0]} />
+                  <Bar key={a.name} dataKey={a.name} stackId="a" fill={PIE_COLORS[i % PIE_COLORS.length]} name={a.displayName.split(" — ")[0]} />
                 ))}
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Pie Chart */}
           <div className="bg-card border border-border rounded-xl p-4">
             <h3 className="font-semibold text-sm mb-3">🥧 Distribuzione per Agente</h3>
             <ResponsiveContainer width="100%" height={220}>
@@ -458,53 +726,61 @@ export default function AgentsPage() {
         {/* ─── Agent Grid ─── */}
         <div>
           <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-primary" /> Agenti Attivi
+            <Sparkles className="w-5 h-5 text-primary" /> Tutti gli Agenti ({AGENTS.length})
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
             {AGENTS.map((agent, idx) => {
+              const enabled = isAgentEnabled(agent.name);
               const dayData = mock.dailyData[mock.dailyData.length - 1];
-              const callsToday = (dayData as any)?.[agent.name] || 0;
+              const agentCallsToday = (dayData as any)?.[agent.name] || 0;
               const callsMonth = mock.dailyData.reduce((s, d) => s + ((d as any)[agent.name] || 0), 0);
-              const avgTime = (1000 + Math.random() * 2000).toFixed(0);
               return (
                 <motion.div
                   key={agent.name}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className="bg-card border border-border rounded-xl p-4 hover:border-primary/40 transition-all cursor-pointer group"
+                  transition={{ delay: idx * 0.04 }}
+                  className={`bg-card border rounded-xl p-4 transition-all cursor-pointer group ${
+                    enabled ? "border-border hover:border-primary/40" : "border-border/50 opacity-60"
+                  }`}
                   onClick={() => setSelectedAgent(agent)}
                 >
                   {/* Header */}
                   <div className="flex items-start gap-3 mb-3">
-                    <AgentIcon agent={agent} size={48} />
+                    <AgentIcon agent={agent} size={44} />
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-sm truncate">{agent.displayName}</h3>
                       <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                         <Badge className={`${agent.modelBadgeColor} text-[9px] h-5`}>{agent.model}</Badge>
-                        <StatusBadge status="active" />
+                        <StatusBadge status={enabled ? "active" : "disabled"} />
                       </div>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition mt-1" />
+                    {/* Quick toggle */}
+                    <Switch
+                      checked={enabled}
+                      onCheckedChange={(checked) => {
+                        toggleAgent.mutate({ agent_name: agent.name, is_enabled: checked });
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="mt-1"
+                    />
                   </div>
 
-                  {/* Description */}
-                  <p className="text-xs text-muted-foreground line-clamp-1 mb-3">{agent.description}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{agent.description}</p>
 
                   {/* Industries */}
                   <div className="flex items-center gap-1 flex-wrap mb-2">
                     <span className="text-[10px] text-muted-foreground mr-1">🎯</span>
-                    {agent.industries.slice(0, 4).map(ind => (
+                    {agent.industries.slice(0, 3).map(ind => (
                       <Badge key={ind} variant="outline" className="text-[9px] h-4 px-1.5">
                         {INDUSTRY_LABELS[ind]?.split(" ")[0] || ind}
                       </Badge>
                     ))}
-                    {agent.industries.length > 4 && (
-                      <Badge variant="outline" className="text-[9px] h-4 px-1.5">+{agent.industries.length - 4}</Badge>
+                    {agent.industries.length > 3 && (
+                      <Badge variant="outline" className="text-[9px] h-4 px-1.5">+{agent.industries.length - 3}</Badge>
                     )}
                   </div>
 
-                  {/* Trigger */}
                   <div className="text-[10px] text-muted-foreground mb-3">⚡ {agent.trigger}</div>
 
                   {/* Stats */}
@@ -514,7 +790,7 @@ export default function AgentsPage() {
                       <div className="text-[9px] text-muted-foreground">per call</div>
                     </div>
                     <div>
-                      <div className="text-xs font-bold">{callsToday}</div>
+                      <div className="text-xs font-bold">{agentCallsToday}</div>
                       <div className="text-[9px] text-muted-foreground">oggi</div>
                     </div>
                     <div>
@@ -525,9 +801,11 @@ export default function AgentsPage() {
 
                   {/* Actions */}
                   <div className="flex gap-2 mt-3 pt-2 border-t border-border">
-                    <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1" onClick={e => { e.stopPropagation(); setSelectedAgent(agent); }}>
-                      <Play className="w-3 h-3" /> Test
-                    </Button>
+                    {agent.testable && (
+                      <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1" onClick={e => { e.stopPropagation(); setSelectedAgent(agent); }}>
+                        <Play className="w-3 h-3" /> Test
+                      </Button>
+                    )}
                     <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1" onClick={e => { e.stopPropagation(); setSelectedAgent(agent); }}>
                       <BarChart3 className="w-3 h-3" /> Analytics
                     </Button>
@@ -543,9 +821,7 @@ export default function AgentsPage() {
 
         {/* ─── Account Ranking ─── */}
         <div>
-          <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
-            🏆 Classifica Consumo AI
-          </h2>
+          <h2 className="text-lg font-bold mb-3 flex items-center gap-2">🏆 Classifica Consumo AI</h2>
           <div className="flex items-center gap-2 mb-3">
             <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
@@ -568,7 +844,6 @@ export default function AgentsPage() {
                   <th className="text-right p-3 hidden md:table-cell">Tokens</th>
                   <th className="text-right p-3">Costo €</th>
                   <th className="text-right p-3 hidden lg:table-cell">Trend</th>
-                  <th className="text-right p-3">Azioni</th>
                 </tr>
               </thead>
               <tbody>
@@ -590,11 +865,6 @@ export default function AgentsPage() {
                         {Math.abs(acc.trend)}%
                       </span>
                     </td>
-                    <td className="p-3 text-right">
-                      <Button variant="ghost" size="sm" className="h-6 px-2 text-[10px]">
-                        <Eye className="w-3 h-3" />
-                      </Button>
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -611,13 +881,20 @@ export default function AgentsPage() {
               <SheetHeader className="pb-4">
                 <div className="flex items-center gap-3">
                   <AgentIcon agent={selectedAgent} size={64} />
-                  <div>
+                  <div className="flex-1">
                     <SheetTitle className="text-lg">{selectedAgent.displayName}</SheetTitle>
                     <div className="flex gap-1.5 mt-1">
                       <Badge className={selectedAgent.modelBadgeColor}>{selectedAgent.model}</Badge>
-                      <StatusBadge status="active" />
+                      <StatusBadge status={isAgentEnabled(selectedAgent.name) ? "active" : "disabled"} />
                     </div>
                   </div>
+                  <Switch
+                    checked={editEnabled}
+                    onCheckedChange={(checked) => {
+                      setEditEnabled(checked);
+                      toggleAgent.mutate({ agent_name: selectedAgent.name, is_enabled: checked });
+                    }}
+                  />
                 </div>
               </SheetHeader>
 
@@ -649,6 +926,10 @@ export default function AgentsPage() {
                     <div className="flex items-start gap-2">
                       <span className="text-muted-foreground w-16 shrink-0">⚡ Trigger:</span>
                       <span className="text-xs">{selectedAgent.trigger}</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-muted-foreground w-16 shrink-0">🧪 Test:</span>
+                      <span className="text-xs">{selectedAgent.testable ? "✅ Testabile via chat" : "⚠ Richiede input specifici"}</span>
                     </div>
                   </div>
                   <div>
@@ -689,17 +970,6 @@ export default function AgentsPage() {
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
-                  <div>
-                    <h4 className="text-xs font-semibold mb-2">Top 5 account per questo agente</h4>
-                    <div className="space-y-1">
-                      {mock.topAccounts.slice(0, 5).map((acc, i) => (
-                        <div key={acc.name} className="flex items-center justify-between bg-muted/50 rounded-lg px-3 py-2 text-xs">
-                          <span className="font-medium">{i + 1}. {acc.name}</span>
-                          <span className="text-muted-foreground">{Math.floor(acc.calls * 0.3)} calls — €{(acc.cost * 0.3).toFixed(2)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </TabsContent>
 
                 {/* TAB: Logs */}
@@ -723,58 +993,28 @@ export default function AgentsPage() {
 
                 {/* TAB: Test */}
                 <TabsContent value="test" className="space-y-4 mt-4">
-                  <Textarea
-                    placeholder="Inserisci un prompt di test..."
-                    value={testPrompt}
-                    onChange={e => setTestPrompt(e.target.value)}
-                    className="min-h-[80px] text-sm"
-                  />
-                  <Button
-                    className="gap-2"
-                    disabled={!testPrompt.trim() || testLoading}
-                    onClick={async () => {
-                      setTestLoading(true);
-                      setTestResult("");
-                      try {
-                        // Call the actual edge function
-                        if (selectedAgent.name === "empire-assistant") {
-                          const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-assistant`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json", Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
-                            body: JSON.stringify({ messages: [{ role: "user", content: testPrompt }] }),
-                          });
-                          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                          const reader = resp.body?.getReader();
-                          const decoder = new TextDecoder();
-                          let result = "";
-                          if (reader) {
-                            while (true) {
-                              const { done, value } = await reader.read();
-                              if (done) break;
-                              const chunk = decoder.decode(value, { stream: true });
-                              for (const line of chunk.split("\n")) {
-                                if (!line.startsWith("data: ") || line.includes("[DONE]")) continue;
-                                try {
-                                  const parsed = JSON.parse(line.slice(6));
-                                  const c = parsed.choices?.[0]?.delta?.content;
-                                  if (c) { result += c; setTestResult(result); }
-                                } catch {}
-                              }
-                            }
-                          }
-                        } else {
-                          setTestResult("⚠ Test live disponibile solo per Empire Assistant. Gli altri agenti richiedono input specifici (immagini, menu, ecc.).");
-                        }
-                      } catch (e: any) {
-                        setTestResult(`❌ Errore: ${e.message}`);
-                      } finally {
-                        setTestLoading(false);
-                      }
-                    }}
-                  >
-                    {testLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
-                    Esegui Test
-                  </Button>
+                  {selectedAgent.testable ? (
+                    <>
+                      <Textarea
+                        placeholder={`Scrivi un messaggio di test per ${selectedAgent.displayName}...`}
+                        value={testPrompt}
+                        onChange={e => setTestPrompt(e.target.value)}
+                        className="min-h-[80px] text-sm"
+                      />
+                      <Button
+                        className="gap-2"
+                        disabled={!testPrompt.trim() || testLoading}
+                        onClick={handleTest}
+                      >
+                        {testLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+                        Esegui Test
+                      </Button>
+                    </>
+                  ) : (
+                    <div className="bg-muted rounded-lg p-4 text-sm text-muted-foreground text-center">
+                      ⚠ Questo agente richiede input specifici (immagini, audio, upload) e non può essere testato con un prompt di testo.
+                    </div>
+                  )}
                   {testResult && (
                     <div className="bg-muted rounded-lg p-4 text-sm whitespace-pre-wrap max-h-[300px] overflow-y-auto">
                       {testResult}
@@ -786,15 +1026,28 @@ export default function AgentsPage() {
                 <TabsContent value="config" className="space-y-4 mt-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Agente abilitato</span>
-                    <Switch defaultChecked />
+                    <Switch
+                      checked={editEnabled}
+                      onCheckedChange={setEditEnabled}
+                    />
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground">Max chiamate per ora (per account)</label>
-                    <Input type="number" defaultValue={100} className="mt-1 h-8" />
+                    <Input
+                      type="number"
+                      value={editMaxCalls}
+                      onChange={e => setEditMaxCalls(parseInt(e.target.value) || 0)}
+                      className="mt-1 h-8"
+                    />
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground">Budget mensile max per account (€)</label>
-                    <Input type="number" defaultValue={20} className="mt-1 h-8" />
+                    <Input
+                      type="number"
+                      value={editMaxBudget}
+                      onChange={e => setEditMaxBudget(parseFloat(e.target.value) || 0)}
+                      className="mt-1 h-8"
+                    />
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground mb-1 block">Settori autorizzati</label>
@@ -803,7 +1056,14 @@ export default function AgentsPage() {
                         <label key={key} className="flex items-center gap-1.5 text-xs cursor-pointer">
                           <input
                             type="checkbox"
-                            defaultChecked={selectedAgent.industries.includes(key)}
+                            checked={editIndustries.includes(key)}
+                            onChange={e => {
+                              if (e.target.checked) {
+                                setEditIndustries(prev => [...prev, key]);
+                              } else {
+                                setEditIndustries(prev => prev.filter(i => i !== key));
+                              }
+                            }}
                             className="rounded border-border"
                           />
                           {label}
@@ -813,10 +1073,20 @@ export default function AgentsPage() {
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground">System Prompt Override</label>
-                    <Textarea className="mt-1 text-xs min-h-[80px]" placeholder="Lascia vuoto per usare il prompt di default..." />
+                    <Textarea
+                      className="mt-1 text-xs min-h-[80px]"
+                      placeholder="Lascia vuoto per usare il prompt di default..."
+                      value={editPromptOverride}
+                      onChange={e => setEditPromptOverride(e.target.value)}
+                    />
                   </div>
-                  <Button className="w-full gap-2">
-                    <Check className="w-4 h-4" /> Salva Configurazione
+                  <Button
+                    className="w-full gap-2"
+                    onClick={handleSaveConfig}
+                    disabled={upsertConfig.isPending}
+                  >
+                    {upsertConfig.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                    Salva Configurazione
                   </Button>
                 </TabsContent>
               </Tabs>
