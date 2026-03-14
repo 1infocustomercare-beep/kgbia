@@ -115,55 +115,129 @@ const DashboardOverview = ({
       </div>
 
       {/* AI Tokens */}
-      <div className="p-3 rounded-2xl bg-primary/5 border border-primary/20 flex items-center gap-3 relative">
+      <div className="p-3 rounded-2xl bg-primary/5 border border-primary/20 relative">
         <div className="absolute top-2 right-2">
           <InfoGuide
             title="Gettoni IA"
             description="I gettoni alimentano le funzionalità AI: creazione menu da foto, generazione immagini food e traduzione automatica in più lingue."
             steps={[
               "Ogni operazione AI consuma 1 gettone",
-              "Premi +50 per acquistare un pacchetto aggiuntivo",
+              "Acquista pacchetti quando li esaurisci",
               "Vai in Studio → AI per usarli",
             ]}
           />
         </div>
-        <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-          <Sparkles className="w-4 h-4 text-primary" />
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+            <Sparkles className="w-4 h-4 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">Gettoni IA</p>
+            <p className="text-[11px] text-muted-foreground truncate">Menu Creator, Foto, Traduzioni</p>
+          </div>
+          <span className={`text-lg font-display font-bold flex-shrink-0 ${aiTokens <= 5 ? "text-destructive" : "text-primary"}`}>{aiTokens}</span>
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground">Gettoni IA</p>
-          <p className="text-[11px] text-muted-foreground truncate">Menu Creator, Foto, Traduzioni</p>
-        </div>
-        <span className="text-lg font-display font-bold text-primary flex-shrink-0">{aiTokens}</span>
+
+        {aiTokens <= 10 && (
+          <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+            className="mt-2 p-2 rounded-lg bg-destructive/10 border border-destructive/20 text-[11px] text-destructive text-center">
+            ⚠️ Gettoni in esaurimento! Ricarica per continuare ad usare le funzioni IA.
+          </motion.div>
+        )}
+
         <motion.button
-          onClick={async () => {
-            if (!restaurantId) return;
-            setBuyingTokens(true);
-            try {
-              const { data, error } = await supabase.functions.invoke("ai-token-checkout", {
-                body: {
-                  restaurantId,
-                  customerEmail: user?.email,
-                  successUrl: `${window.location.origin}/dashboard?tokens=success`,
-                  cancelUrl: `${window.location.origin}/dashboard?tokens=cancelled`,
-                },
-              });
-              if (error) throw error;
-              if (data?.error) throw new Error(data.error);
-              if (data?.url) window.open(data.url, "_blank");
-            } catch (e: any) {
-              toast({ title: "Errore", description: e.message || "Impossibile avviare l'acquisto", variant: "destructive" });
-            }
-            setBuyingTokens(false);
-          }}
-          disabled={buyingTokens}
-          className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-semibold flex items-center gap-1 disabled:opacity-50 flex-shrink-0 min-h-[36px]"
-          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowTokenShop(true)}
+          className="w-full mt-3 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2 min-h-[44px]"
+          whileTap={{ scale: 0.97 }}
         >
-          {buyingTokens ? <Loader2 className="w-3 h-3 animate-spin" /> : <DollarSign className="w-3 h-3" />}
-          +50
+          <Zap className="w-4 h-4" /> Acquista Gettoni IA
         </motion.button>
       </div>
+
+      {/* Token Shop Modal */}
+      <AnimatePresence>
+        {showTokenShop && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+            onClick={() => setShowTokenShop(false)}>
+            <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }}
+              className="w-full max-w-sm bg-card border border-border rounded-2xl p-5 space-y-4 shadow-xl"
+              onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-display font-bold text-foreground">Ricarica Gettoni IA</h3>
+                  <p className="text-[11px] text-muted-foreground">Saldo attuale: {aiTokens} gettoni</p>
+                </div>
+                <button onClick={() => setShowTokenShop(false)} className="p-1.5 rounded-full hover:bg-secondary">
+                  <X className="w-4 h-4 text-muted-foreground" />
+                </button>
+              </div>
+
+              <div className="space-y-2.5">
+                {[
+                  { id: "50", credits: 50, price: 15, label: "Starter", icon: <Zap className="w-4 h-4" />, popular: false },
+                  { id: "150", credits: 150, price: 39, label: "Pro", icon: <Sparkles className="w-4 h-4" />, popular: true, save: "13%" },
+                  { id: "500", credits: 500, price: 99, label: "Business", icon: <Crown className="w-4 h-4" />, popular: false, save: "34%" },
+                ].map((pack) => (
+                  <motion.button key={pack.id}
+                    onClick={async () => {
+                      if (!restaurantId) return;
+                      setBuyingPack(pack.id);
+                      try {
+                        const { data, error } = await supabase.functions.invoke("ai-token-checkout", {
+                          body: {
+                            restaurantId,
+                            customerEmail: user?.email,
+                            credits: pack.credits,
+                            successUrl: `${window.location.origin}/dashboard?tokens=success`,
+                            cancelUrl: `${window.location.origin}/dashboard?tokens=cancelled`,
+                          },
+                        });
+                        if (error) throw error;
+                        if (data?.error) throw new Error(data.error);
+                        if (data?.url) window.open(data.url, "_blank");
+                      } catch (e: any) {
+                        toast({ title: "Errore", description: e.message || "Impossibile avviare l'acquisto", variant: "destructive" });
+                      }
+                      setBuyingPack(null);
+                    }}
+                    disabled={!!buyingPack}
+                    className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left relative overflow-hidden min-h-[60px] ${
+                      pack.popular
+                        ? "border-primary bg-primary/5 ring-1 ring-primary/30"
+                        : "border-border bg-secondary/30 hover:border-primary/40"
+                    } ${buyingPack === pack.id ? "opacity-70" : ""}`}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {pack.popular && (
+                      <span className="absolute top-0 right-0 bg-primary text-primary-foreground text-[9px] font-bold px-2 py-0.5 rounded-bl-lg">
+                        PIÙ SCELTO
+                      </span>
+                    )}
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      pack.popular ? "bg-primary/20 text-primary" : "bg-secondary text-muted-foreground"
+                    }`}>
+                      {buyingPack === pack.id ? <Loader2 className="w-4 h-4 animate-spin" /> : pack.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-foreground">{pack.label} — {pack.credits} gettoni</p>
+                      <p className="text-[11px] text-muted-foreground">
+                        €{(pack.price / pack.credits).toFixed(2)}/gettone
+                        {pack.save && <span className="text-primary font-semibold ml-1">Risparmi {pack.save}</span>}
+                      </p>
+                    </div>
+                    <span className="text-sm font-bold text-foreground flex-shrink-0">€{pack.price}</span>
+                  </motion.button>
+                ))}
+              </div>
+
+              <p className="text-[10px] text-muted-foreground/60 text-center">
+                Pagamento sicuro via Stripe · I gettoni non scadono
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Quick Actions */}
       <div className="space-y-2">
