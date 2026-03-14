@@ -338,11 +338,10 @@ const EmpireVoiceAgent: React.FC = () => {
     setIsListening(true);
   }, [sendMessage, stopAll]);
 
-  // ── Toggle panel ──
+  // ── Toggle panel (does NOT stop audio — voice keeps playing) ──
   const toggleOpen = useCallback(() => {
-    if (isOpen) { stopAll(); setIsOpen(false); }
-    else setIsOpen(true);
-  }, [isOpen, stopAll]);
+    setIsOpen((prev) => !prev);
+  }, []);
 
   // ── Render ──
   return (
