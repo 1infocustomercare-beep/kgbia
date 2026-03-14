@@ -159,7 +159,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
       />
 
       {/* Vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsla(260,20%,4%,0.85)_75%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,hsla(260,20%,4%,0.7)_80%)]" />
 
       {/* Orbital rings */}
       <motion.div
