@@ -642,8 +642,10 @@ const EmpireVoiceAgent: React.FC = () => {
                   >
                     <img src={voiceAgentAvatar} alt="Assistente" className="w-8 h-8 rounded-full object-cover" />
                   </motion.div>
-                  <p className="text-xs text-foreground/30 text-center max-w-[200px]">
-                    Ciao! Sono ATLAS. Ti guido attraverso Empire mentre scorri la pagina.
+                  <p className="text-xs text-foreground/30 text-center max-w-[220px] leading-relaxed">
+                    {isTouchDevice && !autoNarrating
+                      ? "Tocca il pulsante audio: attivo subito la guida vocale italiana in tempo reale."
+                      : "Ciao! Sono ATLAS. Ti guido attraverso Empire mentre scorri la pagina."}
                   </p>
                 </div>
               )}
