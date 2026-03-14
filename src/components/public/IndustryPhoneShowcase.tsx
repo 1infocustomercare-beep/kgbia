@@ -1577,6 +1577,7 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
                 services={demo.services}
                 index={i}
                 sectorStyle={sectorStyle}
+                industryId={industryId}
               />
             ))}
           </div>
