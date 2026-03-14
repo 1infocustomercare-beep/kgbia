@@ -353,13 +353,13 @@ SectionDivider.displayName = "SectionDivider";
 
 /* ═══ Comparison Row ═══ */
 const CompRow = ({ label, empire, others }: { label: string; empire: string; others: string }) => (
-  <motion.div className="grid grid-cols-3 py-3 border-b border-border/30 items-center text-xs sm:text-sm"
+  <motion.div className="grid grid-cols-3 py-2 sm:py-3 border-b border-border/30 items-center text-[0.6rem] sm:text-sm"
     initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-    <span className="text-foreground/50 font-medium">{label}</span>
-    <span className="text-center text-foreground font-bold flex items-center justify-center gap-1.5">
-      <CircleCheck className="w-3.5 h-3.5 text-primary" /> {empire}
+    <span className="text-foreground/50 font-medium leading-tight">{label}</span>
+    <span className="text-center text-foreground font-bold flex items-center justify-center gap-1">
+      <CircleCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary shrink-0" /> <span className="leading-tight">{empire}</span>
     </span>
-    <span className="text-center text-foreground/30">{others}</span>
+    <span className="text-center text-foreground/30 leading-tight line-through decoration-red-500/40">{others}</span>
   </motion.div>
 );
 
@@ -3047,27 +3047,27 @@ const LandingPage = () => {
             Empire vs <span className="text-shimmer">Tutto il Resto</span>
           </motion.h2>
         </div>
-        <motion.div className="max-w-2xl mx-auto p-6 sm:p-8 rounded-2xl glow-card"
+        <motion.div className="max-w-2xl mx-auto p-4 sm:p-8 rounded-2xl glow-card"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           {/* Header */}
-          <div className="grid grid-cols-3 pb-3 border-b border-border/50 mb-1">
-            <span className="text-[0.6rem] font-heading text-foreground/30 tracking-wider uppercase">Funzionalità</span>
-            <span className="text-center text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase">Empire.AI</span>
-            <span className="text-center text-[0.6rem] font-heading text-foreground/30 tracking-wider uppercase">Altri</span>
+          <div className="grid grid-cols-3 pb-2 sm:pb-3 border-b border-border/50 mb-1">
+            <span className="text-[0.5rem] sm:text-[0.6rem] font-heading text-foreground/30 tracking-wider uppercase">Funzionalità</span>
+            <span className="text-center text-[0.5rem] sm:text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase">Empire.AI</span>
+            <span className="text-center text-[0.5rem] sm:text-[0.6rem] font-heading text-foreground/30 tracking-wider uppercase">Altri</span>
           </div>
-          <CompRow label="Costo mensile" empire="€0/mese" others="€200-500/mese" />
-          <CompRow label="Commissioni" empire="Solo 2%" others="15-30%" />
-          <CompRow label="Settori supportati" empire="25+" others="1-3" />
-          <CompRow label="App White Label" empire="Inclusa" others="€extra/mese" />
-          <CompRow label="IA Integrata" empire="20+ Agenti AI" others="Base o assente" />
-          <CompRow label="Voice Agent AI" empire="Incluso" others="Non disponibile" />
-          <CompRow label="Integrazioni" empire="Stripe · ElevenLabs · FCM" others="Poche o a pagamento" />
-          <CompRow label="Automazioni" empire="Email · WhatsApp · Push" others="Solo email" />
-          <CompRow label="Sito pubblico" empire="White-label incluso" others="Template base" />
-          <CompRow label="CRM & Clienti" empire="360° con AI insights" others="Lista contatti" />
-          <CompRow label="Proprietà dati" empire="100% tuoi" others="Del provider" />
-          <CompRow label="Aggiornamenti" empire="Settimanali" others="Trimestrali" />
-          <CompRow label="Supporto" empire="7/7 dedicato" others="Email lenta" />
+          <CompRow label="Canone" empire="€0/mese" others="€200-800/mese" />
+          <CompRow label="Commissioni" empire="Solo 2%" others="15-35%" />
+          <CompRow label="Setup" empire="Gratis" others="€500-2000" />
+          <CompRow label="Settori" empire="25+" others="1-3" />
+          <CompRow label="App dedicata" empire="Inclusa" others="€99/mese extra" />
+          <CompRow label="Agenti IA" empire="20+ inclusi" others="Assenti" />
+          <CompRow label="Voice Agent" empire="Incluso" others="Non disponibile" />
+          <CompRow label="Integrazioni" empire="Stripe · AI · Push" others="Limitate" />
+          <CompRow label="Automazioni" empire="Multi-canale" others="Solo email" />
+          <CompRow label="Sito web" empire="White-label" others="Template" />
+          <CompRow label="CRM" empire="AI-powered" others="Base" />
+          <CompRow label="Dati" empire="100% tuoi" others="Del provider" />
+          <CompRow label="Supporto" empire="7/7 dedicato" others="Ticket lento" />
         </motion.div>
       </Section>
 
