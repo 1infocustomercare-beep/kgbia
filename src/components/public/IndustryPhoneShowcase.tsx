@@ -38,6 +38,27 @@ const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
     bookingFields: ["Nome", "Telefono", "Data", "Ospiti"],
     heroSubtext: "Cucina d'autore",
     serviceIcon: "🍝",
+    analyticsTitle: "Vendite Piatti",
+    analyticsBars: [45, 72, 38, 90, 55, 82, 60, 95, 48, 70, 65, 88],
+    crmClients: [
+      { name: "Marco R.", tag: "VIP", spent: "€1.8K" },
+      { name: "Sofia L.", tag: "Habitué", spent: "€920" },
+      { name: "Luca P.", tag: "Nuovo", spent: "€85" },
+      { name: "Elena V.", tag: "Premium", spent: "€2.4K" },
+    ],
+    notifications: [
+      { icon: "🍕", text: "Ordine tavolo 5 pronto", time: "1m" },
+      { icon: "⭐", text: "Recensione 5★ su Google", time: "12m" },
+      { icon: "📦", text: "Scorte pomodori basse", time: "45m" },
+      { icon: "💰", text: "Incasso giornaliero €1.2K", time: "2h" },
+    ],
+    settingsToggles: [
+      { label: "Menu QR attivo", on: true },
+      { label: "Ordini online", on: true },
+      { label: "Notifiche cucina", on: true },
+      { label: "Upselling AI", on: false },
+      { label: "Fidelity card", on: true },
+    ],
   },
   ncc: {
     heroGradient: "linear-gradient(135deg, #C9A84C22, #8B6F2E10)",
