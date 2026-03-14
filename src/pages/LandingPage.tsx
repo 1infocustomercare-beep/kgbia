@@ -634,6 +634,17 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       <p className="text-[0.55rem] text-foreground/30 mt-0.5">una tantum</p>
                     </div>
 
+                    {/* Installment mini-options on card */}
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      <span className="px-2 py-0.5 rounded-full text-[0.45rem] font-semibold bg-foreground/[0.04] text-foreground/30 border border-border/15">
+                        oppure 3×€{Math.round(p.price / 3)}/mese
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full text-[0.45rem] font-semibold bg-foreground/[0.04] text-foreground/30 border border-border/15">
+                        oppure 6×€{Math.round(p.price / 6)}/mese
+                      </span>
+                      <span className="text-[0.4rem] text-accent/60 font-semibold self-center">0% interessi</span>
+                    </div>
+
                     {/* Monthly + Commission highlight */}
                     <div className="flex items-center gap-2 mt-2">
                       <span className={`px-2 py-0.5 rounded-full text-[0.5rem] font-bold ${
@@ -647,6 +658,18 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         {p.commission === "0%" ? "0% commissioni!" : `${p.commission} transazioni`}
                       </span>
                     </div>
+
+                    {/* Empire: daily cost nudge */}
+                    {p.id === "empire" && (
+                      <div className="mt-2 p-2 rounded-lg bg-accent/[0.06] border border-accent/15">
+                        <p className="text-[0.55rem] text-accent font-bold text-center">
+                          💰 Solo €11/giorno per 24 mesi — poi è tutto tuo, per sempre
+                        </p>
+                        <p className="text-[0.45rem] text-accent/50 text-center mt-0.5">
+                          Meno di un caffè + cornetto al bar. Zero costi nascosti.
+                        </p>
+                      </div>
+                    )}
 
                     <p className="text-[0.6rem] text-foreground/35 mt-2 leading-relaxed">{p.tagline}</p>
 
@@ -685,6 +708,15 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     }`}>
                       {p.savings}
                     </div>
+
+                    {/* Empire upsell nudge on non-empire cards */}
+                    {p.id !== "empire" && (
+                      <div className="mt-2 p-2 rounded-lg bg-accent/[0.03] border border-accent/10 cursor-pointer" onClick={(e) => { e.stopPropagation(); setSelectedPackage("empire"); }}>
+                        <p className="text-[0.45rem] text-accent/70 text-center">
+                          ⚡ Con Empire risparmi <strong>€{p.commission === "2%" ? "6.403" : "4.200"}</strong> in più e hai <strong>0% commissioni per sempre</strong> →
+                        </p>
+                      </div>
+                    )}
 
                     {isSelected && (
                       <motion.div className={`absolute bottom-0 left-0 right-0 h-1 ${p.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`}
