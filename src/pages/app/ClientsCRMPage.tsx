@@ -191,6 +191,7 @@ export default function ClientsCRMPage() {
                 )}
                 <Customer360Widget client={selected} />
               </div>
+            </div>
           )}
         </SheetContent>
       </Sheet>
