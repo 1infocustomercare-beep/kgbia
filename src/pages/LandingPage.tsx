@@ -370,6 +370,21 @@ const CompRow = ({ label, empire, others }: { label: string; empire: string; oth
 type PlanTier = "starter" | "professional" | "enterprise";
 type PricingMode = "monthly" | "package";
 
+/* ── Sector config for pricing ── */
+type PricingSector = "food" | "ncc" | "beauty" | "healthcare" | "retail" | "fitness" | "hospitality" | "trades" | "other";
+
+const PRICING_SECTORS: { id: PricingSector; label: string; emoji: string }[] = [
+  { id: "food", label: "Food & Ristorazione", emoji: "🍽️" },
+  { id: "beauty", label: "Beauty & Wellness", emoji: "💇" },
+  { id: "ncc", label: "NCC & Trasporti", emoji: "🚘" },
+  { id: "healthcare", label: "Salute & Cliniche", emoji: "🏥" },
+  { id: "retail", label: "Retail & Negozi", emoji: "🛍️" },
+  { id: "fitness", label: "Fitness & Palestre", emoji: "🏋️" },
+  { id: "hospitality", label: "Hotel & Ospitalità", emoji: "🏨" },
+  { id: "trades", label: "Artigiani & Servizi", emoji: "🔧" },
+  { id: "other", label: "Altro settore", emoji: "🏢" },
+];
+
 interface AiAddon {
   id: string;
   name: string;
@@ -377,19 +392,53 @@ interface AiAddon {
   price: number;
   icon: React.ReactNode;
   popular?: boolean;
-  sectors?: string;
+  sectors: PricingSector[];
 }
 
+const ALL_SECTORS: PricingSector[] = ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality", "trades", "other"];
+
 const AI_ADDONS: AiAddon[] = [
-  { id: "concierge", name: "Concierge AI", desc: "Receptionist 24/7 multi-canale", price: 99, icon: <Bot className="w-4 h-4" />, popular: true, sectors: "Tutti" },
-  { id: "analytics", name: "Analytics Brain", desc: "Previsioni fatturato e churn", price: 149, icon: <LineChart className="w-4 h-4" />, sectors: "Tutti" },
-  { id: "social", name: "Social Manager AI", desc: "Piano editoriale automatico", price: 79, icon: <Globe className="w-4 h-4" />, popular: true, sectors: "Tutti" },
-  { id: "sales", name: "Sales Closer AI", desc: "Lead scoring e follow-up auto", price: 129, icon: <Target className="w-4 h-4" />, sectors: "Tutti" },
-  { id: "document", name: "Document AI", desc: "Fatture e preventivi automatici", price: 49, icon: <ClipboardCheck className="w-4 h-4" />, sectors: "Tutti" },
-  { id: "compliance", name: "Compliance Guardian", desc: "GDPR, scadenze, audit trail", price: 59, icon: <Shield className="w-4 h-4" />, sectors: "Tutti" },
-  { id: "ops-food", name: "Operations — Food", desc: "KDS, food cost, HACCP", price: 149, icon: <ChefHat className="w-4 h-4" />, sectors: "Food" },
-  { id: "ops-ncc", name: "Operations — NCC", desc: "Fleet, dynamic pricing, dispatch", price: 199, icon: <Car className="w-4 h-4" />, sectors: "NCC" },
+  { id: "concierge", name: "Concierge AI", desc: "Receptionist 24/7 multi-canale", price: 99, icon: <Bot className="w-4 h-4" />, popular: true, sectors: ALL_SECTORS },
+  { id: "analytics", name: "Analytics Brain", desc: "Previsioni fatturato e churn", price: 149, icon: <LineChart className="w-4 h-4" />, sectors: ALL_SECTORS },
+  { id: "social", name: "Social Manager AI", desc: "Piano editoriale automatico", price: 79, icon: <Globe className="w-4 h-4" />, popular: true, sectors: ALL_SECTORS },
+  { id: "sales", name: "Sales Closer AI", desc: "Lead scoring e follow-up auto", price: 129, icon: <Target className="w-4 h-4" />, sectors: ALL_SECTORS },
+  { id: "document", name: "Document AI", desc: "Fatture e preventivi automatici", price: 49, icon: <ClipboardCheck className="w-4 h-4" />, sectors: ALL_SECTORS },
+  { id: "compliance", name: "Compliance Guardian", desc: "GDPR, scadenze, audit trail", price: 59, icon: <Shield className="w-4 h-4" />, sectors: ALL_SECTORS },
+  { id: "ops-food", name: "Operations — Food", desc: "KDS, food cost, HACCP", price: 149, icon: <ChefHat className="w-4 h-4" />, sectors: ["food"] },
+  { id: "ops-ncc", name: "Operations — NCC", desc: "Fleet, dynamic pricing, dispatch", price: 199, icon: <Car className="w-4 h-4" />, sectors: ["ncc"] },
+  { id: "ops-beauty", name: "Operations — Beauty", desc: "Agenda smart, prodotti, fidelity", price: 129, icon: <Scissors className="w-4 h-4" />, sectors: ["beauty"] },
+  { id: "ops-health", name: "Operations — Health", desc: "Cartelle, telemedicina, recall", price: 179, icon: <Heart className="w-4 h-4" />, sectors: ["healthcare"] },
+  { id: "ops-retail", name: "Operations — Retail", desc: "Inventario, POS, promozioni", price: 139, icon: <Store className="w-4 h-4" />, sectors: ["retail"] },
+  { id: "ops-fitness", name: "Operations — Fitness", desc: "Classi, abbonamenti, check-in", price: 119, icon: <Dumbbell className="w-4 h-4" />, sectors: ["fitness"] },
+  { id: "ops-hotel", name: "Operations — Hotel", desc: "Rooms, check-in/out, housekeeping", price: 189, icon: <Building className="w-4 h-4" />, sectors: ["hospitality"] },
+  { id: "ops-trades", name: "Operations — Artigiani", desc: "Interventi, preventivi, dispatch", price: 109, icon: <ClipboardCheck className="w-4 h-4" />, sectors: ["trades"] },
 ];
+
+/** Get sector-specific included agent IDs per package tier */
+const SECTOR_INCLUDED_AGENTS: Record<PricingSector, { growth: string[]; empire: string[] }> = {
+  food:        { growth: ["concierge", "ops-food"],  empire: ["concierge", "ops-food", "analytics", "social", "sales"] },
+  ncc:         { growth: ["concierge", "ops-ncc"],   empire: ["concierge", "ops-ncc", "analytics", "sales", "document"] },
+  beauty:      { growth: ["concierge", "ops-beauty"],empire: ["concierge", "ops-beauty", "analytics", "social", "sales"] },
+  healthcare:  { growth: ["concierge", "ops-health"],empire: ["concierge", "ops-health", "analytics", "compliance", "document"] },
+  retail:      { growth: ["concierge", "ops-retail"],empire: ["concierge", "ops-retail", "analytics", "social", "sales"] },
+  fitness:     { growth: ["concierge", "ops-fitness"],empire: ["concierge", "ops-fitness", "analytics", "social", "sales"] },
+  hospitality: { growth: ["concierge", "ops-hotel"], empire: ["concierge", "ops-hotel", "analytics", "social", "sales"] },
+  trades:      { growth: ["concierge", "ops-trades"],empire: ["concierge", "ops-trades", "analytics", "document", "sales"] },
+  other:       { growth: ["concierge", "analytics"], empire: ["concierge", "analytics", "social", "sales", "document"] },
+};
+
+/** Sector-specific features to show in packages */
+const SECTOR_FEATURES: Record<PricingSector, string[]> = {
+  food: ["Menu QR & Ordinazioni digitali", "Kitchen Display System", "HACCP & Food Cost", "Prenotazioni tavoli", "Delivery & Takeaway"],
+  ncc: ["Gestione Flotta & GPS", "Pricing dinamico tratte", "Booking online automatico", "Dispatch autisti", "Fatturazione automatica"],
+  beauty: ["Agenda appuntamenti smart", "Schede clienti & preferenze", "Promozioni automatiche", "Gestione prodotti & magazzino", "Fidelity card digitale"],
+  healthcare: ["Cartelle pazienti digitali", "Telemedicina integrata", "Recall automatici", "Prescrizioni digitali", "Compliance sanitaria"],
+  retail: ["Inventario in tempo reale", "POS integrato", "Promozioni & coupon", "E-commerce integrato", "Analisi vendite"],
+  fitness: ["Gestione classi & corsi", "Abbonamenti & check-in", "Schede allenamento", "Booking lezioni", "Community & social"],
+  hospitality: ["Gestione camere & tariffe", "Check-in/out digitale", "Housekeeping tracker", "Revenue management", "Booking engine"],
+  trades: ["Gestione interventi", "Preventivi automatici", "Dispatch tecnici", "Foto & documenti cantiere", "Fatturazione elettronica"],
+  other: ["Dashboard personalizzata", "CRM Clienti completo", "Automazioni intelligenti", "Reportistica avanzata", "Multi-lingua"],
+};
 
 const PLAN_TIERS: { id: PlanTier; name: string; price: number; desc: string; badge?: string; features: string[]; includedAgents: number }[] = [
   {
@@ -519,11 +568,32 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
   const [showAddons, setShowAddons] = useState(false);
   const [installments, setInstallments] = useState<3 | 6 | null>(null);
+  const [selectedSector, setSelectedSector] = useState<PricingSector>("food");
+  const [showFeatureRequest, setShowFeatureRequest] = useState(false);
+  const [featureRequestText, setFeatureRequestText] = useState("");
+  const [featureRequestEmail, setFeatureRequestEmail] = useState("");
+  const [featureRequestSending, setFeatureRequestSending] = useState(false);
+  const [featureRequestSent, setFeatureRequestSent] = useState(false);
 
   const plan = PLAN_TIERS.find(p => p.id === selectedPlan)!;
   const pkg = PACKAGE_TIERS.find(p => p.id === selectedPackage)!;
   const addonDiscount = billingCycle === "annual" ? 0.8 : 1;
   const planDiscount = billingCycle === "annual" ? 0.8 : 1;
+
+  // Filter agents by selected sector
+  const sectorAddons = AI_ADDONS.filter(a => a.sectors.includes(selectedSector));
+  const sectorIncluded = SECTOR_INCLUDED_AGENTS[selectedSector];
+  const sectorFeatures = SECTOR_FEATURES[selectedSector];
+
+  // Auto-include sector agents when switching sector/package
+  const getAutoIncludedIds = () => {
+    if (pricingMode === "package") {
+      if (pkg.id === "empire") return sectorIncluded.empire;
+      if (pkg.id === "growth") return sectorIncluded.growth;
+    }
+    return [];
+  };
+  const autoIncludedIds = getAutoIncludedIds();
 
   // Free included agents reduce addon cost
   const currentIncludedAgents = pricingMode === "monthly" ? plan.includedAgents : pkg.includedAgents;
@@ -589,6 +659,30 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
               <CreditCard className="w-3.5 h-3.5" /> Mensile
             </span>
           </button>
+        </motion.div>
+
+        {/* Sector Selector Dropdown */}
+        <motion.div className="max-w-sm mx-auto mt-4" initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <p className="text-[0.55rem] font-heading text-foreground/30 tracking-[2px] uppercase text-center mb-2">Il tuo settore</p>
+          <div className="relative">
+            <select
+              value={selectedSector}
+              onChange={(e) => { setSelectedSector(e.target.value as PricingSector); setSelectedAddons(new Set()); }}
+              className="w-full appearance-none px-4 py-3 rounded-xl border border-border/30 bg-background/60 backdrop-blur-sm text-foreground text-sm font-heading font-semibold text-center cursor-pointer focus:outline-none focus:border-primary/40 transition-colors"
+            >
+              {PRICING_SECTORS.map(s => (
+                <option key={s.id} value={s.id}>{s.emoji} {s.label}</option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30 pointer-events-none" />
+          </div>
+          {sectorFeatures.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-1.5 mt-2.5">
+              {sectorFeatures.slice(0, 3).map((f, i) => (
+                <span key={i} className="px-2 py-0.5 rounded-full text-[0.5rem] bg-primary/[0.08] text-primary/70 font-medium">{f}</span>
+              ))}
+            </div>
+          )}
         </motion.div>
       </div>
 
@@ -858,9 +952,9 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     <Bot className="w-4 h-4 text-primary-foreground" />
                   </div>
                   <div className="text-left">
-                    <p className="text-xs sm:text-sm font-heading font-bold text-foreground">Aggiungi Agenti IA</p>
+                    <p className="text-xs sm:text-sm font-heading font-bold text-foreground">Agenti IA per {PRICING_SECTORS.find(s => s.id === selectedSector)?.label}</p>
                     <p className="text-[0.55rem] text-foreground/35">
-                      {pkg.includedAgents} inclus{pkg.includedAgents > 1 ? "i" : "o"} · Altri con 30% di sconto nel pacchetto
+                      {autoIncludedIds.length} inclus{autoIncludedIds.length > 1 ? "i" : "o"} nel pacchetto · Altri con 30% sconto
                     </p>
                   </div>
                 </div>
@@ -872,16 +966,19 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                 {showAddons && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pb-4">
-                      {AI_ADDONS.map((addon) => {
-                        const isActive = selectedAddons.has(addon.id);
-                        const isFree = isActive && [...selectedAddons].sort().indexOf(addon.id) < pkg.includedAgents;
+                      {sectorAddons.map((addon) => {
+                        const isAutoIncluded = autoIncludedIds.includes(addon.id);
+                        const isActive = selectedAddons.has(addon.id) || isAutoIncluded;
                         const displayPrice = Math.round(addon.price * 0.7);
                         return (
-                          <motion.div key={addon.id} onClick={() => toggleAddon(addon.id)}
+                          <motion.div key={addon.id} onClick={() => !isAutoIncluded && toggleAddon(addon.id)}
                             className={`relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
                               isActive ? "border border-primary/30 bg-primary/[0.06]" : "border border-border/20 hover:border-primary/15 bg-background/30"
-                            }`} whileTap={{ scale: 0.98 }}>
-                            {addon.popular && !isActive && (
+                            } ${isAutoIncluded ? "opacity-90" : ""}`} whileTap={{ scale: isAutoIncluded ? 1 : 0.98 }}>
+                            {isAutoIncluded && (
+                              <div className="absolute -top-1.5 right-3 px-2 py-0.5 rounded-full bg-accent/20 text-[0.45rem] font-bold text-accent tracking-wider uppercase">Incluso</div>
+                            )}
+                            {addon.popular && !isActive && !isAutoIncluded && (
                               <div className="absolute -top-1.5 right-3 px-2 py-0.5 rounded-full bg-accent/20 text-[0.45rem] font-bold text-accent tracking-wider uppercase">Popular</div>
                             )}
                             <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isActive ? "bg-primary/20 text-primary" : "bg-foreground/[0.05] text-foreground/30"}`}>
@@ -892,8 +989,8 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                               <p className="text-[0.55rem] text-foreground/30 truncate">{addon.desc}</p>
                             </div>
                             <div className="text-right flex-shrink-0">
-                              {isFree ? (
-                                <span className="text-xs font-bold text-accent">Incluso</span>
+                              {isAutoIncluded ? (
+                                <span className="text-xs font-bold text-accent">Incluso ✓</span>
                               ) : (
                                 <div>
                                   <span className={`text-xs font-bold ${isActive ? "text-primary" : "text-foreground/40"}`}>+€{displayPrice}/m</span>
@@ -901,11 +998,13 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                                 </div>
                               )}
                             </div>
-                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                              isActive ? "border-primary bg-primary" : "border-foreground/15"
-                            }`}>
-                              {isActive && <Check className="w-3 h-3 text-primary-foreground" />}
-                            </div>
+                            {!isAutoIncluded && (
+                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                                isActive ? "border-primary bg-primary" : "border-foreground/15"
+                              }`}>
+                                {isActive && <Check className="w-3 h-3 text-primary-foreground" />}
+                              </div>
+                            )}
                           </motion.div>
                         );
                       })}
@@ -1387,11 +1486,125 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                   Con Empire risparmi <strong className="text-accent">€2.508/anno</strong> — si ripaga in meno di 4 mesi.
                 </p>
               </motion.div>
-            </motion.div>
-          </motion.div>
-        )}
+              </motion.div>
 
-        {/* ═══ MONTHLY MODE ═══ */}
+              {/* ── Feature Request CTA ── */}
+              <motion.div className="max-w-4xl mx-auto mt-8 text-center" initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <div className="p-5 rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background/40 to-accent/[0.03] backdrop-blur-sm">
+                  <div className="w-12 h-12 mx-auto rounded-xl bg-vibrant-gradient flex items-center justify-center mb-3">
+                    <Sparkles className="w-6 h-6 text-primary-foreground" />
+                  </div>
+                  <h3 className="text-base sm:text-lg font-heading font-bold text-foreground mb-1">Non trovi quello che cerchi?</h3>
+                  <p className="text-xs text-foreground/40 max-w-sm mx-auto mb-4">
+                    Sviluppiamo funzionalità su misura per il tuo business. Descrivici cosa ti serve e lo costruiamo per te.
+                  </p>
+                  <motion.button
+                    onClick={() => setShowFeatureRequest(true)}
+                    className="px-6 py-3 rounded-full bg-vibrant-gradient text-primary-foreground text-xs font-heading font-bold tracking-wider uppercase"
+                    whileHover={{ scale: 1.03, boxShadow: "0 10px 40px hsla(265,70%,60%,0.2)" }}
+                    whileTap={{ scale: 0.97 }}>
+                    <span className="flex items-center gap-2">
+                      <Mail className="w-3.5 h-3.5" /> Richiedi Funzionalità Personalizzata
+                    </span>
+                  </motion.button>
+                  <p className="text-[0.5rem] text-foreground/20 mt-2">Risposta garantita entro 24h · Preventivo gratuito · Settore: {PRICING_SECTORS.find(s => s.id === selectedSector)?.label}</p>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* ── Feature Request Modal ── */}
+          <AnimatePresence>
+            {showFeatureRequest && (
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                onClick={() => setShowFeatureRequest(false)}>
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 10 }}
+                  className="relative w-full max-w-md p-6 rounded-2xl border border-border/30 bg-background/95 backdrop-blur-xl"
+                  onClick={e => e.stopPropagation()}>
+                  <button onClick={() => setShowFeatureRequest(false)} className="absolute top-3 right-3 p-1 rounded-full hover:bg-foreground/[0.05] text-foreground/30">
+                    <X className="w-4 h-4" />
+                  </button>
+                  <div className="w-10 h-10 mx-auto rounded-xl bg-vibrant-gradient flex items-center justify-center mb-3">
+                    <Sparkles className="w-5 h-5 text-primary-foreground" />
+                  </div>
+                  <h3 className="text-lg font-heading font-bold text-foreground text-center mb-1">Richiedi Funzionalità</h3>
+                  <p className="text-xs text-foreground/40 text-center mb-4">Descrivici la funzione che desideri. Il nostro team la valuterà e ti invierà un preventivo.</p>
+
+                  {featureRequestSent ? (
+                    <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center py-6">
+                      <div className="w-14 h-14 mx-auto rounded-full bg-accent/20 flex items-center justify-center mb-3">
+                        <Check className="w-7 h-7 text-accent" />
+                      </div>
+                      <p className="text-sm font-heading font-bold text-foreground mb-1">Richiesta Inviata!</p>
+                      <p className="text-xs text-foreground/40">Ti contatteremo entro 24 ore con un preventivo personalizzato.</p>
+                      <button onClick={() => { setShowFeatureRequest(false); setFeatureRequestSent(false); }}
+                        className="mt-4 px-5 py-2 rounded-full bg-foreground/[0.05] text-foreground/60 text-xs font-semibold hover:bg-foreground/[0.08] transition-colors">
+                        Chiudi
+                      </button>
+                    </motion.div>
+                  ) : (
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-[0.6rem] font-heading font-bold text-foreground/40 tracking-[1px] uppercase">Settore</label>
+                        <div className="mt-1 px-3 py-2 rounded-lg bg-foreground/[0.03] border border-border/20 text-xs text-foreground/60">
+                          {PRICING_SECTORS.find(s => s.id === selectedSector)?.emoji} {PRICING_SECTORS.find(s => s.id === selectedSector)?.label}
+                          {selectedPackage && <span className="ml-2 text-primary/60">· {PACKAGE_TIERS.find(p => p.id === selectedPackage)?.name}</span>}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[0.6rem] font-heading font-bold text-foreground/40 tracking-[1px] uppercase">La tua email</label>
+                        <input
+                          type="email" value={featureRequestEmail} onChange={e => setFeatureRequestEmail(e.target.value)}
+                          placeholder="nome@azienda.it"
+                          className="mt-1 w-full px-3 py-2.5 rounded-lg bg-foreground/[0.03] border border-border/20 text-sm text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/30 transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[0.6rem] font-heading font-bold text-foreground/40 tracking-[1px] uppercase">Descrivi la funzionalità desiderata</label>
+                        <textarea
+                          value={featureRequestText} onChange={e => setFeatureRequestText(e.target.value)}
+                          placeholder="Es: Vorrei un sistema di prenotazione con caparra automatica..."
+                          rows={4}
+                          className="mt-1 w-full px-3 py-2.5 rounded-lg bg-foreground/[0.03] border border-border/20 text-sm text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/30 transition-colors resize-none"
+                        />
+                      </div>
+                      <motion.button
+                        onClick={async () => {
+                          if (!featureRequestText.trim() || !featureRequestEmail.trim()) return;
+                          setFeatureRequestSending(true);
+                          try {
+                            const { supabase } = await import("@/integrations/supabase/client");
+                            await supabase.functions.invoke("submit-feature-request", {
+                              body: {
+                                email: featureRequestEmail.trim(),
+                                description: featureRequestText.trim(),
+                                sector: selectedSector,
+                                packageId: selectedPackage,
+                              },
+                            });
+                            setFeatureRequestSent(true);
+                          } catch {
+                            // silent fail
+                          } finally {
+                            setFeatureRequestSending(false);
+                          }
+                        }}
+                        disabled={featureRequestSending || !featureRequestText.trim() || !featureRequestEmail.trim()}
+                        className="w-full px-5 py-3 rounded-xl bg-vibrant-gradient text-primary-foreground text-sm font-heading font-bold tracking-wider uppercase disabled:opacity-40 disabled:cursor-not-allowed"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}>
+                        {featureRequestSending ? "Invio in corso..." : "Invia Richiesta →"}
+                      </motion.button>
+                      <p className="text-[0.45rem] text-foreground/15 text-center">I tuoi dati sono protetti e utilizzati solo per rispondere alla tua richiesta.</p>
+                    </div>
+                  )}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         {pricingMode === "monthly" && (
           <motion.div key="monthly" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
 
