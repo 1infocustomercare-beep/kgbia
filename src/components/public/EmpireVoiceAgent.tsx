@@ -200,6 +200,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>("hero");
   const [narratedSections, setNarratedSections] = useState<Set<string>>(new Set());
   const [autoNarrating, setAutoNarrating] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<InstanceType<NonNullable<typeof SpeechRecognition>> | null>(null);
@@ -212,6 +213,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const sectionQueueRef = useRef<string[]>([]);
   const queueProcessingRef = useRef(false);
   const narrationAttemptsRef = useRef<Record<string, number>>({});
+  const introStartedRef = useRef(false);
 
   // Sync refs
   useEffect(() => { messagesRef.current = messages; }, [messages]);
