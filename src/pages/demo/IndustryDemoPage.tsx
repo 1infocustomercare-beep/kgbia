@@ -364,21 +364,22 @@ export default function IndustryDemoPage() {
       opening_hours: demoData.hours,
       social_links: {},
     };
+    const accentColor = demoCompany.primary_color || industryConfig.defaultPrimaryColor;
     return (
       <>
         <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
         <PremiumTemplate company={demoCompany} />
-        {/* Phone Preview Showcase */}
-        <div className="py-16 px-4" style={{ background: "linear-gradient(180deg, #0a0a0a, #111)" }}>
-          <div className="max-w-4xl mx-auto text-center mb-10">
-            <p className="text-[10px] font-bold tracking-[4px] uppercase mb-2" style={{ color: demoCompany.primary_color || industryConfig.defaultPrimaryColor }}>Anteprima Interfacce</p>
-            <h3 className="text-xl sm:text-2xl font-bold text-white/90">4 Schermate della Tua App</h3>
-            <p className="text-xs text-white/35 mt-2 max-w-md mx-auto">Ecco come apparirà la tua piattaforma personalizzata {industryConfig.label}</p>
+        {/* Phone Preview Showcase — compact, mobile-first */}
+        <div className="py-10 sm:py-14 px-3 sm:px-4" style={{ background: "linear-gradient(180deg, #0a0a0a, #111)" }}>
+          <div className="max-w-4xl mx-auto text-center mb-5 sm:mb-8">
+            <p className="text-[10px] font-bold tracking-[4px] uppercase mb-1.5" style={{ color: accentColor }}>Anteprima Interfacce</p>
+            <h3 className="text-lg sm:text-2xl font-bold text-white/90">La Tua App in 4 Schermate</h3>
+            <p className="text-[10px] sm:text-xs text-white/35 mt-1 max-w-md mx-auto">Home · Catalogo · Prenotazioni · Dashboard — {industryConfig.label}</p>
           </div>
           <IndustryPhoneShowcase industryId={resolvedIndustry} />
         </div>
         <Suspense fallback={null}>
-          <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={demoCompany.primary_color || industryConfig.defaultPrimaryColor} />
+          <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={accentColor} />
         </Suspense>
       </>
     );
