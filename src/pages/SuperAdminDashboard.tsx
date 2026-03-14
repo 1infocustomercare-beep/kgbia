@@ -789,6 +789,260 @@ const SuperAdminDashboard = () => {
           </motion.div>
         )}
 
+        {/* ===== ABBONAMENTI ===== */}
+        {!loading && activeTab === "subscriptions" && (
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {(() => {
+              const activeSubs = subscriptions.filter(s => s.status === "active" || s.status === "trialing");
+              const cancelingSubs = subscriptions.filter(s => s.cancelAtPeriodEnd);
+              const trialSubs = subscriptions.filter(s => s.status === "trialing");
+              const totalMRRSubs = activeSubs.reduce((sum, s) => {
+                const prices: Record<string, number> = { essential: 29, smart_ia: 59, empire_pro: 89, starter: 0, free: 0 };
+                return sum + (prices[s.plan] || 0);
+              }, 0);
+              const planCounts: Record<string, number> = {};
+              subscriptions.forEach(s => { planCounts[s.plan] = (planCounts[s.plan] || 0) + 1; });
+
+              const handleUpdatePlan = async (subId: string, newPlan: string) => {
+                await supabase.from("business_subscriptions").update({ plan: newPlan, updated_at: new Date().toISOString() }).eq("id", subId);
+                // Also update the company subscription_plan
+                const sub = subscriptions.find(s => s.id === subId);
+                if (sub) {
+                  await supabase.from("companies").update({ subscription_plan: newPlan }).eq("id", sub.companyId);
+                }
+                setEditingSub(null);
+                toast({ title: "Piano aggiornato", description: `Cambiato a ${PLAN_LABELS[newPlan] || newPlan}` });
+                fetchData();
+              };
+
+              const handleCancelSub = async (subId: string) => {
+                await supabase.from("business_subscriptions").update({ cancel_at_period_end: true, updated_at: new Date().toISOString() }).eq("id", subId);
+                toast({ title: "Cancellazione programmata", description: "L'abbonamento terminerà alla fine del periodo" });
+                fetchData();
+              };
+
+              const handleReactivateSub = async (subId: string) => {
+                await supabase.from("business_subscriptions").update({ cancel_at_period_end: false, status: "active", updated_at: new Date().toISOString() }).eq("id", subId);
+                toast({ title: "Abbonamento riattivato" });
+                fetchData();
+              };
+
+              const handleActivateTrial = async (subId: string) => {
+                await supabase.from("business_subscriptions").update({ status: "active", updated_at: new Date().toISOString() }).eq("id", subId);
+                toast({ title: "Trial convertito in attivo" });
+                fetchData();
+              };
+
+              const statusLabel = (status: string, cancel: boolean) => {
+                if (cancel) return { text: "In cancellazione", color: "bg-amber-500/10 text-amber-400" };
+                if (status === "trialing") return { text: "Trial", color: "bg-blue-500/10 text-blue-400" };
+                if (status === "active") return { text: "Attivo", color: "bg-green-500/10 text-green-400" };
+                if (status === "canceled") return { text: "Cancellato", color: "bg-destructive/10 text-destructive" };
+                if (status === "past_due") return { text: "Scaduto", color: "bg-destructive/10 text-destructive" };
+                return { text: status, color: "bg-secondary text-muted-foreground" };
+              };
+
+              const daysUntil = (date: string) => {
+                const diff = Math.ceil((new Date(date).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+                return diff;
+              };
+
+              return (
+                <>
+                  {/* KPI Cards */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="p-3 rounded-2xl bg-card border border-primary/20">
+                      <Calendar className="w-4 h-4 text-primary mb-1" />
+                      <p className="text-2xl font-display font-bold text-primary">{activeSubs.length}</p>
+                      <p className="text-[10px] text-muted-foreground">Abbonamenti Attivi</p>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-card border border-border">
+                      <DollarSign className="w-4 h-4 text-primary mb-1" />
+                      <p className="text-2xl font-display font-bold text-foreground">€{totalMRRSubs.toLocaleString()}</p>
+                      <p className="text-[10px] text-muted-foreground">MRR Abbonamenti</p>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-card border border-border">
+                      <Clock className="w-4 h-4 text-blue-400 mb-1" />
+                      <p className="text-2xl font-display font-bold text-blue-400">{trialSubs.length}</p>
+                      <p className="text-[10px] text-muted-foreground">In Prova</p>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-card border border-border">
+                      <AlertCircle className="w-4 h-4 text-amber-400 mb-1" />
+                      <p className="text-2xl font-display font-bold text-amber-400">{cancelingSubs.length}</p>
+                      <p className="text-[10px] text-muted-foreground">In Cancellazione</p>
+                    </div>
+                  </div>
+
+                  {/* Plan distribution */}
+                  <div className="p-4 rounded-2xl bg-card border border-border">
+                    <h3 className="text-sm font-semibold text-foreground mb-3">Distribuzione Piani</h3>
+                    <div className="space-y-2">
+                      {Object.entries(planCounts).sort((a, b) => b[1] - a[1]).map(([plan, count]) => {
+                        const pct = subscriptions.length > 0 ? (count / subscriptions.length * 100) : 0;
+                        const prices: Record<string, number> = { essential: 29, smart_ia: 59, empire_pro: 89, starter: 0, free: 0 };
+                        return (
+                          <div key={plan}>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-xs font-medium text-foreground">{PLAN_LABELS[plan] || plan}</span>
+                              <span className="text-xs text-muted-foreground">{count} · €{(count * (prices[plan] || 0)).toLocaleString()}/mese</span>
+                            </div>
+                            <div className="h-2 rounded-full bg-secondary overflow-hidden">
+                              <motion.div className="h-full rounded-full bg-primary" initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8 }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Trial expiring soon */}
+                  {trialSubs.filter(s => daysUntil(s.trialEnd) <= 14 && daysUntil(s.trialEnd) > 0).length > 0 && (
+                    <div className="p-3 rounded-xl bg-amber-500/5 border border-amber-500/20">
+                      <div className="flex items-center gap-2 mb-2">
+                        <AlertCircle className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs font-semibold text-foreground">Trial in Scadenza (≤14 giorni)</span>
+                      </div>
+                      <div className="space-y-1">
+                        {trialSubs.filter(s => daysUntil(s.trialEnd) <= 14 && daysUntil(s.trialEnd) > 0).map(s => (
+                          <div key={s.id} className="flex items-center justify-between text-xs">
+                            <span className="text-foreground">{s.companyName}</span>
+                            <span className="text-amber-400 font-medium">{daysUntil(s.trialEnd)} giorni</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Subscriptions list */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-foreground">Tutti gli Abbonamenti ({subscriptions.length})</h3>
+                    </div>
+
+                    {subscriptions.map((sub) => {
+                      const sl = statusLabel(sub.status, sub.cancelAtPeriodEnd);
+                      const isEditing = editingSub === sub.id;
+                      const trialDays = sub.status === "trialing" ? daysUntil(sub.trialEnd) : null;
+                      const prices: Record<string, number> = { essential: 29, smart_ia: 59, empire_pro: 89, starter: 0, free: 0 };
+                      const monthlyPrice = prices[sub.plan] || 0;
+
+                      return (
+                        <motion.div key={sub.id}
+                          className="p-4 rounded-2xl bg-card border border-border"
+                          layout>
+                          {/* Header */}
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h4 className="font-medium text-foreground text-sm">{sub.companyName}</h4>
+                                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase"
+                                  style={{ backgroundColor: (INDUSTRY_COLORS[sub.companyIndustry] || "#C8963E") + "20", color: INDUSTRY_COLORS[sub.companyIndustry] || "#C8963E" }}>
+                                  {INDUSTRY_LABELS[sub.companyIndustry] || sub.companyIndustry}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${sl.color}`}>{sl.text}</span>
+                                <span className="text-[10px] text-muted-foreground">{PLAN_LABELS[sub.plan] || sub.plan}</span>
+                                {monthlyPrice > 0 && <span className="text-[10px] text-primary font-semibold">€{monthlyPrice}/mese</span>}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Trial progress */}
+                          {sub.status === "trialing" && trialDays !== null && (
+                            <div className="mb-3">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-[10px] text-muted-foreground">Trial rimanente</span>
+                                <span className={`text-[10px] font-semibold ${trialDays <= 7 ? "text-destructive" : trialDays <= 14 ? "text-amber-400" : "text-green-400"}`}>
+                                  {trialDays > 0 ? `${trialDays} giorni` : "Scaduto"}
+                                </span>
+                              </div>
+                              <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
+                                <motion.div
+                                  className={`h-full rounded-full ${trialDays <= 7 ? "bg-destructive" : trialDays <= 14 ? "bg-amber-400" : "bg-green-400"}`}
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${Math.max(0, Math.min(100, (trialDays / 90) * 100))}%` }}
+                                  transition={{ duration: 0.6 }}
+                                />
+                              </div>
+                              <p className="text-[9px] text-muted-foreground mt-1">
+                                Inizio: {new Date(sub.trialStart).toLocaleDateString("it-IT")} · Fine: {new Date(sub.trialEnd).toLocaleDateString("it-IT")}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Period info for active */}
+                          {sub.status === "active" && sub.currentPeriodEnd && (
+                            <p className="text-[10px] text-muted-foreground mb-2">
+                              Periodo corrente: {sub.currentPeriodStart ? new Date(sub.currentPeriodStart).toLocaleDateString("it-IT") : "—"} → {new Date(sub.currentPeriodEnd).toLocaleDateString("it-IT")}
+                            </p>
+                          )}
+
+                          {/* Stripe info */}
+                          <div className="flex items-center gap-2 mb-3 flex-wrap">
+                            {sub.stripeCustomerId ? (
+                              <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 font-medium">Stripe Collegato</span>
+                            ) : (
+                              <span className="text-[9px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">Stripe Non Collegato</span>
+                            )}
+                            <span className="text-[9px] text-muted-foreground">Creato {new Date(sub.createdAt).toLocaleDateString("it-IT")}</span>
+                          </div>
+
+                          {/* Edit Plan inline */}
+                          {isEditing ? (
+                            <motion.div className="flex items-center gap-2 flex-wrap" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}>
+                              {["essential", "smart_ia", "empire_pro"].map(p => (
+                                <button key={p} onClick={() => handleUpdatePlan(sub.id, p)}
+                                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                    sub.plan === p ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground hover:bg-primary/10"
+                                  }`}>
+                                  {PLAN_LABELS[p] || p}
+                                </button>
+                              ))}
+                              <button onClick={() => setEditingSub(null)} className="text-[10px] text-muted-foreground underline">Annulla</button>
+                            </motion.div>
+                          ) : (
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <button onClick={() => { setEditingSub(sub.id); setEditPlan(sub.plan); }}
+                                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-secondary text-foreground text-[10px] font-medium hover:bg-primary/10 transition-colors">
+                                <ArrowUpRight className="w-3 h-3" /> Cambia Piano
+                              </button>
+                              {sub.status === "trialing" && (
+                                <button onClick={() => handleActivateTrial(sub.id)}
+                                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-green-500/10 text-green-400 text-[10px] font-medium">
+                                  <CheckCircle2 className="w-3 h-3" /> Attiva
+                                </button>
+                              )}
+                              {sub.cancelAtPeriodEnd ? (
+                                <button onClick={() => handleReactivateSub(sub.id)}
+                                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-green-500/10 text-green-400 text-[10px] font-medium">
+                                  <Unlock className="w-3 h-3" /> Riattiva
+                                </button>
+                              ) : sub.status === "active" && (
+                                <button onClick={() => handleCancelSub(sub.id)}
+                                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-destructive/10 text-destructive text-[10px] font-medium">
+                                  <Ban className="w-3 h-3" /> Cancella
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </motion.div>
+                      );
+                    })}
+
+                    {subscriptions.length === 0 && (
+                      <div className="text-center py-12">
+                        <Calendar className="w-12 h-12 mx-auto mb-3 text-muted-foreground/20" />
+                        <p className="text-sm text-muted-foreground">Nessun abbonamento registrato</p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              );
+            })()}
+          </motion.div>
+        )}
+
         {/* ===== FISCALITÀ ===== */}
         {!loading && activeTab === "fisco" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
