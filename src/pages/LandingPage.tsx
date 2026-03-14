@@ -509,7 +509,7 @@ const PACKAGE_TIERS: PackageTier[] = [
 const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void }) => {
   const [pricingMode, setPricingMode] = useState<PricingMode>("package");
   const [selectedPlan, setSelectedPlan] = useState<PlanTier>("professional");
-  const [selectedPackage, setSelectedPackage] = useState("growth");
+  const [selectedPackage, setSelectedPackage] = useState("empire");
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
   const [showAddons, setShowAddons] = useState(false);
@@ -634,6 +634,17 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       <p className="text-[0.55rem] text-foreground/30 mt-0.5">una tantum</p>
                     </div>
 
+                    {/* Installment mini-options on card */}
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      <span className="px-2 py-0.5 rounded-full text-[0.45rem] font-semibold bg-foreground/[0.04] text-foreground/30 border border-border/15">
+                        oppure 3×€{Math.round(p.price / 3)}/mese
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full text-[0.45rem] font-semibold bg-foreground/[0.04] text-foreground/30 border border-border/15">
+                        oppure 6×€{Math.round(p.price / 6)}/mese
+                      </span>
+                      <span className="text-[0.4rem] text-accent/60 font-semibold self-center">0% interessi</span>
+                    </div>
+
                     {/* Monthly + Commission highlight */}
                     <div className="flex items-center gap-2 mt-2">
                       <span className={`px-2 py-0.5 rounded-full text-[0.5rem] font-bold ${
@@ -647,6 +658,18 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         {p.commission === "0%" ? "0% commissioni!" : `${p.commission} transazioni`}
                       </span>
                     </div>
+
+                    {/* Empire: daily cost nudge */}
+                    {p.id === "empire" && (
+                      <div className="mt-2 p-2 rounded-lg bg-accent/[0.06] border border-accent/15">
+                        <p className="text-[0.55rem] text-accent font-bold text-center">
+                          💰 Solo €11/giorno per 24 mesi — poi è tutto tuo, per sempre
+                        </p>
+                        <p className="text-[0.45rem] text-accent/50 text-center mt-0.5">
+                          Meno di un caffè + cornetto al bar. Zero costi nascosti.
+                        </p>
+                      </div>
+                    )}
 
                     <p className="text-[0.6rem] text-foreground/35 mt-2 leading-relaxed">{p.tagline}</p>
 
@@ -685,6 +708,15 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     }`}>
                       {p.savings}
                     </div>
+
+                    {/* Empire upsell nudge on non-empire cards */}
+                    {p.id !== "empire" && (
+                      <div className="mt-2 p-2 rounded-lg bg-accent/[0.03] border border-accent/10 cursor-pointer" onClick={(e) => { e.stopPropagation(); setSelectedPackage("empire"); }}>
+                        <p className="text-[0.45rem] text-accent/70 text-center">
+                          ⚡ Con Empire risparmi <strong>€{p.commission === "2%" ? "6.403" : "4.200"}</strong> in più e hai <strong>0% commissioni per sempre</strong> →
+                        </p>
+                      </div>
+                    )}
 
                     {isSelected && (
                       <motion.div className={`absolute bottom-0 left-0 right-0 h-1 ${p.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`}
@@ -805,26 +837,62 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     </div>
                   </div>
 
-                  {/* Installment Options */}
-                  <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-border/15">
-                    <p className="text-[0.55rem] text-foreground/30 mr-1">Paga in comode rate:</p>
-                    <button onClick={() => setInstallments(installments === 3 ? null : 3)}
-                      className={`px-3 py-1.5 rounded-full text-[0.55rem] font-semibold transition-all ${
-                        installments === 3 ? "bg-primary/15 text-primary border border-primary/30" : "bg-foreground/[0.04] text-foreground/35 border border-border/20 hover:border-primary/15"
-                      }`}>
-                      3 rate da €{Math.round(pkg.price / 3)}/mese
-                    </button>
-                    <button onClick={() => setInstallments(installments === 6 ? null : 6)}
-                      className={`px-3 py-1.5 rounded-full text-[0.55rem] font-semibold transition-all ${
-                        installments === 6 ? "bg-primary/15 text-primary border border-primary/30" : "bg-foreground/[0.04] text-foreground/35 border border-border/20 hover:border-primary/15"
-                      }`}>
-                      6 rate da €{Math.round(pkg.price / 6)}/mese
-                    </button>
+                  {/* Installment Options — expanded */}
+                  <div className="pt-3 border-t border-border/15">
+                    <p className="text-[0.6rem] font-heading font-bold text-foreground/50 tracking-[2px] uppercase mb-3">Scegli come pagare</p>
+                    <div className="grid grid-cols-3 gap-2">
+                      <button onClick={() => setInstallments(null)}
+                        className={`relative p-3 rounded-xl text-center transition-all ${
+                          installments === null
+                            ? pkg.id === "empire" ? "border-2 border-accent/40 bg-accent/[0.06]" : "border-2 border-primary/40 bg-primary/[0.06]"
+                            : "border border-border/20 hover:border-primary/15 bg-background/30"
+                        }`}>
+                        {installments === null && (
+                          <span className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-accent/20 text-[0.4rem] font-bold text-accent tracking-wider uppercase whitespace-nowrap">Più scelto</span>
+                        )}
+                        <p className="text-lg sm:text-xl font-heading font-bold text-foreground">€{pkg.price.toLocaleString("it-IT")}</p>
+                        <p className="text-[0.5rem] text-foreground/30 mt-0.5">Una tantum</p>
+                        <p className="text-[0.45rem] text-accent/60 font-semibold mt-1">Risparmi di più</p>
+                      </button>
+                      <button onClick={() => setInstallments(3)}
+                        className={`p-3 rounded-xl text-center transition-all ${
+                          installments === 3
+                            ? pkg.id === "empire" ? "border-2 border-accent/40 bg-accent/[0.06]" : "border-2 border-primary/40 bg-primary/[0.06]"
+                            : "border border-border/20 hover:border-primary/15 bg-background/30"
+                        }`}>
+                        <p className="text-lg sm:text-xl font-heading font-bold text-foreground">€{Math.round(pkg.price / 3).toLocaleString("it-IT")}</p>
+                        <p className="text-[0.5rem] text-foreground/30 mt-0.5">×3 mesi</p>
+                        <p className="text-[0.45rem] text-accent/60 font-semibold mt-1">0% interessi</p>
+                      </button>
+                      <button onClick={() => setInstallments(6)}
+                        className={`p-3 rounded-xl text-center transition-all ${
+                          installments === 6
+                            ? pkg.id === "empire" ? "border-2 border-accent/40 bg-accent/[0.06]" : "border-2 border-primary/40 bg-primary/[0.06]"
+                            : "border border-border/20 hover:border-primary/15 bg-background/30"
+                        }`}>
+                        <p className="text-lg sm:text-xl font-heading font-bold text-foreground">€{Math.round(pkg.price / 6).toLocaleString("it-IT")}</p>
+                        <p className="text-[0.5rem] text-foreground/30 mt-0.5">×6 mesi</p>
+                        <p className="text-[0.45rem] text-accent/60 font-semibold mt-1">0% interessi</p>
+                      </button>
+                    </div>
                     {installments && (
-                      <motion.span initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                        className="text-[0.5rem] text-accent font-semibold ml-1">
-                        ✓ 0% interessi
-                      </motion.span>
+                      <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
+                        className="text-[0.55rem] text-foreground/30 text-center mt-2">
+                        Pagherai {installments} rate da <strong className="text-foreground/60">€{Math.round(pkg.price / installments).toLocaleString("it-IT")}/mese</strong> · Addebito automatico · Nessun costo aggiuntivo
+                      </motion.p>
+                    )}
+                    {/* Empire push if not selected */}
+                    {pkg.id !== "empire" && (
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+                        className="mt-3 p-3 rounded-xl bg-accent/[0.04] border border-accent/15 cursor-pointer hover:bg-accent/[0.08] transition-colors"
+                        onClick={() => setSelectedPackage("empire")}>
+                        <p className="text-[0.6rem] text-accent font-bold text-center">
+                          💎 Passa a Empire Domination — risparmi €{(7997 - pkg.price + (pkg.monthlyFee * 24)).toLocaleString("it-IT")} in 2 anni
+                        </p>
+                        <p className="text-[0.45rem] text-accent/50 text-center mt-0.5">
+                          0% commissioni + €0/mese per 24 mesi · Solo €{Math.round(7997 / 6)}/mese in 6 rate
+                        </p>
+                      </motion.div>
                     )}
                   </div>
                 </div>
@@ -845,8 +913,10 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                 </div>
                 {[
                   { label: "Investimento", vals: ["€1.997", "€4.997", "€7.997"] },
+                  { label: "In 6 rate", vals: [`€${Math.round(1997/6)}/m`, `€${Math.round(4997/6)}/m`, `€${Math.round(7997/6)}/m`] },
                   { label: "Canone mensile", vals: ["€49/mese", "€29/mese", "€0 per sempre"] },
                   { label: "Commissioni", vals: ["2%", "1%", "0%"] },
+                  { label: "Costo reale 24 mesi", vals: [`€${(1997 + 49*24).toLocaleString("it-IT")}`, `€${(4997 + 29*24).toLocaleString("it-IT")}`, "€7.997"] },
                   { label: "Agenti IA inclusi", vals: ["0", "2", "5"] },
                   { label: "Mesi inclusi", vals: ["12", "18", "24"] },
                   { label: "Account Manager", vals: ["—", "—", "✓ Dedicato"] },
