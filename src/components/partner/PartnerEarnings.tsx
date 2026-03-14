@@ -125,7 +125,7 @@ const PartnerEarnings = forwardRef<HTMLDivElement>((_, ref) => {
         ) : (
           <div className="space-y-2">
             <p className="text-xs text-muted-foreground">
-              Collega il tuo conto bancario per ricevere le commissioni di €997 per ogni vendita chiusa.
+              Collega il tuo conto bancario per ricevere €997 di commissione per ogni pacchetto venduto.
             </p>
             <motion.button
               onClick={handleConnectStripe}
