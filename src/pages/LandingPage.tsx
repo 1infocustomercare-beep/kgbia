@@ -2396,53 +2396,6 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-          PERCHÉ SIAMO N°1 — Dense Benefits Grid
-         ═══════════════════════════════════════════ */}
-      <Section>
-        <div className="text-center mb-10 sm:mb-14">
-          <SectionLabel text="Supremazia" icon={<Crown className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Perché Siamo <span className="text-shimmer">N°1</span>
-          </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.7]"
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Non è marketing. Sono fatti. Ecco perché nessun competitor può offrire quello che offriamo noi.
-          </motion.p>
-        </div>
-
-        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
-          variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {[
-            { icon: <Brain className="w-4 h-4" />, title: "IA Proprietaria", desc: "Non rivendiamo ChatGPT. Engine AI custom." },
-            { icon: <Globe className="w-4 h-4" />, title: "25+ Settori", desc: "Dal ristorante all'hotel, dalla palestra al medico." },
-            { icon: <Smartphone className="w-4 h-4" />, title: "PWA Nativa", desc: "Installabile come app. No App Store, no costi." },
-            { icon: <Fingerprint className="w-4 h-4" />, title: "100% White Label", desc: "Il tuo brand, zero marchi terzi." },
-            { icon: <Zap className="w-4 h-4" />, title: "Attivo in 24h", desc: "Non mesi. Un giorno e sei operativo." },
-            { icon: <Shield className="w-4 h-4" />, title: "GDPR & AES-256", desc: "Sicurezza enterprise per tutti." },
-            { icon: <Workflow className="w-4 h-4" />, title: "Automazione Totale", desc: "Dal primo contatto alla fattura." },
-            { icon: <Radio className="w-4 h-4" />, title: "Updates Settimanali", desc: "Il sistema si evolve. Sempre gratis." },
-            { icon: <DollarSign className="w-4 h-4" />, title: "Solo 2% Fee", desc: "15× meno di qualsiasi piattaforma." },
-            { icon: <Database className="w-4 h-4" />, title: "Dati Tuoi", desc: "Proprietà totale. Zero lock-in." },
-            { icon: <Bot className="w-4 h-4" />, title: "Concierge AI", desc: "Assistente 24/7 per i tuoi clienti." },
-            { icon: <Headphones className="w-4 h-4" />, title: "Supporto 7/7", desc: "Persone vere, non chatbot." },
-          ].map((b, i) => (
-            <motion.div key={i} variants={popIn}>
-              <PremiumCard scan delay={i * 0.3} className="p-4 text-center">
-                <motion.div className="text-primary/50 mb-2 flex justify-center group-hover/card:text-primary/80 transition-colors"
-                  animate={{ y: [0, -2, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{b.icon}</motion.div>
-                <h4 className="text-[0.7rem] font-heading font-bold text-foreground mb-1">{b.title}</h4>
-                <p className="text-[0.55rem] text-foreground/30 leading-[1.5]">{b.desc}</p>
-              </PremiumCard>
-            </motion.div>
-          ))}
-        </motion.div>
-      </Section>
-
-      <SectionDivider />
-
-      {/* ═══════════════════════════════════════════
           GARANZIA TOTALE — Risk Reversal
          ═══════════════════════════════════════════ */}
       <Section>
