@@ -339,6 +339,16 @@ const AGENTS: AgentDef[] = [
   },
 ];
 
+const INDUSTRY_LABELS: Record<string, string> = {
+  food: "🍽 Food", ncc: "🚗 NCC", beauty: "💇 Beauty", healthcare: "🏥 Salute",
+  retail: "🛍 Retail", fitness: "💪 Fitness", hospitality: "🏨 Hotel",
+  plumber: "🔧 Idraulico", electrician: "⚡ Elettricista", cleaning: "🧹 Pulizie",
+  legal: "⚖️ Legale", accounting: "🧮 Commercialista", photography: "📷 Foto",
+  veterinary: "🐾 Veterinario", tattoo: "🎨 Tattoo", childcare: "👶 Infanzia",
+  education: "🎓 Formazione", events: "🎉 Eventi", logistics: "🚚 Logistica",
+  construction: "🏗 Edilizia", gardening: "🌿 Giardinaggio",
+};
+
 const PIE_COLORS = ["#C8963E", "#8B5CF6", "#10B981", "#EC4899", "#F97316", "#EF4444", "#3B82F6", "#6366F1"];
 
 // ─── Mock data ───
