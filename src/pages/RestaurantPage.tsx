@@ -879,6 +879,13 @@ const RestaurantPage = () => {
       <FloatingCartButton onClick={() => setCartOpen(true)} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} allMenuItems={menu} />
       <CookieBanner restaurantId={dbRestaurant?.id} />
+      <Suspense fallback={null}>
+        <RestaurantVoiceAgent
+          restaurantName={restaurantName}
+          menuItems={menu}
+          primaryColor={dbRestaurant?.primary_color || undefined}
+        />
+      </Suspense>
     </div>
   );
 };
