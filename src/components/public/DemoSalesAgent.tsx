@@ -419,7 +419,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
                         color: "white",
                       }}
                     >
-                      <ReactMarkdown className="prose prose-xs prose-invert">{m.content}</ReactMarkdown>
+                      <div className="prose prose-xs prose-invert"><ReactMarkdown>{m.content}</ReactMarkdown></div>
                     </div>
                   </div>
                 ))}
