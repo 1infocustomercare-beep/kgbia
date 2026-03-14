@@ -151,7 +151,6 @@ export function AIAgentsShowcase() {
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
-            </linearGradient>
           </defs>
           {/* Left helix strand */}
           <motion.path
