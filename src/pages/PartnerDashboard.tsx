@@ -32,7 +32,7 @@ import { GuidesToggle } from "@/components/ui/info-guide";
 import InfoGuide from "@/components/ui/info-guide";
 import { RefreshCw, Palette, Pencil, Upload, Save, X as XIcon } from "lucide-react";
 
-type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault";
+type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault" | "showcase";
 
 const PartnerDashboard = () => {
   const navigate = useNavigate();
