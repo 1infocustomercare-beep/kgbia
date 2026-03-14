@@ -1258,7 +1258,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                           💎 Passa a Empire Domination — risparmi €{(7997 - pkg.price + (pkg.monthlyFee * 24)).toLocaleString("it-IT")} in 2 anni
                         </p>
                         <p className="text-[0.45rem] text-accent/50 text-center mt-0.5">
-                          0% commissioni + €0/mese per 24 mesi · Solo €{Math.round(7997 / 6)}/mese in 6 rate
+                          0% commissioni + €0/mese per 24 mesi · Tutto incluso · Solo €{Math.round(7997 / 6)}/mese in 6 rate
                         </p>
                       </motion.div>
                     )}
