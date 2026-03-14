@@ -63,7 +63,25 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations";
+
+interface SubscriptionRecord {
+  id: string;
+  companyId: string;
+  companyName: string;
+  companyIndustry: string;
+  plan: string;
+  status: string;
+  trialStart: string;
+  trialEnd: string;
+  currentPeriodStart: string | null;
+  currentPeriodEnd: string | null;
+  cancelAtPeriodEnd: boolean;
+  stripeCustomerId: string | null;
+  stripeSubscriptionId: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const INDUSTRY_COLORS: Record<string, string> = {
   food: "#C8963E", ncc: "#1E3A5F", beauty: "#E91E8C", healthcare: "#10B981",
