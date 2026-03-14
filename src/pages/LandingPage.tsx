@@ -359,6 +359,308 @@ const CompRow = ({ label, empire, others }: { label: string; empire: string; oth
 );
 
 /* ═══════════════════════════════════════════
+   PRICING CONFIGURATOR
+   ═══════════════════════════════════════════ */
+
+type PlanTier = "starter" | "professional" | "enterprise";
+
+interface AiAddon {
+  id: string;
+  name: string;
+  desc: string;
+  price: number;
+  icon: React.ReactNode;
+  popular?: boolean;
+  sectors?: string;
+}
+
+const AI_ADDONS: AiAddon[] = [
+  { id: "concierge", name: "Concierge AI", desc: "Receptionist 24/7 multi-canale", price: 99, icon: <Bot className="w-4 h-4" />, popular: true, sectors: "Tutti" },
+  { id: "analytics", name: "Analytics Brain", desc: "Previsioni fatturato e churn", price: 149, icon: <LineChart className="w-4 h-4" />, sectors: "Tutti" },
+  { id: "social", name: "Social Manager AI", desc: "Piano editoriale automatico", price: 79, icon: <Globe className="w-4 h-4" />, popular: true, sectors: "Tutti" },
+  { id: "sales", name: "Sales Closer AI", desc: "Lead scoring e follow-up auto", price: 129, icon: <Target className="w-4 h-4" />, sectors: "Tutti" },
+  { id: "document", name: "Document AI", desc: "Fatture e preventivi automatici", price: 49, icon: <ClipboardCheck className="w-4 h-4" />, sectors: "Tutti" },
+  { id: "compliance", name: "Compliance Guardian", desc: "GDPR, scadenze, audit trail", price: 59, icon: <Shield className="w-4 h-4" />, sectors: "Tutti" },
+  { id: "ops-food", name: "Operations — Food", desc: "KDS, food cost, HACCP", price: 149, icon: <ChefHat className="w-4 h-4" />, sectors: "Food" },
+  { id: "ops-ncc", name: "Operations — NCC", desc: "Fleet, dynamic pricing, dispatch", price: 199, icon: <Car className="w-4 h-4" />, sectors: "NCC" },
+];
+
+const PLAN_TIERS: { id: PlanTier; name: string; price: number; desc: string; badge?: string; features: string[]; includedAgents: number }[] = [
+  {
+    id: "starter",
+    name: "Starter",
+    price: 69,
+    desc: "Tutto per iniziare a digitalizzare",
+    features: ["App White Label completa", "Menu/Catalogo QR", "Ordini & Prenotazioni", "Dashboard Analytics", "Supporto Email", "Sicurezza AES-256 & GDPR"],
+    includedAgents: 0,
+  },
+  {
+    id: "professional",
+    name: "Professional",
+    price: 149,
+    badge: "Più Scelto",
+    desc: "IA + automazioni per crescere",
+    features: ["Tutto di Starter +", "AI Engine completo", "CRM & Fidelizzazione", "Review Shield™", "Push Notification", "Traduzioni automatiche", "1 Agente IA incluso a scelta"],
+    includedAgents: 1,
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise",
+    price: 299,
+    badge: "Max Revenue",
+    desc: "Suite completa per dominare il mercato",
+    features: ["Tutto di Professional +", "Multi-lingua illimitato", "Loyalty Wallet avanzato", "GhostManager™ clienti persi", "Analytics predittivi", "Supporto prioritario 7/7", "3 Agenti IA inclusi a scelta"],
+    includedAgents: 3,
+  },
+];
+
+const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void }) => {
+  const [selectedPlan, setSelectedPlan] = useState<PlanTier>("professional");
+  const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
+  const [showAddons, setShowAddons] = useState(false);
+
+  const plan = PLAN_TIERS.find(p => p.id === selectedPlan)!;
+  const addonDiscount = billingCycle === "annual" ? 0.8 : 1;
+  const planDiscount = billingCycle === "annual" ? 0.8 : 1;
+
+  // Free included agents reduce addon cost
+  const sortedAddons = [...selectedAddons].sort();
+  const freeAgentCount = plan.includedAgents;
+  const paidAddonIds = sortedAddons.slice(freeAgentCount);
+  const addonTotal = paidAddonIds.reduce((sum, id) => {
+    const a = AI_ADDONS.find(x => x.id === id);
+    return sum + (a ? a.price : 0);
+  }, 0) * addonDiscount;
+
+  const planPrice = plan.price * planDiscount;
+  const totalMonthly = planPrice + addonTotal;
+  const savedPerYear = billingCycle === "annual" ? ((plan.price + paidAddonIds.reduce((s, id) => s + (AI_ADDONS.find(x => x.id === id)?.price || 0), 0)) * 12 * 0.2) : 0;
+
+  const toggleAddon = (id: string) => {
+    setSelectedAddons(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  return (
+    <Section id="pricing">
+      <div className="text-center mb-8 sm:mb-12">
+        <SectionLabel text="Piani & Prezzi" icon={<Gem className="w-3 h-3 text-accent" />} />
+        <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          Costruisci il <span className="text-shimmer">Tuo Piano Perfetto</span>
+        </motion.h2>
+        <motion.p className="text-foreground/40 max-w-[400px] mx-auto leading-[1.7] text-xs sm:text-sm"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+          Scegli la base, aggiungi gli agenti IA che servono. Risparmia il 20% con il piano annuale.
+        </motion.p>
+
+        {/* Billing toggle */}
+        <motion.div className="flex items-center justify-center gap-3 mt-6"
+          initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <button onClick={() => setBillingCycle("monthly")}
+            className={`px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${billingCycle === "monthly" ? "bg-primary/15 text-primary" : "text-foreground/30 hover:text-foreground/50"}`}>
+            Mensile
+          </button>
+          <button onClick={() => setBillingCycle("annual")}
+            className={`px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all flex items-center gap-1.5 ${billingCycle === "annual" ? "bg-primary/15 text-primary" : "text-foreground/30 hover:text-foreground/50"}`}>
+            Annuale
+            <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">−20%</span>
+          </button>
+        </motion.div>
+      </div>
+
+      {/* Plan Cards — stacked on mobile */}
+      <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto mb-6"
+        variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+        {PLAN_TIERS.map((p, i) => {
+          const isSelected = selectedPlan === p.id;
+          const displayPrice = Math.round(p.price * planDiscount);
+          return (
+            <motion.div key={p.id} variants={fadeScale}
+              onClick={() => { setSelectedPlan(p.id); if (p.includedAgents > 0) setShowAddons(true); }}
+              className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
+                isSelected
+                  ? "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(265,70%,60%,0.1)]"
+                  : "border border-border/30 hover:border-primary/20 bg-background/40"
+              }`}>
+              {p.badge && (
+                <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
+                  p.badge === "Max Revenue" ? "bg-gradient-to-r from-accent to-primary text-primary-foreground" : "bg-vibrant-gradient text-primary-foreground"
+                }`}>{p.badge}</div>
+              )}
+              {isSelected && <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />}
+
+              <p className="text-[0.6rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
+              <div className="flex items-baseline gap-1 mt-2">
+                <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{displayPrice}</span>
+                <span className="text-xs text-foreground/30">/mese</span>
+              </div>
+              {billingCycle === "annual" && (
+                <p className="text-[0.55rem] text-accent font-semibold mt-0.5">Risparmi €{Math.round(p.price * 12 * 0.2)}/anno</p>
+              )}
+              <p className="text-[0.6rem] text-foreground/35 mt-1.5 leading-relaxed">{p.desc}</p>
+
+              <ul className="mt-4 space-y-2">
+                {p.features.map((f, fi) => (
+                  <li key={fi} className="flex items-start gap-2 text-[0.65rem] sm:text-xs text-foreground/50">
+                    <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${isSelected ? "bg-primary/15" : "bg-foreground/[0.05]"}`}>
+                      <Check className={`w-2.5 h-2.5 ${isSelected ? "text-primary" : "text-foreground/30"}`} />
+                    </div>
+                    <span className={f.startsWith("Tutto") ? "font-semibold text-foreground/60" : ""}>{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {isSelected && (
+                <motion.div className="absolute bottom-0 left-0 right-0 h-1 bg-vibrant-gradient"
+                  layoutId="planIndicator" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+              )}
+            </motion.div>
+          );
+        })}
+      </motion.div>
+
+      {/* AI Agents Upsell Section */}
+      <motion.div
+        className="max-w-3xl mx-auto"
+        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+
+        <button onClick={() => setShowAddons(!showAddons)}
+          className="w-full flex items-center justify-between p-4 rounded-xl border border-primary/15 bg-primary/[0.03] hover:bg-primary/[0.06] transition-colors mb-3">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-vibrant-gradient flex items-center justify-center">
+              <Bot className="w-4 h-4 text-primary-foreground" />
+            </div>
+            <div className="text-left">
+              <p className="text-xs sm:text-sm font-heading font-bold text-foreground">Potenzia con Agenti IA</p>
+              <p className="text-[0.55rem] text-foreground/35">
+                {plan.includedAgents > 0 ? `${plan.includedAgents} inclus${plan.includedAgents > 1 ? "i" : "o"} nel piano · Aggiungi gli altri a prezzo scontato` : "Aggiungi automazioni intelligenti al tuo piano"}
+              </p>
+            </div>
+          </div>
+          <motion.div animate={{ rotate: showAddons ? 180 : 0 }}>
+            <ChevronDown className="w-5 h-5 text-primary/50" />
+          </motion.div>
+        </button>
+
+        <AnimatePresence>
+          {showAddons && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }} className="overflow-hidden">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pb-4">
+                {AI_ADDONS.map((addon) => {
+                  const isActive = selectedAddons.has(addon.id);
+                  const isFree = isActive && [...selectedAddons].sort().indexOf(addon.id) < freeAgentCount;
+                  const displayPrice = Math.round(addon.price * addonDiscount);
+                  return (
+                    <motion.div key={addon.id}
+                      onClick={() => toggleAddon(addon.id)}
+                      className={`relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
+                        isActive
+                          ? "border border-primary/30 bg-primary/[0.06]"
+                          : "border border-border/20 hover:border-primary/15 bg-background/30"
+                      }`}
+                      whileTap={{ scale: 0.98 }}>
+                      {addon.popular && !isActive && (
+                        <div className="absolute -top-1.5 right-3 px-2 py-0.5 rounded-full bg-accent/20 text-[0.45rem] font-bold text-accent tracking-wider uppercase">Popular</div>
+                      )}
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isActive ? "bg-primary/20 text-primary" : "bg-foreground/[0.05] text-foreground/30"}`}>
+                        {addon.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-xs font-semibold truncate ${isActive ? "text-foreground" : "text-foreground/60"}`}>{addon.name}</p>
+                        <p className="text-[0.55rem] text-foreground/30 truncate">{addon.desc}</p>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        {isFree ? (
+                          <span className="text-xs font-bold text-accent">Incluso</span>
+                        ) : (
+                          <span className={`text-xs font-bold ${isActive ? "text-primary" : "text-foreground/40"}`}>+€{displayPrice}/m</span>
+                        )}
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                        isActive ? "border-primary bg-primary" : "border-foreground/15"
+                      }`}>
+                        {isActive && <Check className="w-3 h-3 text-primary-foreground" />}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Summary & CTA */}
+      <motion.div className="max-w-3xl mx-auto mt-4"
+        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <div className="relative p-5 sm:p-7 rounded-2xl overflow-hidden border border-primary/20 bg-gradient-to-b from-primary/[0.06] via-background/60 to-background">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,75%,0.03) 70%, transparent 100%)" }}
+            animate={{ y: ["-100%", "200%"] }}
+            transition={{ duration: 4, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
+          />
+
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative z-10">
+            <div>
+              <p className="text-[0.55rem] font-heading text-foreground/40 tracking-[3px] uppercase mb-1">Il Tuo Piano</p>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{Math.round(totalMonthly)}</span>
+                <span className="text-sm text-foreground/30">/mese</span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-primary/10 text-primary font-semibold">{plan.name}</span>
+                {selectedAddons.size > 0 && (
+                  <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/10 text-accent font-semibold">+{selectedAddons.size} Agenti IA</span>
+                )}
+                {savedPerYear > 0 && (
+                  <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">Risparmi €{Math.round(savedPerYear)}/anno</span>
+                )}
+              </div>
+              <p className="text-[0.55rem] text-foreground/25 mt-2">+ 2% sulle transazioni · IVA esclusa · Cancella quando vuoi</p>
+            </div>
+
+            <div className="flex flex-col gap-2 sm:items-end">
+              <motion.button onClick={() => navigate("/admin")}
+                className="px-8 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap"
+                whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
+                whileTap={{ scale: 0.97 }}>
+                Attiva Ora — Prova Gratis 14gg
+              </motion.button>
+              <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Nessuna carta richiesta · Setup in 24h · Assistenza 7/7</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Trust badges */}
+      <motion.div className="flex flex-wrap justify-center gap-4 mt-6 max-w-3xl mx-auto"
+        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+        {[
+          { icon: <Shield className="w-3.5 h-3.5" />, text: "GDPR Compliant" },
+          { icon: <Lock className="w-3.5 h-3.5" />, text: "AES-256" },
+          { icon: <Zap className="w-3.5 h-3.5" />, text: "Aggiornamenti settimanali" },
+          { icon: <Headphones className="w-3.5 h-3.5" />, text: "Assistenza 7/7" },
+        ].map((b, i) => (
+          <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/20 bg-background/30">
+            <span className="text-primary/50">{b.icon}</span>
+            <span className="text-[0.55rem] text-foreground/30 font-medium">{b.text}</span>
+          </div>
+        ))}
+      </motion.div>
+    </Section>
+  );
+};
+
+/* ═══════════════════════════════════════════
    MAIN
    ═══════════════════════════════════════════ */
 
