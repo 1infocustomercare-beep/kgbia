@@ -748,8 +748,11 @@ function IPhoneFrame({
         </div>
       </div>
 
-      {/* Label */}
-      <p className="text-center text-[8px] sm:text-[9px] text-white/35 mt-2.5 font-semibold tracking-wider uppercase">{screen.label}</p>
+      {/* Label + description */}
+      <div className="text-center mt-2.5">
+        <p className="text-[9px] sm:text-[10px] font-bold tracking-wider uppercase" style={{ color: `${color}cc` }}>{screen.label}</p>
+        {screen.desc && <p className="text-[7px] text-white/25 mt-0.5">{screen.desc}</p>}
+      </div>
     </motion.div>
   );
 }
