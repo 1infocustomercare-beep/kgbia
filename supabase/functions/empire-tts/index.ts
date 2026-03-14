@@ -49,11 +49,11 @@ serve(async (req) => {
           text: normalizedText,
           model_id: "eleven_multilingual_v2",
           voice_settings: {
-            stability: 0.42,
-            similarity_boost: 0.88,
-            style: 0.25,
+            stability: 0.35,
+            similarity_boost: 0.92,
+            style: 0.38,
             use_speaker_boost: true,
-            speed: 0.96,
+            speed: 0.92,
           },
         }),
       }
