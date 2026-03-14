@@ -266,15 +266,16 @@ export default function BeautyPublicSite({ company }: Props) {
         </motion.div>
       </section>
 
-      {/* ═══ TICKER ═══ */}
-      <div className="overflow-hidden py-4" style={{ background: "#111" }}>
-        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1200] }} transition={{ repeat: Infinity, duration: 20, ease: "linear" }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-medium" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "'Inter', sans-serif" }}>
+      {/* ═══ TICKER — Premium Marquee ═══ */}
+      <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
+        <AmbientGlow color={PINK} position="top" />
+        <MarqueeCarousel speed={40} pauseOnHover items={
+          tickerItems.map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-medium mx-6 whitespace-nowrap" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "'Inter', sans-serif" }}>
               <Sparkles className="w-3 h-3" style={{ color: `${PINK}60` }} /> {item}
             </span>
-          ))}
-        </motion.div>
+          ))
+        } />
       </div>
 
       {/* ═══ STATS ═══ */}
