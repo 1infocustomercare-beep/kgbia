@@ -567,6 +567,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
   const [showAddons, setShowAddons] = useState(false);
+  const [installments, setInstallments] = useState<3 | 6 | null>(null);
   const [selectedSector, setSelectedSector] = useState<PricingSector>("food");
   const [showFeatureRequest, setShowFeatureRequest] = useState(false);
   const [featureRequestText, setFeatureRequestText] = useState("");
