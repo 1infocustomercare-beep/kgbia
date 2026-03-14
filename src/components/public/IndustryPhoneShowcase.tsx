@@ -363,7 +363,7 @@ function getSectorStyle(id: IndustryId): SectorStyle {
 function IPhoneFrame({
   screen, color, emoji, companyName, services, index, sectorStyle,
 }: {
-  screen: { label: string; type: string };
+  screen: { label: string; type: string; desc?: string };
   color: string;
   emoji: string;
   companyName: string;
@@ -748,8 +748,11 @@ function IPhoneFrame({
         </div>
       </div>
 
-      {/* Label */}
-      <p className="text-center text-[8px] sm:text-[9px] text-white/35 mt-2.5 font-semibold tracking-wider uppercase">{screen.label}</p>
+      {/* Label + description */}
+      <div className="text-center mt-2.5">
+        <p className="text-[9px] sm:text-[10px] font-bold tracking-wider uppercase" style={{ color: `${color}cc` }}>{screen.label}</p>
+        {screen.desc && <p className="text-[7px] text-white/25 mt-0.5">{screen.desc}</p>}
+      </div>
     </motion.div>
   );
 }
@@ -765,14 +768,14 @@ interface IndustryPhoneShowcaseProps {
 }
 
 const SCREENS = [
-  { label: "Home", type: "hero" },
-  { label: "Catalogo", type: "services" },
-  { label: "Prenota", type: "booking" },
-  { label: "Dashboard", type: "dashboard" },
-  { label: "Analytics", type: "analytics" },
-  { label: "Clienti", type: "crm" },
-  { label: "Notifiche", type: "notifications" },
-  { label: "Settings", type: "settings" },
+  { label: "Home", type: "hero", desc: "Vetrina principale" },
+  { label: "Catalogo", type: "services", desc: "Lista servizi/prodotti" },
+  { label: "Prenota", type: "booking", desc: "Form prenotazione" },
+  { label: "Dashboard", type: "dashboard", desc: "Pannello gestione" },
+  { label: "Analytics", type: "analytics", desc: "Grafici & trend" },
+  { label: "Clienti", type: "crm", desc: "CRM & contatti" },
+  { label: "Notifiche", type: "notifications", desc: "Aggiornamenti live" },
+  { label: "Settings", type: "settings", desc: "Configurazione" },
 ];
 
 export default function IndustryPhoneShowcase({ industryId, className = "", compact = false }: IndustryPhoneShowcaseProps) {
