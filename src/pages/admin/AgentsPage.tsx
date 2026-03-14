@@ -38,6 +38,18 @@ import agentMenuOcr from "@/assets/agent-menu-ocr.png";
 import agentPhotoGen from "@/assets/agent-photo-gen.png";
 import agentTranslator from "@/assets/agent-translator.png";
 import agentInventory from "@/assets/agent-inventory.png";
+import agentConciergeAi from "@/assets/agent-concierge-ai.png";
+import agentAnalyticsBrain from "@/assets/agent-analytics-brain.png";
+import agentSocialManager from "@/assets/agent-social-manager.png";
+import agentSalesCloser from "@/assets/agent-sales-closer.png";
+import agentDocumentAi from "@/assets/agent-document-ai.png";
+import agentSmartNotifier from "@/assets/agent-smart-notifier.png";
+import agentComplianceGuardian from "@/assets/agent-compliance-guardian.png";
+import agentOpsFood from "@/assets/agent-ops-food.png";
+import agentOpsNcc from "@/assets/agent-ops-ncc.png";
+import agentOpsBeauty from "@/assets/agent-ops-beauty.png";
+import agentOpsHealthcare from "@/assets/agent-ops-healthcare.png";
+import agentOpsConstruction from "@/assets/agent-ops-construction.png";
 
 // ─── Agent Definitions ───
 interface AgentDef {
