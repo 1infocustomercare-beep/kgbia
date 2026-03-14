@@ -1189,10 +1189,10 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/*
-          VIDEO INDUSTRIES + WHY US
+          PERCHÉ EMPIRE — Unified Section
          ═══════════════════════════════════════════ */}
       <Section>
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-14">
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="text-center lg:text-left order-2 lg:order-1">
             <SectionLabel text="Perché Empire" icon={<Crown className="w-3 h-3 text-accent" />} />
@@ -1211,7 +1211,7 @@ const LandingPage = () => {
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-3 items-start group"
                   initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                  <motion.div className="w-5 h-5 min-w-[20px] rounded-full bg-primary/15 flex items-center justify-center mt-0.5 relative overflow-hidden"
+                  <motion.div className="w-5 h-5 min-w-[20px] rounded-full bg-primary/15 flex items-center justify-center mt-0.5"
                     animate={{ boxShadow: ["0 0 0px hsla(265,70%,60%,0)", "0 0 12px hsla(265,70%,60%,0.3)", "0 0 0px hsla(265,70%,60%,0)"] }}
                     transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}>
                     <Check className="w-3 h-3 text-primary" />
@@ -1232,68 +1232,23 @@ const LandingPage = () => {
             </div>
           </motion.div>
         </div>
-      </Section>
 
-      <SectionDivider />
-
-      {/* ═══════════════════════════════════════════
-         ═══════════════════════════════════════════ */}
-      <Section>
-        <div className="text-center mb-10 sm:mb-12">
-          <SectionLabel text="Vantaggi" icon={<Zap className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Perché Siamo <span className="text-shimmer">N°1 al Mondo</span>
-          </motion.h2>
-        </div>
-
-        {/* ═══ Mobile: Premium Carousel ═══ */}
-        <div className="sm:hidden">
-          <PremiumCarousel speed="fast" itemWidth={220}>
-            {whyUs.map((item, i) => (
-              <div key={i} className="group relative p-5 rounded-2xl h-full overflow-hidden border border-border/10 bg-card/60 backdrop-blur-sm">
-                {/* Top accent line */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-                {/* Corner glow */}
-                <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary/[0.06] blur-2xl group-hover:bg-primary/[0.12] transition-all duration-700" />
-                <div className="relative z-10">
-                  <PremiumIcon gradient="from-primary/25 to-accent/15" size="md" delay={i * 0.4}>
-                    <span className="text-primary">{item.icon}</span>
-                  </PremiumIcon>
-                  <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
-                  <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </PremiumCarousel>
-        </div>
-
-        {/* ═══ Desktop: Grid ═══ */}
-        <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-5"
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+        {/* Benefits Grid — compact 6-col */}
+        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"
+          variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {whyUs.map((item, i) => (
-            <motion.div key={i} variants={fadeUp}>
-              <PremiumCard glow scan delay={i} className="p-7">
-                {/* Number watermark */}
-                <motion.span className="absolute top-3 right-4 text-[3rem] font-heading font-black leading-none select-none"
-                  style={{ color: "hsla(265,70%,60%,0.03)" }}
-                  whileHover={{ color: "hsla(265,70%,60%,0.08)" }}
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 4, repeat: Infinity, delay: i * 0.6 }}>
-                  {String(i + 1).padStart(2, "0")}
-                </motion.span>
-                <PremiumIcon gradient="from-primary/25 to-accent/15" size="lg" delay={i * 0.5}>
-                  <span className="text-primary">{item.icon}</span>
-                </PremiumIcon>
-                <h3 className="font-heading text-sm font-bold text-foreground mb-2 mt-1">{item.title}</h3>
-                <p className="text-xs text-foreground/40 leading-[1.7]">{item.desc}</p>
+            <motion.div key={i} variants={popIn}>
+              <PremiumCard scan delay={i * 0.3} className="p-4 text-center">
+                <motion.div className="text-primary/50 mb-2 flex justify-center"
+                  animate={{ y: [0, -2, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
+                <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
+                <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
               </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
       </Section>
-
-      {/* Duplicate pain section removed — already present above */}
 
       {/* ═══════════════════════════════════════════
           COMPARISON TABLE — Empire vs Others
