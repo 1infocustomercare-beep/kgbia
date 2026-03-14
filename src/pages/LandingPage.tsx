@@ -666,28 +666,27 @@ const LandingPage = () => {
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
 
-        {/* ═══ LAYER 4: Corner accents — brighter ═══ */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-[120px] h-px" style={{ background: "linear-gradient(90deg, hsla(265,70%,60%,0.4), transparent)" }} />
-          <div className="absolute top-0 left-0 w-px h-[120px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.4), transparent)" }} />
-          <div className="absolute top-0 right-0 w-[120px] h-px" style={{ background: "linear-gradient(270deg, hsla(265,70%,60%,0.4), transparent)" }} />
-          <div className="absolute top-0 right-0 w-px h-[120px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.4), transparent)" }} />
-        </div>
-
-        {/* ═══ LAYER 5: Futuristic crown arc — non intrusive ═══ */}
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[260px] sm:w-[340px] h-[110px] sm:h-[130px] pointer-events-none z-[1]">
-          <motion.div
-            className="absolute inset-0 rounded-[999px]"
-            style={{ borderTop: "1px solid hsla(265,70%,60%,0.22)", borderLeft: "1px solid transparent", borderRight: "1px solid transparent" }}
-            animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.03, 1] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[180px] sm:w-[220px] h-[36px] sm:h-[44px] rounded-full blur-md"
-            style={{ background: "radial-gradient(ellipse at center, hsla(265,70%,60%,0.14), transparent 70%)" }}
-            animate={{ opacity: [0.2, 0.35, 0.2] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-          />
+        {/* ═══ LAYER 4: Subtle floating particles ═══ */}
+        <div className="absolute inset-0 pointer-events-none z-[1]">
+          {[
+            { top: "8%", left: "15%", size: 4, delay: 0 },
+            { top: "22%", right: "10%", size: 3, delay: 1.5 },
+            { top: "70%", left: "8%", size: 2.5, delay: 3 },
+            { top: "55%", right: "18%", size: 3.5, delay: 2 },
+          ].map((p, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                top: p.top, left: (p as any).left, right: (p as any).right,
+                width: p.size, height: p.size,
+                background: "hsla(35,45%,55%,0.3)",
+                boxShadow: "0 0 12px hsla(35,45%,55%,0.15)",
+              }}
+              animate={{ y: [0, -15, 0], opacity: [0.2, 0.5, 0.2] }}
+              transition={{ duration: 5 + i, repeat: Infinity, ease: "easeInOut", delay: p.delay }}
+            />
+          ))}
         </div>
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
