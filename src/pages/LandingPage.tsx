@@ -837,26 +837,62 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     </div>
                   </div>
 
-                  {/* Installment Options */}
-                  <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-border/15">
-                    <p className="text-[0.55rem] text-foreground/30 mr-1">Paga in comode rate:</p>
-                    <button onClick={() => setInstallments(installments === 3 ? null : 3)}
-                      className={`px-3 py-1.5 rounded-full text-[0.55rem] font-semibold transition-all ${
-                        installments === 3 ? "bg-primary/15 text-primary border border-primary/30" : "bg-foreground/[0.04] text-foreground/35 border border-border/20 hover:border-primary/15"
-                      }`}>
-                      3 rate da €{Math.round(pkg.price / 3)}/mese
-                    </button>
-                    <button onClick={() => setInstallments(installments === 6 ? null : 6)}
-                      className={`px-3 py-1.5 rounded-full text-[0.55rem] font-semibold transition-all ${
-                        installments === 6 ? "bg-primary/15 text-primary border border-primary/30" : "bg-foreground/[0.04] text-foreground/35 border border-border/20 hover:border-primary/15"
-                      }`}>
-                      6 rate da €{Math.round(pkg.price / 6)}/mese
-                    </button>
+                  {/* Installment Options — expanded */}
+                  <div className="pt-3 border-t border-border/15">
+                    <p className="text-[0.6rem] font-heading font-bold text-foreground/50 tracking-[2px] uppercase mb-3">Scegli come pagare</p>
+                    <div className="grid grid-cols-3 gap-2">
+                      <button onClick={() => setInstallments(null)}
+                        className={`relative p-3 rounded-xl text-center transition-all ${
+                          installments === null
+                            ? pkg.id === "empire" ? "border-2 border-accent/40 bg-accent/[0.06]" : "border-2 border-primary/40 bg-primary/[0.06]"
+                            : "border border-border/20 hover:border-primary/15 bg-background/30"
+                        }`}>
+                        {installments === null && (
+                          <span className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-accent/20 text-[0.4rem] font-bold text-accent tracking-wider uppercase whitespace-nowrap">Più scelto</span>
+                        )}
+                        <p className="text-lg sm:text-xl font-heading font-bold text-foreground">€{pkg.price.toLocaleString("it-IT")}</p>
+                        <p className="text-[0.5rem] text-foreground/30 mt-0.5">Una tantum</p>
+                        <p className="text-[0.45rem] text-accent/60 font-semibold mt-1">Risparmi di più</p>
+                      </button>
+                      <button onClick={() => setInstallments(3)}
+                        className={`p-3 rounded-xl text-center transition-all ${
+                          installments === 3
+                            ? pkg.id === "empire" ? "border-2 border-accent/40 bg-accent/[0.06]" : "border-2 border-primary/40 bg-primary/[0.06]"
+                            : "border border-border/20 hover:border-primary/15 bg-background/30"
+                        }`}>
+                        <p className="text-lg sm:text-xl font-heading font-bold text-foreground">€{Math.round(pkg.price / 3).toLocaleString("it-IT")}</p>
+                        <p className="text-[0.5rem] text-foreground/30 mt-0.5">×3 mesi</p>
+                        <p className="text-[0.45rem] text-accent/60 font-semibold mt-1">0% interessi</p>
+                      </button>
+                      <button onClick={() => setInstallments(6)}
+                        className={`p-3 rounded-xl text-center transition-all ${
+                          installments === 6
+                            ? pkg.id === "empire" ? "border-2 border-accent/40 bg-accent/[0.06]" : "border-2 border-primary/40 bg-primary/[0.06]"
+                            : "border border-border/20 hover:border-primary/15 bg-background/30"
+                        }`}>
+                        <p className="text-lg sm:text-xl font-heading font-bold text-foreground">€{Math.round(pkg.price / 6).toLocaleString("it-IT")}</p>
+                        <p className="text-[0.5rem] text-foreground/30 mt-0.5">×6 mesi</p>
+                        <p className="text-[0.45rem] text-accent/60 font-semibold mt-1">0% interessi</p>
+                      </button>
+                    </div>
                     {installments && (
-                      <motion.span initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                        className="text-[0.5rem] text-accent font-semibold ml-1">
-                        ✓ 0% interessi
-                      </motion.span>
+                      <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
+                        className="text-[0.55rem] text-foreground/30 text-center mt-2">
+                        Pagherai {installments} rate da <strong className="text-foreground/60">€{Math.round(pkg.price / installments).toLocaleString("it-IT")}/mese</strong> · Addebito automatico · Nessun costo aggiuntivo
+                      </motion.p>
+                    )}
+                    {/* Empire push if not selected */}
+                    {pkg.id !== "empire" && (
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+                        className="mt-3 p-3 rounded-xl bg-accent/[0.04] border border-accent/15 cursor-pointer hover:bg-accent/[0.08] transition-colors"
+                        onClick={() => setSelectedPackage("empire")}>
+                        <p className="text-[0.6rem] text-accent font-bold text-center">
+                          💎 Passa a Empire Domination — risparmi €{(7997 - pkg.price + (pkg.monthlyFee * 24)).toLocaleString("it-IT")} in 2 anni
+                        </p>
+                        <p className="text-[0.45rem] text-accent/50 text-center mt-0.5">
+                          0% commissioni + €0/mese per 24 mesi · Solo €{Math.round(7997 / 6)}/mese in 6 rate
+                        </p>
+                      </motion.div>
                     )}
                   </div>
                 </div>
