@@ -1787,56 +1787,95 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* Grid — each sector = 1 iPhone preview with unique screen style */}
+        {/* Grid — each sector = 1 iPhone preview with its BEST representative screen */}
         {(() => {
-          // Rotate screen types so each sector shows a different interface
-          const screenTypes = [
+          // Each sector shows the screen that best represents its core value
+          const SECTOR_BEST_SCREEN: Record<string, { label: string; type: string }> = {
+            food:         { label: "Menu", type: "services" },
+            ncc:          { label: "Transfer", type: "services" },
+            beauty:       { label: "Prenota", type: "booking" },
+            healthcare:   { label: "Dashboard", type: "dashboard" },
+            retail:       { label: "Analytics", type: "analytics" },
+            fitness:      { label: "Clienti", type: "crm" },
+            hospitality:  { label: "Vetrina", type: "hero" },
+            beach:        { label: "Prenota", type: "booking" },
+            plumber:      { label: "Interventi", type: "notifications" },
+            electrician:  { label: "Dashboard", type: "dashboard" },
+            construction: { label: "Cantieri", type: "analytics" },
+            veterinary:   { label: "Pazienti", type: "crm" },
+            tattoo:       { label: "Portfolio", type: "hero" },
+            events:       { label: "Eventi", type: "notifications" },
+            logistics:    { label: "Tracking", type: "analytics" },
+            agriturismo:  { label: "Camere", type: "services" },
+            cleaning:     { label: "Servizi", type: "services" },
+            legal:        { label: "Pratiche", type: "crm" },
+            accounting:   { label: "Fiscale", type: "dashboard" },
+            garage:       { label: "Officina", type: "notifications" },
+            photography:  { label: "Studio", type: "hero" },
+            gardening:    { label: "Servizi", type: "services" },
+            childcare:    { label: "Iscrizioni", type: "booking" },
+            education:    { label: "Corsi", type: "services" },
+            custom:       { label: "Dashboard", type: "dashboard" },
+            bakery:       { label: "Vetrina", type: "hero" },
+          };
+          const fallbackScreenTypes = [
             { label: "Home", type: "hero" },
             { label: "Catalogo", type: "services" },
             { label: "Prenota", type: "booking" },
             { label: "Dashboard", type: "dashboard" },
             { label: "Analytics", type: "analytics" },
             { label: "Clienti", type: "crm" },
-            { label: "Notifiche", type: "notifications" },
-            { label: "Settings", type: "settings" },
           ];
           const visibleSectors = allSectors.slice(0, showAllSectors ? allSectors.length : INITIAL_SHOW);
           return (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 justify-items-center">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 justify-items-center">
               {visibleSectors.map((id, idx) => {
                 const cfg = INDUSTRY_CONFIGS[id];
                 const demo = DEMO_INDUSTRY_DATA[id];
                 const sectorStyle = getSectorStyle(id);
-                const screenType = screenTypes[idx % screenTypes.length];
+                const screenType = SECTOR_BEST_SCREEN[id] || fallbackScreenTypes[idx % fallbackScreenTypes.length];
+                const clr = cfg.defaultPrimaryColor;
                 return (
                   <motion.div key={id}
-                    className="flex flex-col items-center cursor-pointer group"
-                    initial={{ opacity: 0, y: 20 }}
+                    className="flex flex-col items-center cursor-pointer group relative"
+                    initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-30px" }}
-                    transition={{ duration: 0.4, delay: idx * 0.04 }}
+                    transition={{ duration: 0.5, delay: idx * 0.05, ease: [0.22, 1, 0.36, 1] }}
                     onClick={() => navigate(`/demo/${id}`)}
                   >
-                    {/* Sector label above phone */}
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <span className="text-sm">{cfg.emoji}</span>
-                      <span className="text-[10px] font-bold text-foreground/70 truncate max-w-[100px]">{cfg.label}</span>
+                    {/* Ambient glow behind card */}
+                    <div className="absolute -inset-2 rounded-3xl blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"
+                      style={{ background: `radial-gradient(circle, ${clr}50, transparent 70%)` }} />
+
+                    {/* Sector label — pill with gradient accent */}
+                    <div className="flex items-center gap-1.5 mb-2.5 px-3 py-1 rounded-full border backdrop-blur-sm transition-all duration-300 group-hover:scale-105"
+                      style={{ borderColor: `${clr}25`, background: `linear-gradient(135deg, ${clr}08, ${clr}15)` }}>
+                      <span className="text-xs">{cfg.emoji}</span>
+                      <span className="text-[9px] font-bold tracking-wider uppercase truncate max-w-[90px]" style={{ color: `${clr}dd` }}>{cfg.label}</span>
                     </div>
 
-                    {/* Single iPhone preview */}
-                    <IPhoneFrame
-                      screen={screenType}
-                      color={cfg.defaultPrimaryColor}
-                      emoji={cfg.emoji}
-                      companyName={demo.companyName}
-                      services={demo.services}
-                      index={idx}
-                      sectorStyle={sectorStyle}
-                    />
+                    {/* iPhone preview — with hover lift */}
+                    <div className="transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.03]">
+                      <IPhoneFrame
+                        screen={screenType}
+                        color={clr}
+                        emoji={cfg.emoji}
+                        companyName={demo.companyName}
+                        services={demo.services}
+                        index={idx}
+                        sectorStyle={sectorStyle}
+                      />
+                    </div>
 
-                    {/* Screen type badge */}
-                    <div className="mt-1 px-2.5 py-0.5 rounded-full text-[7px] font-bold tracking-wider uppercase border group-hover:scale-105 transition-transform"
-                      style={{ color: cfg.defaultPrimaryColor + 'cc', borderColor: cfg.defaultPrimaryColor + '25', background: cfg.defaultPrimaryColor + '08' }}>
+                    {/* Screen type badge — glowing pill */}
+                    <div className="mt-2 px-3 py-1 rounded-full text-[7px] font-bold tracking-widest uppercase border transition-all duration-300 group-hover:shadow-lg"
+                      style={{
+                        color: `${clr}cc`,
+                        borderColor: `${clr}30`,
+                        background: `linear-gradient(135deg, ${clr}06, ${clr}12)`,
+                        boxShadow: `0 0 0 0 ${clr}00`,
+                      }}>
                       {screenType.label}
                     </div>
                   </motion.div>
