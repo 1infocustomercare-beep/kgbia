@@ -29,7 +29,7 @@ interface SectorStyleExtended extends SectorStyleBase {
 // Alias for internal use — always the full type
 type SectorStyle = SectorStyleExtended;
 
-const SECTOR_STYLES: Partial<Record<IndustryId, SectorStyle>> = {
+const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
   food: {
     heroGradient: "linear-gradient(135deg, #e85d0422, #ff6b3510)",
     cardBg: "#e85d0412",
