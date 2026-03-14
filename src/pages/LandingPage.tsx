@@ -567,12 +567,32 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
   const [showAddons, setShowAddons] = useState(false);
-  const [installments, setInstallments] = useState<3 | 6 | null>(null);
+  const [selectedSector, setSelectedSector] = useState<PricingSector>("food");
+  const [showFeatureRequest, setShowFeatureRequest] = useState(false);
+  const [featureRequestText, setFeatureRequestText] = useState("");
+  const [featureRequestEmail, setFeatureRequestEmail] = useState("");
+  const [featureRequestSending, setFeatureRequestSending] = useState(false);
+  const [featureRequestSent, setFeatureRequestSent] = useState(false);
 
   const plan = PLAN_TIERS.find(p => p.id === selectedPlan)!;
   const pkg = PACKAGE_TIERS.find(p => p.id === selectedPackage)!;
   const addonDiscount = billingCycle === "annual" ? 0.8 : 1;
   const planDiscount = billingCycle === "annual" ? 0.8 : 1;
+
+  // Filter agents by selected sector
+  const sectorAddons = AI_ADDONS.filter(a => a.sectors.includes(selectedSector));
+  const sectorIncluded = SECTOR_INCLUDED_AGENTS[selectedSector];
+  const sectorFeatures = SECTOR_FEATURES[selectedSector];
+
+  // Auto-include sector agents when switching sector/package
+  const getAutoIncludedIds = () => {
+    if (pricingMode === "package") {
+      if (pkg.id === "empire") return sectorIncluded.empire;
+      if (pkg.id === "growth") return sectorIncluded.growth;
+    }
+    return [];
+  };
+  const autoIncludedIds = getAutoIncludedIds();
 
   // Free included agents reduce addon cost
   const currentIncludedAgents = pricingMode === "monthly" ? plan.includedAgents : pkg.includedAgents;
