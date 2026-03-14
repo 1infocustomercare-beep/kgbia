@@ -262,6 +262,7 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = false;
     sectionQueueRef.current = [];
     queueProcessingRef.current = false;
+    narrationAttemptsRef.current = {};
 
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null; }
