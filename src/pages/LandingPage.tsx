@@ -1486,11 +1486,124 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                   Con Empire risparmi <strong className="text-accent">€2.508/anno</strong> — si ripaga in meno di 4 mesi.
                 </p>
               </motion.div>
-            </motion.div>
-          </motion.div>
-        )}
+              </motion.div>
 
-        {/* ═══ MONTHLY MODE ═══ */}
+              {/* ── Feature Request CTA ── */}
+              <motion.div className="max-w-4xl mx-auto mt-8 text-center" initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <div className="p-5 rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background/40 to-accent/[0.03] backdrop-blur-sm">
+                  <div className="w-12 h-12 mx-auto rounded-xl bg-vibrant-gradient flex items-center justify-center mb-3">
+                    <Sparkles className="w-6 h-6 text-primary-foreground" />
+                  </div>
+                  <h3 className="text-base sm:text-lg font-heading font-bold text-foreground mb-1">Non trovi quello che cerchi?</h3>
+                  <p className="text-xs text-foreground/40 max-w-sm mx-auto mb-4">
+                    Sviluppiamo funzionalità su misura per il tuo business. Descrivici cosa ti serve e lo costruiamo per te.
+                  </p>
+                  <motion.button
+                    onClick={() => setShowFeatureRequest(true)}
+                    className="px-6 py-3 rounded-full bg-vibrant-gradient text-primary-foreground text-xs font-heading font-bold tracking-wider uppercase"
+                    whileHover={{ scale: 1.03, boxShadow: "0 10px 40px hsla(265,70%,60%,0.2)" }}
+                    whileTap={{ scale: 0.97 }}>
+                    <span className="flex items-center gap-2">
+                      <Mail className="w-3.5 h-3.5" /> Richiedi Funzionalità Personalizzata
+                    </span>
+                  </motion.button>
+                  <p className="text-[0.5rem] text-foreground/20 mt-2">Risposta garantita entro 24h · Preventivo gratuito · Settore: {PRICING_SECTORS.find(s => s.id === selectedSector)?.label}</p>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* ── Feature Request Modal ── */}
+          <AnimatePresence>
+            {showFeatureRequest && (
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                onClick={() => setShowFeatureRequest(false)}>
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 10 }}
+                  className="relative w-full max-w-md p-6 rounded-2xl border border-border/30 bg-background/95 backdrop-blur-xl"
+                  onClick={e => e.stopPropagation()}>
+                  <button onClick={() => setShowFeatureRequest(false)} className="absolute top-3 right-3 p-1 rounded-full hover:bg-foreground/[0.05] text-foreground/30">
+                    <X className="w-4 h-4" />
+                  </button>
+                  <div className="w-10 h-10 mx-auto rounded-xl bg-vibrant-gradient flex items-center justify-center mb-3">
+                    <Sparkles className="w-5 h-5 text-primary-foreground" />
+                  </div>
+                  <h3 className="text-lg font-heading font-bold text-foreground text-center mb-1">Richiedi Funzionalità</h3>
+                  <p className="text-xs text-foreground/40 text-center mb-4">Descrivici la funzione che desideri. Il nostro team la valuterà e ti invierà un preventivo.</p>
+
+                  {featureRequestSent ? (
+                    <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center py-6">
+                      <div className="w-14 h-14 mx-auto rounded-full bg-accent/20 flex items-center justify-center mb-3">
+                        <Check className="w-7 h-7 text-accent" />
+                      </div>
+                      <p className="text-sm font-heading font-bold text-foreground mb-1">Richiesta Inviata!</p>
+                      <p className="text-xs text-foreground/40">Ti contatteremo entro 24 ore con un preventivo personalizzato.</p>
+                      <button onClick={() => { setShowFeatureRequest(false); setFeatureRequestSent(false); }}
+                        className="mt-4 px-5 py-2 rounded-full bg-foreground/[0.05] text-foreground/60 text-xs font-semibold hover:bg-foreground/[0.08] transition-colors">
+                        Chiudi
+                      </button>
+                    </motion.div>
+                  ) : (
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-[0.6rem] font-heading font-bold text-foreground/40 tracking-[1px] uppercase">Settore</label>
+                        <div className="mt-1 px-3 py-2 rounded-lg bg-foreground/[0.03] border border-border/20 text-xs text-foreground/60">
+                          {PRICING_SECTORS.find(s => s.id === selectedSector)?.emoji} {PRICING_SECTORS.find(s => s.id === selectedSector)?.label}
+                          {selectedPackage && <span className="ml-2 text-primary/60">· {PACKAGE_TIERS.find(p => p.id === selectedPackage)?.name}</span>}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[0.6rem] font-heading font-bold text-foreground/40 tracking-[1px] uppercase">La tua email</label>
+                        <input
+                          type="email" value={featureRequestEmail} onChange={e => setFeatureRequestEmail(e.target.value)}
+                          placeholder="nome@azienda.it"
+                          className="mt-1 w-full px-3 py-2.5 rounded-lg bg-foreground/[0.03] border border-border/20 text-sm text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/30 transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[0.6rem] font-heading font-bold text-foreground/40 tracking-[1px] uppercase">Descrivi la funzionalità desiderata</label>
+                        <textarea
+                          value={featureRequestText} onChange={e => setFeatureRequestText(e.target.value)}
+                          placeholder="Es: Vorrei un sistema di prenotazione con caparra automatica..."
+                          rows={4}
+                          className="mt-1 w-full px-3 py-2.5 rounded-lg bg-foreground/[0.03] border border-border/20 text-sm text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/30 transition-colors resize-none"
+                        />
+                      </div>
+                      <motion.button
+                        onClick={async () => {
+                          if (!featureRequestText.trim() || !featureRequestEmail.trim()) return;
+                          setFeatureRequestSending(true);
+                          try {
+                            const { supabase } = await import("@/integrations/supabase/client");
+                            await supabase.from("feature_requests").insert({
+                              title: `[Landing] Richiesta da ${featureRequestEmail}`,
+                              description: `Settore: ${selectedSector}\nPacchetto: ${selectedPackage}\n\n${featureRequestText}`,
+                              company_id: "00000000-0000-0000-0000-000000000000",
+                              sector: selectedSector,
+                              status: "new",
+                            });
+                            setFeatureRequestSent(true);
+                          } catch {
+                            // silent fail
+                          } finally {
+                            setFeatureRequestSending(false);
+                          }
+                        }}
+                        disabled={featureRequestSending || !featureRequestText.trim() || !featureRequestEmail.trim()}
+                        className="w-full px-5 py-3 rounded-xl bg-vibrant-gradient text-primary-foreground text-sm font-heading font-bold tracking-wider uppercase disabled:opacity-40 disabled:cursor-not-allowed"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}>
+                        {featureRequestSending ? "Invio in corso..." : "Invia Richiesta →"}
+                      </motion.button>
+                      <p className="text-[0.45rem] text-foreground/15 text-center">I tuoi dati sono protetti e utilizzati solo per rispondere alla tua richiesta.</p>
+                    </div>
+                  )}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         {pricingMode === "monthly" && (
           <motion.div key="monthly" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
 
