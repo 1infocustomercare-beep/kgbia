@@ -223,6 +223,8 @@ const EmpireVoiceAgent: React.FC = () => {
       if (!script || !voiceEnabledRef.current) continue;
       if (narratedRef.current.has(sectionId)) continue;
 
+      narrationAttemptsRef.current[sectionId] = (narrationAttemptsRef.current[sectionId] ?? 0) + 1;
+
       setMessages((prev) => [...prev, { role: "assistant", content: script }]);
       setIsSpeaking(true);
       setIsPaused(false);
@@ -231,8 +233,11 @@ const EmpireVoiceAgent: React.FC = () => {
       const played = await speakText(script, audioRef, abortRef);
 
       if (played && !abortRef.current) {
+        narrationAttemptsRef.current[sectionId] = 0;
         narratedRef.current.add(sectionId);
         setNarratedSections(new Set(narratedRef.current));
+      } else if (!abortRef.current && (narrationAttemptsRef.current[sectionId] ?? 0) < 2) {
+        sectionQueueRef.current.push(sectionId);
       }
 
       setIsSpeaking(false);
