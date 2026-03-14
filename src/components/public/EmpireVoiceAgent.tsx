@@ -405,8 +405,8 @@ const EmpireVoiceAgent: React.FC = () => {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
           >
-            <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg border border-white/10">
-              {isOpen ? <X className="w-6 h-6 text-white" /> : <Sparkles className="w-6 h-6 text-white" />}
+            <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-lg border border-white/10">
+              {isOpen ? <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center"><X className="w-6 h-6 text-white" /></div> : <img src={voiceAgentAvatar} alt="Assistente" className="w-full h-full object-cover" />}
               {isSpeaking && !isPaused && !isOpen && (
                 <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
               )}
