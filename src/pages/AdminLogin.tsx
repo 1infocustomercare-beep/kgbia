@@ -116,7 +116,9 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           return;
         }
 
-        navigate("/setup", { replace: true });
+        // Only send to /setup if they have NO role at all — if they already have restaurant_admin
+        // but no data, send them to /app to avoid re-registration loops
+        navigate("/app", { replace: true });
       };
       checkDestination();
     } else if (roles.includes("partner") || roles.includes("team_leader")) {

@@ -107,6 +107,14 @@ export default function GuidedSetup() {
 
         if (ownedRestaurant?.id) {
           navigate("/dashboard", { replace: true });
+          return;
+        }
+
+        // If user already has restaurant_admin role but no data, redirect to /app
+        // instead of showing setup again (prevents re-registration loops)
+        if (roles.includes("restaurant_admin")) {
+          navigate("/app", { replace: true });
+          return;
         }
       } catch (error) {
         console.error("Failed to validate setup access", error);
