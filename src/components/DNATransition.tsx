@@ -383,13 +383,21 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
           animate={{ opacity: phase === "dissolve" ? 0 : 1 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="flex flex-col items-center gap-4">
-            {/* Outer scanning ring */}
+          <div className="flex flex-col items-center gap-4 relative">
+            {/* Scanning ring — visible during scatter/assemble/pulse */}
             <motion.div
               className="w-20 h-20 sm:w-28 sm:h-28 rounded-full relative"
               style={{ border: "0.5px solid hsla(265,60%,60%,0.06)" }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+              animate={{ 
+                rotate: 360,
+                scale: phase === "morph" ? 1.8 : 1,
+                opacity: phase === "morph" || phase === "dissolve" ? 0 : 1,
+              }}
+              transition={{ 
+                rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                scale: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+                opacity: { duration: 0.6 },
+              }}
             >
               <motion.div
                 className="absolute inset-0 rounded-full"
@@ -397,14 +405,12 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
                   background: "conic-gradient(from 0deg, transparent 0%, hsla(265,80%,65%,0.06) 8%, transparent 16%)",
                 }}
               />
-              {/* Inner ring with gold accent */}
               <motion.div
                 className="absolute inset-4 rounded-full"
                 style={{ border: "0.5px solid hsla(38,45%,55%,0.06)" }}
                 animate={{ rotate: -360 }}
                 transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
               />
-              {/* Core pulse */}
               <motion.div
                 className="absolute inset-0 flex items-center justify-center"
                 animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
@@ -412,6 +418,33 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
               >
                 <div className="w-2 h-2 rounded-full" style={{ background: "hsla(265, 80%, 65%, 0.3)", boxShadow: "0 0 12px hsla(265,80%,65%,0.15)" }} />
               </motion.div>
+            </motion.div>
+
+            {/* Agent mascot — emerges during morph phase */}
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center"
+              initial={{ opacity: 0, scale: 0.3 }}
+              animate={{
+                opacity: phase === "morph" || phase === "dissolve" ? 1 : 0,
+                scale: phase === "morph" ? 1 : phase === "dissolve" ? 1.1 : 0.3,
+              }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="relative w-28 h-28 sm:w-40 sm:h-40">
+                {/* Ambient glow behind agent */}
+                <div className="absolute inset-[-20%] rounded-full pointer-events-none"
+                  style={{ 
+                    background: "radial-gradient(circle, hsla(265,70%,60%,0.15) 0%, hsla(38,50%,55%,0.05) 40%, transparent 70%)",
+                  }} />
+                <motion.img
+                  src={empireAgentMascot}
+                  alt="Empire AI Agent"
+                  className="w-full h-full object-contain relative z-10"
+                  style={{ filter: "drop-shadow(0 0 30px hsla(265,70%,60%,0.3))" }}
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </div>
             </motion.div>
 
             {/* Status text */}
@@ -423,7 +456,10 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
                 backdropFilter: "blur(12px)",
               }}
               initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: phase === "pulse" || phase === "morph" ? 0.9 : phase === "assemble" ? 0.4 : 0, y: 0 }}
+              animate={{ 
+                opacity: phase === "pulse" || phase === "morph" ? 0.9 : phase === "assemble" ? 0.4 : 0, 
+                y: phase === "morph" ? 70 : 0,
+              }}
               transition={{ duration: 0.5, delay: 0.6 }}
             >
               <motion.div
@@ -436,7 +472,7 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
                 className="text-[0.38rem] sm:text-[0.42rem] tracking-[0.3em] uppercase font-mono"
                 style={{ color: "hsla(265,55%,65%,0.25)" }}
               >
-                EMPIRE · NEURAL GENESIS
+                {phase === "morph" ? "EMPIRE · AGENT READY" : "EMPIRE · NEURAL GENESIS"}
               </span>
             </motion.div>
 
@@ -444,7 +480,10 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
             <motion.div
               className="flex items-center gap-5"
               initial={{ opacity: 0 }}
-              animate={{ opacity: phase === "pulse" || phase === "morph" ? 0.6 : 0 }}
+              animate={{ 
+                opacity: phase === "pulse" ? 0.6 : phase === "morph" ? 0.8 : 0,
+                y: phase === "morph" ? 70 : 0,
+              }}
               transition={{ duration: 0.3, delay: 1.2 }}
             >
               {["DNA", "AGENTS", "DEPLOY"].map((label, i) => (
@@ -454,12 +493,15 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
                     style={{
                       background: i === 0 ? "hsl(265,80%,65%)" : i === 1 ? "hsl(38,50%,55%)" : "hsl(170,60%,50%)",
                     }}
-                    animate={{ opacity: [0.2, 0.8, 0.2] }}
+                    animate={{ 
+                      opacity: phase === "morph" ? [0.5, 1, 0.5] : [0.2, 0.8, 0.2],
+                      backgroundColor: phase === "morph" ? "hsl(140,65%,50%)" : undefined,
+                    }}
                     transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.3 }}
                   />
                   <span
                     className="text-[0.3rem] sm:text-[0.33rem] tracking-[0.2em] uppercase font-mono"
-                    style={{ color: "hsla(265,50%,60%,0.18)" }}
+                    style={{ color: phase === "morph" && i <= 1 ? "hsla(140,65%,50%,0.3)" : "hsla(265,50%,60%,0.18)" }}
                   >
                     {label}
                   </span>
