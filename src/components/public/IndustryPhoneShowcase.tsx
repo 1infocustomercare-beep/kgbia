@@ -1197,6 +1197,11 @@ export function IPhoneFrame({
                     </div>
                   ))}
                 </div>
+                {/* Version info */}
+                <div className="mt-1.5 flex items-center justify-center gap-1">
+                  <div className="w-1 h-1 rounded-full" style={{ backgroundColor: "#22c55e" }} />
+                  <span className="text-[4px] text-white/20">Empire v3.2 · Tutti i sistemi attivi</span>
+                </div>
               </div>
             )}
             <div className="absolute inset-0 pointer-events-none"
