@@ -281,6 +281,8 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
         <ScrollIndicator />
       </section>
 
+      {afterHero}
+
       {/* ── TICKER — Premium Marquee ── */}
       <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
         <AmbientGlow color={gold} position="top" />

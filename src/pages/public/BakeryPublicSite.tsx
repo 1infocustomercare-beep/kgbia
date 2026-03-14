@@ -55,7 +55,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const FALLBACK_REVIEWS = [
   { name: "Giulia M.", text: "Il pane più buono che abbia mai assaggiato. Fragranza incredibile e crosta perfetta.", rating: 5, photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" },

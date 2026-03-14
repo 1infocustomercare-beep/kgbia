@@ -67,9 +67,9 @@ function Section({ id, children, style }: { id?: string; children: React.ReactNo
   );
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
-export default function LuxuryPublicSite({ company }: Props) {
+export default function LuxuryPublicSite({ company, afterHero }: Props) {
   const industry = (company.industry || "custom") as IndustryId;
   const config = getIndustryConfig(industry);
   const theme = getSectorTheme(industry);

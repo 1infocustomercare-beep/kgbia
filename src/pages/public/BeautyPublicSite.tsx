@@ -266,6 +266,8 @@ export default function BeautyPublicSite({ company, afterHero }: Props) {
         </motion.div>
       </section>
 
+      {afterHero}
+
       {/* ═══ TICKER — Premium Marquee ═══ */}
       <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
         <AmbientGlow color={PINK} position="top" />

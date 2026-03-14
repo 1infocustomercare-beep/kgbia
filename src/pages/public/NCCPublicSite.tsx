@@ -563,6 +563,8 @@ export default function NCCPublicSite({ company, afterHero }: Props) {
         </motion.div>
       </section>
 
+      {afterHero}
+
       {/* ═══════════ TICKER — infinite marquee ═══════════ */}
       <section className="py-4 overflow-hidden border-y" style={{ background: NCC.ticker, borderColor: `rgba(201,168,76,0.3)` }}>
         <div className="flex animate-ncc-marquee">
