@@ -240,12 +240,21 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
     return () => clearTimeout(t);
   }, [dismissed, hasStarted]);
 
+  // Load voices early
+  useEffect(() => {
+    if (window.speechSynthesis) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+  }, []);
+
   // Cleanup
   useEffect(() => {
     return () => {
       abortRef.current = true;
       audioRef.current?.pause();
       recognitionRef.current?.stop();
+      window.speechSynthesis?.cancel();
     };
   }, []);
 
