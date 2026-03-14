@@ -952,9 +952,9 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     <Bot className="w-4 h-4 text-primary-foreground" />
                   </div>
                   <div className="text-left">
-                    <p className="text-xs sm:text-sm font-heading font-bold text-foreground">Aggiungi Agenti IA</p>
+                    <p className="text-xs sm:text-sm font-heading font-bold text-foreground">Agenti IA per {PRICING_SECTORS.find(s => s.id === selectedSector)?.label}</p>
                     <p className="text-[0.55rem] text-foreground/35">
-                      {pkg.includedAgents} inclus{pkg.includedAgents > 1 ? "i" : "o"} · Altri con 30% di sconto nel pacchetto
+                      {autoIncludedIds.length} inclus{autoIncludedIds.length > 1 ? "i" : "o"} nel pacchetto · Altri con 30% sconto
                     </p>
                   </div>
                 </div>
@@ -966,9 +966,9 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                 {showAddons && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pb-4">
-                      {AI_ADDONS.map((addon) => {
-                        const isActive = selectedAddons.has(addon.id);
-                        const isFree = isActive && [...selectedAddons].sort().indexOf(addon.id) < pkg.includedAgents;
+                      {sectorAddons.map((addon) => {
+                        const isAutoIncluded = autoIncludedIds.includes(addon.id);
+                        const isActive = selectedAddons.has(addon.id) || isAutoIncluded;
                         const displayPrice = Math.round(addon.price * 0.7);
                         return (
                           <motion.div key={addon.id} onClick={() => toggleAddon(addon.id)}
