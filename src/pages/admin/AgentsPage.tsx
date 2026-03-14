@@ -867,13 +867,45 @@ export default function AgentsPage() {
           <div className="space-y-2">
             {unresolvedAlerts.map(alert => (
               <motion.div key={alert.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-                className={`rounded-lg px-4 py-3 flex items-center gap-3 text-sm ${
+                className={`rounded-lg px-4 py-3 flex flex-col gap-2 text-sm ${
                   alert.type === "error" ? "bg-red-500/10 border border-red-500/30 text-red-400" :
                   "bg-yellow-500/10 border border-yellow-500/30 text-yellow-400"
                 }`}>
-                {alert.type === "error" ? <XCircle className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
-                <span className="flex-1">{alert.message}</span>
-                <span className="text-xs opacity-60">{new Date(alert.createdAt).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span>
+                <div className="flex items-center gap-3">
+                  {alert.type === "error" ? <XCircle className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
+                  <span className="flex-1">{alert.message}</span>
+                  <span className="text-xs opacity-60">{new Date(alert.createdAt).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span>
+                </div>
+                <div className="flex items-center gap-2 ml-7">
+                  {alert.type === "error" && (
+                    <>
+                      <Button size="sm" variant="outline" className="h-6 text-[10px] gap-1 border-red-500/30 text-red-300 hover:bg-red-500/20"
+                        onClick={() => { toast({ title: "Agente riavviato", description: `L'agente "${alert.agent}" è stato riavviato con successo.` }); }}>
+                        <RefreshCw className="w-3 h-3" /> Riavvia Agente
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-6 text-[10px] gap-1 border-red-500/30 text-red-300 hover:bg-red-500/20"
+                        onClick={() => { toast({ title: "Log errori", description: "Apertura log degli errori..." }); }}>
+                        <Eye className="w-3 h-3" /> Vedi Log
+                      </Button>
+                    </>
+                  )}
+                  {alert.type === "warning" && (
+                    <>
+                      <Button size="sm" variant="outline" className="h-6 text-[10px] gap-1 border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/20"
+                        onClick={() => { toast({ title: "Budget aumentato", description: "Il limite budget è stato aumentato del 20%." }); }}>
+                        <TrendingUp className="w-3 h-3" /> Aumenta Budget
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-6 text-[10px] gap-1 border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/20"
+                        onClick={() => { toast({ title: "Notifica inviata", description: "Il cliente è stato notificato del superamento budget." }); }}>
+                        <Bell className="w-3 h-3" /> Notifica Cliente
+                      </Button>
+                    </>
+                  )}
+                  <Button size="sm" variant="ghost" className="h-6 text-[10px] gap-1 opacity-60 hover:opacity-100 ml-auto"
+                    onClick={() => { toast({ title: "Alert archiviato" }); }}>
+                    <CheckCircle2 className="w-3 h-3" /> Archivia
+                  </Button>
+                </div>
               </motion.div>
             ))}
           </div>
