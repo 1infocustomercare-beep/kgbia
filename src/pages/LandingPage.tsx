@@ -366,7 +366,7 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════ NAVIGATION ═══════ */}
-      <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 ${navScrolled ? "py-1" : "py-3"}`}>
+      <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 pt-[env(safe-area-inset-top)] ${navScrolled ? "pb-1" : "pb-2"}`}>
         {/* Glassmorphism background */}
         <motion.div 
           className="absolute inset-0"
