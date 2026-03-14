@@ -910,9 +910,201 @@ const SuperAdminDashboard = () => {
             }} />
           </motion.div>
         )}
+        {/* ===== INTEGRATIONS ===== */}
+        {!loading && activeTab === "integrations" && (
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center mb-4">
+              <h2 className="text-lg font-display font-bold text-foreground">Centro Integrazioni</h2>
+              <p className="text-xs text-muted-foreground">Stato di tutte le connessioni, API e servizi del sistema</p>
+            </div>
+
+            {(() => {
+              type IntegrationStatus = "connected" | "missing" | "warning";
+              interface IntegrationItem {
+                name: string;
+                description: string;
+                status: IntegrationStatus;
+                category: string;
+                detail: string;
+                actionLabel?: string;
+                actionUrl?: string;
+              }
+
+              const integrations: IntegrationItem[] = [
+                // ── Core Platform ──
+                { name: "Database Lovable Cloud", description: "Database PostgreSQL principale", status: "connected", category: "Piattaforma", detail: "Connesso e attivo" },
+                { name: "Autenticazione", description: "Sistema di login e registrazione utenti", status: "connected", category: "Piattaforma", detail: "Auth attiva con email verification" },
+                { name: "Storage CDN", description: "Archiviazione file, loghi e media", status: "connected", category: "Piattaforma", detail: "4 bucket attivi (logos, assets, media, partner)" },
+                { name: "Realtime", description: "Aggiornamenti in tempo reale ordini e chat", status: "connected", category: "Piattaforma", detail: "WebSocket attivo" },
+                { name: "RLS Policies", description: "Row Level Security per isolamento tenant", status: "connected", category: "Piattaforma", detail: "Politiche attive su tutte le tabelle" },
+
+                // ── AI & Voice ──
+                { name: "Lovable AI (LLM)", description: "Modelli IA per assistente, traduzioni, analisi", status: "connected", category: "Intelligenza Artificiale", detail: "Gemini / GPT-5 disponibili via Lovable AI" },
+                { name: "ElevenLabs", description: "Text-to-Speech e Voice Agent", status: "connected", category: "Intelligenza Artificiale", detail: "API Key configurata via connector" },
+                { name: "Empire Assistant", description: "Edge Function per assistente IA multi-settore", status: "connected", category: "Intelligenza Artificiale", detail: "supabase/functions/empire-assistant" },
+                { name: "Empire TTS", description: "Text-to-Speech per agenti vocali", status: "connected", category: "Intelligenza Artificiale", detail: "supabase/functions/empire-tts" },
+                { name: "Empire Voice Agent", description: "Agente vocale conversazionale", status: "connected", category: "Intelligenza Artificiale", detail: "supabase/functions/empire-voice-agent" },
+                { name: "Restaurant Voice Agent", description: "Agente vocale per ristoranti", status: "connected", category: "Intelligenza Artificiale", detail: "supabase/functions/restaurant-voice-agent" },
+                { name: "AI Menu (OCR)", description: "Scansione e digitalizzazione menu", status: "connected", category: "Intelligenza Artificiale", detail: "supabase/functions/ai-menu" },
+                { name: "AI Translate", description: "Traduzioni automatiche multi-lingua", status: "connected", category: "Intelligenza Artificiale", detail: "supabase/functions/ai-translate" },
+                { name: "AI Inventory", description: "Gestione scorte intelligente", status: "connected", category: "Intelligenza Artificiale", detail: "supabase/functions/ai-inventory" },
+
+                // ── Payments ──
+                { name: "Stripe Connect", description: "Pagamenti, abbonamenti e marketplace split", status: "missing", category: "Pagamenti", detail: "Chiave API Stripe non configurata — necessaria per pagamenti reali", actionLabel: "Configura Stripe" },
+                { name: "Stripe Webhooks", description: "Notifiche eventi pagamento in tempo reale", status: "missing", category: "Pagamenti", detail: "Webhook endpoint e signing secret da configurare", actionLabel: "Configura Webhook" },
+                { name: "Subscription Checkout", description: "Checkout per abbonamenti mensili", status: "warning", category: "Pagamenti", detail: "Edge function presente, ma Stripe key mancante" },
+                { name: "AI Token Checkout", description: "Acquisto pacchetti gettoni IA", status: "warning", category: "Pagamenti", detail: "Edge function presente, ma Stripe key mancante" },
+
+                // ── Notifications ──
+                { name: "Push Notifications (FCM)", description: "Notifiche push su dispositivi mobili", status: "missing", category: "Notifiche", detail: "Firebase Cloud Messaging non configurato", actionLabel: "Configura FCM" },
+                { name: "Email Transazionali", description: "Email di conferma ordini, prenotazioni", status: "missing", category: "Notifiche", detail: "SMTP o servizio email (Resend/SendGrid) da configurare", actionLabel: "Configura Email" },
+                { name: "WhatsApp Business API", description: "Messaggi WhatsApp automatici ai clienti", status: "missing", category: "Notifiche", detail: "Twilio/WhatsApp Business non configurato", actionLabel: "Configura WhatsApp" },
+                { name: "SMS (Twilio)", description: "SMS per conferme e promozioni", status: "missing", category: "Notifiche", detail: "Connector Twilio disponibile ma non collegato", actionLabel: "Collega Twilio" },
+
+                // ── External Services ──
+                { name: "Google Maps / Places", description: "Geocoding, mappe flotta NCC, indirizzi", status: "missing", category: "Servizi Esterni", detail: "API Key Google Maps non configurata", actionLabel: "Configura Maps" },
+                { name: "Fatturazione Elettronica", description: "Invio automatico fatture SDI", status: "missing", category: "Servizi Esterni", detail: "Provider fatturazione (FattureInCloud/Aruba) non collegato", actionLabel: "Configura FE" },
+                { name: "Social Media APIs", description: "Pubblicazione automatica su Instagram/Facebook", status: "missing", category: "Servizi Esterni", detail: "Meta Business Suite non collegato", actionLabel: "Configura Social" },
+                { name: "Google Analytics", description: "Tracking visitatori siti pubblici", status: "missing", category: "Servizi Esterni", detail: "GA4 Measurement ID non configurato", actionLabel: "Configura GA4" },
+                { name: "Dominio Custom & SSL", description: "Domini personalizzati per i siti dei clienti", status: "missing", category: "Servizi Esterni", detail: "DNS e certificati SSL da configurare per White Label", actionLabel: "Configura Domini" },
+
+                // ── Edge Functions ──
+                { name: "Check Payments (CRON)", description: "Verifica pagamenti scaduti automatica", status: "connected", category: "Backend Functions", detail: "supabase/functions/check-payments" },
+                { name: "Create Company", description: "Onboarding nuova azienda", status: "connected", category: "Backend Functions", detail: "supabase/functions/create-company" },
+                { name: "Assign Partner Role", description: "Assegnazione ruolo partner", status: "connected", category: "Backend Functions", detail: "supabase/functions/assign-partner-role" },
+                { name: "Generate B2B Invoice", description: "Generazione fatture B2B", status: "connected", category: "Backend Functions", detail: "supabase/functions/generate-b2b-invoice" },
+                { name: "Generate Fee Invoice", description: "Fatture commissioni mensili", status: "connected", category: "Backend Functions", detail: "supabase/functions/generate-fee-invoice" },
+                { name: "Partner Assets Generator", description: "Generazione materiali partner", status: "connected", category: "Backend Functions", detail: "supabase/functions/generate-partner-assets" },
+                { name: "Payment Notifications", description: "Notifiche scadenze pagamento", status: "connected", category: "Backend Functions", detail: "supabase/functions/payment-notifications" },
+                { name: "Submit Feature Request", description: "Richieste funzionalità dai clienti", status: "connected", category: "Backend Functions", detail: "supabase/functions/submit-feature-request" },
+                { name: "Send Push Discount", description: "Invio sconti push automatici", status: "connected", category: "Backend Functions", detail: "supabase/functions/send-push-discount" },
+                { name: "Seed Demo Accounts", description: "Creazione account demo settoriali", status: "connected", category: "Backend Functions", detail: "supabase/functions/seed-demo-accounts" },
+              ];
+
+              const categories = [...new Set(integrations.map(i => i.category))];
+              const connectedCount = integrations.filter(i => i.status === "connected").length;
+              const missingCount = integrations.filter(i => i.status === "missing").length;
+              const warningCount = integrations.filter(i => i.status === "warning").length;
+
+              const statusIcon = (s: IntegrationStatus) => {
+                if (s === "connected") return <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" />;
+                if (s === "warning") return <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />;
+                return <XCircle className="w-4 h-4 text-destructive shrink-0" />;
+              };
+
+              const statusBg = (s: IntegrationStatus) => {
+                if (s === "connected") return "border-green-500/15 bg-green-500/[0.03]";
+                if (s === "warning") return "border-amber-500/15 bg-amber-500/[0.03]";
+                return "border-destructive/15 bg-destructive/[0.03]";
+              };
+
+              return (
+                <>
+                  {/* Summary cards */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="p-3 rounded-xl bg-green-500/[0.06] border border-green-500/15 text-center">
+                      <p className="text-2xl font-display font-bold text-green-400">{connectedCount}</p>
+                      <p className="text-[0.6rem] text-green-400/70 font-medium uppercase tracking-wider">Connessi</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-amber-500/[0.06] border border-amber-500/15 text-center">
+                      <p className="text-2xl font-display font-bold text-amber-400">{warningCount}</p>
+                      <p className="text-[0.6rem] text-amber-400/70 font-medium uppercase tracking-wider">Parziali</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-destructive/[0.06] border border-destructive/15 text-center">
+                      <p className="text-2xl font-display font-bold text-destructive">{missingCount}</p>
+                      <p className="text-[0.6rem] text-destructive/70 font-medium uppercase tracking-wider">Da Configurare</p>
+                    </div>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="px-1">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs text-muted-foreground font-medium">Completamento Sistema</span>
+                      <span className="text-xs font-display font-bold text-primary">{Math.round(connectedCount / integrations.length * 100)}%</span>
+                    </div>
+                    <div className="h-2 rounded-full bg-secondary overflow-hidden">
+                      <motion.div
+                        className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${connectedCount / integrations.length * 100}%` }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Categories */}
+                  {categories.map(cat => {
+                    const items = integrations.filter(i => i.category === cat);
+                    const catConnected = items.filter(i => i.status === "connected").length;
+                    return (
+                      <div key={cat}>
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-sm font-display font-bold text-foreground">{cat}</h3>
+                          <span className="text-[0.6rem] text-muted-foreground font-medium px-2 py-0.5 rounded-full bg-secondary">
+                            {catConnected}/{items.length}
+                          </span>
+                        </div>
+                        <div className="space-y-1.5">
+                          {items.map(item => (
+                            <motion.div
+                              key={item.name}
+                              className={`p-3 rounded-xl border ${statusBg(item.status)} transition-all`}
+                              whileHover={{ scale: 1.005 }}
+                            >
+                              <div className="flex items-start gap-2.5">
+                                {statusIcon(item.status)}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <p className="text-xs font-semibold text-foreground">{item.name}</p>
+                                    {item.status === "connected" && (
+                                      <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 font-bold uppercase tracking-wider shrink-0">Attivo</span>
+                                    )}
+                                    {item.status === "missing" && (
+                                      <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-destructive/15 text-destructive font-bold uppercase tracking-wider shrink-0">Mancante</span>
+                                    )}
+                                    {item.status === "warning" && (
+                                      <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 font-bold uppercase tracking-wider shrink-0">Parziale</span>
+                                    )}
+                                  </div>
+                                  <p className="text-[0.6rem] text-muted-foreground mt-0.5">{item.description}</p>
+                                  <p className="text-[0.55rem] text-muted-foreground/60 mt-0.5 italic">{item.detail}</p>
+                                  {item.actionLabel && (
+                                    <motion.button
+                                      className="mt-2 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-[0.6rem] font-bold hover:bg-primary/20 transition-colors flex items-center gap-1"
+                                      whileTap={{ scale: 0.95 }}
+                                      onClick={() => toast({ title: "🔧 " + item.actionLabel, description: "Contatta il team tecnico per configurare: " + item.name })}
+                                    >
+                                      <Zap className="w-3 h-3" />
+                                      {item.actionLabel}
+                                    </motion.button>
+                                  )}
+                                </div>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Info footer */}
+                  <div className="p-3 rounded-xl border border-primary/10 bg-primary/[0.03] text-center">
+                    <p className="text-[0.6rem] text-muted-foreground">
+                      Le integrazioni mancanti sono necessarie per le funzionalità in produzione. Il sistema demo funziona con dati simulati.
+                    </p>
+                    <p className="text-[0.55rem] text-primary/60 mt-1 font-medium">
+                      Ogni integrazione verrà configurata durante il go-live della piattaforma.
+                    </p>
+                  </div>
+                </>
+              );
+            })()}
+          </motion.div>
+        )}
       </div>
     </div>
   );
+};
 };
 
 export default SuperAdminDashboard;
