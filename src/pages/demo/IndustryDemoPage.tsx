@@ -76,6 +76,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#1A1A2E",
     bgTo: "#0d0d0d",
     heroEmoji: "🚘",
+    heroVideo: "https://videos.pexels.com/video-files/5765383/5765383-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Car className="w-5 h-5" />, title: "Gestione Flotta", desc: "Veicoli, scadenze, manutenzione in un click" },
       { icon: <Calendar className="w-5 h-5" />, title: "Prenotazioni Online", desc: "Booking automatico con conferma istantanea" },
