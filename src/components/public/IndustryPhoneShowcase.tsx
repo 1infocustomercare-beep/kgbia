@@ -1590,7 +1590,7 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           onTouchStart={() => setIsPlaying(false)}>
           {SCREENS.map((screen, i) => (
-            <div key={screen.type} className="snap-center flex-shrink-0" style={{ width: "55vw", maxWidth: 200 }}>
+            <div key={screen.type} className="snap-center flex-shrink-0" style={{ width: "32vw", maxWidth: 120 }}>
               <IPhoneFrame
                 screen={screen}
                 color={color}
