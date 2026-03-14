@@ -1648,9 +1648,9 @@ const LandingPage = () => {
                 {/* Ambient glow */}
                 <div className={`absolute -top-6 -right-6 w-16 h-16 rounded-full bg-gradient-to-br ${s.color} opacity-[0.06] blur-xl group-hover:opacity-[0.12] transition-opacity duration-500 pointer-events-none`} />
                 <div className="flex items-center gap-2 mb-2.5">
-                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-lg`}>
+                  <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>
                     {s.icon}
-                  </div>
+                  </PremiumIcon>
                   <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
                 </div>
                 <h3 className="font-heading text-[0.7rem] font-semibold text-foreground mb-1 leading-tight">{s.title}</h3>
