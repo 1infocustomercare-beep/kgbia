@@ -12,9 +12,12 @@ interface Asset {
   type: "image" | "video";
 }
 
-// Use dynamic URL resolution — NO static imports needed
+// Use Vite's import.meta.glob to resolve all assets at build time
+const assetModules = import.meta.glob<{ default: string }>('/src/assets/**/*', { eager: true });
+
 function assetUrl(file: string): string {
-  return new URL(`../assets/${file}`, import.meta.url).href;
+  const key = `/src/assets/${file}`;
+  return assetModules[key]?.default || '';
 }
 
 const ALL_ASSETS: Asset[] = [
