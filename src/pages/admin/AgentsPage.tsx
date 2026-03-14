@@ -1526,12 +1526,12 @@ function ElevenLabsConvAIConfig() {
 function KPICard({ icon, label, value, sub }: { icon: React.ReactNode; label: string; value: string; sub: React.ReactNode }) {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden rounded-xl border border-border bg-card p-4 group hover:border-primary/30 transition-all">
+      className="relative overflow-hidden rounded-lg md:rounded-xl border border-border bg-card p-2.5 md:p-4 group hover:border-primary/30 transition-all">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       <div className="absolute -top-6 -right-6 w-16 h-16 rounded-full blur-xl bg-primary/5 group-hover:bg-primary/10 transition-colors" />
-      <div className="flex items-center gap-2 mb-2">{icon}<span className="text-xs text-muted-foreground">{label}</span></div>
-      <div className="text-2xl font-bold text-foreground">{value}</div>
-      <div className="text-[10px] text-muted-foreground mt-1">{sub}</div>
+      <div className="flex items-center gap-1.5 mb-1 md:mb-2">{icon}<span className="text-[10px] md:text-xs text-muted-foreground truncate">{label}</span></div>
+      <div className="text-lg md:text-2xl font-bold text-foreground truncate">{value}</div>
+      <div className="text-[9px] md:text-[10px] text-muted-foreground mt-0.5 md:mt-1 truncate">{sub}</div>
     </motion.div>
   );
 }
