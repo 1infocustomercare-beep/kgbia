@@ -893,6 +893,20 @@ const SuperAdminDashboard = () => {
             <FeatureRequestsAdminPage />
           </Suspense>
         )}
+
+        {/* ===== SHOWCASE SETTORI ===== */}
+        {!loading && activeTab === "showcase" && (
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center">
+              <h2 className="text-lg font-display font-bold text-foreground">Showcase Settori</h2>
+              <p className="text-xs text-muted-foreground">Preview iPhone Pro di tutti i {Object.keys(INDUSTRY_CONFIGS).length} settori con link ai demo live</p>
+            </div>
+            <AllIndustriesShowcase onViewDemo={(id, slug) => {
+              if (id === "food") navigate(`/r/${slug}`);
+              else navigate(`/demo/${slug}`);
+            }} />
+          </motion.div>
+        )}
       </div>
     </div>
   );
