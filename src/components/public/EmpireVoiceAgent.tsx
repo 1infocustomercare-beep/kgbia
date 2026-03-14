@@ -443,8 +443,12 @@ const EmpireVoiceAgent: React.FC = () => {
                 {/* Auto-narration toggle */}
                 <button
                   onClick={() => {
-                    if (autoNarrating) { stopAll(); }
-                    else { setAutoNarrating(true); narrateSection(currentSection); }
+                    if (autoNarrating) {
+                      stopAll();
+                    } else {
+                      setAutoNarrating(true);
+                      enqueueSectionNarration(currentSection, true);
+                    }
                   }}
                   className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
                     autoNarrating ? "text-green-400 bg-green-400/10" : "text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]"
