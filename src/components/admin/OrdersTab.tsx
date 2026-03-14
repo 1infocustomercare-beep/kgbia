@@ -15,6 +15,7 @@ import { toast } from "@/hooks/use-toast";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { generateQRDataUrl, downloadQR } from "@/lib/qr";
 import { Eye, EyeOff } from "lucide-react";
+import cartoonOrdersKitchen from "@/assets/cartoon-orders-kitchen.png";
 
 // Masked PIN display component
 function PinDisplay({ pin }: { pin: any }) {
