@@ -7,10 +7,20 @@ const corsHeaders = {
 };
 
 /**
- * AI Gold Credits Purchase — 50 credits for €15.00
+ * AI Gold Credits Purchase — Multi-tier pricing
+ * 50 credits  → €15   (€0.30/credit)
+ * 150 credits → €39   (€0.26/credit — save 13%)
+ * 500 credits → €99   (€0.20/credit — save 34%)
  * Revenue goes 100% to the Platform Account (no splits).
- * On successful payment, the webhook adds 50 tokens to the restaurant's balance.
+ * On successful payment, the webhook adds tokens to the restaurant's balance.
  */
+
+const VALID_PACKS: Record<number, { price: number; label: string }> = {
+  50:  { price: 1500,  label: "Starter — 50 Gettoni IA" },
+  150: { price: 3900,  label: "Pro — 150 Gettoni IA" },
+  500: { price: 9900,  label: "Business — 500 Gettoni IA" },
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -19,10 +29,16 @@ serve(async (req) => {
     if (!stripeKey) throw new Error("Stripe not configured");
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
-    const { restaurantId, customerEmail, successUrl, cancelUrl } = await req.json();
+    const { restaurantId, customerEmail, credits, priceEurCents, successUrl, cancelUrl } = await req.json();
 
     if (!restaurantId) throw new Error("Missing restaurantId");
 
+    // Determine pack — support legacy (no credits param = 50)
+    const requestedCredits = credits || 50;
+    const pack = VALID_PACKS[requestedCredits];
+    if (!pack) throw new Error(`Invalid credits amount: ${requestedCredits}`);
+
+    // Use server-side price, ignore client priceEurCents for security
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -31,17 +47,17 @@ serve(async (req) => {
         price_data: {
           currency: "eur",
           product_data: {
-            name: "Empire AI Gold Credits — 50 Gettoni",
+            name: `Empire AI Gold Credits — ${pack.label}`,
             description: "Crediti IA per Menu Creator, Foto AI, Traduzioni automatiche",
           },
-          unit_amount: 1500, // €15.00
+          unit_amount: pack.price,
         },
         quantity: 1,
       }],
       metadata: {
         type: "ai_tokens",
         restaurantId,
-        credits: "50",
+        credits: String(requestedCredits),
       },
       success_url: successUrl || "https://empire.app/dashboard?tokens=success",
       cancel_url: cancelUrl || "https://empire.app/dashboard?tokens=cancelled",
