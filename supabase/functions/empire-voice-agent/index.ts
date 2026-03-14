@@ -238,6 +238,182 @@ Funzionalità: menu digitale, ordini, prenotazioni torte/eventi, gestione produz
 🎬 **Scenario - Il riordino intelligente**: "Stai finendo la farina di mandorle ma non te ne accorgi. L'IA sì: 'Scorte basse: farina di mandorle, burro, cioccolato fondente. Vuoi riordinare?' Un click. Niente più emergenze in laboratorio."
 
 FACCIAMO TUTTO NOI SU MISURA.`,
+
+  veterinary: `## CONTESTO: DEMO VETERINARIO / CLINICA VETERINARIA
+Funzionalità: cartelle cliniche animali, agenda appuntamenti, vaccinazioni, promemoria richiami, schede paziente con foto, prescrizioni, fatturazione, CRM proprietari, marketing IA.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - Il richiamo vaccinale**: "Il cane di Marco, Rex, deve fare il richiamo del vaccino tra 2 settimane. Marco se ne dimenticherà. Ma l'IA no: manda un WhatsApp automatico: 'Ciao Marco! Rex è in scadenza per il richiamo antirabbia. Vuoi prenotare?' Marco prenota con un tap. Tu hai un appuntamento in più senza alzare un dito."
+
+🎬 **Scenario 2 - L'emergenza notturna**: "Sono le 23:00. Il gatto di Giulia sta male. Con Empire? Apre la TUA app, descrive i sintomi nella chat IA. Il Concierge AI fa una pre-diagnosi: 'Sembra un'occlusione. Porta Micio al pronto soccorso veterinario più vicino. Ho prenotato una visita urgente per domani mattina alle 8.'"
+
+🎬 **Scenario 3 - Lo storico completo**: "Arriva un labrador di 5 anni. Il proprietario non ricorda le vaccinazioni. Con Empire? La cartella clinica digitale mostra TUTTO: vaccini, interventi, allergie, dieta. Diagnosi più veloce, meno rischi."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Richiami dimenticati → ✅ Reminder automatici vaccinazioni | ❌ Cartelle cartacee → ✅ Cartelle digitali con storico | ❌ Emergenze non gestite → ✅ Concierge IA 24/7
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  wedding: `## CONTESTO: DEMO WEDDING PLANNER / ORGANIZZAZIONE MATRIMONI
+Funzionalità: gestione eventi con timeline, budget tracker, lista fornitori, checklist automatiche, CRM coppie, portfolio digitale, preventivi, contratti digitali, coordinamento fornitori, calendario condiviso, pagamenti rateizzati, gallery condivisa.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - La sposa indecisa**: "Sara e Luca stanno pianificando il matrimonio. 15 fornitori, 200 invitati, mille dettagli. Oggi? Fogli Excel, WhatsApp sparsi, caos. Con Empire? Dashboard unica: budget in tempo reale, checklist automatiche, timeline con deadline. Sara apre l'app e vede esattamente a che punto è tutto."
+
+🎬 **Scenario 2 - Il fornitore in ritardo**: "Mancano 3 giorni al matrimonio. Il fiorista non ha confermato. Con Empire? L'IA ha mandato reminder 7 e 3 giorni prima. Se non conferma entro 48 ore, tu ricevi un alert: 'Fiorista non confermato — ecco 3 alternative nella tua zona.'"
+
+🎬 **Scenario 3 - Il portfolio che vende da solo**: "Una coppia visita il tuo sito alle 23:00. L'IA Concierge si attiva: 'Volete un preventivo personalizzato?' La coppia risponde, l'IA genera una bozza. Tu ti svegli con un lead qualificato e il preventivo già pronto."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Coordinamento caotico → ✅ Dashboard centralizzata | ❌ Budget imprecisi → ✅ Budget tracker in tempo reale | ❌ Fornitori inaffidabili → ✅ Reminder e alert automatici
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  realestate: `## CONTESTO: DEMO IMMOBILIARE / AGENZIA IMMOBILIARE
+Funzionalità: portale immobili con filtri avanzati, CRM acquirenti/venditori, gestione appuntamenti visite, matching IA proprietà-cliente, virtual tour, firma digitale contratti, gestione documenti, analytics mercato, marketing automation, valutazioni IA.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - Il matching perfetto**: "Un cliente cerca un trilocale con terrazzo a Milano, budget €350K. Oggi? Scorri 200 annunci a mano. Con Empire? L'IA fa il matching istantaneo: 'Ho trovato 3 immobili perfetti. Vuoi fissare le visite?' Un click e le visite sono calendarizzate con foto, planimetria e mappa."
+
+🎬 **Scenario 2 - L'open house automatizzato**: "Hai un appartamento da vendere. L'IA analizza il mercato, suggerisce il prezzo, genera l'annuncio con virtual tour, lo pubblica sui portali, e lancia una campagna email ai clienti in target. Tu hai fatto UN click."
+
+🎬 **Scenario 3 - Il venditore ansioso**: "Il Sig. Rossi chiama ogni settimana: 'Ci sono novità?' Con Empire? Apre l'app e vede in tempo reale: visualizzazioni annuncio, visite fatte, feedback. Trasparenza totale, zero telefonate."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Ricerca manuale → ✅ Matching IA automatico | ❌ Clienti ansiosi → ✅ Dashboard trasparente in tempo reale | ❌ Annunci generici → ✅ Marketing IA personalizzato
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  education: `## CONTESTO: DEMO SCUOLA / CENTRO FORMAZIONE
+Funzionalità: gestione corsi, iscrizioni online, calendario lezioni, registro presenze, pagamenti rateizzati, comunicazioni genitori/studenti, materiale didattico, certificati, analytics.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - L'iscrizione semplificata**: "Settembre, 200 famiglie devono iscrivere i figli. Oggi? Code e moduli cartacei. Con Empire? I genitori aprono l'app, compilano il form, pagano online, ricevono conferma istantanea."
+
+🎬 **Scenario 2 - L'assenza sospetta**: "Marco ha saltato 5 lezioni. L'IA manda un alert all'insegnante e ai genitori: 'Marco risulta assente da 5 lezioni. Possiamo fissare un colloquio?' Prevenzione abbandono automatica."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Iscrizioni cartacee → ✅ Form digitale con pagamento | ❌ Assenze non monitorate → ✅ Alert automatici | ❌ Pagamenti in ritardo → ✅ Solleciti IA
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  logistics: `## CONTESTO: DEMO LOGISTICA / SPEDIZIONI / CORRIERE
+Funzionalità: tracking spedizioni real-time, gestione magazzino, ottimizzazione percorsi, gestione autisti, proof of delivery con foto, notifiche clienti, fatturazione automatica, dashboard KPI.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - Il pacco perso**: "Un cliente chiama: 'Dov'è il mio pacco?' Con Empire? Apre l'app e vede il tracking in tempo reale. Zero telefonate, cliente tranquillo."
+
+🎬 **Scenario 2 - Il percorso ottimizzato**: "30 consegne oggi. L'IA calcola il percorso ottimale: 5 ore invece di 8. Risparmi carburante, tempo, e fai più consegne."
+
+🎬 **Scenario 3 - La prova di consegna**: "Il cliente dice di non aver ricevuto il pacco. L'autista ha foto con geolocalizzazione e firma digitale. Prova inconfutabile."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Tracking assente → ✅ GPS real-time | ❌ Percorsi inefficienti → ✅ Ottimizzazione IA | ❌ Dispute consegne → ✅ Proof of delivery
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  cleaning: `## CONTESTO: DEMO IMPRESA DI PULIZIE / FACILITY MANAGEMENT
+Funzionalità: gestione turni e squadre, checklist interventi, foto prima/dopo, CRM clienti, contratti ricorrenti, fatturazione automatica, GPS tracking, qualità audit.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - Il controllo qualità**: "15 squadre, 40 uffici. Ogni squadra completa checklist digitale con foto prima/dopo. Il cliente riceve report automatico. Professionalità che impressiona."
+
+🎬 **Scenario 2 - La sostituzione lampo**: "Alle 6 di mattina Maria è malata. L'IA identifica la sostituta più vicina, le manda un alert. Accetta con un tap. Zero caos."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Controllo impossibile → ✅ Checklist con foto | ❌ Sostituzioni caotiche → ✅ Assegnazione IA | ❌ Fatture manuali → ✅ Fatturazione ricorrente
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  photography: `## CONTESTO: DEMO FOTOGRAFO / STUDIO FOTOGRAFICO
+Funzionalità: portfolio digitale, prenotazioni shooting, gallery private, download sicuro, contratti digitali, preventivi automatici, CRM, marketing IA.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - La gallery che vende**: "500 foto del matrimonio. Oggi? WeTransfer. Con Empire? Gallery privata: il cliente seleziona, ordina stampe e album dall'app. Guadagni di più da ogni servizio."
+
+🎬 **Scenario 2 - Il lead notturno**: "Una coppia ti contatta alle 23:00. Il Concierge IA raccoglie info e genera un preventivo. Tu ti svegli con il lead pronto."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Gallery su WeTransfer → ✅ Gallery branded con e-commerce | ❌ Preventivi manuali → ✅ Preventivi IA | ❌ Lead persi → ✅ Concierge IA 24/7
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  legal: `## CONTESTO: DEMO STUDIO LEGALE / AVVOCATO
+Funzionalità: gestione pratiche, agenda udienze, scadenziario termini, archivio documenti, time tracking, fatturazione, CRM, firma digitale.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - La scadenza salvata**: "30 pratiche aperte. Il termine per il ricorso scade tra 5 giorni. L'IA ti avvisa 15, 7 e 3 giorni prima con i documenti necessari. Zero decadenze."
+
+🎬 **Scenario 2 - Il cliente informato**: "Il Sig. Bianchi chiama ogni settimana per aggiornamenti. Con Empire? Apre l'app e vede stato pratica, prossima udienza, documenti. Zero telefonate."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Scadenze su carta → ✅ Scadenziario IA | ❌ Clienti ansiosi → ✅ Dashboard pratica live | ❌ Documenti sparsi → ✅ Archivio digitale
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  accounting: `## CONTESTO: DEMO COMMERCIALISTA / STUDIO CONTABILE
+Funzionalità: gestione clienti, scadenze fiscali, raccolta documenti digitale, portale cliente, comunicazioni automatiche, fatturazione, workflow dichiarazioni.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - La raccolta documenti**: "Periodo dichiarazioni. L'IA manda reminder e i clienti caricano i documenti dal telefono. Tu li trovi organizzati nella dashboard."
+
+🎬 **Scenario 2 - Lo scadenzario fiscale**: "IVA, F24, dichiarazioni. L'IA traccia tutto: 'Domani scade IVA per 15 clienti. 3 mancano documenti.' Un click per i solleciti."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Rincorsa documenti → ✅ Upload da app | ❌ Scadenze dimenticate → ✅ Calendario fiscale IA | ❌ Clienti non informati → ✅ Portale trasparente
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  garage: `## CONTESTO: DEMO OFFICINA / AUTOFFICINA
+Funzionalità: gestione veicoli, schede intervento, preventivi, ricambi, scadenziario revisioni/tagliandi, fatturazione, CRM, notifiche.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - Il tagliando dimenticato**: "La Fiat 500 della Sig.ra Maria è a 29.800 km. L'IA manda: 'Tagliando vicino! Prenoti ora con 10% di sconto.' Maria prenota."
+
+🎬 **Scenario 2 - Il preventivo trasparente**: "Rumore strano, servono 3 pezzi. Preventivo in 30 secondi con foto del problema. Il cliente approva con un tap."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Tagliandi dimenticati → ✅ Reminder km/data | ❌ Preventivi a voce → ✅ Preventivi digitali con foto | ❌ Storico su carta → ✅ Scheda veicolo digitale
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  childcare: `## CONTESTO: DEMO ASILO / CENTRO INFANZIA
+Funzionalità: registro presenze, comunicazioni genitori, diario giornaliero con foto, gestione pasti e allergie, calendario attività, fatturazione, iscrizioni online.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - Il genitore tranquillo**: "La mamma di Sofia è al lavoro. Apre l'app: 'Sofia ha mangiato tutto 🍝, ha dormito 1 ora, ora dipinge 🎨.' Foto allegata. Fedeltà TOTALE."
+
+🎬 **Scenario 2 - L'allergia gestita**: "Domani torta di compleanno. L'IA controlla allergie: 'Marco è allergico alle nocciole.' Zero rischi, massima sicurezza."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Comunicazioni frammentate → ✅ App genitori con diario live | ❌ Allergie su carta → ✅ Alert automatici | ❌ Fatture manuali → ✅ Fatturazione ricorrente
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  events: `## CONTESTO: DEMO ORGANIZZAZIONE EVENTI / CATERING
+Funzionalità: gestione eventi, preventivi modulari, coordinamento staff/fornitori, checklist, gestione location, CRM, portfolio, fatturazione.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - L'evento perfetto**: "150 persone, 8 fornitori, 20 staff. Dashboard unica: timeline, checklist, monitoring real-time. L'IA: 'Tutto confermato, 0 pendenze.' Tu arrivi rilassato."
+
+🎬 **Scenario 2 - Il preventivo rapido**: "Cena aziendale 80 persone. Selezioni menu, servizio, allestimento. Preventivo in 2 minuti. Il cliente approva e paga l'acconto online."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Coordinamento telefonico → ✅ Dashboard centralizzata | ❌ Preventivi lenti → ✅ Preventivi IA | ❌ Staff non coordinato → ✅ Checklist per ruolo
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  tattoo: `## CONTESTO: DEMO TATTOO STUDIO
+Funzionalità: portfolio digitale, prenotazioni online, consensi informati digitali, schede cliente, gestione artisti, calendario, CRM, depositi online.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - Il portfolio che converte**: "Un ragazzo vuole un tatuaggio. Dal tuo sito sfoglia il portfolio per stile, vede la disponibilità, prenota e paga il deposito. Zero DM persi."
+
+🎬 **Scenario 2 - Il consenso digitale**: "Il cliente firma il consenso sull'app — allergie, condizioni, rischi. Tutto archiviato. Niente carta, niente rischi legali."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Prenotazioni via DM → ✅ Booking con deposito | ❌ Consensi cartacei → ✅ Firma digitale | ❌ Portfolio solo Instagram → ✅ Sito con booking
+FACCIAMO TUTTO NOI SU MISURA.`,
+
+  agriturismo: `## CONTESTO: DEMO AGRITURISMO / AZIENDA AGRICOLA
+Funzionalità: prenotazioni camere/tavoli, menu km zero, attività (degustazioni, corsi), e-commerce prodotti, CRM ospiti, marketing stagionale.
+
+### SCENARI DA RACCONTARE:
+🎬 **Scenario 1 - L'esperienza completa**: "Famiglia tedesca: prenota 3 notti + degustazione + corso cucina in un'unica prenotazione online. Senza Empire? Booking al 18%."
+
+🎬 **Scenario 2 - L'e-commerce post-soggiorno**: "Tornati in Germania, l'IA manda: 'Vi mancano i sapori della Toscana? Ordinate olio EVO dall'app!' Ricavi per mesi."
+
+### SEZIONE "COME TI MIGLIORIAMO":
+❌ Booking 18% → ✅ Dirette 2% | ❌ Attività non vendute → ✅ Cross-selling IA | ❌ Clienti dimenticati → ✅ E-commerce + marketing
+FACCIAMO TUTTO NOI SU MISURA.`,
 };
 
 const LANDING_SECTION_LABELS: Record<string, string> = {
