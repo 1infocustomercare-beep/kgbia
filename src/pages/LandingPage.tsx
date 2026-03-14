@@ -619,11 +619,11 @@ const LandingPage = () => {
         {/* ═══ LAYER 0: Video background with cinematic overlay ═══ */}
         <div className="absolute inset-0">
           <video src={videoHero} autoPlay muted loop playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-[0.15]"
+            className="absolute inset-0 w-full h-full object-cover opacity-[0.25]"
           />
           {/* Cinematic dark-to-transparent gradient overlays */}
-          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsla(260,18%,7%,0.6) 30%, hsla(260,18%,7%,0.4) 60%, hsl(var(--background)) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 40%, transparent 30%, hsl(var(--background)) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsla(260,18%,7%,0.5) 30%, hsla(260,18%,7%,0.3) 60%, hsl(var(--background)) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 40%, transparent 40%, hsl(var(--background)) 100%)" }} />
         </div>
 
         {/* ═══ LAYER 1: Dramatic radial glow — more visible ═══ */}
