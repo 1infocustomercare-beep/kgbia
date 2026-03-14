@@ -297,6 +297,7 @@ const EmpireVoiceAgent: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
+      autoNarratingRef.current = true;
       setAutoNarrating(true);
       enqueueSectionNarration("hero", true);
     }, 2500);
