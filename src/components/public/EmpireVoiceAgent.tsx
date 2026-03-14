@@ -459,6 +459,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     if (autoNarrating) {
                       stopAll();
                     } else {
+                      autoNarratingRef.current = true;
                       setAutoNarrating(true);
                       enqueueSectionNarration(currentSection, true);
                     }
