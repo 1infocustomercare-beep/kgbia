@@ -8,7 +8,7 @@ import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
    Each sector gets unique gradients, layouts, KPIs and visual identity
    ═══════════════════════════════════════════ */
 
-interface SectorStyle {
+interface SectorStyleBase {
   heroGradient: string;
   cardBg: string;
   chartColors: string[];
@@ -16,13 +16,18 @@ interface SectorStyle {
   bookingFields: string[];
   heroSubtext: string;
   serviceIcon: string;
-  // Extended screens data
+}
+
+interface SectorStyleExtended extends SectorStyleBase {
   analyticsTitle: string;
   analyticsBars: number[];
   crmClients: { name: string; tag: string; spent: string }[];
   notifications: { icon: string; text: string; time: string }[];
   settingsToggles: { label: string; on: boolean }[];
 }
+
+// Alias for internal use — always the full type
+type SectorStyle = SectorStyleExtended;
 
 const SECTOR_STYLES: Partial<Record<IndustryId, SectorStyle>> = {
   food: {
