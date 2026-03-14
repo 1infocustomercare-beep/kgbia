@@ -14,6 +14,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Plus, Phone, Mail, Search, Download, MessageCircle, User, MapPin, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { Customer360Widget } from "@/components/app/Customer360Widget";
 
 const cardV = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
 
