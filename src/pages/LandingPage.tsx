@@ -682,10 +682,11 @@ const LandingPage = () => {
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Clean badge — gold accent */}
-            <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] backdrop-blur-sm mb-5 sm:mb-7"
+            <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border bg-primary/[0.04] backdrop-blur-sm mb-5 sm:mb-7"
+              style={{ borderColor: "hsla(35,45%,50%,0.2)" }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              <span className="text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold text-primary/80 tracking-[2px] uppercase">Il Sistema Operativo per il Tuo Business</span>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} />
+              <span className="text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase" style={{ color: "hsla(35,45%,55%,0.85)" }}>Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
             {/* Headline — gold shimmer */}
@@ -719,34 +720,36 @@ const LandingPage = () => {
               </motion.button>
               <motion.button
                 onClick={() => navigate("/demo")}
-                className="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full border border-foreground/8 text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:border-primary/20 hover:text-foreground hover:bg-primary/[0.03] transition-all flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.01 }}
+                className="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground hover:bg-primary/[0.03] transition-all flex items-center justify-center gap-2"
+                style={{ border: "1px solid hsla(35,45%,50%,0.12)" }}
+                whileHover={{ scale: 1.01, borderColor: "hsla(35,45%,50%,0.25)" }}
               >
-                <Play className="w-4 h-4 text-primary/60" /> Vedi Demo Live
+                <Play className="w-4 h-4" style={{ color: "hsla(35,45%,55%,0.6)" }} /> Vedi Demo Live
               </motion.button>
             </motion.div>
 
-            {/* Metrics — clean minimal cards */}
+            {/* Metrics — clean minimal cards with gold accents */}
             <motion.div className="mt-16 w-full grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
               {metrics.map((m, i) => (
-                <motion.div key={i} className="relative rounded-2xl p-4 sm:p-5 text-center border border-primary/[0.1] bg-deep-black/40 backdrop-blur-sm overflow-hidden"
-                  whileHover={{ y: -3, borderColor: "hsla(265, 70%, 60%, 0.25)" }}
+                <motion.div key={i} className="relative rounded-2xl p-4 sm:p-5 text-center bg-deep-black/40 backdrop-blur-sm overflow-hidden"
+                  style={{ border: "1px solid hsla(35,45%,50%,0.08)" }}
+                  whileHover={{ y: -3, borderColor: "hsla(35,45%,50%,0.2)" }}
                   transition={{ duration: 0.2 }}>
                   {/* Scanning line */}
                   <motion.div
                     className="absolute inset-0 pointer-events-none"
-                    style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.06) 50%, transparent 60%)" }}
+                    style={{ background: "linear-gradient(180deg, transparent 40%, hsla(35,45%,55%,0.04) 50%, transparent 60%)" }}
                     animate={{ y: ["-100%", "200%"] }}
                     transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 + i, ease: "easeInOut" }}
                   />
-                  {/* Corner accents */}
-                  <div className="absolute top-1.5 left-1.5 w-3 h-3 border-t border-l border-primary/20 rounded-tl-sm" />
-                  <div className="absolute bottom-1.5 right-1.5 w-3 h-3 border-b border-r border-primary/20 rounded-br-sm" />
+                  {/* Corner accents — gold */}
+                  <div className="absolute top-1.5 left-1.5 w-3 h-3 border-t border-l rounded-tl-sm" style={{ borderColor: "hsla(35,45%,50%,0.15)" }} />
+                  <div className="absolute bottom-1.5 right-1.5 w-3 h-3 border-b border-r rounded-br-sm" style={{ borderColor: "hsla(35,45%,50%,0.15)" }} />
                   <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient relative z-10">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="text-[0.6rem] text-foreground/30 mt-1.5 tracking-[2px] uppercase font-heading relative z-10">{m.label}</p>
+                  <p className="text-[0.6rem] mt-1.5 tracking-[2px] uppercase font-heading relative z-10" style={{ color: "hsla(35,45%,55%,0.35)" }}>{m.label}</p>
                 </motion.div>
               ))}
             </motion.div>
