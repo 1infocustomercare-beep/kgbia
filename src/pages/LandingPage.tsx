@@ -577,13 +577,13 @@ const LandingPage = () => {
         </motion.div>
 
         {/* Scroll indicator */}
-        <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
-          animate={{ y: [0, 8, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
-          <span className="text-[8px] text-foreground/25 tracking-[4px] uppercase font-heading">Scopri</span>
-          <div className="w-5 h-8 rounded-full border border-primary/15 flex items-start justify-center p-1">
-            <motion.div className="w-1 h-1.5 rounded-full bg-primary/50"
-              animate={{ y: [0, 12, 0] }} transition={{ duration: 1.5, repeat: Infinity }} />
-          </div>
+        <motion.div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-20"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
+          style={{ filter: "drop-shadow(0 0 8px hsla(260,20%,4%,0.8))" }}>
+          <span className="text-[8px] text-foreground/30 tracking-[4px] uppercase font-heading">Scopri</span>
+          <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
+            <ChevronDown className="w-4 h-4 text-primary/40" />
+          </motion.div>
         </motion.div>
       </motion.section>
 
