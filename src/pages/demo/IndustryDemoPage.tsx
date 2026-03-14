@@ -47,6 +47,7 @@ interface SectorTheme {
   bgFrom: string;
   bgTo: string;
   heroEmoji: string;
+  heroVideo: string;
   platformFeatures: { icon: React.ReactNode; title: string; desc: string }[];
 }
 
