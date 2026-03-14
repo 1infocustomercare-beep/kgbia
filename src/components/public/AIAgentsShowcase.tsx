@@ -182,14 +182,14 @@ export function AIAgentsShowcase() {
             />
           ))}
           {/* Floating data nodes */}
-          {Array.from({ length: 24 }, (_, i) => (
+          {Array.from({ length: 30 }, (_, i) => (
             <motion.circle
               key={`node-${i}`}
-              cx={80 + (i % 8) * 140} cy={60 + Math.floor(i / 8) * 300 + (i % 3) * 100}
-              r="2" fill="hsl(var(--primary))"
+              cx={60 + (i % 10) * 110} cy={50 + Math.floor(i / 10) * 400 + (i % 3) * 120}
+              r="3" fill="hsl(var(--primary))"
               initial={{ opacity: 0, scale: 0 }}
-              animate={isInView ? { opacity: [0, 0.5, 0.2, 0.5], scale: [0, 1, 0.7, 1] } : {}}
-              transition={{ delay: 0.8 + i * 0.06, duration: 5, repeat: Infinity, repeatType: "reverse" }}
+              animate={isInView ? { opacity: [0, 0.6, 0.25, 0.6], scale: [0, 1.2, 0.8, 1.2] } : {}}
+              transition={{ delay: 0.8 + i * 0.05, duration: 5, repeat: Infinity, repeatType: "reverse" }}
             />
           ))}
         </svg>
