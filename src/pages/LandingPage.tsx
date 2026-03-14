@@ -1768,7 +1768,7 @@ const LandingPage = () => {
         <div className="relative mb-14">
           {/* DNA background */}
           <div className="absolute inset-0 pointer-events-none -z-[1]">
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[220px] opacity-100">
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-full sm:h-[220px] opacity-100">
               <svg className="w-full h-full" viewBox="0 0 1200 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <linearGradient id="lp-dna-a" x1="0%" y1="0%" x2="100%" y2="0%">
