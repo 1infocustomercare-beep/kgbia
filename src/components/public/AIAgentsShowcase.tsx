@@ -143,9 +143,14 @@ export function AIAgentsShowcase() {
               <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="dna-rung" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.1" />
-              <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.1" />
+              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.2" />
+              <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.2" />
+            </linearGradient>
+            <filter id="dna-glow">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
             </linearGradient>
           </defs>
           {/* Left helix strand */}
