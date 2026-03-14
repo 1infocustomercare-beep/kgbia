@@ -26,6 +26,19 @@ const SECTION_SCRIPTS: Record<string, string> = {
 
 const SECTION_ORDER = ["hero", "industries", "services", "process", "app", "calculator", "testimonials", "pricing", "partner", "contact"];
 
+const normalizeTextForSpeech = (text: string) =>
+  text
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/#{1,6}\s?/g, "")
+    .replace(/\[(.*?)\]\((.*?)\)/g, "$1")
+    .replace(/[>*_~]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 700);
+
 // ── TTS helper ──
 async function speakText(
   text: string,
@@ -34,6 +47,9 @@ async function speakText(
 ): Promise<boolean> {
   if (abortRef.current) return false;
 
+  const normalizedText = normalizeTextForSpeech(text);
+  if (!normalizedText) return false;
+
   try {
     const resp = await fetch(TTS_URL, {
       method: "POST",
@@ -41,22 +57,30 @@ async function speakText(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text: normalizedText }),
     });
 
-    if (!resp.ok) return false;
-    if (abortRef.current) return false;
+    if (!resp.ok || abortRef.current) return false;
 
     const { audioContent } = await resp.json();
     if (!audioContent || abortRef.current) return false;
 
     return await new Promise<boolean>((resolve) => {
       const audio = new Audio(`data:audio/mpeg;base64,${audioContent}`);
+      audio.preload = "auto";
+
       if (audioRef.current) audioRef.current.pause();
       audioRef.current = audio;
 
       audio.onended = () => resolve(true);
       audio.onerror = () => resolve(false);
+
+      if (abortRef.current) {
+        audio.pause();
+        resolve(false);
+        return;
+      }
+
       audio.play().catch(() => resolve(false));
     });
   } catch {
@@ -79,31 +103,81 @@ async function streamChat({
     },
     body: JSON.stringify({ messages, mode, pageContent, sectionId }),
   });
-  if (!resp.ok || !resp.body) throw new Error(`Stream failed: ${resp.status}`);
+
+  if (!resp.ok) {
+    let errorMessage = `Richiesta fallita (${resp.status})`;
+    try {
+      const errorBody = await resp.json();
+      errorMessage = errorBody?.error || errorMessage;
+    } catch {
+      // noop
+    }
+    throw new Error(errorMessage);
+  }
+
+  if (!resp.body) {
+    throw new Error("Nessun flusso di risposta ricevuto");
+  }
 
   const reader = resp.body.getReader();
   const decoder = new TextDecoder();
-  let buf = "";
-  let done = false;
+  let textBuffer = "";
+  let streamDone = false;
 
-  while (!done) {
-    const { done: d, value } = await reader.read();
-    if (d) break;
-    buf += decoder.decode(value, { stream: true });
-    let idx: number;
-    while ((idx = buf.indexOf("\n")) !== -1) {
-      let line = buf.slice(0, idx);
-      buf = buf.slice(idx + 1);
+  while (!streamDone) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    textBuffer += decoder.decode(value, { stream: true });
+
+    let newlineIndex: number;
+    while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+      let line = textBuffer.slice(0, newlineIndex);
+      textBuffer = textBuffer.slice(newlineIndex + 1);
+
       if (line.endsWith("\r")) line = line.slice(0, -1);
+      if (line.startsWith(":")) continue;
+      if (line.trim() === "") continue;
       if (!line.startsWith("data: ")) continue;
-      const json = line.slice(6).trim();
-      if (json === "[DONE]") { done = true; break; }
+
+      const jsonStr = line.slice(6).trim();
+      if (jsonStr === "[DONE]") {
+        streamDone = true;
+        break;
+      }
+
       try {
-        const c = JSON.parse(json).choices?.[0]?.delta?.content;
-        if (c) onDelta(c);
-      } catch { buf = line + "\n" + buf; break; }
+        const parsed = JSON.parse(jsonStr);
+        const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+        if (content) onDelta(content);
+      } catch {
+        textBuffer = line + "\n" + textBuffer;
+        break;
+      }
     }
   }
+
+  if (textBuffer.trim()) {
+    for (let rawLine of textBuffer.split("\n")) {
+      if (!rawLine) continue;
+      if (rawLine.endsWith("\r")) rawLine = rawLine.slice(0, -1);
+      if (rawLine.startsWith(":")) continue;
+      if (rawLine.trim() === "") continue;
+      if (!rawLine.startsWith("data: ")) continue;
+
+      const jsonStr = rawLine.slice(6).trim();
+      if (jsonStr === "[DONE]") continue;
+
+      try {
+        const parsed = JSON.parse(jsonStr);
+        const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+        if (content) onDelta(content);
+      } catch {
+        // ignore leftover partial
+      }
+    }
+  }
+
   onDone();
 }
 
