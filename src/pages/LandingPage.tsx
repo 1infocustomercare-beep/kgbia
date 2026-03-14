@@ -106,26 +106,31 @@ const NeuralCellsBackground = () => {
     window.addEventListener("resize", handler);
     return () => window.removeEventListener("resize", handler);
   }, []);
-  const CELL_COUNT = isMobile ? 22 : 40;
+
+  // Mobile: more cells spread across taller viewport ratio
+  const CELL_COUNT = isMobile ? 35 : 40;
+  const VB_W = isMobile ? 60 : 100;
+  const VB_H = isMobile ? 130 : 100;
 
   const cells = useMemo(() =>
     Array.from({ length: CELL_COUNT }, (_, i) => ({
       id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
+      x: Math.random() * VB_W,
+      y: Math.random() * VB_H,
       delay: Math.random() * 6,
-    })), [CELL_COUNT]
+    })), [CELL_COUNT, VB_W, VB_H]
   );
 
   const connections = useMemo(() => {
     const conns: { a: number; b: number }[] = [];
-    const maxDist = isMobile ? 32 : 28;
+    // Tighter max distance on mobile to create denser clusters
+    const maxDist = isMobile ? 28 : 28;
     for (let i = 0; i < cells.length; i++) {
       for (let j = i + 1; j < cells.length; j++) {
         const dx = cells[i].x - cells[j].x;
         const dy = cells[i].y - cells[j].y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < maxDist && dist > 6) conns.push({ a: i, b: j });
+        if (dist < maxDist && dist > 5) conns.push({ a: i, b: j });
       }
     }
     return conns;
@@ -133,11 +138,11 @@ const NeuralCellsBackground = () => {
 
   // On mobile, limit animated pulses to reduce GPU load
   const pulseConns = isMobile ? connections.filter((_, i) => i % 4 === 0) : connections.filter((_, i) => i % 2 === 0);
-  const goldConns = isMobile ? connections.filter((_, i) => i % 8 === 0) : connections.filter((_, i) => i % 4 === 0);
+  const goldConns = isMobile ? connections.filter((_, i) => i % 6 === 0) : connections.filter((_, i) => i % 4 === 0);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.7 }}>
-      <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: isMobile ? 0.8 : 0.7 }}>
+      <svg className="w-full h-full" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="pulseGlow">
             <feGaussianBlur stdDeviation="0.3" result="blur" />
@@ -152,9 +157,9 @@ const NeuralCellsBackground = () => {
             x1={cells[a].x} y1={cells[a].y}
             x2={cells[b].x} y2={cells[b].y}
             stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.35)" : "hsla(265,70%,65%,0.28)"}
-            strokeWidth="0.15"
+            strokeWidth={isMobile ? "0.2" : "0.15"}
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0.08, 0.35, 0.08] }}
+            animate={{ opacity: [0.1, 0.4, 0.1] }}
             transition={{ duration: 5 + (i % 4) * 2, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
           />
         ))}
@@ -163,7 +168,7 @@ const NeuralCellsBackground = () => {
         {pulseConns.map(({ a, b }, i) => (
           <motion.circle
             key={`vp${i}`}
-            r="0.25"
+            r={isMobile ? "0.35" : "0.25"}
             fill="hsla(265,90%,72%,0.9)"
             filter="url(#pulseGlow)"
             initial={{ cx: cells[a].x, cy: cells[a].y, opacity: 0 }}
@@ -180,7 +185,7 @@ const NeuralCellsBackground = () => {
         {goldConns.map(({ a, b }, i) => (
           <motion.circle
             key={`gp${i}`}
-            r="0.2"
+            r={isMobile ? "0.3" : "0.2"}
             fill="hsla(38,60%,58%,0.9)"
             filter="url(#pulseGlow)"
             initial={{ cx: cells[b].x, cy: cells[b].y, opacity: 0 }}
@@ -194,15 +199,15 @@ const NeuralCellsBackground = () => {
         ))}
 
         {/* Junction nodes */}
-        {cells.filter((_, i) => i % (isMobile ? 3 : 2) === 0).map((cell) => (
+        {cells.filter((_, i) => i % (isMobile ? 2 : 2) === 0).map((cell) => (
           <motion.circle
             key={`node${cell.id}`}
             cx={cell.x} cy={cell.y}
-            r="0.25"
+            r={isMobile ? "0.35" : "0.25"}
             fill="hsla(265,80%,70%,0.4)"
             animate={{
-              r: [0.15, 0.4, 0.15],
-              opacity: [0.2, 0.55, 0.2],
+              r: [isMobile ? 0.2 : 0.15, isMobile ? 0.5 : 0.4, isMobile ? 0.2 : 0.15],
+              opacity: [0.25, 0.6, 0.25],
             }}
             transition={{ duration: 3.5, repeat: Infinity, delay: cell.delay, ease: "easeInOut" }}
           />
