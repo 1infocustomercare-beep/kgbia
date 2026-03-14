@@ -1775,15 +1775,15 @@ const LandingPage = () => {
         const INITIAL_SHOW = 6;
         return (
       <Section style={{ background: "linear-gradient(180deg, hsla(260,14%,13%,1) 0%, hsla(270,18%,9%,1) 50%, hsla(260,14%,13%,1) 100%)" }}>
-        <div className="text-center mb-10">
-          <SectionLabel text="Ogni Settore" icon={<Layers className="w-3 h-3 text-primary" />} />
+        <div className="text-center mb-12">
+          <SectionLabel text="Ogni Settore, Un Mondo" icon={<Layers className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,2.8rem)] font-heading font-bold text-foreground leading-[1.05] mb-3"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Un Design <span className="text-shimmer">Unico per Ogni Business</span>
+            Stili <span className="text-shimmer">Completamente Diversi</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-xs sm:text-sm leading-[1.7]"
+          <motion.p className="text-foreground/40 max-w-[520px] mx-auto text-xs sm:text-sm leading-[1.7]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Interfacce, colori e funzionalità personalizzate per ogni settore.
+            Ogni settore ha la sua interfaccia unica — colori, layout, KPI e funzionalità pensati su misura per il tuo business.
           </motion.p>
         </div>
 
