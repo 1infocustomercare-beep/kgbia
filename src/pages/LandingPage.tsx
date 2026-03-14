@@ -1314,7 +1314,8 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         <div>
                           <p className={`text-[0.6rem] font-heading font-bold tracking-[2px] uppercase ${isEmpire ? "text-accent" : isActive ? "text-primary" : "text-foreground/40"}`}>{p.name}</p>
                           <p className={`text-2xl font-heading font-bold mt-0.5 ${isActive ? "text-foreground" : "text-foreground/50"}`}>€{p.price.toLocaleString("it-IT")}</p>
-                          <p className="text-[0.5rem] text-foreground/25">oppure €{Math.round(p.price / 6)}/mese ×6</p>
+                          <p className="text-[0.5rem] text-foreground/25">oppure da €{Math.round(p.price / 6)}/mese ×6</p>
+                          {isEmpire && <p className="text-[0.4rem] text-accent/70 font-bold mt-0.5">🏆 Tutto Incluso</p>}
                         </div>
                         <div className="text-right">
                           <p className={`text-xs font-heading font-bold ${isEmpire ? "text-accent" : "text-primary/70"}`}>{savings[pi]}</p>
