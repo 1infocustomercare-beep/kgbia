@@ -7,6 +7,20 @@ import nccPremiumInterior from "@/assets/ncc-premium-interior.jpg";
 import nccPremiumHotel from "@/assets/ncc-premium-hotel.jpg";
 import nccPremiumCoast from "@/assets/ncc-premium-coast.jpg";
 import nccHeroVideo from "@/assets/video-ncc-hero.mp4";
+import nccDestCapri from "@/assets/ncc-dest-capri.jpg";
+import nccDestCostiera from "@/assets/ncc-dest-costiera.jpg";
+import nccDestPompei from "@/assets/ncc-dest-pompei-new.png";
+import nccDestSorrento from "@/assets/ncc-dest-sorrento.png";
+import nccBoatCapri from "@/assets/ncc-boat-capri.jpg";
+import nccBoatLuxury from "@/assets/ncc-boat-luxury.jpg";
+import nccCostieraAerial from "@/assets/ncc-costiera-aerial.jpg";
+import nccFleetEclass from "@/assets/ncc-fleet-eclass.jpg";
+import nccFleetSclass from "@/assets/ncc-fleet-sclass.jpg";
+import nccFleetSuv from "@/assets/ncc-fleet-suv.jpg";
+import nccFleetBus from "@/assets/ncc-fleet-bus.jpg";
+import nccFleetSprinter from "@/assets/ncc-fleet-sprinter.jpg";
+import nccFleetShowcase from "@/assets/ncc-fleet-showcase.jpg";
+import nccSuvPremium from "@/assets/ncc-suv-premium.jpg";
 import { motion, useInView, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -172,12 +186,12 @@ function TiltCard({ children, className = "", style }: { children: React.ReactNo
 
 /* ── Fleet Card Data (fallbacks) ── */
 const FALLBACK_FLEET = [
-  { id: "fb-1", name: "Mercedes E-Class o similare", category: "Berlina", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 80, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Acqua"], image_url: "https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=600&h=400&fit=crop" },
-  { id: "fb-2", name: "Mercedes V-Class o similare", category: "Minivan", capacity: 7, min_pax: 1, max_pax: 7, luggage_capacity: 7, base_price: 120, is_popular: true, features: ["Pelle", "Clima", "WiFi", "TV", "Acqua"], image_url: "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=600&h=400&fit=crop" },
-  { id: "fb-3", name: "Bus Gran Turismo", category: "Pullman", capacity: 50, min_pax: 20, max_pax: 50, luggage_capacity: 50, base_price: 350, is_popular: false, features: ["Clima", "WiFi", "TV", "WC", "Bagagliaio"], image_url: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop" },
-  { id: "fb-4", name: "BMW X5 o similare", category: "SUV Premium", capacity: 4, min_pax: 1, max_pax: 4, luggage_capacity: 4, base_price: 100, is_popular: false, features: ["Pelle", "Clima", "WiFi", "4x4", "Acqua"], image_url: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&h=400&fit=crop" },
-  { id: "fb-5", name: "Mercedes S-Class o similare", category: "Sedan Luxury", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 150, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Massaggio", "Champagne"], image_url: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&h=400&fit=crop" },
-  { id: "fb-6", name: "Mercedes Sprinter o similare", category: "Minibus", capacity: 16, min_pax: 8, max_pax: 16, luggage_capacity: 16, base_price: 200, is_popular: false, features: ["Clima", "WiFi", "USB", "Bagagliaio", "Acqua"], image_url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&h=400&fit=crop" },
+  { id: "fb-1", name: "Mercedes E-Class o similare", category: "Berlina", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 80, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Acqua"], image_url: nccFleetEclass },
+  { id: "fb-2", name: "Mercedes V-Class o similare", category: "Minivan", capacity: 7, min_pax: 1, max_pax: 7, luggage_capacity: 7, base_price: 120, is_popular: true, features: ["Pelle", "Clima", "WiFi", "TV", "Acqua"], image_url: nccFleetShowcase },
+  { id: "fb-3", name: "Bus Gran Turismo", category: "Pullman", capacity: 50, min_pax: 20, max_pax: 50, luggage_capacity: 50, base_price: 350, is_popular: false, features: ["Clima", "WiFi", "TV", "WC", "Bagagliaio"], image_url: nccFleetBus },
+  { id: "fb-4", name: "BMW X5 o similare", category: "SUV Premium", capacity: 4, min_pax: 1, max_pax: 4, luggage_capacity: 4, base_price: 100, is_popular: false, features: ["Pelle", "Clima", "WiFi", "4x4", "Acqua"], image_url: nccFleetSuv },
+  { id: "fb-5", name: "Mercedes S-Class o similare", category: "Sedan Luxury", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 150, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Massaggio", "Champagne"], image_url: nccFleetSclass },
+  { id: "fb-6", name: "Mercedes Sprinter o similare", category: "Minibus", capacity: 16, min_pax: 8, max_pax: 16, luggage_capacity: 16, base_price: 200, is_popular: false, features: ["Clima", "WiFi", "USB", "Bagagliaio", "Acqua"], image_url: nccFleetSprinter },
 ];
 
 const FALLBACK_REVIEWS = [
@@ -346,9 +360,9 @@ export default function NCCPublicSite({ company }: Props) {
   ];
 
   const featuredDestinations = [
-    { name: "Pompei & Napoli", image: "https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=600&h=800&fit=crop" },
-    { name: "Costiera Amalfitana", image: "https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=600&h=800&fit=crop" },
-    { name: "Sorrento & Capri", image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=800&fit=crop" },
+    { name: "Pompei & Napoli", image: nccDestPompei },
+    { name: "Costiera Amalfitana", image: nccDestCostiera },
+    { name: "Sorrento & Capri", image: nccDestCapri },
   ];
 
   const boatHighlights: Record<string, string[]> = {
@@ -394,11 +408,11 @@ export default function NCCPublicSite({ company }: Props) {
     return "Giornata intera";
   };
   const boatImages: Record<string, string> = {
-    capri: "https://images.unsplash.com/photo-1515859005217-8a1f08870f59?w=600&h=400&fit=crop",
-    nerano: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop",
-    positano: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=400&fit=crop",
-    amalfi: "https://images.unsplash.com/photo-1612698093158-e07ac200d44e?w=600&h=400&fit=crop",
-    ischia: "https://images.unsplash.com/photo-1551524559-8af4e6624178?w=600&h=400&fit=crop",
+    capri: nccBoatCapri,
+    nerano: nccCostieraAerial,
+    positano: nccDestCostiera,
+    amalfi: nccPremiumCoast,
+    ischia: nccBoatLuxury,
   };
   const getBoatImage = (d: any) => {
     if (d.image_url) return d.image_url;
@@ -406,7 +420,7 @@ export default function NCCPublicSite({ company }: Props) {
     for (const [k, v] of Object.entries(boatImages)) {
       if (key.includes(k)) return v;
     }
-    return "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop";
+    return nccBoatLuxury;
   };
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -560,6 +574,53 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
       </section>
 
+      {/* ═══════════ ESPERIENZA PREMIUM — immersive split ═══════════ */}
+      <Section className="py-20 sm:py-28 px-4" style={{ background: NCC.bg }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+              <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>LA NOSTRA FILOSOFIA</p>
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <span className="text-white">Non solo </span>
+                <span style={{ color: gold }}>un trasferimento.</span>
+                <br />
+                <span className="text-white/60 text-xl sm:text-3xl">Un'esperienza di viaggio.</span>
+              </h2>
+              <p className="text-base sm:text-lg text-white/50 leading-relaxed mb-8">
+                Ogni dettaglio è curato con la massima attenzione: dal primo contatto all'arrivo a destinazione. Veicoli di ultima generazione, autisti professionisti bilingue e un servizio clienti disponibile 24/7.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { icon: Shield, label: "Licenza NCC", value: "Autorizzati" },
+                  { icon: Award, label: "Veicoli Premium", value: "Ultima Gen." },
+                  { icon: Globe, label: "Lingue Parlate", value: "IT · EN · FR" },
+                  { icon: Clock, label: "Disponibilità", value: "24h / 365gg" },
+                ].map((item, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.1 }}
+                    className="p-4 rounded-xl" style={{ background: NCC.darkCard, border: `1px solid ${NCC.cardBorder}` }}>
+                    <item.icon className="w-5 h-5 mb-2" style={{ color: gold }} />
+                    <p className="text-[10px] uppercase tracking-wider text-white/30 mb-0.5">{item.label}</p>
+                    <p className="text-sm font-bold text-white">{item.value}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative">
+              <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ border: `2px solid ${gold}20` }}>
+                <img src={nccCostieraAerial} alt="Costiera Amalfitana" className="w-full aspect-[4/3] object-cover" />
+              </div>
+              <div className="absolute -bottom-6 -left-4 sm:-left-8 rounded-xl overflow-hidden shadow-2xl w-32 sm:w-44" style={{ border: `2px solid ${gold}30` }}>
+                <img src={nccPremiumInterior} alt="Interni Premium" className="w-full aspect-square object-cover" />
+              </div>
+              <div className="absolute -top-4 -right-3 sm:-right-6 rounded-xl overflow-hidden shadow-2xl w-28 sm:w-36" style={{ border: `2px solid ${gold}30` }}>
+                <img src={nccSuvPremium} alt="SUV Premium" className="w-full aspect-[4/3] object-cover" />
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </Section>
+
       {/* ═══════════ DESTINAZIONI — light bg ═══════════ */}
       <Section className="py-16 sm:py-24 px-4" style={{ background: NCC.bgLight }}>
         <div className="max-w-6xl mx-auto">
@@ -688,7 +749,7 @@ export default function NCCPublicSite({ company }: Props) {
             <div ref={scrollRef} className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: "none" }}>
               {[...displayVehicles, ...displayVehicles].map((v: any, i: number) => {
                 const features = v.features?.length > 0 ? v.features : ["Pelle", "Clima", "WiFi", "Acqua"];
-                const img = v.image_url || FALLBACK_FLEET.find(f => f.category.toLowerCase() === (v.category || "").toLowerCase())?.image_url || "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&h=400&fit=crop";
+                const img = v.image_url || FALLBACK_FLEET.find(f => f.category.toLowerCase() === (v.category || "").toLowerCase())?.image_url || nccFleetEclass;
                 const isPopular = v.is_popular || (v.category || "").toLowerCase().includes("minivan") || (v.category || "").toLowerCase().includes("van");
 
                 return (
