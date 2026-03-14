@@ -3059,7 +3059,12 @@ const LandingPage = () => {
           <CompRow label="Commissioni" empire="Solo 2%" others="15-30%" />
           <CompRow label="Settori supportati" empire="25+" others="1-3" />
           <CompRow label="App White Label" empire="Inclusa" others="€extra/mese" />
-          <CompRow label="IA Integrata" empire="Completa" others="Base o assente" />
+          <CompRow label="IA Integrata" empire="20+ Agenti AI" others="Base o assente" />
+          <CompRow label="Voice Agent AI" empire="Incluso" others="Non disponibile" />
+          <CompRow label="Integrazioni" empire="Stripe · ElevenLabs · FCM" others="Poche o a pagamento" />
+          <CompRow label="Automazioni" empire="Email · WhatsApp · Push" others="Solo email" />
+          <CompRow label="Sito pubblico" empire="White-label incluso" others="Template base" />
+          <CompRow label="CRM & Clienti" empire="360° con AI insights" others="Lista contatti" />
           <CompRow label="Proprietà dati" empire="100% tuoi" others="Del provider" />
           <CompRow label="Aggiornamenti" empire="Settimanali" others="Trimestrali" />
           <CompRow label="Supporto" empire="7/7 dedicato" others="Email lenta" />
