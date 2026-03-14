@@ -278,22 +278,15 @@ export default function BeautyPublicSite({ company }: Props) {
         } />
       </div>
 
-      {/* ═══ STATS ═══ */}
+      {/* ═══ STATS — Premium Glass ═══ */}
       <Section className="py-16 sm:py-20 px-4" style={{ background: "#111" }}>
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-            {[
-              { value: 2500, suffix: "+", label: "Clienti Soddisfatte" },
-              { value: 15, suffix: "+", label: "Anni di Esperienza" },
-              { value: 98, suffix: "%", label: "Tasso di Ritorno" },
-              { value: 50, suffix: "+", label: "Trattamenti Premium" },
-            ].map((stat, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                <p className="text-3xl sm:text-4xl font-bold" style={{ color: PINK }}><AnimatedNum value={stat.value} suffix={stat.suffix} /></p>
-                <p className="text-[11px] uppercase tracking-[0.15em] mt-2 text-white/30" style={{ fontFamily: "'Inter', sans-serif" }}>{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
+          <PremiumStatsBar accentColor={PINK} stats={[
+            { value: 2500, suffix: "+", label: "Clienti Soddisfatte" },
+            { value: 15, suffix: "+", label: "Anni di Esperienza" },
+            { value: 98, suffix: "%", label: "Tasso di Ritorno" },
+            { value: 50, suffix: "+", label: "Trattamenti Premium" },
+          ]} />
         </div>
       </Section>
 
