@@ -734,8 +734,14 @@ const LandingPage = () => {
                 { icon: <Timer className="w-3 h-3" />, text: "Attivo in 24h" },
                 { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali" },
               ].map((t, i) => (
-                <span key={i} className="text-[0.6rem] text-foreground/20 font-heading tracking-[3px] uppercase flex items-center gap-2">
-                  <span className="text-primary/35">{t.icon}</span>
+                <span key={i} className="text-[0.6rem] text-foreground/20 font-heading tracking-[3px] uppercase flex items-center gap-2 group/trust">
+                  <motion.span
+                    className="text-primary/40 group-hover/trust:text-primary/70 transition-colors"
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 12, repeat: Infinity, ease: "linear", delay: i * 0.5 }}
+                  >
+                    {t.icon}
+                  </motion.span>
                   {t.text}
                 </span>
               ))}
