@@ -344,14 +344,12 @@ export default function BeautyPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* ═══ WHY US ═══ */}
-      <Section className="py-16 sm:py-24 px-4" style={{ background: `linear-gradient(180deg, ${DARK} 0%, #1a1018 100%)` }}>
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-medium mb-3" style={{ color: PINK, fontFamily: "'Inter', sans-serif" }}>Perché Noi</p>
-            <h2 className="text-3xl sm:text-4xl font-bold">La Differenza</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* ═══ WHY US — Glassmorphism Cards ═══ */}
+      <Section className="py-16 sm:py-24 px-4 relative overflow-hidden" style={{ background: `linear-gradient(180deg, ${DARK} 0%, #1a1018 100%)` }}>
+        <AmbientGlow color={PINK} position="both" />
+        <div className="max-w-5xl mx-auto relative z-10">
+          <PremiumSectionHeader badge="Perché Noi" title="La" highlight="Differenza" accentColor={PINK} />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
             {[
               { icon: Award, title: "Professionisti Certificati", desc: "Team con anni di esperienza e formazione continua" },
               { icon: Sparkles, title: "Prodotti Premium", desc: "Solo brand di alta qualità e cruelty-free" },
@@ -360,15 +358,7 @@ export default function BeautyPublicSite({ company }: Props) {
               { icon: Clock, title: "Orari Flessibili", desc: "Aperti 6 giorni su 7, anche pausa pranzo" },
               { icon: CheckCircle, title: "Soddisfazione Garantita", desc: "Non sei soddisfatta? Ti rifacciamo il trattamento" },
             ].map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-                className="p-5 rounded-2xl hover:border-white/10 transition-colors" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
-                whileHover={{ y: -3 }}>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: `${PINK}15` }}>
-                  <item.icon className="w-5 h-5" style={{ color: PINK }} />
-                </div>
-                <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
-                <p className="text-xs text-white/40" style={{ fontFamily: "'Inter', sans-serif" }}>{item.desc}</p>
-              </motion.div>
+              <GlassServiceCard key={i} icon={<item.icon className="w-5 h-5" style={{ color: PINK }} />} title={item.title} description={item.desc} accentColor={PINK} />
             ))}
           </div>
         </div>
