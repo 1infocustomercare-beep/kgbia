@@ -575,21 +575,21 @@ export default function NCCPublicSite({ company }: Props) {
       </section>
 
       {/* ═══════════ ESPERIENZA PREMIUM — immersive split ═══════════ */}
-      <Section className="py-20 sm:py-28 px-4" style={{ background: NCC.bg }}>
+      <Section className="py-14 sm:py-28 px-4" style={{ background: NCC.bg }}>
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-              <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-semibold mb-4" style={{ color: gold }}>LA NOSTRA FILOSOFIA</p>
-              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-semibold mb-3 sm:mb-4" style={{ color: gold }}>LA NOSTRA FILOSOFIA</p>
+              <h2 className="text-xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-4 sm:mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
                 <span className="text-white">Non solo </span>
                 <span style={{ color: gold }}>un trasferimento.</span>
                 <br />
-                <span className="text-white/60 text-xl sm:text-3xl">Un'esperienza di viaggio.</span>
+                <span className="text-white/60 text-lg sm:text-3xl">Un'esperienza di viaggio.</span>
               </h2>
-              <p className="text-base sm:text-lg text-white/50 leading-relaxed mb-8">
+              <p className="text-sm sm:text-lg text-white/50 leading-relaxed mb-6 sm:mb-8">
                 Ogni dettaglio è curato con la massima attenzione: dal primo contatto all'arrivo a destinazione. Veicoli di ultima generazione, autisti professionisti bilingue e un servizio clienti disponibile 24/7.
               </p>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 {[
                   { icon: Shield, label: "Licenza NCC", value: "Autorizzati" },
                   { icon: Award, label: "Veicoli Premium", value: "Ultima Gen." },
@@ -597,23 +597,23 @@ export default function NCCPublicSite({ company }: Props) {
                   { icon: Clock, label: "Disponibilità", value: "24h / 365gg" },
                 ].map((item, i) => (
                   <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.1 }}
-                    className="p-4 rounded-xl" style={{ background: NCC.darkCard, border: `1px solid ${NCC.cardBorder}` }}>
-                    <item.icon className="w-5 h-5 mb-2" style={{ color: gold }} />
-                    <p className="text-[10px] uppercase tracking-wider text-white/30 mb-0.5">{item.label}</p>
-                    <p className="text-sm font-bold text-white">{item.value}</p>
+                    className="p-3 sm:p-4 rounded-xl" style={{ background: NCC.darkCard, border: `1px solid ${NCC.cardBorder}` }}>
+                    <item.icon className="w-4 h-4 sm:w-5 sm:h-5 mb-1.5 sm:mb-2" style={{ color: gold }} />
+                    <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-white/30 mb-0.5">{item.label}</p>
+                    <p className="text-xs sm:text-sm font-bold text-white">{item.value}</p>
                   </motion.div>
                 ))}
               </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative">
+              className="relative mx-4 sm:mx-0">
               <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ border: `2px solid ${gold}20` }}>
                 <img src={nccCostieraAerial} alt="Costiera Amalfitana" className="w-full aspect-[4/3] object-cover" />
               </div>
-              <div className="absolute -bottom-6 -left-4 sm:-left-8 rounded-xl overflow-hidden shadow-2xl w-32 sm:w-44" style={{ border: `2px solid ${gold}30` }}>
+              <div className="absolute -bottom-4 left-0 sm:-left-8 rounded-xl overflow-hidden shadow-2xl w-24 sm:w-44" style={{ border: `2px solid ${gold}30` }}>
                 <img src={nccPremiumInterior} alt="Interni Premium" className="w-full aspect-square object-cover" />
               </div>
-              <div className="absolute -top-4 -right-3 sm:-right-6 rounded-xl overflow-hidden shadow-2xl w-28 sm:w-36" style={{ border: `2px solid ${gold}30` }}>
+              <div className="absolute -top-3 right-0 sm:-right-6 rounded-xl overflow-hidden shadow-2xl w-20 sm:w-36" style={{ border: `2px solid ${gold}30` }}>
                 <img src={nccSuvPremium} alt="SUV Premium" className="w-full aspect-[4/3] object-cover" />
               </div>
             </motion.div>
