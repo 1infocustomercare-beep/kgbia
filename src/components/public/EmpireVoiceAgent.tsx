@@ -445,22 +445,26 @@ const EmpireVoiceAgent: React.FC = () => {
     try {
       await streamChat({
         messages: allMessages,
+        mode: "landing-assistant",
+        sectionId: currentSection,
         onDelta: upsert,
-        onDone: () => {
+        onDone: async () => {
           setIsLoading(false);
-          if (voiceEnabledRef.current && full.length > 0 && full.length < 2000 && !abortRef.current) {
-            setIsSpeaking(true);
-            speakText(full, audioRef, abortRef).then(() => {
-              if (!abortRef.current) setIsSpeaking(false);
-            });
-          }
+          const shouldSpeak = voiceEnabledRef.current && full.length > 0 && full.length < 2000 && !abortRef.current;
+          if (!shouldSpeak) return;
+
+          setIsSpeaking(true);
+          await speakText(full, audioRef, abortRef);
+          if (!abortRef.current) setIsSpeaking(false);
         },
       });
-    } catch {
+    } catch (error) {
       setIsLoading(false);
-      setMessages((prev) => [...prev, { role: "assistant", content: "Mi scuso, c'è stato un problema. Riprova tra un momento." }]);
+      const fallbackMessage = "Mi scuso, c'è stato un problema. Riprova tra un momento.";
+      const message = error instanceof Error ? error.message : fallbackMessage;
+      setMessages((prev) => [...prev, { role: "assistant", content: message || fallbackMessage }]);
     }
-  }, [isLoading, stopAll]);
+  }, [currentSection, isLoading, stopAll]);
 
   // ── Voice recognition ──
   const startListening = useCallback(() => {
