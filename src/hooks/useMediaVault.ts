@@ -136,7 +136,7 @@ export function useMediaVault() {
     }
   };
 
-  const updateItem = async (id: string, updates: Partial<{ name: string; section: string; description: string; dimensions: string; sort_order: number }>) => {
+  const updateItem = async (id: string, updates: Partial<{ name: string; section: string; description: string; dimensions: string; sort_order: number; url: string }>) => {
     const { error } = await supabase.from("media_vault").update({ ...updates, updated_at: new Date().toISOString() }).eq("id", id);
     if (error) toast({ title: "Errore", description: error.message, variant: "destructive" });
   };
