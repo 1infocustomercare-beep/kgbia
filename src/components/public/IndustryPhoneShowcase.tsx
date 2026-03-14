@@ -42,6 +42,17 @@ const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
     serviceIcon: "🍝",
     analyticsTitle: "Vendite Piatti",
     analyticsBars: [45, 72, 38, 90, 55, 82, 60, 95, 48, 70, 65, 88],
+    analyticsMetrics: [
+      { label: "Scontrino medio", val: "€34.50", delta: "+€3.20" },
+      { label: "Coperti/giorno", val: "86", delta: "+12" },
+      { label: "Food cost", val: "28%", delta: "-1.4%" },
+      { label: "Ritorno clienti", val: "67%", delta: "+5%" },
+    ],
+    activityFeed: [
+      { icon: "🍕", text: "Ordine tavolo 7 — €68", time: "1m", status: "new" },
+      { icon: "💳", text: "Pagamento POS €142", time: "4m", status: "ok" },
+      { icon: "⭐", text: "Review Google 5★", time: "18m", status: "star" },
+    ],
     crmClients: [
       { name: "Marco R.", tag: "VIP", spent: "€1.8K" },
       { name: "Sofia L.", tag: "Habitué", spent: "€920" },
