@@ -1,7 +1,7 @@
-// DemoSalesAgent — Interactive AI sales agent with live voice conversation
+// DemoSalesAgent — Ultra-persuasive AI sales agent with scroll-aware narration
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX, X, Sparkles, Pause, Play, MessageCircle, Send, Mic, MicOff, Square } from "lucide-react";
+import { Volume2, VolumeX, X, Sparkles, Pause, Play, MessageCircle, Send, Mic, MicOff, Square, ChevronDown, Eye } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
@@ -12,78 +12,117 @@ type Msg = { role: "user" | "assistant"; content: string };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
-// Sector-specific pitches
-const SECTOR_PITCHES: Record<string, string[]> = {
+// ── Scroll-aware section narrations per sector ──
+// Each section triggers a contextual explanation as the user scrolls through the demo site
+
+interface ScrollSection {
+  selector: string; // CSS selector or section keyword to detect
+  label: string;
+  pitch: string;
+}
+
+const SCROLL_SECTIONS: Record<string, ScrollSection[]> = {
   default: [
-    "Fermati un secondo. Quello che stai guardando NON è un sito — è un sistema operativo completo per il tuo business. Con oltre duecento funzionalità integrate.",
-    "Ti faccio un esempio concreto: un nostro cliente nel settore artigiani dormiva mentre l'IA gestiva un'emergenza notturna — diagnosi automatica, preventivo generato, appuntamento fissato. Si è svegliato con duecentoventi euro guadagnati senza fare nulla.",
-    "Noi non vendiamo template. Il nostro team costruisce TUTTO su misura per te in ventiquattro ore: il tuo brand, i tuoi colori, le tue funzionalità. Tu non devi fare assolutamente nulla.",
-    "Ogni settimana rilasciamo aggiornamenti gratuiti. Il tuo sistema diventa più intelligente ogni giorno. Zero costi mensili, per sempre. Parlami del tuo business e ti mostro esattamente come ti trasformiamo.",
+    { selector: "hero", label: "🏠 Hero", pitch: "Quello che vedi è solo la vetrina. Dietro ci sono oltre duecento funzionalità invisibili che lavorano per te ventiquattro ore su ventiquattro. Questo sito NON è un template — è un sistema operativo completo costruito SU MISURA per il tuo business dal nostro team in sole ventiquattro ore." },
+    { selector: "menu,catalogo,servizi,services", label: "📋 Servizi", pitch: "Guarda questa sezione: ogni servizio che vedi è gestito dall'IA. Traduzione automatica in otto lingue, foto professionali generate dall'intelligenza artificiale, prezzi dinamici. Un tuo competitor sta già usando sistemi così — chi non si digitalizza nel duemilaventisei è come andare in autostrada con un carretto." },
+    { selector: "prenot,booking,reservation,agenda", label: "📅 Prenotazioni", pitch: "Le prenotazioni funzionano ventiquattro ore su ventiquattro, anche mentre dormi. L'IA manda reminder automatici via WhatsApp, gestisce le cancellazioni, riempie i buchi con la lista d'attesa. Un nostro cliente ha eliminato il cento per cento dei no-show in due settimane." },
+    { selector: "review,recens,testimoni", label: "⭐ Recensioni", pitch: "Ecco Review Shield, la nostra arma segreta. Una recensione negativa da due stelle? Non finisce MAI su Google. L'IA la intercetta, la trasforma in feedback privato, e tu risolvi il problema prima che diventi pubblico. La tua media resta perfetta. Nessun competitor ha questa tecnologia." },
+    { selector: "contact,contatt,cta", label: "📞 Contatti", pitch: "Vedi il form di contatto? Con Empire non è un semplice form — è un Concierge IA che risponde in tempo reale, qualifica i lead, genera preventivi automatici, e fissa appuntamenti. Anche alle tre di notte. Un nostro cliente si è svegliato con duecentoventi euro guadagnati dall'IA mentre dormiva." },
+    { selector: "about,chi-siamo,storia", label: "ℹ️ Chi Siamo", pitch: "La sezione Chi Siamo non è testo statico — è una storia viva. L'IA aggiorna automaticamente le statistiche, i risultati, le testimonianze. Ogni settimana il tuo sito diventa più persuasivo senza che tu faccia nulla. Aggiornamenti settimanali gratuiti, per sempre." },
+    { selector: "gallery,foto,portfolio", label: "📸 Gallery", pitch: "Queste foto le puoi generare con la nostra IA in sessanta secondi. Non servono fotografi professionisti. L'IA crea immagini professionali dei tuoi prodotti e servizi, ottimizzate per social e sito. Un click e hai un catalogo da rivista." },
+    { selector: "faq,domand", label: "❓ FAQ", pitch: "Le FAQ non sono solo testo — l'IA le aggiorna automaticamente basandosi sulle domande più frequenti dei tuoi clienti. E se qualcuno chiede qualcosa che non è nelle FAQ? Il Concierge IA risponde in tempo reale, ventiquattro ore su ventiquattro." },
+    { selector: "price,prezz,tariff,listino", label: "💰 Prezzi", pitch: "I prezzi che vedi sono dinamici. L'IA può modificarli in base alla domanda, al giorno della settimana, alla stagione. Dynamic pricing intelligente che massimizza il tuo fatturato automaticamente. I tuoi competitor fissano i prezzi una volta e li dimenticano — tu li ottimizzi ogni giorno." },
+    { selector: "footer,social", label: "🔗 Footer", pitch: "Hai scrollato tutto il sito — e hai visto solo il cinque per cento di Empire. Dietro questo sito ci sono CRM avanzato, fatturazione elettronica, marketing automatico, analytics predittivi, gestione staff, inventario IA, e molto altro. Duecento funzionalità, zero costi mensili. Vuoi saperne di più?" },
   ],
   food: [
-    "Quello che vedi è solo il cinque per cento di quello che Empire fa per un ristorante. Menu digitale, ordini al tavolo, Kitchen Display, Review Shield, fidelizzazione, marketing automatico — tutto in un unico sistema.",
-    "Ti racconto cosa è successo a un nostro cliente: un habitué non tornava da venticinque giorni. L'IA se n'è accorta, gli ha mandato un messaggio WhatsApp con uno sconto sulla sua carbonara preferita. È tornato il giorno dopo con tutta la famiglia — quattro coperti invece di uno. Il ristoratore non ha fatto nulla.",
-    "Un altro esempio: sabato sera, sala piena. Un cliente scrive una recensione da due stelle. Con i sistemi normali finisce su Google e ti distrugge la media. Con Empire? Review Shield la intercetta, la trasforma in feedback privato, e tu risolvi il problema PRIMA che diventi pubblico.",
-    "Noi costruiamo tutto su misura in ventiquattro ore: il tuo menu, il tuo brand, oltre duecento funzionalità. Zero costi mensili per sempre. Chiedimi qualsiasi cosa!",
+    { selector: "hero", label: "🏠 Hero", pitch: "Benvenuto nel futuro della ristorazione. Quello che stai guardando NON è un semplice sito — è un sistema operativo completo per il tuo ristorante. Menu digitale QR in otto lingue, ordini al tavolo, Kitchen Display, Review Shield, fidelizzazione, marketing automatico. Tutto in un unico sistema costruito su misura dal nostro team in ventiquattro ore." },
+    { selector: "menu,piatt,dish", label: "🍽️ Menu", pitch: "Questo menu digitale si traduce da solo in otto lingue. Il turista tedesco legge in tedesco, il giapponese in giapponese. L'IA genera le descrizioni dei piatti, suggerisce gli abbinamenti vino, calcola allergeni. Un tuo cliente ordina la carbonara? L'IA suggerisce automaticamente un Pecorino di Amatrice e un calice di vino bianco — upselling intelligente che alza lo scontrino medio del venticinque per cento." },
+    { selector: "order,ordin,carrell,cart", label: "📋 Ordini", pitch: "Il cliente ordina dal QR al tavolo, l'ordine arriva DIRETTO in cucina sul Kitchen Display. Zero camerieri che sbagliano, zero attese, zero carta. Sabato sera, sala piena: il vecchio sistema crolla. Con Empire? Centoventi ordini gestiti senza un errore. E tu paghi solo il due per cento — non il trenta per cento di JustEat o Deliveroo." },
+    { selector: "review,recens", label: "⭐ Review Shield", pitch: "Ecco la funzione che vale da sola il prezzo di tutto il sistema. Review Shield. Un cliente scrive una recensione da due stelle? Con le piattaforme normali finisce su Google e ti distrugge la media. Con Empire? L'IA la intercetta, la converte in feedback privato. Tu risolvi il problema, il cliente è contento, la recensione negativa non esiste. La tua media resta a quattro virgola otto stelle." },
+    { selector: "prenot,reserv,tavol", label: "📅 Prenotazioni", pitch: "Prenotazioni ventiquattro ore su ventiquattro con conferma automatica WhatsApp. Un habitué non torna da venticinque giorni? L'IA se ne accorge e gli manda un messaggio personalizzato con uno sconto sulla sua carbonara preferita. È tornato il giorno dopo con tutta la famiglia — quattro coperti invece di uno. Il ristoratore non ha fatto nulla." },
+    { selector: "contact,contatt", label: "📞 Contatti", pitch: "Dietro quel form c'è un Concierge IA che risponde istantaneamente. Sono le ventitré, un cliente vuole prenotare per domani? L'IA gestisce tutto: verifica disponibilità, conferma, manda reminder. Tu dormi, l'IA lavora." },
+    { selector: "about,chi-siamo,storia", label: "ℹ️ La Nostra Storia", pitch: "Questa sezione racconta la tua storia — ma con Empire diventa un'arma di vendita. L'IA aggiorna le statistiche in tempo reale: piatti serviti, clienti soddisfatti, anni di attività. Ogni dato costruisce fiducia automaticamente." },
+    { selector: "gallery,foto", label: "📸 Gallery", pitch: "Le foto del tuo ristorante? L'IA le genera in sessanta secondi. Piatti fotografati come su una rivista Michelin. Non servono fotografi — un click e hai un catalogo professionale che fa venire l'acquolina." },
+    { selector: "footer,social,faq", label: "🔗 Chiusura", pitch: "Hai visto tutto — e questo è solo il cinque per cento. Dietro ci sono Kitchen Display per la cucina, gestione staff con PIN, HACCP digitale, inventario IA, fatturazione SDI, analytics predittivi. Duecento funzionalità, costruite su misura in ventiquattro ore, zero costi mensili per sempre." },
   ],
   ncc: [
-    "Stai guardando il futuro del trasporto premium. Gestione flotta, prenotazioni real-time, assegnazione autisti automatica, CRM clienti VIP, tariffario dinamico, scadenzario documenti — tutto in un'unica piattaforma luxury.",
-    "Esempio reale: il concierge del Grand Hotel chiama per un transfer urgente all'aeroporto. Tu sei in viaggio. Con Empire il concierge prenota dal sito, il sistema assegna l'autista più vicino, il cliente riceve conferma con nome e foto del veicolo. Tu ricevi solo la notifica: nuova corsa confermata, centoventi euro.",
-    "Altro caso: un turista americano prenota un transfer Napoli-Positano. L'IA suggerisce automaticamente un tour in barca a Capri. Il cliente aggiunge trecentocinquanta euro al carrello. Cross-selling automatico, zero sforzo tuo.",
-    "E lo scadenzario intelligente? L'IA ti avvisa quindici giorni prima che l'assicurazione della Mercedes scade. Un click e blocchi l'assegnazione. Nessun rischio, nessuna multa. Parliamo del tuo business!",
+    { selector: "hero", label: "🏠 Hero", pitch: "Stai guardando il futuro del trasporto premium. Gestione flotta, prenotazioni real-time, assegnazione autisti automatica, CRM clienti VIP, tariffario dinamico, scadenzario documenti — tutto in un'unica piattaforma luxury costruita su misura per la tua attività NCC." },
+    { selector: "fleet,flotta,veicol,vehicle", label: "🚘 Flotta", pitch: "Ogni veicolo della tua flotta gestito dall'IA. Scadenze assicurazione, revisione, tagliando — l'IA ti avvisa quindici giorni prima. Un click e blocchi l'assegnazione del veicolo. Nessun rischio, nessuna multa, nessuna dimenticanza. Un nostro cliente ha evitato tremila euro di sanzioni in sei mesi." },
+    { selector: "route,tratt,destin,tour", label: "🗺️ Tratte", pitch: "Matrice prezzi automatica per ogni tratta. Napoli-Positano? Centocinquanta euro. Ma il turista americano vuole anche un tour in barca a Capri? L'IA suggerisce automaticamente: più trecentocinquanta euro al carrello. Cross-selling che funziona da solo, ventiquattro ore su ventiquattro." },
+    { selector: "book,prenot,reserv", label: "📅 Prenotazioni", pitch: "Il concierge del Grand Hotel chiama per un transfer urgente. Tu sei in viaggio. Con Empire? Il concierge prenota dal sito, il sistema assegna l'autista più vicino, il cliente riceve conferma con nome e foto del veicolo. Tu ricevi solo la notifica: nuova corsa confermata, centoventi euro. Non hai fatto nulla." },
+    { selector: "review,recens", label: "⭐ Recensioni", pitch: "Nel settore NCC le recensioni sono tutto. Un cliente insoddisfatto può distruggere la tua reputazione su Google in un minuto. Review Shield intercetta le recensioni negative e le gestisce privatamente. La tua media resta perfetta, i nuovi clienti prenotano con fiducia." },
+    { selector: "contact,contatt,cta", label: "📞 Contatti", pitch: "Il form di contatto è un Concierge IA premium. Un turista scrive alle due di notte in inglese? L'IA risponde in inglese, verifica disponibilità, genera un preventivo, invia conferma. Tu ti svegli con la corsa già confermata e pagata." },
+    { selector: "footer,faq", label: "🔗 Chiusura", pitch: "Hai visto il sito — ma dietro c'è un impero di funzionalità: GPS live fleet map, dispatch autisti, fatturazione B2B, scadenzario intelligente, analytics. Tutto costruito su misura in ventiquattro ore. Zero costi mensili, per sempre." },
   ],
   beauty: [
-    "Prenotazioni ventiquattro ore su ventiquattro, agenda multi-operatore, schede cliente, anti no-show, fidelizzazione, marketing IA — tutto in un sistema elegante come il tuo salone.",
-    "Ti faccio un esempio: lunedì mattina, tre clienti non si presentano. Tre buchi in agenda, tre ore perse. Con Empire il sistema manda reminder automatici WhatsApp ventiquattro e due ore prima. Se il cliente non conferma, l'IA propone lo slot a chi è in lista d'attesa. Buchi in agenda? Zero.",
-    "Un'altra storia: domani è il compleanno di Giulia, una tua cliente top. Senza Empire non lo sai nemmeno. Con Empire? Ieri l'IA le ha mandato un messaggio di auguri con un trattamento viso in omaggio. Giulia ha prenotato entusiasta e ha portato un'amica. Due clienti, zero sforzo.",
-    "Sara non viene da quarantacinque giorni? L'IA lo nota e le manda un'offerta personalizzata. Sara torna. Senza di noi, l'avresti persa per sempre. Vuoi sapere come funziona per il tuo salone?",
+    { selector: "hero", label: "🏠 Hero", pitch: "Benvenuta nel futuro del beauty. Agenda multi-operatore, prenotazioni ventiquattro ore su ventiquattro, anti no-show, schede cliente, fidelizzazione, marketing IA — tutto in un sistema elegante come il tuo salone, costruito su misura dal nostro team." },
+    { selector: "serviz,tratament,service", label: "💅 Servizi", pitch: "Ogni trattamento prenotabile online, con descrizione, durata, prezzo e foto. La cliente sceglie, prenota e paga in un tap. L'agenda si aggiorna in tempo reale per ogni operatore. Zero telefonate, zero sovrapposizioni, zero stress." },
+    { selector: "book,prenot,agenda", label: "📅 Prenotazioni", pitch: "Ecco dove Empire fa la magia. Lunedì mattina, tre clienti non si presentano? Con Empire il sistema manda reminder automatici WhatsApp ventiquattro e due ore prima. Se la cliente non conferma, l'IA propone lo slot a chi è in lista d'attesa. Buchi in agenda? Zero. Un nostro salone ha eliminato il cento per cento dei no-show." },
+    { selector: "review,recens", label: "⭐ Recensioni", pitch: "Una cliente insoddisfatta scrive una recensione negativa? Review Shield la intercetta. Tu rispondi in privato, risolvi il problema, offri un trattamento omaggio. La recensione negativa non esiste pubblicamente. La tua media resta perfetta." },
+    { selector: "gallery,foto,portfolio", label: "📸 Portfolio", pitch: "Il tuo portfolio professionale aggiornato dall'IA. Foto prima e dopo, stili più richiesti, tendenze. Le clienti sfogliano, si ispirano, prenotano. L'IA genera anche contenuti per Instagram automaticamente." },
+    { selector: "contact,contatt", label: "📞 Contatti", pitch: "Domani è il compleanno di Giulia, una tua cliente top. L'IA le ha già mandato gli auguri con un trattamento viso in omaggio. Giulia ha prenotato entusiasta e porta un'amica. Due clienti, zero sforzo tuo. Questo è Empire." },
+    { selector: "footer,faq", label: "🔗 Chiusura", pitch: "Hai visto il sito — ma dietro c'è CRM avanzato, wallet fedeltà, marketing automation WhatsApp, analytics, fatturazione. Sara non viene da quarantacinque giorni? L'IA lo nota e la riconquista con un'offerta personalizzata. Senza Empire, l'avresti persa per sempre." },
   ],
   healthcare: [
-    "Agenda pazienti, cartelle digitali, telemedicina, promemoria appuntamenti, fatturazione, comunicazioni automatiche — un ecosistema completo per il tuo studio medico.",
-    "Esempio concreto: il signor Rossi dimentica sempre gli appuntamenti. Con Empire riceve un SMS quarantotto ore prima e un WhatsApp due ore prima. Se non conferma, lo slot viene liberato per un altro paziente. Zero buchi, zero stress per te.",
-    "Altro caso: hai visitato quaranta pazienti questa settimana. Chi deve fare il follow-up? L'IA lo sa — manda automaticamente le istruzioni post-visita, ricorda i controlli successivi, tutto nella cartella digitale.",
-    "Facciamo tutto noi su misura per il tuo studio in ventiquattro ore. Parlami delle tue esigenze!",
+    { selector: "hero", label: "🏠 Hero", pitch: "Il futuro della sanità digitale. Agenda pazienti, cartelle digitali, telemedicina, promemoria, fatturazione, comunicazioni automatiche — un ecosistema completo per il tuo studio medico, costruito su misura in ventiquattro ore." },
+    { selector: "serviz,service,special", label: "🏥 Specialità", pitch: "Ogni specializzazione con la sua logica: follow-up post-visita automatici, prescrizioni digitali, richiami vaccinali. L'IA sa che il paziente deve tornare tra sei mesi e glielo ricorda automaticamente." },
+    { selector: "book,prenot,agenda", label: "📅 Appuntamenti", pitch: "Il signor Rossi dimentica sempre gli appuntamenti. Con Empire riceve un SMS quarantotto ore prima e un WhatsApp due ore prima. Se non conferma, lo slot viene liberato. Zero buchi, zero stress. L'IA gestisce quaranta pazienti alla settimana meglio di qualsiasi segretaria." },
+    { selector: "contact,contatt", label: "📞 Contatti", pitch: "Un paziente chiama alle ventidue per un'urgenza. Il Concierge IA risponde, fa un triage iniziale, e prenota una visita urgente per domani. Tu ricevi il riassunto al mattino con tutti i dettagli." },
+    { selector: "footer,faq", label: "🔗 Chiusura", pitch: "Cartelle digitali GDPR compliant, fatturazione TSE, follow-up automatici, comunicazioni ai pazienti — tutto integrato. Hai visitato quaranta pazienti questa settimana e non sai chi deve fare il follow-up? L'IA lo sa." },
   ],
   fitness: [
-    "Gestione abbonamenti, prenotazione corsi, check-in digitale, schede allenamento, pagamenti ricorrenti, app membri, analisi retention — tutto integrato per la tua palestra.",
-    "Esempio: Luca ha l'abbonamento ma non viene da tre settimane. L'IA lo nota e gli manda un messaggio: il corso HIIT del martedì ha due posti, prenota ora! Luca torna. Senza Empire avrebbe disdetto il mese dopo.",
-    "Il corso di yoga delle diciotto è sempre pieno? Senza Empire venti persone si presentano per quindici posti — caos totale. Con Empire prenotazione online con posti in tempo reale, lista d'attesa automatica. Tutti felici.",
-    "Il tuo centro sportivo merita il meglio. Chiedimi come ti trasformiamo!",
-  ],
-  hospitality: [
-    "Gestione camere, prenotazioni dirette, check-in digitale, concierge IA ventiquattro ore su ventiquattro, upselling automatico, housekeeping — tutto premium per il tuo hotel.",
-    "Esempio che fa riflettere: un ospite trova il tuo hotel su Google. Normalmente va su Booking e tu paghi il diciotto per cento di commissione. Con Empire prenota direttamente dal tuo sito con solo il due per cento. Su cento notti a centocinquanta euro, risparmi ventiquattromila euro l'anno.",
-    "Sono le ventitré. Un ospite guarda il menu del minibar sul tablet in camera. L'IA suggerisce la colazione in camera con upgrade a champagne. L'ospite clicca sì. Hai guadagnato mentre dormivi.",
-    "Parliamo di come Empire trasforma il tuo hotel!",
+    { selector: "hero", label: "🏠 Hero", pitch: "Il futuro del fitness. Abbonamenti, prenotazione corsi, check-in QR, schede allenamento, pagamenti ricorrenti — tutto integrato per la tua palestra." },
+    { selector: "cors,class,lesson", label: "🏋️ Corsi", pitch: "Il corso di yoga delle diciotto è sempre pieno? Con Empire: prenotazione online con posti in tempo reale, lista d'attesa automatica. Niente più caos all'ingresso. E se un membro cancella? Il primo in lista viene notificato istantaneamente." },
+    { selector: "book,prenot,member", label: "📅 Membership", pitch: "Luca ha l'abbonamento ma non viene da tre settimane. L'IA lo nota e gli manda: il corso HIIT del martedì ha due posti, prenota ora! Luca torna. Senza Empire avrebbe disdetto il mese dopo. Il tasso di rinnovo dei nostri clienti è salito all'ottantasette per cento." },
+    { selector: "footer,faq,contact", label: "🔗 Chiusura", pitch: "Check-in QR, analytics retention, pagamenti ricorrenti Stripe, schede allenamento personalizzate, marketing per membri inattivi. Tutto incluso, zero costi mensili." },
   ],
   hotel: [
-    "Il futuro dell'ospitalità è qui. Prenotazioni dirette, concierge IA, upselling notturno, housekeeping digitale — risparmi migliaia di euro in commissioni OTA.",
-    "Su cento notti a centocinquanta euro, con Empire risparmi ventiquattromila euro l'anno rispetto a Booking. Solo il due per cento di commissione invece del diciotto.",
-    "L'IA lavora per te anche alle tre di notte: suggerisce upgrade, risponde agli ospiti, gestisce le richieste. Tu dormi tranquillo.",
-    "Costruiamo tutto su misura in ventiquattro ore. Parliamone!",
+    { selector: "hero", label: "🏠 Hero", pitch: "Il futuro dell'ospitalità premium. Prenotazioni dirette, concierge IA ventiquattro ore su ventiquattro, upselling automatico, housekeeping digitale — risparmi migliaia di euro in commissioni OTA." },
+    { selector: "room,camer,suite", label: "🛏️ Camere", pitch: "Un ospite trova il tuo hotel su Google. Normalmente va su Booking e tu paghi il diciotto per cento. Con Empire? Prenota direttamente con solo il due per cento. Su cento notti a centocinquanta euro risparmi ventiquattromila euro l'anno. Ventiquattromila euro." },
+    { selector: "book,prenot,reserv", label: "📅 Prenotazioni", pitch: "Prenotazioni dirette con conferma istantanea, check-in digitale, upselling automatico. Sono le ventitré, un ospite guarda il menu in camera. L'IA suggerisce colazione con upgrade a champagne. L'ospite clicca sì. Hai guadagnato mentre dormivi." },
+    { selector: "footer,faq,contact", label: "🔗 Chiusura", pitch: "Concierge IA che risponde in otto lingue, housekeeping digitale, analytics occupancy, revenue management. Tutto costruito su misura, zero costi mensili." },
+  ],
+  hospitality: [
+    { selector: "hero", label: "🏠 Hero", pitch: "Prenotazioni dirette, concierge IA, upselling notturno, housekeeping — il tuo hotel diventa premium e risparmia migliaia in commissioni." },
+    { selector: "footer,faq,contact", label: "🔗 Chiusura", pitch: "Ventiquattromila euro risparmiati passando dalle OTA alle prenotazioni dirette. Solo il due per cento." },
   ],
   beach: [
-    "Mappa interattiva ombrelloni, prenotazioni online, abbonamenti stagionali, gestione bar, push notification, fidelizzazione — il tuo lido diventa digitale e premium.",
-    "È lunedì, occupazione al trenta per cento. L'IA lo prevede dal giorno prima e lancia una push notification: domani ombrellone a metà prezzo! Risultato: occupazione al settanta per cento. Senza Empire avresti avuto un lunedì morto.",
-    "Il cliente è sdraiato sotto l'ombrellone, ha sete, non vuole alzarsi. Apre l'app, ordina un Aperol Spritz, il barista lo porta. Cliente felice, tu incassi di più — tutto dal telefono.",
-    "La tua spiaggia merita il sistema migliore. Chiedimi come!",
+    { selector: "hero", label: "🏠 Hero", pitch: "Mappa interattiva ombrelloni, prenotazioni online, abbonamenti stagionali, gestione bar, push notification — il tuo lido diventa digitale e premium." },
+    { selector: "map,mapp,spot,ombrellon", label: "🏖️ Mappa", pitch: "Ogni ombrellone prenotabile online con prezzi dinamici. È lunedì, occupazione al trenta per cento? L'IA lancia una push: domani ombrellone a metà prezzo! Risultato: occupazione al settanta per cento. Senza Empire? Un lunedì morto." },
+    { selector: "book,prenot,reserv", label: "📅 Prenotazioni", pitch: "Il cliente è sdraiato sotto l'ombrellone, ha sete, non vuole alzarsi. Apre l'app, ordina un Aperol Spritz, il barista lo porta. Cliente felice, tu incassi di più — tutto dal telefono." },
+    { selector: "footer,faq,contact", label: "🔗 Chiusura", pitch: "Abbonamenti stagionali, pass giornalieri, gestione bar, fedeltà. Tutto automatizzato, tutto premium." },
   ],
   retail: [
-    "Catalogo digitale, e-commerce, inventario con barcode, CRM, fedeltà, marketing automatico, fatturazione, analytics — tutto unificato per il tuo negozio.",
-    "Stai per rimanere senza le sneakers taglia quarantadue, il prodotto più venduto. Non te ne accorgi. Ma l'IA sì: alert scorte basse, suggerisce riordino di venti pezzi. Un click e l'ordine parte. Senza Empire? Cliente deluso, vendita persa.",
-    "Maria ha speso cinquecento euro quest'anno. L'IA le manda: hai raggiunto cinquecento punti, ecco un buono da venticinque euro! Maria torna entro la settimana. Fidelizzazione automatica, zero sforzo.",
-    "Vuoi sapere come trasformiamo il tuo negozio? Parliamone!",
+    { selector: "hero", label: "🏠 Hero", pitch: "Catalogo digitale, e-commerce, inventario con barcode, CRM, fedeltà, marketing automatico — tutto unificato per il tuo negozio, costruito su misura." },
+    { selector: "product,prodott,catalog", label: "🛍️ Catalogo", pitch: "Stai per rimanere senza le sneakers taglia quarantadue, il prodotto più venduto. Non te ne accorgi. Ma l'IA sì: alert scorte basse, suggerisce riordino. Un click e l'ordine parte. Senza Empire? Cliente deluso, vendita persa." },
+    { selector: "contact,contatt,cta", label: "📞 Contatti", pitch: "Maria ha speso cinquecento euro quest'anno. L'IA le manda: hai raggiunto cinquecento punti, ecco un buono da venticinque euro! Maria torna entro la settimana. Fidelizzazione automatica, zero sforzo." },
+    { selector: "footer,faq", label: "🔗 Chiusura", pitch: "Inventario IA, loyalty wallet, marketing automation, e-commerce integrato, analytics predittivi. Tutto incluso, zero costi mensili." },
   ],
   plumber: [
-    "Gestione interventi, preventivi digitali con firma, schede cliente, calendario condiviso, foto prima e dopo, fatturazione, GPS dispatch, app cliente col TUO brand — tutto dal telefono.",
-    "Esempio potentissimo: sono le tre di notte, il signor Bianchi ha un tubo rotto. Apre la TUA app, fa una foto, scrive nella chat. L'IA Concierge risponde immediatamente: gli dice di chiudere la valvola, genera un preventivo automatico, fissa l'appuntamento per le otto. Tu ti svegli e trovi tutto pronto — sai cosa portare, quanto costa, dove andare. Hai guadagnato duecentoventi euro dormendo.",
-    "L'IA organizza anche la tua giornata: cinque interventi ottimizzati per percorso, risparmi due ore al giorno. Quarantaquattro ore al mese. Quasi sei giornate lavorative regalate dall'intelligenza artificiale.",
-    "Tu dormi, l'IA lavora. Questo è Empire. Chiedimi qualsiasi cosa!",
+    { selector: "hero", label: "🏠 Hero", pitch: "Gestione interventi, preventivi digitali, schede cliente, calendario condiviso, foto prima e dopo, fatturazione, GPS dispatch — tutto dal telefono. Il tuo business artigianale diventa una macchina da guerra digitale." },
+    { selector: "serviz,service,intervent", label: "🔧 Servizi", pitch: "Sono le tre di notte. Il signor Bianchi ha un tubo rotto. Apre la TUA app, fa una foto, scrive nella chat. L'IA Concierge risponde immediatamente: gli dice di chiudere la valvola, genera un preventivo automatico, fissa l'appuntamento per le otto. Tu ti svegli e trovi tutto pronto. Hai guadagnato duecentoventi euro dormendo." },
+    { selector: "contact,contatt,cta", label: "📞 Contatti", pitch: "L'IA organizza la tua giornata: cinque interventi ottimizzati per percorso, risparmi due ore al giorno. Quarantaquattro ore al mese. Quasi sei giornate lavorative regalate dall'intelligenza artificiale." },
+    { selector: "footer,faq", label: "🔗 Chiusura", pitch: "Preventivi IA con firma digitale, foto prima e dopo, fatturazione elettronica, CRM clienti, reminder manutenzioni. Tu dormi, l'IA lavora. Questo è Empire." },
   ],
 };
 
-const getSectorPitch = (industry: string): string[] =>
-  SECTOR_PITCHES[industry] || SECTOR_PITCHES.default;
+const getScrollSections = (industry: string): ScrollSection[] =>
+  SCROLL_SECTIONS[industry] || SCROLL_SECTIONS.default;
+
+// Opening pitch — first thing the agent says
+const OPENING_PITCHES: Record<string, string> = {
+  default: "Fermati un secondo. Quello che stai guardando NON è un sito — è un sistema operativo completo per il tuo business con oltre duecento funzionalità integrate. Scorri e ti spiego sezione per sezione perché i tuoi competitor stanno già usando sistemi come questo — e perché tu non puoi restare indietro.",
+  food: "Benvenuto nel futuro della ristorazione. Questo sito è solo il cinque per cento di quello che Empire fa per un ristorante. Menu QR multilingua, ordini al tavolo, Kitchen Display, Review Shield, marketing automatico — tutto gestito dall'IA. Scorri il sito e ti spiego sezione per sezione come rivoluzioneremo il tuo locale.",
+  ncc: "Stai guardando il futuro del trasporto premium. Flotta, prenotazioni, autisti, tariffe dinamiche, CRM VIP — tutto in un'unica piattaforma luxury. Scorri e ti mostro come ogni sezione del tuo sito lavora per te ventiquattro ore su ventiquattro.",
+  beauty: "Benvenuta nel futuro del beauty e wellness. Agenda smart, anti no-show, fidelizzazione, marketing IA — tutto elegante come il tuo salone. Scorri e ti racconto come Empire trasforma ogni aspetto della tua attività.",
+  healthcare: "Il futuro della sanità digitale è qui. Agenda pazienti, cartelle digitali, telemedicina, reminder automatici. Scorri e ti mostro come ogni sezione risolve i problemi quotidiani del tuo studio.",
+  fitness: "Il futuro del fitness è qui. Abbonamenti, corsi, check-in, retention — tutto integrato. Scorri e scopri come ogni funzionalità aumenta i tuoi iscritti e riduce le disdette.",
+  hotel: "Il futuro dell'ospitalità premium. Prenotazioni dirette, concierge IA, upselling automatico. Scorri e ti mostro come risparmiare ventiquattromila euro l'anno in commissioni OTA.",
+  hospitality: "Il futuro dell'ospitalità è qui. Prenotazioni dirette e concierge IA ventiquattro ore su ventiquattro. Scorri e ti racconto tutto.",
+  beach: "Il tuo lido diventa digitale e premium. Mappa ombrelloni, prenotazioni, bar, push notification. Scorri e ti mostro come riempire anche i lunedì morti.",
+  retail: "Il futuro del retail è qui. Catalogo, inventario IA, CRM, fedeltà, e-commerce. Scorri e scopri come non perdere mai più una vendita.",
+  plumber: "Il futuro degli artigiani è qui. Interventi, preventivi IA, foto prima e dopo, dispatch GPS. Scorri e ti racconto come guadagnare mentre dormi.",
+};
 
 // Web Speech API fallback TTS
 function speakWithBrowserTTS(text: string): Promise<boolean> {
@@ -94,7 +133,6 @@ function speakWithBrowserTTS(text: string): Promise<boolean> {
     utterance.lang = "it-IT";
     utterance.rate = 1.05;
     utterance.pitch = 1.0;
-    // Try to find an Italian voice
     const voices = window.speechSynthesis.getVoices();
     const itVoice = voices.find(v => v.lang.startsWith("it")) || voices[0];
     if (itVoice) utterance.voice = itVoice;
@@ -121,7 +159,6 @@ async function speakText(
       body: JSON.stringify({ text }),
     });
     if (!resp.ok || abortRef.current) {
-      // Fallback to browser TTS
       if (!abortRef.current) return speakWithBrowserTTS(text);
       return false;
     }
@@ -131,22 +168,15 @@ async function speakText(
       if (!abortRef.current) return speakWithBrowserTTS(text);
       return false;
     }
-
     return await new Promise<boolean>((resolve) => {
       const audio = new Audio(`data:audio/mpeg;base64,${audioContent}`);
       if (audioRef.current) audioRef.current.pause();
       audioRef.current = audio;
       audio.onended = () => resolve(true);
-      audio.onerror = () => {
-        // Fallback on audio error
-        speakWithBrowserTTS(text).then(resolve);
-      };
-      audio.play().catch(() => {
-        speakWithBrowserTTS(text).then(resolve);
-      });
+      audio.onerror = () => { speakWithBrowserTTS(text).then(resolve); };
+      audio.play().catch(() => { speakWithBrowserTTS(text).then(resolve); });
     });
   } catch {
-    // Fallback to browser TTS
     if (!abortRef.current) return speakWithBrowserTTS(text);
     return false;
   }
@@ -191,6 +221,30 @@ async function streamChat({
   onDone();
 }
 
+// ── Detect which section is currently visible ──
+function detectVisibleSection(sections: ScrollSection[]): ScrollSection | null {
+  // Check all sections on page, find the one most in viewport
+  const allSections = document.querySelectorAll("section, [data-section], [id]");
+  for (const section of sections) {
+    const keywords = section.selector.split(",").map(s => s.trim().toLowerCase());
+    for (const el of allSections) {
+      const id = (el.id || "").toLowerCase();
+      const dataSection = el.getAttribute("data-section")?.toLowerCase() || "";
+      const className = (el.className || "").toLowerCase();
+      const textContent = el.textContent?.slice(0, 200).toLowerCase() || "";
+      
+      for (const kw of keywords) {
+        if (id.includes(kw) || dataSection.includes(kw) || className.includes(kw) || textContent.includes(kw)) {
+          const rect = el.getBoundingClientRect();
+          const inView = rect.top < window.innerHeight * 0.7 && rect.bottom > window.innerHeight * 0.2;
+          if (inView) return section;
+        }
+      }
+    }
+  }
+  return null;
+}
+
 interface DemoSalesAgentProps {
   industry: string;
   companyName: string;
@@ -202,7 +256,6 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
   const [isOpen, setIsOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [currentLine, setCurrentLine] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [chatMode, setChatMode] = useState(false);
@@ -212,16 +265,27 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
   const [isListening, setIsListening] = useState(false);
   const [liveTranscript, setLiveTranscript] = useState("");
   const [voiceEnabled, setVoiceEnabled] = useState(true);
+  
+  // Scroll-aware state
+  const [currentSection, setCurrentSection] = useState<ScrollSection | null>(null);
+  const [narratedSections, setNarratedSections] = useState<Set<string>>(new Set());
+  const [scrollNarrationActive, setScrollNarrationActive] = useState(true);
+  const [narrationQueue, setNarrationQueue] = useState<string[]>([]);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const abortRef = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<InstanceType<NonNullable<typeof SpeechRecognition>> | null>(null);
   const messagesRef = useRef<Msg[]>([]);
+  const isSpeakingRef = useRef(false);
+  const scrollNarrationRef = useRef(true);
 
-  const pitch = getSectorPitch(industry);
+  const sections = getScrollSections(industry);
+  const openingPitch = OPENING_PITCHES[industry] || OPENING_PITCHES.default;
 
   useEffect(() => { messagesRef.current = messages; }, [messages]);
+  useEffect(() => { isSpeakingRef.current = isSpeaking; }, [isSpeaking]);
+  useEffect(() => { scrollNarrationRef.current = scrollNarrationActive; }, [scrollNarrationActive]);
 
   // Show after 2s
   useEffect(() => {
@@ -230,15 +294,75 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
     return () => clearTimeout(t);
   }, [dismissed]);
 
-  // Auto-start narration after 4s
+  // Auto-start opening narration after 3s
   useEffect(() => {
     if (dismissed || hasStarted) return;
     const t = setTimeout(() => {
       setHasStarted(true);
-      startNarration();
-    }, 4000);
+      setNarrationQueue([openingPitch]);
+    }, 3000);
     return () => clearTimeout(t);
-  }, [dismissed, hasStarted]);
+  }, [dismissed, hasStarted, openingPitch]);
+
+  // Process narration queue
+  useEffect(() => {
+    if (narrationQueue.length === 0 || isSpeakingRef.current || abortRef.current) return;
+    const text = narrationQueue[0];
+    
+    const speak = async () => {
+      abortRef.current = false;
+      setIsSpeaking(true);
+      await speakText(text, audioRef, abortRef);
+      if (!abortRef.current) {
+        setIsSpeaking(false);
+        setNarrationQueue(prev => prev.slice(1));
+        // Mark section as narrated
+        const section = sections.find(s => s.pitch === text);
+        if (section) {
+          setNarratedSections(prev => new Set([...prev, section.selector]));
+        }
+      }
+    };
+    speak();
+  }, [narrationQueue, sections]);
+
+  // Scroll detection — detect section changes and auto-narrate
+  useEffect(() => {
+    if (dismissed) return;
+    let lastSection: string | null = null;
+    
+    const onScroll = () => {
+      if (!scrollNarrationRef.current || isSpeakingRef.current || chatMode) return;
+      
+      const visible = detectVisibleSection(sections);
+      if (visible && visible.selector !== lastSection) {
+        lastSection = visible.selector;
+        setCurrentSection(visible);
+        
+        // Auto-narrate new sections
+        setNarratedSections(prev => {
+          if (!prev.has(visible.selector) && !isSpeakingRef.current) {
+            setNarrationQueue(q => [...q, visible.pitch]);
+            return new Set([...prev, visible.selector]);
+          }
+          return prev;
+        });
+      }
+    };
+    
+    // Debounced scroll listener
+    let timeout: ReturnType<typeof setTimeout>;
+    const debouncedScroll = () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(onScroll, 800);
+    };
+    
+    window.addEventListener("scroll", debouncedScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", debouncedScroll);
+      clearTimeout(timeout);
+    };
+  }, [dismissed, sections, chatMode]);
 
   // Load voices early
   useEffect(() => {
@@ -269,20 +393,8 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
     setIsPaused(false);
     setIsListening(false);
     setLiveTranscript("");
+    setNarrationQueue([]);
   }, []);
-
-  const startNarration = useCallback(async () => {
-    abortRef.current = false;
-    setIsSpeaking(true);
-    for (let i = 0; i < pitch.length; i++) {
-      if (abortRef.current) break;
-      setCurrentLine(i);
-      const ok = await speakText(pitch[i], audioRef, abortRef);
-      if (!ok || abortRef.current) break;
-      await new Promise(r => setTimeout(r, 600));
-    }
-    setIsSpeaking(false);
-  }, [pitch]);
 
   const togglePause = useCallback(() => {
     if (!audioRef.current) return;
@@ -307,6 +419,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
     if (!text.trim() || isLoading) return;
     stopAll();
     abortRef.current = false;
+    setScrollNarrationActive(false); // Stop scroll narration when user engages
 
     const userMsg: Msg = { role: "user", content: text.trim() };
     const allMessages = [...messagesRef.current, userMsg];
@@ -314,7 +427,6 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
     setInputText("");
     setIsLoading(true);
 
-    // Switch to chat mode
     if (!chatMode) setChatMode(true);
 
     let full = "";
@@ -336,7 +448,6 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
         onDelta: upsert,
         onDone: () => {
           setIsLoading(false);
-          // Speak the response if voice is enabled
           if (voiceEnabled && full.length > 0 && full.length < 2000 && !abortRef.current) {
             setIsSpeaking(true);
             speakText(full, audioRef, abortRef).then(() => {
@@ -356,6 +467,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
     if (!SpeechRecognition) return;
     stopAll();
     abortRef.current = false;
+    setScrollNarrationActive(false);
 
     const recognition = new SpeechRecognition();
     recognition.lang = "it-IT";
@@ -383,7 +495,6 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
     recognition.start();
     setIsListening(true);
 
-    // Open panel if closed
     if (!isOpen) setIsOpen(true);
   }, [sendMessage, stopAll, isOpen]);
 
@@ -425,6 +536,17 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
           ) : (
             <Sparkles className="w-6 h-6 text-black" />
           )}
+          {/* Section indicator badge */}
+          {currentSection && scrollNarrationActive && !chatMode && (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-2 -left-2 px-1.5 py-0.5 rounded-full text-[8px] font-bold whitespace-nowrap"
+              style={{ background: gold, color: "#000" }}
+            >
+              {currentSection.label.split(" ")[0]}
+            </motion.div>
+          )}
           {(isSpeaking || isListening) && (
             <motion.div
               className="absolute -top-1 -right-1 w-5 h-5 rounded-full"
@@ -442,7 +564,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          className="fixed bottom-20 right-4 z-[9999] w-[360px] max-h-[520px] rounded-2xl overflow-hidden flex flex-col"
+          className="fixed bottom-20 right-4 z-[9999] w-[360px] max-w-[calc(100vw-2rem)] max-h-[520px] rounded-2xl overflow-hidden flex flex-col"
           style={{
             background: "rgba(15,15,15,0.97)",
             border: `1px solid ${gold}30`,
@@ -472,13 +594,26 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
                 />
               </div>
               <div>
-                <p className="text-xs font-bold text-white">Empire AI</p>
+                <p className="text-xs font-bold text-white">Empire AI — Consulente</p>
                 <p className="text-[10px]" style={{ color: `${gold}80` }}>
-                  {isListening ? "🎙️ Ti sto ascoltando..." : isSpeaking ? "🔊 Sto parlando..." : isLoading ? "✨ Sto pensando..." : "Sales Assistant"}
+                  {isListening ? "🎙️ Ti ascolto..." : isSpeaking ? `🔊 ${currentSection?.label || "Sto parlando..."}` : isLoading ? "✨ Sto pensando..." : currentSection && scrollNarrationActive ? `👁️ ${currentSection.label}` : "Esperto del tuo settore"}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-1">
+              {/* Toggle scroll narration */}
+              {!chatMode && (
+                <button
+                  onClick={() => {
+                    if (scrollNarrationActive) stopAll();
+                    setScrollNarrationActive(!scrollNarrationActive);
+                  }}
+                  className="p-1.5 rounded-lg hover:bg-white/10 transition"
+                  title={scrollNarrationActive ? "Pausa guida scroll" : "Riattiva guida scroll"}
+                >
+                  <Eye className={`w-3.5 h-3.5 ${scrollNarrationActive ? "text-white/80" : "text-white/30"}`} />
+                </button>
+              )}
               {isSpeaking && (
                 <button onClick={togglePause} className="p-1.5 rounded-lg hover:bg-white/10 transition">
                   {isPaused ? <Play className="w-3.5 h-3.5 text-white/60" /> : <Pause className="w-3.5 h-3.5 text-white/60" />}
@@ -492,11 +627,10 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
               <button
                 onClick={() => setVoiceEnabled(!voiceEnabled)}
                 className="p-1.5 rounded-lg hover:bg-white/10 transition"
-                title={voiceEnabled ? "Disattiva voce" : "Attiva voce"}
               >
                 {voiceEnabled ? <Volume2 className="w-3.5 h-3.5 text-white/60" /> : <VolumeX className="w-3.5 h-3.5 text-white/60" />}
               </button>
-              <button onClick={() => { stopAll(); setChatMode(!chatMode); }} className="p-1.5 rounded-lg hover:bg-white/10 transition">
+              <button onClick={() => { stopAll(); setChatMode(!chatMode); setScrollNarrationActive(false); }} className="p-1.5 rounded-lg hover:bg-white/10 transition">
                 <MessageCircle className="w-3.5 h-3.5 text-white/60" />
               </button>
               <button onClick={() => setIsOpen(false)} className="p-1.5 rounded-lg hover:bg-white/10 transition">
@@ -509,34 +643,72 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
           <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ maxHeight: "360px" }}>
             {!chatMode ? (
               <>
-                {/* Narration lines */}
-                {pitch.map((line, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: i <= currentLine || !isSpeaking ? 1 : 0.3, x: 0 }}
-                    transition={{ delay: i * 0.1, duration: 0.3 }}
-                    className="flex gap-2"
-                  >
+                {/* Active narration display */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="space-y-3"
+                >
+                  {/* Opening pitch */}
+                  <div className="flex gap-2">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5" style={{ background: `${gold}15` }}>
-                      <Sparkles className="w-3 h-3" style={{ color: i === currentLine && isSpeaking ? gold : `${gold}60` }} />
+                      <Sparkles className="w-3 h-3" style={{ color: gold }} />
                     </div>
-                    <p className={`text-xs leading-relaxed ${i === currentLine && isSpeaking ? "text-white" : "text-white/60"}`}>
-                      {line}
+                    <p className={`text-xs leading-relaxed ${narratedSections.size === 0 && isSpeaking ? "text-white" : "text-white/70"}`}>
+                      {openingPitch}
                     </p>
-                  </motion.div>
-                ))}
-                {/* Replay / interact buttons */}
-                {!isSpeaking && hasStarted && (
-                  <div className="flex flex-col gap-2 mt-2">
+                  </div>
+
+                  {/* Narrated sections */}
+                  {sections.filter(s => narratedSections.has(s.selector)).map((section, i) => (
+                    <motion.div
+                      key={section.selector}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1, duration: 0.3 }}
+                      className="flex gap-2"
+                    >
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5" style={{ background: `${gold}15` }}>
+                        <span className="text-[10px]">{section.label.split(" ")[0]}</span>
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-bold mb-0.5" style={{ color: `${gold}90` }}>{section.label}</p>
+                        <p className={`text-xs leading-relaxed ${currentSection?.selector === section.selector && isSpeaking ? "text-white" : "text-white/50"}`}>
+                          {section.pitch}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+
+                  {/* Scroll hint */}
+                  {scrollNarrationActive && narratedSections.size < sections.length && !isSpeaking && (
+                    <motion.div
+                      animate={{ opacity: [0.3, 0.7, 0.3] }}
+                      transition={{ repeat: Infinity, duration: 2 }}
+                      className="flex items-center justify-center gap-2 py-2"
+                    >
+                      <ChevronDown className="w-3 h-3" style={{ color: `${gold}60` }} />
+                      <span className="text-[10px]" style={{ color: `${gold}50` }}>Scorri per scoprire di più...</span>
+                      <ChevronDown className="w-3 h-3" style={{ color: `${gold}60` }} />
+                    </motion.div>
+                  )}
+                </motion.div>
+
+                {/* Action buttons */}
+                {hasStarted && !isSpeaking && (
+                  <div className="flex flex-col gap-2 mt-2 pt-2 border-t" style={{ borderColor: `${gold}10` }}>
                     <motion.button
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      onClick={() => { abortRef.current = false; startNarration(); }}
+                      onClick={() => {
+                        setNarratedSections(new Set());
+                        setScrollNarrationActive(true);
+                        setNarrationQueue([openingPitch]);
+                      }}
                       className="text-[11px] font-semibold flex items-center gap-1 hover:opacity-80 transition"
                       style={{ color: gold }}
                     >
-                      <Play className="w-3 h-3" /> Riascolta
+                      <Play className="w-3 h-3" /> Riascolta da capo
                     </motion.button>
                   </div>
                 )}
@@ -545,13 +717,30 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
               <>
                 {/* Chat messages */}
                 {messages.length === 0 && (
-                  <div className="text-center py-4 space-y-2">
-                    <p className="text-xs text-white/30">
-                      Chiedimi qualsiasi cosa su Empire e su "{companyName}"
+                  <div className="text-center py-4 space-y-3">
+                    <p className="text-xs text-white/40 font-semibold">
+                      Chiedimi qualsiasi cosa su Empire
                     </p>
+                    <div className="space-y-1.5">
+                      {[
+                        "Cosa può fare per il mio settore?",
+                        "Come funziona l'IA?",
+                        "Quanto costa davvero?",
+                        "Che vantaggi ho rispetto ai competitor?",
+                      ].map((q, i) => (
+                        <button
+                          key={i}
+                          onClick={() => sendMessage(q)}
+                          className="block w-full text-left px-3 py-2 rounded-lg text-[11px] transition hover:opacity-80"
+                          style={{ background: `${gold}10`, color: `${gold}cc`, border: `1px solid ${gold}15` }}
+                        >
+                          {q}
+                        </button>
+                      ))}
+                    </div>
                     {hasMic && (
                       <p className="text-[10px] text-white/20">
-                        🎙️ Premi il microfono per parlare con me a voce
+                        🎙️ Premi il microfono per parlare a voce
                       </p>
                     )}
                   </div>
@@ -569,7 +758,6 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
                     </div>
                   </div>
                 ))}
-                {/* Live transcript while listening */}
                 {isListening && liveTranscript && (
                   <div className="flex justify-end">
                     <motion.div
@@ -603,7 +791,6 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
           {/* Input area */}
           {chatMode && (
             <div className="p-3 border-t flex items-center gap-2" style={{ borderColor: `${gold}15` }}>
-              {/* Microphone button */}
               {hasMic && (
                 <button
                   onClick={isListening ? stopListening : startListening}
@@ -650,6 +837,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
                     onClick={() => {
                       stopAll();
                       setChatMode(true);
+                      setScrollNarrationActive(false);
                       setTimeout(() => startListening(), 300);
                     }}
                     className="flex-1 py-2.5 rounded-xl text-xs font-bold transition hover:opacity-90 flex items-center justify-center gap-2"
@@ -659,7 +847,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
                   </button>
                 )}
                 <button
-                  onClick={() => { stopAll(); setChatMode(true); }}
+                  onClick={() => { stopAll(); setChatMode(true); setScrollNarrationActive(false); }}
                   className="flex-1 py-2.5 rounded-xl text-xs font-bold transition hover:opacity-90"
                   style={{ background: `linear-gradient(135deg, ${gold}, ${gold}cc)`, color: "#000" }}
                 >
