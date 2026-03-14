@@ -180,31 +180,30 @@ export default function FitnessPublicSite({ company }: Props) {
         </div>
       </section>
 
-      {/* TICKER */}
-      <div className="overflow-hidden py-4" style={{ background: "#111" }}>
-        <motion.div className="flex gap-8 whitespace-nowrap" animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 15, ease: "linear" }}>
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 text-sm font-bold uppercase text-white/20" style={{ fontFamily: "'Roboto', sans-serif" }}>
+      {/* TICKER — Premium Marquee */}
+      <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
+        <AmbientGlow color={ORANGE} position="top" />
+        <MarqueeCarousel speed={30} pauseOnHover items={
+          tickerItems.map((item, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-bold uppercase mx-6 whitespace-nowrap text-white/20" style={{ fontFamily: "'Roboto', sans-serif" }}>
               <Dumbbell className="w-3 h-3" style={{ color: `${ORANGE}50` }} /> {item}
             </span>
-          ))}
-        </motion.div>
+          ))
+        } />
       </div>
 
-      {/* STATS */}
-      <Section className="py-16 px-4" style={{ background: "#111" }}>
-        <div className="max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-          {[
+      <NeonDivider color={ORANGE} />
+
+      {/* STATS — Premium Glass */}
+      <Section className="py-16 px-4 relative overflow-hidden" style={{ background: "#111" }}>
+        <FloatingOrbs color={ORANGE} count={3} />
+        <div className="max-w-5xl mx-auto relative z-10">
+          <PremiumStatsBar accentColor={ORANGE} stats={[
             { value: 500, suffix: "+", label: "Iscritti" },
             { value: 20, suffix: "+", label: "Classi / Sett." },
             { value: 15, suffix: "+", label: "Trainer" },
             { value: 1500, suffix: "mq", label: "Di Struttura" },
-          ].map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
-              <p className="text-3xl sm:text-4xl font-bold" style={{ color: ORANGE }}><AnimatedNum value={s.value} suffix={s.suffix} /></p>
-              <p className="text-[10px] uppercase tracking-widest text-white/30 mt-1" style={{ fontFamily: "'Roboto', sans-serif" }}>{s.label}</p>
-            </motion.div>
-          ))}
+          ]} />
         </div>
       </Section>
 
