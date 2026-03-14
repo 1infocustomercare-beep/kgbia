@@ -94,35 +94,39 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
 SectionLabel.displayName = "SectionLabel";
 
 /* ═══ Neural Cells Background — flowing DNA data network ═══ */
-const CELL_COUNT = 40;
 const NeuralCellsBackground = () => {
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+  const CELL_COUNT = isMobile ? 18 : 40;
+
   const cells = useMemo(() =>
     Array.from({ length: CELL_COUNT }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      dur: 20 + Math.random() * 20,
       delay: Math.random() * 6,
-      dx: (Math.random() - 0.5) * 10,
-      dy: (Math.random() - 0.5) * 10,
-    })), []
+    })), [CELL_COUNT]
   );
 
   const connections = useMemo(() => {
     const conns: { a: number; b: number }[] = [];
+    const maxDist = isMobile ? 32 : 28;
     for (let i = 0; i < cells.length; i++) {
       for (let j = i + 1; j < cells.length; j++) {
         const dx = cells[i].x - cells[j].x;
         const dy = cells[i].y - cells[j].y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 28 && dist > 6) conns.push({ a: i, b: j });
+        if (dist < maxDist && dist > 6) conns.push({ a: i, b: j });
       }
     }
     return conns;
-  }, [cells]);
+  }, [cells, isMobile]);
+
+  // On mobile, limit animated pulses to reduce GPU load
+  const pulseConns = isMobile ? connections.filter((_, i) => i % 4 === 0) : connections.filter((_, i) => i % 2 === 0);
+  const goldConns = isMobile ? connections.filter((_, i) => i % 8 === 0) : connections.filter((_, i) => i % 4 === 0);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: 0.7 }}>
+    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: isMobile ? 0.5 : 0.7 }}>
       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="pulseGlow">
@@ -131,7 +135,7 @@ const NeuralCellsBackground = () => {
           </filter>
         </defs>
 
-        {/* Connection lines — breathing, thicker */}
+        {/* Connection lines */}
         {connections.map(({ a, b }, i) => (
           <motion.line
             key={`ln${i}`}
@@ -145,8 +149,8 @@ const NeuralCellsBackground = () => {
           />
         ))}
 
-        {/* Violet data pulses — larger, glowing */}
-        {connections.filter((_, i) => i % 2 === 0).map(({ a, b }, i) => (
+        {/* Violet data pulses */}
+        {pulseConns.map(({ a, b }, i) => (
           <motion.circle
             key={`vp${i}`}
             r="0.25"
@@ -162,8 +166,8 @@ const NeuralCellsBackground = () => {
           />
         ))}
 
-        {/* Gold data pulses — opposite direction */}
-        {connections.filter((_, i) => i % 4 === 0).map(({ a, b }, i) => (
+        {/* Gold data pulses */}
+        {goldConns.map(({ a, b }, i) => (
           <motion.circle
             key={`gp${i}`}
             r="0.2"
@@ -179,8 +183,8 @@ const NeuralCellsBackground = () => {
           />
         ))}
 
-        {/* Junction nodes — breathing dots */}
-        {cells.filter((_, i) => i % 2 === 0).map((cell) => (
+        {/* Junction nodes */}
+        {cells.filter((_, i) => i % (isMobile ? 3 : 2) === 0).map((cell) => (
           <motion.circle
             key={`node${cell.id}`}
             cx={cell.x} cy={cell.y}
