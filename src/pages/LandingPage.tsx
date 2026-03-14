@@ -237,9 +237,9 @@ const LandingPage = () => {
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.8], [0, 80]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.8], [1, 0.95]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
   useEffect(() => {
     const h = () => setNavScrolled(window.scrollY > 60);
