@@ -408,11 +408,11 @@ export default function NCCPublicSite({ company }: Props) {
     return "Giornata intera";
   };
   const boatImages: Record<string, string> = {
-    capri: "https://images.unsplash.com/photo-1515859005217-8a1f08870f59?w=600&h=400&fit=crop",
-    nerano: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop",
-    positano: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=400&fit=crop",
-    amalfi: "https://images.unsplash.com/photo-1612698093158-e07ac200d44e?w=600&h=400&fit=crop",
-    ischia: "https://images.unsplash.com/photo-1551524559-8af4e6624178?w=600&h=400&fit=crop",
+    capri: nccBoatCapri,
+    nerano: nccCostieraAerial,
+    positano: nccDestCostiera,
+    amalfi: nccPremiumCoast,
+    ischia: nccBoatLuxury,
   };
   const getBoatImage = (d: any) => {
     if (d.image_url) return d.image_url;
@@ -420,7 +420,7 @@ export default function NCCPublicSite({ company }: Props) {
     for (const [k, v] of Object.entries(boatImages)) {
       if (key.includes(k)) return v;
     }
-    return "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop";
+    return nccBoatLuxury;
   };
 
   const scrollRef = useRef<HTMLDivElement>(null);
