@@ -1285,14 +1285,33 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
-        {/* Benefits Grid — compact 6-col */}
-        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"
+        {/* Benefits — Mobile: auto-scroll carousel */}
+        <div className="sm:hidden">
+          <PremiumCarousel speed="slow" itemWidth={160} showControls={false}>
+            {whyUs.map((item, i) => (
+              <div key={i} className="w-[160px]">
+                <PremiumCard scan delay={i * 0.3} className="p-4 text-center h-full">
+                  <motion.div className="text-primary/50 mb-2 flex justify-center"
+                    animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
+                  <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
+                  <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
+                </PremiumCard>
+              </div>
+            ))}
+          </PremiumCarousel>
+        </div>
+
+        {/* Benefits — Desktop: staggered grid */}
+        <motion.div className="hidden sm:grid sm:grid-cols-3 lg:grid-cols-6 gap-3"
           variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {whyUs.map((item, i) => (
-            <motion.div key={i} variants={popIn}>
+            <motion.div key={i} variants={popIn}
+              whileHover={{ scale: 1.06, y: -6 }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}>
               <PremiumCard scan delay={i * 0.3} className="p-4 text-center">
                 <motion.div className="text-primary/50 mb-2 flex justify-center"
-                  animate={{ y: [0, -2, 0] }}
+                  animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
                   transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
                 <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
                 <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
