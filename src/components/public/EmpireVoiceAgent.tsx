@@ -499,7 +499,7 @@ const EmpireVoiceAgent: React.FC = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[200px] max-h-[400px]">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 min-h-[120px] max-h-[300px] sm:max-h-[400px] overscroll-contain">
               {messages.length === 0 && !isLoading && (
                 <div className="flex flex-col items-center justify-center h-full gap-3 py-8">
                   <motion.div
