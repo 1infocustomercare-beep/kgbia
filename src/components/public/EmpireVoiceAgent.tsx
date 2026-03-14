@@ -1,11 +1,14 @@
-// ATLAS Voice Agent v4 — Instant mobile launch + Web Speech API fallback
+// ATLAS Voice Agent v5 — ElevenLabs Conversational AI SDK + fallback
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause } from "lucide-react";
+import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause, Phone, PhoneOff } from "lucide-react";
 import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
+import { useConversation } from "@elevenlabs/react";
+import { supabase } from "@/integrations/supabase/client";
 
 type Msg = { role: "user" | "assistant"; content: string };
+type VoiceMode = "legacy" | "elevenlabs";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-voice-agent`;
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
