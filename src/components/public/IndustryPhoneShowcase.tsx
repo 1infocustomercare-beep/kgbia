@@ -765,14 +765,14 @@ interface IndustryPhoneShowcaseProps {
 }
 
 const SCREENS = [
-  { label: "Home", type: "hero" },
-  { label: "Catalogo", type: "services" },
-  { label: "Prenota", type: "booking" },
-  { label: "Dashboard", type: "dashboard" },
-  { label: "Analytics", type: "analytics" },
-  { label: "Clienti", type: "crm" },
-  { label: "Notifiche", type: "notifications" },
-  { label: "Settings", type: "settings" },
+  { label: "Home", type: "hero", desc: "Vetrina principale" },
+  { label: "Catalogo", type: "services", desc: "Lista servizi/prodotti" },
+  { label: "Prenota", type: "booking", desc: "Form prenotazione" },
+  { label: "Dashboard", type: "dashboard", desc: "Pannello gestione" },
+  { label: "Analytics", type: "analytics", desc: "Grafici & trend" },
+  { label: "Clienti", type: "crm", desc: "CRM & contatti" },
+  { label: "Notifiche", type: "notifications", desc: "Aggiornamenti live" },
+  { label: "Settings", type: "settings", desc: "Configurazione" },
 ];
 
 export default function IndustryPhoneShowcase({ industryId, className = "", compact = false }: IndustryPhoneShowcaseProps) {
