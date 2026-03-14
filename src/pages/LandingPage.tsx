@@ -77,14 +77,54 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
       className="inline-flex items-center gap-2.5 mb-5"
       initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
     >
-      <div className="flex items-center gap-2 px-4 py-2 rounded-full premium-label">
-        {icon || <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-dot" />}
-        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90">{text}</span>
+      <div className="relative flex items-center gap-2 px-4 py-2 rounded-full premium-label overflow-hidden">
+        {/* Scanning beam */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(90deg, transparent 30%, hsla(265,80%,70%,0.15) 50%, transparent 70%)" }}
+          animate={{ x: ["-150%", "250%"] }}
+          transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+        />
+        {icon || <motion.span className="w-1.5 h-1.5 rounded-full bg-primary" animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />}
+        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90 relative z-10">{text}</span>
       </div>
     </motion.div>
   )
 );
 SectionLabel.displayName = "SectionLabel";
+
+/* ═══ Animated Premium Icon ═══ */
+const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children: React.ReactNode; gradient: string; size?: "sm" | "md" | "lg"; delay?: number }) => {
+  const sizeClasses = size === "sm" ? "w-8 h-8 sm:w-10 sm:h-10 rounded-xl" : size === "lg" ? "w-12 h-12 rounded-2xl" : "w-10 h-10 rounded-xl";
+  return (
+    <motion.div className="relative group/icon" whileHover={{ scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+      {/* Ambient glow */}
+      <motion.div
+        className={`absolute -inset-2 ${sizeClasses} opacity-0 group-hover/icon:opacity-100 transition-opacity duration-700 blur-xl`}
+        style={{ background: `linear-gradient(135deg, hsla(265,70%,60%,0.3), hsla(280,50%,60%,0.2))` }}
+      />
+      {/* Rotating ring */}
+      <motion.div
+        className={`absolute -inset-0.5 ${sizeClasses}`}
+        style={{ border: "1px solid transparent", borderTopColor: "hsla(265,80%,70%,0.3)", borderRightColor: "hsla(300,50%,70%,0.15)" }}
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear", delay }}
+      />
+      {/* Main container */}
+      <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
+        style={{ boxShadow: "0 4px 20px hsla(265,70%,60%,0.15)" }}>
+        {/* Shimmer sweep */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.3) 50%, transparent 65%)" }}
+          animate={{ x: ["-150%", "250%"] }}
+          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 + delay, ease: "easeInOut" }}
+        />
+        <div className="relative z-10">{children}</div>
+      </div>
+    </motion.div>
+  );
+};
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 const fadeUp = { hidden: { opacity: 0, y: 35 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: smoothEase } } };
@@ -642,13 +682,23 @@ const LandingPage = () => {
             <motion.div className="mt-16 w-full grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
               {metrics.map((m, i) => (
-                <motion.div key={i} className="rounded-2xl p-4 sm:p-5 text-center border border-primary/[0.1] bg-deep-black/40 backdrop-blur-sm"
-                  whileHover={{ y: -3, borderColor: "hsla(265, 70%, 60%, 0.2)" }}
+                <motion.div key={i} className="relative rounded-2xl p-4 sm:p-5 text-center border border-primary/[0.1] bg-deep-black/40 backdrop-blur-sm overflow-hidden"
+                  whileHover={{ y: -3, borderColor: "hsla(265, 70%, 60%, 0.25)" }}
                   transition={{ duration: 0.2 }}>
-                  <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient">
+                  {/* Scanning line */}
+                  <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.06) 50%, transparent 60%)" }}
+                    animate={{ y: ["-100%", "200%"] }}
+                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 + i, ease: "easeInOut" }}
+                  />
+                  {/* Corner accents */}
+                  <div className="absolute top-1.5 left-1.5 w-3 h-3 border-t border-l border-primary/20 rounded-tl-sm" />
+                  <div className="absolute bottom-1.5 right-1.5 w-3 h-3 border-b border-r border-primary/20 rounded-br-sm" />
+                  <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient relative z-10">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="text-[0.6rem] text-foreground/30 mt-1.5 tracking-[2px] uppercase font-heading">{m.label}</p>
+                  <p className="text-[0.6rem] text-foreground/30 mt-1.5 tracking-[2px] uppercase font-heading relative z-10">{m.label}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -684,8 +734,14 @@ const LandingPage = () => {
                 { icon: <Timer className="w-3 h-3" />, text: "Attivo in 24h" },
                 { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali" },
               ].map((t, i) => (
-                <span key={i} className="text-[0.6rem] text-foreground/20 font-heading tracking-[3px] uppercase flex items-center gap-2">
-                  <span className="text-primary/35">{t.icon}</span>
+                <span key={i} className="text-[0.6rem] text-foreground/20 font-heading tracking-[3px] uppercase flex items-center gap-2 group/trust">
+                  <motion.span
+                    className="text-primary/40 group-hover/trust:text-primary/70 transition-colors"
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 12, repeat: Infinity, ease: "linear", delay: i * 0.5 }}
+                  >
+                    {t.icon}
+                  </motion.span>
                   {t.text}
                 </span>
               ))}
@@ -727,11 +783,13 @@ const LandingPage = () => {
                 {pain.stat}
               </div>
               {/* Icon */}
-              <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-3 sm:mb-4 shadow-lg group-hover:shadow-primary/20 transition-shadow duration-500`}>
+              <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
                 {pain.icon}
-              </div>
+              </PremiumIcon>
+              <div className="mt-3 sm:mt-4">
               <h3 className="font-heading text-xs sm:text-sm font-semibold text-foreground mb-1 sm:mb-2">{pain.title}</h3>
               <p className="text-[0.65rem] sm:text-xs text-foreground/35 leading-[1.6] sm:leading-[1.7]">{pain.desc}</p>
+              </div>
               {/* Bottom accent line */}
               <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </motion.div>
@@ -1089,9 +1147,11 @@ const LandingPage = () => {
               ].map((f, i) => (
                 <motion.div key={i} className="flex gap-3 items-start group"
                   initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                  <div className="w-5 h-5 min-w-[20px] rounded-full bg-primary/15 flex items-center justify-center mt-0.5">
+                  <motion.div className="w-5 h-5 min-w-[20px] rounded-full bg-primary/15 flex items-center justify-center mt-0.5 relative overflow-hidden"
+                    animate={{ boxShadow: ["0 0 0px hsla(265,70%,60%,0)", "0 0 12px hsla(265,70%,60%,0.3)", "0 0 0px hsla(265,70%,60%,0)"] }}
+                    transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}>
                     <Check className="w-3 h-3 text-primary" />
-                  </div>
+                  </motion.div>
                   <div>
                     <p className="text-xs sm:text-sm font-semibold text-foreground">{f.title}</p>
                     <p className="text-[0.65rem] text-foreground/35 mt-0.5">{f.desc}</p>
@@ -1133,9 +1193,9 @@ const LandingPage = () => {
                 {/* Corner glow */}
                 <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary/[0.06] blur-2xl group-hover:bg-primary/[0.12] transition-all duration-700" />
                 <div className="relative z-10">
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center text-primary mb-3 ring-1 ring-primary/10 group-hover:scale-110 group-hover:ring-primary/25 transition-all duration-500">
-                    {item.icon}
-                  </div>
+                  <PremiumIcon gradient="from-primary/25 to-accent/15" size="md" delay={i * 0.4}>
+                    <span className="text-primary">{item.icon}</span>
+                  </PremiumIcon>
                   <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{item.title}</h3>
                   <p className="text-[0.65rem] text-foreground/40 leading-[1.6]">{item.desc}</p>
                 </div>
@@ -1163,9 +1223,9 @@ const LandingPage = () => {
                 {String(i + 1).padStart(2, "0")}
               </span>
               <div className="relative z-10">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center text-primary mb-5 ring-1 ring-primary/10 group-hover:scale-110 group-hover:rotate-3 group-hover:ring-primary/25 group-hover:shadow-[0_0_20px_hsla(265,85%,65%,0.15)] transition-all duration-500">
-                  {item.icon}
-                </div>
+                <PremiumIcon gradient="from-primary/25 to-accent/15" size="lg" delay={i * 0.5}>
+                  <span className="text-primary">{item.icon}</span>
+                </PremiumIcon>
                 <h3 className="font-heading text-sm font-bold text-foreground mb-2">{item.title}</h3>
                 <p className="text-xs text-foreground/40 leading-[1.7]">{item.desc}</p>
               </div>
@@ -1339,8 +1399,18 @@ const LandingPage = () => {
             { label: "Deploy", value: "< 24h", icon: <Zap className="w-3.5 h-3.5" /> },
             { label: "Evoluzione", value: "Settimanale", icon: <Radio className="w-3.5 h-3.5" /> },
           ].map((spec, i) => (
-            <motion.div key={i} className="p-4 rounded-xl holo-panel text-center" variants={popIn}>
-              <div className="text-primary/50 mb-2 flex justify-center">{spec.icon}</div>
+            <motion.div key={i} className="relative p-4 rounded-xl holo-panel text-center overflow-hidden" variants={popIn}>
+              {/* Pulse ring */}
+              <motion.div
+                className="absolute inset-0 rounded-xl pointer-events-none"
+                style={{ border: "1px solid hsla(265,70%,60%,0.1)" }}
+                animate={{ opacity: [0.3, 0.7, 0.3] }}
+                transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4 }}
+              />
+              <motion.div className="text-primary mb-2 flex justify-center"
+                animate={{ y: [0, -3, 0] }}
+                transition={{ duration: 3, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }}
+              >{spec.icon}</motion.div>
               <p className="text-xs font-heading font-bold text-foreground">{spec.value}</p>
               <p className="text-[0.55rem] text-foreground/30 mt-0.5 tracking-wider uppercase">{spec.label}</p>
             </motion.div>
@@ -1479,9 +1549,10 @@ const LandingPage = () => {
               <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.2), transparent)" }} />
               <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
                 style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent)" }} />
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:bg-primary/15 group-hover:scale-110 transition-all duration-500">
-                {card.icon}
-              </div>
+              <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
+                <span className="text-primary">{card.icon}</span>
+              </PremiumIcon>
+              <div className="mt-4"></div>
               <h3 className="font-heading text-sm font-bold text-foreground mb-2">{card.title}</h3>
               <p className="text-[0.7rem] text-foreground/35 leading-[1.7] mb-3">{card.desc}</p>
               <span className="text-[0.6rem] font-heading font-semibold text-primary/60 tracking-wider">{card.accent}</span>
@@ -1580,9 +1651,9 @@ const LandingPage = () => {
                 {/* Ambient glow */}
                 <div className={`absolute -top-6 -right-6 w-16 h-16 rounded-full bg-gradient-to-br ${s.color} opacity-[0.06] blur-xl group-hover:opacity-[0.12] transition-opacity duration-500 pointer-events-none`} />
                 <div className="flex items-center gap-2 mb-2.5">
-                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-lg`}>
+                  <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>
                     {s.icon}
-                  </div>
+                  </PremiumIcon>
                   <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
                 </div>
                 <h3 className="font-heading text-[0.7rem] font-semibold text-foreground mb-1 leading-tight">{s.title}</h3>
@@ -1611,9 +1682,9 @@ const LandingPage = () => {
               <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-primary/15 rounded-bl-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/15 rounded-br-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="flex items-center justify-between mb-4">
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-lg group-hover:shadow-primary/20 group-hover:scale-110 transition-all duration-500`}>
+                <PremiumIcon gradient={s.color} size="md" delay={i * 0.3}>
                   {s.icon}
-                </div>
+                </PremiumIcon>
                 <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[2px] font-heading">{s.tag}</span>
               </div>
               <h3 className="font-heading text-sm sm:text-base font-semibold text-foreground mb-2">{s.title}</h3>
