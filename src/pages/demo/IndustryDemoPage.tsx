@@ -367,6 +367,9 @@ export default function IndustryDemoPage() {
       <>
         <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
         <PremiumTemplate company={demoCompany} />
+        <Suspense fallback={null}>
+          <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={demoCompany.primary_color || industryConfig.defaultPrimaryColor} />
+        </Suspense>
       </>
     );
   }
