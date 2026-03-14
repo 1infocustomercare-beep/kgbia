@@ -7,7 +7,8 @@ import {
   XCircle, Info, ChevronRight, Clock, Hash, Search, Filter,
   ArrowUpRight, ArrowDownRight, Medal, ChevronDown, X, Send,
   ToggleLeft, ToggleRight, Check, Loader2, Sparkles, Mic, Volume2, Phone, MessageSquare,
-  Pencil, Save, Trash2, Plus, Power, PowerOff, Copy
+  Pencil, Save, Trash2, Plus, Power, PowerOff, Copy,
+  Bell, ShieldCheck, FileText, Car, Scissors, Heart, Wrench, ChefHat
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
@@ -38,6 +39,18 @@ import agentMenuOcr from "@/assets/agent-menu-ocr.png";
 import agentPhotoGen from "@/assets/agent-photo-gen.png";
 import agentTranslator from "@/assets/agent-translator.png";
 import agentInventory from "@/assets/agent-inventory.png";
+import agentConciergeAi from "@/assets/agent-concierge-ai.png";
+import agentAnalyticsBrain from "@/assets/agent-analytics-brain.png";
+import agentSocialManager from "@/assets/agent-social-manager.png";
+import agentSalesCloser from "@/assets/agent-sales-closer.png";
+import agentDocumentAi from "@/assets/agent-document-ai.png";
+import agentSmartNotifier from "@/assets/agent-smart-notifier.png";
+import agentComplianceGuardian from "@/assets/agent-compliance-guardian.png";
+import agentOpsFood from "@/assets/agent-ops-food.png";
+import agentOpsNcc from "@/assets/agent-ops-ncc.png";
+import agentOpsBeauty from "@/assets/agent-ops-beauty.png";
+import agentOpsHealthcare from "@/assets/agent-ops-healthcare.png";
+import agentOpsConstruction from "@/assets/agent-ops-construction.png";
 
 // ─── Agent Definitions ───
 interface AgentDef {
@@ -68,6 +81,18 @@ const AGENT_IMAGES: Record<string, string> = {
   "ai-menu-image": agentPhotoGen,
   "ai-translate": agentTranslator,
   "ai-inventory": agentInventory,
+  "concierge-ai": agentConciergeAi,
+  "analytics-brain": agentAnalyticsBrain,
+  "social-manager": agentSocialManager,
+  "sales-closer": agentSalesCloser,
+  "document-ai": agentDocumentAi,
+  "smart-notifier": agentSmartNotifier,
+  "compliance-guardian": agentComplianceGuardian,
+  "ops-food": agentOpsFood,
+  "ops-ncc": agentOpsNcc,
+  "ops-beauty": agentOpsBeauty,
+  "ops-healthcare": agentOpsHealthcare,
+  "ops-construction": agentOpsConstruction,
 };
 
 const AGENTS: AgentDef[] = [
@@ -167,14 +192,165 @@ const AGENTS: AgentDef[] = [
     inputDesc: "Restaurant ID + ordini + menu", outputDesc: "Alert scorte, suggerimento Piatto del Giorno",
     costPerCall: 0.003, testable: false, testType: "custom",
   },
+  // ═══ Part 6 — Universal Agents ═══
+  {
+    name: "concierge-ai",
+    displayName: "Empire Concierge AI",
+    description: "Receptionist AI multi-canale (WhatsApp, Chat, Email). Prenota appuntamenti in autonomia, qualifica lead, gestisce reclami, upsell contestuale. Multilingua automatico.",
+    icon: "MessageSquare", image: agentConciergeAi, color: "#10B981",
+    model: "Gemini 2.5 Flash", modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "ai-marketplace/concierge-ai",
+    trigger: "Autonomo (multi-canale 24/7)",
+    industries: ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality", "plumber", "electrician", "cleaning", "legal", "accounting", "photography", "veterinary", "tattoo", "childcare", "education", "events", "logistics"],
+    inputDesc: "Messaggi cliente multi-canale + contesto aziendale", outputDesc: "Risposta automatica + azioni (prenotazione, lead, escalation)",
+    costPerCall: 0.004, testable: true, testType: "chat",
+  },
+  {
+    name: "analytics-brain",
+    displayName: "Empire Analytics Brain",
+    description: "Revenue forecasting 30/60/90 giorni, churn prediction, peak hour optimizer, pricing intelligence, anomaly detection. Weekly CEO Brief automatico.",
+    icon: "BarChart3", image: agentAnalyticsBrain, color: "#F59E0B",
+    model: "Gemini 2.5 Pro", modelBadgeColor: "bg-amber-500/20 text-amber-400",
+    file: "ai-marketplace/analytics-brain",
+    trigger: "Schedulato (giornaliero + on-demand)",
+    industries: ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality", "plumber", "electrician", "cleaning", "legal", "accounting", "photography", "veterinary", "tattoo", "childcare", "education", "events", "logistics"],
+    inputDesc: "Dati vendite, clienti, ordini", outputDesc: "Report predittivi + insight + alert",
+    costPerCall: 0.008, testable: false, testType: "custom",
+  },
+  {
+    name: "social-manager",
+    displayName: "Empire Social Manager AI",
+    description: "Piano editoriale mensile, auto-post su Instagram/Facebook/TikTok/Google Business, risponde a TUTTE le recensioni, competitor watch. Content calendar settoriale.",
+    icon: "Globe", image: agentSocialManager, color: "#EC4899",
+    model: "Gemini 2.5 Flash", modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "ai-marketplace/social-manager",
+    trigger: "Schedulato (giornaliero) + on-demand",
+    industries: ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality", "plumber", "electrician", "cleaning", "legal", "accounting", "photography", "veterinary", "tattoo", "childcare", "education", "events", "logistics"],
+    inputDesc: "Brand info + storico post + recensioni", outputDesc: "Post pronti + risposte recensioni + analytics",
+    costPerCall: 0.005, testable: false, testType: "custom",
+  },
+  {
+    name: "sales-closer",
+    displayName: "Empire Sales Closer AI",
+    description: "Pipeline vendite autonoma: lead scoring AI, auto follow-up (giorno 1-3-7-14-30), preventivi automatici, gestione obiezioni, referral program, payment reminder.",
+    icon: "DollarSign", image: agentSalesCloser, color: "#EF4444",
+    model: "Gemini 2.5 Flash", modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "ai-marketplace/sales-closer",
+    trigger: "Autonomo (pipeline continua)",
+    industries: ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality", "plumber", "electrician", "cleaning", "legal", "accounting", "photography", "veterinary", "tattoo", "childcare", "education", "events", "logistics"],
+    inputDesc: "Lead data + interazioni + pricing rules", outputDesc: "Score lead + preventivi + follow-up automatici",
+    costPerCall: 0.006, testable: false, testType: "custom",
+  },
+  {
+    name: "document-ai",
+    displayName: "Empire Document AI",
+    description: "Genera fatture elettroniche (XML SDI), preventivi, contratti, report periodici, certificati, lettere formali, privacy/GDPR in automatico.",
+    icon: "FileText", image: agentDocumentAi, color: "#6366F1",
+    model: "Gemini 3 Flash", modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "ai-marketplace/document-ai",
+    trigger: "On-demand (generazione documenti)",
+    industries: ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality", "plumber", "electrician", "cleaning", "legal", "accounting", "photography", "veterinary", "tattoo", "childcare", "education", "events", "logistics"],
+    inputDesc: "Tipo documento + dati compilazione", outputDesc: "PDF/XML documento generato",
+    costPerCall: 0.003, testable: false, testType: "custom",
+  },
+  {
+    name: "smart-notifier",
+    displayName: "Empire Smart Notifier",
+    description: "Notifiche intelligenti: sceglie canale migliore (email/SMS/WhatsApp/push), timing optimizer, A/B test automatico, frequency cap, escalation chain.",
+    icon: "Bell", image: agentSmartNotifier, color: "#0EA5E9",
+    model: "Gemini 2.5 Flash Lite", modelBadgeColor: "bg-cyan-500/20 text-cyan-400",
+    file: "ai-marketplace/smart-notifier",
+    trigger: "Autonomo (event-driven)",
+    industries: ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality", "plumber", "electrician", "cleaning", "legal", "accounting", "photography", "veterinary", "tattoo", "childcare", "education", "events", "logistics"],
+    inputDesc: "Evento trigger + profilo destinatario", outputDesc: "Notifica ottimizzata su canale migliore",
+    costPerCall: 0.001, testable: false, testType: "custom",
+  },
+  {
+    name: "compliance-guardian",
+    displayName: "Empire Compliance Guardian",
+    description: "GDPR monitor, scadenze fiscali italiane, contratti in scadenza, certificazioni obbligatorie, backup verifier, audit trail completo.",
+    icon: "ShieldCheck", image: agentComplianceGuardian, color: "#14B8A6",
+    model: "Gemini 3 Flash", modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "ai-marketplace/compliance-guardian",
+    trigger: "Schedulato (giornaliero) + alert",
+    industries: ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality", "plumber", "electrician", "cleaning", "legal", "accounting", "photography", "veterinary", "tattoo", "childcare", "education", "events", "logistics"],
+    inputDesc: "Dati aziendali + scadenze + normativa", outputDesc: "Alert conformità + checklist + audit log",
+    costPerCall: 0.002, testable: false, testType: "custom",
+  },
+  // ═══ Part 6 — Operations AI (settore-specifici) ═══
+  {
+    name: "ops-food",
+    displayName: "Operations AI — Food",
+    description: "KDS, food cost calculator, waste tracker, inventory AI predittivo, HACCP monitor automatico. Gestione completa cucina e sala.",
+    icon: "ChefHat", image: agentOpsFood, color: "#C8963E",
+    model: "Gemini 2.5 Flash", modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "ai-marketplace/ops-food",
+    trigger: "Autonomo (real-time operations)",
+    industries: ["food"],
+    inputDesc: "Ordini + menu + inventario + HACCP logs", outputDesc: "Alert operativi + ottimizzazione + compliance",
+    costPerCall: 0.005, testable: false, testType: "custom",
+  },
+  {
+    name: "ops-ncc",
+    displayName: "Operations AI — NCC",
+    description: "Fleet map live, dynamic pricing engine, driver dispatch intelligente, flight monitor con aggiustamento automatico pickup, vehicle expense tracker.",
+    icon: "Car", image: agentOpsNcc, color: "#1E3A5F",
+    model: "Gemini 2.5 Flash", modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "ai-marketplace/ops-ncc",
+    trigger: "Autonomo (real-time fleet)",
+    industries: ["ncc"],
+    inputDesc: "Flotta + prenotazioni + GPS + voli", outputDesc: "Dispatch ottimale + pricing dinamico + alert",
+    costPerCall: 0.006, testable: false, testType: "custom",
+  },
+  {
+    name: "ops-beauty",
+    displayName: "Operations AI — Beauty",
+    description: "Smart booking con AI stylist, staff commission tracker, loyalty gamification (Bronze→Diamond), before/after gallery, virtual try-on.",
+    icon: "Scissors", image: agentOpsBeauty, color: "#E91E8C",
+    model: "Gemini 2.5 Flash", modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "ai-marketplace/ops-beauty",
+    trigger: "Autonomo (booking + loyalty)",
+    industries: ["beauty"],
+    inputDesc: "Appuntamenti + staff + clienti + storico", outputDesc: "Suggerimenti booking + commissioni + loyalty",
+    costPerCall: 0.004, testable: false, testType: "custom",
+  },
+  {
+    name: "ops-healthcare",
+    displayName: "Operations AI — Healthcare",
+    description: "AI Triage assistant, prescription manager con alert interazioni, telemedicina integrata, lab integration HL7/FHIR, GDPR Health Data Vault.",
+    icon: "Heart", image: agentOpsHealthcare, color: "#10B981",
+    model: "Gemini 2.5 Pro", modelBadgeColor: "bg-amber-500/20 text-amber-400",
+    file: "ai-marketplace/ops-healthcare",
+    trigger: "Autonomo (triage + prescrizioni)",
+    industries: ["healthcare"],
+    inputDesc: "Cartelle cliniche + farmaci + referti", outputDesc: "Triage score + alert interazioni + prescrizioni",
+    costPerCall: 0.010, testable: false, testType: "custom",
+  },
+  {
+    name: "ops-construction",
+    displayName: "Operations AI — Construction",
+    description: "Project timeline Gantt, safety compliance checker, material cost tracker, subcontractor portal, site photo journal con geolocalizzazione.",
+    icon: "Wrench", image: agentOpsConstruction, color: "#F97316",
+    model: "Gemini 2.5 Flash", modelBadgeColor: "bg-blue-500/20 text-blue-400",
+    file: "ai-marketplace/ops-construction",
+    trigger: "Autonomo (project tracking)",
+    industries: ["construction"],
+    inputDesc: "Cantiere + materiali + subappaltatori + sicurezza", outputDesc: "Alert budget + sicurezza + timeline",
+    costPerCall: 0.005, testable: false, testType: "custom",
+  },
 ];
 
 const INDUSTRY_LABELS: Record<string, string> = {
   food: "🍽 Food", ncc: "🚗 NCC", beauty: "💇 Beauty", healthcare: "🏥 Salute",
   retail: "🛍 Retail", fitness: "💪 Fitness", hospitality: "🏨 Hotel",
+  plumber: "🔧 Idraulico", electrician: "⚡ Elettricista", cleaning: "🧹 Pulizie",
+  legal: "⚖️ Legale", accounting: "🧮 Commercialista", photography: "📷 Foto",
+  veterinary: "🐾 Veterinario", tattoo: "🎨 Tattoo", childcare: "👶 Infanzia",
+  education: "🎓 Formazione", events: "🎉 Eventi", logistics: "🚚 Logistica",
+  construction: "🏗 Edilizia", gardening: "🌿 Giardinaggio",
 };
 
-const PIE_COLORS = ["#C8963E", "#8B5CF6", "#10B981", "#EC4899", "#F97316", "#EF4444", "#3B82F6", "#6366F1"];
+const PIE_COLORS = ["#C8963E", "#8B5CF6", "#10B981", "#EC4899", "#F97316", "#EF4444", "#3B82F6", "#6366F1", "#0EA5E9", "#14B8A6", "#1E3A5F", "#E91E8C", "#F59E0B", "#22C55E", "#A855F7", "#06B6D4", "#D946EF", "#84CC16", "#FB923C", "#64748B"];
 
 // ─── Mock data ───
 function generateMockData() {
@@ -196,6 +372,18 @@ function generateMockData() {
       "ai-menu-image": Math.floor(10 + Math.random() * 15),
       "ai-translate": Math.floor(3 + Math.random() * 6),
       "ai-inventory": Math.floor(8 + Math.random() * 10),
+      "concierge-ai": Math.floor(30 + Math.random() * 50),
+      "analytics-brain": Math.floor(5 + Math.random() * 10),
+      "social-manager": Math.floor(12 + Math.random() * 20),
+      "sales-closer": Math.floor(8 + Math.random() * 15),
+      "document-ai": Math.floor(15 + Math.random() * 25),
+      "smart-notifier": Math.floor(40 + Math.random() * 60),
+      "compliance-guardian": Math.floor(3 + Math.random() * 8),
+      "ops-food": Math.floor(20 + Math.random() * 30),
+      "ops-ncc": Math.floor(10 + Math.random() * 20),
+      "ops-beauty": Math.floor(8 + Math.random() * 15),
+      "ops-healthcare": Math.floor(5 + Math.random() * 12),
+      "ops-construction": Math.floor(4 + Math.random() * 10),
     };
   });
   const topAccounts = [
