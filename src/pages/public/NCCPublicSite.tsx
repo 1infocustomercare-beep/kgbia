@@ -745,8 +745,8 @@ export default function NCCPublicSite({ company }: Props) {
         </div>
 
         {/* Row 2 — scrolls right (reverse) */}
-        <div className="overflow-hidden">
-          <div className="flex animate-ncc-marquee-reverse" style={{ width: "max-content" }}>
+        <div className="overflow-hidden group/row2">
+          <div className="flex animate-ncc-marquee-reverse group-hover/row2:[animation-play-state:paused]" style={{ width: "max-content" }}>
             {[...whyUsServices.slice(3), ...whyUsServices.slice(0, 3), ...whyUsServices.slice(3), ...whyUsServices.slice(0, 3), ...whyUsServices.slice(3), ...whyUsServices.slice(0, 3), ...whyUsServices.slice(3), ...whyUsServices.slice(0, 3)].map((item, i) => (
               <div key={`r2-${i}`} className="flex-shrink-0 w-[280px] sm:w-[320px] mx-2 sm:mx-3">
                 <div
