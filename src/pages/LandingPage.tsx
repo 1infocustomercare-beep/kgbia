@@ -2,6 +2,9 @@ import { useState, useEffect, useRef, forwardRef, lazy, Suspense, useMemo } from
 const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
+import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
+import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
+import { DEMO_INDUSTRY_DATA } from "@/data/demo-industries";
 import HeroNeuralCanvas from "@/components/public/HeroNeuralCanvas";
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
@@ -1717,6 +1720,73 @@ const LandingPage = () => {
             </div>
           );
         })()}
+      </Section>
+
+      <SectionDivider />
+
+      {/* ═══════════════════════════════════════════
+          SECTOR PREVIEWS — Every industry with unique style
+         ═══════════════════════════════════════════ */}
+      <Section style={{ background: "linear-gradient(180deg, hsla(260,14%,13%,1) 0%, hsla(270,18%,9%,1) 50%, hsla(260,14%,13%,1) 100%)" }}>
+        <div className="text-center mb-14">
+          <SectionLabel text="Ogni Settore" icon={<Layers className="w-3 h-3 text-primary" />} />
+          <motion.h2 className="text-[clamp(1.8rem,5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.05] mb-4"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Un Design <span className="text-shimmer">Unico per Ogni Business</span>
+          </motion.h2>
+          <motion.p className="text-foreground/40 max-w-[550px] mx-auto text-sm leading-[1.8]"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Ogni settore ha interfacce, colori, terminologia e funzionalità completamente personalizzate. Nessun template generico.
+          </motion.p>
+        </div>
+
+        <div className="space-y-6">
+          {(Object.keys(INDUSTRY_CONFIGS) as IndustryId[]).filter(id => DEMO_INDUSTRY_DATA[id]).map((id, idx) => {
+            const cfg = INDUSTRY_CONFIGS[id];
+            const demo = DEMO_INDUSTRY_DATA[id];
+            return (
+              <motion.div key={id}
+                className="rounded-2xl border border-white/[0.06] p-4 sm:p-6 hover:border-white/15 transition-all duration-500"
+                style={{ background: `linear-gradient(135deg, ${cfg.defaultPrimaryColor}06, transparent 60%)` }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.5, delay: idx * 0.03 }}
+              >
+                {/* Sector header */}
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+                      style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}>
+                      {cfg.emoji}
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-foreground">{cfg.label}</h3>
+                      <p className="text-[10px] text-foreground/35">{demo.companyName} · {cfg.description}</p>
+                    </div>
+                  </div>
+                  <motion.button
+                    onClick={() => navigate(`/demo/${id}`)}
+                    className="hidden sm:flex px-4 py-2 rounded-xl text-[10px] font-bold text-foreground/80 border border-foreground/10 hover:border-foreground/30 hover:bg-foreground/5 transition-all"
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Apri Demo →
+                  </motion.button>
+                </div>
+
+                {/* 4 iPhone mockups */}
+                <IndustryPhoneShowcase industryId={id} />
+
+                {/* Mobile CTA */}
+                <div className="sm:hidden mt-4 text-center">
+                  <button onClick={() => navigate(`/demo/${id}`)} className="text-[10px] font-bold underline underline-offset-4 text-foreground/50 hover:text-foreground/80 transition-colors">
+                    Vedi Demo Completa →
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </Section>
 
       <SectionDivider />
