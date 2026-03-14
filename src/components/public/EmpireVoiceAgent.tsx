@@ -1,7 +1,7 @@
-// ATLAS Voice Agent v2
+// ATLAS Voice Agent v3 — Scroll-tracking auto-narration
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Sparkles, Send, Play, Square, Pause, BookOpen } from "lucide-react";
+import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Sparkles, Send, Play, Square, Pause } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -9,25 +9,62 @@ type Msg = { role: "user" | "assistant"; content: string };
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-voice-agent`;
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
 
-// ── Page content extractor ──
-function extractPageContent(): string {
-  const sections: string[] = [];
-  const sectionEls = document.querySelectorAll("section");
-  sectionEls.forEach((sec) => {
-    const text = sec.innerText?.trim();
-    if (text && text.length > 30) {
-      // Take first 600 chars per section to keep token count reasonable
-      sections.push(text.slice(0, 600));
-    }
-  });
-  return sections.slice(0, 10).join("\n\n---\n\n");
+// ── Section narration scripts (short, persuasive, natural) ──
+const SECTION_SCRIPTS: Record<string, string> = {
+  hero: "Benvenuto in Empire — il sistema operativo che trasforma qualsiasi attività in un business digitale di nuova generazione. Pronto a scoprire come?",
+  industries: "Venticinque settori, un'unica piattaforma. Dal ristorante al medico, dall'NCC al beauty — ogni modulo è costruito su misura per il tuo business.",
+  tech: "Sotto il cofano c'è un'architettura neurale di ultima generazione: sicurezza AES-256, intelligenza artificiale predittiva e un motore che lavora per te ventiquattr'ore su ventiquattro.",
+  pain: "Lo sai quanto perdi ogni mese in commissioni e processi manuali? Empire elimina il problema alla radice — il tuo brand, le tue regole, il tuo profitto.",
+  services: "Menu digitale, CRM, prenotazioni, fatturazione, marketing automation, agenti IA — tutto incluso, tutto integrato. Zero complessità.",
+  process: "Tre step per partire: scegli il tuo settore, personalizza la tua app, e sei online. Il nostro team ti configura tutto in ventiquattr'ore.",
+  app: "Guarda la tua app in azione — dashboard in tempo reale, gestione completa, analytics IA. Tutto dal tuo smartphone.",
+  calculator: "Fai due conti: con Empire risparmi fino a quindicimila euro l'anno rispetto alle piattaforme tradizionali. Il ROI è immediato.",
+  testimonials: "Non devi crederci sulla parola — ascolta chi ha già scelto Empire e ha trasformato il proprio business.",
+  pricing: "Un solo pagamento, nessun canone mensile. Duemilanovecentonovantasette euro e il sistema è tuo per sempre. Solo il due percento sulle transazioni.",
+  partner: "Vuoi guadagnare vendendo Empire? Novecentonovantasette euro per ogni vendita chiusa, bonus fino a millecinquecento al mese. Zero rischio, zero investimento.",
+};
+
+const SECTION_ORDER = ["hero", "industries", "tech", "pain", "services", "process", "app", "calculator", "testimonials", "pricing", "partner"];
+
+// ── TTS helper ──
+async function speakText(
+  text: string,
+  audioRef: React.MutableRefObject<HTMLAudioElement | null>,
+  abortRef: React.MutableRefObject<boolean>,
+): Promise<void> {
+  if (abortRef.current) return;
+  try {
+    const resp = await fetch(TTS_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      body: JSON.stringify({ text }),
+    });
+    if (!resp.ok) throw new Error("TTS failed");
+    if (abortRef.current) return;
+    const { audioContent } = await resp.json();
+    if (abortRef.current) return;
+
+    return new Promise((resolve) => {
+      const audio = new Audio(`data:audio/mpeg;base64,${audioContent}`);
+      if (audioRef.current) audioRef.current.pause();
+      audioRef.current = audio;
+      audio.onended = () => resolve();
+      audio.onerror = () => resolve();
+      audio.play().catch(() => resolve());
+    });
+  } catch {
+    return;
+  }
 }
 
 // ── Stream chat helper ──
 async function streamChat({
-  messages, mode, pageContent, onDelta, onDone,
+  messages, mode, pageContent, sectionId, onDelta, onDone,
 }: {
-  messages: Msg[]; mode?: string; pageContent?: string;
+  messages: Msg[]; mode?: string; pageContent?: string; sectionId?: string;
   onDelta: (t: string) => void; onDone: () => void;
 }) {
   const resp = await fetch(CHAT_URL, {
@@ -36,7 +73,7 @@ async function streamChat({
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages, mode, pageContent }),
+    body: JSON.stringify({ messages, mode, pageContent, sectionId }),
   });
   if (!resp.ok || !resp.body) throw new Error(`Stream failed: ${resp.status}`);
 
@@ -66,33 +103,9 @@ async function streamChat({
   onDone();
 }
 
-// ── TTS helper ──
-async function speak(text: string, audioRef: React.MutableRefObject<HTMLAudioElement | null>, onEnd: () => void) {
-  try {
-    const resp = await fetch(TTS_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      },
-      body: JSON.stringify({ text }),
-    });
-    if (!resp.ok) throw new Error("TTS failed");
-    const { audioContent } = await resp.json();
-    const url = `data:audio/mpeg;base64,${audioContent}`;
-    if (audioRef.current) { audioRef.current.pause(); }
-    const audio = new Audio(url);
-    audioRef.current = audio;
-    audio.onended = onEnd;
-    audio.onerror = onEnd;
-    await audio.play();
-  } catch {
-    onEnd();
-  }
-}
-
 // ── SpeechRecognition ──
-const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+const SpeechRecognition = (window as unknown as { SpeechRecognition?: typeof window.SpeechRecognition; webkitSpeechRecognition?: typeof window.SpeechRecognition }).SpeechRecognition
+  || (window as unknown as { webkitSpeechRecognition?: typeof window.SpeechRecognition }).webkitSpeechRecognition;
 
 const EmpireVoiceAgent: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -107,41 +120,92 @@ const EmpireVoiceAgent: React.FC = () => {
   const [inputText, setInputText] = useState("");
   const [liveTranscript, setLiveTranscript] = useState("");
   const [pulseIntensity, setPulseIntensity] = useState(0);
-  const [isReadingPage, setIsReadingPage] = useState(false);
-  const [autoStarted, setAutoStarted] = useState(false);
+  const [currentSection, setCurrentSection] = useState<string>("hero");
+  const [narratedSections, setNarratedSections] = useState<Set<string>>(new Set());
+  const [autoNarrating, setAutoNarrating] = useState(false);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<InstanceType<NonNullable<typeof SpeechRecognition>> | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
-  const readingAbortRef = useRef(false);
+  const abortRef = useRef(false);
+  const messagesRef = useRef<Msg[]>([]);
+  const voiceEnabledRef = useRef(true);
+  const autoNarratingRef = useRef(false);
+  const narratedRef = useRef<Set<string>>(new Set());
 
-  // Auto-scroll messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  // Sync refs
+  useEffect(() => { messagesRef.current = messages; }, [messages]);
+  useEffect(() => { voiceEnabledRef.current = voiceEnabled; }, [voiceEnabled]);
+  useEffect(() => { autoNarratingRef.current = autoNarrating; }, [autoNarrating]);
 
-  // Pulse animation while speaking
+  // Auto-scroll chat
+  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+
+  // Pulse animation
   useEffect(() => {
     if (!isSpeaking || isPaused) { setPulseIntensity(0); return; }
-    const interval = setInterval(() => {
-      setPulseIntensity(Math.random() * 0.6 + 0.4);
-    }, 150);
+    const interval = setInterval(() => setPulseIntensity(Math.random() * 0.6 + 0.4), 150);
     return () => clearInterval(interval);
   }, [isSpeaking, isPaused]);
 
-  // Stop everything
+  // ── Intersection Observer — track visible section ──
+  useEffect(() => {
+    const sectionIds = ["hero", "industries", "services", "process", "app", "calculator", "testimonials", "pricing", "partner"];
+    const observers: IntersectionObserver[] = [];
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
+              setCurrentSection(id);
+            }
+          });
+        },
+        { threshold: [0.3, 0.6] }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    // Also detect "tech" and "pain" sections by checking nearby elements
+    const allSections = document.querySelectorAll("section[id]");
+    allSections.forEach((sec) => {
+      const id = sec.getAttribute("id");
+      if (id && !sectionIds.includes(id)) {
+        const obs = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && entry.intersectionRatio > 0.3 && id) {
+                setCurrentSection(id);
+              }
+            });
+          },
+          { threshold: [0.3] }
+        );
+        obs.observe(sec);
+        observers.push(obs);
+      }
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
+
+  // ── Stop everything ──
   const stopAll = useCallback(() => {
+    abortRef.current = true;
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null; }
-    readingAbortRef.current = true;
     setIsSpeaking(false);
     setIsPaused(false);
     setIsListening(false);
     setLiveTranscript("");
-    setIsReadingPage(false);
+    setAutoNarrating(false);
   }, []);
 
-  // Pause/Resume audio
+  // ── Pause / Resume ──
   const togglePause = useCallback(() => {
     if (!audioRef.current) return;
     if (isPaused) {
@@ -153,14 +217,66 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [isPaused]);
 
-  // Send message
-  const sendMessage = useCallback(async (text: string, msgMode?: string, pageContent?: string) => {
+  // ── Narrate a single section (local script, no API call) ──
+  const narrateSection = useCallback(async (sectionId: string) => {
+    const script = SECTION_SCRIPTS[sectionId];
+    if (!script || !voiceEnabledRef.current) return;
+    if (narratedRef.current.has(sectionId)) return;
+
+    narratedRef.current.add(sectionId);
+    setNarratedSections(new Set(narratedRef.current));
+
+    // Add as assistant message
+    setMessages((prev) => [...prev, { role: "assistant", content: script }]);
+
+    // Speak it
+    setIsSpeaking(true);
+    abortRef.current = false;
+    await speakText(script, audioRef, abortRef);
+    if (!abortRef.current) {
+      setIsSpeaking(false);
+    }
+  }, []);
+
+  // ── Auto-narrate on section change ──
+  useEffect(() => {
+    if (!autoNarratingRef.current) return;
+    if (!currentSection) return;
+    if (narratedRef.current.has(currentSection)) return;
+    if (isSpeaking && !isPaused) return; // wait until current narration finishes
+
+    // Small delay so user settles on the section
+    const timer = setTimeout(() => {
+      if (autoNarratingRef.current && !narratedRef.current.has(currentSection)) {
+        narrateSection(currentSection);
+      }
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [currentSection, isSpeaking, isPaused, narrateSection]);
+
+  // ── Auto-start: show agent and begin narrating ──
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+      setTimeout(() => {
+        setIsOpen(true);
+        setAutoNarrating(true);
+        // Start with hero narration
+        narrateSection("hero");
+      }, 800);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Send user message (chat / voice) ──
+  const sendMessage = useCallback(async (text: string) => {
     if (!text.trim() || isLoading) return;
     stopAll();
-    readingAbortRef.current = false;
+    abortRef.current = false;
 
     const userMsg: Msg = { role: "user", content: text };
-    const allMessages = [...messages, userMsg];
+    const allMessages = [...messagesRef.current, userMsg];
     setMessages(allMessages);
     setIsLoading(true);
     setInputText("");
@@ -168,10 +284,10 @@ const EmpireVoiceAgent: React.FC = () => {
     let full = "";
     const upsert = (chunk: string) => {
       full += chunk;
-      setMessages(prev => {
+      setMessages((prev) => {
         const last = prev[prev.length - 1];
         if (last?.role === "assistant") {
-          return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: full } : m);
+          return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: full } : m));
         }
         return [...prev, { role: "assistant", content: full }];
       });
@@ -180,74 +296,35 @@ const EmpireVoiceAgent: React.FC = () => {
     try {
       await streamChat({
         messages: allMessages,
-        mode: msgMode,
-        pageContent,
         onDelta: upsert,
         onDone: () => {
           setIsLoading(false);
-          // Speak the response if voice enabled and not aborted
-          if (voiceEnabled && full.length > 0 && full.length < 2000 && !readingAbortRef.current) {
+          if (voiceEnabledRef.current && full.length > 0 && full.length < 2000 && !abortRef.current) {
             setIsSpeaking(true);
-            speak(full, audioRef, () => {
-              setIsSpeaking(false);
-              setIsReadingPage(false);
+            speakText(full, audioRef, abortRef).then(() => {
+              if (!abortRef.current) setIsSpeaking(false);
             });
-          } else {
-            setIsReadingPage(false);
           }
         },
       });
-    } catch (e) {
-      console.error("Agent stream error:", e);
+    } catch {
       setIsLoading(false);
-      setIsReadingPage(false);
-      setMessages(prev => [...prev, { role: "assistant", content: "Mi scuso, c'è stato un problema di connessione. Riprova tra un momento." }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: "Mi scuso, c'è stato un problema. Riprova tra un momento." }]);
     }
-  }, [messages, isLoading, voiceEnabled, stopAll]);
+  }, [isLoading, stopAll]);
 
-  // Read & explain the entire page
-  const startPageReading = useCallback(() => {
-    const content = extractPageContent();
-    setIsReadingPage(true);
-    sendMessage(
-      "Leggi e spiega questa pagina al visitatore, convincilo che Empire fa al caso suo",
-      "read_page",
-      content
-    );
-  }, [sendMessage]);
-
-  // Start narration
-  const startNarration = useCallback(() => {
-    sendMessage("Presentami Empire in modo coinvolgente", "narrate");
-  }, [sendMessage]);
-
-  // Auto-start page reading when agent becomes visible
-  useEffect(() => {
-    if (isVisible && !autoStarted) {
-      setAutoStarted(true);
-      // Small delay so the UI renders first
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-        // Need another small delay for the panel to render before starting
-        setTimeout(() => {
-          startPageReading();
-        }, 600);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible, autoStarted, startPageReading]);
-
-  // Start listening via SpeechRecognition
+  // ── Voice recognition ──
   const startListening = useCallback(() => {
     if (!SpeechRecognition) return;
     stopAll();
+    abortRef.current = false;
     const recognition = new SpeechRecognition();
     recognition.lang = "it-IT";
     recognition.interimResults = true;
     recognition.continuous = false;
     recognitionRef.current = recognition;
 
-    recognition.onresult = (e: any) => {
+    recognition.onresult = (e: SpeechRecognitionEvent) => {
       let interim = "";
       let final = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -255,11 +332,7 @@ const EmpireVoiceAgent: React.FC = () => {
         else interim += e.results[i][0].transcript;
       }
       setLiveTranscript(interim);
-      if (final) {
-        setLiveTranscript("");
-        setIsListening(false);
-        sendMessage(final);
-      }
+      if (final) { setLiveTranscript(""); setIsListening(false); sendMessage(final); }
     };
     recognition.onerror = () => { setIsListening(false); setLiveTranscript(""); };
     recognition.onend = () => { setIsListening(false); setLiveTranscript(""); };
@@ -267,38 +340,18 @@ const EmpireVoiceAgent: React.FC = () => {
     setIsListening(true);
   }, [sendMessage, stopAll]);
 
-  // Toggle open
+  // ── Toggle panel ──
   const toggleOpen = useCallback(() => {
-    if (isOpen) {
-      stopAll();
-      setIsOpen(false);
-    } else {
-      setIsOpen(true);
-    }
+    if (isOpen) { stopAll(); setIsOpen(false); }
+    else setIsOpen(true);
   }, [isOpen, stopAll]);
 
-  // Toggle visibility
-  if (!isVisible) {
-    return (
-      <motion.button
-        className="fixed bottom-20 sm:bottom-6 right-4 z-[100] w-14 h-14 rounded-full flex items-center justify-center border border-primary/20 bg-background/80 backdrop-blur-xl shadow-[0_0_30px_hsla(265,85%,65%,0.15)]"
-        onClick={() => setIsVisible(true)}
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 3, duration: 0.5, type: "spring" }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Sparkles className="w-6 h-6 text-primary" />
-      </motion.button>
-    );
-  }
-
+  // ── Render ──
   return (
     <>
       {/* Floating Avatar Button */}
       <AnimatePresence>
-        {!isOpen && (
+        {isVisible && !isOpen && (
           <motion.button
             className="fixed bottom-20 sm:bottom-6 right-4 z-[100] group"
             onClick={toggleOpen}
@@ -308,11 +361,11 @@ const EmpireVoiceAgent: React.FC = () => {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
           >
-            {/* Outer glow rings */}
+            {/* Outer glow */}
             <motion.div
               className="absolute inset-0 rounded-full"
-              style={{ background: "radial-gradient(circle, hsla(265,85%,65%,0.2), transparent 70%)" }}
-              animate={{ scale: [1, 1.6, 1], opacity: [0.4, 0.8, 0.4] }}
+              style={{ background: "radial-gradient(circle, hsla(265,85%,65%,0.25), transparent 70%)" }}
+              animate={{ scale: [1, 1.6, 1], opacity: [0.3, 0.7, 0.3] }}
               transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             />
             <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-[0_0_30px_hsla(265,85%,65%,0.3)] border border-white/10">
@@ -320,12 +373,12 @@ const EmpireVoiceAgent: React.FC = () => {
             </div>
             {/* Label */}
             <motion.div
-              className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-full bg-background/90 backdrop-blur border border-primary/20 text-[0.55rem] font-heading font-bold text-primary tracking-wider uppercase"
+              className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-full bg-background/90 backdrop-blur border border-primary/20 text-[0.55rem] font-bold text-primary tracking-wider uppercase"
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              ATLAS AI
+              {isSpeaking ? "🔊 ATLAS parla..." : "ATLAS AI"}
             </motion.div>
           </motion.button>
         )}
@@ -344,45 +397,54 @@ const EmpireVoiceAgent: React.FC = () => {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-foreground/[0.06]">
               <div className="flex items-center gap-3">
-                {/* Avatar with pulse */}
                 <div className="relative">
                   <motion.div
                     className="absolute -inset-1 rounded-full bg-primary/20 blur-sm"
-                    animate={{ opacity: isSpeaking && !isPaused ? pulseIntensity : 0.2, scale: isSpeaking && !isPaused ? 1 + pulseIntensity * 0.3 : 1 }}
+                    animate={{
+                      opacity: isSpeaking && !isPaused ? pulseIntensity : 0.2,
+                      scale: isSpeaking && !isPaused ? 1 + pulseIntensity * 0.3 : 1,
+                    }}
                     transition={{ duration: 0.15 }}
                   />
                   <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-white" />
                   </div>
-                  {/* Status dot */}
-                  <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${
-                    isPaused ? "bg-amber-400" :
-                    isSpeaking ? "bg-green-400" : 
-                    isListening ? "bg-amber-400" : 
-                    isReadingPage ? "bg-blue-400 animate-pulse" :
-                    "bg-primary/60"
-                  }`} />
+                  <div
+                    className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${
+                      isPaused ? "bg-amber-400" :
+                      isSpeaking ? "bg-green-400 animate-pulse" :
+                      isListening ? "bg-amber-400 animate-pulse" :
+                      isLoading ? "bg-blue-400 animate-pulse" :
+                      autoNarrating ? "bg-green-400" :
+                      "bg-primary/60"
+                    }`}
+                  />
                 </div>
                 <div>
-                  <h3 className="font-heading text-sm font-bold text-foreground">ATLAS</h3>
-                  <p className="text-[0.55rem] text-foreground/40 font-heading tracking-wider uppercase">
-                    {isPaused ? "In pausa" :
-                     isSpeaking ? "Sta parlando..." : 
-                     isReadingPage ? "Legge la pagina..." :
-                     isListening ? "Ti ascolta..." : 
-                     isLoading ? "Sta pensando..." : 
+                  <h3 className="text-sm font-bold text-foreground">ATLAS</h3>
+                  <p className="text-[0.55rem] text-foreground/40 tracking-wider uppercase">
+                    {isPaused ? "⏸ In pausa" :
+                     isSpeaking ? "🔊 Sta parlando..." :
+                     isListening ? "🎙️ Ti ascolta..." :
+                     isLoading ? "💭 Sta pensando..." :
+                     autoNarrating ? `📍 ${currentSection}` :
                      "Empire AI Agent"}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                {/* Voice toggle */}
+              <div className="flex items-center gap-1">
+                {/* Auto-narration toggle */}
                 <button
-                  onClick={() => { setVoiceEnabled(!voiceEnabled); if (voiceEnabled) stopAll(); }}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05] transition-all"
-                  title={voiceEnabled ? "Disattiva voce" : "Attiva voce"}
+                  onClick={() => {
+                    if (autoNarrating) { stopAll(); }
+                    else { setAutoNarrating(true); narrateSection(currentSection); }
+                  }}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
+                    autoNarrating ? "text-green-400 bg-green-400/10" : "text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]"
+                  }`}
+                  title={autoNarrating ? "Ferma guida vocale" : "Avvia guida vocale"}
                 >
-                  {voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                  {autoNarrating ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
                 </button>
                 {/* Mode toggle */}
                 <button
@@ -392,27 +454,18 @@ const EmpireVoiceAgent: React.FC = () => {
                 >
                   {mode === "voice" ? <MessageSquare className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                 </button>
-                {/* Hide */}
+                {/* Close */}
                 <button
-                  onClick={() => { setIsVisible(false); stopAll(); setIsOpen(false); }}
+                  onClick={() => { stopAll(); setIsOpen(false); }}
                   className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05] transition-all"
-                  title="Nascondi agente"
                 >
                   <X className="w-4 h-4" />
-                </button>
-                {/* Close panel */}
-                <button
-                  onClick={toggleOpen}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05] transition-all"
-                  title="Chiudi"
-                >
-                  <Square className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
 
             {/* Messages */}
-            <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[200px] max-h-[400px]">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[200px] max-h-[400px]">
               {messages.length === 0 && !isLoading && (
                 <div className="flex flex-col items-center justify-center h-full gap-3 py-8">
                   <motion.div
@@ -422,8 +475,8 @@ const EmpireVoiceAgent: React.FC = () => {
                   >
                     <Sparkles className="w-8 h-8 text-primary" />
                   </motion.div>
-                  <p className="text-xs text-foreground/30 text-center max-w-[200px] font-heading">
-                    Ciao! Sono ATLAS, il tuo consulente Empire. Sto leggendo la pagina per te...
+                  <p className="text-xs text-foreground/30 text-center max-w-[200px]">
+                    Ciao! Sono ATLAS. Ti guido attraverso Empire mentre scorri la pagina.
                   </p>
                 </div>
               )}
@@ -455,8 +508,10 @@ const EmpireVoiceAgent: React.FC = () => {
 
               {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
                 <motion.div className="flex gap-1.5 px-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  {[0, 1, 2].map(i => (
-                    <motion.div key={i} className="w-2 h-2 rounded-full bg-primary/40"
+                  {[0, 1, 2].map((i) => (
+                    <motion.div
+                      key={i}
+                      className="w-2 h-2 rounded-full bg-primary/40"
                       animate={{ y: [0, -6, 0] }}
                       transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
                     />
@@ -472,7 +527,7 @@ const EmpireVoiceAgent: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Voice Wave Visualizer (when speaking) */}
+            {/* Voice Wave Visualizer */}
             {isSpeaking && !isPaused && (
               <div className="flex items-center justify-center gap-[3px] py-2 px-4">
                 {Array.from({ length: 20 }).map((_, i) => (
@@ -490,7 +545,7 @@ const EmpireVoiceAgent: React.FC = () => {
             {isPaused && (
               <div className="flex items-center justify-center gap-2 py-2 px-4">
                 <Pause className="w-3.5 h-3.5 text-amber-400/70" />
-                <span className="text-[0.6rem] font-heading text-foreground/30 tracking-wider uppercase">In pausa</span>
+                <span className="text-[0.6rem] text-foreground/30 tracking-wider uppercase">In pausa — scorri per continuare</span>
               </div>
             )}
 
@@ -498,26 +553,13 @@ const EmpireVoiceAgent: React.FC = () => {
             <div className="p-3 border-t border-foreground/[0.06]">
               {mode === "voice" ? (
                 <div className="flex items-center justify-center gap-3">
-                  {/* Read Page button */}
-                  <button
-                    onClick={startPageReading}
-                    disabled={isLoading || isReadingPage}
-                    className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase transition-all disabled:opacity-30 ${
-                      isReadingPage 
-                        ? "bg-primary/20 text-primary border border-primary/20" 
-                        : "bg-primary/10 text-primary hover:bg-primary/15"
-                    }`}
-                  >
-                    <BookOpen className="w-3.5 h-3.5" /> Leggi Pagina
-                  </button>
-
-                  {/* Pause/Resume button (visible when speaking) */}
+                  {/* Pause / Resume */}
                   {isSpeaking && (
                     <button
                       onClick={togglePause}
-                      className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase transition-all ${
-                        isPaused 
-                          ? "bg-green-500/10 text-green-400 hover:bg-green-500/15" 
+                      className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[0.6rem] font-bold tracking-wider uppercase transition-all ${
+                        isPaused
+                          ? "bg-green-500/10 text-green-400 hover:bg-green-500/15"
                           : "bg-amber-500/10 text-amber-400 hover:bg-amber-500/15"
                       }`}
                     >
@@ -540,11 +582,11 @@ const EmpireVoiceAgent: React.FC = () => {
                     </button>
                   )}
 
-                  {/* Stop button (when speaking) */}
+                  {/* Stop */}
                   {isSpeaking && (
                     <button
                       onClick={stopAll}
-                      className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-foreground/[0.05] text-foreground/50 text-[0.6rem] font-heading font-bold tracking-wider uppercase hover:bg-foreground/[0.08] transition-all"
+                      className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-foreground/[0.05] text-foreground/50 text-[0.6rem] font-bold tracking-wider uppercase hover:bg-foreground/[0.08] transition-all"
                     >
                       <Square className="w-3.5 h-3.5" /> Stop
                     </button>
@@ -572,7 +614,7 @@ const EmpireVoiceAgent: React.FC = () => {
 
               {!SpeechRecognition && mode === "voice" && (
                 <p className="text-[0.5rem] text-foreground/20 text-center mt-2">
-                  Il riconoscimento vocale non è supportato da questo browser. Usa la chat testuale.
+                  Il riconoscimento vocale non è supportato. Usa la chat testuale.
                 </p>
               )}
             </div>
