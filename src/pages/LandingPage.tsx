@@ -846,37 +846,71 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <motion.div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {[
-            { icon: <Banknote className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Commissioni", desc: "Piattaforme terze che divorano i margini. Su €10K/mese, €3K vanno in fee.", stat: "-30%", color: "from-red-500/80 to-orange-500/80" },
-            { icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Clienti Persi", desc: "Senza CRM e loyalty il 70% non torna. Li acquisisci e li perdi.", stat: "70%", color: "from-amber-500/80 to-yellow-500/80" },
-            { icon: <Smartphone className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Zero Digitale", desc: "Competitor con app e booking online. Tu ancora con carta e WhatsApp.", stat: "0", color: "from-orange-500/80 to-red-500/80" },
-            { icon: <ClipboardCheck className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Processi Manuali", desc: "Ordini a voce, agenda cartacea, Excel. Ogni errore costa tempo e denaro.", stat: "4h/g", color: "from-rose-500/80 to-pink-500/80" },
-            { icon: <Eye className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Reputazione", desc: "Una recensione negativa costa migliaia in clienti persi.", stat: "-€5K", color: "from-red-600/80 to-rose-500/80" },
-            { icon: <Target className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Marketing Cieco", desc: "Pubblicità senza tracking. Zero segmentazione, zero automazione.", stat: "0%", color: "from-amber-600/80 to-orange-500/80" },
-          ].map((pain, i) => (
-            <motion.div key={i} variants={fadeUp} whileHover={{ scale: 1.02 }}>
-              <PremiumCard glow scan delay={i} className="p-4 sm:p-6">
-                {/* Stat badge */}
-                <motion.div className="absolute -top-2.5 right-3 px-2.5 py-0.5 rounded-full bg-background border border-primary/15 text-[0.55rem] sm:text-[0.6rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg z-20 overflow-hidden"
-                  animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>
-                  <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)" }}
-                    animate={{ x: ["-150%", "250%"] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
-                  <span className="relative z-10">{pain.stat}</span>
-                </motion.div>
-                <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
-                  {pain.icon}
-                </PremiumIcon>
-                <div className="mt-3 sm:mt-4">
-                  <h3 className="font-heading text-xs sm:text-sm font-semibold text-foreground mb-1 sm:mb-2">{pain.title}</h3>
-                  <p className="text-[0.65rem] sm:text-xs text-foreground/35 leading-[1.6] sm:leading-[1.7]">{pain.desc}</p>
-                </div>
-              </PremiumCard>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* ═══ Mobile: Auto-scrolling horizontal carousel ═══ */}
+        {(() => {
+          const painData = [
+            { icon: <Banknote className="w-4 h-4" />, title: "Commissioni", desc: "Piattaforme terze che divorano i margini. Su €10K/mese, €3K vanno in fee.", stat: "-30%", color: "from-red-500/80 to-orange-500/80" },
+            { icon: <Users className="w-4 h-4" />, title: "Clienti Persi", desc: "Senza CRM e loyalty il 70% non torna. Li acquisisci e li perdi.", stat: "70%", color: "from-amber-500/80 to-yellow-500/80" },
+            { icon: <Smartphone className="w-4 h-4" />, title: "Zero Digitale", desc: "Competitor con app e booking online. Tu ancora con carta e WhatsApp.", stat: "0", color: "from-orange-500/80 to-red-500/80" },
+            { icon: <ClipboardCheck className="w-4 h-4" />, title: "Processi Manuali", desc: "Ordini a voce, agenda cartacea, Excel. Ogni errore costa tempo e denaro.", stat: "4h/g", color: "from-rose-500/80 to-pink-500/80" },
+            { icon: <Eye className="w-4 h-4" />, title: "Reputazione", desc: "Una recensione negativa costa migliaia in clienti persi.", stat: "-€5K", color: "from-red-600/80 to-rose-500/80" },
+            { icon: <Target className="w-4 h-4" />, title: "Marketing Cieco", desc: "Pubblicità senza tracking. Zero segmentazione, zero automazione.", stat: "0%", color: "from-amber-600/80 to-orange-500/80" },
+          ];
+          return (
+            <>
+              {/* Mobile carousel */}
+              <div className="sm:hidden">
+                <PremiumCarousel speed="slow" itemWidth={200} showControls={false}>
+                  {painData.map((pain, i) => (
+                    <div key={i} className="w-[200px]">
+                      <PremiumCard glow scan delay={i} className="p-4 h-full">
+                        <motion.div className="absolute -top-2.5 right-3 px-2.5 py-0.5 rounded-full bg-background border border-primary/15 text-[0.55rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg z-20 overflow-hidden"
+                          animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
+                          transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>
+                          <span className="relative z-10">{pain.stat}</span>
+                        </motion.div>
+                        <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
+                          {pain.icon}
+                        </PremiumIcon>
+                        <div className="mt-3">
+                          <h3 className="font-heading text-xs font-semibold text-foreground mb-1">{pain.title}</h3>
+                          <p className="text-[0.65rem] text-foreground/35 leading-[1.6]">{pain.desc}</p>
+                        </div>
+                      </PremiumCard>
+                    </div>
+                  ))}
+                </PremiumCarousel>
+              </div>
+
+              {/* Desktop: Staggered grid with enhanced animations */}
+              <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
+                variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+                {painData.map((pain, i) => (
+                  <motion.div key={i} variants={fadeUp}
+                    whileHover={{ scale: 1.03, y: -8 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}>
+                    <PremiumCard glow scan delay={i} className="p-5 sm:p-6">
+                      <motion.div className="absolute -top-2.5 right-3 px-2.5 py-0.5 rounded-full bg-background border border-primary/15 text-[0.6rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg z-20 overflow-hidden"
+                        animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
+                        transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>
+                        <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)" }}
+                          animate={{ x: ["-150%", "250%"] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
+                        <span className="relative z-10">{pain.stat}</span>
+                      </motion.div>
+                      <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
+                        <span className="[&>svg]:w-5 [&>svg]:h-5">{pain.icon}</span>
+                      </PremiumIcon>
+                      <div className="mt-4">
+                        <h3 className="font-heading text-sm font-semibold text-foreground mb-2">{pain.title}</h3>
+                        <p className="text-xs text-foreground/35 leading-[1.7]">{pain.desc}</p>
+                      </div>
+                    </PremiumCard>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </>
+          );
+        })()}
 
         <motion.div className="mt-10 text-center"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -1251,14 +1285,33 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
-        {/* Benefits Grid — compact 6-col */}
-        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"
+        {/* Benefits — Mobile: auto-scroll carousel */}
+        <div className="sm:hidden">
+          <PremiumCarousel speed="slow" itemWidth={160} showControls={false}>
+            {whyUs.map((item, i) => (
+              <div key={i} className="w-[160px]">
+                <PremiumCard scan delay={i * 0.3} className="p-4 text-center h-full">
+                  <motion.div className="text-primary/50 mb-2 flex justify-center"
+                    animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
+                  <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
+                  <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
+                </PremiumCard>
+              </div>
+            ))}
+          </PremiumCarousel>
+        </div>
+
+        {/* Benefits — Desktop: staggered grid */}
+        <motion.div className="hidden sm:grid sm:grid-cols-3 lg:grid-cols-6 gap-3"
           variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {whyUs.map((item, i) => (
-            <motion.div key={i} variants={popIn}>
+            <motion.div key={i} variants={popIn}
+              whileHover={{ scale: 1.06, y: -6 }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}>
               <PremiumCard scan delay={i * 0.3} className="p-4 text-center">
                 <motion.div className="text-primary/50 mb-2 flex justify-center"
-                  animate={{ y: [0, -2, 0] }}
+                  animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
                   transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
                 <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
                 <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
@@ -1667,35 +1720,33 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: 2-col compact grid ═══ */}
+        {/* ═══ Mobile: Auto-scrolling carousel ═══ */}
         <div className="sm:hidden">
-          <motion.div className="grid grid-cols-2 gap-2.5"
-            variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-30px" }}>
+          <PremiumCarousel speed="slow" itemWidth={220} showControls={false}>
             {services.map((s, i) => (
-              <motion.div key={i} variants={fadeUp}
-                className="group relative p-3.5 rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur-sm hover:border-primary/20 transition-all duration-500 overflow-hidden">
-                {/* Ambient glow */}
-                <div className={`absolute -top-6 -right-6 w-16 h-16 rounded-full bg-gradient-to-br ${s.color} opacity-[0.06] blur-xl group-hover:opacity-[0.12] transition-opacity duration-500 pointer-events-none`} />
-                <div className="flex items-center gap-2 mb-2.5">
-                  <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>
-                    {s.icon}
-                  </PremiumIcon>
-                  <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
-                </div>
-                <h3 className="font-heading text-[0.7rem] font-semibold text-foreground mb-1 leading-tight">{s.title}</h3>
-                <p className="text-[0.58rem] text-foreground/35 leading-[1.5]">{s.desc}</p>
-                {/* Bottom accent */}
-                <div className="absolute bottom-0 left-3 right-3 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </motion.div>
+              <div key={i} className="w-[220px]">
+                <PremiumCard glow scan delay={i} className="p-4 h-full">
+                  <div className="flex items-center gap-2 mb-3">
+                    <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>
+                      {s.icon}
+                    </PremiumIcon>
+                    <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
+                  </div>
+                  <h3 className="font-heading text-[0.75rem] font-semibold text-foreground mb-1.5 leading-tight">{s.title}</h3>
+                  <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
+                </PremiumCard>
+              </div>
             ))}
-          </motion.div>
+          </PremiumCarousel>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
         <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {services.map((s, i) => (
-            <motion.div key={i} variants={fadeUp} whileHover={{ scale: 1.01 }}>
+            <motion.div key={i} variants={fadeUp}
+              whileHover={{ scale: 1.03, y: -8 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}>
               <PremiumCard glow scan delay={i} className="p-5 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <PremiumIcon gradient={s.color} size="md" delay={i * 0.3}>
