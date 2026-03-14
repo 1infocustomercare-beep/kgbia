@@ -1544,7 +1544,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           BUILD ANYTHING — Streamlined Conversion Section
          ═══════════════════════════════════════════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,22%,7%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
+      <Section style={{ background: "linear-gradient(180deg, hsla(260,14%,13%,1) 0%, hsla(265,16%,11%,1) 50%, hsla(260,14%,13%,1) 100%)" }}>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] pointer-events-none" style={{ background: "radial-gradient(ellipse, hsla(265,70%,60%,0.05), transparent 70%)" }} />
 
         <div className="text-center mb-14">
