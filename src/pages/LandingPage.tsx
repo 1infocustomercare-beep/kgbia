@@ -1744,9 +1744,9 @@ const LandingPage = () => {
         <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {services.map((s, i) => (
-            <motion.div key={i} variants={fadeUp} whileHover={{ scale: 1.01 }}>
-              <PremiumCard glow scan delay={i} className="p-5 sm:p-6">
-                <div className="flex items-center justify-between mb-4">
+            <motion.div key={i} variants={fadeUp}
+              whileHover={{ scale: 1.03, y: -8 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}>
                   <PremiumIcon gradient={s.color} size="md" delay={i * 0.3}>
                     {s.icon}
                   </PremiumIcon>
