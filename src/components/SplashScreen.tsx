@@ -32,8 +32,8 @@ function NeuralMeshBg() {
             key={`c${i}`}
             x1={MESH_NODES[a].x} y1={MESH_NODES[a].y}
             x2={MESH_NODES[b].x} y2={MESH_NODES[b].y}
-            stroke="hsla(265,85%,65%,0.08)"
-            strokeWidth="0.15"
+            stroke="hsla(265,85%,65%,0.25)"
+            strokeWidth="0.2"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.3 + i * 0.06, ease: "easeOut" }}
