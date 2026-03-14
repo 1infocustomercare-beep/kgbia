@@ -341,11 +341,11 @@ const StudioTab = ({
   return (
     <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       {/* Cartoon illustration */}
-      <div className="flex flex-col items-center text-center gap-2 mb-2">
+      <div className="flex flex-col items-center text-center gap-2 py-2">
         <img src={cartoonStudioMenu} alt="" className="w-24 h-24 object-contain" />
         <div>
-          <h3 className="text-sm font-display font-bold text-foreground">Studio Creativo</h3>
-          <p className="text-[10px] text-muted-foreground">Menu, foto IA, design e lingue</p>
+          <h3 className="text-lg font-display font-bold text-foreground">Studio Creativo</h3>
+          <p className="text-xs text-muted-foreground">Menu, foto IA, design e lingue</p>
         </div>
       </div>
       <div className="flex items-center gap-2">
