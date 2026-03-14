@@ -636,15 +636,15 @@ const LandingPage = () => {
         </div>
 
         {/* ═══ LAYER 2: Horizontal light streaks ═══ */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
           <motion.div className="absolute top-[35%] left-0 right-0 h-[1px]"
-            style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.2) 30%, hsla(280,50%,65%,0.35) 50%, hsla(265,70%,60%,0.2) 70%, transparent 95%)" }}
-            animate={{ opacity: [0.3, 0.7, 0.3] }}
+            style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265,70%,60%,0.08) 35%, hsla(280,50%,65%,0.12) 50%, hsla(265,70%,60%,0.08) 65%, transparent 90%)" }}
+            animate={{ opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div className="absolute top-[65%] left-0 right-0 h-[1px]"
-            style={{ background: "linear-gradient(90deg, transparent 15%, hsla(265,70%,60%,0.1) 40%, hsla(280,50%,65%,0.2) 60%, transparent 85%)" }}
-            animate={{ opacity: [0.2, 0.5, 0.2] }}
+            style={{ background: "linear-gradient(90deg, transparent 20%, hsla(265,70%,60%,0.05) 40%, hsla(280,50%,65%,0.08) 60%, transparent 80%)" }}
+            animate={{ opacity: [0.15, 0.3, 0.15] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
           />
         </div>
