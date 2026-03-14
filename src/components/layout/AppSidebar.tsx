@@ -78,12 +78,14 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
   plumber: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Interventi", icon: "Wrench", url: "/app/interventions" },
+    { title: "Dispatch", icon: "MapPin", url: "/app/field-dispatch" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
     { title: "Magazzino", icon: "Package", url: "/app/inventory" },
   ],
   electrician: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Lavori", icon: "Zap", url: "/app/interventions" },
+    { title: "Dispatch", icon: "MapPin", url: "/app/field-dispatch" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
     { title: "Materiali", icon: "Package", url: "/app/inventory" },
   ],
@@ -95,6 +97,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
   cleaning: [
     { title: "Dashboard", icon: "Home", url: "/app" },
     { title: "Servizi", icon: "ClipboardCheck", url: "/app/interventions" },
+    { title: "Dispatch", icon: "MapPin", url: "/app/field-dispatch" },
     { title: "Clienti", icon: "Users", url: "/app/clients" },
   ],
   legal: [
