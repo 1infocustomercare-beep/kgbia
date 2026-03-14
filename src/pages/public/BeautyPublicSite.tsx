@@ -364,54 +364,16 @@ export default function BeautyPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* ═══ TESTIMONIALS — auto-carousel ═══ */}
-      <Section id="recensioni" className="py-16 sm:py-24 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-medium mb-3" style={{ color: PINK, fontFamily: "'Inter', sans-serif" }}>Recensioni</p>
-            <h2 className="text-3xl sm:text-4xl font-bold">Cosa Dicono di Noi</h2>
+      {/* ═══ TESTIMONIALS — Auto-scrolling Premium Marquee ═══ */}
+      <Section id="recensioni" className="py-16 sm:py-24 relative overflow-hidden">
+        <AmbientGlow color={PINK} position="both" />
+        <div className="relative z-10">
+          <div className="px-4 mb-12">
+            <PremiumSectionHeader badge="Recensioni" title="Cosa Dicono" highlight="di Noi" accentColor={PINK} />
           </div>
-
-          {/* Featured review — auto-cycling */}
-          <div className="mb-10 rounded-2xl p-8 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${PINK}15` }}>
-            <AnimatePresence mode="wait">
-              <motion.div key={reviewIndex} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.5 }}>
-                <div className="flex items-center gap-4 mb-4">
-                  <img src={FALLBACK_REVIEWS[reviewIndex].photo} alt="" className="w-14 h-14 rounded-full object-cover" style={{ border: `2px solid ${PINK}40` }} />
-                  <div>
-                    <p className="font-semibold text-base">{FALLBACK_REVIEWS[reviewIndex].name}</p>
-                    <p className="text-xs text-white/40" style={{ fontFamily: "'Inter', sans-serif" }}>{FALLBACK_REVIEWS[reviewIndex].city}</p>
-                  </div>
-                  <div className="ml-auto flex gap-0.5">
-                    {Array.from({ length: 5 }).map((_, s) => <Star key={s} className="w-4 h-4" fill={PINK} style={{ color: PINK }} />)}
-                  </div>
-                </div>
-                <Quote className="w-8 h-8 mb-3" style={{ color: `${PINK}25` }} />
-                <p className="text-lg italic leading-relaxed text-white/60" style={{ fontFamily: "'Inter', sans-serif" }}>"{FALLBACK_REVIEWS[reviewIndex].text}"</p>
-              </motion.div>
-            </AnimatePresence>
-            {/* Progress dots */}
-            <div className="flex gap-2 justify-center mt-6">
-              {FALLBACK_REVIEWS.map((_, i) => (
-                <button key={i} onClick={() => setReviewIndex(i)} className="w-2 h-2 rounded-full transition-all" style={{ background: i === reviewIndex ? PINK : "rgba(255,255,255,0.15)", transform: i === reviewIndex ? "scale(1.3)" : "scale(1)" }} />
-              ))}
-            </div>
-          </div>
-
-          {/* Mini review cards */}
-          <div className="grid sm:grid-cols-3 gap-4">
-            {FALLBACK_REVIEWS.slice(0, 3).map((t, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="p-5 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                <div className="flex gap-0.5 mb-3">{Array.from({ length: 5 }).map((_, s) => <Star key={s} className="w-3.5 h-3.5" fill={PINK} style={{ color: PINK }} />)}</div>
-                <p className="text-sm mb-4 leading-relaxed text-white/50" style={{ fontFamily: "'Inter', sans-serif" }}>"{t.text}"</p>
-                <div className="flex items-center gap-2">
-                  <img src={t.photo} alt="" className="w-7 h-7 rounded-full object-cover" />
-                  <p className="text-sm font-semibold">— {t.name}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <ReviewsMarquee accentColor={PINK} speed={45} reviews={FALLBACK_REVIEWS.map(r => ({
+            name: r.name, text: r.text, rating: r.rating, photo: r.photo, city: r.city, accentColor: PINK,
+          }))} />
         </div>
       </Section>
 
