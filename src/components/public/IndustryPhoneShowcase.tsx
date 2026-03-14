@@ -742,21 +742,24 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
 
   return (
     <div className={`${className}`}>
-      {/* Desktop: flex row */}
-      <div className={`hidden sm:flex items-end justify-center gap-2 sm:gap-4 ${compact ? "scale-[0.8] origin-center" : ""}`}
-        style={{ perspective: "1000px" }}>
-        {SCREENS.map((screen, i) => (
-          <IPhoneFrame
-            key={screen.type}
-            screen={screen}
-            color={color}
-            emoji={cfg.emoji}
-            companyName={demo.companyName}
-            services={demo.services}
-            index={i}
-            sectorStyle={sectorStyle}
-          />
-        ))}
+      {/* Desktop: horizontal scroll with 8 phones */}
+      <div className={`hidden sm:block relative ${compact ? "scale-[0.85] origin-center" : ""}`}>
+        <div className="overflow-x-auto pb-3 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
+          <div className="flex items-end gap-3 min-w-max justify-center px-2" style={{ perspective: "1000px" }}>
+            {SCREENS.map((screen, i) => (
+              <IPhoneFrame
+                key={screen.type}
+                screen={screen}
+                color={color}
+                emoji={cfg.emoji}
+                companyName={demo.companyName}
+                services={demo.services}
+                index={i}
+                sectorStyle={sectorStyle}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Mobile: horizontal scroll carousel */}
