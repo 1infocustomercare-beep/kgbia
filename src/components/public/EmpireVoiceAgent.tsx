@@ -196,11 +196,63 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => document.removeEventListener("click", onClick);
   }, []);
 
+  // ── Queue processor for robust section narration (no freezes) ──
+  const processNarrationQueue = useCallback(async () => {
+    if (queueProcessingRef.current) return;
+    queueProcessingRef.current = true;
+
+    while (sectionQueueRef.current.length > 0) {
+      if (abortRef.current || !autoNarratingRef.current) break;
+
+      const sectionId = sectionQueueRef.current.shift();
+      if (!sectionId) continue;
+
+      const script = SECTION_SCRIPTS[sectionId];
+      if (!script || !voiceEnabledRef.current) continue;
+      if (narratedRef.current.has(sectionId)) continue;
+
+      setMessages((prev) => [...prev, { role: "assistant", content: script }]);
+      setIsSpeaking(true);
+      setIsPaused(false);
+      abortRef.current = false;
+
+      const played = await speakText(script, audioRef, abortRef);
+
+      if (played && !abortRef.current) {
+        narratedRef.current.add(sectionId);
+        setNarratedSections(new Set(narratedRef.current));
+      }
+
+      setIsSpeaking(false);
+    }
+
+    queueProcessingRef.current = false;
+  }, []);
+
+  const enqueueSectionNarration = useCallback((sectionId: string, forceReplay = false) => {
+    if (!SECTION_SCRIPTS[sectionId] || !voiceEnabledRef.current) return;
+
+    if (forceReplay) {
+      narratedRef.current.delete(sectionId);
+      setNarratedSections(new Set(narratedRef.current));
+    }
+
+    if (narratedRef.current.has(sectionId)) return;
+    if (sectionQueueRef.current.includes(sectionId)) return;
+
+    sectionQueueRef.current.push(sectionId);
+    void processNarrationQueue();
+  }, [processNarrationQueue]);
+
   // ── Stop everything ──
   const stopAll = useCallback(() => {
     abortRef.current = true;
+    sectionQueueRef.current = [];
+    queueProcessingRef.current = false;
+
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null; }
+
     setIsSpeaking(false);
     setIsPaused(false);
     setIsListening(false);
@@ -211,8 +263,9 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── Pause / Resume ──
   const togglePause = useCallback(() => {
     if (!audioRef.current) return;
+
     if (isPaused) {
-      audioRef.current.play();
+      audioRef.current.play().catch(() => undefined);
       setIsPaused(false);
     } else {
       audioRef.current.pause();
@@ -220,54 +273,24 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [isPaused]);
 
-  // ── Narrate a single section (local script, no API call) ──
-  const narrateSection = useCallback(async (sectionId: string) => {
-    const script = SECTION_SCRIPTS[sectionId];
-    if (!script || !voiceEnabledRef.current) return;
-    if (narratedRef.current.has(sectionId)) return;
-
-    narratedRef.current.add(sectionId);
-    setNarratedSections(new Set(narratedRef.current));
-
-    // Add as assistant message
-    setMessages((prev) => [...prev, { role: "assistant", content: script }]);
-
-    // Speak it
-    setIsSpeaking(true);
-    abortRef.current = false;
-    await speakText(script, audioRef, abortRef);
-    if (!abortRef.current) {
-      setIsSpeaking(false);
-    }
-  }, []);
-
   // ── Auto-narrate on section change ──
   useEffect(() => {
-    if (!autoNarratingRef.current) return;
-    if (!currentSection) return;
-    if (narratedRef.current.has(currentSection)) return;
-    if (isSpeaking && !isPaused) return; // wait until current narration finishes
+    if (!autoNarrating) return;
+    if (!currentSection || !SECTION_SCRIPTS[currentSection]) return;
 
-    // Small delay so user settles on the section
-    const timer = setTimeout(() => {
-      if (autoNarratingRef.current && !narratedRef.current.has(currentSection)) {
-        narrateSection(currentSection);
-      }
-    }, 800);
-
-    return () => clearTimeout(timer);
-  }, [currentSection, isSpeaking, isPaused, narrateSection]);
+    enqueueSectionNarration(currentSection);
+  }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
   // ── Auto-start: show button only (chat stays CLOSED) ──
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-      // Auto-narrate hero WITHOUT opening the chat panel
       setAutoNarrating(true);
-      narrateSection("hero");
+      enqueueSectionNarration("hero", true);
     }, 2500);
+
     return () => clearTimeout(timer);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [enqueueSectionNarration]);
 
   // ── Send user message (chat / voice) ──
   const sendMessage = useCallback(async (text: string) => {
