@@ -226,6 +226,31 @@ const SuperAdminDashboard = () => {
       })));
     }
 
+    // Fetch subscriptions
+    const { data: subsData } = await supabase
+      .from("business_subscriptions")
+      .select("*, companies(name, industry)")
+      .order("created_at", { ascending: false });
+    if (subsData) {
+      setSubscriptions(subsData.map((s: any) => ({
+        id: s.id,
+        companyId: s.company_id,
+        companyName: s.companies?.name || "—",
+        companyIndustry: s.companies?.industry || "custom",
+        plan: s.plan,
+        status: s.status,
+        trialStart: s.trial_start,
+        trialEnd: s.trial_end,
+        currentPeriodStart: s.current_period_start,
+        currentPeriodEnd: s.current_period_end,
+        cancelAtPeriodEnd: s.cancel_at_period_end,
+        stripeCustomerId: s.stripe_customer_id,
+        stripeSubscriptionId: s.stripe_subscription_id,
+        createdAt: s.created_at,
+        updatedAt: s.updated_at,
+      })));
+    }
+
     setLoading(false);
   };
 
