@@ -702,7 +702,7 @@ export default function NCCPublicSite({ company }: Props) {
             <div ref={scrollRef} className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: "none" }}>
               {[...displayVehicles, ...displayVehicles].map((v: any, i: number) => {
                 const features = v.features?.length > 0 ? v.features : ["Pelle", "Clima", "WiFi", "Acqua"];
-                const img = v.image_url || FALLBACK_FLEET.find(f => f.category.toLowerCase() === (v.category || "").toLowerCase())?.image_url || "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&h=400&fit=crop";
+                const img = v.image_url || FALLBACK_FLEET.find(f => f.category.toLowerCase() === (v.category || "").toLowerCase())?.image_url || nccFleetEclass;
                 const isPopular = v.is_popular || (v.category || "").toLowerCase().includes("minivan") || (v.category || "").toLowerCase().includes("van");
 
                 return (
