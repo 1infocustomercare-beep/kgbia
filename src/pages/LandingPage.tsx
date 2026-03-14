@@ -613,7 +613,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           HERO
          ═══════════════════════════════════════════ */}
-      <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-16 sm:pt-20 pb-12 sm:pb-16"
+      <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-24 sm:pt-28 pb-12 sm:pb-16"
         style={{ opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Video background with cinematic overlay ═══ */}
