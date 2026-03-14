@@ -202,7 +202,7 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
     setActiveTooltip(prev => prev === id ? null : id);
   };
 
-  // Tooltip bubble component
+  // Tooltip bubble component — renders tooltip INSIDE the element to avoid overflow clipping
   const TipBubble = ({ id, children }: { id: string; children: React.ReactNode }) => {
     const tip = tooltips[id];
     if (!tip) return <>{children}</>;
@@ -225,32 +225,30 @@ const LivePreview = ({ slug, primaryColor, compact = false }: LivePreviewProps) 
               </motion.div>
             )}
           </AnimatePresence>
+          {/* Tooltip rendered INSIDE the clickable area so it's not clipped by overflow-hidden parents */}
+          <AnimatePresence>
+            {isActive && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="absolute inset-x-1 bottom-1 z-50 p-2 rounded-xl bg-primary text-primary-foreground text-[9px] leading-snug font-medium shadow-xl border border-primary-foreground/20 backdrop-blur-sm"
+                style={{ pointerEvents: "auto" }}
+              >
+                <div className="flex items-start gap-1.5">
+                  <Info className="w-2.5 h-2.5 flex-shrink-0 mt-0.5" />
+                  <span>{tip.text}</span>
+                </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setActiveTooltip(null); }}
+                  className="absolute top-1 right-1.5 text-primary-foreground/60 hover:text-primary-foreground"
+                >
+                  <X className="w-2.5 h-2.5" />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-        <AnimatePresence>
-          {isActive && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: tip.position === "top" ? 8 : tip.position === "bottom" ? -8 : 0 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className={`absolute z-50 w-48 p-2 rounded-xl bg-primary text-primary-foreground text-[9px] leading-snug font-medium shadow-xl border border-primary-foreground/20 ${
-                tip.position === "top" ? "bottom-full mb-2 left-1/2 -translate-x-1/2" :
-                tip.position === "bottom" ? "top-full mt-2 left-1/2 -translate-x-1/2" :
-                tip.position === "left" ? "right-full mr-2 top-1/2 -translate-y-1/2" :
-                "left-full ml-2 top-1/2 -translate-y-1/2"
-              }`}>
-              <div className="flex items-start gap-1.5">
-                <Info className="w-2.5 h-2.5 flex-shrink-0 mt-0.5" />
-                <span>{tip.text}</span>
-              </div>
-              <div className={`absolute w-2 h-2 bg-primary rotate-45 ${
-                tip.position === "top" ? "top-full -mt-1 left-1/2 -translate-x-1/2" :
-                tip.position === "bottom" ? "bottom-full -mb-1 left-1/2 -translate-x-1/2" :
-                tip.position === "left" ? "left-full -ml-1 top-1/2 -translate-y-1/2" :
-                "right-full -mr-1 top-1/2 -translate-y-1/2"
-              }`} />
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     );
   };
