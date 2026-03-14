@@ -407,8 +407,9 @@ function generateMockData() {
     };
   });
   const alerts = [
-    { id: "a1", type: "warning", agent: "empire-assistant", message: "L'account 'Ristorante Da Mario' ha superato l'80% del budget mensile AI", isRead: false, createdAt: new Date(now.getTime() - 3600000).toISOString() },
-    { id: "a2", type: "error", agent: "ai-menu-image", message: "L'agente 'Foto Generator' ha avuto 12 errori nell'ultima ora", isRead: false, createdAt: new Date(now.getTime() - 7200000).toISOString() },
+    { id: "a1", type: "warning" as const, agent: "empire-assistant", message: "L'account 'Ristorante Da Mario' ha superato l'80% del budget mensile AI", isRead: false, createdAt: new Date(now.getTime() - 3600000).toISOString(), severity: "medium" as const, errorCode: "BUDGET_THRESHOLD", diagnostics: { cpuUsage: "32%", memoryUsage: "58%", lastRestart: "2h fa", uptime: "48h 12m" }, suggestedFix: "Aumenta il budget mensile o riduci la frequenza delle chiamate." },
+    { id: "a2", type: "error" as const, agent: "ai-menu-image", message: "L'agente 'Foto Generator' ha avuto 12 errori nell'ultima ora", isRead: false, createdAt: new Date(now.getTime() - 7200000).toISOString(), severity: "critical" as const, errorCode: "RATE_LIMIT_EXCEEDED", diagnostics: { cpuUsage: "89%", memoryUsage: "92%", lastRestart: "6h fa", uptime: "6h 03m", errorRate: "18%", lastError: "TimeoutError: Model response exceeded 30s limit", failedCalls: 12, totalCalls: 67 }, suggestedFix: "Riavvia l'agente e verifica i limiti di rate del modello AI." },
+    { id: "a3", type: "error" as const, agent: "ai-translate", message: "Connessione al modello di traduzione persa — 3 tentativi falliti", isRead: false, createdAt: new Date(now.getTime() - 1800000).toISOString(), severity: "high" as const, errorCode: "CONNECTION_LOST", diagnostics: { cpuUsage: "12%", memoryUsage: "34%", lastRestart: "12h fa", uptime: "12h 45m", errorRate: "100%", lastError: "ConnectionRefusedError: Unable to reach translation endpoint", failedCalls: 3, totalCalls: 3 }, suggestedFix: "Verifica la connettività di rete e riavvia il servizio." },
   ];
   return { dailyData, topAccounts, recentLogs, alerts };
 }
@@ -862,46 +863,162 @@ export default function AgentsPage() {
           </div>
         </motion.div>
 
-        {/* Alerts */}
+        {/* Alerts & Diagnostics Panel */}
         {unresolvedAlerts.length > 0 && (
-          <div className="space-y-2">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <AlertTriangle className="w-5 h-5 text-destructive" />
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-destructive rounded-full animate-ping" />
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-destructive rounded-full" />
+                </div>
+                <h3 className="text-sm font-semibold text-foreground">Centro Problemi</h3>
+                <Badge variant="destructive" className="text-[10px] h-5">{unresolvedAlerts.length} attivi</Badge>
+              </div>
+              <Button variant="ghost" size="sm" className="h-7 text-[10px] gap-1 text-muted-foreground"
+                onClick={() => { toast({ title: "Tutti archiviati", description: "Tutti gli alert sono stati archiviati." }); }}>
+                <CheckCircle2 className="w-3 h-3" /> Archivia tutti
+              </Button>
+            </div>
+
             {unresolvedAlerts.map(alert => (
               <motion.div key={alert.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-                className={`rounded-lg px-4 py-3 flex flex-col gap-2 text-sm ${
-                  alert.type === "error" ? "bg-red-500/10 border border-red-500/30 text-red-400" :
-                  "bg-yellow-500/10 border border-yellow-500/30 text-yellow-400"
+                className={`rounded-xl overflow-hidden border ${
+                  alert.type === "error" 
+                    ? "bg-destructive/5 border-destructive/20" 
+                    : "bg-yellow-500/5 border-yellow-500/20"
                 }`}>
-                <div className="flex items-center gap-3">
-                  {alert.type === "error" ? <XCircle className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
-                  <span className="flex-1">{alert.message}</span>
-                  <span className="text-xs opacity-60">{new Date(alert.createdAt).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</span>
+                {/* Header */}
+                <div className="px-4 py-3 flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                    alert.type === "error" ? "bg-destructive/15" : "bg-yellow-500/15"
+                  }`}>
+                    {alert.type === "error" ? <XCircle className="w-4 h-4 text-destructive" /> : <AlertTriangle className="w-4 h-4 text-yellow-500" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-foreground truncate">{alert.message}</span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <Badge variant="outline" className={`text-[9px] h-4 px-1.5 ${
+                        alert.severity === "critical" ? "border-destructive/40 text-destructive" :
+                        alert.severity === "high" ? "border-orange-500/40 text-orange-400" :
+                        "border-yellow-500/40 text-yellow-500"
+                      }`}>
+                        {alert.severity === "critical" ? "🔴 Critico" : alert.severity === "high" ? "🟠 Alto" : "🟡 Medio"}
+                      </Badge>
+                      <span className="text-[10px] text-muted-foreground font-mono">{alert.errorCode}</span>
+                      <span className="text-[10px] text-muted-foreground">
+                        <Clock className="w-3 h-3 inline mr-0.5" />
+                        {new Date(alert.createdAt).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 ml-7">
+
+                {/* Diagnostics Bar */}
+                <div className="px-4 py-2 bg-muted/30 border-t border-border/50 grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <Activity className="w-3 h-3 text-muted-foreground" />
+                    <span className="text-[10px] text-muted-foreground">CPU</span>
+                    <span className={`text-[10px] font-mono font-semibold ${
+                      parseInt(alert.diagnostics.cpuUsage) > 80 ? "text-destructive" : 
+                      parseInt(alert.diagnostics.cpuUsage) > 60 ? "text-yellow-500" : "text-emerald-500"
+                    }`}>{alert.diagnostics.cpuUsage}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <BarChart3 className="w-3 h-3 text-muted-foreground" />
+                    <span className="text-[10px] text-muted-foreground">RAM</span>
+                    <span className={`text-[10px] font-mono font-semibold ${
+                      parseInt(alert.diagnostics.memoryUsage) > 80 ? "text-destructive" : 
+                      parseInt(alert.diagnostics.memoryUsage) > 60 ? "text-yellow-500" : "text-emerald-500"
+                    }`}>{alert.diagnostics.memoryUsage}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <RefreshCw className="w-3 h-3 text-muted-foreground" />
+                    <span className="text-[10px] text-muted-foreground">Restart</span>
+                    <span className="text-[10px] font-mono text-foreground">{alert.diagnostics.lastRestart}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Clock className="w-3 h-3 text-muted-foreground" />
+                    <span className="text-[10px] text-muted-foreground">Uptime</span>
+                    <span className="text-[10px] font-mono text-foreground">{alert.diagnostics.uptime}</span>
+                  </div>
+                </div>
+
+                {/* Error Details (for errors) */}
+                {alert.type === "error" && alert.diagnostics.lastError && (
+                  <div className="px-4 py-2 bg-destructive/5 border-t border-destructive/10">
+                    <div className="flex items-start gap-2">
+                      <FileText className="w-3 h-3 text-destructive mt-0.5 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <code className="text-[10px] text-destructive/80 font-mono break-all">{alert.diagnostics.lastError}</code>
+                        {alert.diagnostics.failedCalls && (
+                          <div className="flex items-center gap-3 mt-1">
+                            <span className="text-[10px] text-muted-foreground">{alert.diagnostics.failedCalls}/{alert.diagnostics.totalCalls} chiamate fallite</span>
+                            <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden max-w-[120px]">
+                              <div className="h-full bg-destructive rounded-full" style={{ width: `${(alert.diagnostics.failedCalls / (alert.diagnostics.totalCalls || 1)) * 100}%` }} />
+                            </div>
+                            <span className="text-[10px] font-mono text-destructive">{alert.diagnostics.errorRate}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Suggested Fix */}
+                <div className="px-4 py-2 border-t border-border/50 bg-primary/5">
+                  <div className="flex items-start gap-2">
+                    <Sparkles className="w-3 h-3 text-primary mt-0.5 shrink-0" />
+                    <span className="text-[10px] text-primary/80">
+                      <span className="font-semibold">Suggerimento AI:</span> {alert.suggestedFix}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="px-4 py-2.5 border-t border-border/50 flex flex-wrap items-center gap-2">
                   {alert.type === "error" && (
                     <>
-                      <Button size="sm" variant="outline" className="h-6 text-[10px] gap-1 border-red-500/30 text-red-300 hover:bg-red-500/20"
-                        onClick={() => { toast({ title: "Agente riavviato", description: `L'agente "${alert.agent}" è stato riavviato con successo.` }); }}>
-                        <RefreshCw className="w-3 h-3" /> Riavvia Agente
+                      <Button size="sm" className="h-7 text-[10px] gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+                        onClick={() => { 
+                          toast({ title: "🔧 Auto-Repair avviato", description: `Diagnosi e riparazione automatica dell'agente "${alert.agent}" in corso...` });
+                        }}>
+                        <Wrench className="w-3 h-3" /> Auto-Repair
                       </Button>
-                      <Button size="sm" variant="outline" className="h-6 text-[10px] gap-1 border-red-500/30 text-red-300 hover:bg-red-500/20"
-                        onClick={() => { toast({ title: "Log errori", description: "Apertura log degli errori..." }); }}>
-                        <Eye className="w-3 h-3" /> Vedi Log
+                      <Button size="sm" variant="outline" className="h-7 text-[10px] gap-1.5 border-primary/30 text-primary hover:bg-primary/10"
+                        onClick={() => { toast({ title: "Agente riavviato", description: `L'agente "${alert.agent}" è stato riavviato con successo.` }); }}>
+                        <RefreshCw className="w-3 h-3" /> Riavvia
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-[10px] gap-1.5"
+                        onClick={() => { toast({ title: "Log errori", description: "Apertura log completi dell'agente..." }); }}>
+                        <Eye className="w-3 h-3" /> Log Completi
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-[10px] gap-1.5"
+                        onClick={() => { toast({ title: "Rollback configurazione", description: "Ripristinata l'ultima configurazione funzionante." }); }}>
+                        <Download className="w-3 h-3" /> Rollback Config
                       </Button>
                     </>
                   )}
                   {alert.type === "warning" && (
                     <>
-                      <Button size="sm" variant="outline" className="h-6 text-[10px] gap-1 border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/20"
+                      <Button size="sm" className="h-7 text-[10px] gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground"
                         onClick={() => { toast({ title: "Budget aumentato", description: "Il limite budget è stato aumentato del 20%." }); }}>
-                        <TrendingUp className="w-3 h-3" /> Aumenta Budget
+                        <TrendingUp className="w-3 h-3" /> Aumenta Budget +20%
                       </Button>
-                      <Button size="sm" variant="outline" className="h-6 text-[10px] gap-1 border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/20"
-                        onClick={() => { toast({ title: "Notifica inviata", description: "Il cliente è stato notificato del superamento budget." }); }}>
+                      <Button size="sm" variant="outline" className="h-7 text-[10px] gap-1.5"
+                        onClick={() => { toast({ title: "Notifica inviata", description: "Il cliente è stato notificato via email." }); }}>
                         <Bell className="w-3 h-3" /> Notifica Cliente
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-[10px] gap-1.5"
+                        onClick={() => { toast({ title: "Limite impostato", description: "Raggiunto il limite, l'agente verrà sospeso automaticamente." }); }}>
+                        <ShieldCheck className="w-3 h-3" /> Imposta Auto-Stop
                       </Button>
                     </>
                   )}
-                  <Button size="sm" variant="ghost" className="h-6 text-[10px] gap-1 opacity-60 hover:opacity-100 ml-auto"
+                  <Button size="sm" variant="ghost" className="h-7 text-[10px] gap-1 text-muted-foreground hover:text-foreground ml-auto"
                     onClick={() => { toast({ title: "Alert archiviato" }); }}>
                     <CheckCircle2 className="w-3 h-3" /> Archivia
                   </Button>
