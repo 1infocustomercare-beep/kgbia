@@ -846,37 +846,71 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <motion.div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {[
-            { icon: <Banknote className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Commissioni", desc: "Piattaforme terze che divorano i margini. Su €10K/mese, €3K vanno in fee.", stat: "-30%", color: "from-red-500/80 to-orange-500/80" },
-            { icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Clienti Persi", desc: "Senza CRM e loyalty il 70% non torna. Li acquisisci e li perdi.", stat: "70%", color: "from-amber-500/80 to-yellow-500/80" },
-            { icon: <Smartphone className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Zero Digitale", desc: "Competitor con app e booking online. Tu ancora con carta e WhatsApp.", stat: "0", color: "from-orange-500/80 to-red-500/80" },
-            { icon: <ClipboardCheck className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Processi Manuali", desc: "Ordini a voce, agenda cartacea, Excel. Ogni errore costa tempo e denaro.", stat: "4h/g", color: "from-rose-500/80 to-pink-500/80" },
-            { icon: <Eye className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Reputazione", desc: "Una recensione negativa costa migliaia in clienti persi.", stat: "-€5K", color: "from-red-600/80 to-rose-500/80" },
-            { icon: <Target className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Marketing Cieco", desc: "Pubblicità senza tracking. Zero segmentazione, zero automazione.", stat: "0%", color: "from-amber-600/80 to-orange-500/80" },
-          ].map((pain, i) => (
-            <motion.div key={i} variants={fadeUp} whileHover={{ scale: 1.02 }}>
-              <PremiumCard glow scan delay={i} className="p-4 sm:p-6">
-                {/* Stat badge */}
-                <motion.div className="absolute -top-2.5 right-3 px-2.5 py-0.5 rounded-full bg-background border border-primary/15 text-[0.55rem] sm:text-[0.6rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg z-20 overflow-hidden"
-                  animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>
-                  <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)" }}
-                    animate={{ x: ["-150%", "250%"] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
-                  <span className="relative z-10">{pain.stat}</span>
-                </motion.div>
-                <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
-                  {pain.icon}
-                </PremiumIcon>
-                <div className="mt-3 sm:mt-4">
-                  <h3 className="font-heading text-xs sm:text-sm font-semibold text-foreground mb-1 sm:mb-2">{pain.title}</h3>
-                  <p className="text-[0.65rem] sm:text-xs text-foreground/35 leading-[1.6] sm:leading-[1.7]">{pain.desc}</p>
-                </div>
-              </PremiumCard>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* ═══ Mobile: Auto-scrolling horizontal carousel ═══ */}
+        {(() => {
+          const painData = [
+            { icon: <Banknote className="w-4 h-4" />, title: "Commissioni", desc: "Piattaforme terze che divorano i margini. Su €10K/mese, €3K vanno in fee.", stat: "-30%", color: "from-red-500/80 to-orange-500/80" },
+            { icon: <Users className="w-4 h-4" />, title: "Clienti Persi", desc: "Senza CRM e loyalty il 70% non torna. Li acquisisci e li perdi.", stat: "70%", color: "from-amber-500/80 to-yellow-500/80" },
+            { icon: <Smartphone className="w-4 h-4" />, title: "Zero Digitale", desc: "Competitor con app e booking online. Tu ancora con carta e WhatsApp.", stat: "0", color: "from-orange-500/80 to-red-500/80" },
+            { icon: <ClipboardCheck className="w-4 h-4" />, title: "Processi Manuali", desc: "Ordini a voce, agenda cartacea, Excel. Ogni errore costa tempo e denaro.", stat: "4h/g", color: "from-rose-500/80 to-pink-500/80" },
+            { icon: <Eye className="w-4 h-4" />, title: "Reputazione", desc: "Una recensione negativa costa migliaia in clienti persi.", stat: "-€5K", color: "from-red-600/80 to-rose-500/80" },
+            { icon: <Target className="w-4 h-4" />, title: "Marketing Cieco", desc: "Pubblicità senza tracking. Zero segmentazione, zero automazione.", stat: "0%", color: "from-amber-600/80 to-orange-500/80" },
+          ];
+          return (
+            <>
+              {/* Mobile carousel */}
+              <div className="sm:hidden">
+                <PremiumCarousel speed="slow" itemWidth={200} showControls={false}>
+                  {painData.map((pain, i) => (
+                    <div key={i} className="w-[200px]">
+                      <PremiumCard glow scan delay={i} className="p-4 h-full">
+                        <motion.div className="absolute -top-2.5 right-3 px-2.5 py-0.5 rounded-full bg-background border border-primary/15 text-[0.55rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg z-20 overflow-hidden"
+                          animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
+                          transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>
+                          <span className="relative z-10">{pain.stat}</span>
+                        </motion.div>
+                        <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
+                          {pain.icon}
+                        </PremiumIcon>
+                        <div className="mt-3">
+                          <h3 className="font-heading text-xs font-semibold text-foreground mb-1">{pain.title}</h3>
+                          <p className="text-[0.65rem] text-foreground/35 leading-[1.6]">{pain.desc}</p>
+                        </div>
+                      </PremiumCard>
+                    </div>
+                  ))}
+                </PremiumCarousel>
+              </div>
+
+              {/* Desktop: Staggered grid with enhanced animations */}
+              <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
+                variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+                {painData.map((pain, i) => (
+                  <motion.div key={i} variants={fadeUp}
+                    whileHover={{ scale: 1.03, y: -8 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}>
+                    <PremiumCard glow scan delay={i} className="p-5 sm:p-6">
+                      <motion.div className="absolute -top-2.5 right-3 px-2.5 py-0.5 rounded-full bg-background border border-primary/15 text-[0.6rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg z-20 overflow-hidden"
+                        animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
+                        transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>
+                        <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)" }}
+                          animate={{ x: ["-150%", "250%"] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
+                        <span className="relative z-10">{pain.stat}</span>
+                      </motion.div>
+                      <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
+                        <span className="[&>svg]:w-5 [&>svg]:h-5">{pain.icon}</span>
+                      </PremiumIcon>
+                      <div className="mt-4">
+                        <h3 className="font-heading text-sm font-semibold text-foreground mb-2">{pain.title}</h3>
+                        <p className="text-xs text-foreground/35 leading-[1.7]">{pain.desc}</p>
+                      </div>
+                    </PremiumCard>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </>
+          );
+        })()}
 
         <motion.div className="mt-10 text-center"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
