@@ -290,38 +290,32 @@ export default function BeautyPublicSite({ company }: Props) {
         </div>
       </Section>
 
-      {/* ═══ SERVICES — auto-scrolling carousel ═══ */}
-      <Section id="servizi" className="py-16 sm:py-24 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="text-[11px] uppercase tracking-[0.3em] font-medium mb-3" style={{ color: PINK, fontFamily: "'Inter', sans-serif" }}>I Nostri Servizi</p>
-            <h2 className="text-3xl sm:text-4xl font-bold">Trattamenti Esclusivi</h2>
-          </div>
-          <div className="relative">
-            <div ref={scrollRef} className="flex gap-5 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4" style={{ scrollbarWidth: "none" }}>
-              {services.map((s, i) => (
-                <motion.div key={i} className="group relative rounded-2xl overflow-hidden flex-shrink-0 w-[280px] sm:w-[320px] snap-start cursor-pointer"
-                  style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
-                  whileHover={{ y: -5, transition: { duration: 0.3 } }}>
-                  <div className="relative h-52 overflow-hidden">
-                    <img src={s.img} alt={s.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f0812] via-transparent to-transparent" />
-                    <span className="absolute top-3 left-3 text-2xl">{s.icon}</span>
-                    <Badge className="absolute top-3 right-3 text-[9px]" style={{ background: `${PINK}25`, color: PINK, border: `1px solid ${PINK}40` }}>Premium</Badge>
-                  </div>
-                  <div className="p-5">
-                    <h3 className="font-semibold text-base mb-1">{s.name}</h3>
-                    <p className="text-sm text-white/40" style={{ fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            <button onClick={() => scrollRef.current?.scrollBy({ left: -320, behavior: "smooth" })} className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-xl z-10 hover:scale-110 transition" style={{ background: "rgba(0,0,0,0.7)", border: `1px solid ${PINK}30` }}>
-              <ChevronLeft className="w-5 h-5" style={{ color: PINK }} />
-            </button>
-            <button onClick={() => scrollRef.current?.scrollBy({ left: 320, behavior: "smooth" })} className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-xl z-10 hover:scale-110 transition" style={{ background: "rgba(0,0,0,0.7)", border: `1px solid ${PINK}30` }}>
-              <ChevronRight className="w-5 h-5" style={{ color: PINK }} />
-            </button>
+      {/* ═══ SERVICES — Auto-scroll Premium Marquee ═══ */}
+      <Section id="servizi" className="py-16 sm:py-24 px-4 relative overflow-hidden">
+        <AmbientGlow color={PINK} position="both" />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <PremiumSectionHeader badge="I Nostri Servizi" title="Trattamenti" highlight="Esclusivi" accentColor={PINK} subtitle="Scopri i nostri servizi premium, studiati per esaltare la tua bellezza naturale." />
+          <div className="mt-12">
+            <MarqueeCarousel speed={50} pauseOnHover items={
+              services.map((s, i) => (
+                <div key={i} className="w-[280px] sm:w-[320px] mx-2 sm:mx-3 flex-shrink-0">
+                  <motion.div className="group relative rounded-3xl overflow-hidden cursor-pointer h-full"
+                    style={{ background: "rgba(255,255,255,0.02)", border: `1px solid rgba(255,255,255,0.06)`, backdropFilter: "blur(12px)" }}
+                    whileHover={{ y: -6, scale: 1.02 }} transition={{ duration: 0.4 }}>
+                    <div className="relative h-52 overflow-hidden rounded-t-3xl">
+                      <img src={s.img} alt={s.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0f0812] via-transparent to-transparent" />
+                      <span className="absolute top-3 left-3 text-2xl">{s.icon}</span>
+                      <Badge className="absolute top-3 right-3 text-[9px] rounded-full px-3" style={{ background: `${PINK}25`, color: PINK, border: `1px solid ${PINK}40` }}>Premium</Badge>
+                    </div>
+                    <div className="p-5">
+                      <h3 className="font-semibold text-base mb-1">{s.name}</h3>
+                      <p className="text-sm text-white/40" style={{ fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
+                    </div>
+                  </motion.div>
+                </div>
+              ))
+            } />
           </div>
         </div>
       </Section>
