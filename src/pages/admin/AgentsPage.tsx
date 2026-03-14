@@ -740,7 +740,7 @@ export default function AgentsPage() {
       <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border px-4 md:px-6 py-4">
         <div className="flex items-center justify-between max-w-[1600px] mx-auto">
           <div className="flex items-center gap-3">
-            <BackButton variant="inline" fallback="/superadmin" />
+            <BackButton variant="inline" />
             <div>
               <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2">
                 <Brain className="w-6 h-6 text-primary" />
