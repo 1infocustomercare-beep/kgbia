@@ -293,6 +293,8 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
         </motion.div>
       </section>
 
+      {afterHero}
+
       {/* ═══ CHI SIAMO ═══ */}
       <Section id="chi-siamo" style={{ padding: "5rem 1.25rem", background: p.bgAlt }}>
         <div className="max-w-4xl mx-auto text-center">

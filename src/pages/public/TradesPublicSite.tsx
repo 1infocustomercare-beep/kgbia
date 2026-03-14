@@ -230,6 +230,8 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         <ScrollIndicator />
       </section>
 
+      {afterHero}
+
       {/* ═══ TICKER — Premium Marquee ═══ */}
       <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
         <AmbientGlow color={isElectrician ? "#fbbf24" : "#60a5fa"} position="top" />

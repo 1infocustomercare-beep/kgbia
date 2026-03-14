@@ -202,6 +202,8 @@ export default function HotelPublicSite({ company, afterHero }: Props) {
         <ScrollIndicator />
       </section>
 
+      {afterHero}
+
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-5" style={{ background: BORDEAUX }}>
         <MarqueeCarousel speed={40} pauseOnHover items={

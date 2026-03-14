@@ -204,6 +204,8 @@ export default function BakeryPublicSite({ company, afterHero }: Props) {
         <ScrollIndicator color={`${creamBg}50`} />
       </section>
 
+      {afterHero}
+
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-5" style={{ background: brown }}>
         <MarqueeCarousel speed={35} pauseOnHover items={

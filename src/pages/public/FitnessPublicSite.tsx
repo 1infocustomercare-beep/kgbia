@@ -180,6 +180,8 @@ export default function FitnessPublicSite({ company, afterHero }: Props) {
         </div>
       </section>
 
+      {afterHero}
+
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
         <AmbientGlow color={ORANGE} position="top" />

@@ -214,6 +214,8 @@ export default function BeachPublicSite({ company, afterHero }: Props) {
         <ScrollIndicator />
       </section>
 
+      {afterHero}
+
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-5 relative" style={{ background: "#0d1e2d" }}>
         <AmbientGlow color={CYAN} position="top" />

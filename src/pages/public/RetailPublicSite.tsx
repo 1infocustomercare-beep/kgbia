@@ -165,6 +165,8 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
         <ScrollIndicator color="rgba(0,0,0,0.3)" />
       </section>
 
+      {afterHero}
+
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-4 border-y border-gray-100" style={{ background: accent }}>
         <MarqueeCarousel speed={35} pauseOnHover items={
