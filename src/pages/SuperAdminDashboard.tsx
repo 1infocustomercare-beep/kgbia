@@ -100,7 +100,8 @@ const INDUSTRY_LABELS: Record<string, string> = {
 };
 
 const PLAN_LABELS: Record<string, string> = {
-  essential: "Essential €29", smart_ia: "Smart IA €59", empire_pro: "Empire Pro €89",
+  essential: "Essential €29/m", smart_ia: "Smart IA €59/m", empire_pro: "Empire Pro €89/m",
+  digital_start: "Digital Start €1.997", growth_ai: "Growth AI €4.997", empire_domination: "Empire €7.997",
   starter: "Starter", free: "Free",
 };
 
