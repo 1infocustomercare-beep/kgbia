@@ -80,6 +80,18 @@ const AGENT_IMAGES: Record<string, string> = {
   "ai-menu-image": agentPhotoGen,
   "ai-translate": agentTranslator,
   "ai-inventory": agentInventory,
+  "concierge-ai": agentConciergeAi,
+  "analytics-brain": agentAnalyticsBrain,
+  "social-manager": agentSocialManager,
+  "sales-closer": agentSalesCloser,
+  "document-ai": agentDocumentAi,
+  "smart-notifier": agentSmartNotifier,
+  "compliance-guardian": agentComplianceGuardian,
+  "ops-food": agentOpsFood,
+  "ops-ncc": agentOpsNcc,
+  "ops-beauty": agentOpsBeauty,
+  "ops-healthcare": agentOpsHealthcare,
+  "ops-construction": agentOpsConstruction,
 };
 
 const AGENTS: AgentDef[] = [
