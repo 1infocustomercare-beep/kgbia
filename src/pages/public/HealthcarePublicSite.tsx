@@ -54,7 +54,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/7579341/7579341-uhd_2560_1440_25fps.mp4";
 const GALLERY = [
@@ -73,7 +73,7 @@ const FALLBACK_REVIEWS = [
   { name: "Anna F.", text: "Check-up preventivo completo e dettagliato. Staff gentile e molto professionale.", rating: 5, city: "Firenze", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" },
 ];
 
-export default function HealthcarePublicSite({ company }: Props) {
+export default function HealthcarePublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const name = company.name || "Studio Medico";
   const tagline = company.tagline || "La tua salute, la nostra missione";
@@ -224,6 +224,8 @@ export default function HealthcarePublicSite({ company }: Props) {
 
         <ScrollIndicator />
       </section>
+
+      {afterHero}
 
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-5 relative" style={{ background: BLUE }}>
