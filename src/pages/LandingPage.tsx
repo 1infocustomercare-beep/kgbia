@@ -537,6 +537,10 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
   const totalMonthly = planPrice + addonTotal;
   const savedPerYear = billingCycle === "annual" ? ((plan.price + paidAddonIds.reduce((s, id) => s + (AI_ADDONS.find(x => x.id === id)?.price || 0), 0)) * 12 * 0.2) : 0;
 
+  // Package mode: addon monthly cost on top of setup fee
+  const packageAddonMonthly = paidAddonIds.reduce((sum, id) => sum + Math.round((AI_ADDONS.find(x => x.id === id)?.price || 0) * 0.7), 0);
+  const packageTotalSetup = pkg.price;
+  const packageTotalMonthly = pkg.monthlyFee + packageAddonMonthly;
   const packageInstallment = installments ? Math.round(pkg.price / installments) : null;
 
   const toggleAddon = (id: string) => {
