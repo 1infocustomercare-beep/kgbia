@@ -155,6 +155,12 @@
     animation-play-state: paused;
   }
 
+  /* ═══ NCC PHONES CAROUSEL ═══ */
+  @keyframes ncc-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
   /* ═══ VERTICAL FLOAT STAGGER ═══ */
   @keyframes luxury-float {
     0%, 100% { transform: translateY(0) scale(1); }
