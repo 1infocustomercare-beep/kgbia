@@ -29,11 +29,11 @@ const partnerSchema = z.object({
 type FormData = z.infer<typeof partnerSchema>;
 
 const benefits = [
-  { icon: <Trophy className="w-5 h-5" />, title: "€997 / vendita", desc: "Commissione diretta per ogni contratto chiuso" },
+  { icon: <Trophy className="w-5 h-5" />, title: "€997 / vendita", desc: "Commissione fissa per ogni pacchetto chiuso (€1.997-€7.997)" },
   { icon: <Award className="w-5 h-5" />, title: "Bonus fino a €1.500/mese", desc: "Acceleratori su 3 e 5 vendite mensili" },
   { icon: <CreditCard className="w-5 h-5" />, title: "Payout istantaneo", desc: "Pagamenti automatici via Stripe Connect" },
   { icon: <Rocket className="w-5 h-5" />, title: "Sandbox Demo", desc: "Demo pre-configurata per chiudere vendite" },
-  { icon: <Users className="w-5 h-5" />, title: "Team Leader", desc: "Override €50/vendita dalla 4ª vendita di ogni membro" },
+  { icon: <Users className="w-5 h-5" />, title: "Team Leader", desc: "Override €50/vendita dalla 5ª vendita di ogni membro" },
   { icon: <Gift className="w-5 h-5" />, title: "Zero costi di ingresso", desc: "Nessun investimento iniziale richiesto" },
 ];
 

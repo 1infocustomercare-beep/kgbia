@@ -3,7 +3,7 @@ import {
   TrendingUp, Shield, CheckCircle, Crown,
   BarChart3, Users, Zap, Star, ChefHat,
   Wallet, Bell, Globe, Camera, Lock,
-  CalendarDays, QrCode, MessageSquare
+  CalendarDays, QrCode, MessageSquare, Package, Gem
 } from "lucide-react";
 
 const growthMetrics = [
@@ -31,6 +31,12 @@ const allIncluded = [
   { icon: <BarChart3 className="w-4 h-4" />, name: "Analytics Sorgenti" },
   { icon: <Users className="w-4 h-4" />, name: "Blacklist Clienti" },
   { icon: <Zap className="w-4 h-4" />, name: "Upselling Automatico" },
+];
+
+const packages = [
+  { name: "Digital Start", price: "€1.997", monthly: "poi €49/mese", commission: "2%", icon: <Package className="w-4 h-4" /> },
+  { name: "Growth AI", price: "€4.997", monthly: "poi €29/mese", commission: "1%", icon: <Zap className="w-4 h-4" />, popular: true },
+  { name: "Empire Domination", price: "€7.997", monthly: "€0/mese", commission: "0%", icon: <Gem className="w-4 h-4" />, empire: true },
 ];
 
 const InvestmentSummary = () => {
@@ -100,11 +106,47 @@ const InvestmentSummary = () => {
         </div>
       </div>
 
-      {/* Everything Included */}
+      {/* 3 Package Comparison */}
       <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/5 to-amber-500/5 border border-primary/20 space-y-4">
         <div className="text-center">
-          <h3 className="text-base font-display font-bold text-foreground">Tutto Incluso nella Licenza</h3>
-          <p className="text-[10px] text-muted-foreground mt-1">€2.997 una tantum — Nessun canone mensile</p>
+          <h3 className="text-base font-display font-bold text-foreground">I 3 Pacchetti Empire</h3>
+          <p className="text-[10px] text-muted-foreground mt-1">Rateizzazione: 3 rate TAN 0% o 6 rate TAN 5.9%</p>
+        </div>
+        <div className="space-y-2">
+          {packages.map((p, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 + i * 0.08 }}
+              className={`flex items-center gap-3 p-3 rounded-xl border ${
+                p.empire ? "border-amber-500/30 bg-amber-500/5" : p.popular ? "border-primary/30 bg-primary/5" : "border-border/30 bg-card/50"
+              }`}
+            >
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                p.empire ? "bg-amber-500/15 text-amber-500" : "bg-primary/10 text-primary"
+              }`}>
+                {p.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] font-bold text-foreground">{p.name}</p>
+                <p className="text-[9px] text-muted-foreground">{p.monthly} · {p.commission} fee</p>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className={`text-sm font-display font-bold ${p.empire ? "text-amber-500" : "text-foreground"}`}>{p.price}</p>
+                {p.popular && <p className="text-[8px] text-primary font-bold">PIÙ SCELTO</p>}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Everything Included (Empire Domination) */}
+      <div className="p-5 rounded-2xl bg-gradient-to-br from-amber-500/5 to-primary/5 border border-amber-500/20 space-y-4">
+        <div className="text-center">
+          <h3 className="text-base font-display font-bold text-foreground">Empire Domination — Tutto Incluso</h3>
+          <p className="text-[10px] text-muted-foreground mt-1">€7.997 · €0/mese · 0% commissioni — per sempre</p>
+          <p className="text-[10px] text-amber-500 font-bold mt-1">💰 Solo ~€11/giorno per 24 mesi</p>
         </div>
         <div className="grid grid-cols-2 gap-2">
           {allIncluded.map((item, i) => (
@@ -126,16 +168,16 @@ const InvestmentSummary = () => {
       <div className="p-5 rounded-2xl bg-gradient-to-r from-primary/10 to-amber-500/10 border border-primary/20 text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
           <CheckCircle className="w-4 h-4 text-emerald-400" />
-          <span className="text-sm font-display font-bold text-foreground">Prezzo Licenza: €2.997</span>
+          <span className="text-sm font-display font-bold text-foreground">Da €1.997 a €7.997</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          IVA 22% inclusa • Pagamento unico • Proprietà permanente
+          IVA 22% inclusa • Rateizzazione disponibile • 3 rate TAN 0% o 6 rate TAN 5.9%
         </p>
         <div className="grid grid-cols-3 gap-2 mt-3">
           {[
-            { label: "Zero Canoni", value: "€0/mese" },
-            { label: "Fee Ordini", value: "Solo 2%" },
-            { label: "Aggiornamenti", value: "∞ gratis" },
+            { label: "Empire: Canoni", value: "€0/mese" },
+            { label: "Empire: Fee", value: "0%" },
+            { label: "Garanzia", value: "Risultati" },
           ].map((stat, i) => (
             <div key={i} className="p-2 rounded-lg bg-card/50 border border-border/30 text-center">
               <p className="text-xs font-display font-bold text-primary">{stat.value}</p>
@@ -149,7 +191,7 @@ const InvestmentSummary = () => {
       <div className="p-4 rounded-2xl bg-card border border-border/50 text-center space-y-2">
         <Shield className="w-6 h-6 text-primary mx-auto" />
         <p className="text-sm font-display font-bold text-foreground">
-          "Questa è l'ultima app che comprerai nella tua vita."
+          Risultati Garantiti + 1 Mese Assistenza Gratuita
         </p>
         <p className="text-[10px] text-muted-foreground">
           Nessun vincolo. Nessun rinnovo. Il software è tuo. Per sempre.
