@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, forwardRef, lazy, Suspense } from "react";
+import { useState, useEffect, useRef, forwardRef, lazy, Suspense, useMemo } from "react";
 const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
