@@ -506,7 +506,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     animate={{ rotate: [0, 5, -5, 0] }}
                     transition={{ duration: 4, repeat: Infinity }}
                   >
-                    <Sparkles className="w-8 h-8 text-primary" />
+                    <img src={voiceAgentAvatar} alt="Assistente" className="w-8 h-8 rounded-full object-cover" />
                   </motion.div>
                   <p className="text-xs text-foreground/30 text-center max-w-[200px]">
                     Ciao! Sono ATLAS. Ti guido attraverso Empire mentre scorri la pagina.
