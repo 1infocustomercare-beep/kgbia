@@ -27,6 +27,7 @@ import type { MenuItem } from "@/types/restaurant";
 import { useCart } from "@/context/CartContext";
 import { applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
 import { getBusinessTypeConfig, normalizeBusinessType } from "@/lib/business-type";
+const RestaurantVoiceAgent = lazy(() => import("@/components/restaurant/RestaurantVoiceAgent"));
 
 const RestaurantPage = () => {
   const { slug } = useParams();
