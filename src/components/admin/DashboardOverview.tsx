@@ -26,6 +26,8 @@ const DashboardOverview = ({
   restaurantId, reviews, reservations, menuUrl, onNavigate,
 }: DashboardOverviewProps) => {
   const [buyingTokens, setBuyingTokens] = useState(false);
+  const [showTokenShop, setShowTokenShop] = useState(false);
+  const [buyingPack, setBuyingPack] = useState<string | null>(null);
   const { user } = useAuth();
   const avgRating = reviews.length > 0
     ? (reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviews.length).toFixed(1)
