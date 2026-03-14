@@ -77,15 +77,15 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
       className="inline-flex items-center gap-2.5 mb-5"
       initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
     >
-      <div className="relative flex items-center gap-2 px-4 py-2 rounded-full premium-label overflow-hidden">
-        {/* Scanning beam */}
+      <div className="relative flex items-center gap-2 px-4 py-2 rounded-full premium-label overflow-hidden" style={{ borderLeft: "1px solid hsla(35,45%,50%,0.15)" }}>
+        {/* Scanning beam — gold tint */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(90deg, transparent 30%, hsla(265,80%,70%,0.15) 50%, transparent 70%)" }}
+          style={{ background: "linear-gradient(90deg, transparent 30%, hsla(35,45%,55%,0.12) 50%, transparent 70%)" }}
           animate={{ x: ["-150%", "250%"] }}
           transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
         />
-        {icon || <motion.span className="w-1.5 h-1.5 rounded-full bg-primary" animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />}
+        {icon || <motion.span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />}
         <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90 relative z-10">{text}</span>
       </div>
     </motion.div>
@@ -149,11 +149,11 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     style={{ background: "hsla(265,20%,8%,0.6)", backdropFilter: "blur(8px)" }}
     whileHover={hover ? { y: -5, borderColor: "hsla(265,70%,60%,0.2)", transition: { duration: 0.3 } } : undefined}
   >
-    {/* Top accent line */}
-    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.25), transparent)" }} />
-    {/* Corner accents */}
-    <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-primary/15 rounded-tl-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
-    <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/15 rounded-br-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    {/* Top accent line — gold hint */}
+    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,50%,0.18), hsla(265,70%,60%,0.15), transparent)" }} />
+    {/* Corner accents — gold */}
+    <div className="absolute top-2 left-2 w-3 h-3 border-t border-l rounded-tl-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,50%,0.2)" }} />
+    <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r rounded-br-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,50%,0.2)" }} />
     {/* Scanning beam */}
     {scan && (
       <motion.div
@@ -196,12 +196,12 @@ const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: strin
 /* ═══ Section Divider ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
   <div ref={ref} className="section-connector">
-    <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(265, 70%, 60%, 0.1) 20%, hsla(265, 70%, 60%, 0.25) 50%, hsla(265, 70%, 60%, 0.1) 80%, transparent 100%)" }} />
+    <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(35,45%,50%,0.08) 15%, hsla(265, 70%, 60%, 0.15) 35%, hsla(35,45%,50%,0.2) 50%, hsla(265, 70%, 60%, 0.15) 65%, hsla(35,45%,50%,0.08) 85%, transparent 100%)" }} />
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <motion.div
         className="w-2 h-2 rounded-full"
-        style={{ background: "hsl(265, 70%, 60%)", boxShadow: "0 0 12px hsla(265, 70%, 60%, 0.5), 0 0 30px hsla(280, 50%, 65%, 0.2)" }}
-        animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
+        style={{ background: "linear-gradient(135deg, hsl(35,45%,50%), hsl(265, 70%, 60%))", boxShadow: "0 0 10px hsla(35,45%,50%,0.4), 0 0 24px hsla(265, 70%, 60%, 0.3)" }}
+        animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2, repeat: Infinity }}
       />
     </div>
