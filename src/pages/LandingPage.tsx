@@ -1747,6 +1747,8 @@ const LandingPage = () => {
             <motion.div key={i} variants={fadeUp}
               whileHover={{ scale: 1.03, y: -8 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}>
+              <PremiumCard glow scan delay={i} className="p-5 sm:p-6">
+                <div className="flex items-center justify-between mb-4">
                   <PremiumIcon gradient={s.color} size="md" delay={i * 0.3}>
                     {s.icon}
                   </PremiumIcon>
