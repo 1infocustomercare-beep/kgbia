@@ -13,26 +13,26 @@ const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
 const SECTION_SCRIPTS: Record<string, string> = {
   hero: "Benvenuto in Empire — il sistema operativo che trasforma qualsiasi attività in un business digitale di nuova generazione. Pronto a scoprire come?",
   industries: "Venticinque settori, un'unica piattaforma. Dal ristorante al medico, dall'NCC al beauty — ogni modulo è costruito su misura per il tuo business.",
-  tech: "Sotto il cofano c'è un'architettura neurale di ultima generazione: sicurezza AES-256, intelligenza artificiale predittiva e un motore che lavora per te ventiquattr'ore su ventiquattro.",
-  pain: "Lo sai quanto perdi ogni mese in commissioni e processi manuali? Empire elimina il problema alla radice — il tuo brand, le tue regole, il tuo profitto.",
   services: "Menu digitale, CRM, prenotazioni, fatturazione, marketing automation, agenti IA — tutto incluso, tutto integrato. Zero complessità.",
   process: "Tre step per partire: scegli il tuo settore, personalizza la tua app, e sei online. Il nostro team ti configura tutto in ventiquattr'ore.",
   app: "Guarda la tua app in azione — dashboard in tempo reale, gestione completa, analytics IA. Tutto dal tuo smartphone.",
   calculator: "Fai due conti: con Empire risparmi fino a quindicimila euro l'anno rispetto alle piattaforme tradizionali. Il ROI è immediato.",
   testimonials: "Non devi crederci sulla parola — ascolta chi ha già scelto Empire e ha trasformato il proprio business.",
-  pricing: "Un solo pagamento, nessun canone mensile. Duemilanovecentonovantasette euro e il sistema è tuo per sempre. Solo il due percento sulle transazioni.",
+  pricing: "Un investimento chiaro, scalabile e sostenibile: Empire cresce con te e aumenta il valore della tua azienda mese dopo mese.",
   partner: "Vuoi guadagnare vendendo Empire? Novecentonovantasette euro per ogni vendita chiusa, bonus fino a millecinquecento al mese. Zero rischio, zero investimento.",
+  contact: "Se vuoi, ora possiamo passare all'azione: ti mostro la demo del tuo settore e costruiamo subito la tua versione personalizzata.",
 };
 
-const SECTION_ORDER = ["hero", "industries", "tech", "pain", "services", "process", "app", "calculator", "testimonials", "pricing", "partner"];
+const SECTION_ORDER = ["hero", "industries", "services", "process", "app", "calculator", "testimonials", "pricing", "partner", "contact"];
 
 // ── TTS helper ──
 async function speakText(
   text: string,
   audioRef: React.MutableRefObject<HTMLAudioElement | null>,
   abortRef: React.MutableRefObject<boolean>,
-): Promise<void> {
-  if (abortRef.current) return;
+): Promise<boolean> {
+  if (abortRef.current) return false;
+
   try {
     const resp = await fetch(TTS_URL, {
       method: "POST",
@@ -42,21 +42,24 @@ async function speakText(
       },
       body: JSON.stringify({ text }),
     });
-    if (!resp.ok) throw new Error("TTS failed");
-    if (abortRef.current) return;
-    const { audioContent } = await resp.json();
-    if (abortRef.current) return;
 
-    return new Promise((resolve) => {
+    if (!resp.ok) return false;
+    if (abortRef.current) return false;
+
+    const { audioContent } = await resp.json();
+    if (!audioContent || abortRef.current) return false;
+
+    return await new Promise<boolean>((resolve) => {
       const audio = new Audio(`data:audio/mpeg;base64,${audioContent}`);
       if (audioRef.current) audioRef.current.pause();
       audioRef.current = audio;
-      audio.onended = () => resolve();
-      audio.onerror = () => resolve();
-      audio.play().catch(() => resolve());
+
+      audio.onended = () => resolve(true);
+      audio.onerror = () => resolve(false);
+      audio.play().catch(() => resolve(false));
     });
   } catch {
-    return;
+    return false;
   }
 }
 
@@ -119,7 +122,6 @@ const EmpireVoiceAgent: React.FC = () => {
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [inputText, setInputText] = useState("");
   const [liveTranscript, setLiveTranscript] = useState("");
-  const [pulseIntensity, setPulseIntensity] = useState(0);
   const [currentSection, setCurrentSection] = useState<string>("hero");
   const [narratedSections, setNarratedSections] = useState<Set<string>>(new Set());
   const [autoNarrating, setAutoNarrating] = useState(false);
@@ -132,6 +134,9 @@ const EmpireVoiceAgent: React.FC = () => {
   const voiceEnabledRef = useRef(true);
   const autoNarratingRef = useRef(false);
   const narratedRef = useRef<Set<string>>(new Set());
+  const sectionQueueRef = useRef<string[]>([]);
+  const queueProcessingRef = useRef(false);
+  const narrationAttemptsRef = useRef<Record<string, number>>({});
 
   // Sync refs
   useEffect(() => { messagesRef.current = messages; }, [messages]);
@@ -141,63 +146,132 @@ const EmpireVoiceAgent: React.FC = () => {
   // Auto-scroll chat
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
-  // Pulse animation
+  // ── Intersection Observer — stable tracking of known landing sections ──
   useEffect(() => {
-    if (!isSpeaking || isPaused) { setPulseIntensity(0); return; }
-    const interval = setInterval(() => setPulseIntensity(Math.random() * 0.6 + 0.4), 150);
-    return () => clearInterval(interval);
-  }, [isSpeaking, isPaused]);
+    const observedIds = SECTION_ORDER.filter((id) => !!document.getElementById(id));
+    if (observedIds.length === 0) return;
 
-  // ── Intersection Observer — track visible section ──
-  useEffect(() => {
-    const sectionIds = ["hero", "industries", "services", "process", "app", "calculator", "testimonials", "pricing", "partner"];
-    const observers: IntersectionObserver[] = [];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const mostVisible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
-              setCurrentSection(id);
-            }
-          });
-        },
-        { threshold: [0.3, 0.6] }
-      );
-      obs.observe(el);
-      observers.push(obs);
-    });
+        if (!mostVisible) return;
 
-    // Also detect "tech" and "pain" sections by checking nearby elements
-    const allSections = document.querySelectorAll("section[id]");
-    allSections.forEach((sec) => {
-      const id = sec.getAttribute("id");
-      if (id && !sectionIds.includes(id)) {
-        const obs = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting && entry.intersectionRatio > 0.3 && id) {
-                setCurrentSection(id);
-              }
-            });
-          },
-          { threshold: [0.3] }
-        );
-        obs.observe(sec);
-        observers.push(obs);
+        const sectionId = mostVisible.target.getAttribute("id");
+        if (!sectionId) return;
+
+        setCurrentSection((prev) => (prev === sectionId ? prev : sectionId));
+      },
+      {
+        threshold: [0.25, 0.4, 0.6],
+        rootMargin: "-10% 0px -45% 0px",
       }
+    );
+
+    observedIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
     });
 
-    return () => observers.forEach((o) => o.disconnect());
+    return () => observer.disconnect();
   }, []);
+
+  // ── Follow click navigation (menu links / CTA with #section) ──
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+
+      const anchor = target.closest("a[href^='#']") as HTMLAnchorElement | null;
+      if (!anchor) return;
+
+      const id = anchor.getAttribute("href")?.replace("#", "")?.trim();
+      if (!id || !SECTION_SCRIPTS[id]) return;
+
+      setCurrentSection((prev) => (prev === id ? prev : id));
+
+      if (!autoNarratingRef.current) return;
+
+      narratedRef.current.delete(id);
+      setNarratedSections(new Set(narratedRef.current));
+
+      if (!sectionQueueRef.current.includes(id)) {
+        sectionQueueRef.current.push(id);
+      }
+
+      void processNarrationQueue();
+    };
+
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
+  // ── Queue processor for robust section narration (no freezes) ──
+  const processNarrationQueue = useCallback(async () => {
+    if (queueProcessingRef.current) return;
+    queueProcessingRef.current = true;
+
+    while (sectionQueueRef.current.length > 0) {
+      if (abortRef.current) break;
+
+      const sectionId = sectionQueueRef.current.shift();
+      if (!sectionId) continue;
+
+      const script = SECTION_SCRIPTS[sectionId];
+      if (!script || !voiceEnabledRef.current) continue;
+      if (narratedRef.current.has(sectionId)) continue;
+
+      narrationAttemptsRef.current[sectionId] = (narrationAttemptsRef.current[sectionId] ?? 0) + 1;
+
+      setMessages((prev) => [...prev, { role: "assistant", content: script }]);
+      setIsSpeaking(true);
+      setIsPaused(false);
+      abortRef.current = false;
+
+      const played = await speakText(script, audioRef, abortRef);
+
+      if (played && !abortRef.current) {
+        narrationAttemptsRef.current[sectionId] = 0;
+        narratedRef.current.add(sectionId);
+        setNarratedSections(new Set(narratedRef.current));
+      } else if (!abortRef.current && (narrationAttemptsRef.current[sectionId] ?? 0) < 2) {
+        sectionQueueRef.current.push(sectionId);
+      }
+
+      setIsSpeaking(false);
+    }
+
+    queueProcessingRef.current = false;
+  }, []);
+
+  const enqueueSectionNarration = useCallback((sectionId: string, forceReplay = false) => {
+    if (!SECTION_SCRIPTS[sectionId] || !voiceEnabledRef.current) return;
+
+    if (forceReplay) {
+      narratedRef.current.delete(sectionId);
+      setNarratedSections(new Set(narratedRef.current));
+    }
+
+    if (narratedRef.current.has(sectionId)) return;
+    if (sectionQueueRef.current.includes(sectionId)) return;
+
+    sectionQueueRef.current.push(sectionId);
+    void processNarrationQueue();
+  }, [processNarrationQueue]);
 
   // ── Stop everything ──
   const stopAll = useCallback(() => {
     abortRef.current = true;
+    autoNarratingRef.current = false;
+    sectionQueueRef.current = [];
+    queueProcessingRef.current = false;
+    narrationAttemptsRef.current = {};
+
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null; }
+
     setIsSpeaking(false);
     setIsPaused(false);
     setIsListening(false);
@@ -208,8 +282,9 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── Pause / Resume ──
   const togglePause = useCallback(() => {
     if (!audioRef.current) return;
+
     if (isPaused) {
-      audioRef.current.play();
+      audioRef.current.play().catch(() => undefined);
       setIsPaused(false);
     } else {
       audioRef.current.pause();
@@ -217,54 +292,25 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [isPaused]);
 
-  // ── Narrate a single section (local script, no API call) ──
-  const narrateSection = useCallback(async (sectionId: string) => {
-    const script = SECTION_SCRIPTS[sectionId];
-    if (!script || !voiceEnabledRef.current) return;
-    if (narratedRef.current.has(sectionId)) return;
-
-    narratedRef.current.add(sectionId);
-    setNarratedSections(new Set(narratedRef.current));
-
-    // Add as assistant message
-    setMessages((prev) => [...prev, { role: "assistant", content: script }]);
-
-    // Speak it
-    setIsSpeaking(true);
-    abortRef.current = false;
-    await speakText(script, audioRef, abortRef);
-    if (!abortRef.current) {
-      setIsSpeaking(false);
-    }
-  }, []);
-
   // ── Auto-narrate on section change ──
   useEffect(() => {
-    if (!autoNarratingRef.current) return;
-    if (!currentSection) return;
-    if (narratedRef.current.has(currentSection)) return;
-    if (isSpeaking && !isPaused) return; // wait until current narration finishes
+    if (!autoNarrating) return;
+    if (!currentSection || !SECTION_SCRIPTS[currentSection]) return;
 
-    // Small delay so user settles on the section
-    const timer = setTimeout(() => {
-      if (autoNarratingRef.current && !narratedRef.current.has(currentSection)) {
-        narrateSection(currentSection);
-      }
-    }, 800);
-
-    return () => clearTimeout(timer);
-  }, [currentSection, isSpeaking, isPaused, narrateSection]);
+    enqueueSectionNarration(currentSection);
+  }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
   // ── Auto-start: show button only (chat stays CLOSED) ──
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-      // Auto-narrate hero WITHOUT opening the chat panel
+      autoNarratingRef.current = true;
       setAutoNarrating(true);
-      narrateSection("hero");
+      enqueueSectionNarration("hero", true);
     }, 2500);
+
     return () => clearTimeout(timer);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [enqueueSectionNarration]);
 
   // ── Send user message (chat / voice) ──
   const sendMessage = useCallback(async (text: string) => {
@@ -350,18 +396,18 @@ const EmpireVoiceAgent: React.FC = () => {
       <AnimatePresence>
         {isVisible && (
           <motion.button
-            className={`fixed ${isOpen ? 'bottom-[calc(85vh-1.5rem)] sm:bottom-[610px]' : 'bottom-20 sm:bottom-6'} right-4 z-[201] group`}
+            className="fixed bottom-20 sm:bottom-6 right-4 z-[201] group"
             onClick={toggleOpen}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
           >
             <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg border border-white/10">
               {isOpen ? <X className="w-6 h-6 text-white" /> : <Sparkles className="w-6 h-6 text-white" />}
               {isSpeaking && !isPaused && !isOpen && (
-                <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-background animate-pulse" />
+                <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
               )}
             </div>
           </motion.button>
@@ -384,11 +430,8 @@ const EmpireVoiceAgent: React.FC = () => {
                 <div className="relative">
                   <motion.div
                     className="absolute -inset-1 rounded-full bg-primary/20 blur-sm"
-                    animate={{
-                      opacity: isSpeaking && !isPaused ? pulseIntensity : 0.2,
-                      scale: isSpeaking && !isPaused ? 1 + pulseIntensity * 0.3 : 1,
-                    }}
-                    transition={{ duration: 0.15 }}
+                    animate={isSpeaking && !isPaused ? { opacity: [0.25, 0.45, 0.25], scale: [1, 1.08, 1] } : { opacity: 0.2, scale: 1 }}
+                    transition={{ duration: 1.4, repeat: isSpeaking && !isPaused ? Infinity : 0, ease: "easeInOut" }}
                   />
                   <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-white" />
@@ -396,9 +439,9 @@ const EmpireVoiceAgent: React.FC = () => {
                   <div
                     className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${
                       isPaused ? "bg-amber-400" :
-                      isSpeaking ? "bg-green-400 animate-pulse" :
-                      isListening ? "bg-amber-400 animate-pulse" :
-                      isLoading ? "bg-blue-400 animate-pulse" :
+                      isSpeaking ? "bg-green-400" :
+                      isListening ? "bg-amber-400" :
+                      isLoading ? "bg-blue-400" :
                       autoNarrating ? "bg-green-400" :
                       "bg-primary/60"
                     }`}
@@ -420,8 +463,13 @@ const EmpireVoiceAgent: React.FC = () => {
                 {/* Auto-narration toggle */}
                 <button
                   onClick={() => {
-                    if (autoNarrating) { stopAll(); }
-                    else { setAutoNarrating(true); narrateSection(currentSection); }
+                    if (autoNarrating) {
+                      stopAll();
+                    } else {
+                      autoNarratingRef.current = true;
+                      setAutoNarrating(true);
+                      enqueueSectionNarration(currentSection, true);
+                    }
                   }}
                   className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
                     autoNarrating ? "text-green-400 bg-green-400/10" : "text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05]"
@@ -514,14 +562,18 @@ const EmpireVoiceAgent: React.FC = () => {
             {/* Voice Wave Visualizer */}
             {isSpeaking && !isPaused && (
               <div className="flex items-center justify-center gap-[3px] py-2 px-4">
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="w-[3px] rounded-full bg-primary/50"
-                    animate={{ height: [4, 4 + Math.random() * 20, 4] }}
-                    transition={{ duration: 0.3 + Math.random() * 0.3, repeat: Infinity, delay: i * 0.03 }}
-                  />
-                ))}
+                {Array.from({ length: 20 }).map((_, i) => {
+                  const peak = 8 + ((i * 7) % 14);
+                  const speed = 0.6 + ((i % 4) * 0.12);
+                  return (
+                    <motion.div
+                      key={i}
+                      className="w-[3px] rounded-full bg-primary/50"
+                      animate={{ height: [4, peak, 4] }}
+                      transition={{ duration: speed, repeat: Infinity, delay: i * 0.03, ease: "easeInOut" }}
+                    />
+                  );
+                })}
               </div>
             )}
 
