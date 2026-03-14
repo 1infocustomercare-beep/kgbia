@@ -1588,7 +1588,7 @@ const LandingPage = () => {
                       <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[44px] h-[12px] rounded-full z-30" style={{ background: "hsla(0,0%,5%,1)" }} />
                       <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden" style={{ background: "#0a0a0a" }}>
                         <div className="relative w-full h-[35%]">
-                          <img src={nccHeroBg} alt="NCC Booking" className="w-full h-full object-cover" loading="lazy" />
+                          <img src={nccPremiumCoast} alt="NCC Booking" className="w-full h-full object-cover" loading="lazy" />
                           <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent, #0a0a0a)" }} />
                           <div className="absolute bottom-2 left-2 z-10">
                             <div className="flex items-center gap-1 mb-0.5">
