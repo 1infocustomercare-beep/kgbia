@@ -324,7 +324,8 @@ const EmpireVoiceAgent: React.FC = () => {
     recognition.continuous = false;
     recognitionRef.current = recognition;
 
-    recognition.onresult = (e: SpeechRecognitionEvent) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = (e: any) => {
       let interim = "";
       let final = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
