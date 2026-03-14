@@ -181,6 +181,7 @@ const getTheme = (industry: string): SectorTheme => {
     bgFrom: "#0a0a1a",
     bgTo: "#0d0d0d",
     heroEmoji: "⚡",
+    heroVideo: "https://videos.pexels.com/video-files/3255275/3255275-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Calendar className="w-5 h-5" />, title: "Prenotazioni", desc: "Sistema di booking integrato" },
       { icon: <Users className="w-5 h-5" />, title: "CRM Clienti", desc: "Gestione clientela completa" },
