@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS, type DemoService } from "@/data/demo-industries";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
+import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
 import NCCPublicSite from "@/pages/public/NCCPublicSite";
 import BeautyPublicSite from "@/pages/public/BeautyPublicSite";
 import HealthcarePublicSite from "@/pages/public/HealthcarePublicSite";
@@ -367,6 +368,15 @@ export default function IndustryDemoPage() {
       <>
         <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
         <PremiumTemplate company={demoCompany} />
+        {/* Phone Preview Showcase */}
+        <div className="py-16 px-4" style={{ background: "linear-gradient(180deg, #0a0a0a, #111)" }}>
+          <div className="max-w-4xl mx-auto text-center mb-10">
+            <p className="text-[10px] font-bold tracking-[4px] uppercase mb-2" style={{ color: demoCompany.primary_color || industryConfig.defaultPrimaryColor }}>Anteprima Interfacce</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-white/90">4 Schermate della Tua App</h3>
+            <p className="text-xs text-white/35 mt-2 max-w-md mx-auto">Ecco come apparirà la tua piattaforma personalizzata {industryConfig.label}</p>
+          </div>
+          <IndustryPhoneShowcase industryId={resolvedIndustry} />
+        </div>
         <Suspense fallback={null}>
           <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={demoCompany.primary_color || industryConfig.defaultPrimaryColor} />
         </Suspense>
@@ -848,6 +858,16 @@ export default function IndustryDemoPage() {
             </Button>
           </div>
         </div>
+      </AnimSection>
+
+      {/* ═══════ PHONE SHOWCASE ═══════ */}
+      <AnimSection className="py-16 px-4" style={{ background: `linear-gradient(180deg, ${theme.bgTo}, ${theme.bgFrom})` }}>
+        <div className="max-w-4xl mx-auto text-center mb-10">
+          <p className="text-[10px] font-bold tracking-[4px] uppercase mb-2" style={{ color: theme.accent }}>Preview App</p>
+          <h3 className="text-xl sm:text-2xl font-bold text-white/90">Le Tue 4 Interfacce</h3>
+          <p className="text-xs text-white/35 mt-2">Home · Catalogo · Prenotazioni · Dashboard IA</p>
+        </div>
+        <IndustryPhoneShowcase industryId={resolvedIndustry} />
       </AnimSection>
 
       {/* ═══════ FOOTER ═══════ */}
