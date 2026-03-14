@@ -18,7 +18,7 @@ import {
   Palette, Mail, Car, Scissors, Heart, Store, Dumbbell, Building,
   Calendar, Package, CreditCard, Route, ClipboardCheck, Headphones,
   Layers, Globe, Radio, MonitorSmartphone, Cpu, Fingerprint,
-  ChevronRight, CircleCheck, Minus, Activity, ServerCog, Gauge,
+  ChevronRight, ChevronLeft, Pause, CircleCheck, Minus, Activity, ServerCog, Gauge,
   Workflow, ScanLine, Database, Wifi, Timer, LineChart
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -371,6 +371,8 @@ const LandingPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeIndustry, setActiveIndustry] = useState(0);
   const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
+  const mockupCarouselRef = useRef<HTMLDivElement>(null);
+  const [mockupCarouselPaused, setMockupCarouselPaused] = useState(false);
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -1639,7 +1641,7 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* Auto-scrolling carousel */}
+        {/* Auto-scrolling carousel with controls */}
         {(() => {
           const mockups = [
             { img: mockupCliente, title: "App Cliente", desc: "Prenota servizi, gestisci appuntamenti e ricevi aggiornamenti in tempo reale.", tag: "FRONT-END", sector: "Beauty & Wellness", features: ["Prenotazioni online", "Loyalty & Cashback", "Push Notification", "Chat Diretta"] },
@@ -1649,15 +1651,55 @@ const LandingPage = () => {
             { img: mockupAdmin, title: "Fleet Manager", desc: "Gestione veicoli, autisti, tratte e pricing dinamico con tracking GPS.", tag: "BACK-OFFICE", sector: "NCC Premium", features: ["GPS live tracking", "Pricing dinamico", "Scadenzario docs", "Revenue analytics"] },
             { img: mockupCucina, title: "Agenda Smart", desc: "Calendario appuntamenti, gestione slot e notifiche automatiche per clienti.", tag: "OPERATIONS", sector: "Healthcare & Fitness", features: ["Agenda drag & drop", "Reminder automatici", "Schede paziente", "Report periodici"] },
           ];
+
+          const carouselRef = mockupCarouselRef;
+          const carouselPaused = mockupCarouselPaused;
+          const setCarouselPaused = setMockupCarouselPaused;
+
+          const scrollCarousel = (direction: 'left' | 'right') => {
+            const el = carouselRef.current;
+            if (!el) return;
+            const cardWidth = 215; // card + gap
+            el.scrollBy({ left: direction === 'right' ? cardWidth * 2 : -cardWidth * 2, behavior: 'smooth' });
+          };
+
           return (
             <div className="relative overflow-hidden -mx-5 sm:-mx-6 px-5 sm:px-6">
               {/* Fade edges */}
               <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(var(--background)), transparent)" }} />
               <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(var(--background)), transparent)" }} />
+
+              {/* Controls */}
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <button
+                  onClick={() => scrollCarousel('left')}
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
+                  aria-label="Indietro"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setCarouselPaused(p => !p)}
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
+                  aria-label={carouselPaused ? "Play" : "Pausa"}
+                >
+                  {carouselPaused ? <Play className="w-3.5 h-3.5 ml-0.5" /> : <Pause className="w-3.5 h-3.5" />}
+                </button>
+                <button
+                  onClick={() => scrollCarousel('right')}
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
+                  aria-label="Avanti"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
               
-              <div className="flex gap-5 sm:gap-6"
+              <div
+                ref={carouselRef}
+                className="flex gap-5 sm:gap-6"
                 style={{
-                  animation: "carousel-scroll 35s linear infinite",
+                  animation: `carousel-scroll 22s linear infinite`,
+                  animationPlayState: carouselPaused ? 'paused' : 'running',
                   width: "max-content",
                 }}>
                 {[...mockups, ...mockups].map((mock, i) => {
