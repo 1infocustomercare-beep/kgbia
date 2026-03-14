@@ -533,20 +533,19 @@ export default function IndustryDemoPage() {
       </section>
 
       {/* ═══════ PHONE SHOWCASE — Right after hero ═══════ */}
-      <AnimSection className="py-14 px-4" style={{ background: `linear-gradient(180deg, ${theme.bgFrom}, ${theme.accent}06, ${theme.bgTo})` }}>
-        <div className="max-w-4xl mx-auto text-center mb-8">
-          <motion.p className="text-[10px] font-bold tracking-[4px] uppercase mb-2"
-            style={{ color: theme.accent }}
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Anteprima Interfacce
-          </motion.p>
-          <motion.h3 className="text-xl sm:text-2xl font-bold text-white/90"
+      <AnimSection className="py-10 sm:py-14 px-3 sm:px-4" style={{ background: `linear-gradient(180deg, ${theme.bgFrom}, ${theme.accent}06, ${theme.bgTo})` }}>
+        <div className="max-w-4xl mx-auto text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] mb-3">
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
+            <span className="text-[9px] font-bold tracking-[3px] uppercase text-white/50">8 Interfacce · 8 Stili Diversi</span>
+          </div>
+          <motion.h3 className="text-lg sm:text-2xl font-bold text-white/90"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Le Tue 4 Schermate
+            Ogni Schermata, un Design Unico
           </motion.h3>
-          <motion.p className="text-xs text-white/35 mt-2 max-w-md mx-auto"
+          <motion.p className="text-[10px] sm:text-xs text-white/35 mt-1.5 max-w-lg mx-auto leading-relaxed"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Home · Catalogo · Prenotazioni · Dashboard IA — personalizzato per {industryConfig.label}
+            Dalla vetrina al CRM, ogni sezione ha il suo stile dedicato — colori, layout e contenuti personalizzati per <span className="font-semibold" style={{ color: theme.accent }}>{industryConfig.label}</span>
           </motion.p>
         </div>
         <IndustryPhoneShowcase industryId={resolvedIndustry} />
