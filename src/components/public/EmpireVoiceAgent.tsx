@@ -122,7 +122,6 @@ const EmpireVoiceAgent: React.FC = () => {
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [inputText, setInputText] = useState("");
   const [liveTranscript, setLiveTranscript] = useState("");
-  const [pulseIntensity, setPulseIntensity] = useState(0);
   const [currentSection, setCurrentSection] = useState<string>("hero");
   const [narratedSections, setNarratedSections] = useState<Set<string>>(new Set());
   const [autoNarrating, setAutoNarrating] = useState(false);
@@ -135,6 +134,8 @@ const EmpireVoiceAgent: React.FC = () => {
   const voiceEnabledRef = useRef(true);
   const autoNarratingRef = useRef(false);
   const narratedRef = useRef<Set<string>>(new Set());
+  const sectionQueueRef = useRef<string[]>([]);
+  const queueProcessingRef = useRef(false);
 
   // Sync refs
   useEffect(() => { messagesRef.current = messages; }, [messages]);
@@ -143,13 +144,6 @@ const EmpireVoiceAgent: React.FC = () => {
 
   // Auto-scroll chat
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
-
-  // Pulse animation
-  useEffect(() => {
-    if (!isSpeaking || isPaused) { setPulseIntensity(0); return; }
-    const interval = setInterval(() => setPulseIntensity(Math.random() * 0.6 + 0.4), 150);
-    return () => clearInterval(interval);
-  }, [isSpeaking, isPaused]);
 
   // ── Intersection Observer — track visible section ──
   useEffect(() => {
