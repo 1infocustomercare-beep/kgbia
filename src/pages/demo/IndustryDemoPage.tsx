@@ -884,6 +884,10 @@ export default function IndustryDemoPage() {
           <span className="hidden sm:inline">{demoData.bookingLabel}</span>
         </motion.button>
       </div>
+
+      <Suspense fallback={null}>
+        <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={theme.accent} />
+      </Suspense>
     </div>
   );
 }
