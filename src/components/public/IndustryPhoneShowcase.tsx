@@ -797,6 +797,17 @@ export function getSectorStyle(id: IndustryId): SectorStyle {
     serviceIcon: cfg.emoji,
     analyticsTitle: "Analytics",
     analyticsBars: [30, 55, 42, 78, 62, 90, 48, 72, 85, 40, 65, 58],
+    analyticsMetrics: [
+      { label: "Conversione", val: "12.4%", delta: "+2.1%" },
+      { label: "Clienti attivi", val: "128", delta: "+12" },
+      { label: "Ticket medio", val: "€38", delta: "+€4" },
+      { label: "Retention", val: "85%", delta: "+2%" },
+    ],
+    activityFeed: [
+      { icon: "🔔", text: "Nuovo ordine ricevuto", time: "2m", status: "new" },
+      { icon: "💳", text: "Pagamento €85 confermato", time: "8m", status: "ok" },
+      { icon: "⭐", text: "Recensione 5★ ricevuta", time: "22m", status: "star" },
+    ],
     crmClients: [
       { name: "Marco R.", tag: "VIP", spent: "€1.2K" },
       { name: "Laura B.", tag: "Nuovo", spent: "€340" },
