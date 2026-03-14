@@ -467,10 +467,25 @@ const EmpireVoiceAgent: React.FC = () => {
   }, [currentSection, isLoading, stopAll]);
 
   // ── Voice recognition ──
-  const startListening = useCallback(() => {
-    if (!SpeechRecognition) return;
+  const startListening = useCallback(async () => {
+    if (!SpeechRecognition) {
+      setMode("chat");
+      return;
+    }
+
     stopAll();
     abortRef.current = false;
+
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Per usare la voce su mobile, abilita l'accesso al microfono del browser e riprova." }
+      ]);
+      return;
+    }
+
     const recognition = new SpeechRecognition();
     recognition.lang = "it-IT";
     recognition.interimResults = true;
@@ -490,8 +505,13 @@ const EmpireVoiceAgent: React.FC = () => {
     };
     recognition.onerror = () => { setIsListening(false); setLiveTranscript(""); };
     recognition.onend = () => { setIsListening(false); setLiveTranscript(""); };
-    recognition.start();
-    setIsListening(true);
+
+    try {
+      recognition.start();
+      setIsListening(true);
+    } catch {
+      setIsListening(false);
+    }
   }, [sendMessage, stopAll]);
 
   // ── Toggle panel (does NOT stop audio — voice keeps playing) ──
