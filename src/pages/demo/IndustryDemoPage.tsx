@@ -127,6 +127,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#0d0a1a",
     bgTo: "#0d0d0d",
     heroEmoji: "🛍️",
+    heroVideo: "https://videos.pexels.com/video-files/5585378/5585378-uhd_2560_1440_30fps.mp4",
     platformFeatures: [
       { icon: <Package className="w-5 h-5" />, title: "Catalogo Prodotti", desc: "Gestisci inventario con foto e varianti" },
       { icon: <Store className="w-5 h-5" />, title: "E-Commerce", desc: "Negozio online integrato con spedizioni" },
