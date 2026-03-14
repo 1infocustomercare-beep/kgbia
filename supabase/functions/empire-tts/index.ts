@@ -34,8 +34,8 @@ serve(async (req) => {
       });
     }
 
-    // Laura: Italian feminine voice with premium natural tone
-    const voiceId = "FGY2WhTYpPnrIDTdsKH5";
+    // Viola: Serene, Balanced and Engaging — middle-aged female voice
+    const voiceId = "x89KUxIfWuOxMog310Aq";
 
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
