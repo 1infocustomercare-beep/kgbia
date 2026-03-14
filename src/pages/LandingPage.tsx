@@ -1701,28 +1701,24 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: 2-col compact grid ═══ */}
+        {/* ═══ Mobile: Auto-scrolling carousel ═══ */}
         <div className="sm:hidden">
-          <motion.div className="grid grid-cols-2 gap-2.5"
-            variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-30px" }}>
+          <PremiumCarousel speed="slow" itemWidth={220} showControls={false}>
             {services.map((s, i) => (
-              <motion.div key={i} variants={fadeUp}
-                className="group relative p-3.5 rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur-sm hover:border-primary/20 transition-all duration-500 overflow-hidden">
-                {/* Ambient glow */}
-                <div className={`absolute -top-6 -right-6 w-16 h-16 rounded-full bg-gradient-to-br ${s.color} opacity-[0.06] blur-xl group-hover:opacity-[0.12] transition-opacity duration-500 pointer-events-none`} />
-                <div className="flex items-center gap-2 mb-2.5">
-                  <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>
-                    {s.icon}
-                  </PremiumIcon>
-                  <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
-                </div>
-                <h3 className="font-heading text-[0.7rem] font-semibold text-foreground mb-1 leading-tight">{s.title}</h3>
-                <p className="text-[0.58rem] text-foreground/35 leading-[1.5]">{s.desc}</p>
-                {/* Bottom accent */}
-                <div className="absolute bottom-0 left-3 right-3 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </motion.div>
+              <div key={i} className="w-[220px]">
+                <PremiumCard glow scan delay={i} className="p-4 h-full">
+                  <div className="flex items-center gap-2 mb-3">
+                    <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>
+                      {s.icon}
+                    </PremiumIcon>
+                    <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
+                  </div>
+                  <h3 className="font-heading text-[0.75rem] font-semibold text-foreground mb-1.5 leading-tight">{s.title}</h3>
+                  <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
+                </PremiumCard>
+              </div>
             ))}
-          </motion.div>
+          </PremiumCarousel>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
