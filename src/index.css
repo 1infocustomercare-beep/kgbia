@@ -68,6 +68,22 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
+  /* Force mobile-app layout on all screen sizes */
+  #root {
+    max-width: 430px;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 100dvh;
+    position: relative;
+    box-shadow: 0 0 80px hsla(var(--primary) / 0.08);
+  }
+
+  @media (min-width: 431px) {
+    body {
+      background: hsl(252, 14%, 8%);
+    }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', 'Playfair Display', serif;
   }
