@@ -2213,7 +2213,7 @@ const LandingPage = () => {
             {/* Brand text */}
             <div className="flex flex-col leading-none">
               <motion.span 
-                className="font-heading font-bold text-[0.9rem] tracking-[0.3em] uppercase text-foreground"
+                className="font-heading font-bold text-[0.75rem] sm:text-[0.9rem] tracking-[0.3em] uppercase text-foreground"
                 animate={{ opacity: [0.85, 1, 0.85] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
