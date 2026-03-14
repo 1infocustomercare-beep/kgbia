@@ -899,41 +899,141 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
               </div>
             </motion.div>
 
-            {/* Comparison mini-table */}
-            <motion.div className="max-w-4xl mx-auto mt-6 overflow-x-auto" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-              <div className="min-w-[500px] p-4 rounded-xl border border-border/15 bg-background/30">
-                <p className="text-[0.6rem] font-heading text-foreground/40 tracking-[3px] uppercase mb-3 text-center">Confronto Pacchetti — Perché il pacchetto ti conviene</p>
-                <div className="grid grid-cols-4 gap-2 text-center mb-2">
-                  <div />
+            {/* Comparison Table — Professional */}
+            <motion.div className="max-w-4xl mx-auto mt-8 overflow-x-auto" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <div className="text-center mb-5">
+                <p className="text-[0.6rem] font-heading text-accent/60 tracking-[4px] uppercase mb-1">Analisi dettagliata</p>
+                <h3 className="text-lg sm:text-xl font-heading font-bold text-foreground">Quale pacchetto fa per te?</h3>
+                <p className="text-xs text-foreground/35 mt-1 max-w-md mx-auto">Confronta i piani in un colpo d'occhio. Ogni euro investito nel pacchetto giusto si ripaga da solo.</p>
+              </div>
+
+              <div className="min-w-[540px] rounded-2xl border border-border/15 overflow-hidden">
+                {/* Header row */}
+                <div className="grid grid-cols-4 gap-0">
+                  <div className="p-4 bg-background/50" />
                   {PACKAGE_TIERS.map(p => (
-                    <div key={p.id} className={`text-[0.55rem] font-heading font-bold py-1.5 rounded-lg ${
-                      p.id === selectedPackage ? (p.id === "empire" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary") : "text-foreground/30"
-                    }`}>{p.name}</div>
+                    <div key={p.id}
+                      onClick={() => setSelectedPackage(p.id)}
+                      className={`relative p-4 text-center cursor-pointer transition-all ${
+                        p.id === selectedPackage
+                          ? p.id === "empire"
+                            ? "bg-accent/[0.08]"
+                            : "bg-primary/[0.06]"
+                          : "bg-background/30 hover:bg-foreground/[0.02]"
+                      }`}>
+                      {p.id === "empire" && (
+                        <span className="absolute -top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-b-lg bg-accent/20 text-[0.4rem] font-bold text-accent tracking-[2px] uppercase">Consigliato</span>
+                      )}
+                      <p className={`text-[0.55rem] font-heading font-bold tracking-[2px] uppercase mt-1 ${
+                        p.id === selectedPackage ? (p.id === "empire" ? "text-accent" : "text-primary") : "text-foreground/30"
+                      }`}>{p.name}</p>
+                      <p className={`text-xl font-heading font-bold mt-1 ${
+                        p.id === selectedPackage ? "text-foreground" : "text-foreground/40"
+                      }`}>€{p.price.toLocaleString("it-IT")}</p>
+                      <p className="text-[0.45rem] text-foreground/25 mt-0.5">
+                        oppure €{Math.round(p.price / 6)}/mese ×6
+                      </p>
+                    </div>
                   ))}
                 </div>
+
+                {/* Data rows */}
                 {[
-                  { label: "Investimento", vals: ["€1.997", "€4.997", "€7.997"] },
-                  { label: "In 6 rate", vals: [`€${Math.round(1997/6)}/m`, `€${Math.round(4997/6)}/m`, `€${Math.round(7997/6)}/m`] },
-                  { label: "Canone mensile", vals: ["€49/mese", "€29/mese", "€0 per sempre"] },
-                  { label: "Commissioni", vals: ["2%", "1%", "0%"] },
-                  { label: "Costo reale 24 mesi", vals: [`€${(1997 + 49*24).toLocaleString("it-IT")}`, `€${(4997 + 29*24).toLocaleString("it-IT")}`, "€7.997"] },
-                  { label: "Agenti IA inclusi", vals: ["0", "2", "5"] },
-                  { label: "Mesi inclusi", vals: ["12", "18", "24"] },
-                  { label: "Account Manager", vals: ["—", "—", "✓ Dedicato"] },
-                  { label: "Risparmio totale", vals: ["€883", "€2.203", "€6.403+"] },
+                  { label: "Canone mensile dopo setup", vals: ["€49/mese", "€29/mese", "€0 per sempre"], icon: "💳", isHighlight: [false, false, true] },
+                  { label: "Commissione su ogni vendita", vals: ["2% trattenuto", "1% trattenuto", "0% — tutto tuo"], icon: "📊", isHighlight: [false, false, true] },
+                  { label: "Costo reale in 2 anni", vals: [`€${(1997 + 49*24).toLocaleString("it-IT")}`, `€${(4997 + 29*24).toLocaleString("it-IT")}`, "€7.997 totali"], icon: "🧮", isHighlight: [false, false, true] },
+                  { label: "Piattaforma inclusa", vals: ["12 mesi", "18 mesi", "24 mesi"], icon: "📅", isHighlight: [false, false, true] },
+                  { label: "Agenti IA inclusi", vals: ["Nessuno", "2 a scelta", "5 a scelta"], icon: "🤖", isHighlight: [false, false, true] },
+                  { label: "CRM & Fidelizzazione", vals: ["Base", "Avanzata", "Enterprise"], icon: "👥", isHighlight: [false, true, true] },
+                  { label: "Review Shield™", vals: ["—", "✓ Incluso", "✓ Incluso"], icon: "🛡️", isHighlight: [false, true, true] },
+                  { label: "Analytics predittivi IA", vals: ["—", "—", "✓ Incluso"], icon: "📈", isHighlight: [false, false, true] },
+                  { label: "Account Manager dedicato", vals: ["—", "—", "✓ VIP 7/7"], icon: "🎯", isHighlight: [false, false, true] },
+                  { label: "Multi-sede", vals: ["—", "—", "✓ Incluso"], icon: "🏢", isHighlight: [false, false, true] },
                 ].map((row, ri) => (
-                  <div key={ri} className="grid grid-cols-4 gap-2 py-2 border-t border-border/10 text-[0.55rem] items-center">
-                    <span className="text-foreground/40 font-medium">{row.label}</span>
+                  <div key={ri} className={`grid grid-cols-4 gap-0 ${ri % 2 === 0 ? "bg-foreground/[0.01]" : "bg-background/20"}`}>
+                    <div className="p-3 flex items-center gap-2 border-t border-border/10">
+                      <span className="text-xs">{row.icon}</span>
+                      <span className="text-[0.6rem] text-foreground/50 font-medium">{row.label}</span>
+                    </div>
                     {row.vals.map((v, vi) => (
-                      <span key={vi} className={`text-center font-semibold ${
-                        vi === 2 && (v.includes("0%") || v.includes("€0") || v.includes("€6.403"))
-                          ? "text-accent font-bold"
-                          : vi === PACKAGE_TIERS.findIndex(p => p.id === selectedPackage) ? "text-foreground" : "text-foreground/30"
-                      }`}>{v}</span>
+                      <div key={vi} className={`p-3 text-center border-t border-border/10 transition-all ${
+                        vi === PACKAGE_TIERS.findIndex(p => p.id === selectedPackage) ? "bg-primary/[0.03]" : ""
+                      } ${PACKAGE_TIERS[vi].id === "empire" ? "bg-accent/[0.02]" : ""}`}>
+                        <span className={`text-[0.6rem] font-semibold ${
+                          row.isHighlight[vi]
+                            ? vi === 2 ? "text-accent font-bold" : "text-primary"
+                            : v === "—" ? "text-foreground/15" : "text-foreground/45"
+                        }`}>{v}</span>
+                      </div>
                     ))}
                   </div>
                 ))}
+
+                {/* Savings footer row */}
+                <div className="grid grid-cols-4 gap-0 border-t-2 border-accent/15">
+                  <div className="p-4 flex items-center">
+                    <span className="text-[0.6rem] font-heading font-bold text-accent/70 tracking-[1px] uppercase">Risparmio totale</span>
+                  </div>
+                  {[
+                    { save: "€883", sub: "vs mensile" },
+                    { save: "€2.203", sub: "vs mensile" },
+                    { save: "€6.403+", sub: "commissioni incluse" },
+                  ].map((s, si) => (
+                    <div key={si} className={`p-4 text-center ${si === 2 ? "bg-accent/[0.06]" : ""}`}>
+                      <p className={`text-sm font-heading font-bold ${si === 2 ? "text-accent" : "text-foreground/50"}`}>{s.save}</p>
+                      <p className="text-[0.4rem] text-foreground/25 mt-0.5">{s.sub}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Bottom CTA row */}
+                <div className="grid grid-cols-4 gap-0 border-t border-border/10">
+                  <div className="p-3" />
+                  {PACKAGE_TIERS.map(p => (
+                    <div key={p.id} className="p-3 text-center">
+                      <motion.button
+                        onClick={() => { setSelectedPackage(p.id); navigate("/admin"); }}
+                        className={`w-full px-3 py-2 rounded-lg text-[0.55rem] font-heading font-bold tracking-wider uppercase transition-all ${
+                          p.id === "empire"
+                            ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black"
+                            : p.id === selectedPackage
+                              ? "bg-vibrant-gradient text-primary-foreground"
+                              : "bg-foreground/[0.05] text-foreground/40 hover:bg-foreground/[0.08]"
+                        }`}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}>
+                        {p.id === "empire" ? "Scelgo Empire →" : `Scelgo ${p.name}`}
+                      </motion.button>
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              {/* Scenario di esempio persuasivo */}
+              <motion.div className="mt-5 p-4 rounded-xl border border-accent/10 bg-accent/[0.02]"
+                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+                <p className="text-[0.6rem] font-heading font-bold text-accent/70 tracking-[2px] uppercase text-center mb-2">📊 Esempio reale: ristorante con €8.000/mese di ordini online</p>
+                <div className="grid grid-cols-3 gap-3 text-center">
+                  <div>
+                    <p className="text-[0.5rem] text-foreground/30 font-medium">Digital Start</p>
+                    <p className="text-xs font-bold text-foreground/50">€160/mese in commissioni</p>
+                    <p className="text-[0.45rem] text-foreground/25">+€49 canone = €209/mese di costi</p>
+                  </div>
+                  <div>
+                    <p className="text-[0.5rem] text-foreground/30 font-medium">Growth AI</p>
+                    <p className="text-xs font-bold text-foreground/50">€80/mese in commissioni</p>
+                    <p className="text-[0.45rem] text-foreground/25">+€29 canone = €109/mese di costi</p>
+                  </div>
+                  <div className="rounded-lg bg-accent/[0.06] p-2 -m-1">
+                    <p className="text-[0.5rem] text-accent font-bold">Empire Domination</p>
+                    <p className="text-xs font-bold text-accent">€0/mese di costi</p>
+                    <p className="text-[0.45rem] text-accent/60 font-semibold">Zero commissioni · Zero canone</p>
+                  </div>
+                </div>
+                <p className="text-[0.5rem] text-accent/60 text-center mt-3 font-semibold">
+                  Con Empire risparmi fino a <strong className="text-accent">€2.508/anno</strong> solo di commissioni e canoni. Il pacchetto si ripaga in meno di 4 mesi.
+                </p>
+              </motion.div>
             </motion.div>
           </motion.div>
         )}
