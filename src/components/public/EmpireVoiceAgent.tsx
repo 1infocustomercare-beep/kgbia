@@ -838,12 +838,14 @@ const EmpireVoiceAgent: React.FC = () => {
                 <div>
                   <h3 className="text-sm font-bold text-foreground">Laura</h3>
                   <p className="text-[0.55rem] text-foreground/40 tracking-wider uppercase">
-                    {isPaused ? "⏸ In pausa" :
-                     isSpeaking ? "🔊 Sta parlando..." :
-                     isListening ? "🎙️ Ti ascolta..." :
-                     isLoading ? "💭 Sta pensando..." :
-                     autoNarrating ? `📍 ${currentSection}` :
-                     "Empire AI Agent"}
+                    {voiceMode === "elevenlabs" && conversation.status === "connected"
+                      ? conversation.isSpeaking ? "🔊 Conversazione attiva" : "🎙️ Ti ascolta..."
+                      : isPaused ? "⏸ In pausa"
+                      : isSpeaking ? "🔊 Sta parlando..."
+                      : isListening ? "🎙️ Ti ascolta..."
+                      : isLoading ? "💭 Sta pensando..."
+                      : autoNarrating ? `📍 ${currentSection}`
+                      : "Empire AI Agent"}
                   </p>
                 </div>
               </div>
