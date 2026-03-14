@@ -105,7 +105,7 @@ export const INDUSTRY_CONFIGS: Record<IndustryId, IndustryConfig> = {
     emoji: "🚗",
     description: "Noleggio con conducente, transfer, limousine service",
     icon: "Car",
-    color: "210 80% 50%",
+    color: "43 55% 54%",
     terminology: {
       company: "Azienda NCC", companies: "Aziende NCC",
       customer: "Passeggero", customers: "Passeggeri",
@@ -123,7 +123,7 @@ export const INDUSTRY_CONFIGS: Record<IndustryId, IndustryConfig> = {
       { id: "reviews", label: "Recensioni", icon: "Star", path: "/reviews", enabled: true },
     ],
     features: ["fleet_management", "route_planning", "booking_system", "driver_assignment", "gps_tracking"],
-    defaultPrimaryColor: "#2563EB",
+    defaultPrimaryColor: "#C9A84C",
   },
   beauty: {
     id: "beauty",
