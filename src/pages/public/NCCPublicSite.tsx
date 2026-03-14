@@ -186,12 +186,12 @@ function TiltCard({ children, className = "", style }: { children: React.ReactNo
 
 /* ── Fleet Card Data (fallbacks) ── */
 const FALLBACK_FLEET = [
-  { id: "fb-1", name: "Mercedes E-Class o similare", category: "Berlina", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 80, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Acqua"], image_url: "https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=600&h=400&fit=crop" },
-  { id: "fb-2", name: "Mercedes V-Class o similare", category: "Minivan", capacity: 7, min_pax: 1, max_pax: 7, luggage_capacity: 7, base_price: 120, is_popular: true, features: ["Pelle", "Clima", "WiFi", "TV", "Acqua"], image_url: "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=600&h=400&fit=crop" },
-  { id: "fb-3", name: "Bus Gran Turismo", category: "Pullman", capacity: 50, min_pax: 20, max_pax: 50, luggage_capacity: 50, base_price: 350, is_popular: false, features: ["Clima", "WiFi", "TV", "WC", "Bagagliaio"], image_url: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop" },
-  { id: "fb-4", name: "BMW X5 o similare", category: "SUV Premium", capacity: 4, min_pax: 1, max_pax: 4, luggage_capacity: 4, base_price: 100, is_popular: false, features: ["Pelle", "Clima", "WiFi", "4x4", "Acqua"], image_url: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&h=400&fit=crop" },
-  { id: "fb-5", name: "Mercedes S-Class o similare", category: "Sedan Luxury", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 150, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Massaggio", "Champagne"], image_url: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&h=400&fit=crop" },
-  { id: "fb-6", name: "Mercedes Sprinter o similare", category: "Minibus", capacity: 16, min_pax: 8, max_pax: 16, luggage_capacity: 16, base_price: 200, is_popular: false, features: ["Clima", "WiFi", "USB", "Bagagliaio", "Acqua"], image_url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&h=400&fit=crop" },
+  { id: "fb-1", name: "Mercedes E-Class o similare", category: "Berlina", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 80, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Acqua"], image_url: nccFleetEclass },
+  { id: "fb-2", name: "Mercedes V-Class o similare", category: "Minivan", capacity: 7, min_pax: 1, max_pax: 7, luggage_capacity: 7, base_price: 120, is_popular: true, features: ["Pelle", "Clima", "WiFi", "TV", "Acqua"], image_url: nccFleetShowcase },
+  { id: "fb-3", name: "Bus Gran Turismo", category: "Pullman", capacity: 50, min_pax: 20, max_pax: 50, luggage_capacity: 50, base_price: 350, is_popular: false, features: ["Clima", "WiFi", "TV", "WC", "Bagagliaio"], image_url: nccFleetBus },
+  { id: "fb-4", name: "BMW X5 o similare", category: "SUV Premium", capacity: 4, min_pax: 1, max_pax: 4, luggage_capacity: 4, base_price: 100, is_popular: false, features: ["Pelle", "Clima", "WiFi", "4x4", "Acqua"], image_url: nccFleetSuv },
+  { id: "fb-5", name: "Mercedes S-Class o similare", category: "Sedan Luxury", capacity: 3, min_pax: 1, max_pax: 3, luggage_capacity: 3, base_price: 150, is_popular: false, features: ["Pelle", "Clima", "WiFi", "Massaggio", "Champagne"], image_url: nccFleetSclass },
+  { id: "fb-6", name: "Mercedes Sprinter o similare", category: "Minibus", capacity: 16, min_pax: 8, max_pax: 16, luggage_capacity: 16, base_price: 200, is_popular: false, features: ["Clima", "WiFi", "USB", "Bagagliaio", "Acqua"], image_url: nccFleetSprinter },
 ];
 
 const FALLBACK_REVIEWS = [
