@@ -411,6 +411,7 @@ const SuperAdminDashboard = () => {
     { id: "overview", label: "Overview", icon: <BarChart3 className="w-5 h-5" /> },
     { id: "tenants", label: "Tenant", icon: <Store className="w-5 h-5" /> },
     { id: "payments", label: "Pagamenti", icon: <CreditCard className="w-5 h-5" /> },
+    { id: "subscriptions" as SuperTab, label: "Abbonamenti", icon: <Calendar className="w-5 h-5" /> },
     { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-5 h-5" /> },
     { id: "billing", label: "Fatture", icon: <DollarSign className="w-5 h-5" /> },
     { id: "mary", label: "AI-Mary", icon: <Bot className="w-5 h-5" /> },
