@@ -13,26 +13,26 @@ const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
 const SECTION_SCRIPTS: Record<string, string> = {
   hero: "Benvenuto in Empire — il sistema operativo che trasforma qualsiasi attività in un business digitale di nuova generazione. Pronto a scoprire come?",
   industries: "Venticinque settori, un'unica piattaforma. Dal ristorante al medico, dall'NCC al beauty — ogni modulo è costruito su misura per il tuo business.",
-  tech: "Sotto il cofano c'è un'architettura neurale di ultima generazione: sicurezza AES-256, intelligenza artificiale predittiva e un motore che lavora per te ventiquattr'ore su ventiquattro.",
-  pain: "Lo sai quanto perdi ogni mese in commissioni e processi manuali? Empire elimina il problema alla radice — il tuo brand, le tue regole, il tuo profitto.",
   services: "Menu digitale, CRM, prenotazioni, fatturazione, marketing automation, agenti IA — tutto incluso, tutto integrato. Zero complessità.",
   process: "Tre step per partire: scegli il tuo settore, personalizza la tua app, e sei online. Il nostro team ti configura tutto in ventiquattr'ore.",
   app: "Guarda la tua app in azione — dashboard in tempo reale, gestione completa, analytics IA. Tutto dal tuo smartphone.",
   calculator: "Fai due conti: con Empire risparmi fino a quindicimila euro l'anno rispetto alle piattaforme tradizionali. Il ROI è immediato.",
   testimonials: "Non devi crederci sulla parola — ascolta chi ha già scelto Empire e ha trasformato il proprio business.",
-  pricing: "Un solo pagamento, nessun canone mensile. Duemilanovecentonovantasette euro e il sistema è tuo per sempre. Solo il due percento sulle transazioni.",
+  pricing: "Un investimento chiaro, scalabile e sostenibile: Empire cresce con te e aumenta il valore della tua azienda mese dopo mese.",
   partner: "Vuoi guadagnare vendendo Empire? Novecentonovantasette euro per ogni vendita chiusa, bonus fino a millecinquecento al mese. Zero rischio, zero investimento.",
+  contact: "Se vuoi, ora possiamo passare all'azione: ti mostro la demo del tuo settore e costruiamo subito la tua versione personalizzata.",
 };
 
-const SECTION_ORDER = ["hero", "industries", "tech", "pain", "services", "process", "app", "calculator", "testimonials", "pricing", "partner"];
+const SECTION_ORDER = ["hero", "industries", "services", "process", "app", "calculator", "testimonials", "pricing", "partner", "contact"];
 
 // ── TTS helper ──
 async function speakText(
   text: string,
   audioRef: React.MutableRefObject<HTMLAudioElement | null>,
   abortRef: React.MutableRefObject<boolean>,
-): Promise<void> {
-  if (abortRef.current) return;
+): Promise<boolean> {
+  if (abortRef.current) return false;
+
   try {
     const resp = await fetch(TTS_URL, {
       method: "POST",
@@ -42,21 +42,24 @@ async function speakText(
       },
       body: JSON.stringify({ text }),
     });
-    if (!resp.ok) throw new Error("TTS failed");
-    if (abortRef.current) return;
-    const { audioContent } = await resp.json();
-    if (abortRef.current) return;
 
-    return new Promise((resolve) => {
+    if (!resp.ok) return false;
+    if (abortRef.current) return false;
+
+    const { audioContent } = await resp.json();
+    if (!audioContent || abortRef.current) return false;
+
+    return await new Promise<boolean>((resolve) => {
       const audio = new Audio(`data:audio/mpeg;base64,${audioContent}`);
       if (audioRef.current) audioRef.current.pause();
       audioRef.current = audio;
-      audio.onended = () => resolve();
-      audio.onerror = () => resolve();
-      audio.play().catch(() => resolve());
+
+      audio.onended = () => resolve(true);
+      audio.onerror = () => resolve(false);
+      audio.play().catch(() => resolve(false));
     });
   } catch {
-    return;
+    return false;
   }
 }
 
