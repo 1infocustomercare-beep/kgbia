@@ -2486,94 +2486,9 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          PRICING
+          PRICING — Interactive Configurator
          ═══════════════════════════════════════════ */}
-      <Section id="pricing">
-        <div className="text-center mb-12">
-          <SectionLabel text="Investimento" icon={<Gem className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Un Solo Pagamento,<br /><span className="text-shimmer">Valore Per Sempre</span>
-          </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[440px] mx-auto leading-[1.7] text-sm"
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Niente canoni mensili. Niente vincoli. Il tuo asset digitale di proprietà.
-          </motion.p>
-        </div>
-
-        <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto"
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {/* Main plan */}
-          <motion.div className="relative p-7 sm:p-9 rounded-2xl overflow-hidden border border-primary/20 bg-gradient-to-b from-primary/[0.06] via-deep-black/60 to-background"
-            variants={fadeScale} whileHover={{ y: -4 }}>
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
-            <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-vibrant-gradient text-[0.55rem] font-bold text-primary-foreground tracking-[2px] font-heading uppercase">Più Scelto</div>
-            <span className="text-[0.6rem] font-heading font-semibold text-primary/70 tracking-[3px] uppercase">Pagamento Unico</span>
-            <p className="text-5xl sm:text-6xl font-heading font-bold text-foreground mt-3">€2.997</p>
-            <p className="text-[0.65rem] text-foreground/35 mt-1.5">IVA 22% inclusa · Una volta sola</p>
-            <ul className="mt-7 space-y-3 mb-7">
-              {[
-                "Asset Digitale di Tua Proprietà",
-                "App White Label completa",
-                "AI Engine — catalogo in 60s",
-                "25+ settori con moduli dedicati",
-                "CRM, Loyalty & Push Notification",
-                "Analytics & Fatturazione",
-                "Review Shield™",
-                "Sicurezza AES-256 & GDPR",
-                "Aggiornamenti settimanali inclusi",
-                "Assistenza dedicata 7/7 a vita",
-                "Zero canoni mensili per sempre",
-              ].map((f, i) => (
-                <li key={i} className="flex items-center gap-3 text-xs sm:text-sm text-foreground/50">
-                  <div className="w-5 h-5 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Check className="w-3 h-3 text-primary" />
-                  </div>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <motion.button onClick={() => navigate("/admin")}
-              className="w-full py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase"
-              whileHover={{ scale: 1.02, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Inizia il Tuo Impero
-            </motion.button>
-            <p className="mt-3 text-[0.6rem] text-center text-foreground/25">Dopo: €0/mese · Solo 2% sulle transazioni</p>
-          </motion.div>
-
-          {/* Installment plan */}
-          <motion.div className="relative p-7 sm:p-9 rounded-2xl glow-card"
-            variants={fadeScale} whileHover={{ y: -4 }}>
-            <span className="text-[0.6rem] font-heading font-semibold text-foreground/35 tracking-[3px] uppercase">3 Rate Comode</span>
-            <p className="text-4xl sm:text-5xl font-heading font-bold text-foreground mt-3">€1.099<span className="text-sm text-foreground/35 font-normal">/mese</span></p>
-            <p className="text-[0.65rem] text-foreground/35 mt-1.5">Totale: €3.297 · IVA inclusa</p>
-            <ul className="mt-7 space-y-3 mb-7">
-              {["Tutte le funzionalità incluse", "Massima flessibilità", "Attivazione immediata", "Cancella quando vuoi"].map((f, i) => (
-                <li key={i} className="flex items-center gap-3 text-xs sm:text-sm text-foreground/40">
-                  <div className="w-5 h-5 rounded-lg bg-foreground/[0.05] flex items-center justify-center flex-shrink-0">
-                    <Check className="w-3 h-3 text-foreground/35" />
-                  </div>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <motion.button onClick={() => navigate("/admin")}
-              className="w-full py-4 rounded-full border border-primary/15 text-primary font-bold text-sm font-heading tracking-wider uppercase hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Scegli 3 Rate
-            </motion.button>
-          </motion.div>
-        </motion.div>
-
-        <motion.p className="text-center mt-7 text-[0.65rem] text-foreground/25 max-w-lg mx-auto"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-          Dopo l'attivazione: €0/mese · Solo <span className="text-primary font-bold">2%</span> sulle transazioni per infrastruttura, IA e aggiornamenti continui.
-        </motion.p>
-      </Section>
+      <PricingConfigurator navigate={navigate} />
 
       <SectionDivider />
 
