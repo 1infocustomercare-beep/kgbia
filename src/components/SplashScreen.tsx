@@ -68,7 +68,7 @@ function NeuralMeshBg() {
             {/* Glow */}
             <motion.circle
               cx={node.x} cy={node.y} r={node.size ? 3 : 1.8}
-              fill="hsla(265,85%,65%,0.06)"
+              fill="hsla(265,85%,65%,0.15)"
               initial={{ scale: 0 }}
               animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
               transition={{ duration: 3, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
