@@ -122,6 +122,17 @@ const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
     bookingFields: ["Nome", "Servizio", "Data", "Ora"],
     heroSubtext: "Beauty & Wellness",
     serviceIcon: "💅",
+    analyticsMetrics: [
+      { label: "Tasso prenotazione", val: "78%", delta: "+4.2%" },
+      { label: "Clienti fidelizzati", val: "156", delta: "+23" },
+      { label: "Ticket medio", val: "€62", delta: "+€8" },
+      { label: "No-show rate", val: "3.2%", delta: "-1.1%" },
+    ],
+    activityFeed: [
+      { icon: "💇", text: "Appuntamento Giulia M.", time: "2m", status: "new" },
+      { icon: "💳", text: "Pagamento €75 Colore+Piega", time: "8m", status: "ok" },
+      { icon: "⭐", text: "Review 5★ da Valentina", time: "35m", status: "star" },
+    ],
     analyticsTitle: "Performance Servizi",
     analyticsBars: [35, 68, 52, 85, 40, 78, 62, 90, 45, 72, 58, 82],
     crmClients: [
