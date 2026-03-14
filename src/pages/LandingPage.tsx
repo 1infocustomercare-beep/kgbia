@@ -1067,7 +1067,10 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         </motion.div>
                       )}
                       {packageTotalMonthly === 0 && pkg.monthlyFee === 0 && (
-                        <p className="text-[0.6rem] text-accent font-bold mt-1.5">€0/mese — Zero costi ricorrenti!</p>
+                        <div className="mt-1.5">
+                          <p className="text-[0.6rem] text-accent font-bold">€0/mese — Zero costi ricorrenti!</p>
+                          <p className="text-[0.45rem] text-accent/50 mt-0.5">🏆 Pacchetto completo: tutto incluso, niente di nascosto</p>
+                        </div>
                       )}
 
                       {/* Tags */}
