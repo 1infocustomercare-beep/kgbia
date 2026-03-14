@@ -531,7 +531,26 @@ export default function IndustryDemoPage() {
         </div>
       </section>
 
-      {/* ═══════ FEATURES STRIP ═══════ */}
+      {/* ═══════ PHONE SHOWCASE — Right after hero ═══════ */}
+      <AnimSection className="py-14 px-4" style={{ background: `linear-gradient(180deg, ${theme.bgFrom}, ${theme.accent}06, ${theme.bgTo})` }}>
+        <div className="max-w-4xl mx-auto text-center mb-8">
+          <motion.p className="text-[10px] font-bold tracking-[4px] uppercase mb-2"
+            style={{ color: theme.accent }}
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Anteprima Interfacce
+          </motion.p>
+          <motion.h3 className="text-xl sm:text-2xl font-bold text-white/90"
+            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Le Tue 4 Schermate
+          </motion.h3>
+          <motion.p className="text-xs text-white/35 mt-2 max-w-md mx-auto"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Home · Catalogo · Prenotazioni · Dashboard IA — personalizzato per {industryConfig.label}
+          </motion.p>
+        </div>
+        <IndustryPhoneShowcase industryId={resolvedIndustry} />
+      </AnimSection>
+
       <AnimSection className="border-y border-white/5" style={{ background: `linear-gradient(180deg, ${theme.accent}08, transparent)` } as any}>
         <div className="max-w-5xl mx-auto py-10 px-4 grid grid-cols-1 sm:grid-cols-3 gap-6">
           {demoData.features.map((f, i) => {
