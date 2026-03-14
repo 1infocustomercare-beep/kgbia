@@ -137,9 +137,9 @@ export function AIAgentsShowcase() {
             </linearGradient>
             <linearGradient id="dna-s2" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0" />
-              <stop offset="30%" stopColor="hsl(var(--accent))" stopOpacity="0.15" />
-              <stop offset="50%" stopColor="hsl(var(--accent))" stopOpacity="0.25" />
-              <stop offset="70%" stopColor="hsl(var(--accent))" stopOpacity="0.15" />
+              <stop offset="20%" stopColor="hsl(var(--accent))" stopOpacity="0.3" />
+              <stop offset="50%" stopColor="hsl(var(--accent))" stopOpacity="0.45" />
+              <stop offset="80%" stopColor="hsl(var(--accent))" stopOpacity="0.3" />
               <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="dna-rung" x1="0%" y1="0%" x2="100%" y2="0%">
