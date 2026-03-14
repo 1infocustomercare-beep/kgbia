@@ -356,9 +356,9 @@
 
   /* ═══ COUNTER CARD ═══ */
   .counter-card {
-    background: hsla(260, 18%, 8%, 0.6);
-    backdrop-filter: blur(20px);
-    border: 1px solid hsla(250, 20%, 96%, 0.06);
+    background: linear-gradient(145deg, hsla(260, 16%, 18%, 0.65), hsla(260, 14%, 14%, 0.55));
+    backdrop-filter: blur(20px) saturate(1.3);
+    border: 1px solid hsla(265, 50%, 60%, 0.1);
     position: relative;
     overflow: hidden;
   }
@@ -367,7 +367,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, hsla(265, 70%, 60%, 0.04) 0%, transparent 50%);
+    background: linear-gradient(135deg, hsla(265, 70%, 65%, 0.05) 0%, transparent 50%);
     pointer-events: none;
   }
 
