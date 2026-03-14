@@ -977,43 +977,86 @@ const EmpireVoiceAgent: React.FC = () => {
             <div className="p-3 border-t border-foreground/[0.06]">
               {mode === "voice" ? (
                 <div className="flex items-center justify-center gap-3">
-                  {/* Pause / Resume */}
-                  {isSpeaking && (
-                    <button
-                      onClick={togglePause}
-                      className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[0.6rem] font-bold tracking-wider uppercase transition-all ${
-                        isPaused
-                          ? "bg-green-500/10 text-green-400 hover:bg-green-500/15"
-                          : "bg-amber-500/10 text-amber-400 hover:bg-amber-500/15"
-                      }`}
-                    >
-                      {isPaused ? <><Play className="w-3.5 h-3.5" /> Riprendi</> : <><Pause className="w-3.5 h-3.5" /> Pausa</>}
-                    </button>
-                  )}
+                  {/* ElevenLabs ConvAI Mode */}
+                  {voiceMode === "elevenlabs" && conversation.status === "connected" ? (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <motion.div
+                          className="w-2.5 h-2.5 rounded-full bg-emerald-400"
+                          animate={{ opacity: [0.4, 1, 0.4] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        />
+                        <span className="text-[0.6rem] text-foreground/50 uppercase tracking-wider font-medium">
+                          {conversation.isSpeaking ? "🔊 Laura parla..." : "🎙️ Ti ascolta..."}
+                        </span>
+                      </div>
+                      <button
+                        onClick={stopElevenlabsConversation}
+                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-destructive/10 text-destructive text-[0.6rem] font-bold tracking-wider uppercase hover:bg-destructive/20 transition-all"
+                      >
+                        <PhoneOff className="w-3.5 h-3.5" /> Chiudi
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      {/* Pause / Resume */}
+                      {isSpeaking && (
+                        <button
+                          onClick={togglePause}
+                          className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[0.6rem] font-bold tracking-wider uppercase transition-all ${
+                            isPaused
+                              ? "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15"
+                              : "bg-amber-500/10 text-amber-400 hover:bg-amber-500/15"
+                          }`}
+                        >
+                          {isPaused ? <><Play className="w-3.5 h-3.5" /> Riprendi</> : <><Pause className="w-3.5 h-3.5" /> Pausa</>}
+                        </button>
+                      )}
 
-                  {/* Mic button */}
-                  {!isSpeaking && (
-                    <button
-                      onClick={isListening ? stopAll : startListening}
-                      disabled={isLoading || !SpeechRecognition}
-                      className={`w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation ${
-                        isListening
-                          ? "bg-red-500/20 border-2 border-red-400 text-red-400"
-                          : "bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30"
-                      } disabled:opacity-30`}
-                    >
-                      {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-                    </button>
-                  )}
+                      {/* ElevenLabs ConvAI button (primary) */}
+                      {!isSpeaking && elevenlabsAvailable && (
+                        <button
+                          onClick={startElevenlabsConversation}
+                          disabled={elevenlabsConnecting || isLoading}
+                          className="w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30 disabled:opacity-30"
+                          title="Conversazione vocale IA"
+                        >
+                          {elevenlabsConnecting ? (
+                            <motion.div className="w-5 h-5 border-2 border-white/60 border-t-white rounded-full" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+                          ) : (
+                            <Phone className="w-5 h-5" />
+                          )}
+                        </button>
+                      )}
 
-                  {/* Stop */}
-                  {isSpeaking && (
-                    <button
-                      onClick={stopAll}
-                      className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-foreground/[0.05] text-foreground/50 text-[0.6rem] font-bold tracking-wider uppercase hover:bg-foreground/[0.08] transition-all"
-                    >
-                      <Square className="w-3.5 h-3.5" /> Stop
-                    </button>
+                      {/* Legacy Mic button (fallback or secondary) */}
+                      {!isSpeaking && (
+                        <button
+                          onClick={isListening ? stopAll : startListening}
+                          disabled={isLoading || !SpeechRecognition}
+                          className={`${elevenlabsAvailable ? "w-10 h-10" : "w-14 h-14"} rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation ${
+                            isListening
+                              ? "bg-destructive/20 border-2 border-destructive text-destructive"
+                              : elevenlabsAvailable
+                                ? "bg-secondary text-foreground/60 hover:bg-secondary/80"
+                                : "bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30"
+                          } disabled:opacity-30`}
+                          title={elevenlabsAvailable ? "Domanda singola" : "Parla"}
+                        >
+                          {isListening ? <MicOff className="w-4 h-4" /> : <Mic className={elevenlabsAvailable ? "w-4 h-4" : "w-5 h-5"} />}
+                        </button>
+                      )}
+
+                      {/* Stop */}
+                      {isSpeaking && (
+                        <button
+                          onClick={stopAll}
+                          className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-foreground/[0.05] text-foreground/50 text-[0.6rem] font-bold tracking-wider uppercase hover:bg-foreground/[0.08] transition-all"
+                        >
+                          <Square className="w-3.5 h-3.5" /> Stop
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               ) : (
