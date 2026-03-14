@@ -410,11 +410,8 @@ const EmpireVoiceAgent: React.FC = () => {
                 <div className="relative">
                   <motion.div
                     className="absolute -inset-1 rounded-full bg-primary/20 blur-sm"
-                    animate={{
-                      opacity: isSpeaking && !isPaused ? pulseIntensity : 0.2,
-                      scale: isSpeaking && !isPaused ? 1 + pulseIntensity * 0.3 : 1,
-                    }}
-                    transition={{ duration: 0.15 }}
+                    animate={isSpeaking && !isPaused ? { opacity: [0.25, 0.45, 0.25], scale: [1, 1.08, 1] } : { opacity: 0.2, scale: 1 }}
+                    transition={{ duration: 1.4, repeat: isSpeaking && !isPaused ? Infinity : 0, ease: "easeInOut" }}
                   />
                   <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-white" />
@@ -422,9 +419,9 @@ const EmpireVoiceAgent: React.FC = () => {
                   <div
                     className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${
                       isPaused ? "bg-amber-400" :
-                      isSpeaking ? "bg-green-400 animate-pulse" :
-                      isListening ? "bg-amber-400 animate-pulse" :
-                      isLoading ? "bg-blue-400 animate-pulse" :
+                      isSpeaking ? "bg-green-400" :
+                      isListening ? "bg-amber-400" :
+                      isLoading ? "bg-blue-400" :
                       autoNarrating ? "bg-green-400" :
                       "bg-primary/60"
                     }`}
