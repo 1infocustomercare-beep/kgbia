@@ -7,6 +7,7 @@ import LostCustomers from "@/components/restaurant/LostCustomers";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import type { MenuItem } from "@/types/restaurant";
+import cartoonProfit from "@/assets/cartoon-profit.png";
 
 type ProfitSection = "panic" | "clients" | "reviews";
 
