@@ -30,6 +30,13 @@ import nccHeroBg from "@/assets/ncc-hero-bg-amalfi.jpg";
 import nccPremiumCoast from "@/assets/ncc-premium-coast.jpg";
 import nccPremiumInterior from "@/assets/ncc-premium-interior.jpg";
 import nccFleetShowcase from "@/assets/ncc-fleet-showcase.jpg";
+import cartoonFood from "@/assets/cartoon-sector-food.png";
+import cartoonNcc from "@/assets/cartoon-sector-ncc.png";
+import cartoonBeauty from "@/assets/cartoon-sector-beauty.png";
+import cartoonHealthcare from "@/assets/cartoon-sector-healthcare.png";
+import cartoonRetail from "@/assets/cartoon-sector-retail.png";
+import cartoonFitness from "@/assets/cartoon-sector-fitness.png";
+import cartoonHotel from "@/assets/cartoon-sector-hotel.png";
 
 /* ═══════════════════════════════════════════
    HELPERS
