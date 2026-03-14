@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
@@ -152,6 +153,96 @@ const SECTOR_STYLES: Partial<Record<IndustryId, SectorStyle>> = {
     bookingFields: ["Mittente", "Dest.", "Data", "Tipo"],
     heroSubtext: "Logistica & Trasporti",
     serviceIcon: "📦",
+  },
+  agriturismo: {
+    heroGradient: "linear-gradient(135deg, #4d7c0f22, #65a30d10)",
+    cardBg: "#4d7c0f12",
+    chartColors: ["#4d7c0f", "#65a30d", "#a3e635"],
+    kpis: [{ label: "Camere", val: "18" }, { label: "Ospiti", val: "42" }, { label: "Rating", val: "4.9★" }, { label: "Incasso", val: "€3.6K" }],
+    bookingFields: ["Ospite", "Check-in", "Check-out", "Persone"],
+    heroSubtext: "Agriturismo Bio",
+    serviceIcon: "🌿",
+  },
+  cleaning: {
+    heroGradient: "linear-gradient(135deg, #0891b222, #22d3ee10)",
+    cardBg: "#0891b212",
+    chartColors: ["#0891b2", "#22d3ee", "#67e8f9"],
+    kpis: [{ label: "Servizi", val: "34" }, { label: "Clienti", val: "78" }, { label: "Rating", val: "4.7★" }, { label: "Fatturato", val: "€4.2K" }],
+    bookingFields: ["Cliente", "Indirizzo", "Tipo", "Data"],
+    heroSubtext: "Pulizie Professionali",
+    serviceIcon: "🧹",
+  },
+  legal: {
+    heroGradient: "linear-gradient(135deg, #1e3a5f22, #1e40af10)",
+    cardBg: "#1e3a5f12",
+    chartColors: ["#1e3a5f", "#1e40af", "#60a5fa"],
+    kpis: [{ label: "Pratiche", val: "52" }, { label: "Clienti", val: "134" }, { label: "Rating", val: "5.0★" }, { label: "Fatturato", val: "€18K" }],
+    bookingFields: ["Cliente", "Pratica", "Data", "Tipo"],
+    heroSubtext: "Studio Legale",
+    serviceIcon: "⚖️",
+  },
+  accounting: {
+    heroGradient: "linear-gradient(135deg, #2563eb22, #3b82f610)",
+    cardBg: "#2563eb12",
+    chartColors: ["#2563eb", "#3b82f6", "#93c5fd"],
+    kpis: [{ label: "Clienti", val: "89" }, { label: "Dichiar.", val: "156" }, { label: "Rating", val: "4.8★" }, { label: "Fatturato", val: "€12K" }],
+    bookingFields: ["Cliente", "P.IVA", "Tipo", "Scadenza"],
+    heroSubtext: "Studio Commercialista",
+    serviceIcon: "📊",
+  },
+  garage: {
+    heroGradient: "linear-gradient(135deg, #78350f22, #a16207 10)",
+    cardBg: "#78350f12",
+    chartColors: ["#78350f", "#a16207", "#fbbf24"],
+    kpis: [{ label: "Riparazioni", val: "27" }, { label: "Veicoli", val: "45" }, { label: "Rating", val: "4.8★" }, { label: "Fatturato", val: "€6.3K" }],
+    bookingFields: ["Cliente", "Veicolo", "Targa", "Lavoro"],
+    heroSubtext: "Autofficina",
+    serviceIcon: "🔩",
+  },
+  photography: {
+    heroGradient: "linear-gradient(135deg, #9333ea22, #a855f710)",
+    cardBg: "#9333ea12",
+    chartColors: ["#9333ea", "#a855f7", "#d8b4fe"],
+    kpis: [{ label: "Shooting", val: "14" }, { label: "Clienti", val: "67" }, { label: "Rating", val: "5.0★" }, { label: "Revenue", val: "€5.8K" }],
+    bookingFields: ["Cliente", "Tipo", "Data", "Location"],
+    heroSubtext: "Studio Fotografico",
+    serviceIcon: "📸",
+  },
+  gardening: {
+    heroGradient: "linear-gradient(135deg, #16a34a22, #22c55e10)",
+    cardBg: "#16a34a12",
+    chartColors: ["#16a34a", "#22c55e", "#86efac"],
+    kpis: [{ label: "Giardini", val: "23" }, { label: "Clienti", val: "56" }, { label: "Rating", val: "4.9★" }, { label: "Fatturato", val: "€3.8K" }],
+    bookingFields: ["Cliente", "Indirizzo", "Tipo", "Data"],
+    heroSubtext: "Giardinaggio",
+    serviceIcon: "🌱",
+  },
+  childcare: {
+    heroGradient: "linear-gradient(135deg, #f472b622, #fb923c10)",
+    cardBg: "#f472b612",
+    chartColors: ["#f472b6", "#fb923c", "#fcd34d"],
+    kpis: [{ label: "Bambini", val: "32" }, { label: "Iscritti", val: "28" }, { label: "Rating", val: "5.0★" }, { label: "MRR", val: "€4.5K" }],
+    bookingFields: ["Genitore", "Bambino", "Età", "Orario"],
+    heroSubtext: "Asilo & Infanzia",
+    serviceIcon: "👶",
+  },
+  education: {
+    heroGradient: "linear-gradient(135deg, #0d9488 22, #14b8a610)",
+    cardBg: "#0d948812",
+    chartColors: ["#0d9488", "#14b8a6", "#5eead4"],
+    kpis: [{ label: "Studenti", val: "124" }, { label: "Corsi", val: "18" }, { label: "Rating", val: "4.9★" }, { label: "Revenue", val: "€8.2K" }],
+    bookingFields: ["Studente", "Corso", "Livello", "Orario"],
+    heroSubtext: "Formazione",
+    serviceIcon: "🎓",
+  },
+  custom: {
+    heroGradient: "linear-gradient(135deg, #6366f122, #818cf810)",
+    cardBg: "#6366f112",
+    chartColors: ["#6366f1", "#818cf8", "#c7d2fe"],
+    kpis: [{ label: "Clienti", val: "45" }, { label: "Ordini", val: "89" }, { label: "Rating", val: "4.8★" }, { label: "Revenue", val: "€3.1K" }],
+    bookingFields: ["Nome", "Email", "Servizio", "Data"],
+    heroSubtext: "Business Custom",
+    serviceIcon: "✨",
   },
 };
 
@@ -418,10 +509,33 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
   const demo = DEMO_INDUSTRY_DATA[industryId];
   const color = cfg.defaultPrimaryColor;
   const sectorStyle = getSectorStyle(industryId);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+
+  // Auto-scroll on mobile
+  useEffect(() => {
+    if (!isPlaying) { clearInterval(intervalRef.current); return; }
+    intervalRef.current = setInterval(() => {
+      setActiveIdx(prev => (prev + 1) % SCREENS.length);
+    }, 3000);
+    return () => clearInterval(intervalRef.current);
+  }, [isPlaying]);
+
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    const el = scrollRef.current;
+    const child = el.children[activeIdx] as HTMLElement;
+    if (child) {
+      el.scrollTo({ left: child.offsetLeft - el.offsetWidth / 2 + child.offsetWidth / 2, behavior: "smooth" });
+    }
+  }, [activeIdx]);
 
   return (
     <div className={`${className}`}>
-      <div className={`flex items-end justify-center gap-2 sm:gap-4 ${compact ? "scale-[0.8] origin-center" : ""}`}
+      {/* Desktop: flex row */}
+      <div className={`hidden sm:flex items-end justify-center gap-2 sm:gap-4 ${compact ? "scale-[0.8] origin-center" : ""}`}
         style={{ perspective: "1000px" }}>
         {SCREENS.map((screen, i) => (
           <IPhoneFrame
@@ -435,6 +549,50 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
             sectorStyle={sectorStyle}
           />
         ))}
+      </div>
+
+      {/* Mobile: horizontal scroll carousel */}
+      <div className="sm:hidden relative">
+        <div ref={scrollRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide px-4"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          onTouchStart={() => setIsPlaying(false)}>
+          {SCREENS.map((screen, i) => (
+            <div key={screen.type} className="snap-center flex-shrink-0" style={{ width: "55vw", maxWidth: 200 }}>
+              <IPhoneFrame
+                screen={screen}
+                color={color}
+                emoji={cfg.emoji}
+                companyName={demo.companyName}
+                services={demo.services}
+                index={i}
+                sectorStyle={sectorStyle}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Controls & dots */}
+        <div className="flex items-center justify-center gap-3 mt-2">
+          <div className="flex gap-1.5">
+            {SCREENS.map((_, i) => (
+              <button key={i} onClick={() => { setActiveIdx(i); setIsPlaying(false); }}
+                className="w-2 h-2 rounded-full transition-all duration-300"
+                style={{ backgroundColor: i === activeIdx ? color : `${color}30`, transform: i === activeIdx ? "scale(1.3)" : "scale(1)" }} />
+            ))}
+          </div>
+          <button onClick={() => setIsPlaying(!isPlaying)}
+            className="w-6 h-6 rounded-full flex items-center justify-center border transition-all"
+            style={{ borderColor: `${color}40`, background: isPlaying ? `${color}15` : "transparent" }}>
+            {isPlaying ? (
+              <span className="flex gap-[2px]">
+                <span className="w-[2px] h-2 rounded-full" style={{ backgroundColor: color }} />
+                <span className="w-[2px] h-2 rounded-full" style={{ backgroundColor: color }} />
+              </span>
+            ) : (
+              <span className="w-0 h-0 ml-[1px] border-t-[4px] border-b-[4px] border-l-[6px] border-transparent" style={{ borderLeftColor: color }} />
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
