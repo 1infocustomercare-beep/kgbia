@@ -401,7 +401,7 @@ const PartnerDashboard = () => {
                   <span className="text-[10px] text-muted-foreground">{currentMonth}</span>
                 </div>
                 <div className="flex items-center justify-around">
-                  <BonusProgressRing salesCount={salesCount} milestone={4} label="€500" reward={salesCount >= 4 ? "✓ Sbloccato" : `${4 - salesCount} mancanti`} unlocked={salesCount >= 4} />
+                  <BonusProgressRing salesCount={currentMonthSales} milestone={3} label="€500" reward={currentMonthSales >= 3 ? "✓ Sbloccato" : `${3 - currentMonthSales} mancanti`} unlocked={currentMonthSales >= 3} />
                   <BonusProgressRing salesCount={currentMonthSales} milestone={5} label="€1.500" reward={currentMonthSales >= 5 ? "✓ Sbloccato" : `${5 - currentMonthSales} mancanti`} unlocked={currentMonthSales >= 5} />
                 </div>
               </div>
@@ -484,7 +484,7 @@ const PartnerDashboard = () => {
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       { label: "Cliente", emoji: "👤", href: `/r/${demoRestaurant.slug}` },
-                      { label: "Admin", emoji: "⚙️", href: `/dashboard` },
+                      { label: "Admin", emoji: "⚙️", href: `/r/${demoRestaurant.slug}?view=admin` },
                       { label: "Cucina", emoji: "👨‍🍳", href: `/kitchen` },
                     ].map((link, i) => (
                       <a key={i} href={link.href} target="_blank" rel="noopener noreferrer"
@@ -603,7 +603,7 @@ const PartnerDashboard = () => {
                   €{totalOverrides.toLocaleString()}
                 </motion.p>
                 <div className="flex items-center gap-3 mt-2">
-                  <span className="text-[10px] text-sky-400 font-medium">€50 × vendite idonee (dalla 5ª)</span>
+                  <span className="text-[10px] text-sky-400 font-medium">€50 × vendite idonee (dalla 5ª per membro)</span>
                   <span className="text-[10px] text-muted-foreground">·</span>
                   <span className="text-[10px] text-muted-foreground">{teamMembers.length} partner attivi</span>
                 </div>
