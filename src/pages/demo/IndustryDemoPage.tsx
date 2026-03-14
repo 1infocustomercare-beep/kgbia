@@ -47,6 +47,7 @@ interface SectorTheme {
   bgFrom: string;
   bgTo: string;
   heroEmoji: string;
+  heroVideo: string;
   platformFeatures: { icon: React.ReactNode; title: string; desc: string }[];
 }
 
@@ -58,6 +59,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#1a0a00",
     bgTo: "#0d0d0d",
     heroEmoji: "🍽️",
+    heroVideo: "https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <QrCode className="w-5 h-5" />, title: "Menu Digitale QR", desc: "I clienti scansionano e ordinano dal tavolo" },
       { icon: <BarChart3 className="w-5 h-5" />, title: "Dashboard Vendite", desc: "Revenue, piatti top e trend in tempo reale" },
@@ -74,6 +76,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#1A1A2E",
     bgTo: "#0d0d0d",
     heroEmoji: "🚘",
+    heroVideo: "https://videos.pexels.com/video-files/5765383/5765383-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Car className="w-5 h-5" />, title: "Gestione Flotta", desc: "Veicoli, scadenze, manutenzione in un click" },
       { icon: <Calendar className="w-5 h-5" />, title: "Prenotazioni Online", desc: "Booking automatico con conferma istantanea" },
@@ -90,6 +93,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#1a0a14",
     bgTo: "#0d0d0d",
     heroEmoji: "💅",
+    heroVideo: "https://videos.pexels.com/video-files/6724370/6724370-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Calendar className="w-5 h-5" />, title: "Agenda Intelligente", desc: "Prenotazioni online con slot automatici" },
       { icon: <Users className="w-5 h-5" />, title: "Schede Clienti", desc: "Storico trattamenti, allergie, preferenze" },
@@ -106,6 +110,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#0a1a1a",
     bgTo: "#0d0d0d",
     heroEmoji: "🏥",
+    heroVideo: "https://videos.pexels.com/video-files/7579658/7579658-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Calendar className="w-5 h-5" />, title: "Agenda Medica", desc: "Prenotazioni online con slot per specialità" },
       { icon: <FileText className="w-5 h-5" />, title: "Cartelle Pazienti", desc: "Storico visite, referti e prescrizioni" },
@@ -122,6 +127,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#0d0a1a",
     bgTo: "#0d0d0d",
     heroEmoji: "🛍️",
+    heroVideo: "https://videos.pexels.com/video-files/5585378/5585378-uhd_2560_1440_30fps.mp4",
     platformFeatures: [
       { icon: <Package className="w-5 h-5" />, title: "Catalogo Prodotti", desc: "Gestisci inventario con foto e varianti" },
       { icon: <Store className="w-5 h-5" />, title: "E-Commerce", desc: "Negozio online integrato con spedizioni" },
@@ -138,6 +144,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#0a1a0a",
     bgTo: "#0d0d0d",
     heroEmoji: "💪",
+    heroVideo: "https://videos.pexels.com/video-files/4761437/4761437-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Calendar className="w-5 h-5" />, title: "Prenotazione Corsi", desc: "Iscrizione online a lezioni e personal" },
       { icon: <Users className="w-5 h-5" />, title: "Gestione Iscritti", desc: "Abbonamenti, scadenze e check-in" },
@@ -154,6 +161,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#1a140a",
     bgTo: "#0d0d0d",
     heroEmoji: "🏨",
+    heroVideo: "https://videos.pexels.com/video-files/6394054/6394054-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Calendar className="w-5 h-5" />, title: "Booking Engine", desc: "Prenotazioni dirette senza commissioni OTA" },
       { icon: <Building className="w-5 h-5" />, title: "Gestione Camere", desc: "Disponibilità, tariffe e pulizie" },
@@ -173,6 +181,7 @@ const getTheme = (industry: string): SectorTheme => {
     bgFrom: "#0a0a1a",
     bgTo: "#0d0d0d",
     heroEmoji: "⚡",
+    heroVideo: "https://videos.pexels.com/video-files/3255275/3255275-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Calendar className="w-5 h-5" />, title: "Prenotazioni", desc: "Sistema di booking integrato" },
       { icon: <Users className="w-5 h-5" />, title: "CRM Clienti", desc: "Gestione clientela completa" },
@@ -448,35 +457,23 @@ export default function IndustryDemoPage() {
       {/* ═══════ HERO ═══════ */}
       <section id="home" className="relative pt-14">
         <div className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden">
-          {/* Animated gradient orbs */}
+          {/* Video Background */}
           <div className="absolute inset-0">
-            <motion.div
-              className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-[120px]"
-              style={{ background: theme.accent, top: "10%", right: "-10%" }}
-              animate={{ x: [0, -30, 0], y: [0, 20, 0] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            <video
+              autoPlay muted loop playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+              src={theme.heroVideo}
             />
-            <motion.div
-              className="absolute w-[400px] h-[400px] rounded-full opacity-10 blur-[100px]"
-              style={{ background: theme.accent, bottom: "10%", left: "-5%" }}
-              animate={{ x: [0, 20, 0], y: [0, -15, 0] }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            {/* Dark overlay with accent tint */}
+            <div className="absolute inset-0 bg-black/60" />
+            <div className="absolute inset-0 opacity-30"
+              style={{ background: `linear-gradient(135deg, ${theme.accent}40 0%, transparent 50%, ${theme.accent}20 100%)` }}
             />
+            {/* Bottom vignette */}
+            <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${theme.bgFrom} 0%, transparent 40%)` }} />
           </div>
 
-          {/* Grid pattern */}
-          <div className="absolute inset-0 opacity-[0.03]"
-            style={{ backgroundImage: `linear-gradient(${theme.accent}40 1px, transparent 1px), linear-gradient(90deg, ${theme.accent}40 1px, transparent 1px)`, backgroundSize: "60px 60px" }}
-          />
-
           <div className="relative text-center px-6 py-20 max-w-3xl mx-auto">
-            <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}>
-              <motion.span className="text-7xl sm:text-8xl block mb-6"
-                animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
-                {theme.heroEmoji}
-              </motion.span>
-            </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}>
