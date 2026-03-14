@@ -93,6 +93,7 @@ const SECTOR_THEMES: Record<string, SectorTheme> = {
     bgFrom: "#1a0a14",
     bgTo: "#0d0d0d",
     heroEmoji: "💅",
+    heroVideo: "https://videos.pexels.com/video-files/6724370/6724370-uhd_2560_1440_25fps.mp4",
     platformFeatures: [
       { icon: <Calendar className="w-5 h-5" />, title: "Agenda Intelligente", desc: "Prenotazioni online con slot automatici" },
       { icon: <Users className="w-5 h-5" />, title: "Schede Clienti", desc: "Storico trattamenti, allergie, preferenze" },
