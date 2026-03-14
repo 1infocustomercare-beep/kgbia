@@ -350,40 +350,91 @@ export function AIAgentsShowcase() {
           </div>
         </div>
 
-        {/* ══════ SECTOR CAPABILITIES MATRIX ══════ */}
+        {/* ══════ SECTOR CAPABILITIES — DNA ASSEMBLY ══════ */}
         <div className="mb-16 sm:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-8"
+            className="text-center mb-6"
           >
-            <h3 className="text-[clamp(1.3rem,3.5vw,2.2rem)] font-heading font-bold text-foreground leading-[1.1] mb-3">
+            <h3 className="text-[clamp(1.3rem,3.5vw,2.2rem)] font-heading font-bold text-foreground leading-[1.1] mb-2">
               IA Dedicata Per <span className="text-shimmer">Ogni Settore</span>
             </h3>
-            <p className="text-foreground/40 text-sm max-w-[500px] mx-auto">
+            <p className="text-foreground/40 text-xs max-w-[450px] mx-auto">
               Ogni settore ha agenti specializzati che parlano la lingua del tuo business
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
-            {sectorCapabilities.map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 25 }}
-                className="group relative rounded-xl border border-foreground/[0.06] bg-card/30 backdrop-blur-sm p-3 overflow-hidden hover:border-primary/15 transition-all duration-400"
-              >
-                <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${s.color} opacity-0 group-hover:opacity-60 transition-opacity duration-500`} />
-                <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${s.color} flex items-center justify-center text-white mb-2 shadow-md`}>
-                  {s.icon}
-                </div>
-                <h4 className="font-heading font-bold text-xs text-foreground mb-0.5">{s.sector}</h4>
-                <p className="text-[0.58rem] text-foreground/35 leading-[1.4]">{s.features}</p>
-              </motion.div>
-            ))}
+          <div className="relative">
+            {/* Central DNA spine for sectors */}
+            <motion.div
+              className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 hidden sm:block z-0"
+              style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--primary) / 0.4), hsl(var(--accent) / 0.3), transparent)" }}
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            />
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 relative z-10">
+              {sectorCapabilities.map((s, i) => {
+                const isLeft = i % 2 === 0;
+                const row = Math.floor(i / 4);
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{
+                      opacity: 0,
+                      x: isLeft ? -50 : 50,
+                      y: 20,
+                      rotateY: isLeft ? -15 : 15,
+                      rotateZ: isLeft ? -3 : 3,
+                      scale: 0.8,
+                    }}
+                    whileInView={{
+                      opacity: 1,
+                      x: 0,
+                      y: 0,
+                      rotateY: 0,
+                      rotateZ: 0,
+                      scale: 1,
+                    }}
+                    viewport={{ once: true, margin: "-30px" }}
+                    transition={{
+                      delay: i * 0.1,
+                      duration: 0.6,
+                      type: "spring",
+                      stiffness: 140,
+                      damping: 16,
+                    }}
+                    className="group relative"
+                    style={{ perspective: "800px" }}
+                  >
+                    {/* DNA connector dot */}
+                    <motion.div
+                      className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary/30 shadow-[0_0_8px_hsl(var(--primary)/0.4)] z-20 hidden sm:block"
+                      style={{ [isLeft ? "right" : "left"]: "-5px" }}
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: [0, 1.5, 1] }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 + 0.4, duration: 0.35 }}
+                    />
+
+                    <div className="relative rounded-lg border border-foreground/[0.06] bg-card/30 backdrop-blur-sm p-2 sm:p-2.5 overflow-hidden hover:border-primary/20 transition-all duration-400 hover:shadow-[0_0_15px_hsl(var(--primary)/0.08)]">
+                      <div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r ${s.color} opacity-0 group-hover:opacity-60 transition-opacity duration-500`} />
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <div className={`w-5 h-5 min-w-[20px] rounded bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-sm`}>
+                          <span className="scale-[0.7]">{s.icon}</span>
+                        </div>
+                        <h4 className="font-heading font-bold text-[0.65rem] text-foreground leading-tight truncate">{s.sector}</h4>
+                      </div>
+                      <p className="text-[0.5rem] text-foreground/35 leading-[1.35] line-clamp-2">{s.features}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
