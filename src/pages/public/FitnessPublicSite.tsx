@@ -52,7 +52,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/3195530/3195530-uhd_2560_1440_25fps.mp4";
 const GALLERY = [
@@ -79,7 +79,7 @@ const FAQ_ITEMS = [
   { q: "C'è un parcheggio?", a: "Sì, abbiamo un parcheggio gratuito riservato ai soci con oltre 50 posti auto." },
 ];
 
-export default function FitnessPublicSite({ company }: Props) {
+export default function FitnessPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const name = company.name || "Fitness Club";
   const tagline = company.tagline || "Trasforma il Tuo Corpo";
@@ -179,6 +179,8 @@ export default function FitnessPublicSite({ company }: Props) {
           </motion.div>
         </div>
       </section>
+
+      {afterHero}
 
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>

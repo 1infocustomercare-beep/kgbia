@@ -55,7 +55,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const FALLBACK_REVIEWS = [
   { name: "Giulia M.", text: "Il pane più buono che abbia mai assaggiato. Fragranza incredibile e crosta perfetta.", rating: 5, photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" },
@@ -72,7 +72,7 @@ const FAQ_ITEMS = [
   { q: "Fate consegne a domicilio?", a: "Sì, effettuiamo consegne nella zona. Per ordini superiori a €30 la consegna è gratuita." },
 ];
 
-export default function BakeryPublicSite({ company }: Props) {
+export default function BakeryPublicSite({ company, afterHero }: Props) {
   const brown = "#6B3A2A";
   const creamBg = "#F5E6CC";
   const pink = "#E8B4B8";
@@ -203,6 +203,8 @@ export default function BakeryPublicSite({ company }: Props) {
         </motion.div>
         <ScrollIndicator color={`${creamBg}50`} />
       </section>
+
+      {afterHero}
 
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-5" style={{ background: brown }}>

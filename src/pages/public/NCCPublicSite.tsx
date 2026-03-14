@@ -64,7 +64,7 @@ const fadeUp = {
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 /* ── Animated Section ── */
 const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
@@ -215,7 +215,7 @@ const REVIEW_DATES = ["Gennaio 2024", "Dicembre 2023", "Novembre 2023", "Ottobre
 /* ════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ════════════════════════════════════════════════════════════ */
-export default function NCCPublicSite({ company }: Props) {
+export default function NCCPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const gold = company.primary_color || NCC.gold;
   const [bookingForm, setBookingForm] = useState({ name: "", phone: "", email: "", route: "", vehicle: "", pickup: "", dropoff: "", date: "", time: "", passengers: "1", luggage: "1", flight: "", notes: "" });
@@ -562,6 +562,8 @@ export default function NCCPublicSite({ company }: Props) {
           <ChevronDown className="w-5 h-5 text-white/15" />
         </motion.div>
       </section>
+
+      {afterHero}
 
       {/* ═══════════ TICKER — infinite marquee ═══════════ */}
       <section className="py-4 overflow-hidden border-y" style={{ background: NCC.ticker, borderColor: `rgba(201,168,76,0.3)` }}>

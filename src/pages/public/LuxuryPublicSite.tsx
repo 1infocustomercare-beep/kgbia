@@ -67,9 +67,9 @@ function Section({ id, children, style }: { id?: string; children: React.ReactNo
   );
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
-export default function LuxuryPublicSite({ company }: Props) {
+export default function LuxuryPublicSite({ company, afterHero }: Props) {
   const industry = (company.industry || "custom") as IndustryId;
   const config = getIndustryConfig(industry);
   const theme = getSectorTheme(industry);
@@ -292,6 +292,8 @@ export default function LuxuryPublicSite({ company }: Props) {
           <ChevronDown className="w-5 h-5" style={{ color: p.textMuted }} />
         </motion.div>
       </section>
+
+      {afterHero}
 
       {/* ═══ CHI SIAMO ═══ */}
       <Section id="chi-siamo" style={{ padding: "5rem 1.25rem", background: p.bgAlt }}>

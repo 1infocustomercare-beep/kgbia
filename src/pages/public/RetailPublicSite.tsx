@@ -50,7 +50,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/5585385/5585385-uhd_2560_1440_25fps.mp4";
 const COLLECTIONS = [
@@ -76,7 +76,7 @@ const FAQ_ITEMS = [
   { q: "Fate personal shopping?", a: "Sì, offriamo un servizio di personal shopping su appuntamento sia in negozio che online via videochiamata." },
 ];
 
-export default function RetailPublicSite({ company }: Props) {
+export default function RetailPublicSite({ company, afterHero }: Props) {
   const accent = company.primary_color || "#1a1a1a";
   const companyId = company.id;
   const [email, setEmail] = useState("");
@@ -164,6 +164,8 @@ export default function RetailPublicSite({ company }: Props) {
         </div>
         <ScrollIndicator color="rgba(0,0,0,0.3)" />
       </section>
+
+      {afterHero}
 
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-4 border-y border-gray-100" style={{ background: accent }}>

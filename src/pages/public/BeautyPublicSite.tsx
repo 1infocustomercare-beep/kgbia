@@ -92,7 +92,7 @@ function PremiumBadge() {
   );
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/3998269/3998269-uhd_2732_1440_25fps.mp4";
 const GALLERY = [
@@ -112,7 +112,7 @@ const FALLBACK_REVIEWS = [
   { name: "Francesca B.", text: "Trattamento viso anti-age incredibile. La mia pelle non è mai stata così luminosa!", rating: 5, city: "Torino", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" },
 ];
 
-export default function BeautyPublicSite({ company }: Props) {
+export default function BeautyPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const [form, setForm] = useState({ name: "", phone: "", service: "", date: "", time: "", notes: "" });
   const [submitting, setSubmitting] = useState(false);
@@ -265,6 +265,8 @@ export default function BeautyPublicSite({ company }: Props) {
           <ChevronDown className="w-5 h-5 text-white/30" />
         </motion.div>
       </section>
+
+      {afterHero}
 
       {/* ═══ TICKER — Premium Marquee ═══ */}
       <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>

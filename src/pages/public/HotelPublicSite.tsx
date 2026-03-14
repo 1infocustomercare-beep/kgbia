@@ -54,7 +54,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/9503163/9503163-uhd_2560_1440_24fps.mp4";
 const GALLERY = [
@@ -72,7 +72,7 @@ const FALLBACK_REVIEWS = [
   { name: "Giovanni V.", text: "Location perfetta, camere eleganti e ristorante con cucina raffinata. Top!", rating: 5, photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" },
 ];
 
-export default function HotelPublicSite({ company }: Props) {
+export default function HotelPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const name = company.name || "Grand Hotel";
   const tagline = company.tagline || "Ospitalità d'eccellenza";
@@ -201,6 +201,8 @@ export default function HotelPublicSite({ company }: Props) {
 
         <ScrollIndicator />
       </section>
+
+      {afterHero}
 
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-5" style={{ background: BORDEAUX }}>

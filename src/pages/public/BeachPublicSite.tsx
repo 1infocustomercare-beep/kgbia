@@ -56,7 +56,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const HERO_VIDEO = "https://videos.pexels.com/video-files/17950850/17950850-uhd_2560_1440_60fps.mp4";
 const GALLERY = [
@@ -74,7 +74,7 @@ const FALLBACK_REVIEWS = [
   { name: "Andrea G.", text: "Servizio bar al posto eccellente. Area bambini perfetta per le famiglie.", rating: 5, photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" },
 ];
 
-export default function BeachPublicSite({ company }: Props) {
+export default function BeachPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const phone = company.phone;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -213,6 +213,8 @@ export default function BeachPublicSite({ company }: Props) {
 
         <ScrollIndicator />
       </section>
+
+      {afterHero}
 
       {/* TICKER — Premium Marquee */}
       <div className="overflow-hidden py-5 relative" style={{ background: "#0d1e2d" }}>

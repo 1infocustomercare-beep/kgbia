@@ -89,9 +89,9 @@ function PremiumBadge() {
   );
 }
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
-export default function FoodPublicSite({ company }: Props) {
+export default function FoodPublicSite({ company, afterHero }: Props) {
   const gold = "#D4AF37";
   const dark = "#0A0A0A";
   const cream = "#F5F0E8";
@@ -280,6 +280,8 @@ export default function FoodPublicSite({ company }: Props) {
 
         <ScrollIndicator />
       </section>
+
+      {afterHero}
 
       {/* ── TICKER — Premium Marquee ── */}
       <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>

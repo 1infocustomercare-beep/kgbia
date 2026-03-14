@@ -29,7 +29,7 @@ const fadeUp = {
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 
-interface Props { company: any; }
+interface Props { company: any; afterHero?: React.ReactNode; }
 
 const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
   ({ id, children, className = "", style }, _ref) => {
@@ -51,7 +51,7 @@ const HERO_VIDEOS: Record<string, string> = {
   plumber: "https://videos.pexels.com/video-files/6538938/6538938-uhd_2560_1440_25fps.mp4",
   default: "https://videos.pexels.com/video-files/5532771/5532771-uhd_2560_1440_25fps.mp4",
 };
-export default function TradesPublicSite({ company }: Props) {
+export default function TradesPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const industry = (company.industry || "plumber") as IndustryId;
   const config = getIndustryConfig(industry);
@@ -229,6 +229,8 @@ export default function TradesPublicSite({ company }: Props) {
 
         <ScrollIndicator />
       </section>
+
+      {afterHero}
 
       {/* ═══ TICKER — Premium Marquee ═══ */}
       <div className="overflow-hidden py-5 relative" style={{ background: "#111" }}>
