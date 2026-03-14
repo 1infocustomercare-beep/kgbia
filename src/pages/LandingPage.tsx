@@ -1971,7 +1971,10 @@ const LandingPage = () => {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
   useEffect(() => {
-    const h = () => setNavScrolled(window.scrollY > 60);
+    const h = () => {
+      setNavScrolled(window.scrollY > 60);
+      setCtaVisible(window.scrollY > 400);
+    };
     window.addEventListener("scroll", h, { passive: true });
     return () => window.removeEventListener("scroll", h);
   }, []);
