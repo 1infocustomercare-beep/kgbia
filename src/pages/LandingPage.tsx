@@ -145,31 +145,49 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
 /* ═══ Premium Animated Card ═══ */
 const PremiumCard = ({ children, className = "", hover = true, glow = false, scan = false, delay = 0 }: { children: React.ReactNode; className?: string; hover?: boolean; glow?: boolean; scan?: boolean; delay?: number }) => (
   <motion.div
-    className={`relative rounded-2xl border border-primary/[0.08] overflow-hidden group/card ${className}`}
-    style={{ background: "hsla(265,20%,8%,0.6)", backdropFilter: "blur(8px)" }}
-    whileHover={hover ? { y: -5, borderColor: "hsla(265,70%,60%,0.2)", transition: { duration: 0.3 } } : undefined}
+    className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
+    style={{
+      background: "linear-gradient(145deg, hsla(260,18%,18%,0.65), hsla(260,16%,14%,0.55))",
+      backdropFilter: "blur(20px) saturate(1.4)",
+      borderColor: "hsla(265,50%,60%,0.1)",
+    }}
+    whileHover={hover ? {
+      y: -6,
+      borderColor: "hsla(265,70%,65%,0.25)",
+      boxShadow: "0 20px 60px hsla(265,70%,60%,0.12), 0 0 30px hsla(265,70%,60%,0.06), inset 0 1px 0 hsla(265,80%,80%,0.08)",
+      transition: { duration: 0.4, ease: "easeOut" },
+    } : undefined}
   >
-    {/* Top accent line — gold hint */}
-    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,50%,0.18), hsla(265,70%,60%,0.15), transparent)" }} />
-    {/* Corner accents — gold */}
-    <div className="absolute top-2 left-2 w-3 h-3 border-t border-l rounded-tl-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,50%,0.2)" }} />
-    <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r rounded-br-sm pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,50%,0.2)" }} />
-    {/* Scanning beam */}
+    {/* Top accent line — animated gradient */}
+    <motion.div className="absolute top-0 left-0 right-0 h-px z-10"
+      style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,55%,0.2), hsla(265,70%,65%,0.25), hsla(35,45%,55%,0.15), transparent)" }}
+      animate={{ backgroundPosition: ["0% 0%", "200% 0%"] }}
+      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+    />
+    {/* Corner accents — gold, always slightly visible */}
+    <div className="absolute top-2 left-2 w-4 h-4 border-t border-l rounded-tl-sm pointer-events-none opacity-20 group-hover/card:opacity-60 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
+    <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r rounded-br-sm pointer-events-none opacity-20 group-hover/card:opacity-60 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
+    {/* Scanning beam — more visible */}
     {scan && (
       <motion.div
         className="absolute inset-0 pointer-events-none z-0"
-        style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.04) 50%, transparent 60%)" }}
+        style={{ background: "linear-gradient(180deg, transparent 35%, hsla(265,80%,75%,0.06) 50%, transparent 65%)" }}
         animate={{ y: ["-100%", "200%"] }}
-        transition={{ duration: 4, repeat: Infinity, repeatDelay: 2 + delay, ease: "easeInOut" }}
+        transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 1.5 + delay, ease: "easeInOut" }}
       />
     )}
-    {/* Ambient glow on hover */}
+    {/* Ambient glow on hover — stronger */}
     {glow && (
-      <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"
-        style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent)" }} />
+      <motion.div className="absolute -top-8 -right-8 w-32 h-32 rounded-full pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"
+        style={{ background: "radial-gradient(circle, hsla(265,70%,65%,0.12), transparent)" }}
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      />
     )}
-    {/* Bottom accent */}
-    <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    {/* Bottom glow line */}
+    <div className="absolute bottom-0 left-3 right-3 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    {/* Inner glass reflection */}
+    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(265,40%,80%,0.03) 0%, transparent 40%)" }} />
     <div className="relative z-10">{children}</div>
   </motion.div>
 );

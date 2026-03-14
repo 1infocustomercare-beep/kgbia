@@ -425,9 +425,9 @@
 
   /* ═══ GLOW CARD ═══ */
   .glow-card {
-    background: linear-gradient(145deg, hsla(260, 20%, 10%, 0.85), hsla(260, 18%, 5%, 0.95));
+    background: linear-gradient(145deg, hsla(260, 18%, 18%, 0.75), hsla(260, 16%, 13%, 0.65));
     backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid hsla(265, 60%, 50%, 0.08);
+    border: 1px solid hsla(265, 55%, 55%, 0.1);
     position: relative;
     overflow: hidden;
     transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -439,7 +439,7 @@
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, hsla(265, 70%, 60%, 0.0), hsla(280, 45%, 68%, 0.0));
+    background: linear-gradient(135deg, hsla(265, 70%, 65%, 0.0), hsla(280, 45%, 70%, 0.0));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -454,22 +454,22 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent 10%, hsla(265, 70%, 60%, 0.15) 50%, transparent 90%);
+    background: linear-gradient(90deg, transparent 10%, hsla(265, 70%, 65%, 0.2) 50%, transparent 90%);
     transition: opacity 0.5s;
   }
 
   .glow-card:hover::before {
-    background: linear-gradient(135deg, hsla(265, 70%, 60%, 0.5), hsla(280, 45%, 68%, 0.25));
+    background: linear-gradient(135deg, hsla(265, 70%, 65%, 0.5), hsla(280, 45%, 70%, 0.25));
   }
 
   .glow-card:hover::after {
-    background: linear-gradient(90deg, transparent 5%, hsla(280, 45%, 68%, 0.5) 50%, transparent 95%);
+    background: linear-gradient(90deg, transparent 5%, hsla(280, 45%, 70%, 0.5) 50%, transparent 95%);
   }
 
   .glow-card:hover {
-    border-color: hsla(265, 70%, 60%, 0.15);
+    border-color: hsla(265, 70%, 65%, 0.2);
     transform: translateY(-4px);
-    box-shadow: 0 25px 80px hsla(0, 0%, 0%, 0.6), 0 0 80px hsla(265, 70%, 60%, 0.1), inset 0 1px 0 hsla(280, 45%, 68%, 0.05);
+    box-shadow: 0 25px 80px hsla(0, 0%, 0%, 0.4), 0 0 60px hsla(265, 70%, 60%, 0.12), inset 0 1px 0 hsla(280, 50%, 75%, 0.06);
   }
 
   /* ═══ SPOTLIGHT ═══ */
