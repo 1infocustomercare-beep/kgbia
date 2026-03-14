@@ -383,6 +383,9 @@ const LandingPage = () => {
         <Particle delay={1.5} size={2} x="50%" y="45%" />
       </div>
 
+      {/* ═══════ NEURAL CELLS BACKGROUND ═══════ */}
+      <NeuralCellsBackground />
+
       {/* ═══════ NAVIGATION ═══════ */}
       <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 pt-[env(safe-area-inset-top)] ${navScrolled ? "pb-1" : "pb-2"}`}>
         {/* Glassmorphism background */}
