@@ -72,7 +72,7 @@ const FALLBACK_REVIEWS = [
   { name: "Giovanni V.", text: "Location perfetta, camere eleganti e ristorante con cucina raffinata. Top!", rating: 5, photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" },
 ];
 
-export default function HotelPublicSite({ company }: Props) {
+export default function HotelPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const name = company.name || "Grand Hotel";
   const tagline = company.tagline || "Ospitalità d'eccellenza";

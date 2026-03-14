@@ -76,7 +76,7 @@ const FAQ_ITEMS = [
   { q: "Fate personal shopping?", a: "Sì, offriamo un servizio di personal shopping su appuntamento sia in negozio che online via videochiamata." },
 ];
 
-export default function RetailPublicSite({ company }: Props) {
+export default function RetailPublicSite({ company, afterHero }: Props) {
   const accent = company.primary_color || "#1a1a1a";
   const companyId = company.id;
   const [email, setEmail] = useState("");

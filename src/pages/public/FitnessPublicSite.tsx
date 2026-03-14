@@ -79,7 +79,7 @@ const FAQ_ITEMS = [
   { q: "C'è un parcheggio?", a: "Sì, abbiamo un parcheggio gratuito riservato ai soci con oltre 50 posti auto." },
 ];
 
-export default function FitnessPublicSite({ company }: Props) {
+export default function FitnessPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const name = company.name || "Fitness Club";
   const tagline = company.tagline || "Trasforma il Tuo Corpo";

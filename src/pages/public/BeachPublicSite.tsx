@@ -74,7 +74,7 @@ const FALLBACK_REVIEWS = [
   { name: "Andrea G.", text: "Servizio bar al posto eccellente. Area bambini perfetta per le famiglie.", rating: 5, photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" },
 ];
 
-export default function BeachPublicSite({ company }: Props) {
+export default function BeachPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const phone = company.phone;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

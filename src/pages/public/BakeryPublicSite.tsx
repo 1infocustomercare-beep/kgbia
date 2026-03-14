@@ -72,7 +72,7 @@ const FAQ_ITEMS = [
   { q: "Fate consegne a domicilio?", a: "Sì, effettuiamo consegne nella zona. Per ordini superiori a €30 la consegna è gratuita." },
 ];
 
-export default function BakeryPublicSite({ company }: Props) {
+export default function BakeryPublicSite({ company, afterHero }: Props) {
   const brown = "#6B3A2A";
   const creamBg = "#F5E6CC";
   const pink = "#E8B4B8";
