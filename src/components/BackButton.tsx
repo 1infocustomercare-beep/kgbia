@@ -46,13 +46,13 @@ export default function BackButton({
     return (
       <motion.button
         onClick={handleClick}
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.3, duration: 0.4 }}
-        className={`fixed top-[72px] left-3 z-[60] flex items-center gap-1.5 px-3 py-2 rounded-full border text-xs font-medium transition-all duration-300 shadow-lg ${themeStyles[theme]} ${className}`}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3, duration: 0.3 }}
+        className={`fixed top-[72px] left-3 z-[60] w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-300 shadow-lg ${themeStyles[theme]} ${className}`}
+        title={label}
       >
-        <ArrowLeft className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">{label}</span>
+        <ArrowLeft className="w-4 h-4" />
       </motion.button>
     );
   }
