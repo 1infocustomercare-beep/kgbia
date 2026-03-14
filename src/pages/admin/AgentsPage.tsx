@@ -372,6 +372,18 @@ function generateMockData() {
       "ai-menu-image": Math.floor(10 + Math.random() * 15),
       "ai-translate": Math.floor(3 + Math.random() * 6),
       "ai-inventory": Math.floor(8 + Math.random() * 10),
+      "concierge-ai": Math.floor(30 + Math.random() * 50),
+      "analytics-brain": Math.floor(5 + Math.random() * 10),
+      "social-manager": Math.floor(12 + Math.random() * 20),
+      "sales-closer": Math.floor(8 + Math.random() * 15),
+      "document-ai": Math.floor(15 + Math.random() * 25),
+      "smart-notifier": Math.floor(40 + Math.random() * 60),
+      "compliance-guardian": Math.floor(3 + Math.random() * 8),
+      "ops-food": Math.floor(20 + Math.random() * 30),
+      "ops-ncc": Math.floor(10 + Math.random() * 20),
+      "ops-beauty": Math.floor(8 + Math.random() * 15),
+      "ops-healthcare": Math.floor(5 + Math.random() * 12),
+      "ops-construction": Math.floor(4 + Math.random() * 10),
     };
   });
   const topAccounts = [
