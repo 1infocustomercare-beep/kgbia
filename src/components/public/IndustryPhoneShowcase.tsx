@@ -2,151 +2,403 @@ import { motion } from "framer-motion";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 
-interface PhoneScreen {
-  label: string;
-  type: "hero" | "services" | "dashboard" | "booking";
+/* ═══════════════════════════════════════════
+   PER-SECTOR SCREEN STYLES
+   Each sector gets unique gradients, layouts, KPIs and visual identity
+   ═══════════════════════════════════════════ */
+
+interface SectorStyle {
+  heroGradient: string;
+  cardBg: string;
+  chartColors: string[];
+  kpis: { label: string; val: string }[];
+  bookingFields: string[];
+  heroSubtext: string;
+  serviceIcon: string;
 }
 
-const SCREEN_CONFIGS: Record<string, PhoneScreen[]> = {
-  default: [
-    { label: "Home", type: "hero" },
-    { label: "Servizi", type: "services" },
-    { label: "Prenotazioni", type: "booking" },
-    { label: "Dashboard", type: "dashboard" },
-  ],
+const SECTOR_STYLES: Partial<Record<IndustryId, SectorStyle>> = {
+  food: {
+    heroGradient: "linear-gradient(135deg, #e85d0422, #ff6b3510)",
+    cardBg: "#e85d0412",
+    chartColors: ["#e85d04", "#ff6b35", "#ffa94d"],
+    kpis: [{ label: "Coperti", val: "86" }, { label: "Ordini", val: "142" }, { label: "Rating", val: "4.9★" }, { label: "Incasso", val: "€3.2K" }],
+    bookingFields: ["Nome", "Telefono", "Data", "Ospiti"],
+    heroSubtext: "Cucina d'autore",
+    serviceIcon: "🍝",
+  },
+  ncc: {
+    heroGradient: "linear-gradient(135deg, #C9A84C22, #8B6F2E10)",
+    cardBg: "#C9A84C12",
+    chartColors: ["#C9A84C", "#8B6F2E", "#E6D5A8"],
+    kpis: [{ label: "Transfer", val: "28" }, { label: "Flotta", val: "12" }, { label: "Rating", val: "5.0★" }, { label: "Revenue", val: "€8.4K" }],
+    bookingFields: ["Partenza", "Arrivo", "Data", "Pax"],
+    heroSubtext: "Luxury Transfer",
+    serviceIcon: "🚘",
+  },
+  beauty: {
+    heroGradient: "linear-gradient(135deg, #e91e8c22, #ff69b410)",
+    cardBg: "#e91e8c12",
+    chartColors: ["#e91e8c", "#ff69b4", "#ffb6c1"],
+    kpis: [{ label: "Appuntamenti", val: "47" }, { label: "Clienti", val: "234" }, { label: "Rating", val: "4.8★" }, { label: "Incasso", val: "€4.1K" }],
+    bookingFields: ["Nome", "Servizio", "Data", "Ora"],
+    heroSubtext: "Beauty & Wellness",
+    serviceIcon: "💅",
+  },
+  healthcare: {
+    heroGradient: "linear-gradient(135deg, #0d9e7122, #14b8a610)",
+    cardBg: "#0d9e7112",
+    chartColors: ["#0d9e71", "#14b8a6", "#5eead4"],
+    kpis: [{ label: "Visite", val: "38" }, { label: "Pazienti", val: "412" }, { label: "Rating", val: "4.9★" }, { label: "Fatturato", val: "€12K" }],
+    bookingFields: ["Paziente", "Telefono", "Data", "Visita"],
+    heroSubtext: "Centro Medico",
+    serviceIcon: "🏥",
+  },
+  retail: {
+    heroGradient: "linear-gradient(135deg, #1a1a1a22, #33333310)",
+    cardBg: "#ffffff08",
+    chartColors: ["#ffffff", "#999999", "#666666"],
+    kpis: [{ label: "Vendite", val: "89" }, { label: "Prodotti", val: "340" }, { label: "Rating", val: "4.7★" }, { label: "Revenue", val: "€5.8K" }],
+    bookingFields: ["Nome", "Email", "Prodotto", "Qta"],
+    heroSubtext: "Fashion & Style",
+    serviceIcon: "🛍️",
+  },
+  fitness: {
+    heroGradient: "linear-gradient(135deg, #f9731622, #ff990010)",
+    cardBg: "#f9731612",
+    chartColors: ["#f97316", "#ff9900", "#fbbf24"],
+    kpis: [{ label: "Iscritti", val: "156" }, { label: "Corsi", val: "24" }, { label: "Rating", val: "4.8★" }, { label: "MRR", val: "€6.2K" }],
+    bookingFields: ["Nome", "Corso", "Data", "Orario"],
+    heroSubtext: "Fitness Club",
+    serviceIcon: "💪",
+  },
+  hospitality: {
+    heroGradient: "linear-gradient(135deg, #92400e22, #b4540010)",
+    cardBg: "#92400e12",
+    chartColors: ["#b45309", "#d97706", "#fbbf24"],
+    kpis: [{ label: "Camere", val: "42" }, { label: "Occupaz.", val: "87%" }, { label: "Rating", val: "4.9★" }, { label: "ADR", val: "€189" }],
+    bookingFields: ["Ospite", "Check-in", "Check-out", "Camere"],
+    heroSubtext: "Luxury Hotel",
+    serviceIcon: "🏨",
+  },
+  beach: {
+    heroGradient: "linear-gradient(135deg, #0891b222, #06b6d410)",
+    cardBg: "#0891b212",
+    chartColors: ["#0891b2", "#06b6d4", "#67e8f9"],
+    kpis: [{ label: "Ombrelloni", val: "120" }, { label: "Prenot.", val: "95" }, { label: "Rating", val: "4.7★" }, { label: "Incasso", val: "€2.8K" }],
+    bookingFields: ["Nome", "Data", "Fila", "Ombrellone"],
+    heroSubtext: "Lido & Beach",
+    serviceIcon: "🏖️",
+  },
+  plumber: {
+    heroGradient: "linear-gradient(135deg, #2563eb22, #3b82f610)",
+    cardBg: "#2563eb12",
+    chartColors: ["#2563eb", "#3b82f6", "#93c5fd"],
+    kpis: [{ label: "Interventi", val: "23" }, { label: "Clienti", val: "87" }, { label: "Rating", val: "4.8★" }, { label: "Fatturato", val: "€3.5K" }],
+    bookingFields: ["Cliente", "Indirizzo", "Tipo", "Urgenza"],
+    heroSubtext: "Pronto Intervento",
+    serviceIcon: "🔧",
+  },
+  electrician: {
+    heroGradient: "linear-gradient(135deg, #eab30822, #f59e0b10)",
+    cardBg: "#eab30812",
+    chartColors: ["#eab308", "#f59e0b", "#fcd34d"],
+    kpis: [{ label: "Lavori", val: "31" }, { label: "Clienti", val: "124" }, { label: "Rating", val: "4.9★" }, { label: "Fatturato", val: "€4.8K" }],
+    bookingFields: ["Cliente", "Indirizzo", "Tipo", "Data"],
+    heroSubtext: "Impianti Elettrici",
+    serviceIcon: "⚡",
+  },
+  construction: {
+    heroGradient: "linear-gradient(135deg, #78350f22, #92400e10)",
+    cardBg: "#78350f12",
+    chartColors: ["#78350f", "#92400e", "#d97706"],
+    kpis: [{ label: "Cantieri", val: "8" }, { label: "Operai", val: "34" }, { label: "Avanz.", val: "72%" }, { label: "Budget", val: "€45K" }],
+    bookingFields: ["Committente", "Cantiere", "Data", "Note"],
+    heroSubtext: "Edilizia & Costruzioni",
+    serviceIcon: "🏗️",
+  },
+  veterinary: {
+    heroGradient: "linear-gradient(135deg, #059a6e22, #10b98110)",
+    cardBg: "#059a6e12",
+    chartColors: ["#059a6e", "#10b981", "#6ee7b7"],
+    kpis: [{ label: "Visite", val: "45" }, { label: "Pazienti", val: "312" }, { label: "Rating", val: "5.0★" }, { label: "Fatturato", val: "€5.1K" }],
+    bookingFields: ["Proprietario", "Animale", "Data", "Tipo"],
+    heroSubtext: "Clinica Veterinaria",
+    serviceIcon: "🐾",
+  },
+  tattoo: {
+    heroGradient: "linear-gradient(135deg, #7c3aed22, #8b5cf610)",
+    cardBg: "#7c3aed12",
+    chartColors: ["#7c3aed", "#8b5cf6", "#c4b5fd"],
+    kpis: [{ label: "Sessioni", val: "18" }, { label: "Artisti", val: "4" }, { label: "Rating", val: "4.9★" }, { label: "Incasso", val: "€3.9K" }],
+    bookingFields: ["Nome", "Stile", "Zona", "Data"],
+    heroSubtext: "Tattoo Studio",
+    serviceIcon: "🎨",
+  },
+  events: {
+    heroGradient: "linear-gradient(135deg, #dc264f22, #ef444410)",
+    cardBg: "#dc264f12",
+    chartColors: ["#dc2626", "#ef4444", "#fca5a5"],
+    kpis: [{ label: "Eventi", val: "12" }, { label: "Ospiti", val: "480" }, { label: "Rating", val: "4.8★" }, { label: "Revenue", val: "€18K" }],
+    bookingFields: ["Evento", "Data", "Location", "Budget"],
+    heroSubtext: "Event Planning",
+    serviceIcon: "🎉",
+  },
+  logistics: {
+    heroGradient: "linear-gradient(135deg, #0369a122, #0284c710)",
+    cardBg: "#0369a112",
+    chartColors: ["#0369a1", "#0284c7", "#38bdf8"],
+    kpis: [{ label: "Spedizioni", val: "67" }, { label: "Mezzi", val: "15" }, { label: "On-Time", val: "96%" }, { label: "Revenue", val: "€22K" }],
+    bookingFields: ["Mittente", "Dest.", "Data", "Tipo"],
+    heroSubtext: "Logistica & Trasporti",
+    serviceIcon: "📦",
+  },
 };
 
-/** Renders a mini iPhone Pro frame with styled placeholder content */
-function IPhoneFrame({ 
-  screen, color, emoji, companyName, services, index 
-}: { 
-  screen: PhoneScreen; color: string; emoji: string; companyName: string; 
-  services: { name: string; emoji?: string; price: number }[]; index: number;
+function getSectorStyle(id: IndustryId): SectorStyle {
+  const cfg = INDUSTRY_CONFIGS[id];
+  return SECTOR_STYLES[id] || {
+    heroGradient: `linear-gradient(135deg, ${cfg.defaultPrimaryColor}22, ${cfg.defaultPrimaryColor}10)`,
+    cardBg: `${cfg.defaultPrimaryColor}12`,
+    chartColors: [cfg.defaultPrimaryColor, cfg.defaultPrimaryColor, cfg.defaultPrimaryColor],
+    kpis: [{ label: "Clienti", val: "128" }, { label: "Ordini", val: "34" }, { label: "Rating", val: "4.8★" }, { label: "Incasso", val: "€2.4K" }],
+    bookingFields: ["Nome", "Telefono", "Data", "Ora"],
+    heroSubtext: cfg.label,
+    serviceIcon: cfg.emoji,
+  };
+}
+
+/* ═══════════════════════════════════════════
+   iPHONE FRAME COMPONENT — Premium with unique screens per sector
+   ═══════════════════════════════════════════ */
+
+function IPhoneFrame({
+  screen, color, emoji, companyName, services, index, sectorStyle,
+}: {
+  screen: { label: string; type: string };
+  color: string;
+  emoji: string;
+  companyName: string;
+  services: { name: string; emoji?: string; price: number }[];
+  index: number;
+  sectorStyle: SectorStyle;
 }) {
+  const isCenter = index === 1 || index === 2;
+
   return (
     <motion.div
-      className="flex-shrink-0 w-[140px] sm:w-[160px]"
-      initial={{ opacity: 0, y: 30, rotateY: -8 }}
-      whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+      className="flex-shrink-0 w-[130px] sm:w-[155px]"
+      initial={{ opacity: 0, y: 40 + (isCenter ? 0 : 15), scale: 0.9 }}
+      whileInView={{ opacity: 1, y: isCenter ? -8 : 0, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.12, ease: "easeOut" }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* iPhone frame */}
-      <div className="relative rounded-[20px] sm:rounded-[24px] border-[2px] border-white/15 overflow-hidden shadow-2xl"
-        style={{ background: "linear-gradient(180deg, rgba(30,30,30,1) 0%, rgba(15,15,15,1) 100%)" }}>
-        
-        {/* Dynamic Island */}
-        <div className="flex justify-center pt-2 pb-1">
-          <div className="w-[50px] h-[14px] bg-black rounded-full border border-white/10" />
-        </div>
+      {/* Ambient glow behind phone */}
+      <div className="relative">
+        <div className="absolute -inset-3 rounded-[32px] blur-2xl opacity-20 pointer-events-none"
+          style={{ background: `radial-gradient(circle, ${color}40, transparent 70%)` }} />
 
-        {/* Screen content */}
-        <div className="aspect-[9/16] overflow-hidden relative" style={{ minHeight: 220 }}>
-          {screen.type === "hero" && (
-            <div className="h-full flex flex-col">
-              <div className="flex-1 relative flex flex-col items-center justify-center p-3 text-center"
-                style={{ background: `linear-gradient(180deg, ${color}22 0%, ${color}08 100%)` }}>
-                <span className="text-2xl mb-1.5">{emoji}</span>
-                <p className="text-[9px] font-bold text-white/90 leading-tight">{companyName}</p>
-                <p className="text-[7px] text-white/40 mt-0.5">Benvenuti</p>
-                <div className="mt-2 px-3 py-1 rounded-full text-[7px] font-semibold text-white"
-                  style={{ backgroundColor: color }}>
-                  Scopri di più
+        {/* iPhone shell */}
+        <div className="relative rounded-[22px] sm:rounded-[26px] overflow-hidden"
+          style={{
+            border: "2.5px solid rgba(255,255,255,0.12)",
+            background: "linear-gradient(180deg, #1c1c1e 0%, #0a0a0a 100%)",
+            boxShadow: `0 20px 60px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)`,
+          }}>
+
+          {/* Dynamic Island */}
+          <div className="flex justify-center pt-2 pb-0.5">
+            <div className="w-[48px] h-[13px] bg-black rounded-full" style={{ boxShadow: "inset 0 0 3px rgba(255,255,255,0.08)" }} />
+          </div>
+
+          {/* Screen */}
+          <div className="aspect-[9/17] overflow-hidden relative" style={{ minHeight: 210 }}>
+
+            {/* ═══ HERO SCREEN ═══ */}
+            {screen.type === "hero" && (
+              <div className="h-full flex flex-col" style={{ background: sectorStyle.heroGradient }}>
+                <div className="flex-1 flex flex-col items-center justify-center p-3 text-center relative">
+                  {/* Decorative ring */}
+                  <motion.div className="absolute w-20 h-20 rounded-full border border-dashed opacity-10"
+                    style={{ borderColor: color }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }} />
+                  <motion.span className="text-3xl mb-2 drop-shadow-lg"
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >{emoji}</motion.span>
+                  <p className="text-[10px] font-bold text-white/90 leading-tight tracking-wide">{companyName}</p>
+                  <p className="text-[7px] text-white/35 mt-0.5 tracking-widest uppercase">{sectorStyle.heroSubtext}</p>
+                  <motion.div className="mt-3 px-4 py-1.5 rounded-full text-[7px] font-bold text-white tracking-wider uppercase relative overflow-hidden"
+                    style={{ backgroundColor: color, boxShadow: `0 4px 15px ${color}50` }}>
+                    <motion.div className="absolute inset-0"
+                      style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%)" }}
+                      animate={{ x: ["-200%", "200%"] }}
+                      transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }} />
+                    <span className="relative">Scopri di più</span>
+                  </motion.div>
+                </div>
+                {/* Stats bar */}
+                <div className="flex gap-0.5 p-1.5">
+                  {sectorStyle.kpis.slice(0, 3).map((k, i) => (
+                    <div key={i} className="flex-1 text-center p-1 rounded-md" style={{ backgroundColor: `${color}10` }}>
+                      <p className="text-[6px] text-white/25">{k.label}</p>
+                      <p className="text-[7px] font-bold" style={{ color }}>{k.val}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="p-2 space-y-1">
-                {[1,2,3].map(i => (
-                  <div key={i} className="h-2 rounded-full bg-white/5" style={{ width: `${90 - i * 15}%` }} />
-                ))}
-              </div>
-            </div>
-          )}
+            )}
 
-          {screen.type === "services" && (
-            <div className="h-full p-2.5 space-y-1.5">
-              <p className="text-[8px] font-bold text-white/80 mb-1">Servizi</p>
-              {services.slice(0, 5).map((s, i) => (
-                <div key={i} className="flex items-center gap-1.5 p-1.5 rounded-lg"
-                  style={{ backgroundColor: `${color}12`, border: `1px solid ${color}20` }}>
-                  <span className="text-[10px]">{s.emoji || "✨"}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[7px] font-medium text-white/80 truncate">{s.name}</p>
-                  </div>
-                  <span className="text-[7px] font-bold" style={{ color }}>€{s.price}</span>
+            {/* ═══ SERVICES SCREEN ═══ */}
+            {screen.type === "services" && (
+              <div className="h-full p-2.5">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                  <p className="text-[8px] font-bold text-white/80 tracking-wide">{INDUSTRY_CONFIGS[services[0]?.emoji ? "food" : "custom"]?.terminology?.items || "Servizi"}</p>
                 </div>
-              ))}
-            </div>
-          )}
-
-          {screen.type === "booking" && (
-            <div className="h-full p-2.5 flex flex-col">
-              <p className="text-[8px] font-bold text-white/80 mb-2">Prenotazione</p>
-              <div className="space-y-1.5 flex-1">
-                {["Nome", "Telefono", "Data", "Ora"].map((f, i) => (
-                  <div key={i} className="h-5 rounded-md bg-white/5 border border-white/10 px-1.5 flex items-center">
-                    <span className="text-[6px] text-white/25">{f}</span>
-                  </div>
-                ))}
-                <div className="h-5 rounded-md flex items-center justify-center text-[7px] font-semibold text-white mt-1"
-                  style={{ backgroundColor: color }}>
-                  Conferma
+                <div className="space-y-1">
+                  {services.slice(0, 4).map((s, i) => (
+                    <motion.div key={i} className="flex items-center gap-1.5 p-1.5 rounded-lg relative overflow-hidden"
+                      style={{ backgroundColor: sectorStyle.cardBg, border: `0.5px solid ${color}18` }}
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.3 + i * 0.08 }}>
+                      <span className="text-[10px]">{s.emoji || sectorStyle.serviceIcon}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[7px] font-semibold text-white/80 truncate">{s.name}</p>
+                      </div>
+                      <span className="text-[7px] font-bold" style={{ color }}>€{s.price}</span>
+                    </motion.div>
+                  ))}
+                </div>
+                {/* Category tabs */}
+                <div className="flex gap-1 mt-2">
+                  {["Tutti", "Popolari", "Nuovi"].map((t, i) => (
+                    <div key={i} className="px-2 py-0.5 rounded-full text-[5px] font-bold"
+                      style={i === 0 ? { backgroundColor: color, color: "#fff" } : { backgroundColor: `${color}10`, color: `${color}90` }}>
+                      {t}
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="flex gap-1 mt-2">
-                {[1,2,3].map(i => (
-                  <div key={i} className="flex-1 h-1 rounded-full" 
-                    style={{ backgroundColor: i === 1 ? color : `${color}30` }} />
-                ))}
-              </div>
-            </div>
-          )}
+            )}
 
-          {screen.type === "dashboard" && (
-            <div className="h-full p-2.5 space-y-1.5">
-              <div className="flex items-center gap-1 mb-1">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
-                <p className="text-[7px] font-bold text-white/70">Dashboard</p>
-              </div>
-              {/* KPI cards */}
-              <div className="grid grid-cols-2 gap-1">
-                {[
-                  { label: "Oggi", val: "€1.240" },
-                  { label: "Ordini", val: "34" },
-                  { label: "Clienti", val: "128" },
-                  { label: "Rating", val: "4.8★" },
-                ].map((kpi, i) => (
-                  <div key={i} className="p-1.5 rounded-md bg-white/5 border border-white/8">
-                    <p className="text-[5px] text-white/30">{kpi.label}</p>
-                    <p className="text-[8px] font-bold" style={{ color }}>{kpi.val}</p>
+            {/* ═══ BOOKING SCREEN ═══ */}
+            {screen.type === "booking" && (
+              <div className="h-full p-2.5 flex flex-col">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                  <p className="text-[8px] font-bold text-white/80">Prenotazione</p>
+                </div>
+                <div className="space-y-1.5 flex-1">
+                  {sectorStyle.bookingFields.map((f, i) => (
+                    <div key={i} className="h-[18px] rounded-lg border px-2 flex items-center"
+                      style={{ backgroundColor: `${color}06`, borderColor: `${color}15` }}>
+                      <span className="text-[6px] text-white/25 tracking-wide">{f}</span>
+                    </div>
+                  ))}
+                  {/* Date picker mock */}
+                  <div className="grid grid-cols-7 gap-[1px] mt-1">
+                    {Array.from({ length: 14 }).map((_, i) => (
+                      <div key={i} className="aspect-square rounded-sm flex items-center justify-center text-[4px]"
+                        style={{
+                          backgroundColor: i === 8 ? color : `${color}06`,
+                          color: i === 8 ? "#fff" : `${color}60`,
+                          fontWeight: i === 8 ? 700 : 400,
+                        }}>
+                        {i + 15}
+                      </div>
+                    ))}
                   </div>
-                ))}
+                  <motion.div className="h-[18px] rounded-lg flex items-center justify-center text-[7px] font-bold text-white mt-1 relative overflow-hidden"
+                    style={{ backgroundColor: color, boxShadow: `0 3px 12px ${color}40` }}>
+                    <motion.div className="absolute inset-0"
+                      style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)" }}
+                      animate={{ x: ["-200%", "200%"] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 4 }} />
+                    <span className="relative">Conferma ✓</span>
+                  </motion.div>
+                </div>
               </div>
-              {/* Mini chart */}
-              <div className="mt-1 h-8 rounded-md bg-white/3 border border-white/5 flex items-end gap-[2px] p-1">
-                {[40, 65, 50, 80, 55, 90, 70].map((h, i) => (
-                  <div key={i} className="flex-1 rounded-t-sm" style={{ height: `${h}%`, backgroundColor: `${color}${i === 5 ? 'CC' : '55'}` }} />
-                ))}
+            )}
+
+            {/* ═══ DASHBOARD SCREEN ═══ */}
+            {screen.type === "dashboard" && (
+              <div className="h-full p-2.5">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-1">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <p className="text-[7px] font-bold text-white/70">Dashboard</p>
+                  </div>
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="w-1 h-1 rounded-full" style={{ backgroundColor: `${color}40` }} />
+                    ))}
+                  </div>
+                </div>
+                {/* KPI Grid */}
+                <div className="grid grid-cols-2 gap-1">
+                  {sectorStyle.kpis.map((kpi, i) => (
+                    <motion.div key={i} className="p-1.5 rounded-lg relative overflow-hidden"
+                      style={{ backgroundColor: `${color}08`, border: `0.5px solid ${color}10` }}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.4 + i * 0.08 }}>
+                      <p className="text-[5px] text-white/30 tracking-wider uppercase">{kpi.label}</p>
+                      <p className="text-[9px] font-bold" style={{ color }}>{kpi.val}</p>
+                    </motion.div>
+                  ))}
+                </div>
+                {/* Chart */}
+                <div className="mt-1.5 h-10 rounded-lg flex items-end gap-[2px] p-1.5"
+                  style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}08` }}>
+                  {[35, 55, 42, 78, 62, 90, 45, 82, 68].map((h, i) => (
+                    <motion.div key={i} className="flex-1 rounded-t-sm"
+                      style={{ backgroundColor: sectorStyle.chartColors[i % sectorStyle.chartColors.length] + (i === 5 ? "CC" : "55") }}
+                      initial={{ height: 0 }}
+                      whileInView={{ height: `${h}%` }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.5 + i * 0.04, duration: 0.4 }}
+                    />
+                  ))}
+                </div>
+                {/* Activity feed */}
+                <div className="mt-1.5 space-y-0.5">
+                  {["Nuovo ordine", "Pagamento", "Review 5★"].map((t, i) => (
+                    <div key={i} className="flex items-center gap-1 px-1 py-0.5 rounded text-[5px]"
+                      style={{ backgroundColor: `${color}06` }}>
+                      <div className="w-1 h-1 rounded-full" style={{ backgroundColor: sectorStyle.chartColors[i % sectorStyle.chartColors.length] }} />
+                      <span className="text-white/40">{t}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="h-2 w-16 rounded-full bg-white/5 mt-1" />
-            </div>
-          )}
+            )}
 
-          {/* Ambient glow */}
-          <div className="absolute inset-0 pointer-events-none"
-            style={{ background: `radial-gradient(circle at 50% 20%, ${color}08 0%, transparent 70%)` }} />
-        </div>
+            {/* Screen ambient glow */}
+            <div className="absolute inset-0 pointer-events-none"
+              style={{ background: `radial-gradient(circle at 50% 30%, ${color}08 0%, transparent 60%)` }} />
+          </div>
 
-        {/* Home indicator */}
-        <div className="flex justify-center py-1.5">
-          <div className="w-8 h-1 rounded-full bg-white/20" />
+          {/* Home indicator */}
+          <div className="flex justify-center py-1.5">
+            <div className="w-9 h-[3px] rounded-full bg-white/15" />
+          </div>
         </div>
       </div>
 
       {/* Label */}
-      <p className="text-center text-[9px] sm:text-[10px] text-white/40 mt-2 font-medium">{screen.label}</p>
+      <p className="text-center text-[8px] sm:text-[9px] text-white/35 mt-2.5 font-semibold tracking-wider uppercase">{screen.label}</p>
     </motion.div>
   );
 }
+
+/* ═══════════════════════════════════════════
+   MAIN SHOWCASE COMPONENT
+   ═══════════════════════════════════════════ */
 
 interface IndustryPhoneShowcaseProps {
   industryId: IndustryId;
@@ -154,16 +406,24 @@ interface IndustryPhoneShowcaseProps {
   compact?: boolean;
 }
 
+const SCREENS = [
+  { label: "Home", type: "hero" },
+  { label: "Catalogo", type: "services" },
+  { label: "Prenota", type: "booking" },
+  { label: "Dashboard", type: "dashboard" },
+];
+
 export default function IndustryPhoneShowcase({ industryId, className = "", compact = false }: IndustryPhoneShowcaseProps) {
   const cfg = INDUSTRY_CONFIGS[industryId];
   const demo = DEMO_INDUSTRY_DATA[industryId];
-  const screens = SCREEN_CONFIGS.default;
   const color = cfg.defaultPrimaryColor;
+  const sectorStyle = getSectorStyle(industryId);
 
   return (
     <div className={`${className}`}>
-      <div className={`flex items-end justify-center gap-3 sm:gap-5 ${compact ? "scale-[0.85] origin-center" : ""}`}>
-        {screens.map((screen, i) => (
+      <div className={`flex items-end justify-center gap-2 sm:gap-4 ${compact ? "scale-[0.8] origin-center" : ""}`}
+        style={{ perspective: "1000px" }}>
+        {SCREENS.map((screen, i) => (
           <IPhoneFrame
             key={screen.type}
             screen={screen}
@@ -172,6 +432,7 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
             companyName={demo.companyName}
             services={demo.services}
             index={i}
+            sectorStyle={sectorStyle}
           />
         ))}
       </div>
@@ -179,34 +440,39 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
   );
 }
 
-/** Full section with title + phone showcase for use in demo pages & partner dashboards */
-export function IndustryShowcaseSection({ 
-  industryId, 
+/* ═══════════════════════════════════════════
+   SECTION & GRID EXPORTS
+   ═══════════════════════════════════════════ */
+
+export function IndustryShowcaseSection({
+  industryId,
   onViewDemo,
   showDemoLink = true,
-}: { 
-  industryId: IndustryId; 
+}: {
+  industryId: IndustryId;
   onViewDemo?: () => void;
   showDemoLink?: boolean;
 }) {
   const cfg = INDUSTRY_CONFIGS[industryId];
   const demo = DEMO_INDUSTRY_DATA[industryId];
-  const slug = DEMO_SLUGS[industryId];
 
   return (
     <div className="py-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">{cfg.emoji}</span>
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+            style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}>
+            {cfg.emoji}
+          </div>
           <div>
             <h3 className="text-sm font-bold text-white">{cfg.label}</h3>
-            <p className="text-[10px] text-white/40">{demo.companyName}</p>
+            <p className="text-[10px] text-white/35">{demo.companyName} · {cfg.description}</p>
           </div>
         </div>
         {showDemoLink && (
           <motion.button
             onClick={onViewDemo}
-            className="px-3 py-1.5 rounded-lg text-[10px] font-semibold text-white/80 border border-white/10 hover:border-white/30 transition"
+            className="px-4 py-2 rounded-xl text-[10px] font-bold text-white/80 border border-white/10 hover:border-white/30 hover:bg-white/5 transition-all"
             whileTap={{ scale: 0.95 }}
           >
             Apri Demo →
@@ -218,21 +484,26 @@ export function IndustryShowcaseSection({
   );
 }
 
-/** Grid of all industries with phone showcases — used in partner dashboards */
 export function AllIndustriesShowcase({ onViewDemo }: { onViewDemo?: (id: IndustryId, slug: string) => void }) {
   const allIds = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {allIds.map(id => {
         const slug = DEMO_SLUGS[id];
         return (
-          <div key={id} className="rounded-2xl bg-white/[0.02] border border-white/5 p-4 hover:border-white/10 transition">
+          <motion.div key={id}
+            className="rounded-2xl border border-white/[0.06] p-4 sm:p-5 hover:border-white/15 transition-all"
+            style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005))" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+          >
             <IndustryShowcaseSection
               industryId={id}
               onViewDemo={() => onViewDemo?.(id, slug)}
             />
-          </div>
+          </motion.div>
         );
       })}
     </div>
