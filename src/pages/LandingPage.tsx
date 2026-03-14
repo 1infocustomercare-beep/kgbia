@@ -1955,6 +1955,7 @@ const LandingPage = () => {
   const [avgOrder, setAvgOrder] = useState(25);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
+  const [ctaVisible, setCtaVisible] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeIndustry, setActiveIndustry] = useState(0);
   const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
@@ -1970,7 +1971,10 @@ const LandingPage = () => {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
   useEffect(() => {
-    const h = () => setNavScrolled(window.scrollY > 60);
+    const h = () => {
+      setNavScrolled(window.scrollY > 60);
+      setCtaVisible(window.scrollY > 400);
+    };
     window.addEventListener("scroll", h, { passive: true });
     return () => window.removeEventListener("scroll", h);
   }, []);
@@ -4906,24 +4910,28 @@ const LandingPage = () => {
         </div>
       </footer>
 
-      {/* ═══════ STICKY CTA MOBILE ═══════ */}
-      <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] bg-background/80 backdrop-blur-2xl border-t border-border/20 md:hidden"
-        initial={{ y: 100 }} animate={{ y: 0 }} transition={{ delay: 2, type: "spring", damping: 25 }}>
-        <div className="flex gap-2">
-          <motion.button onClick={() => scrollTo("pricing")}
-            className="flex-1 py-3.5 rounded-xl bg-vibrant-gradient text-primary-foreground font-bold text-sm tracking-wider font-heading uppercase"
-            whileTap={{ scale: 0.97 }}
-          >
-            Inizia Ora
-          </motion.button>
-          <motion.button onClick={() => navigate("/demo")}
-            className="px-4 py-3.5 rounded-xl border border-primary/15 text-primary"
-            whileTap={{ scale: 0.95 }}
-          >
-            <Play className="w-4 h-4" />
-          </motion.button>
-        </div>
-      </motion.div>
+      {/* ═══════ STICKY CTA ═══════ */}
+      <AnimatePresence>
+        {ctaVisible && (
+          <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] bg-background/80 backdrop-blur-2xl border-t border-border/20"
+            initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} transition={{ type: "spring", damping: 25 }}>
+            <div className="flex gap-2 max-w-md mx-auto">
+              <motion.button onClick={() => scrollTo("pricing")}
+                className="flex-1 py-3.5 rounded-xl bg-vibrant-gradient text-primary-foreground font-bold text-sm tracking-wider font-heading uppercase"
+                whileTap={{ scale: 0.97 }}
+              >
+                Inizia Ora
+              </motion.button>
+              <motion.button onClick={() => navigate("/demo")}
+                className="px-4 py-3.5 rounded-xl border border-primary/15 text-primary"
+                whileTap={{ scale: 0.95 }}
+              >
+                <Play className="w-4 h-4" />
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* ATLAS Voice Agent */}
       <Suspense fallback={null}>
         <EmpireVoiceAgent />
