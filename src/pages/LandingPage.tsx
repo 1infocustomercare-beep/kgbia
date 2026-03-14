@@ -1714,26 +1714,23 @@ const LandingPage = () => {
         <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
           {services.map((s, i) => (
-            <motion.div key={i}
-              className="group relative p-5 sm:p-6 rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur-sm hover:border-primary/20 hover:bg-primary/[0.02] transition-all duration-500 overflow-hidden"
-              variants={fadeUp}
-              whileHover={{ y: -4, scale: 1.01 }}
-            >
-              {/* Ambient corner glow */}
-              <div className={`absolute -top-8 -right-8 w-24 h-24 rounded-full bg-gradient-to-br ${s.color} opacity-[0.04] blur-2xl group-hover:opacity-[0.1] transition-opacity duration-500 pointer-events-none`} />
-              {/* Corner brackets on hover */}
-              <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-primary/15 rounded-tl-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-primary/15 rounded-tr-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-primary/15 rounded-bl-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-primary/15 rounded-br-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="flex items-center justify-between mb-4">
-                <PremiumIcon gradient={s.color} size="md" delay={i * 0.3}>
-                  {s.icon}
-                </PremiumIcon>
-                <span className="text-[0.5rem] px-2 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[2px] font-heading">{s.tag}</span>
-              </div>
-              <h3 className="font-heading text-sm sm:text-base font-semibold text-foreground mb-2">{s.title}</h3>
-              <p className="text-xs sm:text-sm text-foreground/40 leading-[1.7]">{s.desc}</p>
+            <motion.div key={i} variants={fadeUp} whileHover={{ scale: 1.01 }}>
+              <PremiumCard glow scan delay={i} className="p-5 sm:p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <PremiumIcon gradient={s.color} size="md" delay={i * 0.3}>
+                    {s.icon}
+                  </PremiumIcon>
+                  <motion.span className="text-[0.5rem] px-2.5 py-1 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[2px] font-heading relative overflow-hidden"
+                    animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.25)", "hsla(265,70%,60%,0.1)"] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.4 }}>
+                    <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)" }}
+                      animate={{ x: ["-150%", "250%"] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }} />
+                    <span className="relative z-10">{s.tag}</span>
+                  </motion.span>
+                </div>
+                <h3 className="font-heading text-sm sm:text-base font-semibold text-foreground mb-2">{s.title}</h3>
+                <p className="text-xs sm:text-sm text-foreground/40 leading-[1.7]">{s.desc}</p>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
