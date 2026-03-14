@@ -118,6 +118,9 @@ const SuperAdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTenant, setSelectedTenant] = useState<CompanyTenant | null>(null);
   const [showCreateTenant, setShowCreateTenant] = useState(false);
+  const [subscriptions, setSubscriptions] = useState<SubscriptionRecord[]>([]);
+  const [editingSub, setEditingSub] = useState<string | null>(null);
+  const [editPlan, setEditPlan] = useState("");
 
   // AI-Mary
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
