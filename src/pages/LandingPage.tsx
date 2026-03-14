@@ -95,8 +95,13 @@ SectionLabel.displayName = "SectionLabel";
 
 /* ═══ Neural Cells Background — flowing DNA data network ═══ */
 const NeuralCellsBackground = () => {
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
-  const CELL_COUNT = isMobile ? 18 : 40;
+  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 640);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  const CELL_COUNT = isMobile ? 22 : 40;
 
   const cells = useMemo(() =>
     Array.from({ length: CELL_COUNT }, (_, i) => ({
