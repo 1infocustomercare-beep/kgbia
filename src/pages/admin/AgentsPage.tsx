@@ -595,6 +595,8 @@ export default function AgentsPage() {
     },
   });
 
+  const ALL_INDUSTRIES = ["food", "ncc", "beauty", "healthcare", "retail", "fitness", "hospitality", "beach", "plumber", "electrician", "agriturismo", "cleaning", "legal", "accounting", "garage", "photography", "construction", "gardening", "veterinary", "tattoo", "childcare", "education", "events", "logistics", "custom"];
+
   // Bulk toggle all agents
   const bulkToggle = useMutation({
     mutationFn: async (enable: boolean) => {
@@ -617,6 +619,30 @@ export default function AgentsPage() {
       queryClient.invalidateQueries({ queryKey: ["ai-agent-configs"] });
       toast({ title: "✅ Tutti gli agenti aggiornati" });
       setBulkAction(null);
+    },
+  });
+
+  // Bulk activate ALL agents in ALL industries
+  const bulkActivateAll = useMutation({
+    mutationFn: async () => {
+      for (const agent of AGENTS) {
+        const { data: existing } = await supabase
+          .from("ai_agent_configs").select("id").eq("agent_name", agent.name).maybeSingle();
+        if (existing) {
+          await supabase.from("ai_agent_configs")
+            .update({ is_enabled: true, allowed_industries: ALL_INDUSTRIES, updated_at: new Date().toISOString() }).eq("id", existing.id);
+        } else {
+          await supabase.from("ai_agent_configs").insert({
+            agent_name: agent.name, is_enabled: true, display_name: agent.displayName,
+            description: agent.description, icon: agent.icon, color: agent.color,
+            allowed_industries: ALL_INDUSTRIES,
+          });
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ai-agent-configs"] });
+      toast({ title: "🚀 Tutti gli agenti attivati su tutti i 25 settori!", description: `${AGENTS.length} agenti ora coprono ${ALL_INDUSTRIES.length} settori.` });
     },
   });
 
