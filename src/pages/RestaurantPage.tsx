@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef, useEffect, FormEvent } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/gdpr/CookieBanner";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
@@ -27,6 +27,7 @@ import type { MenuItem } from "@/types/restaurant";
 import { useCart } from "@/context/CartContext";
 import { applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
 import { getBusinessTypeConfig, normalizeBusinessType } from "@/lib/business-type";
+const RestaurantVoiceAgent = lazy(() => import("@/components/restaurant/RestaurantVoiceAgent"));
 
 const RestaurantPage = () => {
   const { slug } = useParams();
@@ -878,6 +879,13 @@ const RestaurantPage = () => {
       <FloatingCartButton onClick={() => setCartOpen(true)} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} allMenuItems={menu} />
       <CookieBanner restaurantId={dbRestaurant?.id} />
+      <Suspense fallback={null}>
+        <RestaurantVoiceAgent
+          restaurantName={restaurantName}
+          menuItems={menu}
+          primaryColor={dbRestaurant?.primary_color || undefined}
+        />
+      </Suspense>
     </div>
   );
 };
