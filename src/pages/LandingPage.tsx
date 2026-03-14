@@ -913,8 +913,10 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                 </div>
                 {[
                   { label: "Investimento", vals: ["€1.997", "€4.997", "€7.997"] },
+                  { label: "In 6 rate", vals: [`€${Math.round(1997/6)}/m`, `€${Math.round(4997/6)}/m`, `€${Math.round(7997/6)}/m`] },
                   { label: "Canone mensile", vals: ["€49/mese", "€29/mese", "€0 per sempre"] },
                   { label: "Commissioni", vals: ["2%", "1%", "0%"] },
+                  { label: "Costo reale 24 mesi", vals: [`€${(1997 + 49*24).toLocaleString("it-IT")}`, `€${(4997 + 29*24).toLocaleString("it-IT")}`, "€7.997"] },
                   { label: "Agenti IA inclusi", vals: ["0", "2", "5"] },
                   { label: "Mesi inclusi", vals: ["12", "18", "24"] },
                   { label: "Account Manager", vals: ["—", "—", "✓ Dedicato"] },
