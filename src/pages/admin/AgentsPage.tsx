@@ -749,7 +749,6 @@ export default function AgentsPage() {
               <p className="text-sm text-muted-foreground mt-0.5">Gestisci, modifica, testa e monitora tutti gli agenti IA</p>
             </div>
           </div>
-          </div>
           <div className="flex items-center gap-2">
             <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 animate-pulse">
               {activeCount} attivi
