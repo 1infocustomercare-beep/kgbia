@@ -259,7 +259,8 @@ const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
 
 function getSectorStyle(id: IndustryId): SectorStyle {
   const cfg = INDUSTRY_CONFIGS[id];
-  return SECTOR_STYLES[id] || {
+  const base = SECTOR_STYLES[id] || {};
+  const defaults: SectorStyle = {
     heroGradient: `linear-gradient(135deg, ${cfg.defaultPrimaryColor}22, ${cfg.defaultPrimaryColor}10)`,
     cardBg: `${cfg.defaultPrimaryColor}12`,
     chartColors: [cfg.defaultPrimaryColor, cfg.defaultPrimaryColor, cfg.defaultPrimaryColor],
@@ -267,7 +268,29 @@ function getSectorStyle(id: IndustryId): SectorStyle {
     bookingFields: ["Nome", "Telefono", "Data", "Ora"],
     heroSubtext: cfg.label,
     serviceIcon: cfg.emoji,
+    analyticsTitle: "Analytics",
+    analyticsBars: [30, 55, 42, 78, 62, 90, 48, 72, 85, 40, 65, 58],
+    crmClients: [
+      { name: "Marco R.", tag: "VIP", spent: "€1.2K" },
+      { name: "Laura B.", tag: "Nuovo", spent: "€340" },
+      { name: "Giuseppe F.", tag: "Fedele", spent: "€890" },
+      { name: "Anna M.", tag: "Premium", spent: "€2.1K" },
+    ],
+    notifications: [
+      { icon: "🔔", text: "Nuovo ordine ricevuto", time: "2m" },
+      { icon: "⭐", text: "Recensione 5 stelle", time: "15m" },
+      { icon: "💳", text: "Pagamento confermato", time: "32m" },
+      { icon: "📅", text: "Prenotazione domani", time: "1h" },
+    ],
+    settingsToggles: [
+      { label: "Prenotazioni online", on: true },
+      { label: "Notifiche push", on: true },
+      { label: "Pagamenti online", on: true },
+      { label: "Chat clienti", on: false },
+      { label: "Marketing AI", on: true },
+    ],
   };
+  return { ...defaults, ...base };
 }
 
 /* ═══════════════════════════════════════════
