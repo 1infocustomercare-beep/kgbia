@@ -370,6 +370,7 @@ const SuperAdminDashboard = () => {
     { id: "feature_requests", label: "Richieste", icon: <Lightbulb className="w-5 h-5" /> },
     { id: "media", label: "Media", icon: <Film className="w-5 h-5" /> },
     { id: "brand" as SuperTab, label: "Brand", icon: <Crown className="w-5 h-5" /> },
+    { id: "showcase", label: "Settori", icon: <Eye className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => { await signOut(); navigate("/admin"); };
