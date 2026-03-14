@@ -607,97 +607,124 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
               </p>
             </motion.div>
 
-            {/* Package Cards — horizontal scroll on mobile */}
-            <div className="sm:hidden mb-6">
-              <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-3 px-1 -mx-1 scrollbar-hide">
-                {PACKAGE_TIERS.map((p) => {
-                  const isSelected = selectedPackage === p.id;
-                  return (
-                    <motion.div key={p.id}
-                      onClick={() => setSelectedPackage(p.id)}
-                      className={`relative flex-shrink-0 w-[280px] snap-center p-4 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
-                        isSelected
-                          ? p.id === "empire"
-                            ? "border-2 border-accent/40 bg-gradient-to-b from-accent/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(35,45%,50%,0.12)]"
-                            : "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_30px_hsla(265,70%,60%,0.1)]"
-                          : "border border-border/30 bg-background/40 opacity-80"
-                      }`}
-                      whileTap={{ scale: 0.98 }}>
-                      {p.badge && (
-                        <div className={`absolute top-0 right-0 px-2.5 py-0.5 rounded-bl-xl text-[0.45rem] font-bold tracking-[1.5px] font-heading uppercase ${
-                          p.id === "empire"
-                            ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black"
-                            : p.badge === "Più Scelto" ? "bg-vibrant-gradient text-primary-foreground"
-                            : "bg-gradient-to-r from-accent to-primary text-primary-foreground"
-                        }`}>{p.badge}</div>
-                      )}
-                      {isSelected && <div className={`absolute top-0 left-0 right-0 h-[2px] ${p.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />}
+            {/* Package Cards — stacked on mobile */}
+            <div className="sm:hidden space-y-4 mb-6">
+              {PACKAGE_TIERS.map((p) => {
+                const isSelected = selectedPackage === p.id;
+                const isEmpire = p.id === "empire";
+                return (
+                  <motion.div key={p.id}
+                    onClick={() => setSelectedPackage(p.id)}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className={`relative w-full rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
+                      isEmpire
+                        ? "border-2 border-accent/40 shadow-[0_0_50px_hsla(35,45%,50%,0.15)]"
+                        : isSelected
+                          ? "border-2 border-primary/40 shadow-[0_0_30px_hsla(265,70%,60%,0.1)]"
+                          : "border border-border/30"
+                    }`}
+                    style={{
+                      background: isEmpire
+                        ? "linear-gradient(165deg, hsla(35,30%,12%,0.6), hsla(265,15%,10%,0.8))"
+                        : "hsla(265,15%,10%,0.4)"
+                    }}
+                    whileTap={{ scale: 0.99 }}>
 
-                      <p className="text-[0.55rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
+                    {/* Top accent line */}
+                    <div className={`h-[2px] w-full ${isEmpire ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />
 
-                      {/* Price row */}
-                      <div className="mt-1.5 flex items-baseline gap-2">
-                        <span className="text-2xl font-heading font-bold text-foreground">€{p.price.toLocaleString("it-IT")}</span>
-                        <span className="text-[0.6rem] text-foreground/20 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
+                    {/* Badge */}
+                    {p.badge && (
+                      <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
+                        isEmpire
+                          ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black"
+                          : p.badge === "Più Scelto" ? "bg-vibrant-gradient text-primary-foreground"
+                          : "bg-gradient-to-r from-accent to-primary text-primary-foreground"
+                      }`}>{p.badge}</div>
+                    )}
+
+                    <div className="p-5">
+                      {/* Header: Name + Price */}
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="text-[0.6rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
+                          <div className="mt-1 flex items-baseline gap-2">
+                            <span className="text-3xl font-heading font-bold text-foreground">€{p.price.toLocaleString("it-IT")}</span>
+                            <span className="text-xs text-foreground/20 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
+                          </div>
+                          <p className="text-[0.55rem] text-foreground/25 mt-0.5">
+                            oppure 6×€{Math.round(p.price / 6)}/mese · <span className="text-accent/60 font-semibold">0% interessi</span>
+                          </p>
+                        </div>
+                        {/* Discount badge */}
+                        <div className={`px-2.5 py-1.5 rounded-xl text-center ${isEmpire ? "bg-accent/15" : "bg-primary/10"}`}>
+                          <span className={`text-lg font-heading font-bold ${isEmpire ? "text-accent" : "text-primary"}`}>
+                            -{Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)}%
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <span className="text-[0.45rem] text-foreground/25">oppure 6×€{Math.round(p.price / 6)}/mese</span>
-                        <span className="text-[0.4rem] text-accent/50 font-semibold">0% interessi</span>
-                      </div>
 
-                      {/* Monthly + Commission */}
-                      <div className="flex items-center gap-1.5 mt-2">
-                        <span className={`px-1.5 py-0.5 rounded-full text-[0.45rem] font-bold ${
-                          p.monthlyFee === 0 ? "bg-accent/20 text-accent" : "bg-primary/10 text-primary"
+                      {/* Monthly + Commission pills */}
+                      <div className="flex items-center gap-2 mt-3">
+                        <span className={`flex-1 text-center px-2 py-1.5 rounded-xl text-[0.6rem] font-bold border ${
+                          p.monthlyFee === 0
+                            ? "bg-accent/10 text-accent border-accent/20"
+                            : "bg-foreground/[0.03] text-foreground/50 border-border/20"
                         }`}>
-                          {p.monthlyFee === 0 ? "€0/mese" : `poi €${p.monthlyFee}/mese`}
+                          {p.monthlyFee === 0 ? "€0/mese ✓" : `poi €${p.monthlyFee}/mese`}
                         </span>
-                        <span className={`px-1.5 py-0.5 rounded-full text-[0.45rem] font-bold ${
-                          p.commission === "0%" ? "bg-accent/20 text-accent" : "bg-foreground/[0.06] text-foreground/40"
+                        <span className={`flex-1 text-center px-2 py-1.5 rounded-xl text-[0.6rem] font-bold border ${
+                          p.commission === "0%"
+                            ? "bg-accent/10 text-accent border-accent/20"
+                            : "bg-foreground/[0.03] text-foreground/50 border-border/20"
                         }`}>
-                          {p.commission === "0%" ? "0% commissioni" : `${p.commission} transazioni`}
+                          {p.commission === "0%" ? "0% commissioni ✓" : `${p.commission} transazioni`}
                         </span>
                       </div>
 
-                      {/* Empire daily nudge - compact */}
-                      {p.id === "empire" && (
-                        <p className="text-[0.5rem] text-accent font-bold mt-2 text-center">
-                          💰 Solo €11/giorno — poi è tutto tuo
-                        </p>
+                      {/* Empire daily nudge */}
+                      {isEmpire && (
+                        <div className="mt-3 p-2.5 rounded-xl bg-accent/[0.06] border border-accent/15 text-center">
+                          <p className="text-[0.65rem] text-accent font-bold">
+                            💰 Solo €11/giorno per 24 mesi — poi è tutto tuo, per sempre
+                          </p>
+                          <p className="text-[0.5rem] text-accent/40 mt-0.5">Meno di un caffè al bar. Zero costi nascosti.</p>
+                        </div>
                       )}
 
-                      {/* Key features — show top 5 on mobile */}
-                      <ul className="mt-2.5 space-y-1">
-                        {p.features.slice(0, isSelected ? p.features.length : 5).map((f, fi) => (
-                          <li key={fi} className="flex items-start gap-1.5 text-[0.55rem] text-foreground/45">
-                            <Check className={`w-3 h-3 flex-shrink-0 mt-0.5 ${
-                              f.includes("ZERO") || f.includes("0%") ? "text-accent" : isSelected ? "text-primary" : "text-foreground/25"
-                            }`} />
-                            <span className={`${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : ""}`}>{f}</span>
+                      {/* Features */}
+                      <ul className="mt-3 space-y-1.5">
+                        {p.features.slice(0, isSelected ? p.features.length : 4).map((f, fi) => (
+                          <li key={fi} className="flex items-start gap-2 text-[0.65rem] text-foreground/50">
+                            <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                              f.includes("ZERO") || f.includes("0%") ? "bg-accent/20" : "bg-primary/10"
+                            }`}>
+                              <Check className={`w-2.5 h-2.5 ${
+                                f.includes("ZERO") || f.includes("0%") ? "text-accent" : "text-primary"
+                              }`} />
+                            </div>
+                            <span className={`leading-snug ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/60" : ""}`}>{f}</span>
                           </li>
                         ))}
-                        {!isSelected && p.features.length > 5 && (
-                          <li className="text-[0.45rem] text-primary/50 font-semibold pl-5">+{p.features.length - 5} altre funzionalità →</li>
+                        {!isSelected && p.features.length > 4 && (
+                          <li className="text-[0.55rem] text-primary/60 font-semibold pl-6 pt-0.5">
+                            Tocca per vedere +{p.features.length - 4} funzionalità →
+                          </li>
                         )}
                       </ul>
 
-                      {/* Savings */}
-                      <div className={`mt-2.5 p-1.5 rounded-lg text-[0.5rem] font-semibold text-center ${
-                        p.id === "empire" ? "bg-accent/10 text-accent" : "bg-primary/[0.06] text-primary/70"
+                      {/* Savings bar */}
+                      <div className={`mt-3 p-2.5 rounded-xl text-[0.6rem] font-bold text-center ${
+                        isEmpire ? "bg-accent/10 text-accent border border-accent/15" : "bg-primary/[0.06] text-primary/70 border border-primary/10"
                       }`}>
                         {p.savings}
                       </div>
-
-                      {/* Selection indicator */}
-                      {isSelected && (
-                        <motion.div className={`absolute bottom-0 left-0 right-0 h-1 ${p.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`}
-                          layoutId="pkgIndicatorMobile" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </div>
-              <p className="text-[0.4rem] text-foreground/20 text-center mt-1">← Scorri per confrontare i pacchetti →</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
 
             {/* Desktop Package Cards */}
