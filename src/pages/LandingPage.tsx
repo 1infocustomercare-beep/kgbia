@@ -1444,20 +1444,15 @@ const LandingPage = () => {
             { label: "Deploy", value: "< 24h", icon: <Zap className="w-3.5 h-3.5" /> },
             { label: "Evoluzione", value: "Settimanale", icon: <Radio className="w-3.5 h-3.5" /> },
           ].map((spec, i) => (
-            <motion.div key={i} className="relative p-4 rounded-xl holo-panel text-center overflow-hidden" variants={popIn}>
-              {/* Pulse ring */}
-              <motion.div
-                className="absolute inset-0 rounded-xl pointer-events-none"
-                style={{ border: "1px solid hsla(265,70%,60%,0.1)" }}
-                animate={{ opacity: [0.3, 0.7, 0.3] }}
-                transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4 }}
-              />
-              <motion.div className="text-primary mb-2 flex justify-center"
-                animate={{ y: [0, -3, 0] }}
-                transition={{ duration: 3, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }}
-              >{spec.icon}</motion.div>
-              <p className="text-xs font-heading font-bold text-foreground">{spec.value}</p>
-              <p className="text-[0.55rem] text-foreground/30 mt-0.5 tracking-wider uppercase">{spec.label}</p>
+            <motion.div key={i} variants={popIn}>
+              <PremiumCard scan delay={i} className="p-4 text-center">
+                <motion.div className="text-primary mb-2 flex justify-center"
+                  animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }}
+                >{spec.icon}</motion.div>
+                <p className="text-xs font-heading font-bold text-foreground">{spec.value}</p>
+                <p className="text-[0.55rem] text-foreground/30 mt-0.5 tracking-wider uppercase">{spec.label}</p>
+              </PremiumCard>
             </motion.div>
           ))}
         </motion.div>
