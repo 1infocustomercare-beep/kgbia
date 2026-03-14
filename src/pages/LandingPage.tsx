@@ -561,6 +561,53 @@ const PACKAGE_TIERS: PackageTier[] = [
   },
 ];
 
+/** Animated count-up component for savings */
+const SavingsCounter = ({ target, delay = 0 }: { target: number; delay?: number }) => {
+  const [count, setCount] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting && !hasStarted) setHasStarted(true); },
+      { threshold: 0.5 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [hasStarted]);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+    const timeout = setTimeout(() => {
+      const duration = 1800;
+      const steps = 40;
+      const increment = target / steps;
+      let current = 0;
+      const interval = setInterval(() => {
+        current += increment;
+        if (current >= target) { setCount(target); clearInterval(interval); }
+        else setCount(Math.round(current));
+      }, duration / steps);
+      return () => clearInterval(interval);
+    }, delay * 1000);
+    return () => clearTimeout(timeout);
+  }, [hasStarted, target, delay]);
+
+  return (
+    <div ref={ref}>
+      <motion.p
+        className="text-lg font-heading font-bold text-accent"
+        key={count}
+        initial={{ scale: 1 }}
+        animate={count === target ? { scale: [1, 1.08, 1] } : {}}
+        transition={{ duration: 0.3 }}
+      >
+        €{count.toLocaleString("it-IT")}
+      </motion.p>
+    </div>
+  );
+};
+
 const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void }) => {
   const [pricingMode, setPricingMode] = useState<PricingMode>("package");
   const [selectedPlan, setSelectedPlan] = useState<PlanTier>("professional");
@@ -1132,6 +1179,50 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       <p className="text-[0.5rem] text-foreground/25 mt-2">
                         {pkg.commission} sulle transazioni · IVA esclusa
                       </p>
+
+                      {/* Animated cumulative savings counter — Empire only */}
+                      {pkg.id === "empire" && (() => {
+                        const baseCost24 = 1997 + 49 * 24; // €3173
+                        const growthCost24 = 4997 + 29 * 24; // €5693
+                        const empireCost24 = 7997;
+                        // With €8k/mo revenue: base 2% = €160/mo, growth 1% = €80/mo
+                        const revenueMonth = 8000;
+                        const baseCommissions24 = revenueMonth * 0.02 * 24;
+                        const growthCommissions24 = revenueMonth * 0.01 * 24;
+                        const savingsVsBase = (baseCost24 + baseCommissions24) - empireCost24;
+                        const savingsVsGrowth = (growthCost24 + growthCommissions24) - empireCost24;
+                        return (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4 }}
+                            className="mt-3 p-3 rounded-xl border border-accent/15 bg-gradient-to-br from-accent/[0.05] via-background/40 to-accent/[0.02] overflow-hidden relative"
+                          >
+                            {/* Shimmer */}
+                            <motion.div className="absolute inset-0 pointer-events-none"
+                              style={{ background: "linear-gradient(105deg, transparent 35%, hsla(38,55%,60%,0.08) 50%, transparent 65%)" }}
+                              animate={{ x: ["-150%", "250%"] }}
+                              transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+                            />
+                            <p className="text-[0.5rem] font-heading font-bold text-accent/60 tracking-[2px] uppercase mb-2 relative z-10">💰 Risparmio cumulativo in 24 mesi</p>
+                            <div className="grid grid-cols-2 gap-2 relative z-10">
+                              <div className="text-center p-2 rounded-lg bg-accent/[0.06] border border-accent/10">
+                                <p className="text-[0.45rem] text-foreground/30 mb-0.5">vs Digital Start</p>
+                                <SavingsCounter target={savingsVsBase} />
+                                <p className="text-[0.4rem] text-foreground/20 mt-0.5">canone + commissioni</p>
+                              </div>
+                              <div className="text-center p-2 rounded-lg bg-accent/[0.06] border border-accent/10">
+                                <p className="text-[0.45rem] text-foreground/30 mb-0.5">vs Growth AI</p>
+                                <SavingsCounter target={savingsVsGrowth} delay={0.3} />
+                                <p className="text-[0.4rem] text-foreground/20 mt-0.5">canone + commissioni</p>
+                              </div>
+                            </div>
+                            <p className="text-[0.4rem] text-accent/40 text-center mt-2 relative z-10">
+                              Basato su €8.000/mese di fatturato · Il risparmio cresce con le vendite
+                            </p>
+                          </motion.div>
+                        );
+                      })()}
                     </div>
 
                     {/* CTA */}
