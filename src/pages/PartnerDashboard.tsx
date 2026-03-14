@@ -31,8 +31,9 @@ import DemoCreditsWallet from "@/components/partner/DemoCreditsWallet";
 import { GuidesToggle } from "@/components/ui/info-guide";
 import InfoGuide from "@/components/ui/info-guide";
 import { RefreshCw, Palette, Pencil, Upload, Save, X as XIcon } from "lucide-react";
+import { AllIndustriesShowcase } from "@/components/public/IndustryPhoneShowcase";
 
-type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault";
+type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault" | "showcase";
 
 const PartnerDashboard = () => {
   const navigate = useNavigate();
@@ -256,12 +257,13 @@ const PartnerDashboard = () => {
   const bottomTabs: { id: Tab; label: string; icon: React.ReactNode }[] = demoMode ? [
     { id: "dashboard", label: "Home", icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: "sandbox", label: "Demo", icon: <Play className="w-5 h-5" /> },
-    { id: "toolkit", label: "Funzioni", icon: <BookOpen className="w-5 h-5" /> },
+    { id: "showcase", label: "Settori", icon: <Smartphone className="w-5 h-5" /> },
     { id: "pricing", label: "Investimento", icon: <CreditCard className="w-5 h-5" /> },
     { id: "investment", label: "Crescita", icon: <BarChart3 className="w-5 h-5" /> },
   ] : [
     { id: "dashboard", label: "Home", icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: "sandbox", label: "Demo", icon: <Play className="w-5 h-5" /> },
+    { id: "showcase", label: "Settori", icon: <Smartphone className="w-5 h-5" /> },
     ...(isTeamLeader ? [{ id: "team" as Tab, label: "Team", icon: <Users className="w-5 h-5" /> }] : []),
     { id: "earnings", label: "Guadagni", icon: <DollarSign className="w-5 h-5" /> },
     { id: "vault", label: "Asset", icon: <FolderDown className="w-5 h-5" /> },
@@ -566,6 +568,19 @@ const PartnerDashboard = () => {
           {activeTab === "pricing" && <PricingClosing key="pricing" onOpenROI={() => setShowROI(true)} demoMode={demoMode} />}
           {activeTab === "earnings" && !demoMode && <PartnerEarnings key="earnings" />}
           {activeTab === "vault" && !demoMode && <AssetVault key="vault" />}
+
+          {activeTab === "showcase" && (
+            <motion.div key="showcase" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
+              <div className="text-center">
+                <h2 className="text-lg font-display font-bold text-foreground">Showcase Settori</h2>
+                <p className="text-xs text-muted-foreground">Preview complete di tutti i settori con link demo per le presentazioni</p>
+              </div>
+              <AllIndustriesShowcase onViewDemo={(id, slug) => {
+                if (id === "food") navigate(`/r/${slug}`);
+                else navigate(`/demo/${slug}`);
+              }} />
+            </motion.div>
+          )}
 
           {/* === TEAM LEADER — Enhanced Interface === */}
           {activeTab === "team" && isTeamLeader && !demoMode && (

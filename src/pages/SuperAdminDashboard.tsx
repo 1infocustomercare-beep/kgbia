@@ -15,6 +15,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
+import { INDUSTRY_CONFIGS } from "@/config/industry-config";
+import { AllIndustriesShowcase } from "@/components/public/IndustryPhoneShowcase";
 import { toast } from "@/hooks/use-toast";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 
@@ -61,7 +63,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents" | "media" | "feature_requests" | "brand";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase";
 
 const INDUSTRY_COLORS: Record<string, string> = {
   food: "#C8963E", ncc: "#1E3A5F", beauty: "#E91E8C", healthcare: "#10B981",
@@ -370,6 +372,7 @@ const SuperAdminDashboard = () => {
     { id: "feature_requests", label: "Richieste", icon: <Lightbulb className="w-5 h-5" /> },
     { id: "media", label: "Media", icon: <Film className="w-5 h-5" /> },
     { id: "brand" as SuperTab, label: "Brand", icon: <Crown className="w-5 h-5" /> },
+    { id: "showcase", label: "Settori", icon: <Eye className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => { await signOut(); navigate("/admin"); };
@@ -891,6 +894,20 @@ const SuperAdminDashboard = () => {
           <Suspense fallback={<div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
             <FeatureRequestsAdminPage />
           </Suspense>
+        )}
+
+        {/* ===== SHOWCASE SETTORI ===== */}
+        {!loading && activeTab === "showcase" && (
+          <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="text-center">
+              <h2 className="text-lg font-display font-bold text-foreground">Showcase Settori</h2>
+              <p className="text-xs text-muted-foreground">Preview iPhone Pro di tutti i {Object.keys(INDUSTRY_CONFIGS).length} settori con link ai demo live</p>
+            </div>
+            <AllIndustriesShowcase onViewDemo={(id, slug) => {
+              if (id === "food") navigate(`/r/${slug}`);
+              else navigate(`/demo/${slug}`);
+            }} />
+          </motion.div>
         )}
       </div>
     </div>
