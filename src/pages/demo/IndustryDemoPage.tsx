@@ -578,47 +578,46 @@ export default function IndustryDemoPage() {
         </div>
       </AnimSection>
 
-      {/* ═══════ POPULAR / HIGHLIGHTS ═══════ */}
-      {popularServices.length > 0 && (
-        <AnimSection className="max-w-5xl mx-auto py-16 px-4">
+      {/* ═══════ WHY US — VALUE PROPOSITION ═══════ */}
+      <AnimSection className="max-w-5xl mx-auto py-16 px-4">
           <div className="text-center mb-10">
             <Badge className="mb-3 text-xs border-0" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-              ⭐ I Più Richiesti
+              🚀 Tutto Incluso
             </Badge>
             <h2 className="text-2xl sm:text-3xl font-bold">
-              {resolvedIndustry === "food" ? "I Più Amati dai Clienti" : "I Nostri Servizi Top"}
+              Tutto Ciò di Cui Hai Bisogno, in Un'unica Piattaforma
             </h2>
+            <p className="text-sm text-white/40 mt-3 max-w-lg mx-auto leading-relaxed">
+              Non servono 10 strumenti diversi. Gestiamo ogni aspetto del tuo business con un ecosistema integrato, intelligente e sempre attivo.
+            </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {popularServices.map((s, i) => (
+            {[
+              { emoji: "🎯", title: "Sito Web & App su Misura", desc: "Design premium personalizzato per il tuo settore, ottimizzato per convertire visitatori in clienti." },
+              { emoji: "🤖", title: "Intelligenza Artificiale Integrata", desc: "Agenti AI che rispondono, vendono e gestiscono per te — 24 ore su 24, 7 giorni su 7." },
+              { emoji: "📊", title: "Dashboard & Analytics Avanzati", desc: "Monitora fatturato, clienti, performance e trend in tempo reale con insight predittivi." },
+              { emoji: "📅", title: "Prenotazioni & CRM Automatico", desc: "Agenda smart, gestione clienti, reminder automatici e fidelizzazione integrata." },
+              { emoji: "💳", title: "Pagamenti & Fatturazione", desc: "Incassi online, fatture automatiche, reportistica fiscale — tutto in un click." },
+              { emoji: "📣", title: "Marketing & Automazioni", desc: "Campagne, notifiche push, recupero clienti persi e upselling — tutto automatizzato." },
+            ].map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.08 }} viewport={{ once: true }}>
-                <div className="group relative p-5 rounded-2xl border border-white/5 hover:border-white/15 transition-all duration-500 cursor-pointer overflow-hidden"
+                <div className="group relative p-5 rounded-2xl border border-white/5 hover:border-white/15 transition-all duration-500 cursor-pointer overflow-hidden h-full"
                   style={{ background: `linear-gradient(135deg, ${theme.accent}08, transparent)` }}>
-                  {/* Hover glow */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{ background: `radial-gradient(ellipse at center, ${theme.accent}10, transparent 70%)` }} />
-                  <div className="relative flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-2xl">{s.emoji || "📌"}</span>
-                        <h3 className="font-bold text-sm text-white">{s.name}</h3>
-                      </div>
-                      <p className="text-xs text-white/40 line-clamp-2 leading-relaxed">{s.description}</p>
-                      {s.duration && <p className="text-[10px] text-white/30 mt-1.5 flex items-center gap-1"><Clock className="w-3 h-3" /> {s.duration}</p>}
+                  <div className="relative">
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <span className="text-2xl">{item.emoji}</span>
+                      <h3 className="font-bold text-sm text-white">{item.title}</h3>
                     </div>
-                    <div className="text-right shrink-0">
-                      <span className="font-bold text-lg" style={{ color: theme.accent }}>
-                        {s.price === 0 ? "Gratis" : `€${s.price.toLocaleString("it-IT")}`}
-                      </span>
-                    </div>
+                    <p className="text-xs text-white/40 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               </motion.div>
             ))}
           </div>
         </AnimSection>
-      )}
 
       {/* ═══════ FULL SERVICE LIST ═══════ */}
       <AnimSection id="services" className="max-w-5xl mx-auto py-16 px-4">
