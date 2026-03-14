@@ -820,28 +820,33 @@ const LandingPage = () => {
               </motion.button>
             </motion.div>
 
-            {/* Metrics — clean minimal cards with gold accents */}
-            <motion.div className="mt-16 w-full grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
+            {/* Metrics — premium glassmorphism cards */}
+            <motion.div className="mt-14 sm:mt-20 w-full grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, duration: 0.8 }}>
               {metrics.map((m, i) => (
-                <motion.div key={i} className="relative rounded-2xl p-4 sm:p-5 text-center bg-deep-black/40 backdrop-blur-sm overflow-hidden"
-                  style={{ border: "1px solid hsla(35,45%,50%,0.08)" }}
-                  whileHover={{ y: -3, borderColor: "hsla(35,45%,50%,0.2)" }}
-                  transition={{ duration: 0.2 }}>
-                  {/* Scanning line */}
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{ background: "linear-gradient(180deg, transparent 40%, hsla(35,45%,55%,0.04) 50%, transparent 60%)" }}
-                    animate={{ y: ["-100%", "200%"] }}
-                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 + i, ease: "easeInOut" }}
+                <motion.div key={i} className="group relative rounded-2xl p-5 sm:p-6 text-center overflow-hidden backdrop-blur-md"
+                  style={{
+                    background: "linear-gradient(135deg, hsla(265,30%,15%,0.4), hsla(265,20%,10%,0.3))",
+                    border: "1px solid hsla(265,50%,50%,0.08)",
+                    boxShadow: "inset 0 1px 0 hsla(265,70%,70%,0.05), 0 8px 32px hsla(265,50%,10%,0.2)"
+                  }}
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}>
+                  {/* Shimmer sweep */}
+                  <motion.div className="absolute inset-0 pointer-events-none"
+                    style={{ background: "linear-gradient(105deg, transparent 30%, hsla(35,45%,55%,0.06) 50%, transparent 70%)" }}
+                    animate={{ x: ["-200%", "300%"] }}
+                    transition={{ duration: 4, repeat: Infinity, repeatDelay: 3 + i, ease: "easeInOut" }}
                   />
-                  {/* Corner accents — gold */}
-                  <div className="absolute top-1.5 left-1.5 w-3 h-3 border-t border-l rounded-tl-sm" style={{ borderColor: "hsla(35,45%,50%,0.15)" }} />
-                  <div className="absolute bottom-1.5 right-1.5 w-3 h-3 border-b border-r rounded-br-sm" style={{ borderColor: "hsla(35,45%,50%,0.15)" }} />
+                  {/* Top highlight */}
+                  <div className="absolute top-0 left-[10%] right-[10%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,65%,0.15), transparent)" }} />
+                  {/* Corner HUD */}
+                  <div className="absolute top-2 left-2 w-2.5 h-2.5 border-t border-l rounded-tl-sm opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: "hsla(35,45%,50%,0.25)" }} />
+                  <div className="absolute bottom-2 right-2 w-2.5 h-2.5 border-b border-r rounded-br-sm opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: "hsla(35,45%,50%,0.25)" }} />
                   <p className="text-2xl sm:text-3xl font-heading font-bold text-vibrant-gradient relative z-10">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="text-[0.6rem] mt-1.5 tracking-[2px] uppercase font-heading relative z-10" style={{ color: "hsla(35,45%,55%,0.35)" }}>{m.label}</p>
+                  <p className="text-[0.55rem] sm:text-[0.6rem] mt-2 tracking-[2.5px] uppercase font-heading relative z-10" style={{ color: "hsla(35,45%,55%,0.4)" }}>{m.label}</p>
                 </motion.div>
               ))}
             </motion.div>
