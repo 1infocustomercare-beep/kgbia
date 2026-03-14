@@ -68,15 +68,15 @@ serve(async (req) => {
     // ── AI Token Purchase ──
     if (meta.type === "ai_tokens") {
       const restaurantId = meta.restaurantId;
-      if (restaurantId) {
-        // Add 50 tokens
+      const creditsToAdd = parseInt(meta.credits || "50", 10);
+      if (restaurantId && creditsToAdd > 0) {
         const { data: current } = await supabase
           .from("ai_tokens")
           .select("balance")
           .eq("restaurant_id", restaurantId)
           .single();
 
-        const newBalance = (current?.balance || 0) + 50;
+        const newBalance = (current?.balance || 0) + creditsToAdd;
         await supabase
           .from("ai_tokens")
           .update({ balance: newBalance })
@@ -84,11 +84,11 @@ serve(async (req) => {
 
         await supabase.from("ai_token_history").insert({
           restaurant_id: restaurantId,
-          action: "Acquisto Gold Credits (50 gettoni)",
-          tokens: 50,
+          action: `Acquisto Gold Credits (${creditsToAdd} gettoni)`,
+          tokens: creditsToAdd,
         });
 
-        console.log(`AI tokens +50 for restaurant ${restaurantId}, new balance: ${newBalance}`);
+        console.log(`AI tokens +${creditsToAdd} for restaurant ${restaurantId}, new balance: ${newBalance}`);
       }
       return new Response(JSON.stringify({ received: true, type: "ai_tokens" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
