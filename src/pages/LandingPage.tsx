@@ -607,8 +607,101 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
               </p>
             </motion.div>
 
-            {/* Package Cards */}
-            <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto mb-6"
+            {/* Package Cards — horizontal scroll on mobile */}
+            <div className="sm:hidden mb-6">
+              <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-3 px-1 -mx-1 scrollbar-hide">
+                {PACKAGE_TIERS.map((p) => {
+                  const isSelected = selectedPackage === p.id;
+                  return (
+                    <motion.div key={p.id}
+                      onClick={() => setSelectedPackage(p.id)}
+                      className={`relative flex-shrink-0 w-[280px] snap-center p-4 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
+                        isSelected
+                          ? p.id === "empire"
+                            ? "border-2 border-accent/40 bg-gradient-to-b from-accent/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(35,45%,50%,0.12)]"
+                            : "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_30px_hsla(265,70%,60%,0.1)]"
+                          : "border border-border/30 bg-background/40 opacity-80"
+                      }`}
+                      whileTap={{ scale: 0.98 }}>
+                      {p.badge && (
+                        <div className={`absolute top-0 right-0 px-2.5 py-0.5 rounded-bl-xl text-[0.45rem] font-bold tracking-[1.5px] font-heading uppercase ${
+                          p.id === "empire"
+                            ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black"
+                            : p.badge === "Più Scelto" ? "bg-vibrant-gradient text-primary-foreground"
+                            : "bg-gradient-to-r from-accent to-primary text-primary-foreground"
+                        }`}>{p.badge}</div>
+                      )}
+                      {isSelected && <div className={`absolute top-0 left-0 right-0 h-[2px] ${p.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />}
+
+                      <p className="text-[0.55rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
+
+                      {/* Price row */}
+                      <div className="mt-1.5 flex items-baseline gap-2">
+                        <span className="text-2xl font-heading font-bold text-foreground">€{p.price.toLocaleString("it-IT")}</span>
+                        <span className="text-[0.6rem] text-foreground/20 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="text-[0.45rem] text-foreground/25">oppure 6×€{Math.round(p.price / 6)}/mese</span>
+                        <span className="text-[0.4rem] text-accent/50 font-semibold">0% interessi</span>
+                      </div>
+
+                      {/* Monthly + Commission */}
+                      <div className="flex items-center gap-1.5 mt-2">
+                        <span className={`px-1.5 py-0.5 rounded-full text-[0.45rem] font-bold ${
+                          p.monthlyFee === 0 ? "bg-accent/20 text-accent" : "bg-primary/10 text-primary"
+                        }`}>
+                          {p.monthlyFee === 0 ? "€0/mese" : `poi €${p.monthlyFee}/mese`}
+                        </span>
+                        <span className={`px-1.5 py-0.5 rounded-full text-[0.45rem] font-bold ${
+                          p.commission === "0%" ? "bg-accent/20 text-accent" : "bg-foreground/[0.06] text-foreground/40"
+                        }`}>
+                          {p.commission === "0%" ? "0% commissioni" : `${p.commission} transazioni`}
+                        </span>
+                      </div>
+
+                      {/* Empire daily nudge - compact */}
+                      {p.id === "empire" && (
+                        <p className="text-[0.5rem] text-accent font-bold mt-2 text-center">
+                          💰 Solo €11/giorno — poi è tutto tuo
+                        </p>
+                      )}
+
+                      {/* Key features — show top 5 on mobile */}
+                      <ul className="mt-2.5 space-y-1">
+                        {p.features.slice(0, isSelected ? p.features.length : 5).map((f, fi) => (
+                          <li key={fi} className="flex items-start gap-1.5 text-[0.55rem] text-foreground/45">
+                            <Check className={`w-3 h-3 flex-shrink-0 mt-0.5 ${
+                              f.includes("ZERO") || f.includes("0%") ? "text-accent" : isSelected ? "text-primary" : "text-foreground/25"
+                            }`} />
+                            <span className={`${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : ""}`}>{f}</span>
+                          </li>
+                        ))}
+                        {!isSelected && p.features.length > 5 && (
+                          <li className="text-[0.45rem] text-primary/50 font-semibold pl-5">+{p.features.length - 5} altre funzionalità →</li>
+                        )}
+                      </ul>
+
+                      {/* Savings */}
+                      <div className={`mt-2.5 p-1.5 rounded-lg text-[0.5rem] font-semibold text-center ${
+                        p.id === "empire" ? "bg-accent/10 text-accent" : "bg-primary/[0.06] text-primary/70"
+                      }`}>
+                        {p.savings}
+                      </div>
+
+                      {/* Selection indicator */}
+                      {isSelected && (
+                        <motion.div className={`absolute bottom-0 left-0 right-0 h-1 ${p.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`}
+                          layoutId="pkgIndicatorMobile" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+              <p className="text-[0.4rem] text-foreground/20 text-center mt-1">← Scorri per confrontare i pacchetti →</p>
+            </div>
+
+            {/* Desktop Package Cards */}
+            <motion.div className="hidden sm:grid grid-cols-3 gap-4 max-w-4xl mx-auto mb-6"
               variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
               {PACKAGE_TIERS.map((p) => {
                 const isSelected = selectedPackage === p.id;
@@ -634,7 +727,6 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
 
                     <p className="text-[0.6rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
 
-                    {/* Price */}
                     <div className="mt-2">
                       <div className="flex items-baseline gap-2">
                         <span className="text-2xl sm:text-3xl font-heading font-bold text-foreground">€{p.price.toLocaleString("it-IT")}</span>
@@ -643,7 +735,6 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       <p className="text-[0.55rem] text-foreground/30 mt-0.5">una tantum</p>
                     </div>
 
-                    {/* Installment mini-options on card */}
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       <span className="px-2 py-0.5 rounded-full text-[0.45rem] font-semibold bg-foreground/[0.04] text-foreground/30 border border-border/15">
                         oppure 3×€{Math.round(p.price / 3)}/mese
@@ -654,7 +745,6 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       <span className="text-[0.4rem] text-accent/60 font-semibold self-center">0% interessi</span>
                     </div>
 
-                    {/* Monthly + Commission highlight */}
                     <div className="flex items-center gap-2 mt-2">
                       <span className={`px-2 py-0.5 rounded-full text-[0.5rem] font-bold ${
                         p.monthlyFee === 0 ? "bg-accent/20 text-accent" : "bg-primary/10 text-primary"
@@ -668,7 +758,6 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       </span>
                     </div>
 
-                    {/* Empire: daily cost nudge */}
                     {p.id === "empire" && (
                       <div className="mt-2 p-2 rounded-lg bg-accent/[0.06] border border-accent/15">
                         <p className="text-[0.55rem] text-accent font-bold text-center">
@@ -699,7 +788,6 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       ))}
                     </ul>
 
-                    {/* Bonus extras */}
                     <div className="mt-3 pt-3 border-t border-border/20">
                       <p className="text-[0.5rem] font-heading font-bold text-accent/60 tracking-[2px] uppercase mb-1.5">
                         <Gift className="w-3 h-3 inline mr-1" />Bonus inclusi
@@ -711,14 +799,12 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       ))}
                     </div>
 
-                    {/* Savings callout */}
                     <div className={`mt-3 p-2 rounded-lg text-[0.55rem] font-semibold text-center ${
                       p.id === "empire" ? "bg-accent/10 text-accent" : "bg-primary/[0.06] text-primary/70"
                     }`}>
                       {p.savings}
                     </div>
 
-                    {/* Empire upsell nudge on non-empire cards */}
                     {p.id !== "empire" && (
                       <div className="mt-2 p-2 rounded-lg bg-accent/[0.03] border border-accent/10 cursor-pointer" onClick={(e) => { e.stopPropagation(); setSelectedPackage("empire"); }}>
                         <p className="text-[0.45rem] text-accent/70 text-center">
