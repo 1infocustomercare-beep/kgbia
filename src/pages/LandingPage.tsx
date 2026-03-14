@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, forwardRef, lazy, Suspense, useMemo } from
 const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
+import HeroNeuralCanvas from "@/components/public/HeroNeuralCanvas";
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
