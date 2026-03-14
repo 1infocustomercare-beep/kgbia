@@ -1549,9 +1549,10 @@ const LandingPage = () => {
               <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.2), transparent)" }} />
               <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
                 style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent)" }} />
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:bg-primary/15 group-hover:scale-110 transition-all duration-500">
-                {card.icon}
-              </div>
+              <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
+                <span className="text-primary">{card.icon}</span>
+              </PremiumIcon>
+              <div className="mt-4"></div>
               <h3 className="font-heading text-sm font-bold text-foreground mb-2">{card.title}</h3>
               <p className="text-[0.7rem] text-foreground/35 leading-[1.7] mb-3">{card.desc}</p>
               <span className="text-[0.6rem] font-heading font-semibold text-primary/60 tracking-wider">{card.accent}</span>
