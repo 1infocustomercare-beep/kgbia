@@ -867,14 +867,20 @@ export function IPhoneFrame({
             {/* ═══ HERO SCREEN ═══ */}
             {screen.type === "hero" && (
               <div className="h-full flex flex-col" style={{ background: sectorStyle.heroGradient }}>
+                {/* Subtle mesh background */}
+                <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle at 30% 40%, ${color} 1px, transparent 1px), radial-gradient(circle at 70% 60%, ${color} 0.5px, transparent 0.5px)`, backgroundSize: "20px 20px, 15px 15px" }} />
                 <div className="flex-1 flex flex-col items-center justify-center p-3 text-center relative">
-                  {/* Decorative ring */}
+                  {/* Double orbit rings */}
                   <motion.div className="absolute w-20 h-20 rounded-full border border-dashed opacity-10"
                     style={{ borderColor: color }}
                     animate={{ rotate: 360 }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }} />
+                  <motion.div className="absolute w-14 h-14 rounded-full border opacity-[0.06]"
+                    style={{ borderColor: color }}
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
                   <motion.span className="text-3xl mb-2 drop-shadow-lg"
-                    animate={{ scale: [1, 1.1, 1] }}
+                    animate={{ scale: [1, 1.1, 1], y: [0, -3, 0] }}
                     transition={{ duration: 3, repeat: Infinity }}
                   >{emoji}</motion.span>
                   <p className="text-[10px] font-bold text-white/90 leading-tight tracking-wide">{companyName}</p>
@@ -888,13 +894,14 @@ export function IPhoneFrame({
                     <span className="relative">Scopri di più</span>
                   </motion.div>
                 </div>
-                {/* Stats bar */}
+                {/* Stats bar with glassmorphism */}
                 <div className="flex gap-0.5 p-1.5">
                   {sectorStyle.kpis.slice(0, 3).map((k, i) => (
-                    <div key={i} className="flex-1 text-center p-1 rounded-md" style={{ backgroundColor: `${color}10` }}>
+                    <motion.div key={i} className="flex-1 text-center p-1 rounded-md backdrop-blur-sm" style={{ backgroundColor: `${color}10`, border: `0.5px solid ${color}08` }}
+                      initial={{ opacity: 0, y: 5 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 + i * 0.1 }}>
                       <p className="text-[6px] text-white/25">{k.label}</p>
                       <p className="text-[7px] font-bold" style={{ color }}>{k.val}</p>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
