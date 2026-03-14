@@ -346,11 +346,11 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── Render ──
   return (
     <>
-      {/* Floating Avatar Button */}
+      {/* Floating Avatar Button — always visible, toggles chat open/close */}
       <AnimatePresence>
-        {isVisible && !isOpen && (
+        {isVisible && (
           <motion.button
-            className="fixed bottom-20 sm:bottom-6 right-4 z-[100] group"
+            className={`fixed ${isOpen ? 'bottom-[calc(85vh-1.5rem)] sm:bottom-[610px]' : 'bottom-20 sm:bottom-6'} right-4 z-[201] group`}
             onClick={toggleOpen}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -359,9 +359,8 @@ const EmpireVoiceAgent: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg border border-white/10">
-              <Sparkles className="w-6 h-6 text-white" />
-              {/* Small speaking indicator dot */}
-              {isSpeaking && !isPaused && (
+              {isOpen ? <X className="w-6 h-6 text-white" /> : <Sparkles className="w-6 h-6 text-white" />}
+              {isSpeaking && !isPaused && !isOpen && (
                 <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-background animate-pulse" />
               )}
             </div>
