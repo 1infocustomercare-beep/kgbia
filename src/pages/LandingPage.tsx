@@ -774,6 +774,26 @@ const LandingPage = () => {
           </motion.div>
         </motion.div>
 
+        {/* CTA buttons under sectors */}
+        <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10 sm:mt-14"
+          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
+          <motion.button
+            onClick={() => scrollTo("pricing")}
+            className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
+            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Inizia Ora <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </motion.button>
+          <motion.button
+            onClick={() => navigate("/demo")}
+            className="px-7 py-3.5 rounded-full border border-foreground/8 text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:border-primary/20 hover:text-foreground hover:bg-primary/[0.03] transition-all inline-flex items-center gap-2"
+            whileHover={{ scale: 1.01 }}
+          >
+            <Play className="w-4 h-4 text-primary/60" /> Prova Tutte le Demo
+          </motion.button>
+        </motion.div>
+
         {/* ═══ Sector Selector Sheet (iPhone style) ═══ */}
         <AnimatePresence>
           {sectorSheetOpen && (
