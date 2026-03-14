@@ -1221,9 +1221,9 @@ const LandingPage = () => {
                 {String(i + 1).padStart(2, "0")}
               </span>
               <div className="relative z-10">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center text-primary mb-5 ring-1 ring-primary/10 group-hover:scale-110 group-hover:rotate-3 group-hover:ring-primary/25 group-hover:shadow-[0_0_20px_hsla(265,85%,65%,0.15)] transition-all duration-500">
-                  {item.icon}
-                </div>
+                <PremiumIcon gradient="from-primary/25 to-accent/15" size="lg" delay={i * 0.5}>
+                  <span className="text-primary">{item.icon}</span>
+                </PremiumIcon>
                 <h3 className="font-heading text-sm font-bold text-foreground mb-2">{item.title}</h3>
                 <p className="text-xs text-foreground/40 leading-[1.7]">{item.desc}</p>
               </div>
