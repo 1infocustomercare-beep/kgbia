@@ -2397,66 +2397,125 @@ const LandingPage = () => {
               transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Ambient glow behind mascot */}
+              {/* Ambient glow */}
               <motion.div
-                className="absolute inset-[-30%] rounded-full blur-[60px] pointer-events-none"
-                style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.2), hsla(38,50%,55%,0.08), transparent 70%)" }}
-                animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-[-35%] rounded-full blur-[80px] pointer-events-none"
+                style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.25), hsla(38,50%,55%,0.1), transparent 70%)" }}
+                animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.9, 0.4] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               />
-              {/* Orbiting rings */}
-              <motion.div
-                className="absolute inset-[-15%] rounded-full border border-dashed pointer-events-none"
-                style={{ borderColor: "hsla(265,60%,60%,0.15)" }}
+
+              {/* DNA Helix SVG rotating */}
+              <motion.svg
+                className="absolute inset-[-20%] w-[140%] h-[140%] pointer-events-none"
+                viewBox="0 0 200 200"
                 animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              />
+                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+              >
+                {/* Strand 1 */}
+                {Array.from({ length: 12 }).map((_, i) => {
+                  const angle = (i / 12) * Math.PI * 2;
+                  const x = 100 + Math.cos(angle) * 70;
+                  const y = 100 + Math.sin(angle) * 70;
+                  return (
+                    <circle key={`s1-${i}`} cx={x} cy={y} r={i % 3 === 0 ? 3 : 1.5}
+                      fill={i % 2 === 0 ? "hsla(265,80%,65%,0.6)" : "hsla(38,50%,55%,0.5)"}
+                      opacity={0.7}>
+                      <animate attributeName="r" values={`${i % 3 === 0 ? 3 : 1.5};${i % 3 === 0 ? 4.5 : 2.5};${i % 3 === 0 ? 3 : 1.5}`} dur={`${2 + i * 0.3}s`} repeatCount="indefinite" />
+                    </circle>
+                  );
+                })}
+                {/* DNA bridges */}
+                {Array.from({ length: 6 }).map((_, i) => {
+                  const angle = (i / 6) * Math.PI * 2;
+                  const x1 = 100 + Math.cos(angle) * 55;
+                  const y1 = 100 + Math.sin(angle) * 55;
+                  const x2 = 100 + Math.cos(angle + Math.PI) * 55;
+                  const y2 = 100 + Math.sin(angle + Math.PI) * 55;
+                  return (
+                    <line key={`bridge-${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
+                      stroke="hsla(265,60%,60%,0.12)" strokeWidth="0.5" strokeDasharray="3 3">
+                      <animate attributeName="opacity" values="0.1;0.3;0.1" dur={`${3 + i * 0.5}s`} repeatCount="indefinite" />
+                    </line>
+                  );
+                })}
+              </motion.svg>
+
+              {/* Inner ring — counter-rotating */}
               <motion.div
-                className="absolute inset-[-8%] rounded-full border pointer-events-none"
-                style={{ borderColor: "hsla(38,50%,55%,0.1)" }}
+                className="absolute inset-[5%] rounded-full border pointer-events-none"
+                style={{ borderColor: "hsla(38,50%,55%,0.12)", borderStyle: "dashed" }}
                 animate={{ rotate: -360 }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
               />
-              {/* Orbiting mini nodes */}
-              {[0, 1, 2, 3].map(i => (
+
+              {/* Orbiting agent icons */}
+              {["🤖", "📊", "🧠", "⚡", "🎯", "🔮"].map((emoji, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full pointer-events-none"
+                  className="absolute w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-[0.6rem] pointer-events-none"
                   style={{
-                    background: i % 2 === 0
-                      ? "linear-gradient(135deg, hsla(265,80%,65%,0.9), hsla(300,60%,70%,0.7))"
-                      : "linear-gradient(135deg, hsla(38,50%,55%,0.9), hsla(35,60%,65%,0.7))",
+                    background: "hsla(265,20%,15%,0.7)",
+                    border: "1px solid hsla(265,60%,60%,0.2)",
+                    backdropFilter: "blur(4px)",
                     boxShadow: i % 2 === 0
-                      ? "0 0 8px hsla(265,80%,65%,0.5)"
-                      : "0 0 8px hsla(38,50%,55%,0.5)",
+                      ? "0 0 12px hsla(265,80%,65%,0.3)"
+                      : "0 0 12px hsla(38,50%,55%,0.3)",
                     top: "50%",
                     left: "50%",
                   }}
                   animate={{
                     x: [
-                      Math.cos((i * Math.PI) / 2) * 85,
-                      Math.cos((i * Math.PI) / 2 + Math.PI / 2) * 85,
-                      Math.cos((i * Math.PI) / 2 + Math.PI) * 85,
-                      Math.cos((i * Math.PI) / 2 + (3 * Math.PI) / 2) * 85,
-                      Math.cos((i * Math.PI) / 2) * 85,
+                      Math.cos((i * Math.PI) / 3) * 95,
+                      Math.cos((i * Math.PI) / 3 + Math.PI / 3) * 95,
+                      Math.cos((i * Math.PI) / 3 + (2 * Math.PI) / 3) * 95,
+                      Math.cos((i * Math.PI) / 3 + Math.PI) * 95,
+                      Math.cos((i * Math.PI) / 3 + (4 * Math.PI) / 3) * 95,
+                      Math.cos((i * Math.PI) / 3 + (5 * Math.PI) / 3) * 95,
+                      Math.cos((i * Math.PI) / 3) * 95,
                     ],
                     y: [
-                      Math.sin((i * Math.PI) / 2) * 85,
-                      Math.sin((i * Math.PI) / 2 + Math.PI / 2) * 85,
-                      Math.sin((i * Math.PI) / 2 + Math.PI) * 85,
-                      Math.sin((i * Math.PI) / 2 + (3 * Math.PI) / 2) * 85,
-                      Math.sin((i * Math.PI) / 2) * 85,
+                      Math.sin((i * Math.PI) / 3) * 95,
+                      Math.sin((i * Math.PI) / 3 + Math.PI / 3) * 95,
+                      Math.sin((i * Math.PI) / 3 + (2 * Math.PI) / 3) * 95,
+                      Math.sin((i * Math.PI) / 3 + Math.PI) * 95,
+                      Math.sin((i * Math.PI) / 3 + (4 * Math.PI) / 3) * 95,
+                      Math.sin((i * Math.PI) / 3 + (5 * Math.PI) / 3) * 95,
+                      Math.sin((i * Math.PI) / 3) * 95,
                     ],
+                    scale: [1, 1.2, 1, 0.9, 1],
                   }}
-                  transition={{ duration: 8 + i * 2, repeat: Infinity, ease: "linear" }}
-                />
+                  transition={{ duration: 12 + i * 1.5, repeat: Infinity, ease: "linear" }}
+                >
+                  {emoji}
+                </motion.div>
               ))}
+
+              {/* Pulsing energy ring */}
+              <motion.div
+                className="absolute inset-[15%] rounded-full pointer-events-none"
+                style={{ border: "2px solid hsla(265,70%,60%,0.15)" }}
+                animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
+              />
+              <motion.div
+                className="absolute inset-[15%] rounded-full pointer-events-none"
+                style={{ border: "2px solid hsla(38,50%,55%,0.1)" }}
+                animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0, 0.2] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeOut", delay: 1.5 }}
+              />
+
               {/* Floating mascot image */}
               <motion.img
                 src={empireAgentMascot}
-                alt="Empire AI Agent"
-                className="relative z-10 w-full h-full object-contain drop-shadow-[0_0_30px_hsla(265,70%,60%,0.3)]"
-                animate={{ y: [0, -8, 0], rotateZ: [-1, 1, -1] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                alt="Empire AI Agent — Sistema SaaS Agentico"
+                className="relative z-10 w-[85%] h-[85%] mx-auto object-contain drop-shadow-[0_0_40px_hsla(265,70%,60%,0.4)]"
+                animate={{
+                  y: [0, -10, 0],
+                  rotateZ: [-1.5, 1.5, -1.5],
+                  scale: [1, 1.03, 1],
+                }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               />
             </motion.div>
 
