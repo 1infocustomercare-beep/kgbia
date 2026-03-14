@@ -1042,6 +1042,48 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                         )}
                       </div>
 
+                      {/* Quick package switcher */}
+                      <div className="flex items-center gap-1.5 mb-3">
+                        {PACKAGE_TIERS.map((tier) => {
+                          const isActive = tier.id === selectedPackage;
+                          const isEmpireTier = tier.id === "empire";
+                          return (
+                            <motion.button
+                              key={tier.id}
+                              onClick={() => setSelectedPackage(tier.id)}
+                              className={`relative px-3 py-1.5 rounded-full text-[0.5rem] font-heading font-bold tracking-wider uppercase transition-all overflow-hidden ${
+                                isActive
+                                  ? isEmpireTier
+                                    ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20"
+                                    : "bg-vibrant-gradient text-primary-foreground shadow-lg shadow-primary/20"
+                                  : "bg-foreground/[0.05] text-foreground/35 hover:bg-foreground/[0.08] hover:text-foreground/50"
+                              }`}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              layout
+                              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                            >
+                              {isActive && isEmpireTier && (
+                                <motion.div
+                                  className="absolute inset-0 pointer-events-none"
+                                  style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%)" }}
+                                  animate={{ x: ["-200%", "300%"] }}
+                                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 2.5, ease: "easeInOut" }}
+                                />
+                              )}
+                              <span className="relative z-10 flex items-center gap-1">
+                                {isEmpireTier && "👑 "}{tier.name.split(" ")[0]}
+                                {isActive && (
+                                  <motion.span initial={{ width: 0, opacity: 0 }} animate={{ width: "auto", opacity: 1 }} className="overflow-hidden">
+                                    ✓
+                                  </motion.span>
+                                )}
+                              </span>
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+
                       {/* Setup price */}
                       <div className="flex items-baseline gap-2">
                         <motion.span key={packageTotalSetup} initial={{ scale: 1.1, opacity: 0.5 }} animate={{ scale: 1, opacity: 1 }}
