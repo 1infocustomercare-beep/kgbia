@@ -404,17 +404,19 @@ const EmpireVoiceAgent: React.FC = () => {
     enqueueSectionNarration(currentSection);
   }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
-  // ── Auto-start: show button only (chat stays CLOSED) ──
+  // ── Auto-start: show button, autoplay only on desktop ──
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-      autoNarratingRef.current = true;
-      setAutoNarrating(true);
-      enqueueSectionNarration("hero", true);
-    }, 2500);
+    }, 1600);
 
     return () => clearTimeout(timer);
-  }, [enqueueSectionNarration]);
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible || isTouchDevice) return;
+    startIntroNarration();
+  }, [isVisible, isTouchDevice, startIntroNarration]);
 
   // ── Send user message (chat / voice) ──
   const sendMessage = useCallback(async (text: string) => {
