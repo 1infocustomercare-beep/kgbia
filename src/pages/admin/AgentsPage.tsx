@@ -411,20 +411,52 @@ function generateMockData() {
   return { dailyData, topAccounts, recentLogs, alerts };
 }
 
-// ─── Agent Avatar with cartoon image ───
+// ─── Agent Avatar — Futuristic holographic style ───
 function AgentAvatar({ agent, size = 48 }: { agent: AgentDef; size?: number }) {
   const imgSrc = AGENT_IMAGES[agent.name] || agent.image;
+  const ringSize = size + 10;
   return (
-    <div
-      className="relative rounded-2xl flex items-center justify-center shrink-0 overflow-hidden"
-      style={{
-        width: size, height: size,
-        background: `linear-gradient(135deg, ${agent.color}15, ${agent.color}30)`,
-        border: `2px solid ${agent.color}44`,
-      }}
-    >
-      <img src={imgSrc} alt={agent.displayName} className="w-full h-full object-cover" />
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
+    <div className="relative shrink-0" style={{ width: ringSize, height: ringSize }}>
+      {/* Outer glow ring */}
+      <motion.div
+        className="absolute inset-0 rounded-2xl"
+        style={{
+          background: `conic-gradient(from 0deg, ${agent.color}00, ${agent.color}55, ${agent.color}00, ${agent.color}33, ${agent.color}00)`,
+          filter: `blur(2px)`,
+        }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+      />
+      {/* Ambient glow */}
+      <div
+        className="absolute inset-1 rounded-[14px] blur-md opacity-40"
+        style={{ background: agent.color }}
+      />
+      {/* Image container */}
+      <div
+        className="absolute inset-[5px] rounded-xl overflow-hidden"
+        style={{
+          background: `linear-gradient(145deg, ${agent.color}20, hsl(var(--card)))`,
+          border: `1.5px solid ${agent.color}55`,
+          boxShadow: `0 0 20px ${agent.color}22, inset 0 1px 0 rgba(255,255,255,0.08)`,
+        }}
+      >
+        <img src={imgSrc} alt={agent.displayName} className="w-full h-full object-cover" />
+        {/* Scanning beam overlay */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: `linear-gradient(180deg, transparent 35%, ${agent.color}18 50%, transparent 65%)` }}
+          animate={{ y: ["-100%", "200%"] }}
+          transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
+        />
+        {/* Top edge light */}
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${agent.color}66, transparent)` }} />
+        {/* Inner ring */}
+        <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10" />
+      </div>
+      {/* Corner HUD accents */}
+      <div className="absolute top-[3px] right-[3px] w-2 h-2 border-t border-r rounded-tr-md" style={{ borderColor: `${agent.color}55` }} />
+      <div className="absolute bottom-[3px] left-[3px] w-2 h-2 border-b border-l rounded-bl-md" style={{ borderColor: `${agent.color}55` }} />
     </div>
   );
 }
@@ -821,66 +853,93 @@ export default function AgentsPage() {
               return (
                 <motion.div key={agent.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.04 }}
-                  className={`bg-card border rounded-xl p-4 transition-all cursor-pointer group relative ${
-                    enabled ? "border-border hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5" : "border-border/50 opacity-50 grayscale"
+                  className={`relative overflow-hidden rounded-xl transition-all cursor-pointer group ${
+                    enabled
+                      ? "hover:shadow-xl hover:shadow-primary/10"
+                      : "opacity-40 grayscale"
                   }`}
+                  style={{
+                    background: enabled
+                      ? `linear-gradient(160deg, hsl(var(--card)), ${agent.color}08)`
+                      : "hsl(var(--card))",
+                    border: `1px solid ${enabled ? agent.color + "25" : "hsl(var(--border))"}`,
+                  }}
                   onClick={() => setSelectedAgent(agent)}
+                  whileHover={enabled ? { y: -3, borderColor: agent.color + "55" } : {}}
                 >
-                  {/* Header with cartoon avatar */}
-                  <div className="flex items-start gap-3 mb-3">
-                    <AgentAvatar agent={agent} size={56} />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-sm truncate">{config?.display_name || agent.displayName}</h3>
-                      <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                        <Badge className={`${agent.modelBadgeColor} text-[9px] h-5`}>{agent.model}</Badge>
-                        <StatusBadge status={enabled ? "active" : "disabled"} />
+                  {/* Top gradient accent */}
+                  <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${agent.color}66, transparent)` }} />
+                  {/* Ambient corner glow */}
+                  <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700" style={{ background: agent.color }} />
+
+                  <div className="p-4">
+                    {/* Header with avatar */}
+                    <div className="flex items-start gap-3 mb-3">
+                      <AgentAvatar agent={agent} size={52} />
+                      <div className="flex-1 min-w-0 pt-1">
+                        <h3 className="font-bold text-sm truncate text-foreground">{config?.display_name || agent.displayName}</h3>
+                        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                          <Badge className={`${agent.modelBadgeColor} text-[9px] h-5`}>{agent.model}</Badge>
+                          <StatusBadge status={enabled ? "active" : "disabled"} />
+                        </div>
+                      </div>
+                      <Switch checked={enabled}
+                        onCheckedChange={(checked) => toggleAgent.mutate({ agent_name: agent.name, is_enabled: checked })}
+                        onClick={(e) => e.stopPropagation()} className="mt-1" />
+                    </div>
+
+                    <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{config?.description || agent.description}</p>
+
+                    {/* Industries */}
+                    <div className="flex items-center gap-1 flex-wrap mb-2">
+                      <span className="text-[10px] text-muted-foreground mr-1">🎯</span>
+                      {(config?.allowed_industries || agent.industries).slice(0, 3).map((ind: string) => (
+                        <Badge key={ind} variant="outline" className="text-[9px] h-4 px-1.5"
+                          style={{ borderColor: `${agent.color}30`, color: `${agent.color}cc` }}>
+                          {INDUSTRY_LABELS[ind]?.split(" ")[0] || ind}
+                        </Badge>
+                      ))}
+                      {(config?.allowed_industries || agent.industries).length > 3 && (
+                        <Badge variant="outline" className="text-[9px] h-4 px-1.5">+{(config?.allowed_industries || agent.industries).length - 3}</Badge>
+                      )}
+                    </div>
+
+                    <div className="text-[10px] text-muted-foreground mb-3">⚡ {agent.trigger}</div>
+
+                    {/* Stats row */}
+                    <div className="border-t border-border/50 pt-2 grid grid-cols-3 gap-2 text-center">
+                      <div>
+                        <div className="text-xs font-bold" style={{ color: agent.color }}>€{agent.costPerCall}</div>
+                        <div className="text-[9px] text-muted-foreground">per call</div>
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-foreground">{agentCallsToday}</div>
+                        <div className="text-[9px] text-muted-foreground">oggi</div>
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-foreground">{callsMonth.toLocaleString()}</div>
+                        <div className="text-[9px] text-muted-foreground">mese</div>
                       </div>
                     </div>
-                    <Switch checked={enabled}
-                      onCheckedChange={(checked) => toggleAgent.mutate({ agent_name: agent.name, is_enabled: checked })}
-                      onClick={(e) => e.stopPropagation()} className="mt-1" />
-                  </div>
 
-                  <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{config?.description || agent.description}</p>
-
-                  {/* Industries */}
-                  <div className="flex items-center gap-1 flex-wrap mb-2">
-                    <span className="text-[10px] text-muted-foreground mr-1">🎯</span>
-                    {(config?.allowed_industries || agent.industries).slice(0, 3).map((ind: string) => (
-                      <Badge key={ind} variant="outline" className="text-[9px] h-4 px-1.5">
-                        {INDUSTRY_LABELS[ind]?.split(" ")[0] || ind}
-                      </Badge>
-                    ))}
-                    {(config?.allowed_industries || agent.industries).length > 3 && (
-                      <Badge variant="outline" className="text-[9px] h-4 px-1.5">+{(config?.allowed_industries || agent.industries).length - 3}</Badge>
-                    )}
-                  </div>
-
-                  <div className="text-[10px] text-muted-foreground mb-3">⚡ {agent.trigger}</div>
-
-                  {/* Stats */}
-                  <div className="border-t border-border pt-2 grid grid-cols-3 gap-2 text-center">
-                    <div><div className="text-xs font-bold">€{agent.costPerCall}</div><div className="text-[9px] text-muted-foreground">per call</div></div>
-                    <div><div className="text-xs font-bold">{agentCallsToday}</div><div className="text-[9px] text-muted-foreground">oggi</div></div>
-                    <div><div className="text-xs font-bold">{callsMonth.toLocaleString()}</div><div className="text-[9px] text-muted-foreground">mese</div></div>
-                  </div>
-
-                  {/* Action buttons */}
-                  <div className="flex gap-2 mt-3 pt-2 border-t border-border">
-                    {agent.testable && (
+                    {/* Action buttons */}
+                    <div className="flex gap-2 mt-3 pt-2 border-t border-border/50">
+                      {agent.testable && (
+                        <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
+                          style={{ borderColor: `${agent.color}30` }}
+                          onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
+                          <Play className="w-3 h-3" /> Test
+                        </Button>
+                      )}
                       <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
                         onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
-                        <Play className="w-3 h-3" /> Test
+                        <BarChart3 className="w-3 h-3" /> Analytics
                       </Button>
-                    )}
-                    <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
-                      onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
-                      <BarChart3 className="w-3 h-3" /> Analytics
-                    </Button>
-                    <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
-                      onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
-                      <Pencil className="w-3 h-3" /> Modifica
-                    </Button>
+                      <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
+                        onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
+                        <Pencil className="w-3 h-3" /> Modifica
+                      </Button>
+                    </div>
                   </div>
                 </motion.div>
               );
@@ -1264,12 +1323,15 @@ function ElevenLabsConvAIConfig() {
   );
 }
 
-// ─── KPI Card ───
+// ─── KPI Card — Premium ───
 function KPICard({ icon, label, value, sub }: { icon: React.ReactNode; label: string; value: string; sub: React.ReactNode }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-4">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      className="relative overflow-hidden rounded-xl border border-border bg-card p-4 group hover:border-primary/30 transition-all">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+      <div className="absolute -top-6 -right-6 w-16 h-16 rounded-full blur-xl bg-primary/5 group-hover:bg-primary/10 transition-colors" />
       <div className="flex items-center gap-2 mb-2">{icon}<span className="text-xs text-muted-foreground">{label}</span></div>
-      <div className="text-2xl font-bold">{value}</div>
+      <div className="text-2xl font-bold text-foreground">{value}</div>
       <div className="text-[10px] text-muted-foreground mt-1">{sub}</div>
     </motion.div>
   );
