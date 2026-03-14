@@ -1752,32 +1752,94 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ 3 Pillars ═══ */}
-        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-14"
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {[
-            { icon: <Palette className="w-5 h-5" />, title: "100% White Label", desc: "Colori, font, logo, layout — ogni pixel è il tuo brand.", accent: "Il TUO brand" },
-            { icon: <Workflow className="w-5 h-5" />, title: "Automazione Totale", desc: "Booking, fatture, reminder, marketing — tutto in autopilot.", accent: "Zero lavoro manuale" },
-            { icon: <Rocket className="w-5 h-5" />, title: "Sviluppo Custom", desc: "Moduli dedicati, integrazioni, logiche proprietarie su richiesta.", accent: "Nessun limite" },
-          ].map((card, i) => (
-            <motion.div key={i} variants={fadeScale}>
-              <PremiumCard glow scan delay={i} className="p-6">
-                <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
-                  <span className="text-primary">{card.icon}</span>
-                </PremiumIcon>
-                <div className="mt-4"></div>
-                <h3 className="font-heading text-sm font-bold text-foreground mb-2">{card.title}</h3>
-                <p className="text-[0.7rem] text-foreground/35 leading-[1.7] mb-3">{card.desc}</p>
-                <motion.span className="text-[0.6rem] font-heading font-semibold text-primary/60 tracking-wider inline-flex items-center gap-1.5"
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.8 }}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
-                  {card.accent}
-                </motion.span>
-              </PremiumCard>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* ═══ 3 Pillars — DNA Assembly ═══ */}
+        <div className="relative mb-14">
+          {/* DNA background */}
+          <div className="absolute inset-0 pointer-events-none -z-[1]">
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[220px] opacity-100">
+              <svg className="w-full h-full" viewBox="0 0 1200 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="lp-dna-a" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                    <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.5" />
+                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient id="lp-dna-b" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0" />
+                    <stop offset="50%" stopColor="hsl(var(--accent))" stopOpacity="0.35" />
+                    <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <motion.path
+                  d="M 0 80 C 200 10, 400 150, 600 80 C 800 10, 1000 150, 1200 80"
+                  fill="none"
+                  stroke="url(#lp-dna-a)"
+                  strokeWidth="2"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                />
+                <motion.path
+                  d="M 0 160 C 200 230, 400 90, 600 160 C 800 230, 1000 90, 1200 160"
+                  fill="none"
+                  stroke="url(#lp-dna-b)"
+                  strokeWidth="2"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
+                />
+              </svg>
+            </div>
+            <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 hidden sm:block" style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--primary)/0.35), transparent)" }} />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+            {[
+              { icon: <Palette className="w-4 h-4" />, title: "100% White Label", desc: "Colori, font, logo, layout — ogni pixel è il tuo brand.", accent: "Il TUO brand" },
+              { icon: <Workflow className="w-4 h-4" />, title: "Automazione Totale", desc: "Booking, fatture, reminder, marketing — tutto in autopilot.", accent: "Zero lavoro manuale" },
+              { icon: <Rocket className="w-4 h-4" />, title: "Sviluppo Custom", desc: "Moduli dedicati, integrazioni, logiche proprietarie su richiesta.", accent: "Nessun limite" },
+            ].map((card, i) => {
+              const fromLeft = i !== 1;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: fromLeft ? -45 : 45, y: 16, rotateY: fromLeft ? -14 : 14, scale: 0.86 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0, rotateY: 0, scale: 1 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ delay: i * 0.12, duration: 0.6, type: "spring", stiffness: 145, damping: 16 }}
+                  className="relative"
+                  style={{ perspective: "900px" }}
+                >
+                  <motion.div
+                    className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] z-20 hidden sm:block"
+                    style={i === 0 ? { right: "-5px" } : i === 2 ? { left: "-5px" } : { left: "50%", transform: "translate(-50%, -50%)" }}
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: [0, 1.45, 1] }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.12 + 0.35, duration: 0.35 }}
+                  />
+
+                  <PremiumCard glow scan delay={i} className="p-4 sm:p-4">
+                    <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
+                      <span className="text-primary">{card.icon}</span>
+                    </PremiumIcon>
+                    <div className="mt-2.5" />
+                    <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{card.title}</h3>
+                    <p className="text-[0.62rem] text-foreground/35 leading-[1.55] mb-2">{card.desc}</p>
+                    <motion.span className="text-[0.55rem] font-heading font-semibold text-primary/60 tracking-wider inline-flex items-center gap-1.5"
+                      animate={{ opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.6 }}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                      {card.accent}
+                    </motion.span>
+                  </PremiumCard>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
 
         {/* ═══ Scrolling Capabilities Ticker ═══ */}
         <div className="relative mb-14 -mx-5 sm:-mx-6 overflow-hidden">
