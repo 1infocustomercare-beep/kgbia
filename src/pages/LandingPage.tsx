@@ -1650,8 +1650,8 @@ const LandingPage = () => {
             { img: mockupCucina, title: "Agenda Smart", desc: "Calendario appuntamenti, gestione slot e notifiche automatiche per clienti.", tag: "OPERATIONS", sector: "Healthcare & Fitness", features: ["Agenda drag & drop", "Reminder automatici", "Schede paziente", "Report periodici"] },
           ];
 
-          const carouselRef = React.useRef<HTMLDivElement>(null);
-          const [carouselPaused, setCarouselPaused] = React.useState(false);
+          const carouselRef = useRef<HTMLDivElement>(null);
+          const [carouselPaused, setCarouselPaused] = useState(false);
 
           const scrollCarousel = (direction: 'left' | 'right') => {
             const el = carouselRef.current;
