@@ -1423,9 +1423,59 @@ const LandingPage = () => {
           </motion.div>
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="order-1 lg:order-2">
-            <div className="relative rounded-2xl overflow-hidden glow-card">
-              <img src={heroTechCommand} alt="Empire AI Command Center" className="w-full aspect-video object-cover" loading="lazy" />
-              <div className="absolute inset-0 bg-gradient-to-l from-background/50 via-transparent to-transparent pointer-events-none" />
+            <div className="relative rounded-2xl overflow-hidden glow-card aspect-video bg-background/80 border border-primary/10">
+              <svg className="w-full h-full" viewBox="0 0 600 340" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                  <linearGradient id="why-dna-g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="hsl(265,70%,60%)" stopOpacity="0.8" />
+                    <stop offset="50%" stopColor="hsl(35,45%,50%)" stopOpacity="0.5" />
+                    <stop offset="100%" stopColor="hsl(265,70%,60%)" stopOpacity="0.8" />
+                  </linearGradient>
+                  <linearGradient id="why-dna-g2" x1="100%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="hsl(35,45%,50%)" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="hsl(265,70%,60%)" stopOpacity="0.4" />
+                  </linearGradient>
+                  <filter id="why-glow"><feGaussianBlur stdDeviation="3" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+                  <radialGradient id="why-node-g" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="hsl(265,70%,60%)" stopOpacity="1" />
+                    <stop offset="100%" stopColor="hsl(265,70%,60%)" stopOpacity="0" />
+                  </radialGradient>
+                </defs>
+                <motion.path d="M 0,170 C 100,50 200,290 300,170 C 400,50 500,290 600,170" fill="none" stroke="url(#why-dna-g1)" strokeWidth="2"
+                  initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }}
+                  transition={{ duration: 2, ease: "easeInOut" }} filter="url(#why-glow)" />
+                <motion.path d="M 0,170 C 100,290 200,50 300,170 C 400,290 500,50 600,170" fill="none" stroke="url(#why-dna-g2)" strokeWidth="2"
+                  initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }}
+                  transition={{ duration: 2, ease: "easeInOut", delay: 0.3 }} filter="url(#why-glow)" />
+                {Array.from({ length: 12 }).map((_, i) => {
+                  const x = 25 + i * 50;
+                  const t = i / 11;
+                  const yA = 170 + 120 * Math.sin(t * Math.PI * 2);
+                  const yB = 170 - 120 * Math.sin(t * Math.PI * 2);
+                  return (
+                    <motion.line key={`wc-${i}`} x1={x} y1={yA} x2={x} y2={yB}
+                      stroke="hsl(265,70%,60%)" strokeWidth="1" strokeOpacity="0.2"
+                      initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 1.5 + i * 0.08 }} />
+                  );
+                })}
+                {[
+                  { cx: 80, cy: 100, r: 4, d: 0.5 }, { cx: 200, cy: 240, r: 3, d: 0.8 },
+                  { cx: 300, cy: 90, r: 5, d: 1.1 }, { cx: 420, cy: 260, r: 3.5, d: 1.4 },
+                  { cx: 520, cy: 120, r: 4, d: 1.7 }, { cx: 150, cy: 170, r: 3, d: 2.0 },
+                  { cx: 450, cy: 170, r: 3, d: 2.2 },
+                ].map((n, i) => (
+                  <motion.circle key={`wn-${i}`} cx={n.cx} cy={n.cy} r={n.r} fill="url(#why-node-g)"
+                    initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: [0, 1.3, 1], opacity: [0, 1, 0.7] }}
+                    viewport={{ once: true }} transition={{ duration: 0.8, delay: n.d }} />
+                ))}
+                <motion.rect x="0" y="0" width="3" height="340" fill="hsl(265,70%,60%)" opacity="0.12"
+                  animate={{ x: [0, 600] }} transition={{ duration: 4, repeat: Infinity, ease: "linear", repeatDelay: 2 }} />
+                <text x="300" y="170" textAnchor="middle" dominantBaseline="middle" fill="hsl(265,70%,60%)" fontSize="11" fontFamily="monospace" opacity="0.25">
+                  EMPIRE AI · NEURAL ENGINE
+                </text>
+              </svg>
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/30 pointer-events-none" />
             </div>
           </motion.div>
         </div>
