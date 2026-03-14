@@ -1767,69 +1767,76 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-          SECTOR PREVIEWS — Every industry with unique style
+          SECTOR PREVIEWS — Compact grid, expandable
          ═══════════════════════════════════════════ */}
+      {(() => {
+        const allSectors = (Object.keys(INDUSTRY_CONFIGS) as IndustryId[]).filter(id => DEMO_INDUSTRY_DATA[id]);
+        const INITIAL_SHOW = 6;
+        return (
       <Section style={{ background: "linear-gradient(180deg, hsla(260,14%,13%,1) 0%, hsla(270,18%,9%,1) 50%, hsla(260,14%,13%,1) 100%)" }}>
-        <div className="text-center mb-14">
+        <div className="text-center mb-10">
           <SectionLabel text="Ogni Settore" icon={<Layers className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.8rem,5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.05] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,2.8rem)] font-heading font-bold text-foreground leading-[1.05] mb-3"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Un Design <span className="text-shimmer">Unico per Ogni Business</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[550px] mx-auto text-sm leading-[1.8]"
+          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-xs sm:text-sm leading-[1.7]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Ogni settore ha interfacce, colori, terminologia e funzionalità completamente personalizzate. Nessun template generico.
+            Interfacce, colori e funzionalità personalizzate per ogni settore.
           </motion.p>
         </div>
 
-        <div className="space-y-6">
-          {(Object.keys(INDUSTRY_CONFIGS) as IndustryId[]).filter(id => DEMO_INDUSTRY_DATA[id]).map((id, idx) => {
+        {/* Grid — 1 col mobile, 2 tablet, 3 desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {allSectors.slice(0, showAllSectors ? allSectors.length : INITIAL_SHOW).map((id, idx) => {
             const cfg = INDUSTRY_CONFIGS[id];
             const demo = DEMO_INDUSTRY_DATA[id];
             return (
               <motion.div key={id}
-                className="rounded-2xl border border-white/[0.06] p-4 sm:p-6 hover:border-white/15 transition-all duration-500"
-                style={{ background: `linear-gradient(135deg, ${cfg.defaultPrimaryColor}06, transparent 60%)` }}
-                initial={{ opacity: 0, y: 30 }}
+                className="rounded-xl border border-white/[0.06] p-3 sm:p-4 hover:border-white/15 transition-all duration-500 cursor-pointer group"
+                style={{ background: `linear-gradient(135deg, ${cfg.defaultPrimaryColor}08, transparent 60%)` }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.5, delay: idx * 0.03 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.4, delay: idx * 0.03 }}
+                onClick={() => navigate(`/demo/${id}`)}
               >
-                {/* Sector header */}
-                <div className="flex items-center justify-between mb-5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-                      style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}>
-                      {cfg.emoji}
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-foreground">{cfg.label}</h3>
-                      <p className="text-[10px] text-foreground/35">{demo.companyName} · {cfg.description}</p>
-                    </div>
+                {/* Sector header — compact */}
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
+                    style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}>
+                    {cfg.emoji}
                   </div>
-                  <motion.button
-                    onClick={() => navigate(`/demo/${id}`)}
-                    className="hidden sm:flex px-4 py-2 rounded-xl text-[10px] font-bold text-foreground/80 border border-foreground/10 hover:border-foreground/30 hover:bg-foreground/5 transition-all"
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Apri Demo →
-                  </motion.button>
+                  <div className="min-w-0">
+                    <h3 className="text-xs font-bold text-foreground truncate">{cfg.label}</h3>
+                    <p className="text-[9px] text-foreground/35 truncate">{demo.companyName}</p>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-foreground/20 ml-auto flex-shrink-0 group-hover:text-foreground/50 transition-colors" />
                 </div>
 
-                {/* 4 iPhone mockups */}
-                <IndustryPhoneShowcase industryId={id} />
-
-                {/* Mobile CTA */}
-                <div className="sm:hidden mt-4 text-center">
-                  <button onClick={() => navigate(`/demo/${id}`)} className="text-[10px] font-bold underline underline-offset-4 text-foreground/50 hover:text-foreground/80 transition-colors">
-                    Vedi Demo Completa →
-                  </button>
+                {/* Phone showcase — scaled down */}
+                <div className="transform scale-[0.92] origin-top -mb-2">
+                  <IndustryPhoneShowcase industryId={id} />
                 </div>
               </motion.div>
             );
           })}
         </div>
+
+        {/* Show more / less */}
+        {allSectors.length > INITIAL_SHOW && (
+          <div className="text-center mt-6">
+            <button
+              onClick={() => setShowAllSectors(p => !p)}
+              className="px-5 py-2.5 rounded-xl text-xs font-semibold border border-foreground/10 text-foreground/60 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/5 transition-all duration-300"
+            >
+              {showAllSectors ? "Mostra meno ↑" : `Mostra tutti i ${allSectors.length} settori ↓`}
+            </button>
+          </div>
+        )}
       </Section>
+        );
+      })()}
 
       <SectionDivider />
 
