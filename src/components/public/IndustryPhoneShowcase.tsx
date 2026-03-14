@@ -363,8 +363,14 @@ function getSectorStyle(id: IndustryId): SectorStyle {
 function IPhoneFrame({
   screen, color, emoji, companyName, services, index, sectorStyle,
 }: {
-  screen: { label: string; type: string };
+  screen: { label: string; type: string; desc?: string };
   color: string;
+  emoji: string;
+  companyName: string;
+  services: { name: string; emoji?: string; price: number }[];
+  index: number;
+  sectorStyle: SectorStyle;
+}) {
   emoji: string;
   companyName: string;
   services: { name: string; emoji?: string; price: number }[];
