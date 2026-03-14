@@ -674,9 +674,9 @@ const LandingPage = () => {
           <div className="absolute top-0 right-0 w-px h-[120px]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.4), transparent)" }} />
         </div>
 
-        {/* ═══ LAYER 5: Central vertical beam ═══ */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-[30vh]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.5), hsla(265,70%,60%,0.08), transparent)" }} />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[3px] blur-sm" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.25), transparent)" }} />
+        {/* ═══ LAYER 5: Central vertical beam — subtle, behind content ═══ */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-[20vh] z-[1]" style={{ background: "linear-gradient(180deg, hsla(265,70%,60%,0.2), transparent)", filter: "blur(1px)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[2px] blur-sm z-[1]" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.12), transparent)" }} />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
