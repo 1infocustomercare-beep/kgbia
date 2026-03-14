@@ -1568,9 +1568,13 @@ const LandingPage = () => {
           </motion.div>
 
           <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="order-1 lg:order-2">
-            <div className="flex justify-center items-center gap-3 sm:gap-5 relative">
+            className="order-1 lg:order-2 w-full overflow-hidden">
+            <div className="relative">
               <div className="absolute -inset-16 rounded-[80px] blur-[100px] pointer-events-none" style={{ background: "hsla(265,70%,60%,0.05)" }} />
+              {/* Fade edges */}
+              <div className="absolute left-0 top-0 bottom-0 w-16 z-30 pointer-events-none" style={{ background: "linear-gradient(to right, hsl(var(--background)), transparent)" }} />
+              <div className="absolute right-0 top-0 bottom-0 w-16 z-30 pointer-events-none" style={{ background: "linear-gradient(to left, hsl(var(--background)), transparent)" }} />
+              <div className="flex gap-5 animate-[ncc-scroll_25s_linear_infinite] hover:[animation-play-state:paused]" style={{ width: "max-content" }}>
               
               {/* iPhone 1 - Booking */}
               <motion.div className="relative z-10"
