@@ -3623,38 +3623,75 @@ const LandingPage = () => {
           {testimonials.map((t, i) => (
             <div key={i} className="group relative h-full">
               {/* Card */}
-              <div className="relative p-7 sm:p-8 rounded-2xl h-full flex flex-col border border-border/40 bg-card/60 backdrop-blur-sm transition-all duration-500 group-hover:border-primary/20 group-hover:shadow-[0_0_40px_-12px_hsla(265,70%,60%,0.12)]">
-                {/* Top accent line */}
-                <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+              <div className="relative p-7 sm:p-8 rounded-2xl h-full flex flex-col overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
+                style={{
+                  background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
+                  border: "1px solid hsla(265,40%,50%,0.12)",
+                  boxShadow: "0 16px 48px -12px hsla(265,50%,8%,0.5), inset 0 1px 0 hsla(265,60%,70%,0.06)",
+                  backdropFilter: "blur(24px)",
+                }}>
                 
-                {/* Quote icon */}
+                {/* Shimmer sweep */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                  style={{ background: "linear-gradient(105deg, transparent 40%, hsla(38,50%,55%,0.06) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
+                
+                {/* HUD corner accents */}
+                <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsla(38,50%,55%,0.2)" }} />
+                <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
+                
+                {/* Top gradient line */}
+                <div className="absolute top-0 left-8 right-8 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
+                
+                {/* Industry emoji badge */}
+                <div className="absolute top-5 right-5 w-8 h-8 rounded-lg flex items-center justify-center text-sm"
+                  style={{ background: "hsla(265,30%,20%,0.6)", border: "1px solid hsla(265,40%,50%,0.15)" }}>
+                  {t.emoji}
+                </div>
+
+                {/* Quote icon — gold accent */}
                 <div className="mb-5">
-                  <Quote className="w-5 h-5 text-primary/25" />
+                  <Quote className="w-5 h-5" style={{ color: "hsla(38,50%,55%,0.4)" }} />
                 </div>
 
                 {/* Testimonial text */}
-                <blockquote className="text-[0.8rem] sm:text-sm text-foreground/55 leading-[1.85] mb-6 flex-1">
-                  {t.quote}
+                <blockquote className="text-[0.8rem] sm:text-sm leading-[1.85] mb-6 flex-1"
+                  style={{ color: "hsla(0,0%,100%,0.55)" }}>
+                  "{t.quote}"
                 </blockquote>
 
-                {/* Metric badge */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-primary/[0.06] border border-primary/10 text-[0.65rem] text-primary font-semibold font-heading tracking-wider mb-5 self-start">
+                {/* Metric badge — glowing */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.65rem] font-semibold font-heading tracking-wider mb-5 self-start transition-all duration-500 group-hover:shadow-[0_0_20px_-4px_hsla(265,70%,60%,0.3)]"
+                  style={{
+                    background: "linear-gradient(135deg, hsla(265,40%,25%,0.5), hsla(265,30%,18%,0.4))",
+                    border: "1px solid hsla(265,60%,55%,0.2)",
+                    color: "hsl(var(--primary))",
+                  }}>
                   <TrendingUp className="w-3 h-3" /> {t.metric}
                 </div>
 
-                {/* Divider */}
-                <div className="h-px bg-border/30 mb-5" />
+                {/* Divider — gradient */}
+                <div className="h-px mb-5" style={{ background: "linear-gradient(90deg, hsla(38,50%,55%,0.15), hsla(265,40%,50%,0.1), transparent)" }} />
 
                 {/* Author */}
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full border border-primary/15 bg-primary/[0.05] flex items-center justify-center text-foreground/50 text-xs font-bold font-heading">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-11 h-11 rounded-full flex items-center justify-center text-xs font-bold font-heading"
+                    style={{
+                      background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))",
+                      border: "1px solid hsla(265,50%,55%,0.2)",
+                      color: "hsl(var(--primary))",
+                      boxShadow: "0 0 16px -4px hsla(265,70%,60%,0.2)",
+                    }}>
                     {t.name.charAt(0)}
                   </div>
                   <div>
-                    <h4 className="font-heading text-xs font-semibold text-foreground/80">{t.name}</h4>
-                    <p className="text-[0.6rem] text-foreground/30 mt-0.5">{t.role}</p>
+                    <h4 className="font-heading text-xs font-semibold" style={{ color: "hsla(0,0%,100%,0.8)" }}>{t.name}</h4>
+                    <p className="text-[0.6rem] mt-0.5" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
                   </div>
                 </div>
+
+                {/* Bottom glow */}
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-16 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                  style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent 70%)" }} />
               </div>
             </div>
           ))}
