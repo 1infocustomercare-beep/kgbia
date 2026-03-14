@@ -112,7 +112,7 @@ const FALLBACK_REVIEWS = [
   { name: "Francesca B.", text: "Trattamento viso anti-age incredibile. La mia pelle non è mai stata così luminosa!", rating: 5, city: "Torino", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" },
 ];
 
-export default function BeautyPublicSite({ company }: Props) {
+export default function BeautyPublicSite({ company, afterHero }: Props) {
   const companyId = company.id;
   const [form, setForm] = useState({ name: "", phone: "", service: "", date: "", time: "", notes: "" });
   const [submitting, setSubmitting] = useState(false);
