@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef, useEffect, FormEvent } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/gdpr/CookieBanner";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
