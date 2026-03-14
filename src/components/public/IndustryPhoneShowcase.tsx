@@ -320,7 +320,7 @@ const SECTOR_STYLES: Partial<Record<IndustryId, Partial<SectorStyle>>> = {
   },
 };
 
-function getSectorStyle(id: IndustryId): SectorStyle {
+export function getSectorStyle(id: IndustryId): SectorStyle {
   const cfg = INDUSTRY_CONFIGS[id];
   const base = SECTOR_STYLES[id] || {};
   const defaults: SectorStyle = {
@@ -360,7 +360,7 @@ function getSectorStyle(id: IndustryId): SectorStyle {
    iPHONE FRAME COMPONENT — Premium with unique screens per sector
    ═══════════════════════════════════════════ */
 
-function IPhoneFrame({
+export function IPhoneFrame({
   screen, color, emoji, companyName, services, index, sectorStyle,
 }: {
   screen: { label: string; type: string; desc?: string };
