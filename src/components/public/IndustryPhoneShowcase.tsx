@@ -823,7 +823,7 @@ export function getSectorStyle(id: IndustryId): SectorStyle {
    ═══════════════════════════════════════════ */
 
 export function IPhoneFrame({
-  screen, color, emoji, companyName, services, index, sectorStyle,
+  screen, color, emoji, companyName, services, index, sectorStyle, industryId,
 }: {
   screen: { label: string; type: string; desc?: string };
   color: string;
@@ -832,6 +832,7 @@ export function IPhoneFrame({
   services: { name: string; emoji?: string; price: number }[];
   index: number;
   sectorStyle: SectorStyle;
+  industryId: IndustryId;
 }) {
   const isCenter = index === 1 || index === 2;
 
