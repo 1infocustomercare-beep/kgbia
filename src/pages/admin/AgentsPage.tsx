@@ -32,6 +32,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 
 // Agent cartoon images
+import agentHubHero from "@/assets/agent-hub-hero.png";
 import agentEmpireAssistant from "@/assets/agent-empire-assistant.png";
 import agentAtlasVoice from "@/assets/agent-atlas-voice.png";
 import agentConciergeFood from "@/assets/agent-concierge-food.png";
