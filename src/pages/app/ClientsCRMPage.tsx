@@ -190,7 +190,7 @@ export default function ClientsCRMPage() {
                   <div className="bg-muted/50 p-3 rounded-lg text-sm">{selected.notes}</div>
                 )}
                 <Customer360Widget client={selected} />
-            </div>
+              </div>
           )}
         </SheetContent>
       </Sheet>
