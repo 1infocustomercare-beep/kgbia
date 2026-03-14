@@ -341,8 +341,8 @@ const StudioTab = ({
   return (
     <motion.div className="space-y-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       {/* Cartoon illustration */}
-      <div className="flex items-center gap-3 mb-1">
-        <img src={cartoonStudioMenu} alt="" className="w-14 h-14 object-contain flex-shrink-0" />
+      <div className="flex flex-col items-center text-center gap-2 mb-2">
+        <img src={cartoonStudioMenu} alt="" className="w-24 h-24 object-contain" />
         <div>
           <h3 className="text-sm font-display font-bold text-foreground">Studio Creativo</h3>
           <p className="text-[10px] text-muted-foreground">Menu, foto IA, design e lingue</p>
