@@ -246,6 +246,31 @@ class RouteErrorBoundary extends React.Component<{ children: ReactNode }, RouteE
   }
 }
 
+type IntroErrorBoundaryState = {
+  hasError: boolean;
+};
+
+class IntroErrorBoundary extends React.Component<{ children: ReactNode; onFail: () => void }, IntroErrorBoundaryState> {
+  state: IntroErrorBoundaryState = { hasError: false };
+
+  static getDerivedStateFromError(): IntroErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Intro rendering error:", error, errorInfo);
+    this.props.onFail();
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null;
+    }
+
+    return this.props.children;
+  }
+}
+
 function App() {
   const [introCompleted, setIntroCompleted] = useState(false);
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
