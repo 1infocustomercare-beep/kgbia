@@ -473,7 +473,7 @@ const SuperAdminDashboard = () => {
             >
               {/* Outer orbital ring 1 */}
               <motion.div
-                className="absolute -inset-1 rounded-full border border-primary/20"
+               className="absolute -inset-1 rounded-full border border-empire-violet/30"
                 animate={{ rotateZ: 360 }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                 style={{ transformStyle: 'preserve-3d', transform: 'rotateX(70deg)' }}
