@@ -931,12 +931,8 @@ const EmpireVoiceAgent: React.FC = () => {
                 transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
               />
             )}
-            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden shadow-[0_0_30px_hsla(265,85%,65%,0.25)] bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              {voiceMode === "elevenlabs" && conversation.status === "connected" ? (
-                <PhoneOff className="w-6 h-6 text-white" />
-              ) : (
-                <Phone className="w-6 h-6 text-white" />
-              )}
+            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden shadow-[0_0_30px_hsla(265,85%,65%,0.25)] border-2 border-primary/30">
+              <img src={voiceAgentAvatar} alt="Arianna — Assistente Empire" className="w-full h-full object-cover" />
               {/* Active call indicator */}
               {(isSpeaking && !isPaused && !isOpen) && (
                 <span className="absolute top-1 right-1 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
