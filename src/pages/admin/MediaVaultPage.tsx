@@ -3,17 +3,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Film, Image, Trash2, Eye, Copy, Check, Search, Grid3X3, List, Play,
   Plus, Upload, ChevronUp, ChevronDown, Pencil, X, Save, ExternalLink,
-  ArrowUpDown, Key, ShieldCheck, CheckCircle2, XCircle, AlertCircle,
-  RefreshCw, FolderOpen, Layers, Replace, ArrowDown, ArrowUp, Zap, Lock
+  ArrowUpDown, RefreshCw, FolderOpen, Layers, ArrowDown, ArrowUp, Palette
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { useMediaVault, type MediaItem } from "@/hooks/useMediaVault";
+import { useSiteAssets, useUpdateSiteAsset, type SiteAsset } from "@/hooks/useSiteAssets";
+import { supabase } from "@/integrations/supabase/client";
 
 type ViewMode = "grid" | "list" | "sections";
-type PageTab = "media" | "apikeys";
+type PageTab = "media" | "site_assets";
 
-// Section mapping: which section of the landing page uses what
+// Section mapping for Media Vault
 const SECTION_MAP: Record<string, { label: string; color: string; description: string }> = {
   "Landing — Hero": { label: "🏠 Hero Homepage", color: "hsl(var(--primary))", description: "Video/immagine principale in apertura" },
   "Landing — Settori": { label: "🏭 Showcase Settori", color: "hsl(265, 70%, 60%)", description: "Montaggio video multi-settore" },
@@ -28,29 +30,19 @@ const SECTION_MAP: Record<string, { label: string; color: string; description: s
   "Brand": { label: "👑 Brand Assets", color: "hsl(38, 50%, 55%)", description: "Loghi e identità visiva Empire" },
 };
 
-// API Keys needed for the full Empire system
-const API_KEYS_CONFIG = [
-  { key: "STRIPE_SECRET_KEY", label: "Stripe Secret Key", category: "Pagamenti", description: "Chiave segreta per pagamenti, abbonamenti e Connect", required: true, docUrl: "https://dashboard.stripe.com/apikeys" },
-  { key: "STRIPE_WEBHOOK_SECRET", label: "Stripe Webhook Secret", category: "Pagamenti", description: "Signing secret per validare webhook Stripe", required: true, docUrl: "https://dashboard.stripe.com/webhooks" },
-  { key: "ELEVENLABS_API_KEY", label: "ElevenLabs API Key", category: "IA & Voice", description: "Text-to-Speech e agenti vocali conversazionali", required: false, managed: true },
-  { key: "GOOGLE_MAPS_API_KEY", label: "Google Maps API Key", category: "Servizi Esterni", description: "Geocoding, mappe flotta NCC, autocomplete indirizzi", required: false, docUrl: "https://console.cloud.google.com/apis" },
-  { key: "TWILIO_ACCOUNT_SID", label: "Twilio Account SID", category: "Notifiche", description: "SMS e WhatsApp Business API", required: false, docUrl: "https://console.twilio.com" },
-  { key: "TWILIO_AUTH_TOKEN", label: "Twilio Auth Token", category: "Notifiche", description: "Token di autenticazione Twilio", required: false },
-  { key: "RESEND_API_KEY", label: "Resend API Key", category: "Notifiche", description: "Email transazionali (conferme, notifiche)", required: false, docUrl: "https://resend.com/api-keys" },
-  { key: "FCM_SERVER_KEY", label: "Firebase FCM Key", category: "Notifiche", description: "Push notifications su dispositivi mobili", required: false, docUrl: "https://console.firebase.google.com" },
-  { key: "GA4_MEASUREMENT_ID", label: "Google Analytics GA4", category: "Analytics", description: "Tracking visitatori siti pubblici", required: false, docUrl: "https://analytics.google.com" },
-  { key: "META_ACCESS_TOKEN", label: "Meta Business Token", category: "Social", description: "Pubblicazione automatica Instagram/Facebook", required: false, docUrl: "https://developers.facebook.com" },
-  { key: "FATTURA_CLOUD_API_KEY", label: "Fatturazione Elettronica", category: "Fiscale", description: "Invio automatico fatture SDI (FattureInCloud/Aruba)", required: false },
-];
-
-// Known configured secrets from the system
-const CONFIGURED_SECRETS = [
-  "SUPABASE_DB_URL", "SUPABASE_PUBLISHABLE_KEY", "LOVABLE_API_KEY",
-  "ELEVENLABS_API_KEY", "SUPABASE_URL", "SUPABASE_ANON_KEY", "SUPABASE_SERVICE_ROLE_KEY"
-];
+// Section labels for Site Assets
+const SITE_ASSET_SECTIONS: Record<string, { label: string; icon: string; description: string }> = {
+  landing: { label: "Landing Page", icon: "🏠", description: "Hero, mockup e sfondi della home page" },
+  sectors: { label: "Settori", icon: "🎯", description: "Immagini settori nella landing" },
+  agents: { label: "Agenti IA", icon: "🤖", description: "Header e icone agenti nell'app" },
+  ncc: { label: "NCC / Trasporti", icon: "🚗", description: "Immagini flotta e destinazioni NCC" },
+};
 
 const MediaVaultPage = () => {
   const { items, loading, addItem, deleteItem, updateItem, moveItem, uploadFile } = useMediaVault();
+  const { data: siteAssets, isLoading: siteAssetsLoading } = useSiteAssets();
+  const updateSiteAsset = useUpdateSiteAsset();
+
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("sections");
   const [filterType, setFilterType] = useState<"all" | "video" | "image">("all");
@@ -72,13 +64,19 @@ const MediaVaultPage = () => {
   const replaceFileRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+  // Site assets state
+  const [saSearch, setSaSearch] = useState("");
+  const [saSectionFilter, setSaSectionFilter] = useState("all");
+  const [saEditingId, setSaEditingId] = useState<string | null>(null);
+  const [saEditUrl, setSaEditUrl] = useState("");
+  const [saUploading, setSaUploading] = useState<string | null>(null);
+
   const filtered = useMemo(() => items.filter(m => {
     if (filterType !== "all" && m.type !== filterType) return false;
     if (search && !m.name.toLowerCase().includes(search.toLowerCase()) && !m.section.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   }), [items, filterType, search]);
 
-  // Group by section
   const groupedBySection = useMemo(() => {
     const map: Record<string, MediaItem[]> = {};
     filtered.forEach(item => {
@@ -86,7 +84,6 @@ const MediaVaultPage = () => {
       if (!map[section]) map[section] = [];
       map[section].push(item);
     });
-    // Sort each group by sort_order
     Object.values(map).forEach(arr => arr.sort((a, b) => a.sort_order - b.sort_order));
     return map;
   }, [filtered]);
@@ -100,6 +97,22 @@ const MediaVaultPage = () => {
       return a.localeCompare(b);
     });
   }, [groupedBySection]);
+
+  // Site Assets filtered/grouped
+  const saFiltered = useMemo(() => (siteAssets || []).filter(a => {
+    if (saSectionFilter !== "all" && a.section !== saSectionFilter) return false;
+    if (saSearch && !a.label.toLowerCase().includes(saSearch.toLowerCase()) && !a.slot_key.toLowerCase().includes(saSearch.toLowerCase())) return false;
+    return true;
+  }), [siteAssets, saSectionFilter, saSearch]);
+
+  const saGrouped = useMemo(() => {
+    return saFiltered.reduce<Record<string, (SiteAsset & { resolvedUrl: string })[]>>((acc, a) => {
+      const key = a.section;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(a as SiteAsset & { resolvedUrl: string });
+      return acc;
+    }, {});
+  }, [saFiltered]);
 
   const copyPath = (item: MediaItem) => {
     navigator.clipboard.writeText(item.url);
@@ -144,7 +157,6 @@ const MediaVaultPage = () => {
     await deleteItem(item.id);
   };
 
-  // Replace media file
   const handleReplaceFile = async (file: File) => {
     if (!replacingId) return;
     setUploading(true);
@@ -156,7 +168,6 @@ const MediaVaultPage = () => {
     toast({ title: "Media sostituito ✓" });
   };
 
-  // Swap positions between two items
   const handleSwap = async (targetId: string) => {
     if (!swapFrom || swapFrom === targetId) { setSwapFrom(null); return; }
     const fromItem = items.find(i => i.id === swapFrom);
@@ -168,6 +179,45 @@ const MediaVaultPage = () => {
     ]);
     setSwapFrom(null);
     toast({ title: "Posizioni scambiate ✓" });
+  };
+
+  // Site Asset handlers
+  const handleSaUpload = async (assetId: string, file: File) => {
+    setSaUploading(assetId);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `site-assets/${assetId}.${ext}`;
+      const { error: uploadError } = await supabase.storage.from("media-vault").upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data: { publicUrl } } = supabase.storage.from("media-vault").getPublicUrl(path);
+      await updateSiteAsset.mutateAsync({ id: assetId, url: publicUrl });
+      toast({ title: "Asset aggiornato ✓" });
+    } catch (e: any) {
+      toast({ title: "Errore upload", description: e.message, variant: "destructive" });
+    } finally {
+      setSaUploading(null);
+    }
+  };
+
+  const handleSaSetUrl = async (assetId: string) => {
+    if (!saEditUrl.trim()) return;
+    try {
+      await updateSiteAsset.mutateAsync({ id: assetId, url: saEditUrl.trim() });
+      toast({ title: "URL impostato ✓" });
+      setSaEditingId(null);
+      setSaEditUrl("");
+    } catch (e: any) {
+      toast({ title: "Errore", description: e.message, variant: "destructive" });
+    }
+  };
+
+  const handleSaReset = async (assetId: string) => {
+    try {
+      await updateSiteAsset.mutateAsync({ id: assetId, url: null });
+      toast({ title: "Ripristinato", description: "Torna all'asset predefinito" });
+    } catch {
+      toast({ title: "Errore", variant: "destructive" });
+    }
   };
 
   const renderMediaCard = (item: MediaItem, i: number) => {
@@ -184,7 +234,6 @@ const MediaVaultPage = () => {
         initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.02 }}
         onClick={isSwapTarget ? () => handleSwap(item.id) : undefined}
       >
-        {/* Thumbnail */}
         <div className="relative aspect-video bg-foreground/5 cursor-pointer" onClick={!isSwapTarget ? () => setPreview(item) : undefined}>
           {item.type === "video" ? (
             <>
@@ -207,7 +256,6 @@ const MediaVaultPage = () => {
           </div>
         </div>
 
-        {/* Info */}
         <div className="p-3">
           {isEditing ? (
             <div className="space-y-2">
@@ -273,25 +321,30 @@ const MediaVaultPage = () => {
     );
   };
 
+  const customCount = useMemo(() => (siteAssets || []).filter(a => !!a.url).length, [siteAssets]);
+
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6">
       {/* Hidden replace file input */}
       <input ref={replaceFileRef} type="file" accept="video/*,image/*" className="hidden"
         onChange={e => { if (e.target.files?.[0]) handleReplaceFile(e.target.files[0]); }} />
 
-      {/* Page Tabs: Media | API Keys */}
+      {/* Page Tabs */}
       <div className="flex gap-2 mb-5">
         <button onClick={() => setPageTab("media")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${pageTab === "media" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground border border-border"}`}>
-          <Film className="w-4 h-4" /> Media CMS
+          <Film className="w-4 h-4" /> Media Vault
         </button>
-        <button onClick={() => setPageTab("apikeys")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${pageTab === "apikeys" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground border border-border"}`}>
-          <Key className="w-4 h-4" /> Chiavi API
+        <button onClick={() => setPageTab("site_assets")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${pageTab === "site_assets" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground border border-border"}`}>
+          <Palette className="w-4 h-4" /> Site Assets
+          {customCount > 0 && (
+            <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] font-bold bg-accent/20 text-accent">{customCount}</span>
+          )}
         </button>
       </div>
 
-      {/* ===== MEDIA CMS TAB ===== */}
+      {/* ===== MEDIA VAULT TAB ===== */}
       {pageTab === "media" && (
         <>
           {/* Header */}
@@ -301,8 +354,8 @@ const MediaVaultPage = () => {
                 <Layers className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-foreground">Media CMS</h1>
-                <p className="text-xs text-muted-foreground">{items.length} asset · {Object.keys(groupedBySection).length} sezioni · Tempo reale</p>
+                <h1 className="text-lg font-bold text-foreground">Media Vault</h1>
+                <p className="text-xs text-muted-foreground">{items.length} asset · {Object.keys(groupedBySection).length} sezioni</p>
               </div>
             </div>
             <Button onClick={() => setShowAdd(!showAdd)} size="sm" className="gap-1.5 text-xs">
@@ -519,146 +572,152 @@ const MediaVaultPage = () => {
         </>
       )}
 
-      {/* ===== API KEYS TAB ===== */}
-      {pageTab === "apikeys" && (
-        <motion.div className="space-y-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Key className="w-5 h-5 text-primary" />
+      {/* ===== SITE ASSETS TAB ===== */}
+      {pageTab === "site_assets" && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+              <Palette className="w-5 h-5 text-accent" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-foreground">Chiavi API & Connessioni</h1>
-              <p className="text-xs text-muted-foreground">Tutte le chiavi necessarie per il funzionamento completo di Empire</p>
+              <h1 className="text-lg font-bold text-foreground">Site Assets</h1>
+              <p className="text-xs text-muted-foreground">
+                Gestisci foto e video di tutta la piattaforma · {customCount} personalizzati su {(siteAssets || []).length} totali
+              </p>
             </div>
           </div>
 
-          {/* Summary */}
-          {(() => {
-            const configured = API_KEYS_CONFIG.filter(k => CONFIGURED_SECRETS.includes(k.key) || k.managed);
-            const missing = API_KEYS_CONFIG.filter(k => !CONFIGURED_SECRETS.includes(k.key) && !k.managed);
-            const categories = [...new Set(API_KEYS_CONFIG.map(k => k.category))];
+          {/* Search + Section filters */}
+          <div className="flex gap-2 mb-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+              <Input placeholder="Cerca slot..." value={saSearch} onChange={e => setSaSearch(e.target.value)}
+                className="pl-8 h-9 text-xs bg-secondary/40 border-border/50 rounded-xl" />
+            </div>
+          </div>
+          <div className="flex gap-1.5 mb-5 overflow-x-auto scrollbar-hide pb-1">
+            {[{ key: "all", label: "Tutti", icon: "📋" }, ...Object.entries(SITE_ASSET_SECTIONS).map(([k, v]) => ({ key: k, label: v.label, icon: v.icon }))].map(s => (
+              <button key={s.key} onClick={() => setSaSectionFilter(s.key)}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[0.6rem] font-semibold whitespace-nowrap transition-all ${
+                  saSectionFilter === s.key ? "bg-primary text-primary-foreground shadow-sm" : "bg-secondary/50 text-muted-foreground"
+                }`}>
+                <span>{s.icon}</span>
+                <span>{s.label}</span>
+              </button>
+            ))}
+          </div>
 
+          {siteAssetsLoading && (
+            <div className="text-center py-16">
+              <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">Caricamento...</p>
+            </div>
+          )}
+
+          {/* Grouped sections */}
+          {!siteAssetsLoading && Object.entries(saGrouped).map(([section, sItems]) => {
+            const secInfo = SITE_ASSET_SECTIONS[section];
             return (
-              <>
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="p-3 rounded-xl bg-green-500/[0.06] border border-green-500/15 text-center">
-                    <p className="text-xl font-display font-bold text-green-400">{configured.length}</p>
-                    <p className="text-[0.55rem] text-green-400/70 font-medium uppercase tracking-wider">Configurate</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-destructive/[0.06] border border-destructive/15 text-center">
-                    <p className="text-xl font-display font-bold text-destructive">{missing.length}</p>
-                    <p className="text-[0.55rem] text-destructive/70 font-medium uppercase tracking-wider">Mancanti</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-primary/[0.06] border border-primary/15 text-center">
-                    <p className="text-xl font-display font-bold text-primary">{API_KEYS_CONFIG.length}</p>
-                    <p className="text-[0.55rem] text-primary/70 font-medium uppercase tracking-wider">Totali</p>
-                  </div>
-                </div>
-
-                {/* Progress */}
-                <div className="px-1">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs text-muted-foreground font-medium">Completamento</span>
-                    <span className="text-xs font-display font-bold text-primary">{Math.round(configured.length / API_KEYS_CONFIG.length * 100)}%</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-secondary overflow-hidden">
-                    <motion.div className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
-                      initial={{ width: 0 }} animate={{ width: `${configured.length / API_KEYS_CONFIG.length * 100}%` }} transition={{ duration: 1 }} />
-                  </div>
-                </div>
-
-                {/* By Category */}
-                {categories.map(cat => {
-                  const catKeys = API_KEYS_CONFIG.filter(k => k.category === cat);
-                  const catConfigured = catKeys.filter(k => CONFIGURED_SECRETS.includes(k.key) || k.managed).length;
-                  return (
-                    <div key={cat}>
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-sm font-display font-bold text-foreground">{cat}</h3>
-                        <span className="text-[0.6rem] text-muted-foreground font-medium px-2 py-0.5 rounded-full bg-secondary">
-                          {catConfigured}/{catKeys.length}
-                        </span>
-                      </div>
-                      <div className="space-y-1.5">
-                        {catKeys.map(apiKey => {
-                          const isConfigured = CONFIGURED_SECRETS.includes(apiKey.key) || apiKey.managed;
-                          return (
-                            <div key={apiKey.key}
-                              className={`p-3 rounded-xl border transition-all ${
-                                isConfigured ? "border-green-500/15 bg-green-500/[0.03]" : "border-destructive/15 bg-destructive/[0.03]"
-                              }`}>
-                              <div className="flex items-start gap-2.5">
-                                {isConfigured ? (
-                                  <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0 mt-0.5" />
-                                ) : (
-                                  <XCircle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
-                                )}
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center justify-between gap-2">
-                                    <div className="flex items-center gap-2">
-                                      <p className="text-xs font-semibold text-foreground">{apiKey.label}</p>
-                                      {apiKey.required && (
-                                        <span className="text-[0.45rem] px-1 py-0.5 rounded bg-destructive/15 text-destructive font-bold uppercase">Necessaria</span>
-                                      )}
-                                    </div>
-                                    {isConfigured ? (
-                                      <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 font-bold shrink-0">
-                                        {apiKey.managed ? "CONNECTOR" : "ATTIVA"}
-                                      </span>
-                                    ) : (
-                                      <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-destructive/15 text-destructive font-bold shrink-0">MANCANTE</span>
-                                    )}
-                                  </div>
-                                  <p className="text-[0.6rem] text-muted-foreground mt-0.5">{apiKey.description}</p>
-                                  <p className="text-[0.5rem] text-muted-foreground/50 mt-0.5 font-mono">{apiKey.key}</p>
-                                  <div className="flex items-center gap-2 mt-2">
-                                    {!isConfigured && (
-                                      <Button variant="default" size="sm" className="h-6 text-[0.55rem] gap-1 px-2"
-                                        onClick={() => toast({ title: "🔧 Configura " + apiKey.label, description: "Vai in Settings → Secrets per aggiungere: " + apiKey.key })}>
-                                        <Zap className="w-2.5 h-2.5" /> Configura
-                                      </Button>
-                                    )}
-                                    {apiKey.docUrl && (
-                                      <a href={apiKey.docUrl} target="_blank" rel="noopener noreferrer"
-                                        className="flex items-center gap-1 text-[0.55rem] text-primary hover:underline">
-                                        <ExternalLink className="w-2.5 h-2.5" /> Documentazione
-                                      </a>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
+              <div key={section} className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-1.5 h-8 rounded-full bg-accent/50" />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-sm font-heading font-bold text-foreground">
+                        {secInfo?.icon} {secInfo?.label || section}
+                      </h2>
+                      <span className="text-[0.55rem] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-mono">{sItems.length}</span>
                     </div>
-                  );
-                })}
-
-                {/* Platform secrets (auto-managed) */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-display font-bold text-foreground">🔒 Piattaforma (Auto-gestite)</h3>
-                    <span className="text-[0.6rem] text-green-400 font-medium px-2 py-0.5 rounded-full bg-green-500/10">Tutte attive</span>
-                  </div>
-                  <div className="space-y-1">
-                    {["SUPABASE_URL", "SUPABASE_ANON_KEY", "SUPABASE_SERVICE_ROLE_KEY", "SUPABASE_DB_URL", "LOVABLE_API_KEY"].map(key => (
-                      <div key={key} className="flex items-center gap-2.5 p-2.5 rounded-xl border border-green-500/10 bg-green-500/[0.02]">
-                        <Lock className="w-3 h-3 text-green-400 shrink-0" />
-                        <span className="text-[0.6rem] font-mono text-muted-foreground">{key}</span>
-                        <CheckCircle2 className="w-3 h-3 text-green-400 ml-auto shrink-0" />
-                      </div>
-                    ))}
+                    {secInfo && <p className="text-[0.5rem] text-muted-foreground">{secInfo.description}</p>}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl border border-primary/10 bg-primary/[0.03] text-center">
-                  <p className="text-[0.6rem] text-muted-foreground">Le chiavi API vengono gestite in modo sicuro tramite il sistema di Secrets.</p>
-                  <p className="text-[0.55rem] text-primary/60 mt-1 font-medium">Nessuna chiave viene mai esposta nel codice frontend.</p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {sItems.map(asset => {
+                    const isEditing = saEditingId === asset.id;
+                    const hasCustom = !!asset.url;
+                    const previewUrl = asset.resolvedUrl;
+                    const isVideo = asset.asset_type === "video";
+
+                    return (
+                      <motion.div key={asset.id}
+                        className={`relative rounded-xl border overflow-hidden ${hasCustom ? "border-primary/30 bg-primary/[0.03]" : "border-border/40 bg-card/40"}`}
+                        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                        
+                        {/* Preview */}
+                        <div className="aspect-video relative bg-secondary/30 overflow-hidden">
+                          {previewUrl && !isVideo && (
+                            <img src={previewUrl} alt={asset.label} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                          )}
+                          {previewUrl && isVideo && (
+                            <video src={previewUrl} className="absolute inset-0 w-full h-full object-cover" muted loop autoPlay playsInline />
+                          )}
+                          {!previewUrl && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              {isVideo ? <Film className="w-6 h-6 text-muted-foreground/30" /> : <Image className="w-6 h-6 text-muted-foreground/30" />}
+                            </div>
+                          )}
+                          {hasCustom && (
+                            <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded-md bg-primary/90 text-primary-foreground text-[0.45rem] font-bold">
+                              CUSTOM
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Info */}
+                        <div className="p-2">
+                          <p className="text-[0.6rem] font-semibold text-foreground truncate mb-0.5">{asset.label}</p>
+                          <p className="text-[0.45rem] font-mono text-muted-foreground truncate mb-1.5">{asset.slot_key}</p>
+
+                          {isEditing ? (
+                            <div className="flex gap-1">
+                              <Input value={saEditUrl} onChange={e => setSaEditUrl(e.target.value)} placeholder="https://..."
+                                className="h-7 text-[0.55rem] flex-1 bg-secondary/40 border-border/50 rounded-lg" />
+                              <button onClick={() => handleSaSetUrl(asset.id)} className="w-7 h-7 rounded-lg bg-primary/15 text-primary flex items-center justify-center">
+                                <Check className="w-3 h-3" />
+                              </button>
+                              <button onClick={() => { setSaEditingId(null); setSaEditUrl(""); }} className="w-7 h-7 rounded-lg bg-destructive/10 text-destructive flex items-center justify-center">
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex gap-1">
+                              <label className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[0.5rem] font-semibold cursor-pointer transition-colors ${
+                                saUploading === asset.id ? "bg-muted text-muted-foreground" : "bg-primary/10 text-primary hover:bg-primary/20"
+                              }`}>
+                                <Upload className="w-3 h-3" />
+                                {saUploading === asset.id ? "..." : "Upload"}
+                                <input type="file" className="hidden" accept={isVideo ? "video/*" : "image/*"}
+                                  onChange={e => { const f = e.target.files?.[0]; if (f) handleSaUpload(asset.id, f); }} />
+                              </label>
+                              <button onClick={() => { setSaEditingId(asset.id); setSaEditUrl(asset.url || ""); }}
+                                className="flex items-center justify-center gap-0.5 px-2 py-1.5 rounded-lg bg-secondary/60 text-muted-foreground hover:text-foreground text-[0.5rem] font-semibold transition-colors">
+                                <ExternalLink className="w-3 h-3" /> URL
+                              </button>
+                              {hasCustom && (
+                                <button onClick={() => handleSaReset(asset.id)}
+                                  className="w-7 flex items-center justify-center rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors">
+                                  <Trash2 className="w-3 h-3" />
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
-              </>
+              </div>
             );
-          })()}
+          })}
+
+          {!siteAssetsLoading && saFiltered.length === 0 && (
+            <div className="text-center py-16">
+              <Palette className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">Nessun asset trovato</p>
+            </div>
+          )}
         </motion.div>
       )}
 
