@@ -24,13 +24,13 @@ const HELIX_NODES = IS_MOBILE ? 20 : 42;
 const MESH_COUNT = IS_MOBILE ? 10 : 28;
 const CELL_COUNT = IS_MOBILE ? 2 : 5;
 
-// Phase timing (ms) — brand shorter, DNA longer for full effect
+// Phase timing (ms) — much faster on mobile to prevent blocking
 const TIMINGS = IS_MOBILE
-  ? { brand: 0, dna: 1200, pulse: 3200, morph: 4200, exit: 5000, complete: 5600 }
+  ? { brand: 0, dna: 800, pulse: 2000, morph: 2800, exit: 3400, complete: 3800 }
   : { brand: 0, dna: 1400, pulse: 3600, morph: 4800, exit: 5600, complete: 6200 };
 
 // Absolute safety: never block app beyond this
-const SAFETY_TIMEOUT = IS_MOBILE ? 7000 : 8000;
+const SAFETY_TIMEOUT = IS_MOBILE ? 4500 : 8000;
 
 type Phase = "brand" | "dna" | "pulse" | "morph" | "exit";
 
@@ -340,6 +340,10 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           transition={{ duration: 0.6, ease: smoothEase }}
           onAnimationComplete={() => {
             if (phase === "exit") safeComplete();
+          }}
+          onClick={() => {
+            // Tap anywhere to skip on mobile
+            if (IS_MOBILE) safeComplete();
           }}
         >
           {/* Canvas for DNA helix */}
