@@ -252,10 +252,18 @@ const resolveIcon = (name: string) => ICON_MAP[name] || Star;
 export default function IndustryDemoPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [bookingSubmitted, setBookingSubmitted] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>({});
+
+  // ── Partner branding overrides from URL params ──
+  const brandOverride = searchParams.get("brand");
+  const colorOverride = searchParams.get("color");
+  const taglineOverride = searchParams.get("tagline");
+  const logoOverride = searchParams.get("logo");
+  const isPartnerBranded = !!brandOverride;
 
   // Try DB first
   const { data: company } = useQuery({
@@ -284,8 +292,8 @@ export default function IndustryDemoPage() {
   const industryConfig = INDUSTRY_CONFIGS[resolvedIndustry];
   const demoData = DEMO_INDUSTRY_DATA[resolvedIndustry];
   const theme = getTheme(resolvedIndustry);
-  const companyName = company?.name || demoData.companyName;
-  const tagline = company?.tagline || demoData.tagline;
+  const companyName = brandOverride || company?.name || demoData.companyName;
+  const tagline = taglineOverride || company?.tagline || demoData.tagline;
 
   // Categories
   const categories = useMemo(() => {
