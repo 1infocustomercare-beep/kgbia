@@ -2212,7 +2212,7 @@ const LandingPage = () => {
           animate={{ opacity: navScrolled ? 0.4 : 0 }}
           transition={{ duration: 0.6 }}
           style={{ 
-            background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.15) 30%, hsla(35,50%,55%,0.1) 50%, hsla(265,70%,60%,0.15) 70%, transparent 95%)",
+            background: "linear-gradient(90deg, transparent 5%, hsla(38,45%,55%,0.12) 30%, hsla(35,50%,55%,0.08) 50%, hsla(38,45%,55%,0.12) 70%, transparent 95%)",
             filter: "blur(2px)",
           }}
         />
