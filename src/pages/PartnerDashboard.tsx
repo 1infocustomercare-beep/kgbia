@@ -649,7 +649,7 @@ const PartnerDashboard = () => {
               </div>
 
               {/* Team Ledger — Hierarchy View */}
-              <div className="space-y-2">
+              <div data-guide-section="team-ledger" className="space-y-2">
                 <h3 className="text-sm font-bold text-foreground">Team Ledger ({teamMembers.length} membri)</h3>
                 {teamMembers.length === 0 ? (
                   <p className="text-xs text-muted-foreground py-4 text-center">Nessun membro ancora. Recluta partner per guadagnare override!</p>
