@@ -596,7 +596,7 @@ const PartnerDashboard = () => {
                 // @ts-ignore data-guide-section attribute
                 const isActive = salesCount >= 4 && teamMembers.length >= 2;
                 return (
-                  <div className={`p-4 rounded-2xl border ${isActive ? "bg-emerald-500/5 border-emerald-500/20" : "bg-destructive/5 border-destructive/20"}`}>
+                  <div data-guide-section="leader-status" className={`p-4 rounded-2xl border ${isActive ? "bg-emerald-500/5 border-emerald-500/20" : "bg-destructive/5 border-destructive/20"}`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className={`w-2.5 h-2.5 rounded-full ${isActive ? "bg-emerald-400 animate-pulse" : "bg-destructive"}`} />
