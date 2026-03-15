@@ -4,10 +4,15 @@ import empireAgentMascot from "@/assets/empire-agent-mascot.png";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
+// Detect mobile/low-power devices
+const IS_MOBILE = typeof window !== "undefined" && (
+  /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+  window.innerWidth < 768
+);
+
 /**
- * Premium DNA Neural Transition — Cellular Informatics Style
- * Canvas-based double helix with data pulses, neural mesh background,
- * and cellular biology aesthetics matching HeroNeuralCanvas.
+ * Premium DNA Neural Transition — Mobile-Optimized
+ * Canvas-based on desktop, simplified CSS on mobile
  */
 const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -16,6 +21,15 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
   phaseRef.current = phase;
 
   useEffect(() => {
+    // Mobile: much shorter timeline to avoid freezing
+    if (IS_MOBILE) {
+      const t1 = setTimeout(() => setPhase("assemble"), 200);
+      const t2 = setTimeout(() => setPhase("morph"), 800);
+      const t3 = setTimeout(() => setPhase("dissolve"), 1200);
+      const t4 = setTimeout(onComplete, 1500);
+      return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+    }
+    // Desktop: full timeline
     const t1 = setTimeout(() => setPhase("assemble"), 300);
     const t2 = setTimeout(() => setPhase("pulse"), 1200);
     const t3 = setTimeout(() => setPhase("morph"), 1800);
@@ -25,10 +39,13 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
   }, [onComplete]);
 
   const startCanvas = useCallback(() => {
+    // SKIP CANVAS entirely on mobile — use CSS fallback
+    if (IS_MOBILE) return () => {};
+
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) return () => {};
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) return () => {};
 
     const dpr = Math.min(window.devicePixelRatio, 2);
     let w = window.innerWidth;
@@ -46,8 +63,8 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
     };
     window.addEventListener("resize", resize);
 
-    // ═══ BACKGROUND MESH — ambient floating nodes like HeroNeuralCanvas ═══
-    const MESH_COUNT = w < 640 ? 25 : 45;
+    // ═══ BACKGROUND MESH ═══
+    const MESH_COUNT = 35;
     const meshNodes: { x: number; y: number; vx: number; vy: number; r: number; type: "v" | "g" }[] = [];
     for (let i = 0; i < MESH_COUNT; i++) {
       meshNodes.push({
@@ -59,8 +76,8 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
       });
     }
 
-    // ═══ DNA HELIX NODES — cellular double-strand structure ═══
-    const HELIX_NODES = w < 640 ? 40 : 64;
+    // ═══ DNA HELIX NODES ═══
+    const HELIX_NODES = 48;
     const helixNodes: {
       x: number; y: number;
       sx: number; sy: number;
@@ -79,21 +96,20 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
       const strand = i % 2 === 0 ? 1 : -1;
       const xPos = 0.5 + Math.sin(angle) * amplitude * strand;
       const isGold = i % 6 === 0;
-      const isBridge = i % 4 < 2;
 
       helixNodes.push({
         x: Math.random(), y: Math.random(),
         sx: Math.random(), sy: Math.random(),
         tx: xPos, ty: yPos,
-        r: isGold ? 2.2 : (isBridge ? 1.6 : 1),
+        r: isGold ? 2 : 1,
         type: isGold ? "g" : "v",
         strand, phase: t * Math.PI * 8,
         baseAngle: angle,
       });
     }
 
-    // ═══ CELLULAR ORGANELLES — floating membrane circles ═══
-    const CELL_COUNT = w < 640 ? 5 : 8;
+    // ═══ CELLULAR ORGANELLES ═══
+    const CELL_COUNT = 6;
     const cells: { cx: number; cy: number; radius: number; speed: number; offset: number }[] = [];
     for (let i = 0; i < CELL_COUNT; i++) {
       cells.push({
@@ -113,24 +129,19 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
       ctx.clearRect(0, 0, w, h);
       const currentPhase = phaseRef.current;
 
-      // Phase progress
-      let scatterAlpha = currentPhase === "scatter" ? 1 : 0;
-      let assembleP = 0, pulseP = 0, morphP = 0, dissolveP = 0;
+      let assembleP = 0, morphP = 0, dissolveP = 0;
 
-      if (currentPhase === "scatter") {
-        scatterAlpha = Math.min(elapsed / 0.3, 1);
-      } else if (currentPhase === "assemble") {
+      if (currentPhase === "assemble") {
         assembleP = Math.min((elapsed - 0.4) / 1.2, 1);
         assembleP = 1 - Math.pow(1 - assembleP, 3);
       } else if (currentPhase === "pulse") {
         assembleP = 1;
-        pulseP = Math.min((elapsed - 1.8) / 1.0, 1);
       } else if (currentPhase === "morph") {
-        assembleP = 1; pulseP = 1;
+        assembleP = 1;
         morphP = Math.min((elapsed - 2.8) / 0.8, 1);
         morphP = morphP * morphP;
       } else if (currentPhase === "dissolve") {
-        assembleP = 1; pulseP = 1; morphP = 1;
+        assembleP = 1; morphP = 1;
         dissolveP = Math.min((elapsed - 3.6) / 0.6, 1);
         dissolveP = dissolveP * dissolveP;
       }
@@ -138,7 +149,7 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
       const globalFade = dissolveP > 0 ? 1 - dissolveP : Math.min(elapsed / 0.3, 1);
       ctx.globalAlpha = globalFade;
 
-      // ═══ CELLULAR MEMBRANES — bio-tech circles ═══
+      // ═══ CELLULAR MEMBRANES ═══
       for (const cell of cells) {
         const breathe = Math.sin(elapsed * cell.speed + cell.offset) * 5;
         const r = cell.radius + breathe;
@@ -151,18 +162,9 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
         ctx.strokeStyle = `hsla(265, 60%, 55%, ${cellAlpha})`;
         ctx.lineWidth = 0.5;
         ctx.stroke();
-
-        // Inner membrane
-        ctx.beginPath();
-        ctx.arc(px, py, r * 0.7, 0, Math.PI * 2);
-        ctx.strokeStyle = `hsla(38, 45%, 55%, ${cellAlpha * 0.6})`;
-        ctx.lineWidth = 0.3;
-        ctx.setLineDash([2, 4]);
-        ctx.stroke();
-        ctx.setLineDash([]);
       }
 
-      // ═══ BACKGROUND NEURAL MESH ═══
+      // ═══ BACKGROUND MESH — O(n) only nearby connections ═══
       for (const n of meshNodes) {
         n.x += n.vx;
         n.y += n.vy;
@@ -170,19 +172,19 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
         if (n.y < 0 || n.y > 1) n.vy *= -1;
       }
 
-      const meshAlpha = 0.06 * (1 - morphP * 0.5);
+      const meshAlpha = 0.05 * (1 - morphP * 0.5);
+      // Only check nearby pairs using spatial bucketing (simplified)
       for (let i = 0; i < meshNodes.length; i++) {
-        for (let j = i + 1; j < meshNodes.length; j++) {
+        for (let j = i + 1; j < Math.min(i + 8, meshNodes.length); j++) {
           const dx = meshNodes[i].x - meshNodes[j].x;
           const dy = meshNodes[i].y - meshNodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 0.15) {
-            const a = (1 - dist / 0.15) * meshAlpha;
-            const isGold = meshNodes[i].type === "g" || meshNodes[j].type === "g";
+          if (dist < 0.12) {
+            const a = (1 - dist / 0.12) * meshAlpha;
             ctx.beginPath();
             ctx.moveTo(meshNodes[i].x * w, meshNodes[i].y * h);
             ctx.lineTo(meshNodes[j].x * w, meshNodes[j].y * h);
-            ctx.strokeStyle = isGold ? `hsla(35, 45%, 55%, ${a})` : `hsla(265, 70%, 60%, ${a})`;
+            ctx.strokeStyle = `hsla(265, 70%, 60%, ${a})`;
             ctx.lineWidth = 0.4;
             ctx.stroke();
           }
@@ -192,85 +194,42 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
       for (const n of meshNodes) {
         const px = n.x * w;
         const py = n.y * h;
-        const pulse = n.r + Math.sin(elapsed * 2 + n.x * 8) * 0.3;
         ctx.beginPath();
-        ctx.arc(px, py, pulse, 0, Math.PI * 2);
+        ctx.arc(px, py, n.r, 0, Math.PI * 2);
         ctx.fillStyle = n.type === "g"
-          ? `hsla(35, 50%, 60%, ${0.15 * (1 - morphP * 0.7)})`
-          : `hsla(265, 75%, 65%, ${0.12 * (1 - morphP * 0.7)})`;
+          ? `hsla(35, 50%, 60%, ${0.12 * (1 - morphP * 0.7)})`
+          : `hsla(265, 75%, 65%, ${0.1 * (1 - morphP * 0.7)})`;
         ctx.fill();
       }
 
-      // ═══ DNA HELIX — assemble from scattered to formation ═══
-      const helixRotation = elapsed * 0.3; // slow rotation
+      // ═══ DNA HELIX ═══
+      const helixRotation = elapsed * 0.3;
       for (const n of helixNodes) {
         if (morphP > 0) {
-          // Morph: converge to center then expand
-          const cx = 0.5;
-          const cy = 0.5;
-          n.x = n.tx + (cx - n.tx) * morphP;
-          n.y = n.ty + (cy - n.ty) * morphP;
-        } else if (dissolveP > 0) {
-          n.x = 0.5;
-          n.y = 0.5;
+          n.x = n.tx + (0.5 - n.tx) * morphP;
+          n.y = n.ty + (0.5 - n.ty) * morphP;
         } else {
-          // Add helix rotation
           const rotatedAngle = n.baseAngle + helixRotation;
-          const amplitude = 0.10 + Math.sin((n.ty) * Math.PI) * 0.05;
+          const amplitude = 0.10 + Math.sin(n.ty * Math.PI) * 0.05;
           const rotatedTx = 0.5 + Math.sin(rotatedAngle) * amplitude * n.strand;
           n.x = n.sx + (rotatedTx - n.sx) * assembleP;
           n.y = n.sy + (n.ty - n.sy) * assembleP;
         }
       }
 
-      // Helix connections
-      const connDist = 0.08 + (1 - assembleP) * 0.06;
-      for (let i = 0; i < helixNodes.length; i++) {
-        for (let j = i + 1; j < helixNodes.length; j++) {
-          const dx = helixNodes[i].x - helixNodes[j].x;
-          const dy = helixNodes[i].y - helixNodes[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < connDist) {
-            const a = (1 - dist / connDist) * (assembleP > 0.5 ? 0.15 : 0.06);
-            const isGold = helixNodes[i].type === "g" || helixNodes[j].type === "g";
-            ctx.beginPath();
-            ctx.moveTo(helixNodes[i].x * w, helixNodes[i].y * h);
-            ctx.lineTo(helixNodes[j].x * w, helixNodes[j].y * h);
-            ctx.strokeStyle = isGold ? `hsla(35, 45%, 55%, ${a})` : `hsla(265, 70%, 60%, ${a})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-
-      // DNA bridge lines (base pairs) — cellular look
-      if (assembleP > 0.5 && morphP < 0.8) {
-        const bridgeAlpha = Math.min((assembleP - 0.5) * 2, 1) * 0.1 * (1 - morphP);
-        for (let i = 0; i < helixNodes.length - 1; i += 2) {
-          const a = helixNodes[i];
-          const b = helixNodes[i + 1];
-          if (Math.abs(a.ty - b.ty) < 0.04) {
-            const midX = (a.x * w + b.x * w) / 2;
-            const midY = (a.y * h + b.y * h) / 2;
-
-            // Base pair with nucleotide glow
-            ctx.beginPath();
-            ctx.moveTo(a.x * w, a.y * h);
-            ctx.lineTo(b.x * w, b.y * h);
-            const pairGrad = ctx.createLinearGradient(a.x * w, a.y * h, b.x * w, b.y * h);
-            pairGrad.addColorStop(0, `hsla(265, 60%, 60%, ${bridgeAlpha})`);
-            pairGrad.addColorStop(0.5, `hsla(38, 50%, 55%, ${bridgeAlpha * 1.5})`);
-            pairGrad.addColorStop(1, `hsla(265, 60%, 60%, ${bridgeAlpha})`);
-            ctx.strokeStyle = pairGrad;
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
-
-            // Nucleotide center dot
-            ctx.beginPath();
-            ctx.arc(midX, midY, 1.5, 0, Math.PI * 2);
-            ctx.fillStyle = `hsla(38, 50%, 60%, ${bridgeAlpha * 2})`;
-            ctx.fill();
-          }
+      // Helix connections — only adjacent nodes (O(n))
+      for (let i = 0; i < helixNodes.length - 1; i++) {
+        const a = helixNodes[i], b = helixNodes[i + 1];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 0.1) {
+          const alpha = (1 - dist / 0.1) * (assembleP > 0.5 ? 0.12 : 0.05);
+          ctx.beginPath();
+          ctx.moveTo(a.x * w, a.y * h);
+          ctx.lineTo(b.x * w, b.y * h);
+          ctx.strokeStyle = `hsla(265, 70%, 60%, ${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
         }
       }
 
@@ -278,70 +237,23 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
       for (const n of helixNodes) {
         const px = n.x * w;
         const py = n.y * h;
-        const nodeR = n.r * (1 + Math.sin(elapsed * 3 + n.phase) * 0.2);
-
-        // Outer glow
-        const grad = ctx.createRadialGradient(px, py, 0, px, py, nodeR * 5);
-        if (n.type === "g") {
-          grad.addColorStop(0, `hsla(35, 50%, 55%, ${0.12 * (1 - dissolveP)})`);
-          grad.addColorStop(1, "hsla(35, 50%, 55%, 0)");
-        } else {
-          grad.addColorStop(0, `hsla(265, 70%, 60%, ${0.08 * (1 - dissolveP)})`);
-          grad.addColorStop(1, "hsla(265, 70%, 60%, 0)");
-        }
         ctx.beginPath();
-        ctx.arc(px, py, nodeR * 5, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
-
-        // Core
-        ctx.beginPath();
-        ctx.arc(px, py, nodeR, 0, Math.PI * 2);
+        ctx.arc(px, py, n.r, 0, Math.PI * 2);
         ctx.fillStyle = n.type === "g"
-          ? `hsla(35, 50%, 60%, ${0.6 + Math.sin(elapsed * 2 + n.phase) * 0.15})`
-          : `hsla(265, 75%, 65%, ${0.45 + Math.sin(elapsed * 2 + n.phase) * 0.15})`;
+          ? `hsla(35, 50%, 60%, ${0.5 * (1 - dissolveP)})`
+          : `hsla(265, 75%, 65%, ${0.4 * (1 - dissolveP)})`;
         ctx.fill();
       }
 
-      // ═══ DATA PULSES traveling along helix ═══
-      if (assembleP > 0.7 && dissolveP < 0.3 && morphP < 0.5) {
-        const pulseCount = 6;
-        for (let p = 0; p < pulseCount; p++) {
-          const pt = ((elapsed * 0.5 + p / pulseCount) % 1);
-          const idx = Math.floor(pt * (helixNodes.length - 1));
-          const node = helixNodes[idx];
-          if (node) {
-            const px = node.x * w;
-            const py = node.y * h;
-            const r = 5 + Math.sin(elapsed * 4 + p) * 2;
-            const pulseGrad = ctx.createRadialGradient(px, py, 0, px, py, r);
-            const isGoldPulse = p % 3 === 0;
-            pulseGrad.addColorStop(0, isGoldPulse ? "hsla(38, 60%, 60%, 0.7)" : "hsla(265, 90%, 70%, 0.6)");
-            pulseGrad.addColorStop(0.5, isGoldPulse ? "hsla(38, 60%, 60%, 0.2)" : "hsla(265, 85%, 65%, 0.15)");
-            pulseGrad.addColorStop(1, "transparent");
-            ctx.beginPath();
-            ctx.arc(px, py, r, 0, Math.PI * 2);
-            ctx.fillStyle = pulseGrad;
-            ctx.fill();
-          }
-        }
-      }
-
-      // ═══ MORPH PHASE — energy ring expansion ═══
+      // ═══ MORPH ring ═══
       if (morphP > 0 && dissolveP < 1) {
-        const ringCount = 3;
-        for (let r = 0; r < ringCount; r++) {
-          const rProgress = Math.min(morphP + r * 0.15, 1);
-          const radius = rProgress * Math.max(w, h) * 0.4;
-          const ringAlpha = (1 - rProgress) * 0.08 * (1 - dissolveP);
-          ctx.beginPath();
-          ctx.arc(w / 2, h / 2, radius, 0, Math.PI * 2);
-          ctx.strokeStyle = r === 1
-            ? `hsla(38, 50%, 55%, ${ringAlpha})`
-            : `hsla(265, 70%, 60%, ${ringAlpha})`;
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
+        const radius = morphP * Math.max(w, h) * 0.3;
+        const ringAlpha = (1 - morphP) * 0.06 * (1 - dissolveP);
+        ctx.beginPath();
+        ctx.arc(w / 2, h / 2, radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `hsla(265, 70%, 60%, ${ringAlpha})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
       }
 
       ctx.globalAlpha = 1;
@@ -366,83 +278,98 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
         className="fixed inset-0 z-[9998] overflow-hidden"
         style={{ backgroundColor: "hsl(252, 12%, 6%)" }}
         animate={phase === "dissolve" ? { opacity: 0 } : { opacity: 1 }}
-        transition={{ duration: 0.6, ease: smoothEase }}
+        transition={{ duration: IS_MOBILE ? 0.3 : 0.6, ease: smoothEase }}
         onAnimationComplete={() => {
           if (phase === "dissolve") onComplete();
         }}
       >
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+        {/* Canvas — desktop only */}
+        {!IS_MOBILE && (
+          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+        )}
+
+        {/* Mobile CSS fallback — lightweight animated background */}
+        {IS_MOBILE && (
+          <div className="absolute inset-0">
+            {/* Simple radial gradient */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "radial-gradient(ellipse at center, hsla(265,70%,55%,0.12) 0%, transparent 60%)" }}
+            />
+            {/* Simple dots grid */}
+            <div
+              className="absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: "radial-gradient(circle, hsla(265,80%,65%,0.8) 1px, transparent 1px)",
+                backgroundSize: "40px 40px",
+              }}
+            />
+          </div>
+        )}
 
         {/* Vignette */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsla(252,12%,6%,0.7)_75%)] pointer-events-none" />
 
-        {/* Center HUD — minimal premium */}
+        {/* Center HUD */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: phase === "dissolve" ? 0 : 1 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.3 }}
         >
           <div className="flex flex-col items-center gap-4 relative">
-            {/* Scanning ring — visible during scatter/assemble/pulse */}
-            <motion.div
-              className="w-20 h-20 sm:w-28 sm:h-28 rounded-full relative"
-              style={{ border: "0.5px solid hsla(265,60%,60%,0.06)" }}
-              animate={{ 
-                rotate: 360,
-                scale: phase === "morph" ? 1.8 : 1,
-                opacity: phase === "morph" || phase === "dissolve" ? 0 : 1,
-              }}
-              transition={{ 
-                rotate: { duration: 10, repeat: Infinity, ease: "linear" },
-                scale: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
-                opacity: { duration: 0.6 },
-              }}
-            >
+            {/* Scanning ring — desktop only */}
+            {!IS_MOBILE && (
               <motion.div
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background: "conic-gradient(from 0deg, transparent 0%, hsla(265,80%,65%,0.06) 8%, transparent 16%)",
+                className="w-20 h-20 sm:w-28 sm:h-28 rounded-full relative"
+                style={{ border: "0.5px solid hsla(265,60%,60%,0.06)" }}
+                animate={{ 
+                  rotate: 360,
+                  scale: phase === "morph" ? 1.8 : 1,
+                  opacity: phase === "morph" || phase === "dissolve" ? 0 : 1,
                 }}
-              />
-              <motion.div
-                className="absolute inset-4 rounded-full"
-                style={{ border: "0.5px solid hsla(38,45%,55%,0.06)" }}
-                animate={{ rotate: -360 }}
-                transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.div
-                className="absolute inset-0 flex items-center justify-center"
-                animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                transition={{ 
+                  rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                  scale: { duration: 0.8, ease: smoothEase },
+                  opacity: { duration: 0.6 },
+                }}
               >
-                <div className="w-2 h-2 rounded-full" style={{ background: "hsla(265, 80%, 65%, 0.3)", boxShadow: "0 0 12px hsla(265,80%,65%,0.15)" }} />
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: "conic-gradient(from 0deg, transparent 0%, hsla(265,80%,65%,0.06) 8%, transparent 16%)",
+                  }}
+                />
+                <motion.div
+                  className="absolute inset-4 rounded-full"
+                  style={{ border: "0.5px solid hsla(38,45%,55%,0.06)" }}
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+                />
               </motion.div>
-            </motion.div>
+            )}
 
             {/* Agent mascot — emerges during morph phase */}
             <motion.div
-              className="absolute inset-0 flex items-center justify-center"
-              initial={{ opacity: 0, scale: 0.3 }}
+              className="flex items-center justify-center"
+              initial={{ opacity: 0, scale: 0.5 }}
               animate={{
                 opacity: phase === "morph" || phase === "dissolve" ? 1 : 0,
-                scale: phase === "morph" ? 1 : phase === "dissolve" ? 1.1 : 0.3,
+                scale: phase === "morph" ? 1 : phase === "dissolve" ? 1.05 : 0.5,
               }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: IS_MOBILE ? 0.4 : 0.8, ease: smoothEase }}
             >
-              <div className="relative w-28 h-28 sm:w-40 sm:h-40">
-                {/* Ambient glow behind agent */}
+              <div className="relative w-24 h-24 sm:w-40 sm:h-40">
                 <div className="absolute inset-[-20%] rounded-full pointer-events-none"
-                  style={{ 
-                    background: "radial-gradient(circle, hsla(265,70%,60%,0.15) 0%, hsla(38,50%,55%,0.05) 40%, transparent 70%)",
-                  }} />
-                <motion.img
+                  style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.12) 0%, transparent 60%)" }}
+                />
+                <img
                   src={empireAgentMascot}
                   alt="Empire AI Agent"
                   className="w-full h-full object-contain relative z-10"
-                  style={{ filter: "drop-shadow(0 0 30px hsla(265,70%,60%,0.3))" }}
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  style={{ filter: "drop-shadow(0 0 20px hsla(265,70%,60%,0.2))" }}
+                  loading="eager"
+                  decoding="async"
                 />
               </div>
             </motion.div>
@@ -453,20 +380,17 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
               style={{
                 background: "hsla(252,15%,10%,0.5)",
                 border: "0.5px solid hsla(265,50%,55%,0.06)",
-                backdropFilter: "blur(12px)",
               }}
               initial={{ opacity: 0, y: 8 }}
               animate={{ 
                 opacity: phase === "pulse" || phase === "morph" ? 0.9 : phase === "assemble" ? 0.4 : 0, 
                 y: phase === "morph" ? 70 : 0,
               }}
-              transition={{ duration: 0.5, delay: 0.6 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
             >
-              <motion.div
-                className="w-1 h-1 rounded-full"
+              <div
+                className="w-1 h-1 rounded-full animate-pulse"
                 style={{ background: "hsla(140,65%,50%,0.7)" }}
-                animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.1, 0.8] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
               />
               <span
                 className="text-[0.38rem] sm:text-[0.42rem] tracking-[0.3em] uppercase font-mono"
@@ -476,42 +400,40 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
               </span>
             </motion.div>
 
-            {/* Phase indicators */}
-            <motion.div
-              className="flex items-center gap-5"
-              initial={{ opacity: 0 }}
-              animate={{ 
-                opacity: phase === "pulse" ? 0.6 : phase === "morph" ? 0.8 : 0,
-                y: phase === "morph" ? 70 : 0,
-              }}
-              transition={{ duration: 0.3, delay: 1.2 }}
-            >
-              {["DNA", "AGENTS", "DEPLOY"].map((label, i) => (
-                <div key={label} className="flex items-center gap-1.5">
-                  <motion.div
-                    className="w-[3px] h-[3px] rounded-full"
-                    style={{
-                      background: i === 0 ? "hsl(265,80%,65%)" : i === 1 ? "hsl(38,50%,55%)" : "hsl(170,60%,50%)",
-                    }}
-                    animate={{ 
-                      opacity: phase === "morph" ? [0.5, 1, 0.5] : [0.2, 0.8, 0.2],
-                      backgroundColor: phase === "morph" ? "hsl(140,65%,50%)" : undefined,
-                    }}
-                    transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.3 }}
-                  />
-                  <span
-                    className="text-[0.3rem] sm:text-[0.33rem] tracking-[0.2em] uppercase font-mono"
-                    style={{ color: phase === "morph" && i <= 1 ? "hsla(140,65%,50%,0.3)" : "hsla(265,50%,60%,0.18)" }}
-                  >
-                    {label}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
+            {/* Phase indicators — desktop only */}
+            {!IS_MOBILE && (
+              <motion.div
+                className="flex items-center gap-5"
+                initial={{ opacity: 0 }}
+                animate={{ 
+                  opacity: phase === "pulse" ? 0.6 : phase === "morph" ? 0.8 : 0,
+                  y: phase === "morph" ? 70 : 0,
+                }}
+                transition={{ duration: 0.3, delay: 1.2 }}
+              >
+                {["DNA", "AGENTS", "DEPLOY"].map((label, i) => (
+                  <div key={label} className="flex items-center gap-1.5">
+                    <div
+                      className="w-[3px] h-[3px] rounded-full animate-pulse"
+                      style={{
+                        background: i === 0 ? "hsl(265,80%,65%)" : i === 1 ? "hsl(38,50%,55%)" : "hsl(170,60%,50%)",
+                        animationDelay: `${i * 300}ms`,
+                      }}
+                    />
+                    <span
+                      className="text-[0.3rem] sm:text-[0.33rem] tracking-[0.2em] uppercase font-mono"
+                      style={{ color: "hsla(265,50%,60%,0.18)" }}
+                    >
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </motion.div>
+            )}
           </div>
         </motion.div>
 
-        {/* Subtle tech grid */}
+        {/* Subtle tech grid — CSS only, lightweight */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.01]"
           style={{
