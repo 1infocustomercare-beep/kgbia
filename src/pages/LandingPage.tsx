@@ -2537,7 +2537,7 @@ const LandingPage = () => {
             className="lg:hidden p-2.5 text-foreground rounded-xl transition-colors relative" 
             aria-label="Menu"
             whileTap={{ scale: 0.92 }}
-            style={{ background: mobileMenuOpen ? "hsla(265,70%,60%,0.12)" : "transparent" }}
+            style={{ background: mobileMenuOpen ? "hsla(38,45%,55%,0.1)" : "transparent" }}
           >
             {/* Glow ring on open */}
             {mobileMenuOpen && (
