@@ -156,7 +156,7 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
     <motion.div
       ref={ref}
       className="inline-flex items-center gap-2.5 mb-5"
-      initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+      initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}
     >
       <div className="relative flex items-center gap-2 px-4 py-2 rounded-full premium-label overflow-hidden" style={{ borderLeft: "1px solid hsla(35,45%,50%,0.15)" }}>
         {/* Scanning beam — gold tint */}
