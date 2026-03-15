@@ -1224,7 +1224,7 @@ const EmpireVoiceAgent: React.FC = () => {
                           transition={{ duration: 1.5, repeat: Infinity }}
                         />
                         <span className="text-[0.6rem] text-foreground/50 uppercase tracking-wider font-medium">
-                          {conversation.isSpeaking ? "🔊 Laura parla..." : "🎙️ Ti ascolta..."}
+                          {conversation.isSpeaking ? "🔊 Arianna parla..." : "🎙️ Ti ascolta..."}
                         </span>
                       </div>
                       <button
