@@ -3832,6 +3832,39 @@ export type Database = {
           },
         ]
       }
+      site_assets: {
+        Row: {
+          asset_type: string
+          default_file: string | null
+          id: string
+          label: string
+          section: string
+          slot_key: string
+          updated_at: string | null
+          url: string | null
+        }
+        Insert: {
+          asset_type?: string
+          default_file?: string | null
+          id?: string
+          label: string
+          section?: string
+          slot_key: string
+          updated_at?: string | null
+          url?: string | null
+        }
+        Update: {
+          asset_type?: string
+          default_file?: string | null
+          id?: string
+          label?: string
+          section?: string
+          slot_key?: string
+          updated_at?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
       social_posts: {
         Row: {
           company_id: string

@@ -8,7 +8,7 @@ import {
   Cpu, Wifi, CheckCircle2, XCircle, AlertCircle,
   ChevronRight, Filter, Plus, ArrowUpRight, ArrowDownRight,
   Building2, MapPin, Zap, Activity, Lightbulb,
-  ToggleLeft, ToggleRight, BookOpen, Link2, ChevronDown, ChevronUp, Info
+  ToggleLeft, ToggleRight, BookOpen, Link2, ChevronDown, ChevronUp, Info, ImageIcon
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -65,7 +65,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms";
 
 interface SubscriptionRecord {
   id: string;
@@ -427,6 +427,7 @@ const SuperAdminDashboard = () => {
     { id: "brand" as SuperTab, label: "Brand", icon: <Crown className="w-5 h-5" /> },
     { id: "showcase", label: "Settori", icon: <Eye className="w-5 h-5" /> },
     { id: "integrations" as SuperTab, label: "Integrazioni", icon: <Wifi className="w-5 h-5" /> },
+    { id: "asset_cms" as SuperTab, label: "Asset CMS", icon: <ImageIcon className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => { await signOut(); navigate("/admin"); };
@@ -566,7 +567,7 @@ const SuperAdminDashboard = () => {
       <div className="grid grid-cols-4 gap-1 px-3 py-2">
         {tabs.map((tab) => (
           <button key={tab.id}
-            onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : setActiveTab(tab.id)}
+            onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "asset_cms" ? navigate("/superadmin/asset-cms") : setActiveTab(tab.id)}
             className={`flex flex-col items-center justify-center gap-0.5 px-1.5 py-2 rounded-xl text-[0.6rem] font-medium whitespace-nowrap transition-colors min-h-[44px] ${
               activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
             }`}>
