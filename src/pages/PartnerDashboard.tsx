@@ -530,7 +530,7 @@ const PartnerDashboard = () => {
           {/* Demo mode dashboard */}
           {activeTab === "dashboard" && demoMode && (
             <motion.div key="dash-demo" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/10 via-card to-amber-500/5 border border-primary/20">
+              <div data-guide-section="enterprise-preview" className="p-5 rounded-2xl bg-gradient-to-br from-primary/10 via-card to-amber-500/5 border border-primary/20">
                 <div className="flex items-center gap-2 mb-2">
                   <Sparkles className="w-4 h-4 text-primary" />
                   <span className="text-xs font-medium text-primary tracking-wider uppercase">Enterprise Preview</span>
