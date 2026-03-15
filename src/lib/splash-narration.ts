@@ -14,12 +14,6 @@ let splashNarrationStarted = false;
 let splashNarrationCompleted = false;
 let currentUtterance: SpeechSynthesisUtterance | null = null;
 
-const IS_TOUCH_DEVICE = typeof window !== "undefined" && (
-  "ontouchstart" in window ||
-  navigator.maxTouchPoints > 0 ||
-  window.matchMedia?.("(pointer: coarse)")?.matches === true
-);
-
 // Best Italian voice finder (mirrors EmpireVoiceAgent logic)
 let cachedVoice: SpeechSynthesisVoice | null = null;
 
@@ -44,14 +38,6 @@ function getBestItalianVoice(): SpeechSynthesisVoice | null {
 export function startSplashNarration(): void {
   if (splashNarrationStarted) return;
   if (typeof window === "undefined" || !window.speechSynthesis) return;
-
-  // On mobile, speechSynthesis requires a user gesture — skip splash narration
-  // and let the voice agent handle it after the first touch interaction.
-  if (IS_TOUCH_DEVICE) {
-    splashNarrationStarted = false;
-    splashNarrationCompleted = false;
-    return;
-  }
 
   splashNarrationStarted = true;
 
