@@ -251,11 +251,45 @@ function App() {
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
   useEffect(() => {
+    const startedAt = performance.now();
+
+    const completeIntroSafely = (reason: string) => {
+      setIntroCompleted((prev) => {
+        if (!prev) {
+          console.warn(`[Intro] Forced completion via ${reason}`);
+        }
+        return true;
+      });
+    };
+
     const introFailsafe = window.setTimeout(() => {
-      setIntroCompleted(true);
+      completeIntroSafely("timeout");
     }, INTRO_FAILSAFE_MS);
 
-    return () => window.clearTimeout(introFailsafe);
+    let rafId = 0;
+    const watchdogLoop = () => {
+      if (performance.now() - startedAt >= INTRO_HARD_WATCHDOG_MS) {
+        completeIntroSafely("watchdog");
+        return;
+      }
+      rafId = window.requestAnimationFrame(watchdogLoop);
+    };
+    rafId = window.requestAnimationFrame(watchdogLoop);
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState !== "visible") return;
+      if (performance.now() - startedAt >= INTRO_FAILSAFE_MS) {
+        completeIntroSafely("visibility");
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      window.clearTimeout(introFailsafe);
+      window.cancelAnimationFrame(rafId);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
   }, []);
 
   // Preload critical route chunk while splash is running (especially useful on mobile/4G)
