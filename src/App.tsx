@@ -173,11 +173,6 @@ function App() {
                     <BrandAssetsPage />
                   </ProtectedRoute>
                 } />
-                <Route path="/superadmin/asset-cms" element={
-                  <ProtectedRoute requiredRole="super_admin">
-                    <AssetCMSPage />
-                  </ProtectedRoute>
-                } />
                 <Route path="/staff" element={
                   <ProtectedRoute requiredRole="staff">
                     <StaffPanel />
