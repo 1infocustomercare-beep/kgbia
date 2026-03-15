@@ -10,107 +10,11 @@ import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-// Lazy-loaded pages for code splitting
-const Index = lazy(() => import("./pages/Index"));
-const LandingPage = lazy(() => import("./pages/LandingPage"));
-const RestaurantPage = lazy(() => import("./pages/RestaurantPage"));
-const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
-const AdminLogin = lazy(() => import("./pages/AdminLogin"));
-const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
-const KitchenView = lazy(() => import("./pages/KitchenView"));
-const StaffPanel = lazy(() => import("./pages/StaffPanel"));
-const PartnerDashboard = lazy(() => import("./pages/PartnerDashboard"));
-const PartnerRegister = lazy(() => import("./pages/PartnerRegister"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
-const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
-const GuidedSetup = lazy(() => import("./pages/GuidedSetup"));
-const MarketingPage = lazy(() => import("./pages/MarketingPage"));
-const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
-const BusinessPage = lazy(() => import("./pages/BusinessPage"));
-const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
-const ResetPassword = lazy(() => import("./pages/ResetPassword"));
-
-// App layout + adaptive pages
-const AppLayout = lazy(() => import("./components/layout/AppLayout"));
-const AdaptiveDashboard = lazy(() => import("./pages/app/AdaptiveDashboard"));
-const LeadsPage = lazy(() => import("./pages/LeadsPage"));
-const StaffPage = lazy(() => import("./pages/app/StaffPage"));
-const HACCPPage = lazy(() => import("./pages/app/HACCPPage"));
-const SettingsPage = lazy(() => import("./pages/app/SettingsPage"));
-const NCCFleetPage = lazy(() => import("./pages/app/NCCFleetPage"));
-const NCCRoutesPage = lazy(() => import("./pages/app/NCCRoutesPage"));
-const NCCBookingsPage = lazy(() => import("./pages/app/NCCBookingsPage"));
-const NCCDriversPage = lazy(() => import("./pages/app/NCCDriversPage"));
-const NCCPricingPage = lazy(() => import("./pages/app/NCCPricingPage"));
-const NCCCrossSellingPage = lazy(() => import("./pages/app/NCCCrossSellingPage"));
-const NCCSettingsPage = lazy(() => import("./pages/app/NCCSettingsPage"));
-const NCCExpiryPage = lazy(() => import("./pages/app/NCCExpiryPage"));
-const MenuPage = lazy(() => import("./pages/app/MenuPage"));
-const OrdersPage = lazy(() => import("./pages/app/OrdersPage"));
-const InventoryPage = lazy(() => import("./pages/app/InventoryPage"));
-const PayrollPage = lazy(() => import("./pages/app/PayrollPage"));
-const FinancePage = lazy(() => import("./pages/app/FinancePage"));
-const SocialPage = lazy(() => import("./pages/app/SocialPage"));
-const ReservationsPage = lazy(() => import("./pages/app/ReservationsPage"));
-const ReviewsPage = lazy(() => import("./pages/app/ReviewsPage"));
-const GenericModulePage = lazy(() => import("./pages/app/GenericModulePage"));
-const WebHubPage = lazy(() => import("./pages/app/WebHubPage"));
-
-// New pages
-const KitchenPage = lazy(() => import("./pages/app/KitchenPage"));
-const TablesPage = lazy(() => import("./pages/app/TablesPage"));
-const AppointmentsPage = lazy(() => import("./pages/app/AppointmentsPage"));
-const ClientsCRMPage = lazy(() => import("./pages/app/ClientsCRMPage"));
-const InterventionsPage = lazy(() => import("./pages/app/InterventionsPage"));
-const BeachMapPage = lazy(() => import("./pages/app/BeachMapPage"));
-const NCCBeachBookingsPage = lazy(() => import("./pages/app/NCCBeachBookingsPage"));
-const TeamPage = lazy(() => import("./pages/app/TeamPage"));
-const AutomationsPage = lazy(() => import("./pages/app/AutomationsPage"));
-const FeatureRequestsPage = lazy(() => import("./pages/app/FeatureRequestsPage"));
-const SubscriptionPage = lazy(() => import("./pages/app/SubscriptionPage"));
-
-// Demo pages
-const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
-const DemoDirectoryPage = lazy(() => import("./pages/demo/DemoDirectoryPage"));
-const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
-const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
-const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
-
-// Part 6 — AI Marketplace + Sector pages
-const AIMarketplacePage = lazy(() => import("./pages/app/AIMarketplacePage"));
-const KitchenDisplayPage = lazy(() => import("./pages/app/KitchenDisplayPage"));
-const LiveFleetMapPage = lazy(() => import("./pages/app/LiveFleetMapPage"));
-const LoyaltyPage = lazy(() => import("./pages/app/LoyaltyPage"));
-const TelemedicinePage = lazy(() => import("./pages/app/TelemedicinePage"));
-const ProjectTimelinePage = lazy(() => import("./pages/app/ProjectTimelinePage"));
-const FieldDispatchPage = lazy(() => import("./pages/app/FieldDispatchPage"));
-
-// Agent Marketplace
-const AgentMarketplace = lazy(() => import("./pages/AgentMarketplace"));
-const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
-const AdminAgentsPage = lazy(() => import("./pages/admin/AdminAgents"));
-
-const queryClient = new QueryClient();
-
-const PageLoader = () => (
-  <div className="min-h-screen bg-background flex items-center justify-center">
-    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-  </div>
+// Detect mobile for tighter safety timeouts
+const IS_MOBILE = typeof window !== "undefined" && (
+  /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+  window.innerWidth < 768
 );
-
-function App() {
-  const [showSplash, setShowSplash] = useState(true);
-  const [showDNA, setShowDNA] = useState(false);
-
-  // Safety timeout: force dismiss splash after 2.5s no matter what
-  useEffect(() => {
-    const splashTimer = setTimeout(() => { setShowSplash(false); setShowDNA(true); }, 2500);
-    // Safety timeout: force dismiss DNA after 5s total no matter what
-    const dnaTimer = setTimeout(() => { setShowSplash(false); setShowDNA(false); }, 5000);
-    return () => { clearTimeout(splashTimer); clearTimeout(dnaTimer); };
-  }, []);
 
   const handleSplashComplete = () => {
     setShowSplash(false);
