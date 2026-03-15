@@ -133,6 +133,8 @@ export type Database = {
       }
       agents: {
         Row: {
+          ai_model: string
+          autonomy_level: number
           capabilities: string[] | null
           category: string
           color_hex: string | null
@@ -140,14 +142,18 @@ export type Database = {
           description_it: string
           icon_emoji: string | null
           id: string
+          learning_enabled: boolean
           name: string
           pricing: Json | null
+          privacy_level: string
           sectors: string[]
           status: string | null
           type: string
           updated_at: string | null
         }
         Insert: {
+          ai_model?: string
+          autonomy_level?: number
           capabilities?: string[] | null
           category: string
           color_hex?: string | null
@@ -155,14 +161,18 @@ export type Database = {
           description_it: string
           icon_emoji?: string | null
           id?: string
+          learning_enabled?: boolean
           name: string
           pricing?: Json | null
+          privacy_level?: string
           sectors?: string[]
           status?: string | null
           type: string
           updated_at?: string | null
         }
         Update: {
+          ai_model?: string
+          autonomy_level?: number
           capabilities?: string[] | null
           category?: string
           color_hex?: string | null
@@ -170,8 +180,10 @@ export type Database = {
           description_it?: string
           icon_emoji?: string | null
           id?: string
+          learning_enabled?: boolean
           name?: string
           pricing?: Json | null
+          privacy_level?: string
           sectors?: string[]
           status?: string | null
           type?: string
@@ -4233,6 +4245,7 @@ export type Database = {
         | "partner"
         | "team_leader"
       business_type: "restaurant" | "pizzeria" | "bar" | "bakery" | "sushi"
+      privacy_level: "strict" | "standard" | "minimal"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -4369,6 +4382,7 @@ export const Constants = {
         "team_leader",
       ],
       business_type: ["restaurant", "pizzeria", "bar", "bakery", "sushi"],
+      privacy_level: ["strict", "standard", "minimal"],
     },
   },
 } as const
