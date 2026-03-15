@@ -313,7 +313,7 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
       />
       {/* Main container */}
       <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
-        style={{ boxShadow: "0 4px 20px hsla(265,70%,60%,0.15), inset 0 1px 1px rgba(255,255,255,0.15)" }}>
+        style={{ boxShadow: "0 4px 20px hsla(38,50%,50%,0.12), inset 0 1px 1px rgba(255,255,255,0.15)" }}>
         {/* Shimmer sweep */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
