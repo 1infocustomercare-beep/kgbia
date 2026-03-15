@@ -414,7 +414,7 @@ const PartnerDashboard = () => {
 
               {/* === DEMO RESTAURANT (streamlined) === */}
               {demoRestaurant && (
-                <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
+                <div data-guide-section="demo-restaurant" className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {demoRestaurant.logo_url ? (
