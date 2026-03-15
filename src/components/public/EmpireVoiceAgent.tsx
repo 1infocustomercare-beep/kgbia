@@ -335,11 +335,9 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── ElevenLabs Conversational AI hook ──
   const conversation = useConversation({
     onConnect: () => {
-      console.log("ElevenLabs ConvAI connected");
       setMessages(prev => [...prev, { role: "assistant", content: "🎙️ Connesso! Parla pure, ti ascolto..." }]);
     },
     onDisconnect: () => {
-      console.log("ElevenLabs ConvAI disconnected");
       setVoiceMode("legacy");
     },
     onMessage: (message: any) => {
@@ -351,58 +349,80 @@ const EmpireVoiceAgent: React.FC = () => {
         if (text) setMessages(prev => [...prev, { role: "assistant", content: text }]);
       }
     },
-    onError: (error) => {
-      console.error("ElevenLabs ConvAI error:", error);
+    onError: () => {
+      setElevenlabsAvailable(false);
       setVoiceMode("legacy");
     },
   });
 
-  // Check if ElevenLabs ConvAI is available on mount
-  useEffect(() => {
-    const checkElevenlabs = async () => {
-      try {
-        const { data, error } = await supabase.functions.invoke("elevenlabs-conversation-token", {
-          body: {},
-        });
-        setElevenlabsAvailable(!error && !!data?.token);
-      } catch {
-        setElevenlabsAvailable(false);
-      }
-    };
-    checkElevenlabs();
-  }, []);
-
-  // Start ElevenLabs conversation
-  const startElevenlabsConversation = useCallback(async () => {
-    setElevenlabsConnecting(true);
+  const getElevenlabsTokenSilently = useCallback(async (): Promise<string | null> => {
     try {
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-
       const { data, error } = await supabase.functions.invoke("elevenlabs-conversation-token", {
         body: {},
       });
 
       if (error || !data?.token) {
-        throw new Error("Token non ricevuto");
+        setElevenlabsAvailable(false);
+        return null;
+      }
+
+      return data.token as string;
+    } catch {
+      setElevenlabsAvailable(false);
+      return null;
+    }
+  }, []);
+
+  // Check if ElevenLabs ConvAI is available on mount
+  useEffect(() => {
+    let mounted = true;
+
+    const checkElevenlabs = async () => {
+      const token = await getElevenlabsTokenSilently();
+      if (!mounted) return;
+      setElevenlabsAvailable(!!token);
+    };
+
+    void checkElevenlabs();
+
+    return () => {
+      mounted = false;
+    };
+  }, [getElevenlabsTokenSilently]);
+
+  // Start ElevenLabs conversation
+  const startElevenlabsConversation = useCallback(async () => {
+    setElevenlabsConnecting(true);
+
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      const token = await getElevenlabsTokenSilently();
+      if (!token) {
+        setVoiceMode("legacy");
+        return;
       }
 
       await conversation.startSession({
-        conversationToken: data.token,
+        conversationToken: token,
         connectionType: "webrtc",
       });
 
       setVoiceMode("elevenlabs");
-    } catch (err) {
-      console.error("Failed to start ElevenLabs conversation:", err);
-      setMessages(prev => [...prev, { role: "assistant", content: "Non riesco a connettermi all'agente vocale. Usa la modalità classica." }]);
+    } catch {
+      setElevenlabsAvailable(false);
       setVoiceMode("legacy");
     } finally {
       setElevenlabsConnecting(false);
     }
-  }, [conversation]);
+  }, [conversation, getElevenlabsTokenSilently]);
 
   const stopElevenlabsConversation = useCallback(async () => {
-    await conversation.endSession();
+    try {
+      await conversation.endSession();
+    } catch {
+      // silent fallback to legacy mode
+    }
     setVoiceMode("legacy");
   }, [conversation]);
 
