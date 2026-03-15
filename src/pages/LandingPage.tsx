@@ -2920,7 +2920,8 @@ const LandingPage = () => {
               {/* Micro DNA particles — tiny circulating dots in helix pattern */}
               {Array.from({ length: 12 }).map((_, i) => {
                 const isViolet = i % 2 === 0;
-                const radius = 115 + (i % 3) * 15;
+                const isMobileP = typeof window !== "undefined" && window.innerWidth < 640;
+                const radius = isMobileP ? (72 + (i % 3) * 10) : (115 + (i % 3) * 15);
                 return (
                   <motion.div
                     key={`particle-${i}`}
