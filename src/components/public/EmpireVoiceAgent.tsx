@@ -6,7 +6,7 @@ import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
 import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
-import { wasSplashNarrationStarted } from "@/lib/splash-narration";
+import { wasSplashNarrationStarted, isSplashNarrationDone } from "@/lib/splash-narration";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type VoiceMode = "legacy" | "elevenlabs";
@@ -567,9 +567,9 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    // If splash already started/completed hero narration, mark it as done
-    if (wasSplashNarrationStarted()) {
-      // Hero was already narrated during splash — mark it narrated
+    // Check if splash actually completed the hero narration successfully
+    if (wasSplashNarrationStarted() && isSplashNarrationDone()) {
+      // Hero was fully narrated during splash — mark it narrated
       narratedRef.current.add("hero");
       setNarratedSections(new Set(narratedRef.current));
       // Add the hero script to messages so user sees it in chat
@@ -577,6 +577,7 @@ const EmpireVoiceAgent: React.FC = () => {
         setMessages(prev => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
       }
     } else {
+      // Splash didn't start OR didn't complete — play hero narration now
       enqueueSectionNarration("hero", true);
     }
   }, [enqueueSectionNarration]);
