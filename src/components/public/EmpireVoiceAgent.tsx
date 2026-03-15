@@ -332,6 +332,8 @@ const EmpireVoiceAgent: React.FC = () => {
   const narrationAttemptsRef = useRef<Record<string, number>>({});
   const introStartedRef = useRef(false);
   const useBrowserFallbackRef = useRef(false);
+  const isTouchDeviceRef = useRef(false);
+  const userInteractedRef = useRef(false);
 
   // ── ElevenLabs Conversational AI hook ──
   const conversation = useConversation({
