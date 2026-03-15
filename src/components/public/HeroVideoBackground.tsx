@@ -1,5 +1,4 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
 
 interface HeroVideoBackgroundProps {
   primarySrc: string;
@@ -17,7 +16,8 @@ export function HeroVideoBackground({
   poster,
   className = "absolute inset-0 w-full h-full object-cover",
   style,
-  accentColor = "rgba(255,255,255,0.15)",
+  overlay = true,
+  accentColor = "hsl(var(--primary) / 0.22)",
 }: HeroVideoBackgroundProps) {
   const [useFallback, setUseFallback] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
@@ -30,10 +30,10 @@ export function HeroVideoBackground({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    
+
     setIsLoaded(false);
     retryCount.current = 0;
-    
+
     const attemptPlay = () => {
       video.load();
       const playPromise = video.play();
@@ -60,16 +60,6 @@ export function HeroVideoBackground({
 
     return () => clearTimeout(timeout);
   }, [activeSrc]);
-
-  // Generate random particles
-  const particles = Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: 1 + Math.random() * 3,
-    duration: 4 + Math.random() * 8,
-    delay: Math.random() * 5,
-  }));
 
   return (
     <>
@@ -118,105 +108,42 @@ export function HeroVideoBackground({
         </video>
       )}
 
-      {/* ═══ ANIMATED OVERLAYS ═══ */}
-      
-      {/* 1. Diagonal light sweep */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{ zIndex: 2, overflow: "hidden" }}
-        aria-hidden="true"
-      >
-        <motion.div
-          className="absolute w-[200%] h-[1px]"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
-            top: "50%",
-            left: "-50%",
-            transformOrigin: "center",
-            rotate: "-35deg",
-          }}
-          animate={{ x: ["-100%", "200%"] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", repeatDelay: 4 }}
-        />
-      </motion.div>
-
-      {/* 2. Floating particles */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 2 }} aria-hidden="true">
-        {particles.map((p) => (
-          <motion.div
-            key={p.id}
-            className="absolute rounded-full"
+      {overlay && (
+        <>
+          {/* Subtle cinematic darkening for text readability */}
+          <div
+            className="absolute inset-0 pointer-events-none"
             style={{
-              width: p.size,
-              height: p.size,
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-              background: accentColor,
+              zIndex: 2,
+              background:
+                "linear-gradient(180deg, hsl(var(--background) / 0.15) 0%, hsl(var(--background) / 0.5) 70%, hsl(var(--background) / 0.75) 100%)",
             }}
-            animate={{
-              y: [0, -40, -20, -60, 0],
-              x: [0, 10, -8, 5, 0],
-              opacity: [0, 0.7, 0.3, 0.6, 0],
-            }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              delay: p.delay,
-              ease: "easeInOut",
-            }}
+            aria-hidden="true"
           />
-        ))}
-      </div>
 
-      {/* 3. Corner glow pulses */}
-      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }} aria-hidden="true">
-        <motion.div
-          className="absolute top-0 left-0 w-[40%] h-[40%]"
-          style={{
-            background: `radial-gradient(ellipse at top left, ${accentColor} 0%, transparent 70%)`,
-          }}
-          animate={{ opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-[40%] h-[40%]"
-          style={{
-            background: `radial-gradient(ellipse at bottom right, ${accentColor} 0%, transparent 70%)`,
-          }}
-          animate={{ opacity: [0.2, 0.5, 0.2] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
-      </div>
+          {/* Sector tint layer */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              zIndex: 2,
+              background: `linear-gradient(135deg, ${accentColor} 0%, transparent 45%, hsl(var(--background) / 0.35) 100%)`,
+              opacity: 0.55,
+            }}
+            aria-hidden="true"
+          />
 
-      {/* 4. Subtle horizontal scan lines */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          zIndex: 2,
-          backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px)`,
-          mixBlendMode: "multiply",
-        }}
-        aria-hidden="true"
-      />
-
-      {/* 5. Animated vignette pulse */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          zIndex: 2,
-          background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%)",
-        }}
-        animate={{ opacity: [0.7, 1, 0.7] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        aria-hidden="true"
-      />
-
-      {/* 6. Film grain texture */}
-      <div
-        className="absolute inset-0 pointer-events-none hero-grain"
-        style={{ zIndex: 2, opacity: 0.035, mixBlendMode: "overlay" }}
-        aria-hidden="true"
-      />
+          {/* Professional vignette */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              zIndex: 2,
+              background:
+                "radial-gradient(ellipse at center, transparent 42%, hsl(var(--background) / 0.62) 100%)",
+            }}
+            aria-hidden="true"
+          />
+        </>
+      )}
     </>
   );
 }
