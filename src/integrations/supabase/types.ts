@@ -2486,6 +2486,45 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_demo_projects: {
+        Row: {
+          client_logo_url: string | null
+          client_name: string
+          created_at: string | null
+          id: string
+          notes: string | null
+          primary_color: string | null
+          sector: string
+          tagline: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          client_logo_url?: string | null
+          client_name: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          primary_color?: string | null
+          sector: string
+          tagline?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          client_logo_url?: string | null
+          client_name?: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          primary_color?: string | null
+          sector?: string
+          tagline?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       partner_sales: {
         Row: {
           bonus_amount: number
