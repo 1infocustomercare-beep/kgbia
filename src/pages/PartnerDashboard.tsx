@@ -339,7 +339,7 @@ const PartnerDashboard = () => {
             <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
 
               {/* === NET EARNINGS HERO === */}
-              <div className="p-5 rounded-2xl glass border border-primary/20 relative overflow-hidden">
+              <div data-guide-section="net-earnings" className="p-5 rounded-2xl glass border border-primary/20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Guadagni Netti</p>
                 <motion.p className="text-4xl font-heading font-bold text-vibrant-gradient"
