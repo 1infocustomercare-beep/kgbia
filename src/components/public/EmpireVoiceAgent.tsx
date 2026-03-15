@@ -583,10 +583,8 @@ const EmpireVoiceAgent: React.FC = () => {
       setIsPaused(false);
       abortRef.current = false;
 
-      const played = await Promise.race<boolean>([
-        speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId),
-        new Promise<boolean>((resolve) => window.setTimeout(() => resolve(false), SPEECH_ATTEMPT_TIMEOUT_MS)),
-      ]);
+      // No aggressive timeout race — let speakText finish naturally
+      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId);
 
       if (played && !abortRef.current) {
         narrationAttemptsRef.current[sectionId] = 0;
@@ -594,7 +592,9 @@ const EmpireVoiceAgent: React.FC = () => {
         setNarratedSections(new Set(narratedRef.current));
       } else if (!abortRef.current) {
         const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
-        if (attempts < 4) {
+        if (attempts < 2) {
+          // Retry once with a small delay to let voices load
+          await new Promise(r => setTimeout(r, 500));
           sectionQueueRef.current.push(sectionId);
         } else if (sectionId === "hero" && isTouchDeviceRef.current && !userInteractedRef.current) {
           setMobilePromptShown(true);
