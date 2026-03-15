@@ -42,6 +42,15 @@ const TEMPLATE_MAP: Record<string, React.LazyExoticComponent<React.ComponentType
   gardening: TradesPublicSite,
   construction: TradesPublicSite,
   garage: TradesPublicSite,
+  photography: TradesPublicSite,
+  veterinary: TradesPublicSite,
+  tattoo: TradesPublicSite,
+  childcare: TradesPublicSite,
+  education: TradesPublicSite,
+  events: TradesPublicSite,
+  logistics: TradesPublicSite,
+  legal: TradesPublicSite,
+  accounting: TradesPublicSite,
 };
 
 export default function BusinessPage() {
