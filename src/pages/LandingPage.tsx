@@ -2885,12 +2885,13 @@ const LandingPage = () => {
                 { Icon: Binary, color: "hsla(38,45%,60%,0.85)", glow: "hsla(38,45%,60%,0.25)" },
               ].map(({ Icon, color, glow }, i) => {
                 const total = 8;
-                const radius = 135;
-                const radiusY = 125;
+                const isMobileOuter = typeof window !== "undefined" && window.innerWidth < 640;
+                const radius = isMobileOuter ? 85 : 135;
+                const radiusY = isMobileOuter ? 78 : 125;
                 return (
                   <motion.div
                     key={`outer-${i}`}
-                    className="absolute w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center pointer-events-none"
+                    className="absolute w-5 h-5 sm:w-7 sm:h-7 rounded-md flex items-center justify-center pointer-events-none"
                     style={{
                       background: "hsla(260,15%,8%,0.9)",
                       border: "1px solid hsla(265,40%,45%,0.25)",
@@ -2911,7 +2912,7 @@ const LandingPage = () => {
                     }}
                     transition={{ duration: 20 + i * 2, repeat: Infinity, ease: "linear" }}
                   >
-                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ color }} />
+                    <Icon className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" style={{ color }} />
                   </motion.div>
                 );
               })}
