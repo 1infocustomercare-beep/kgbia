@@ -2013,6 +2013,12 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const {
+    heroLanding, videoHero, heroTechCommand, heroAiPlatform, heroPartnerLuxury,
+    mockupCliente, mockupAdmin, mockupCucina,
+    nccHeroBg, nccPremiumCoast, nccPremiumInterior, nccFleetShowcase,
+    cartoonFood, cartoonNcc, cartoonBeauty, cartoonHealthcare, cartoonRetail, cartoonFitness, cartoonHotel,
+  } = useLandingAssets();
   const [monthlyOrders, setMonthlyOrders] = useState(500);
   const [avgOrder, setAvgOrder] = useState(25);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
