@@ -16,16 +16,16 @@ const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
 
 // ── Section narration scripts ──
 const SECTION_SCRIPTS: Record<string, string> = {
-  hero: "Benvenuto in Empire — il sistema operativo che trasforma qualsiasi attività in un business digitale di nuova generazione. Pronto a scoprire come?",
-  industries: "Venticinque settori, un'unica piattaforma. Dal ristorante al medico, dall'NCC al beauty — ogni modulo è costruito su misura per il tuo business.",
-  services: "Menu digitale, CRM, prenotazioni, fatturazione, marketing automation, agenti IA — tutto incluso, tutto integrato. Zero complessità.",
-  process: "Tre step per partire: scegli il tuo settore, personalizza la tua app, e sei online. Il nostro team ti configura tutto in ventiquattr'ore.",
-  app: "Guarda la tua app in azione — dashboard in tempo reale, gestione completa, analytics IA. Tutto dal tuo smartphone.",
-  calculator: "Fai due conti: con Empire risparmi fino a quindicimila euro l'anno rispetto alle piattaforme tradizionali. Il ROI è immediato.",
-  testimonials: "Non devi crederci sulla parola — ascolta chi ha già scelto Empire e ha trasformato il proprio business.",
-  pricing: "Un investimento chiaro, scalabile e sostenibile: Empire cresce con te e aumenta il valore della tua azienda mese dopo mese.",
-  partner: "Vuoi guadagnare vendendo Empire? Novecentonovantasette euro per ogni vendita chiusa, bonus fino a millecinquecento al mese. Zero rischio, zero investimento.",
-  contact: "Se vuoi, ora possiamo passare all'azione: ti mostro la demo del tuo settore e costruiamo subito la tua versione personalizzata.",
+  hero: "Ciao! Sono Arianna, la tua consulente digitale Empire. Hai tra le mani il sistema operativo più avanzato d'Italia per far crescere il tuo business. In pochi minuti ti mostro come Empire può aumentare i tuoi ricavi del trenta per cento e tagliare i costi operativi — senza cambiare nulla di quello che fai oggi. Vuoi scoprire come funziona per il tuo settore?",
+  industries: "Empire copre venticinque settori — ristorazione, hotel, beauty, NCC, healthcare, edilizia e molti altri. Ogni modulo è costruito su misura con funzionalità specifiche per il tuo mercato. Non è un software generico: è come avere un team tech dedicato, a una frazione del costo.",
+  services: "Menu digitale con QR, CRM clienti, prenotazioni automatiche, fatturazione elettronica, marketing automation, agenti IA che lavorano per te ventiquattr'ore su ventiquattro — tutto in un'unica piattaforma. Zero integrazioni esterne, zero mal di testa tecnici.",
+  process: "Tre passi e sei operativo: scegli il settore, personalizza la tua app, e vai online. Il nostro team configura tutto in ventiquattr'ore. Nessuna competenza tecnica richiesta — ci pensiamo noi a tutto.",
+  app: "Guarda la tua app in azione: dashboard in tempo reale, gestione completa degli ordini, analytics predittivi con intelligenza artificiale. Tutto dal tuo smartphone, ovunque ti trovi. I tuoi competitor ancora usano carta e penna.",
+  calculator: "I numeri parlano chiaro: con Empire risparmi fino a quindicimila euro l'anno rispetto alle soluzioni tradizionali. Il ritorno sull'investimento è già dal primo mese. Vuoi che faccia un calcolo personalizzato per la tua attività?",
+  testimonials: "Non devi credermi sulla parola — i risultati parlano da soli. Centinaia di imprenditori hanno già scelto Empire e hanno aumentato fatturato e clienti in meno di novanta giorni.",
+  pricing: "Un investimento chiaro, prevedibile e scalabile: Empire cresce con te. Niente sorprese, niente costi nascosti. Ogni euro investito genera valore misurabile per la tua azienda.",
+  partner: "Vuoi guadagnare vendendo Empire? Commissioni fino a novecentonovantasette euro per ogni vendita chiusa, bonus ricorrenti fino a millecinquecento al mese. Zero rischio, zero investimento iniziale. Il programma partner più vantaggioso del settore.",
+  contact: "Perfetto — se vuoi possiamo passare all'azione adesso. Ti preparo una demo personalizzata per il tuo settore e in dieci minuti vedi Empire in funzione con i tuoi dati. Cosa ne dici?",
 };
 
 const SECTION_ORDER = ["hero", "industries", "services", "process", "app", "calculator", "testimonials", "pricing", "partner", "contact"];
