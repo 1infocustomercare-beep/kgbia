@@ -274,16 +274,18 @@ const PartnerDashboard = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header — Vibrant FLAVR style */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/30 glass-strong safe-top">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-vibrant-gradient flex items-center justify-center vibrant-glow">
-            <Crown className="w-5 h-5 text-primary-foreground" />
+      <div className="relative flex items-center justify-between px-4 pt-3 pb-2 border-b border-empire-violet-deep/20 safe-top overflow-hidden" style={{ background: 'var(--gradient-dna-subtle)' }}>
+        {/* DNA scan line */}
+        <motion.div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: 'var(--gradient-dna)' }} animate={{ opacity: [0.2, 0.6, 0.2] }} transition={{ duration: 3, repeat: Infinity }} />
+        <div className="flex items-center gap-2.5 relative z-10">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-empire-violet to-empire-violet-deep flex items-center justify-center shadow-[var(--shadow-dna)]">
+            <Crown className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-sm font-heading font-bold text-foreground">
+            <h1 className="text-sm font-display font-bold text-foreground">
               {demoMode ? "Empire Solutions" : isTeamLeader ? "Empire Team Leader" : "Empire Partner"}
             </h1>
-            <p className="text-[10px] text-primary">
+            <p className="text-[10px] text-empire-violet-glow">
               {demoMode ? "Enterprise Preview" : isTeamLeader ? `👑 Team Leader · ${teamMembers.length} membri` : bottomTabs.find(t => t.id === activeTab)?.label}
             </p>
           </div>
