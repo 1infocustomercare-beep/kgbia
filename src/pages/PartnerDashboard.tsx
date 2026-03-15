@@ -593,6 +593,7 @@ const PartnerDashboard = () => {
 
               {/* Leader Status Badge */}
               {(() => {
+                // @ts-ignore data-guide-section attribute
                 const isActive = salesCount >= 4 && teamMembers.length >= 2;
                 return (
                   <div className={`p-4 rounded-2xl border ${isActive ? "bg-emerald-500/5 border-emerald-500/20" : "bg-destructive/5 border-destructive/20"}`}>
