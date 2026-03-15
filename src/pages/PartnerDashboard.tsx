@@ -367,7 +367,7 @@ const PartnerDashboard = () => {
               </div>
 
               {/* === STATS ROW === */}
-              <div className="grid grid-cols-3 gap-3">
+              <div data-guide-section="stats-row" className="grid grid-cols-3 gap-3">
                 <div className="p-3.5 rounded-xl bg-card border border-border/50 text-center">
                   <Trophy className="w-4 h-4 text-primary mb-1 mx-auto" />
                   <p className="text-xl font-display font-bold text-foreground">{salesCount}</p>
