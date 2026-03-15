@@ -122,12 +122,12 @@
   }
 
   .bg-gold-gradient {
-    background: linear-gradient(135deg, hsl(265, 70%, 55%), hsl(280, 50%, 58%), hsl(265, 65%, 50%));
+    background: linear-gradient(135deg, hsl(38, 50%, 48%), hsl(34, 45%, 42%), hsl(30, 42%, 38%));
   }
 
   .gold-border-glow {
-    border-color: hsla(265, 70%, 60%, 0.15);
-    box-shadow: 0 0 20px hsla(265, 70%, 60%, 0.06);
+    border-color: hsla(38, 50%, 55%, 0.15);
+    box-shadow: 0 0 20px hsla(38, 50%, 55%, 0.06);
   }
 
   @keyframes marquee-scroll {
