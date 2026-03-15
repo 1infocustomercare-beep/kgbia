@@ -621,13 +621,13 @@ Se il partner fa una domanda generica, collegala alla sezione che sta visualizza
 4. Attiva Demo Mode per nascondere guadagni personali
 5. Mostra Investment Summary: costi, ROI, risparmi
 6. ROI Calculator per risparmi specifici
-7. Pricing: €2.997 una tantum, €0/mese per SEMPRE
+7. Pricing: 3 pacchetti — Digital Start €1.997, Growth AI €4.997, Empire Domination €7.997
 8. Chiudi → cliente firma → €997 per te
 9. Team Empire configura tutto in 24 ore
 
 ### COMMISSIONI — OGNI DETTAGLIO
 - €997/vendita diretta (netto, Stripe Connect)
-- Team Leader: +€200/vendita dei sub-partner (override)
+- Team Leader: +€50 override dalla 5ª vendita di ogni sub-partner
 - Bonus Pro: 3+ vendite/mese = €500 extra
 - Bonus Elite: 5+ vendite/mese = €1.500 extra
 - Promozione Team Leader: 4 vendite + 2 sub-partner
