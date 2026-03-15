@@ -192,7 +192,7 @@ const NeuralCellsBackground = () => {
       {/* DNA Birth Pulse — expanding ring from center when page loads */}
       <motion.div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-        style={{ border: "2px solid hsla(265,80%,65%,0.4)" }}
+        style={{ border: "2px solid hsla(38,50%,55%,0.35)" }}
         initial={{ width: 0, height: 0, opacity: 1 }}
         animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
         transition={{ duration: 2, ease: "easeOut" }}
