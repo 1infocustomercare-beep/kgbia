@@ -90,6 +90,7 @@ const FieldDispatchPage = lazy(() => import("./pages/app/FieldDispatchPage"));
 // Agent Marketplace
 const AgentMarketplace = lazy(() => import("./pages/AgentMarketplace"));
 const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
+const AdminAgentsPage = lazy(() => import("./pages/admin/AdminAgents"));
 
 const queryClient = new QueryClient();
 
@@ -164,6 +165,11 @@ function App() {
                 <Route path="/superadmin/agents" element={
                   <ProtectedRoute requiredRole="super_admin">
                     <AgentsPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/agents" element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <AdminAgentsPage />
                   </ProtectedRoute>
                 } />
                 <Route path="/superadmin/media" element={
