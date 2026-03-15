@@ -2236,8 +2236,8 @@ const LandingPage = () => {
             {/* Top-left corner */}
             <motion.div className="absolute top-0 left-0 w-5 h-5 pointer-events-none"
               initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} transition={{ duration: 0.8 }}>
-              <div className="absolute top-0 left-0 w-full h-[1.5px]" style={{ background: "linear-gradient(90deg, hsla(265,80%,70%,0.8), transparent)" }} />
-              <div className="absolute top-0 left-0 w-[1.5px] h-full" style={{ background: "linear-gradient(180deg, hsla(265,80%,70%,0.8), transparent)" }} />
+              <div className="absolute top-0 left-0 w-full h-[1.5px]" style={{ background: "linear-gradient(90deg, hsla(38,50%,55%,0.6), transparent)" }} />
+              <div className="absolute top-0 left-0 w-[1.5px] h-full" style={{ background: "linear-gradient(180deg, hsla(38,50%,55%,0.6), transparent)" }} />
             </motion.div>
             {/* Top-right corner */}
             <motion.div className="absolute top-0 right-0 w-5 h-5 pointer-events-none"
