@@ -2707,7 +2707,7 @@ const LandingPage = () => {
 
             {/* ═══ Empire Agent Mascot — Neural DNA Nexus ═══ */}
             <motion.div
-              className="relative mt-6 sm:mt-8 w-44 h-44 sm:w-56 sm:h-56 mx-auto"
+              className="relative mt-6 sm:mt-8 w-36 h-36 sm:w-56 sm:h-56 mx-auto overflow-visible"
               initial={{ opacity: 0, scale: 0.5, y: 40 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
