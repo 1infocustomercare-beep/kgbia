@@ -40,8 +40,12 @@ const isConstrainedNetwork = () => {
 };
 
 // Keep cinematic intro, but never trap users on splash
-const INTRO_FAILSAFE_MS = IS_MOBILE ? 4500 : 9000;
-const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 6500 : 12000;
+const INTRO_FAILSAFE_MS = IS_MOBILE ? 3200 : 8000;
+const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 5000 : 11000;
+const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" && (
+  isConstrainedNetwork() ||
+  window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true
+);
 
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
@@ -295,7 +299,7 @@ class IntroErrorBoundary extends React.Component<{ children: ReactNode; onFail: 
 }
 
 function App() {
-  const [introCompleted, setIntroCompleted] = useState(false);
+  const [introCompleted, setIntroCompleted] = useState(() => SHOULD_SKIP_INTRO_DEFAULT);
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
   useEffect(() => {
@@ -366,18 +370,23 @@ function App() {
   useEffect(() => {
     const path = window.location.pathname;
     const constrained = isConstrainedNetwork();
-    let deferredIndexPreload: number | null = null;
+    let deferredPreload: number | null = null;
 
-    if (path === "/" || path === "/home") {
+    // On constrained connections, avoid extra eager preloads to reduce startup contention
+    if (constrained) {
+      return;
+    }
+
+    if (path === "/") {
+      void preloadRoute(loadIndex);
+      deferredPreload = window.setTimeout(() => {
+        void preloadRoute(loadLandingPage);
+      }, 900);
+    } else if (path === "/home") {
       void preloadRoute(loadLandingPage);
-
-      if (constrained) {
-        deferredIndexPreload = window.setTimeout(() => {
-          void preloadRoute(loadIndex);
-        }, 1400);
-      } else {
+      deferredPreload = window.setTimeout(() => {
         void preloadRoute(loadIndex);
-      }
+      }, 900);
     } else if (path.startsWith("/r/")) {
       void preloadRoute(() => import("./pages/RestaurantPage"));
     } else if (path.startsWith("/admin")) {
@@ -385,8 +394,8 @@ function App() {
     }
 
     return () => {
-      if (deferredIndexPreload !== null) {
-        window.clearTimeout(deferredIndexPreload);
+      if (deferredPreload !== null) {
+        window.clearTimeout(deferredPreload);
       }
     };
   }, []);
@@ -426,13 +435,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div
-        className="min-h-screen"
-        style={{
-          visibility: introCompleted ? "visible" : "hidden",
-          pointerEvents: introCompleted ? "auto" : "none",
-        }}
-      >
+      <div className="min-h-screen">
         <TooltipProvider>
           <AuthProvider>
             <CartProvider>
