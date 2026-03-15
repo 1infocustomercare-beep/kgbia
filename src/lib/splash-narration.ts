@@ -2,6 +2,9 @@
  * Splash Narration — starts the hero voice during the UnifiedIntro splash screen.
  * Uses browser TTS (speechSynthesis) since no user gesture is needed on desktop,
  * and the audio context is already available.
+ *
+ * On mobile/touch devices the browser blocks speechSynthesis without a user gesture,
+ * so we skip splash narration and let EmpireVoiceAgent handle it after the first tap.
  */
 
 const HERO_SCRIPT =
@@ -10,6 +13,12 @@ const HERO_SCRIPT =
 let splashNarrationStarted = false;
 let splashNarrationCompleted = false;
 let currentUtterance: SpeechSynthesisUtterance | null = null;
+
+const IS_TOUCH_DEVICE = typeof window !== "undefined" && (
+  "ontouchstart" in window ||
+  navigator.maxTouchPoints > 0 ||
+  window.matchMedia?.("(pointer: coarse)")?.matches === true
+);
 
 // Best Italian voice finder (mirrors EmpireVoiceAgent logic)
 let cachedVoice: SpeechSynthesisVoice | null = null;
@@ -36,17 +45,22 @@ export function startSplashNarration(): void {
   if (splashNarrationStarted) return;
   if (typeof window === "undefined" || !window.speechSynthesis) return;
 
+  // On mobile, speechSynthesis requires a user gesture — skip splash narration
+  // and let the voice agent handle it after the first touch interaction.
+  if (IS_TOUCH_DEVICE) {
+    splashNarrationStarted = false;
+    splashNarrationCompleted = false;
+    return;
+  }
+
   splashNarrationStarted = true;
 
-  // Ensure voices are loaded
   const voices = window.speechSynthesis.getVoices();
   if (voices.length === 0) {
-    // Voices not loaded yet — wait for them
     window.speechSynthesis.onvoiceschanged = () => {
       cachedVoice = null;
       doSpeak();
     };
-    // Try anyway in case onvoiceschanged doesn't fire
     setTimeout(doSpeak, 200);
   } else {
     doSpeak();
@@ -79,7 +93,6 @@ function doSpeak() {
   window.speechSynthesis.speak(utterance);
 }
 
-/** Check if the hero was already narrated during splash */
 export function wasSplashNarrationStarted(): boolean {
   return splashNarrationStarted;
 }

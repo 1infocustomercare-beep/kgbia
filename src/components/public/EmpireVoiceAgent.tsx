@@ -773,49 +773,91 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Auto-start on every device ──
+  // ── Auto-start: desktop immediately, mobile waits for first gesture ──
   useEffect(() => {
     if (!isVisible) return;
-    startIntroNarration();
+
+    // On non-touch (desktop), start right away — speechSynthesis works without gesture
+    if (!isTouchDeviceRef.current) {
+      startIntroNarration();
+    }
+    // On touch devices we wait for the pointerdown/touchstart unlock below
   }, [isVisible, startIntroNarration]);
 
-  // ── Resilient retry for blocked/autoplay-limited contexts (mobile browsers) ──
+  // ── Unlock audio on first user gesture (critical for mobile browsers) ──
   useEffect(() => {
     if (!isVisible) return;
 
-    const retryHeroNarration = () => {
-      if (!voiceEnabledRef.current) return;
-      if (narratedRef.current.has("hero")) return;
-      enqueueSectionNarration("hero", true);
-    };
+    let unlocked = false;
 
-    const retryTimer = window.setTimeout(retryHeroNarration, 1200);
+    const unlockAndSpeak = () => {
+      if (unlocked) return;
+      unlocked = true;
 
-    const onUserUnlock = () => {
-      if (userInteractedRef.current) return;
       userInteractedRef.current = true;
       setUserInteracted(true);
       setMobilePromptShown(false);
-      retryHeroNarration();
+
+      // Unlock speechSynthesis with a silent utterance inside the gesture callback
+      if (window.speechSynthesis) {
+        const silentUtterance = new SpeechSynthesisUtterance("");
+        silentUtterance.volume = 0;
+        silentUtterance.lang = "it-IT";
+        try {
+          window.speechSynthesis.speak(silentUtterance);
+        } catch {
+          // noop
+        }
+      }
+
+      // Now queue hero narration — speechSynthesis is unlocked
+      window.setTimeout(() => {
+        if (!voiceEnabledRef.current) return;
+        if (narratedRef.current.has("hero")) return;
+        startIntroNarration();
+        enqueueSectionNarration("hero", true);
+      }, 150);
+
+      // Clean up listeners
+      window.removeEventListener("pointerdown", unlockAndSpeak);
+      window.removeEventListener("touchstart", unlockAndSpeak);
+      window.removeEventListener("click", unlockAndSpeak);
     };
 
+    // On desktop, also listen but don't block — narration already started
+    // On mobile, this is the ONLY way to unlock audio
+    window.addEventListener("pointerdown", unlockAndSpeak, { passive: true, once: false });
+    window.addEventListener("touchstart", unlockAndSpeak, { passive: true, once: false });
+    window.addEventListener("click", unlockAndSpeak, { passive: true, once: false });
+
+    // Show mobile prompt after a delay if hero hasn't been narrated
+    let mobilePromptTimer: number | undefined;
+    if (isTouchDeviceRef.current) {
+      mobilePromptTimer = window.setTimeout(() => {
+        if (!narratedRef.current.has("hero") && !userInteractedRef.current) {
+          setMobilePromptShown(true);
+        }
+      }, 2500);
+    }
+
     const onVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        retryHeroNarration();
+      if (document.visibilityState === "visible" && userInteractedRef.current) {
+        if (!voiceEnabledRef.current) return;
+        if (narratedRef.current.has("hero")) return;
+        enqueueSectionNarration("hero", true);
       }
     };
 
-    window.addEventListener("pointerdown", onUserUnlock, { passive: true });
-    window.addEventListener("focus", retryHeroNarration);
     document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
-      window.clearTimeout(retryTimer);
-      window.removeEventListener("pointerdown", onUserUnlock);
-      window.removeEventListener("focus", retryHeroNarration);
+      window.removeEventListener("pointerdown", unlockAndSpeak);
+      window.removeEventListener("touchstart", unlockAndSpeak);
+      window.removeEventListener("click", unlockAndSpeak);
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      if (mobilePromptTimer) window.clearTimeout(mobilePromptTimer);
     };
-  }, [isVisible, enqueueSectionNarration]);
+  }, [isVisible, startIntroNarration, enqueueSectionNarration]);
 
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
