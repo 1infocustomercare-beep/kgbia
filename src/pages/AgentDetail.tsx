@@ -219,6 +219,11 @@ export default function AgentDetail() {
           </div>
         </TabsContent>
 
+        {/* Intelligence Tab */}
+        <TabsContent value="intelligence" className="space-y-4">
+          <IntelligenceTab agent={agent} executionCount={executions.length || mockDailyData.reduce((s, d) => s + d.executions, 0)} />
+        </TabsContent>
+
         {/* Executions Log */}
         <TabsContent value="logs">
           <Card className="border-white/10 bg-white/5 overflow-hidden">
