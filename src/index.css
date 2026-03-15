@@ -364,9 +364,9 @@
 
   /* ═══ COUNTER CARD ═══ */
   .counter-card {
-    background: linear-gradient(145deg, hsla(260, 16%, 18%, 0.65), hsla(260, 14%, 14%, 0.55));
+    background: linear-gradient(145deg, hsla(230, 10%, 17%, 0.65), hsla(230, 8%, 13%, 0.55));
     backdrop-filter: blur(20px) saturate(1.3);
-    border: 1px solid hsla(265, 50%, 60%, 0.1);
+    border: 1px solid hsla(38, 45%, 55%, 0.1);
     position: relative;
     overflow: hidden;
   }
@@ -375,20 +375,20 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, hsla(265, 70%, 65%, 0.05) 0%, transparent 50%);
+    background: linear-gradient(135deg, hsla(38, 50%, 55%, 0.04) 0%, transparent 50%);
     pointer-events: none;
   }
 
   /* ═══ NEON TEXT ═══ */
   .neon-text {
-    text-shadow: 0 0 20px hsla(265, 70%, 60%, 0.4), 0 0 60px hsla(280, 45%, 68%, 0.15);
+    text-shadow: 0 0 20px hsla(38, 50%, 55%, 0.3), 0 0 60px hsla(35, 45%, 50%, 0.12);
   }
 
   /* ═══ FUTURISTIC CARD ═══ */
   .future-card {
-    background: linear-gradient(145deg, hsla(260, 16%, 18%, 0.7), hsla(260, 14%, 13%, 0.6));
+    background: linear-gradient(145deg, hsla(230, 10%, 17%, 0.7), hsla(230, 8%, 12%, 0.6));
     backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid hsla(265, 50%, 60%, 0.1);
+    border: 1px solid hsla(38, 45%, 55%, 0.1);
     position: relative;
     overflow: hidden;
   }
@@ -400,16 +400,16 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsla(265, 70%, 65%, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, hsla(38, 50%, 55%, 0.25), transparent);
   }
 
   .future-card:hover {
-    border-color: hsla(265, 70%, 65%, 0.2);
-    box-shadow: 0 25px 80px hsla(0, 0%, 0%, 0.35), 0 0 40px hsla(265, 70%, 60%, 0.1);
+    border-color: hsla(38, 50%, 55%, 0.2);
+    box-shadow: 0 25px 80px hsla(0, 0%, 0%, 0.35), 0 0 40px hsla(38, 50%, 55%, 0.08);
   }
 
   .future-card:hover::after {
-    background: linear-gradient(90deg, transparent, hsla(265, 70%, 65%, 0.6), transparent);
+    background: linear-gradient(90deg, transparent, hsla(38, 50%, 55%, 0.5), transparent);
   }
 
   /* ═══ AURORA MESH ═══ */
@@ -421,11 +421,11 @@
   .aurora-mesh {
     background: linear-gradient(
       -45deg,
-      hsla(265, 30%, 14%, 0.3),
-      hsla(260, 22%, 12%, 0.2),
-      hsla(270, 18%, 10%, 0.35),
-      hsla(280, 25%, 14%, 0.12),
-      hsla(265, 30%, 12%, 0.3)
+      hsla(230, 12%, 14%, 0.3),
+      hsla(225, 10%, 12%, 0.2),
+      hsla(235, 8%, 10%, 0.35),
+      hsla(220, 10%, 14%, 0.12),
+      hsla(230, 12%, 12%, 0.3)
     );
     background-size: 400% 400%;
     animation: aurora 15s ease infinite;
@@ -433,9 +433,9 @@
 
   /* ═══ GLOW CARD ═══ */
   .glow-card {
-    background: linear-gradient(145deg, hsla(260, 18%, 18%, 0.75), hsla(260, 16%, 13%, 0.65));
+    background: linear-gradient(145deg, hsla(230, 10%, 17%, 0.75), hsla(230, 8%, 12%, 0.65));
     backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid hsla(265, 55%, 55%, 0.1);
+    border: 1px solid hsla(38, 45%, 50%, 0.1);
     position: relative;
     overflow: hidden;
     transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -447,7 +447,7 @@
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, hsla(265, 70%, 65%, 0.0), hsla(280, 45%, 70%, 0.0));
+    background: linear-gradient(135deg, hsla(38, 50%, 55%, 0.0), hsla(35, 45%, 55%, 0.0));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -462,12 +462,12 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent 10%, hsla(265, 70%, 65%, 0.2) 50%, transparent 90%);
+    background: linear-gradient(90deg, transparent 10%, hsla(38, 50%, 55%, 0.18) 50%, transparent 90%);
     transition: opacity 0.5s;
   }
 
   .glow-card:hover::before {
-    background: linear-gradient(135deg, hsla(265, 70%, 65%, 0.5), hsla(280, 45%, 70%, 0.25));
+    background: linear-gradient(135deg, hsla(38, 50%, 55%, 0.4), hsla(35, 45%, 55%, 0.2));
   }
 
   .glow-card:hover::after {
