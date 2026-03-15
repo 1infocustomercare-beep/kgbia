@@ -13,7 +13,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useRef, useCallback } from "react";
+import empireAgentMascot from "@/assets/empire-agent-mascot.png";
 import BackButton from "@/components/BackButton";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
@@ -444,58 +445,100 @@ const SuperAdminDashboard = () => {
     <div className="min-h-screen bg-background">
       <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
-      <div className="relative overflow-hidden border-b-2 border-primary/40 bg-gradient-to-r from-primary/10 via-background to-primary/5">
-        {/* Animated HUD grid background */}
-        <div className="absolute inset-0 opacity-[0.04]" style={{
+      <div className="relative overflow-hidden border-b-2 border-primary/40 bg-gradient-to-br from-primary/10 via-background to-primary/5">
+        {/* HUD grid */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
-          backgroundSize: '24px 24px'
+          backgroundSize: '20px 20px'
         }} />
-        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+        {/* Top scan line */}
+        <motion.div
+          className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/60 to-transparent"
+          animate={{ opacity: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity }}
+        />
 
         <div className="flex items-center justify-between px-4 pt-4 pb-3 relative z-10">
           <div className="flex items-center gap-3">
-            {/* Animated 3D Agent Mascot */}
-            <motion.div 
-              className="relative w-14 h-14 flex-shrink-0"
-              animate={{ y: [0, -4, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            {/* ─── DNA-to-Mascot Animated Agent ─── */}
+            <motion.div
+              className="relative w-[68px] h-[68px] flex-shrink-0"
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
-              {/* Orbital ring */}
-              <motion.div 
-                className="absolute inset-0 rounded-full border border-primary/30"
+              {/* Outer orbital ring 1 */}
+              <motion.div
+                className="absolute -inset-1 rounded-full border border-primary/20"
                 animate={{ rotateZ: 360 }}
-                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                style={{ transformStyle: 'preserve-3d', rotateX: '65deg' }}
+                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                style={{ transformStyle: 'preserve-3d', transform: 'rotateX(70deg)' }}
               />
-              {/* Core glow */}
-              <div className="absolute inset-1 rounded-xl bg-gradient-to-br from-primary/30 via-primary/10 to-accent/20 backdrop-blur-sm ring-1 ring-primary/40 shadow-[0_0_20px_hsl(var(--primary)/0.3)]" />
-              {/* Agent icon with pulse */}
-              <motion.div 
-                className="absolute inset-0 flex items-center justify-center"
-                animate={{ scale: [1, 1.08, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <div className="relative">
-                  <Crown className="w-6 h-6 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)]" />
-                  {/* Scanning beam */}
-                  <motion.div 
-                    className="absolute -inset-1 rounded-full"
-                    style={{ background: 'conic-gradient(from 0deg, transparent 0%, hsl(var(--primary) / 0.3) 10%, transparent 20%)' }}
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                  />
-                </div>
-              </motion.div>
-              {/* Status dot */}
-              <motion.div 
-                className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-background"
-                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+              {/* Outer orbital ring 2 - counter */}
+              <motion.div
+                className="absolute -inset-2 rounded-full border border-primary/10"
+                animate={{ rotateZ: -360 }}
+                transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+                style={{ transformStyle: 'preserve-3d', transform: 'rotateX(55deg) rotateY(20deg)' }}
+              />
+
+              {/* DNA helix particles around mascot */}
+              {[...Array(6)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1.5 h-1.5 rounded-full bg-primary/60"
+                  style={{
+                    left: '50%', top: '50%',
+                    marginLeft: -3, marginTop: -3,
+                  }}
+                  animate={{
+                    x: [Math.cos(i * 60 * Math.PI / 180) * 28, Math.cos((i * 60 + 180) * Math.PI / 180) * 28, Math.cos(i * 60 * Math.PI / 180) * 28],
+                    y: [Math.sin(i * 60 * Math.PI / 180) * 28, Math.sin((i * 60 + 180) * Math.PI / 180) * 28, Math.sin(i * 60 * Math.PI / 180) * 28],
+                    scale: [0.6, 1.2, 0.6],
+                    opacity: [0.3, 0.8, 0.3],
+                  }}
+                  transition={{
+                    duration: 4,
+                    delay: i * 0.3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              ))}
+
+              {/* Core glow behind mascot */}
+              <motion.div
+                className="absolute inset-2 rounded-full bg-gradient-to-br from-primary/25 via-primary/10 to-accent/15 blur-sm"
+                animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              />
+
+              {/* Scanning conic beam */}
+              <motion.div
+                className="absolute inset-1 rounded-full"
+                style={{ background: 'conic-gradient(from 0deg, transparent 0%, hsl(var(--primary) / 0.15) 8%, transparent 16%)' }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              />
+
+              {/* Mascot image */}
+              <motion.img
+                src={empireAgentMascot}
+                alt="Empire Agent"
+                className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-contain drop-shadow-[0_0_12px_hsl(var(--primary)/0.5)] z-10"
+                animate={{ scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              />
+
+              {/* Live status dot */}
+              <motion.div
+                className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-background z-20"
+                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.6, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               />
             </motion.div>
 
             <div>
-              <motion.h1 
+              <motion.h1
                 className="text-base font-display font-bold text-gold-gradient"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -504,7 +547,7 @@ const SuperAdminDashboard = () => {
                 Empire Central
               </motion.h1>
               <div className="flex items-center gap-1.5">
-                <motion.div 
+                <motion.div
                   className="w-1.5 h-1.5 rounded-full bg-primary"
                   animate={{ opacity: [0.4, 1, 0.4] }}
                   transition={{ duration: 2, repeat: Infinity }}
