@@ -2288,7 +2288,7 @@ const LandingPage = () => {
             {navLinks.slice(0, Math.ceil(navLinks.length / 2)).map((link, i) => (
               <motion.a key={link.href} href={link.href}
                 className="relative px-5 py-2.5 text-[0.68rem] font-medium text-foreground/40 hover:text-foreground transition-all duration-500 tracking-[0.18em] uppercase group rounded-xl"
-                whileHover={{ backgroundColor: "hsla(265,70%,60%,0.08)" }}
+                whileHover={{ backgroundColor: "hsla(38,45%,55%,0.08)" }}
                 initial={{ opacity: 0, y: -16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 + 0.3, type: "spring", damping: 20 }}
