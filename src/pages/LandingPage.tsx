@@ -20,7 +20,7 @@ import {
   Layers, Globe, Radio, MonitorSmartphone, Cpu, Fingerprint,
   ChevronRight, ChevronLeft, Pause, CircleCheck, Minus, Activity, ServerCog, Gauge,
   Workflow, ScanLine, Database, Wifi, Timer, LineChart,
-  Network, Atom, Radar, BrainCircuit, CircuitBoard, Waypoints, Sparkles, Binary
+  Network, Atom, Radar, BrainCircuit, CircuitBoard, Waypoints, Binary
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
