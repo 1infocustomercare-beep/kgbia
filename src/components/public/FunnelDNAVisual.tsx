@@ -1,8 +1,22 @@
-import { useEffect, useRef, memo } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, memo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const FUNNEL_STEPS = [
+  { icon: "📲", label: "QR Scan", metric: "1.240", sub: "scansioni/mese", color: "primary" },
+  { icon: "🛒", label: "Ordini AI", metric: "+68%", sub: "conversione", color: "primary" },
+  { icon: "🤖", label: "Agenti Attivi", metric: "24/24", sub: "operativi", color: "primary" },
+  { icon: "💰", label: "Revenue", metric: "€12.4k", sub: "incremento medio", color: "accent" },
+] as const;
 
 const FunnelDNAVisual = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [activeStep, setActiveStep] = useState(0);
+
+  // Rotate active funnel step
+  useEffect(() => {
+    const iv = setInterval(() => setActiveStep(p => (p + 1) % FUNNEL_STEPS.length), 3000);
+    return () => clearInterval(iv);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -14,7 +28,7 @@ const FunnelDNAVisual = memo(() => {
     let t = 0;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio, 2);
+      const dpr = Math.min(window.devicePixelRatio, 1.5);
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
@@ -31,12 +45,11 @@ const FunnelDNAVisual = memo(() => {
 
       const cx = w / 2;
       const cy = h / 2;
-      const strands = 2;
       const points = 48;
       const amp = Math.min(w, h) * 0.28;
       const spacing = h / points;
 
-      // Draw connecting lines between strands
+      // Connecting rungs between strands
       for (let i = 0; i < points; i++) {
         const y = i * spacing;
         const phase1 = Math.sin(t * 2 + i * 0.18) * amp;
@@ -55,8 +68,8 @@ const FunnelDNAVisual = memo(() => {
         }
       }
 
-      // Draw DNA strands
-      for (let s = 0; s < strands; s++) {
+      // DNA strands
+      for (let s = 0; s < 2; s++) {
         const phaseOffset = s * Math.PI;
         ctx.beginPath();
         for (let i = 0; i <= points; i++) {
@@ -125,6 +138,8 @@ const FunnelDNAVisual = memo(() => {
     };
   }, []);
 
+  const step = FUNNEL_STEPS[activeStep];
+
   return (
     <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-background/50">
       {/* Ambient glow */}
@@ -136,38 +151,70 @@ const FunnelDNAVisual = memo(() => {
       {/* Canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-      {/* HUD overlay elements */}
+      {/* HUD overlay — conversion funnel data */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Corner brackets */}
         {[["top-3 left-3", "border-t border-l"], ["top-3 right-3", "border-t border-r"], ["bottom-3 left-3", "border-b border-l"], ["bottom-3 right-3", "border-b border-r"]].map(([pos, border], i) => (
           <div key={i} className={`absolute ${pos} w-5 h-5 ${border} border-primary/20 rounded-sm`} />
         ))}
 
-        {/* Floating stats */}
-        <motion.div className="absolute top-6 right-8 text-right"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-          <div className="text-[0.55rem] font-mono text-primary/40 tracking-widest uppercase">Neural Sync</div>
-          <div className="text-[0.65rem] font-mono text-primary/60 font-bold">99.7%</div>
-        </motion.div>
-
-        <motion.div className="absolute bottom-6 left-8"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-          <div className="text-[0.55rem] font-mono text-accent/40 tracking-widest uppercase">AI Agents Active</div>
-          <div className="text-[0.65rem] font-mono text-accent/60 font-bold">24 / 24</div>
-        </motion.div>
-
-        <motion.div className="absolute top-1/2 left-6 -translate-y-1/2 flex flex-col gap-1"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
-          {[85, 92, 78, 95, 88].map((v, i) => (
-            <div key={i} className="flex items-center gap-1">
-              <div className="w-8 h-[2px] rounded-full overflow-hidden bg-primary/10">
-                <motion.div className="h-full bg-primary/30 rounded-full"
-                  initial={{ width: 0 }} animate={{ width: `${v}%` }}
-                  transition={{ delay: 1.2 + i * 0.1, duration: 0.6 }} />
-              </div>
-            </div>
+        {/* Funnel step indicators — left column */}
+        <div className="absolute top-5 left-5 flex flex-col gap-1.5">
+          {FUNNEL_STEPS.map((s, i) => (
+            <motion.div
+              key={i}
+              className={`flex items-center gap-1.5 px-2 py-1 rounded-lg backdrop-blur-sm transition-colors ${
+                i === activeStep
+                  ? "bg-primary/15 border border-primary/30"
+                  : "bg-background/5"
+              }`}
+              animate={{ opacity: i === activeStep ? 1 : 0.4 }}
+              transition={{ duration: 0.4 }}
+            >
+              <span className="text-xs">{s.icon}</span>
+              <span className="text-[0.55rem] font-mono text-foreground/70 tracking-wide">{s.label}</span>
+            </motion.div>
           ))}
-        </motion.div>
+        </div>
+
+        {/* Active metric — right side, animated */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeStep}
+            className="absolute top-5 right-5 text-right"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.35 }}
+          >
+            <div className="text-[0.5rem] font-mono text-primary/50 tracking-[0.2em] uppercase">{step.label}</div>
+            <div className="text-lg font-bold font-mono text-primary/80 leading-none mt-0.5">{step.metric}</div>
+            <div className="text-[0.5rem] font-mono text-muted-foreground/60 mt-0.5">{step.sub}</div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Bottom conversion bar */}
+        <div className="absolute bottom-5 left-5 right-5">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[0.5rem] font-mono text-primary/40 tracking-widest uppercase">Funnel Conversion</span>
+            <span className="text-[0.55rem] font-mono text-accent/70 font-bold">87.3%</span>
+          </div>
+          <div className="h-1 rounded-full bg-primary/10 overflow-hidden">
+            <motion.div
+              className="h-full rounded-full bg-gradient-to-r from-primary/50 to-accent/50"
+              initial={{ width: 0 }}
+              animate={{ width: "87.3%" }}
+              transition={{ delay: 0.5, duration: 1.2, ease: "easeOut" }}
+            />
+          </div>
+          <div className="flex justify-between mt-1">
+            {FUNNEL_STEPS.map((s, i) => (
+              <div key={i} className="flex flex-col items-center">
+                <div className={`w-1.5 h-1.5 rounded-full ${i === activeStep ? "bg-primary" : "bg-primary/20"} transition-colors`} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Bottom gradient */}
