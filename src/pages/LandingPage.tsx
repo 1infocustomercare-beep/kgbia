@@ -103,10 +103,18 @@ SectionLabel.displayName = "SectionLabel";
 /* ═══ Neural Cells Background — flowing DNA data network ═══ */
 const NeuralCellsBackground = () => {
   const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 640);
+  const [born, setBorn] = useState(false);
+
   useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth < 640);
     window.addEventListener("resize", handler);
     return () => window.removeEventListener("resize", handler);
+  }, []);
+
+  // Delayed "birth" — syncs with DNA transition dissolve
+  useEffect(() => {
+    const t = setTimeout(() => setBorn(true), 300);
+    return () => clearTimeout(t);
   }, []);
 
   // Mobile: more cells spread across taller viewport ratio
@@ -125,7 +133,6 @@ const NeuralCellsBackground = () => {
 
   const connections = useMemo(() => {
     const conns: { a: number; b: number }[] = [];
-    // Tighter max distance on mobile to create denser clusters
     const maxDist = isMobile ? 28 : 28;
     for (let i = 0; i < cells.length; i++) {
       for (let j = i + 1; j < cells.length; j++) {
@@ -143,7 +150,29 @@ const NeuralCellsBackground = () => {
   const goldConns = isMobile ? connections.filter((_, i) => i % 6 === 0) : connections.filter((_, i) => i % 4 === 0);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1]" style={{ opacity: isMobile ? 0.8 : 0.7 }}>
+    <motion.div
+      className="fixed inset-0 pointer-events-none z-[1]"
+      style={{ opacity: isMobile ? 0.8 : 0.7 }}
+      initial={{ opacity: 0, scale: 1.3 }}
+      animate={born ? { opacity: isMobile ? 0.8 : 0.7, scale: 1 } : { opacity: 0, scale: 1.3 }}
+      transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {/* DNA Birth Pulse — expanding ring from center when page loads */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+        style={{ border: "2px solid hsla(265,80%,65%,0.4)" }}
+        initial={{ width: 0, height: 0, opacity: 1 }}
+        animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
+        transition={{ duration: 2, ease: "easeOut" }}
+      />
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+        style={{ border: "1px solid hsla(38,50%,55%,0.3)" }}
+        initial={{ width: 0, height: 0, opacity: 1 }}
+        animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
+        transition={{ duration: 2.5, ease: "easeOut", delay: 0.3 }}
+      />
+
       <svg className="w-full h-full" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="pulseGlow">
@@ -201,7 +230,7 @@ const NeuralCellsBackground = () => {
         ))}
 
         {/* Junction nodes */}
-        {cells.filter((_, i) => i % (isMobile ? 2 : 2) === 0).map((cell) => (
+        {cells.filter((_, i) => i % 2 === 0).map((cell) => (
           <motion.circle
             key={`node${cell.id}`}
             cx={cell.x} cy={cell.y}
@@ -215,7 +244,7 @@ const NeuralCellsBackground = () => {
           />
         ))}
       </svg>
-    </div>
+    </motion.div>
   );
 };
 
