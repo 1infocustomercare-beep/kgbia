@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Crown } from "lucide-react";
 import empireAgentMascot from "@/assets/empire-agent-mascot.png";
 import { startSplashNarration } from "@/lib/splash-narration";
