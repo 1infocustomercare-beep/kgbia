@@ -394,12 +394,13 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           {/* ═══ BRAND PHASE — Crown logo + EMPIRE.AI ═══ */}
           <motion.div
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{ willChange: "opacity, transform", WebkitTransform: "translate3d(0,0,0)" }}
             animate={{
               opacity: showBrand ? 1 : 0,
-              scale: phase === "dna" ? 0.85 : 1,
-              y: phase === "dna" ? -30 : 0,
+              scale: phase === "dna" ? 0.8 : 1,
+              y: phase === "dna" ? -40 : 0,
             }}
-            transition={{ duration: 1.2, ease: smoothEase }}
+            transition={{ duration: 0.8, ease: smoothEase }}
           >
             <div className="flex flex-col items-center gap-5">
               {/* Crown container */}
