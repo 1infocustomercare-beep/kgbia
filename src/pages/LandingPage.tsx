@@ -2264,7 +2264,7 @@ const LandingPage = () => {
         {navScrolled && (
           <>
             <motion.div className="absolute w-1 h-1 rounded-full pointer-events-none"
-              style={{ background: "hsla(265,80%,70%,0.5)", top: "50%", left: "12%" }}
+              style={{ background: "hsla(38,50%,55%,0.4)", top: "50%", left: "12%" }}
               animate={{ opacity: [0, 0.7, 0], y: [-3, 3, -3], scale: [0.8, 1.3, 0.8] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
