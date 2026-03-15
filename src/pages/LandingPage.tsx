@@ -307,7 +307,7 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
       {/* Counter ring */}
       <motion.div
         className={`absolute inset-0 ${sizeClasses}`}
-        style={{ border: "1px solid transparent", borderBottomColor: "hsla(280,60%,75%,0.2)" }}
+        style={{ border: "1px solid transparent", borderBottomColor: "hsla(32,35%,55%,0.2)" }}
         animate={{ rotate: [360, 0] }}
         transition={{ duration: 14, repeat: Infinity, ease: "linear", delay: delay + 1 }}
       />
