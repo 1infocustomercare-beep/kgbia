@@ -374,8 +374,10 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, []);
 
-  // Check if ElevenLabs ConvAI is available on mount
+  // Check ElevenLabs availability only when panel is opened (avoid startup network noise on mobile)
   useEffect(() => {
+    if (!isOpen || elevenlabsAvailable !== null) return;
+
     let mounted = true;
 
     const checkElevenlabs = async () => {
@@ -389,7 +391,7 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => {
       mounted = false;
     };
-  }, [getElevenlabsTokenSilently]);
+  }, [isOpen, elevenlabsAvailable, getElevenlabsTokenSilently]);
 
   // Start ElevenLabs conversation
   const startElevenlabsConversation = useCallback(async () => {

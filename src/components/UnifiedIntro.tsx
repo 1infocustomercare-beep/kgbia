@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Crown } from "lucide-react";
 import empireAgentMascot from "@/assets/empire-agent-mascot.png";
 import { startSplashNarration } from "@/lib/splash-narration";
@@ -324,9 +324,11 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
   const showHUD = phase === "dna" || phase === "pulse" || phase === "morph";
   const showMascot = phase === "morph" || phase === "exit";
 
+  if (phase === "exit" && completedRef.current) {
+    return null;
+  }
+
   return (
-    <AnimatePresence>
-      {phase !== "exit" || !completedRef.current ? (
         <motion.div
           key="unified-intro"
           className="fixed inset-0 z-[9999] overflow-hidden"
@@ -592,8 +594,6 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
             </p>
           </motion.div>
         </motion.div>
-      ) : null}
-    </AnimatePresence>
   );
 };
 

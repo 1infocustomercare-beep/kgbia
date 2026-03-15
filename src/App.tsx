@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
 import UnifiedIntro from "@/components/UnifiedIntro";
 import { Toaster } from "@/components/ui/toaster";
@@ -23,7 +23,7 @@ const loadLandingPage = () => import("./pages/LandingPage");
 
 const isRetryableImportError = (error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
-  return /Failed to fetch dynamically imported module|Importing a module script failed|Load failed/i.test(message);
+  return /failed to fetch dynamically imported module|importing a module script failed|load failed|loading chunk [\w-]+ failed|chunkloaderror|dynamically imported module/i.test(message);
 };
 
 const CHUNK_RECOVERY_FLAG = "empire_chunk_recovery_once";
@@ -89,9 +89,7 @@ const importWithRetry = async <T,>(
 
       const lastAttempt = attempt === maxAttempts;
       if (lastAttempt) {
-        if (tryRecoverFromChunkError(error)) {
-          return new Promise<T>(() => undefined);
-        }
+        tryRecoverFromChunkError(error);
         throw error;
       }
 
@@ -248,6 +246,7 @@ class RouteErrorBoundary extends React.Component<{ children: ReactNode }, RouteE
 
 function App() {
   const [introCompleted, setIntroCompleted] = useState(false);
+  const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
   useEffect(() => {
     const introFailsafe = window.setTimeout(() => {
@@ -275,6 +274,29 @@ function App() {
     if (path.startsWith("/admin")) {
       void preloadRoute(() => import("./pages/AdminLogin"));
     }
+  }, []);
+
+  useEffect(() => {
+    const onUnhandledRejection = (event: PromiseRejectionEvent) => {
+      if (!tryRecoverFromChunkError(event.reason)) return;
+      event.preventDefault();
+    };
+
+    const onPreloadError = (event: Event) => {
+      const customEvent = event as CustomEvent<{ payload?: unknown }>;
+      const payload = customEvent.detail?.payload ?? (event as { payload?: unknown }).payload;
+      const fallbackReason = (event as { reason?: unknown }).reason;
+      if (!tryRecoverFromChunkError(payload ?? fallbackReason ?? event)) return;
+      if (typeof event.preventDefault === "function") event.preventDefault();
+    };
+
+    window.addEventListener("unhandledrejection", onUnhandledRejection);
+    window.addEventListener("vite:preloadError", onPreloadError as EventListener);
+
+    return () => {
+      window.removeEventListener("unhandledrejection", onUnhandledRejection);
+      window.removeEventListener("vite:preloadError", onPreloadError as EventListener);
+    };
   }, []);
 
   // If app booted successfully, allow future chunk recovery attempts
@@ -441,7 +463,7 @@ function App() {
         </TooltipProvider>
       </div>
 
-      {!introCompleted && <UnifiedIntro onComplete={() => setIntroCompleted(true)} />}
+      {!introCompleted && <UnifiedIntro onComplete={handleIntroComplete} />}
     </QueryClientProvider>
   );
 }
