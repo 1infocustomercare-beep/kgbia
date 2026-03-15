@@ -566,7 +566,6 @@ const EmpireVoiceAgent: React.FC = () => {
     setAutoNarrating(true);
 
     // If splash already started/completed hero narration, mark it as done
-    const { wasSplashNarrationStarted, isSplashNarrationDone } = require("@/lib/splash-narration");
     if (wasSplashNarrationStarted()) {
       // Hero was already narrated during splash — mark it narrated
       narratedRef.current.add("hero");
