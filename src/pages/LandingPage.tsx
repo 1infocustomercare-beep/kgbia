@@ -366,7 +366,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     {/* Ambient glow on hover — stronger */}
     {glow && (
       <motion.div className="absolute -top-8 -right-8 w-32 h-32 rounded-full pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"
-        style={{ background: "radial-gradient(circle, hsla(265,70%,65%,0.12), transparent)" }}
+        style={{ background: "radial-gradient(circle, hsla(38,50%,55%,0.1), transparent)" }}
         animate={{ scale: [1, 1.2, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       />
