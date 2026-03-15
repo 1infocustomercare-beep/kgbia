@@ -1974,7 +1974,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                   <div className="flex flex-col gap-2 sm:items-end">
                     <motion.button onClick={() => navigate("/admin")}
                       className="px-8 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap"
-                      whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
+                      whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(38,50%,55%,0.2)" }}
                       whileTap={{ scale: 0.97 }}>
                       Attiva Ora — Prova Gratis 14gg
                     </motion.button>
