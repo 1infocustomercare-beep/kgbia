@@ -299,7 +299,7 @@ class IntroErrorBoundary extends React.Component<{ children: ReactNode; onFail: 
 }
 
 function App() {
-  const [introCompleted, setIntroCompleted] = useState(false);
+  const [introCompleted, setIntroCompleted] = useState(() => SHOULD_SKIP_INTRO_DEFAULT);
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
   useEffect(() => {
