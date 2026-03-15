@@ -283,7 +283,8 @@ function App() {
     };
 
     const onPreloadError = (event: Event) => {
-      const payload = (event as CustomEvent<{ payload?: unknown }>).payload;
+      const customEvent = event as CustomEvent<{ payload?: unknown }>;
+      const payload = customEvent.detail?.payload ?? (event as { payload?: unknown }).payload;
       const fallbackReason = (event as { reason?: unknown }).reason;
       if (!tryRecoverFromChunkError(payload ?? fallbackReason ?? event)) return;
       if (typeof event.preventDefault === "function") event.preventDefault();
