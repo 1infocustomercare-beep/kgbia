@@ -111,7 +111,10 @@ function App() {
 
   return (
   <QueryClientProvider client={queryClient}>
-    {showIntro && <UnifiedIntro onComplete={() => setShowIntro(false)} />}
+    {showIntro && (
+      <UnifiedIntro onComplete={() => setShowIntro(false)} />
+    )}
+    <div style={{ visibility: showIntro ? 'hidden' : 'visible', minHeight: '100dvh' }}>
     <TooltipProvider>
       <AuthProvider>
         <CartProvider>
