@@ -22,7 +22,7 @@ const ICON_MAP: Record<string, any> = {
   BarChart3, Settings, Target, MessageSquare, Store, CreditCard,
   Home, Briefcase, Receipt, PenTool, Sparkles, UserCog, Wrench,
   Zap, Leaf, Heart, Camera, Truck, Umbrella, Cog, FileText,
-  Clock, GraduationCap, Baby, Scale, Lightbulb, Shield,
+  Clock, GraduationCap, Baby, Scale, Lightbulb, Shield, Bot,
 };
 
 // Modules per industry
