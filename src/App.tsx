@@ -87,6 +87,10 @@ const TelemedicinePage = lazy(() => import("./pages/app/TelemedicinePage"));
 const ProjectTimelinePage = lazy(() => import("./pages/app/ProjectTimelinePage"));
 const FieldDispatchPage = lazy(() => import("./pages/app/FieldDispatchPage"));
 
+// Agent Marketplace
+const AgentMarketplace = lazy(() => import("./pages/AgentMarketplace"));
+const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
+
 const queryClient = new QueryClient();
 
 const PageLoader = () => (
@@ -233,6 +237,8 @@ function App() {
                   <Route path="subscription" element={<SubscriptionPage />} />
                   {/* Part 6 — AI Marketplace + Sector pages */}
                   <Route path="ai-marketplace" element={<AIMarketplacePage />} />
+                  <Route path="agents" element={<AgentMarketplace />} />
+                  <Route path="agents/:id" element={<AgentDetailPage />} />
                   <Route path="kitchen-display" element={<KitchenDisplayPage />} />
                   <Route path="live-map" element={<LiveFleetMapPage />} />
                   <Route path="loyalty" element={<LoyaltyPage />} />
