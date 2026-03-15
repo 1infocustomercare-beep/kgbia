@@ -842,11 +842,11 @@
   }
   .prismatic-edge {
     background: linear-gradient(90deg,
-      hsla(265, 70%, 60%, 0.6),
-      hsla(280, 50%, 65%, 0.4),
-      hsla(300, 35%, 60%, 0.5),
-      hsla(280, 45%, 68%, 0.3),
-      hsla(265, 70%, 60%, 0.6)
+      hsla(38, 55%, 55%, 0.5),
+      hsla(35, 45%, 55%, 0.35),
+      hsla(32, 40%, 52%, 0.4),
+      hsla(35, 45%, 58%, 0.3),
+      hsla(38, 55%, 55%, 0.5)
     );
     background-size: 300% 100%;
     animation: prismatic 4s linear infinite;
