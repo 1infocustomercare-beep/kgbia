@@ -30,7 +30,7 @@ const TIMINGS = IS_MOBILE
   : { brand: 0, dna: 1400, pulse: 3600, morph: 4800, exit: 5600, complete: 6200 };
 
 // Absolute safety: never block app beyond this
-const SAFETY_TIMEOUT = IS_MOBILE ? 7000 : 8000;
+const SAFETY_TIMEOUT = IS_MOBILE ? 4500 : 8000;
 
 type Phase = "brand" | "dna" | "pulse" | "morph" | "exit";
 

@@ -256,6 +256,7 @@ function App() {
         </CartProvider>
       </AuthProvider>
     </TooltipProvider>
+    </div>
   </QueryClientProvider>
   );
 }
