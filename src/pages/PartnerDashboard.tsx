@@ -34,7 +34,7 @@ import InfoGuide from "@/components/ui/info-guide";
 import { RefreshCw, Palette, Pencil, Upload, Save, X as XIcon } from "lucide-react";
 import { AllIndustriesShowcase } from "@/components/public/IndustryPhoneShowcase";
 
-type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault" | "showcase";
+type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault" | "showcase" | "projects";
 
 const PartnerDashboard = () => {
   const navigate = useNavigate();
