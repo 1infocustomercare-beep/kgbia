@@ -442,7 +442,7 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── ElevenLabs Conversational AI hook ──
   const conversation = useConversation({
     onConnect: () => {
-      setMessages(prev => [...prev, { role: "assistant", content: "🎙️ Connesso! Parla pure, ti ascolto..." }]);
+      setMessages(prev => [...prev, { role: "assistant", content: "📞 Arianna in linea! Parlami pure, ti ascolto..." }]);
     },
     onDisconnect: () => {
       setVoiceMode("legacy");
@@ -961,7 +961,7 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [sendMessage, stopAll]);
 
-  // ── Toggle panel ──
+  // ── Toggle panel — auto-start ElevenLabs call for real phone experience ──
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => {
       const next = !prev;
@@ -973,17 +973,26 @@ const EmpireVoiceAgent: React.FC = () => {
         if (!narratedRef.current.has("hero")) {
           enqueueSectionNarration("hero", true);
         }
+        // Auto-start ElevenLabs conversation for instant phone call feel
+        if (elevenlabsAvailable && voiceMode !== "elevenlabs") {
+          setTimeout(() => startElevenlabsConversation(), 300);
+        }
+      } else {
+        // Closing panel: end ElevenLabs call
+        if (voiceMode === "elevenlabs" && conversation.status === "connected") {
+          stopElevenlabsConversation();
+        }
       }
       return next;
     });
-  }, [startIntroNarration, enqueueSectionNarration]);
+  }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status]);
 
   // ── Render ──
   return (
     <>
       {/* Mobile prompt removed — voice starts automatically */}
 
-      {/* Floating Avatar Button */}
+      {/* Floating Phone Button — "Chiama Arianna" */}
       <AnimatePresence>
         {isVisible && (
           <motion.button
@@ -992,15 +1001,44 @@ const EmpireVoiceAgent: React.FC = () => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
           >
-            <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden shadow-lg border border-white/10">
-              <img src={voiceAgentAvatar} alt="Assistente" className="w-full h-full object-cover" />
-              {isSpeaking && !isPaused && !isOpen && (
-                <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
+            {/* Pulsing ring when speaking */}
+            {(isSpeaking || (voiceMode === "elevenlabs" && conversation.status === "connected")) && !isOpen && (
+              <motion.div
+                className="absolute -inset-2 rounded-full border-2 border-primary/40"
+                animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+            )}
+            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden shadow-[0_0_30px_hsla(265,85%,65%,0.25)] bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              {voiceMode === "elevenlabs" && conversation.status === "connected" ? (
+                <PhoneOff className="w-6 h-6 text-white" />
+              ) : (
+                <Phone className="w-6 h-6 text-white" />
+              )}
+              {/* Active call indicator */}
+              {(isSpeaking && !isPaused && !isOpen) && (
+                <span className="absolute top-1 right-1 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
               )}
             </div>
+            {/* Label */}
+            {!isOpen && (
+              <motion.div
+                className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-full text-[0.55rem] font-bold tracking-wider uppercase"
+                style={{
+                  background: "hsla(260, 20%, 8%, 0.9)",
+                  border: "1px solid hsla(265, 85%, 65%, 0.15)",
+                  color: "hsla(265, 85%, 75%, 0.8)",
+                }}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                Chiama Arianna
+              </motion.div>
+            )}
           </motion.button>
         )}
       </AnimatePresence>
@@ -1040,7 +1078,7 @@ const EmpireVoiceAgent: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-foreground">Laura</h3>
+                  <h3 className="text-sm font-bold text-foreground">Arianna</h3>
                   <p className="text-[0.55rem] text-foreground/40 tracking-wider uppercase">
                     {voiceMode === "elevenlabs" && conversation.status === "connected"
                       ? conversation.isSpeaking ? "🔊 Conversazione attiva" : "🎙️ Ti ascolta..."
@@ -1102,7 +1140,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     <img src={voiceAgentAvatar} alt="Assistente" className="w-8 h-8 rounded-full object-cover" />
                   </motion.div>
                   <p className="text-xs text-foreground/30 text-center max-w-[220px] leading-relaxed">
-                    Ciao! Sono Laura, la tua guida vocale. Ti accompagno nella scoperta di Empire.
+                    Ciao! Sono Arianna, la tua assistente vocale Empire. Tocca il telefono per parlarmi come in una vera telefonata.
                   </p>
                 </div>
               )}
@@ -1194,7 +1232,7 @@ const EmpireVoiceAgent: React.FC = () => {
                           transition={{ duration: 1.5, repeat: Infinity }}
                         />
                         <span className="text-[0.6rem] text-foreground/50 uppercase tracking-wider font-medium">
-                          {conversation.isSpeaking ? "🔊 Laura parla..." : "🎙️ Ti ascolta..."}
+                          {conversation.isSpeaking ? "🔊 Arianna parla..." : "🎙️ Ti ascolta..."}
                         </span>
                       </div>
                       <button
