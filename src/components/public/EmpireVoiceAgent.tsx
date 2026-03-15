@@ -563,7 +563,20 @@ const EmpireVoiceAgent: React.FC = () => {
     introStartedRef.current = true;
     autoNarratingRef.current = true;
     setAutoNarrating(true);
-    enqueueSectionNarration("hero", true);
+
+    // If splash already started/completed hero narration, mark it as done
+    const { wasSplashNarrationStarted, isSplashNarrationDone } = require("@/lib/splash-narration");
+    if (wasSplashNarrationStarted()) {
+      // Hero was already narrated during splash — mark it narrated
+      narratedRef.current.add("hero");
+      setNarratedSections(new Set(narratedRef.current));
+      // Add the hero script to messages so user sees it in chat
+      if (!messagesRef.current.some(m => m.content === SECTION_SCRIPTS.hero)) {
+        setMessages(prev => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
+      }
+    } else {
+      enqueueSectionNarration("hero", true);
+    }
   }, [enqueueSectionNarration]);
 
   const stopAll = useCallback(() => {
