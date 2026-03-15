@@ -3077,9 +3077,9 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Non Siamo un Software. <span className="text-shimmer">Siamo il Futuro.</span>
           </motion.h2>
-          <motion.p className="text-foreground/50 max-w-[520px] mx-auto text-sm leading-[1.7]"
+          <motion.p className="text-foreground/50 max-w-[560px] mx-auto text-sm leading-[1.7]"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Dashboard IA, gestione flotta, prenotazioni, cataloghi digitali, CRM avanzato, automazioni, fatturazione, analytics — tutto in un ecosistema white-label per qualsiasi settore.
+            91 Agenti IA autonomi, dashboard predittive, CRM intelligente, gestione flotta e prenotazioni, cataloghi digitali con OCR, automazioni multi-canale, fatturazione elettronica, analytics in tempo reale, voice agent, generazione foto e contenuti AI — un ecosistema white-label completo che lavora 24/7 per ogni settore, senza intervento umano.
           </motion.p>
         </div>
         <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
