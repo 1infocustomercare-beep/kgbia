@@ -740,19 +740,15 @@ const EmpireVoiceAgent: React.FC = () => {
     enqueueSectionNarration(currentSection);
   }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
-  // ── Instant visibility (300ms) ──
+  // ── Visibility — show button after 1.5s, but do NOT auto-start narration ──
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 300);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Auto-start on every device (including mobile during splash) ──
-  useEffect(() => {
-    if (!isVisible) return;
-    startIntroNarration();
-  }, [isVisible, startIntroNarration]);
+  // No auto-start — narration only begins when user opens the panel
 
   // ── Unlock audio on first user gesture (critical for mobile browsers) ──
   useEffect(() => {
