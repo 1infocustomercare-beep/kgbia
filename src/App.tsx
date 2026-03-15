@@ -277,6 +277,16 @@ function App() {
     }
   }, []);
 
+  // If app booted successfully, allow future chunk recovery attempts
+  useEffect(() => {
+    if (!introCompleted) return;
+    const timer = window.setTimeout(() => {
+      clearChunkRecoveryFlag();
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
+  }, [introCompleted]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <div
