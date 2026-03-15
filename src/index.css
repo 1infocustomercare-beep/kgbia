@@ -141,6 +141,35 @@
     box-shadow: 0 0 20px hsla(38, 50%, 55%, 0.06);
   }
 
+  /* ═══ EMPIRE DNA VIOLET UTILITIES ═══ */
+  .dna-glow {
+    box-shadow: var(--shadow-dna);
+  }
+
+  .dna-glow-lg {
+    box-shadow: var(--shadow-dna-lg);
+  }
+
+  .text-dna-gradient {
+    background: var(--gradient-dna);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-dna-gradient {
+    background: var(--gradient-dna);
+  }
+
+  .bg-dna-subtle {
+    background: var(--gradient-dna-subtle);
+  }
+
+  .dna-border {
+    border-color: hsl(265 85% 65% / 0.2);
+    box-shadow: 0 0 16px hsl(265 85% 65% / 0.08);
+  }
+
   @keyframes marquee-scroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
