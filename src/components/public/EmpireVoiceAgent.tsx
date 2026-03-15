@@ -842,7 +842,6 @@ const EmpireVoiceAgent: React.FC = () => {
       window.removeEventListener("touchstart", unlockAndSpeak);
       window.removeEventListener("click", unlockAndSpeak);
       document.removeEventListener("visibilitychange", onVisibilityChange);
-      if (mobilePromptTimer) window.clearTimeout(mobilePromptTimer);
     };
   }, [isVisible, startIntroNarration, enqueueSectionNarration]);
 
