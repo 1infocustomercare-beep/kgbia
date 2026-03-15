@@ -21,30 +21,61 @@ const FunnelDNAVisual = memo(() => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animId: number;
+    let animId = 0;
     let t = 0;
+    let width = 0;
+    let height = 0;
+
+    const isValidDimension = (value: number) => Number.isFinite(value) && value > 0;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio, 1.5);
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      const nextWidth = rect.width;
+      const nextHeight = rect.height;
+
+      if (!isValidDimension(nextWidth) || !isValidDimension(nextHeight)) {
+        width = 0;
+        height = 0;
+        return;
+      }
+
+      width = nextWidth;
+      height = nextHeight;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.max(1, Math.floor(width * dpr));
+      canvas.height = Math.max(1, Math.floor(height * dpr));
+
+      // Reset transform before re-scaling to avoid cumulative drift/overflow.
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
     };
+
     resize();
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", resize, { passive: true });
+
+    const resizeObserver = typeof ResizeObserver !== "undefined"
+      ? new ResizeObserver(() => resize())
+      : null;
+    resizeObserver?.observe(canvas);
 
     const draw = () => {
-      const w = canvas.getBoundingClientRect().width;
-      const h = canvas.getBoundingClientRect().height;
+      const w = width;
+      const h = height;
+
+      if (!isValidDimension(w) || !isValidDimension(h)) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
+
       ctx.clearRect(0, 0, w, h);
       t += 0.008;
 
       const cx = w / 2;
-      const cy = h / 2;
       const points = 48;
       const amp = Math.min(w, h) * 0.28;
       const spacing = h / points;
@@ -111,7 +142,7 @@ const FunnelDNAVisual = memo(() => {
       // Floating particles
       for (let i = 0; i < 30; i++) {
         const px = cx + Math.sin(t * 0.7 + i * 2.1) * amp * 1.3;
-        const py = (h * ((i * 0.618 + t * 0.1) % 1));
+        const py = h * ((i * 0.618 + t * 0.1) % 1);
         const pa = 0.08 + 0.06 * Math.sin(t * 2 + i);
         ctx.beginPath();
         ctx.arc(px, py, 1, 0, Math.PI * 2);
@@ -120,7 +151,7 @@ const FunnelDNAVisual = memo(() => {
       }
 
       // Scanning beam
-      const beamY = ((t * 40) % h);
+      const beamY = (t * 40) % h;
       const beamGrad = ctx.createLinearGradient(0, beamY - 20, 0, beamY + 20);
       beamGrad.addColorStop(0, "hsla(265, 70%, 60%, 0)");
       beamGrad.addColorStop(0.5, "hsla(265, 70%, 60%, 0.06)");
@@ -130,10 +161,12 @@ const FunnelDNAVisual = memo(() => {
 
       animId = requestAnimationFrame(draw);
     };
-    draw();
+
+    animId = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(animId);
+      resizeObserver?.disconnect();
       window.removeEventListener("resize", resize);
     };
   }, []);
