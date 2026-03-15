@@ -773,15 +773,10 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Auto-start: desktop immediately, mobile waits for first gesture ──
+  // ── Auto-start on every device (including mobile during splash) ──
   useEffect(() => {
     if (!isVisible) return;
-
-    // On non-touch (desktop), start right away — speechSynthesis works without gesture
-    if (!isTouchDeviceRef.current) {
-      startIntroNarration();
-    }
-    // On touch devices we wait for the pointerdown/touchstart unlock below
+    startIntroNarration();
   }, [isVisible, startIntroNarration]);
 
   // ── Unlock audio on first user gesture (critical for mobile browsers) ──

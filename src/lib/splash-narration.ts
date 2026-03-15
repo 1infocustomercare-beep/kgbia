@@ -39,14 +39,6 @@ export function startSplashNarration(): void {
   if (splashNarrationStarted) return;
   if (typeof window === "undefined" || !window.speechSynthesis) return;
 
-  // On mobile, speechSynthesis requires a user gesture — skip splash narration
-  // and let the voice agent handle it after the first touch interaction.
-  if (IS_TOUCH_DEVICE) {
-    splashNarrationStarted = false;
-    splashNarrationCompleted = false;
-    return;
-  }
-
   splashNarrationStarted = true;
 
   const voices = window.speechSynthesis.getVoices();
