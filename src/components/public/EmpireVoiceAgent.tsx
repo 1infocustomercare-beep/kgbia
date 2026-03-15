@@ -582,7 +582,10 @@ const EmpireVoiceAgent: React.FC = () => {
       setIsPaused(false);
       abortRef.current = false;
 
-      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId);
+      const played = await Promise.race<boolean>([
+        speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId),
+        new Promise<boolean>((resolve) => window.setTimeout(() => resolve(false), SPEECH_ATTEMPT_TIMEOUT_MS)),
+      ]);
 
       if (played && !abortRef.current) {
         narrationAttemptsRef.current[sectionId] = 0;
