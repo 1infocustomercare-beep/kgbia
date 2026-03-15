@@ -6,7 +6,7 @@ import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
 import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
-import { wasSplashNarrationStarted } from "@/lib/splash-narration";
+import { wasSplashNarrationStarted, isSplashNarrationDone } from "@/lib/splash-narration";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type VoiceMode = "legacy" | "elevenlabs";
