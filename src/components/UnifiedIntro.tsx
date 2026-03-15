@@ -454,7 +454,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                   style={{ background: "linear-gradient(90deg, hsl(265,85%,65%), hsl(280,80%,60%), hsl(265,85%,65%))" }}
                   initial={{ width: "0%" }}
                   animate={{ width: "100%" }}
-                  transition={{ duration: TIMINGS.exit / 1000 - 0.5, delay: 0.7, ease: [0.4, 0, 0.2, 1] }}
+                  transition={{ duration: TIMINGS.exit / 1000 - 0.3, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
                 />
               </motion.div>
             </div>
