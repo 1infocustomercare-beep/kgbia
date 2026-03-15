@@ -778,7 +778,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(105deg, transparent 40%, hsla(280, 45%, 68%, 0.08) 45%, hsla(265, 70%, 65%, 0.05) 50%, transparent 55%);
+    background: linear-gradient(105deg, transparent 40%, hsla(38, 50%, 58%, 0.06) 45%, hsla(35, 45%, 55%, 0.04) 50%, transparent 55%);
     animation: holo-shine 5s ease-in-out infinite;
     pointer-events: none;
   }
