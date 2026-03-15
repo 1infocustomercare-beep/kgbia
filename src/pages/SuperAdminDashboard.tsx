@@ -1239,10 +1239,7 @@ const SuperAdminDashboard = () => {
                 guideSteps?: string[];
               }
 
-              // State for toggles & expanded guides
-              const [disabledIntegrations, setDisabledIntegrations] = useState<Record<string, boolean>>({});
-              const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
-              const [disabledSectors, setDisabledSectors] = useState<Record<string, boolean>>({});
+              // toggles & guides use component-level state
 
               const toggleIntegration = (name: string) => {
                 setDisabledIntegrations(prev => ({ ...prev, [name]: !prev[name] }));
