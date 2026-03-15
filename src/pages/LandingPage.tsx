@@ -2222,8 +2222,8 @@ const LandingPage = () => {
           <motion.div
             className="absolute bottom-0 left-0 h-[2px] w-32 pointer-events-none rounded-full"
             style={{ 
-              background: "linear-gradient(90deg, transparent, hsla(35,50%,60%,0.6), hsla(265,90%,75%,0.9), hsla(300,60%,70%,0.6), transparent)",
-              boxShadow: "0 0 16px hsla(265,90%,75%,0.5), 0 0 30px hsla(265,90%,75%,0.15)",
+              background: "linear-gradient(90deg, transparent, hsla(35,50%,60%,0.6), hsla(38,55%,58%,0.9), hsla(40,50%,55%,0.6), transparent)",
+              boxShadow: "0 0 16px hsla(38,55%,58%,0.5), 0 0 30px hsla(38,55%,58%,0.15)",
             }}
             animate={{ x: ["-15vw", "115vw"] }}
             transition={{ duration: 4.5, repeat: Infinity, ease: "linear", repeatDelay: 0.8 }}
