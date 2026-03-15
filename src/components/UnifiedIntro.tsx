@@ -39,12 +39,32 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
   const phaseRef = useRef<Phase>("brand");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const completedRef = useRef(false);
+  const tappedRef = useRef(false);
 
   const safeComplete = useCallback(() => {
     if (completedRef.current) return;
     completedRef.current = true;
     onComplete();
   }, [onComplete]);
+
+  // On mobile: first tap unlocks audio + starts narration; second tap skips
+  const handleTap = useCallback(() => {
+    if (!IS_MOBILE) {
+      safeComplete();
+      return;
+    }
+
+    if (!tappedRef.current) {
+      // First tap: unlock audio and start narration
+      tappedRef.current = true;
+      unlockAndStartSplashNarration();
+      // Don't skip — let the splash continue with voice
+      return;
+    }
+
+    // Second tap: skip
+    safeComplete();
+  }, [safeComplete]);
 
   // Phase scheduler
   useEffect(() => {
