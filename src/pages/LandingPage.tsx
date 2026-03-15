@@ -401,7 +401,7 @@ const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: strin
 /* ═══ Section Divider ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
   <div ref={ref} className="section-connector">
-    <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(35,45%,50%,0.08) 15%, hsla(265, 70%, 60%, 0.15) 35%, hsla(35,45%,50%,0.2) 50%, hsla(265, 70%, 60%, 0.15) 65%, hsla(35,45%,50%,0.08) 85%, transparent 100%)" }} />
+    <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(35,45%,50%,0.08) 15%, hsla(38,45%,52%,0.15) 35%, hsla(35,45%,50%,0.2) 50%, hsla(38,45%,52%,0.15) 65%, hsla(35,45%,50%,0.08) 85%, transparent 100%)" }} />
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <motion.div
         className="w-2 h-2 rounded-full"
