@@ -2428,7 +2428,7 @@ const LandingPage = () => {
               <div className="flex items-center gap-1.5">
                 {/* Animated dot separator */}
                 <motion.div className="w-1 h-1 rounded-full" 
-                  style={{ background: "hsla(265,80%,70%,0.6)" }}
+                  style={{ background: "hsla(38,50%,55%,0.5)" }}
                   animate={{ opacity: [0.3, 0.8, 0.3], scale: [0.8, 1.2, 0.8] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 />
