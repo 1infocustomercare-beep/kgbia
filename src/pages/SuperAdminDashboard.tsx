@@ -447,18 +447,21 @@ const SuperAdminDashboard = () => {
     <div className="min-h-screen bg-background">
       <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
-      <div className="relative overflow-hidden border-b-2 border-primary/40 bg-gradient-to-br from-primary/10 via-background to-primary/5">
-        {/* HUD grid */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
+      <div className="relative overflow-hidden border-b border-empire-violet-deep/30 bg-gradient-to-br from-empire-violet-surface via-background to-empire-violet/5">
+        {/* HUD grid — DNA violet */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `linear-gradient(hsl(var(--empire-violet)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--empire-violet)) 1px, transparent 1px)`,
           backgroundSize: '20px 20px'
         }} />
-        {/* Top scan line */}
+        {/* Top scan line — violet */}
         <motion.div
-          className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/60 to-transparent"
+          className="absolute top-0 left-0 w-full h-[2px]"
+          style={{ background: 'var(--gradient-dna)' }}
           animate={{ opacity: [0.3, 0.8, 0.3] }}
           transition={{ duration: 3, repeat: Infinity }}
         />
+        {/* Bottom DNA glow */}
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-empire-violet/40 to-transparent" />
 
         <div className="flex items-center justify-between px-4 pt-4 pb-3 relative z-10">
           <div className="flex items-center gap-3">
