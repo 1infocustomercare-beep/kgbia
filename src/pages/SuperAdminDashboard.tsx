@@ -444,19 +444,79 @@ const SuperAdminDashboard = () => {
     <div className="min-h-screen bg-background">
       <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b-2 border-primary/40 bg-gradient-to-r from-primary/5 to-transparent">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-primary/20 flex items-center justify-center ring-2 ring-primary/30">
-            <Crown className="w-5 h-5 text-primary" />
+      <div className="relative overflow-hidden border-b-2 border-primary/40 bg-gradient-to-r from-primary/10 via-background to-primary/5">
+        {/* Animated HUD grid background */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
+          backgroundSize: '24px 24px'
+        }} />
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+
+        <div className="flex items-center justify-between px-4 pt-4 pb-3 relative z-10">
+          <div className="flex items-center gap-3">
+            {/* Animated 3D Agent Mascot */}
+            <motion.div 
+              className="relative w-14 h-14 flex-shrink-0"
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              {/* Orbital ring */}
+              <motion.div 
+                className="absolute inset-0 rounded-full border border-primary/30"
+                animate={{ rotateZ: 360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                style={{ transformStyle: 'preserve-3d', rotateX: '65deg' }}
+              />
+              {/* Core glow */}
+              <div className="absolute inset-1 rounded-xl bg-gradient-to-br from-primary/30 via-primary/10 to-accent/20 backdrop-blur-sm ring-1 ring-primary/40 shadow-[0_0_20px_hsl(var(--primary)/0.3)]" />
+              {/* Agent icon with pulse */}
+              <motion.div 
+                className="absolute inset-0 flex items-center justify-center"
+                animate={{ scale: [1, 1.08, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <div className="relative">
+                  <Crown className="w-6 h-6 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)]" />
+                  {/* Scanning beam */}
+                  <motion.div 
+                    className="absolute -inset-1 rounded-full"
+                    style={{ background: 'conic-gradient(from 0deg, transparent 0%, hsl(var(--primary) / 0.3) 10%, transparent 20%)' }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  />
+                </div>
+              </motion.div>
+              {/* Status dot */}
+              <motion.div 
+                className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-background"
+                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+            </motion.div>
+
+            <div>
+              <motion.h1 
+                className="text-base font-display font-bold text-gold-gradient"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                Empire Central
+              </motion.h1>
+              <div className="flex items-center gap-1.5">
+                <motion.div 
+                  className="w-1.5 h-1.5 rounded-full bg-primary"
+                  animate={{ opacity: [0.4, 1, 0.4] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+                <p className="text-[10px] text-primary/70 font-medium tracking-wider uppercase">👑 Super Admin</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <h1 className="text-base font-display font-bold text-gold-gradient">Empire Central</h1>
-            <p className="text-[10px] text-primary/70 font-medium tracking-wider uppercase">👑 Super Admin</p>
-          </div>
+          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
+            <LogOut className="w-4 h-4 text-muted-foreground" />
+          </button>
         </div>
-        <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
-          <LogOut className="w-4 h-4 text-muted-foreground" />
-        </button>
       </div>
 
       {/* Tab bar */}
