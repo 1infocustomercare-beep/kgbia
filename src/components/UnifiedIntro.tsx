@@ -54,7 +54,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
     };
 
     const timers = [
-      setTimeout(() => set("dna"), TIMINGS.dna),
+      setTimeout(() => { set("dna"); startSplashNarration(); }, TIMINGS.dna),
       setTimeout(() => set("pulse"), TIMINGS.pulse),
       setTimeout(() => set("morph"), TIMINGS.morph),
       setTimeout(() => set("exit"), TIMINGS.exit),
