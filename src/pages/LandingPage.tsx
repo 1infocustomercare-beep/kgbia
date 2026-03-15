@@ -2597,7 +2597,7 @@ const LandingPage = () => {
                     {/* Active indicator — glowing dot */}
                     <motion.div
                       className="absolute left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100"
-                      style={{ background: "hsla(265,80%,65%,0.8)", boxShadow: "0 0 8px hsla(265,80%,65%,0.5)" }}
+                      style={{ background: "hsla(38,55%,55%,0.8)", boxShadow: "0 0 8px hsla(38,55%,55%,0.5)" }}
                       transition={{ duration: 0.3 }}
                     />
                   </motion.a>
