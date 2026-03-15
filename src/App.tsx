@@ -237,6 +237,8 @@ function App() {
                   <Route path="subscription" element={<SubscriptionPage />} />
                   {/* Part 6 — AI Marketplace + Sector pages */}
                   <Route path="ai-marketplace" element={<AIMarketplacePage />} />
+                  <Route path="agents" element={<AgentMarketplace />} />
+                  <Route path="agents/:id" element={<AgentDetailPage />} />
                   <Route path="kitchen-display" element={<KitchenDisplayPage />} />
                   <Route path="live-map" element={<LiveFleetMapPage />} />
                   <Route path="loyalty" element={<LoyaltyPage />} />
