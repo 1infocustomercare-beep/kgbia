@@ -1278,7 +1278,8 @@ const SuperAdminDashboard = () => {
                   status: "connected", detail: "API Key configurata via connector ElevenLabs",
                   scope: "admin", usedBy: "Empire TTS, Voice Agent, Restaurant Voice Agent", secretName: "ELEVENLABS_API_KEY",
                   guideUrl: "https://elevenlabs.io/docs/api-reference/text-to-speech",
-                  guideSteps: ["1. Vai su elevenlabs.io → API Keys", "2. Copia la tua API Key", "3. Inseriscila come secret ELEVENLABS_API_KEY", "4. Testa con la funzione Empire TTS"]
+                  guideSteps: ["1. Vai su elevenlabs.io → API Keys", "2. Copia la tua API Key", "3. Inseriscila come secret ELEVENLABS_API_KEY", "4. Testa con la funzione Empire TTS"],
+                  buyCreditsUrl: "https://elevenlabs.io/subscription"
                 },
                 {
                   name: "Stripe Connect (Platform)", description: "Pagamenti, split commissioni, abbonamenti",
