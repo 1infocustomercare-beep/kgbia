@@ -653,11 +653,8 @@ const EmpireVoiceAgent: React.FC = () => {
       } else if (!abortRef.current) {
         const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
         if (attempts < 2) {
-          // Retry once with a small delay to let voices load
           await new Promise(r => setTimeout(r, 500));
           sectionQueueRef.current.push(sectionId);
-        } else if (sectionId === "hero" && isTouchDeviceRef.current && !userInteractedRef.current) {
-          setMobilePromptShown(true);
         }
       }
 
