@@ -854,8 +854,8 @@
 
   .hex-grid {
     background-image:
-      radial-gradient(circle at 25% 25%, hsla(265, 70%, 60%, 0.04) 1px, transparent 1px),
-      radial-gradient(circle at 75% 75%, hsla(280, 45%, 68%, 0.03) 1px, transparent 1px);
+      radial-gradient(circle at 25% 25%, hsla(38, 50%, 55%, 0.04) 1px, transparent 1px),
+      radial-gradient(circle at 75% 75%, hsla(35, 45%, 55%, 0.03) 1px, transparent 1px);
     background-size: 30px 30px;
   }
 
