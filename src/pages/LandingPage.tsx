@@ -2744,7 +2744,7 @@ const LandingPage = () => {
                         <animate attributeName="r" values={`${isPrimary ? 2.5 : 1.5};${isPrimary ? 4 : 2.5};${isPrimary ? 2.5 : 1.5}`} dur={`${2 + (i % 5) * 0.4}s`} repeatCount="indefinite" />
                       </circle>
                       <circle cx={x2} cy={y2} r={isPrimary ? 1.5 : 2.5}
-                        fill={isPrimary ? "hsla(38,55%,55%,0.5)" : "hsla(265,80%,65%,0.7)"}
+                        fill={isPrimary ? "hsla(35,50%,55%,0.5)" : "hsla(38,55%,58%,0.7)"}
                         filter="url(#agent-glow)">
                         <animate attributeName="r" values={`${isPrimary ? 1.5 : 2.5};${isPrimary ? 2.5 : 4};${isPrimary ? 1.5 : 2.5}`} dur={`${2.5 + (i % 4) * 0.3}s`} repeatCount="indefinite" />
                       </circle>
