@@ -390,10 +390,11 @@ function App() {
   useEffect(() => {
     const path = window.location.pathname;
     const constrained = isConstrainedNetwork();
+    const shouldDeferPreloads = IS_MOBILE || constrained;
     let deferredPreload: number | null = null;
 
-    // On constrained connections, avoid extra eager preloads to reduce startup contention
-    if (constrained) {
+    // On mobile/slow connections, avoid eager preloads to reduce startup contention
+    if (shouldDeferPreloads) {
       return;
     }
 
