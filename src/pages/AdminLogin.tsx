@@ -238,6 +238,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       const pin = data[0];
       sessionStorage.setItem("kitchen_mode", JSON.stringify({
         restaurantId: pin.restaurant_id, pinId: pin.pin_id, label: pin.label,
+        pinCode: kitchenPin.trim(),
       }));
       navigate("/kitchen");
     } catch { setError("Errore di connessione."); }
