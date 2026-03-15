@@ -23,13 +23,13 @@ const HELIX_NODES = IS_MOBILE ? 20 : 42;
 const MESH_COUNT = IS_MOBILE ? 10 : 28;
 const CELL_COUNT = IS_MOBILE ? 2 : 5;
 
-// Phase timing (ms) — longer to appreciate the full effect
+// Phase timing (ms) — brand shorter, DNA longer for full effect
 const TIMINGS = IS_MOBILE
-  ? { brand: 0, dna: 2200, pulse: 3800, morph: 5000, exit: 6200, complete: 7200 }
-  : { brand: 0, dna: 2500, pulse: 4200, morph: 5600, exit: 6800, complete: 7800 };
+  ? { brand: 0, dna: 1200, pulse: 3200, morph: 4200, exit: 5000, complete: 5600 }
+  : { brand: 0, dna: 1400, pulse: 3600, morph: 4800, exit: 5600, complete: 6200 };
 
 // Absolute safety: never block app beyond this
-const SAFETY_TIMEOUT = IS_MOBILE ? 9000 : 10000;
+const SAFETY_TIMEOUT = IS_MOBILE ? 7000 : 8000;
 
 type Phase = "brand" | "dna" | "pulse" | "morph" | "exit";
 
@@ -329,9 +329,14 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
         <motion.div
           key="unified-intro"
           className="fixed inset-0 z-[9999] overflow-hidden"
-          style={{ backgroundColor: "hsl(260, 20%, 4%)" }}
+          style={{
+            backgroundColor: "hsl(260, 20%, 4%)",
+            willChange: "opacity, transform",
+            WebkitTransform: "translate3d(0,0,0)",
+            transform: "translate3d(0,0,0)",
+          }}
           animate={phase === "exit" ? { opacity: 0 } : { opacity: 1 }}
-          transition={{ duration: 0.8, ease: smoothEase }}
+          transition={{ duration: 0.6, ease: smoothEase }}
           onAnimationComplete={() => {
             if (phase === "exit") safeComplete();
           }}
@@ -340,7 +345,12 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           <canvas
             ref={canvasRef}
             className="absolute inset-0 w-full h-full"
-            style={{ opacity: phase === "brand" ? 0 : 1, transition: "opacity 0.8s ease" }}
+            style={{
+              opacity: phase === "brand" ? 0 : 1,
+              transition: "opacity 0.6s ease",
+              willChange: "opacity",
+              WebkitTransform: "translate3d(0,0,0)",
+            }}
           />
 
           {/* Ambient glow — CSS only, no blur on mobile */}
@@ -384,19 +394,20 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           {/* ═══ BRAND PHASE — Crown logo + EMPIRE.AI ═══ */}
           <motion.div
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{ willChange: "opacity, transform", WebkitTransform: "translate3d(0,0,0)" }}
             animate={{
               opacity: showBrand ? 1 : 0,
-              scale: phase === "dna" ? 0.85 : 1,
-              y: phase === "dna" ? -30 : 0,
+              scale: phase === "dna" ? 0.8 : 1,
+              y: phase === "dna" ? -40 : 0,
             }}
-            transition={{ duration: 1.2, ease: smoothEase }}
+            transition={{ duration: 0.8, ease: smoothEase }}
           >
             <div className="flex flex-col items-center gap-5">
               {/* Crown container */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.7 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: smoothEase }}
+                transition={{ duration: 0.5, delay: 0.1, ease: smoothEase }}
               >
                 <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[22px] sm:rounded-[28px] bg-gradient-to-br from-white/[0.06] to-white/[0.02] flex items-center justify-center border border-white/[0.08] shadow-[0_0_40px_hsla(265,85%,65%,0.1)]">
                   <div
@@ -411,9 +422,9 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
               {/* Brand text */}
               <motion.div
                 className="flex flex-col items-center gap-2.5"
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5, ease: smoothEase }}
+                transition={{ duration: 0.4, delay: 0.3, ease: smoothEase }}
               >
                 <h1 className="font-heading font-bold text-2xl sm:text-3xl tracking-[0.25em] uppercase text-foreground">
                   EMPIRE<span className="text-shimmer">.AI</span>
@@ -423,7 +434,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                   style={{ background: "linear-gradient(90deg, transparent, hsl(265,85%,65%), hsl(280,80%,60%), transparent)" }}
                   initial={{ width: 0, opacity: 0 }}
                   animate={{ width: 140, opacity: 0.5 }}
-                  transition={{ duration: 0.6, delay: 0.9, ease: smoothEase }}
+                  transition={{ duration: 0.4, delay: 0.5, ease: smoothEase }}
                 />
                 <p className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.5em] uppercase text-foreground/20 font-heading">
                   Il Sistema Operativo del Business
@@ -443,7 +454,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                   style={{ background: "linear-gradient(90deg, hsl(265,85%,65%), hsl(280,80%,60%), hsl(265,85%,65%))" }}
                   initial={{ width: "0%" }}
                   animate={{ width: "100%" }}
-                  transition={{ duration: TIMINGS.exit / 1000 - 0.5, delay: 0.7, ease: [0.4, 0, 0.2, 1] }}
+                  transition={{ duration: TIMINGS.exit / 1000 - 0.3, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
                 />
               </motion.div>
             </div>
@@ -540,12 +551,13 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           {/* ═══ MASCOT — emerges from DNA morph ═══ */}
           <motion.div
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{ willChange: "opacity, transform", WebkitTransform: "translate3d(0,0,0)" }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{
               opacity: showMascot ? 1 : 0,
               scale: showMascot ? 1 : 0.5,
             }}
-            transition={{ duration: IS_MOBILE ? 0.5 : 0.8, ease: smoothEase }}
+            transition={{ duration: IS_MOBILE ? 0.4 : 0.6, ease: smoothEase }}
           >
             <div className="relative w-24 h-24 sm:w-36 sm:h-36">
               <div
