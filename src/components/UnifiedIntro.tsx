@@ -329,9 +329,14 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
         <motion.div
           key="unified-intro"
           className="fixed inset-0 z-[9999] overflow-hidden"
-          style={{ backgroundColor: "hsl(260, 20%, 4%)" }}
+          style={{
+            backgroundColor: "hsl(260, 20%, 4%)",
+            willChange: "opacity, transform",
+            WebkitTransform: "translate3d(0,0,0)",
+            transform: "translate3d(0,0,0)",
+          }}
           animate={phase === "exit" ? { opacity: 0 } : { opacity: 1 }}
-          transition={{ duration: 0.8, ease: smoothEase }}
+          transition={{ duration: 0.6, ease: smoothEase }}
           onAnimationComplete={() => {
             if (phase === "exit") safeComplete();
           }}
@@ -340,7 +345,12 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           <canvas
             ref={canvasRef}
             className="absolute inset-0 w-full h-full"
-            style={{ opacity: phase === "brand" ? 0 : 1, transition: "opacity 0.8s ease" }}
+            style={{
+              opacity: phase === "brand" ? 0 : 1,
+              transition: "opacity 0.6s ease",
+              willChange: "opacity",
+              WebkitTransform: "translate3d(0,0,0)",
+            }}
           />
 
           {/* Ambient glow — CSS only, no blur on mobile */}
