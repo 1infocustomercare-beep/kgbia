@@ -123,7 +123,9 @@ const SuperAdminDashboard = () => {
   const [subscriptions, setSubscriptions] = useState<SubscriptionRecord[]>([]);
   const [editingSub, setEditingSub] = useState<string | null>(null);
   const [editPlan, setEditPlan] = useState("");
-
+  const [disabledIntegrations, setDisabledIntegrations] = useState<Record<string, boolean>>({});
+  const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
+  const [disabledSectors, setDisabledSectors] = useState<Record<string, boolean>>({});
   // AI-Mary
   const [maryMessages, setMaryMessages] = useState<{role: string; content: string}[]>([
     { role: "assistant", content: "Ciao! Sono **Mary**, il tuo agente IA per il controllo centralizzato di Empire.\n\n📊 Chiedi: revenue, tenant attivi, vault non configurati, churn rate\n🔔 Azioni: invia reminder, genera report, analisi settore" }
