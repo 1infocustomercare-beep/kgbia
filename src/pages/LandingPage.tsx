@@ -2467,7 +2467,7 @@ const LandingPage = () => {
                 <span className="relative z-10">{link.label}</span>
                 <motion.span 
                   className="absolute bottom-1 left-1/2 -translate-x-1/2 h-[2px] rounded-full origin-center"
-                  style={{ background: "linear-gradient(90deg, hsla(35,50%,55%,0.7), hsla(265,80%,65%,0.9), hsla(300,60%,70%,0.7), hsla(35,50%,55%,0.7))", backgroundSize: "200% 100%" }}
+                  style={{ background: "linear-gradient(90deg, hsla(35,50%,55%,0.7), hsla(38,55%,60%,0.9), hsla(40,50%,58%,0.7), hsla(35,50%,55%,0.7))", backgroundSize: "200% 100%" }}
                   initial={{ width: 0, opacity: 0 }}
                   whileHover={{ width: "70%", opacity: 1 }}
                   transition={{ duration: 0.35, ease: "easeOut" }}
