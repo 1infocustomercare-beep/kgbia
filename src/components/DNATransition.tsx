@@ -137,17 +137,17 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
       let assembleP = 0, morphP = 0, dissolveP = 0;
 
       if (currentPhase === "assemble") {
-        assembleP = Math.min((elapsed - 0.3) / 1.0, 1);
+        assembleP = Math.min(elapsed / 1.0, 1);
         assembleP = 1 - Math.pow(1 - Math.max(assembleP, 0), 3);
       } else if (currentPhase === "pulse") {
         assembleP = 1;
       } else if (currentPhase === "morph") {
         assembleP = 1;
-        morphP = Math.min((elapsed - (IS_MOBILE ? 1.2 : 2.0)) / 0.8, 1);
+        morphP = Math.min((elapsed - (IS_MOBILE ? 1.7 : 2.2)) / 0.8, 1);
         morphP = Math.max(morphP, 0) ** 2;
       } else if (currentPhase === "dissolve") {
         assembleP = 1; morphP = 1;
-        dissolveP = Math.min((elapsed - (IS_MOBILE ? 1.8 : 2.8)) / 0.6, 1);
+        dissolveP = Math.min((elapsed - (IS_MOBILE ? 2.5 : 3.0)) / 0.6, 1);
         dissolveP = Math.max(dissolveP, 0) ** 2;
       }
 
