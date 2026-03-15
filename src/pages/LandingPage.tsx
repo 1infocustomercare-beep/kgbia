@@ -2648,8 +2648,8 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           HERO
          ═══════════════════════════════════════════ */}
-      <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-20 sm:pt-28 pb-12 sm:pb-16"
-        style={{ opacity: heroOpacity }}>
+       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-20 sm:pt-28 pb-20 sm:pb-16"
+         style={{ opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Cinematic video background ═══ */}
         <div className="absolute inset-0" style={{ zIndex: 2 }}>
@@ -2707,7 +2707,7 @@ const LandingPage = () => {
 
             {/* ═══ Empire Agent Mascot — Neural DNA Nexus ═══ */}
             <motion.div
-              className="relative mt-6 sm:mt-8 w-44 h-44 sm:w-56 sm:h-56 mx-auto"
+              className="relative mt-6 sm:mt-8 w-36 h-36 sm:w-56 sm:h-56 mx-auto overflow-visible"
               initial={{ opacity: 0, scale: 0.5, y: 40 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -2832,10 +2832,12 @@ const LandingPage = () => {
                 { Icon: Workflow, color: "hsla(38,60%,55%,0.9)", glow: "hsla(38,60%,55%,0.3)" },
                 { Icon: Database, color: "hsla(265,65%,65%,0.9)", glow: "hsla(265,65%,65%,0.3)" },
                 { Icon: ScanLine, color: "hsla(38,50%,60%,0.9)", glow: "hsla(38,50%,60%,0.3)" },
-              ].map(({ Icon, color, glow }, i) => (
+              ].map(({ Icon, color, glow }, i) => {
+                const innerR = typeof window !== "undefined" && window.innerWidth < 640 ? 65 : 100;
+                return (
                 <motion.div
                   key={`inner-${i}`}
-                  className="absolute w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center pointer-events-none"
+                  className="absolute w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center pointer-events-none"
                   style={{
                     background: "hsla(260,15%,10%,0.85)",
                     border: "1px solid hsla(265,40%,50%,0.2)",
@@ -2846,30 +2848,30 @@ const LandingPage = () => {
                   }}
                   animate={{
                     x: [
-                      Math.cos((i * Math.PI) / 3) * 100,
-                      Math.cos((i * Math.PI) / 3 + Math.PI / 3) * 100,
-                      Math.cos((i * Math.PI) / 3 + (2 * Math.PI) / 3) * 100,
-                      Math.cos((i * Math.PI) / 3 + Math.PI) * 100,
-                      Math.cos((i * Math.PI) / 3 + (4 * Math.PI) / 3) * 100,
-                      Math.cos((i * Math.PI) / 3 + (5 * Math.PI) / 3) * 100,
-                      Math.cos((i * Math.PI) / 3) * 100,
+                      Math.cos((i * Math.PI) / 3) * innerR,
+                      Math.cos((i * Math.PI) / 3 + Math.PI / 3) * innerR,
+                      Math.cos((i * Math.PI) / 3 + (2 * Math.PI) / 3) * innerR,
+                      Math.cos((i * Math.PI) / 3 + Math.PI) * innerR,
+                      Math.cos((i * Math.PI) / 3 + (4 * Math.PI) / 3) * innerR,
+                      Math.cos((i * Math.PI) / 3 + (5 * Math.PI) / 3) * innerR,
+                      Math.cos((i * Math.PI) / 3) * innerR,
                     ],
                     y: [
-                      Math.sin((i * Math.PI) / 3) * 100,
-                      Math.sin((i * Math.PI) / 3 + Math.PI / 3) * 100,
-                      Math.sin((i * Math.PI) / 3 + (2 * Math.PI) / 3) * 100,
-                      Math.sin((i * Math.PI) / 3 + Math.PI) * 100,
-                      Math.sin((i * Math.PI) / 3 + (4 * Math.PI) / 3) * 100,
-                      Math.sin((i * Math.PI) / 3 + (5 * Math.PI) / 3) * 100,
-                      Math.sin((i * Math.PI) / 3) * 100,
+                      Math.sin((i * Math.PI) / 3) * innerR,
+                      Math.sin((i * Math.PI) / 3 + Math.PI / 3) * innerR,
+                      Math.sin((i * Math.PI) / 3 + (2 * Math.PI) / 3) * innerR,
+                      Math.sin((i * Math.PI) / 3 + Math.PI) * innerR,
+                      Math.sin((i * Math.PI) / 3 + (4 * Math.PI) / 3) * innerR,
+                      Math.sin((i * Math.PI) / 3 + (5 * Math.PI) / 3) * innerR,
+                      Math.sin((i * Math.PI) / 3) * innerR,
                     ],
                     scale: [1, 1.15, 1, 0.92, 1],
                   }}
                   transition={{ duration: 14 + i * 1.5, repeat: Infinity, ease: "linear" }}
                 >
-                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color }} />
+                  <Icon className="w-3 h-3 sm:w-4 sm:h-4" style={{ color }} />
                 </motion.div>
-              ))}
+              );})}
 
               {/* Outer DNA orbit — additional AI tech icons circulating on wider elliptical paths */}
               {[
@@ -2883,12 +2885,13 @@ const LandingPage = () => {
                 { Icon: Binary, color: "hsla(38,45%,60%,0.85)", glow: "hsla(38,45%,60%,0.25)" },
               ].map(({ Icon, color, glow }, i) => {
                 const total = 8;
-                const radius = 135;
-                const radiusY = 125;
+                const isMobileOuter = typeof window !== "undefined" && window.innerWidth < 640;
+                const radius = isMobileOuter ? 85 : 135;
+                const radiusY = isMobileOuter ? 78 : 125;
                 return (
                   <motion.div
                     key={`outer-${i}`}
-                    className="absolute w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center pointer-events-none"
+                    className="absolute w-5 h-5 sm:w-7 sm:h-7 rounded-md flex items-center justify-center pointer-events-none"
                     style={{
                       background: "hsla(260,15%,8%,0.9)",
                       border: "1px solid hsla(265,40%,45%,0.25)",
@@ -2909,7 +2912,7 @@ const LandingPage = () => {
                     }}
                     transition={{ duration: 20 + i * 2, repeat: Infinity, ease: "linear" }}
                   >
-                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ color }} />
+                    <Icon className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" style={{ color }} />
                   </motion.div>
                 );
               })}
@@ -2917,7 +2920,8 @@ const LandingPage = () => {
               {/* Micro DNA particles — tiny circulating dots in helix pattern */}
               {Array.from({ length: 12 }).map((_, i) => {
                 const isViolet = i % 2 === 0;
-                const radius = 115 + (i % 3) * 15;
+                const isMobileP = typeof window !== "undefined" && window.innerWidth < 640;
+                const radius = isMobileP ? (72 + (i % 3) * 10) : (115 + (i % 3) * 15);
                 return (
                   <motion.div
                     key={`particle-${i}`}

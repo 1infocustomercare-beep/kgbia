@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Crown } from "lucide-react";
 import empireAgentMascot from "@/assets/empire-agent-mascot.png";
-import { startSplashNarration } from "@/lib/splash-narration";
+import { startSplashNarration, unlockAndStartSplashNarration } from "@/lib/splash-narration";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
@@ -39,12 +39,32 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
   const phaseRef = useRef<Phase>("brand");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const completedRef = useRef(false);
+  const tappedRef = useRef(false);
 
   const safeComplete = useCallback(() => {
     if (completedRef.current) return;
     completedRef.current = true;
     onComplete();
   }, [onComplete]);
+
+  // On mobile: first tap unlocks audio + starts narration; second tap skips
+  const handleTap = useCallback(() => {
+    if (!IS_MOBILE) {
+      safeComplete();
+      return;
+    }
+
+    if (!tappedRef.current) {
+      // First tap: unlock audio and start narration
+      tappedRef.current = true;
+      unlockAndStartSplashNarration();
+      // Don't skip — let the splash continue with voice
+      return;
+    }
+
+    // Second tap: skip
+    safeComplete();
+  }, [safeComplete]);
 
   // Phase scheduler
   useEffect(() => {
@@ -343,10 +363,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           onAnimationComplete={() => {
             if (phase === "exit") safeComplete();
           }}
-          onClick={() => {
-            // Tap anywhere to skip on mobile
-            if (IS_MOBILE) safeComplete();
-          }}
+          onClick={handleTap}
         >
           {/* Canvas for DNA helix */}
           <canvas
