@@ -11,6 +11,7 @@ import AgentFilters from "@/components/admin/AgentFilters";
 import SectorTabs from "@/components/admin/SectorTabs";
 import AgentCard from "@/components/admin/AgentCard";
 import AgentCostsTab from "@/components/admin/AgentCostsTab";
+import TenantAgentsTab from "@/components/admin/TenantAgentsTab";
 import { CATEGORY_LABELS } from "@/types/agent";
 import type { Agent } from "@/types/agent";
 import { toast } from "@/hooks/use-toast";
