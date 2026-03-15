@@ -263,11 +263,11 @@ const PartnerDashboard = () => {
     { id: "investment", label: "Crescita", icon: <BarChart3 className="w-5 h-5" /> },
   ] : [
     { id: "dashboard", label: "Home", icon: <LayoutDashboard className="w-5 h-5" /> },
+    { id: "projects" as Tab, label: "Bozze", icon: <Briefcase className="w-5 h-5" /> },
     { id: "sandbox", label: "Demo", icon: <Play className="w-5 h-5" /> },
     { id: "showcase", label: "Settori", icon: <Smartphone className="w-5 h-5" /> },
     ...(isTeamLeader ? [{ id: "team" as Tab, label: "Team", icon: <Users className="w-5 h-5" /> }] : []),
     { id: "earnings", label: "Guadagni", icon: <DollarSign className="w-5 h-5" /> },
-    { id: "vault", label: "Asset", icon: <FolderDown className="w-5 h-5" /> },
   ];
 
   return (
