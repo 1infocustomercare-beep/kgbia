@@ -192,7 +192,7 @@ const NeuralCellsBackground = () => {
       {/* DNA Birth Pulse — expanding ring from center when page loads */}
       <motion.div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-        style={{ border: "2px solid hsla(265,80%,65%,0.4)" }}
+        style={{ border: "2px solid hsla(38,50%,55%,0.35)" }}
         initial={{ width: 0, height: 0, opacity: 1 }}
         animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
         transition={{ duration: 2, ease: "easeOut" }}
@@ -219,7 +219,7 @@ const NeuralCellsBackground = () => {
             key={`ln${i}`}
             x1={cells[a].x} y1={cells[a].y}
             x2={cells[b].x} y2={cells[b].y}
-            stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.35)" : "hsla(265,70%,65%,0.28)"}
+            stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.35)" : "hsla(220,15%,55%,0.18)"}
             strokeWidth={isMobile ? "0.2" : "0.15"}
             initial={{ opacity: 0 }}
             animate={{ opacity: [0.1, 0.4, 0.1] }}
@@ -227,12 +227,12 @@ const NeuralCellsBackground = () => {
           />
         ))}
 
-        {/* Violet data pulses */}
+        {/* Warm data pulses */}
         {pulseConns.map(({ a, b }, i) => (
           <motion.circle
             key={`vp${i}`}
             r={isMobile ? "0.35" : "0.25"}
-            fill="hsla(265,90%,72%,0.9)"
+            fill="hsla(32,55%,60%,0.85)"
             filter="url(#pulseGlow)"
             initial={{ cx: cells[a].x, cy: cells[a].y, opacity: 0 }}
             animate={{
@@ -267,7 +267,7 @@ const NeuralCellsBackground = () => {
             key={`node${cell.id}`}
             cx={cell.x} cy={cell.y}
             r={isMobile ? "0.35" : "0.25"}
-            fill="hsla(265,80%,70%,0.4)"
+            fill="hsla(38,45%,55%,0.35)"
             animate={{
               r: [isMobile ? 0.2 : 0.15, isMobile ? 0.5 : 0.4, isMobile ? 0.2 : 0.15],
               opacity: [0.25, 0.6, 0.25],
@@ -288,32 +288,32 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
       {/* Ambient glow */}
       <motion.div
         className={`absolute -inset-2 ${sizeClasses} opacity-0 group-hover/icon:opacity-100 transition-opacity duration-700 blur-xl`}
-        style={{ background: `linear-gradient(135deg, hsla(265,70%,60%,0.3), hsla(280,50%,60%,0.2))` }}
+        style={{ background: `linear-gradient(135deg, hsla(38,50%,55%,0.25), hsla(32,40%,50%,0.15))` }}
       />
       {/* Outer pulse ring */}
       <motion.div
         className={`absolute -inset-1.5 ${sizeClasses} pointer-events-none`}
-        style={{ border: "1px solid hsla(265,80%,70%,0.15)" }}
+        style={{ border: "1px solid hsla(38,50%,55%,0.15)" }}
         animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
         transition={{ duration: 3, repeat: Infinity, delay: delay * 0.5, ease: "easeInOut" }}
       />
       {/* Rotating ring */}
       <motion.div
         className={`absolute -inset-0.5 ${sizeClasses}`}
-        style={{ border: "1.5px solid transparent", borderTopColor: "hsla(265,80%,70%,0.4)", borderRightColor: "hsla(300,50%,70%,0.2)" }}
+        style={{ border: "1.5px solid transparent", borderTopColor: "hsla(38,50%,55%,0.35)", borderRightColor: "hsla(32,40%,50%,0.2)" }}
         animate={{ rotate: [0, 360] }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear", delay }}
       />
       {/* Counter ring */}
       <motion.div
         className={`absolute inset-0 ${sizeClasses}`}
-        style={{ border: "1px solid transparent", borderBottomColor: "hsla(280,60%,75%,0.2)" }}
+        style={{ border: "1px solid transparent", borderBottomColor: "hsla(32,35%,55%,0.2)" }}
         animate={{ rotate: [360, 0] }}
         transition={{ duration: 14, repeat: Infinity, ease: "linear", delay: delay + 1 }}
       />
       {/* Main container */}
       <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
-        style={{ boxShadow: "0 4px 20px hsla(265,70%,60%,0.15), inset 0 1px 1px rgba(255,255,255,0.15)" }}>
+        style={{ boxShadow: "0 4px 20px hsla(38,50%,50%,0.12), inset 0 1px 1px rgba(255,255,255,0.15)" }}>
         {/* Shimmer sweep */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
@@ -334,20 +334,20 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
   <motion.div
     className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
     style={{
-      background: "linear-gradient(145deg, hsla(260,18%,18%,0.65), hsla(260,16%,14%,0.55))",
+      background: "linear-gradient(145deg, hsla(230,10%,17%,0.65), hsla(230,8%,13%,0.55))",
       backdropFilter: "blur(20px) saturate(1.4)",
-      borderColor: "hsla(265,50%,60%,0.1)",
+      borderColor: "hsla(38,40%,55%,0.1)",
     }}
     whileHover={hover ? {
       y: -6,
-      borderColor: "hsla(265,70%,65%,0.25)",
-      boxShadow: "0 20px 60px hsla(265,70%,60%,0.12), 0 0 30px hsla(265,70%,60%,0.06), inset 0 1px 0 hsla(265,80%,80%,0.08)",
+      borderColor: "hsla(38,45%,55%,0.25)",
+      boxShadow: "0 20px 60px hsla(38,45%,50%,0.1), 0 0 30px hsla(38,45%,50%,0.05), inset 0 1px 0 hsla(38,50%,70%,0.08)",
       transition: { duration: 0.4, ease: "easeOut" },
     } : undefined}
   >
     {/* Top accent line — animated gradient */}
     <motion.div className="absolute top-0 left-0 right-0 h-px z-10"
-      style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,55%,0.2), hsla(265,70%,65%,0.25), hsla(35,45%,55%,0.15), transparent)" }}
+      style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,55%,0.2), hsla(38,50%,60%,0.2), hsla(35,45%,55%,0.15), transparent)" }}
       animate={{ backgroundPosition: ["0% 0%", "200% 0%"] }}
       transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
     />
@@ -358,7 +358,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     {scan && (
       <motion.div
         className="absolute inset-0 pointer-events-none z-0"
-        style={{ background: "linear-gradient(180deg, transparent 35%, hsla(265,80%,75%,0.06) 50%, transparent 65%)" }}
+        style={{ background: "linear-gradient(180deg, transparent 35%, hsla(38,50%,60%,0.05) 50%, transparent 65%)" }}
         animate={{ y: ["-100%", "200%"] }}
         transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 1.5 + delay, ease: "easeInOut" }}
       />
@@ -366,7 +366,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     {/* Ambient glow on hover — stronger */}
     {glow && (
       <motion.div className="absolute -top-8 -right-8 w-32 h-32 rounded-full pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"
-        style={{ background: "radial-gradient(circle, hsla(265,70%,65%,0.12), transparent)" }}
+        style={{ background: "radial-gradient(circle, hsla(38,50%,55%,0.1), transparent)" }}
         animate={{ scale: [1, 1.2, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -374,7 +374,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     {/* Bottom glow line */}
     <div className="absolute bottom-0 left-3 right-3 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
     {/* Inner glass reflection */}
-    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(265,40%,80%,0.03) 0%, transparent 40%)" }} />
+    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(38,30%,70%,0.03) 0%, transparent 40%)" }} />
     <div className="relative z-10">{children}</div>
   </motion.div>
 );
@@ -392,7 +392,7 @@ const popIn = { hidden: { opacity: 0, scale: 0.88 }, visible: { opacity: 1, scal
 const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => (
   <motion.div
     className="absolute rounded-full"
-    style={{ width: size, height: size, left: x, top: y, background: delay % 2 === 0 ? "hsl(265, 70%, 60%)" : "hsl(280, 50%, 65%)" }}
+    style={{ width: size, height: size, left: x, top: y, background: delay % 2 === 0 ? "hsl(38, 45%, 52%)" : "hsl(32, 35%, 55%)" }}
     animate={{ y: [0, -25, 0], opacity: [0.1, 0.35, 0.1], scale: [1, 1.3, 1] }}
     transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
   />
@@ -401,11 +401,11 @@ const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: strin
 /* ═══ Section Divider ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
   <div ref={ref} className="section-connector">
-    <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(35,45%,50%,0.08) 15%, hsla(265, 70%, 60%, 0.15) 35%, hsla(35,45%,50%,0.2) 50%, hsla(265, 70%, 60%, 0.15) 65%, hsla(35,45%,50%,0.08) 85%, transparent 100%)" }} />
+    <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(35,45%,50%,0.08) 15%, hsla(38,45%,52%,0.15) 35%, hsla(35,45%,50%,0.2) 50%, hsla(38,45%,52%,0.15) 65%, hsla(35,45%,50%,0.08) 85%, transparent 100%)" }} />
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <motion.div
         className="w-2 h-2 rounded-full"
-        style={{ background: "linear-gradient(135deg, hsl(35,45%,50%), hsl(265, 70%, 60%))", boxShadow: "0 0 10px hsla(35,45%,50%,0.4), 0 0 24px hsla(265, 70%, 60%, 0.3)" }}
+        style={{ background: "linear-gradient(135deg, hsl(35,45%,50%), hsl(38,45%,52%))", boxShadow: "0 0 10px hsla(35,45%,50%,0.4), 0 0 24px hsla(38,45%,52%,0.3)" }}
         animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2, repeat: Infinity }}
       />
@@ -830,13 +830,13 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       isEmpire
                         ? "border-2 border-accent/40 shadow-[0_0_50px_hsla(35,45%,50%,0.15)]"
                         : isSelected
-                          ? "border-2 border-primary/40 shadow-[0_0_30px_hsla(265,70%,60%,0.1)]"
+                          ? "border-2 border-primary/40 shadow-[0_0_30px_hsla(38,50%,55%,0.1)]"
                           : "border border-border/30"
                     }`}
                     style={{
                       background: isEmpire
-                        ? "linear-gradient(165deg, hsla(35,30%,12%,0.6), hsla(265,15%,10%,0.8))"
-                        : "hsla(265,15%,10%,0.4)"
+                        ? "linear-gradient(165deg, hsla(35,30%,12%,0.6), hsla(230,10%,10%,0.8))"
+                        : "hsla(230,10%,12%,0.4)"
                     }}
                     whileTap={{ scale: 0.99 }}>
 
@@ -947,7 +947,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       isSelected
                         ? p.id === "empire"
                           ? "border-2 border-accent/40 bg-gradient-to-b from-accent/[0.08] via-background/60 to-background shadow-[0_0_50px_hsla(35,45%,50%,0.12)]"
-                          : "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(265,70%,60%,0.1)]"
+                          : "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(38,50%,55%,0.1)]"
                         : "border border-border/30 hover:border-primary/20 bg-background/40"
                     }`}>
                     {p.badge && (
@@ -1299,7 +1299,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                             ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black"
                             : "bg-vibrant-gradient text-primary-foreground"
                         }`}
-                        whileHover={{ scale: 1.03, boxShadow: pkg.id === "empire" ? "0 15px 50px hsla(35,45%,50%,0.3)" : "0 15px 50px hsla(265,70%,60%,0.25)" }}
+                        whileHover={{ scale: 1.03, boxShadow: pkg.id === "empire" ? "0 15px 50px hsla(35,45%,50%,0.3)" : "0 15px 50px hsla(38,50%,55%,0.2)" }}
                         whileTap={{ scale: 0.97 }}>
                         <motion.div className="absolute inset-0 pointer-events-none"
                           style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)" }}
@@ -1706,7 +1706,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                   <motion.button
                     onClick={() => setShowFeatureRequest(true)}
                     className="px-6 py-3 rounded-full bg-vibrant-gradient text-primary-foreground text-xs font-heading font-bold tracking-wider uppercase"
-                    whileHover={{ scale: 1.03, boxShadow: "0 10px 40px hsla(265,70%,60%,0.2)" }}
+                    whileHover={{ scale: 1.03, boxShadow: "0 10px 40px hsla(38,50%,55%,0.2)" }}
                     whileTap={{ scale: 0.97 }}>
                     <span className="flex items-center gap-2">
                       <Mail className="w-3.5 h-3.5" /> Richiedi Funzionalità Personalizzata
@@ -1848,7 +1848,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     onClick={() => { setSelectedPlan(p.id); if (p.includedAgents > 0) setShowAddons(true); }}
                     className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                       isSelected
-                        ? "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(265,70%,60%,0.1)]"
+                        ? "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(38,50%,55%,0.1)]"
                         : "border border-border/30 hover:border-primary/20 bg-background/40"
                     }`}>
                     {p.badge && (
@@ -1974,7 +1974,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                   <div className="flex flex-col gap-2 sm:items-end">
                     <motion.button onClick={() => navigate("/admin")}
                       className="px-8 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap"
-                      whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
+                      whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(38,50%,55%,0.2)" }}
                       whileTap={{ scale: 0.97 }}>
                       Attiva Ora — Prova Gratis 14gg
                     </motion.button>
@@ -2174,7 +2174,7 @@ const LandingPage = () => {
         <motion.div 
           className="absolute inset-0"
           animate={{ 
-            backgroundColor: navScrolled ? "hsla(265,20%,4%,0.88)" : "hsla(265,20%,4%,0)",
+            backgroundColor: navScrolled ? "hsla(230,12%,6%,0.92)" : "hsla(230,12%,6%,0)",
             backdropFilter: navScrolled ? "blur(40px) saturate(1.8)" : "blur(0px) saturate(1)",
           }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -2184,7 +2184,7 @@ const LandingPage = () => {
         <motion.div 
           className="absolute top-0 left-0 right-0 h-[1.5px]"
           style={{ 
-            background: "linear-gradient(90deg, transparent 0%, hsla(265,90%,70%,0.6) 15%, hsla(300,80%,75%,0.5) 30%, hsla(200,90%,70%,0.4) 50%, hsla(35,50%,60%,0.5) 70%, hsla(265,90%,70%,0.6) 85%, transparent 100%)",
+            background: "linear-gradient(90deg, transparent 0%, hsla(38,50%,55%,0.5) 15%, hsla(35,45%,60%,0.4) 30%, hsla(40,40%,58%,0.3) 50%, hsla(35,50%,60%,0.4) 70%, hsla(38,50%,55%,0.5) 85%, transparent 100%)",
             backgroundSize: "300% 100%",
           }}
           animate={{ 
@@ -2203,7 +2203,7 @@ const LandingPage = () => {
           animate={{ opacity: navScrolled ? 1 : 0 }}
           transition={{ duration: 0.6 }}
           style={{ 
-            background: "linear-gradient(90deg, transparent 2%, hsla(265,85%,65%,0.5) 25%, hsla(35,60%,55%,0.35) 50%, hsla(265,85%,65%,0.5) 75%, transparent 98%)",
+            background: "linear-gradient(90deg, transparent 2%, hsla(38,50%,55%,0.35) 25%, hsla(35,45%,55%,0.25) 50%, hsla(38,50%,55%,0.35) 75%, transparent 98%)",
           }}
         />
         {/* Second faint glow line below */}
@@ -2212,7 +2212,7 @@ const LandingPage = () => {
           animate={{ opacity: navScrolled ? 0.4 : 0 }}
           transition={{ duration: 0.6 }}
           style={{ 
-            background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.15) 30%, hsla(35,50%,55%,0.1) 50%, hsla(265,70%,60%,0.15) 70%, transparent 95%)",
+            background: "linear-gradient(90deg, transparent 5%, hsla(38,45%,55%,0.12) 30%, hsla(35,50%,55%,0.08) 50%, hsla(38,45%,55%,0.12) 70%, transparent 95%)",
             filter: "blur(2px)",
           }}
         />
@@ -2222,8 +2222,8 @@ const LandingPage = () => {
           <motion.div
             className="absolute bottom-0 left-0 h-[2px] w-32 pointer-events-none rounded-full"
             style={{ 
-              background: "linear-gradient(90deg, transparent, hsla(35,50%,60%,0.6), hsla(265,90%,75%,0.9), hsla(300,60%,70%,0.6), transparent)",
-              boxShadow: "0 0 16px hsla(265,90%,75%,0.5), 0 0 30px hsla(265,90%,75%,0.15)",
+              background: "linear-gradient(90deg, transparent, hsla(35,50%,60%,0.6), hsla(38,55%,58%,0.9), hsla(40,50%,55%,0.6), transparent)",
+              boxShadow: "0 0 16px hsla(38,55%,58%,0.5), 0 0 30px hsla(38,55%,58%,0.15)",
             }}
             animate={{ x: ["-15vw", "115vw"] }}
             transition={{ duration: 4.5, repeat: Infinity, ease: "linear", repeatDelay: 0.8 }}
@@ -2236,8 +2236,8 @@ const LandingPage = () => {
             {/* Top-left corner */}
             <motion.div className="absolute top-0 left-0 w-5 h-5 pointer-events-none"
               initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} transition={{ duration: 0.8 }}>
-              <div className="absolute top-0 left-0 w-full h-[1.5px]" style={{ background: "linear-gradient(90deg, hsla(265,80%,70%,0.8), transparent)" }} />
-              <div className="absolute top-0 left-0 w-[1.5px] h-full" style={{ background: "linear-gradient(180deg, hsla(265,80%,70%,0.8), transparent)" }} />
+              <div className="absolute top-0 left-0 w-full h-[1.5px]" style={{ background: "linear-gradient(90deg, hsla(38,50%,55%,0.6), transparent)" }} />
+              <div className="absolute top-0 left-0 w-[1.5px] h-full" style={{ background: "linear-gradient(180deg, hsla(38,50%,55%,0.6), transparent)" }} />
             </motion.div>
             {/* Top-right corner */}
             <motion.div className="absolute top-0 right-0 w-5 h-5 pointer-events-none"
@@ -2248,8 +2248,8 @@ const LandingPage = () => {
             {/* Bottom-left corner */}
             <motion.div className="absolute bottom-0 left-0 w-5 h-5 pointer-events-none"
               initial={{ opacity: 0 }} animate={{ opacity: 0.35 }} transition={{ duration: 0.8, delay: 0.2 }}>
-              <div className="absolute bottom-0 left-0 w-full h-[1.5px]" style={{ background: "linear-gradient(90deg, hsla(265,80%,70%,0.6), transparent)" }} />
-              <div className="absolute bottom-0 left-0 w-[1.5px] h-full" style={{ background: "linear-gradient(0deg, hsla(265,80%,70%,0.6), transparent)" }} />
+              <div className="absolute bottom-0 left-0 w-full h-[1.5px]" style={{ background: "linear-gradient(90deg, hsla(38,45%,55%,0.4), transparent)" }} />
+              <div className="absolute bottom-0 left-0 w-[1.5px] h-full" style={{ background: "linear-gradient(0deg, hsla(38,45%,55%,0.4), transparent)" }} />
             </motion.div>
             {/* Bottom-right corner */}
             <motion.div className="absolute bottom-0 right-0 w-5 h-5 pointer-events-none"
@@ -2264,7 +2264,7 @@ const LandingPage = () => {
         {navScrolled && (
           <>
             <motion.div className="absolute w-1 h-1 rounded-full pointer-events-none"
-              style={{ background: "hsla(265,80%,70%,0.5)", top: "50%", left: "12%" }}
+              style={{ background: "hsla(38,50%,55%,0.4)", top: "50%", left: "12%" }}
               animate={{ opacity: [0, 0.7, 0], y: [-3, 3, -3], scale: [0.8, 1.3, 0.8] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -2274,7 +2274,7 @@ const LandingPage = () => {
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
             />
             <motion.div className="absolute w-[3px] h-[3px] rounded-full pointer-events-none"
-              style={{ background: "hsla(300,60%,70%,0.3)", top: "60%", left: "55%" }}
+              style={{ background: "hsla(35,45%,55%,0.25)", top: "60%", left: "55%" }}
               animate={{ opacity: [0, 0.4, 0], x: [-2, 2, -2] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
             />
@@ -2288,7 +2288,7 @@ const LandingPage = () => {
             {navLinks.slice(0, Math.ceil(navLinks.length / 2)).map((link, i) => (
               <motion.a key={link.href} href={link.href}
                 className="relative px-5 py-2.5 text-[0.68rem] font-medium text-foreground/40 hover:text-foreground transition-all duration-500 tracking-[0.18em] uppercase group rounded-xl"
-                whileHover={{ backgroundColor: "hsla(265,70%,60%,0.08)" }}
+                whileHover={{ backgroundColor: "hsla(38,45%,55%,0.08)" }}
                 initial={{ opacity: 0, y: -16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 + 0.3, type: "spring", damping: 20 }}
@@ -2297,7 +2297,7 @@ const LandingPage = () => {
                 {/* Hover underline — animated gradient sweep */}
                 <motion.span 
                   className="absolute bottom-1 left-1/2 -translate-x-1/2 h-[2px] rounded-full origin-center"
-                  style={{ background: "linear-gradient(90deg, hsla(35,50%,55%,0.7), hsla(265,80%,65%,0.9), hsla(300,60%,70%,0.7), hsla(35,50%,55%,0.7))", backgroundSize: "200% 100%" }}
+                  style={{ background: "linear-gradient(90deg, hsla(35,50%,55%,0.7), hsla(38,55%,58%,0.9), hsla(40,50%,60%,0.7), hsla(35,50%,55%,0.7))", backgroundSize: "200% 100%" }}
                   initial={{ width: 0, opacity: 0 }}
                   whileHover={{ width: "70%", opacity: 1 }}
                   transition={{ duration: 0.35, ease: "easeOut" }}
@@ -2305,7 +2305,7 @@ const LandingPage = () => {
                 {/* Hover glow aura */}
                 <motion.div
                   className="absolute inset-0 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{ boxShadow: "inset 0 0 24px hsla(265,70%,60%,0.08), 0 0 12px hsla(265,70%,60%,0.04)" }}
+                  style={{ boxShadow: "inset 0 0 24px hsla(38,50%,55%,0.06), 0 0 12px hsla(38,50%,55%,0.03)" }}
                 />
               </motion.a>
             ))}
@@ -2316,7 +2316,7 @@ const LandingPage = () => {
             {/* Ambient halo behind logo — multi-layer */}
             <motion.div
               className="absolute -inset-10 rounded-full pointer-events-none"
-              style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.25), hsla(35,50%,55%,0.08), transparent 65%)" }}
+              style={{ background: "radial-gradient(circle, hsla(38,50%,55%,0.2), hsla(35,45%,50%,0.08), transparent 65%)" }}
               animate={{ opacity: [0, 0.6, 0], scale: [0.95, 1.1, 0.95] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -2324,15 +2324,15 @@ const LandingPage = () => {
             <motion.div
               className="relative w-11 h-11 sm:w-[52px] sm:h-[52px] rounded-2xl flex items-center justify-center overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, hsla(265,75%,58%,1), hsla(280,65%,50%,1), hsla(300,50%,45%,1))",
-                boxShadow: "0 0 35px hsla(265,70%,60%,0.5), 0 0 70px hsla(265,70%,60%,0.15), inset 0 1px 2px rgba(255,255,255,0.35)",
+                background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(34,50%,42%,1), hsla(30,45%,38%,1))",
+                boxShadow: "0 0 35px hsla(38,55%,50%,0.4), 0 0 70px hsla(38,55%,50%,0.1), inset 0 1px 2px rgba(255,255,255,0.35)",
               }}
               whileHover={{ rotate: -8, scale: 1.15 }}
               animate={{
                 boxShadow: [
-                  "0 0 25px hsla(265,70%,60%,0.35), 0 0 55px hsla(265,70%,60%,0.1), inset 0 1px 1px rgba(255,255,255,0.2)",
-                  "0 0 50px hsla(265,70%,60%,0.65), 0 0 90px hsla(265,70%,60%,0.2), inset 0 1px 2px rgba(255,255,255,0.5)",
-                  "0 0 25px hsla(265,70%,60%,0.35), 0 0 55px hsla(265,70%,60%,0.1), inset 0 1px 1px rgba(255,255,255,0.2)",
+                  "0 0 25px hsla(38,55%,50%,0.3), 0 0 55px hsla(38,55%,50%,0.08), inset 0 1px 1px rgba(255,255,255,0.2)",
+                  "0 0 50px hsla(38,55%,50%,0.5), 0 0 90px hsla(38,55%,50%,0.15), inset 0 1px 2px rgba(255,255,255,0.5)",
+                  "0 0 25px hsla(38,55%,50%,0.3), 0 0 55px hsla(38,55%,50%,0.08), inset 0 1px 1px rgba(255,255,255,0.2)",
                 ],
               }}
               transition={{ boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" } }}
@@ -2340,14 +2340,14 @@ const LandingPage = () => {
               {/* Orbital ring 1 — fast */}
               <motion.div
                 className="absolute inset-0 rounded-2xl"
-                style={{ border: "1.5px solid transparent", borderTopColor: "hsla(265,90%,80%,0.7)", borderRightColor: "hsla(35,50%,60%,0.3)" }}
+                style={{ border: "1.5px solid transparent", borderTopColor: "hsla(38,60%,65%,0.6)", borderRightColor: "hsla(35,50%,60%,0.3)" }}
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
               />
               {/* Orbital ring 2 — counter-rotating */}
               <motion.div
                 className="absolute inset-1 rounded-xl"
-                style={{ border: "1px solid transparent", borderBottomColor: "hsla(300,70%,80%,0.4)", borderLeftColor: "hsla(265,60%,70%,0.25)" }}
+                style={{ border: "1px solid transparent", borderBottomColor: "hsla(35,50%,60%,0.35)", borderLeftColor: "hsla(38,45%,55%,0.2)" }}
                 animate={{ rotate: [360, 0] }}
                 transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
               />
@@ -2384,7 +2384,7 @@ const LandingPage = () => {
               {/* Neural pulse ring — expanding */}
               <motion.div
                 className="absolute inset-0 rounded-2xl pointer-events-none"
-                style={{ border: "1.5px solid hsla(265,80%,70%,0.35)" }}
+                style={{ border: "1.5px solid hsla(38,50%,55%,0.3)" }}
                 animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
               />
@@ -2408,11 +2408,11 @@ const LandingPage = () => {
               <motion.span 
                 className="font-heading font-bold text-[0.82rem] sm:text-[1rem] tracking-[0.35em] uppercase"
                 style={{
-                  background: "linear-gradient(135deg, hsla(0,0%,100%,1) 0%, hsla(265,60%,88%,1) 40%, hsla(0,0%,100%,0.9) 70%, hsla(35,50%,75%,1) 100%)",
+                  background: "linear-gradient(135deg, hsla(0,0%,100%,1) 0%, hsla(38,40%,82%,1) 40%, hsla(0,0%,100%,0.9) 70%, hsla(35,50%,75%,1) 100%)",
                   backgroundSize: "200% 100%",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  filter: "drop-shadow(0 0 10px hsla(265,70%,60%,0.2))",
+                  filter: "drop-shadow(0 0 10px hsla(38,50%,55%,0.2))",
                 }}
                 animate={{ 
                   backgroundPosition: ["0% 0%", "200% 0%"],
@@ -2428,13 +2428,13 @@ const LandingPage = () => {
               <div className="flex items-center gap-1.5">
                 {/* Animated dot separator */}
                 <motion.div className="w-1 h-1 rounded-full" 
-                  style={{ background: "hsla(265,80%,70%,0.6)" }}
+                  style={{ background: "hsla(38,50%,55%,0.5)" }}
                   animate={{ opacity: [0.3, 0.8, 0.3], scale: [0.8, 1.2, 0.8] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 />
                 <motion.span className="text-[0.38rem] sm:text-[0.5rem] tracking-[0.5em] uppercase font-semibold"
                   style={{
-                    background: "linear-gradient(90deg, hsla(35,50%,58%,1), hsla(265,70%,70%,1), hsla(300,50%,75%,1), hsla(35,50%,58%,1))",
+                    background: "linear-gradient(90deg, hsla(35,50%,58%,1), hsla(38,55%,62%,1), hsla(40,45%,60%,1), hsla(35,50%,58%,1))",
                     backgroundSize: "300% 100%",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -2459,7 +2459,7 @@ const LandingPage = () => {
             {navLinks.slice(Math.ceil(navLinks.length / 2)).map((link, i) => (
               <motion.a key={link.href} href={link.href}
                 className="relative px-5 py-2.5 text-[0.68rem] font-medium text-foreground/40 hover:text-foreground transition-all duration-500 tracking-[0.18em] uppercase group rounded-xl"
-                whileHover={{ backgroundColor: "hsla(265,70%,60%,0.08)" }}
+                whileHover={{ backgroundColor: "hsla(38,45%,55%,0.08)" }}
                 initial={{ opacity: 0, y: -16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 + 0.5, type: "spring", damping: 20 }}
@@ -2467,14 +2467,14 @@ const LandingPage = () => {
                 <span className="relative z-10">{link.label}</span>
                 <motion.span 
                   className="absolute bottom-1 left-1/2 -translate-x-1/2 h-[2px] rounded-full origin-center"
-                  style={{ background: "linear-gradient(90deg, hsla(35,50%,55%,0.7), hsla(265,80%,65%,0.9), hsla(300,60%,70%,0.7), hsla(35,50%,55%,0.7))", backgroundSize: "200% 100%" }}
+                  style={{ background: "linear-gradient(90deg, hsla(35,50%,55%,0.7), hsla(38,55%,60%,0.9), hsla(40,50%,58%,0.7), hsla(35,50%,55%,0.7))", backgroundSize: "200% 100%" }}
                   initial={{ width: 0, opacity: 0 }}
                   whileHover={{ width: "70%", opacity: 1 }}
                   transition={{ duration: 0.35, ease: "easeOut" }}
                 />
                 <motion.div
                   className="absolute inset-0 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{ boxShadow: "inset 0 0 24px hsla(265,70%,60%,0.08), 0 0 12px hsla(265,70%,60%,0.04)" }}
+                  style={{ boxShadow: "inset 0 0 24px hsla(38,50%,55%,0.06), 0 0 12px hsla(38,50%,55%,0.03)" }}
                 />
               </motion.a>
             ))}
@@ -2484,10 +2484,10 @@ const LandingPage = () => {
               onClick={() => scrollTo("contact")}
               className="ml-5 px-8 py-3 rounded-full text-primary-foreground text-[0.65rem] font-bold font-heading tracking-[0.22em] uppercase relative overflow-hidden group"
               style={{ 
-                background: "linear-gradient(135deg, hsla(265,75%,55%,1), hsla(280,65%,48%,1), hsla(300,50%,45%,1))",
-                boxShadow: "0 4px 28px hsla(265,70%,60%,0.35), 0 0 0 1px hsla(265,80%,70%,0.2), 0 12px 40px hsla(265,70%,60%,0.1)",
+                background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(34,50%,42%,1), hsla(30,45%,38%,1))",
+                boxShadow: "0 4px 28px hsla(38,55%,50%,0.3), 0 0 0 1px hsla(38,55%,60%,0.2), 0 12px 40px hsla(38,55%,50%,0.08)",
               }}
-              whileHover={{ scale: 1.06, boxShadow: "0 8px 44px hsla(265,70%,60%,0.55), 0 0 0 1.5px hsla(265,80%,70%,0.35), 0 16px 60px hsla(265,70%,60%,0.15)" }}
+              whileHover={{ scale: 1.06, boxShadow: "0 8px 44px hsla(38,55%,50%,0.45), 0 0 0 1.5px hsla(38,55%,60%,0.3), 0 16px 60px hsla(38,55%,50%,0.12)" }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: -14 }}
               animate={{ opacity: 1, y: 0 }}
@@ -2511,7 +2511,7 @@ const LandingPage = () => {
               <motion.div
                 className="absolute -inset-[1.5px] rounded-full pointer-events-none"
                 style={{ 
-                  background: "linear-gradient(135deg, hsla(265,80%,75%,0.45), hsla(300,60%,70%,0.25), hsla(35,50%,60%,0.35), hsla(265,80%,75%,0.45))",
+                  background: "linear-gradient(135deg, hsla(38,55%,60%,0.4), hsla(35,50%,55%,0.25), hsla(40,45%,58%,0.3), hsla(38,55%,60%,0.4))",
                   backgroundSize: "300% 300%",
                 }}
                 animate={{ 
@@ -2537,12 +2537,12 @@ const LandingPage = () => {
             className="lg:hidden p-2.5 text-foreground rounded-xl transition-colors relative" 
             aria-label="Menu"
             whileTap={{ scale: 0.92 }}
-            style={{ background: mobileMenuOpen ? "hsla(265,70%,60%,0.12)" : "transparent" }}
+            style={{ background: mobileMenuOpen ? "hsla(38,45%,55%,0.1)" : "transparent" }}
           >
             {/* Glow ring on open */}
             {mobileMenuOpen && (
               <motion.div className="absolute inset-0 rounded-xl pointer-events-none"
-                style={{ boxShadow: "0 0 15px hsla(265,70%,60%,0.2), inset 0 0 10px hsla(265,70%,60%,0.05)" }}
+                style={{ boxShadow: "0 0 15px hsla(38,50%,55%,0.15), inset 0 0 10px hsla(38,50%,55%,0.04)" }}
                 animate={{ opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
@@ -2567,11 +2567,11 @@ const LandingPage = () => {
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="lg:hidden overflow-hidden relative"
-              style={{ backgroundColor: "hsla(265,20%,5%,0.96)", backdropFilter: "blur(40px) saturate(1.8)" }}>
+              style={{ backgroundColor: "hsla(230,12%,5%,0.96)", backdropFilter: "blur(40px) saturate(1.8)" }}>
               {/* Top holographic line */}
               <motion.div className="h-[1.5px] w-full" 
                 style={{ 
-                  background: "linear-gradient(90deg, transparent, hsla(265,85%,65%,0.5), hsla(35,50%,55%,0.4), hsla(300,60%,70%,0.4), hsla(265,85%,65%,0.5), transparent)",
+                  background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.4), hsla(35,50%,55%,0.35), hsla(40,45%,55%,0.3), hsla(38,50%,55%,0.4), transparent)",
                   backgroundSize: "300% 100%",
                 }}
                 animate={{ backgroundPosition: ["0% 0%", "300% 0%"] }}
@@ -2579,7 +2579,7 @@ const LandingPage = () => {
               />
               {/* HUD side lines */}
               <motion.div className="absolute left-0 top-2 bottom-2 w-[1px] pointer-events-none"
-                style={{ background: "linear-gradient(180deg, hsla(265,80%,70%,0.4), transparent 30%, transparent 70%, hsla(265,80%,70%,0.3))" }}
+                style={{ background: "linear-gradient(180deg, hsla(38,50%,55%,0.3), transparent 30%, transparent 70%, hsla(38,50%,55%,0.2))" }}
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
               />
               <motion.div className="absolute right-0 top-2 bottom-2 w-[1px] pointer-events-none"
@@ -2597,7 +2597,7 @@ const LandingPage = () => {
                     {/* Active indicator — glowing dot */}
                     <motion.div
                       className="absolute left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100"
-                      style={{ background: "hsla(265,80%,65%,0.8)", boxShadow: "0 0 8px hsla(265,80%,65%,0.5)" }}
+                      style={{ background: "hsla(38,55%,55%,0.8)", boxShadow: "0 0 8px hsla(38,55%,55%,0.5)" }}
                       transition={{ duration: 0.3 }}
                     />
                   </motion.a>
@@ -2608,8 +2608,8 @@ const LandingPage = () => {
                   transition={{ delay: 0.35, type: "spring", damping: 18 }}
                   className="mt-4 w-full py-3.5 rounded-xl text-primary-foreground text-xs font-bold tracking-[0.2em] uppercase font-heading relative overflow-hidden"
                   style={{ 
-                    background: "linear-gradient(135deg, hsla(265,70%,55%,1), hsla(280,60%,50%,1), hsla(300,50%,45%,1))",
-                    boxShadow: "0 4px 24px hsla(265,70%,60%,0.3), 0 0 0 1px hsla(265,80%,70%,0.15)",
+                    background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(34,50%,42%,1), hsla(30,45%,38%,1))",
+                    boxShadow: "0 4px 24px hsla(38,55%,50%,0.3), 0 0 0 1px hsla(38,55%,60%,0.15)",
                   }}>
                   <motion.div className="absolute inset-0 pointer-events-none"
                     style={{ background: "linear-gradient(105deg, transparent 25%, rgba(255,255,255,0.3) 48%, transparent 75%)" }}
@@ -2652,13 +2652,13 @@ const LandingPage = () => {
           {/* Cinematic vignette overlays */}
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsl(var(--background)) 100%)" }} />
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 15%, transparent 85%, hsl(var(--background)) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(265,60%,20%,0.5) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
         </div>
 
         {/* ═══ LAYER 1: Central glow orb ═══ */}
         <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
           <motion.div className="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] rounded-full blur-[180px]"
-            style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.08), hsla(35,45%,50%,0.03), transparent 70%)" }}
+            style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.06), hsla(35,45%,50%,0.03), transparent 70%)" }}
             animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -2700,7 +2700,7 @@ const LandingPage = () => {
               {/* Ambient glow */}
               <motion.div
                 className="absolute inset-[-40%] rounded-full blur-[90px] pointer-events-none"
-                style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.3), hsla(38,50%,55%,0.12), transparent 70%)" }}
+                style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), hsla(35,50%,55%,0.1), transparent 70%)" }}
                 animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -2714,8 +2714,8 @@ const LandingPage = () => {
               >
                 <defs>
                   <linearGradient id="agent-dna-strand1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="hsla(265,80%,65%,0.7)" />
-                    <stop offset="100%" stopColor="hsla(265,60%,50%,0.1)" />
+                    <stop offset="0%" stopColor="hsla(38,55%,58%,0.7)" />
+                    <stop offset="100%" stopColor="hsla(38,45%,45%,0.1)" />
                   </linearGradient>
                   <linearGradient id="agent-dna-strand2" x1="100%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" stopColor="hsla(38,55%,55%,0.6)" />
@@ -2739,19 +2739,19 @@ const LandingPage = () => {
                   return (
                     <g key={`helix-${i}`}>
                       <circle cx={x1} cy={y1} r={isPrimary ? 2.5 : 1.5}
-                        fill={isPrimary ? "hsla(265,80%,65%,0.7)" : "hsla(38,55%,55%,0.5)"}
+                        fill={isPrimary ? "hsla(38,55%,58%,0.7)" : "hsla(35,50%,55%,0.5)"}
                         filter="url(#agent-glow)">
                         <animate attributeName="r" values={`${isPrimary ? 2.5 : 1.5};${isPrimary ? 4 : 2.5};${isPrimary ? 2.5 : 1.5}`} dur={`${2 + (i % 5) * 0.4}s`} repeatCount="indefinite" />
                       </circle>
                       <circle cx={x2} cy={y2} r={isPrimary ? 1.5 : 2.5}
-                        fill={isPrimary ? "hsla(38,55%,55%,0.5)" : "hsla(265,80%,65%,0.7)"}
+                        fill={isPrimary ? "hsla(35,50%,55%,0.5)" : "hsla(38,55%,58%,0.7)"}
                         filter="url(#agent-glow)">
                         <animate attributeName="r" values={`${isPrimary ? 1.5 : 2.5};${isPrimary ? 2.5 : 4};${isPrimary ? 1.5 : 2.5}`} dur={`${2.5 + (i % 4) * 0.3}s`} repeatCount="indefinite" />
                       </circle>
                       {/* Base pair bridges */}
                       {i % 3 === 0 && (
                         <line x1={x1} y1={y1} x2={x2} y2={y2}
-                          stroke="hsla(265,60%,60%,0.15)" strokeWidth="0.8" strokeDasharray="2 2">
+                          stroke="hsla(38,45%,55%,0.15)" strokeWidth="0.8" strokeDasharray="2 2">
                           <animate attributeName="opacity" values="0.08;0.25;0.08" dur={`${3 + (i % 4)}s`} repeatCount="indefinite" />
                         </line>
                       )}
@@ -2768,7 +2768,7 @@ const LandingPage = () => {
                   return (
                     <path key={`neural-${i}`}
                       d={`M ${outerX} ${outerY} Q ${cpX} ${cpY} 150 150`}
-                      fill="none" stroke="hsla(265,60%,60%,0.08)" strokeWidth="0.6">
+                      fill="none" stroke="hsla(38,45%,55%,0.08)" strokeWidth="0.6">
                       <animate attributeName="stroke-opacity" values="0.04;0.15;0.04" dur={`${4 + i * 0.5}s`} repeatCount="indefinite" />
                     </path>
                   );
@@ -2779,7 +2779,7 @@ const LandingPage = () => {
                   const r = 105;
                   return (
                     <circle key={`pulse-${i}`} r="2"
-                      fill={i % 2 === 0 ? "hsla(265,90%,75%,0.9)" : "hsla(38,60%,65%,0.9)"}
+                      fill={i % 2 === 0 ? "hsla(38,60%,60%,0.9)" : "hsla(35,55%,55%,0.9)"}
                       filter="url(#agent-glow)">
                       <animateMotion dur={`${6 + i * 2}s`} repeatCount="indefinite" begin={`${i * 1.5}s`}>
                         <mpath xlinkHref={`#orbit-path-${i}`} />
