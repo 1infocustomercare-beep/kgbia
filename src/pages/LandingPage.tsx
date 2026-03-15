@@ -267,7 +267,7 @@ const NeuralCellsBackground = () => {
             key={`node${cell.id}`}
             cx={cell.x} cy={cell.y}
             r={isMobile ? "0.35" : "0.25"}
-            fill="hsla(265,80%,70%,0.4)"
+            fill="hsla(38,45%,55%,0.35)"
             animate={{
               r: [isMobile ? 0.2 : 0.15, isMobile ? 0.5 : 0.4, isMobile ? 0.2 : 0.15],
               opacity: [0.25, 0.6, 0.25],
