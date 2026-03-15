@@ -471,13 +471,13 @@
   }
 
   .glow-card:hover::after {
-    background: linear-gradient(90deg, transparent 5%, hsla(280, 45%, 70%, 0.5) 50%, transparent 95%);
+    background: linear-gradient(90deg, transparent 5%, hsla(38, 50%, 60%, 0.4) 50%, transparent 95%);
   }
 
   .glow-card:hover {
-    border-color: hsla(265, 70%, 65%, 0.2);
+    border-color: hsla(38, 50%, 55%, 0.2);
     transform: translateY(-4px);
-    box-shadow: 0 25px 80px hsla(0, 0%, 0%, 0.4), 0 0 60px hsla(265, 70%, 60%, 0.12), inset 0 1px 0 hsla(280, 50%, 75%, 0.06);
+    box-shadow: 0 25px 80px hsla(0, 0%, 0%, 0.4), 0 0 60px hsla(38, 50%, 55%, 0.1), inset 0 1px 0 hsla(35, 45%, 65%, 0.06);
   }
 
   /* ═══ SPOTLIGHT ═══ */
