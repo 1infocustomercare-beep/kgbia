@@ -6,7 +6,7 @@ import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
 import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
-import { wasSplashNarrationStarted, isSplashNarrationDone, isSplashNarrationSpeaking } from "@/lib/splash-narration";
+// Splash narration integration removed — agent starts only on user interaction
 
 type Msg = { role: "user" | "assistant"; content: string };
 type VoiceMode = "legacy" | "elevenlabs";
@@ -16,16 +16,16 @@ const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
 
 // ── Section narration scripts ──
 const SECTION_SCRIPTS: Record<string, string> = {
-  hero: "Benvenuto in Empire — il sistema operativo che trasforma qualsiasi attività in un business digitale di nuova generazione. Pronto a scoprire come?",
-  industries: "Venticinque settori, un'unica piattaforma. Dal ristorante al medico, dall'NCC al beauty — ogni modulo è costruito su misura per il tuo business.",
-  services: "Menu digitale, CRM, prenotazioni, fatturazione, marketing automation, agenti IA — tutto incluso, tutto integrato. Zero complessità.",
-  process: "Tre step per partire: scegli il tuo settore, personalizza la tua app, e sei online. Il nostro team ti configura tutto in ventiquattr'ore.",
-  app: "Guarda la tua app in azione — dashboard in tempo reale, gestione completa, analytics IA. Tutto dal tuo smartphone.",
-  calculator: "Fai due conti: con Empire risparmi fino a quindicimila euro l'anno rispetto alle piattaforme tradizionali. Il ROI è immediato.",
-  testimonials: "Non devi crederci sulla parola — ascolta chi ha già scelto Empire e ha trasformato il proprio business.",
-  pricing: "Un investimento chiaro, scalabile e sostenibile: Empire cresce con te e aumenta il valore della tua azienda mese dopo mese.",
-  partner: "Vuoi guadagnare vendendo Empire? Novecentonovantasette euro per ogni vendita chiusa, bonus fino a millecinquecento al mese. Zero rischio, zero investimento.",
-  contact: "Se vuoi, ora possiamo passare all'azione: ti mostro la demo del tuo settore e costruiamo subito la tua versione personalizzata.",
+  hero: "Ciao! Sono Arianna, la tua consulente digitale Empire. Hai tra le mani il sistema operativo più avanzato d'Italia per far crescere il tuo business. In pochi minuti ti mostro come Empire può aumentare i tuoi ricavi del trenta per cento e tagliare i costi operativi — senza cambiare nulla di quello che fai oggi. Vuoi scoprire come funziona per il tuo settore?",
+  industries: "Empire copre venticinque settori — ristorazione, hotel, beauty, NCC, healthcare, edilizia e molti altri. Ogni modulo è costruito su misura con funzionalità specifiche per il tuo mercato. Non è un software generico: è come avere un team tech dedicato, a una frazione del costo.",
+  services: "Menu digitale con QR, CRM clienti, prenotazioni automatiche, fatturazione elettronica, marketing automation, agenti IA che lavorano per te ventiquattr'ore su ventiquattro — tutto in un'unica piattaforma. Zero integrazioni esterne, zero mal di testa tecnici.",
+  process: "Tre passi e sei operativo: scegli il settore, personalizza la tua app, e vai online. Il nostro team configura tutto in ventiquattr'ore. Nessuna competenza tecnica richiesta — ci pensiamo noi a tutto.",
+  app: "Guarda la tua app in azione: dashboard in tempo reale, gestione completa degli ordini, analytics predittivi con intelligenza artificiale. Tutto dal tuo smartphone, ovunque ti trovi. I tuoi competitor ancora usano carta e penna.",
+  calculator: "I numeri parlano chiaro: con Empire risparmi fino a quindicimila euro l'anno rispetto alle soluzioni tradizionali. Il ritorno sull'investimento è già dal primo mese. Vuoi che faccia un calcolo personalizzato per la tua attività?",
+  testimonials: "Non devi credermi sulla parola — i risultati parlano da soli. Centinaia di imprenditori hanno già scelto Empire e hanno aumentato fatturato e clienti in meno di novanta giorni.",
+  pricing: "Un investimento chiaro, prevedibile e scalabile: Empire cresce con te. Niente sorprese, niente costi nascosti. Ogni euro investito genera valore misurabile per la tua azienda.",
+  partner: "Vuoi guadagnare vendendo Empire? Commissioni fino a novecentonovantasette euro per ogni vendita chiusa, bonus ricorrenti fino a millecinquecento al mese. Zero rischio, zero investimento iniziale. Il programma partner più vantaggioso del settore.",
+  contact: "Perfetto — se vuoi possiamo passare all'azione adesso. Ti preparo una demo personalizzata per il tuo settore e in dieci minuti vedi Empire in funzione con i tuoi dati. Cosa ne dici?",
 };
 
 const SECTION_ORDER = ["hero", "industries", "services", "process", "app", "calculator", "testimonials", "pricing", "partner", "contact"];
@@ -686,38 +686,7 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    const splashStarted = wasSplashNarrationStarted();
-    const splashDone = isSplashNarrationDone();
-    const splashSpeaking = isSplashNarrationSpeaking();
-
-    // If splash narration completed successfully, skip hero
-    if (splashStarted && splashDone) {
-      narratedRef.current.add("hero");
-      setNarratedSections(new Set(narratedRef.current));
-      if (!messagesRef.current.some((m) => m.content === SECTION_SCRIPTS.hero)) {
-        setMessages((prev) => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
-      }
-      return;
-    }
-
-    // If splash is still speaking, wait for it to finish then mark hero as done
-    if (splashSpeaking) {
-      const checkInterval = window.setInterval(() => {
-        if (isSplashNarrationDone()) {
-          window.clearInterval(checkInterval);
-          narratedRef.current.add("hero");
-          setNarratedSections(new Set(narratedRef.current));
-          if (!messagesRef.current.some((m) => m.content === SECTION_SCRIPTS.hero)) {
-            setMessages((prev) => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
-          }
-        }
-      }, 500);
-      // Safety: clear after 30s
-      window.setTimeout(() => window.clearInterval(checkInterval), 30000);
-      return;
-    }
-
-    // Splash didn't start or failed: queue hero narration
+    // Always queue hero narration fresh — no splash dependency
     enqueueSectionNarration("hero", true);
   }, [enqueueSectionNarration]);
 
@@ -771,85 +740,17 @@ const EmpireVoiceAgent: React.FC = () => {
     enqueueSectionNarration(currentSection);
   }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
-  // ── Instant visibility (300ms) ──
+  // ── Visibility — show button after 1.5s, but do NOT auto-start narration ──
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 300);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Auto-start on every device (including mobile during splash) ──
-  useEffect(() => {
-    if (!isVisible) return;
-    startIntroNarration();
-  }, [isVisible, startIntroNarration]);
+  // No auto-start — narration only begins when user opens the panel
 
-  // ── Unlock audio on first user gesture (critical for mobile browsers) ──
-  useEffect(() => {
-    if (!isVisible) return;
-
-    let unlocked = false;
-
-    const unlockAndSpeak = () => {
-      if (unlocked) return;
-      unlocked = true;
-
-      userInteractedRef.current = true;
-      setUserInteracted(true);
-      setMobilePromptShown(false);
-
-      // Unlock speechSynthesis with a silent utterance inside the gesture callback
-      if (window.speechSynthesis) {
-        const silentUtterance = new SpeechSynthesisUtterance("");
-        silentUtterance.volume = 0;
-        silentUtterance.lang = "it-IT";
-        try {
-          window.speechSynthesis.speak(silentUtterance);
-        } catch {
-          // noop
-        }
-      }
-
-      // Now queue hero narration — speechSynthesis is unlocked
-      window.setTimeout(() => {
-        if (!voiceEnabledRef.current) return;
-        if (narratedRef.current.has("hero")) return;
-        startIntroNarration();
-        enqueueSectionNarration("hero", true);
-      }, 150);
-
-      // Clean up listeners
-      window.removeEventListener("pointerdown", unlockAndSpeak);
-      window.removeEventListener("touchstart", unlockAndSpeak);
-      window.removeEventListener("click", unlockAndSpeak);
-    };
-
-    // On desktop, also listen but don't block — narration already started
-    // On mobile, this is the ONLY way to unlock audio
-    window.addEventListener("pointerdown", unlockAndSpeak, { passive: true, once: false });
-    window.addEventListener("touchstart", unlockAndSpeak, { passive: true, once: false });
-    window.addEventListener("click", unlockAndSpeak, { passive: true, once: false });
-
-    // No mobile prompt — voice starts automatically
-
-    const onVisibilityChange = () => {
-      if (document.visibilityState === "visible" && userInteractedRef.current) {
-        if (!voiceEnabledRef.current) return;
-        if (narratedRef.current.has("hero")) return;
-        enqueueSectionNarration("hero", true);
-      }
-    };
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
-    return () => {
-      window.removeEventListener("pointerdown", unlockAndSpeak);
-      window.removeEventListener("touchstart", unlockAndSpeak);
-      window.removeEventListener("click", unlockAndSpeak);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-    };
-  }, [isVisible, startIntroNarration, enqueueSectionNarration]);
+  // No aggressive auto-unlock listeners — voice starts only when user opens the agent panel
 
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
@@ -961,7 +862,7 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [sendMessage, stopAll]);
 
-  // ── Toggle panel — auto-start ElevenLabs call for real phone experience ──
+  // ── Toggle panel — unlock audio on user gesture, then start narration ──
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => {
       const next = !prev;
@@ -969,28 +870,46 @@ const EmpireVoiceAgent: React.FC = () => {
         userInteractedRef.current = true;
         setUserInteracted(true);
         setMobilePromptShown(false);
-        startIntroNarration();
-        if (!narratedRef.current.has("hero")) {
-          enqueueSectionNarration("hero", true);
+
+        // Unlock speechSynthesis with a silent utterance inside the gesture context
+        if (window.speechSynthesis) {
+          try {
+            const silent = new SpeechSynthesisUtterance("");
+            silent.volume = 0;
+            silent.lang = "it-IT";
+            window.speechSynthesis.speak(silent);
+          } catch {
+            // noop
+          }
         }
+
+        // Start narration after short delay (audio context is now unlocked)
+        setTimeout(() => {
+          startIntroNarration();
+          if (!narratedRef.current.has("hero")) {
+            enqueueSectionNarration("hero", true);
+          }
+        }, 200);
+
         // Auto-start ElevenLabs conversation for instant phone call feel
         if (elevenlabsAvailable && voiceMode !== "elevenlabs") {
-          setTimeout(() => startElevenlabsConversation(), 300);
+          setTimeout(() => startElevenlabsConversation(), 500);
         }
       } else {
-        // Closing panel: end ElevenLabs call
+        // Closing panel: stop narration and end ElevenLabs call
+        stopAll();
         if (voiceMode === "elevenlabs" && conversation.status === "connected") {
           stopElevenlabsConversation();
         }
       }
       return next;
     });
-  }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status]);
+  }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status, stopAll]);
 
   // ── Render ──
   return (
     <>
-      {/* Mobile prompt removed — voice starts automatically */}
+      {/* Voice agent — starts only on user interaction */}
 
       {/* Floating Phone Button — "Chiama Arianna" */}
       <AnimatePresence>
@@ -1140,7 +1059,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     <img src={voiceAgentAvatar} alt="Assistente" className="w-8 h-8 rounded-full object-cover" />
                   </motion.div>
                   <p className="text-xs text-foreground/30 text-center max-w-[220px] leading-relaxed">
-                    Ciao! Sono Arianna, la tua assistente vocale Empire. Tocca il telefono per parlarmi come in una vera telefonata.
+                    Ciao! Sono <strong className="text-primary/60">Arianna</strong>, la tua consulente Empire. Ti spiego come far crescere il tuo business con l'IA — parla o scrivi.
                   </p>
                 </div>
               )}
