@@ -300,8 +300,12 @@ function App() {
 
   useEffect(() => {
     const startedAt = performance.now();
+    let introReleased = false;
 
     const completeIntroSafely = (reason: string) => {
+      if (introReleased) return;
+      introReleased = true;
+
       setIntroCompleted((prev) => {
         if (!prev) {
           console.warn(`[Intro] Forced completion via ${reason}`);
@@ -309,6 +313,10 @@ function App() {
         return true;
       });
     };
+
+    if (isConstrainedNetwork()) {
+      completeIntroSafely("constrained-network");
+    }
 
     const introFailsafe = window.setTimeout(() => {
       completeIntroSafely("timeout");
@@ -326,38 +334,61 @@ function App() {
 
     const onVisibilityChange = () => {
       if (document.visibilityState !== "visible") return;
-      if (performance.now() - startedAt >= INTRO_FAILSAFE_MS) {
+      if (performance.now() - startedAt >= INTRO_FAILSAFE_MS || isConstrainedNetwork()) {
         completeIntroSafely("visibility");
       }
     };
 
+    const onConnectivityChange = () => {
+      if (isConstrainedNetwork()) {
+        completeIntroSafely("connectivity");
+      }
+    };
+
+    const nav = navigator as ExtendedNavigator;
+    nav.connection?.addEventListener?.("change", onConnectivityChange);
+
     document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("offline", onConnectivityChange);
+    window.addEventListener("online", onConnectivityChange);
 
     return () => {
       window.clearTimeout(introFailsafe);
       window.cancelAnimationFrame(rafId);
+      nav.connection?.removeEventListener?.("change", onConnectivityChange);
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("offline", onConnectivityChange);
+      window.removeEventListener("online", onConnectivityChange);
     };
   }, []);
 
   // Preload critical route chunk while splash is running (especially useful on mobile/4G)
   useEffect(() => {
     const path = window.location.pathname;
+    const constrained = isConstrainedNetwork();
+    let deferredIndexPreload: number | null = null;
 
     if (path === "/" || path === "/home") {
       void preloadRoute(loadLandingPage);
-      void preloadRoute(loadIndex);
-      return;
-    }
 
-    if (path.startsWith("/r/")) {
+      if (constrained) {
+        deferredIndexPreload = window.setTimeout(() => {
+          void preloadRoute(loadIndex);
+        }, 1400);
+      } else {
+        void preloadRoute(loadIndex);
+      }
+    } else if (path.startsWith("/r/")) {
       void preloadRoute(() => import("./pages/RestaurantPage"));
-      return;
-    }
-
-    if (path.startsWith("/admin")) {
+    } else if (path.startsWith("/admin")) {
       void preloadRoute(() => import("./pages/AdminLogin"));
     }
+
+    return () => {
+      if (deferredIndexPreload !== null) {
+        window.clearTimeout(deferredIndexPreload);
+      }
+    };
   }, []);
 
   useEffect(() => {
