@@ -2511,7 +2511,7 @@ const LandingPage = () => {
               <motion.div
                 className="absolute -inset-[1.5px] rounded-full pointer-events-none"
                 style={{ 
-                  background: "linear-gradient(135deg, hsla(265,80%,75%,0.45), hsla(300,60%,70%,0.25), hsla(35,50%,60%,0.35), hsla(265,80%,75%,0.45))",
+                  background: "linear-gradient(135deg, hsla(38,55%,60%,0.4), hsla(35,50%,55%,0.25), hsla(40,45%,58%,0.3), hsla(38,55%,60%,0.4))",
                   backgroundSize: "300% 300%",
                 }}
                 animate={{ 
