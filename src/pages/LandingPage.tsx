@@ -300,7 +300,7 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
       {/* Rotating ring */}
       <motion.div
         className={`absolute -inset-0.5 ${sizeClasses}`}
-        style={{ border: "1.5px solid transparent", borderTopColor: "hsla(265,80%,70%,0.4)", borderRightColor: "hsla(300,50%,70%,0.2)" }}
+        style={{ border: "1.5px solid transparent", borderTopColor: "hsla(38,50%,55%,0.35)", borderRightColor: "hsla(32,40%,50%,0.2)" }}
         animate={{ rotate: [0, 360] }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear", delay }}
       />
