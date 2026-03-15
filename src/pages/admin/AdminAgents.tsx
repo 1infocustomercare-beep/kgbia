@@ -228,6 +228,9 @@ export default function AdminAgents() {
           </div>
         )}
 
+        {/* TENANT/ACCOUNT TAB */}
+        {mainTab === "tenant" && <TenantAgentsTab />}
+
         {/* COSTI TAB */}
         {mainTab === "costi" && <AgentCostsTab />}
       </div>
