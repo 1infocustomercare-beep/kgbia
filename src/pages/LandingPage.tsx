@@ -2832,10 +2832,12 @@ const LandingPage = () => {
                 { Icon: Workflow, color: "hsla(38,60%,55%,0.9)", glow: "hsla(38,60%,55%,0.3)" },
                 { Icon: Database, color: "hsla(265,65%,65%,0.9)", glow: "hsla(265,65%,65%,0.3)" },
                 { Icon: ScanLine, color: "hsla(38,50%,60%,0.9)", glow: "hsla(38,50%,60%,0.3)" },
-              ].map(({ Icon, color, glow }, i) => (
+              ].map(({ Icon, color, glow }, i) => {
+                const innerR = typeof window !== "undefined" && window.innerWidth < 640 ? 65 : 100;
+                return (
                 <motion.div
                   key={`inner-${i}`}
-                  className="absolute w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center pointer-events-none"
+                  className="absolute w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center pointer-events-none"
                   style={{
                     background: "hsla(260,15%,10%,0.85)",
                     border: "1px solid hsla(265,40%,50%,0.2)",
@@ -2846,30 +2848,30 @@ const LandingPage = () => {
                   }}
                   animate={{
                     x: [
-                      Math.cos((i * Math.PI) / 3) * 100,
-                      Math.cos((i * Math.PI) / 3 + Math.PI / 3) * 100,
-                      Math.cos((i * Math.PI) / 3 + (2 * Math.PI) / 3) * 100,
-                      Math.cos((i * Math.PI) / 3 + Math.PI) * 100,
-                      Math.cos((i * Math.PI) / 3 + (4 * Math.PI) / 3) * 100,
-                      Math.cos((i * Math.PI) / 3 + (5 * Math.PI) / 3) * 100,
-                      Math.cos((i * Math.PI) / 3) * 100,
+                      Math.cos((i * Math.PI) / 3) * innerR,
+                      Math.cos((i * Math.PI) / 3 + Math.PI / 3) * innerR,
+                      Math.cos((i * Math.PI) / 3 + (2 * Math.PI) / 3) * innerR,
+                      Math.cos((i * Math.PI) / 3 + Math.PI) * innerR,
+                      Math.cos((i * Math.PI) / 3 + (4 * Math.PI) / 3) * innerR,
+                      Math.cos((i * Math.PI) / 3 + (5 * Math.PI) / 3) * innerR,
+                      Math.cos((i * Math.PI) / 3) * innerR,
                     ],
                     y: [
-                      Math.sin((i * Math.PI) / 3) * 100,
-                      Math.sin((i * Math.PI) / 3 + Math.PI / 3) * 100,
-                      Math.sin((i * Math.PI) / 3 + (2 * Math.PI) / 3) * 100,
-                      Math.sin((i * Math.PI) / 3 + Math.PI) * 100,
-                      Math.sin((i * Math.PI) / 3 + (4 * Math.PI) / 3) * 100,
-                      Math.sin((i * Math.PI) / 3 + (5 * Math.PI) / 3) * 100,
-                      Math.sin((i * Math.PI) / 3) * 100,
+                      Math.sin((i * Math.PI) / 3) * innerR,
+                      Math.sin((i * Math.PI) / 3 + Math.PI / 3) * innerR,
+                      Math.sin((i * Math.PI) / 3 + (2 * Math.PI) / 3) * innerR,
+                      Math.sin((i * Math.PI) / 3 + Math.PI) * innerR,
+                      Math.sin((i * Math.PI) / 3 + (4 * Math.PI) / 3) * innerR,
+                      Math.sin((i * Math.PI) / 3 + (5 * Math.PI) / 3) * innerR,
+                      Math.sin((i * Math.PI) / 3) * innerR,
                     ],
                     scale: [1, 1.15, 1, 0.92, 1],
                   }}
                   transition={{ duration: 14 + i * 1.5, repeat: Infinity, ease: "linear" }}
                 >
-                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color }} />
+                  <Icon className="w-3 h-3 sm:w-4 sm:h-4" style={{ color }} />
                 </motion.div>
-              ))}
+              );})}
 
               {/* Outer DNA orbit — additional AI tech icons circulating on wider elliptical paths */}
               {[
