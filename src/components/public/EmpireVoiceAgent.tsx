@@ -688,9 +688,10 @@ const EmpireVoiceAgent: React.FC = () => {
 
     const splashStarted = wasSplashNarrationStarted();
     const splashDone = isSplashNarrationDone();
+    const splashSpeaking = isSplashNarrationSpeaking();
 
-    // Desktop: if splash voice finished correctly, avoid duplicate hero narration
-    if (splashStarted && splashDone && !isTouchDeviceRef.current) {
+    // If splash narration completed successfully, skip hero
+    if (splashStarted && splashDone) {
       narratedRef.current.add("hero");
       setNarratedSections(new Set(narratedRef.current));
       if (!messagesRef.current.some((m) => m.content === SECTION_SCRIPTS.hero)) {
@@ -699,16 +700,24 @@ const EmpireVoiceAgent: React.FC = () => {
       return;
     }
 
-    // If splash is still narrating, don't interrupt it immediately; verify shortly after
-    if (splashStarted && !splashDone) {
-      window.setTimeout(() => {
-        if (narratedRef.current.has("hero")) return;
-        enqueueSectionNarration("hero", true);
-      }, 1800);
+    // If splash is still speaking, wait for it to finish then mark hero as done
+    if (splashSpeaking) {
+      const checkInterval = window.setInterval(() => {
+        if (isSplashNarrationDone()) {
+          window.clearInterval(checkInterval);
+          narratedRef.current.add("hero");
+          setNarratedSections(new Set(narratedRef.current));
+          if (!messagesRef.current.some((m) => m.content === SECTION_SCRIPTS.hero)) {
+            setMessages((prev) => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
+          }
+        }
+      }, 500);
+      // Safety: clear after 30s
+      window.setTimeout(() => window.clearInterval(checkInterval), 30000);
       return;
     }
 
-    // Mobile or splash not completed: force hero narration now
+    // Splash didn't start or failed: queue hero narration
     enqueueSectionNarration("hero", true);
   }, [enqueueSectionNarration]);
 
