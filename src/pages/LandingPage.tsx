@@ -405,7 +405,7 @@ const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <motion.div
         className="w-2 h-2 rounded-full"
-        style={{ background: "linear-gradient(135deg, hsl(35,45%,50%), hsl(265, 70%, 60%))", boxShadow: "0 0 10px hsla(35,45%,50%,0.4), 0 0 24px hsla(265, 70%, 60%, 0.3)" }}
+        style={{ background: "linear-gradient(135deg, hsl(35,45%,50%), hsl(38,45%,52%))", boxShadow: "0 0 10px hsla(35,45%,50%,0.4), 0 0 24px hsla(38,45%,52%,0.3)" }}
         animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2, repeat: Infinity }}
       />
