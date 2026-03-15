@@ -767,15 +767,15 @@ const PartnerDashboard = () => {
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
 
       {/* Bottom Tabs */}
-      <div className="fixed bottom-0 inset-x-0 glass-strong border-t border-border/30 safe-bottom z-50">
+      <div className="fixed bottom-0 inset-x-0 border-t border-empire-violet-deep/20 safe-bottom z-50" style={{ background: 'hsla(265, 30%, 12%, 0.9)', backdropFilter: 'blur(20px)' }}>
         <div className="flex items-center justify-around px-1 py-2">
           {bottomTabs.map((tab) => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
               className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all min-h-[44px]
-                ${activeTab === tab.id ? "text-primary" : "text-muted-foreground"}`}>
+                ${activeTab === tab.id ? "text-empire-violet-glow" : "text-muted-foreground"}`}>
               {tab.icon}
               <span className="text-[9px] font-medium">{tab.label}</span>
-              {activeTab === tab.id && <motion.div layoutId="partner-tab" className="w-4 h-0.5 bg-vibrant-gradient rounded-full" />}
+              {activeTab === tab.id && <motion.div layoutId="partner-tab" className="w-4 h-0.5 rounded-full" style={{ background: 'var(--gradient-dna)' }} />}
             </button>
           ))}
         </div>
