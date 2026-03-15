@@ -1133,7 +1133,6 @@ const EmpireVoiceAgent: React.FC = () => {
                   <p className="text-xs text-foreground/30 text-center max-w-[220px] leading-relaxed">
                     Ciao! Sono Arianna, la tua assistente vocale Empire. Tocca il telefono per parlarmi come in una vera telefonata.
                   </p>
-                  </p>
                 </div>
               )}
 
