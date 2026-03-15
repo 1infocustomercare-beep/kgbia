@@ -88,6 +88,9 @@ if (typeof window !== "undefined" && window.speechSynthesis) {
 }
 
 // ── Web Speech API fallback TTS ──
+const SPEECH_START_TIMEOUT_MS = 1800;
+const SPEECH_ATTEMPT_TIMEOUT_MS = 9000;
+
 function speakWithBrowserTTS(
   text: string,
   abortRef: React.MutableRefObject<boolean>,
@@ -97,13 +100,10 @@ function speakWithBrowserTTS(
       resolve(false);
       return;
     }
-    
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
-    
+
     const utterance = new SpeechSynthesisUtterance(text);
     const voice = getBestItalianFemaleVoice();
-    
+
     if (voice) {
       utterance.voice = voice;
     }
@@ -111,16 +111,59 @@ function speakWithBrowserTTS(
     utterance.rate = 0.95;
     utterance.pitch = 1.05;
     utterance.volume = 1;
-    
-    utterance.onend = () => resolve(true);
-    utterance.onerror = () => resolve(false);
-    
-    if (abortRef.current) {
-      resolve(false);
+
+    let settled = false;
+    let started = false;
+
+    const startTimer = window.setTimeout(() => {
+      if (started) return;
+      try {
+        window.speechSynthesis.cancel();
+      } catch {
+        // noop
+      }
+      finish(false);
+    }, SPEECH_START_TIMEOUT_MS);
+
+    const hardTimer = window.setTimeout(() => {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {
+        // noop
+      }
+      finish(false);
+    }, SPEECH_ATTEMPT_TIMEOUT_MS);
+
+    const finish = (ok: boolean) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(startTimer);
+      window.clearTimeout(hardTimer);
+      utterance.onstart = null;
+      utterance.onend = null;
+      utterance.onerror = null;
+      resolve(ok);
+    };
+
+    utterance.onstart = () => {
+      started = true;
+    };
+    utterance.onend = () => finish(true);
+    utterance.onerror = () => finish(false);
+
+    if (abortRef.current || document.visibilityState !== "visible") {
+      finish(false);
       return;
     }
-    
-    window.speechSynthesis.speak(utterance);
+
+    try {
+      if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        window.speechSynthesis.cancel();
+      }
+      window.speechSynthesis.speak(utterance);
+    } catch {
+      finish(false);
+    }
   });
 }
 
@@ -539,7 +582,10 @@ const EmpireVoiceAgent: React.FC = () => {
       setIsPaused(false);
       abortRef.current = false;
 
-      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId);
+      const played = await Promise.race<boolean>([
+        speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId),
+        new Promise<boolean>((resolve) => window.setTimeout(() => resolve(false), SPEECH_ATTEMPT_TIMEOUT_MS)),
+      ]);
 
       if (played && !abortRef.current) {
         narrationAttemptsRef.current[sectionId] = 0;
@@ -582,19 +628,30 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    // Check if splash actually completed the hero narration successfully
-    if (wasSplashNarrationStarted() && isSplashNarrationDone()) {
-      // Hero was fully narrated during splash — mark it narrated
+    const splashStarted = wasSplashNarrationStarted();
+    const splashDone = isSplashNarrationDone();
+
+    // Desktop: if splash voice finished correctly, avoid duplicate hero narration
+    if (splashStarted && splashDone && !isTouchDeviceRef.current) {
       narratedRef.current.add("hero");
       setNarratedSections(new Set(narratedRef.current));
-      // Add the hero script to messages so user sees it in chat
-      if (!messagesRef.current.some(m => m.content === SECTION_SCRIPTS.hero)) {
-        setMessages(prev => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
+      if (!messagesRef.current.some((m) => m.content === SECTION_SCRIPTS.hero)) {
+        setMessages((prev) => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
       }
-    } else {
-      // Splash didn't start OR didn't complete — play hero narration now
-      enqueueSectionNarration("hero", true);
+      return;
     }
+
+    // If splash is still narrating, don't interrupt it immediately; verify shortly after
+    if (splashStarted && !splashDone) {
+      window.setTimeout(() => {
+        if (narratedRef.current.has("hero")) return;
+        enqueueSectionNarration("hero", true);
+      }, 1800);
+      return;
+    }
+
+    // Mobile or splash not completed: force hero narration now
+    enqueueSectionNarration("hero", true);
   }, [enqueueSectionNarration]);
 
   const stopAll = useCallback(() => {
