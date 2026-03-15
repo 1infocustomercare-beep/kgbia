@@ -14,6 +14,171 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_executions: {
+        Row: {
+          agent_id: string | null
+          created_at: string | null
+          duration_ms: number | null
+          execution_type: string | null
+          id: string
+          input: Json | null
+          output: Json | null
+          status: string | null
+          tenant_id: string
+        }
+        Insert: {
+          agent_id?: string | null
+          created_at?: string | null
+          duration_ms?: number | null
+          execution_type?: string | null
+          id?: string
+          input?: Json | null
+          output?: Json | null
+          status?: string | null
+          tenant_id: string
+        }
+        Update: {
+          agent_id?: string | null
+          created_at?: string | null
+          duration_ms?: number | null
+          execution_type?: string | null
+          id?: string
+          input?: Json | null
+          output?: Json | null
+          status?: string | null
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_executions_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_installations: {
+        Row: {
+          agent_id: string | null
+          config: Json | null
+          created_at: string | null
+          id: string
+          status: string | null
+          tenant_id: string
+        }
+        Insert: {
+          agent_id?: string | null
+          config?: Json | null
+          created_at?: string | null
+          id?: string
+          status?: string | null
+          tenant_id: string
+        }
+        Update: {
+          agent_id?: string | null
+          config?: Json | null
+          created_at?: string | null
+          id?: string
+          status?: string | null
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_installations_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_metrics: {
+        Row: {
+          agent_id: string | null
+          avg_duration_ms: number | null
+          executions_success: number | null
+          executions_total: number | null
+          id: string
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id?: string | null
+          avg_duration_ms?: number | null
+          executions_success?: number | null
+          executions_total?: number | null
+          id?: string
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string | null
+          avg_duration_ms?: number | null
+          executions_success?: number | null
+          executions_total?: number | null
+          id?: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_metrics_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agents: {
+        Row: {
+          capabilities: string[] | null
+          category: string
+          color_hex: string | null
+          created_at: string | null
+          description_it: string
+          icon_emoji: string | null
+          id: string
+          name: string
+          pricing: Json | null
+          sectors: string[]
+          status: string | null
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          capabilities?: string[] | null
+          category: string
+          color_hex?: string | null
+          created_at?: string | null
+          description_it: string
+          icon_emoji?: string | null
+          id?: string
+          name: string
+          pricing?: Json | null
+          sectors?: string[]
+          status?: string | null
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          capabilities?: string[] | null
+          category?: string
+          color_hex?: string | null
+          created_at?: string | null
+          description_it?: string
+          icon_emoji?: string | null
+          id?: string
+          name?: string
+          pricing?: Json | null
+          sectors?: string[]
+          status?: string | null
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       ai_agent_configs: {
         Row: {
           agent_name: string
