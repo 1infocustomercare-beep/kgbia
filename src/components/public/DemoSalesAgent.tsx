@@ -232,7 +232,8 @@ function detectVisibleSection(sections: ScrollSection[]): ScrollSection | null {
     for (const el of allSections) {
       const id = (el.id || "").toLowerCase();
       const dataSection = el.getAttribute("data-section")?.toLowerCase() || "";
-      const className = (el.className || "").toLowerCase();
+      const rawClass = el.className;
+      const className = (typeof rawClass === "string" ? rawClass : (rawClass as unknown as {baseVal?: string})?.baseVal || "").toLowerCase();
       const textContent = el.textContent?.slice(0, 200).toLowerCase() || "";
       
       for (const kw of keywords) {
