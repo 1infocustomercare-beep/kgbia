@@ -22,6 +22,7 @@ import ROICalculator from "@/components/partner/ROICalculator";
 import PartnerSalesToolkit from "@/components/partner/PartnerSalesToolkit";
 import InvestmentSummary from "@/components/partner/InvestmentSummary";
 import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
+import PartnerDemoProjects from "@/components/partner/PartnerDemoProjects";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import PartnerLeaderboard from "@/components/partner/PartnerLeaderboard";
 import AssetVault from "@/components/partner/AssetVault";
@@ -33,7 +34,7 @@ import InfoGuide from "@/components/ui/info-guide";
 import { RefreshCw, Palette, Pencil, Upload, Save, X as XIcon } from "lucide-react";
 import { AllIndustriesShowcase } from "@/components/public/IndustryPhoneShowcase";
 
-type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault" | "showcase";
+type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault" | "showcase" | "projects";
 
 const PartnerDashboard = () => {
   const navigate = useNavigate();
@@ -262,11 +263,11 @@ const PartnerDashboard = () => {
     { id: "investment", label: "Crescita", icon: <BarChart3 className="w-5 h-5" /> },
   ] : [
     { id: "dashboard", label: "Home", icon: <LayoutDashboard className="w-5 h-5" /> },
+    { id: "projects" as Tab, label: "Bozze", icon: <Briefcase className="w-5 h-5" /> },
     { id: "sandbox", label: "Demo", icon: <Play className="w-5 h-5" /> },
     { id: "showcase", label: "Settori", icon: <Smartphone className="w-5 h-5" /> },
     ...(isTeamLeader ? [{ id: "team" as Tab, label: "Team", icon: <Users className="w-5 h-5" /> }] : []),
     { id: "earnings", label: "Guadagni", icon: <DollarSign className="w-5 h-5" /> },
-    { id: "vault", label: "Asset", icon: <FolderDown className="w-5 h-5" /> },
   ];
 
   return (
@@ -568,6 +569,7 @@ const PartnerDashboard = () => {
           {activeTab === "pricing" && <PricingClosing key="pricing" onOpenROI={() => setShowROI(true)} demoMode={demoMode} />}
           {activeTab === "earnings" && !demoMode && <PartnerEarnings key="earnings" />}
           {activeTab === "vault" && !demoMode && <AssetVault key="vault" />}
+          {activeTab === "projects" && !demoMode && <PartnerDemoProjects key="projects" />}
 
           {activeTab === "showcase" && (
             <motion.div key="showcase" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">

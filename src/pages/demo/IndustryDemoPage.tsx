@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
 const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -252,10 +252,18 @@ const resolveIcon = (name: string) => ICON_MAP[name] || Star;
 export default function IndustryDemoPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [bookingSubmitted, setBookingSubmitted] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>({});
+
+  // ── Partner branding overrides from URL params ──
+  const brandOverride = searchParams.get("brand");
+  const colorOverride = searchParams.get("color");
+  const taglineOverride = searchParams.get("tagline");
+  const logoOverride = searchParams.get("logo");
+  const isPartnerBranded = !!brandOverride;
 
   // Try DB first
   const { data: company } = useQuery({
@@ -284,8 +292,8 @@ export default function IndustryDemoPage() {
   const industryConfig = INDUSTRY_CONFIGS[resolvedIndustry];
   const demoData = DEMO_INDUSTRY_DATA[resolvedIndustry];
   const theme = getTheme(resolvedIndustry);
-  const companyName = company?.name || demoData.companyName;
-  const tagline = company?.tagline || demoData.tagline;
+  const companyName = brandOverride || company?.name || demoData.companyName;
+  const tagline = taglineOverride || company?.tagline || demoData.tagline;
 
   // Categories
   const categories = useMemo(() => {
@@ -361,11 +369,12 @@ export default function IndustryDemoPage() {
   if (PremiumTemplate) {
     const demoCompany = company || {
       id: "00000000-0000-0000-0000-000000000001",
-      name: demoData.companyName,
+      name: companyName,
       slug: slug || "demo",
       industry: resolvedIndustry,
-      tagline: demoData.tagline,
-      primary_color: industryConfig.defaultPrimaryColor,
+      tagline: tagline,
+      primary_color: colorOverride || industryConfig.defaultPrimaryColor,
+      logo_url: logoOverride || null,
       address: demoData.address,
       city: demoData.city,
       phone: demoData.phone,
@@ -373,6 +382,13 @@ export default function IndustryDemoPage() {
       opening_hours: demoData.hours,
       social_links: {},
     };
+    // Apply branding overrides even when company exists in DB
+    if (isPartnerBranded) {
+      demoCompany.name = brandOverride!;
+      if (colorOverride) demoCompany.primary_color = colorOverride;
+      if (taglineOverride) demoCompany.tagline = taglineOverride;
+      if (logoOverride) demoCompany.logo_url = logoOverride;
+    }
     const accentColor = demoCompany.primary_color || industryConfig.defaultPrimaryColor;
 
     const phoneShowcaseSection = (
@@ -394,7 +410,22 @@ export default function IndustryDemoPage() {
     return (
       <>
         <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
-        <PremiumTemplate company={demoCompany} afterHero={phoneShowcaseSection} />
+        {/* Partner branding banner */}
+        {isPartnerBranded && (
+          <div className="fixed top-0 inset-x-0 z-[60] bg-black/90 backdrop-blur-xl border-b border-white/10 px-4 py-2.5 flex items-center justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              {logoOverride && <img src={logoOverride} alt="" className="w-7 h-7 rounded-lg object-cover border border-white/10" />}
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-white truncate">{brandOverride}</p>
+                <p className="text-[9px] text-white/40">Bozza demo personalizzata — Empire Platform</p>
+              </div>
+            </div>
+            <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: colorOverride || accentColor }} />
+          </div>
+        )}
+        <div style={isPartnerBranded ? { paddingTop: "52px" } : {}}>
+          <PremiumTemplate company={demoCompany} afterHero={phoneShowcaseSection} />
+        </div>
         <Suspense fallback={null}>
           <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={accentColor} />
         </Suspense>
