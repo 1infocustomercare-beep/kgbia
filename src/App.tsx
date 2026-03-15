@@ -111,12 +111,18 @@ function App() {
   const [showDNA, setShowDNA] = useState(false);
 
   useEffect(() => {
-    // Mobile: much shorter timeouts to prevent freezing
-    const splashTimeout = IS_MOBILE ? 1600 : 2500;
-    const dnaTimeout = IS_MOBILE ? 2800 : 5000;
+    // Safety timeouts — let animations play fully but prevent infinite stuck states
+    const splashTimeout = IS_MOBILE ? 2400 : 3000;
+    const dnaTimeout = IS_MOBILE ? 5500 : 6500;
 
-    const splashTimer = setTimeout(() => { setShowSplash(false); setShowDNA(true); }, splashTimeout);
-    const dnaTimer = setTimeout(() => { setShowSplash(false); setShowDNA(false); }, dnaTimeout);
+    const splashTimer = setTimeout(() => { 
+      setShowSplash(false); 
+      setShowDNA(true); 
+    }, splashTimeout);
+    const dnaTimer = setTimeout(() => { 
+      setShowSplash(false); 
+      setShowDNA(false); 
+    }, dnaTimeout);
     return () => { clearTimeout(splashTimer); clearTimeout(dnaTimer); };
   }, []);
 
