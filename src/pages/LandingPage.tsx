@@ -293,7 +293,7 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
       {/* Outer pulse ring */}
       <motion.div
         className={`absolute -inset-1.5 ${sizeClasses} pointer-events-none`}
-        style={{ border: "1px solid hsla(265,80%,70%,0.15)" }}
+        style={{ border: "1px solid hsla(38,50%,55%,0.15)" }}
         animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
         transition={{ duration: 3, repeat: Infinity, delay: delay * 0.5, ease: "easeInOut" }}
       />
