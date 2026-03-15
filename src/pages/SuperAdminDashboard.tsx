@@ -1656,6 +1656,30 @@ const SuperAdminDashboard = () => {
                     </AnimatePresence>
                   </div>
 
+                  {/* ═══ ACCORDION: Per Account ═══ */}
+                  <div className="rounded-xl border border-blue-500/15 overflow-hidden">
+                    <button
+                      onClick={() => setExpandedSection(expandedSection === "accounts" as any ? null : "accounts" as any)}
+                      className="w-full flex items-center justify-between px-3 py-2.5 bg-blue-500/[0.04] hover:bg-blue-500/[0.08] transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-3.5 h-3.5 text-blue-400" />
+                        <span className="text-xs font-display font-bold text-foreground">Per Account</span>
+                        <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-bold">Tenant</span>
+                      </div>
+                      {expandedSection === ("accounts" as any) ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
+                    </button>
+                    <AnimatePresence>
+                      {expandedSection === ("accounts" as any) && (
+                        <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
+                          <div className="p-2">
+                            <TenantIntegrationsSection />
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
                   {/* ═══ ACCORDION: Edge Functions ═══ */}
                   <div className="rounded-xl border border-border overflow-hidden">
                     <button
