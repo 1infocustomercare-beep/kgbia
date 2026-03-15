@@ -21,10 +21,46 @@ const INTRO_FAILSAFE_MS = IS_MOBILE ? 15000 : 12000;
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
 
+const isRetryableImportError = (error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error);
+  return /Failed to fetch dynamically imported module|Importing a module script failed|Load failed/i.test(message);
+};
+
+const delay = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
+const importWithRetry = async <T,>(
+  importer: () => Promise<T>,
+  maxAttempts = IS_MOBILE ? 4 : 3,
+): Promise<T> => {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      return await importer();
+    } catch (error) {
+      lastError = error;
+      if (!isRetryableImportError(error) || attempt === maxAttempts) {
+        throw error;
+      }
+      await delay(350 * attempt);
+    }
+  }
+
+  throw lastError;
+};
+
+const preloadRoute = async (importer: () => Promise<unknown>) => {
+  try {
+    await importWithRetry(importer);
+  } catch (error) {
+    console.warn("Route preload failed (will retry on navigation):", error);
+  }
+};
+
 // Lazy-loaded pages for code splitting
-const Index = lazy(loadIndex);
-const LandingPage = lazy(loadLandingPage);
-const RestaurantPage = lazy(() => import("./pages/RestaurantPage"));
+const Index = lazy(() => importWithRetry(loadIndex));
+const LandingPage = lazy(() => importWithRetry(loadLandingPage));
+const RestaurantPage = lazy(() => importWithRetry(() => import("./pages/RestaurantPage")));
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
