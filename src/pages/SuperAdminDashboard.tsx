@@ -447,18 +447,21 @@ const SuperAdminDashboard = () => {
     <div className="min-h-screen bg-background">
       <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
-      <div className="relative overflow-hidden border-b-2 border-primary/40 bg-gradient-to-br from-primary/10 via-background to-primary/5">
-        {/* HUD grid */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
+      <div className="relative overflow-hidden border-b border-empire-violet-deep/30 bg-gradient-to-br from-empire-violet-surface via-background to-empire-violet/5">
+        {/* HUD grid — DNA violet */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `linear-gradient(hsl(var(--empire-violet)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--empire-violet)) 1px, transparent 1px)`,
           backgroundSize: '20px 20px'
         }} />
-        {/* Top scan line */}
+        {/* Top scan line — violet */}
         <motion.div
-          className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/60 to-transparent"
+          className="absolute top-0 left-0 w-full h-[2px]"
+          style={{ background: 'var(--gradient-dna)' }}
           animate={{ opacity: [0.3, 0.8, 0.3] }}
           transition={{ duration: 3, repeat: Infinity }}
         />
+        {/* Bottom DNA glow */}
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-empire-violet/40 to-transparent" />
 
         <div className="flex items-center justify-between px-4 pt-4 pb-3 relative z-10">
           <div className="flex items-center gap-3">
@@ -470,14 +473,14 @@ const SuperAdminDashboard = () => {
             >
               {/* Outer orbital ring 1 */}
               <motion.div
-                className="absolute -inset-1 rounded-full border border-primary/20"
+               className="absolute -inset-1 rounded-full border border-empire-violet/30"
                 animate={{ rotateZ: 360 }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                 style={{ transformStyle: 'preserve-3d', transform: 'rotateX(70deg)' }}
               />
               {/* Outer orbital ring 2 - counter */}
               <motion.div
-                className="absolute -inset-2 rounded-full border border-primary/10"
+               className="absolute -inset-2 rounded-full border border-empire-violet/15"
                 animate={{ rotateZ: -360 }}
                 transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
                 style={{ transformStyle: 'preserve-3d', transform: 'rotateX(55deg) rotateY(20deg)' }}
@@ -487,7 +490,7 @@ const SuperAdminDashboard = () => {
               {[...Array(6)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-1.5 h-1.5 rounded-full bg-primary/60"
+                  className="absolute w-1.5 h-1.5 rounded-full bg-empire-violet/70"
                   style={{
                     left: '50%', top: '50%',
                     marginLeft: -3, marginTop: -3,
@@ -509,7 +512,7 @@ const SuperAdminDashboard = () => {
 
               {/* Core glow behind mascot */}
               <motion.div
-                className="absolute inset-2 rounded-full bg-gradient-to-br from-primary/25 via-primary/10 to-accent/15 blur-sm"
+               className="absolute inset-2 rounded-full bg-gradient-to-br from-empire-violet/25 via-empire-violet-deep/15 to-primary/15 blur-sm"
                 animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -517,7 +520,7 @@ const SuperAdminDashboard = () => {
               {/* Scanning conic beam */}
               <motion.div
                 className="absolute inset-1 rounded-full"
-                style={{ background: 'conic-gradient(from 0deg, transparent 0%, hsl(var(--primary) / 0.15) 8%, transparent 16%)' }}
+               style={{ background: 'conic-gradient(from 0deg, transparent 0%, hsl(var(--empire-violet) / 0.15) 8%, transparent 16%)' }}
                 animate={{ rotate: 360 }}
                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
               />
@@ -526,7 +529,7 @@ const SuperAdminDashboard = () => {
               <motion.img
                 src={empireAgentMascot}
                 alt="Empire Agent"
-                className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-contain drop-shadow-[0_0_12px_hsl(var(--primary)/0.5)] z-10"
+               className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-contain drop-shadow-[0_0_12px_hsl(265_85%_65%/0.5)] z-10"
                 animate={{ scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -550,11 +553,11 @@ const SuperAdminDashboard = () => {
               </motion.h1>
               <div className="flex items-center gap-1.5">
                 <motion.div
-                  className="w-1.5 h-1.5 rounded-full bg-primary"
+                 className="w-1.5 h-1.5 rounded-full bg-empire-violet"
                   animate={{ opacity: [0.4, 1, 0.4] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
-                <p className="text-[10px] text-primary/70 font-medium tracking-wider uppercase">👑 Super Admin</p>
+                <p className="text-[10px] text-empire-violet-glow/70 font-medium tracking-wider uppercase">👑 Super Admin</p>
               </div>
             </div>
           </div>
@@ -570,7 +573,7 @@ const SuperAdminDashboard = () => {
           <button key={tab.id}
             onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : setActiveTab(tab.id)}
             className={`flex flex-col items-center justify-center gap-0.5 px-1.5 py-2 rounded-xl text-[0.6rem] font-medium whitespace-nowrap transition-colors min-h-[44px] ${
-              activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground"
+              activeTab === tab.id ? "bg-empire-violet text-white shadow-[0_0_16px_hsl(265_85%_65%/0.3)]" : "bg-empire-violet-surface/50 text-muted-foreground hover:bg-empire-violet-surface"
             }`}>
             <span className="[&_svg]:w-3.5 [&_svg]:h-3.5">{tab.icon}</span>
             <span className="leading-tight">{tab.label}</span>
@@ -582,7 +585,7 @@ const SuperAdminDashboard = () => {
       <div className="px-4 pb-8">
         {loading && (
           <div className="flex items-center justify-center py-20">
-            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-empire-violet border-t-transparent rounded-full animate-spin" />
           </div>
         )}
 

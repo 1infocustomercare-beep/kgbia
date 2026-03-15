@@ -68,6 +68,13 @@ export default {
           muted: "hsl(var(--gold-muted))",
         },
         "deep-black": "hsl(var(--deep-black))",
+        empire: {
+          violet: "hsl(var(--empire-violet))",
+          "violet-deep": "hsl(var(--empire-violet-deep))",
+          "violet-glow": "hsl(var(--empire-violet-glow))",
+          "violet-muted": "hsl(var(--empire-violet-muted))",
+          "violet-surface": "hsl(var(--empire-violet-surface))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

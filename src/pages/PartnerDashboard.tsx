@@ -274,16 +274,18 @@ const PartnerDashboard = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header — Vibrant FLAVR style */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/30 glass-strong safe-top">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-vibrant-gradient flex items-center justify-center vibrant-glow">
-            <Crown className="w-5 h-5 text-primary-foreground" />
+      <div className="relative flex items-center justify-between px-4 pt-3 pb-2 border-b border-empire-violet-deep/20 safe-top overflow-hidden" style={{ background: 'var(--gradient-dna-subtle)' }}>
+        {/* DNA scan line */}
+        <motion.div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: 'var(--gradient-dna)' }} animate={{ opacity: [0.2, 0.6, 0.2] }} transition={{ duration: 3, repeat: Infinity }} />
+        <div className="flex items-center gap-2.5 relative z-10">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-empire-violet to-empire-violet-deep flex items-center justify-center shadow-[var(--shadow-dna)]">
+            <Crown className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-sm font-heading font-bold text-foreground">
+            <h1 className="text-sm font-display font-bold text-foreground">
               {demoMode ? "Empire Solutions" : isTeamLeader ? "Empire Team Leader" : "Empire Partner"}
             </h1>
-            <p className="text-[10px] text-primary">
+            <p className="text-[10px] text-empire-violet-glow">
               {demoMode ? "Enterprise Preview" : isTeamLeader ? `👑 Team Leader · ${teamMembers.length} membri` : bottomTabs.find(t => t.id === activeTab)?.label}
             </p>
           </div>
@@ -765,15 +767,15 @@ const PartnerDashboard = () => {
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
 
       {/* Bottom Tabs */}
-      <div className="fixed bottom-0 inset-x-0 glass-strong border-t border-border/30 safe-bottom z-50">
+      <div className="fixed bottom-0 inset-x-0 border-t border-empire-violet-deep/20 safe-bottom z-50" style={{ background: 'hsla(265, 30%, 12%, 0.9)', backdropFilter: 'blur(20px)' }}>
         <div className="flex items-center justify-around px-1 py-2">
           {bottomTabs.map((tab) => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
               className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all min-h-[44px]
-                ${activeTab === tab.id ? "text-primary" : "text-muted-foreground"}`}>
+                ${activeTab === tab.id ? "text-empire-violet-glow" : "text-muted-foreground"}`}>
               {tab.icon}
               <span className="text-[9px] font-medium">{tab.label}</span>
-              {activeTab === tab.id && <motion.div layoutId="partner-tab" className="w-4 h-0.5 bg-vibrant-gradient rounded-full" />}
+              {activeTab === tab.id && <motion.div layoutId="partner-tab" className="w-4 h-0.5 rounded-full" style={{ background: 'var(--gradient-dna)' }} />}
             </button>
           ))}
         </div>
