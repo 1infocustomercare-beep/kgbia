@@ -16,7 +16,8 @@ export function HeroVideoBackground({
   poster,
   className = "absolute inset-0 w-full h-full object-cover",
   style,
-  accentColor = "rgba(255,255,255,0.15)",
+  overlay = true,
+  accentColor = "hsl(var(--primary) / 0.22)",
 }: HeroVideoBackgroundProps) {
   const [useFallback, setUseFallback] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
@@ -29,10 +30,10 @@ export function HeroVideoBackground({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    
+
     setIsLoaded(false);
     retryCount.current = 0;
-    
+
     const attemptPlay = () => {
       video.load();
       const playPromise = video.play();
@@ -59,16 +60,6 @@ export function HeroVideoBackground({
 
     return () => clearTimeout(timeout);
   }, [activeSrc]);
-
-  // Generate random particles
-  const particles = Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: 1 + Math.random() * 3,
-    duration: 4 + Math.random() * 8,
-    delay: Math.random() * 5,
-  }));
 
   return (
     <>
