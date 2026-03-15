@@ -830,13 +830,13 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       isEmpire
                         ? "border-2 border-accent/40 shadow-[0_0_50px_hsla(35,45%,50%,0.15)]"
                         : isSelected
-                          ? "border-2 border-primary/40 shadow-[0_0_30px_hsla(265,70%,60%,0.1)]"
+                          ? "border-2 border-primary/40 shadow-[0_0_30px_hsla(38,50%,55%,0.1)]"
                           : "border border-border/30"
                     }`}
                     style={{
                       background: isEmpire
-                        ? "linear-gradient(165deg, hsla(35,30%,12%,0.6), hsla(265,15%,10%,0.8))"
-                        : "hsla(265,15%,10%,0.4)"
+                        ? "linear-gradient(165deg, hsla(35,30%,12%,0.6), hsla(230,10%,10%,0.8))"
+                        : "hsla(230,10%,12%,0.4)"
                     }}
                     whileTap={{ scale: 0.99 }}>
 
