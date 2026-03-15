@@ -23,18 +23,19 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
 
   useEffect(() => {
     if (IS_MOBILE) {
-      const t1 = setTimeout(() => setPhase("assemble"), 200);
-      const t2 = setTimeout(() => setPhase("pulse"), 700);
-      const t3 = setTimeout(() => setPhase("morph"), 1200);
-      const t4 = setTimeout(() => setPhase("dissolve"), 1800);
-      const t5 = setTimeout(onComplete, 2200);
+      // Mobile: give each phase enough time to be visible
+      const t1 = setTimeout(() => setPhase("assemble"), 300);
+      const t2 = setTimeout(() => setPhase("pulse"), 1000);
+      const t3 = setTimeout(() => setPhase("morph"), 1700);
+      const t4 = setTimeout(() => setPhase("dissolve"), 2500);
+      const t5 = setTimeout(onComplete, 3100);
       return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
     }
-    const t1 = setTimeout(() => setPhase("assemble"), 300);
-    const t2 = setTimeout(() => setPhase("pulse"), 1200);
-    const t3 = setTimeout(() => setPhase("morph"), 1800);
-    const t4 = setTimeout(() => setPhase("dissolve"), 2200);
-    const t5 = setTimeout(onComplete, 2600);
+    const t1 = setTimeout(() => setPhase("assemble"), 400);
+    const t2 = setTimeout(() => setPhase("pulse"), 1400);
+    const t3 = setTimeout(() => setPhase("morph"), 2200);
+    const t4 = setTimeout(() => setPhase("dissolve"), 3000);
+    const t5 = setTimeout(onComplete, 3600);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
   }, [onComplete]);
 

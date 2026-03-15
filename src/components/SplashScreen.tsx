@@ -135,9 +135,9 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [phase, setPhase] = useState<"build" | "exit">("build");
 
   useEffect(() => {
-    // On mobile, use shorter timings to prevent rendering stalls
-    const exitDelay = IS_MOBILE ? 1000 : 1400;
-    const completeDelay = IS_MOBILE ? 1400 : 1900;
+    // Give mobile enough time to see the full splash animation
+    const exitDelay = IS_MOBILE ? 1600 : 1800;
+    const completeDelay = IS_MOBILE ? 2100 : 2400;
     const t1 = setTimeout(() => setPhase("exit"), exitDelay);
     const t2 = setTimeout(onComplete, completeDelay);
     return () => { clearTimeout(t1); clearTimeout(t2); };
