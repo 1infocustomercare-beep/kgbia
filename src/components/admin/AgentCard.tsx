@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Lock } from "lucide-react";
 import { CATEGORY_LABELS } from "@/types/agent";
 import type { Agent } from "@/types/agent";
 import { getAgentImage } from "@/lib/agent-images";
@@ -31,101 +32,128 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
   const price = pricing?.base || 0;
   const isActive = agent.status === "active";
   const isBeta = agent.status === "beta";
+  const isInactive = agent.status === "inactive";
   const agentImg = getAgentImage(agent.name, agent.category, agent.sectors || []);
+  const isPaid = price > 0;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.02 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: index * 0.015, type: "spring", stiffness: 300, damping: 25 }}
       onClick={() => onClick(agent)}
-      className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden cursor-pointer hover:-translate-y-0.5 hover:shadow-2xl hover:border-primary/30 transition-all duration-200"
+      className={`group relative bg-white/[0.03] backdrop-blur-xl border rounded-2xl overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ${
+        isInactive
+          ? "border-red-500/20 opacity-60"
+          : isActive
+          ? "border-white/10 hover:border-primary/40"
+          : "border-amber-500/20"
+      }`}
     >
-      {/* Agent image banner */}
-      <div className="relative h-28 overflow-hidden bg-gradient-to-br from-white/5 to-white/[0.02]">
+      {/* Inactive lock overlay */}
+      {isInactive && (
+        <div className="absolute inset-0 z-10 bg-background/60 backdrop-blur-sm flex flex-col items-center justify-center gap-2">
+          <Lock className="w-6 h-6 text-red-400" />
+          <span className="text-[0.6rem] text-red-400 font-medium">Disattivato</span>
+        </div>
+      )}
+
+      {/* Agent alien image */}
+      <div className="relative h-24 overflow-hidden bg-gradient-to-br from-primary/10 via-violet-500/5 to-transparent">
         {agentImg && (
-          <img
+          <motion.img
             src={agentImg}
             alt={agent.name}
-            className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-300"
+            className="absolute inset-0 w-full h-full object-contain p-2 drop-shadow-2xl"
+            whileHover={{ scale: 1.1, rotate: 2 }}
+            transition={{ type: "spring", stiffness: 200 }}
           />
         )}
-        {/* Price badge overlay */}
-        <div className="absolute top-2 right-2">
-          {price > 0 ? (
-            <span className="text-[0.65rem] font-bold px-2 py-1 rounded-full bg-background/80 backdrop-blur text-violet-400 border border-violet-500/30">
+        {/* Glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+
+        {/* Price + beta badges */}
+        <div className="absolute top-1.5 right-1.5 flex flex-col gap-1 items-end">
+          {isPaid ? (
+            <span className="text-[0.55rem] font-bold px-1.5 py-0.5 rounded-full bg-violet-500/80 text-white backdrop-blur-sm">
               €{price}/mo
             </span>
           ) : (
-            <span className="text-[0.65rem] font-bold px-2 py-1 rounded-full bg-background/80 backdrop-blur text-emerald-400 border border-emerald-500/30">
-              Incluso
+            <span className="text-[0.55rem] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/80 text-white backdrop-blur-sm">
+              Free
+            </span>
+          )}
+          {isBeta && (
+            <span className="text-[0.5rem] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/90 text-white">
+              BETA
             </span>
           )}
         </div>
-        {isBeta && (
-          <div className="absolute top-2 left-2">
-            <Badge className="text-[0.6rem] px-1.5 bg-amber-500/90 text-white border-0">
-              Beta
-            </Badge>
-          </div>
-        )}
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-        {/* Emoji icon */}
+
+        {/* Category color bar */}
         <div
-          className="absolute bottom-2 left-3 w-10 h-10 rounded-xl flex items-center justify-center text-xl border border-white/10 backdrop-blur-md"
-          style={{ backgroundColor: `${agent.color_hex}40` }}
-        >
-          {agent.icon_emoji}
-        </div>
+          className="absolute bottom-0 left-0 right-0 h-0.5"
+          style={{ backgroundColor: cat.color }}
+        />
       </div>
 
       {/* Content */}
-      <div className="p-3 pt-2 space-y-2">
-        <h3 className="font-semibold text-foreground text-sm leading-tight">{agent.name}</h3>
+      <div className="p-2.5 space-y-1.5">
+        <div className="flex items-start gap-1.5">
+          <span className="text-base leading-none">{agent.icon_emoji}</span>
+          <h3 className="font-semibold text-foreground text-[0.75rem] leading-tight flex-1">{agent.name}</h3>
+        </div>
 
         <div className="flex items-center gap-1 flex-wrap">
-          <Badge variant="outline" className="text-[0.55rem] px-1.5 py-0" style={{ borderColor: cat.color, color: cat.color }}>
+          <Badge
+            variant="outline"
+            className="text-[0.5rem] px-1 py-0 h-4 rounded-md"
+            style={{ borderColor: cat.color, color: cat.color }}
+          >
             {cat.icon} {cat.label}
           </Badge>
-          <Badge variant="outline" className="text-[0.55rem] px-1.5 py-0 border-white/20 text-muted-foreground">
-            {agent.type === "universal" ? "🌐 Universale" : "🎯 Settore"}
+          <Badge variant="outline" className="text-[0.5rem] px-1 py-0 h-4 rounded-md border-white/15 text-muted-foreground">
+            {agent.type === "universal" ? "🌐" : "🎯"}
           </Badge>
         </div>
 
-        <p className="text-[0.7rem] text-muted-foreground line-clamp-2 leading-relaxed">{agent.description_it}</p>
+        <p className="text-[0.6rem] text-muted-foreground line-clamp-2 leading-relaxed">{agent.description_it}</p>
 
         {/* Sectors */}
-        <div className="flex flex-wrap gap-1">
-          {(agent.sectors || []).slice(0, 3).map((s) => (
-            <span key={s} className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-white/5 text-muted-foreground">
+        <div className="flex flex-wrap gap-0.5">
+          {(agent.sectors || []).slice(0, 2).map((s) => (
+            <span key={s} className="text-[0.45rem] px-1 py-0.5 rounded-md bg-white/5 text-muted-foreground">
               {SECTOR_LABELS[s] || s}
             </span>
           ))}
-          {(agent.sectors || []).length > 3 && (
-            <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-white/5 text-muted-foreground">
-              +{agent.sectors.length - 3}
+          {(agent.sectors || []).length > 2 && (
+            <span className="text-[0.45rem] px-1 py-0.5 rounded-md bg-white/5 text-muted-foreground">
+              +{agent.sectors.length - 2}
             </span>
           )}
         </div>
 
-        {/* Metrics row */}
-        <div className="flex items-center justify-between text-[0.6rem] text-muted-foreground">
-          <span>{installs} installazioni</span>
-          <span>{successRate}% success</span>
+        {/* Metrics */}
+        <div className="flex items-center justify-between text-[0.55rem] text-muted-foreground pt-1">
+          <span className="flex items-center gap-1">
+            <span className={`w-1.5 h-1.5 rounded-full ${installs > 0 ? "bg-blue-400" : "bg-white/20"}`} />
+            {installs} utenti
+          </span>
+          <span>{successRate}%</span>
         </div>
 
         {/* Status toggle */}
         <div
-          className="flex items-center justify-between pt-2 border-t border-white/5"
+          className="flex items-center justify-between pt-1.5 border-t border-white/5"
           onClick={(e) => e.stopPropagation()}
         >
-          <span className={`text-xs font-medium ${isActive ? "text-emerald-400" : isBeta ? "text-amber-400" : "text-red-400"}`}>
-            {isActive ? "Attivo" : isBeta ? "Beta" : "Inattivo"}
+          <span className={`text-[0.6rem] font-semibold ${isActive ? "text-emerald-400" : isBeta ? "text-amber-400" : "text-red-400"}`}>
+            {isActive ? "● Attivo" : isBeta ? "◐ Beta" : "○ Off"}
           </span>
           <Switch
             checked={isActive}
             onCheckedChange={(checked) => onToggle(agent.id, checked ? "active" : "inactive")}
+            className="scale-75"
           />
         </div>
       </div>
