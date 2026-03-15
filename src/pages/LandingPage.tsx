@@ -2408,11 +2408,11 @@ const LandingPage = () => {
               <motion.span 
                 className="font-heading font-bold text-[0.82rem] sm:text-[1rem] tracking-[0.35em] uppercase"
                 style={{
-                  background: "linear-gradient(135deg, hsla(0,0%,100%,1) 0%, hsla(265,60%,88%,1) 40%, hsla(0,0%,100%,0.9) 70%, hsla(35,50%,75%,1) 100%)",
+                  background: "linear-gradient(135deg, hsla(0,0%,100%,1) 0%, hsla(38,40%,82%,1) 40%, hsla(0,0%,100%,0.9) 70%, hsla(35,50%,75%,1) 100%)",
                   backgroundSize: "200% 100%",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  filter: "drop-shadow(0 0 10px hsla(265,70%,60%,0.2))",
+                  filter: "drop-shadow(0 0 10px hsla(38,50%,55%,0.2))",
                 }}
                 animate={{ 
                   backgroundPosition: ["0% 0%", "200% 0%"],
