@@ -2474,7 +2474,7 @@ const LandingPage = () => {
                 />
                 <motion.div
                   className="absolute inset-0 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{ boxShadow: "inset 0 0 24px hsla(265,70%,60%,0.08), 0 0 12px hsla(265,70%,60%,0.04)" }}
+                  style={{ boxShadow: "inset 0 0 24px hsla(38,50%,55%,0.06), 0 0 12px hsla(38,50%,55%,0.03)" }}
                 />
               </motion.a>
             ))}
