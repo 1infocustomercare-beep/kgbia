@@ -604,10 +604,10 @@ Se il partner fa una domanda generica, collegala alla sezione che sta visualizza
 - **Dashboard**: panoramica vendite, guadagni, bonus, stato account — è la prima cosa che il partner vede
 - **Sandbox Demo**: ristorante demo personalizzabile (nome, logo, colore), PIN cucina 1234, reset con un click, 16 piatti, 8 tavoli, ordini campione
 - **Showcase Settori**: preview di TUTTI i 25+ settori con iPhone mockup interattivo — ogni settore ha un sito demo completo
-- **Pricing/Closing**: investimento €2.997 una tantum o 3 rate da €1.099, €0/mese PER SEMPRE, solo 2% sulle transazioni
-- **Guadagni**: storico commissioni, stato pagamenti, Stripe Connect configurazione
+- **Pricing/Closing**: 3 pacchetti — Digital Start €1.997 (12 mesi incl., poi €49/mese + 2%), Growth AI €4.997 (18 mesi incl., poi €29/mese + 1%), Empire Domination €7.997 (24 mesi incl., poi €0/mese e 0% per sempre). Rateizzazione: 3 rate TAN 0% o 6 rate TAN 5,9%
+- **Guadagni**: storico commissioni (€997/vendita), stato pagamenti, Stripe Connect configurazione
 - **Bozze Demo**: demo brandizzate per ogni cliente — il segreto dei top seller
-- **Team**: gestione sub-partner, override €200/vendita, promozione automatica a Team Leader
+- **Team**: gestione sub-partner, override €50/vendita dalla 5ª vendita sub-partner, promozione automatica a Team Leader
 - **Crescita & ROI**: calcolatore ROI interattivo, dati di impatto per convincere i clienti
 - **Sales Toolkit**: script vendita, gestione obiezioni, pitch deck, guide per settore
 - **Asset Vault**: video, presentazioni, brochure, loghi — materiali professionali
