@@ -2484,10 +2484,10 @@ const LandingPage = () => {
               onClick={() => scrollTo("contact")}
               className="ml-5 px-8 py-3 rounded-full text-primary-foreground text-[0.65rem] font-bold font-heading tracking-[0.22em] uppercase relative overflow-hidden group"
               style={{ 
-                background: "linear-gradient(135deg, hsla(265,75%,55%,1), hsla(280,65%,48%,1), hsla(300,50%,45%,1))",
-                boxShadow: "0 4px 28px hsla(265,70%,60%,0.35), 0 0 0 1px hsla(265,80%,70%,0.2), 0 12px 40px hsla(265,70%,60%,0.1)",
+                background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(34,50%,42%,1), hsla(30,45%,38%,1))",
+                boxShadow: "0 4px 28px hsla(38,55%,50%,0.3), 0 0 0 1px hsla(38,55%,60%,0.2), 0 12px 40px hsla(38,55%,50%,0.08)",
               }}
-              whileHover={{ scale: 1.06, boxShadow: "0 8px 44px hsla(265,70%,60%,0.55), 0 0 0 1.5px hsla(265,80%,70%,0.35), 0 16px 60px hsla(265,70%,60%,0.15)" }}
+              whileHover={{ scale: 1.06, boxShadow: "0 8px 44px hsla(38,55%,50%,0.45), 0 0 0 1.5px hsla(38,55%,60%,0.3), 0 16px 60px hsla(38,55%,50%,0.12)" }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: -14 }}
               animate={{ opacity: 1, y: 0 }}
