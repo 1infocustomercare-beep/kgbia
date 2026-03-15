@@ -5,7 +5,7 @@ import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import IndustryPhoneShowcase, { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA } from "@/data/demo-industries";
-import HeroNeuralCanvas from "@/components/public/HeroNeuralCanvas";
+
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
@@ -2351,12 +2351,23 @@ const LandingPage = () => {
       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-20 sm:pt-28 pb-12 sm:pb-16"
         style={{ opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Neural canvas background ═══ */}
+        {/* ═══ LAYER 0: Cinematic video background ═══ */}
         <div className="absolute inset-0">
-          <HeroNeuralCanvas />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ filter: "brightness(0.35) saturate(1.1)" }}
+          >
+            <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4" type="video/mp4" />
+          </video>
           {/* Cinematic vignette overlays */}
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsl(var(--background)) 100%)" }} />
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 15%, transparent 85%, hsl(var(--background)) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(265,60%,20%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.2) 100%)" }} />
         </div>
 
         {/* ═══ LAYER 1: Central glow orb ═══ */}
