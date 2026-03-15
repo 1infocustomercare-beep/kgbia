@@ -410,7 +410,9 @@ const PartnerDashboard = () => {
               </div>
 
               {/* === DEMO CREDITS === */}
-              <DemoCreditsWallet userId={user?.id} />
+              <div data-guide-section="demo-credits">
+                <DemoCreditsWallet userId={user?.id} />
+              </div>
 
               {/* === DEMO RESTAURANT (streamlined) === */}
               {demoRestaurant && (
