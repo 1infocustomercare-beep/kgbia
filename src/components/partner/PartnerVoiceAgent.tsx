@@ -1,7 +1,7 @@
-// PartnerVoiceAgent — Full-featured AI assistant for Partner & Team Leader dashboards
+// PartnerVoiceAgent — Full-featured AI assistant with scroll-aware Guide Mode
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause, Sparkles, Bot } from "lucide-react";
+import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause, Sparkles, Bot, Navigation } from "lucide-react";
 import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
 
@@ -136,11 +136,49 @@ async function streamChat({ messages, onDelta, onDone }: {
   onDone();
 }
 
-const PartnerVoiceAgent: React.FC = () => {
+// ── GUIDE MODE: Section narrations ──
+const SECTION_NARRATIONS: Record<string, string> = {
+  // Dashboard sections
+  "net-earnings": "Ecco i tuoi guadagni netti in tempo reale. Qui vedi il totale delle commissioni, gli override dal tuo team e i bonus performance. Ogni vendita ti porta 997 euro netti. Con Empire, i tuoi guadagni crescono esponenzialmente man mano che costruisci il tuo portafoglio clienti.",
+  "stats-row": "Queste sono le tue metriche chiave: vendite totali, commissione per vendita e il tuo progresso verso la promozione a Team Leader. Raggiungi 4 vendite personali e recluta 2 partner per sbloccare gli override passivi!",
+  "bonus-progress": "Il sistema bonus premia chi si impegna: 3 vendite al mese ti danno 500 euro bonus, 5 vendite un bonus Elite da 1.500 euro. Sono soldi extra, oltre alle commissioni. Immagina: 5 vendite a 997 euro più il bonus Elite — quasi 6.500 euro in un solo mese!",
+  "demo-credits": "I crediti demo ti permettono di creare dimostrazioni live per i tuoi potenziali clienti. Usa le demo AI, il voice agent e le funzionalità avanzate per impressionare il cliente e chiudere la vendita più velocemente.",
+  "demo-restaurant": "Questo è il tuo ristorante demo personalizzabile. Inserisci il nome e il logo del tuo cliente per mostrargli l'app già pronta con il suo brand. L'impatto emotivo è devastante: vedono la loro attività già digitalizzata!",
+  "leaderboard": "La classifica vendite. Vedi come ti posizioni rispetto agli altri partner. La competizione sana motiva tutti a dare il massimo. I top seller ricevono riconoscimenti e accesso prioritario a nuove funzionalità.",
+  
+  // Demo mode dashboard
+  "enterprise-preview": "Questa è la modalità presentazione. Tutti i tuoi dati sensibili sono nascosti. Mostra questo al cliente per dargli una visione professionale della piattaforma senza rivelare i tuoi guadagni personali.",
+  "platform-stats": "Questi numeri parlano da soli: oltre 127 ristoranti attivi, 98% di soddisfazione, più di 21 funzionalità integrate e una crescita media del 34% per i clienti. Usa questi dati per rafforzare la credibilità durante la vendita.",
+  
+  // Tab sections
+  "tab-sandbox": "Benvenuto nella Sandbox Demo! Qui puoi mostrare al cliente tutte le funzionalità della piattaforma in azione. Personalizza la demo con il nome del cliente, i suoi colori e il suo logo per un effetto wow immediato.",
+  "tab-showcase": "Lo Showcase Settori è la tua arma segreta. Mostra al cliente il sito demo del suo settore specifico — ristorazione, hotel, beauty, NCC, edilizia e molti altri. Ogni settore ha funzionalità dedicate che risolvono problemi reali.",
+  "tab-pricing": "Qui trovi la presentazione dell'investimento. La licenza lifetime costa 2.997 euro — zero canoni mensili per sempre. Confronta: un gestionale tradizionale costa 100-300 euro al mese. In un anno il cliente ha già risparmiato. In due anni è tutto guadagnato!",
+  "tab-earnings": "Sezione Guadagni: qui trovi il dettaglio completo delle tue commissioni, i bonifici ricevuti e le previsioni di guadagno. Tutto trasparente, tutto tracciato.",
+  "tab-projects": "Le Bozze Demo ti permettono di preparare presentazioni personalizzate per ogni cliente. Crea una bozza con il brand del cliente, scegli il settore e lancia una demo brandizzata che lascia senza parole.",
+  "tab-team": "La sezione Team è il cuore della tua crescita passiva. Qui gestisci i partner che hai reclutato, monitori le loro vendite e guadagni gli override — 50 euro per ogni vendita dalla quinta in poi di ogni membro. Più il team cresce, più guadagni dormendo!",
+  "tab-investment": "La sezione Crescita mostra ai clienti il ritorno sull'investimento con numeri concreti. Un ristorante medio recupera l'investimento in 45 giorni grazie all'aumento degli ordini e alla riduzione dei costi operativi.",
+  "tab-toolkit": "Il Sales Toolkit è il tuo arsenale di vendita: script pronti, gestione obiezioni, materiali brandizzati e strategie testate sul campo. Tutto ciò che ti serve per chiudere ogni trattativa con sicurezza.",
+  "tab-vault": "L'Asset Vault contiene tutti i materiali scaricabili: presentazioni, brochure, loghi, video dimostrativi. Materiale professionale pronto all'uso per le tue presentazioni.",
+  "tab-recruitment": "La sezione Reclutamento ti aiuta a costruire il tuo team. Condividi il tuo link di invito personalizzato e quando un nuovo partner si registra, viene automaticamente assegnato al tuo team.",
+
+  // Team Leader sections
+  "leader-status": "Questo badge mostra il tuo stato di Team Leader. Per mantenere gli override attivi, devi avere almeno 4 vendite personali e 2 partner nel team. È un sistema meritocratico che premia chi guida con l'esempio.",
+  "override-revenue": "Ecco i tuoi guadagni passivi da management. 50 euro per ogni vendita idonea dei tuoi partner — dalla quinta vendita in poi. Più partner attivi hai, più questo numero cresce automaticamente. È il vero potere del network!",
+  "recruit-engine": "Il motore di reclutamento. Copia il tuo link personalizzato e condividilo. Riceverai una notifica in tempo reale quando un nuovo partner si registra tramite il tuo link.",
+  "team-ledger": "Il registro del team mostra le performance di ogni membro: vendite, override generati e stato di attivazione. Usa queste informazioni per supportare i tuoi partner e massimizzare i risultati del team.",
+};
+
+interface PartnerVoiceAgentProps {
+  activeTab?: string;
+  demoMode?: boolean;
+}
+
+const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<"voice" | "chat">("chat");
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Ciao! 👋 Sono **ATLAS PRO**, il tuo assistente IA dedicato a **massima potenza**. Conosco ogni dettaglio di Empire: vendite, commissioni, demo, obiezioni, dashboard, settori, tecniche avanzate, navigazione — **tutto**. Chiedimi qualsiasi cosa, ti guido passo-passo! 🚀" }
+    { role: "assistant", content: "Ciao! 👋 Sono **ATLAS PRO**, il tuo assistente IA dedicato a **massima potenza**. Conosco ogni dettaglio di Empire: vendite, commissioni, demo, obiezioni, dashboard, settori, tecniche avanzate, navigazione — **tutto**. Chiedimi qualsiasi cosa, ti guido passo-passo! 🚀\n\n💡 **Attiva la Guida Vocale** per farmi spiegare ogni sezione mentre scorri!" }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -149,6 +187,7 @@ const PartnerVoiceAgent: React.FC = () => {
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [inputText, setInputText] = useState("");
   const [liveTranscript, setLiveTranscript] = useState("");
+  const [guideMode, setGuideMode] = useState(false);
 
   const recognitionRef = useRef<InstanceType<NonNullable<typeof SpeechRecognition>> | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -156,12 +195,83 @@ const PartnerVoiceAgent: React.FC = () => {
   const messagesRef = useRef<Msg[]>([]);
   const voiceEnabledRef = useRef(true);
   const inputRef = useRef<HTMLInputElement>(null);
+  const guideModeRef = useRef(false);
+  const lastNarratedSection = useRef<string>("");
+  const narratingRef = useRef(false);
+  const lastTabRef = useRef<string>("");
 
   useEffect(() => { messagesRef.current = messages; }, [messages]);
   useEffect(() => { voiceEnabledRef.current = voiceEnabled; }, [voiceEnabled]);
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
   useEffect(() => { if (!SpeechRecognition) setMode("chat"); }, []);
   useEffect(() => { if (isOpen && mode === "chat") setTimeout(() => inputRef.current?.focus(), 150); }, [isOpen, mode]);
+  useEffect(() => { guideModeRef.current = guideMode; }, [guideMode]);
+
+  // ── GUIDE MODE: Tab change narration ──
+  useEffect(() => {
+    if (!guideMode || !activeTab || narratingRef.current) return;
+    const tabKey = `tab-${activeTab}`;
+    if (tabKey === lastNarratedSection.current) return;
+    
+    // Small delay for tab transition
+    const timer = setTimeout(() => {
+      if (!guideModeRef.current) return;
+      const narration = SECTION_NARRATIONS[tabKey];
+      if (narration && tabKey !== lastNarratedSection.current) {
+        lastNarratedSection.current = tabKey;
+        narrateSection(tabKey, narration);
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [activeTab, guideMode]);
+
+  // ── GUIDE MODE: IntersectionObserver for scroll sections ──
+  useEffect(() => {
+    if (!guideMode) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!guideModeRef.current || narratingRef.current) return;
+        for (const entry of entries) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+            const sectionId = (entry.target as HTMLElement).dataset.guideSection;
+            if (sectionId && sectionId !== lastNarratedSection.current && SECTION_NARRATIONS[sectionId]) {
+              lastNarratedSection.current = sectionId;
+              narrateSection(sectionId, SECTION_NARRATIONS[sectionId]);
+            }
+          }
+        }
+      },
+      { threshold: 0.5, rootMargin: "-10% 0px -10% 0px" }
+    );
+
+    // Observe all guide sections
+    const elements = document.querySelectorAll("[data-guide-section]");
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [guideMode, activeTab]);
+
+  const narrateSection = useCallback(async (sectionId: string, text: string) => {
+    if (narratingRef.current) return;
+    narratingRef.current = true;
+    abortRef.current = false;
+
+    // Cancel any current speech
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+
+    // Add narration as message
+    const guideMsg: Msg = { role: "assistant", content: `🎙️ **${getSectionTitle(sectionId)}**\n\n${text}` };
+    setMessages(prev => [...prev, guideMsg]);
+    
+    // Speak it
+    setIsSpeaking(true);
+    await speakWithBrowserTTS(text, abortRef);
+    if (!abortRef.current) {
+      setIsSpeaking(false);
+    }
+    narratingRef.current = false;
+  }, []);
 
   const stopAll = useCallback(() => {
     abortRef.current = true;
@@ -171,6 +281,7 @@ const PartnerVoiceAgent: React.FC = () => {
     setIsPaused(false);
     setIsListening(false);
     setLiveTranscript("");
+    narratingRef.current = false;
   }, []);
 
   const togglePause = useCallback(() => {
@@ -179,6 +290,27 @@ const PartnerVoiceAgent: React.FC = () => {
       else { window.speechSynthesis.pause(); setIsPaused(true); }
     }
   }, [isPaused]);
+
+  const toggleGuideMode = useCallback(() => {
+    const next = !guideMode;
+    setGuideMode(next);
+    if (next) {
+      lastNarratedSection.current = "";
+      narratingRef.current = false;
+      setMessages(prev => [...prev, { role: "assistant", content: "🧭 **Guida Vocale Attivata!**\n\nOra ti spiegherò ogni sezione della dashboard mentre scorri e navighi tra le tab. Muoviti liberamente, io ti accompagno! 🚀" }]);
+      // Trigger narration for current tab
+      if (activeTab) {
+        const tabKey = `tab-${activeTab}`;
+        if (SECTION_NARRATIONS[tabKey]) {
+          lastNarratedSection.current = tabKey;
+          setTimeout(() => narrateSection(tabKey, SECTION_NARRATIONS[tabKey]), 800);
+        }
+      }
+    } else {
+      stopAll();
+      setMessages(prev => [...prev, { role: "assistant", content: "⏹️ Guida Vocale disattivata. Puoi sempre riattivare o chiedimi qualsiasi cosa nella chat!" }]);
+    }
+  }, [guideMode, activeTab, narrateSection, stopAll]);
 
   const sendMessage = useCallback(async (text: string) => {
     if (!text.trim() || isLoading) return;
@@ -256,7 +388,7 @@ const PartnerVoiceAgent: React.FC = () => {
     try { recognition.start(); setIsListening(true); } catch { setIsListening(false); }
   }, [sendMessage, stopAll]);
 
-  // Quick action buttons for partners — comprehensive coverage
+  // Quick action buttons for partners
   const quickActions = [
     { label: "📊 Commissioni", prompt: "Spiegami nel dettaglio come funzionano le commissioni, i bonus Pro ed Elite, e i guadagni del Team Leader" },
     { label: "🎯 Script vendita", prompt: "Dammi uno script di vendita completo, parola per parola, per chiamare un potenziale cliente e chiudere la vendita" },
@@ -289,13 +421,22 @@ const PartnerVoiceAgent: React.FC = () => {
               />
               <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-xl border-2 border-primary/30 bg-background">
                 <img src={voiceAgentAvatar} alt="ATLAS" className="w-full h-full object-cover" />
-                {isSpeaking && !isPaused && (
+                {(isSpeaking && !isPaused) && (
                   <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
                 )}
               </div>
               <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                <Sparkles className="w-3 h-3 text-primary-foreground" />
+                {guideMode ? <Navigation className="w-3 h-3 text-primary-foreground" /> : <Sparkles className="w-3 h-3 text-primary-foreground" />}
               </div>
+              {guideMode && (
+                <motion.div
+                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded-full bg-emerald-500 text-[7px] font-bold text-white whitespace-nowrap"
+                  animate={{ opacity: [1, 0.6, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  GUIDA ON
+                </motion.div>
+              )}
             </div>
           </motion.button>
         )}
@@ -325,7 +466,7 @@ const PartnerVoiceAgent: React.FC = () => {
                     <img src={voiceAgentAvatar} alt="ATLAS" className="w-full h-full object-cover" />
                   </div>
                   <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${
-                    isPaused ? "bg-amber-400" : isSpeaking ? "bg-green-400" : isListening ? "bg-amber-400" : isLoading ? "bg-blue-400" : "bg-primary/60"
+                    isPaused ? "bg-amber-400" : isSpeaking ? "bg-green-400" : isListening ? "bg-amber-400" : isLoading ? "bg-blue-400" : guideMode ? "bg-emerald-400" : "bg-primary/60"
                   }`} />
                 </div>
                 <div>
@@ -333,7 +474,7 @@ const PartnerVoiceAgent: React.FC = () => {
                     ATLAS <span className="text-[0.55rem] font-normal text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full">PRO</span>
                   </h3>
                   <p className="text-[0.55rem] text-muted-foreground tracking-wider uppercase">
-                    {isPaused ? "⏸ In pausa" : isSpeaking ? "🔊 Sta parlando..." : isListening ? "🎙️ Ti ascolta..." : isLoading ? "💭 Sta pensando..." : "Assistente Partner IA"}
+                    {isPaused ? "⏸ In pausa" : isSpeaking ? "🔊 Sta parlando..." : isListening ? "🎙️ Ti ascolta..." : isLoading ? "💭 Sta pensando..." : guideMode ? "🧭 Guida Vocale Attiva" : "Assistente Partner IA"}
                   </p>
                 </div>
               </div>
@@ -369,8 +510,24 @@ const PartnerVoiceAgent: React.FC = () => {
               </div>
             </div>
 
+            {/* Guide Mode Toggle */}
+            <div className="px-3 pt-2">
+              <motion.button
+                onClick={toggleGuideMode}
+                className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                  guideMode
+                    ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-[0_0_15px_hsla(160,80%,45%,0.15)]"
+                    : "bg-foreground/[0.04] text-muted-foreground border border-foreground/[0.08] hover:bg-foreground/[0.08] hover:text-foreground"
+                }`}
+                whileTap={{ scale: 0.97 }}
+              >
+                <Navigation className={`w-4 h-4 ${guideMode ? "text-emerald-400" : ""}`} />
+                {guideMode ? "🧭 Guida Vocale Attiva — Tocca per disattivare" : "🧭 Attiva Guida Vocale (spiega ogni sezione)"}
+              </motion.button>
+            </div>
+
             {/* Quick Actions */}
-            {messages.length <= 1 && !isLoading && (
+            {messages.length <= 1 && !isLoading && !guideMode && (
               <div className="px-3 pt-3 flex flex-wrap gap-1.5">
                 {quickActions.map((action) => (
                   <motion.button key={action.label}
@@ -471,5 +628,35 @@ const PartnerVoiceAgent: React.FC = () => {
     </>
   );
 };
+
+// Helper: get section title from ID
+function getSectionTitle(sectionId: string): string {
+  const titles: Record<string, string> = {
+    "net-earnings": "💰 Guadagni Netti",
+    "stats-row": "📊 Metriche Chiave",
+    "bonus-progress": "🏆 Bonus Performance",
+    "demo-credits": "🎟️ Crediti Demo",
+    "demo-restaurant": "🍕 Ristorante Demo",
+    "leaderboard": "🥇 Classifica",
+    "enterprise-preview": "🎭 Modalità Presentazione",
+    "platform-stats": "📈 Statistiche Piattaforma",
+    "tab-sandbox": "🎮 Sandbox Demo",
+    "tab-showcase": "🏪 Showcase Settori",
+    "tab-pricing": "💳 Investimento",
+    "tab-earnings": "💵 Guadagni",
+    "tab-projects": "📋 Bozze Demo",
+    "tab-team": "👥 Gestione Team",
+    "tab-investment": "📈 Crescita & ROI",
+    "tab-toolkit": "🛠️ Sales Toolkit",
+    "tab-vault": "📁 Asset Vault",
+    "tab-recruitment": "🤝 Reclutamento",
+    "tab-dashboard": "🏠 Dashboard",
+    "leader-status": "👑 Stato Leader",
+    "override-revenue": "💎 Revenue Passiva",
+    "recruit-engine": "🚀 Motore Reclutamento",
+    "team-ledger": "📒 Registro Team",
+  };
+  return titles[sectionId] || "📌 Sezione";
+}
 
 export default PartnerVoiceAgent;

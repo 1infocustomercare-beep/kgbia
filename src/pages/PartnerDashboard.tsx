@@ -339,7 +339,7 @@ const PartnerDashboard = () => {
             <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
 
               {/* === NET EARNINGS HERO === */}
-              <div className="p-5 rounded-2xl glass border border-primary/20 relative overflow-hidden">
+              <div data-guide-section="net-earnings" className="p-5 rounded-2xl glass border border-primary/20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Guadagni Netti</p>
                 <motion.p className="text-4xl font-heading font-bold text-vibrant-gradient"
@@ -367,7 +367,7 @@ const PartnerDashboard = () => {
               </div>
 
               {/* === STATS ROW === */}
-              <div className="grid grid-cols-3 gap-3">
+              <div data-guide-section="stats-row" className="grid grid-cols-3 gap-3">
                 <div className="p-3.5 rounded-xl bg-card border border-border/50 text-center">
                   <Trophy className="w-4 h-4 text-primary mb-1 mx-auto" />
                   <p className="text-xl font-display font-bold text-foreground">{salesCount}</p>
@@ -396,7 +396,7 @@ const PartnerDashboard = () => {
               </div>
 
               {/* === BONUS PROGRESS (compact) === */}
-              <div className="p-4 rounded-2xl bg-card border border-border/50">
+              <div data-guide-section="bonus-progress" className="p-4 rounded-2xl bg-card border border-border/50">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-xs font-bold text-foreground flex items-center gap-2">
                     <Sparkles className="w-3.5 h-3.5 text-primary" /> Bonus Mensile
@@ -410,11 +410,13 @@ const PartnerDashboard = () => {
               </div>
 
               {/* === DEMO CREDITS === */}
-              <DemoCreditsWallet userId={user?.id} />
+              <div data-guide-section="demo-credits">
+                <DemoCreditsWallet userId={user?.id} />
+              </div>
 
               {/* === DEMO RESTAURANT (streamlined) === */}
               {demoRestaurant && (
-                <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
+                <div data-guide-section="demo-restaurant" className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {demoRestaurant.logo_url ? (
@@ -521,14 +523,16 @@ const PartnerDashboard = () => {
               )}
 
               {/* === LEADERBOARD === */}
-              <PartnerLeaderboard currentUserSales={salesCount} />
+              <div data-guide-section="leaderboard">
+                <PartnerLeaderboard currentUserSales={salesCount} />
+              </div>
             </motion.div>
           )}
 
           {/* Demo mode dashboard */}
           {activeTab === "dashboard" && demoMode && (
             <motion.div key="dash-demo" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/10 via-card to-amber-500/5 border border-primary/20">
+              <div data-guide-section="enterprise-preview" className="p-5 rounded-2xl bg-gradient-to-br from-primary/10 via-card to-amber-500/5 border border-primary/20">
                 <div className="flex items-center gap-2 mb-2">
                   <Sparkles className="w-4 h-4 text-primary" />
                   <span className="text-xs font-medium text-primary tracking-wider uppercase">Enterprise Preview</span>
@@ -536,7 +540,7 @@ const PartnerDashboard = () => {
                 <h2 className="text-xl font-display font-bold text-foreground">La Suite Completa per la Ristorazione</h2>
                 <p className="text-sm text-muted-foreground mt-1">21+ funzionalità integrate. Un'unica soluzione. Proprietà permanente.</p>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div data-guide-section="platform-stats" className="grid grid-cols-2 gap-3">
                 {[
                   { label: "Ristoranti Attivi", value: "127", icon: <Briefcase className="w-5 h-5" />, color: "text-primary" },
                   { label: "Soddisfazione", value: "98%", icon: <Trophy className="w-5 h-5" />, color: "text-emerald-400" },
@@ -591,9 +595,10 @@ const PartnerDashboard = () => {
 
               {/* Leader Status Badge */}
               {(() => {
+                // @ts-ignore data-guide-section attribute
                 const isActive = salesCount >= 4 && teamMembers.length >= 2;
                 return (
-                  <div className={`p-4 rounded-2xl border ${isActive ? "bg-emerald-500/5 border-emerald-500/20" : "bg-destructive/5 border-destructive/20"}`}>
+                  <div data-guide-section="leader-status" className={`p-4 rounded-2xl border ${isActive ? "bg-emerald-500/5 border-emerald-500/20" : "bg-destructive/5 border-destructive/20"}`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className={`w-2.5 h-2.5 rounded-full ${isActive ? "bg-emerald-400 animate-pulse" : "bg-destructive"}`} />
@@ -613,7 +618,7 @@ const PartnerDashboard = () => {
               })()}
 
               {/* Override Revenue Tracker */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-sky-500/10 via-card to-blue-500/5 border border-sky-500/20">
+              <div data-guide-section="override-revenue" className="p-5 rounded-2xl bg-gradient-to-br from-sky-500/10 via-card to-blue-500/5 border border-sky-500/20">
                 <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Revenue da Management</p>
                 <motion.p className="text-3xl font-display font-bold text-foreground"
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
@@ -627,7 +632,7 @@ const PartnerDashboard = () => {
               </div>
 
               {/* Recruitment Engine */}
-              <div className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
+              <div data-guide-section="recruit-engine" className="p-4 rounded-2xl bg-card border border-border/50 space-y-3">
                 <div className="flex items-center gap-2">
                   <UserPlus className="w-5 h-5 text-primary" />
                   <h3 className="text-sm font-bold text-foreground">Recluta Partner</h3>
@@ -646,7 +651,7 @@ const PartnerDashboard = () => {
               </div>
 
               {/* Team Ledger — Hierarchy View */}
-              <div className="space-y-2">
+              <div data-guide-section="team-ledger" className="space-y-2">
                 <h3 className="text-sm font-bold text-foreground">Team Ledger ({teamMembers.length} membri)</h3>
                 {teamMembers.length === 0 ? (
                   <p className="text-xs text-muted-foreground py-4 text-center">Nessun membro ancora. Recluta partner per guadagnare override!</p>
@@ -754,7 +759,7 @@ const PartnerDashboard = () => {
       </div>
 
       {/* ATLAS Partner Voice Agent */}
-      <PartnerVoiceAgent />
+      <PartnerVoiceAgent activeTab={activeTab} demoMode={demoMode} />
 
       {/* ROI Calculator Modal */}
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
