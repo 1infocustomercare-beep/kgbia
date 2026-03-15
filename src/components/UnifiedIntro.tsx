@@ -363,10 +363,8 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           onAnimationComplete={() => {
             if (phase === "exit") safeComplete();
           }}
-          onClick={() => {
-            // Tap anywhere to skip on mobile
-            if (IS_MOBILE) safeComplete();
-          }}
+          onClick={handleTap}
+        >
         >
           {/* Canvas for DNA helix */}
           <canvas
