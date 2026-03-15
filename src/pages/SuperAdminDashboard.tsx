@@ -512,7 +512,7 @@ const SuperAdminDashboard = () => {
 
               {/* Core glow behind mascot */}
               <motion.div
-                className="absolute inset-2 rounded-full bg-gradient-to-br from-primary/25 via-primary/10 to-accent/15 blur-sm"
+               className="absolute inset-2 rounded-full bg-gradient-to-br from-empire-violet/25 via-empire-violet-deep/15 to-primary/15 blur-sm"
                 animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
