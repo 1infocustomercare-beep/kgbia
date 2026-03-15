@@ -1237,6 +1237,7 @@ const SuperAdminDashboard = () => {
                 secretName?: string;
                 guideUrl?: string;
                 guideSteps?: string[];
+                buyCreditsUrl?: string;
               }
 
               // toggles & guides use component-level state
