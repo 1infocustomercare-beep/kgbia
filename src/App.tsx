@@ -370,18 +370,23 @@ function App() {
   useEffect(() => {
     const path = window.location.pathname;
     const constrained = isConstrainedNetwork();
-    let deferredIndexPreload: number | null = null;
+    let deferredPreload: number | null = null;
 
-    if (path === "/" || path === "/home") {
+    // On constrained connections, avoid extra eager preloads to reduce startup contention
+    if (constrained) {
+      return;
+    }
+
+    if (path === "/") {
+      void preloadRoute(loadIndex);
+      deferredPreload = window.setTimeout(() => {
+        void preloadRoute(loadLandingPage);
+      }, 900);
+    } else if (path === "/home") {
       void preloadRoute(loadLandingPage);
-
-      if (constrained) {
-        deferredIndexPreload = window.setTimeout(() => {
-          void preloadRoute(loadIndex);
-        }, 1400);
-      } else {
+      deferredPreload = window.setTimeout(() => {
         void preloadRoute(loadIndex);
-      }
+      }, 900);
     } else if (path.startsWith("/r/")) {
       void preloadRoute(() => import("./pages/RestaurantPage"));
     } else if (path.startsWith("/admin")) {
@@ -389,8 +394,8 @@ function App() {
     }
 
     return () => {
-      if (deferredIndexPreload !== null) {
-        window.clearTimeout(deferredIndexPreload);
+      if (deferredPreload !== null) {
+        window.clearTimeout(deferredPreload);
       }
     };
   }, []);
