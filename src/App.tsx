@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 import UnifiedIntro from "@/components/UnifiedIntro";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -15,9 +16,14 @@ const IS_MOBILE = typeof window !== "undefined" && (
   window.innerWidth < 768
 );
 
+const INTRO_FAILSAFE_MS = IS_MOBILE ? 15000 : 12000;
+
+const loadIndex = () => import("./pages/Index");
+const loadLandingPage = () => import("./pages/LandingPage");
+
 // Lazy-loaded pages for code splitting
-const Index = lazy(() => import("./pages/Index"));
-const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Index = lazy(loadIndex);
+const LandingPage = lazy(loadLandingPage);
 const RestaurantPage = lazy(() => import("./pages/RestaurantPage"));
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
@@ -83,7 +89,6 @@ const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
 const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
 
-
 // Part 6 — AI Marketplace + Sector pages
 const AIMarketplacePage = lazy(() => import("./pages/app/AIMarketplacePage"));
 const KitchenDisplayPage = lazy(() => import("./pages/app/KitchenDisplayPage"));
@@ -101,169 +106,236 @@ const AdminAgentsPage = lazy(() => import("./pages/admin/AdminAgents"));
 const queryClient = new QueryClient();
 
 const PageLoader = () => (
-  <div className="min-h-screen bg-background flex items-center justify-center">
+  <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-3">
     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+    <p className="text-xs text-muted-foreground tracking-wide">Caricamento…</p>
   </div>
 );
 
+type RouteErrorBoundaryState = {
+  hasError: boolean;
+};
+
+class RouteErrorBoundary extends React.Component<{ children: ReactNode }, RouteErrorBoundaryState> {
+  state: RouteErrorBoundaryState = { hasError: false };
+
+  static getDerivedStateFromError(): RouteErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Route loading error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-6">
+          <div className="max-w-sm w-full rounded-2xl border border-border bg-card p-5 text-center space-y-3">
+            <h2 className="text-base font-semibold">Connessione instabile</h2>
+            <p className="text-sm text-muted-foreground">La pagina non si è caricata correttamente. Riprova ora.</p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="w-full rounded-xl bg-primary text-primary-foreground py-2 text-sm font-medium"
+            >
+              Riprova
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 function App() {
-  const [showIntro, setShowIntro] = useState(true);
+  const [introCompleted, setIntroCompleted] = useState(false);
 
   useEffect(() => {
     const introFailsafe = window.setTimeout(() => {
-      setShowIntro(false);
-    }, 12000);
+      setIntroCompleted(true);
+    }, INTRO_FAILSAFE_MS);
 
     return () => window.clearTimeout(introFailsafe);
   }, []);
 
+  // Preload critical route chunk while splash is running (especially useful on mobile/4G)
+  useEffect(() => {
+    const path = window.location.pathname;
+
+    if (path === "/" || path === "/home") {
+      void loadLandingPage();
+      void loadIndex();
+      return;
+    }
+
+    if (path.startsWith("/r/")) {
+      void import("./pages/RestaurantPage");
+      return;
+    }
+
+    if (path.startsWith("/admin")) {
+      void import("./pages/AdminLogin");
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
-      {showIntro ? (
-        <UnifiedIntro onComplete={() => setShowIntro(false)} />
-      ) : (
+      <div
+        className="min-h-screen"
+        style={{
+          visibility: introCompleted ? "visible" : "hidden",
+          pointerEvents: introCompleted ? "auto" : "none",
+        }}
+      >
         <TooltipProvider>
           <AuthProvider>
             <CartProvider>
               <Toaster />
               <Sonner />
               <BrowserRouter>
-                <Suspense fallback={<PageLoader />}>
-                  <Routes>
-                    {/* Public routes */}
-                    <Route path="/" element={<Index />} />
-                    <Route path="/home" element={<LandingPage />} />
-                    <Route path="/marketing" element={<MarketingPage />} />
-                    <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
-                    <Route path="/b/:slug" element={<BusinessPage />} />
-                    <Route path="/demo" element={<DemoDirectoryPage />} />
-                    <Route path="/demo/:slug" element={<IndustryDemoPage />} />
-                    <Route path="/r/:slug" element={<RestaurantPage />} />
-                    <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
-                    <Route path="/admin" element={<AdminLogin />} />
-                    <Route path="/kitchen" element={<KitchenView />} />
-                    <Route path="/partner/register" element={<PartnerRegister />} />
-                    <Route path="/privacy" element={<PrivacyPolicy />} />
-                    <Route path="/cookie-policy" element={<CookiePolicy />} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
+                <RouteErrorBoundary>
+                  <Suspense fallback={<PageLoader />}>
+                    <Routes>
+                      {/* Public routes */}
+                      <Route path="/" element={<Index />} />
+                      <Route path="/home" element={<LandingPage />} />
+                      <Route path="/marketing" element={<MarketingPage />} />
+                      <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
+                      <Route path="/b/:slug" element={<BusinessPage />} />
+                      <Route path="/demo" element={<DemoDirectoryPage />} />
+                      <Route path="/demo/:slug" element={<IndustryDemoPage />} />
+                      <Route path="/r/:slug" element={<RestaurantPage />} />
+                      <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
+                      <Route path="/admin" element={<AdminLogin />} />
+                      <Route path="/kitchen" element={<KitchenView />} />
+                      <Route path="/partner/register" element={<PartnerRegister />} />
+                      <Route path="/privacy" element={<PrivacyPolicy />} />
+                      <Route path="/cookie-policy" element={<CookiePolicy />} />
+                      <Route path="/reset-password" element={<ResetPassword />} />
 
-                    {/* Onboarding */}
-                    <Route path="/onboarding" element={
-                      <ProtectedRoute><OnboardingPage /></ProtectedRoute>
-                    } />
+                      {/* Onboarding */}
+                      <Route path="/onboarding" element={
+                        <ProtectedRoute><OnboardingPage /></ProtectedRoute>
+                      } />
 
-                    {/* Legacy protected routes (kept intact) */}
-                    <Route path="/dashboard" element={
-                      <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/superadmin" element={
-                      <ProtectedRoute requiredRole="super_admin">
-                        <SuperAdminDashboard />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/superadmin/agents" element={
-                      <ProtectedRoute requiredRole="super_admin">
-                        <AgentsPage />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/admin/agents" element={
-                      <ProtectedRoute requiredRole="super_admin">
-                        <AdminAgentsPage />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/superadmin/media" element={
-                      <ProtectedRoute requiredRole="super_admin">
-                        <MediaVaultPage />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/superadmin/brand-assets" element={
-                      <ProtectedRoute requiredRole="super_admin">
-                        <BrandAssetsPage />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/staff" element={
-                      <ProtectedRoute requiredRole="staff">
-                        <StaffPanel />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/partner" element={
-                      <ProtectedRoute requiredRole="partner">
-                        <PartnerDashboard />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/admin/dashboard" element={
-                      <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/setup" element={
-                      <ProtectedRoute><GuidedSetup /></ProtectedRoute>
-                    } />
+                      {/* Legacy protected routes (kept intact) */}
+                      <Route path="/dashboard" element={
+                        <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
+                          <AdminDashboard />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/superadmin" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <SuperAdminDashboard />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/superadmin/agents" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <AgentsPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/admin/agents" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <AdminAgentsPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/superadmin/media" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <MediaVaultPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/superadmin/brand-assets" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <BrandAssetsPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/staff" element={
+                        <ProtectedRoute requiredRole="staff">
+                          <StaffPanel />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/partner" element={
+                        <ProtectedRoute requiredRole="partner">
+                          <PartnerDashboard />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/admin/dashboard" element={
+                        <ProtectedRoute requiredRole="restaurant_admin" blockRole="super_admin">
+                          <AdminDashboard />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/setup" element={
+                        <ProtectedRoute><GuidedSetup /></ProtectedRoute>
+                      } />
 
-                    {/* ═══ Adaptive App Routes (industry-aware) ═══ */}
-                    <Route path="/app" element={
-                      <ProtectedRoute><AppLayout /></ProtectedRoute>
-                    }>
-                      <Route index element={<AdaptiveDashboard />} />
-                      {/* Food modules */}
-                      <Route path="menu" element={<MenuPage />} />
-                      <Route path="orders" element={<OrdersPage />} />
-                      <Route path="kitchen" element={<KitchenPage />} />
-                      <Route path="tables" element={<TablesPage />} />
-                      <Route path="reservations" element={<ReservationsPage />} />
-                      <Route path="reviews" element={<ReviewsPage />} />
-                      <Route path="inventory" element={<InventoryPage />} />
-                      {/* NCC modules */}
-                      <Route path="fleet" element={<NCCFleetPage />} />
-                      <Route path="routes" element={<NCCRoutesPage />} />
-                      <Route path="bookings" element={<NCCBookingsPage />} />
-                      <Route path="drivers" element={<NCCDriversPage />} />
-                      <Route path="pricing" element={<NCCPricingPage />} />
-                      <Route path="cross-selling" element={<NCCCrossSellingPage />} />
-                      <Route path="ncc-expiry" element={<NCCExpiryPage />} />
-                      {/* Multi-sector modules */}
-                      <Route path="appointments" element={<AppointmentsPage />} />
-                      <Route path="clients" element={<ClientsCRMPage />} />
-                      <Route path="interventions" element={<InterventionsPage />} />
-                      <Route path="beach-map" element={<BeachMapPage />} />
-                      <Route path="beach-bookings" element={<NCCBeachBookingsPage />} />
-                      <Route path="team" element={<TeamPage />} />
-                      <Route path="automations" element={<AutomationsPage />} />
-                      {/* Common modules */}
-                      <Route path="leads" element={<LeadsPage />} />
-                      <Route path="staff" element={<StaffPage />} />
-                      <Route path="haccp" element={<HACCPPage />} />
-                      <Route path="payroll" element={<PayrollPage />} />
-                      <Route path="finance" element={<FinancePage />} />
-                      <Route path="social" element={<SocialPage />} />
-                      <Route path="settings" element={<SettingsPage />} />
-                      <Route path="webhub" element={<WebHubPage />} />
-                      <Route path="feature-requests" element={<FeatureRequestsPage />} />
-                      <Route path="subscription" element={<SubscriptionPage />} />
-                      {/* Part 6 — AI Marketplace + Sector pages */}
-                      <Route path="ai-marketplace" element={<AIMarketplacePage />} />
-                      <Route path="agents" element={<AgentMarketplace />} />
-                      <Route path="agents/:id" element={<AgentDetailPage />} />
-                      <Route path="kitchen-display" element={<KitchenDisplayPage />} />
-                      <Route path="live-map" element={<LiveFleetMapPage />} />
-                      <Route path="loyalty" element={<LoyaltyPage />} />
-                      <Route path="telemedicine" element={<TelemedicinePage />} />
-                      <Route path="project-timeline" element={<ProjectTimelinePage />} />
-                      <Route path="field-dispatch" element={<FieldDispatchPage />} />
-                      {/* Catch-all for industry modules in development */}
-                      <Route path="*" element={<GenericModulePage />} />
-                    </Route>
+                      {/* ═══ Adaptive App Routes (industry-aware) ═══ */}
+                      <Route path="/app" element={
+                        <ProtectedRoute><AppLayout /></ProtectedRoute>
+                      }>
+                        <Route index element={<AdaptiveDashboard />} />
+                        {/* Food modules */}
+                        <Route path="menu" element={<MenuPage />} />
+                        <Route path="orders" element={<OrdersPage />} />
+                        <Route path="kitchen" element={<KitchenPage />} />
+                        <Route path="tables" element={<TablesPage />} />
+                        <Route path="reservations" element={<ReservationsPage />} />
+                        <Route path="reviews" element={<ReviewsPage />} />
+                        <Route path="inventory" element={<InventoryPage />} />
+                        {/* NCC modules */}
+                        <Route path="fleet" element={<NCCFleetPage />} />
+                        <Route path="routes" element={<NCCRoutesPage />} />
+                        <Route path="bookings" element={<NCCBookingsPage />} />
+                        <Route path="drivers" element={<NCCDriversPage />} />
+                        <Route path="pricing" element={<NCCPricingPage />} />
+                        <Route path="cross-selling" element={<NCCCrossSellingPage />} />
+                        <Route path="ncc-expiry" element={<NCCExpiryPage />} />
+                        {/* Multi-sector modules */}
+                        <Route path="appointments" element={<AppointmentsPage />} />
+                        <Route path="clients" element={<ClientsCRMPage />} />
+                        <Route path="interventions" element={<InterventionsPage />} />
+                        <Route path="beach-map" element={<BeachMapPage />} />
+                        <Route path="beach-bookings" element={<NCCBeachBookingsPage />} />
+                        <Route path="team" element={<TeamPage />} />
+                        <Route path="automations" element={<AutomationsPage />} />
+                        {/* Common modules */}
+                        <Route path="leads" element={<LeadsPage />} />
+                        <Route path="staff" element={<StaffPage />} />
+                        <Route path="haccp" element={<HACCPPage />} />
+                        <Route path="payroll" element={<PayrollPage />} />
+                        <Route path="finance" element={<FinancePage />} />
+                        <Route path="social" element={<SocialPage />} />
+                        <Route path="settings" element={<SettingsPage />} />
+                        <Route path="webhub" element={<WebHubPage />} />
+                        <Route path="feature-requests" element={<FeatureRequestsPage />} />
+                        <Route path="subscription" element={<SubscriptionPage />} />
+                        {/* Part 6 — AI Marketplace + Sector pages */}
+                        <Route path="ai-marketplace" element={<AIMarketplacePage />} />
+                        <Route path="agents" element={<AgentMarketplace />} />
+                        <Route path="agents/:id" element={<AgentDetailPage />} />
+                        <Route path="kitchen-display" element={<KitchenDisplayPage />} />
+                        <Route path="live-map" element={<LiveFleetMapPage />} />
+                        <Route path="loyalty" element={<LoyaltyPage />} />
+                        <Route path="telemedicine" element={<TelemedicinePage />} />
+                        <Route path="project-timeline" element={<ProjectTimelinePage />} />
+                        <Route path="field-dispatch" element={<FieldDispatchPage />} />
+                        {/* Catch-all for industry modules in development */}
+                        <Route path="*" element={<GenericModulePage />} />
+                      </Route>
 
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </Suspense>
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </Suspense>
+                </RouteErrorBoundary>
               </BrowserRouter>
             </CartProvider>
           </AuthProvider>
         </TooltipProvider>
-      )}
+      </div>
+
+      {!introCompleted && <UnifiedIntro onComplete={() => setIntroCompleted(true)} />}
     </QueryClientProvider>
   );
 }
