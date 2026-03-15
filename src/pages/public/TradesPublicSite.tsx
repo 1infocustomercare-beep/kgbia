@@ -49,6 +49,20 @@ Section.displayName = "Section";
 const HERO_VIDEOS: Record<string, string> = {
   electrician: "https://videos.pexels.com/video-files/5532771/5532771-uhd_2560_1440_25fps.mp4",
   plumber: "https://videos.pexels.com/video-files/6538938/6538938-uhd_2560_1440_25fps.mp4",
+  construction: "https://videos.pexels.com/video-files/5698648/5698648-uhd_2560_1440_25fps.mp4",
+  gardening: "https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_25fps.mp4",
+  cleaning: "https://videos.pexels.com/video-files/4107096/4107096-uhd_2560_1440_25fps.mp4",
+  garage: "https://videos.pexels.com/video-files/5691524/5691524-uhd_2560_1440_25fps.mp4",
+  photography: "https://videos.pexels.com/video-files/3141210/3141210-uhd_2560_1440_25fps.mp4",
+  veterinary: "https://videos.pexels.com/video-files/7516620/7516620-uhd_2560_1440_25fps.mp4",
+  tattoo: "https://videos.pexels.com/video-files/5765792/5765792-uhd_2560_1440_25fps.mp4",
+  childcare: "https://videos.pexels.com/video-files/8088245/8088245-uhd_2560_1440_25fps.mp4",
+  education: "https://videos.pexels.com/video-files/5676125/5676125-uhd_2560_1440_25fps.mp4",
+  events: "https://videos.pexels.com/video-files/1093662/1093662-uhd_2560_1440_25fps.mp4",
+  logistics: "https://videos.pexels.com/video-files/2928223/2928223-uhd_2560_1440_25fps.mp4",
+  agriturismo: "https://videos.pexels.com/video-files/4880441/4880441-uhd_2560_1440_25fps.mp4",
+  legal: "https://videos.pexels.com/video-files/5325736/5325736-uhd_2560_1440_25fps.mp4",
+  accounting: "https://videos.pexels.com/video-files/6774523/6774523-uhd_2560_1440_25fps.mp4",
   default: "https://videos.pexels.com/video-files/5532771/5532771-uhd_2560_1440_25fps.mp4",
 };
 export default function TradesPublicSite({ company, afterHero }: Props) {
