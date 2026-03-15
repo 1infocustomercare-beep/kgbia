@@ -10,8 +10,14 @@ const SECTORS = [
   "tattoo", "childcare", "education", "events", "logistics"
 ] as const;
 
+const CATEGORIES = [
+  "all", "concierge", "analytics", "content", "sales", "operations", "compliance"
+] as const;
+
 export type AgentType = "all" | "universal" | "sector-specific";
 export type AgentStatus = "all" | "active" | "beta" | "inactive";
+export type AgentCategory = typeof CATEGORIES[number];
+export type UsageFilter = "all" | "installed" | "not-installed";
 
 export function useAdminAgents() {
   const qc = useQueryClient();
@@ -19,6 +25,8 @@ export function useAdminAgents() {
   const [typeFilter, setTypeFilter] = useState<AgentType>("all");
   const [statusFilter, setStatusFilter] = useState<AgentStatus>("all");
   const [sectorFilter, setSectorFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState<AgentCategory>("all");
+  const [usageFilter, setUsageFilter] = useState<UsageFilter>("all");
 
   const { data: agents = [], isLoading } = useQuery({
     queryKey: ["admin-agents"],
@@ -89,8 +97,11 @@ export function useAdminAgents() {
     if (typeFilter !== "all") result = result.filter((a) => a.type === typeFilter);
     if (statusFilter !== "all") result = result.filter((a) => a.status === statusFilter);
     if (sectorFilter !== "all") result = result.filter((a) => a.sectors?.includes(sectorFilter));
+    if (categoryFilter !== "all") result = result.filter((a) => a.category === categoryFilter);
+    if (usageFilter === "installed") result = result.filter((a) => (installationCounts[a.id] || 0) > 0);
+    if (usageFilter === "not-installed") result = result.filter((a) => (installationCounts[a.id] || 0) === 0);
     return result;
-  }, [agents, search, typeFilter, statusFilter, sectorFilter]);
+  }, [agents, search, typeFilter, statusFilter, sectorFilter, categoryFilter, usageFilter, installationCounts]);
 
   const sectorCounts = useMemo(() => {
     const counts: Record<string, number> = { all: agents.length };
@@ -99,6 +110,14 @@ export function useAdminAgents() {
         counts[s] = (counts[s] || 0) + 1;
       })
     );
+    return counts;
+  }, [agents]);
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: agents.length };
+    agents.forEach((a) => {
+      counts[a.category] = (counts[a.category] || 0) + 1;
+    });
     return counts;
   }, [agents]);
 
@@ -130,11 +149,15 @@ export function useAdminAgents() {
     typeFilter, setTypeFilter,
     statusFilter, setStatusFilter,
     sectorFilter, setSectorFilter,
+    categoryFilter, setCategoryFilter,
+    usageFilter, setUsageFilter,
     sectorCounts,
+    categoryCounts,
     installationCounts,
     metrics,
     kpis,
     toggleStatus,
     SECTORS,
+    CATEGORIES,
   };
 }
