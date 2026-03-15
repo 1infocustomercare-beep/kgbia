@@ -227,12 +227,12 @@ const NeuralCellsBackground = () => {
           />
         ))}
 
-        {/* Violet data pulses */}
+        {/* Warm data pulses */}
         {pulseConns.map(({ a, b }, i) => (
           <motion.circle
             key={`vp${i}`}
             r={isMobile ? "0.35" : "0.25"}
-            fill="hsla(265,90%,72%,0.9)"
+            fill="hsla(32,55%,60%,0.85)"
             filter="url(#pulseGlow)"
             initial={{ cx: cells[a].x, cy: cells[a].y, opacity: 0 }}
             animate={{
