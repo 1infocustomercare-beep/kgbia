@@ -365,7 +365,6 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           }}
           onClick={handleTap}
         >
-        >
           {/* Canvas for DNA helix */}
           <canvas
             ref={canvasRef}
