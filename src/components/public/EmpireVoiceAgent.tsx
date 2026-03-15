@@ -862,7 +862,7 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [sendMessage, stopAll]);
 
-  // ── Toggle panel — auto-start ElevenLabs call for real phone experience ──
+  // ── Toggle panel — unlock audio on user gesture, then start narration ──
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => {
       const next = !prev;
@@ -870,23 +870,41 @@ const EmpireVoiceAgent: React.FC = () => {
         userInteractedRef.current = true;
         setUserInteracted(true);
         setMobilePromptShown(false);
-        startIntroNarration();
-        if (!narratedRef.current.has("hero")) {
-          enqueueSectionNarration("hero", true);
+
+        // Unlock speechSynthesis with a silent utterance inside the gesture context
+        if (window.speechSynthesis) {
+          try {
+            const silent = new SpeechSynthesisUtterance("");
+            silent.volume = 0;
+            silent.lang = "it-IT";
+            window.speechSynthesis.speak(silent);
+          } catch {
+            // noop
+          }
         }
+
+        // Start narration after short delay (audio context is now unlocked)
+        setTimeout(() => {
+          startIntroNarration();
+          if (!narratedRef.current.has("hero")) {
+            enqueueSectionNarration("hero", true);
+          }
+        }, 200);
+
         // Auto-start ElevenLabs conversation for instant phone call feel
         if (elevenlabsAvailable && voiceMode !== "elevenlabs") {
-          setTimeout(() => startElevenlabsConversation(), 300);
+          setTimeout(() => startElevenlabsConversation(), 500);
         }
       } else {
-        // Closing panel: end ElevenLabs call
+        // Closing panel: stop narration and end ElevenLabs call
+        stopAll();
         if (voiceMode === "elevenlabs" && conversation.status === "connected") {
           stopElevenlabsConversation();
         }
       }
       return next;
     });
-  }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status]);
+  }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status, stopAll]);
 
   // ── Render ──
   return (
