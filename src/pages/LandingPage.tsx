@@ -2274,7 +2274,7 @@ const LandingPage = () => {
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
             />
             <motion.div className="absolute w-[3px] h-[3px] rounded-full pointer-events-none"
-              style={{ background: "hsla(300,60%,70%,0.3)", top: "60%", left: "55%" }}
+              style={{ background: "hsla(35,45%,55%,0.25)", top: "60%", left: "55%" }}
               animate={{ opacity: [0, 0.4, 0], x: [-2, 2, -2] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
             />
