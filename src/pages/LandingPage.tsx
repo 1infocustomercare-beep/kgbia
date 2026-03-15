@@ -2571,7 +2571,7 @@ const LandingPage = () => {
               {/* Top holographic line */}
               <motion.div className="h-[1.5px] w-full" 
                 style={{ 
-                  background: "linear-gradient(90deg, transparent, hsla(265,85%,65%,0.5), hsla(35,50%,55%,0.4), hsla(300,60%,70%,0.4), hsla(265,85%,65%,0.5), transparent)",
+                  background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.4), hsla(35,50%,55%,0.35), hsla(40,45%,55%,0.3), hsla(38,50%,55%,0.4), transparent)",
                   backgroundSize: "300% 100%",
                 }}
                 animate={{ backgroundPosition: ["0% 0%", "300% 0%"] }}
