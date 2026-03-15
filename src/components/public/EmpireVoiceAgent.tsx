@@ -651,30 +651,67 @@ const EmpireVoiceAgent: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-      // On mobile, show the prompt overlay immediately
-      if (window.matchMedia("(pointer: coarse)").matches) {
-        setMobilePromptShown(true);
-      }
     }, 300);
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Desktop auto-start ──
+  // ── Auto-start on every device ──
   useEffect(() => {
-    if (!isVisible || isTouchDevice) return;
+    if (!isVisible) return;
     startIntroNarration();
-  }, [isVisible, isTouchDevice, startIntroNarration]);
+  }, [isVisible, startIntroNarration]);
 
-  // ── Mobile: start speaking after user's first tap anywhere on the prompt ──
+  // ── Resilient retry for blocked/autoplay-limited contexts (mobile browsers) ──
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const retryHeroNarration = () => {
+      if (!voiceEnabledRef.current) return;
+      if (narratedRef.current.has("hero")) return;
+      enqueueSectionNarration("hero", true);
+    };
+
+    const retryTimer = window.setTimeout(retryHeroNarration, 1200);
+
+    const onUserUnlock = () => {
+      if (userInteractedRef.current) return;
+      userInteractedRef.current = true;
+      setUserInteracted(true);
+      setMobilePromptShown(false);
+      retryHeroNarration();
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        retryHeroNarration();
+      }
+    };
+
+    window.addEventListener("pointerdown", onUserUnlock, { passive: true });
+    window.addEventListener("focus", retryHeroNarration);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      window.clearTimeout(retryTimer);
+      window.removeEventListener("pointerdown", onUserUnlock);
+      window.removeEventListener("focus", retryHeroNarration);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [isVisible, enqueueSectionNarration]);
+
+  // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
+    userInteractedRef.current = true;
     setUserInteracted(true);
     setMobilePromptShown(false);
     setIsOpen(true);
-    // Small delay to ensure audio context is unlocked by user gesture
     setTimeout(() => {
       startIntroNarration();
+      if (!narratedRef.current.has("hero")) {
+        enqueueSectionNarration("hero", true);
+      }
     }, 50);
-  }, [startIntroNarration]);
+  }, [startIntroNarration, enqueueSectionNarration]);
 
   // ── Send user message ──
   const sendMessage = useCallback(async (text: string) => {
