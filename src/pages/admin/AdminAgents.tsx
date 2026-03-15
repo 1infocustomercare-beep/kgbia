@@ -11,6 +11,7 @@ import AgentFilters from "@/components/admin/AgentFilters";
 import SectorTabs from "@/components/admin/SectorTabs";
 import AgentCard from "@/components/admin/AgentCard";
 import AgentCostsTab from "@/components/admin/AgentCostsTab";
+import TenantAgentsTab from "@/components/admin/TenantAgentsTab";
 import { CATEGORY_LABELS } from "@/types/agent";
 import type { Agent } from "@/types/agent";
 import { toast } from "@/hooks/use-toast";
@@ -108,7 +109,8 @@ export default function AdminAgents() {
           {[
             { id: "catalogo", label: "Catalogo", icon: LayoutGrid },
             { id: "settori", label: "Settori", icon: Building2 },
-            { id: "costi", label: "Costi & Uso", icon: DollarSign },
+            { id: "tenant", label: "Account", icon: Users },
+            { id: "costi", label: "Costi", icon: DollarSign },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -225,6 +227,9 @@ export default function AdminAgents() {
             )}
           </div>
         )}
+
+        {/* TENANT/ACCOUNT TAB */}
+        {mainTab === "tenant" && <TenantAgentsTab />}
 
         {/* COSTI TAB */}
         {mainTab === "costi" && <AgentCostsTab />}
