@@ -168,8 +168,8 @@ class RouteErrorBoundary extends React.Component<{ children: ReactNode }, RouteE
       return (
         <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-6">
           <div className="max-w-sm w-full rounded-2xl border border-border bg-card p-5 text-center space-y-3">
-            <h2 className="text-base font-semibold">Connessione instabile</h2>
-            <p className="text-sm text-muted-foreground">La pagina non si è caricata correttamente. Riprova ora.</p>
+            <h2 className="text-base font-semibold">Errore di caricamento</h2>
+            <p className="text-sm text-muted-foreground">Il modulo non si è caricato al primo tentativo. Riprova ora.</p>
             <button
               type="button"
               onClick={() => window.location.reload()}
