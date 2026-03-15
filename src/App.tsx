@@ -276,6 +276,28 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const onUnhandledRejection = (event: PromiseRejectionEvent) => {
+      if (!tryRecoverFromChunkError(event.reason)) return;
+      event.preventDefault();
+    };
+
+    const onPreloadError = (event: Event) => {
+      const payload = (event as CustomEvent<{ payload?: unknown }>).payload;
+      const fallbackReason = (event as { reason?: unknown }).reason;
+      if (!tryRecoverFromChunkError(payload ?? fallbackReason ?? event)) return;
+      if (typeof event.preventDefault === "function") event.preventDefault();
+    };
+
+    window.addEventListener("unhandledrejection", onUnhandledRejection);
+    window.addEventListener("vite:preloadError", onPreloadError as EventListener);
+
+    return () => {
+      window.removeEventListener("unhandledrejection", onUnhandledRejection);
+      window.removeEventListener("vite:preloadError", onPreloadError as EventListener);
+    };
+  }, []);
+
   // If app booted successfully, allow future chunk recovery attempts
   useEffect(() => {
     if (!introCompleted) return;
