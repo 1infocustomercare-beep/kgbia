@@ -628,19 +628,30 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    // Check if splash actually completed the hero narration successfully
-    if (wasSplashNarrationStarted() && isSplashNarrationDone()) {
-      // Hero was fully narrated during splash — mark it narrated
+    const splashStarted = wasSplashNarrationStarted();
+    const splashDone = isSplashNarrationDone();
+
+    // Desktop: if splash voice finished correctly, avoid duplicate hero narration
+    if (splashStarted && splashDone && !isTouchDeviceRef.current) {
       narratedRef.current.add("hero");
       setNarratedSections(new Set(narratedRef.current));
-      // Add the hero script to messages so user sees it in chat
-      if (!messagesRef.current.some(m => m.content === SECTION_SCRIPTS.hero)) {
-        setMessages(prev => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
+      if (!messagesRef.current.some((m) => m.content === SECTION_SCRIPTS.hero)) {
+        setMessages((prev) => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
       }
-    } else {
-      // Splash didn't start OR didn't complete — play hero narration now
-      enqueueSectionNarration("hero", true);
+      return;
     }
+
+    // If splash is still narrating, don't interrupt it immediately; verify shortly after
+    if (splashStarted && !splashDone) {
+      window.setTimeout(() => {
+        if (narratedRef.current.has("hero")) return;
+        enqueueSectionNarration("hero", true);
+      }, 1800);
+      return;
+    }
+
+    // Mobile or splash not completed: force hero narration now
+    enqueueSectionNarration("hero", true);
   }, [enqueueSectionNarration]);
 
   const stopAll = useCallback(() => {
