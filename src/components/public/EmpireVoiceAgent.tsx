@@ -442,7 +442,7 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── ElevenLabs Conversational AI hook ──
   const conversation = useConversation({
     onConnect: () => {
-      setMessages(prev => [...prev, { role: "assistant", content: "🎙️ Connesso! Parla pure, ti ascolto..." }]);
+      setMessages(prev => [...prev, { role: "assistant", content: "📞 Arianna in linea! Parlami pure, ti ascolto..." }]);
     },
     onDisconnect: () => {
       setVoiceMode("legacy");
