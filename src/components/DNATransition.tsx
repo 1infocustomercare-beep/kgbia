@@ -4,16 +4,17 @@ import empireAgentMascot from "@/assets/empire-agent-mascot.png";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
-// Detect mobile/low-power devices
 const IS_MOBILE = typeof window !== "undefined" && (
   /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
   window.innerWidth < 768
 );
 
-/**
- * Premium DNA Neural Transition — Mobile-Optimized
- * Canvas-based on desktop, simplified CSS on mobile
- */
+// Parametri adattivi: mobile ridotti ma visibili
+const MESH_COUNT = IS_MOBILE ? 16 : 35;
+const HELIX_NODES_COUNT = IS_MOBILE ? 24 : 48;
+const CELL_COUNT = IS_MOBILE ? 3 : 6;
+const MESH_CHECK_RANGE = IS_MOBILE ? 4 : 8;
+
 const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [phase, setPhase] = useState<"scatter" | "assemble" | "pulse" | "morph" | "dissolve">("scatter");
@@ -21,15 +22,14 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
   phaseRef.current = phase;
 
   useEffect(() => {
-    // Mobile: much shorter timeline to avoid freezing
     if (IS_MOBILE) {
       const t1 = setTimeout(() => setPhase("assemble"), 200);
-      const t2 = setTimeout(() => setPhase("morph"), 800);
-      const t3 = setTimeout(() => setPhase("dissolve"), 1200);
-      const t4 = setTimeout(onComplete, 1500);
-      return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+      const t2 = setTimeout(() => setPhase("pulse"), 700);
+      const t3 = setTimeout(() => setPhase("morph"), 1200);
+      const t4 = setTimeout(() => setPhase("dissolve"), 1800);
+      const t5 = setTimeout(onComplete, 2200);
+      return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
     }
-    // Desktop: full timeline
     const t1 = setTimeout(() => setPhase("assemble"), 300);
     const t2 = setTimeout(() => setPhase("pulse"), 1200);
     const t3 = setTimeout(() => setPhase("morph"), 1800);
@@ -39,15 +39,13 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
   }, [onComplete]);
 
   const startCanvas = useCallback(() => {
-    // SKIP CANVAS entirely on mobile — use CSS fallback
-    if (IS_MOBILE) return () => {};
-
     const canvas = canvasRef.current;
     if (!canvas) return () => {};
     const ctx = canvas.getContext("2d");
     if (!ctx) return () => {};
 
-    const dpr = Math.min(window.devicePixelRatio, 2);
+    // Mobile: use dpr 1 to save GPU; desktop: up to 2
+    const dpr = IS_MOBILE ? 1 : Math.min(window.devicePixelRatio, 2);
     let w = window.innerWidth;
     let h = window.innerHeight;
     canvas.width = w * dpr;
@@ -64,7 +62,6 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
     window.addEventListener("resize", resize);
 
     // ═══ BACKGROUND MESH ═══
-    const MESH_COUNT = 35;
     const meshNodes: { x: number; y: number; vx: number; vy: number; r: number; type: "v" | "g" }[] = [];
     for (let i = 0; i < MESH_COUNT; i++) {
       meshNodes.push({
@@ -77,7 +74,6 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
     }
 
     // ═══ DNA HELIX NODES ═══
-    const HELIX_NODES = 48;
     const helixNodes: {
       x: number; y: number;
       sx: number; sy: number;
@@ -88,8 +84,8 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
     }[] = [];
 
     const turns = 3.5;
-    for (let i = 0; i < HELIX_NODES; i++) {
-      const t = i / HELIX_NODES;
+    for (let i = 0; i < HELIX_NODES_COUNT; i++) {
+      const t = i / HELIX_NODES_COUNT;
       const angle = t * Math.PI * 2 * turns;
       const yPos = 0.08 + t * 0.84;
       const amplitude = 0.10 + Math.sin(t * Math.PI) * 0.05;
@@ -109,7 +105,6 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
     }
 
     // ═══ CELLULAR ORGANELLES ═══
-    const CELL_COUNT = 6;
     const cells: { cx: number; cy: number; radius: number; speed: number; offset: number }[] = [];
     for (let i = 0; i < CELL_COUNT; i++) {
       cells.push({
@@ -123,8 +118,17 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
 
     let startTime = performance.now();
     let animId: number;
+    // Mobile: throttle to ~30fps
+    let lastFrame = 0;
+    const FRAME_INTERVAL = IS_MOBILE ? 33 : 0;
 
     const draw = (now: number) => {
+      if (IS_MOBILE && now - lastFrame < FRAME_INTERVAL) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrame = now;
+
       const elapsed = (now - startTime) / 1000;
       ctx.clearRect(0, 0, w, h);
       const currentPhase = phaseRef.current;
@@ -132,18 +136,18 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
       let assembleP = 0, morphP = 0, dissolveP = 0;
 
       if (currentPhase === "assemble") {
-        assembleP = Math.min((elapsed - 0.4) / 1.2, 1);
-        assembleP = 1 - Math.pow(1 - assembleP, 3);
+        assembleP = Math.min((elapsed - 0.3) / 1.0, 1);
+        assembleP = 1 - Math.pow(1 - Math.max(assembleP, 0), 3);
       } else if (currentPhase === "pulse") {
         assembleP = 1;
       } else if (currentPhase === "morph") {
         assembleP = 1;
-        morphP = Math.min((elapsed - 2.8) / 0.8, 1);
-        morphP = morphP * morphP;
+        morphP = Math.min((elapsed - (IS_MOBILE ? 1.2 : 2.0)) / 0.8, 1);
+        morphP = Math.max(morphP, 0) ** 2;
       } else if (currentPhase === "dissolve") {
         assembleP = 1; morphP = 1;
-        dissolveP = Math.min((elapsed - 3.6) / 0.6, 1);
-        dissolveP = dissolveP * dissolveP;
+        dissolveP = Math.min((elapsed - (IS_MOBILE ? 1.8 : 2.8)) / 0.6, 1);
+        dissolveP = Math.max(dissolveP, 0) ** 2;
       }
 
       const globalFade = dissolveP > 0 ? 1 - dissolveP : Math.min(elapsed / 0.3, 1);
@@ -164,7 +168,7 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
         ctx.stroke();
       }
 
-      // ═══ BACKGROUND MESH — O(n) only nearby connections ═══
+      // ═══ BACKGROUND MESH ═══
       for (const n of meshNodes) {
         n.x += n.vx;
         n.y += n.vy;
@@ -173,9 +177,8 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
       }
 
       const meshAlpha = 0.05 * (1 - morphP * 0.5);
-      // Only check nearby pairs using spatial bucketing (simplified)
       for (let i = 0; i < meshNodes.length; i++) {
-        for (let j = i + 1; j < Math.min(i + 8, meshNodes.length); j++) {
+        for (let j = i + 1; j < Math.min(i + MESH_CHECK_RANGE, meshNodes.length); j++) {
           const dx = meshNodes[i].x - meshNodes[j].x;
           const dy = meshNodes[i].y - meshNodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -217,7 +220,7 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
         }
       }
 
-      // Helix connections — only adjacent nodes (O(n))
+      // Helix connections — adjacent nodes only
       for (let i = 0; i < helixNodes.length - 1; i++) {
         const a = helixNodes[i], b = helixNodes[i + 1];
         const dx = a.x - b.x, dy = a.y - b.y;
@@ -283,29 +286,8 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
           if (phase === "dissolve") onComplete();
         }}
       >
-        {/* Canvas — desktop only */}
-        {!IS_MOBILE && (
-          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
-        )}
-
-        {/* Mobile CSS fallback — lightweight animated background */}
-        {IS_MOBILE && (
-          <div className="absolute inset-0">
-            {/* Simple radial gradient */}
-            <div
-              className="absolute inset-0"
-              style={{ background: "radial-gradient(ellipse at center, hsla(265,70%,55%,0.12) 0%, transparent 60%)" }}
-            />
-            {/* Simple dots grid */}
-            <div
-              className="absolute inset-0 opacity-[0.04]"
-              style={{
-                backgroundImage: "radial-gradient(circle, hsla(265,80%,65%,0.8) 1px, transparent 1px)",
-                backgroundSize: "40px 40px",
-              }}
-            />
-          </div>
-        )}
+        {/* Canvas — both desktop and mobile */}
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
         {/* Vignette */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsla(252,12%,6%,0.7)_75%)] pointer-events-none" />
@@ -318,36 +300,34 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
           transition={{ duration: 0.3 }}
         >
           <div className="flex flex-col items-center gap-4 relative">
-            {/* Scanning ring — desktop only */}
-            {!IS_MOBILE && (
+            {/* Scanning ring */}
+            <motion.div
+              className="w-20 h-20 sm:w-28 sm:h-28 rounded-full relative"
+              style={{ border: "0.5px solid hsla(265,60%,60%,0.06)" }}
+              animate={{ 
+                rotate: 360,
+                scale: phase === "morph" ? 1.8 : 1,
+                opacity: phase === "morph" || phase === "dissolve" ? 0 : 1,
+              }}
+              transition={{ 
+                rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                scale: { duration: 0.8, ease: smoothEase },
+                opacity: { duration: 0.6 },
+              }}
+            >
               <motion.div
-                className="w-20 h-20 sm:w-28 sm:h-28 rounded-full relative"
-                style={{ border: "0.5px solid hsla(265,60%,60%,0.06)" }}
-                animate={{ 
-                  rotate: 360,
-                  scale: phase === "morph" ? 1.8 : 1,
-                  opacity: phase === "morph" || phase === "dissolve" ? 0 : 1,
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: "conic-gradient(from 0deg, transparent 0%, hsla(265,80%,65%,0.06) 8%, transparent 16%)",
                 }}
-                transition={{ 
-                  rotate: { duration: 10, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 0.8, ease: smoothEase },
-                  opacity: { duration: 0.6 },
-                }}
-              >
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    background: "conic-gradient(from 0deg, transparent 0%, hsla(265,80%,65%,0.06) 8%, transparent 16%)",
-                  }}
-                />
-                <motion.div
-                  className="absolute inset-4 rounded-full"
-                  style={{ border: "0.5px solid hsla(38,45%,55%,0.06)" }}
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
-                />
-              </motion.div>
-            )}
+              />
+              <motion.div
+                className="absolute inset-4 rounded-full"
+                style={{ border: "0.5px solid hsla(38,45%,55%,0.06)" }}
+                animate={{ rotate: -360 }}
+                transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+              />
+            </motion.div>
 
             {/* Agent mascot — emerges during morph phase */}
             <motion.div
@@ -400,40 +380,38 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
               </span>
             </motion.div>
 
-            {/* Phase indicators — desktop only */}
-            {!IS_MOBILE && (
-              <motion.div
-                className="flex items-center gap-5"
-                initial={{ opacity: 0 }}
-                animate={{ 
-                  opacity: phase === "pulse" ? 0.6 : phase === "morph" ? 0.8 : 0,
-                  y: phase === "morph" ? 70 : 0,
-                }}
-                transition={{ duration: 0.3, delay: 1.2 }}
-              >
-                {["DNA", "AGENTS", "DEPLOY"].map((label, i) => (
-                  <div key={label} className="flex items-center gap-1.5">
-                    <div
-                      className="w-[3px] h-[3px] rounded-full animate-pulse"
-                      style={{
-                        background: i === 0 ? "hsl(265,80%,65%)" : i === 1 ? "hsl(38,50%,55%)" : "hsl(170,60%,50%)",
-                        animationDelay: `${i * 300}ms`,
-                      }}
-                    />
-                    <span
-                      className="text-[0.3rem] sm:text-[0.33rem] tracking-[0.2em] uppercase font-mono"
-                      style={{ color: "hsla(265,50%,60%,0.18)" }}
-                    >
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </motion.div>
-            )}
+            {/* Phase indicators */}
+            <motion.div
+              className="flex items-center gap-5"
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: phase === "pulse" ? 0.6 : phase === "morph" ? 0.8 : 0,
+                y: phase === "morph" ? 70 : 0,
+              }}
+              transition={{ duration: 0.3, delay: IS_MOBILE ? 0.5 : 1.2 }}
+            >
+              {["DNA", "AGENTS", "DEPLOY"].map((label, i) => (
+                <div key={label} className="flex items-center gap-1.5">
+                  <div
+                    className="w-[3px] h-[3px] rounded-full animate-pulse"
+                    style={{
+                      background: i === 0 ? "hsl(265,80%,65%)" : i === 1 ? "hsl(38,50%,55%)" : "hsl(170,60%,50%)",
+                      animationDelay: `${i * 300}ms`,
+                    }}
+                  />
+                  <span
+                    className="text-[0.3rem] sm:text-[0.33rem] tracking-[0.2em] uppercase font-mono"
+                    style={{ color: "hsla(265,50%,60%,0.18)" }}
+                  >
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </motion.div>
           </div>
         </motion.div>
 
-        {/* Subtle tech grid — CSS only, lightweight */}
+        {/* Subtle tech grid */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.01]"
           style={{
