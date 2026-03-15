@@ -2384,7 +2384,7 @@ const LandingPage = () => {
               {/* Neural pulse ring — expanding */}
               <motion.div
                 className="absolute inset-0 rounded-2xl pointer-events-none"
-                style={{ border: "1.5px solid hsla(265,80%,70%,0.35)" }}
+                style={{ border: "1.5px solid hsla(38,50%,55%,0.3)" }}
                 animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
               />
