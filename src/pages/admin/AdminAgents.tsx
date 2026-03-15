@@ -109,7 +109,8 @@ export default function AdminAgents() {
           {[
             { id: "catalogo", label: "Catalogo", icon: LayoutGrid },
             { id: "settori", label: "Settori", icon: Building2 },
-            { id: "costi", label: "Costi & Uso", icon: DollarSign },
+            { id: "tenant", label: "Account", icon: Users },
+            { id: "costi", label: "Costi", icon: DollarSign },
           ].map((tab) => (
             <button
               key={tab.id}
