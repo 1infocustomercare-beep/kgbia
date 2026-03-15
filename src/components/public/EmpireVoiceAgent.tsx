@@ -1069,7 +1069,7 @@ const EmpireVoiceAgent: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-foreground">Laura</h3>
+                  <h3 className="text-sm font-bold text-foreground">Arianna</h3>
                   <p className="text-[0.55rem] text-foreground/40 tracking-wider uppercase">
                     {voiceMode === "elevenlabs" && conversation.status === "connected"
                       ? conversation.isSpeaking ? "🔊 Conversazione attiva" : "🎙️ Ti ascolta..."
