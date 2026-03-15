@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, forwardRef, lazy, Suspense, useMemo } from "react";
-const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
+import { useState, useEffect, useRef, forwardRef, useMemo } from "react";
+import type { ComponentType } from "react";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import IndustryPhoneShowcase, { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
@@ -76,6 +76,48 @@ function useLandingAssets() {
   };
 }
 
+const importVoiceAgentWithRetry = async (
+  maxAttempts = 4,
+): Promise<{ default: ComponentType }> => {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      return await import("@/components/public/EmpireVoiceAgent") as { default: ComponentType };
+    } catch (error) {
+      lastError = error;
+      if (attempt === maxAttempts) break;
+      await new Promise<void>((resolve) => window.setTimeout(resolve, 350 * attempt));
+    }
+  }
+
+  throw lastError;
+};
+
+const SafeEmpireVoiceAgent = () => {
+  const [AgentComponent, setAgentComponent] = useState<ComponentType | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    void importVoiceAgentWithRetry()
+      .then((module) => {
+        if (!mounted) return;
+        setAgentComponent(() => module.default);
+      })
+      .catch((error) => {
+        console.warn("Voice agent module unavailable on this connection:", error);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (!AgentComponent) return null;
+
+  return <AgentComponent />;
+};
 
 /* ═══════════════════════════════════════════
    HELPERS
@@ -5277,9 +5319,7 @@ const LandingPage = () => {
         )}
       </AnimatePresence>
       {/* ATLAS Voice Agent */}
-      <Suspense fallback={null}>
-        <EmpireVoiceAgent />
-      </Suspense>
+      <SafeEmpireVoiceAgent />
     </div>
   );
 };
