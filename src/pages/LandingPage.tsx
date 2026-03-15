@@ -2347,7 +2347,7 @@ const LandingPage = () => {
               {/* Orbital ring 2 — counter-rotating */}
               <motion.div
                 className="absolute inset-1 rounded-xl"
-                style={{ border: "1px solid transparent", borderBottomColor: "hsla(300,70%,80%,0.4)", borderLeftColor: "hsla(265,60%,70%,0.25)" }}
+                style={{ border: "1px solid transparent", borderBottomColor: "hsla(35,50%,60%,0.35)", borderLeftColor: "hsla(38,45%,55%,0.2)" }}
                 animate={{ rotate: [360, 0] }}
                 transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
               />
