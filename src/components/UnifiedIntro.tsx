@@ -23,13 +23,13 @@ const HELIX_NODES = IS_MOBILE ? 20 : 42;
 const MESH_COUNT = IS_MOBILE ? 10 : 28;
 const CELL_COUNT = IS_MOBILE ? 2 : 5;
 
-// Phase timing (ms) — longer to appreciate the full effect
+// Phase timing (ms) — brand shorter, DNA longer for full effect
 const TIMINGS = IS_MOBILE
-  ? { brand: 0, dna: 2200, pulse: 3800, morph: 5000, exit: 6200, complete: 7200 }
-  : { brand: 0, dna: 2500, pulse: 4200, morph: 5600, exit: 6800, complete: 7800 };
+  ? { brand: 0, dna: 1200, pulse: 3200, morph: 4200, exit: 5000, complete: 5600 }
+  : { brand: 0, dna: 1400, pulse: 3600, morph: 4800, exit: 5600, complete: 6200 };
 
 // Absolute safety: never block app beyond this
-const SAFETY_TIMEOUT = IS_MOBILE ? 9000 : 10000;
+const SAFETY_TIMEOUT = IS_MOBILE ? 7000 : 8000;
 
 type Phase = "brand" | "dna" | "pulse" | "morph" | "exit";
 
