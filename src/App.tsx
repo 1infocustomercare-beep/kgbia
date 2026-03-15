@@ -90,6 +90,7 @@ const FieldDispatchPage = lazy(() => import("./pages/app/FieldDispatchPage"));
 // Agent Marketplace
 const AgentMarketplace = lazy(() => import("./pages/AgentMarketplace"));
 const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
+const AdminAgentsPage = lazy(() => import("./pages/admin/AdminAgents"));
 
 const queryClient = new QueryClient();
 
