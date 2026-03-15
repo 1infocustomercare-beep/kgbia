@@ -521,7 +521,9 @@ const PartnerDashboard = () => {
               )}
 
               {/* === LEADERBOARD === */}
-              <PartnerLeaderboard currentUserSales={salesCount} />
+              <div data-guide-section="leaderboard">
+                <PartnerLeaderboard currentUserSales={salesCount} />
+              </div>
             </motion.div>
           )}
 
