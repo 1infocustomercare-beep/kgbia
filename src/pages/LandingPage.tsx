@@ -2434,7 +2434,7 @@ const LandingPage = () => {
                 />
                 <motion.span className="text-[0.38rem] sm:text-[0.5rem] tracking-[0.5em] uppercase font-semibold"
                   style={{
-                    background: "linear-gradient(90deg, hsla(35,50%,58%,1), hsla(265,70%,70%,1), hsla(300,50%,75%,1), hsla(35,50%,58%,1))",
+                    background: "linear-gradient(90deg, hsla(35,50%,58%,1), hsla(38,55%,62%,1), hsla(40,45%,60%,1), hsla(35,50%,58%,1))",
                     backgroundSize: "300% 100%",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
