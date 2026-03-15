@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import SplashScreen from "@/components/SplashScreen";
-import DNATransition from "@/components/DNATransition";
+import UnifiedIntro from "@/components/UnifiedIntro";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -107,34 +106,11 @@ const PageLoader = () => (
 );
 
 function App() {
-  const [showSplash, setShowSplash] = useState(true);
-  const [showDNA, setShowDNA] = useState(false);
-
-  useEffect(() => {
-    // Safety timeouts — let animations play fully but prevent infinite stuck states
-    const splashTimeout = IS_MOBILE ? 2400 : 3000;
-    const dnaTimeout = IS_MOBILE ? 5500 : 6500;
-
-    const splashTimer = setTimeout(() => { 
-      setShowSplash(false); 
-      setShowDNA(true); 
-    }, splashTimeout);
-    const dnaTimer = setTimeout(() => { 
-      setShowSplash(false); 
-      setShowDNA(false); 
-    }, dnaTimeout);
-    return () => { clearTimeout(splashTimer); clearTimeout(dnaTimer); };
-  }, []);
-
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-    setShowDNA(true);
-  };
+  const [showIntro, setShowIntro] = useState(true);
 
   return (
   <QueryClientProvider client={queryClient}>
-    {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-    {showDNA && <DNATransition onComplete={() => setShowDNA(false)} />}
+    {showIntro && <UnifiedIntro onComplete={() => setShowIntro(false)} />}
     <TooltipProvider>
       <AuthProvider>
         <CartProvider>
