@@ -5319,9 +5319,7 @@ const LandingPage = () => {
         )}
       </AnimatePresence>
       {/* ATLAS Voice Agent */}
-      <Suspense fallback={null}>
-        <EmpireVoiceAgent />
-      </Suspense>
+      <SafeEmpireVoiceAgent />
     </div>
   );
 };
