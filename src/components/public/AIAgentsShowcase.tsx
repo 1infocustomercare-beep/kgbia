@@ -515,7 +515,7 @@ export function AIAgentsShowcase() {
                       transition={{ delay: i * 0.09 + 0.35, duration: 0.3 }}
                     />
 
-                    <div className="relative rounded-lg border border-foreground/[0.05] bg-card/25 backdrop-blur-sm p-2.5 overflow-hidden hover:border-primary/15 transition-all duration-400 hover:shadow-[0_0_12px_hsl(var(--primary)/0.06)]">
+                    <div className="relative rounded-xl border border-primary/10 bg-gradient-to-br from-card/80 via-card/60 to-primary/[0.04] backdrop-blur-md p-3 overflow-hidden hover:border-primary/25 transition-all duration-400 hover:shadow-[0_0_20px_hsl(var(--primary)/0.1)] shadow-[0_2px_12px_hsl(var(--background)/0.5)]">
                       <motion.div
                         className="absolute top-0 right-0 w-6 h-6"
                         initial={{ opacity: 0 }}
@@ -527,13 +527,13 @@ export function AIAgentsShowcase() {
                         <div className="absolute top-0 right-0 h-[1px] w-3 bg-gradient-to-l from-primary/25 to-transparent" />
                       </motion.div>
 
-                      <div className="flex items-start gap-2">
-                        <div className="w-6 h-6 min-w-[24px] rounded bg-primary/[0.08] border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors duration-400">
-                          <span className="scale-[0.8]">{p.icon}</span>
+                      <div className="flex items-start gap-2.5">
+                        <div className="w-7 h-7 min-w-[28px] rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors duration-400 shadow-[0_0_8px_hsl(var(--primary)/0.08)]">
+                          <span className="scale-[0.85]">{p.icon}</span>
                         </div>
                         <div>
-                          <h4 className="font-heading font-bold text-[0.65rem] text-foreground mb-0.5 leading-tight">{p.title}</h4>
-                          <p className="text-[0.5rem] text-foreground/35 leading-[1.4] line-clamp-2">{p.desc}</p>
+                          <h4 className="font-heading font-bold text-[0.7rem] text-foreground mb-0.5 leading-tight tracking-wide">{p.title}</h4>
+                          <p className="text-[0.55rem] text-foreground/55 leading-[1.5] line-clamp-2">{p.desc}</p>
                         </div>
                       </div>
                     </div>
