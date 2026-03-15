@@ -34,8 +34,8 @@ serve(async (req) => {
       });
     }
 
-    // Viola: Serene, Balanced and Engaging — middle-aged female voice
-    const voiceId = "x89KUxIfWuOxMog310Aq";
+    // Sara — Professional, warm, persuasive Italian female voice
+    const voiceId = "EXAVITQu4vr4xnSDxMaL";
 
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
@@ -49,11 +49,11 @@ serve(async (req) => {
           text: normalizedText,
           model_id: "eleven_multilingual_v2",
           voice_settings: {
-            stability: 0.35,
-            similarity_boost: 0.92,
-            style: 0.38,
+            stability: 0.45,
+            similarity_boost: 0.88,
+            style: 0.30,
             use_speaker_boost: true,
-            speed: 0.92,
+            speed: 0.90,
           },
         }),
       }
