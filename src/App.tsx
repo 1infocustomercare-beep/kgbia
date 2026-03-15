@@ -21,10 +21,46 @@ const INTRO_FAILSAFE_MS = IS_MOBILE ? 15000 : 12000;
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
 
+const isRetryableImportError = (error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error);
+  return /Failed to fetch dynamically imported module|Importing a module script failed|Load failed/i.test(message);
+};
+
+const delay = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
+const importWithRetry = async <T,>(
+  importer: () => Promise<T>,
+  maxAttempts = IS_MOBILE ? 4 : 3,
+): Promise<T> => {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      return await importer();
+    } catch (error) {
+      lastError = error;
+      if (!isRetryableImportError(error) || attempt === maxAttempts) {
+        throw error;
+      }
+      await delay(350 * attempt);
+    }
+  }
+
+  throw lastError;
+};
+
+const preloadRoute = async (importer: () => Promise<unknown>) => {
+  try {
+    await importWithRetry(importer);
+  } catch (error) {
+    console.warn("Route preload failed (will retry on navigation):", error);
+  }
+};
+
 // Lazy-loaded pages for code splitting
-const Index = lazy(loadIndex);
-const LandingPage = lazy(loadLandingPage);
-const RestaurantPage = lazy(() => import("./pages/RestaurantPage"));
+const Index = lazy(() => importWithRetry(loadIndex));
+const LandingPage = lazy(() => importWithRetry(loadLandingPage));
+const RestaurantPage = lazy(() => importWithRetry(() => import("./pages/RestaurantPage")));
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -132,8 +168,8 @@ class RouteErrorBoundary extends React.Component<{ children: ReactNode }, RouteE
       return (
         <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-6">
           <div className="max-w-sm w-full rounded-2xl border border-border bg-card p-5 text-center space-y-3">
-            <h2 className="text-base font-semibold">Connessione instabile</h2>
-            <p className="text-sm text-muted-foreground">La pagina non si è caricata correttamente. Riprova ora.</p>
+            <h2 className="text-base font-semibold">Errore di caricamento</h2>
+            <p className="text-sm text-muted-foreground">Il modulo non si è caricato al primo tentativo. Riprova ora.</p>
             <button
               type="button"
               onClick={() => window.location.reload()}
@@ -166,18 +202,18 @@ function App() {
     const path = window.location.pathname;
 
     if (path === "/" || path === "/home") {
-      void loadLandingPage();
-      void loadIndex();
+      void preloadRoute(loadLandingPage);
+      void preloadRoute(loadIndex);
       return;
     }
 
     if (path.startsWith("/r/")) {
-      void import("./pages/RestaurantPage");
+      void preloadRoute(() => import("./pages/RestaurantPage"));
       return;
     }
 
     if (path.startsWith("/admin")) {
-      void import("./pages/AdminLogin");
+      void preloadRoute(() => import("./pages/AdminLogin"));
     }
   }, []);
 
