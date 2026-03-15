@@ -947,7 +947,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       isSelected
                         ? p.id === "empire"
                           ? "border-2 border-accent/40 bg-gradient-to-b from-accent/[0.08] via-background/60 to-background shadow-[0_0_50px_hsla(35,45%,50%,0.12)]"
-                          : "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(265,70%,60%,0.1)]"
+                          : "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(38,50%,55%,0.1)]"
                         : "border border-border/30 hover:border-primary/20 bg-background/40"
                     }`}>
                     {p.badge && (
