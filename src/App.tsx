@@ -87,6 +87,10 @@ const TelemedicinePage = lazy(() => import("./pages/app/TelemedicinePage"));
 const ProjectTimelinePage = lazy(() => import("./pages/app/ProjectTimelinePage"));
 const FieldDispatchPage = lazy(() => import("./pages/app/FieldDispatchPage"));
 
+// Agent Marketplace
+const AgentMarketplace = lazy(() => import("./pages/AgentMarketplace"));
+const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
+
 const queryClient = new QueryClient();
 
 const PageLoader = () => (
