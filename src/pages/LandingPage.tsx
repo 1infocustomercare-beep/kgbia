@@ -2579,7 +2579,7 @@ const LandingPage = () => {
               />
               {/* HUD side lines */}
               <motion.div className="absolute left-0 top-2 bottom-2 w-[1px] pointer-events-none"
-                style={{ background: "linear-gradient(180deg, hsla(265,80%,70%,0.4), transparent 30%, transparent 70%, hsla(265,80%,70%,0.3))" }}
+                style={{ background: "linear-gradient(180deg, hsla(38,50%,55%,0.3), transparent 30%, transparent 70%, hsla(38,50%,55%,0.2))" }}
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
               />
               <motion.div className="absolute right-0 top-2 bottom-2 w-[1px] pointer-events-none"
