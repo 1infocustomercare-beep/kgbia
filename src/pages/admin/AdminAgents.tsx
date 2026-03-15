@@ -15,6 +15,7 @@ import type { Agent } from "@/types/agent";
 import { toast } from "@/hooks/use-toast";
 import { getAgentImage } from "@/lib/agent-images";
 import agentHubHero from "@/assets/agent-hub-hero-animated.png";
+import agentHubMascot from "@/assets/agent-hub-mascot-3d.png";
 
 export default function AdminAgents() {
   const navigate = useNavigate();
