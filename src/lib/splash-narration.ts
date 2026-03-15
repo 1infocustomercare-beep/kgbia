@@ -14,12 +14,6 @@ let splashNarrationStarted = false;
 let splashNarrationCompleted = false;
 let currentUtterance: SpeechSynthesisUtterance | null = null;
 
-const IS_TOUCH_DEVICE = typeof window !== "undefined" && (
-  "ontouchstart" in window ||
-  navigator.maxTouchPoints > 0 ||
-  window.matchMedia?.("(pointer: coarse)")?.matches === true
-);
-
 // Best Italian voice finder (mirrors EmpireVoiceAgent logic)
 let cachedVoice: SpeechSynthesisVoice | null = null;
 
