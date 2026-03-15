@@ -225,12 +225,32 @@ const AdminAgentsPage = lazy(() => import("./pages/admin/AdminAgents"));
 
 const queryClient = new QueryClient();
 
-const PageLoader = () => (
-  <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-3">
-    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-    <p className="text-xs text-muted-foreground tracking-wide">Caricamento…</p>
-  </div>
-);
+const PAGE_LOADER_STALL_MS = 8000;
+
+const PageLoader = () => {
+  const [stalled, setStalled] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setStalled(true), PAGE_LOADER_STALL_MS);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-3 px-6 text-center">
+      <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="text-xs text-muted-foreground tracking-wide">Caricamento…</p>
+      {stalled && (
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="rounded-xl bg-primary text-primary-foreground px-4 py-2 text-xs font-medium"
+        >
+          Riprova ora
+        </button>
+      )}
+    </div>
+  );
+};
 
 type RouteErrorBoundaryState = {
   hasError: boolean;
@@ -370,10 +390,11 @@ function App() {
   useEffect(() => {
     const path = window.location.pathname;
     const constrained = isConstrainedNetwork();
+    const shouldDeferPreloads = IS_MOBILE || constrained;
     let deferredPreload: number | null = null;
 
-    // On constrained connections, avoid extra eager preloads to reduce startup contention
-    if (constrained) {
+    // On mobile/slow connections, avoid eager preloads to reduce startup contention
+    if (shouldDeferPreloads) {
       return;
     }
 
