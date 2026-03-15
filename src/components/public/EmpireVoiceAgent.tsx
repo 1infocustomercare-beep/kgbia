@@ -983,7 +983,7 @@ const EmpireVoiceAgent: React.FC = () => {
     <>
       {/* Mobile prompt removed — voice starts automatically */}
 
-      {/* Floating Avatar Button */}
+      {/* Floating Phone Button — "Chiama Arianna" */}
       <AnimatePresence>
         {isVisible && (
           <motion.button
@@ -992,15 +992,44 @@ const EmpireVoiceAgent: React.FC = () => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
           >
-            <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden shadow-lg border border-white/10">
-              <img src={voiceAgentAvatar} alt="Assistente" className="w-full h-full object-cover" />
-              {isSpeaking && !isPaused && !isOpen && (
-                <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
+            {/* Pulsing ring when speaking */}
+            {(isSpeaking || (voiceMode === "elevenlabs" && conversation.status === "connected")) && !isOpen && (
+              <motion.div
+                className="absolute -inset-2 rounded-full border-2 border-primary/40"
+                animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+            )}
+            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden shadow-[0_0_30px_hsla(265,85%,65%,0.25)] bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              {voiceMode === "elevenlabs" && conversation.status === "connected" ? (
+                <PhoneOff className="w-6 h-6 text-white" />
+              ) : (
+                <Phone className="w-6 h-6 text-white" />
+              )}
+              {/* Active call indicator */}
+              {(isSpeaking && !isPaused && !isOpen) && (
+                <span className="absolute top-1 right-1 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
               )}
             </div>
+            {/* Label */}
+            {!isOpen && (
+              <motion.div
+                className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-full text-[0.55rem] font-bold tracking-wider uppercase"
+                style={{
+                  background: "hsla(260, 20%, 8%, 0.9)",
+                  border: "1px solid hsla(265, 85%, 65%, 0.15)",
+                  color: "hsla(265, 85%, 75%, 0.8)",
+                }}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                Chiama Arianna
+              </motion.div>
+            )}
           </motion.button>
         )}
       </AnimatePresence>
