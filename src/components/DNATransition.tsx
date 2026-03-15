@@ -260,6 +260,26 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
         ctx.stroke();
       }
 
+      // ═══ DISSOLVE expanding ripple — bridges into landing page neural cells ═══
+      if (dissolveP > 0) {
+        const rippleRadius = dissolveP * Math.max(w, h) * 0.8;
+        const rippleAlpha = (1 - dissolveP) * 0.15;
+        // Violet ripple
+        ctx.beginPath();
+        ctx.arc(w / 2, h / 2, rippleRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = `hsla(265, 80%, 65%, ${rippleAlpha})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        // Gold ripple (delayed)
+        const goldRadius = Math.max(0, dissolveP - 0.15) * Math.max(w, h) * 0.8;
+        const goldAlpha = Math.max(0, 1 - dissolveP) * 0.1;
+        ctx.beginPath();
+        ctx.arc(w / 2, h / 2, goldRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = `hsla(38, 50%, 55%, ${goldAlpha})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
       ctx.globalAlpha = 1;
       animId = requestAnimationFrame(draw);
     };
