@@ -1998,7 +1998,363 @@ export function IPhoneFrame({
               );
             })()}
 
-            {/* ═══ NOTIFICATIONS SCREEN — 4 variants ═══ */}
+            {/* ═══ ORDERS SCREEN ═══ */}
+            {screen.type === "orders" && (() => {
+              const orderItems = [
+                { id: "#1847", items: "2x " + (services[0]?.name || "Prodotto A"), total: "€" + ((services[0]?.price || 25) * 2), status: "in_prep", time: "2m", channel: "🪑 Tavolo 5" },
+                { id: "#1846", items: "1x " + (services[1]?.name || "Prodotto B"), total: "€" + (services[1]?.price || 18), status: "ready", time: "8m", channel: "📱 Online" },
+                { id: "#1845", items: "3x " + (services[2]?.name || "Prodotto C"), total: "€" + ((services[2]?.price || 12) * 3), status: "delivered", time: "22m", channel: "🛵 Delivery" },
+                { id: "#1844", items: "1x " + (services[3]?.name || "Prodotto D"), total: "€" + (services[3]?.price || 30), status: "new", time: "ora", channel: "🪑 Tavolo 2" },
+              ];
+              const statusMap: Record<string, { label: string; bg: string; color: string }> = {
+                new: { label: "Nuovo", bg: `${color}20`, color },
+                in_prep: { label: "In prep.", bg: "#f59e0b20", color: "#f59e0b" },
+                ready: { label: "Pronto", bg: "#22c55e20", color: "#22c55e" },
+                delivered: { label: "Consegnato", bg: "#64748b20", color: "#64748b" },
+              };
+              return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-1">
+                      <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                      <p className="text-[7px] font-bold text-white/70">Ordini Live</p>
+                    </div>
+                    <motion.div className="px-1.5 py-0.5 rounded-full text-[5px] font-bold text-white" style={{ backgroundColor: color }}
+                      animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>
+                      {orderItems.length} attivi
+                    </motion.div>
+                  </div>
+                  <div className="flex gap-1 mb-1.5">
+                    {["Tutti", "Nuovi", "In prep.", "Pronti"].map((t, i) => (
+                      <div key={i} className="px-1.5 py-0.5 rounded-full text-[4px] font-bold"
+                        style={i === 0 ? { backgroundColor: color, color: "#fff" } : { backgroundColor: `${color}08`, color: `${color}60` }}>{t}</div>
+                    ))}
+                  </div>
+                  <div className="space-y-1">
+                    {orderItems.map((o, i) => {
+                      const st = statusMap[o.status] || statusMap.new;
+                      return (
+                        <motion.div key={i} className="p-1.5 rounded-lg"
+                          style={{ backgroundColor: i === 0 ? `${color}10` : `${color}04`, border: `0.5px solid ${i === 0 ? `${color}20` : `${color}08`}` }}
+                          initial={{ opacity: 0, x: -8 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.08 }}>
+                          <div className="flex items-center justify-between mb-0.5">
+                            <div className="flex items-center gap-1">
+                              <span className="text-[5px] font-mono font-bold text-white/50">{o.id}</span>
+                              <span className="text-[4px] text-white/25">{o.channel}</span>
+                            </div>
+                            <div className="px-1 py-[1px] rounded text-[4px] font-bold" style={{ backgroundColor: st.bg, color: st.color }}>{st.label}</div>
+                          </div>
+                          <p className="text-[5px] text-white/60 truncate">{o.items}</p>
+                          <div className="flex items-center justify-between mt-0.5">
+                            <span className="text-[6px] font-bold" style={{ color }}>{o.total}</span>
+                            <span className="text-[3px] text-white/20">{o.time}</span>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* ═══ REVIEWS SCREEN ═══ */}
+            {screen.type === "reviews" && (() => {
+              const reviewsList = [
+                { name: "Marco R.", rating: 5, text: "Servizio eccellente, tornerò sicuramente!", time: "2h", source: "Google" },
+                { name: "Sara L.", rating: 5, text: "Professionalità e qualità al top", time: "1g", source: "TripAdvisor" },
+                { name: "Giovanni P.", rating: 4, text: "Molto bene, solo un po' di attesa", time: "2g", source: "Google" },
+                { name: "Chiara M.", rating: 5, text: "Esperienza fantastica, consigliatissimo!", time: "3g", source: "Instagram" },
+              ];
+              return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-1">
+                      <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                      <p className="text-[7px] font-bold text-white/70">Recensioni</p>
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      <span className="text-[8px] font-black" style={{ color }}>4.9</span>
+                      <span className="text-[6px] text-yellow-400">★</span>
+                    </div>
+                  </div>
+                  {/* Rating bars */}
+                  <div className="p-1.5 rounded-lg mb-1.5" style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}10` }}>
+                    {[5, 4, 3, 2, 1].map(r => (
+                      <div key={r} className="flex items-center gap-1 mb-0.5">
+                        <span className="text-[4px] text-white/30 w-2">{r}★</span>
+                        <div className="flex-1 h-[3px] rounded-full" style={{ backgroundColor: `${color}10` }}>
+                          <div className="h-full rounded-full" style={{ backgroundColor: color, width: `${r === 5 ? 78 : r === 4 ? 18 : r === 3 ? 4 : 0}%` }} />
+                        </div>
+                        <span className="text-[3px] text-white/20 w-3 text-right">{r === 5 ? "78%" : r === 4 ? "18%" : r === 3 ? "4%" : "0%"}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="space-y-1">
+                    {reviewsList.map((r, i) => (
+                      <motion.div key={i} className="p-1.5 rounded-lg"
+                        style={{ backgroundColor: `${color}${i === 0 ? '08' : '04'}`, border: `0.5px solid ${color}08` }}
+                        initial={{ opacity: 0, y: 5 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.08 }}>
+                        <div className="flex items-center justify-between mb-0.5">
+                          <span className="text-[5px] font-bold text-white/70">{r.name}</span>
+                          <div className="flex items-center gap-0.5">
+                            <span className="text-[5px] text-yellow-400">{"★".repeat(r.rating)}</span>
+                            <span className="text-[3px] text-white/20">{r.source}</span>
+                          </div>
+                        </div>
+                        <p className="text-[4px] text-white/40 leading-relaxed">{r.text}</p>
+                        <p className="text-[3px] text-white/15 mt-0.5">{r.time} fa</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* ═══ LOYALTY SCREEN ═══ */}
+            {screen.type === "loyalty" && (() => {
+              return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-1">
+                      <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                      <p className="text-[7px] font-bold text-white/70">Fidelity Program</p>
+                    </div>
+                    <span className="text-[5px] font-bold" style={{ color }}>🎁 Attivo</span>
+                  </div>
+                  {/* Points card */}
+                  <div className="p-2 rounded-xl mb-1.5 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${color}20, ${color}08)`, border: `1px solid ${color}25` }}>
+                    <div className="absolute top-0 right-0 w-12 h-12 rounded-full opacity-10" style={{ background: color, filter: "blur(12px)" }} />
+                    <p className="text-[4px] text-white/30 uppercase tracking-wider">Punti Fedeltà</p>
+                    <p className="text-[14px] font-black" style={{ color }}>2.450</p>
+                    <div className="flex items-center gap-1 mt-1">
+                      <div className="flex-1 h-[4px] rounded-full" style={{ backgroundColor: `${color}15` }}>
+                        <motion.div className="h-full rounded-full" style={{ backgroundColor: color }}
+                          initial={{ width: 0 }} whileInView={{ width: "72%" }} viewport={{ once: true }} transition={{ duration: 1 }} />
+                      </div>
+                      <span className="text-[4px] text-white/30">72%</span>
+                    </div>
+                    <p className="text-[4px] text-white/25 mt-0.5">550 punti al prossimo premio 🎁</p>
+                  </div>
+                  {/* Rewards */}
+                  <p className="text-[4px] text-white/20 uppercase tracking-wider mb-1 font-bold">Premi Disponibili</p>
+                  {[
+                    { emoji: "☕", name: "Caffè omaggio", pts: "500", status: "available" },
+                    { emoji: "🎂", name: "Dessert gratis", pts: "1.000", status: "available" },
+                    { emoji: "💎", name: "Sconto 20%", pts: "2.000", status: "available" },
+                    { emoji: "🌟", name: "Esperienza VIP", pts: "5.000", status: "locked" },
+                  ].map((r, i) => (
+                    <motion.div key={i} className="flex items-center gap-1.5 p-1 rounded-md mb-0.5"
+                      style={{ backgroundColor: `${color}${r.status === 'locked' ? '03' : '06'}`, border: `0.5px solid ${color}${r.status === 'locked' ? '05' : '10'}` }}
+                      initial={{ opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.06 }}>
+                      <span className="text-[8px]" style={{ opacity: r.status === 'locked' ? 0.3 : 1 }}>{r.emoji}</span>
+                      <div className="flex-1">
+                        <p className="text-[5px] font-semibold text-white/70">{r.name}</p>
+                      </div>
+                      <span className="text-[5px] font-bold" style={{ color: r.status === 'locked' ? `${color}40` : color }}>{r.pts} pt</span>
+                    </motion.div>
+                  ))}
+                </div>
+              );
+            })()}
+
+            {/* ═══ SOCIAL SCREEN ═══ */}
+            {screen.type === "social" && (() => {
+              return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-1">
+                      <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                      <p className="text-[7px] font-bold text-white/70">Social & Marketing</p>
+                    </div>
+                    <div className="px-1.5 py-0.5 rounded-full text-[4px] font-bold" style={{ backgroundColor: `${color}15`, color }}>+ Nuovo</div>
+                  </div>
+                  {/* Social stats */}
+                  <div className="grid grid-cols-3 gap-1 mb-1.5">
+                    {[
+                      { platform: "📸", name: "IG", followers: "2.4K", growth: "+12%" },
+                      { platform: "👍", name: "FB", followers: "1.8K", growth: "+5%" },
+                      { platform: "🗺️", name: "Google", followers: "4.9★", growth: "+0.2" },
+                    ].map((s, i) => (
+                      <div key={i} className="p-1 rounded-md text-center" style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}08` }}>
+                        <span className="text-[8px]">{s.platform}</span>
+                        <p className="text-[6px] font-bold" style={{ color }}>{s.followers}</p>
+                        <p className="text-[3px] text-emerald-400">{s.growth}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Scheduled posts */}
+                  <p className="text-[4px] text-white/20 uppercase tracking-wider mb-1 font-bold">Post Programmati</p>
+                  {[
+                    { time: "Oggi 18:00", platform: "📸", text: "Novità della settimana! ✨", status: "scheduled" },
+                    { time: "Dom 12:00", platform: "👍", text: "Promo weekend speciale 🔥", status: "draft" },
+                    { time: "Lun 09:00", platform: "📸", text: "Buon inizio settimana! ☀️", status: "scheduled" },
+                  ].map((p, i) => (
+                    <motion.div key={i} className="flex items-center gap-1.5 p-1.5 rounded-md mb-0.5"
+                      style={{ backgroundColor: `${color}${i === 0 ? '08' : '04'}`, border: `0.5px solid ${color}08` }}
+                      initial={{ opacity: 0, y: 5 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.08 }}>
+                      <span className="text-[8px]">{p.platform}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[5px] text-white/60 truncate">{p.text}</p>
+                        <p className="text-[3px] text-white/25 mt-0.5">{p.time}</p>
+                      </div>
+                      <div className="px-1 py-[1px] rounded text-[3px] font-bold"
+                        style={{ backgroundColor: p.status === 'scheduled' ? '#22c55e15' : `${color}10`, color: p.status === 'scheduled' ? '#22c55e' : `${color}60` }}>
+                        {p.status === 'scheduled' ? '✓ Prog.' : 'Bozza'}
+                      </div>
+                    </motion.div>
+                  ))}
+                  {/* AI suggestion */}
+                  <div className="mt-1 p-1.5 rounded-lg" style={{ background: `linear-gradient(135deg, ${color}08, ${color}04)`, border: `0.5px dashed ${color}20` }}>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[6px]">🤖</span>
+                      <p className="text-[4px] text-white/40">AI suggerisce: "Post sulla nuova stagione"</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* ═══ INVENTORY SCREEN ═══ */}
+            {screen.type === "inventory" && (() => {
+              return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-1">
+                      <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                      <p className="text-[7px] font-bold text-white/70">Inventario</p>
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#f59e0b" }} />
+                      <span className="text-[4px] text-white/30">3 alert</span>
+                    </div>
+                  </div>
+                  {/* Summary */}
+                  <div className="grid grid-cols-3 gap-1 mb-1.5">
+                    {[
+                      { label: "Prodotti", val: "248", icon: "📦" },
+                      { label: "In esaur.", val: "7", icon: "⚠️" },
+                      { label: "Valore", val: "€12K", icon: "💰" },
+                    ].map((s, i) => (
+                      <div key={i} className="p-1 rounded-md text-center" style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}08` }}>
+                        <span className="text-[6px]">{s.icon}</span>
+                        <p className="text-[7px] font-bold" style={{ color }}>{s.val}</p>
+                        <p className="text-[3px] text-white/25">{s.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Stock items */}
+                  <p className="text-[4px] text-white/20 uppercase tracking-wider mb-1 font-bold">⚠️ Scorte Basse</p>
+                  {[
+                    { name: services[0]?.name || "Prodotto A", stock: 3, min: 10, trend: "↓" },
+                    { name: services[1]?.name || "Prodotto B", stock: 5, min: 15, trend: "↓" },
+                    { name: services[2]?.name || "Prodotto C", stock: 8, min: 20, trend: "→" },
+                  ].map((item, i) => (
+                    <motion.div key={i} className="flex items-center gap-1.5 p-1 rounded-md mb-0.5"
+                      style={{ backgroundColor: i === 0 ? '#ef444408' : `${color}04`, border: `0.5px solid ${i === 0 ? '#ef444415' : `${color}06`}` }}
+                      initial={{ opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.06 }}>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[5px] font-semibold text-white/60 truncate">{item.name}</p>
+                        <div className="flex items-center gap-1 mt-0.5">
+                          <div className="flex-1 h-[3px] rounded-full" style={{ backgroundColor: `${color}10` }}>
+                            <div className="h-full rounded-full" style={{ backgroundColor: item.stock <= 5 ? '#ef4444' : '#f59e0b', width: `${(item.stock / item.min) * 100}%` }} />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[6px] font-bold" style={{ color: item.stock <= 5 ? '#ef4444' : '#f59e0b' }}>{item.stock}</span>
+                        <span className="text-[4px] text-white/20">/{item.min}</span>
+                      </div>
+                    </motion.div>
+                  ))}
+                  {/* Recent movements */}
+                  <p className="text-[4px] text-white/15 uppercase tracking-wider mt-1.5 mb-0.5 font-bold">Ultimi Movimenti</p>
+                  {[
+                    { text: "Carico #234 ricevuto", type: "+", time: "1h" },
+                    { text: "Scarico cucina", type: "-", time: "3h" },
+                  ].map((m, i) => (
+                    <div key={i} className="flex items-center gap-1 py-0.5 text-[4px]">
+                      <span className="font-bold" style={{ color: m.type === '+' ? '#22c55e' : '#ef4444' }}>{m.type}</span>
+                      <span className="text-white/35 flex-1 truncate">{m.text}</span>
+                      <span className="text-white/15">{m.time}</span>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+
+            {/* ═══ STAFF SCREEN ═══ */}
+            {screen.type === "staff" && (() => {
+              const staffList = [
+                { name: "Mario R.", role: "Manager", status: "online", hours: "8h", avatar: "👨‍💼" },
+                { name: "Laura B.", role: "Operatore", status: "online", hours: "6h", avatar: "👩‍🔧" },
+                { name: "Giuseppe F.", role: "Assistente", status: "break", hours: "4h", avatar: "👨‍🍳" },
+                { name: "Anna M.", role: "Stagista", status: "offline", hours: "—", avatar: "👩‍💻" },
+              ];
+              return (
+                <div className="h-full p-2.5">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-1">
+                      <div className="w-1 h-3 rounded-full" style={{ backgroundColor: color }} />
+                      <p className="text-[7px] font-bold text-white/70">Team</p>
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <span className="text-[4px] text-white/30">3 online</span>
+                    </div>
+                  </div>
+                  {/* Today summary */}
+                  <div className="grid grid-cols-3 gap-1 mb-1.5">
+                    {[
+                      { label: "Presenti", val: "3/4", color: "#22c55e" },
+                      { label: "Ore Oggi", val: "18h", color },
+                      { label: "Produttività", val: "94%", color },
+                    ].map((s, i) => (
+                      <div key={i} className="p-1 rounded-md text-center" style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}08` }}>
+                        <p className="text-[7px] font-bold" style={{ color: s.color }}>{s.val}</p>
+                        <p className="text-[3px] text-white/25">{s.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Staff list */}
+                  <div className="space-y-0.5">
+                    {staffList.map((s, i) => (
+                      <motion.div key={i} className="flex items-center gap-1.5 p-1.5 rounded-lg"
+                        style={{ backgroundColor: `${color}${s.status === 'online' ? '06' : '03'}`, border: `0.5px solid ${color}06` }}
+                        initial={{ opacity: 0, y: 4 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.06 }}>
+                        <div className="relative">
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center text-[8px]" style={{ backgroundColor: `${color}15` }}>{s.avatar}</div>
+                          <div className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full border border-black"
+                            style={{ backgroundColor: s.status === 'online' ? '#22c55e' : s.status === 'break' ? '#f59e0b' : '#64748b' }} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[5px] font-semibold text-white/70">{s.name}</p>
+                          <p className="text-[3px] text-white/25">{s.role}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[5px] font-bold" style={{ color }}>{s.hours}</p>
+                          <p className="text-[3px] capitalize" style={{ color: s.status === 'online' ? '#22c55e' : s.status === 'break' ? '#f59e0b' : '#64748b' }}>{s.status}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                  {/* Shift bar */}
+                  <div className="mt-1.5 p-1 rounded-md" style={{ backgroundColor: `${color}04` }}>
+                    <p className="text-[3px] text-white/20 mb-0.5 font-bold uppercase">Turni Oggi</p>
+                    <div className="flex gap-[1px]">
+                      {Array.from({ length: 12 }).map((_, i) => (
+                        <div key={i} className="flex-1 h-[6px] rounded-sm" style={{ backgroundColor: i >= 2 && i <= 9 ? `${color}${i <= 7 ? '30' : '15'}` : `${color}05` }} />
+                      ))}
+                    </div>
+                    <div className="flex justify-between mt-0.5">
+                      <span className="text-[3px] text-white/15">08:00</span>
+                      <span className="text-[3px] text-white/15">20:00</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+
             {screen.type === "notifications" && (() => {
               if (v === 0) return (
                 /* V0: Standard list */
