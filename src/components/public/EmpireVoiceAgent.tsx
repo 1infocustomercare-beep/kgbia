@@ -88,8 +88,7 @@ if (typeof window !== "undefined" && window.speechSynthesis) {
 }
 
 // ── Web Speech API fallback TTS ──
-const SPEECH_START_TIMEOUT_MS = 1800;
-const SPEECH_ATTEMPT_TIMEOUT_MS = 9000;
+const SPEECH_HARD_TIMEOUT_MS = 30000; // generous — let speech finish naturally
 
 function speakWithBrowserTTS(
   text: string,
@@ -100,6 +99,10 @@ function speakWithBrowserTTS(
       resolve(false);
       return;
     }
+
+    // On some mobile browsers, voices are empty until user gesture.
+    // Trigger getVoices() refresh first.
+    window.speechSynthesis.getVoices();
 
     const utterance = new SpeechSynthesisUtterance(text);
     const voice = getBestItalianFemaleVoice();
@@ -113,31 +116,16 @@ function speakWithBrowserTTS(
     utterance.volume = 1;
 
     let settled = false;
-    let started = false;
 
-    const startTimer = window.setTimeout(() => {
-      if (started) return;
-      try {
-        window.speechSynthesis.cancel();
-      } catch {
-        // noop
-      }
-      finish(false);
-    }, SPEECH_START_TIMEOUT_MS);
-
+    // Single hard timeout — only safety net, not aggressive
     const hardTimer = window.setTimeout(() => {
-      try {
-        window.speechSynthesis.cancel();
-      } catch {
-        // noop
-      }
+      try { window.speechSynthesis.cancel(); } catch { /* noop */ }
       finish(false);
-    }, SPEECH_ATTEMPT_TIMEOUT_MS);
+    }, SPEECH_HARD_TIMEOUT_MS);
 
     const finish = (ok: boolean) => {
       if (settled) return;
       settled = true;
-      window.clearTimeout(startTimer);
       window.clearTimeout(hardTimer);
       utterance.onstart = null;
       utterance.onend = null;
@@ -145,22 +133,35 @@ function speakWithBrowserTTS(
       resolve(ok);
     };
 
-    utterance.onstart = () => {
-      started = true;
-    };
     utterance.onend = () => finish(true);
-    utterance.onerror = () => finish(false);
+    utterance.onerror = (e) => {
+      // "interrupted" is not a real error — it means cancel() was called externally
+      if (e?.error === "interrupted") {
+        finish(false);
+      } else {
+        finish(false);
+      }
+    };
 
-    if (abortRef.current || document.visibilityState !== "visible") {
+    if (abortRef.current) {
       finish(false);
       return;
     }
 
     try {
+      // Cancel any lingering speech, then speak
       if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
         window.speechSynthesis.cancel();
       }
-      window.speechSynthesis.speak(utterance);
+      // Small delay after cancel to let engine reset (fixes iOS)
+      window.setTimeout(() => {
+        if (abortRef.current || settled) return;
+        try {
+          window.speechSynthesis.speak(utterance);
+        } catch {
+          finish(false);
+        }
+      }, 80);
     } catch {
       finish(false);
     }
