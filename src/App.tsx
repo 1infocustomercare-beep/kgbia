@@ -217,6 +217,9 @@ class RouteErrorBoundary extends React.Component<{ children: ReactNode }, RouteE
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    if (tryRecoverFromChunkError(error)) {
+      return;
+    }
     console.error("Route loading error:", error, errorInfo);
   }
 
