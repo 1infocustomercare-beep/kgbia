@@ -750,71 +750,7 @@ const EmpireVoiceAgent: React.FC = () => {
 
   // No auto-start — narration only begins when user opens the panel
 
-  // ── Unlock audio on first user gesture (critical for mobile browsers) ──
-  useEffect(() => {
-    if (!isVisible) return;
-
-    let unlocked = false;
-
-    const unlockAndSpeak = () => {
-      if (unlocked) return;
-      unlocked = true;
-
-      userInteractedRef.current = true;
-      setUserInteracted(true);
-      setMobilePromptShown(false);
-
-      // Unlock speechSynthesis with a silent utterance inside the gesture callback
-      if (window.speechSynthesis) {
-        const silentUtterance = new SpeechSynthesisUtterance("");
-        silentUtterance.volume = 0;
-        silentUtterance.lang = "it-IT";
-        try {
-          window.speechSynthesis.speak(silentUtterance);
-        } catch {
-          // noop
-        }
-      }
-
-      // Now queue hero narration — speechSynthesis is unlocked
-      window.setTimeout(() => {
-        if (!voiceEnabledRef.current) return;
-        if (narratedRef.current.has("hero")) return;
-        startIntroNarration();
-        enqueueSectionNarration("hero", true);
-      }, 150);
-
-      // Clean up listeners
-      window.removeEventListener("pointerdown", unlockAndSpeak);
-      window.removeEventListener("touchstart", unlockAndSpeak);
-      window.removeEventListener("click", unlockAndSpeak);
-    };
-
-    // On desktop, also listen but don't block — narration already started
-    // On mobile, this is the ONLY way to unlock audio
-    window.addEventListener("pointerdown", unlockAndSpeak, { passive: true, once: false });
-    window.addEventListener("touchstart", unlockAndSpeak, { passive: true, once: false });
-    window.addEventListener("click", unlockAndSpeak, { passive: true, once: false });
-
-    // No mobile prompt — voice starts automatically
-
-    const onVisibilityChange = () => {
-      if (document.visibilityState === "visible" && userInteractedRef.current) {
-        if (!voiceEnabledRef.current) return;
-        if (narratedRef.current.has("hero")) return;
-        enqueueSectionNarration("hero", true);
-      }
-    };
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
-    return () => {
-      window.removeEventListener("pointerdown", unlockAndSpeak);
-      window.removeEventListener("touchstart", unlockAndSpeak);
-      window.removeEventListener("click", unlockAndSpeak);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-    };
-  }, [isVisible, startIntroNarration, enqueueSectionNarration]);
+  // No aggressive auto-unlock listeners — voice starts only when user opens the agent panel
 
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
