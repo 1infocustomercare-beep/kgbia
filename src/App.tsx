@@ -167,6 +167,11 @@ function App() {
                     <AgentsPage />
                   </ProtectedRoute>
                 } />
+                <Route path="/admin/agents" element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <AdminAgentsPage />
+                  </ProtectedRoute>
+                } />
                 <Route path="/superadmin/media" element={
                   <ProtectedRoute requiredRole="super_admin">
                     <MediaVaultPage />
