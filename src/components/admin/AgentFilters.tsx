@@ -76,20 +76,29 @@ export default function AgentFilters({
         </button>
       </div>
 
-      {/* Collapsed: Quick category row */}
+      {/* Collapsed: Quick category grid – fits all on screen */}
       {!expanded && (
-        <div className="flex gap-1 overflow-x-auto pb-0.5 scrollbar-hide">
+        <div className="grid grid-cols-4 gap-1">
           {CATEGORY_ORDER.map((c) => {
             const catInfo = c === "all" ? null : CATEGORY_LABELS[c];
+            const isActive = categoryFilter === c;
             return (
               <button
                 key={c}
                 onClick={() => onCategory(c)}
-                className={`px-2 py-1 rounded-lg text-[0.6rem] font-medium whitespace-nowrap transition-all flex items-center gap-0.5 ${pill(categoryFilter === c)}`}
+                className={`relative flex flex-col items-center justify-center py-1.5 rounded-xl transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-sm ring-1 ring-primary/30"
+                    : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
+                }`}
               >
-                {catInfo ? <span>{catInfo.icon}</span> : null}
-                <span>{catInfo ? catInfo.label : "Tutte"}</span>
-                <span className={`text-[0.5rem] px-1 rounded-full ${categoryFilter === c ? "bg-primary-foreground/20" : "bg-foreground/10"}`}>
+                <span className="text-sm leading-none">{catInfo ? catInfo.icon : "🔷"}</span>
+                <span className="text-[0.55rem] font-semibold mt-0.5 leading-tight truncate max-w-full px-0.5">
+                  {catInfo ? catInfo.label : "Tutte"}
+                </span>
+                <span className={`absolute -top-1 -right-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full text-[0.45rem] font-bold ${
+                  isActive ? "bg-primary-foreground text-primary" : "bg-foreground/10 text-muted-foreground"
+                }`}>
                   {categoryCounts[c] || 0}
                 </span>
               </button>
