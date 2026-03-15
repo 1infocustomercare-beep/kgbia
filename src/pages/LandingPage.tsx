@@ -2608,8 +2608,8 @@ const LandingPage = () => {
                   transition={{ delay: 0.35, type: "spring", damping: 18 }}
                   className="mt-4 w-full py-3.5 rounded-xl text-primary-foreground text-xs font-bold tracking-[0.2em] uppercase font-heading relative overflow-hidden"
                   style={{ 
-                    background: "linear-gradient(135deg, hsla(265,70%,55%,1), hsla(280,60%,50%,1), hsla(300,50%,45%,1))",
-                    boxShadow: "0 4px 24px hsla(265,70%,60%,0.3), 0 0 0 1px hsla(265,80%,70%,0.15)",
+                    background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(34,50%,42%,1), hsla(30,45%,38%,1))",
+                    boxShadow: "0 4px 24px hsla(38,55%,50%,0.3), 0 0 0 1px hsla(38,55%,60%,0.15)",
                   }}>
                   <motion.div className="absolute inset-0 pointer-events-none"
                     style={{ background: "linear-gradient(105deg, transparent 25%, rgba(255,255,255,0.3) 48%, transparent 75%)" }}
