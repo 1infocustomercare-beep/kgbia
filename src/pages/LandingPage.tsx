@@ -2693,8 +2693,11 @@ const LandingPage = () => {
             loop
             playsInline
             preload="auto"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ filter: "brightness(0.3) saturate(1.15)" }}
+            controls={false}
+            disablePictureInPicture
+            disableRemotePlayback
+            className="absolute inset-0 w-full h-full object-cover [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-enclosure]:hidden [&::-webkit-media-controls-panel]:hidden [&::-webkit-media-controls-start-playback-button]:hidden"
+            style={{ filter: "brightness(0.3) saturate(1.15)", WebkitAppearance: "none" } as any}
           >
             <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4" />
           </video>
