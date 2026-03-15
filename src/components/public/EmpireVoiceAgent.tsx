@@ -435,6 +435,8 @@ const EmpireVoiceAgent: React.FC = () => {
   useEffect(() => { messagesRef.current = messages; }, [messages]);
   useEffect(() => { voiceEnabledRef.current = voiceEnabled; }, [voiceEnabled]);
   useEffect(() => { autoNarratingRef.current = autoNarrating; }, [autoNarrating]);
+  useEffect(() => { isTouchDeviceRef.current = isTouchDevice; }, [isTouchDevice]);
+  useEffect(() => { userInteractedRef.current = userInteracted; }, [userInteracted]);
 
   useEffect(() => {
     if (!SpeechRecognition) setMode("chat");
