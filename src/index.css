@@ -909,14 +909,14 @@
   }
 
   .circuit-line {
-    background: linear-gradient(90deg, transparent, hsla(265, 70%, 60%, 0.25), hsla(280, 50%, 65%, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, hsla(38, 50%, 55%, 0.2), hsla(35, 45%, 55%, 0.15), transparent);
     animation: circuit-pulse 3s ease-in-out infinite;
   }
 
   .holo-panel {
-    background: linear-gradient(135deg, hsla(265, 30%, 15%, 0.4), hsla(260, 20%, 10%, 0.3));
+    background: linear-gradient(135deg, hsla(230, 12%, 15%, 0.4), hsla(225, 10%, 10%, 0.3));
     backdrop-filter: blur(16px) saturate(1.5);
-    border: 1px solid hsla(265, 70%, 60%, 0.12);
+    border: 1px solid hsla(38, 50%, 55%, 0.12);
     position: relative;
     overflow: hidden;
   }
@@ -926,7 +926,7 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsla(280, 45%, 68%, 0.5), hsla(265, 70%, 60%, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, hsla(38, 50%, 58%, 0.4), hsla(35, 45%, 55%, 0.25), transparent);
   }
 
   .holo-panel::after {
@@ -934,7 +934,7 @@
     position: absolute;
     bottom: 0; left: 0; right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsla(265, 70%, 60%, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, hsla(38, 50%, 55%, 0.18), transparent);
   }
 
   .neural-node {
@@ -943,20 +943,20 @@
   }
 
   @keyframes neural-pulse {
-    0%, 100% { box-shadow: 0 0 4px hsla(265, 70%, 60%, 0.3); transform: scale(1); }
-    50% { box-shadow: 0 0 20px hsla(265, 70%, 60%, 0.7), 0 0 40px hsla(280, 45%, 68%, 0.3); transform: scale(1.3); }
+    0%, 100% { box-shadow: 0 0 4px hsla(38, 50%, 55%, 0.3); transform: scale(1); }
+    50% { box-shadow: 0 0 20px hsla(38, 50%, 55%, 0.6), 0 0 40px hsla(35, 45%, 55%, 0.25); transform: scale(1.3); }
   }
 
   .holo-badge {
     background: linear-gradient(90deg,
-      hsla(265, 70%, 60%, 0.15),
-      hsla(280, 45%, 68%, 0.2),
-      hsla(300, 35%, 60%, 0.15),
-      hsla(265, 70%, 60%, 0.15)
+      hsla(38, 50%, 55%, 0.15),
+      hsla(35, 45%, 55%, 0.18),
+      hsla(32, 40%, 52%, 0.12),
+      hsla(38, 50%, 55%, 0.15)
     );
     background-size: 200% 100%;
     animation: holo-rotate 3s linear infinite;
-    border: 1px solid hsla(280, 45%, 68%, 0.15);
+    border: 1px solid hsla(35, 45%, 55%, 0.15);
   }
 
   .section-connector {
