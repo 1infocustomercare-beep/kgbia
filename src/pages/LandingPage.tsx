@@ -24,25 +24,57 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
-import heroLanding from "@/assets/hero-landing.jpg";
-import videoHero from "@/assets/video-hero-empire.mp4";
-import heroTechCommand from "@/assets/hero-tech-command.jpg";
-import heroAiPlatform from "@/assets/hero-ai-platform.jpg";
-import heroPartnerLuxury from "@/assets/hero-partner-luxury.jpg";
-import mockupCliente from "@/assets/mockup-cliente.jpg";
-import mockupAdmin from "@/assets/mockup-admin.jpg";
-import mockupCucina from "@/assets/mockup-cucina.jpg";
-import nccHeroBg from "@/assets/ncc-hero-bg-amalfi.jpg";
-import nccPremiumCoast from "@/assets/ncc-premium-coast.jpg";
-import nccPremiumInterior from "@/assets/ncc-premium-interior.jpg";
-import nccFleetShowcase from "@/assets/ncc-fleet-showcase.jpg";
-import cartoonFood from "@/assets/cartoon-sector-food.png";
-import cartoonNcc from "@/assets/cartoon-sector-ncc.png";
-import cartoonBeauty from "@/assets/cartoon-sector-beauty.png";
-import cartoonHealthcare from "@/assets/cartoon-sector-healthcare.png";
-import cartoonRetail from "@/assets/cartoon-sector-retail.png";
-import cartoonFitness from "@/assets/cartoon-sector-fitness.png";
-import cartoonHotel from "@/assets/cartoon-sector-hotel.png";
+import heroLandingDefault from "@/assets/hero-landing.jpg";
+import videoHeroDefault from "@/assets/video-hero-empire.mp4";
+import heroTechCommandDefault from "@/assets/hero-tech-command.jpg";
+import heroAiPlatformDefault from "@/assets/hero-ai-platform.jpg";
+import heroPartnerLuxuryDefault from "@/assets/hero-partner-luxury.jpg";
+import mockupClienteDefault from "@/assets/mockup-cliente.jpg";
+import mockupAdminDefault from "@/assets/mockup-admin.jpg";
+import mockupCucinaDefault from "@/assets/mockup-cucina.jpg";
+import nccHeroBgDefault from "@/assets/ncc-hero-bg-amalfi.jpg";
+import nccPremiumCoastDefault from "@/assets/ncc-premium-coast.jpg";
+import nccPremiumInteriorDefault from "@/assets/ncc-premium-interior.jpg";
+import nccFleetShowcaseDefault from "@/assets/ncc-fleet-showcase.jpg";
+import cartoonFoodDefault from "@/assets/cartoon-sector-food.png";
+import cartoonNccDefault from "@/assets/cartoon-sector-ncc.png";
+import cartoonBeautyDefault from "@/assets/cartoon-sector-beauty.png";
+import cartoonHealthcareDefault from "@/assets/cartoon-sector-healthcare.png";
+import cartoonRetailDefault from "@/assets/cartoon-sector-retail.png";
+import cartoonFitnessDefault from "@/assets/cartoon-sector-fitness.png";
+import cartoonHotelDefault from "@/assets/cartoon-sector-hotel.png";
+import { useSiteAssets } from "@/hooks/useSiteAssets";
+
+/* Build a lookup from site_assets — custom URL overrides bundled default */
+function useLandingAssets() {
+  const { data: assets } = useSiteAssets();
+  const map = useMemo(() => {
+    const m: Record<string, string> = {};
+    (assets || []).forEach(a => { if (a.resolvedUrl) m[a.slot_key] = a.resolvedUrl; });
+    return m;
+  }, [assets]);
+  return {
+    heroLanding: map["landing.hero_image"] || heroLandingDefault,
+    videoHero: map["landing.hero_video"] || videoHeroDefault,
+    heroTechCommand: map["landing.hero_tech"] || heroTechCommandDefault,
+    heroAiPlatform: map["landing.hero_ai"] || heroAiPlatformDefault,
+    heroPartnerLuxury: map["landing.hero_partner"] || heroPartnerLuxuryDefault,
+    mockupCliente: map["landing.mockup_cliente"] || mockupClienteDefault,
+    mockupAdmin: map["landing.mockup_admin"] || mockupAdminDefault,
+    mockupCucina: map["landing.mockup_cucina"] || mockupCucinaDefault,
+    nccHeroBg: map["landing.ncc_hero_bg"] || nccHeroBgDefault,
+    nccPremiumCoast: map["landing.ncc_premium_coast"] || nccPremiumCoastDefault,
+    nccPremiumInterior: map["landing.ncc_premium_interior"] || nccPremiumInteriorDefault,
+    nccFleetShowcase: map["landing.ncc_fleet"] || nccFleetShowcaseDefault,
+    cartoonFood: map["landing.sector_food"] || cartoonFoodDefault,
+    cartoonNcc: map["landing.sector_ncc"] || cartoonNccDefault,
+    cartoonBeauty: map["landing.sector_beauty"] || cartoonBeautyDefault,
+    cartoonHealthcare: map["landing.sector_healthcare"] || cartoonHealthcareDefault,
+    cartoonRetail: map["landing.sector_retail"] || cartoonRetailDefault,
+    cartoonFitness: map["landing.sector_fitness"] || cartoonFitnessDefault,
+    cartoonHotel: map["landing.sector_hotel"] || cartoonHotelDefault,
+  };
+}
 
 
 /* ═══════════════════════════════════════════
