@@ -60,106 +60,94 @@ export default function AdminAgents() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* ─── Animated Hero Banner ─── */}
-      <div className="relative overflow-hidden">
-        {/* Animated background layers */}
-        <div className="absolute inset-0">
-          <motion.img
-            src={agentHubHero}
-            alt="Agent Hub"
-            className="w-full h-full object-cover"
-            animate={{
-              scale: [1, 1.05, 1],
-              filter: [
-                "brightness(0.3) hue-rotate(0deg)",
-                "brightness(0.4) hue-rotate(15deg)",
-                "brightness(0.3) hue-rotate(0deg)",
-              ],
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
-          {/* Scanning beam */}
-          <motion.div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(180deg, transparent 0%, hsl(var(--primary) / 0.1) 50%, transparent 100%)",
-              height: "30%",
-            }}
-            animate={{ top: ["-30%", "130%"] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatDelay: 2 }}
-          />
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
-        </div>
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-violet-500/5 to-background">
+        {/* Subtle animated bg glow */}
+        <motion.div
+          className="absolute inset-0 opacity-30"
+          style={{ background: "radial-gradient(ellipse at 30% 50%, hsl(var(--primary) / 0.3), transparent 70%)" }}
+          animate={{ opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.5), transparent)" }}
+          animate={{ opacity: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity }}
+        />
 
-        <div className="relative px-4 pt-5 pb-6">
-          {/* Back + title */}
-          <div className="flex items-center gap-3 mb-4">
-            <button
-              onClick={() => navigate("/superadmin")}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all border border-white/10"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            <div className="flex-1">
+        <div className="relative px-4 pt-5 pb-6 flex gap-4 items-center">
+          {/* Left: Mascot 3D */}
+          <motion.div
+            className="shrink-0 w-28 h-28 relative"
+            animate={{ y: [0, -8, 0], rotate: [0, 2, -2, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <img
+              src={agentHubMascot}
+              alt="Agent Hub Mascot"
+              className="w-full h-full object-contain drop-shadow-[0_0_20px_hsl(var(--primary)/0.5)]"
+            />
+            {/* Glow ring underneath */}
+            <motion.div
+              className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-20 h-3 rounded-full bg-primary/20 blur-md"
+              animate={{ scaleX: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            />
+          </motion.div>
+
+          {/* Right: Text + pills */}
+          <div className="flex-1 min-w-0">
+            {/* Back + title */}
+            <div className="flex items-center gap-2 mb-2">
+              <button
+                onClick={() => navigate("/superadmin")}
+                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all border border-white/10"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+              </button>
               <motion.h1
-                className="text-xl font-bold flex items-center gap-2"
+                className="text-lg font-bold flex items-center gap-1.5"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
               >
-                <motion.div
-                  className="p-2 rounded-xl bg-primary/20 border border-primary/30"
-                  animate={{ boxShadow: ["0 0 10px hsl(var(--primary) / 0.3)", "0 0 25px hsl(var(--primary) / 0.5)", "0 0 10px hsl(var(--primary) / 0.3)"] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <Bot className="w-5 h-5 text-primary" />
-                </motion.div>
                 <span className="bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent bg-[length:200%] animate-shimmer">
                   Agent Hub
                 </span>
               </motion.h1>
             </div>
-          </div>
 
-          {/* Animated subtitle */}
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={heroPhase}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.4 }}
-              className="text-[0.7rem] text-muted-foreground mb-4 leading-relaxed"
-            >
-              {heroTexts[heroPhase]}
-            </motion.p>
-          </AnimatePresence>
+            {/* Animated subtitle */}
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={heroPhase}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.4 }}
+                className="text-[0.65rem] text-muted-foreground mb-3 leading-relaxed"
+              >
+                {heroTexts[heroPhase]}
+              </motion.p>
+            </AnimatePresence>
 
-          {/* Stats pills */}
-          <div className="flex gap-2 flex-wrap">
-            <motion.div
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/15 border border-primary/25 backdrop-blur-md"
-              whileHover={{ scale: 1.05 }}
-            >
-              <Sparkles className="w-3 h-3 text-primary" />
-              <span className="text-xs font-bold text-primary">{allAgents.length}</span>
-              <span className="text-[0.6rem] text-primary/70">Agenti</span>
-            </motion.div>
-            <motion.div
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-violet-500/15 border border-violet-500/25 backdrop-blur-md"
-              whileHover={{ scale: 1.05 }}
-            >
-              <Zap className="w-3 h-3 text-violet-400" />
-              <span className="text-xs font-bold text-violet-400">{Object.keys(sectorCounts).length - 1}</span>
-              <span className="text-[0.6rem] text-violet-400/70">Settori</span>
-            </motion.div>
-            <motion.div
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/25 backdrop-blur-md"
-              whileHover={{ scale: 1.05 }}
-            >
-              <Crown className="w-3 h-3 text-amber-400" />
-              <span className="text-xs font-bold text-amber-400">{universalCount}</span>
-              <span className="text-[0.6rem] text-amber-400/70">Universali</span>
-            </motion.div>
+            {/* Stats pills */}
+            <div className="flex gap-1.5 flex-wrap">
+              <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-primary/15 border border-primary/25">
+                <Sparkles className="w-2.5 h-2.5 text-primary" />
+                <span className="text-[0.6rem] font-bold text-primary">{allAgents.length}</span>
+                <span className="text-[0.5rem] text-primary/70">Agenti</span>
+              </div>
+              <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-violet-500/15 border border-violet-500/25">
+                <Zap className="w-2.5 h-2.5 text-violet-400" />
+                <span className="text-[0.6rem] font-bold text-violet-400">{Object.keys(sectorCounts).length - 1}</span>
+                <span className="text-[0.5rem] text-violet-400/70">Settori</span>
+              </div>
+              <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-amber-500/15 border border-amber-500/25">
+                <Crown className="w-2.5 h-2.5 text-amber-400" />
+                <span className="text-[0.6rem] font-bold text-amber-400">{universalCount}</span>
+                <span className="text-[0.5rem] text-amber-400/70">Universali</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
