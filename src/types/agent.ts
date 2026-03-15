@@ -1,3 +1,5 @@
+export type PrivacyLevel = 'strict' | 'standard' | 'minimal';
+
 export interface Agent {
   id: string;
   name: string;
@@ -10,6 +12,10 @@ export interface Agent {
   status: 'active' | 'beta' | 'inactive';
   capabilities: string[];
   pricing: { base: number; currency: string };
+  ai_model: string;
+  learning_enabled: boolean;
+  privacy_level: PrivacyLevel;
+  autonomy_level: number;
   created_at?: string;
   updated_at?: string;
 }

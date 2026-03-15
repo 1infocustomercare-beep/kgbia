@@ -3,14 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ArrowLeft, Bot, CheckCircle2, Zap, Clock, Activity, Settings2 } from "lucide-react";
+import { ArrowLeft, Bot, CheckCircle2, Zap, Clock, Activity, Settings2, Brain, Shield, Eye, GraduationCap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Slider } from "@/components/ui/slider";
 import { useAgentInstallation } from "@/hooks/useAgentInstallation";
 import { useAuth } from "@/context/AuthContext";
-import { CATEGORY_LABELS, type Agent } from "@/types/agent";
+import { CATEGORY_LABELS, type Agent, type PrivacyLevel } from "@/types/agent";
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
@@ -158,9 +159,12 @@ export default function AgentDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="metrics" className="space-y-4">
-        <TabsList className="bg-white/5 border border-white/10">
+        <TabsList className="bg-white/5 border border-white/10 flex-wrap h-auto gap-1 p-1">
           <TabsTrigger value="metrics" className="gap-1.5 data-[state=active]:bg-purple-500/20">
             <Activity className="w-3.5 h-3.5" /> Metriche
+          </TabsTrigger>
+          <TabsTrigger value="intelligence" className="gap-1.5 data-[state=active]:bg-cyan-500/20">
+            <Brain className="w-3.5 h-3.5" /> Intelligenza
           </TabsTrigger>
           <TabsTrigger value="logs" className="gap-1.5 data-[state=active]:bg-purple-500/20">
             <Clock className="w-3.5 h-3.5" /> Esecuzioni
@@ -213,6 +217,11 @@ export default function AgentDetail() {
               </ResponsiveContainer>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* Intelligence Tab */}
+        <TabsContent value="intelligence" className="space-y-4">
+          <IntelligenceTab agent={agent} executionCount={executions.length || mockDailyData.reduce((s, d) => s + d.executions, 0)} />
         </TabsContent>
 
         {/* Executions Log */}
@@ -286,6 +295,166 @@ export default function AgentDetail() {
           </Card>
         </TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+/* ─── Intelligence Tab Component ─── */
+const PRIVACY_CONFIG: Record<PrivacyLevel, { label: string; color: string; icon: React.ReactNode; desc: string }> = {
+  strict: { label: "Strict", color: "text-emerald-400", icon: <Shield className="w-4 h-4" />, desc: "Isolamento totale dati per tenant. Zero condivisione." },
+  standard: { label: "Standard", color: "text-amber-400", icon: <Eye className="w-4 h-4" />, desc: "Dati aggregati anonimi per miglioramento modello." },
+  minimal: { label: "Minimal", color: "text-red-400", icon: <Eye className="w-4 h-4" />, desc: "Privacy base. Dati usati per training globale." },
+};
+
+const AI_MODEL_LABELS: Record<string, { label: string; tier: string }> = {
+  "gpt-4o": { label: "GPT-4o", tier: "Premium" },
+  "gpt-4o-mini": { label: "GPT-4o Mini", tier: "Standard" },
+  "gemini-2.5-pro": { label: "Gemini 2.5 Pro", tier: "Premium" },
+  "gemini-2.5-flash": { label: "Gemini 2.5 Flash", tier: "Fast" },
+};
+
+function IntelligenceTab({ agent, executionCount }: { agent: Agent; executionCount: number }) {
+  const autonomy = agent.autonomy_level ?? 7;
+  const privacy = PRIVACY_CONFIG[agent.privacy_level ?? 'strict'] || PRIVACY_CONFIG.strict;
+  const modelInfo = AI_MODEL_LABELS[agent.ai_model] || { label: agent.ai_model || 'Auto', tier: 'Custom' };
+  const learningEnabled = agent.learning_enabled ?? true;
+
+  // AI Score: weighted formula
+  const aiScore = Math.min(100, Math.round(autonomy * 8 + Math.min(executionCount, 200) / 10 + (learningEnabled ? 10 : 0)));
+
+  return (
+    <div className="space-y-4">
+      {/* AI Score Hero */}
+      <Card className="border-white/10 bg-gradient-to-br from-cyan-500/10 via-purple-500/5 to-transparent p-6">
+        <div className="flex items-center gap-5">
+          <div className="relative w-20 h-20 flex-shrink-0">
+            <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+              <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.1)" strokeWidth="8" fill="none" />
+              <motion.circle
+                cx="50" cy="50" r="42"
+                stroke="url(#scoreGrad)"
+                strokeWidth="8"
+                fill="none"
+                strokeLinecap="round"
+                strokeDasharray={`${aiScore * 2.64} 264`}
+                initial={{ strokeDasharray: "0 264" }}
+                animate={{ strokeDasharray: `${aiScore * 2.64} 264` }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+              />
+              <defs>
+                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#06B6D4" />
+                  <stop offset="100%" stopColor="#8B5CF6" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-xl font-bold text-foreground">{aiScore}</span>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-foreground">AI Intelligence Score</h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Basato su autonomia, esecuzioni ({executionCount}) e capacità di apprendimento
+            </p>
+            <div className="flex gap-2 mt-2">
+              <Badge className="text-[10px] bg-cyan-500/20 text-cyan-400 border-cyan-500/30">
+                {aiScore >= 80 ? 'Eccellente' : aiScore >= 60 ? 'Avanzato' : aiScore >= 40 ? 'Intermedio' : 'Base'}
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Model + Autonomy */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="border-white/10 bg-white/5 p-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <Brain className="w-4 h-4 text-purple-400" />
+            <h4 className="text-xs font-semibold text-foreground">Modello AI</h4>
+          </div>
+          <div className="flex items-center justify-between bg-white/5 rounded-lg p-3 border border-white/10">
+            <div>
+              <p className="text-sm font-bold text-foreground">{modelInfo.label}</p>
+              <p className="text-[10px] text-muted-foreground">Tier: {modelInfo.tier}</p>
+            </div>
+            <Badge variant="outline" className="text-[10px] border-purple-500/30 text-purple-400">{modelInfo.tier}</Badge>
+          </div>
+        </Card>
+
+        <Card className="border-white/10 bg-white/5 p-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <Zap className="w-4 h-4 text-amber-400" />
+            <h4 className="text-xs font-semibold text-foreground">Livello Autonomia</h4>
+          </div>
+          <div className="space-y-2">
+            <Slider
+              value={[autonomy]}
+              min={1}
+              max={10}
+              step={1}
+              disabled
+              className="pointer-events-none"
+            />
+            <div className="flex justify-between text-[10px] text-muted-foreground">
+              <span>1 - Assistito</span>
+              <span className="font-bold text-foreground">{autonomy}/10</span>
+              <span>10 - Autonomo</span>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Privacy + Learning */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="border-white/10 bg-white/5 p-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <Shield className="w-4 h-4 text-emerald-400" />
+            <h4 className="text-xs font-semibold text-foreground">Privacy Level</h4>
+          </div>
+          <div className="flex items-center gap-3 bg-white/5 rounded-lg p-3 border border-white/10">
+            <div className={privacy.color}>{privacy.icon}</div>
+            <div>
+              <p className={`text-sm font-bold ${privacy.color}`}>{privacy.label}</p>
+              <p className="text-[10px] text-muted-foreground">{privacy.desc}</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="border-white/10 bg-white/5 p-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <GraduationCap className="w-4 h-4 text-cyan-400" />
+            <h4 className="text-xs font-semibold text-foreground">Apprendimento Autonomo</h4>
+          </div>
+          <div className="flex items-center gap-3 bg-white/5 rounded-lg p-3 border border-white/10">
+            <div className={`w-3 h-3 rounded-full ${learningEnabled ? 'bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-red-400'}`} />
+            <div>
+              <p className="text-sm font-bold text-foreground">{learningEnabled ? 'Attivo' : 'Disattivato'}</p>
+              <p className="text-[10px] text-muted-foreground">
+                {learningEnabled ? 'L\'agente migliora dalle interazioni passate' : 'Nessun apprendimento automatico'}
+              </p>
+            </div>
+          </div>
+
+          {/* Learning Stats */}
+          {learningEnabled && (
+            <div className="grid grid-cols-3 gap-2 mt-2">
+              <div className="text-center p-2 bg-white/5 rounded-lg border border-white/5">
+                <p className="text-sm font-bold text-cyan-400">{Math.min(executionCount, 999)}</p>
+                <p className="text-[9px] text-muted-foreground">Interazioni</p>
+              </div>
+              <div className="text-center p-2 bg-white/5 rounded-lg border border-white/5">
+                <p className="text-sm font-bold text-purple-400">{Math.min(Math.round(executionCount * 0.15), 150)}</p>
+                <p className="text-[9px] text-muted-foreground">Pattern</p>
+              </div>
+              <div className="text-center p-2 bg-white/5 rounded-lg border border-white/5">
+                <p className="text-sm font-bold text-amber-400">{Math.round(85 + Math.min(executionCount * 0.05, 14))}%</p>
+                <p className="text-[9px] text-muted-foreground">Precisione</p>
+              </div>
+            </div>
+          )}
+        </Card>
+      </div>
     </div>
   );
 }
