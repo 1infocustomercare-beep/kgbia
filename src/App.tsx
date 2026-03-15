@@ -16,6 +16,29 @@ const IS_MOBILE = typeof window !== "undefined" && (
   window.innerWidth < 768
 );
 
+type ExtendedNavigator = Navigator & {
+  connection?: {
+    effectiveType?: string;
+    saveData?: boolean;
+    addEventListener?: (type: "change", listener: () => void) => void;
+    removeEventListener?: (type: "change", listener: () => void) => void;
+  };
+  deviceMemory?: number;
+};
+
+const isConstrainedNetwork = () => {
+  if (typeof navigator === "undefined") return false;
+
+  const nav = navigator as ExtendedNavigator;
+  const effectiveType = nav.connection?.effectiveType?.toLowerCase();
+  const lowBandwidth = effectiveType === "slow-2g" || effectiveType === "2g" || effectiveType === "3g";
+  const saveDataEnabled = !!nav.connection?.saveData;
+  const lowMemoryDevice = typeof nav.deviceMemory === "number" && nav.deviceMemory <= 2;
+  const offline = navigator.onLine === false;
+
+  return lowBandwidth || saveDataEnabled || lowMemoryDevice || offline;
+};
+
 // Keep cinematic intro, but never trap users on splash
 const INTRO_FAILSAFE_MS = IS_MOBILE ? 4500 : 9000;
 const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 6500 : 12000;
@@ -277,8 +300,12 @@ function App() {
 
   useEffect(() => {
     const startedAt = performance.now();
+    let introReleased = false;
 
     const completeIntroSafely = (reason: string) => {
+      if (introReleased) return;
+      introReleased = true;
+
       setIntroCompleted((prev) => {
         if (!prev) {
           console.warn(`[Intro] Forced completion via ${reason}`);
@@ -286,6 +313,10 @@ function App() {
         return true;
       });
     };
+
+    if (isConstrainedNetwork()) {
+      completeIntroSafely("constrained-network");
+    }
 
     const introFailsafe = window.setTimeout(() => {
       completeIntroSafely("timeout");
@@ -303,38 +334,61 @@ function App() {
 
     const onVisibilityChange = () => {
       if (document.visibilityState !== "visible") return;
-      if (performance.now() - startedAt >= INTRO_FAILSAFE_MS) {
+      if (performance.now() - startedAt >= INTRO_FAILSAFE_MS || isConstrainedNetwork()) {
         completeIntroSafely("visibility");
       }
     };
 
+    const onConnectivityChange = () => {
+      if (isConstrainedNetwork()) {
+        completeIntroSafely("connectivity");
+      }
+    };
+
+    const nav = navigator as ExtendedNavigator;
+    nav.connection?.addEventListener?.("change", onConnectivityChange);
+
     document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("offline", onConnectivityChange);
+    window.addEventListener("online", onConnectivityChange);
 
     return () => {
       window.clearTimeout(introFailsafe);
       window.cancelAnimationFrame(rafId);
+      nav.connection?.removeEventListener?.("change", onConnectivityChange);
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("offline", onConnectivityChange);
+      window.removeEventListener("online", onConnectivityChange);
     };
   }, []);
 
   // Preload critical route chunk while splash is running (especially useful on mobile/4G)
   useEffect(() => {
     const path = window.location.pathname;
+    const constrained = isConstrainedNetwork();
+    let deferredIndexPreload: number | null = null;
 
     if (path === "/" || path === "/home") {
       void preloadRoute(loadLandingPage);
-      void preloadRoute(loadIndex);
-      return;
-    }
 
-    if (path.startsWith("/r/")) {
+      if (constrained) {
+        deferredIndexPreload = window.setTimeout(() => {
+          void preloadRoute(loadIndex);
+        }, 1400);
+      } else {
+        void preloadRoute(loadIndex);
+      }
+    } else if (path.startsWith("/r/")) {
       void preloadRoute(() => import("./pages/RestaurantPage"));
-      return;
-    }
-
-    if (path.startsWith("/admin")) {
+    } else if (path.startsWith("/admin")) {
       void preloadRoute(() => import("./pages/AdminLogin"));
     }
+
+    return () => {
+      if (deferredIndexPreload !== null) {
+        window.clearTimeout(deferredIndexPreload);
+      }
+    };
   }, []);
 
   useEffect(() => {
