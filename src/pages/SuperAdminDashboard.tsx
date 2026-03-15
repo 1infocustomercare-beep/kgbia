@@ -1237,6 +1237,7 @@ const SuperAdminDashboard = () => {
                 secretName?: string;
                 guideUrl?: string;
                 guideSteps?: string[];
+                buyCreditsUrl?: string;
               }
 
               // toggles & guides use component-level state
@@ -1278,7 +1279,8 @@ const SuperAdminDashboard = () => {
                   status: "connected", detail: "API Key configurata via connector ElevenLabs",
                   scope: "admin", usedBy: "Empire TTS, Voice Agent, Restaurant Voice Agent", secretName: "ELEVENLABS_API_KEY",
                   guideUrl: "https://elevenlabs.io/docs/api-reference/text-to-speech",
-                  guideSteps: ["1. Vai su elevenlabs.io → API Keys", "2. Copia la tua API Key", "3. Inseriscila come secret ELEVENLABS_API_KEY", "4. Testa con la funzione Empire TTS"]
+                  guideSteps: ["1. Vai su elevenlabs.io → API Keys", "2. Copia la tua API Key", "3. Inseriscila come secret ELEVENLABS_API_KEY", "4. Testa con la funzione Empire TTS"],
+                  buyCreditsUrl: "https://elevenlabs.io/subscription"
                 },
                 {
                   name: "Stripe Connect (Platform)", description: "Pagamenti, split commissioni, abbonamenti",
@@ -1488,6 +1490,17 @@ const SuperAdminDashboard = () => {
                                     Guida Setup
                                     {guideOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                                   </motion.button>
+                                )}
+                                {item.buyCreditsUrl && (
+                                  <a
+                                    href={item.buyCreditsUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500/20 to-primary/20 text-amber-400 text-[0.6rem] font-bold hover:from-amber-500/30 hover:to-primary/30 transition-all flex items-center gap-1 border border-amber-500/20"
+                                  >
+                                    <CreditCard className="w-3 h-3" />
+                                    💰 Compra Crediti
+                                  </a>
                                 )}
                               </div>
                             </>
