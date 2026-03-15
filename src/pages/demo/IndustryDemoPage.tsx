@@ -410,7 +410,22 @@ export default function IndustryDemoPage() {
     return (
       <>
         <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
-        <PremiumTemplate company={demoCompany} afterHero={phoneShowcaseSection} />
+        {/* Partner branding banner */}
+        {isPartnerBranded && (
+          <div className="fixed top-0 inset-x-0 z-[60] bg-black/90 backdrop-blur-xl border-b border-white/10 px-4 py-2.5 flex items-center justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              {logoOverride && <img src={logoOverride} alt="" className="w-7 h-7 rounded-lg object-cover border border-white/10" />}
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-white truncate">{brandOverride}</p>
+                <p className="text-[9px] text-white/40">Bozza demo personalizzata — Empire Platform</p>
+              </div>
+            </div>
+            <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: colorOverride || accentColor }} />
+          </div>
+        )}
+        <div style={isPartnerBranded ? { paddingTop: "52px" } : {}}>
+          <PremiumTemplate company={demoCompany} afterHero={phoneShowcaseSection} />
+        </div>
         <Suspense fallback={null}>
           <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={accentColor} />
         </Suspense>
