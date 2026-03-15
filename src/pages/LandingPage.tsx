@@ -2700,7 +2700,7 @@ const LandingPage = () => {
               {/* Ambient glow */}
               <motion.div
                 className="absolute inset-[-40%] rounded-full blur-[90px] pointer-events-none"
-                style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.3), hsla(38,50%,55%,0.12), transparent 70%)" }}
+                style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), hsla(35,50%,55%,0.1), transparent 70%)" }}
                 animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               />
