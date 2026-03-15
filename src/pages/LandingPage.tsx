@@ -1706,7 +1706,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                   <motion.button
                     onClick={() => setShowFeatureRequest(true)}
                     className="px-6 py-3 rounded-full bg-vibrant-gradient text-primary-foreground text-xs font-heading font-bold tracking-wider uppercase"
-                    whileHover={{ scale: 1.03, boxShadow: "0 10px 40px hsla(265,70%,60%,0.2)" }}
+                    whileHover={{ scale: 1.03, boxShadow: "0 10px 40px hsla(38,50%,55%,0.2)" }}
                     whileTap={{ scale: 0.97 }}>
                     <span className="flex items-center gap-2">
                       <Mail className="w-3.5 h-3.5" /> Richiedi Funzionalità Personalizzata
