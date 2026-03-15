@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Crown } from "lucide-react";
 import empireAgentMascot from "@/assets/empire-agent-mascot.png";
-import { startSplashNarration } from "@/lib/splash-narration";
+import { startSplashNarration, unlockAndStartSplashNarration } from "@/lib/splash-narration";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
