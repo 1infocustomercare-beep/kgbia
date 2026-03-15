@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown } from "lucide-react";
 import empireAgentMascot from "@/assets/empire-agent-mascot.png";
+import { startSplashNarration } from "@/lib/splash-narration";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
@@ -53,7 +54,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
     };
 
     const timers = [
-      setTimeout(() => set("dna"), TIMINGS.dna),
+      setTimeout(() => { set("dna"); startSplashNarration(); }, TIMINGS.dna),
       setTimeout(() => set("pulse"), TIMINGS.pulse),
       setTimeout(() => set("morph"), TIMINGS.morph),
       setTimeout(() => set("exit"), TIMINGS.exit),
