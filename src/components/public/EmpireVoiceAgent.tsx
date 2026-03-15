@@ -976,7 +976,7 @@ const EmpireVoiceAgent: React.FC = () => {
 
       {/* Floating Avatar Button */}
       <AnimatePresence>
-        {isVisible && !mobilePromptShown && (
+        {isVisible && (
           <motion.button
             className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-4 z-[201] group touch-manipulation"
             onClick={toggleOpen}
