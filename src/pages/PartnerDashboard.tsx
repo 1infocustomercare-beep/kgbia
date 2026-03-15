@@ -538,7 +538,7 @@ const PartnerDashboard = () => {
                 <h2 className="text-xl font-display font-bold text-foreground">La Suite Completa per la Ristorazione</h2>
                 <p className="text-sm text-muted-foreground mt-1">21+ funzionalità integrate. Un'unica soluzione. Proprietà permanente.</p>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div data-guide-section="platform-stats" className="grid grid-cols-2 gap-3">
                 {[
                   { label: "Ristoranti Attivi", value: "127", icon: <Briefcase className="w-5 h-5" />, color: "text-primary" },
                   { label: "Soddisfazione", value: "98%", icon: <Trophy className="w-5 h-5" />, color: "text-emerald-400" },
