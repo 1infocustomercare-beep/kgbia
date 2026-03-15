@@ -529,7 +529,7 @@ const SuperAdminDashboard = () => {
               <motion.img
                 src={empireAgentMascot}
                 alt="Empire Agent"
-                className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-contain drop-shadow-[0_0_12px_hsl(var(--primary)/0.5)] z-10"
+               className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-contain drop-shadow-[0_0_12px_hsl(265_85%_65%/0.5)] z-10"
                 animate={{ scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               />
