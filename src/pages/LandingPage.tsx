@@ -2371,7 +2371,7 @@ const LandingPage = () => {
         </div>
 
         {/* ═══ LAYER 1: Central glow orb ═══ */}
-        <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+        <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
           <motion.div className="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] rounded-full blur-[180px]"
             style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.08), hsla(35,45%,50%,0.03), transparent 70%)" }}
             animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
