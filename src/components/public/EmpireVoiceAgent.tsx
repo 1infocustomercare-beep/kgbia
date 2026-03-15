@@ -88,7 +88,29 @@ if (typeof window !== "undefined" && window.speechSynthesis) {
 }
 
 // ── Web Speech API fallback TTS ──
-const SPEECH_HARD_TIMEOUT_MS = 30000; // generous — let speech finish naturally
+const SPEECH_START_GUARD_MS = 4500;
+const SPEECH_HARD_TIMEOUT_MS = 30000;
+const SPEECH_VOICE_WARMUP_RETRIES = 3;
+const BROWSER_ONLY_TTS_KEY = "empire_voice_browser_only";
+
+function setBrowserOnlyTTS(enabled: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    if (enabled) window.localStorage.setItem(BROWSER_ONLY_TTS_KEY, "1");
+    else window.localStorage.removeItem(BROWSER_ONLY_TTS_KEY);
+  } catch {
+    // noop
+  }
+}
+
+function isBrowserOnlyTTS(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(BROWSER_ONLY_TTS_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 
 function speakWithBrowserTTS(
   text: string,
@@ -100,32 +122,15 @@ function speakWithBrowserTTS(
       return;
     }
 
-    // On some mobile browsers, voices are empty until user gesture.
-    // Trigger getVoices() refresh first.
-    window.speechSynthesis.getVoices();
-
+    const synth = window.speechSynthesis;
     const utterance = new SpeechSynthesisUtterance(text);
-    const voice = getBestItalianFemaleVoice();
-
-    if (voice) {
-      utterance.voice = voice;
-    }
-    utterance.lang = "it-IT";
-    utterance.rate = 0.95;
-    utterance.pitch = 1.05;
-    utterance.volume = 1;
-
     let settled = false;
-
-    // Single hard timeout — only safety net, not aggressive
-    const hardTimer = window.setTimeout(() => {
-      try { window.speechSynthesis.cancel(); } catch { /* noop */ }
-      finish(false);
-    }, SPEECH_HARD_TIMEOUT_MS);
+    let started = false;
 
     const finish = (ok: boolean) => {
       if (settled) return;
       settled = true;
+      window.clearTimeout(startGuardTimer);
       window.clearTimeout(hardTimer);
       utterance.onstart = null;
       utterance.onend = null;
@@ -133,38 +138,78 @@ function speakWithBrowserTTS(
       resolve(ok);
     };
 
-    utterance.onend = () => finish(true);
-    utterance.onerror = (e) => {
-      // "interrupted" is not a real error — it means cancel() was called externally
-      if (e?.error === "interrupted") {
+    const speakNow = () => {
+      if (abortRef.current || settled) {
         finish(false);
-      } else {
+        return;
+      }
+
+      const voice = getBestItalianFemaleVoice();
+      if (voice) {
+        utterance.voice = voice;
+      }
+      utterance.lang = "it-IT";
+      utterance.rate = 0.95;
+      utterance.pitch = 1.05;
+      utterance.volume = 1;
+
+      utterance.onstart = () => {
+        started = true;
+      };
+      utterance.onend = () => finish(true);
+      utterance.onerror = () => finish(false);
+
+      try {
+        if (synth.speaking || synth.pending) {
+          synth.cancel();
+        }
+
+        // Let engine reset after cancel (important on iOS/Safari)
+        window.setTimeout(() => {
+          if (abortRef.current || settled) {
+            finish(false);
+            return;
+          }
+          try {
+            synth.speak(utterance);
+          } catch {
+            finish(false);
+          }
+        }, 80);
+      } catch {
         finish(false);
       }
     };
 
-    if (abortRef.current) {
-      finish(false);
-      return;
-    }
-
-    try {
-      // Cancel any lingering speech, then speak
-      if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-        window.speechSynthesis.cancel();
+    const warmupVoices = (attempt = 0) => {
+      const voices = synth.getVoices();
+      if (voices.length > 0 || attempt >= SPEECH_VOICE_WARMUP_RETRIES) {
+        speakNow();
+        return;
       }
-      // Small delay after cancel to let engine reset (fixes iOS)
-      window.setTimeout(() => {
-        if (abortRef.current || settled) return;
-        try {
-          window.speechSynthesis.speak(utterance);
-        } catch {
-          finish(false);
-        }
-      }, 80);
-    } catch {
+      window.setTimeout(() => warmupVoices(attempt + 1), 250);
+    };
+
+    const startGuardTimer = window.setTimeout(() => {
+      if (started) return;
+      try {
+        synth.cancel();
+      } catch {
+        // noop
+      }
       finish(false);
-    }
+    }, SPEECH_START_GUARD_MS);
+
+    const hardTimer = window.setTimeout(() => {
+      try {
+        synth.cancel();
+      } catch {
+        // noop
+      }
+      finish(false);
+    }, SPEECH_HARD_TIMEOUT_MS);
+
+    warmupVoices();
   });
 }
 
