@@ -551,12 +551,13 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           {/* ═══ MASCOT — emerges from DNA morph ═══ */}
           <motion.div
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{ willChange: "opacity, transform", WebkitTransform: "translate3d(0,0,0)" }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{
               opacity: showMascot ? 1 : 0,
               scale: showMascot ? 1 : 0.5,
             }}
-            transition={{ duration: IS_MOBILE ? 0.5 : 0.8, ease: smoothEase }}
+            transition={{ duration: IS_MOBILE ? 0.4 : 0.6, ease: smoothEase }}
           >
             <div className="relative w-24 h-24 sm:w-36 sm:h-36">
               <div
