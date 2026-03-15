@@ -202,18 +202,18 @@ function App() {
     const path = window.location.pathname;
 
     if (path === "/" || path === "/home") {
-      void loadLandingPage();
-      void loadIndex();
+      void preloadRoute(loadLandingPage);
+      void preloadRoute(loadIndex);
       return;
     }
 
     if (path.startsWith("/r/")) {
-      void import("./pages/RestaurantPage");
+      void preloadRoute(() => import("./pages/RestaurantPage"));
       return;
     }
 
     if (path.startsWith("/admin")) {
-      void import("./pages/AdminLogin");
+      void preloadRoute(() => import("./pages/AdminLogin"));
     }
   }, []);
 
