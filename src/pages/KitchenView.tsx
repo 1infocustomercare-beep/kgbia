@@ -163,22 +163,53 @@ const KitchenView = () => {
   }, []);
 
   const fetchOrders = async (restaurantId: string) => {
-    const { data } = await supabase
-      .from("orders").select("*")
-      .eq("restaurant_id", restaurantId)
-      .in("status", ["pending", "preparing", "ready"])
-      .order("created_at", { ascending: true });
-    if (data) {
-      if (data.length > prevOrderCountRef.current && prevOrderCountRef.current > 0 && soundOnRef.current) {
+    const stored = sessionStorage.getItem("kitchen_mode");
+    if (!stored) return;
+    const { pinCode } = JSON.parse(stored);
+    if (!pinCode) {
+      // Fallback: try direct query (works for authenticated users)
+      const { data } = await supabase
+        .from("orders").select("*")
+        .eq("restaurant_id", restaurantId)
+        .in("status", ["pending", "preparing", "ready"])
+        .order("created_at", { ascending: true });
+      if (data) {
+        if (data.length > prevOrderCountRef.current && prevOrderCountRef.current > 0 && soundOnRef.current) {
+          playNewOrderAlert();
+        }
+        prevOrderCountRef.current = data.length;
+        setOrders(data);
+      }
+      return;
+    }
+    try {
+      const { data, error } = await supabase.functions.invoke("kitchen-orders", {
+        body: { pin_code: pinCode, action: "fetch" },
+      });
+      if (error) throw error;
+      const ordersData = data?.orders || [];
+      if (ordersData.length > prevOrderCountRef.current && prevOrderCountRef.current > 0 && soundOnRef.current) {
         playNewOrderAlert();
       }
-      prevOrderCountRef.current = data.length;
-      setOrders(data);
+      prevOrderCountRef.current = ordersData.length;
+      setOrders(ordersData);
+    } catch (err) {
+      console.error("Kitchen fetch error:", err);
     }
   };
 
   const updateStatus = async (orderId: string, status: string) => {
-    await supabase.from("orders").update({ status }).eq("id", orderId);
+    const stored = sessionStorage.getItem("kitchen_mode");
+    if (!stored) return;
+    const { pinCode } = JSON.parse(stored);
+    if (!pinCode) {
+      // Fallback for authenticated users
+      await supabase.from("orders").update({ status }).eq("id", orderId);
+    } else {
+      await supabase.functions.invoke("kitchen-orders", {
+        body: { pin_code: pinCode, action: "update_status", order_id: orderId, status },
+      });
+    }
     if (session) fetchOrders(session.restaurantId);
   };
 
