@@ -595,7 +595,31 @@ const SuperAdminDashboard = () => {
                     alert.severity === "error" ? "bg-destructive/10 border border-destructive/20" : "bg-amber-500/10 border border-amber-500/20"
                   }`}>
                     <AlertCircle className={`w-4 h-4 flex-shrink-0 ${alert.severity === "error" ? "text-destructive" : "text-amber-500"}`} />
-                    <p className="text-sm text-foreground">{alert.message}</p>
+                    <p className="text-sm text-foreground flex-1">{alert.message}</p>
+                    {alert.type === "fisco" && (
+                      <button
+                        onClick={() => setActiveTab("fisco")}
+                        className="text-[0.65rem] font-semibold px-2.5 py-1 rounded-lg bg-primary/15 text-primary hover:bg-primary/25 transition-colors whitespace-nowrap"
+                      >
+                        Configura →
+                      </button>
+                    )}
+                    {alert.type === "payment" && (
+                      <button
+                        onClick={() => setActiveTab("payments")}
+                        className="text-[0.65rem] font-semibold px-2.5 py-1 rounded-lg bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors whitespace-nowrap"
+                      >
+                        Vedi →
+                      </button>
+                    )}
+                    {alert.type === "blocked" && (
+                      <button
+                        onClick={() => setActiveTab("tenants")}
+                        className="text-[0.65rem] font-semibold px-2.5 py-1 rounded-lg bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors whitespace-nowrap"
+                      >
+                        Gestisci →
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
