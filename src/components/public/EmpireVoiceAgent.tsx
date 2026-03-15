@@ -528,7 +528,13 @@ const EmpireVoiceAgent: React.FC = () => {
 
       narrationAttemptsRef.current[sectionId] = (narrationAttemptsRef.current[sectionId] ?? 0) + 1;
 
-      setMessages((prev) => [...prev, { role: "assistant", content: script }]);
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === "assistant" && last.content === script) {
+          return prev;
+        }
+        return [...prev, { role: "assistant", content: script }];
+      });
       setIsSpeaking(true);
       setIsPaused(false);
       abortRef.current = false;
@@ -539,8 +545,13 @@ const EmpireVoiceAgent: React.FC = () => {
         narrationAttemptsRef.current[sectionId] = 0;
         narratedRef.current.add(sectionId);
         setNarratedSections(new Set(narratedRef.current));
-      } else if (!abortRef.current && (narrationAttemptsRef.current[sectionId] ?? 0) < 2) {
-        sectionQueueRef.current.push(sectionId);
+      } else if (!abortRef.current) {
+        const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
+        if (attempts < 4) {
+          sectionQueueRef.current.push(sectionId);
+        } else if (sectionId === "hero" && isTouchDeviceRef.current && !userInteractedRef.current) {
+          setMobilePromptShown(true);
+        }
       }
 
       setIsSpeaking(false);
