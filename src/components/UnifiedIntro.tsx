@@ -324,9 +324,11 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
   const showHUD = phase === "dna" || phase === "pulse" || phase === "morph";
   const showMascot = phase === "morph" || phase === "exit";
 
+  if (phase === "exit" && completedRef.current) {
+    return null;
+  }
+
   return (
-    <AnimatePresence>
-      {phase !== "exit" || !completedRef.current ? (
         <motion.div
           key="unified-intro"
           className="fixed inset-0 z-[9999] overflow-hidden"
