@@ -334,14 +334,14 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
   <motion.div
     className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
     style={{
-      background: "linear-gradient(145deg, hsla(260,18%,18%,0.65), hsla(260,16%,14%,0.55))",
+      background: "linear-gradient(145deg, hsla(230,10%,17%,0.65), hsla(230,8%,13%,0.55))",
       backdropFilter: "blur(20px) saturate(1.4)",
-      borderColor: "hsla(265,50%,60%,0.1)",
+      borderColor: "hsla(38,40%,55%,0.1)",
     }}
     whileHover={hover ? {
       y: -6,
-      borderColor: "hsla(265,70%,65%,0.25)",
-      boxShadow: "0 20px 60px hsla(265,70%,60%,0.12), 0 0 30px hsla(265,70%,60%,0.06), inset 0 1px 0 hsla(265,80%,80%,0.08)",
+      borderColor: "hsla(38,45%,55%,0.25)",
+      boxShadow: "0 20px 60px hsla(38,45%,50%,0.1), 0 0 30px hsla(38,45%,50%,0.05), inset 0 1px 0 hsla(38,50%,70%,0.08)",
       transition: { duration: 0.4, ease: "easeOut" },
     } : undefined}
   >
