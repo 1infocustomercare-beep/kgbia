@@ -140,7 +140,7 @@ const PartnerVoiceAgent: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<"voice" | "chat">("chat");
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Ciao! 👋 Sono **ATLAS**, il tuo assistente IA dedicato. Posso aiutarti con vendite, commissioni, demo, obiezioni dei clienti, strategie — qualsiasi cosa ti serva. Chiedimi tutto!" }
+    { role: "assistant", content: "Ciao! 👋 Sono **ATLAS PRO**, il tuo assistente IA dedicato a **massima potenza**. Conosco ogni dettaglio di Empire: vendite, commissioni, demo, obiezioni, dashboard, settori, tecniche avanzate, navigazione — **tutto**. Chiedimi qualsiasi cosa, ti guido passo-passo! 🚀" }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
