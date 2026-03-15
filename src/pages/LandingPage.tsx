@@ -2330,9 +2330,9 @@ const LandingPage = () => {
               whileHover={{ rotate: -8, scale: 1.15 }}
               animate={{
                 boxShadow: [
-                  "0 0 25px hsla(265,70%,60%,0.35), 0 0 55px hsla(265,70%,60%,0.1), inset 0 1px 1px rgba(255,255,255,0.2)",
-                  "0 0 50px hsla(265,70%,60%,0.65), 0 0 90px hsla(265,70%,60%,0.2), inset 0 1px 2px rgba(255,255,255,0.5)",
-                  "0 0 25px hsla(265,70%,60%,0.35), 0 0 55px hsla(265,70%,60%,0.1), inset 0 1px 1px rgba(255,255,255,0.2)",
+                  "0 0 25px hsla(38,55%,50%,0.3), 0 0 55px hsla(38,55%,50%,0.08), inset 0 1px 1px rgba(255,255,255,0.2)",
+                  "0 0 50px hsla(38,55%,50%,0.5), 0 0 90px hsla(38,55%,50%,0.15), inset 0 1px 2px rgba(255,255,255,0.5)",
+                  "0 0 25px hsla(38,55%,50%,0.3), 0 0 55px hsla(38,55%,50%,0.08), inset 0 1px 1px rgba(255,255,255,0.2)",
                 ],
               }}
               transition={{ boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" } }}
