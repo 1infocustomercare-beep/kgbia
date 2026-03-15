@@ -4268,6 +4268,14 @@ export type Database = {
       }
       is_staff: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
+      verify_kitchen_pin: {
+        Args: { p_pin: string }
+        Returns: {
+          label: string
+          pin_id: string
+          restaurant_id: string
+        }[]
+      }
     }
     Enums: {
       app_role:
