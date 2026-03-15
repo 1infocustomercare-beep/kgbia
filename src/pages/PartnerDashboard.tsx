@@ -754,7 +754,7 @@ const PartnerDashboard = () => {
       </div>
 
       {/* ATLAS Partner Voice Agent */}
-      <PartnerVoiceAgent />
+      <PartnerVoiceAgent activeTab={activeTab} demoMode={demoMode} />
 
       {/* ROI Calculator Modal */}
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
