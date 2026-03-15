@@ -2751,7 +2751,7 @@ const LandingPage = () => {
                       {/* Base pair bridges */}
                       {i % 3 === 0 && (
                         <line x1={x1} y1={y1} x2={x2} y2={y2}
-                          stroke="hsla(265,60%,60%,0.15)" strokeWidth="0.8" strokeDasharray="2 2">
+                          stroke="hsla(38,45%,55%,0.15)" strokeWidth="0.8" strokeDasharray="2 2">
                           <animate attributeName="opacity" values="0.08;0.25;0.08" dur={`${3 + (i % 4)}s`} repeatCount="indefinite" />
                         </line>
                       )}
