@@ -616,7 +616,7 @@ const PartnerDashboard = () => {
               })()}
 
               {/* Override Revenue Tracker */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-sky-500/10 via-card to-blue-500/5 border border-sky-500/20">
+              <div data-guide-section="override-revenue" className="p-5 rounded-2xl bg-gradient-to-br from-sky-500/10 via-card to-blue-500/5 border border-sky-500/20">
                 <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mb-1">Revenue da Management</p>
                 <motion.p className="text-3xl font-display font-bold text-foreground"
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
