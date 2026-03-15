@@ -89,9 +89,7 @@ const importWithRetry = async <T,>(
 
       const lastAttempt = attempt === maxAttempts;
       if (lastAttempt) {
-        if (tryRecoverFromChunkError(error)) {
-          return new Promise<T>(() => undefined);
-        }
+        tryRecoverFromChunkError(error);
         throw error;
       }
 
