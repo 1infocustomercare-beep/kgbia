@@ -8,7 +8,7 @@ import {
   Cpu, Wifi, CheckCircle2, XCircle, AlertCircle,
   ChevronRight, Filter, Plus, ArrowUpRight, ArrowDownRight,
   Building2, MapPin, Zap, Activity, Lightbulb,
-  ToggleLeft, ToggleRight, BookOpen, Link2, ChevronDown, ChevronUp, Info
+  ToggleLeft, ToggleRight, BookOpen, Link2, ChevronDown, ChevronUp, Info, ImageIcon
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
