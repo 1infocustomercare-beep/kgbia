@@ -461,7 +461,7 @@ SectionDivider.displayName = "SectionDivider";
 /* ═══ Comparison Row ═══ */
 const CompRow = ({ label, empire, others, icon }: { label: string; empire: string; others: string; icon?: string }) => (
   <motion.div className="grid grid-cols-3 py-1.5 sm:py-2.5 border-b border-border/20 items-center text-[0.55rem] sm:text-sm"
-    initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+    initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={vpOnce}>
     <span className="text-foreground/50 font-medium leading-tight flex items-center gap-1">
       {icon && <span className="text-[0.5rem] sm:text-xs hidden sm:inline">{icon}</span>}
       <span className="truncate">{label}</span>
