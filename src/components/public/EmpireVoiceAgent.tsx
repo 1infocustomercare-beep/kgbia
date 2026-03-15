@@ -972,50 +972,7 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── Render ──
   return (
     <>
-      {/* Mobile activation prompt — full-screen tap-to-start overlay */}
-      <AnimatePresence>
-        {mobilePromptShown && isTouchDevice && !userInteracted && (
-          <motion.div
-            className="fixed inset-0 z-[300] flex items-end justify-center pb-32"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {/* Backdrop */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={handleMobileActivate} />
-            
-            {/* Prompt card */}
-            <motion.button
-              onClick={handleMobileActivate}
-              className="relative z-10 flex items-center gap-4 px-6 py-4 rounded-2xl bg-background/95 border border-primary/20 shadow-[0_0_40px_hsla(265,85%,65%,0.25)] touch-manipulation"
-              initial={{ y: 40, scale: 0.9 }}
-              animate={{ y: 0, scale: 1 }}
-              exit={{ y: 40, scale: 0.9 }}
-              transition={{ type: "spring", damping: 20, stiffness: 300 }}
-            >
-              <div className="relative">
-                <motion.div
-                  className="absolute -inset-2 rounded-full bg-primary/30 blur-md"
-                  animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-primary/40">
-                  <img src={voiceAgentAvatar} alt="Assistente" className="w-full h-full object-cover" />
-                </div>
-              </div>
-              <div className="text-left">
-                <p className="text-sm font-bold text-foreground">Ciao! Sono Laura 👋</p>
-                <p className="text-xs text-foreground/50 mt-0.5">Tocca per attivare la guida vocale</p>
-                <div className="flex items-center gap-1.5 mt-1.5">
-                  <Volume2 className="w-3 h-3 text-primary/70" />
-                  <span className="text-[0.6rem] text-primary/70 font-medium tracking-wide uppercase">Audio italiano</span>
-                </div>
-              </div>
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile prompt removed — voice starts automatically */}
 
       {/* Floating Avatar Button */}
       <AnimatePresence>
