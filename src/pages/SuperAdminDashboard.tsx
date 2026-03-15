@@ -1218,7 +1218,7 @@ const SuperAdminDashboard = () => {
           <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="text-center mb-4">
               <h2 className="text-lg font-display font-bold text-foreground">🔌 Centro Connessioni & API</h2>
-              <p className="text-[10px] text-muted-foreground">Stato di tutte le connessioni reali — separate per ruolo e settore</p>
+              <p className="text-[10px] text-muted-foreground">Gestisci, configura e attiva/disattiva ogni integrazione per account e settore</p>
             </div>
 
             {(() => {
@@ -1233,62 +1233,135 @@ const SuperAdminDashboard = () => {
                 actionLabel?: string;
                 usedBy: string;
                 secretName?: string;
+                guideUrl?: string;
+                guideSteps?: string[];
               }
+
+              // State for toggles & expanded guides
+              const [disabledIntegrations, setDisabledIntegrations] = useState<Record<string, boolean>>({});
+              const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
+              const [disabledSectors, setDisabledSectors] = useState<Record<string, boolean>>({});
+
+              const toggleIntegration = (name: string) => {
+                setDisabledIntegrations(prev => ({ ...prev, [name]: !prev[name] }));
+                const isNowDisabled = !disabledIntegrations[name];
+                toast({
+                  title: isNowDisabled ? "🔴 Integrazione Disattivata" : "🟢 Integrazione Riattivata",
+                  description: `${name} è stata ${isNowDisabled ? "spenta" : "riattivata"} per tutti gli account collegati.`,
+                });
+              };
+
+              const toggleSector = (sector: string) => {
+                setDisabledSectors(prev => ({ ...prev, [sector]: !prev[sector] }));
+                const isNowDisabled = !disabledSectors[sector];
+                toast({
+                  title: isNowDisabled ? "🔴 Settore Disattivato" : "🟢 Settore Riattivato",
+                  description: `Tutte le integrazioni del settore ${sectorLabel(sector)} sono state ${isNowDisabled ? "spente" : "riattivate"}.`,
+                });
+              };
 
               // ─── SUPER ADMIN — Connessioni Personali Empire ───
               const adminIntegrations: IntegrationItem[] = [
-                // Core infrastruttura
-                { name: "Lovable Cloud (Database)", description: "PostgreSQL, Auth, Storage, Realtime", status: "connected", detail: "Infrastruttura core attiva — gestita automaticamente", scope: "admin", usedBy: "Intera piattaforma" },
-                { name: "Lovable AI Gateway", description: "LLM per assistenti, traduzioni, analisi AI", status: "connected", detail: "LOVABLE_API_KEY configurata — Gemini/GPT-5 disponibili", scope: "admin", usedBy: "Empire Assistant, AI Menu, AI Translate, AI Inventory", secretName: "LOVABLE_API_KEY" },
-                { name: "ElevenLabs (Voce IA)", description: "Text-to-Speech e Conversational AI Agent", status: "connected", detail: "API Key configurata via connector ElevenLabs", scope: "admin", usedBy: "Empire TTS, Voice Agent, Restaurant Voice Agent", secretName: "ELEVENLABS_API_KEY" },
-
-                // Pagamenti piattaforma
-                { name: "Stripe Connect (Platform)", description: "Pagamenti, split commissioni, abbonamenti", status: "missing", detail: "STRIPE_SECRET_KEY necessaria per pagamenti reali, checkout e split Partner/TL", scope: "admin", usedBy: "Checkout, abbonamenti, split partner, rateizzazione", actionLabel: "Configura Stripe", secretName: "STRIPE_SECRET_KEY" },
-                { name: "Stripe Webhook Secret", description: "Verifica eventi Stripe (pagamenti, rinnovi)", status: "missing", detail: "STRIPE_WEBHOOK_SECRET per validare callback Stripe", scope: "admin", usedBy: "stripe-webhook edge function", actionLabel: "Configura Webhook", secretName: "STRIPE_WEBHOOK_SECRET" },
-
-                // Notifiche globali
-                { name: "Firebase Cloud Messaging", description: "Push notification su app mobile/PWA", status: "missing", detail: "FCM_SERVER_KEY per inviare notifiche push a tutti i tenant", scope: "admin", usedBy: "Notifiche ordini, promozioni, scadenze", actionLabel: "Configura FCM", secretName: "FCM_SERVER_KEY" },
-                { name: "Email Service (Resend/SMTP)", description: "Email transazionali e marketing", status: "missing", detail: "RESEND_API_KEY o SMTP config per conferme ordini, fatture, onboarding", scope: "admin", usedBy: "Conferme ordini, reset password, onboarding partner", actionLabel: "Configura Email", secretName: "RESEND_API_KEY" },
-
-                // Analytics & monitoring
-                { name: "Google Analytics (GA4)", description: "Tracking visitatori su tutti i siti pubblici", status: "missing", detail: "GA4_MEASUREMENT_ID per tracciare traffico landing + siti tenant", scope: "admin", usedBy: "Landing page, siti pubblici settoriali", actionLabel: "Configura GA4", secretName: "GA4_MEASUREMENT_ID" },
-                { name: "Sentry (Error Monitoring)", description: "Monitoraggio errori e performance", status: "missing", detail: "SENTRY_DSN per tracciare crash e errori in produzione", scope: "admin", usedBy: "Tutta l'app (frontend + edge functions)", actionLabel: "Configura Sentry", secretName: "SENTRY_DSN" },
-
-                // Domini e SSL
-                { name: "Domini Custom & SSL", description: "White-label con dominio personalizzato", status: "missing", detail: "Configurazione DNS + certificati SSL per siti clienti", scope: "admin", usedBy: "Siti pubblici white-label dei clienti", actionLabel: "Configura Domini" },
+                {
+                  name: "Lovable Cloud (Database)", description: "PostgreSQL, Auth, Storage, Realtime",
+                  status: "connected", detail: "Infrastruttura core attiva — gestita automaticamente",
+                  scope: "admin", usedBy: "Intera piattaforma",
+                  guideSteps: ["Gestito automaticamente da Lovable Cloud", "Database, Auth, Storage e Realtime sono sempre attivi", "Nessuna configurazione necessaria"]
+                },
+                {
+                  name: "Lovable AI Gateway", description: "LLM per assistenti, traduzioni, analisi AI",
+                  status: "connected", detail: "LOVABLE_API_KEY configurata — Gemini/GPT-5 disponibili",
+                  scope: "admin", usedBy: "Empire Assistant, AI Menu, AI Translate, AI Inventory", secretName: "LOVABLE_API_KEY",
+                  guideSteps: ["La chiave è pre-configurata con Lovable Cloud", "Modelli disponibili: Gemini 2.5, GPT-5, GPT-5-mini", "I token vengono tracciati nella tabella ai_usage_logs"]
+                },
+                {
+                  name: "ElevenLabs (Voce IA)", description: "Text-to-Speech e Conversational AI Agent",
+                  status: "connected", detail: "API Key configurata via connector ElevenLabs",
+                  scope: "admin", usedBy: "Empire TTS, Voice Agent, Restaurant Voice Agent", secretName: "ELEVENLABS_API_KEY",
+                  guideUrl: "https://elevenlabs.io/docs/api-reference/text-to-speech",
+                  guideSteps: ["1. Vai su elevenlabs.io → API Keys", "2. Copia la tua API Key", "3. Inseriscila come secret ELEVENLABS_API_KEY", "4. Testa con la funzione Empire TTS"]
+                },
+                {
+                  name: "Stripe Connect (Platform)", description: "Pagamenti, split commissioni, abbonamenti",
+                  status: "missing", detail: "STRIPE_SECRET_KEY necessaria per pagamenti reali",
+                  scope: "admin", usedBy: "Checkout, abbonamenti, split partner, rateizzazione",
+                  actionLabel: "Configura Stripe", secretName: "STRIPE_SECRET_KEY",
+                  guideUrl: "https://docs.stripe.com/connect",
+                  guideSteps: ["1. Crea account Stripe → dashboard.stripe.com", "2. Vai su Developers → API Keys", "3. Copia la Secret Key (sk_live_...)", "4. Inseriscila come secret STRIPE_SECRET_KEY", "5. Abilita Connect per split commissioni Partner/TL"]
+                },
+                {
+                  name: "Stripe Webhook Secret", description: "Verifica eventi Stripe (pagamenti, rinnovi)",
+                  status: "missing", detail: "STRIPE_WEBHOOK_SECRET per validare callback Stripe",
+                  scope: "admin", usedBy: "stripe-webhook edge function",
+                  actionLabel: "Configura Webhook", secretName: "STRIPE_WEBHOOK_SECRET",
+                  guideUrl: "https://docs.stripe.com/webhooks",
+                  guideSteps: ["1. Vai su Stripe Dashboard → Webhooks", "2. Aggiungi endpoint: [URL]/functions/v1/stripe-webhook", "3. Seleziona eventi: checkout.session.completed, invoice.paid", "4. Copia il Signing Secret (whsec_...)", "5. Inseriscilo come STRIPE_WEBHOOK_SECRET"]
+                },
+                {
+                  name: "Firebase Cloud Messaging", description: "Push notification su app mobile/PWA",
+                  status: "missing", detail: "FCM_SERVER_KEY per notifiche push a tutti i tenant",
+                  scope: "admin", usedBy: "Notifiche ordini, promozioni, scadenze",
+                  actionLabel: "Configura FCM", secretName: "FCM_SERVER_KEY",
+                  guideUrl: "https://firebase.google.com/docs/cloud-messaging",
+                  guideSteps: ["1. Vai su console.firebase.google.com", "2. Crea progetto o seleziona esistente", "3. Project Settings → Cloud Messaging → Server Key", "4. Copia la Server Key", "5. Inseriscila come FCM_SERVER_KEY"]
+                },
+                {
+                  name: "Email Service (Resend)", description: "Email transazionali e marketing",
+                  status: "missing", detail: "RESEND_API_KEY per conferme ordini, fatture, onboarding",
+                  scope: "admin", usedBy: "Conferme ordini, reset password, onboarding partner",
+                  actionLabel: "Configura Email", secretName: "RESEND_API_KEY",
+                  guideUrl: "https://resend.com/docs/introduction",
+                  guideSteps: ["1. Registrati su resend.com", "2. Vai su API Keys → Create API Key", "3. Copia la chiave (re_...)", "4. Inseriscila come RESEND_API_KEY", "5. Configura dominio mittente in Resend Dashboard"]
+                },
+                {
+                  name: "Google Analytics (GA4)", description: "Tracking visitatori su siti pubblici",
+                  status: "missing", detail: "GA4_MEASUREMENT_ID per tracking traffico",
+                  scope: "admin", usedBy: "Landing page, siti pubblici settoriali",
+                  actionLabel: "Configura GA4", secretName: "GA4_MEASUREMENT_ID",
+                  guideUrl: "https://support.google.com/analytics/answer/9304153",
+                  guideSteps: ["1. Vai su analytics.google.com", "2. Crea proprietà GA4", "3. Copia il Measurement ID (G-XXXXXXXXXX)", "4. Inseriscilo come GA4_MEASUREMENT_ID"]
+                },
+                {
+                  name: "Sentry (Error Monitoring)", description: "Monitoraggio errori e performance",
+                  status: "missing", detail: "SENTRY_DSN per tracciare crash in produzione",
+                  scope: "admin", usedBy: "Tutta l'app (frontend + edge functions)",
+                  actionLabel: "Configura Sentry", secretName: "SENTRY_DSN",
+                  guideUrl: "https://docs.sentry.io/platforms/javascript/guides/react/",
+                  guideSteps: ["1. Registrati su sentry.io", "2. Crea progetto React", "3. Copia il DSN dall'impostazioni", "4. Inseriscilo come SENTRY_DSN"]
+                },
+                {
+                  name: "Domini Custom & SSL", description: "White-label con dominio personalizzato",
+                  status: "missing", detail: "DNS + SSL per siti clienti",
+                  scope: "admin", usedBy: "Siti pubblici white-label dei clienti",
+                  actionLabel: "Configura Domini",
+                  guideSteps: ["1. Acquista dominio (es. Cloudflare, Namecheap)", "2. Configura CNAME verso il tuo deploy", "3. Abilita SSL automatico", "4. Configura per-tenant nella tabella companies"]
+                },
               ];
 
               // ─── CONNESSIONI CLIENTI — Per Settore ───
               const clientIntegrations: IntegrationItem[] = [
-                // ─ Ristorazione (Food) ─
-                { name: "Fatturazione Elettronica SDI", description: "Invio fatture elettroniche al Sistema di Interscambio", status: "missing", detail: "FattureInCloud o Aruba per invio automatico fatture", scope: "client", sector: "food", usedBy: "Ristoranti — fatturazione automatica", actionLabel: "Configura FE" },
-                { name: "Deliveroo / Glovo API", description: "Sincronizzazione ordini delivery", status: "missing", detail: "API per ricevere ordini da piattaforme delivery esterne", scope: "client", sector: "food", usedBy: "Ristoranti — ordini multi-piattaforma", actionLabel: "Configura Delivery" },
-                { name: "Stampante Comande (ESC/POS)", description: "Stampa automatica comande in cucina", status: "missing", detail: "Integrazione con stampanti termiche via WebUSB o cloud print", scope: "client", sector: "food", usedBy: "Ristoranti — cucina", actionLabel: "Configura Stampante" },
+                { name: "Fatturazione Elettronica SDI", description: "Invio fatture al Sistema di Interscambio", status: "missing", detail: "FattureInCloud o Aruba per invio automatico", scope: "client", sector: "food", usedBy: "Ristoranti — fatturazione", actionLabel: "Configura FE", guideUrl: "https://www.fattureincloud.it/guida/api/", guideSteps: ["1. Registrati su FattureInCloud", "2. Crea API Key", "3. Configura codice fiscale e P.IVA del tenant", "4. Abilita invio automatico"] },
+                { name: "Deliveroo / Glovo API", description: "Sincronizzazione ordini delivery", status: "missing", detail: "API per ordini da piattaforme esterne", scope: "client", sector: "food", usedBy: "Ristoranti — ordini multi-piattaforma", actionLabel: "Configura Delivery", guideSteps: ["1. Richiedi accesso API Partner Deliveroo/Glovo", "2. Configura webhook per ricezione ordini", "3. Mappa il menu del ristorante", "4. Testa con ordine di prova"] },
+                { name: "Stampante Comande (ESC/POS)", description: "Stampa automatica comande in cucina", status: "missing", detail: "WebUSB o cloud print per stampanti termiche", scope: "client", sector: "food", usedBy: "Ristoranti — cucina", actionLabel: "Configura Stampante", guideSteps: ["1. Collega stampante termica via USB o WiFi", "2. Installa driver compatibile ESC/POS", "3. Configura dimensione scontrino (80mm)", "4. Testa stampa comanda di prova"] },
 
-                // ─ NCC / Trasporto ─
-                { name: "Google Maps Platform", description: "Geocoding, routing, ETA, mappe flotta", status: "missing", detail: "GOOGLE_MAPS_API_KEY per calcolo percorsi, tracking GPS e mappe", scope: "client", sector: "ncc", usedBy: "NCC — routing, fleet map, booking form", actionLabel: "Configura Maps", secretName: "GOOGLE_MAPS_API_KEY" },
-                { name: "WhatsApp Business API", description: "Conferme booking e promemoria viaggio", status: "missing", detail: "Twilio/WhatsApp per messaggi automatici ai passeggeri", scope: "client", sector: "ncc", usedBy: "NCC — conferme prenotazione", actionLabel: "Collega WhatsApp" },
-                { name: "Stripe Connect (NCC)", description: "Pagamenti prenotazioni e depositi", status: "missing", detail: "Account Stripe Connect per ogni azienda NCC", scope: "client", sector: "ncc", usedBy: "NCC — checkout prenotazioni", actionLabel: "Configura Stripe NCC" },
+                { name: "Google Maps Platform", description: "Geocoding, routing, ETA, mappe flotta", status: "missing", detail: "API Key per calcolo percorsi e tracking", scope: "client", sector: "ncc", usedBy: "NCC — routing, fleet map, booking", actionLabel: "Configura Maps", secretName: "GOOGLE_MAPS_API_KEY", guideUrl: "https://developers.google.com/maps/documentation", guideSteps: ["1. Vai su console.cloud.google.com", "2. Abilita Maps JavaScript API + Directions API", "3. Crea API Key con restrizioni", "4. Inseriscila come GOOGLE_MAPS_API_KEY"] },
+                { name: "WhatsApp Business API", description: "Conferme booking e promemoria viaggio", status: "missing", detail: "Twilio/WhatsApp per messaggi ai passeggeri", scope: "client", sector: "ncc", usedBy: "NCC — conferme prenotazione", actionLabel: "Collega WhatsApp", guideUrl: "https://www.twilio.com/docs/whatsapp", guideSteps: ["1. Crea account Twilio", "2. Abilita WhatsApp Sandbox", "3. Configura template messaggi", "4. Inserisci TWILIO_AUTH_TOKEN"] },
+                { name: "Stripe Connect (NCC)", description: "Pagamenti prenotazioni e depositi", status: "missing", detail: "Stripe Connect per ogni azienda NCC", scope: "client", sector: "ncc", usedBy: "NCC — checkout prenotazioni", actionLabel: "Configura Stripe NCC", guideSteps: ["1. Il tenant deve completare l'onboarding Stripe Connect", "2. Configura split fee (piattaforma prende %)", "3. Abilita pagamenti con carta e Apple Pay"] },
 
-                // ─ Beauty / Wellness ─
-                { name: "Google Calendar Sync", description: "Sincronizzazione appuntamenti", status: "missing", detail: "Google Calendar API per sync bidirezionale appuntamenti", scope: "client", sector: "beauty", usedBy: "Beauty — agenda appuntamenti", actionLabel: "Collega Calendar" },
-                { name: "SMS Reminders (Twilio)", description: "Promemoria appuntamento via SMS", status: "missing", detail: "Twilio SMS per ridurre no-show con reminder automatici", scope: "client", sector: "beauty", usedBy: "Beauty — notifiche clienti", actionLabel: "Collega Twilio" },
+                { name: "Google Calendar Sync", description: "Sincronizzazione appuntamenti", status: "missing", detail: "Google Calendar API per sync bidirezionale", scope: "client", sector: "beauty", usedBy: "Beauty — agenda appuntamenti", actionLabel: "Collega Calendar", guideUrl: "https://developers.google.com/calendar", guideSteps: ["1. Abilita Google Calendar API", "2. Configura OAuth2 per il tenant", "3. Autorizza accesso al calendario", "4. Abilita sync bidirezionale"] },
+                { name: "SMS Reminders (Twilio)", description: "Promemoria appuntamento via SMS", status: "missing", detail: "Twilio per ridurre no-show", scope: "client", sector: "beauty", usedBy: "Beauty — notifiche clienti", actionLabel: "Collega Twilio", guideUrl: "https://www.twilio.com/docs/sms", guideSteps: ["1. Crea account Twilio", "2. Acquista numero di telefono", "3. Configura template SMS", "4. Abilita reminder automatico 24h prima"] },
 
-                // ─ Healthcare ─
-                { name: "Telemedicina (WebRTC)", description: "Videochiamate medico-paziente", status: "missing", detail: "Daily.co o Twilio Video per consulti da remoto", scope: "client", sector: "healthcare", usedBy: "Sanità — visite online", actionLabel: "Configura Video" },
-                { name: "HL7/FHIR Gateway", description: "Interoperabilità con sistemi sanitari", status: "missing", detail: "Standard sanitario per scambio dati pazienti", scope: "client", sector: "healthcare", usedBy: "Sanità — cartelle cliniche", actionLabel: "Configura FHIR" },
+                { name: "Telemedicina (WebRTC)", description: "Videochiamate medico-paziente", status: "missing", detail: "Daily.co o Twilio Video per consulti remoti", scope: "client", sector: "healthcare", usedBy: "Sanità — visite online", actionLabel: "Configura Video", guideUrl: "https://docs.daily.co/", guideSteps: ["1. Registrati su daily.co", "2. Crea API Key", "3. Configura room settings", "4. Integra nel modulo appuntamenti"] },
+                { name: "HL7/FHIR Gateway", description: "Interoperabilità sistemi sanitari", status: "missing", detail: "Standard per scambio dati pazienti", scope: "client", sector: "healthcare", usedBy: "Sanità — cartelle cliniche", actionLabel: "Configura FHIR", guideUrl: "https://www.hl7.org/fhir/", guideSteps: ["1. Identifica il sistema EHR del cliente", "2. Configura endpoint FHIR", "3. Mappa risorse paziente", "4. Testa con dati di esempio"] },
 
-                // ─ Hotel / Hospitality ─
-                { name: "Channel Manager (OTA)", description: "Sync tariffe con Booking.com, Expedia", status: "missing", detail: "API per sincronizzazione prezzi e disponibilità camere", scope: "client", sector: "hospitality", usedBy: "Hotel — distribuzione tariffe", actionLabel: "Configura OTA" },
-                { name: "PMS Integration", description: "Property Management System", status: "missing", detail: "Collegamento con software gestionale alberghiero", scope: "client", sector: "hospitality", usedBy: "Hotel — check-in/out, housekeeping", actionLabel: "Configura PMS" },
+                { name: "Channel Manager (OTA)", description: "Sync tariffe Booking.com, Expedia", status: "missing", detail: "API per sincronizzazione camere", scope: "client", sector: "hospitality", usedBy: "Hotel — distribuzione tariffe", actionLabel: "Configura OTA", guideSteps: ["1. Scegli channel manager (SiteMinder, Cloudbeds)", "2. Configura mapping camere", "3. Abilita sync bidirezionale tariffe", "4. Testa con prenotazione di prova"] },
+                { name: "PMS Integration", description: "Property Management System", status: "missing", detail: "Collegamento con gestionale alberghiero", scope: "client", sector: "hospitality", usedBy: "Hotel — check-in/out, housekeeping", actionLabel: "Configura PMS", guideSteps: ["1. Identifica il PMS del cliente", "2. Configura API di integrazione", "3. Mappa camere e tariffe", "4. Abilita sync automatico"] },
 
-                // ─ Retail ─
-                { name: "POS Integration", description: "Sincronizzazione cassa e inventario", status: "missing", detail: "Collegamento con registratore di cassa / POS", scope: "client", sector: "retail", usedBy: "Retail — vendite e magazzino", actionLabel: "Configura POS" },
-                { name: "Shopify / WooCommerce", description: "Sync catalogo e-commerce", status: "missing", detail: "Importazione prodotti e sincronizzazione ordini online", scope: "client", sector: "retail", usedBy: "Retail — e-commerce", actionLabel: "Configura E-commerce" },
+                { name: "POS Integration", description: "Sincronizzazione cassa e inventario", status: "missing", detail: "Collegamento con registratore di cassa", scope: "client", sector: "retail", usedBy: "Retail — vendite e magazzino", actionLabel: "Configura POS", guideSteps: ["1. Identifica il modello POS", "2. Installa plugin/connector", "3. Mappa prodotti e categorie", "4. Testa sincronizzazione vendita"] },
+                { name: "Shopify / WooCommerce", description: "Sync catalogo e-commerce", status: "missing", detail: "Importazione prodotti e ordini online", scope: "client", sector: "retail", usedBy: "Retail — e-commerce", actionLabel: "Configura E-commerce", guideUrl: "https://shopify.dev/docs/api", guideSteps: ["1. Genera API Key dal pannello Shopify", "2. Configura webhook ordini", "3. Mappa catalogo prodotti", "4. Abilita sync inventario"] },
 
-                // ─ Tutti i settori ─
-                { name: "Meta Business Suite", description: "Pubblicazione automatica Instagram/Facebook", status: "missing", detail: "Meta Graph API per posting automatico e gestione pagine social", scope: "client", sector: "all", usedBy: "Tutti — Social Manager AI", actionLabel: "Configura Social" },
-                { name: "Google My Business", description: "Sync recensioni e info attività", status: "missing", detail: "Google Business Profile API per aggiornamento automatico", scope: "client", sector: "all", usedBy: "Tutti — reputazione online", actionLabel: "Configura GMB" },
+                { name: "Meta Business Suite", description: "Pubblicazione Instagram/Facebook", status: "missing", detail: "Meta Graph API per posting automatico", scope: "client", sector: "all", usedBy: "Tutti — Social Manager AI", actionLabel: "Configura Social", guideUrl: "https://developers.facebook.com/docs/graph-api/", guideSteps: ["1. Crea app su developers.facebook.com", "2. Richiedi permessi pages_manage_posts", "3. Connetti pagina del cliente", "4. Testa pubblicazione automatica"] },
+                { name: "Google My Business", description: "Sync recensioni e info attività", status: "missing", detail: "Google Business Profile API", scope: "client", sector: "all", usedBy: "Tutti — reputazione online", actionLabel: "Configura GMB", guideUrl: "https://developers.google.com/my-business", guideSteps: ["1. Abilita Business Profile API", "2. Verifica proprietà scheda GMB", "3. Configura sync recensioni", "4. Abilita aggiornamento automatico info"] },
               ];
 
               const allIntegrations = [...adminIntegrations, ...clientIntegrations];
@@ -1328,53 +1401,142 @@ const SuperAdminDashboard = () => {
                 return labels[sector || "all"] || sector || "";
               };
 
-              const renderItem = (item: IntegrationItem) => (
-                <motion.div
-                  key={item.name}
-                  className={`p-3 rounded-xl border ${statusBg(item.status)} transition-all`}
-                  whileHover={{ scale: 1.005 }}
-                >
-                  <div className="flex items-start gap-2.5">
-                    {statusIcon(item.status)}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="text-xs font-semibold text-foreground truncate">{item.name}</p>
-                        {item.status === "connected" && (
-                          <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 font-bold uppercase tracking-wider shrink-0">Attivo</span>
-                        )}
-                        {item.status === "missing" && (
-                          <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-destructive/15 text-destructive font-bold uppercase tracking-wider shrink-0">Mancante</span>
-                        )}
-                        {item.status === "warning" && (
-                          <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 font-bold uppercase tracking-wider shrink-0">Parziale</span>
-                        )}
-                      </div>
-                      <p className="text-[0.6rem] text-muted-foreground mt-0.5">{item.description}</p>
-                      <p className="text-[0.55rem] text-muted-foreground/60 mt-0.5 italic">{item.detail}</p>
-                      <div className="flex items-center gap-1 mt-1">
-                        <span className="text-[0.5rem] text-primary/70 font-medium">👤 Usato da:</span>
-                        <span className="text-[0.5rem] text-muted-foreground">{item.usedBy}</span>
-                      </div>
-                      {item.secretName && (
-                        <div className="flex items-center gap-1 mt-0.5">
-                          <Lock className="w-2.5 h-2.5 text-muted-foreground/50" />
-                          <span className="text-[0.5rem] text-muted-foreground/50 font-mono">{item.secretName}</span>
+              const isGuideOpen = (name: string) => expandedGuide === name;
+
+              const renderItem = (item: IntegrationItem) => {
+                const isDisabled = disabledIntegrations[item.name] || false;
+                const guideOpen = isGuideOpen(item.name);
+
+                return (
+                  <motion.div
+                    key={item.name}
+                    className={`rounded-xl border transition-all overflow-hidden ${isDisabled ? "border-muted/30 bg-muted/5 opacity-50" : statusBg(item.status)}`}
+                    whileHover={{ scale: 1.005 }}
+                  >
+                    <div className="p-3">
+                      <div className="flex items-start gap-2.5">
+                        {isDisabled ? <Power className="w-4 h-4 text-muted-foreground/40 shrink-0" /> : statusIcon(item.status)}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <p className={`text-xs font-semibold truncate ${isDisabled ? "text-muted-foreground line-through" : "text-foreground"}`}>{item.name}</p>
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              {!isDisabled && item.status === "connected" && (
+                                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 font-bold uppercase tracking-wider">Attivo</span>
+                              )}
+                              {!isDisabled && item.status === "missing" && (
+                                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-destructive/15 text-destructive font-bold uppercase tracking-wider">Mancante</span>
+                              )}
+                              {isDisabled && (
+                                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-muted/20 text-muted-foreground font-bold uppercase tracking-wider">Spento</span>
+                              )}
+                              {/* Toggle ON/OFF */}
+                              <motion.button
+                                onClick={() => toggleIntegration(item.name)}
+                                className={`p-0.5 rounded-md transition-colors ${isDisabled ? "text-muted-foreground/50 hover:text-destructive" : "text-green-400 hover:text-amber-400"}`}
+                                whileTap={{ scale: 0.9 }}
+                                title={isDisabled ? "Riattiva integrazione" : "Disattiva integrazione"}
+                              >
+                                {isDisabled ? <ToggleLeft className="w-5 h-5" /> : <ToggleRight className="w-5 h-5" />}
+                              </motion.button>
+                            </div>
+                          </div>
+
+                          {!isDisabled && (
+                            <>
+                              <p className="text-[0.6rem] text-muted-foreground mt-0.5">{item.description}</p>
+                              <p className="text-[0.55rem] text-muted-foreground/60 mt-0.5 italic">{item.detail}</p>
+                              <div className="flex items-center gap-1 mt-1">
+                                <span className="text-[0.5rem] text-primary/70 font-medium">👤 Usato da:</span>
+                                <span className="text-[0.5rem] text-muted-foreground">{item.usedBy}</span>
+                              </div>
+                              {item.secretName && (
+                                <div className="flex items-center gap-1 mt-0.5">
+                                  <Lock className="w-2.5 h-2.5 text-muted-foreground/50" />
+                                  <span className="text-[0.5rem] text-muted-foreground/50 font-mono">{item.secretName}</span>
+                                </div>
+                              )}
+
+                              {/* Action buttons row */}
+                              <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                                {item.actionLabel && (
+                                  <motion.button
+                                    className="px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[0.6rem] font-bold hover:bg-primary/20 transition-colors flex items-center gap-1"
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => toast({ title: "🔧 " + item.actionLabel, description: "Configurazione necessaria: " + item.name + (item.secretName ? ` (secret: ${item.secretName})` : "") })}
+                                  >
+                                    <Zap className="w-3 h-3" />
+                                    {item.actionLabel}
+                                  </motion.button>
+                                )}
+                                {item.guideUrl && (
+                                  <a
+                                    href={item.guideUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-2.5 py-1 rounded-lg bg-accent/10 text-accent text-[0.6rem] font-bold hover:bg-accent/20 transition-colors flex items-center gap-1"
+                                  >
+                                    <ExternalLink className="w-3 h-3" />
+                                    Documentazione
+                                  </a>
+                                )}
+                                {item.guideSteps && (
+                                  <motion.button
+                                    className="px-2.5 py-1 rounded-lg bg-secondary text-foreground text-[0.6rem] font-bold hover:bg-secondary/80 transition-colors flex items-center gap-1"
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => setExpandedGuide(guideOpen ? null : item.name)}
+                                  >
+                                    <BookOpen className="w-3 h-3" />
+                                    Guida Setup
+                                    {guideOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                                  </motion.button>
+                                )}
+                              </div>
+                            </>
+                          )}
                         </div>
-                      )}
-                      {item.actionLabel && (
-                        <motion.button
-                          className="mt-2 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-[0.6rem] font-bold hover:bg-primary/20 transition-colors flex items-center gap-1"
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => toast({ title: "🔧 " + item.actionLabel, description: "Configurazione necessaria: " + item.name + (item.secretName ? ` (secret: ${item.secretName})` : "") })}
-                        >
-                          <Zap className="w-3 h-3" />
-                          {item.actionLabel}
-                        </motion.button>
-                      )}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              );
+
+                    {/* Expandable guide panel */}
+                    <AnimatePresence>
+                      {guideOpen && item.guideSteps && !isDisabled && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-3 pb-3 pt-1 border-t border-border/30">
+                            <p className="text-[0.55rem] font-bold text-primary mb-1.5 flex items-center gap-1">
+                              <Info className="w-3 h-3" /> Come configurare:
+                            </p>
+                            <div className="space-y-1">
+                              {item.guideSteps.map((step, i) => (
+                                <div key={i} className="flex items-start gap-1.5">
+                                  <span className="text-[0.5rem] text-primary/60 font-mono shrink-0 mt-px">{step.startsWith(String(i + 1)) ? "▸" : "•"}</span>
+                                  <span className="text-[0.55rem] text-muted-foreground leading-relaxed">{step}</span>
+                                </div>
+                              ))}
+                            </div>
+                            {item.guideUrl && (
+                              <a
+                                href={item.guideUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-2 inline-flex items-center gap-1 text-[0.55rem] text-primary font-semibold hover:underline"
+                              >
+                                <Link2 className="w-3 h-3" />
+                                Apri documentazione completa →
+                              </a>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              };
 
               // Group client integrations by sector
               const clientSectors = [...new Set(clientIntegrations.map(i => i.sector || "all"))];
@@ -1397,24 +1559,20 @@ const SuperAdminDashboard = () => {
                     </div>
                   </div>
 
-                  {/* ═══════════════════════════════════════════ */}
-                  {/* SEZIONE 1: SUPER ADMIN — Connessioni Piattaforma */}
-                  {/* ═══════════════════════════════════════════ */}
+                  {/* ═══ SEZIONE 1: SUPER ADMIN ═══ */}
                   <div className="rounded-2xl border border-primary/20 overflow-hidden" style={{ background: "linear-gradient(160deg, hsl(var(--card)), hsl(var(--primary) / 0.04))" }}>
                     <div className="px-4 py-3 border-b border-primary/10 flex items-center justify-between" style={{ background: "hsl(var(--primary) / 0.06)" }}>
                       <div className="flex items-center gap-2">
                         <Crown className="w-4 h-4 text-primary" />
                         <div>
-                          <h3 className="text-sm font-display font-bold text-foreground">🔒 Super Admin — Infrastruttura Empire</h3>
-                          <p className="text-[0.55rem] text-muted-foreground">Connessioni personali per gestire tutta la piattaforma</p>
+                          <h3 className="text-sm font-display font-bold text-foreground">🔒 Infrastruttura Empire</h3>
+                          <p className="text-[0.55rem] text-muted-foreground">Connessioni core — clicca toggle per spegnere</p>
                         </div>
                       </div>
                       <span className="text-[0.6rem] text-primary font-bold px-2 py-0.5 rounded-full bg-primary/10">
                         {adminConnected}/{adminTotal}
                       </span>
                     </div>
-
-                    {/* Progress */}
                     <div className="px-4 pt-3 pb-1">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-[0.55rem] text-muted-foreground">Completamento infrastruttura</span>
@@ -1429,22 +1587,19 @@ const SuperAdminDashboard = () => {
                         />
                       </div>
                     </div>
-
                     <div className="p-3 space-y-1.5">
                       {adminIntegrations.map(renderItem)}
                     </div>
                   </div>
 
-                  {/* ═══════════════════════════════════════════ */}
-                  {/* SEZIONE 2: CLIENTI — Connessioni per Settore */}
-                  {/* ═══════════════════════════════════════════ */}
+                  {/* ═══ SEZIONE 2: CLIENTI — Per Settore ═══ */}
                   <div className="rounded-2xl border border-accent/20 overflow-hidden" style={{ background: "linear-gradient(160deg, hsl(var(--card)), hsl(var(--accent) / 0.04))" }}>
                     <div className="px-4 py-3 border-b border-accent/10 flex items-center justify-between" style={{ background: "hsl(var(--accent) / 0.06)" }}>
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-accent" />
                         <div>
-                          <h3 className="text-sm font-display font-bold text-foreground">👥 Clienti — Integrazioni per Settore</h3>
-                          <p className="text-[0.55rem] text-muted-foreground">Connessioni che i clienti useranno in base al loro settore</p>
+                          <h3 className="text-sm font-display font-bold text-foreground">👥 Integrazioni per Settore</h3>
+                          <p className="text-[0.55rem] text-muted-foreground">Spegni un intero settore o singole integrazioni</p>
                         </div>
                       </div>
                       <span className="text-[0.6rem] text-accent font-bold px-2 py-0.5 rounded-full bg-accent/10">
@@ -1456,29 +1611,58 @@ const SuperAdminDashboard = () => {
                       {clientSectors.map(sector => {
                         const sectorItems = clientIntegrations.filter(i => i.sector === sector);
                         const sectorConnectedCount = sectorItems.filter(i => i.status === "connected").length;
+                        const isSectorDisabled = disabledSectors[sector] || false;
                         return (
-                          <div key={sector}>
+                          <div key={sector} className={isSectorDisabled ? "opacity-40" : ""}>
                             <div className="flex items-center justify-between mb-2">
                               <h4 className="text-xs font-display font-bold text-foreground flex items-center gap-1.5">
                                 <span>{sectorIcon(sector)}</span>
                                 {sectorLabel(sector)}
                               </h4>
-                              <span className="text-[0.55rem] text-muted-foreground font-medium px-2 py-0.5 rounded-full bg-secondary">
-                                {sectorConnectedCount}/{sectorItems.length}
-                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-[0.55rem] text-muted-foreground font-medium px-2 py-0.5 rounded-full bg-secondary">
+                                  {sectorConnectedCount}/{sectorItems.length}
+                                </span>
+                                <motion.button
+                                  onClick={() => toggleSector(sector)}
+                                  className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[0.55rem] font-bold transition-colors ${
+                                    isSectorDisabled
+                                      ? "bg-destructive/10 text-destructive hover:bg-destructive/20"
+                                      : "bg-green-500/10 text-green-400 hover:bg-green-500/20"
+                                  }`}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  {isSectorDisabled ? <ToggleLeft className="w-3.5 h-3.5" /> : <ToggleRight className="w-3.5 h-3.5" />}
+                                  {isSectorDisabled ? "Spento" : "Attivo"}
+                                </motion.button>
+                              </div>
                             </div>
-                            <div className="space-y-1.5">
-                              {sectorItems.map(renderItem)}
-                            </div>
+                            {!isSectorDisabled && (
+                              <div className="space-y-1.5">
+                                {sectorItems.map(renderItem)}
+                              </div>
+                            )}
+                            {isSectorDisabled && (
+                              <div className="p-3 rounded-xl bg-muted/10 border border-muted/20 text-center">
+                                <p className="text-[0.6rem] text-muted-foreground">
+                                  Tutte le integrazioni di {sectorLabel(sector)} sono disattivate
+                                </p>
+                                <motion.button
+                                  onClick={() => toggleSector(sector)}
+                                  className="mt-1.5 px-3 py-1 rounded-lg bg-primary/10 text-primary text-[0.6rem] font-bold"
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  Riattiva Settore
+                                </motion.button>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
                     </div>
                   </div>
 
-                  {/* ═══════════════════════════════════════════ */}
-                  {/* SEZIONE 3: Edge Functions attive */}
-                  {/* ═══════════════════════════════════════════ */}
+                  {/* ═══ SEZIONE 3: Edge Functions ═══ */}
                   <div className="rounded-2xl border border-border overflow-hidden">
                     <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-card">
                       <div className="flex items-center gap-2">
@@ -1532,10 +1716,11 @@ const SuperAdminDashboard = () => {
                     <div className="flex items-start gap-2">
                       <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-[0.6rem] text-foreground font-medium mb-1">Sicurezza & Separazione</p>
+                        <p className="text-[0.6rem] text-foreground font-medium mb-1">Sicurezza & Controllo</p>
                         <p className="text-[0.55rem] text-muted-foreground leading-relaxed">
-                          Le <strong>connessioni Super Admin</strong> (Stripe, ElevenLabs, FCM) sono secrets server-side accessibili solo dalle Edge Functions — mai esposti ai clienti.
-                          Le <strong>connessioni clienti</strong> verranno gestite per-tenant con chiavi separate per ogni azienda, garantendo isolamento totale tra i business.
+                          Ogni integrazione può essere <strong>spenta individualmente</strong> o per <strong>intero settore</strong>.
+                          Usa i toggle per disattivare istantaneamente le connessioni di clienti che non pagano o non necessitano del servizio.
+                          Le chiavi API sono secrets server-side — mai esposti ai clienti.
                         </p>
                       </div>
                     </div>
