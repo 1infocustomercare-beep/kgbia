@@ -7,11 +7,16 @@ const HeroNeuralCanvas = memo(() => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animId: number;
+    let animId = 0;
     let t = 0;
+    let width = 0;
+    let height = 0;
+
+    const isValidDimension = (value: number) => Number.isFinite(value) && value > 0;
 
     const nodes: { x: number; y: number; vx: number; vy: number; r: number; type: "v" | "g" }[] = [];
     const nodeCount = window.innerWidth < 640 ? 35 : 65;
@@ -28,18 +33,44 @@ const HeroNeuralCanvas = memo(() => {
     }
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio, 2);
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const nextWidth = rect.width;
+      const nextHeight = rect.height;
+
+      if (!isValidDimension(nextWidth) || !isValidDimension(nextHeight)) {
+        width = 0;
+        height = 0;
+        return;
+      }
+
+      width = nextWidth;
+      height = nextHeight;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.floor(width * dpr));
+      canvas.height = Math.max(1, Math.floor(height * dpr));
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
     };
+
     resize();
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", resize, { passive: true });
+
+    const resizeObserver = typeof ResizeObserver !== "undefined"
+      ? new ResizeObserver(() => resize())
+      : null;
+    resizeObserver?.observe(canvas);
 
     const draw = () => {
-      const w = canvas.getBoundingClientRect().width;
-      const h = canvas.getBoundingClientRect().height;
+      const w = width;
+      const h = height;
+
+      if (!isValidDimension(w) || !isValidDimension(h)) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
+
       ctx.clearRect(0, 0, w, h);
       t += 0.004;
 
@@ -102,7 +133,7 @@ const HeroNeuralCanvas = memo(() => {
       for (let i = 0; i < Math.min(nodes.length - 1, 12); i++) {
         const a = nodes[i];
         const b = nodes[(i + 3) % nodes.length];
-        const progress = ((t * 0.8 + i * 0.3) % 1);
+        const progress = (t * 0.8 + i * 0.3) % 1;
         const px = (a.x + (b.x - a.x) * progress) * w;
         const py = (a.y + (b.y - a.y) * progress) * h;
         const alpha = Math.sin(progress * Math.PI) * 0.6;
@@ -115,7 +146,7 @@ const HeroNeuralCanvas = memo(() => {
       }
 
       // Scanning beam (horizontal)
-      const beamX = ((t * 60) % (w + 200)) - 100;
+      const beamX = (t * 60) % (w + 200) - 100;
       const beamGrad = ctx.createLinearGradient(beamX - 60, 0, beamX + 60, 0);
       beamGrad.addColorStop(0, "hsla(265, 70%, 60%, 0)");
       beamGrad.addColorStop(0.5, "hsla(265, 70%, 60%, 0.03)");
@@ -125,10 +156,12 @@ const HeroNeuralCanvas = memo(() => {
 
       animId = requestAnimationFrame(draw);
     };
-    draw();
+
+    animId = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(animId);
+      resizeObserver?.disconnect();
       window.removeEventListener("resize", resize);
     };
   }, []);
