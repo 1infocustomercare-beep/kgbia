@@ -288,7 +288,7 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
       {/* Ambient glow */}
       <motion.div
         className={`absolute -inset-2 ${sizeClasses} opacity-0 group-hover/icon:opacity-100 transition-opacity duration-700 blur-xl`}
-        style={{ background: `linear-gradient(135deg, hsla(265,70%,60%,0.3), hsla(280,50%,60%,0.2))` }}
+        style={{ background: `linear-gradient(135deg, hsla(38,50%,55%,0.25), hsla(32,40%,50%,0.15))` }}
       />
       {/* Outer pulse ring */}
       <motion.div
