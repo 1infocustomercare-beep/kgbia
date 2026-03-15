@@ -2311,144 +2311,117 @@ const LandingPage = () => {
             ))}
           </div>
 
-          {/* ═══ Centered Logo — Ultra Futuristic Premium ═══ */}
-          <a href="#hero" className="flex items-center gap-3 group relative lg:absolute lg:left-1/2 lg:-translate-x-1/2 z-10">
-            {/* Ambient halo behind logo — multi-layer */}
+          {/* ═══ Centered Logo — Ultra Premium Luxury ═══ */}
+          <a href="#hero" className="flex items-center gap-4 group relative lg:absolute lg:left-1/2 lg:-translate-x-1/2 z-10">
+            {/* Outer breathing halo — soft gold */}
             <motion.div
-              className="absolute -inset-10 rounded-full pointer-events-none"
-              style={{ background: "radial-gradient(circle, hsla(38,50%,55%,0.2), hsla(35,45%,50%,0.08), transparent 65%)" }}
-              animate={{ opacity: [0, 0.6, 0], scale: [0.95, 1.1, 0.95] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -inset-14 rounded-full pointer-events-none"
+              style={{ background: "radial-gradient(circle, hsla(38,40%,55%,0.12), hsla(38,35%,50%,0.04), transparent 60%)" }}
+              animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.9, 1.15, 0.9] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
-            {/* Logo container — futuristic with orbital system */}
+            {/* Secondary halo ring */}
             <motion.div
-              className="relative w-11 h-11 sm:w-[52px] sm:h-[52px] rounded-2xl flex items-center justify-center overflow-hidden"
+              className="absolute -inset-8 rounded-full pointer-events-none"
+              style={{ border: "1px solid hsla(38,40%,55%,0.06)" }}
+              animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0, 0.2] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeOut" }}
+            />
+
+            {/* Logo container — hexagonal feel with premium depth */}
+            <motion.div
+              className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-[16px] flex items-center justify-center"
               style={{
-                background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(34,50%,42%,1), hsla(30,45%,38%,1))",
-                boxShadow: "0 0 35px hsla(38,55%,50%,0.4), 0 0 70px hsla(38,55%,50%,0.1), inset 0 1px 2px rgba(255,255,255,0.35)",
+                background: "linear-gradient(145deg, hsla(38,45%,20%,1), hsla(35,40%,14%,1), hsla(30,35%,10%,1))",
+                boxShadow: "0 0 0 1px hsla(38,50%,50%,0.2), 0 0 40px hsla(38,50%,50%,0.15), 0 8px 32px hsla(0,0%,0%,0.4), inset 0 1px 0 hsla(38,50%,60%,0.15)",
               }}
-              whileHover={{ rotate: -8, scale: 1.15 }}
-              animate={{
-                boxShadow: [
-                  "0 0 25px hsla(38,55%,50%,0.3), 0 0 55px hsla(38,55%,50%,0.08), inset 0 1px 1px rgba(255,255,255,0.2)",
-                  "0 0 50px hsla(38,55%,50%,0.5), 0 0 90px hsla(38,55%,50%,0.15), inset 0 1px 2px rgba(255,255,255,0.5)",
-                  "0 0 25px hsla(38,55%,50%,0.3), 0 0 55px hsla(38,55%,50%,0.08), inset 0 1px 1px rgba(255,255,255,0.2)",
-                ],
-              }}
-              transition={{ boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" } }}
+              whileHover={{ scale: 1.12, rotate: -5 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              {/* Orbital ring 1 — fast */}
+              {/* Inner gold border — subtle luxury */}
+              <div className="absolute inset-[2px] rounded-[14px] border border-[hsla(38,50%,50%,0.12)] pointer-events-none" />
+              
+              {/* Orbital ring — slow elegant rotation */}
               <motion.div
-                className="absolute inset-0 rounded-2xl"
-                style={{ border: "1.5px solid transparent", borderTopColor: "hsla(38,60%,65%,0.6)", borderRightColor: "hsla(35,50%,60%,0.3)" }}
+                className="absolute -inset-1 rounded-[20px] pointer-events-none"
+                style={{ border: "1px solid transparent", borderTopColor: "hsla(38,45%,55%,0.35)", borderRightColor: "hsla(38,45%,55%,0.1)" }}
                 animate={{ rotate: [0, 360] }}
-                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
               />
-              {/* Orbital ring 2 — counter-rotating */}
+              
+              {/* Counter-rotating inner ring */}
               <motion.div
-                className="absolute inset-1 rounded-xl"
-                style={{ border: "1px solid transparent", borderBottomColor: "hsla(35,50%,60%,0.35)", borderLeftColor: "hsla(38,45%,55%,0.2)" }}
+                className="absolute inset-0.5 rounded-[14px] pointer-events-none"
+                style={{ border: "0.5px solid transparent", borderBottomColor: "hsla(38,40%,55%,0.2)" }}
                 animate={{ rotate: [360, 0] }}
-                transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
               />
-              {/* Orbital ring 3 — diagonal fast spin */}
+
+              {/* Single elegant shimmer */}
               <motion.div
-                className="absolute inset-0.5 rounded-[14px]"
-                style={{ border: "0.5px solid transparent", borderTopColor: "hsla(35,50%,60%,0.3)", borderBottomColor: "hsla(35,50%,60%,0.2)" }}
-                animate={{ rotate: [0, -360] }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              />
-              {/* Premium double shimmer sweep */}
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: "linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.45) 46%, rgba(255,255,255,0.15) 54%, transparent 80%)" }}
-                animate={{ x: ["-200%", "300%"] }}
-                transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
-              />
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: "linear-gradient(250deg, transparent 30%, rgba(255,255,255,0.2) 48%, transparent 70%)" }}
-                animate={{ x: ["200%", "-200%"] }}
-                transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut", delay: 1.5 }}
-              />
-              {/* Glass inner border */}
-              <div className="absolute inset-px rounded-[15px] border border-white/[0.15] pointer-events-none" />
-              {/* Crown icon — 3D perspective rotate */}
-              <motion.div
-                animate={{ rotateY: [0, 360] }}
-                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                style={{ perspective: "200px" }}
+                className="absolute inset-0 rounded-[14px] pointer-events-none overflow-hidden"
               >
-                <Crown className="w-5 h-5 sm:w-[22px] sm:h-[22px] text-white drop-shadow-[0_0_16px_rgba(255,255,255,0.95)]" />
+                <motion.div
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(115deg, transparent 30%, hsla(38,50%,70%,0.25) 48%, hsla(38,50%,70%,0.08) 52%, transparent 70%)" }}
+                  animate={{ x: ["-150%", "250%"] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }}
+                />
               </motion.div>
-              {/* Neural pulse ring — expanding */}
+
+              {/* Crown icon */}
+              <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-[hsla(38,50%,65%,0.9)] drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" />
+              
+              {/* Breathing pulse ring */}
               <motion.div
-                className="absolute inset-0 rounded-2xl pointer-events-none"
-                style={{ border: "1.5px solid hsla(38,50%,55%,0.3)" }}
-                animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+                className="absolute inset-0 rounded-[16px] pointer-events-none"
+                style={{ border: "1px solid hsla(38,50%,55%,0.15)" }}
+                animate={{ scale: [1, 1.35], opacity: [0.4, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
               />
-              {/* Second pulse ring — offset timing */}
-              <motion.div
-                className="absolute inset-0 rounded-2xl pointer-events-none"
-                style={{ border: "1px solid hsla(35,50%,60%,0.2)" }}
-                animate={{ scale: [1, 1.8, 1], opacity: [0.3, 0, 0.3] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeOut", delay: 1.2 }}
-              />
-              {/* Status dot — live pulse with halo */}
+
+              {/* Status indicator */}
               <motion.div 
-                className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full z-10"
-                style={{ backgroundColor: "hsla(140,70%,50%,1)", boxShadow: "0 0 12px hsla(140,70%,50%,0.8), 0 0 24px hsla(140,70%,50%,0.3)" }}
-                animate={{ scale: [1, 1.5, 1], opacity: [0.8, 1, 0.8] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full z-10"
+                style={{ backgroundColor: "hsla(160,50%,50%,0.9)", boxShadow: "0 0 8px hsla(160,50%,50%,0.6)" }}
+                animate={{ opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />
             </motion.div>
-            {/* Brand text — premium typography with animated elements */}
-            <div className="flex flex-col leading-none gap-0.5">
+
+            {/* Brand text — refined luxury typography */}
+            <div className="flex flex-col leading-none gap-1">
               <motion.span 
-                className="font-heading font-bold text-[0.82rem] sm:text-[1rem] tracking-[0.35em] uppercase"
+                className="font-heading font-bold text-[0.9rem] sm:text-[1.1rem] tracking-[0.4em] uppercase"
                 style={{
-                  background: "linear-gradient(135deg, hsla(0,0%,100%,1) 0%, hsla(38,40%,82%,1) 40%, hsla(0,0%,100%,0.9) 70%, hsla(35,50%,75%,1) 100%)",
+                  background: "linear-gradient(135deg, hsla(0,0%,95%,1) 0%, hsla(38,30%,78%,1) 50%, hsla(0,0%,95%,1) 100%)",
                   backgroundSize: "200% 100%",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  filter: "drop-shadow(0 0 10px hsla(38,50%,55%,0.2))",
                 }}
-                animate={{ 
-                  backgroundPosition: ["0% 0%", "200% 0%"],
-                  opacity: [0.9, 1, 0.9],
-                }}
-                transition={{ 
-                  backgroundPosition: { duration: 6, repeat: Infinity, ease: "linear" },
-                  opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                }}
+                animate={{ backgroundPosition: ["0% 0%", "200% 0%"] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
               >
                 EMPIRE
               </motion.span>
-              <div className="flex items-center gap-1.5">
-                {/* Animated dot separator */}
-                <motion.div className="w-1 h-1 rounded-full" 
-                  style={{ background: "hsla(38,50%,55%,0.5)" }}
-                  animate={{ opacity: [0.3, 0.8, 0.3], scale: [0.8, 1.2, 0.8] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              <div className="flex items-center gap-2">
+                {/* Thin elegant line */}
+                <motion.div 
+                  className="h-px flex-1 max-w-[12px]"
+                  style={{ background: "linear-gradient(90deg, transparent, hsla(38,40%,55%,0.4))" }}
+                  animate={{ opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 />
-                <motion.span className="text-[0.38rem] sm:text-[0.5rem] tracking-[0.5em] uppercase font-semibold"
-                  style={{
-                    background: "linear-gradient(90deg, hsla(35,50%,58%,1), hsla(38,55%,62%,1), hsla(40,45%,60%,1), hsla(35,50%,58%,1))",
-                    backgroundSize: "300% 100%",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                  animate={{ backgroundPosition: ["0% 0%", "300% 0%"] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                <span className="text-[0.42rem] sm:text-[0.52rem] tracking-[0.45em] uppercase font-medium"
+                  style={{ color: "hsla(38,35%,58%,0.7)" }}
                 >
                   AUTONOMOUS AI
-                </motion.span>
-                {/* Animated dot separator */}
-                <motion.div className="w-1 h-1 rounded-full" 
-                  style={{ background: "hsla(35,50%,60%,0.5)" }}
-                  animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.8, 1.1, 0.8] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                </span>
+                <motion.div 
+                  className="h-px flex-1 max-w-[12px]"
+                  style={{ background: "linear-gradient(90deg, hsla(38,40%,55%,0.4), transparent)" }}
+                  animate={{ opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
                 />
               </div>
             </div>
