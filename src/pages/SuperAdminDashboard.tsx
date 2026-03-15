@@ -427,7 +427,7 @@ const SuperAdminDashboard = () => {
     { id: "brand" as SuperTab, label: "Brand", icon: <Crown className="w-5 h-5" /> },
     { id: "showcase", label: "Settori", icon: <Eye className="w-5 h-5" /> },
     { id: "integrations" as SuperTab, label: "Integrazioni", icon: <Wifi className="w-5 h-5" /> },
-    { id: "asset_cms" as SuperTab, label: "Asset CMS", icon: <ImageIcon className="w-5 h-5" /> },
+    
   ];
 
   const handleLogout = async () => { await signOut(); navigate("/admin"); };
