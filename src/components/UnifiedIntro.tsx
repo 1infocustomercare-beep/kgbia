@@ -26,11 +26,11 @@ const CELL_COUNT = IS_MOBILE ? 2 : 5;
 
 // Phase timing (ms) — much faster on mobile to prevent blocking
 const TIMINGS = IS_MOBILE
-  ? { brand: 0, dna: 800, pulse: 2000, morph: 2800, exit: 3400, complete: 3800 }
+  ? { brand: 0, dna: 600, pulse: 1400, morph: 2000, exit: 2400, complete: 2800 }
   : { brand: 0, dna: 1400, pulse: 3600, morph: 4800, exit: 5600, complete: 6200 };
 
 // Absolute safety: never block app beyond this
-const SAFETY_TIMEOUT = IS_MOBILE ? 4500 : 8000;
+const SAFETY_TIMEOUT = IS_MOBILE ? 3000 : 8000;
 
 type Phase = "brand" | "dna" | "pulse" | "morph" | "exit";
 
