@@ -2425,10 +2425,6 @@ const LandingPage = () => {
                 />
               </div>
             </div>
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                />
-              </div>
-            </div>
           </a>
 
           {/* ═══ Right Nav Links + CTA (desktop) ═══ */}
