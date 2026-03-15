@@ -347,7 +347,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
   >
     {/* Top accent line — animated gradient */}
     <motion.div className="absolute top-0 left-0 right-0 h-px z-10"
-      style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,55%,0.2), hsla(265,70%,65%,0.25), hsla(35,45%,55%,0.15), transparent)" }}
+      style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,55%,0.2), hsla(38,50%,60%,0.2), hsla(35,45%,55%,0.15), transparent)" }}
       animate={{ backgroundPosition: ["0% 0%", "200% 0%"] }}
       transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
     />
