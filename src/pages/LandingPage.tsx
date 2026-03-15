@@ -3077,7 +3077,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Non Siamo un Software. <span className="text-shimmer">Siamo il Futuro.</span>
           </motion.h2>
-          <motion.p className="text-foreground/50 max-w-[560px] mx-auto text-sm leading-[1.7]"
+          <motion.p className="text-foreground/70 max-w-[560px] mx-auto text-[0.9rem] leading-[1.85] tracking-wide font-light"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             91 Agenti IA autonomi, dashboard predittive, CRM intelligente, gestione flotta e prenotazioni, cataloghi digitali con OCR, automazioni multi-canale, fatturazione elettronica, analytics in tempo reale, voice agent, generazione foto e contenuti AI — un ecosistema white-label completo che lavora 24/7 per ogni settore, senza intervento umano.
           </motion.p>
