@@ -10,6 +10,12 @@ import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
+// Detect mobile for tighter safety timeouts
+const IS_MOBILE = typeof window !== "undefined" && (
+  /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+  window.innerWidth < 768
+);
+
 // Lazy-loaded pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
@@ -104,11 +110,13 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [showDNA, setShowDNA] = useState(false);
 
-  // Safety timeout: force dismiss splash after 2.5s no matter what
   useEffect(() => {
-    const splashTimer = setTimeout(() => { setShowSplash(false); setShowDNA(true); }, 2500);
-    // Safety timeout: force dismiss DNA after 5s total no matter what
-    const dnaTimer = setTimeout(() => { setShowSplash(false); setShowDNA(false); }, 5000);
+    // Mobile: much shorter timeouts to prevent freezing
+    const splashTimeout = IS_MOBILE ? 1600 : 2500;
+    const dnaTimeout = IS_MOBILE ? 2800 : 5000;
+
+    const splashTimer = setTimeout(() => { setShowSplash(false); setShowDNA(true); }, splashTimeout);
+    const dnaTimer = setTimeout(() => { setShowSplash(false); setShowDNA(false); }, dnaTimeout);
     return () => { clearTimeout(splashTimer); clearTimeout(dnaTimer); };
   }, []);
 
@@ -263,6 +271,7 @@ function App() {
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
-); }
+  );
+}
 
 export default App;
