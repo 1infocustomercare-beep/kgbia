@@ -159,9 +159,12 @@ export default function AgentDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="metrics" className="space-y-4">
-        <TabsList className="bg-white/5 border border-white/10">
+        <TabsList className="bg-white/5 border border-white/10 flex-wrap h-auto gap-1 p-1">
           <TabsTrigger value="metrics" className="gap-1.5 data-[state=active]:bg-purple-500/20">
             <Activity className="w-3.5 h-3.5" /> Metriche
+          </TabsTrigger>
+          <TabsTrigger value="intelligence" className="gap-1.5 data-[state=active]:bg-cyan-500/20">
+            <Brain className="w-3.5 h-3.5" /> Intelligenza
           </TabsTrigger>
           <TabsTrigger value="logs" className="gap-1.5 data-[state=active]:bg-purple-500/20">
             <Clock className="w-3.5 h-3.5" /> Esecuzioni
