@@ -2739,7 +2739,7 @@ const LandingPage = () => {
                   return (
                     <g key={`helix-${i}`}>
                       <circle cx={x1} cy={y1} r={isPrimary ? 2.5 : 1.5}
-                        fill={isPrimary ? "hsla(265,80%,65%,0.7)" : "hsla(38,55%,55%,0.5)"}
+                        fill={isPrimary ? "hsla(38,55%,58%,0.7)" : "hsla(35,50%,55%,0.5)"}
                         filter="url(#agent-glow)">
                         <animate attributeName="r" values={`${isPrimary ? 2.5 : 1.5};${isPrimary ? 4 : 2.5};${isPrimary ? 2.5 : 1.5}`} dur={`${2 + (i % 5) * 0.4}s`} repeatCount="indefinite" />
                       </circle>
