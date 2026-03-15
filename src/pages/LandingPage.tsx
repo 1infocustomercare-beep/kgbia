@@ -19,7 +19,8 @@ import {
   Calendar, Package, CreditCard, Route, ClipboardCheck, Headphones,
   Layers, Globe, Radio, MonitorSmartphone, Cpu, Fingerprint,
   ChevronRight, ChevronLeft, Pause, CircleCheck, Minus, Activity, ServerCog, Gauge,
-  Workflow, ScanLine, Database, Wifi, Timer, LineChart
+  Workflow, ScanLine, Database, Wifi, Timer, LineChart,
+  Network, Atom, Radar, BrainCircuit, CircuitBoard, Waypoints, Binary
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
@@ -2524,7 +2525,7 @@ const LandingPage = () => {
                 transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
               />
 
-              {/* Orbiting tech icons — replaced emojis with Lucide icons */}
+              {/* Orbiting tech icons — inner ring */}
               {[
                 { Icon: Brain, color: "hsla(265,80%,65%,0.9)", glow: "hsla(265,80%,65%,0.3)" },
                 { Icon: Cpu, color: "hsla(38,55%,60%,0.9)", glow: "hsla(38,50%,55%,0.3)" },
@@ -2534,7 +2535,7 @@ const LandingPage = () => {
                 { Icon: ScanLine, color: "hsla(38,50%,60%,0.9)", glow: "hsla(38,50%,60%,0.3)" },
               ].map(({ Icon, color, glow }, i) => (
                 <motion.div
-                  key={i}
+                  key={`inner-${i}`}
                   className="absolute w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center pointer-events-none"
                   style={{
                     background: "hsla(260,15%,10%,0.85)",
@@ -2570,6 +2571,81 @@ const LandingPage = () => {
                   <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color }} />
                 </motion.div>
               ))}
+
+              {/* Outer DNA orbit — additional AI tech icons circulating on wider elliptical paths */}
+              {[
+                { Icon: BrainCircuit, color: "hsla(265,75%,70%,0.85)", glow: "hsla(265,75%,70%,0.25)" },
+                { Icon: Network, color: "hsla(38,55%,58%,0.85)", glow: "hsla(38,55%,58%,0.25)" },
+                { Icon: Atom, color: "hsla(265,60%,72%,0.85)", glow: "hsla(265,60%,72%,0.25)" },
+                { Icon: Radar, color: "hsla(38,50%,55%,0.85)", glow: "hsla(38,50%,55%,0.25)" },
+                { Icon: CircuitBoard, color: "hsla(265,70%,62%,0.85)", glow: "hsla(265,70%,62%,0.25)" },
+                { Icon: Waypoints, color: "hsla(38,60%,52%,0.85)", glow: "hsla(38,60%,52%,0.25)" },
+                { Icon: Sparkles, color: "hsla(265,85%,75%,0.85)", glow: "hsla(265,85%,75%,0.25)" },
+                { Icon: Binary, color: "hsla(38,45%,60%,0.85)", glow: "hsla(38,45%,60%,0.25)" },
+              ].map(({ Icon, color, glow }, i) => {
+                const total = 8;
+                const radius = 135;
+                const radiusY = 125;
+                return (
+                  <motion.div
+                    key={`outer-${i}`}
+                    className="absolute w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center pointer-events-none"
+                    style={{
+                      background: "hsla(260,15%,8%,0.9)",
+                      border: "1px solid hsla(265,40%,45%,0.25)",
+                      backdropFilter: "blur(6px)",
+                      boxShadow: `0 0 12px ${glow}, inset 0 0 4px hsla(265,30%,35%,0.1)`,
+                      top: "50%",
+                      left: "50%",
+                    }}
+                    animate={{
+                      x: Array.from({ length: 7 }, (_, k) =>
+                        Math.cos((i / total) * Math.PI * 2 + (k / 6) * Math.PI * 2) * radius
+                      ),
+                      y: Array.from({ length: 7 }, (_, k) =>
+                        Math.sin((i / total) * Math.PI * 2 + (k / 6) * Math.PI * 2) * radiusY
+                      ),
+                      rotate: [0, 180, 360],
+                      scale: [0.85, 1.1, 0.95, 1.05, 0.85],
+                    }}
+                    transition={{ duration: 20 + i * 2, repeat: Infinity, ease: "linear" }}
+                  >
+                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ color }} />
+                  </motion.div>
+                );
+              })}
+
+              {/* Micro DNA particles — tiny circulating dots in helix pattern */}
+              {Array.from({ length: 12 }).map((_, i) => {
+                const isViolet = i % 2 === 0;
+                const radius = 115 + (i % 3) * 15;
+                return (
+                  <motion.div
+                    key={`particle-${i}`}
+                    className="absolute rounded-full pointer-events-none"
+                    style={{
+                      width: isViolet ? 4 : 3,
+                      height: isViolet ? 4 : 3,
+                      background: isViolet ? "hsla(265,85%,72%,0.8)" : "hsla(38,60%,60%,0.7)",
+                      boxShadow: isViolet
+                        ? "0 0 8px hsla(265,85%,72%,0.5)"
+                        : "0 0 8px hsla(38,60%,60%,0.4)",
+                      top: "50%",
+                      left: "50%",
+                    }}
+                    animate={{
+                      x: Array.from({ length: 13 }, (_, k) =>
+                        Math.cos((i / 12) * Math.PI * 2 + (k / 12) * Math.PI * 2) * radius
+                      ),
+                      y: Array.from({ length: 13 }, (_, k) =>
+                        Math.sin((i / 12) * Math.PI * 2 + (k / 12) * Math.PI * 2) * (radius * 0.85)
+                      ),
+                      opacity: [0.4, 1, 0.6, 1, 0.4],
+                    }}
+                    transition={{ duration: 8 + i * 0.7, repeat: Infinity, ease: "linear" }}
+                  />
+                );
+              })}
 
               {/* Pulsing energy rings */}
               <motion.div
