@@ -26,6 +26,53 @@ const isRetryableImportError = (error: unknown) => {
   return /Failed to fetch dynamically imported module|Importing a module script failed|Load failed/i.test(message);
 };
 
+const CHUNK_RECOVERY_FLAG = "empire_chunk_recovery_once";
+
+const clearChunkRecoveryFlag = () => {
+  try {
+    window.sessionStorage.removeItem(CHUNK_RECOVERY_FLAG);
+  } catch {
+    // ignore storage availability issues
+  }
+};
+
+const tryRecoverFromChunkError = (error: unknown): boolean => {
+  if (!isRetryableImportError(error) || typeof window === "undefined") {
+    return false;
+  }
+
+  try {
+    if (window.sessionStorage.getItem(CHUNK_RECOVERY_FLAG) === "1") {
+      return false;
+    }
+    window.sessionStorage.setItem(CHUNK_RECOVERY_FLAG, "1");
+  } catch {
+    return false;
+  }
+
+  const performReload = () => {
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set("chunk_recovery", Date.now().toString());
+    window.location.replace(nextUrl.toString());
+  };
+
+  if ("serviceWorker" in navigator) {
+    void navigator.serviceWorker.getRegistrations().then((registrations) => {
+      void Promise.all(registrations.map((registration) => registration.unregister())).finally(() => {
+        if ("caches" in window) {
+          void caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))).finally(performReload);
+          return;
+        }
+        performReload();
+      });
+    }).catch(performReload);
+    return true;
+  }
+
+  performReload();
+  return true;
+};
+
 const delay = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
 const importWithRetry = async <T,>(
@@ -39,9 +86,19 @@ const importWithRetry = async <T,>(
       return await importer();
     } catch (error) {
       lastError = error;
-      if (!isRetryableImportError(error) || attempt === maxAttempts) {
+
+      const lastAttempt = attempt === maxAttempts;
+      if (lastAttempt) {
+        if (tryRecoverFromChunkError(error)) {
+          return new Promise<T>(() => undefined);
+        }
         throw error;
       }
+
+      if (!isRetryableImportError(error)) {
+        throw error;
+      }
+
       await delay(350 * attempt);
     }
   }
