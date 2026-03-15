@@ -422,9 +422,9 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
               {/* Brand text */}
               <motion.div
                 className="flex flex-col items-center gap-2.5"
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5, ease: smoothEase }}
+                transition={{ duration: 0.4, delay: 0.3, ease: smoothEase }}
               >
                 <h1 className="font-heading font-bold text-2xl sm:text-3xl tracking-[0.25em] uppercase text-foreground">
                   EMPIRE<span className="text-shimmer">.AI</span>
