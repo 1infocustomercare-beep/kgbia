@@ -156,7 +156,7 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
     <motion.div
       ref={ref}
       className="inline-flex items-center gap-2.5 mb-5"
-      initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+      initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}
     >
       <div className="relative flex items-center gap-2 px-4 py-2 rounded-full premium-label overflow-hidden" style={{ borderLeft: "1px solid hsla(35,45%,50%,0.15)" }}>
         {/* Scanning beam — gold tint */}
@@ -422,13 +422,15 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
 );
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
-const fadeUp = { hidden: { opacity: 0, y: 35 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: smoothEase } } };
-const fadeScale = { hidden: { opacity: 0, y: 15, scale: 0.97 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: smoothEase } } };
-const staggerContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } } };
-const staggerFast = { hidden: {}, visible: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } } };
-const slideInLeft = { hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: smoothEase } } };
-const slideInRight = { hidden: { opacity: 0, x: 40 }, visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: smoothEase } } };
-const popIn = { hidden: { opacity: 0, scale: 0.88 }, visible: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 200, damping: 24 } } };
+/** Shared viewport config — triggers animations 200px before element enters screen on mobile */
+const vpOnce = { once: true, margin: "0px 0px -150px 0px" as any } as const;
+const fadeUp = { hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: smoothEase } } };
+const fadeScale = { hidden: { opacity: 0, y: 10, scale: 0.98 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: smoothEase } } };
+const staggerContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } } };
+const staggerFast = { hidden: {}, visible: { transition: { staggerChildren: 0.04, delayChildren: 0.03 } } };
+const slideInLeft = { hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: smoothEase } } };
+const slideInRight = { hidden: { opacity: 0, x: 30 }, visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: smoothEase } } };
+const popIn = { hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 200, damping: 24 } } };
 
 /* ═══ Floating Particle ═══ */
 const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => (
@@ -459,7 +461,7 @@ SectionDivider.displayName = "SectionDivider";
 /* ═══ Comparison Row ═══ */
 const CompRow = ({ label, empire, others, icon }: { label: string; empire: string; others: string; icon?: string }) => (
   <motion.div className="grid grid-cols-3 py-1.5 sm:py-2.5 border-b border-border/20 items-center text-[0.55rem] sm:text-sm"
-    initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+    initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={vpOnce}>
     <span className="text-foreground/50 font-medium leading-tight flex items-center gap-1">
       {icon && <span className="text-[0.5rem] sm:text-xs hidden sm:inline">{icon}</span>}
       <span className="truncate">{label}</span>
@@ -2079,6 +2081,38 @@ const LandingPage = () => {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
+
+  /* Mobile viewport-animation safety: force-reveal any elements stuck at opacity 0 */
+  useEffect(() => {
+    if (window.innerWidth >= 640) return;
+    const revealHidden = () => {
+      document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        // If element should be visible (above viewport bottom + 100px buffer)
+        if (rect.top < window.innerHeight + 100 && rect.bottom > -100) {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        }
+      });
+    };
+    // Run periodically during scroll
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => { revealHidden(); ticking = false; });
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    // Also run after initial render
+    const initialTimer = setTimeout(revealHidden, 800);
+    const secondTimer = setTimeout(revealHidden, 2000);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(initialTimer);
+      clearTimeout(secondTimer);
+    };
+  }, []);
 
   useEffect(() => {
     const h = () => {
