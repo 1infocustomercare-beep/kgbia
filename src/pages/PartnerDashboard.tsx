@@ -21,7 +21,7 @@ import PricingClosing from "@/components/partner/PricingClosing";
 import ROICalculator from "@/components/partner/ROICalculator";
 import PartnerSalesToolkit from "@/components/partner/PartnerSalesToolkit";
 import InvestmentSummary from "@/components/partner/InvestmentSummary";
-import EmpireAssistant from "@/components/admin/EmpireAssistant";
+import PartnerVoiceAgent from "@/components/partner/PartnerVoiceAgent";
 import BonusProgressRing from "@/components/partner/BonusProgressRing";
 import PartnerLeaderboard from "@/components/partner/PartnerLeaderboard";
 import AssetVault from "@/components/partner/AssetVault";
