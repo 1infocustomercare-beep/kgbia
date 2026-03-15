@@ -2768,7 +2768,7 @@ const LandingPage = () => {
                   return (
                     <path key={`neural-${i}`}
                       d={`M ${outerX} ${outerY} Q ${cpX} ${cpY} 150 150`}
-                      fill="none" stroke="hsla(265,60%,60%,0.08)" strokeWidth="0.6">
+                      fill="none" stroke="hsla(38,45%,55%,0.08)" strokeWidth="0.6">
                       <animate attributeName="stroke-opacity" values="0.04;0.15;0.04" dur={`${4 + i * 0.5}s`} repeatCount="indefinite" />
                     </path>
                   );
