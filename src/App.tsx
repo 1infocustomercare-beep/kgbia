@@ -23,7 +23,7 @@ const loadLandingPage = () => import("./pages/LandingPage");
 
 const isRetryableImportError = (error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
-  return /Failed to fetch dynamically imported module|Importing a module script failed|Load failed/i.test(message);
+  return /failed to fetch dynamically imported module|importing a module script failed|load failed|loading chunk [\w-]+ failed|chunkloaderror|dynamically imported module/i.test(message);
 };
 
 const CHUNK_RECOVERY_FLAG = "empire_chunk_recovery_once";
