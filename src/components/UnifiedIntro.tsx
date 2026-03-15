@@ -407,7 +407,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
               <motion.div
                 initial={{ opacity: 0, scale: 0.7 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: smoothEase }}
+                transition={{ duration: 0.5, delay: 0.1, ease: smoothEase }}
               >
                 <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[22px] sm:rounded-[28px] bg-gradient-to-br from-white/[0.06] to-white/[0.02] flex items-center justify-center border border-white/[0.08] shadow-[0_0_40px_hsla(265,85%,65%,0.1)]">
                   <div
