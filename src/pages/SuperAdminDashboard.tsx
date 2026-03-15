@@ -490,7 +490,7 @@ const SuperAdminDashboard = () => {
               {[...Array(6)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-1.5 h-1.5 rounded-full bg-primary/60"
+                  className="absolute w-1.5 h-1.5 rounded-full bg-empire-violet/70"
                   style={{
                     left: '50%', top: '50%',
                     marginLeft: -3, marginTop: -3,
