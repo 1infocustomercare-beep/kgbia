@@ -16,7 +16,9 @@ const IS_MOBILE = typeof window !== "undefined" && (
   window.innerWidth < 768
 );
 
-const INTRO_FAILSAFE_MS = IS_MOBILE ? 15000 : 12000;
+// Keep cinematic intro, but never trap users on splash
+const INTRO_FAILSAFE_MS = IS_MOBILE ? 4500 : 9000;
+const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 6500 : 12000;
 
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
