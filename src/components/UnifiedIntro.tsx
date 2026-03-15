@@ -594,8 +594,6 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
             </p>
           </motion.div>
         </motion.div>
-      ) : null}
-    </AnimatePresence>
   );
 };
 

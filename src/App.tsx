@@ -462,7 +462,7 @@ function App() {
         </TooltipProvider>
       </div>
 
-      {!introCompleted && <UnifiedIntro onComplete={() => setIntroCompleted(true)} />}
+      {!introCompleted && <UnifiedIntro onComplete={handleIntroComplete} />}
     </QueryClientProvider>
   );
 }
