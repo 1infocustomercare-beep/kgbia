@@ -2542,7 +2542,7 @@ const LandingPage = () => {
             {/* Glow ring on open */}
             {mobileMenuOpen && (
               <motion.div className="absolute inset-0 rounded-xl pointer-events-none"
-                style={{ boxShadow: "0 0 15px hsla(265,70%,60%,0.2), inset 0 0 10px hsla(265,70%,60%,0.05)" }}
+                style={{ boxShadow: "0 0 15px hsla(38,50%,55%,0.15), inset 0 0 10px hsla(38,50%,55%,0.04)" }}
                 animate={{ opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
