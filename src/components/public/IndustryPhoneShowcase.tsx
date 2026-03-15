@@ -1579,25 +1579,26 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [activeIdx, setActiveIdx] = useState(0);
+  const [showAll, setShowAll] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
 
   // Auto-scroll on mobile
   useEffect(() => {
-    if (!isPlaying) { clearInterval(intervalRef.current); return; }
+    if (!isPlaying || showAll) { clearInterval(intervalRef.current); return; }
     intervalRef.current = setInterval(() => {
       setActiveIdx(prev => (prev + 1) % SCREENS.length);
     }, 3000);
     return () => clearInterval(intervalRef.current);
-  }, [isPlaying]);
+  }, [isPlaying, showAll]);
 
   useEffect(() => {
-    if (!scrollRef.current) return;
+    if (!scrollRef.current || showAll) return;
     const el = scrollRef.current;
     const child = el.children[activeIdx] as HTMLElement;
     if (child) {
       el.scrollTo({ left: child.offsetLeft - el.offsetWidth / 2 + child.offsetWidth / 2, behavior: "smooth" });
     }
-  }, [activeIdx]);
+  }, [activeIdx, showAll]);
 
   return (
     <div className={`${className}`}>
@@ -1622,47 +1623,93 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
         </div>
       </div>
 
-      {/* Mobile: horizontal scroll carousel */}
+      {/* Mobile: carousel OR full grid */}
       <div className="sm:hidden relative">
-        <div ref={scrollRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide px-4"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          onTouchStart={() => setIsPlaying(false)}>
-          {SCREENS.map((screen, i) => (
-            <div key={screen.type} className="snap-center flex-shrink-0" style={{ width: "32vw", maxWidth: 120 }}>
-              <IPhoneFrame
-                screen={screen}
-                color={color}
-                emoji={cfg.emoji}
-                companyName={demo.companyName}
-                services={demo.services}
-                index={i}
-                sectorStyle={sectorStyle}
-                industryId={industryId}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Controls & dots */}
-        <div className="flex items-center justify-center gap-3 mt-2">
-          <div className="flex gap-1.5">
-            {SCREENS.map((_, i) => (
-              <button key={i} onClick={() => { setActiveIdx(i); setIsPlaying(false); }}
-                className="w-2 h-2 rounded-full transition-all duration-300"
-                style={{ backgroundColor: i === activeIdx ? color : `${color}30`, transform: i === activeIdx ? "scale(1.3)" : "scale(1)" }} />
+        {showAll ? (
+          /* ── Full grid view ── */
+          <motion.div
+            className="grid grid-cols-2 gap-3 px-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {SCREENS.map((screen, i) => (
+              <motion.div
+                key={screen.type}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+              >
+                <IPhoneFrame
+                  screen={screen}
+                  color={color}
+                  emoji={cfg.emoji}
+                  companyName={demo.companyName}
+                  services={demo.services}
+                  index={i}
+                  sectorStyle={sectorStyle}
+                  industryId={industryId}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          /* ── Carousel view ── */
+          <div ref={scrollRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide px-4"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            onTouchStart={() => setIsPlaying(false)}>
+            {SCREENS.map((screen, i) => (
+              <div key={screen.type} className="snap-center flex-shrink-0" style={{ width: "32vw", maxWidth: 120 }}>
+                <IPhoneFrame
+                  screen={screen}
+                  color={color}
+                  emoji={cfg.emoji}
+                  companyName={demo.companyName}
+                  services={demo.services}
+                  index={i}
+                  sectorStyle={sectorStyle}
+                  industryId={industryId}
+                />
+              </div>
             ))}
           </div>
-          <button onClick={() => setIsPlaying(!isPlaying)}
-            className="w-6 h-6 rounded-full flex items-center justify-center border transition-all"
-            style={{ borderColor: `${color}40`, background: isPlaying ? `${color}15` : "transparent" }}>
-            {isPlaying ? (
-              <span className="flex gap-[2px]">
-                <span className="w-[2px] h-2 rounded-full" style={{ backgroundColor: color }} />
-                <span className="w-[2px] h-2 rounded-full" style={{ backgroundColor: color }} />
-              </span>
-            ) : (
-              <span className="w-0 h-0 ml-[1px] border-t-[4px] border-b-[4px] border-l-[6px] border-transparent" style={{ borderLeftColor: color }} />
-            )}
+        )}
+
+        {/* Controls: dots + play/pause + show all toggle */}
+        <div className="flex items-center justify-center gap-3 mt-2">
+          {!showAll && (
+            <div className="flex gap-1.5">
+              {SCREENS.map((_, i) => (
+                <button key={i} onClick={() => { setActiveIdx(i); setIsPlaying(false); }}
+                  className="w-2 h-2 rounded-full transition-all duration-300"
+                  style={{ backgroundColor: i === activeIdx ? color : `${color}30`, transform: i === activeIdx ? "scale(1.3)" : "scale(1)" }} />
+              ))}
+            </div>
+          )}
+          {!showAll && (
+            <button onClick={() => setIsPlaying(!isPlaying)}
+              className="w-6 h-6 rounded-full flex items-center justify-center border transition-all"
+              style={{ borderColor: `${color}40`, background: isPlaying ? `${color}15` : "transparent" }}>
+              {isPlaying ? (
+                <span className="flex gap-[2px]">
+                  <span className="w-[2px] h-2 rounded-full" style={{ backgroundColor: color }} />
+                  <span className="w-[2px] h-2 rounded-full" style={{ backgroundColor: color }} />
+                </span>
+              ) : (
+                <span className="w-0 h-0 ml-[1px] border-t-[4px] border-b-[4px] border-l-[6px] border-transparent" style={{ borderLeftColor: color }} />
+              )}
+            </button>
+          )}
+          <button
+            onClick={() => { setShowAll(!showAll); setIsPlaying(false); }}
+            className="px-3 py-1 rounded-full text-[9px] font-bold tracking-wider uppercase border transition-all"
+            style={{
+              borderColor: `${color}40`,
+              color: showAll ? "#fff" : `${color}`,
+              background: showAll ? `${color}` : `${color}10`,
+            }}
+          >
+            {showAll ? "Carosello ←" : "Vedi Tutte →"}
           </button>
         </div>
       </div>
