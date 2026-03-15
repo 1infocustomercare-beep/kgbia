@@ -2714,8 +2714,8 @@ const LandingPage = () => {
               >
                 <defs>
                   <linearGradient id="agent-dna-strand1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="hsla(265,80%,65%,0.7)" />
-                    <stop offset="100%" stopColor="hsla(265,60%,50%,0.1)" />
+                    <stop offset="0%" stopColor="hsla(38,55%,58%,0.7)" />
+                    <stop offset="100%" stopColor="hsla(38,45%,45%,0.1)" />
                   </linearGradient>
                   <linearGradient id="agent-dna-strand2" x1="100%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" stopColor="hsla(38,55%,55%,0.6)" />
