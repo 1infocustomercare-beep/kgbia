@@ -196,20 +196,20 @@
   }
 
   .luxury-border {
-    border: 1px solid hsla(265, 60%, 55%, 0.18);
+    border: 1px solid hsla(38, 45%, 50%, 0.18);
   }
 
   .luxury-card {
-    background: linear-gradient(145deg, hsla(260, 16%, 18%, 0.7), hsla(260, 14%, 14%, 0.6));
+    background: linear-gradient(145deg, hsla(230, 10%, 17%, 0.7), hsla(230, 8%, 13%, 0.6));
     backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid hsla(265, 50%, 60%, 0.1);
+    border: 1px solid hsla(38, 45%, 55%, 0.1);
     position: relative;
     overflow: hidden;
   }
 
   .luxury-card:hover {
-    border-color: hsla(265, 70%, 65%, 0.25);
-    box-shadow: 0 20px 60px hsla(0, 0%, 0%, 0.3), 0 0 40px hsla(265, 70%, 60%, 0.1);
+    border-color: hsla(38, 50%, 55%, 0.2);
+    box-shadow: 0 20px 60px hsla(0, 0%, 0%, 0.3), 0 0 40px hsla(38, 50%, 55%, 0.08);
   }
 
   /* ═══ PREMIUM CARD GLASS ═══ */
