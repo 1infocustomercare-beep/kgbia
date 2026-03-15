@@ -825,15 +825,7 @@ const EmpireVoiceAgent: React.FC = () => {
     window.addEventListener("touchstart", unlockAndSpeak, { passive: true, once: false });
     window.addEventListener("click", unlockAndSpeak, { passive: true, once: false });
 
-    // Show mobile prompt after a delay if hero hasn't been narrated
-    let mobilePromptTimer: number | undefined;
-    if (isTouchDeviceRef.current) {
-      mobilePromptTimer = window.setTimeout(() => {
-        if (!narratedRef.current.has("hero") && !userInteractedRef.current) {
-          setMobilePromptShown(true);
-        }
-      }, 2500);
-    }
+    // No mobile prompt — voice starts automatically
 
     const onVisibilityChange = () => {
       if (document.visibilityState === "visible" && userInteractedRef.current) {
