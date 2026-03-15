@@ -133,13 +133,18 @@ export default function AgentCard({ agent, index, installs, successRate, onToggl
           )}
         </div>
 
-        {/* Metrics */}
+        {/* Metrics + AI Score */}
         <div className="flex items-center justify-between text-[0.55rem] text-muted-foreground pt-1">
           <span className="flex items-center gap-1">
             <span className={`w-1.5 h-1.5 rounded-full ${installs > 0 ? "bg-blue-400" : "bg-white/20"}`} />
             {installs} utenti
           </span>
-          <span>{successRate}%</span>
+          <span className="flex items-center gap-1.5">
+            <span>{successRate}%</span>
+            <span className="px-1 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold text-[0.5rem]">
+              AI {Math.min(100, Math.round((agent.autonomy_level ?? 7) * 8 + Math.min(installs * 5, 20)))}
+            </span>
+          </span>
         </div>
 
         {/* Status toggle */}
