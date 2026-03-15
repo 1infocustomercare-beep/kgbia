@@ -1059,7 +1059,7 @@ const EmpireVoiceAgent: React.FC = () => {
                     <img src={voiceAgentAvatar} alt="Assistente" className="w-8 h-8 rounded-full object-cover" />
                   </motion.div>
                   <p className="text-xs text-foreground/30 text-center max-w-[220px] leading-relaxed">
-                    Ciao! Sono Arianna, la tua assistente vocale Empire. Tocca il telefono per parlarmi come in una vera telefonata.
+                    Ciao! Sono <strong className="text-primary/60">Arianna</strong>, la tua consulente Empire. Ti spiego come far crescere il tuo business con l'IA — parla o scrivi.
                   </p>
                 </div>
               )}
