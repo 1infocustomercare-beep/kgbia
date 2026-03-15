@@ -2082,6 +2082,38 @@ const LandingPage = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
+  /* Mobile viewport-animation safety: force-reveal any elements stuck at opacity 0 */
+  useEffect(() => {
+    if (window.innerWidth >= 640) return;
+    const revealHidden = () => {
+      document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        // If element should be visible (above viewport bottom + 100px buffer)
+        if (rect.top < window.innerHeight + 100 && rect.bottom > -100) {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        }
+      });
+    };
+    // Run periodically during scroll
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => { revealHidden(); ticking = false; });
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    // Also run after initial render
+    const initialTimer = setTimeout(revealHidden, 800);
+    const secondTimer = setTimeout(revealHidden, 2000);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(initialTimer);
+      clearTimeout(secondTimer);
+    };
+  }, []);
+
   useEffect(() => {
     const h = () => {
       setNavScrolled(window.scrollY > 60);

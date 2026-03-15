@@ -1042,19 +1042,3 @@
     }
   }
 }
-
-/* ═══ Mobile viewport animation safety net ═══
-   On mobile, framer-motion whileInView animations with initial opacity:0
-   can leave sections blank if IntersectionObserver fires late.
-   This ensures all motion elements become visible after 1.5s as fallback. */
-@media (max-width: 639px) {
-  [style*="opacity: 0"][style*="transform"] {
-    animation: mobileRevealFallback 0s 2s forwards;
-  }
-}
-@keyframes mobileRevealFallback {
-  to {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
