@@ -256,14 +256,16 @@ const PartnerVoiceAgent: React.FC = () => {
     try { recognition.start(); setIsListening(true); } catch { setIsListening(false); }
   }, [sendMessage, stopAll]);
 
-  // Quick action buttons for partners
+  // Quick action buttons for partners — comprehensive coverage
   const quickActions = [
-    { label: "📊 Commissioni", prompt: "Spiegami nel dettaglio come funzionano le commissioni e i bonus" },
-    { label: "🎯 Script vendita", prompt: "Dammi uno script di vendita efficace per chiamare un potenziale cliente" },
-    { label: "❌ Obiezioni", prompt: "Quali sono le obiezioni più comuni e come gestirle?" },
-    { label: "👑 Team Leader", prompt: "Come divento Team Leader? Quali sono i requisiti e i vantaggi?" },
-    { label: "💡 Consigli demo", prompt: "Come posso fare una demo efficace e chiudere la vendita?" },
-    { label: "🏪 Settori", prompt: "Quali settori sono più facili da vendere e perché?" },
+    { label: "📊 Commissioni", prompt: "Spiegami nel dettaglio come funzionano le commissioni, i bonus Pro ed Elite, e i guadagni del Team Leader" },
+    { label: "🎯 Script vendita", prompt: "Dammi uno script di vendita completo, parola per parola, per chiamare un potenziale cliente e chiudere la vendita" },
+    { label: "❌ Obiezioni", prompt: "Elenca tutte le obiezioni comuni dei clienti e dammi le risposte killer per ognuna" },
+    { label: "👑 Team Leader", prompt: "Come divento Team Leader? Quali sono i requisiti, i vantaggi e la roadmap completa?" },
+    { label: "💡 Guida demo", prompt: "Guidami passo-passo su come fare una demo efficace al cliente usando la mia Dashboard" },
+    { label: "🏪 Settori", prompt: "Quali settori sono più facili da vendere, perché, e cosa dico specificamente per ognuno?" },
+    { label: "🧭 Dashboard", prompt: "Spiegami tutte le sezioni della mia Dashboard Partner e come usarle al meglio" },
+    { label: "🔥 Motivami", prompt: "Ho bisogno di motivazione! Ricordami quanto posso guadagnare e dammi una strategia per questa settimana" },
   ];
 
   return (
