@@ -1,5 +1,5 @@
 // PartnerVoiceAgent — Full-featured AI assistant with scroll-aware Guide Mode
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause, Sparkles, Bot, Navigation } from "lucide-react";
 import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
@@ -69,10 +69,12 @@ function speakWithBrowserTTS(text: string, abortRef: React.MutableRefObject<bool
 const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
 // ── Stream chat helper ──
-async function streamChat({ messages, onDelta, onDone }: {
+async function streamChat({ messages, onDelta, onDone, activeTab, demoMode }: {
   messages: Msg[];
   onDelta: (t: string) => void;
   onDone: () => void;
+  activeTab?: string;
+  demoMode?: boolean;
 }) {
   const resp = await fetch(CHAT_URL, {
     method: "POST",
@@ -80,7 +82,12 @@ async function streamChat({ messages, onDelta, onDone }: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages, mode: "partner-assistant" }),
+    body: JSON.stringify({ 
+      messages, 
+      mode: "partner-assistant",
+      sectionId: activeTab || "dashboard",
+      pageContent: demoMode ? "demo-mode-active" : undefined,
+    }),
   });
 
   if (!resp.ok) {
@@ -139,35 +146,111 @@ async function streamChat({ messages, onDelta, onDone }: {
 // ── GUIDE MODE: Section narrations ──
 const SECTION_NARRATIONS: Record<string, string> = {
   // Dashboard sections
-  "net-earnings": "Ecco i tuoi guadagni netti in tempo reale. Qui vedi il totale delle commissioni, gli override dal tuo team e i bonus performance. Ogni vendita ti porta 997 euro netti. Con Empire, i tuoi guadagni crescono esponenzialmente man mano che costruisci il tuo portafoglio clienti.",
-  "stats-row": "Queste sono le tue metriche chiave: vendite totali, commissione per vendita e il tuo progresso verso la promozione a Team Leader. Raggiungi 4 vendite personali e recluta 2 partner per sbloccare gli override passivi!",
-  "bonus-progress": "Il sistema bonus premia chi si impegna: 3 vendite al mese ti danno 500 euro bonus, 5 vendite un bonus Elite da 1.500 euro. Sono soldi extra, oltre alle commissioni. Immagina: 5 vendite a 997 euro più il bonus Elite — quasi 6.500 euro in un solo mese!",
-  "demo-credits": "I crediti demo ti permettono di creare dimostrazioni live per i tuoi potenziali clienti. Usa le demo AI, il voice agent e le funzionalità avanzate per impressionare il cliente e chiudere la vendita più velocemente.",
-  "demo-restaurant": "Questo è il tuo ristorante demo personalizzabile. Inserisci il nome e il logo del tuo cliente per mostrargli l'app già pronta con il suo brand. L'impatto emotivo è devastante: vedono la loro attività già digitalizzata!",
-  "leaderboard": "La classifica vendite. Vedi come ti posizioni rispetto agli altri partner. La competizione sana motiva tutti a dare il massimo. I top seller ricevono riconoscimenti e accesso prioritario a nuove funzionalità.",
+  "net-earnings": "Ecco i tuoi guadagni netti in tempo reale. Qui vedi il totale delle commissioni, gli override dal tuo team e i bonus performance. Ogni vendita ti porta 997 euro netti. Con Empire, i tuoi guadagni crescono esponenzialmente man mano che costruisci il tuo portafoglio clienti. Immagina: 5 vendite questo mese, sono quasi 5.000 euro solo di commissioni, più eventuali bonus Elite da 1.500 euro. Stiamo parlando di oltre 6.000 euro in un mese!",
+  "stats-row": "Queste sono le tue metriche chiave: vendite totali, commissione per vendita e il tuo progresso verso la promozione a Team Leader. Raggiungi 4 vendite personali e recluta 2 partner per sbloccare gli override passivi — 200 euro per ogni vendita del tuo team! È il momento di accelerare.",
+  "bonus-progress": "Il sistema bonus premia chi si impegna: 3 vendite al mese ti danno 500 euro bonus, 5 vendite un bonus Elite da 1.500 euro. Sono soldi extra, oltre alle commissioni. Immagina: 5 vendite a 997 euro più il bonus Elite — quasi 6.500 euro in un solo mese! E non c'è tetto: più vendi, più guadagni. Il sistema è progettato per farti crescere senza limiti.",
+  "demo-credits": "I crediti demo ti permettono di creare dimostrazioni live per i tuoi potenziali clienti. Ogni demo personalizzata lascia il cliente senza parole: vede la SUA attività già digitalizzata con il SUO brand. L'impatto emotivo è devastante e accelera la chiusura della vendita. Usa ogni credito strategicamente!",
+  "demo-restaurant": "Questo è il tuo ristorante demo personalizzabile. Inserisci il nome e il logo del tuo cliente per mostrargli l'app già pronta con il suo brand. L'impatto emotivo è devastante: vedono la loro attività già digitalizzata! Il PIN cucina è 1234, e puoi resettare tutto con un click. Durante la presentazione, mostra il menu, gli ordini in tempo reale, la mappa tavoli — il cliente rimane a bocca aperta.",
+  "leaderboard": "La classifica vendite. Vedi come ti posizioni rispetto agli altri partner. La competizione sana motiva tutti a dare il massimo. I top seller ricevono riconoscimenti e accesso prioritario a nuove funzionalità. Punta alla top 10 — è lì che i migliori costruiscono il loro network e la loro reputazione!",
   
   // Demo mode dashboard
-  "enterprise-preview": "Questa è la modalità presentazione. Tutti i tuoi dati sensibili sono nascosti. Mostra questo al cliente per dargli una visione professionale della piattaforma senza rivelare i tuoi guadagni personali.",
-  "platform-stats": "Questi numeri parlano da soli: oltre 127 ristoranti attivi, 98% di soddisfazione, più di 21 funzionalità integrate e una crescita media del 34% per i clienti. Usa questi dati per rafforzare la credibilità durante la vendita.",
+  "enterprise-preview": "Questa è la modalità presentazione Enterprise. Tutti i tuoi dati sensibili sono nascosti — guadagni, commissioni, dettagli bancari. Mostra questo al cliente per dargli una visione professionale della piattaforma. È come avere un vestito su misura per ogni appuntamento commerciale.",
+  "platform-stats": "Questi numeri parlano da soli: oltre 127 ristoranti attivi, 98% di soddisfazione, più di 200 funzionalità integrate e una crescita media del 34% per i clienti. Usa questi dati per rafforzare la credibilità durante la vendita. I numeri non mentono — e quando il cliente li vede, la fiducia sale immediatamente.",
   
-  // Tab sections
-  "tab-sandbox": "Benvenuto nella Sandbox Demo! Qui puoi mostrare al cliente tutte le funzionalità della piattaforma in azione. Personalizza la demo con il nome del cliente, i suoi colori e il suo logo per un effetto wow immediato.",
-  "tab-showcase": "Lo Showcase Settori è la tua arma segreta. Mostra al cliente il sito demo del suo settore specifico — ristorazione, hotel, beauty, NCC, edilizia e molti altri. Ogni settore ha funzionalità dedicate che risolvono problemi reali.",
-  "tab-pricing": "Qui trovi la presentazione dell'investimento. La licenza lifetime costa 2.997 euro — zero canoni mensili per sempre. Confronta: un gestionale tradizionale costa 100-300 euro al mese. In un anno il cliente ha già risparmiato. In due anni è tutto guadagnato!",
-  "tab-earnings": "Sezione Guadagni: qui trovi il dettaglio completo delle tue commissioni, i bonifici ricevuti e le previsioni di guadagno. Tutto trasparente, tutto tracciato.",
-  "tab-projects": "Le Bozze Demo ti permettono di preparare presentazioni personalizzate per ogni cliente. Crea una bozza con il brand del cliente, scegli il settore e lancia una demo brandizzata che lascia senza parole.",
-  "tab-team": "La sezione Team è il cuore della tua crescita passiva. Qui gestisci i partner che hai reclutato, monitori le loro vendite e guadagni gli override — 50 euro per ogni vendita dalla quinta in poi di ogni membro. Più il team cresce, più guadagni dormendo!",
-  "tab-investment": "La sezione Crescita mostra ai clienti il ritorno sull'investimento con numeri concreti. Un ristorante medio recupera l'investimento in 45 giorni grazie all'aumento degli ordini e alla riduzione dei costi operativi.",
-  "tab-toolkit": "Il Sales Toolkit è il tuo arsenale di vendita: script pronti, gestione obiezioni, materiali brandizzati e strategie testate sul campo. Tutto ciò che ti serve per chiudere ogni trattativa con sicurezza.",
-  "tab-vault": "L'Asset Vault contiene tutti i materiali scaricabili: presentazioni, brochure, loghi, video dimostrativi. Materiale professionale pronto all'uso per le tue presentazioni.",
-  "tab-recruitment": "La sezione Reclutamento ti aiuta a costruire il tuo team. Condividi il tuo link di invito personalizzato e quando un nuovo partner si registra, viene automaticamente assegnato al tuo team.",
+  // Tab sections — detailed and persuasive
+  "tab-dashboard": "Questa è la tua base operativa — il centro di controllo della tua attività commerciale. Da qui hai una visione d'insieme immediata: guadagni, vendite, bonus in corso e posizione in classifica. Ogni numero qui rappresenta una opportunità. Controlla i tuoi KPI ogni mattina e pianifica la giornata in base agli obiettivi.",
+  "tab-sandbox": "Benvenuto nella Sandbox Demo! Questa è la tua arma più potente nelle trattative. Puoi personalizzare il ristorante demo con il nome, il logo e i colori del TUO cliente. Immagina: apri il telefono davanti al cliente e gli mostri la SUA app già funzionante. Il cliente vede il suo nome, il suo brand — e dice 'Quando partiamo?' La Sandbox ha 16 piatti nel menu, 8 tavoli con mappa interattiva, ordini campione e recensioni. Il PIN cucina è 1234. Puoi resettare tutto con un click per la prossima demo.",
+  "tab-showcase": "Lo Showcase Settori è la tua arma segreta nella vendita. Mostra al cliente il sito demo del suo settore specifico — ristorazione, hotel, beauty, NCC, edilizia, veterinario e oltre 25 settori. Ogni settore ha funzionalità dedicate che risolvono problemi REALI. Quando il cliente vede il SUO settore con le SUE funzionalità, la vendita è quasi chiusa. Usa il mockup iPhone per un effetto wow professionale: 'Ecco come apparirebbe la TUA app.'",
+  "tab-pricing": "Ecco la presentazione dell'investimento — la pagina che chiude le vendite! La licenza lifetime costa 2.997 euro — zero canoni mensili per sempre. Confronta: un gestionale tradizionale costa 100-300 euro al mese. In un anno il cliente ha già risparmiato. In due anni è tutto guadagnato! Presenta sempre il confronto: '2.997 una tantum o 36.000 euro in 10 anni con un canone?' La scelta è ovvia. E c'è anche l'opzione 3 rate da 1.099 euro per chi preferisce rateizzare.",
+  "tab-earnings": "Sezione Guadagni: qui trovi il dettaglio completo delle tue commissioni, i bonifici ricevuti e le previsioni di guadagno. Tutto trasparente, tutto tracciato via Stripe Connect. Ogni vendita da 997 euro appare qui con stato e data di accredito. Se sei Team Leader, vedi anche gli override di 200 euro per ogni vendita del tuo team. Questo pannello è la prova che il sistema funziona — mostralo ai potenziali partner per reclutarli!",
+  "tab-projects": "Le Bozze Demo ti permettono di preparare presentazioni personalizzate per ogni cliente. Crea una bozza con il brand del cliente, scegli il settore e lancia una demo brandizzata che lascia senza parole. Il segreto dei top seller? Arrivano all'appuntamento con la demo GIÀ preparata. Il cliente si siede, apre il telefono e vede la SUA app. Game over.",
+  "tab-team": "La sezione Team è il cuore della tua crescita passiva e scalabile. Qui gestisci i partner che hai reclutato, monitori le loro vendite e guadagni gli override — 200 euro per ogni vendita di ogni membro del team. Più il team cresce, più guadagni dormendo! Un team di 5 partner attivi che fanno 2 vendite al mese ciascuno = 10 vendite × 200 euro = 2.000 euro di override passivo. Ogni mese. Senza vendere tu.",
+  "tab-investment": "La sezione Crescita mostra ai clienti il ritorno sull'investimento con numeri concreti e indiscutibili. Un ristorante medio recupera l'investimento in 45 giorni grazie all'aumento degli ordini diretti, alla riduzione delle commissioni delle piattaforme e al recupero automatico dei clienti persi. Usa il calcolatore ROI per personalizzare i numeri sul caso specifico del cliente — è la prova matematica che Empire si paga da solo.",
+  "tab-toolkit": "Il Sales Toolkit è il tuo arsenale di vendita completo e professionale. Qui trovi: script di vendita pronti parola per parola, gestione delle 9 obiezioni più comuni con risposte killer, guide di presentazione per settore, pitch deck professionali e strategie testate sul campo dai migliori venditori. Non improvvisare mai — usa questi materiali e la chiusura è garantita.",
+  "tab-vault": "L'Asset Vault contiene tutti i materiali scaricabili professionali: presentazioni eleganti, brochure per settore, video demo, loghi e immagini brandizzate Empire. Ogni materiale è stato creato per impressionare. Scarica, personalizza e usa nelle tue presentazioni. I partner che usano i materiali professionali hanno un tasso di chiusura 3 volte superiore.",
+  "tab-recruitment": "La sezione Reclutamento ti aiuta a costruire il tuo team — la chiave per i guadagni passivi illimitati. Condividi il tuo link di invito personalizzato e quando un nuovo partner si registra, viene automaticamente assegnato al tuo team. Ogni partner reclutato è una fonte di reddito passivo: 200 euro per ogni sua vendita. Recluta 2 partner attivi e diventi Team Leader con accesso a bonus potenziati e materiali esclusivi.",
 
   // Team Leader sections
-  "leader-status": "Questo badge mostra il tuo stato di Team Leader. Per mantenere gli override attivi, devi avere almeno 4 vendite personali e 2 partner nel team. È un sistema meritocratico che premia chi guida con l'esempio.",
-  "override-revenue": "Ecco i tuoi guadagni passivi da management. 50 euro per ogni vendita idonea dei tuoi partner — dalla quinta vendita in poi. Più partner attivi hai, più questo numero cresce automaticamente. È il vero potere del network!",
-  "recruit-engine": "Il motore di reclutamento. Copia il tuo link personalizzato e condividilo. Riceverai una notifica in tempo reale quando un nuovo partner si registra tramite il tuo link.",
-  "team-ledger": "Il registro del team mostra le performance di ogni membro: vendite, override generati e stato di attivazione. Usa queste informazioni per supportare i tuoi partner e massimizzare i risultati del team.",
+  "leader-status": "Questo badge mostra il tuo stato di Team Leader — il livello più alto della rete commerciale Empire. Per mantenere gli override attivi, devi avere almeno 4 vendite personali e 2 partner nel team. È un sistema meritocratico che premia chi guida con l'esempio. Il Team Leader non è solo un titolo: è una macchina di reddito passivo.",
+  "override-revenue": "Ecco i tuoi guadagni passivi da management. 200 euro per ogni vendita idonea dei tuoi partner. Più partner attivi hai, più questo numero cresce automaticamente, ogni mese, senza sforzo. Immagina 10 partner nel team: anche se ognuno fa solo 1 vendita al mese, sono 2.000 euro passivi. Ogni mese. Mentre dormi.",
+  "recruit-engine": "Il motore di reclutamento. Copia il tuo link personalizzato e condividilo ovunque — LinkedIn, WhatsApp, social, eventi. Riceverai una notifica in tempo reale quando un nuovo partner si registra tramite il tuo link. Il segreto? Non cercare venditori — cerca imprenditori ambiziosi che vogliono un secondo reddito.",
+  "team-ledger": "Il registro del team mostra le performance di ogni membro: vendite, override generati e stato di attivazione. Usa queste informazioni per supportare i tuoi partner, identificare chi ha bisogno di coaching e massimizzare i risultati del team. I migliori Team Leader fanno un check settimanale con ogni partner.",
 };
+
+// ── Dynamic quick actions per tab ──
+const TAB_QUICK_ACTIONS: Record<string, Array<{ label: string; prompt: string }>> = {
+  dashboard: [
+    { label: "📊 Panoramica vendite", prompt: "Fammi una panoramica completa delle mie metriche e dimmi cosa devo migliorare questa settimana" },
+    { label: "🎯 Strategia settimanale", prompt: "Pianifica la mia settimana di vendita: quante chiamate, demo e follow-up devo fare per raggiungere il bonus?" },
+    { label: "🔥 Motivazione", prompt: "Ho bisogno di energia! Ricordami il mio potenziale di guadagno e dammi un boost motivazionale" },
+    { label: "👑 Roadmap Team Leader", prompt: "A che punto sono nel percorso verso Team Leader? Cosa mi manca e qual è la strategia più rapida?" },
+  ],
+  sandbox: [
+    { label: "🎮 Come fare una demo perfetta", prompt: "Guidami passo-passo su come usare la Sandbox per fare una demo che chiude la vendita al 100%" },
+    { label: "🎨 Personalizzare la demo", prompt: "Come personalizzo la demo con il brand del cliente? Voglio l'effetto wow massimo" },
+    { label: "📱 Cosa mostrare prima", prompt: "In che ordine devo mostrare le funzionalità della demo per massimizzare l'impatto? Dammi la sequenza vincente" },
+    { label: "🍕 Tour completo demo", prompt: "Fammi un tour completo di tutte le funzionalità della Sandbox Demo: menu, ordini, cucina, tavoli, tutto" },
+  ],
+  showcase: [
+    { label: "🏪 Settore più facile", prompt: "Qual è il settore più facile da vendere adesso e perché? Dammi lo script specifico" },
+    { label: "🎯 Pitch per ristorante", prompt: "Dammi un pitch di vendita perfetto per un ristorante, parola per parola, con scenari d'impatto" },
+    { label: "💇 Pitch per beauty", prompt: "Dammi un pitch di vendita completo per un centro estetico con obiezioni e risposte" },
+    { label: "🚗 Pitch per NCC", prompt: "Dammi un pitch di vendita specifico per un'azienda NCC/transfer con scenari concreti" },
+    { label: "🔧 Pitch per artigiano", prompt: "Dammi un pitch completo per un idraulico/elettricista con lo scenario dell'emergenza notturna" },
+    { label: "🏨 Pitch per hotel", prompt: "Pitch completo per un hotel/B&B: scenari di risparmio sulle OTA e upselling automatico" },
+  ],
+  pricing: [
+    { label: "💰 Come presentare il prezzo", prompt: "Qual è il modo migliore per presentare il prezzo di €2.997 senza far scappare il cliente? Dammi la tecnica" },
+    { label: "🆚 Confronto competitor", prompt: "Fammi un confronto dettagliato: quanto costa Empire vs le alternative tradizionali? I numeri devono essere schiaccianti" },
+    { label: "📊 Calcolo ROI per il cliente", prompt: "Aiutami a calcolare il ROI per un cliente tipo: quanto risparmia e in quanto tempo recupera l'investimento?" },
+    { label: "❌ Obiezione 'costa troppo'", prompt: "Il cliente dice 'costa troppo'. Dammi la risposta killer definitiva con numeri e confronti" },
+  ],
+  earnings: [
+    { label: "💵 Previsione guadagni", prompt: "Quanti soldi posso realisticamente guadagnare nei prossimi 3, 6 e 12 mesi? Fammi i calcoli" },
+    { label: "📈 Come aumentare le vendite", prompt: "Quali sono le 5 strategie più efficaci per aumentare le mie vendite questo mese?" },
+    { label: "🏆 Obiettivo bonus Elite", prompt: "Come raggiungo il Bonus Elite da €1.500? Dammi un piano d'azione concreto giorno per giorno" },
+  ],
+  projects: [
+    { label: "📋 Creare bozza vincente", prompt: "Come creo una bozza demo che fa dire 'WOW' al cliente? Quali dettagli personalizzare?" },
+    { label: "🎯 Preparare l'appuntamento", prompt: "Ho un appuntamento domani con un cliente. Come preparo la bozza demo perfetta per impressionarlo?" },
+  ],
+  team: [
+    { label: "👥 Costruire il team", prompt: "Come recluto i partner migliori? Dove li trovo e cosa dico per convincerli?" },
+    { label: "🎓 Coaching team", prompt: "Come faccio coaching efficace ai miei sub-partner per aumentare le loro vendite?" },
+    { label: "💎 Massimizzare override", prompt: "Come massimizzo i guadagni passivi dal mio team? Quanti partner mi servono e che risultati aspettarmi?" },
+  ],
+  investment: [
+    { label: "📊 ROI da mostrare", prompt: "Dammi i numeri ROI più convincenti da mostrare al cliente nella sezione Crescita" },
+    { label: "🎯 Come usare il calcolatore", prompt: "Come uso al meglio il calcolatore ROI durante la presentazione per chiudere la vendita?" },
+  ],
+  toolkit: [
+    { label: "📝 Script chiamata a freddo", prompt: "Dammi uno script completo parola per parola per una chiamata a freddo a un potenziale cliente" },
+    { label: "❌ Top 5 obiezioni", prompt: "Quali sono le 5 obiezioni più comuni e come le gestisco in modo definitivo?" },
+    { label: "🎯 Tecniche di chiusura", prompt: "Insegnami le 3 tecniche di chiusura più efficaci per chiudere la vendita al primo appuntamento" },
+    { label: "📞 Follow-up perfetto", prompt: "Come faccio il follow-up dopo la demo se il cliente dice 'ci penso'? Dammi la strategia completa" },
+  ],
+  vault: [
+    { label: "📁 Materiali migliori", prompt: "Quali materiali dell'Asset Vault devo usare per ogni tipo di cliente e in quale ordine?" },
+    { label: "🎬 Video per la vendita", prompt: "Come uso i video demo durante la presentazione? Quali mostro e quando?" },
+  ],
+  recruitment: [
+    { label: "🤝 Script reclutamento", prompt: "Dammi uno script completo per reclutare un nuovo partner. Come lo contatto e cosa dico?" },
+    { label: "🎯 Dove trovare partner", prompt: "Dove trovo le persone giuste da reclutare nel mio team? Quali canali funzionano meglio?" },
+    { label: "💰 Pitch guadagni team", prompt: "Come presento l'opportunità di guadagno a un potenziale partner? Quali numeri uso?" },
+  ],
+};
+
+// Default quick actions
+const DEFAULT_QUICK_ACTIONS = [
+  { label: "📊 Commissioni", prompt: "Spiegami nel dettaglio come funzionano le commissioni, i bonus Pro ed Elite, e i guadagni del Team Leader" },
+  { label: "🎯 Script vendita", prompt: "Dammi uno script di vendita completo, parola per parola, per chiamare un potenziale cliente e chiudere la vendita" },
+  { label: "❌ Obiezioni", prompt: "Elenca tutte le obiezioni comuni dei clienti e dammi le risposte killer per ognuna" },
+  { label: "👑 Team Leader", prompt: "Come divento Team Leader? Quali sono i requisiti, i vantaggi e la roadmap completa?" },
+  { label: "💡 Guida demo", prompt: "Guidami passo-passo su come fare una demo efficace al cliente usando la mia Dashboard" },
+  { label: "🏪 Settori", prompt: "Quali settori sono più facili da vendere, perché, e cosa dico specificamente per ognuno?" },
+  { label: "🧭 Dashboard", prompt: "Spiegami tutte le sezioni della mia Dashboard Partner e come usarle al meglio" },
+  { label: "🔥 Motivami", prompt: "Ho bisogno di motivazione! Ricordami quanto posso guadagnare e dammi una strategia per questa settimana" },
+];
 
 interface PartnerVoiceAgentProps {
   activeTab?: string;
@@ -178,7 +261,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<"voice" | "chat">("chat");
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Ciao! 👋 Sono **ATLAS PRO**, il tuo assistente IA dedicato a **massima potenza**. Conosco ogni dettaglio di Empire: vendite, commissioni, demo, obiezioni, dashboard, settori, tecniche avanzate, navigazione — **tutto**. Chiedimi qualsiasi cosa, ti guido passo-passo! 🚀\n\n💡 **Attiva la Guida Vocale** per farmi spiegare ogni sezione mentre scorri!" }
+    { role: "assistant", content: "Ciao! 👋 Sono **ATLAS PRO**, il tuo consulente IA a **massima potenza**.\n\nConosco ogni aspetto di Empire: vendite, commissioni, demo, settori, obiezioni, dashboard, tecniche avanzate — **tutto, nel dettaglio**.\n\n🎯 **Chiedimi qualsiasi cosa** — ti guido passo-passo con risposte concrete e azionabili.\n\n💡 **Attiva la Guida Vocale** per farmi spiegare ogni sezione mentre navighi!" }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -198,7 +281,11 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
   const guideModeRef = useRef(false);
   const lastNarratedSection = useRef<string>("");
   const narratingRef = useRef(false);
-  const lastTabRef = useRef<string>("");
+
+  // Current quick actions based on tab
+  const currentQuickActions = useMemo(() => {
+    return TAB_QUICK_ACTIONS[activeTab || "dashboard"] || DEFAULT_QUICK_ACTIONS;
+  }, [activeTab]);
 
   useEffect(() => { messagesRef.current = messages; }, [messages]);
   useEffect(() => { voiceEnabledRef.current = voiceEnabled; }, [voiceEnabled]);
@@ -213,7 +300,6 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
     const tabKey = `tab-${activeTab}`;
     if (tabKey === lastNarratedSection.current) return;
     
-    // Small delay for tab transition
     const timer = setTimeout(() => {
       if (!guideModeRef.current) return;
       const narration = SECTION_NARRATIONS[tabKey];
@@ -245,7 +331,6 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
       { threshold: 0.5, rootMargin: "-10% 0px -10% 0px" }
     );
 
-    // Observe all guide sections
     const elements = document.querySelectorAll("[data-guide-section]");
     elements.forEach((el) => observer.observe(el));
 
@@ -257,14 +342,11 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
     narratingRef.current = true;
     abortRef.current = false;
 
-    // Cancel any current speech
     if (window.speechSynthesis) window.speechSynthesis.cancel();
 
-    // Add narration as message
     const guideMsg: Msg = { role: "assistant", content: `🎙️ **${getSectionTitle(sectionId)}**\n\n${text}` };
     setMessages(prev => [...prev, guideMsg]);
     
-    // Speak it
     setIsSpeaking(true);
     await speakWithBrowserTTS(text, abortRef);
     if (!abortRef.current) {
@@ -297,8 +379,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
     if (next) {
       lastNarratedSection.current = "";
       narratingRef.current = false;
-      setMessages(prev => [...prev, { role: "assistant", content: "🧭 **Guida Vocale Attivata!**\n\nOra ti spiegherò ogni sezione della dashboard mentre scorri e navighi tra le tab. Muoviti liberamente, io ti accompagno! 🚀" }]);
-      // Trigger narration for current tab
+      setMessages(prev => [...prev, { role: "assistant", content: "🧭 **Guida Vocale Attivata!**\n\nOra ti spiegherò ogni sezione della dashboard mentre scorri e navighi tra le tab. Muoviti liberamente, io ti accompagno con spiegazioni dettagliate e consigli strategici! 🚀" }]);
       if (activeTab) {
         const tabKey = `tab-${activeTab}`;
         if (SECTION_NARRATIONS[tabKey]) {
@@ -339,6 +420,8 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
       await streamChat({
         messages: allMessages,
         onDelta: upsert,
+        activeTab,
+        demoMode,
         onDone: async () => {
           setIsLoading(false);
           if (voiceEnabledRef.current && full.length > 0 && full.length < 2000 && !abortRef.current) {
@@ -354,7 +437,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
       const msg = error instanceof Error ? error.message : "Errore, riprova.";
       setMessages((prev) => [...prev, { role: "assistant", content: msg }]);
     }
-  }, [isLoading, stopAll]);
+  }, [isLoading, stopAll, activeTab, demoMode]);
 
   const startListening = useCallback(async () => {
     if (!SpeechRecognition) { setMode("chat"); return; }
@@ -388,17 +471,16 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
     try { recognition.start(); setIsListening(true); } catch { setIsListening(false); }
   }, [sendMessage, stopAll]);
 
-  // Quick action buttons for partners
-  const quickActions = [
-    { label: "📊 Commissioni", prompt: "Spiegami nel dettaglio come funzionano le commissioni, i bonus Pro ed Elite, e i guadagni del Team Leader" },
-    { label: "🎯 Script vendita", prompt: "Dammi uno script di vendita completo, parola per parola, per chiamare un potenziale cliente e chiudere la vendita" },
-    { label: "❌ Obiezioni", prompt: "Elenca tutte le obiezioni comuni dei clienti e dammi le risposte killer per ognuna" },
-    { label: "👑 Team Leader", prompt: "Come divento Team Leader? Quali sono i requisiti, i vantaggi e la roadmap completa?" },
-    { label: "💡 Guida demo", prompt: "Guidami passo-passo su come fare una demo efficace al cliente usando la mia Dashboard" },
-    { label: "🏪 Settori", prompt: "Quali settori sono più facili da vendere, perché, e cosa dico specificamente per ognuno?" },
-    { label: "🧭 Dashboard", prompt: "Spiegami tutte le sezioni della mia Dashboard Partner e come usarle al meglio" },
-    { label: "🔥 Motivami", prompt: "Ho bisogno di motivazione! Ricordami quanto posso guadagnare e dammi una strategia per questa settimana" },
-  ];
+  // Tab label for header subtitle
+  const tabLabel = useMemo(() => {
+    const labels: Record<string, string> = {
+      dashboard: "Dashboard", sandbox: "Sandbox Demo", showcase: "Showcase Settori",
+      pricing: "Pricing & Closing", earnings: "Guadagni", projects: "Bozze Demo",
+      team: "Gestione Team", investment: "Crescita & ROI", toolkit: "Sales Toolkit",
+      vault: "Asset Vault", recruitment: "Reclutamento",
+    };
+    return labels[activeTab || "dashboard"] || "Dashboard";
+  }, [activeTab]);
 
   return (
     <>
@@ -474,7 +556,7 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
                     ATLAS <span className="text-[0.55rem] font-normal text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full">PRO</span>
                   </h3>
                   <p className="text-[0.55rem] text-muted-foreground tracking-wider uppercase">
-                    {isPaused ? "⏸ In pausa" : isSpeaking ? "🔊 Sta parlando..." : isListening ? "🎙️ Ti ascolta..." : isLoading ? "💭 Sta pensando..." : guideMode ? "🧭 Guida Vocale Attiva" : "Assistente Partner IA"}
+                    {isPaused ? "⏸ In pausa" : isSpeaking ? "🔊 Sta parlando..." : isListening ? "🎙️ Ti ascolta..." : isLoading ? "💭 Sta pensando..." : guideMode ? "🧭 Guida Vocale Attiva" : `📍 ${tabLabel}`}
                   </p>
                 </div>
               </div>
@@ -526,10 +608,10 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
               </motion.button>
             </div>
 
-            {/* Quick Actions */}
+            {/* Quick Actions — dynamic per tab */}
             {messages.length <= 1 && !isLoading && !guideMode && (
               <div className="px-3 pt-3 flex flex-wrap gap-1.5">
-                {quickActions.map((action) => (
+                {currentQuickActions.map((action) => (
                   <motion.button key={action.label}
                     onClick={() => sendMessage(action.prompt)}
                     className="px-2.5 py-1.5 rounded-full text-[0.6rem] font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-all border border-primary/10"
@@ -640,9 +722,10 @@ function getSectionTitle(sectionId: string): string {
     "leaderboard": "🥇 Classifica",
     "enterprise-preview": "🎭 Modalità Presentazione",
     "platform-stats": "📈 Statistiche Piattaforma",
+    "tab-dashboard": "🏠 Dashboard",
     "tab-sandbox": "🎮 Sandbox Demo",
     "tab-showcase": "🏪 Showcase Settori",
-    "tab-pricing": "💳 Investimento",
+    "tab-pricing": "💳 Investimento & Pricing",
     "tab-earnings": "💵 Guadagni",
     "tab-projects": "📋 Bozze Demo",
     "tab-team": "👥 Gestione Team",
@@ -650,7 +733,6 @@ function getSectionTitle(sectionId: string): string {
     "tab-toolkit": "🛠️ Sales Toolkit",
     "tab-vault": "📁 Asset Vault",
     "tab-recruitment": "🤝 Reclutamento",
-    "tab-dashboard": "🏠 Dashboard",
     "leader-status": "👑 Stato Leader",
     "override-revenue": "💎 Revenue Passiva",
     "recruit-engine": "🚀 Motore Reclutamento",
