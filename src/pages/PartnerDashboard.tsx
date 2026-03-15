@@ -396,7 +396,7 @@ const PartnerDashboard = () => {
               </div>
 
               {/* === BONUS PROGRESS (compact) === */}
-              <div className="p-4 rounded-2xl bg-card border border-border/50">
+              <div data-guide-section="bonus-progress" className="p-4 rounded-2xl bg-card border border-border/50">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-xs font-bold text-foreground flex items-center gap-2">
                     <Sparkles className="w-3.5 h-3.5 text-primary" /> Bonus Mensile
