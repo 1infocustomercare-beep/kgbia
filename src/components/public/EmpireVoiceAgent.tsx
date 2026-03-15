@@ -686,38 +686,7 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    const splashStarted = wasSplashNarrationStarted();
-    const splashDone = isSplashNarrationDone();
-    const splashSpeaking = isSplashNarrationSpeaking();
-
-    // If splash narration completed successfully, skip hero
-    if (splashStarted && splashDone) {
-      narratedRef.current.add("hero");
-      setNarratedSections(new Set(narratedRef.current));
-      if (!messagesRef.current.some((m) => m.content === SECTION_SCRIPTS.hero)) {
-        setMessages((prev) => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
-      }
-      return;
-    }
-
-    // If splash is still speaking, wait for it to finish then mark hero as done
-    if (splashSpeaking) {
-      const checkInterval = window.setInterval(() => {
-        if (isSplashNarrationDone()) {
-          window.clearInterval(checkInterval);
-          narratedRef.current.add("hero");
-          setNarratedSections(new Set(narratedRef.current));
-          if (!messagesRef.current.some((m) => m.content === SECTION_SCRIPTS.hero)) {
-            setMessages((prev) => [...prev, { role: "assistant", content: SECTION_SCRIPTS.hero }]);
-          }
-        }
-      }, 500);
-      // Safety: clear after 30s
-      window.setTimeout(() => window.clearInterval(checkInterval), 30000);
-      return;
-    }
-
-    // Splash didn't start or failed: queue hero narration
+    // Always queue hero narration fresh — no splash dependency
     enqueueSectionNarration("hero", true);
   }, [enqueueSectionNarration]);
 
