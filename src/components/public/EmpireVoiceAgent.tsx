@@ -814,12 +814,17 @@ const EmpireVoiceAgent: React.FC = () => {
     setIsOpen((prev) => {
       const next = !prev;
       if (next) {
+        userInteractedRef.current = true;
         setUserInteracted(true);
+        setMobilePromptShown(false);
         startIntroNarration();
+        if (!narratedRef.current.has("hero")) {
+          enqueueSectionNarration("hero", true);
+        }
       }
       return next;
     });
-  }, [startIntroNarration]);
+  }, [startIntroNarration, enqueueSectionNarration]);
 
   // ── Render ──
   return (
