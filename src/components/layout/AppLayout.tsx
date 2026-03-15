@@ -38,7 +38,7 @@ export default function AppLayout() {
         <div className="flex-1 flex flex-col min-w-0 relative z-10">
           <TopBar />
           <main className="flex-1 p-3 md:p-6 overflow-auto pb-20 md:pb-6">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               <motion.div
                 key={location.pathname}
                 initial={{ opacity: 0 }}
