@@ -16,6 +16,29 @@ const IS_MOBILE = typeof window !== "undefined" && (
   window.innerWidth < 768
 );
 
+type ExtendedNavigator = Navigator & {
+  connection?: {
+    effectiveType?: string;
+    saveData?: boolean;
+    addEventListener?: (type: "change", listener: () => void) => void;
+    removeEventListener?: (type: "change", listener: () => void) => void;
+  };
+  deviceMemory?: number;
+};
+
+const isConstrainedNetwork = () => {
+  if (typeof navigator === "undefined") return false;
+
+  const nav = navigator as ExtendedNavigator;
+  const effectiveType = nav.connection?.effectiveType?.toLowerCase();
+  const lowBandwidth = effectiveType === "slow-2g" || effectiveType === "2g" || effectiveType === "3g";
+  const saveDataEnabled = !!nav.connection?.saveData;
+  const lowMemoryDevice = typeof nav.deviceMemory === "number" && nav.deviceMemory <= 2;
+  const offline = navigator.onLine === false;
+
+  return lowBandwidth || saveDataEnabled || lowMemoryDevice || offline;
+};
+
 // Keep cinematic intro, but never trap users on splash
 const INTRO_FAILSAFE_MS = IS_MOBILE ? 4500 : 9000;
 const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 6500 : 12000;
