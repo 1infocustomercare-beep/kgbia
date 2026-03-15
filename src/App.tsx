@@ -435,13 +435,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div
-        className="min-h-screen"
-        style={{
-          visibility: introCompleted ? "visible" : "hidden",
-          pointerEvents: introCompleted ? "auto" : "none",
-        }}
-      >
+      <div className="min-h-screen">
         <TooltipProvider>
           <AuthProvider>
             <CartProvider>
