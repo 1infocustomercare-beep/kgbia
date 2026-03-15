@@ -751,8 +751,8 @@ const PartnerDashboard = () => {
         </AnimatePresence>
       </div>
 
-      {/* Empire Assistant */}
-      <EmpireAssistant />
+      {/* ATLAS Partner Voice Agent */}
+      <PartnerVoiceAgent />
 
       {/* ROI Calculator Modal */}
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
