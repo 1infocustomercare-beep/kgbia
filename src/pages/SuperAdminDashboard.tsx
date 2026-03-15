@@ -1262,7 +1262,7 @@ const SuperAdminDashboard = () => {
                 });
               };
 
-              const [expandedSection, setExpandedSection] = useState<"admin" | "client" | "functions" | null>("admin");
+              // expandedSection uses component-level state
 
               // ─── ADMIN INTEGRATIONS ───
               const adminIntegrations: IntegrationItem[] = [
