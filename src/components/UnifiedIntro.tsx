@@ -434,7 +434,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                   style={{ background: "linear-gradient(90deg, transparent, hsl(265,85%,65%), hsl(280,80%,60%), transparent)" }}
                   initial={{ width: 0, opacity: 0 }}
                   animate={{ width: 140, opacity: 0.5 }}
-                  transition={{ duration: 0.6, delay: 0.9, ease: smoothEase }}
+                  transition={{ duration: 0.4, delay: 0.5, ease: smoothEase }}
                 />
                 <p className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.5em] uppercase text-foreground/20 font-heading">
                   Il Sistema Operativo del Business
