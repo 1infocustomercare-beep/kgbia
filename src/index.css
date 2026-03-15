@@ -972,14 +972,14 @@
     transform: translate(-50%, -50%);
     width: 4px; height: 4px;
     border-radius: 50%;
-    background: hsl(265, 70%, 60%);
-    box-shadow: 0 0 12px hsla(265, 70%, 60%, 0.45), 0 0 24px hsla(280, 45%, 68%, 0.2);
+    background: hsl(38, 50%, 55%);
+    box-shadow: 0 0 12px hsla(38, 50%, 55%, 0.4), 0 0 24px hsla(35, 45%, 55%, 0.2);
   }
 
   .animated-grid-bg {
     background-image:
-      linear-gradient(hsla(265, 70%, 60%, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, hsla(265, 70%, 60%, 0.04) 1px, transparent 1px);
+      linear-gradient(hsla(38, 50%, 55%, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(38, 50%, 55%, 0.04) 1px, transparent 1px);
     background-size: 60px 60px;
     animation: grid-line-flow 4s linear infinite;
   }
