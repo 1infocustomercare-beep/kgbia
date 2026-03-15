@@ -1299,7 +1299,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                             ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black"
                             : "bg-vibrant-gradient text-primary-foreground"
                         }`}
-                        whileHover={{ scale: 1.03, boxShadow: pkg.id === "empire" ? "0 15px 50px hsla(35,45%,50%,0.3)" : "0 15px 50px hsla(265,70%,60%,0.25)" }}
+                        whileHover={{ scale: 1.03, boxShadow: pkg.id === "empire" ? "0 15px 50px hsla(35,45%,50%,0.3)" : "0 15px 50px hsla(38,50%,55%,0.2)" }}
                         whileTap={{ scale: 0.97 }}>
                         <motion.div className="absolute inset-0 pointer-events-none"
                           style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)" }}
