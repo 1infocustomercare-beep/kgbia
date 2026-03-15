@@ -909,7 +909,7 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── Render ──
   return (
     <>
-      {/* Mobile prompt removed — voice starts automatically */}
+      {/* Voice agent — starts only on user interaction */}
 
       {/* Floating Phone Button — "Chiama Arianna" */}
       <AnimatePresence>
