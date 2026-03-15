@@ -2174,7 +2174,7 @@ const LandingPage = () => {
         <motion.div 
           className="absolute inset-0"
           animate={{ 
-            backgroundColor: navScrolled ? "hsla(265,20%,4%,0.88)" : "hsla(265,20%,4%,0)",
+            backgroundColor: navScrolled ? "hsla(230,12%,6%,0.92)" : "hsla(230,12%,6%,0)",
             backdropFilter: navScrolled ? "blur(40px) saturate(1.8)" : "blur(0px) saturate(1)",
           }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
