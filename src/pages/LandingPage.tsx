@@ -2652,7 +2652,7 @@ const LandingPage = () => {
           {/* Cinematic vignette overlays */}
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsl(var(--background)) 100%)" }} />
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 15%, transparent 85%, hsl(var(--background)) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(265,60%,20%,0.5) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
         </div>
 
         {/* ═══ LAYER 1: Central glow orb ═══ */}
