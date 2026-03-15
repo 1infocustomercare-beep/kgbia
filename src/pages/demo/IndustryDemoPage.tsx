@@ -369,11 +369,12 @@ export default function IndustryDemoPage() {
   if (PremiumTemplate) {
     const demoCompany = company || {
       id: "00000000-0000-0000-0000-000000000001",
-      name: demoData.companyName,
+      name: companyName,
       slug: slug || "demo",
       industry: resolvedIndustry,
-      tagline: demoData.tagline,
-      primary_color: industryConfig.defaultPrimaryColor,
+      tagline: tagline,
+      primary_color: colorOverride || industryConfig.defaultPrimaryColor,
+      logo_url: logoOverride || null,
       address: demoData.address,
       city: demoData.city,
       phone: demoData.phone,
@@ -381,6 +382,13 @@ export default function IndustryDemoPage() {
       opening_hours: demoData.hours,
       social_links: {},
     };
+    // Apply branding overrides even when company exists in DB
+    if (isPartnerBranded) {
+      demoCompany.name = brandOverride!;
+      if (colorOverride) demoCompany.primary_color = colorOverride;
+      if (taglineOverride) demoCompany.tagline = taglineOverride;
+      if (logoOverride) demoCompany.logo_url = logoOverride;
+    }
     const accentColor = demoCompany.primary_color || industryConfig.defaultPrimaryColor;
 
     const phoneShowcaseSection = (
