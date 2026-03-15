@@ -82,7 +82,7 @@ const DemoDirectoryPage = lazy(() => import("./pages/demo/DemoDirectoryPage"));
 const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
 const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
-const AssetCMSPage = lazy(() => import("./pages/superadmin/AssetCMSPage"));
+
 
 // Part 6 — AI Marketplace + Sector pages
 const AIMarketplacePage = lazy(() => import("./pages/app/AIMarketplacePage"));
@@ -171,11 +171,6 @@ function App() {
                 <Route path="/superadmin/brand-assets" element={
                   <ProtectedRoute requiredRole="super_admin">
                     <BrandAssetsPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/superadmin/asset-cms" element={
-                  <ProtectedRoute requiredRole="super_admin">
-                    <AssetCMSPage />
                   </ProtectedRoute>
                 } />
                 <Route path="/staff" element={
