@@ -99,10 +99,12 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [showDNA, setShowDNA] = useState(false);
 
-  // Safety timeout: force dismiss after 2s no matter what
+  // Safety timeout: force dismiss splash after 2.5s no matter what
   useEffect(() => {
-    const timer = setTimeout(() => { setShowSplash(false); setShowDNA(true); }, 2000);
-    return () => clearTimeout(timer);
+    const splashTimer = setTimeout(() => { setShowSplash(false); setShowDNA(true); }, 2500);
+    // Safety timeout: force dismiss DNA after 5s total no matter what
+    const dnaTimer = setTimeout(() => { setShowSplash(false); setShowDNA(false); }, 5000);
+    return () => { clearTimeout(splashTimer); clearTimeout(dnaTimer); };
   }, []);
 
   const handleSplashComplete = () => {

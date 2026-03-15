@@ -16,11 +16,11 @@ const DNATransition = ({ onComplete }: { onComplete: () => void }) => {
   phaseRef.current = phase;
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("assemble"), 400);
-    const t2 = setTimeout(() => setPhase("pulse"), 1800);
-    const t3 = setTimeout(() => setPhase("morph"), 2800);
-    const t4 = setTimeout(() => setPhase("dissolve"), 3600);
-    const t5 = setTimeout(onComplete, 4200);
+    const t1 = setTimeout(() => setPhase("assemble"), 300);
+    const t2 = setTimeout(() => setPhase("pulse"), 1200);
+    const t3 = setTimeout(() => setPhase("morph"), 1800);
+    const t4 = setTimeout(() => setPhase("dissolve"), 2200);
+    const t5 = setTimeout(onComplete, 2600);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
   }, [onComplete]);
 
