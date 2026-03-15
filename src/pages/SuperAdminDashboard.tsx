@@ -553,11 +553,11 @@ const SuperAdminDashboard = () => {
               </motion.h1>
               <div className="flex items-center gap-1.5">
                 <motion.div
-                  className="w-1.5 h-1.5 rounded-full bg-primary"
+                 className="w-1.5 h-1.5 rounded-full bg-empire-violet"
                   animate={{ opacity: [0.4, 1, 0.4] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
-                <p className="text-[10px] text-primary/70 font-medium tracking-wider uppercase">👑 Super Admin</p>
+                <p className="text-[10px] text-empire-violet-glow/70 font-medium tracking-wider uppercase">👑 Super Admin</p>
               </div>
             </div>
           </div>
