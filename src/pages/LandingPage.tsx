@@ -1848,7 +1848,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     onClick={() => { setSelectedPlan(p.id); if (p.includedAgents > 0) setShowAddons(true); }}
                     className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                       isSelected
-                        ? "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(265,70%,60%,0.1)]"
+                        ? "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(38,50%,55%,0.1)]"
                         : "border border-border/30 hover:border-primary/20 bg-background/40"
                     }`}>
                     {p.badge && (
