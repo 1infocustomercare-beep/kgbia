@@ -54,7 +54,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
     }
     if (!tappedRef.current) {
       tappedRef.current = true;
-      unlockAndStartSplashNarration();
+      // No splash narration — skip to complete on second tap
       return;
     }
     safeComplete();
