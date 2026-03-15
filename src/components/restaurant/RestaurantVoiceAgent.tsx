@@ -71,9 +71,19 @@ async function speak(text: string, audioRef: React.MutableRefObject<HTMLAudioEle
       },
       body: JSON.stringify({ text: cleanText }),
     });
-    if (!resp.ok) throw new Error("TTS failed");
-    const { audioContent } = await resp.json();
-    const url = `data:audio/mpeg;base64,${audioContent}`;
+    const data = await resp.json();
+    if (data.fallback || !data.audioContent) {
+      // Fallback to Web Speech API
+      const synth = window.speechSynthesis;
+      const utter = new SpeechSynthesisUtterance(cleanText);
+      utter.lang = "it-IT";
+      utter.rate = 0.95;
+      utter.onend = onEnd;
+      utter.onerror = () => onEnd();
+      synth.speak(utter);
+      return;
+    }
+    const url = `data:audio/mpeg;base64,${data.audioContent}`;
     if (audioRef.current) { audioRef.current.pause(); }
     const audio = new Audio(url);
     audioRef.current = audio;

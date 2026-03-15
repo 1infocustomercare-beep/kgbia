@@ -62,6 +62,12 @@ serve(async (req) => {
     if (!response.ok) {
       const errText = await response.text();
       console.error("ElevenLabs TTS error:", response.status, errText);
+      // Return quota_exceeded so client can fall back to Web Speech API
+      if (errText.includes("quota_exceeded") || response.status === 401) {
+        return new Response(JSON.stringify({ error: "quota_exceeded", fallback: true }), {
+          status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
       throw new Error(`TTS error: ${response.status}`);
     }
 
