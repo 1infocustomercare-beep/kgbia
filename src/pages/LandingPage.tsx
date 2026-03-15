@@ -2779,7 +2779,7 @@ const LandingPage = () => {
                   const r = 105;
                   return (
                     <circle key={`pulse-${i}`} r="2"
-                      fill={i % 2 === 0 ? "hsla(265,90%,75%,0.9)" : "hsla(38,60%,65%,0.9)"}
+                      fill={i % 2 === 0 ? "hsla(38,60%,60%,0.9)" : "hsla(35,55%,55%,0.9)"}
                       filter="url(#agent-glow)">
                       <animateMotion dur={`${6 + i * 2}s`} repeatCount="indefinite" begin={`${i * 1.5}s`}>
                         <mpath xlinkHref={`#orbit-path-${i}`} />
