@@ -961,7 +961,7 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [sendMessage, stopAll]);
 
-  // ── Toggle panel ──
+  // ── Toggle panel — auto-start ElevenLabs call for real phone experience ──
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => {
       const next = !prev;
@@ -973,10 +973,19 @@ const EmpireVoiceAgent: React.FC = () => {
         if (!narratedRef.current.has("hero")) {
           enqueueSectionNarration("hero", true);
         }
+        // Auto-start ElevenLabs conversation for instant phone call feel
+        if (elevenlabsAvailable && voiceMode !== "elevenlabs") {
+          setTimeout(() => startElevenlabsConversation(), 300);
+        }
+      } else {
+        // Closing panel: end ElevenLabs call
+        if (voiceMode === "elevenlabs" && conversation.status === "connected") {
+          stopElevenlabsConversation();
+        }
       }
       return next;
     });
-  }, [startIntroNarration, enqueueSectionNarration]);
+  }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status]);
 
   // ── Render ──
   return (
