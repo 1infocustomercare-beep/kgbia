@@ -3,14 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ArrowLeft, Bot, CheckCircle2, Zap, Clock, Activity, Settings2 } from "lucide-react";
+import { ArrowLeft, Bot, CheckCircle2, Zap, Clock, Activity, Settings2, Brain, Shield, Eye, GraduationCap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Slider } from "@/components/ui/slider";
 import { useAgentInstallation } from "@/hooks/useAgentInstallation";
 import { useAuth } from "@/context/AuthContext";
-import { CATEGORY_LABELS, type Agent } from "@/types/agent";
+import { CATEGORY_LABELS, type Agent, type PrivacyLevel } from "@/types/agent";
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
