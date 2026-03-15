@@ -1217,10 +1217,11 @@ const SuperAdminDashboard = () => {
         )}
         {/* ===== INTEGRATIONS ===== */}
         {!loading && activeTab === "integrations" && (
-          <motion.div className="space-y-5 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <div className="text-center mb-4">
-              <h2 className="text-lg font-display font-bold text-foreground">🔌 Centro Connessioni & API</h2>
-              <p className="text-[10px] text-muted-foreground">Gestisci, configura e attiva/disattiva ogni integrazione per account e settore</p>
+          <motion.div className="space-y-3 mt-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {/* Header compact */}
+            <div className="text-center">
+              <h2 className="text-base font-display font-bold text-foreground">🔌 Centro Connessioni</h2>
+              <p className="text-[9px] text-muted-foreground">Configura · Attiva/Disattiva · Per settore</p>
             </div>
 
             {(() => {
@@ -1246,8 +1247,8 @@ const SuperAdminDashboard = () => {
                 setDisabledIntegrations(prev => ({ ...prev, [name]: !prev[name] }));
                 const isNowDisabled = !disabledIntegrations[name];
                 toast({
-                  title: isNowDisabled ? "🔴 Integrazione Disattivata" : "🟢 Integrazione Riattivata",
-                  description: `${name} è stata ${isNowDisabled ? "spenta" : "riattivata"} per tutti gli account collegati.`,
+                  title: isNowDisabled ? "🔴 Disattivata" : "🟢 Riattivata",
+                  description: `${name} ${isNowDisabled ? "spenta" : "riattivata"}.`,
                 });
               };
 
@@ -1255,114 +1256,45 @@ const SuperAdminDashboard = () => {
                 setDisabledSectors(prev => ({ ...prev, [sector]: !prev[sector] }));
                 const isNowDisabled = !disabledSectors[sector];
                 toast({
-                  title: isNowDisabled ? "🔴 Settore Disattivato" : "🟢 Settore Riattivato",
-                  description: `Tutte le integrazioni del settore ${sectorLabel(sector)} sono state ${isNowDisabled ? "spente" : "riattivate"}.`,
+                  title: isNowDisabled ? "🔴 Settore Off" : "🟢 Settore On",
+                  description: `${sectorLabel(sector)} ${isNowDisabled ? "disattivato" : "riattivato"}.`,
                 });
               };
 
-              // ─── SUPER ADMIN — Connessioni Personali Empire ───
+              const [expandedSection, setExpandedSection] = useState<"admin" | "client" | "functions" | null>("admin");
+
+              // ─── ADMIN INTEGRATIONS ───
               const adminIntegrations: IntegrationItem[] = [
-                {
-                  name: "Lovable Cloud (Database)", description: "PostgreSQL, Auth, Storage, Realtime",
-                  status: "connected", detail: "Infrastruttura core attiva — gestita automaticamente",
-                  scope: "admin", usedBy: "Intera piattaforma",
-                  guideSteps: ["Gestito automaticamente da Lovable Cloud", "Database, Auth, Storage e Realtime sono sempre attivi", "Nessuna configurazione necessaria"]
-                },
-                {
-                  name: "Lovable AI Gateway", description: "LLM per assistenti, traduzioni, analisi AI",
-                  status: "connected", detail: "LOVABLE_API_KEY configurata — Gemini/GPT-5 disponibili",
-                  scope: "admin", usedBy: "Empire Assistant, AI Menu, AI Translate, AI Inventory", secretName: "LOVABLE_API_KEY",
-                  guideSteps: ["La chiave è pre-configurata con Lovable Cloud", "Modelli disponibili: Gemini 2.5, GPT-5, GPT-5-mini", "I token vengono tracciati nella tabella ai_usage_logs"]
-                },
-                {
-                  name: "ElevenLabs (Voce IA)", description: "Text-to-Speech e Conversational AI Agent",
-                  status: "connected", detail: "API Key configurata via connector ElevenLabs",
-                  scope: "admin", usedBy: "Empire TTS, Voice Agent, Restaurant Voice Agent", secretName: "ELEVENLABS_API_KEY",
-                  guideUrl: "https://elevenlabs.io/docs/api-reference/text-to-speech",
-                  guideSteps: ["1. Vai su elevenlabs.io → API Keys", "2. Copia la tua API Key", "3. Inseriscila come secret ELEVENLABS_API_KEY", "4. Testa con la funzione Empire TTS"],
-                  buyCreditsUrl: "https://elevenlabs.io/subscription"
-                },
-                {
-                  name: "Stripe Connect (Platform)", description: "Pagamenti, split commissioni, abbonamenti",
-                  status: "missing", detail: "STRIPE_SECRET_KEY necessaria per pagamenti reali",
-                  scope: "admin", usedBy: "Checkout, abbonamenti, split partner, rateizzazione",
-                  actionLabel: "Configura Stripe", secretName: "STRIPE_SECRET_KEY",
-                  guideUrl: "https://docs.stripe.com/connect",
-                  guideSteps: ["1. Crea account Stripe → dashboard.stripe.com", "2. Vai su Developers → API Keys", "3. Copia la Secret Key (sk_live_...)", "4. Inseriscila come secret STRIPE_SECRET_KEY", "5. Abilita Connect per split commissioni Partner/TL"]
-                },
-                {
-                  name: "Stripe Webhook Secret", description: "Verifica eventi Stripe (pagamenti, rinnovi)",
-                  status: "missing", detail: "STRIPE_WEBHOOK_SECRET per validare callback Stripe",
-                  scope: "admin", usedBy: "stripe-webhook edge function",
-                  actionLabel: "Configura Webhook", secretName: "STRIPE_WEBHOOK_SECRET",
-                  guideUrl: "https://docs.stripe.com/webhooks",
-                  guideSteps: ["1. Vai su Stripe Dashboard → Webhooks", "2. Aggiungi endpoint: [URL]/functions/v1/stripe-webhook", "3. Seleziona eventi: checkout.session.completed, invoice.paid", "4. Copia il Signing Secret (whsec_...)", "5. Inseriscilo come STRIPE_WEBHOOK_SECRET"]
-                },
-                {
-                  name: "Firebase Cloud Messaging", description: "Push notification su app mobile/PWA",
-                  status: "missing", detail: "FCM_SERVER_KEY per notifiche push a tutti i tenant",
-                  scope: "admin", usedBy: "Notifiche ordini, promozioni, scadenze",
-                  actionLabel: "Configura FCM", secretName: "FCM_SERVER_KEY",
-                  guideUrl: "https://firebase.google.com/docs/cloud-messaging",
-                  guideSteps: ["1. Vai su console.firebase.google.com", "2. Crea progetto o seleziona esistente", "3. Project Settings → Cloud Messaging → Server Key", "4. Copia la Server Key", "5. Inseriscila come FCM_SERVER_KEY"]
-                },
-                {
-                  name: "Email Service (Resend)", description: "Email transazionali e marketing",
-                  status: "missing", detail: "RESEND_API_KEY per conferme ordini, fatture, onboarding",
-                  scope: "admin", usedBy: "Conferme ordini, reset password, onboarding partner",
-                  actionLabel: "Configura Email", secretName: "RESEND_API_KEY",
-                  guideUrl: "https://resend.com/docs/introduction",
-                  guideSteps: ["1. Registrati su resend.com", "2. Vai su API Keys → Create API Key", "3. Copia la chiave (re_...)", "4. Inseriscila come RESEND_API_KEY", "5. Configura dominio mittente in Resend Dashboard"]
-                },
-                {
-                  name: "Google Analytics (GA4)", description: "Tracking visitatori su siti pubblici",
-                  status: "missing", detail: "GA4_MEASUREMENT_ID per tracking traffico",
-                  scope: "admin", usedBy: "Landing page, siti pubblici settoriali",
-                  actionLabel: "Configura GA4", secretName: "GA4_MEASUREMENT_ID",
-                  guideUrl: "https://support.google.com/analytics/answer/9304153",
-                  guideSteps: ["1. Vai su analytics.google.com", "2. Crea proprietà GA4", "3. Copia il Measurement ID (G-XXXXXXXXXX)", "4. Inseriscilo come GA4_MEASUREMENT_ID"]
-                },
-                {
-                  name: "Sentry (Error Monitoring)", description: "Monitoraggio errori e performance",
-                  status: "missing", detail: "SENTRY_DSN per tracciare crash in produzione",
-                  scope: "admin", usedBy: "Tutta l'app (frontend + edge functions)",
-                  actionLabel: "Configura Sentry", secretName: "SENTRY_DSN",
-                  guideUrl: "https://docs.sentry.io/platforms/javascript/guides/react/",
-                  guideSteps: ["1. Registrati su sentry.io", "2. Crea progetto React", "3. Copia il DSN dall'impostazioni", "4. Inseriscilo come SENTRY_DSN"]
-                },
-                {
-                  name: "Domini Custom & SSL", description: "White-label con dominio personalizzato",
-                  status: "missing", detail: "DNS + SSL per siti clienti",
-                  scope: "admin", usedBy: "Siti pubblici white-label dei clienti",
-                  actionLabel: "Configura Domini",
-                  guideSteps: ["1. Acquista dominio (es. Cloudflare, Namecheap)", "2. Configura CNAME verso il tuo deploy", "3. Abilita SSL automatico", "4. Configura per-tenant nella tabella companies"]
-                },
+                { name: "Lovable Cloud", description: "PostgreSQL, Auth, Storage, Realtime", status: "connected", detail: "Infrastruttura core — automatica", scope: "admin", usedBy: "Piattaforma", guideSteps: ["Gestito automaticamente", "Nessuna config necessaria"] },
+                { name: "Lovable AI Gateway", description: "LLM: Gemini, GPT-5", status: "connected", detail: "LOVABLE_API_KEY attiva", scope: "admin", usedBy: "Assistenti, Menu, Translate", secretName: "LOVABLE_API_KEY", guideSteps: ["Pre-configurata con Lovable Cloud", "Modelli: Gemini 2.5, GPT-5"] },
+                { name: "ElevenLabs", description: "TTS & Voice Agent", status: "connected", detail: "API Key configurata", scope: "admin", usedBy: "TTS, Voice Agent", secretName: "ELEVENLABS_API_KEY", guideUrl: "https://elevenlabs.io/docs/api-reference/text-to-speech", guideSteps: ["1. elevenlabs.io → API Keys", "2. Copia API Key", "3. Inserisci come secret"], buyCreditsUrl: "https://elevenlabs.io/subscription" },
+                { name: "Stripe Platform", description: "Pagamenti, split, abbonamenti", status: "missing", detail: "STRIPE_SECRET_KEY necessaria", scope: "admin", usedBy: "Checkout, split partner", actionLabel: "Configura", secretName: "STRIPE_SECRET_KEY", guideUrl: "https://docs.stripe.com/connect", guideSteps: ["1. dashboard.stripe.com", "2. Developers → API Keys", "3. Copia Secret Key", "4. Inserisci come secret"] },
+                { name: "Stripe Webhook", description: "Verifica eventi pagamento", status: "missing", detail: "STRIPE_WEBHOOK_SECRET", scope: "admin", usedBy: "stripe-webhook", actionLabel: "Configura", secretName: "STRIPE_WEBHOOK_SECRET", guideUrl: "https://docs.stripe.com/webhooks", guideSteps: ["1. Stripe → Webhooks", "2. Aggiungi endpoint", "3. Copia Signing Secret"] },
+                { name: "Firebase FCM", description: "Push notification PWA", status: "missing", detail: "FCM_SERVER_KEY", scope: "admin", usedBy: "Notifiche ordini", actionLabel: "Configura", secretName: "FCM_SERVER_KEY", guideUrl: "https://firebase.google.com/docs/cloud-messaging", guideSteps: ["1. console.firebase.google.com", "2. Cloud Messaging → Server Key", "3. Inserisci come secret"] },
+                { name: "Resend Email", description: "Email transazionali", status: "missing", detail: "RESEND_API_KEY", scope: "admin", usedBy: "Conferme, fatture", actionLabel: "Configura", secretName: "RESEND_API_KEY", guideUrl: "https://resend.com/docs/introduction", guideSteps: ["1. resend.com → API Keys", "2. Copia chiave (re_...)", "3. Inserisci come secret"] },
+                { name: "Google Analytics", description: "GA4 tracking", status: "missing", detail: "GA4_MEASUREMENT_ID", scope: "admin", usedBy: "Landing, siti pubblici", actionLabel: "Configura", secretName: "GA4_MEASUREMENT_ID", guideUrl: "https://support.google.com/analytics/answer/9304153", guideSteps: ["1. analytics.google.com", "2. Crea proprietà GA4", "3. Copia Measurement ID"] },
+                { name: "Sentry", description: "Error monitoring", status: "missing", detail: "SENTRY_DSN", scope: "admin", usedBy: "Frontend + Edge", actionLabel: "Configura", secretName: "SENTRY_DSN", guideUrl: "https://docs.sentry.io/platforms/javascript/guides/react/", guideSteps: ["1. sentry.io → Crea progetto", "2. Copia DSN", "3. Inserisci come secret"] },
+                { name: "Domini Custom", description: "White-label & SSL", status: "missing", detail: "DNS + SSL per clienti", scope: "admin", usedBy: "Siti white-label", actionLabel: "Configura", guideSteps: ["1. Acquista dominio", "2. Configura CNAME", "3. Abilita SSL"] },
               ];
 
-              // ─── CONNESSIONI CLIENTI — Per Settore ───
+              // ─── CLIENT INTEGRATIONS ───
               const clientIntegrations: IntegrationItem[] = [
-                { name: "Fatturazione Elettronica SDI", description: "Invio fatture al Sistema di Interscambio", status: "missing", detail: "FattureInCloud o Aruba per invio automatico", scope: "client", sector: "food", usedBy: "Ristoranti — fatturazione", actionLabel: "Configura FE", guideUrl: "https://www.fattureincloud.it/guida/api/", guideSteps: ["1. Registrati su FattureInCloud", "2. Crea API Key", "3. Configura codice fiscale e P.IVA del tenant", "4. Abilita invio automatico"] },
-                { name: "Deliveroo / Glovo API", description: "Sincronizzazione ordini delivery", status: "missing", detail: "API per ordini da piattaforme esterne", scope: "client", sector: "food", usedBy: "Ristoranti — ordini multi-piattaforma", actionLabel: "Configura Delivery", guideSteps: ["1. Richiedi accesso API Partner Deliveroo/Glovo", "2. Configura webhook per ricezione ordini", "3. Mappa il menu del ristorante", "4. Testa con ordine di prova"] },
-                { name: "Stampante Comande (ESC/POS)", description: "Stampa automatica comande in cucina", status: "missing", detail: "WebUSB o cloud print per stampanti termiche", scope: "client", sector: "food", usedBy: "Ristoranti — cucina", actionLabel: "Configura Stampante", guideSteps: ["1. Collega stampante termica via USB o WiFi", "2. Installa driver compatibile ESC/POS", "3. Configura dimensione scontrino (80mm)", "4. Testa stampa comanda di prova"] },
-
-                { name: "Google Maps Platform", description: "Geocoding, routing, ETA, mappe flotta", status: "missing", detail: "API Key per calcolo percorsi e tracking", scope: "client", sector: "ncc", usedBy: "NCC — routing, fleet map, booking", actionLabel: "Configura Maps", secretName: "GOOGLE_MAPS_API_KEY", guideUrl: "https://developers.google.com/maps/documentation", guideSteps: ["1. Vai su console.cloud.google.com", "2. Abilita Maps JavaScript API + Directions API", "3. Crea API Key con restrizioni", "4. Inseriscila come GOOGLE_MAPS_API_KEY"] },
-                { name: "WhatsApp Business API", description: "Conferme booking e promemoria viaggio", status: "missing", detail: "Twilio/WhatsApp per messaggi ai passeggeri", scope: "client", sector: "ncc", usedBy: "NCC — conferme prenotazione", actionLabel: "Collega WhatsApp", guideUrl: "https://www.twilio.com/docs/whatsapp", guideSteps: ["1. Crea account Twilio", "2. Abilita WhatsApp Sandbox", "3. Configura template messaggi", "4. Inserisci TWILIO_AUTH_TOKEN"] },
-                { name: "Stripe Connect (NCC)", description: "Pagamenti prenotazioni e depositi", status: "missing", detail: "Stripe Connect per ogni azienda NCC", scope: "client", sector: "ncc", usedBy: "NCC — checkout prenotazioni", actionLabel: "Configura Stripe NCC", guideSteps: ["1. Il tenant deve completare l'onboarding Stripe Connect", "2. Configura split fee (piattaforma prende %)", "3. Abilita pagamenti con carta e Apple Pay"] },
-
-                { name: "Google Calendar Sync", description: "Sincronizzazione appuntamenti", status: "missing", detail: "Google Calendar API per sync bidirezionale", scope: "client", sector: "beauty", usedBy: "Beauty — agenda appuntamenti", actionLabel: "Collega Calendar", guideUrl: "https://developers.google.com/calendar", guideSteps: ["1. Abilita Google Calendar API", "2. Configura OAuth2 per il tenant", "3. Autorizza accesso al calendario", "4. Abilita sync bidirezionale"] },
-                { name: "SMS Reminders (Twilio)", description: "Promemoria appuntamento via SMS", status: "missing", detail: "Twilio per ridurre no-show", scope: "client", sector: "beauty", usedBy: "Beauty — notifiche clienti", actionLabel: "Collega Twilio", guideUrl: "https://www.twilio.com/docs/sms", guideSteps: ["1. Crea account Twilio", "2. Acquista numero di telefono", "3. Configura template SMS", "4. Abilita reminder automatico 24h prima"] },
-
-                { name: "Telemedicina (WebRTC)", description: "Videochiamate medico-paziente", status: "missing", detail: "Daily.co o Twilio Video per consulti remoti", scope: "client", sector: "healthcare", usedBy: "Sanità — visite online", actionLabel: "Configura Video", guideUrl: "https://docs.daily.co/", guideSteps: ["1. Registrati su daily.co", "2. Crea API Key", "3. Configura room settings", "4. Integra nel modulo appuntamenti"] },
-                { name: "HL7/FHIR Gateway", description: "Interoperabilità sistemi sanitari", status: "missing", detail: "Standard per scambio dati pazienti", scope: "client", sector: "healthcare", usedBy: "Sanità — cartelle cliniche", actionLabel: "Configura FHIR", guideUrl: "https://www.hl7.org/fhir/", guideSteps: ["1. Identifica il sistema EHR del cliente", "2. Configura endpoint FHIR", "3. Mappa risorse paziente", "4. Testa con dati di esempio"] },
-
-                { name: "Channel Manager (OTA)", description: "Sync tariffe Booking.com, Expedia", status: "missing", detail: "API per sincronizzazione camere", scope: "client", sector: "hospitality", usedBy: "Hotel — distribuzione tariffe", actionLabel: "Configura OTA", guideSteps: ["1. Scegli channel manager (SiteMinder, Cloudbeds)", "2. Configura mapping camere", "3. Abilita sync bidirezionale tariffe", "4. Testa con prenotazione di prova"] },
-                { name: "PMS Integration", description: "Property Management System", status: "missing", detail: "Collegamento con gestionale alberghiero", scope: "client", sector: "hospitality", usedBy: "Hotel — check-in/out, housekeeping", actionLabel: "Configura PMS", guideSteps: ["1. Identifica il PMS del cliente", "2. Configura API di integrazione", "3. Mappa camere e tariffe", "4. Abilita sync automatico"] },
-
-                { name: "POS Integration", description: "Sincronizzazione cassa e inventario", status: "missing", detail: "Collegamento con registratore di cassa", scope: "client", sector: "retail", usedBy: "Retail — vendite e magazzino", actionLabel: "Configura POS", guideSteps: ["1. Identifica il modello POS", "2. Installa plugin/connector", "3. Mappa prodotti e categorie", "4. Testa sincronizzazione vendita"] },
-                { name: "Shopify / WooCommerce", description: "Sync catalogo e-commerce", status: "missing", detail: "Importazione prodotti e ordini online", scope: "client", sector: "retail", usedBy: "Retail — e-commerce", actionLabel: "Configura E-commerce", guideUrl: "https://shopify.dev/docs/api", guideSteps: ["1. Genera API Key dal pannello Shopify", "2. Configura webhook ordini", "3. Mappa catalogo prodotti", "4. Abilita sync inventario"] },
-
-                { name: "Meta Business Suite", description: "Pubblicazione Instagram/Facebook", status: "missing", detail: "Meta Graph API per posting automatico", scope: "client", sector: "all", usedBy: "Tutti — Social Manager AI", actionLabel: "Configura Social", guideUrl: "https://developers.facebook.com/docs/graph-api/", guideSteps: ["1. Crea app su developers.facebook.com", "2. Richiedi permessi pages_manage_posts", "3. Connetti pagina del cliente", "4. Testa pubblicazione automatica"] },
-                { name: "Google My Business", description: "Sync recensioni e info attività", status: "missing", detail: "Google Business Profile API", scope: "client", sector: "all", usedBy: "Tutti — reputazione online", actionLabel: "Configura GMB", guideUrl: "https://developers.google.com/my-business", guideSteps: ["1. Abilita Business Profile API", "2. Verifica proprietà scheda GMB", "3. Configura sync recensioni", "4. Abilita aggiornamento automatico info"] },
+                { name: "Fatturazione SDI", description: "Sistema di Interscambio", status: "missing", detail: "FattureInCloud/Aruba", scope: "client", sector: "food", usedBy: "Ristoranti", actionLabel: "Configura", guideSteps: ["1. FattureInCloud → API Key", "2. Configura P.IVA tenant", "3. Abilita invio auto"] },
+                { name: "Delivery API", description: "Deliveroo/Glovo sync", status: "missing", detail: "Ordini multi-piattaforma", scope: "client", sector: "food", usedBy: "Ristoranti", actionLabel: "Configura", guideSteps: ["1. Richiedi accesso API Partner", "2. Configura webhook ordini"] },
+                { name: "Stampante ESC/POS", description: "Comande cucina", status: "missing", detail: "WebUSB/cloud print", scope: "client", sector: "food", usedBy: "Cucina", actionLabel: "Configura", guideSteps: ["1. Collega stampante termica", "2. Installa driver ESC/POS"] },
+                { name: "Google Maps", description: "Routing, ETA, fleet", status: "missing", detail: "GOOGLE_MAPS_API_KEY", scope: "client", sector: "ncc", usedBy: "NCC routing", actionLabel: "Configura", secretName: "GOOGLE_MAPS_API_KEY", guideUrl: "https://developers.google.com/maps", guideSteps: ["1. console.cloud.google.com", "2. Abilita Maps + Directions API", "3. Crea API Key"] },
+                { name: "WhatsApp Business", description: "Conferme booking", status: "missing", detail: "Twilio/WhatsApp", scope: "client", sector: "ncc", usedBy: "NCC booking", actionLabel: "Configura", guideUrl: "https://www.twilio.com/docs/whatsapp", guideSteps: ["1. Crea account Twilio", "2. Abilita WhatsApp Sandbox"] },
+                { name: "Stripe NCC", description: "Pagamenti prenotazioni", status: "missing", detail: "Stripe Connect per NCC", scope: "client", sector: "ncc", usedBy: "NCC checkout", actionLabel: "Configura", guideSteps: ["1. Onboarding Stripe Connect", "2. Configura split fee"] },
+                { name: "Google Calendar", description: "Sync appuntamenti", status: "missing", detail: "Calendar API", scope: "client", sector: "beauty", usedBy: "Beauty agenda", actionLabel: "Configura", guideUrl: "https://developers.google.com/calendar", guideSteps: ["1. Abilita Calendar API", "2. Configura OAuth2"] },
+                { name: "SMS Twilio", description: "Reminder appuntamento", status: "missing", detail: "Twilio SMS", scope: "client", sector: "beauty", usedBy: "Beauty notifiche", actionLabel: "Configura", guideUrl: "https://www.twilio.com/docs/sms", guideSteps: ["1. Account Twilio", "2. Acquista numero", "3. Template SMS"] },
+                { name: "Telemedicina", description: "WebRTC video", status: "missing", detail: "Daily.co/Twilio Video", scope: "client", sector: "healthcare", usedBy: "Visite online", actionLabel: "Configura", guideUrl: "https://docs.daily.co/", guideSteps: ["1. Registrati daily.co", "2. Crea API Key"] },
+                { name: "HL7/FHIR", description: "Interoperabilità sanitaria", status: "missing", detail: "Standard dati pazienti", scope: "client", sector: "healthcare", usedBy: "Cartelle cliniche", actionLabel: "Configura", guideSteps: ["1. Identifica EHR", "2. Configura endpoint FHIR"] },
+                { name: "Channel Manager", description: "OTA sync tariffe", status: "missing", detail: "Booking.com, Expedia", scope: "client", sector: "hospitality", usedBy: "Hotel tariffe", actionLabel: "Configura", guideSteps: ["1. Scegli channel manager", "2. Mapping camere"] },
+                { name: "PMS Integration", description: "Gestionale alberghiero", status: "missing", detail: "Check-in/out, housekeeping", scope: "client", sector: "hospitality", usedBy: "Hotel ops", actionLabel: "Configura", guideSteps: ["1. Identifica PMS", "2. Configura API"] },
+                { name: "POS Integration", description: "Cassa & inventario", status: "missing", detail: "Registratore di cassa", scope: "client", sector: "retail", usedBy: "Retail vendite", actionLabel: "Configura", guideSteps: ["1. Identifica modello POS", "2. Installa connector"] },
+                { name: "Shopify/Woo", description: "E-commerce sync", status: "missing", detail: "Catalogo + ordini", scope: "client", sector: "retail", usedBy: "Retail e-commerce", actionLabel: "Configura", guideUrl: "https://shopify.dev/docs/api", guideSteps: ["1. Genera API Key Shopify", "2. Webhook ordini"] },
+                { name: "Meta Business", description: "Instagram/Facebook auto", status: "missing", detail: "Meta Graph API", scope: "client", sector: "all", usedBy: "Social Manager", actionLabel: "Configura", guideUrl: "https://developers.facebook.com/docs/graph-api/", guideSteps: ["1. App su developers.facebook.com", "2. Permessi pages_manage_posts"] },
+                { name: "Google My Business", description: "Recensioni & info", status: "missing", detail: "Business Profile API", scope: "client", sector: "all", usedBy: "Reputazione online", actionLabel: "Configura", guideUrl: "https://developers.google.com/my-business", guideSteps: ["1. Abilita Business Profile API", "2. Verifica scheda GMB"] },
               ];
 
               const allIntegrations = [...adminIntegrations, ...clientIntegrations];
@@ -1374,368 +1306,283 @@ const SuperAdminDashboard = () => {
               const totalMissing = allIntegrations.filter(i => i.status === "missing").length;
               const totalWarning = allIntegrations.filter(i => i.status === "warning").length;
 
-              const statusIcon = (s: IntegrationStatus) => {
-                if (s === "connected") return <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" />;
-                if (s === "warning") return <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />;
-                return <XCircle className="w-4 h-4 text-destructive shrink-0" />;
-              };
-
-              const statusBg = (s: IntegrationStatus) => {
-                if (s === "connected") return "border-green-500/15 bg-green-500/[0.03]";
-                if (s === "warning") return "border-amber-500/15 bg-amber-500/[0.03]";
-                return "border-destructive/15 bg-destructive/[0.03]";
+              const statusDot = (s: IntegrationStatus) => {
+                if (s === "connected") return "bg-green-400";
+                if (s === "warning") return "bg-amber-400";
+                return "bg-destructive";
               };
 
               const sectorIcon = (sector?: string) => {
-                const icons: Record<string, string> = {
-                  food: "🍽️", ncc: "🚗", beauty: "💅", healthcare: "🏥", hospitality: "🏨",
-                  retail: "🛍️", fitness: "💪", beach: "🏖️", all: "🌐",
-                };
+                const icons: Record<string, string> = { food: "🍽️", ncc: "🚗", beauty: "💅", healthcare: "🏥", hospitality: "🏨", retail: "🛍️", fitness: "💪", beach: "🏖️", all: "🌐" };
                 return icons[sector || "all"] || "🔧";
               };
 
               const sectorLabel = (sector?: string) => {
-                const labels: Record<string, string> = {
-                  food: "Ristorazione", ncc: "NCC / Trasporto", beauty: "Beauty & Wellness",
-                  healthcare: "Sanità", hospitality: "Hotel", retail: "Retail", all: "Tutti i Settori",
-                };
+                const labels: Record<string, string> = { food: "Food", ncc: "NCC", beauty: "Beauty", healthcare: "Sanità", hospitality: "Hotel", retail: "Retail", all: "Globali" };
                 return labels[sector || "all"] || sector || "";
               };
 
-              const isGuideOpen = (name: string) => expandedGuide === name;
-
-              const renderItem = (item: IntegrationItem) => {
+              const renderCompactItem = (item: IntegrationItem) => {
                 const isDisabled = disabledIntegrations[item.name] || false;
-                const guideOpen = isGuideOpen(item.name);
+                const guideOpen = expandedGuide === item.name;
 
                 return (
-                  <motion.div
-                    key={item.name}
-                    className={`rounded-xl border transition-all overflow-hidden ${isDisabled ? "border-muted/30 bg-muted/5 opacity-50" : statusBg(item.status)}`}
-                    whileHover={{ scale: 1.005 }}
-                  >
-                    <div className="p-3">
-                      <div className="flex items-start gap-2.5">
-                        {isDisabled ? <Power className="w-4 h-4 text-muted-foreground/40 shrink-0" /> : statusIcon(item.status)}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between gap-2">
-                            <p className={`text-xs font-semibold truncate ${isDisabled ? "text-muted-foreground line-through" : "text-foreground"}`}>{item.name}</p>
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              {!isDisabled && item.status === "connected" && (
-                                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 font-bold uppercase tracking-wider">Attivo</span>
-                              )}
-                              {!isDisabled && item.status === "missing" && (
-                                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-destructive/15 text-destructive font-bold uppercase tracking-wider">Mancante</span>
-                              )}
-                              {isDisabled && (
-                                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-muted/20 text-muted-foreground font-bold uppercase tracking-wider">Spento</span>
-                              )}
-                              {/* Toggle ON/OFF */}
-                              <motion.button
-                                onClick={() => toggleIntegration(item.name)}
-                                className={`p-0.5 rounded-md transition-colors ${isDisabled ? "text-muted-foreground/50 hover:text-destructive" : "text-green-400 hover:text-amber-400"}`}
-                                whileTap={{ scale: 0.9 }}
-                                title={isDisabled ? "Riattiva integrazione" : "Disattiva integrazione"}
-                              >
-                                {isDisabled ? <ToggleLeft className="w-5 h-5" /> : <ToggleRight className="w-5 h-5" />}
-                              </motion.button>
-                            </div>
-                          </div>
+                  <div key={item.name} className={`rounded-lg border transition-all overflow-hidden ${isDisabled ? "border-muted/20 opacity-40" : item.status === "connected" ? "border-green-500/15 bg-green-500/[0.02]" : "border-border bg-card/50"}`}>
+                    {/* Main row — always visible */}
+                    <div className="flex items-center gap-2 px-2.5 py-2">
+                      <div className={`w-2 h-2 rounded-full shrink-0 ${isDisabled ? "bg-muted-foreground/30" : statusDot(item.status)}`} />
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-[0.65rem] font-semibold leading-tight truncate ${isDisabled ? "text-muted-foreground line-through" : "text-foreground"}`}>{item.name}</p>
+                        <p className="text-[0.5rem] text-muted-foreground truncate">{item.description}</p>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        {/* Status badge */}
+                        {!isDisabled && item.status === "connected" && <span className="text-[0.45rem] px-1 py-0.5 rounded bg-green-500/15 text-green-400 font-bold">ON</span>}
+                        {!isDisabled && item.status === "missing" && <span className="text-[0.45rem] px-1 py-0.5 rounded bg-destructive/15 text-destructive font-bold">OFF</span>}
+                        {isDisabled && <span className="text-[0.45rem] px-1 py-0.5 rounded bg-muted/20 text-muted-foreground font-bold">⏸</span>}
 
-                          {!isDisabled && (
-                            <>
-                              <p className="text-[0.6rem] text-muted-foreground mt-0.5">{item.description}</p>
-                              <p className="text-[0.55rem] text-muted-foreground/60 mt-0.5 italic">{item.detail}</p>
-                              <div className="flex items-center gap-1 mt-1">
-                                <span className="text-[0.5rem] text-primary/70 font-medium">👤 Usato da:</span>
-                                <span className="text-[0.5rem] text-muted-foreground">{item.usedBy}</span>
-                              </div>
-                              {item.secretName && (
-                                <div className="flex items-center gap-1 mt-0.5">
-                                  <Lock className="w-2.5 h-2.5 text-muted-foreground/50" />
-                                  <span className="text-[0.5rem] text-muted-foreground/50 font-mono">{item.secretName}</span>
-                                </div>
-                              )}
+                        {/* Expand details */}
+                        {!isDisabled && (
+                          <motion.button
+                            onClick={() => setExpandedGuide(guideOpen ? null : item.name)}
+                            className="p-1 rounded-md hover:bg-secondary/60 text-muted-foreground"
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            {guideOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                          </motion.button>
+                        )}
 
-                              {/* Action buttons row */}
-                              <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-                                {item.actionLabel && (
-                                  <motion.button
-                                    className="px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[0.6rem] font-bold hover:bg-primary/20 transition-colors flex items-center gap-1"
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={() => toast({ title: "🔧 " + item.actionLabel, description: "Configurazione necessaria: " + item.name + (item.secretName ? ` (secret: ${item.secretName})` : "") })}
-                                  >
-                                    <Zap className="w-3 h-3" />
-                                    {item.actionLabel}
-                                  </motion.button>
-                                )}
-                                {item.guideUrl && (
-                                  <a
-                                    href={item.guideUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-2.5 py-1 rounded-lg bg-accent/10 text-accent text-[0.6rem] font-bold hover:bg-accent/20 transition-colors flex items-center gap-1"
-                                  >
-                                    <ExternalLink className="w-3 h-3" />
-                                    Documentazione
-                                  </a>
-                                )}
-                                {item.guideSteps && (
-                                  <motion.button
-                                    className="px-2.5 py-1 rounded-lg bg-secondary text-foreground text-[0.6rem] font-bold hover:bg-secondary/80 transition-colors flex items-center gap-1"
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={() => setExpandedGuide(guideOpen ? null : item.name)}
-                                  >
-                                    <BookOpen className="w-3 h-3" />
-                                    Guida Setup
-                                    {guideOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                                  </motion.button>
-                                )}
-                                {item.buyCreditsUrl && (
-                                  <a
-                                    href={item.buyCreditsUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500/20 to-primary/20 text-amber-400 text-[0.6rem] font-bold hover:from-amber-500/30 hover:to-primary/30 transition-all flex items-center gap-1 border border-amber-500/20"
-                                  >
-                                    <CreditCard className="w-3 h-3" />
-                                    💰 Compra Crediti
-                                  </a>
-                                )}
-                              </div>
-                            </>
-                          )}
-                        </div>
+                        {/* Toggle */}
+                        <motion.button
+                          onClick={() => toggleIntegration(item.name)}
+                          className={`p-0.5 rounded transition-colors ${isDisabled ? "text-muted-foreground/40" : "text-green-400"}`}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          {isDisabled ? <ToggleLeft className="w-4 h-4" /> : <ToggleRight className="w-4 h-4" />}
+                        </motion.button>
                       </div>
                     </div>
 
-                    {/* Expandable guide panel */}
+                    {/* Expandable detail panel */}
                     <AnimatePresence>
-                      {guideOpen && item.guideSteps && !isDisabled && (
+                      {guideOpen && !isDisabled && (
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
+                          transition={{ duration: 0.15 }}
                           className="overflow-hidden"
                         >
-                          <div className="px-3 pb-3 pt-1 border-t border-border/30">
-                            <p className="text-[0.55rem] font-bold text-primary mb-1.5 flex items-center gap-1">
-                              <Info className="w-3 h-3" /> Come configurare:
-                            </p>
-                            <div className="space-y-1">
-                              {item.guideSteps.map((step, i) => (
-                                <div key={i} className="flex items-start gap-1.5">
-                                  <span className="text-[0.5rem] text-primary/60 font-mono shrink-0 mt-px">{step.startsWith(String(i + 1)) ? "▸" : "•"}</span>
-                                  <span className="text-[0.55rem] text-muted-foreground leading-relaxed">{step}</span>
-                                </div>
-                              ))}
+                          <div className="px-2.5 pb-2.5 pt-0.5 border-t border-border/20 space-y-1.5">
+                            {/* Info row */}
+                            <p className="text-[0.5rem] text-muted-foreground/70 italic">{item.detail}</p>
+                            {item.secretName && (
+                              <div className="flex items-center gap-1">
+                                <Lock className="w-2.5 h-2.5 text-muted-foreground/40" />
+                                <span className="text-[0.45rem] font-mono text-muted-foreground/50">{item.secretName}</span>
+                              </div>
+                            )}
+                            <p className="text-[0.45rem] text-primary/60">👤 {item.usedBy}</p>
+
+                            {/* Action buttons — compact grid */}
+                            <div className="flex flex-wrap gap-1 pt-0.5">
+                              {item.actionLabel && (
+                                <motion.button
+                                  className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[0.55rem] font-bold flex items-center gap-0.5"
+                                  whileTap={{ scale: 0.95 }}
+                                  onClick={() => toast({ title: "🔧 " + item.actionLabel, description: item.name + (item.secretName ? ` → ${item.secretName}` : "") })}
+                                >
+                                  <Zap className="w-2.5 h-2.5" />{item.actionLabel}
+                                </motion.button>
+                              )}
+                              {item.guideUrl && (
+                                <a href={item.guideUrl} target="_blank" rel="noopener noreferrer" className="px-2 py-0.5 rounded-md bg-accent/10 text-accent text-[0.55rem] font-bold flex items-center gap-0.5">
+                                  <ExternalLink className="w-2.5 h-2.5" />Docs
+                                </a>
+                              )}
+                              {item.buyCreditsUrl && (
+                                <a href={item.buyCreditsUrl} target="_blank" rel="noopener noreferrer" className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 text-[0.55rem] font-bold flex items-center gap-0.5 border border-amber-500/15">
+                                  <CreditCard className="w-2.5 h-2.5" />Crediti
+                                </a>
+                              )}
                             </div>
-                            {item.guideUrl && (
-                              <a
-                                href={item.guideUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-2 inline-flex items-center gap-1 text-[0.55rem] text-primary font-semibold hover:underline"
-                              >
-                                <Link2 className="w-3 h-3" />
-                                Apri documentazione completa →
-                              </a>
+
+                            {/* Setup steps */}
+                            {item.guideSteps && (
+                              <div className="pt-1 space-y-0.5">
+                                {item.guideSteps.map((step, i) => (
+                                  <p key={i} className="text-[0.5rem] text-muted-foreground/70 pl-2 flex items-start gap-1">
+                                    <span className="text-primary/50 shrink-0">▸</span>{step}
+                                  </p>
+                                ))}
+                              </div>
                             )}
                           </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </motion.div>
+                  </div>
                 );
               };
 
-              // Group client integrations by sector
               const clientSectors = [...new Set(clientIntegrations.map(i => i.sector || "all"))];
 
               return (
                 <>
-                  {/* Summary cards */}
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="p-3 rounded-xl bg-green-500/[0.06] border border-green-500/15 text-center">
-                      <p className="text-2xl font-display font-bold text-green-400">{totalConnected}</p>
-                      <p className="text-[0.6rem] text-green-400/70 font-medium uppercase tracking-wider">Connessi</p>
+                  {/* Summary — ultra compact */}
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <div className="py-2 px-2 rounded-lg bg-green-500/[0.06] border border-green-500/10 text-center">
+                      <p className="text-xl font-display font-bold text-green-400 leading-none">{totalConnected}</p>
+                      <p className="text-[0.5rem] text-green-400/60 font-medium mt-0.5">Connessi</p>
                     </div>
-                    <div className="p-3 rounded-xl bg-amber-500/[0.06] border border-amber-500/15 text-center">
-                      <p className="text-2xl font-display font-bold text-amber-400">{totalWarning}</p>
-                      <p className="text-[0.6rem] text-amber-400/70 font-medium uppercase tracking-wider">Parziali</p>
+                    <div className="py-2 px-2 rounded-lg bg-amber-500/[0.06] border border-amber-500/10 text-center">
+                      <p className="text-xl font-display font-bold text-amber-400 leading-none">{totalWarning}</p>
+                      <p className="text-[0.5rem] text-amber-400/60 font-medium mt-0.5">Parziali</p>
                     </div>
-                    <div className="p-3 rounded-xl bg-destructive/[0.06] border border-destructive/15 text-center">
-                      <p className="text-2xl font-display font-bold text-destructive">{totalMissing}</p>
-                      <p className="text-[0.6rem] text-destructive/70 font-medium uppercase tracking-wider">Da Collegare</p>
-                    </div>
-                  </div>
-
-                  {/* ═══ SEZIONE 1: SUPER ADMIN ═══ */}
-                  <div className="rounded-2xl border border-primary/20 overflow-hidden" style={{ background: "linear-gradient(160deg, hsl(var(--card)), hsl(var(--primary) / 0.04))" }}>
-                    <div className="px-4 py-3 border-b border-primary/10 flex items-center justify-between" style={{ background: "hsl(var(--primary) / 0.06)" }}>
-                      <div className="flex items-center gap-2">
-                        <Crown className="w-4 h-4 text-primary" />
-                        <div>
-                          <h3 className="text-sm font-display font-bold text-foreground">🔒 Infrastruttura Empire</h3>
-                          <p className="text-[0.55rem] text-muted-foreground">Connessioni core — clicca toggle per spegnere</p>
-                        </div>
-                      </div>
-                      <span className="text-[0.6rem] text-primary font-bold px-2 py-0.5 rounded-full bg-primary/10">
-                        {adminConnected}/{adminTotal}
-                      </span>
-                    </div>
-                    <div className="px-4 pt-3 pb-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[0.55rem] text-muted-foreground">Completamento infrastruttura</span>
-                        <span className="text-[0.55rem] font-bold text-primary">{Math.round(adminConnected / adminTotal * 100)}%</span>
-                      </div>
-                      <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-                        <motion.div
-                          className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${adminConnected / adminTotal * 100}%` }}
-                          transition={{ duration: 1 }}
-                        />
-                      </div>
-                    </div>
-                    <div className="p-3 space-y-1.5">
-                      {adminIntegrations.map(renderItem)}
+                    <div className="py-2 px-2 rounded-lg bg-destructive/[0.06] border border-destructive/10 text-center">
+                      <p className="text-xl font-display font-bold text-destructive leading-none">{totalMissing}</p>
+                      <p className="text-[0.5rem] text-destructive/60 font-medium mt-0.5">Mancanti</p>
                     </div>
                   </div>
 
-                  {/* ═══ SEZIONE 2: CLIENTI — Per Settore ═══ */}
-                  <div className="rounded-2xl border border-accent/20 overflow-hidden" style={{ background: "linear-gradient(160deg, hsl(var(--card)), hsl(var(--accent) / 0.04))" }}>
-                    <div className="px-4 py-3 border-b border-accent/10 flex items-center justify-between" style={{ background: "hsl(var(--accent) / 0.06)" }}>
+                  {/* ═══ ACCORDION: Infrastruttura ═══ */}
+                  <div className="rounded-xl border border-primary/15 overflow-hidden">
+                    <button
+                      onClick={() => setExpandedSection(expandedSection === "admin" ? null : "admin")}
+                      className="w-full flex items-center justify-between px-3 py-2.5 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors"
+                    >
                       <div className="flex items-center gap-2">
-                        <Users className="w-4 h-4 text-accent" />
-                        <div>
-                          <h3 className="text-sm font-display font-bold text-foreground">👥 Integrazioni per Settore</h3>
-                          <p className="text-[0.55rem] text-muted-foreground">Spegni un intero settore o singole integrazioni</p>
-                        </div>
+                        <Crown className="w-3.5 h-3.5 text-primary" />
+                        <span className="text-xs font-display font-bold text-foreground">Infrastruttura</span>
+                        <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-bold">{adminConnected}/{adminTotal}</span>
                       </div>
-                      <span className="text-[0.6rem] text-accent font-bold px-2 py-0.5 rounded-full bg-accent/10">
-                        {clientConnected}/{clientTotal}
-                      </span>
-                    </div>
-
-                    <div className="p-3 space-y-4">
-                      {clientSectors.map(sector => {
-                        const sectorItems = clientIntegrations.filter(i => i.sector === sector);
-                        const sectorConnectedCount = sectorItems.filter(i => i.status === "connected").length;
-                        const isSectorDisabled = disabledSectors[sector] || false;
-                        return (
-                          <div key={sector} className={isSectorDisabled ? "opacity-40" : ""}>
-                            <div className="flex items-center justify-between mb-2">
-                              <h4 className="text-xs font-display font-bold text-foreground flex items-center gap-1.5">
-                                <span>{sectorIcon(sector)}</span>
-                                {sectorLabel(sector)}
-                              </h4>
-                              <div className="flex items-center gap-2">
-                                <span className="text-[0.55rem] text-muted-foreground font-medium px-2 py-0.5 rounded-full bg-secondary">
-                                  {sectorConnectedCount}/{sectorItems.length}
-                                </span>
-                                <motion.button
-                                  onClick={() => toggleSector(sector)}
-                                  className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[0.55rem] font-bold transition-colors ${
-                                    isSectorDisabled
-                                      ? "bg-destructive/10 text-destructive hover:bg-destructive/20"
-                                      : "bg-green-500/10 text-green-400 hover:bg-green-500/20"
-                                  }`}
-                                  whileTap={{ scale: 0.95 }}
-                                >
-                                  {isSectorDisabled ? <ToggleLeft className="w-3.5 h-3.5" /> : <ToggleRight className="w-3.5 h-3.5" />}
-                                  {isSectorDisabled ? "Spento" : "Attivo"}
-                                </motion.button>
-                              </div>
-                            </div>
-                            {!isSectorDisabled && (
-                              <div className="space-y-1.5">
-                                {sectorItems.map(renderItem)}
-                              </div>
-                            )}
-                            {isSectorDisabled && (
-                              <div className="p-3 rounded-xl bg-muted/10 border border-muted/20 text-center">
-                                <p className="text-[0.6rem] text-muted-foreground">
-                                  Tutte le integrazioni di {sectorLabel(sector)} sono disattivate
-                                </p>
-                                <motion.button
-                                  onClick={() => toggleSector(sector)}
-                                  className="mt-1.5 px-3 py-1 rounded-lg bg-primary/10 text-primary text-[0.6rem] font-bold"
-                                  whileTap={{ scale: 0.95 }}
-                                >
-                                  Riattiva Settore
-                                </motion.button>
-                              </div>
-                            )}
+                      <div className="flex items-center gap-2">
+                        {/* Progress mini */}
+                        <div className="w-12 h-1 rounded-full bg-secondary overflow-hidden">
+                          <div className="h-full rounded-full bg-primary" style={{ width: `${adminConnected / adminTotal * 100}%` }} />
+                        </div>
+                        {expandedSection === "admin" ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
+                      </div>
+                    </button>
+                    <AnimatePresence>
+                      {expandedSection === "admin" && (
+                        <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
+                          <div className="p-2 space-y-1">
+                            {adminIntegrations.map(renderCompactItem)}
                           </div>
-                        );
-                      })}
-                    </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
 
-                  {/* ═══ SEZIONE 3: Edge Functions ═══ */}
-                  <div className="rounded-2xl border border-border overflow-hidden">
-                    <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-card">
+                  {/* ═══ ACCORDION: Integrazioni Settore ═══ */}
+                  <div className="rounded-xl border border-accent/15 overflow-hidden">
+                    <button
+                      onClick={() => setExpandedSection(expandedSection === "client" ? null : "client")}
+                      className="w-full flex items-center justify-between px-3 py-2.5 bg-accent/[0.04] hover:bg-accent/[0.08] transition-colors"
+                    >
                       <div className="flex items-center gap-2">
-                        <Cpu className="w-4 h-4 text-muted-foreground" />
-                        <div>
-                          <h3 className="text-sm font-display font-bold text-foreground">⚡ Backend Functions</h3>
-                          <p className="text-[0.55rem] text-muted-foreground">Edge functions deployate e operative</p>
-                        </div>
+                        <Users className="w-3.5 h-3.5 text-accent" />
+                        <span className="text-xs font-display font-bold text-foreground">Per Settore</span>
+                        <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-accent/10 text-accent font-bold">{clientConnected}/{clientTotal}</span>
                       </div>
-                      <span className="text-[0.6rem] text-green-400 font-bold px-2 py-0.5 rounded-full bg-green-500/10">
-                        Tutte attive
-                      </span>
-                    </div>
-                    <div className="p-3 grid grid-cols-1 gap-1">
-                      {[
-                        { fn: "empire-assistant", desc: "Assistente IA multi-settore", deps: "LOVABLE_API_KEY" },
-                        { fn: "empire-tts", desc: "Text-to-Speech", deps: "ELEVENLABS_API_KEY" },
-                        { fn: "empire-voice-agent", desc: "Agente vocale Empire", deps: "ELEVENLABS_API_KEY" },
-                        { fn: "restaurant-voice-agent", desc: "Agente vocale ristorante", deps: "ELEVENLABS_API_KEY" },
-                        { fn: "elevenlabs-conversation-token", desc: "Token conversazione ElevenLabs", deps: "ELEVENLABS_API_KEY" },
-                        { fn: "ai-menu", desc: "OCR menu e generazione piatti", deps: "LOVABLE_API_KEY" },
-                        { fn: "ai-translate", desc: "Traduzioni automatiche", deps: "LOVABLE_API_KEY" },
-                        { fn: "ai-inventory", desc: "Gestione scorte AI", deps: "LOVABLE_API_KEY" },
-                        { fn: "create-company", desc: "Onboarding nuova azienda", deps: "—" },
-                        { fn: "assign-partner-role", desc: "Assegnazione ruolo partner", deps: "—" },
-                        { fn: "check-payments", desc: "Verifica pagamenti scaduti", deps: "—" },
-                        { fn: "generate-b2b-invoice", desc: "Generazione fatture B2B", deps: "—" },
-                        { fn: "generate-fee-invoice", desc: "Fatture commissioni mensili", deps: "—" },
-                        { fn: "payment-notifications", desc: "Notifiche scadenze", deps: "—" },
-                        { fn: "subscription-checkout", desc: "Checkout abbonamenti", deps: "STRIPE_SECRET_KEY" },
-                        { fn: "stripe-webhook", desc: "Webhook pagamenti Stripe", deps: "STRIPE_WEBHOOK_SECRET" },
-                        { fn: "ai-token-checkout", desc: "Acquisto token AI", deps: "STRIPE_SECRET_KEY" },
-                        { fn: "submit-feature-request", desc: "Richieste funzionalità", deps: "—" },
-                        { fn: "send-push-discount", desc: "Sconti push automatici", deps: "FCM_SERVER_KEY" },
-                        { fn: "seed-demo-accounts", desc: "Creazione account demo", deps: "—" },
-                      ].map(f => (
-                        <div key={f.fn} className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-muted/30 transition-colors">
-                          <CheckCircle2 className="w-3 h-3 text-green-400 shrink-0" />
-                          <span className="text-[0.6rem] font-mono text-foreground/80 truncate flex-1">{f.fn}</span>
-                          <span className="text-[0.5rem] text-muted-foreground truncate max-w-[120px] hidden sm:inline">{f.desc}</span>
-                          <span className={`text-[0.45rem] font-mono px-1 py-0.5 rounded ${f.deps === "—" ? "text-muted-foreground/40" : "text-amber-400/70 bg-amber-500/5"}`}>
-                            {f.deps}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                      {expandedSection === "client" ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
+                    </button>
+                    <AnimatePresence>
+                      {expandedSection === "client" && (
+                        <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
+                          <div className="p-2 space-y-3">
+                            {clientSectors.map(sector => {
+                              const sectorItems = clientIntegrations.filter(i => i.sector === sector);
+                              const sectorConn = sectorItems.filter(i => i.status === "connected").length;
+                              const isSectorOff = disabledSectors[sector] || false;
+                              return (
+                                <div key={sector}>
+                                  <div className="flex items-center justify-between mb-1.5">
+                                    <span className="text-[0.65rem] font-bold text-foreground flex items-center gap-1">
+                                      {sectorIcon(sector)} {sectorLabel(sector)}
+                                      <span className="text-[0.5rem] text-muted-foreground font-normal ml-1">{sectorConn}/{sectorItems.length}</span>
+                                    </span>
+                                    <motion.button
+                                      onClick={() => toggleSector(sector)}
+                                      className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[0.5rem] font-bold ${isSectorOff ? "bg-destructive/10 text-destructive" : "bg-green-500/10 text-green-400"}`}
+                                      whileTap={{ scale: 0.95 }}
+                                    >
+                                      {isSectorOff ? <ToggleLeft className="w-3 h-3" /> : <ToggleRight className="w-3 h-3" />}
+                                      {isSectorOff ? "Off" : "On"}
+                                    </motion.button>
+                                  </div>
+                                  {!isSectorOff ? (
+                                    <div className="space-y-1">{sectorItems.map(renderCompactItem)}</div>
+                                  ) : (
+                                    <p className="text-[0.5rem] text-muted-foreground text-center py-2 bg-muted/5 rounded-lg">Settore disattivato</p>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
 
-                  {/* Info footer */}
-                  <div className="p-3 rounded-xl border border-primary/10 bg-primary/[0.03]">
-                    <div className="flex items-start gap-2">
-                      <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-[0.6rem] text-foreground font-medium mb-1">Sicurezza & Controllo</p>
-                        <p className="text-[0.55rem] text-muted-foreground leading-relaxed">
-                          Ogni integrazione può essere <strong>spenta individualmente</strong> o per <strong>intero settore</strong>.
-                          Usa i toggle per disattivare istantaneamente le connessioni di clienti che non pagano o non necessitano del servizio.
-                          Le chiavi API sono secrets server-side — mai esposti ai clienti.
-                        </p>
+                  {/* ═══ ACCORDION: Edge Functions ═══ */}
+                  <div className="rounded-xl border border-border overflow-hidden">
+                    <button
+                      onClick={() => setExpandedSection(expandedSection === "functions" ? null : "functions")}
+                      className="w-full flex items-center justify-between px-3 py-2.5 bg-card hover:bg-muted/20 transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Cpu className="w-3.5 h-3.5 text-muted-foreground" />
+                        <span className="text-xs font-display font-bold text-foreground">Edge Functions</span>
+                        <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-400 font-bold">20 attive</span>
                       </div>
-                    </div>
+                      {expandedSection === "functions" ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
+                    </button>
+                    <AnimatePresence>
+                      {expandedSection === "functions" && (
+                        <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
+                          <div className="p-2 grid grid-cols-1 gap-0.5">
+                            {[
+                              { fn: "empire-assistant", deps: "LOVABLE" },
+                              { fn: "empire-tts", deps: "11LABS" },
+                              { fn: "empire-voice-agent", deps: "11LABS" },
+                              { fn: "restaurant-voice-agent", deps: "11LABS" },
+                              { fn: "elevenlabs-conversation-token", deps: "11LABS" },
+                              { fn: "ai-menu", deps: "LOVABLE" },
+                              { fn: "ai-translate", deps: "LOVABLE" },
+                              { fn: "ai-inventory", deps: "LOVABLE" },
+                              { fn: "create-company", deps: "—" },
+                              { fn: "assign-partner-role", deps: "—" },
+                              { fn: "check-payments", deps: "—" },
+                              { fn: "generate-b2b-invoice", deps: "—" },
+                              { fn: "generate-fee-invoice", deps: "—" },
+                              { fn: "payment-notifications", deps: "—" },
+                              { fn: "subscription-checkout", deps: "STRIPE" },
+                              { fn: "stripe-webhook", deps: "STRIPE" },
+                              { fn: "ai-token-checkout", deps: "STRIPE" },
+                              { fn: "submit-feature-request", deps: "—" },
+                              { fn: "send-push-discount", deps: "FCM" },
+                              { fn: "seed-demo-accounts", deps: "—" },
+                            ].map(f => (
+                              <div key={f.fn} className="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-muted/20 transition-colors">
+                                <div className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
+                                <span className="text-[0.55rem] font-mono text-foreground/70 truncate flex-1">{f.fn}</span>
+                                <span className={`text-[0.4rem] font-mono px-1 rounded ${f.deps === "—" ? "text-muted-foreground/30" : "text-amber-400/60 bg-amber-500/5"}`}>{f.deps}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Security note — minimal */}
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary/10 bg-primary/[0.02]">
+                    <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
+                    <p className="text-[0.5rem] text-muted-foreground leading-relaxed">
+                      Toggle singolo o per settore · API keys server-side · Mai esposti ai clienti
+                    </p>
                   </div>
                 </>
               );
