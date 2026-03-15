@@ -228,11 +228,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
     setLoading(true);
     try {
       const { data, error: dbError } = await supabase
-        .from("kitchen_access_pins")
-        .select("id, restaurant_id, label")
-        .eq("pin_code", kitchenPin.trim())
-        .eq("is_active", true)
-        .limit(1);
+        .rpc("verify_kitchen_pin", { p_pin: kitchenPin.trim() });
 
       if (dbError || !data || data.length === 0) {
         setError("PIN non valido o scaduto.");
@@ -241,7 +237,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       }
       const pin = data[0];
       sessionStorage.setItem("kitchen_mode", JSON.stringify({
-        restaurantId: pin.restaurant_id, pinId: pin.id, label: pin.label,
+        restaurantId: pin.restaurant_id, pinId: pin.pin_id, label: pin.label,
       }));
       navigate("/kitchen");
     } catch { setError("Errore di connessione."); }
