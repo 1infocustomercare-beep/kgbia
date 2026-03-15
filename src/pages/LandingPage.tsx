@@ -2316,7 +2316,7 @@ const LandingPage = () => {
             {/* Ambient halo behind logo — multi-layer */}
             <motion.div
               className="absolute -inset-10 rounded-full pointer-events-none"
-              style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.25), hsla(35,50%,55%,0.08), transparent 65%)" }}
+              style={{ background: "radial-gradient(circle, hsla(38,50%,55%,0.2), hsla(35,45%,50%,0.08), transparent 65%)" }}
               animate={{ opacity: [0, 0.6, 0], scale: [0.95, 1.1, 0.95] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
             />
