@@ -2352,7 +2352,7 @@ const LandingPage = () => {
         style={{ opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Cinematic video background ═══ */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0" style={{ zIndex: 2 }}>
           <video
             autoPlay
             muted
@@ -2360,14 +2360,14 @@ const LandingPage = () => {
             playsInline
             preload="auto"
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ filter: "brightness(0.35) saturate(1.1)" }}
+            style={{ filter: "brightness(0.3) saturate(1.15)" }}
           >
-            <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4" type="video/mp4" />
+            <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4" />
           </video>
           {/* Cinematic vignette overlays */}
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsl(var(--background)) 100%)" }} />
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 15%, transparent 85%, hsl(var(--background)) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(265,60%,20%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.2) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(265,60%,20%,0.5) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
         </div>
 
         {/* ═══ LAYER 1: Central glow orb ═══ */}
