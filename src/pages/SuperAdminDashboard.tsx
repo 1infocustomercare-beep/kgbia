@@ -17,6 +17,7 @@ import { lazy, Suspense, useRef, useCallback } from "react";
 import empireAgentMascot from "@/assets/empire-agent-mascot.png";
 import BackButton from "@/components/BackButton";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
+import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { AllIndustriesShowcase } from "@/components/public/IndustryPhoneShowcase";
 import { toast } from "@/hooks/use-toast";
