@@ -246,6 +246,7 @@ class RouteErrorBoundary extends React.Component<{ children: ReactNode }, RouteE
 
 function App() {
   const [introCompleted, setIntroCompleted] = useState(false);
+  const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
   useEffect(() => {
     const introFailsafe = window.setTimeout(() => {
