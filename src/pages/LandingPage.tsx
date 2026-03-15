@@ -358,7 +358,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     {scan && (
       <motion.div
         className="absolute inset-0 pointer-events-none z-0"
-        style={{ background: "linear-gradient(180deg, transparent 35%, hsla(265,80%,75%,0.06) 50%, transparent 65%)" }}
+        style={{ background: "linear-gradient(180deg, transparent 35%, hsla(38,50%,60%,0.05) 50%, transparent 65%)" }}
         animate={{ y: ["-100%", "200%"] }}
         transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 1.5 + delay, ease: "easeInOut" }}
       />
