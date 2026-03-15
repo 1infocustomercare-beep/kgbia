@@ -520,7 +520,7 @@ const SuperAdminDashboard = () => {
               {/* Scanning conic beam */}
               <motion.div
                 className="absolute inset-1 rounded-full"
-                style={{ background: 'conic-gradient(from 0deg, transparent 0%, hsl(var(--primary) / 0.15) 8%, transparent 16%)' }}
+               style={{ background: 'conic-gradient(from 0deg, transparent 0%, hsl(var(--empire-violet) / 0.15) 8%, transparent 16%)' }}
                 animate={{ rotate: 360 }}
                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
               />
