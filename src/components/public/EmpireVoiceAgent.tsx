@@ -6,7 +6,7 @@ import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
 import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
-import { isSplashNarrationSpeaking } from "@/lib/splash-narration";
+import { stopSplashNarration } from "@/lib/splash-narration";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type VoiceMode = "legacy" | "elevenlabs";
@@ -275,8 +275,8 @@ async function speakText(
     const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
     if (playedInBrowser || abortRef.current) return playedInBrowser;
 
-    // On mobile, if browser TTS is blocked for hero intro, try premium as secondary fallback.
-    if (sectionId !== "hero" || useBrowserFallbackRef.current) {
+    // If browser speech is blocked, always allow premium fallback for hero.
+    if (sectionId !== "hero") {
       return false;
     }
   }
@@ -736,19 +736,11 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    let heroWaitAttempts = 0;
-    const queueHeroWhenReady = () => {
-      if (!voiceEnabledRef.current) return;
-      heroWaitAttempts++;
-      // Wait for splash narration to finish, but cap at ~4s to avoid permanent block
-      if (isSplashNarrationSpeaking() && heroWaitAttempts < 20) {
-        window.setTimeout(queueHeroWhenReady, 220);
-        return;
-      }
-      enqueueSectionNarration("hero", true);
-    };
+    // Hard handoff: prevent splash TTS from blocking/canceling Arianna.
+    stopSplashNarration();
+    abortRef.current = false;
 
-    queueHeroWhenReady();
+    enqueueSectionNarration("hero", true);
   }, [enqueueSectionNarration]);
 
   const stopAll = useCallback(() => {
@@ -863,6 +855,8 @@ const EmpireVoiceAgent: React.FC = () => {
       narratedRef.current.delete("hero");
       setNarratedSections(new Set(narratedRef.current));
 
+      stopSplashNarration();
+      abortRef.current = false;
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);

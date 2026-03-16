@@ -154,3 +154,21 @@ export function isSplashNarrationSpeaking(): boolean {
 export function isSplashNarrationDone(): boolean {
   return splashNarrationCompleted;
 }
+
+export function stopSplashNarration(): void {
+  if (safetyTimer) {
+    clearTimeout(safetyTimer);
+    safetyTimer = null;
+  }
+
+  if (typeof window !== "undefined" && window.speechSynthesis) {
+    try {
+      window.speechSynthesis.cancel();
+    } catch {
+      // noop
+    }
+  }
+
+  currentUtterance = null;
+  splashNarrationCompleted = true;
+}
