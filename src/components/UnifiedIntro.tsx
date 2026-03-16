@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
+import { Crown } from "lucide-react";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
@@ -22,14 +23,14 @@ const MESH_COUNT = IS_MOBILE ? 22 : 40;
 const ENERGY_PARTICLES = IS_MOBILE ? 16 : 30;
 const CIRCUIT_LINES = IS_MOBILE ? 8 : 16;
 
-// Timings — no brand phase, DNA starts immediately
+// Timings — brand phase first, then DNA
 const TIMINGS = IS_MOBILE
-  ? { assemble: 100, pulse: 1000, morph: 1800, exit: 2500, complete: 3000 }
-  : { assemble: 200, pulse: 1600, morph: 2800, exit: 3800, complete: 4400 };
+  ? { brand: 0, assemble: 800, pulse: 1600, morph: 2400, exit: 3000, complete: 3400 }
+  : { brand: 0, assemble: 1400, pulse: 2800, morph: 3800, exit: 4600, complete: 5200 };
 
-const SAFETY_TIMEOUT = IS_MOBILE ? 3500 : 6000;
+const SAFETY_TIMEOUT = IS_MOBILE ? 4000 : 7000;
 
-type Phase = "scatter" | "assemble" | "pulse" | "morph" | "exit";
+type Phase = "brand" | "assemble" | "pulse" | "morph" | "exit";
 
 // Color palette: gold, violet, green
 const COLORS = {
@@ -41,8 +42,8 @@ const COLORS = {
 const hsl = (c: typeof COLORS.gold, a: number) => `hsla(${c.h},${c.s}%,${c.l}%,${a})`;
 
 const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
-  const [phase, setPhase] = useState<Phase>("scatter");
-  const phaseRef = useRef<Phase>("scatter");
+  const [phase, setPhase] = useState<Phase>("brand");
+  const phaseRef = useRef<Phase>("brand");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const completedRef = useRef(false);
   const tappedRef = useRef(false);
@@ -188,6 +189,11 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
       ctx.clearRect(0, 0, w, h);
       const cp = phaseRef.current;
 
+      // Don't draw DNA during brand phase
+      if (cp === "brand") {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
       const assembleStart = TIMINGS.assemble / 1000;
       const morphStart = TIMINGS.morph / 1000;
       const exitStart = TIMINGS.exit / 1000;
@@ -542,15 +548,86 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
       }}
       onClick={handleTap}
     >
-      {/* Canvas for DNA helix */}
+      {/* Canvas for DNA helix — hidden during brand */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
         style={{
+          opacity: phase === "brand" ? 0 : 1,
+          transition: "opacity 0.5s ease",
           willChange: "opacity",
           WebkitTransform: "translate3d(0,0,0)",
         }}
       />
+
+      {/* ═══ BRAND PHASE — Crown logo + EMPIRE.AI ═══ */}
+      <motion.div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        style={{ willChange: "opacity, transform", WebkitTransform: "translate3d(0,0,0)" }}
+        animate={{
+          opacity: phase === "brand" ? 1 : 0,
+          scale: phase === "brand" ? 1 : 0.8,
+          y: phase === "brand" ? 0 : -40,
+        }}
+        transition={{ duration: 0.8, ease: smoothEase }}
+      >
+        <div className="flex flex-col items-center gap-5">
+          {/* Crown container */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: smoothEase }}
+          >
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[22px] sm:rounded-[28px] bg-gradient-to-br from-white/[0.06] to-white/[0.02] flex items-center justify-center border border-white/[0.08] shadow-[0_0_50px_hsla(265,85%,65%,0.15)]">
+              <div
+                className="w-[56px] h-[56px] sm:w-[68px] sm:h-[68px] rounded-[16px] sm:rounded-[20px] flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, hsl(265,85%,65%), hsl(280,80%,60%), hsl(265,85%,55%))" }}
+              >
+                <Crown className="w-7 h-7 sm:w-8 sm:h-8 text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Brand text */}
+          <motion.div
+            className="flex flex-col items-center gap-2.5"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3, ease: smoothEase }}
+          >
+            <h1 className="font-heading font-bold text-2xl sm:text-3xl tracking-[0.25em] uppercase text-foreground">
+              EMPIRE<span className="text-shimmer">.AI</span>
+            </h1>
+            <motion.div
+              className="h-px rounded-full mx-auto"
+              style={{ background: "linear-gradient(90deg, transparent, hsl(265,85%,65%), hsl(280,80%,60%), transparent)" }}
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 140, opacity: 0.5 }}
+              transition={{ duration: 0.4, delay: 0.5, ease: smoothEase }}
+            />
+            <p className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.5em] uppercase text-foreground/20 font-heading">
+              Il Sistema Operativo del Business
+            </p>
+          </motion.div>
+
+          {/* Loading bar */}
+          <motion.div
+            className="w-36 sm:w-48 h-[1.5px] rounded-full overflow-hidden"
+            style={{ background: "hsla(265,85%,65%,0.06)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <motion.div
+              className="h-full rounded-full"
+              style={{ background: "linear-gradient(90deg, hsl(265,85%,65%), hsl(155,65%,50%), hsl(38,55%,58%))" }}
+              initial={{ width: "0%" }}
+              animate={{ width: "100%" }}
+              transition={{ duration: TIMINGS.exit / 1000 - 0.3, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            />
+          </motion.div>
+        </div>
+      </motion.div>
 
       {/* Ambient tri-color glow */}
       <div
@@ -599,7 +676,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
       <motion.div
         className="absolute inset-0 flex items-end justify-center pb-20 sm:pb-24 pointer-events-none"
         initial={{ opacity: 0 }}
-        animate={{ opacity: phase === "scatter" ? 0 : phase === "exit" ? 0 : 1 }}
+        animate={{ opacity: phase === "brand" ? 0 : phase === "exit" ? 0 : 1 }}
         transition={{ duration: 0.4, delay: 0.3 }}
       >
         <div className="flex flex-col items-center gap-3">
