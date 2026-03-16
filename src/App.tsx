@@ -568,6 +568,7 @@ function App() {
                         <Route path="beach-bookings" element={<NCCBeachBookingsPage />} />
                         <Route path="team" element={<TeamPage />} />
                         <Route path="automations" element={<AutomationsPage />} />
+                        <Route path="whatsapp" element={<WhatsAppPage />} />
                         {/* Common modules */}
                         <Route path="leads" element={<LeadsPage />} />
                         <Route path="staff" element={<StaffPage />} />
