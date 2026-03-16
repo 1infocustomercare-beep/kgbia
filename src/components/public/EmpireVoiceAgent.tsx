@@ -241,6 +241,7 @@ async function speakText(
   abortRef: React.MutableRefObject<boolean>,
   useBrowserFallbackRef: React.MutableRefObject<boolean>,
   sectionId?: string,
+  options?: { preferImmediate?: boolean },
 ): Promise<boolean> {
   if (abortRef.current) return false;
 
@@ -254,7 +255,7 @@ async function speakText(
   // Use browser TTS first for reliability, then fallback to premium for hero when needed.
   const isPremiumSection = sectionId ? PREMIUM_SECTIONS.has(sectionId) : false;
   if (!isPremiumSection || useBrowserFallbackRef.current) {
-    const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef);
+    const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
     if (playedInBrowser || abortRef.current) return playedInBrowser;
 
     // On mobile, if browser TTS is blocked for hero intro, try premium as secondary fallback.
@@ -278,7 +279,7 @@ async function speakText(
       console.warn("ElevenLabs TTS failed, switching to browser voice");
       useBrowserFallbackRef.current = true;
       setBrowserOnlyTTS(true);
-      return speakWithBrowserTTS(normalizedText, abortRef);
+      return speakWithBrowserTTS(normalizedText, abortRef, options);
     }
 
     const data = await resp.json();
@@ -288,7 +289,7 @@ async function speakText(
       if (data?.error === "quota_exceeded" || data?.fallback) {
         setBrowserOnlyTTS(true);
       }
-      return speakWithBrowserTTS(normalizedText, abortRef);
+      return speakWithBrowserTTS(normalizedText, abortRef, options);
     }
 
     // Premium path worked: allow future premium attempts again
@@ -305,7 +306,7 @@ async function speakText(
       audio.onerror = () => {
         useBrowserFallbackRef.current = true;
         setBrowserOnlyTTS(true);
-        speakWithBrowserTTS(normalizedText, abortRef).then(resolve);
+        speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
       };
 
       if (abortRef.current) {
@@ -317,13 +318,13 @@ async function speakText(
       audio.play().catch(() => {
         useBrowserFallbackRef.current = true;
         setBrowserOnlyTTS(true);
-        speakWithBrowserTTS(normalizedText, abortRef).then(resolve);
+        speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
       });
     });
   } catch {
     useBrowserFallbackRef.current = true;
     setBrowserOnlyTTS(true);
-    return speakWithBrowserTTS(normalizedText, abortRef);
+    return speakWithBrowserTTS(normalizedText, abortRef, options);
   }
 }
 
