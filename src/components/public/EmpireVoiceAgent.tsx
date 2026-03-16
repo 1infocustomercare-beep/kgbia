@@ -1113,22 +1113,34 @@ const EmpireVoiceAgent: React.FC = () => {
     setMessages(prev => [...prev, { role: "assistant", content: "📞 Sto chiamando Arianna..." }]);
     setIsOpen(true);
 
-    if (elevenlabsAvailable === false) {
-      stopRingTone();
-      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ La chiamata vocale non è disponibile al momento. Usa la chat testuale o il microfono per parlare con me." }]);
-      // Restart narration as fallback
-      startIntroNarration();
-      return;
+    // Try ElevenLabs first if available
+    if (elevenlabsAvailable !== false) {
+      try {
+        await startElevenlabsConversation();
+        stopRingTone();
+        return;
+      } catch {
+        // Fall through to legacy mode
+      }
     }
 
-    try {
-      await startElevenlabsConversation();
-      stopRingTone();
-    } catch {
-      stopRingTone();
-      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ Non riesco a connettermi. Riprova tra un momento." }]);
+    // Fallback: use legacy SpeechRecognition for a "call" experience
+    stopRingTone();
+
+    if (SpeechRecognition) {
+      setMessages(prev => [...prev, { role: "assistant", content: "📞 Arianna in linea! Parlami pure, ti ascolto... 🎙️" }]);
+      setMode("voice");
+
+      // Small delay so the user sees the message before mic starts
+      setTimeout(() => {
+        startListening();
+      }, 800);
+    } else {
+      // No mic available — switch to chat mode
+      setMessages(prev => [...prev, { role: "assistant", content: "Ciao! Sono qui per aiutarti 💬 Scrivi pure la tua domanda qui sotto." }]);
+      setMode("chat");
     }
-  }, [voiceMode, conversation.status, stopElevenlabsConversation, elevenlabsAvailable, startIntroNarration, startElevenlabsConversation, stopAll, playRingTone, stopRingTone]);
+  }, [voiceMode, conversation.status, stopElevenlabsConversation, elevenlabsAvailable, startElevenlabsConversation, stopAll, playRingTone, stopRingTone, startListening]);
 
   // ── Render ──
   return (
