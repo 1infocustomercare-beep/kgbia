@@ -782,12 +782,14 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, [startIntroNarration, enqueueSectionNarration]);
 
-  // ── Recovery: autoplay restrictions on mobile browsers (retry silently, chat stays closed) ──
+  // ── Recovery: autoplay restrictions on mobile browsers (retry instantly inside user gesture) ──
   useEffect(() => {
     const unlockAndRetry = () => {
       if (userInteractedRef.current) return;
       userInteractedRef.current = true;
       setUserInteracted(true);
+
+      const heroScript = SECTION_SCRIPTS.hero;
 
       if (window.speechSynthesis) {
         try {
@@ -801,27 +803,60 @@ const EmpireVoiceAgent: React.FC = () => {
         }
       }
 
+      // Force hero replay in queue (keeps message/state flow coherent)
       if (!narratedRef.current.has("hero")) {
+        startIntroNarration();
         enqueueSectionNarration("hero", true);
+      }
+
+      // Immediate best-effort speech in gesture context for iOS autoplay policies
+      if (heroScript && !narratedRef.current.has("hero")) {
+        void (async () => {
+          setMessages((prev) => {
+            const last = prev[prev.length - 1];
+            if (last?.role === "assistant" && last.content === heroScript) return prev;
+            return [...prev, { role: "assistant", content: heroScript }];
+          });
+
+          abortRef.current = false;
+          setIsSpeaking(true);
+          setIsPaused(false);
+
+          const played = await speakWithBrowserTTS(normalizeTextForSpeech(heroScript), abortRef, {
+            preferImmediate: true,
+          });
+
+          if (played && !abortRef.current) {
+            narrationAttemptsRef.current.hero = 0;
+            narratedRef.current.add("hero");
+            setNarratedSections(new Set(narratedRef.current));
+          }
+
+          setIsSpeaking(false);
+        })();
       }
     };
 
-    const maybeActivated = (navigator as Navigator & { userActivation?: { hasBeenActive?: boolean } }).userActivation?.hasBeenActive;
+    const maybeActivated =
+      (navigator as Navigator & { userActivation?: { hasBeenActive?: boolean } }).userActivation?.hasBeenActive;
     if (maybeActivated) {
       unlockAndRetry();
       return;
     }
 
-    window.addEventListener("pointerdown", unlockAndRetry, { passive: true, once: true });
-    window.addEventListener("touchstart", unlockAndRetry, { passive: true, once: true });
+    const options = { passive: true, once: true } as const;
+    window.addEventListener("pointerdown", unlockAndRetry, options);
+    window.addEventListener("touchstart", unlockAndRetry, options);
     window.addEventListener("keydown", unlockAndRetry, { once: true });
+    window.addEventListener("scroll", unlockAndRetry, options);
 
     return () => {
       window.removeEventListener("pointerdown", unlockAndRetry as EventListener);
       window.removeEventListener("touchstart", unlockAndRetry as EventListener);
       window.removeEventListener("keydown", unlockAndRetry as EventListener);
+      window.removeEventListener("scroll", unlockAndRetry as EventListener);
     };
-  }, [enqueueSectionNarration]);
+  }, [enqueueSectionNarration, startIntroNarration]);
 
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
