@@ -215,36 +215,98 @@ export default function WhatsAppPage() {
 
   const isConfigured = !!config?.phone_number_id && !!config?.access_token;
 
+  // ── Templates state ──
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [templatesLoading, setTemplatesLoading] = useState(false);
+  const [editTpl, setEditTpl] = useState<any>(null);
+  const [tplDialogOpen, setTplDialogOpen] = useState(false);
+
+  const TPLCATS = ["welcome", "booking", "alert", "promo", "system", "menu_update"];
+
+  const loadTemplates = async () => {
+    setTemplatesLoading(true);
+    const { data } = await supabase.from("whatsapp_templates").select("*").order("created_at", { ascending: false });
+    if (data) setTemplates(data);
+    setTemplatesLoading(false);
+  };
+
+  useEffect(() => { if (activeTab === "templates") loadTemplates(); }, [activeTab]);
+
+  const saveTpl = async () => {
+    if (!editTpl?.body_text) { toast.error("Body obbligatorio"); return; }
+    const payload = {
+      tenant_id: config?.tenant_id || "00000000-0000-0000-0000-000000000000",
+      template_name: editTpl.template_name || "template",
+      language: editTpl.language || "it",
+      category: editTpl.category || "system",
+      body_text: editTpl.body_text,
+      header_text: editTpl.header_text || null,
+      footer_text: editTpl.footer_text || null,
+      buttons: editTpl.buttons || [],
+      status: "pending",
+    };
+    if (editTpl.id) {
+      await supabase.from("whatsapp_templates").update(payload).eq("id", editTpl.id);
+      toast.success("Template aggiornato");
+    } else {
+      await supabase.from("whatsapp_templates").insert(payload);
+      toast.success("Template creato");
+    }
+    setTplDialogOpen(false);
+    setEditTpl(null);
+    loadTemplates();
+  };
+
+  const deleteTpl = async (id: string) => {
+    await supabase.from("whatsapp_templates").delete().eq("id", id);
+    toast.success("Template eliminato");
+    loadTemplates();
+  };
+
   return (
     <div className="space-y-4 pb-24">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-[#25D366]/15 flex items-center justify-center">
-          <MessageCircle className="w-5 h-5 text-[#25D366]" />
+      {/* ── Empire Branding Header ── */}
+      <div className="relative overflow-hidden rounded-2xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1a0533] via-[#2d1b4e] to-[#0d0d0d]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(200,150,62,0.15),transparent_60%)]" />
+        <div className="relative px-4 py-4 flex items-center gap-3">
+          <div className="relative">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#C8963E] to-[#F5D680] flex items-center justify-center shadow-lg shadow-[#C8963E]/30">
+              <Crown className="w-5 h-5 text-white" />
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#25D366] flex items-center justify-center animate-pulse">
+              <MessageCircle className="w-3 h-3 text-white" />
+            </div>
+          </div>
+          <div className="flex-1">
+            <h1 className="text-lg font-bold bg-gradient-to-r from-[#C8963E] via-[#F5D680] to-[#C8963E] bg-clip-text text-transparent">
+              Empire WhatsApp Orchestrator
+            </h1>
+            <p className="text-[10px] text-white/60">
+              Gestione AI Autonoma via WhatsApp
+            </p>
+          </div>
+          {isConfigured && (
+            <Badge className="bg-[#25D366]/15 text-[#25D366] border-[#25D366]/30">
+              Connesso
+            </Badge>
+          )}
         </div>
-        <div>
-          <h1 className="text-xl font-bold">WhatsApp Business</h1>
-          <p className="text-xs text-muted-foreground">
-            Gestisci conversazioni, notifiche e AI auto-reply
-          </p>
-        </div>
-        {isConfigured && (
-          <Badge className="ml-auto bg-[#25D366]/15 text-[#25D366] border-[#25D366]/30">
-            Connesso
-          </Badge>
-        )}
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="w-full">
-          <TabsTrigger value="chat" className="flex-1 gap-1">
-            <MessageCircle className="w-3.5 h-3.5" /> Chat
+        <TabsList className="w-full grid grid-cols-4">
+          <TabsTrigger value="chat" className="gap-1 text-xs">
+            <MessageCircle className="w-3 h-3" /> Chat
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="flex-1 gap-1">
-            <Bell className="w-3.5 h-3.5" /> Notifiche
+          <TabsTrigger value="templates" className="gap-1 text-xs">
+            <FileText className="w-3 h-3" /> Templates
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex-1 gap-1">
-            <Settings className="w-3.5 h-3.5" /> Config
+          <TabsTrigger value="notifications" className="gap-1 text-xs">
+            <Bell className="w-3 h-3" /> Notifiche
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="gap-1 text-xs">
+            <Settings className="w-3 h-3" /> Config
           </TabsTrigger>
         </TabsList>
 
