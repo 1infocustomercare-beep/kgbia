@@ -661,6 +661,7 @@ const EmpireVoiceAgent: React.FC = () => {
       if (narratedRef.current.has(sectionId)) continue;
 
       narrationAttemptsRef.current[sectionId] = (narrationAttemptsRef.current[sectionId] ?? 0) + 1;
+      console.log(`[Arianna] Narrating "${sectionId}" attempt #${narrationAttemptsRef.current[sectionId]}`);
 
       setMessages((prev) => {
         const last = prev[prev.length - 1];
