@@ -724,9 +724,12 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
+    let heroWaitAttempts = 0;
     const queueHeroWhenReady = () => {
       if (!voiceEnabledRef.current) return;
-      if (isSplashNarrationSpeaking()) {
+      heroWaitAttempts++;
+      // Wait for splash narration to finish, but cap at ~4s to avoid permanent block
+      if (isSplashNarrationSpeaking() && heroWaitAttempts < 20) {
         window.setTimeout(queueHeroWhenReady, 220);
         return;
       }

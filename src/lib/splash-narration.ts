@@ -14,6 +14,18 @@ let splashNarrationStarted = false;
 let splashNarrationCompleted = false;
 let currentUtterance: SpeechSynthesisUtterance | null = null;
 let audioUnlocked = false;
+let safetyTimer: ReturnType<typeof setTimeout> | null = null;
+
+// Safety: force-complete after 12s max so Arianna is never permanently blocked
+function armSafetyTimeout() {
+  if (safetyTimer) clearTimeout(safetyTimer);
+  safetyTimer = setTimeout(() => {
+    if (!splashNarrationCompleted) {
+      splashNarrationCompleted = true;
+      currentUtterance = null;
+    }
+  }, 12000);
+}
 
 // Best Italian voice finder
 let cachedVoice: SpeechSynthesisVoice | null = null;
@@ -58,10 +70,12 @@ function doSpeak() {
   };
 
   currentUtterance = utterance;
+  armSafetyTimeout();
   try {
     window.speechSynthesis.speak(utterance);
   } catch {
     currentUtterance = null;
+    splashNarrationCompleted = true;
   }
 }
 
