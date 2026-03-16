@@ -457,7 +457,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
         ctx.fillRect(0, scanY - 50, w, 100);
       }
 
-      // ═══ ORBIT PHASE — dots form a large rotating ring ═══
+      // ═══ ORBIT PHASE — Futuristic DNA Superintelligence Ring ═══
       if (orbitP > 0) {
         const orbitRadius = IS_MOBILE 
           ? Math.max(w, h) * 0.38 * (1 - collapseP) + coreRadius * 0.5 * collapseP
@@ -465,103 +465,239 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
         
         const orbitAlpha = (1 - dissolveP);
         const rotSpeed = elapsed * 0.8;
+        const cx = w / 2, cy = h / 2;
 
-        // Outer orbit glow trail
-        if (collapseP < 1) {
-          ctx.beginPath();
-          ctx.arc(w / 2, h / 2, orbitRadius, 0, Math.PI * 2);
-          ctx.strokeStyle = hsl(COLORS.violet, 0.08 * orbitAlpha);
-          ctx.lineWidth = IS_MOBILE ? 20 : 30;
-          ctx.stroke();
+        // ── Triple helix ring (DNA around the orbit) ──
+        const helixStrands = 3;
+        const helixSegments = IS_MOBILE ? 80 : 120;
+        const helixAmp = IS_MOBILE ? 12 : 18; // wave amplitude perpendicular to ring
+        const helixFreq = 8; // number of waves around the ring
+
+        for (let s = 0; s < helixStrands; s++) {
+          const strandColor = colorPalette[s];
+          const phaseOffset = (s / helixStrands) * Math.PI * 2;
           
           ctx.beginPath();
-          ctx.arc(w / 2, h / 2, orbitRadius, 0, Math.PI * 2);
-          ctx.strokeStyle = hsl(COLORS.gold, 0.04 * orbitAlpha);
-          ctx.lineWidth = IS_MOBILE ? 40 : 60;
+          for (let i = 0; i <= helixSegments; i++) {
+            const t = i / helixSegments;
+            const baseAngle = t * Math.PI * 2 + rotSpeed * (0.6 + s * 0.15);
+            const waveOffset = Math.sin(t * Math.PI * 2 * helixFreq + phaseOffset + elapsed * 3) * helixAmp;
+            const r = orbitRadius + waveOffset;
+            const px = cx + Math.cos(baseAngle) * r;
+            const py = cy + Math.sin(baseAngle) * r;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.strokeStyle = hsl(strandColor, 0.5 * orbitAlpha * orbitP);
+          ctx.lineWidth = IS_MOBILE ? 1.8 : 2.2;
+          ctx.stroke();
+
+          // Glow layer
+          ctx.beginPath();
+          for (let i = 0; i <= helixSegments; i++) {
+            const t = i / helixSegments;
+            const baseAngle = t * Math.PI * 2 + rotSpeed * (0.6 + s * 0.15);
+            const waveOffset = Math.sin(t * Math.PI * 2 * helixFreq + phaseOffset + elapsed * 3) * helixAmp;
+            const r = orbitRadius + waveOffset;
+            const px = cx + Math.cos(baseAngle) * r;
+            const py = cy + Math.sin(baseAngle) * r;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.strokeStyle = hsl(strandColor, 0.12 * orbitAlpha * orbitP);
+          ctx.lineWidth = IS_MOBILE ? 8 : 12;
           ctx.stroke();
         }
 
-        // Orbit ring (sharp)
-        ctx.beginPath();
-        ctx.arc(w / 2, h / 2, orbitRadius, 0, Math.PI * 2);
-        ctx.strokeStyle = hsl(COLORS.violet, 0.4 * orbitAlpha * orbitP);
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        // ── Cross-links between strands (DNA rungs) ──
+        const rungCount = IS_MOBILE ? 16 : 24;
+        for (let i = 0; i < rungCount; i++) {
+          const t = i / rungCount;
+          const baseAngle = t * Math.PI * 2 + rotSpeed * 0.6;
+          
+          const wave1 = Math.sin(t * Math.PI * 2 * helixFreq + elapsed * 3) * helixAmp;
+          const wave2 = Math.sin(t * Math.PI * 2 * helixFreq + (2 / 3) * Math.PI * 2 + elapsed * 3) * helixAmp;
+          
+          const r1 = orbitRadius + wave1;
+          const r2 = orbitRadius + wave2;
+          
+          const px1 = cx + Math.cos(baseAngle) * r1;
+          const py1 = cy + Math.sin(baseAngle) * r1;
+          const px2 = cx + Math.cos(baseAngle) * r2;
+          const py2 = cy + Math.sin(baseAngle) * r2;
+          
+          const rungAlpha = 0.2 * orbitAlpha * orbitP * (0.5 + 0.5 * Math.sin(t * Math.PI * 4 + elapsed));
+          ctx.beginPath();
+          ctx.moveTo(px1, py1);
+          ctx.lineTo(px2, py2);
+          ctx.strokeStyle = hsl(COLORS.gold, rungAlpha);
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
 
-        // Second inner ring
-        ctx.beginPath();
-        ctx.arc(w / 2, h / 2, orbitRadius * 0.85, 0, Math.PI * 2);
-        ctx.strokeStyle = hsl(COLORS.gold, 0.2 * orbitAlpha * orbitP);
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        // Orbiting dots
+        // ── Pulsing data nodes on the ring ──
         for (const dot of orbitDots) {
           const a = dot.angle + rotSpeed * dot.speed;
-          const dx = Math.cos(a) * orbitRadius;
-          const dy = Math.sin(a) * orbitRadius;
-          const px = w / 2 + dx;
-          const py = h / 2 + dy;
+          const strandIdx = Math.floor(dot.angle / (Math.PI * 2 / 3)) % 3;
+          const phaseOff = (strandIdx / 3) * Math.PI * 2;
+          const waveOff = Math.sin(dot.angle * helixFreq + phaseOff + elapsed * 3) * helixAmp;
+          const r = orbitRadius + waveOff;
+          const px = cx + Math.cos(a) * r;
+          const py = cy + Math.sin(a) * r;
           const c = colorPalette[dot.colorIdx];
+          const pulse = 0.7 + 0.3 * Math.sin(elapsed * 4 + dot.angle * 3);
 
-          // Glow
-          const glowR = dot.size * 4;
+          // Node glow
+          const glowR = dot.size * 5 * pulse;
           const glowGrad = ctx.createRadialGradient(px, py, 0, px, py, glowR);
-          glowGrad.addColorStop(0, hsl(c, 0.4 * orbitAlpha));
+          glowGrad.addColorStop(0, hsl(c, 0.5 * orbitAlpha * pulse));
+          glowGrad.addColorStop(0.4, hsl(c, 0.15 * orbitAlpha));
           glowGrad.addColorStop(1, hsl(c, 0));
           ctx.beginPath();
           ctx.arc(px, py, glowR, 0, Math.PI * 2);
           ctx.fillStyle = glowGrad;
           ctx.fill();
 
-          // Dot
+          // Core dot
           ctx.beginPath();
-          ctx.arc(px, py, dot.size * orbitP, 0, Math.PI * 2);
-          ctx.fillStyle = hsl(c, 0.9 * orbitAlpha);
+          ctx.arc(px, py, dot.size * orbitP * pulse, 0, Math.PI * 2);
+          ctx.fillStyle = hsl(c, 0.95 * orbitAlpha);
           ctx.fill();
 
-          // White core
+          // White highlight
           ctx.beginPath();
-          ctx.arc(px, py, dot.size * 0.3 * orbitP, 0, Math.PI * 2);
-          ctx.fillStyle = `hsla(0,0%,100%,${0.7 * orbitAlpha})`;
+          ctx.arc(px - dot.size * 0.2, py - dot.size * 0.2, dot.size * 0.35 * orbitP, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(0,0%,100%,${0.8 * orbitAlpha * pulse})`;
+          ctx.fill();
+        }
+
+        // ── Rotating scan arcs (radar-like) ──
+        const arcCount = 3;
+        for (let i = 0; i < arcCount; i++) {
+          const arcAngle = elapsed * (1.2 + i * 0.3) + (i * Math.PI * 2) / arcCount;
+          const arcLen = Math.PI * 0.3;
+          const arcR = orbitRadius * (0.92 + i * 0.05);
+          const arcColor = colorPalette[i];
+          
+          const arcGrad = ctx.createConicGradient(arcAngle - arcLen, cx, cy);
+          arcGrad.addColorStop(0, hsl(arcColor, 0));
+          arcGrad.addColorStop(0.5, hsl(arcColor, 0.25 * orbitAlpha));
+          arcGrad.addColorStop(1, hsl(arcColor, 0));
+          
+          ctx.beginPath();
+          ctx.arc(cx, cy, arcR, arcAngle - arcLen, arcAngle + arcLen);
+          ctx.strokeStyle = arcGrad as unknown as string;
+          ctx.lineWidth = IS_MOBILE ? 3 : 4;
+          ctx.stroke();
+        }
+
+        // ── Inner neural network pattern ──
+        if (orbitP > 0.5) {
+          const neuralAlpha = (orbitP - 0.5) * 2 * 0.15 * orbitAlpha;
+          const neuralNodes = IS_MOBILE ? 8 : 12;
+          const neuralR = orbitRadius * 0.55;
+          const nPositions: { x: number; y: number }[] = [];
+          
+          for (let i = 0; i < neuralNodes; i++) {
+            const na = (i / neuralNodes) * Math.PI * 2 + elapsed * 0.3;
+            const nr = neuralR * (0.4 + 0.6 * Math.abs(Math.sin(na * 2 + elapsed)));
+            const nx = cx + Math.cos(na) * nr;
+            const ny = cy + Math.sin(na) * nr;
+            nPositions.push({ x: nx, y: ny });
+            
+            // Neural node
+            ctx.beginPath();
+            ctx.arc(nx, ny, 2, 0, Math.PI * 2);
+            ctx.fillStyle = hsl(COLORS.violet, neuralAlpha * 3);
+            ctx.fill();
+          }
+          
+          // Neural connections
+          for (let i = 0; i < nPositions.length; i++) {
+            for (let j = i + 1; j < nPositions.length; j++) {
+              if ((i + j) % 3 === 0) {
+                const dx = nPositions[i].x - nPositions[j].x;
+                const dy = nPositions[i].y - nPositions[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < neuralR * 1.2) {
+                  const connAlpha = neuralAlpha * (1 - dist / (neuralR * 1.2));
+                  ctx.beginPath();
+                  ctx.moveTo(nPositions[i].x, nPositions[i].y);
+                  ctx.lineTo(nPositions[j].x, nPositions[j].y);
+                  ctx.strokeStyle = hsl(COLORS.violet, connAlpha);
+                  ctx.lineWidth = 0.5;
+                  ctx.stroke();
+                }
+              }
+            }
+          }
+          
+          // Center brain core
+          const brainPulse = 1 + Math.sin(elapsed * 3) * 0.15;
+          const brainR = IS_MOBILE ? 16 : 22;
+          const brainGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, brainR * brainPulse * 2);
+          brainGrad.addColorStop(0, `hsla(0,0%,100%,${0.3 * neuralAlpha * 6})`);
+          brainGrad.addColorStop(0.2, hsl(COLORS.violet, neuralAlpha * 5));
+          brainGrad.addColorStop(0.5, hsl(COLORS.gold, neuralAlpha * 3));
+          brainGrad.addColorStop(1, hsl(COLORS.violet, 0));
+          ctx.beginPath();
+          ctx.arc(cx, cy, brainR * brainPulse * 2, 0, Math.PI * 2);
+          ctx.fillStyle = brainGrad;
           ctx.fill();
         }
 
         // ═══ COLLAPSE — converging energy beams ═══
         if (collapseP > 0) {
-          const beamCount = 6;
+          const beamCount = 8;
           for (let i = 0; i < beamCount; i++) {
             const ba = (i / beamCount) * Math.PI * 2 + elapsed * 2;
             const outerR = orbitRadius * 1.2;
-            const innerR = coreRadius * 0.3 * (1 - collapseP) + 5;
-            const ox = w / 2 + Math.cos(ba) * outerR;
-            const oy = h / 2 + Math.sin(ba) * outerR;
+            const ox = cx + Math.cos(ba) * outerR;
+            const oy = cy + Math.sin(ba) * outerR;
             
-            const beamGrad = ctx.createLinearGradient(ox, oy, w / 2, h / 2);
+            const beamGrad = ctx.createLinearGradient(ox, oy, cx, cy);
             const c = colorPalette[i % 3];
             beamGrad.addColorStop(0, hsl(c, 0));
-            beamGrad.addColorStop(0.3, hsl(c, 0.15 * collapseP * orbitAlpha));
-            beamGrad.addColorStop(1, hsl(c, 0.4 * collapseP * orbitAlpha));
+            beamGrad.addColorStop(0.2, hsl(c, 0.1 * collapseP * orbitAlpha));
+            beamGrad.addColorStop(0.7, hsl(c, 0.35 * collapseP * orbitAlpha));
+            beamGrad.addColorStop(1, `hsla(0,0%,100%,${0.4 * collapseP * orbitAlpha})`);
             
             ctx.beginPath();
             ctx.moveTo(ox, oy);
-            ctx.lineTo(w / 2, h / 2);
+            ctx.lineTo(cx, cy);
             ctx.strokeStyle = beamGrad as unknown as string;
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1.5 + collapseP * 1.5;
             ctx.stroke();
           }
 
-          // Central bright flash during collapse
-          const flashR = coreRadius * 0.6 * (1 + (1 - collapseP) * 0.5);
-          const flashGrad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, flashR);
-          flashGrad.addColorStop(0, `hsla(0,0%,100%,${0.3 * collapseP * orbitAlpha})`);
-          flashGrad.addColorStop(0.3, hsl(COLORS.violet, 0.3 * collapseP * orbitAlpha));
-          flashGrad.addColorStop(0.6, hsl(COLORS.gold, 0.15 * collapseP * orbitAlpha));
-          flashGrad.addColorStop(1, hsl(COLORS.green, 0));
+          // Central supernova flash
+          const flashR = coreRadius * (0.8 + collapseP * 0.6) * (1 + Math.sin(elapsed * 6) * 0.08);
+          const flashGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, flashR);
+          flashGrad.addColorStop(0, `hsla(0,0%,100%,${0.5 * collapseP * orbitAlpha})`);
+          flashGrad.addColorStop(0.15, hsl(COLORS.violet, 0.4 * collapseP * orbitAlpha));
+          flashGrad.addColorStop(0.35, hsl(COLORS.gold, 0.25 * collapseP * orbitAlpha));
+          flashGrad.addColorStop(0.6, hsl(COLORS.green, 0.1 * collapseP * orbitAlpha));
+          flashGrad.addColorStop(1, hsl(COLORS.violet, 0));
           ctx.beginPath();
-          ctx.arc(w / 2, h / 2, flashR, 0, Math.PI * 2);
+          ctx.arc(cx, cy, flashR, 0, Math.PI * 2);
           ctx.fillStyle = flashGrad;
           ctx.fill();
+
+          // Hexagonal frame around the core
+          const hexR = coreRadius * 0.45 * (1 - collapseP * 0.3);
+          const hexAlpha = 0.4 * collapseP * orbitAlpha;
+          ctx.beginPath();
+          for (let i = 0; i < 6; i++) {
+            const ha = (i / 6) * Math.PI * 2 + elapsed * 0.5;
+            const hx = cx + Math.cos(ha) * hexR;
+            const hy = cy + Math.sin(ha) * hexR;
+            if (i === 0) ctx.moveTo(hx, hy);
+            else ctx.lineTo(hx, hy);
+          }
+          ctx.closePath();
+          ctx.strokeStyle = hsl(COLORS.gold, hexAlpha);
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
         }
       }
 
