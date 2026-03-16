@@ -49,7 +49,7 @@ export default function BackButton({
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.3, duration: 0.3 }}
-        className={`fixed top-[72px] left-3 z-[60] w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-300 shadow-lg ${themeStyles[theme]} ${className}`}
+        className={`fixed top-3 left-3 z-[60] w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-300 shadow-lg ${themeStyles[theme]} ${className}`}
         title={label}
       >
         <ArrowLeft className="w-4 h-4" />
