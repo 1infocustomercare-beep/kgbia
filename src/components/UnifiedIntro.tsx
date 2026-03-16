@@ -1062,6 +1062,8 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                   : "0 0 8px hsla(38,60%,60%,0.4)",
                 top: "50%",
                 left: "50%",
+                marginLeft: isViolet ? -2 : -1.5,
+                marginTop: isViolet ? -2 : -1.5,
               }}
               animate={{
                 x: Array.from({ length: 13 }, (_, k) =>
