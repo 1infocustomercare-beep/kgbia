@@ -772,14 +772,21 @@ const EmpireVoiceAgent: React.FC = () => {
     if (autoBootedRef.current) return;
     autoBootedRef.current = true;
 
-    const timer = setTimeout(() => {
+    const bootAttempt = () => {
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
       }
-    }, 120);
+    };
 
-    return () => clearTimeout(timer);
+    const timers = [
+      window.setTimeout(bootAttempt, 120),
+      window.setTimeout(bootAttempt, 1100),
+      window.setTimeout(bootAttempt, 2500),
+      window.setTimeout(bootAttempt, 4200),
+    ];
+
+    return () => timers.forEach((t) => window.clearTimeout(t));
   }, [startIntroNarration, enqueueSectionNarration]);
 
   // ── Recovery: autoplay restrictions on mobile browsers (retry instantly inside user gesture) ──
