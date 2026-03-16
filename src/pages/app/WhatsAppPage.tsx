@@ -15,8 +15,11 @@ import { Label } from "@/components/ui/label";
 import {
   MessageCircle, Send, Bot, Settings, Bell, Archive,
   Phone, User, Clock, CheckCheck, Check, X, Sparkles,
-  AlertCircle, Shield,
+  AlertCircle, Shield, Crown, FileText, Plus, Pencil, Trash2,
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
