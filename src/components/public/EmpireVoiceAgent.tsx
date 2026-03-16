@@ -673,7 +673,13 @@ const EmpireVoiceAgent: React.FC = () => {
       abortRef.current = false;
 
       // No aggressive timeout race — let speakText finish naturally
-      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId);
+      const preferImmediate = sectionId === "hero" && preferImmediateNarrationRef.current;
+      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId, {
+        preferImmediate,
+      });
+      if (preferImmediate) {
+        preferImmediateNarrationRef.current = false;
+      }
 
       if (played && !abortRef.current) {
         narrationAttemptsRef.current[sectionId] = 0;
