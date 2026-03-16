@@ -32,8 +32,8 @@ export default function AppLayout() {
   return (
     <SidebarProvider>
       <div className="min-h-[100dvh] flex w-full bg-background relative overflow-hidden">
-        {/* Subtle cyber grid */}
-        <div className="fixed inset-0 cyber-grid pointer-events-none opacity-30 z-0" />
+        {/* Empire DNA Neural Background */}
+        <EmpireDNABackground />
 
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0 relative z-10">
