@@ -747,6 +747,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
       onAnimationComplete={() => {
         if (phase === "exit") safeComplete();
       }}
+      onPointerDown={emitGestureUnlock}
       onClick={handleTap}
     >
       {/* Canvas */}
