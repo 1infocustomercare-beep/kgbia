@@ -97,9 +97,14 @@ const StaffPanel = () => {
             <p className="text-xs text-muted-foreground">AI-Mary · Monitoraggio Vault</p>
           </div>
         </div>
-        <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
-          <LogOut className="w-5 h-5 text-muted-foreground" />
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Indietro">
+            <ArrowLeft className="w-5 h-5 text-muted-foreground" />
+          </button>
+          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
+            <LogOut className="w-5 h-5 text-muted-foreground" />
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-1.5 px-4 py-3 overflow-x-auto scrollbar-hide">

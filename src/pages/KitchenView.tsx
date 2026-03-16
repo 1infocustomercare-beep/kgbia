@@ -267,7 +267,10 @@ const KitchenView = () => {
             <p className="text-xs text-primary">{session.label} · {orders.length} ordini attivi</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" title="Indietro">
+            <ArrowLeft className="w-5 h-5 text-muted-foreground" />
+          </button>
           <button onClick={() => { setSoundOn(!soundOn); soundOnRef.current = !soundOn; }} className="p-2 rounded-full hover:bg-secondary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
             {soundOn ? <Volume2 className="w-5 h-5 text-primary" /> : <VolumeX className="w-5 h-5 text-muted-foreground" />}
           </button>
