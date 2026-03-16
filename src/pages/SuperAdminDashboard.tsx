@@ -562,9 +562,14 @@ const SuperAdminDashboard = () => {
               </div>
             </div>
           </div>
-          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
-            <LogOut className="w-4 h-4 text-muted-foreground" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Home">
+              <ArrowLeft className="w-4 h-4 text-muted-foreground" />
+            </button>
+            <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Esci">
+              <LogOut className="w-4 h-4 text-muted-foreground" />
+            </button>
+          </div>
         </div>
       </div>
 
