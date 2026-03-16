@@ -42,8 +42,8 @@ const COLORS = {
 const hsl = (c: typeof COLORS.gold, a: number) => `hsla(${c.h},${c.s}%,${c.l}%,${a})`;
 
 const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
-  const [phase, setPhase] = useState<Phase>("scatter");
-  const phaseRef = useRef<Phase>("scatter");
+  const [phase, setPhase] = useState<Phase>("brand");
+  const phaseRef = useRef<Phase>("brand");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const completedRef = useRef(false);
   const tappedRef = useRef(false);
