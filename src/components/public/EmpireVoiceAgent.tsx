@@ -115,6 +115,7 @@ function isBrowserOnlyTTS(): boolean {
 function speakWithBrowserTTS(
   text: string,
   abortRef: React.MutableRefObject<boolean>,
+  options?: { preferImmediate?: boolean },
 ): Promise<boolean> {
   return new Promise((resolve) => {
     if (!window.speechSynthesis || abortRef.current) {
@@ -159,23 +160,33 @@ function speakWithBrowserTTS(
       utterance.onend = () => finish(true);
       utterance.onerror = () => finish(false);
 
+      const runSpeak = () => {
+        if (abortRef.current || settled) {
+          finish(false);
+          return;
+        }
+        try {
+          synth.speak(utterance);
+        } catch {
+          finish(false);
+        }
+      };
+
       try {
         if (synth.speaking || synth.pending) {
           synth.cancel();
         }
 
-        // Let engine reset after cancel (important on iOS/Safari)
-        window.setTimeout(() => {
-          if (abortRef.current || settled) {
-            finish(false);
-            return;
-          }
-          try {
-            synth.speak(utterance);
-          } catch {
-            finish(false);
-          }
-        }, 80);
+        // If we are inside a direct user gesture, speak immediately to satisfy iOS autoplay policies.
+        const gestureActive =
+          (navigator as Navigator & { userActivation?: { isActive?: boolean } }).userActivation?.isActive === true;
+
+        if (options?.preferImmediate || gestureActive) {
+          runSpeak();
+        } else {
+          // Let engine reset after cancel (important on iOS/Safari when not in gesture context)
+          window.setTimeout(runSpeak, 80);
+        }
       } catch {
         finish(false);
       }
