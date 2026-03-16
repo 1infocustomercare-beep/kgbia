@@ -435,6 +435,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const queueProcessingRef = useRef(false);
   const narrationAttemptsRef = useRef<Record<string, number>>({});
   const introStartedRef = useRef(false);
+  const autoBootedRef = useRef(false);
   const useBrowserFallbackRef = useRef(isBrowserOnlyTTS());
   const isTouchDeviceRef = useRef(false);
   const userInteractedRef = useRef(false);
