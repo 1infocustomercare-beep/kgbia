@@ -701,9 +701,14 @@ const EmpireVoiceAgent: React.FC = () => {
       } else if (!abortRef.current) {
         const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
         console.warn(`[Arianna] Narration failed for "${sectionId}", attempt ${attempts}`);
-        if (attempts < 20) {
-          await new Promise(r => setTimeout(r, 1200));
+        if (attempts < 3) {
+          await new Promise(r => setTimeout(r, 2000));
           sectionQueueRef.current.push(sectionId);
+        } else {
+          // After 3 failures, mark as narrated to stop retrying and show text only
+          console.log(`[Arianna] Giving up narration for "${sectionId}" after ${attempts} attempts — text shown in chat`);
+          narratedRef.current.add(sectionId);
+          setNarratedSections(new Set(narratedRef.current));
         }
       }
 
