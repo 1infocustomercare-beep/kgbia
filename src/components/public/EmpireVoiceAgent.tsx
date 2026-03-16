@@ -522,24 +522,23 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, []);
 
-  // Check ElevenLabs availability only when panel is opened (avoid startup network noise on mobile)
+  // Check ElevenLabs availability early (on mount) so the call button works immediately
   useEffect(() => {
-    if (!isOpen || elevenlabsAvailable !== null) return;
+    if (elevenlabsAvailable !== null) return;
 
     let mounted = true;
-
-    const checkElevenlabs = async () => {
+    // Delay check slightly to avoid blocking initial render
+    const timer = setTimeout(async () => {
       const token = await getElevenlabsTokenSilently();
       if (!mounted) return;
       setElevenlabsAvailable(!!token);
-    };
-
-    void checkElevenlabs();
+    }, 2000);
 
     return () => {
       mounted = false;
+      clearTimeout(timer);
     };
-  }, [isOpen, elevenlabsAvailable, getElevenlabsTokenSilently]);
+  }, [elevenlabsAvailable, getElevenlabsTokenSilently]);
 
   // Start ElevenLabs conversation
   const startElevenlabsConversation = useCallback(async () => {
