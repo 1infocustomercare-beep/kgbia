@@ -332,13 +332,11 @@ async function speakText(
 
       audio.play().catch(() => {
         useBrowserFallbackRef.current = true;
-        setBrowserOnlyTTS(true);
         speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
       });
     });
   } catch {
     useBrowserFallbackRef.current = true;
-    setBrowserOnlyTTS(true);
     return speakWithBrowserTTS(normalizedText, abortRef, options);
   }
 }
