@@ -435,6 +435,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const queueProcessingRef = useRef(false);
   const narrationAttemptsRef = useRef<Record<string, number>>({});
   const introStartedRef = useRef(false);
+  const autoBootedRef = useRef(false);
   const useBrowserFallbackRef = useRef(isBrowserOnlyTTS());
   const isTouchDeviceRef = useRef(false);
   const userInteractedRef = useRef(false);
@@ -740,7 +741,7 @@ const EmpireVoiceAgent: React.FC = () => {
     enqueueSectionNarration(currentSection);
   }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
-  // ── Visibility — show button after 1.5s, but do NOT auto-start narration ──
+  // ── Visibility ──
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
@@ -748,9 +749,20 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // No auto-start — narration only begins when user opens the panel
+  // ── Auto-open + auto-voice intro (hands-free) ──
+  useEffect(() => {
+    if (!isVisible || autoBootedRef.current) return;
 
-  // No aggressive auto-unlock listeners — voice starts only when user opens the agent panel
+    autoBootedRef.current = true;
+    setIsOpen(true);
+
+    setTimeout(() => {
+      startIntroNarration();
+      if (!narratedRef.current.has("hero")) {
+        enqueueSectionNarration("hero", true);
+      }
+    }, 120);
+  }, [isVisible, startIntroNarration, enqueueSectionNarration]);
 
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
@@ -905,6 +917,23 @@ const EmpireVoiceAgent: React.FC = () => {
       return next;
     });
   }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status, stopAll]);
+
+  const handleCallAction = useCallback(() => {
+    if (voiceMode === "elevenlabs" && conversation.status === "connected") {
+      void stopElevenlabsConversation();
+      return;
+    }
+
+    if (elevenlabsAvailable === false) {
+      startIntroNarration();
+      if (!narratedRef.current.has("hero")) {
+        enqueueSectionNarration("hero", true);
+      }
+      return;
+    }
+
+    void startElevenlabsConversation();
+  }, [voiceMode, conversation.status, stopElevenlabsConversation, elevenlabsAvailable, startIntroNarration, enqueueSectionNarration, startElevenlabsConversation]);
 
   // ── Render ──
   return (
@@ -1173,13 +1202,13 @@ const EmpireVoiceAgent: React.FC = () => {
                         </button>
                       )}
 
-                      {/* ElevenLabs ConvAI button (primary) */}
-                      {!isSpeaking && elevenlabsAvailable && (
+                      {/* Call button (always visible) */}
+                      {!isSpeaking && (
                         <button
-                          onClick={startElevenlabsConversation}
+                          onClick={handleCallAction}
                           disabled={elevenlabsConnecting || isLoading}
                           className="w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30 disabled:opacity-30"
-                          title="Conversazione vocale IA"
+                          title="Chiama Arianna"
                         >
                           {elevenlabsConnecting ? (
                             <motion.div className="w-5 h-5 border-2 border-white/60 border-t-white rounded-full" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
@@ -1189,21 +1218,15 @@ const EmpireVoiceAgent: React.FC = () => {
                         </button>
                       )}
 
-                      {/* Legacy Mic button (fallback or secondary) */}
+                      {/* Legacy Mic button (secondary) */}
                       {!isSpeaking && (
                         <button
                           onClick={isListening ? stopAll : startListening}
                           disabled={isLoading || !SpeechRecognition}
-                          className={`${elevenlabsAvailable ? "w-10 h-10" : "w-14 h-14"} rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation ${
-                            isListening
-                              ? "bg-destructive/20 border-2 border-destructive text-destructive"
-                              : elevenlabsAvailable
-                                ? "bg-secondary text-foreground/60 hover:bg-secondary/80"
-                                : "bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30"
-                          } disabled:opacity-30`}
-                          title={elevenlabsAvailable ? "Domanda singola" : "Parla"}
+                          className="w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation bg-secondary text-foreground/60 hover:bg-secondary/80 disabled:opacity-30"
+                          title="Parla"
                         >
-                          {isListening ? <MicOff className="w-4 h-4" /> : <Mic className={elevenlabsAvailable ? "w-4 h-4" : "w-5 h-5"} />}
+                          {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                         </button>
                       )}
 
