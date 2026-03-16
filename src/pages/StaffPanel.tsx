@@ -3,7 +3,7 @@ import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
 import {
   CheckCircle2, XCircle, AlertCircle,
-  LogOut, Cpu, Wifi, Bot, Send, ShieldCheck
+  LogOut, Cpu, Wifi, Bot, Send, ShieldCheck, ArrowLeft
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";

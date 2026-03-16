@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import BackButton from "@/components/BackButton";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChefHat, LogOut, Volume2, VolumeX, Printer } from "lucide-react";
+import { ChefHat, LogOut, Volume2, VolumeX, Printer, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
