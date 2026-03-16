@@ -980,22 +980,6 @@ const EmpireVoiceAgent: React.FC = () => {
                 <span className="absolute top-1 right-1 w-3 h-3 rounded-full bg-green-400 border-2 border-background" />
               )}
             </div>
-            {/* Label */}
-            {!isOpen && (
-              <motion.div
-                className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-full text-[0.55rem] font-bold tracking-wider uppercase"
-                style={{
-                  background: "hsla(260, 20%, 8%, 0.9)",
-                  border: "1px solid hsla(265, 85%, 65%, 0.15)",
-                  color: "hsla(265, 85%, 75%, 0.8)",
-                }}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                Chiama Arianna
-              </motion.div>
-            )}
           </motion.button>
         )}
       </AnimatePresence>
