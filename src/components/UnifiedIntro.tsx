@@ -748,14 +748,12 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
       />
 
       {/* ═══ BRAND PHASE ═══ */}
+      {phase === "brand" && (
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         style={{ willChange: "opacity, transform", WebkitTransform: "translate3d(0,0,0)" }}
-        animate={{
-          opacity: phase === "brand" ? 1 : 0,
-          scale: phase === "brand" ? 1 : 0.85,
-          y: phase === "brand" ? 0 : -30,
-        }}
+        initial={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.85, y: -30 }}
         transition={{ duration: 0.8, ease: smoothEase }}
       >
         <div className="flex flex-col items-center gap-5">
@@ -818,6 +816,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           </motion.div>
         </div>
       </motion.div>
+      )}
 
       {/* Ambient glow */}
       <div
