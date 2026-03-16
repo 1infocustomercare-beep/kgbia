@@ -1757,6 +1757,164 @@ const SuperAdminDashboard = () => {
             })()}
           </motion.div>
         )}
+
+        {/* ===== WHATSAPP ===== */}
+        {!loading && activeTab === "whatsapp" && (
+          <motion.div className="space-y-4 mt-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {/* Header */}
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-2 rounded-2xl bg-[#25D366]/15 flex items-center justify-center">
+                <MessageCircle className="w-8 h-8 text-[#25D366]" />
+              </div>
+              <h2 className="text-base font-display font-bold text-foreground">WhatsApp AI Orchestrator</h2>
+              <p className="text-[9px] text-muted-foreground">Agente IA multi-tenant · Isolamento privacy assoluto</p>
+            </div>
+
+            {/* Agent Card */}
+            <div className="rounded-xl border border-[#25D366]/20 bg-[#25D366]/[0.03] p-4 space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-[#25D366]/15 flex items-center justify-center">
+                  <Bot className="w-6 h-6 text-[#25D366]" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-bold text-foreground">Empire WhatsApp Agent</h3>
+                  <p className="text-[0.55rem] text-muted-foreground">Chat IA · Template · Broadcast · Sentiment</p>
+                </div>
+                <span className="text-[0.5rem] px-2 py-1 rounded-full bg-[#25D366]/15 text-[#25D366] font-bold">v2.0</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-lg bg-background/50 p-2 text-center">
+                  <p className="text-lg font-bold text-foreground">25+</p>
+                  <p className="text-[0.5rem] text-muted-foreground">Settori supportati</p>
+                </div>
+                <div className="rounded-lg bg-background/50 p-2 text-center">
+                  <p className="text-lg font-bold text-foreground">8</p>
+                  <p className="text-[0.5rem] text-muted-foreground">Prompt settoriali</p>
+                </div>
+              </div>
+              {/* Capabilities */}
+              <div className="flex flex-wrap gap-1">
+                {["Chat IA Auto-Reply", "Template Notifiche", "Broadcast Promo", "Sentiment Analysis", "Multi-Tenant"].map(cap => (
+                  <span key={cap} className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary/70 font-medium">{cap}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Privacy & Isolation */}
+            <div className="rounded-xl border border-primary/15 bg-primary/[0.02] p-3 space-y-2">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-primary" />
+                <h3 className="text-xs font-bold text-foreground">Isolamento Multi-Tenant</h3>
+              </div>
+              <div className="space-y-1.5 text-[0.55rem] text-muted-foreground leading-relaxed">
+                <p>✅ Ogni account ha la <strong className="text-foreground">propria configurazione WhatsApp</strong> separata (numero, token, webhook)</p>
+                <p>✅ Le conversazioni sono isolate per <strong className="text-foreground">tenant_id</strong> — Ristorante X non vede mai i dati di Ristorante Y</p>
+                <p>✅ I prompt IA sono personalizzati per <strong className="text-foreground">settore</strong> (food, beauty, NCC, hotel...)</p>
+                <p>✅ RLS policies su tutte le tabelle WhatsApp garantiscono isolamento assoluto</p>
+              </div>
+            </div>
+
+            {/* Setup Guide */}
+            <div className="rounded-xl border border-border p-3 space-y-3">
+              <h3 className="text-xs font-bold text-foreground flex items-center gap-2">
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                Come attivare WhatsApp per il tuo account
+              </h3>
+              <div className="space-y-2">
+                {[
+                  { step: "1", title: "Crea App su Meta Business", desc: "Vai su developers.facebook.com → Crea App → Business → Aggiungi prodotto WhatsApp", url: "https://developers.facebook.com/apps/" },
+                  { step: "2", title: "Ottieni credenziali API", desc: "WhatsApp → API Setup → Copia Phone Number ID, Token permanente e Business Account ID" },
+                  { step: "3", title: "Configura Webhook", desc: "Imposta webhook URL: la tua edge function whatsapp-webhook riceve i messaggi in entrata" },
+                  { step: "4", title: "Inserisci nel pannello", desc: "Vai su /app/whatsapp nel tuo account → Tab Impostazioni → Inserisci Phone Number ID, Token e Business ID" },
+                  { step: "5", title: "Testa!", desc: "Invia un messaggio al numero configurato — l'agente IA risponderà automaticamente con il prompt del tuo settore" },
+                ].map(item => (
+                  <div key={item.step} className="flex gap-2">
+                    <div className="w-5 h-5 rounded-full bg-primary/15 flex items-center justify-center shrink-0 mt-0.5">
+                      <span className="text-[0.55rem] font-bold text-primary">{item.step}</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-[0.6rem] font-bold text-foreground">{item.title}</p>
+                      <p className="text-[0.5rem] text-muted-foreground leading-relaxed">{item.desc}</p>
+                      {item.url && (
+                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-[0.5rem] text-primary/70 hover:text-primary flex items-center gap-0.5 mt-0.5">
+                          <ExternalLink className="w-2.5 h-2.5" /> Apri Meta Developers
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="grid grid-cols-2 gap-2">
+              <motion.button
+                onClick={() => navigate("/app/whatsapp")}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-[#25D366]/20 bg-[#25D366]/[0.04] hover:bg-[#25D366]/[0.08] transition-colors"
+                whileTap={{ scale: 0.97 }}
+              >
+                <MessageCircle className="w-5 h-5 text-[#25D366]" />
+                <span className="text-[0.6rem] font-bold text-foreground">Apri Chat WA</span>
+                <span className="text-[0.45rem] text-muted-foreground">Vai alla dashboard</span>
+              </motion.button>
+              <motion.button
+                onClick={() => { setActiveTab("integrations"); setExpandedSection("client" as any); }}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card/50 hover:bg-muted/20 transition-colors"
+                whileTap={{ scale: 0.97 }}
+              >
+                <Wifi className="w-5 h-5 text-muted-foreground" />
+                <span className="text-[0.6rem] font-bold text-foreground">Connettori</span>
+                <span className="text-[0.45rem] text-muted-foreground">Config per tenant</span>
+              </motion.button>
+            </div>
+
+            {/* Architecture */}
+            <div className="rounded-xl border border-border p-3 space-y-2">
+              <h3 className="text-xs font-bold text-foreground">🏗️ Architettura</h3>
+              <div className="grid grid-cols-1 gap-1">
+                {[
+                  { table: "whatsapp_config", desc: "Config per tenant (token, phone_id, webhook)" },
+                  { table: "whatsapp_conversations", desc: "Thread chat isolati per tenant_id" },
+                  { table: "whatsapp_messages", desc: "Messaggi in/out con stato delivery" },
+                  { table: "whatsapp_notifications", desc: "Template + broadcast per tenant" },
+                  { table: "sector_system_prompts", desc: "Prompt IA personalizzati per settore" },
+                ].map(t => (
+                  <div key={t.table} className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-muted/10">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#25D366] shrink-0" />
+                    <span className="text-[0.55rem] font-mono text-foreground/70">{t.table}</span>
+                    <span className="text-[0.45rem] text-muted-foreground flex-1 truncate">— {t.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Edge Functions */}
+            <div className="rounded-xl border border-border p-3 space-y-2">
+              <h3 className="text-xs font-bold text-foreground">⚡ Edge Functions WhatsApp</h3>
+              <div className="grid grid-cols-1 gap-0.5">
+                {[
+                  { fn: "whatsapp-webhook", desc: "Riceve messaggi da Meta API" },
+                  { fn: "whatsapp-send", desc: "Invia messaggi e template" },
+                  { fn: "whatsapp-ai-chat", desc: "Risposta IA automatica con Gemini" },
+                ].map(f => (
+                  <div key={f.fn} className="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-muted/20">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#25D366] shrink-0" />
+                    <span className="text-[0.55rem] font-mono text-foreground/70">{f.fn}</span>
+                    <span className="text-[0.45rem] text-muted-foreground flex-1 truncate">— {f.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Security note */}
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[#25D366]/10 bg-[#25D366]/[0.02]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#25D366] shrink-0" />
+              <p className="text-[0.5rem] text-muted-foreground leading-relaxed">
+                Token Meta e credenziali API salvati come secrets server-side · Mai esposti ai client · RLS su ogni tabella
+              </p>
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );
