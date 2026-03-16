@@ -213,8 +213,9 @@ function speakWithBrowserTTS(
   });
 }
 
-// ── TTS helper — ElevenLabs only for first impact (hero), browser TTS for the rest ──
-const PREMIUM_SECTIONS = new Set(["hero"]); // Only hero gets ElevenLabs premium voice
+// ── TTS helper — browser-first for reliable auto-start on landing/splash ──
+// Premium audio element playback can be blocked by autoplay policies on mobile.
+const PREMIUM_SECTIONS = new Set<string>();
 
 async function speakText(
   text: string,
