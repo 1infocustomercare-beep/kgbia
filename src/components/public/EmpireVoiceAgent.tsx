@@ -275,8 +275,8 @@ async function speakText(
     const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
     if (playedInBrowser || abortRef.current) return playedInBrowser;
 
-    // On mobile, if browser TTS is blocked for hero intro, try premium as secondary fallback.
-    if (sectionId !== "hero" || useBrowserFallbackRef.current) {
+    // If browser speech is blocked, always allow premium fallback for hero.
+    if (sectionId !== "hero") {
       return false;
     }
   }
