@@ -511,6 +511,11 @@ function App() {
                           <AdminAgentsPage />
                         </ProtectedRoute>
                       } />
+                      <Route path="/admin/whatsapp" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <AdminWhatsApp />
+                        </ProtectedRoute>
+                      } />
                       <Route path="/superadmin/media" element={
                         <ProtectedRoute requiredRole="super_admin">
                           <MediaVaultPage />
