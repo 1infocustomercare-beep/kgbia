@@ -88,9 +88,9 @@ if (typeof window !== "undefined" && window.speechSynthesis) {
 }
 
 // ── Web Speech API fallback TTS ──
-const SPEECH_START_GUARD_MS = 4500;
-const SPEECH_HARD_TIMEOUT_MS = 30000;
-const SPEECH_VOICE_WARMUP_RETRIES = 3;
+const SPEECH_START_GUARD_MS = 2200;
+const SPEECH_HARD_TIMEOUT_MS = 12000;
+const SPEECH_VOICE_WARMUP_RETRIES = 8;
 const BROWSER_ONLY_TTS_KEY = "empire_voice_browser_only";
 
 function setBrowserOnlyTTS(enabled: boolean) {
