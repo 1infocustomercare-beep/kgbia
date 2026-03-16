@@ -70,10 +70,12 @@ function doSpeak() {
   };
 
   currentUtterance = utterance;
+  armSafetyTimeout();
   try {
     window.speechSynthesis.speak(utterance);
   } catch {
     currentUtterance = null;
+    splashNarrationCompleted = true;
   }
 }
 
