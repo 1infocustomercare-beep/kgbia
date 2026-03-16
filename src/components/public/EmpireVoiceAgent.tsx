@@ -465,6 +465,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const isTouchDeviceRef = useRef(false);
   const userInteractedRef = useRef(false);
   const unlockInFlightRef = useRef(false);
+  const preferImmediateNarrationRef = useRef(false);
 
   // ── ElevenLabs Conversational AI hook ──
   const conversation = useConversation({
