@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, forwardRef, useMemo } from "react";
-import type { ComponentType } from "react";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import IndustryPhoneShowcase, { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
@@ -44,6 +43,7 @@ import cartoonRetailDefault from "@/assets/cartoon-sector-retail.png";
 import cartoonFitnessDefault from "@/assets/cartoon-sector-fitness.png";
 import cartoonHotelDefault from "@/assets/cartoon-sector-hotel.png";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
+import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 
 /* Build a lookup from site_assets — custom URL overrides bundled default */
 function useLandingAssets() {
@@ -76,48 +76,7 @@ function useLandingAssets() {
   };
 }
 
-const importVoiceAgentWithRetry = async (
-  maxAttempts = 4,
-): Promise<{ default: ComponentType }> => {
-  let lastError: unknown;
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-    try {
-      return await import("@/components/public/EmpireVoiceAgent") as { default: ComponentType };
-    } catch (error) {
-      lastError = error;
-      if (attempt === maxAttempts) break;
-      await new Promise<void>((resolve) => window.setTimeout(resolve, 350 * attempt));
-    }
-  }
-
-  throw lastError;
-};
-
-const SafeEmpireVoiceAgent = () => {
-  const [AgentComponent, setAgentComponent] = useState<ComponentType | null>(null);
-
-  useEffect(() => {
-    let mounted = true;
-
-    void importVoiceAgentWithRetry()
-      .then((module) => {
-        if (!mounted) return;
-        setAgentComponent(() => module.default);
-      })
-      .catch((error) => {
-        console.warn("Voice agent module unavailable on this connection:", error);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  if (!AgentComponent) return null;
-
-  return <AgentComponent />;
-};
+const SafeEmpireVoiceAgent = () => <EmpireVoiceAgent />;
 
 /* ═══════════════════════════════════════════
    HELPERS
