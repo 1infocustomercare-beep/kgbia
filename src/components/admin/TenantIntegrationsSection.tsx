@@ -38,12 +38,24 @@ const PLAN_INTEGRATIONS: Record<string, string[]> = {
 };
 
 const SECTOR_INTEGRATIONS: Record<string, string[]> = {
-  food: ["Fatturazione SDI", "Delivery API", "Stampante ESC/POS"],
+  food: ["Fatturazione SDI", "Delivery API", "Stampante ESC/POS", "WhatsApp Business"],
   ncc: ["Google Maps", "WhatsApp Business", "Stripe NCC"],
-  beauty: ["Google Calendar", "SMS Twilio"],
-  healthcare: ["Telemedicina", "HL7/FHIR"],
-  hospitality: ["Channel Manager", "PMS Integration"],
-  retail: ["POS Integration", "Shopify/Woo"],
+  beauty: ["Google Calendar", "SMS Twilio", "WhatsApp Business"],
+  healthcare: ["Telemedicina", "HL7/FHIR", "WhatsApp Business"],
+  hospitality: ["Channel Manager", "PMS Integration", "WhatsApp Business"],
+  retail: ["POS Integration", "Shopify/Woo", "WhatsApp Business"],
+  fitness: ["WhatsApp Business"],
+  plumber: ["WhatsApp Business"],
+  electrician: ["WhatsApp Business"],
+  construction: ["WhatsApp Business"],
+  cleaning: ["WhatsApp Business"],
+  legal: ["WhatsApp Business"],
+  accounting: ["WhatsApp Business"],
+  events: ["WhatsApp Business"],
+  logistics: ["WhatsApp Business"],
+  veterinary: ["WhatsApp Business"],
+  education: ["WhatsApp Business"],
+  custom: ["WhatsApp Business"],
 };
 
 type PaymentStatus = "ok" | "warning" | "overdue" | "blocked" | "trial" | "unknown";
