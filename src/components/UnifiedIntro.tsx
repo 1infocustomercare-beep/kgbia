@@ -969,7 +969,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           { Icon: Database, color: "hsla(265,65%,65%,0.9)", glow: "hsla(265,65%,65%,0.3)" },
           { Icon: ScanLine, color: "hsla(38,50%,60%,0.9)", glow: "hsla(38,50%,60%,0.3)" },
         ].map(({ Icon, color, glow }, i) => {
-          const innerR = IS_MOBILE ? 65 : 100;
+          const innerR = IS_MOBILE ? 42 : 72;
           return (
             <motion.div
               key={`inner-${i}`}
@@ -981,6 +981,8 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                 boxShadow: `0 0 16px ${glow}, inset 0 0 6px hsla(265,40%,40%,0.1)`,
                 top: "50%",
                 left: "50%",
+                marginTop: -12,
+                marginLeft: -12,
               }}
               animate={{
                 x: Array.from({ length: 7 }, (_, k) =>
