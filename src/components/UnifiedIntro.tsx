@@ -548,15 +548,86 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
       }}
       onClick={handleTap}
     >
-      {/* Canvas for DNA helix */}
+      {/* Canvas for DNA helix — hidden during brand */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
         style={{
+          opacity: phase === "brand" ? 0 : 1,
+          transition: "opacity 0.5s ease",
           willChange: "opacity",
           WebkitTransform: "translate3d(0,0,0)",
         }}
       />
+
+      {/* ═══ BRAND PHASE — Crown logo + EMPIRE.AI ═══ */}
+      <motion.div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        style={{ willChange: "opacity, transform", WebkitTransform: "translate3d(0,0,0)" }}
+        animate={{
+          opacity: phase === "brand" ? 1 : 0,
+          scale: phase === "brand" ? 1 : 0.8,
+          y: phase === "brand" ? 0 : -40,
+        }}
+        transition={{ duration: 0.8, ease: smoothEase }}
+      >
+        <div className="flex flex-col items-center gap-5">
+          {/* Crown container */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: smoothEase }}
+          >
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[22px] sm:rounded-[28px] bg-gradient-to-br from-white/[0.06] to-white/[0.02] flex items-center justify-center border border-white/[0.08] shadow-[0_0_50px_hsla(265,85%,65%,0.15)]">
+              <div
+                className="w-[56px] h-[56px] sm:w-[68px] sm:h-[68px] rounded-[16px] sm:rounded-[20px] flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, hsl(265,85%,65%), hsl(280,80%,60%), hsl(265,85%,55%))" }}
+              >
+                <Crown className="w-7 h-7 sm:w-8 sm:h-8 text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Brand text */}
+          <motion.div
+            className="flex flex-col items-center gap-2.5"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3, ease: smoothEase }}
+          >
+            <h1 className="font-heading font-bold text-2xl sm:text-3xl tracking-[0.25em] uppercase text-foreground">
+              EMPIRE<span className="text-shimmer">.AI</span>
+            </h1>
+            <motion.div
+              className="h-px rounded-full mx-auto"
+              style={{ background: "linear-gradient(90deg, transparent, hsl(265,85%,65%), hsl(280,80%,60%), transparent)" }}
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 140, opacity: 0.5 }}
+              transition={{ duration: 0.4, delay: 0.5, ease: smoothEase }}
+            />
+            <p className="text-[0.5rem] sm:text-[0.55rem] tracking-[0.5em] uppercase text-foreground/20 font-heading">
+              Il Sistema Operativo del Business
+            </p>
+          </motion.div>
+
+          {/* Loading bar */}
+          <motion.div
+            className="w-36 sm:w-48 h-[1.5px] rounded-full overflow-hidden"
+            style={{ background: "hsla(265,85%,65%,0.06)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <motion.div
+              className="h-full rounded-full"
+              style={{ background: "linear-gradient(90deg, hsl(265,85%,65%), hsl(155,65%,50%), hsl(38,55%,58%))" }}
+              initial={{ width: "0%" }}
+              animate={{ width: "100%" }}
+              transition={{ duration: TIMINGS.exit / 1000 - 0.3, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            />
+          </motion.div>
+        </div>
+      </motion.div>
 
       {/* Ambient tri-color glow */}
       <div
