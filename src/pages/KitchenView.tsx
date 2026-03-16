@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import BackButton from "@/components/BackButton";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChefHat, LogOut, Volume2, VolumeX, Printer } from "lucide-react";
+import { ChefHat, LogOut, Volume2, VolumeX, Printer, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -255,7 +255,7 @@ const KitchenView = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <BackButton to="/home" label="Indietro" variant="floating" theme="light" />
+      {/* Back integrated in header */}
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-border sticky top-0 bg-background z-10">
         <div className="flex items-center gap-3">
@@ -267,7 +267,10 @@ const KitchenView = () => {
             <p className="text-xs text-primary">{session.label} · {orders.length} ordini attivi</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" title="Indietro">
+            <ArrowLeft className="w-5 h-5 text-muted-foreground" />
+          </button>
           <button onClick={() => { setSoundOn(!soundOn); soundOnRef.current = !soundOn; }} className="p-2 rounded-full hover:bg-secondary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
             {soundOn ? <Volume2 className="w-5 h-5 text-primary" /> : <VolumeX className="w-5 h-5 text-muted-foreground" />}
           </button>

@@ -9,14 +9,13 @@ import {
   Cpu, Wifi, CheckCircle2, XCircle, AlertCircle,
   ChevronRight, Filter, Plus, ArrowUpRight, ArrowDownRight,
   Building2, MapPin, Zap, Activity, Lightbulb,
-  ToggleLeft, ToggleRight, BookOpen, Link2, ChevronDown, ChevronUp, Info, ImageIcon
+  ToggleLeft, ToggleRight, BookOpen, Link2, ChevronDown, ChevronUp, Info, ImageIcon, ArrowLeft
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lazy, Suspense, useRef, useCallback } from "react";
 import empireAgentMascot from "@/assets/empire-agent-mascot.png";
-import BackButton from "@/components/BackButton";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
 import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
@@ -445,9 +444,8 @@ const SuperAdminDashboard = () => {
   }, [payments, fiscoMissing, blockedTenants]);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-x-hidden">
       <EmpireDNABackground />
-      <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
       <div className="relative overflow-hidden border-b border-empire-violet-deep/30 bg-gradient-to-br from-empire-violet-surface via-background to-empire-violet/5">
         {/* HUD grid — DNA violet */}
@@ -563,24 +561,31 @@ const SuperAdminDashboard = () => {
               </div>
             </div>
           </div>
-          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
-            <LogOut className="w-4 h-4 text-muted-foreground" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Home">
+              <ArrowLeft className="w-4 h-4 text-muted-foreground" />
+            </button>
+            <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Esci">
+              <LogOut className="w-4 h-4 text-muted-foreground" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Tab bar */}
-      <div className="grid grid-cols-4 gap-1 px-3 py-2">
-        {tabs.map((tab) => (
-          <button key={tab.id}
-            onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : setActiveTab(tab.id)}
-            className={`flex flex-col items-center justify-center gap-0.5 px-1.5 py-2 rounded-xl text-[0.6rem] font-medium whitespace-nowrap transition-colors min-h-[44px] ${
-              activeTab === tab.id ? "bg-empire-violet text-white shadow-[0_0_16px_hsl(265_85%_65%/0.3)]" : "bg-empire-violet-surface/50 text-muted-foreground hover:bg-empire-violet-surface"
-            }`}>
-            <span className="[&_svg]:w-3.5 [&_svg]:h-3.5">{tab.icon}</span>
-            <span className="leading-tight">{tab.label}</span>
-          </button>
-        ))}
+      {/* Tab bar — horizontally scrollable */}
+      <div className="overflow-x-auto scrollbar-hide">
+        <div className="flex gap-1 px-3 py-2 min-w-max">
+          {tabs.map((tab) => (
+            <button key={tab.id}
+              onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : setActiveTab(tab.id)}
+              className={`flex flex-col items-center justify-center gap-0.5 px-3 py-2 rounded-xl text-[0.6rem] font-medium whitespace-nowrap transition-colors min-h-[44px] min-w-[64px] ${
+                activeTab === tab.id ? "bg-empire-violet text-white shadow-[0_0_16px_hsl(265_85%_65%/0.3)]" : "bg-empire-violet-surface/50 text-muted-foreground hover:bg-empire-violet-surface"
+              }`}>
+              <span className="[&_svg]:w-3.5 [&_svg]:h-3.5">{tab.icon}</span>
+              <span className="leading-tight">{tab.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Content */}

@@ -3,7 +3,7 @@ import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
 import {
   CheckCircle2, XCircle, AlertCircle,
-  LogOut, Cpu, Wifi, Bot, Send, ShieldCheck
+  LogOut, Cpu, Wifi, Bot, Send, ShieldCheck, ArrowLeft
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -86,7 +86,7 @@ const StaffPanel = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <BackButton to="/home" label="Indietro" variant="floating" theme="light" />
+      {/* Back integrated in header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-border">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center">
@@ -97,9 +97,14 @@ const StaffPanel = () => {
             <p className="text-xs text-muted-foreground">AI-Mary · Monitoraggio Vault</p>
           </div>
         </div>
-        <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
-          <LogOut className="w-5 h-5 text-muted-foreground" />
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary transition-colors" title="Indietro">
+            <ArrowLeft className="w-5 h-5 text-muted-foreground" />
+          </button>
+          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary transition-colors">
+            <LogOut className="w-5 h-5 text-muted-foreground" />
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-1.5 px-4 py-3 overflow-x-auto scrollbar-hide">

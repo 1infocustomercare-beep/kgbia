@@ -10,7 +10,7 @@ import {
   Eye, EyeOff, Briefcase, BarChart3,
   Users, Award, Star, FolderDown,
   Link2, Copy, CheckCircle, UserPlus,
-  ExternalLink, ChefHat, Smartphone, Monitor
+  ExternalLink, ChefHat, Smartphone, Monitor, ArrowLeft
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -274,7 +274,7 @@ const PartnerDashboard = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
       <EmpireDNABackground />
-      <BackButton to="/home" label="Home" variant="floating" theme="light" />
+      {/* Back integrated in header */}
       {/* Header — Vibrant FLAVR style */}
       <div className="relative flex items-center justify-between px-4 pt-3 pb-2 border-b border-empire-violet-deep/20 safe-top overflow-hidden" style={{ background: 'var(--gradient-dna-subtle)' }}>
         {/* DNA scan line */}
@@ -292,7 +292,7 @@ const PartnerDashboard = () => {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <GuidesToggle />
           <motion.button
             onClick={() => {
@@ -310,9 +310,14 @@ const PartnerDashboard = () => {
             {demoMode ? "LIVE" : "DEMO"}
           </motion.button>
           {!demoMode && (
-            <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center">
-              <LogOut className="w-4 h-4 text-muted-foreground" />
-            </button>
+            <>
+              <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center" title="Home">
+                <ArrowLeft className="w-4 h-4 text-muted-foreground" />
+              </button>
+              <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center" title="Esci">
+                <LogOut className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </>
           )}
         </div>
       </div>
