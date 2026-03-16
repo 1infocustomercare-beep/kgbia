@@ -272,7 +272,8 @@ const PartnerDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
+      <EmpireDNABackground />
       <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header — Vibrant FLAVR style */}
       <div className="relative flex items-center justify-between px-4 pt-3 pb-2 border-b border-empire-violet-deep/20 safe-top overflow-hidden" style={{ background: 'var(--gradient-dna-subtle)' }}>
