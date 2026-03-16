@@ -40,8 +40,8 @@ const isConstrainedNetwork = () => {
 };
 
 // Keep cinematic intro, but never trap users on splash
-const INTRO_FAILSAFE_MS = IS_MOBILE ? 3200 : 8000;
-const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 5000 : 11000;
+const INTRO_FAILSAFE_MS = IS_MOBILE ? 8000 : 9000;
+const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
 const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" && (
   isConstrainedNetwork() ||
   window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true
