@@ -654,8 +654,8 @@ const EmpireVoiceAgent: React.FC = () => {
         setNarratedSections(new Set(narratedRef.current));
       } else if (!abortRef.current) {
         const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
-        if (attempts < 2) {
-          await new Promise(r => setTimeout(r, 500));
+        if (attempts < 6) {
+          await new Promise(r => setTimeout(r, 700));
           sectionQueueRef.current.push(sectionId);
         }
       }
