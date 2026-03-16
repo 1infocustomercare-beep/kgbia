@@ -178,6 +178,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
 const COMMON_NAV = [
   { title: "AI Agents", icon: "Bot", url: "/app/agents" },
   { title: "AI Marketplace", icon: "Sparkles", url: "/app/ai-marketplace" },
+  { title: "WhatsApp", icon: "MessageSquare", url: "/app/whatsapp" },
   { title: "Team", icon: "Briefcase", url: "/app/team" },
   { title: "Automazioni", icon: "Sparkles", url: "/app/automations" },
   { title: "Payroll", icon: "Receipt", url: "/app/payroll" },
