@@ -6,7 +6,7 @@ import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
 import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
-// Splash narration integration removed — agent starts only on user interaction
+import { isSplashNarrationSpeaking } from "@/lib/splash-narration";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type VoiceMode = "legacy" | "elevenlabs";
@@ -241,6 +241,7 @@ async function speakText(
   abortRef: React.MutableRefObject<boolean>,
   useBrowserFallbackRef: React.MutableRefObject<boolean>,
   sectionId?: string,
+  options?: { preferImmediate?: boolean },
 ): Promise<boolean> {
   if (abortRef.current) return false;
 
@@ -254,7 +255,7 @@ async function speakText(
   // Use browser TTS first for reliability, then fallback to premium for hero when needed.
   const isPremiumSection = sectionId ? PREMIUM_SECTIONS.has(sectionId) : false;
   if (!isPremiumSection || useBrowserFallbackRef.current) {
-    const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef);
+    const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
     if (playedInBrowser || abortRef.current) return playedInBrowser;
 
     // On mobile, if browser TTS is blocked for hero intro, try premium as secondary fallback.
@@ -278,7 +279,7 @@ async function speakText(
       console.warn("ElevenLabs TTS failed, switching to browser voice");
       useBrowserFallbackRef.current = true;
       setBrowserOnlyTTS(true);
-      return speakWithBrowserTTS(normalizedText, abortRef);
+      return speakWithBrowserTTS(normalizedText, abortRef, options);
     }
 
     const data = await resp.json();
@@ -288,7 +289,7 @@ async function speakText(
       if (data?.error === "quota_exceeded" || data?.fallback) {
         setBrowserOnlyTTS(true);
       }
-      return speakWithBrowserTTS(normalizedText, abortRef);
+      return speakWithBrowserTTS(normalizedText, abortRef, options);
     }
 
     // Premium path worked: allow future premium attempts again
@@ -305,7 +306,7 @@ async function speakText(
       audio.onerror = () => {
         useBrowserFallbackRef.current = true;
         setBrowserOnlyTTS(true);
-        speakWithBrowserTTS(normalizedText, abortRef).then(resolve);
+        speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
       };
 
       if (abortRef.current) {
@@ -317,13 +318,13 @@ async function speakText(
       audio.play().catch(() => {
         useBrowserFallbackRef.current = true;
         setBrowserOnlyTTS(true);
-        speakWithBrowserTTS(normalizedText, abortRef).then(resolve);
+        speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
       });
     });
   } catch {
     useBrowserFallbackRef.current = true;
     setBrowserOnlyTTS(true);
-    return speakWithBrowserTTS(normalizedText, abortRef);
+    return speakWithBrowserTTS(normalizedText, abortRef, options);
   }
 }
 
@@ -465,6 +466,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const isTouchDeviceRef = useRef(false);
   const userInteractedRef = useRef(false);
   const unlockInFlightRef = useRef(false);
+  const preferImmediateNarrationRef = useRef(false);
 
   // ── ElevenLabs Conversational AI hook ──
   const conversation = useConversation({
@@ -671,7 +673,13 @@ const EmpireVoiceAgent: React.FC = () => {
       abortRef.current = false;
 
       // No aggressive timeout race — let speakText finish naturally
-      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId);
+      const preferImmediate = sectionId === "hero" && preferImmediateNarrationRef.current;
+      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId, {
+        preferImmediate,
+      });
+      if (preferImmediate) {
+        preferImmediateNarrationRef.current = false;
+      }
 
       if (played && !abortRef.current) {
         narrationAttemptsRef.current[sectionId] = 0;
@@ -713,8 +721,16 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    // Always queue hero narration fresh — no splash dependency
-    enqueueSectionNarration("hero", true);
+    const queueHeroWhenReady = () => {
+      if (!voiceEnabledRef.current) return;
+      if (isSplashNarrationSpeaking()) {
+        window.setTimeout(queueHeroWhenReady, 220);
+        return;
+      }
+      enqueueSectionNarration("hero", true);
+    };
+
+    queueHeroWhenReady();
   }, [enqueueSectionNarration]);
 
   const stopAll = useCallback(() => {
@@ -810,8 +826,6 @@ const EmpireVoiceAgent: React.FC = () => {
       userInteractedRef.current = true;
       setUserInteracted(true);
 
-      const heroScript = SECTION_SCRIPTS.hero;
-
       if (window.speechSynthesis) {
         try {
           window.speechSynthesis.cancel();
@@ -824,43 +838,18 @@ const EmpireVoiceAgent: React.FC = () => {
         }
       }
 
-      // Keep queue flow coherent with full narration system
+      // Force next hero narration attempt to run immediately in this gesture context
+      preferImmediateNarrationRef.current = true;
       narrationAttemptsRef.current.hero = 0;
+      narratedRef.current.delete("hero");
+      setNarratedSections(new Set(narratedRef.current));
+
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
       }
 
-      if (!heroScript) {
-        unlockInFlightRef.current = false;
-        return;
-      }
-
-      // Immediate best-effort speech inside gesture context for iOS autoplay policies
-      void (async () => {
-        setMessages((prev) => {
-          const last = prev[prev.length - 1];
-          if (last?.role === "assistant" && last.content === heroScript) return prev;
-          return [...prev, { role: "assistant", content: heroScript }];
-        });
-
-        abortRef.current = false;
-        setIsSpeaking(true);
-        setIsPaused(false);
-
-        const played = await speakWithBrowserTTS(normalizeTextForSpeech(heroScript), abortRef, {
-          preferImmediate: true,
-        });
-
-        if (played && !abortRef.current) {
-          narrationAttemptsRef.current.hero = 0;
-          narratedRef.current.add("hero");
-          setNarratedSections(new Set(narratedRef.current));
-        }
-
-        setIsSpeaking(false);
-        unlockInFlightRef.current = false;
-      })();
+      unlockInFlightRef.current = false;
     };
 
     const options = { passive: true } as const;
