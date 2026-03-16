@@ -213,8 +213,9 @@ function speakWithBrowserTTS(
   });
 }
 
-// ── TTS helper — ElevenLabs only for first impact (hero), browser TTS for the rest ──
-const PREMIUM_SECTIONS = new Set(["hero"]); // Only hero gets ElevenLabs premium voice
+// ── TTS helper — browser-first for reliable auto-start on landing/splash ──
+// Premium audio element playback can be blocked by autoplay policies on mobile.
+const PREMIUM_SECTIONS = new Set<string>();
 
 async function speakText(
   text: string,
@@ -749,33 +750,53 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Auto-voice intro (hands-free) — chat stays CLOSED, voice plays in background ──
+  // ── Auto-voice intro (hands-free) — starts at splash/home without opening chat ──
   useEffect(() => {
     if (autoBootedRef.current) return;
 
-    // Start narration early — even before isVisible (during splash)
     autoBootedRef.current = true;
 
-    // Unlock speechSynthesis with silent utterance (needed on some browsers)
-    if (window.speechSynthesis) {
-      try {
-        const silent = new SpeechSynthesisUtterance("");
-        silent.volume = 0;
-        silent.lang = "it-IT";
-        window.speechSynthesis.speak(silent);
-      } catch { /* noop */ }
-    }
-
-    // Start narration after a short delay (let splash begin, don't open chat)
     const timer = setTimeout(() => {
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
       }
-    }, 2000); // 2s — voice starts during splash
+    }, 250); // immediate start during splash/home landing
 
     return () => clearTimeout(timer);
   }, [startIntroNarration, enqueueSectionNarration]);
+
+  // ── Recovery: if autoplay policy blocks first attempt, retry on first user interaction (chat stays closed) ──
+  useEffect(() => {
+    const unlockAndRetry = () => {
+      if (userInteractedRef.current) return;
+      userInteractedRef.current = true;
+      setUserInteracted(true);
+
+      if (window.speechSynthesis) {
+        try {
+          const silent = new SpeechSynthesisUtterance("");
+          silent.volume = 0;
+          silent.lang = "it-IT";
+          window.speechSynthesis.speak(silent);
+        } catch {
+          // noop
+        }
+      }
+
+      if (!narratedRef.current.has("hero")) {
+        enqueueSectionNarration("hero", true);
+      }
+    };
+
+    window.addEventListener("pointerdown", unlockAndRetry, { passive: true, once: true });
+    window.addEventListener("keydown", unlockAndRetry, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", unlockAndRetry as EventListener);
+      window.removeEventListener("keydown", unlockAndRetry as EventListener);
+    };
+  }, [enqueueSectionNarration]);
 
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
