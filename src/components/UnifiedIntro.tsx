@@ -717,8 +717,6 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
     return null;
   }
 
-  // Responsive orbital ring sizes
-  const ringBase = IS_MOBILE ? 55 : 50; // vmin percentage
 
   return (
     <motion.div
