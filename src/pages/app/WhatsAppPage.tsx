@@ -462,6 +462,107 @@ export default function WhatsAppPage() {
           )}
         </TabsContent>
 
+        {/* ════ TEMPLATES TAB ════ */}
+        <TabsContent value="templates" className="mt-3 space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold">WhatsApp Templates</h3>
+            <Dialog open={tplDialogOpen} onOpenChange={setTplDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="bg-[#25D366] hover:bg-[#1da851]" onClick={() => setEditTpl({ language: "it", category: "system", buttons: [] })}>
+                  <Plus className="w-3 h-3 mr-1" /> Nuovo
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>{editTpl?.id ? "Modifica Template" : "Nuovo Template"}</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-3 mt-2">
+                  <div>
+                    <Label htmlFor="tpl_name">Nome Template</Label>
+                    <Input id="tpl_name" value={editTpl?.template_name || ""} onChange={(e) => setEditTpl((p: any) => ({ ...p, template_name: e.target.value }))} placeholder="welcome_food" />
+                  </div>
+                  <div>
+                    <Label>Categoria</Label>
+                    <Select value={editTpl?.category || "system"} onValueChange={(v) => setEditTpl((p: any) => ({ ...p, category: v }))}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {TPLCATS.map((c) => (<SelectItem key={c} value={c}>{c}</SelectItem>))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>Header (opzionale)</Label>
+                    <Input value={editTpl?.header_text || ""} onChange={(e) => setEditTpl((p: any) => ({ ...p, header_text: e.target.value }))} placeholder="👑 Empire AI" />
+                  </div>
+                  <div>
+                    <Label>Body *</Label>
+                    <Textarea rows={4} value={editTpl?.body_text || ""} onChange={(e) => setEditTpl((p: any) => ({ ...p, body_text: e.target.value }))} placeholder="Ciao {user_name}, benvenuto..." />
+                    <p className="text-[10px] text-muted-foreground mt-1">Variabili: {"{company_name}"} {"{user_name}"} {"{date}"}</p>
+                  </div>
+                  <div>
+                    <Label>Footer (opzionale)</Label>
+                    <Input value={editTpl?.footer_text || ""} onChange={(e) => setEditTpl((p: any) => ({ ...p, footer_text: e.target.value }))} placeholder="Powered by Empire AI" />
+                  </div>
+                  {/* Preview */}
+                  <Card className="bg-[#ECE5DD]">
+                    <CardContent className="py-3">
+                      <p className="text-[10px] font-medium text-center text-muted-foreground mb-2">Preview WhatsApp</p>
+                      <div className="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
+                        {editTpl?.header_text && <p className="font-bold text-sm mb-1">{editTpl.header_text}</p>}
+                        <p className="text-sm whitespace-pre-wrap">{editTpl?.body_text || "Il tuo messaggio..."}</p>
+                        {editTpl?.footer_text && <p className="text-xs text-muted-foreground mt-2">{editTpl.footer_text}</p>}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Button onClick={saveTpl} className="w-full bg-[#25D366] hover:bg-[#1da851] text-white">
+                    {editTpl?.id ? "Aggiorna" : "Crea"} Template
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {templatesLoading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map((i) => <Skeleton key={i} className="h-16 rounded-lg" />)}
+            </div>
+          ) : templates.length === 0 ? (
+            <Card>
+              <CardContent className="py-8 text-center text-sm text-muted-foreground">
+                <FileText className="w-10 h-10 mx-auto mb-2 opacity-30" />
+                Nessun template. Creane uno per automatizzare i messaggi.
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-2">
+              {templates.map((t) => (
+                <Card key={t.id}>
+                  <CardContent className="py-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-medium text-sm">{t.template_name}</span>
+                          <Badge variant="outline" className="text-xs">{t.category}</Badge>
+                          <Badge className={cn("text-xs", t.status === "approved" ? "bg-green-500/15 text-green-600" : t.status === "rejected" ? "bg-red-500/15 text-red-500" : "bg-yellow-500/15 text-yellow-600")}>{t.status}</Badge>
+                        </div>
+                        <p className="text-xs mt-1 line-clamp-2 text-muted-foreground">{t.body_text}</p>
+                      </div>
+                      <div className="flex gap-1 ml-2">
+                        <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => { setEditTpl(t); setTplDialogOpen(true); }}>
+                          <Pencil className="w-3 h-3" />
+                        </Button>
+                        <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => deleteTpl(t.id)}>
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
         {/* ════ NOTIFICATIONS TAB ════ */}
         <TabsContent value="notifications" className="mt-3 space-y-3">
           <Card>
