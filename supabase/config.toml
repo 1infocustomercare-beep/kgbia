@@ -50,3 +50,12 @@ verify_jwt = false
 
 [functions.restaurant-voice-agent]
 verify_jwt = false
+
+[functions.whatsapp-webhook]
+verify_jwt = false
+
+[functions.whatsapp-send]
+verify_jwt = false
+
+[functions.whatsapp-ai-chat]
+verify_jwt = false
