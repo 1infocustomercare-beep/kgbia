@@ -863,6 +863,8 @@ const EmpireVoiceAgent: React.FC = () => {
       narratedRef.current.delete("hero");
       setNarratedSections(new Set(narratedRef.current));
 
+      stopSplashNarration();
+      abortRef.current = false;
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
