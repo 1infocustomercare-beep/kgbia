@@ -92,12 +92,17 @@ const SPEECH_START_GUARD_MS = 5000;
 const SPEECH_HARD_TIMEOUT_MS = 60000;
 const SPEECH_VOICE_WARMUP_RETRIES = 12;
 const BROWSER_ONLY_TTS_KEY = "empire_voice_browser_only";
+const BROWSER_ONLY_TTS_TTL_MS = 15 * 60 * 1000;
 
 function setBrowserOnlyTTS(enabled: boolean) {
   if (typeof window === "undefined") return;
   try {
-    if (enabled) window.localStorage.setItem(BROWSER_ONLY_TTS_KEY, "1");
-    else window.localStorage.removeItem(BROWSER_ONLY_TTS_KEY);
+    if (enabled) {
+      const until = Date.now() + BROWSER_ONLY_TTS_TTL_MS;
+      window.localStorage.setItem(BROWSER_ONLY_TTS_KEY, String(until));
+    } else {
+      window.localStorage.removeItem(BROWSER_ONLY_TTS_KEY);
+    }
   } catch {
     // noop
   }
@@ -106,7 +111,18 @@ function setBrowserOnlyTTS(enabled: boolean) {
 function isBrowserOnlyTTS(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    return window.localStorage.getItem(BROWSER_ONLY_TTS_KEY) === "1";
+    const raw = window.localStorage.getItem(BROWSER_ONLY_TTS_KEY);
+    if (!raw) return false;
+
+    const until = Number(raw);
+    const isExpired = !Number.isFinite(until) || Date.now() > until;
+
+    if (isExpired) {
+      window.localStorage.removeItem(BROWSER_ONLY_TTS_KEY);
+      return false;
+    }
+
+    return true;
   } catch {
     return false;
   }
@@ -277,9 +293,8 @@ async function speakText(
     });
 
     if (!resp.ok || abortRef.current) {
-      console.warn("ElevenLabs TTS failed, switching to browser voice");
+      // Transient API/network errors should not permanently force browser-only mode.
       useBrowserFallbackRef.current = true;
-      setBrowserOnlyTTS(true);
       return speakWithBrowserTTS(normalizedText, abortRef, options);
     }
 
@@ -306,7 +321,6 @@ async function speakText(
       audio.onended = () => resolve(true);
       audio.onerror = () => {
         useBrowserFallbackRef.current = true;
-        setBrowserOnlyTTS(true);
         speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
       };
 
@@ -318,13 +332,11 @@ async function speakText(
 
       audio.play().catch(() => {
         useBrowserFallbackRef.current = true;
-        setBrowserOnlyTTS(true);
         speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
       });
     });
   } catch {
     useBrowserFallbackRef.current = true;
-    setBrowserOnlyTTS(true);
     return speakWithBrowserTTS(normalizedText, abortRef, options);
   }
 }
