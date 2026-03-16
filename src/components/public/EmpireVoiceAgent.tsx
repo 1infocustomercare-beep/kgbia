@@ -158,8 +158,8 @@ function speakWithBrowserTTS(
         started = true;
         console.log("[Arianna TTS] ▶ Speech started");
       };
-      utterance.onend = () => finish(true);
-      utterance.onerror = () => finish(false);
+      utterance.onend = () => { console.log("[Arianna TTS] ✅ Speech ended"); finish(true); };
+      utterance.onerror = (e) => { console.warn("[Arianna TTS] ❌ Speech error", e); finish(false); };
 
       const runSpeak = () => {
         if (abortRef.current || settled) {
