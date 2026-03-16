@@ -23,14 +23,14 @@ const MESH_COUNT = IS_MOBILE ? 22 : 40;
 const ENERGY_PARTICLES = IS_MOBILE ? 16 : 30;
 const CIRCUIT_LINES = IS_MOBILE ? 8 : 16;
 
-// Timings — no brand phase, DNA starts immediately
+// Timings — brand phase first, then DNA
 const TIMINGS = IS_MOBILE
-  ? { assemble: 100, pulse: 1000, morph: 1800, exit: 2500, complete: 3000 }
-  : { assemble: 200, pulse: 1600, morph: 2800, exit: 3800, complete: 4400 };
+  ? { brand: 0, assemble: 800, pulse: 1600, morph: 2400, exit: 3000, complete: 3400 }
+  : { brand: 0, assemble: 1400, pulse: 2800, morph: 3800, exit: 4600, complete: 5200 };
 
-const SAFETY_TIMEOUT = IS_MOBILE ? 3500 : 6000;
+const SAFETY_TIMEOUT = IS_MOBILE ? 4000 : 7000;
 
-type Phase = "scatter" | "assemble" | "pulse" | "morph" | "exit";
+type Phase = "brand" | "assemble" | "pulse" | "morph" | "exit";
 
 // Color palette: gold, violet, green
 const COLORS = {
