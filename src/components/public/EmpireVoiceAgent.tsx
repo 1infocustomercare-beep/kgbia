@@ -88,9 +88,9 @@ if (typeof window !== "undefined" && window.speechSynthesis) {
 }
 
 // ── Web Speech API fallback TTS ──
-const SPEECH_START_GUARD_MS = 2200;
-const SPEECH_HARD_TIMEOUT_MS = 12000;
-const SPEECH_VOICE_WARMUP_RETRIES = 8;
+const SPEECH_START_GUARD_MS = 5000;
+const SPEECH_HARD_TIMEOUT_MS = 60000;
+const SPEECH_VOICE_WARMUP_RETRIES = 12;
 const BROWSER_ONLY_TTS_KEY = "empire_voice_browser_only";
 
 function setBrowserOnlyTTS(enabled: boolean) {
@@ -156,9 +156,10 @@ function speakWithBrowserTTS(
 
       utterance.onstart = () => {
         started = true;
+        console.log("[Arianna TTS] ▶ Speech started");
       };
-      utterance.onend = () => finish(true);
-      utterance.onerror = () => finish(false);
+      utterance.onend = () => { console.log("[Arianna TTS] ✅ Speech ended"); finish(true); };
+      utterance.onerror = (e) => { console.warn("[Arianna TTS] ❌ Speech error", e); finish(false); };
 
       const runSpeak = () => {
         if (abortRef.current || settled) {
@@ -660,6 +661,7 @@ const EmpireVoiceAgent: React.FC = () => {
       if (narratedRef.current.has(sectionId)) continue;
 
       narrationAttemptsRef.current[sectionId] = (narrationAttemptsRef.current[sectionId] ?? 0) + 1;
+      console.log(`[Arianna] Narrating "${sectionId}" attempt #${narrationAttemptsRef.current[sectionId]}`);
 
       setMessages((prev) => {
         const last = prev[prev.length - 1];
@@ -687,8 +689,9 @@ const EmpireVoiceAgent: React.FC = () => {
         setNarratedSections(new Set(narratedRef.current));
       } else if (!abortRef.current) {
         const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
-        if (attempts < 6) {
-          await new Promise(r => setTimeout(r, 700));
+        console.warn(`[Arianna] Narration failed for "${sectionId}", attempt ${attempts}`);
+        if (attempts < 20) {
+          await new Promise(r => setTimeout(r, 1200));
           sectionQueueRef.current.push(sectionId);
         }
       }
@@ -797,6 +800,7 @@ const EmpireVoiceAgent: React.FC = () => {
     autoBootedRef.current = true;
 
     const bootAttempt = () => {
+      console.log("[Arianna] Boot attempt — hero narrated:", narratedRef.current.has("hero"), "voiceEnabled:", voiceEnabledRef.current);
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
