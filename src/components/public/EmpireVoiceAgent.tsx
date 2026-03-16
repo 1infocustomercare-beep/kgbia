@@ -798,6 +798,7 @@ const EmpireVoiceAgent: React.FC = () => {
     autoBootedRef.current = true;
 
     const bootAttempt = () => {
+      console.log("[Arianna] Boot attempt — hero narrated:", narratedRef.current.has("hero"), "voiceEnabled:", voiceEnabledRef.current);
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
