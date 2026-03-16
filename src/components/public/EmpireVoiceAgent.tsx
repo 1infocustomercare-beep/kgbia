@@ -736,19 +736,11 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    let heroWaitAttempts = 0;
-    const queueHeroWhenReady = () => {
-      if (!voiceEnabledRef.current) return;
-      heroWaitAttempts++;
-      // Wait for splash narration to finish, but cap at ~4s to avoid permanent block
-      if (isSplashNarrationSpeaking() && heroWaitAttempts < 20) {
-        window.setTimeout(queueHeroWhenReady, 220);
-        return;
-      }
-      enqueueSectionNarration("hero", true);
-    };
+    // Hard handoff: prevent splash TTS from blocking/canceling Arianna.
+    stopSplashNarration();
+    abortRef.current = false;
 
-    queueHeroWhenReady();
+    enqueueSectionNarration("hero", true);
   }, [enqueueSectionNarration]);
 
   const stopAll = useCallback(() => {
