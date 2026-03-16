@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import EmpireDNABackground from "@/components/EmpireDNABackground";
 import BackButton from "@/components/BackButton";
 import { motion, AnimatePresence } from "framer-motion";
 import { LayoutDashboard, UtensilsCrossed, ShoppingCart, TrendingUp, LogOut, Settings } from "lucide-react";
@@ -311,7 +312,8 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
+      <EmpireDNABackground />
       <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/50 bg-card/50 safe-top">

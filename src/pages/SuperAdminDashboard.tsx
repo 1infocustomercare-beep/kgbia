@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import EmpireDNABackground from "@/components/EmpireDNABackground";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Crown, Power, TrendingUp, DollarSign, Users, Store,
@@ -444,7 +445,8 @@ const SuperAdminDashboard = () => {
   }, [payments, fiscoMissing, blockedTenants]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      <EmpireDNABackground />
       <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
       <div className="relative overflow-hidden border-b border-empire-violet-deep/30 bg-gradient-to-br from-empire-violet-surface via-background to-empire-violet/5">
