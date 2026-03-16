@@ -156,6 +156,7 @@ function speakWithBrowserTTS(
 
       utterance.onstart = () => {
         started = true;
+        console.log("[Arianna TTS] ▶ Speech started");
       };
       utterance.onend = () => finish(true);
       utterance.onerror = () => finish(false);
