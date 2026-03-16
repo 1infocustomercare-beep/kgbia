@@ -749,20 +749,33 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Auto-open + auto-voice intro (hands-free) ──
+  // ── Auto-voice intro (hands-free) — chat stays CLOSED, voice plays in background ──
   useEffect(() => {
-    if (!isVisible || autoBootedRef.current) return;
+    if (autoBootedRef.current) return;
 
+    // Start narration early — even before isVisible (during splash)
     autoBootedRef.current = true;
-    setIsOpen(true);
 
-    setTimeout(() => {
+    // Unlock speechSynthesis with silent utterance (needed on some browsers)
+    if (window.speechSynthesis) {
+      try {
+        const silent = new SpeechSynthesisUtterance("");
+        silent.volume = 0;
+        silent.lang = "it-IT";
+        window.speechSynthesis.speak(silent);
+      } catch { /* noop */ }
+    }
+
+    // Start narration after a short delay (let splash begin, don't open chat)
+    const timer = setTimeout(() => {
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
       }
-    }, 120);
-  }, [isVisible, startIntroNarration, enqueueSectionNarration]);
+    }, 2000); // 2s — voice starts during splash
+
+    return () => clearTimeout(timer);
+  }, [startIntroNarration, enqueueSectionNarration]);
 
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
