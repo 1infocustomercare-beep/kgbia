@@ -981,6 +981,8 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                 boxShadow: `0 0 16px ${glow}, inset 0 0 6px hsla(265,40%,40%,0.1)`,
                 top: "50%",
                 left: "50%",
+                marginLeft: IS_MOBILE ? -12 : -16,
+                marginTop: IS_MOBILE ? -12 : -16,
               }}
               animate={{
                 x: Array.from({ length: 7 }, (_, k) =>
