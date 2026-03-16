@@ -1202,13 +1202,13 @@ const EmpireVoiceAgent: React.FC = () => {
                         </button>
                       )}
 
-                      {/* ElevenLabs ConvAI button (primary) */}
-                      {!isSpeaking && elevenlabsAvailable && (
+                      {/* Call button (always visible) */}
+                      {!isSpeaking && (
                         <button
-                          onClick={startElevenlabsConversation}
+                          onClick={handleCallAction}
                           disabled={elevenlabsConnecting || isLoading}
                           className="w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30 disabled:opacity-30"
-                          title="Conversazione vocale IA"
+                          title="Chiama Arianna"
                         >
                           {elevenlabsConnecting ? (
                             <motion.div className="w-5 h-5 border-2 border-white/60 border-t-white rounded-full" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
@@ -1218,21 +1218,15 @@ const EmpireVoiceAgent: React.FC = () => {
                         </button>
                       )}
 
-                      {/* Legacy Mic button (fallback or secondary) */}
+                      {/* Legacy Mic button (secondary) */}
                       {!isSpeaking && (
                         <button
                           onClick={isListening ? stopAll : startListening}
                           disabled={isLoading || !SpeechRecognition}
-                          className={`${elevenlabsAvailable ? "w-10 h-10" : "w-14 h-14"} rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation ${
-                            isListening
-                              ? "bg-destructive/20 border-2 border-destructive text-destructive"
-                              : elevenlabsAvailable
-                                ? "bg-secondary text-foreground/60 hover:bg-secondary/80"
-                                : "bg-gradient-to-br from-primary to-accent text-white hover:shadow-primary/30"
-                          } disabled:opacity-30`}
-                          title={elevenlabsAvailable ? "Domanda singola" : "Parla"}
+                          className="w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg touch-manipulation bg-secondary text-foreground/60 hover:bg-secondary/80 disabled:opacity-30"
+                          title="Parla"
                         >
-                          {isListening ? <MicOff className="w-4 h-4" /> : <Mic className={elevenlabsAvailable ? "w-4 h-4" : "w-5 h-5"} />}
+                          {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                         </button>
                       )}
 
