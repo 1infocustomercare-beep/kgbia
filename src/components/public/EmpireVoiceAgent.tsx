@@ -741,7 +741,7 @@ const EmpireVoiceAgent: React.FC = () => {
     enqueueSectionNarration(currentSection);
   }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
-  // ── Visibility — show button after 1.5s, but do NOT auto-start narration ──
+  // ── Visibility ──
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
@@ -749,9 +749,20 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // No auto-start — narration only begins when user opens the panel
+  // ── Auto-open + auto-voice intro (hands-free) ──
+  useEffect(() => {
+    if (!isVisible || autoBootedRef.current) return;
 
-  // No aggressive auto-unlock listeners — voice starts only when user opens the agent panel
+    autoBootedRef.current = true;
+    setIsOpen(true);
+
+    setTimeout(() => {
+      startIntroNarration();
+      if (!narratedRef.current.has("hero")) {
+        enqueueSectionNarration("hero", true);
+      }
+    }, 120);
+  }, [isVisible, startIntroNarration, enqueueSectionNarration]);
 
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
