@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import EmpireDNABackground from "@/components/EmpireDNABackground";
 import BackButton from "@/components/BackButton";
 import { motion, AnimatePresence } from "framer-motion";
 import {
