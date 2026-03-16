@@ -189,6 +189,11 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
       ctx.clearRect(0, 0, w, h);
       const cp = phaseRef.current;
 
+      // Don't draw DNA during brand phase
+      if (cp === "brand") {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
       const assembleStart = TIMINGS.assemble / 1000;
       const morphStart = TIMINGS.morph / 1000;
       const exitStart = TIMINGS.exit / 1000;
