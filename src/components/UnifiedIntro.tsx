@@ -816,6 +816,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           </motion.div>
         </div>
       </motion.div>
+      )}
 
       {/* Ambient glow */}
       <div
