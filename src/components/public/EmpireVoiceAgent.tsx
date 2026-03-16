@@ -193,6 +193,13 @@ function speakWithBrowserTTS(
     };
 
     const warmupVoices = (attempt = 0) => {
+      // In direct gesture context (mobile autoplay unlock), speak immediately.
+      // Waiting for voice warmup would move execution outside gesture and get blocked on iOS.
+      if (options?.preferImmediate) {
+        speakNow();
+        return;
+      }
+
       const voices = synth.getVoices();
       if (voices.length > 0 || attempt >= SPEECH_VOICE_WARMUP_RETRIES) {
         speakNow();
