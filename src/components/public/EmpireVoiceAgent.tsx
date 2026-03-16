@@ -825,18 +825,25 @@ const EmpireVoiceAgent: React.FC = () => {
   }, [startIntroNarration, enqueueSectionNarration]);
 
   // ── Recovery: autoplay restrictions on mobile browsers (retry inside first gestures, also after splash) ──
+  // IMPORTANT: This only fires ONCE to unlock audio. After that, narration continues
+  // on its own via the queue system. Touching the screen must NOT restart narration.
+  const audioUnlockedRef = useRef(false);
+
   useEffect(() => {
     let isMounted = true;
 
     const unlockAndRetry = () => {
       if (!isMounted) return;
+      // Only unlock ONCE — after that, narration is self-sustaining
+      if (audioUnlockedRef.current) return;
       if (unlockInFlightRef.current) return;
-      if (narratedRef.current.has("hero")) return;
 
       unlockInFlightRef.current = true;
+      audioUnlockedRef.current = true;
       userInteractedRef.current = true;
       setUserInteracted(true);
 
+      // Unlock speechSynthesis with a silent utterance inside gesture context
       if (window.speechSynthesis) {
         try {
           window.speechSynthesis.cancel();
@@ -852,8 +859,6 @@ const EmpireVoiceAgent: React.FC = () => {
       // Force next hero narration attempt to run immediately in this gesture context
       preferImmediateNarrationRef.current = true;
       narrationAttemptsRef.current.hero = 0;
-      narratedRef.current.delete("hero");
-      setNarratedSections(new Set(narratedRef.current));
 
       stopSplashNarration();
       abortRef.current = false;
