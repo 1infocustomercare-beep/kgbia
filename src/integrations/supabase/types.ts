@@ -3643,6 +3643,42 @@ export type Database = {
           },
         ]
       }
+      sector_system_prompts: {
+        Row: {
+          allowed_actions: Json | null
+          blocked_actions: Json | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          sector: string
+          system_prompt: string
+          updated_at: string
+          welcome_template: string
+        }
+        Insert: {
+          allowed_actions?: Json | null
+          blocked_actions?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          sector: string
+          system_prompt: string
+          updated_at?: string
+          welcome_template: string
+        }
+        Update: {
+          allowed_actions?: Json | null
+          blocked_actions?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          sector?: string
+          system_prompt?: string
+          updated_at?: string
+          welcome_template?: string
+        }
+        Relationships: []
+      }
       seo_settings: {
         Row: {
           company_id: string
@@ -4220,6 +4256,164 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      whatsapp_config: {
+        Row: {
+          access_token: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          phone_number_id: string | null
+          tenant_id: string
+          updated_at: string
+          webhook_verify_token: string | null
+          whatsapp_business_account_id: string | null
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          phone_number_id?: string | null
+          tenant_id: string
+          updated_at?: string
+          webhook_verify_token?: string | null
+          whatsapp_business_account_id?: string | null
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          phone_number_id?: string | null
+          tenant_id?: string
+          updated_at?: string
+          webhook_verify_token?: string | null
+          whatsapp_business_account_id?: string | null
+        }
+        Relationships: []
+      }
+      whatsapp_conversations: {
+        Row: {
+          contact_name: string | null
+          contact_phone: string
+          context: Json | null
+          created_at: string
+          id: string
+          last_message_at: string | null
+          sector: string
+          status: string
+          tenant_id: string
+        }
+        Insert: {
+          contact_name?: string | null
+          contact_phone: string
+          context?: Json | null
+          created_at?: string
+          id?: string
+          last_message_at?: string | null
+          sector: string
+          status?: string
+          tenant_id: string
+        }
+        Update: {
+          contact_name?: string | null
+          contact_phone?: string
+          context?: Json | null
+          created_at?: string
+          id?: string
+          last_message_at?: string | null
+          sector?: string
+          status?: string
+          tenant_id?: string
+        }
+        Relationships: []
+      }
+      whatsapp_messages: {
+        Row: {
+          content: string
+          conversation_id: string | null
+          created_at: string
+          direction: string
+          id: string
+          message_type: string
+          metadata: Json | null
+          status: string
+          tenant_id: string
+          whatsapp_message_id: string | null
+        }
+        Insert: {
+          content: string
+          conversation_id?: string | null
+          created_at?: string
+          direction: string
+          id?: string
+          message_type?: string
+          metadata?: Json | null
+          status?: string
+          tenant_id: string
+          whatsapp_message_id?: string | null
+        }
+        Update: {
+          content?: string
+          conversation_id?: string | null
+          created_at?: string
+          direction?: string
+          id?: string
+          message_type?: string
+          metadata?: Json | null
+          status?: string
+          tenant_id?: string
+          whatsapp_message_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "whatsapp_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      whatsapp_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          notification_type: string
+          recipient_phone: string
+          scheduled_at: string | null
+          sent_at: string | null
+          status: string
+          template_name: string | null
+          template_params: Json | null
+          tenant_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notification_type: string
+          recipient_phone: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          template_name?: string | null
+          template_params?: Json | null
+          tenant_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notification_type?: string
+          recipient_phone?: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          template_name?: string | null
+          template_params?: Json | null
+          tenant_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
