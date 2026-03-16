@@ -853,10 +853,10 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           x: "-50%",
           y: "-50%",
         }}
-        initial={{ opacity: 0, scale: 0.5 }}
+        initial={{ opacity: 0, scale: 0.4 }}
         animate={{
-          opacity: phase === "exit" ? 0 : phase === "brand" ? 0.7 : 1,
-          scale: phase === "brand" ? 0.7 : phase === "collapse" ? 0.85 : phase === "exit" ? 0.3 : 1,
+          opacity: phase === "brand" ? 0 : phase === "exit" ? 0 : 1,
+          scale: phase === "brand" ? 0.4 : phase === "collapse" ? 0.85 : phase === "exit" ? 0.3 : 1,
         }}
         transition={{ duration: 1.2, ease: smoothEase }}
       >
