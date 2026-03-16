@@ -2708,11 +2708,24 @@ const LandingPage = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Ambient glow */}
+              {/* DNA Background glow — Purple & Green */}
+              <motion.div
+                className="absolute inset-[-60%] rounded-full blur-[100px] pointer-events-none"
+                style={{ background: "radial-gradient(ellipse 60% 80% at 35% 40%, hsla(265,65%,55%,0.3), transparent 70%)" }}
+                animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.85, 0.5] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <motion.div
+                className="absolute inset-[-60%] rounded-full blur-[100px] pointer-events-none"
+                style={{ background: "radial-gradient(ellipse 60% 80% at 65% 60%, hsla(145,55%,45%,0.25), transparent 70%)" }}
+                animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.75, 0.4] }}
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              />
+              {/* Ambient gold glow */}
               <motion.div
                 className="absolute inset-[-40%] rounded-full blur-[90px] pointer-events-none"
-                style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), hsla(35,50%,55%,0.1), transparent 70%)" }}
-                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.15), hsla(35,50%,55%,0.06), transparent 70%)" }}
+                animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.8, 0.4] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               />
 
