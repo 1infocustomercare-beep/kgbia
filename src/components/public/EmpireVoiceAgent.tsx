@@ -918,6 +918,23 @@ const EmpireVoiceAgent: React.FC = () => {
     });
   }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status, stopAll]);
 
+  const handleCallAction = useCallback(() => {
+    if (voiceMode === "elevenlabs" && conversation.status === "connected") {
+      void stopElevenlabsConversation();
+      return;
+    }
+
+    if (elevenlabsAvailable === false) {
+      startIntroNarration();
+      if (!narratedRef.current.has("hero")) {
+        enqueueSectionNarration("hero", true);
+      }
+      return;
+    }
+
+    void startElevenlabsConversation();
+  }, [voiceMode, conversation.status, stopElevenlabsConversation, elevenlabsAvailable, startIntroNarration, enqueueSectionNarration, startElevenlabsConversation]);
+
   // ── Render ──
   return (
     <>
