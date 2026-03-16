@@ -223,6 +223,7 @@ const FieldDispatchPage = lazy(() => import("./pages/app/FieldDispatchPage"));
 const AgentMarketplace = lazy(() => import("./pages/AgentMarketplace"));
 const AgentDetailPage = lazy(() => import("./pages/AgentDetail"));
 const AdminAgentsPage = lazy(() => import("./pages/admin/AdminAgents"));
+const AdminWhatsApp = lazy(() => import("./pages/admin/AdminWhatsApp"));
 
 const queryClient = new QueryClient();
 
@@ -508,6 +509,11 @@ function App() {
                       <Route path="/admin/agents" element={
                         <ProtectedRoute requiredRole="super_admin">
                           <AdminAgentsPage />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/admin/whatsapp" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <AdminWhatsApp />
                         </ProtectedRoute>
                       } />
                       <Route path="/superadmin/media" element={

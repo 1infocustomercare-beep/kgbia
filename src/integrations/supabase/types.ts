@@ -239,6 +239,48 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_agent_prompts: {
+        Row: {
+          agent_name: string
+          autonomy_level: number | null
+          blocked_capabilities: Json | null
+          capabilities: Json | null
+          created_at: string | null
+          id: string
+          industry_type: string
+          is_active: boolean | null
+          prompt_text: string
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          agent_name: string
+          autonomy_level?: number | null
+          blocked_capabilities?: Json | null
+          capabilities?: Json | null
+          created_at?: string | null
+          id?: string
+          industry_type: string
+          is_active?: boolean | null
+          prompt_text: string
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          agent_name?: string
+          autonomy_level?: number | null
+          blocked_capabilities?: Json | null
+          capabilities?: Json | null
+          created_at?: string | null
+          id?: string
+          industry_type?: string
+          is_active?: boolean | null
+          prompt_text?: string
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       ai_alerts: {
         Row: {
           agent_name: string | null
@@ -4411,6 +4453,51 @@ export type Database = {
           status?: string
           template_name?: string | null
           template_params?: Json | null
+          tenant_id?: string
+        }
+        Relationships: []
+      }
+      whatsapp_templates: {
+        Row: {
+          body_text: string
+          buttons: Json | null
+          category: string | null
+          created_at: string | null
+          footer_text: string | null
+          header_text: string | null
+          id: string
+          language: string | null
+          meta_template_id: string | null
+          status: string | null
+          template_name: string | null
+          tenant_id: string
+        }
+        Insert: {
+          body_text: string
+          buttons?: Json | null
+          category?: string | null
+          created_at?: string | null
+          footer_text?: string | null
+          header_text?: string | null
+          id?: string
+          language?: string | null
+          meta_template_id?: string | null
+          status?: string | null
+          template_name?: string | null
+          tenant_id: string
+        }
+        Update: {
+          body_text?: string
+          buttons?: Json | null
+          category?: string | null
+          created_at?: string | null
+          footer_text?: string | null
+          header_text?: string | null
+          id?: string
+          language?: string | null
+          meta_template_id?: string | null
+          status?: string | null
+          template_name?: string | null
           tenant_id?: string
         }
         Relationships: []
