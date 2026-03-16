@@ -600,7 +600,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
       <motion.div
         className="absolute inset-0 flex items-end justify-center pb-20 sm:pb-24 pointer-events-none"
         initial={{ opacity: 0 }}
-        animate={{ opacity: phase === "scatter" ? 0 : phase === "exit" ? 0 : 1 }}
+        animate={{ opacity: phase === "brand" ? 0 : phase === "exit" ? 0 : 1 }}
         transition={{ duration: 0.4, delay: 0.3 }}
       >
         <div className="flex flex-col items-center gap-3">
