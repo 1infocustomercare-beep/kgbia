@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
 import BackButton from "@/components/BackButton";
 import { motion, AnimatePresence } from "framer-motion";
-import { LayoutDashboard, UtensilsCrossed, ShoppingCart, TrendingUp, LogOut, Settings } from "lucide-react";
+import { LayoutDashboard, UtensilsCrossed, ShoppingCart, TrendingUp, LogOut, Settings, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useMyRestaurant } from "@/hooks/useMyRestaurant";
