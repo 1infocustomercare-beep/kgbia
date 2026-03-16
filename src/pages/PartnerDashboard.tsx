@@ -10,7 +10,7 @@ import {
   Eye, EyeOff, Briefcase, BarChart3,
   Users, Award, Star, FolderDown,
   Link2, Copy, CheckCircle, UserPlus,
-  ExternalLink, ChefHat, Smartphone, Monitor
+  ExternalLink, ChefHat, Smartphone, Monitor, ArrowLeft
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
