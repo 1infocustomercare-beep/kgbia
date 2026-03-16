@@ -293,9 +293,8 @@ async function speakText(
     });
 
     if (!resp.ok || abortRef.current) {
-      console.warn("ElevenLabs TTS failed, switching to browser voice");
+      // Transient API/network errors should not permanently force browser-only mode.
       useBrowserFallbackRef.current = true;
-      setBrowserOnlyTTS(true);
       return speakWithBrowserTTS(normalizedText, abortRef, options);
     }
 
