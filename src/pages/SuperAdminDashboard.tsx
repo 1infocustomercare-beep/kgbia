@@ -572,17 +572,17 @@ const SuperAdminDashboard = () => {
         </div>
       </div>
 
-      {/* Tab bar — horizontally scrollable */}
-      <div className="overflow-x-auto scrollbar-hide">
-        <div className="flex gap-1 px-3 py-2 min-w-max">
+      {/* Tab bar — compact grid for mobile */}
+      <div className="px-3 py-2">
+        <div className="grid grid-cols-5 gap-1">
           {tabs.map((tab) => (
             <button key={tab.id}
               onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center gap-0.5 px-3 py-2 rounded-xl text-[0.6rem] font-medium whitespace-nowrap transition-colors min-h-[44px] min-w-[64px] ${
+              className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px] ${
                 activeTab === tab.id ? "bg-empire-violet text-white shadow-[0_0_16px_hsl(265_85%_65%/0.3)]" : "bg-empire-violet-surface/50 text-muted-foreground hover:bg-empire-violet-surface"
               }`}>
-              <span className="[&_svg]:w-3.5 [&_svg]:h-3.5">{tab.icon}</span>
-              <span className="leading-tight">{tab.label}</span>
+              <span className="[&_svg]:w-3 [&_svg]:h-3">{tab.icon}</span>
+              <span className="leading-tight truncate w-full text-center">{tab.label}</span>
             </button>
           ))}
         </div>
