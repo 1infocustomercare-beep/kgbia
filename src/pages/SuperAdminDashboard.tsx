@@ -445,9 +445,8 @@ const SuperAdminDashboard = () => {
   }, [payments, fiscoMissing, blockedTenants]);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-x-hidden">
       <EmpireDNABackground />
-      <BackButton to="/home" label="Home" variant="floating" theme="light" />
       {/* Header */}
       <div className="relative overflow-hidden border-b border-empire-violet-deep/30 bg-gradient-to-br from-empire-violet-surface via-background to-empire-violet/5">
         {/* HUD grid — DNA violet */}
