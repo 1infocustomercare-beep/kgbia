@@ -1048,7 +1048,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
         {/* Micro DNA particles */}
         {Array.from({ length: 12 }).map((_, i) => {
           const isViolet = i % 2 === 0;
-          const radius = IS_MOBILE ? (72 + (i % 3) * 10) : (115 + (i % 3) * 15);
+          const radius = IS_MOBILE ? (48 + (i % 3) * 6) : (80 + (i % 3) * 12);
           return (
             <motion.div
               key={`particle-${i}`}
@@ -1062,6 +1062,8 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                   : "0 0 8px hsla(38,60%,60%,0.4)",
                 top: "50%",
                 left: "50%",
+                marginTop: -2,
+                marginLeft: -2,
               }}
               animate={{
                 x: Array.from({ length: 13 }, (_, k) =>
