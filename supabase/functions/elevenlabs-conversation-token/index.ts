@@ -49,8 +49,9 @@ serve(async (req) => {
     }
 
     if (!agentId) {
-      return new Response(JSON.stringify({ error: "ElevenLabs Agent ID non configurato. Vai su Agenti IA → Configurazione ElevenLabs nel pannello Super Admin." }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      // Return 200 with unavailable flag instead of 400 to avoid noisy client errors
+      return new Response(JSON.stringify({ token: null, unavailable: true, reason: "ElevenLabs Agent ID non configurato." }), {
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
