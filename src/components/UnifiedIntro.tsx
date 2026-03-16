@@ -69,6 +69,10 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
 
   // Unified click: double-tap on mobile, double-click on desktop
   const handleTap = useCallback(() => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("empire-user-gesture"));
+    }
+
     if (!tappedRef.current) {
       tappedRef.current = true;
       return;

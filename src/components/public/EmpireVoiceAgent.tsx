@@ -825,6 +825,7 @@ const EmpireVoiceAgent: React.FC = () => {
       }
 
       // Keep queue flow coherent with full narration system
+      narrationAttemptsRef.current.hero = 0;
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
@@ -863,8 +864,11 @@ const EmpireVoiceAgent: React.FC = () => {
     };
 
     const options = { passive: true } as const;
+    window.addEventListener("empire-user-gesture", unlockAndRetry as EventListener);
     window.addEventListener("pointerdown", unlockAndRetry, options);
     window.addEventListener("touchstart", unlockAndRetry, options);
+    window.addEventListener("touchend", unlockAndRetry, options);
+    window.addEventListener("click", unlockAndRetry, options);
     window.addEventListener("keydown", unlockAndRetry);
     window.addEventListener("scroll", unlockAndRetry, options);
 
@@ -872,13 +876,18 @@ const EmpireVoiceAgent: React.FC = () => {
       (navigator as Navigator & { userActivation?: { hasBeenActive?: boolean } }).userActivation?.hasBeenActive;
     if (maybeActivated) {
       window.setTimeout(unlockAndRetry, 0);
+      window.setTimeout(unlockAndRetry, 600);
+      window.setTimeout(unlockAndRetry, 1800);
     }
 
     return () => {
       isMounted = false;
       unlockInFlightRef.current = false;
+      window.removeEventListener("empire-user-gesture", unlockAndRetry as EventListener);
       window.removeEventListener("pointerdown", unlockAndRetry as EventListener);
       window.removeEventListener("touchstart", unlockAndRetry as EventListener);
+      window.removeEventListener("touchend", unlockAndRetry as EventListener);
+      window.removeEventListener("click", unlockAndRetry as EventListener);
       window.removeEventListener("keydown", unlockAndRetry as EventListener);
       window.removeEventListener("scroll", unlockAndRetry as EventListener);
     };
