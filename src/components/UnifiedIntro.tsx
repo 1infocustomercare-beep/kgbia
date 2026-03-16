@@ -1012,8 +1012,8 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
           { Icon: Binary, color: "hsla(38,45%,60%,0.85)", glow: "hsla(38,45%,60%,0.25)" },
         ].map(({ Icon, color, glow }, i) => {
           const total = 8;
-          const radius = IS_MOBILE ? 85 : 135;
-          const radiusY = IS_MOBILE ? 78 : 125;
+          const radius = IS_MOBILE ? 58 : 100;
+          const radiusY = IS_MOBILE ? 54 : 92;
           return (
             <motion.div
               key={`outer-${i}`}
@@ -1025,6 +1025,8 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                 boxShadow: `0 0 12px ${glow}, inset 0 0 4px hsla(265,30%,35%,0.1)`,
                 top: "50%",
                 left: "50%",
+                marginTop: -10,
+                marginLeft: -10,
               }}
               animate={{
                 x: Array.from({ length: 7 }, (_, k) =>
