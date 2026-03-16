@@ -457,6 +457,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const useBrowserFallbackRef = useRef(isBrowserOnlyTTS());
   const isTouchDeviceRef = useRef(false);
   const userInteractedRef = useRef(false);
+  const unlockInFlightRef = useRef(false);
 
   // ── ElevenLabs Conversational AI hook ──
   const conversation = useConversation({
