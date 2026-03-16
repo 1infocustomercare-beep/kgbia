@@ -12,6 +12,9 @@ import type {
   WhatsAppNotification,
 } from "@/types/whatsapp";
 
+// Helper to bypass generated types for new tables not yet in types.ts
+const from = (table: string) => supabase.from(table as any);
+
 // ── Config ──
 export function useWhatsAppConfig() {
   const { user } = useAuth();
@@ -19,13 +22,12 @@ export function useWhatsAppConfig() {
     queryKey: ["whatsapp-config", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("whatsapp_config" as any)
+      const { data, error } = await from("whatsapp_config")
         .select("*")
         .eq("tenant_id", user!.id)
         .maybeSingle();
       if (error) throw error;
-      return data as WhatsAppConfig | null;
+      return (data as unknown as WhatsAppConfig) ?? null;
     },
   });
 }
@@ -35,22 +37,19 @@ export function useSaveWhatsAppConfig() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (config: Partial<WhatsAppConfig>) => {
-      const existing = await supabase
-        .from("whatsapp_config" as any)
+      const { data: existing } = await from("whatsapp_config")
         .select("id")
         .eq("tenant_id", user!.id)
         .maybeSingle();
 
-      if (existing.data) {
-        const { error } = await supabase
-          .from("whatsapp_config" as any)
-          .update({ ...config, updated_at: new Date().toISOString() })
-          .eq("id", existing.data.id);
+      if (existing) {
+        const { error } = await from("whatsapp_config")
+          .update({ ...config, updated_at: new Date().toISOString() } as any)
+          .eq("id", (existing as any).id);
         if (error) throw error;
       } else {
-        const { error } = await supabase
-          .from("whatsapp_config" as any)
-          .insert({ ...config, tenant_id: user!.id });
+        const { error } = await from("whatsapp_config")
+          .insert({ ...config, tenant_id: user!.id } as any);
         if (error) throw error;
       }
     },
@@ -65,13 +64,12 @@ export function useWhatsAppConversations() {
     queryKey: ["whatsapp-conversations", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("whatsapp_conversations" as any)
+      const { data, error } = await from("whatsapp_conversations")
         .select("*")
         .eq("tenant_id", user!.id)
         .order("last_message_at", { ascending: false });
       if (error) throw error;
-      return (data || []) as WhatsAppConversation[];
+      return (data as unknown as WhatsAppConversation[]) || [];
     },
   });
 }
@@ -83,14 +81,13 @@ export function useWhatsAppMessages(conversationId: string | null) {
     queryKey: ["whatsapp-messages", conversationId],
     enabled: !!user && !!conversationId,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("whatsapp_messages" as any)
+      const { data, error } = await from("whatsapp_messages")
         .select("*")
         .eq("conversation_id", conversationId!)
         .eq("tenant_id", user!.id)
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return (data || []) as WhatsAppMessage[];
+      return (data as unknown as WhatsAppMessage[]) || [];
     },
   });
 }
@@ -145,14 +142,13 @@ export function useWhatsAppNotifications() {
     queryKey: ["whatsapp-notifications", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("whatsapp_notifications" as any)
+      const { data, error } = await from("whatsapp_notifications")
         .select("*")
         .eq("tenant_id", user!.id)
         .order("created_at", { ascending: false })
         .limit(50);
       if (error) throw error;
-      return (data || []) as WhatsAppNotification[];
+      return (data as unknown as WhatsAppNotification[]) || [];
     },
   });
 }
