@@ -701,9 +701,14 @@ const EmpireVoiceAgent: React.FC = () => {
       } else if (!abortRef.current) {
         const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
         console.warn(`[Arianna] Narration failed for "${sectionId}", attempt ${attempts}`);
-        if (attempts < 20) {
-          await new Promise(r => setTimeout(r, 1200));
+        if (attempts < 3) {
+          await new Promise(r => setTimeout(r, 2000));
           sectionQueueRef.current.push(sectionId);
+        } else {
+          // After 3 failures, mark as narrated to stop retrying and show text only
+          console.log(`[Arianna] Giving up narration for "${sectionId}" after ${attempts} attempts — text shown in chat`);
+          narratedRef.current.add(sectionId);
+          setNarratedSections(new Set(narratedRef.current));
         }
       }
 
@@ -1113,22 +1118,34 @@ const EmpireVoiceAgent: React.FC = () => {
     setMessages(prev => [...prev, { role: "assistant", content: "📞 Sto chiamando Arianna..." }]);
     setIsOpen(true);
 
-    if (elevenlabsAvailable === false) {
-      stopRingTone();
-      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ La chiamata vocale non è disponibile al momento. Usa la chat testuale o il microfono per parlare con me." }]);
-      // Restart narration as fallback
-      startIntroNarration();
-      return;
+    // Try ElevenLabs first if available
+    if (elevenlabsAvailable !== false) {
+      try {
+        await startElevenlabsConversation();
+        stopRingTone();
+        return;
+      } catch {
+        // Fall through to legacy mode
+      }
     }
 
-    try {
-      await startElevenlabsConversation();
-      stopRingTone();
-    } catch {
-      stopRingTone();
-      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ Non riesco a connettermi. Riprova tra un momento." }]);
+    // Fallback: use legacy SpeechRecognition for a "call" experience
+    stopRingTone();
+
+    if (SpeechRecognition) {
+      setMessages(prev => [...prev, { role: "assistant", content: "📞 Arianna in linea! Parlami pure, ti ascolto... 🎙️" }]);
+      setMode("voice");
+
+      // Small delay so the user sees the message before mic starts
+      setTimeout(() => {
+        startListening();
+      }, 800);
+    } else {
+      // No mic available — switch to chat mode
+      setMessages(prev => [...prev, { role: "assistant", content: "Ciao! Sono qui per aiutarti 💬 Scrivi pure la tua domanda qui sotto." }]);
+      setMode("chat");
     }
-  }, [voiceMode, conversation.status, stopElevenlabsConversation, elevenlabsAvailable, startIntroNarration, startElevenlabsConversation, stopAll, playRingTone, stopRingTone]);
+  }, [voiceMode, conversation.status, stopElevenlabsConversation, elevenlabsAvailable, startElevenlabsConversation, stopAll, playRingTone, stopRingTone, startListening]);
 
   // ── Render ──
   return (
