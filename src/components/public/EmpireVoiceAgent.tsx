@@ -321,7 +321,6 @@ async function speakText(
       audio.onended = () => resolve(true);
       audio.onerror = () => {
         useBrowserFallbackRef.current = true;
-        setBrowserOnlyTTS(true);
         speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
       };
 
