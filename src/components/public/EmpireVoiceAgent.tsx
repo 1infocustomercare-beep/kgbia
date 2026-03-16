@@ -522,24 +522,23 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, []);
 
-  // Check ElevenLabs availability only when panel is opened (avoid startup network noise on mobile)
+  // Check ElevenLabs availability early (on mount) so the call button works immediately
   useEffect(() => {
-    if (!isOpen || elevenlabsAvailable !== null) return;
+    if (elevenlabsAvailable !== null) return;
 
     let mounted = true;
-
-    const checkElevenlabs = async () => {
+    // Delay check slightly to avoid blocking initial render
+    const timer = setTimeout(async () => {
       const token = await getElevenlabsTokenSilently();
       if (!mounted) return;
       setElevenlabsAvailable(!!token);
-    };
-
-    void checkElevenlabs();
+    }, 2000);
 
     return () => {
       mounted = false;
+      clearTimeout(timer);
     };
-  }, [isOpen, elevenlabsAvailable, getElevenlabsTokenSilently]);
+  }, [elevenlabsAvailable, getElevenlabsTokenSilently]);
 
   // Start ElevenLabs conversation
   const startElevenlabsConversation = useCallback(async () => {
@@ -825,18 +824,25 @@ const EmpireVoiceAgent: React.FC = () => {
   }, [startIntroNarration, enqueueSectionNarration]);
 
   // ── Recovery: autoplay restrictions on mobile browsers (retry inside first gestures, also after splash) ──
+  // IMPORTANT: This only fires ONCE to unlock audio. After that, narration continues
+  // on its own via the queue system. Touching the screen must NOT restart narration.
+  const audioUnlockedRef = useRef(false);
+
   useEffect(() => {
     let isMounted = true;
 
     const unlockAndRetry = () => {
       if (!isMounted) return;
+      // Only unlock ONCE — after that, narration is self-sustaining
+      if (audioUnlockedRef.current) return;
       if (unlockInFlightRef.current) return;
-      if (narratedRef.current.has("hero")) return;
 
       unlockInFlightRef.current = true;
+      audioUnlockedRef.current = true;
       userInteractedRef.current = true;
       setUserInteracted(true);
 
+      // Unlock speechSynthesis with a silent utterance inside gesture context
       if (window.speechSynthesis) {
         try {
           window.speechSynthesis.cancel();
@@ -852,8 +858,6 @@ const EmpireVoiceAgent: React.FC = () => {
       // Force next hero narration attempt to run immediately in this gesture context
       preferImmediateNarrationRef.current = true;
       narrationAttemptsRef.current.hero = 0;
-      narratedRef.current.delete("hero");
-      setNarratedSections(new Set(narratedRef.current));
 
       stopSplashNarration();
       abortRef.current = false;
@@ -1049,22 +1053,82 @@ const EmpireVoiceAgent: React.FC = () => {
     });
   }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status, stopAll]);
 
-  const handleCallAction = useCallback(() => {
+  // ── Ring tone for phone call effect ──
+  const ringToneRef = useRef<{ ctx: AudioContext; osc: OscillatorNode; gain: GainNode } | null>(null);
+
+  const playRingTone = useCallback(() => {
+    try {
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = 440;
+      gain.gain.value = 0.15;
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+
+      // Ring pattern: beep-pause-beep
+      const now = ctx.currentTime;
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.setValueAtTime(0, now + 0.4);
+      gain.gain.setValueAtTime(0.15, now + 0.6);
+      gain.gain.setValueAtTime(0, now + 1.0);
+      gain.gain.setValueAtTime(0.15, now + 1.4);
+      gain.gain.setValueAtTime(0, now + 1.8);
+
+      ringToneRef.current = { ctx, osc, gain };
+
+      // Auto-stop after 3s max
+      setTimeout(() => stopRingTone(), 3000);
+    } catch {
+      // AudioContext not available
+    }
+  }, []);
+
+  const stopRingTone = useCallback(() => {
+    if (ringToneRef.current) {
+      try {
+        ringToneRef.current.osc.stop();
+        ringToneRef.current.ctx.close();
+      } catch { /* noop */ }
+      ringToneRef.current = null;
+    }
+  }, []);
+
+  const handleCallAction = useCallback(async () => {
     if (voiceMode === "elevenlabs" && conversation.status === "connected") {
+      stopRingTone();
       void stopElevenlabsConversation();
       return;
     }
 
+    // Stop any ongoing narration so the call takes over
+    stopAll();
+    abortRef.current = false;
+
+    // Play ring tone for realistic phone feel
+    playRingTone();
+
+    // Show connecting message
+    setMessages(prev => [...prev, { role: "assistant", content: "📞 Sto chiamando Arianna..." }]);
+    setIsOpen(true);
+
     if (elevenlabsAvailable === false) {
+      stopRingTone();
+      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ La chiamata vocale non è disponibile al momento. Usa la chat testuale o il microfono per parlare con me." }]);
+      // Restart narration as fallback
       startIntroNarration();
-      if (!narratedRef.current.has("hero")) {
-        enqueueSectionNarration("hero", true);
-      }
       return;
     }
 
-    void startElevenlabsConversation();
-  }, [voiceMode, conversation.status, stopElevenlabsConversation, elevenlabsAvailable, startIntroNarration, enqueueSectionNarration, startElevenlabsConversation]);
+    try {
+      await startElevenlabsConversation();
+      stopRingTone();
+    } catch {
+      stopRingTone();
+      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ Non riesco a connettermi. Riprova tra un momento." }]);
+    }
+  }, [voiceMode, conversation.status, stopElevenlabsConversation, elevenlabsAvailable, startIntroNarration, startElevenlabsConversation, stopAll, playRingTone, stopRingTone]);
 
   // ── Render ──
   return (
