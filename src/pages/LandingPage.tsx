@@ -43,6 +43,7 @@ import cartoonRetailDefault from "@/assets/cartoon-sector-retail.png";
 import cartoonFitnessDefault from "@/assets/cartoon-sector-fitness.png";
 import cartoonHotelDefault from "@/assets/cartoon-sector-hotel.png";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
+import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 
 /* Build a lookup from site_assets — custom URL overrides bundled default */
 function useLandingAssets() {
