@@ -244,13 +244,19 @@ async function speakText(
     useBrowserFallbackRef.current = true;
   }
 
-  // Use browser TTS for non-premium sections or when premium is disabled
+  // Use browser TTS first for reliability, then fallback to premium for hero when needed.
   const isPremiumSection = sectionId ? PREMIUM_SECTIONS.has(sectionId) : false;
   if (!isPremiumSection || useBrowserFallbackRef.current) {
-    return speakWithBrowserTTS(normalizedText, abortRef);
+    const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef);
+    if (playedInBrowser || abortRef.current) return playedInBrowser;
+
+    // On mobile, if browser TTS is blocked for hero intro, try premium as secondary fallback.
+    if (sectionId !== "hero" || useBrowserFallbackRef.current) {
+      return false;
+    }
   }
 
-  // Premium voice (ElevenLabs) — only for first impact
+  // Premium voice (ElevenLabs) — fallback path for blocked hero autoplay
   try {
     const resp = await fetch(TTS_URL, {
       method: "POST",
