@@ -844,8 +844,15 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
 
       {/* ═══ DNA Neural Nexus — from Landing Hero ═══ */}
       <motion.div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none overflow-visible"
-        style={{ width: IS_MOBILE ? "55vmin" : "42vmin", height: IS_MOBILE ? "55vmin" : "42vmin" }}
+        className="absolute pointer-events-none overflow-visible"
+        style={{
+          width: IS_MOBILE ? "55vmin" : "42vmin",
+          height: IS_MOBILE ? "55vmin" : "42vmin",
+          top: "50%",
+          left: "50%",
+          x: "-50%",
+          y: "-50%",
+        }}
         initial={{ opacity: 0, scale: 0.4 }}
         animate={{
           opacity: phase === "brand" ? 0 : phase === "exit" ? 0 : 1,
