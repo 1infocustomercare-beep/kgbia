@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Crown } from "lucide-react";
+import {
+  Crown, Brain, Cpu, Fingerprint, Workflow, ScanLine, Database,
+  BrainCircuit, Network, Atom, Radar, CircuitBoard, Waypoints, Sparkles, Binary
+} from "lucide-react";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
