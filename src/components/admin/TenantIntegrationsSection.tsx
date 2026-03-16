@@ -30,20 +30,32 @@ const PLAN_LABELS: Record<string, string> = {
 
 const PLAN_INTEGRATIONS: Record<string, string[]> = {
   essential: ["Lovable Cloud", "Lovable AI Gateway"],
-  smart_ia: ["Lovable Cloud", "Lovable AI Gateway", "ElevenLabs", "Meta Business"],
-  empire_pro: ["Lovable Cloud", "Lovable AI Gateway", "ElevenLabs", "Stripe Platform", "Meta Business", "Google My Business"],
+  smart_ia: ["Lovable Cloud", "Lovable AI Gateway", "ElevenLabs", "Meta Business", "WhatsApp Business"],
+  empire_pro: ["Lovable Cloud", "Lovable AI Gateway", "ElevenLabs", "Stripe Platform", "Meta Business", "Google My Business", "WhatsApp Business"],
   digital_start: ["Lovable Cloud", "Lovable AI Gateway"],
-  growth_ai: ["Lovable Cloud", "Lovable AI Gateway", "ElevenLabs", "Stripe Platform"],
-  empire_domination: ["Lovable Cloud", "Lovable AI Gateway", "ElevenLabs", "Stripe Platform", "Meta Business", "Google My Business", "Google Analytics"],
+  growth_ai: ["Lovable Cloud", "Lovable AI Gateway", "ElevenLabs", "Stripe Platform", "WhatsApp Business"],
+  empire_domination: ["Lovable Cloud", "Lovable AI Gateway", "ElevenLabs", "Stripe Platform", "Meta Business", "Google My Business", "Google Analytics", "WhatsApp Business"],
 };
 
 const SECTOR_INTEGRATIONS: Record<string, string[]> = {
-  food: ["Fatturazione SDI", "Delivery API", "Stampante ESC/POS"],
+  food: ["Fatturazione SDI", "Delivery API", "Stampante ESC/POS", "WhatsApp Business"],
   ncc: ["Google Maps", "WhatsApp Business", "Stripe NCC"],
-  beauty: ["Google Calendar", "SMS Twilio"],
-  healthcare: ["Telemedicina", "HL7/FHIR"],
-  hospitality: ["Channel Manager", "PMS Integration"],
-  retail: ["POS Integration", "Shopify/Woo"],
+  beauty: ["Google Calendar", "SMS Twilio", "WhatsApp Business"],
+  healthcare: ["Telemedicina", "HL7/FHIR", "WhatsApp Business"],
+  hospitality: ["Channel Manager", "PMS Integration", "WhatsApp Business"],
+  retail: ["POS Integration", "Shopify/Woo", "WhatsApp Business"],
+  fitness: ["WhatsApp Business"],
+  plumber: ["WhatsApp Business"],
+  electrician: ["WhatsApp Business"],
+  construction: ["WhatsApp Business"],
+  cleaning: ["WhatsApp Business"],
+  legal: ["WhatsApp Business"],
+  accounting: ["WhatsApp Business"],
+  events: ["WhatsApp Business"],
+  logistics: ["WhatsApp Business"],
+  veterinary: ["WhatsApp Business"],
+  education: ["WhatsApp Business"],
+  custom: ["WhatsApp Business"],
 };
 
 type PaymentStatus = "ok" | "warning" | "overdue" | "blocked" | "trial" | "unknown";
