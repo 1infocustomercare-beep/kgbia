@@ -324,9 +324,12 @@ const AdminDashboard = () => {
             <p className="text-[10px] text-primary">{bottomTabs.find(t => t.id === activeTab)?.label}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <GuidesToggle />
-          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center">
+          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center" title="Home">
+            <ArrowLeft className="w-4 h-4 text-muted-foreground" />
+          </button>
+          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center" title="Esci">
             <LogOut className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
