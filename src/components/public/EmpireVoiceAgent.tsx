@@ -1054,22 +1054,82 @@ const EmpireVoiceAgent: React.FC = () => {
     });
   }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status, stopAll]);
 
-  const handleCallAction = useCallback(() => {
+  // ── Ring tone for phone call effect ──
+  const ringToneRef = useRef<{ ctx: AudioContext; osc: OscillatorNode; gain: GainNode } | null>(null);
+
+  const playRingTone = useCallback(() => {
+    try {
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = 440;
+      gain.gain.value = 0.15;
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+
+      // Ring pattern: beep-pause-beep
+      const now = ctx.currentTime;
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.setValueAtTime(0, now + 0.4);
+      gain.gain.setValueAtTime(0.15, now + 0.6);
+      gain.gain.setValueAtTime(0, now + 1.0);
+      gain.gain.setValueAtTime(0.15, now + 1.4);
+      gain.gain.setValueAtTime(0, now + 1.8);
+
+      ringToneRef.current = { ctx, osc, gain };
+
+      // Auto-stop after 3s max
+      setTimeout(() => stopRingTone(), 3000);
+    } catch {
+      // AudioContext not available
+    }
+  }, []);
+
+  const stopRingTone = useCallback(() => {
+    if (ringToneRef.current) {
+      try {
+        ringToneRef.current.osc.stop();
+        ringToneRef.current.ctx.close();
+      } catch { /* noop */ }
+      ringToneRef.current = null;
+    }
+  }, []);
+
+  const handleCallAction = useCallback(async () => {
     if (voiceMode === "elevenlabs" && conversation.status === "connected") {
+      stopRingTone();
       void stopElevenlabsConversation();
       return;
     }
 
+    // Stop any ongoing narration so the call takes over
+    stopAll();
+    abortRef.current = false;
+
+    // Play ring tone for realistic phone feel
+    playRingTone();
+
+    // Show connecting message
+    setMessages(prev => [...prev, { role: "assistant", content: "📞 Sto chiamando Arianna..." }]);
+    setIsOpen(true);
+
     if (elevenlabsAvailable === false) {
+      stopRingTone();
+      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ La chiamata vocale non è disponibile al momento. Usa la chat testuale o il microfono per parlare con me." }]);
+      // Restart narration as fallback
       startIntroNarration();
-      if (!narratedRef.current.has("hero")) {
-        enqueueSectionNarration("hero", true);
-      }
       return;
     }
 
-    void startElevenlabsConversation();
-  }, [voiceMode, conversation.status, stopElevenlabsConversation, elevenlabsAvailable, startIntroNarration, enqueueSectionNarration, startElevenlabsConversation]);
+    try {
+      await startElevenlabsConversation();
+      stopRingTone();
+    } catch {
+      stopRingTone();
+      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ Non riesco a connettermi. Riprova tra un momento." }]);
+    }
+  }, [voiceMode, conversation.status, stopElevenlabsConversation, elevenlabsAvailable, startIntroNarration, startElevenlabsConversation, stopAll, playRingTone, stopRingTone]);
 
   // ── Render ──
   return (
