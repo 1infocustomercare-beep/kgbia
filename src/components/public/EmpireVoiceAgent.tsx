@@ -753,7 +753,6 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── Auto-voice intro (hands-free) — starts at splash/home without opening chat ──
   useEffect(() => {
     if (autoBootedRef.current) return;
-
     autoBootedRef.current = true;
 
     const timer = setTimeout(() => {
@@ -761,12 +760,12 @@ const EmpireVoiceAgent: React.FC = () => {
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
       }
-    }, 250); // immediate start during splash/home landing
+    }, 120);
 
     return () => clearTimeout(timer);
   }, [startIntroNarration, enqueueSectionNarration]);
 
-  // ── Recovery: if autoplay policy blocks first attempt, retry on first user interaction (chat stays closed) ──
+  // ── Recovery: autoplay restrictions on mobile browsers (retry silently, chat stays closed) ──
   useEffect(() => {
     const unlockAndRetry = () => {
       if (userInteractedRef.current) return;
@@ -775,7 +774,8 @@ const EmpireVoiceAgent: React.FC = () => {
 
       if (window.speechSynthesis) {
         try {
-          const silent = new SpeechSynthesisUtterance("");
+          window.speechSynthesis.cancel();
+          const silent = new SpeechSynthesisUtterance(" ");
           silent.volume = 0;
           silent.lang = "it-IT";
           window.speechSynthesis.speak(silent);
@@ -789,11 +789,19 @@ const EmpireVoiceAgent: React.FC = () => {
       }
     };
 
+    const maybeActivated = (navigator as Navigator & { userActivation?: { hasBeenActive?: boolean } }).userActivation?.hasBeenActive;
+    if (maybeActivated) {
+      unlockAndRetry();
+      return;
+    }
+
     window.addEventListener("pointerdown", unlockAndRetry, { passive: true, once: true });
+    window.addEventListener("touchstart", unlockAndRetry, { passive: true, once: true });
     window.addEventListener("keydown", unlockAndRetry, { once: true });
 
     return () => {
       window.removeEventListener("pointerdown", unlockAndRetry as EventListener);
+      window.removeEventListener("touchstart", unlockAndRetry as EventListener);
       window.removeEventListener("keydown", unlockAndRetry as EventListener);
     };
   }, [enqueueSectionNarration]);
