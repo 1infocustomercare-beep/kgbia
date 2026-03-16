@@ -16,7 +16,6 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lazy, Suspense, useRef, useCallback } from "react";
 import empireAgentMascot from "@/assets/empire-agent-mascot.png";
-import BackButton from "@/components/BackButton";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
 import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
