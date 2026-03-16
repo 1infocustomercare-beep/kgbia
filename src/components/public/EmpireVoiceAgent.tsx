@@ -721,8 +721,16 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    // Always queue hero narration fresh — no splash dependency
-    enqueueSectionNarration("hero", true);
+    const queueHeroWhenReady = () => {
+      if (!voiceEnabledRef.current) return;
+      if (isSplashNarrationSpeaking()) {
+        window.setTimeout(queueHeroWhenReady, 220);
+        return;
+      }
+      enqueueSectionNarration("hero", true);
+    };
+
+    queueHeroWhenReady();
   }, [enqueueSectionNarration]);
 
   const stopAll = useCallback(() => {
