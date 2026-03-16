@@ -4,6 +4,7 @@ import {
   Crown, Brain, Cpu, Fingerprint, Workflow, ScanLine, Database,
   BrainCircuit, Network, Atom, Radar, CircuitBoard, Waypoints, Sparkles, Binary
 } from "lucide-react";
+import { startSplashNarration, unlockAndStartSplashNarration } from "@/lib/splash-narration";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
@@ -67,18 +68,27 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
     onComplete();
   }, [onComplete]);
 
-  // Unified click: double-tap on mobile, double-click on desktop
-  const handleTap = useCallback(() => {
+  useEffect(() => {
+    startSplashNarration();
+  }, []);
+
+  const emitGestureUnlock = useCallback(() => {
+    unlockAndStartSplashNarration();
     if (typeof window !== "undefined") {
       window.dispatchEvent(new Event("empire-user-gesture"));
     }
+  }, []);
+
+  // Unified click: double-tap on mobile, double-click on desktop
+  const handleTap = useCallback(() => {
+    emitGestureUnlock();
 
     if (!tappedRef.current) {
       tappedRef.current = true;
       return;
     }
     safeComplete();
-  }, [safeComplete]);
+  }, [emitGestureUnlock, safeComplete]);
 
   // Phase scheduler
   useEffect(() => {
