@@ -5,6 +5,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { useIndustry } from "@/hooks/useIndustry";
 import { motion, AnimatePresence } from "framer-motion";
+import EmpireDNABackground from "@/components/EmpireDNABackground";
 
 export default function AppLayout() {
   const { industry, loading, resolved } = useIndustry();
