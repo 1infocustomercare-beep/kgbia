@@ -826,8 +826,6 @@ const EmpireVoiceAgent: React.FC = () => {
       userInteractedRef.current = true;
       setUserInteracted(true);
 
-      const heroScript = SECTION_SCRIPTS.hero;
-
       if (window.speechSynthesis) {
         try {
           window.speechSynthesis.cancel();
@@ -840,43 +838,18 @@ const EmpireVoiceAgent: React.FC = () => {
         }
       }
 
-      // Keep queue flow coherent with full narration system
+      // Force next hero narration attempt to run immediately in this gesture context
+      preferImmediateNarrationRef.current = true;
       narrationAttemptsRef.current.hero = 0;
+      narratedRef.current.delete("hero");
+      setNarratedSections(new Set(narratedRef.current));
+
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
       }
 
-      if (!heroScript) {
-        unlockInFlightRef.current = false;
-        return;
-      }
-
-      // Immediate best-effort speech inside gesture context for iOS autoplay policies
-      void (async () => {
-        setMessages((prev) => {
-          const last = prev[prev.length - 1];
-          if (last?.role === "assistant" && last.content === heroScript) return prev;
-          return [...prev, { role: "assistant", content: heroScript }];
-        });
-
-        abortRef.current = false;
-        setIsSpeaking(true);
-        setIsPaused(false);
-
-        const played = await speakWithBrowserTTS(normalizeTextForSpeech(heroScript), abortRef, {
-          preferImmediate: true,
-        });
-
-        if (played && !abortRef.current) {
-          narrationAttemptsRef.current.hero = 0;
-          narratedRef.current.add("hero");
-          setNarratedSections(new Set(narratedRef.current));
-        }
-
-        setIsSpeaking(false);
-        unlockInFlightRef.current = false;
-      })();
+      unlockInFlightRef.current = false;
     };
 
     const options = { passive: true } as const;
