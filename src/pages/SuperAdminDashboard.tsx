@@ -447,7 +447,9 @@ const SuperAdminDashboard = () => {
   }, [payments, fiscoMissing, blockedTenants]);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-x-hidden">
+    <div className="min-h-screen bg-background relative overflow-x-hidden" style={{ isolation: "isolate" }}>
+      {/* Opaque overlay to block EmpireDNABackground from bleeding through */}
+      <div className="fixed inset-0 bg-background/95 -z-[1]" />
       
       {/* Header */}
       <div className="relative overflow-hidden border-b border-empire-violet-deep/30 bg-gradient-to-br from-empire-violet-surface via-background to-empire-violet/5">
