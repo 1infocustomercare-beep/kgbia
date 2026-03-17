@@ -241,7 +241,7 @@ const DashboardOverview = ({
 
       {/* Quick Actions */}
       <div className="space-y-2">
-        <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">Azioni rapide</p>
+        <p className="text-[0.55rem] uppercase tracking-[3px] text-muted-foreground/40 font-semibold">Accesso Rapido</p>
         <div className="grid grid-cols-2 gap-2">
           <motion.button onClick={() => window.open(menuUrl, "_blank")}
             className="flex items-center gap-2 p-3 rounded-xl bg-secondary/50 text-sm text-foreground min-h-[48px] active:bg-secondary transition-colors"
