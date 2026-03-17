@@ -5,7 +5,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { useIndustry } from "@/hooks/useIndustry";
 import { motion, AnimatePresence } from "framer-motion";
-import EmpireDNABackground from "@/components/EmpireDNABackground";
+
 
 import PageGuide from "@/components/ui/page-guide";
 
