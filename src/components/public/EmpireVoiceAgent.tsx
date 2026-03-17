@@ -265,23 +265,23 @@ async function speakText(
   const normalizedText = normalizeTextForSpeech(text);
   if (!normalizedText) return false;
 
-  if (isBrowserOnlyTTS()) {
+  const quotaKnownExhausted = isBrowserOnlyTTS();
+  if (quotaKnownExhausted) {
     useBrowserFallbackRef.current = true;
   }
 
-  // Use browser TTS first for reliability, then fallback to premium for hero when needed.
-  const isPremiumSection = sectionId ? PREMIUM_SECTIONS.has(sectionId) : false;
-  if (!isPremiumSection || useBrowserFallbackRef.current) {
-    const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
-    if (playedInBrowser || abortRef.current) return playedInBrowser;
+  // Always try browser TTS first — it's free and reliable when gesture context is available
+  const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
+  if (playedInBrowser || abortRef.current) return playedInBrowser;
 
-    // If browser speech is blocked, always allow premium fallback for hero.
-    if (sectionId !== "hero") {
-      return false;
-    }
+  // If we KNOW premium quota is exhausted, don't waste API calls — just return false
+  // The gesture handler will retry browser TTS in a proper gesture context later
+  if (quotaKnownExhausted) {
+    console.log("[Arianna] Skipping premium API (quota exhausted) — waiting for gesture to retry browser TTS");
+    return false;
   }
 
-  // Premium voice (ElevenLabs) — fallback path for blocked hero autoplay
+  // Premium voice (ElevenLabs) — only try if quota might still be available
   try {
     const resp = await fetch(TTS_URL, {
       method: "POST",
@@ -293,9 +293,8 @@ async function speakText(
     });
 
     if (!resp.ok || abortRef.current) {
-      // Transient API/network errors should not permanently force browser-only mode.
       useBrowserFallbackRef.current = true;
-      return speakWithBrowserTTS(normalizedText, abortRef, options);
+      return false;
     }
 
     const data = await resp.json();
@@ -305,7 +304,7 @@ async function speakText(
       if (data?.error === "quota_exceeded" || data?.fallback) {
         setBrowserOnlyTTS(true);
       }
-      return speakWithBrowserTTS(normalizedText, abortRef, options);
+      return false;
     }
 
     // Premium path worked: allow future premium attempts again
@@ -321,7 +320,7 @@ async function speakText(
       audio.onended = () => resolve(true);
       audio.onerror = () => {
         useBrowserFallbackRef.current = true;
-        speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
+        resolve(false);
       };
 
       if (abortRef.current) {
@@ -332,12 +331,12 @@ async function speakText(
 
       audio.play().catch(() => {
         useBrowserFallbackRef.current = true;
-        speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
+        resolve(false);
       });
     });
   } catch {
     useBrowserFallbackRef.current = true;
-    return speakWithBrowserTTS(normalizedText, abortRef, options);
+    return false;
   }
 }
 
@@ -702,13 +701,14 @@ const EmpireVoiceAgent: React.FC = () => {
         const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
         console.warn(`[Arianna] Narration failed for "${sectionId}", attempt ${attempts}`);
         if (attempts < 3) {
+          // Short retry for transient failures
           await new Promise(r => setTimeout(r, 2000));
           sectionQueueRef.current.push(sectionId);
         } else {
-          // After 3 failures, mark as narrated to stop retrying and show text only
-          console.log(`[Arianna] Giving up narration for "${sectionId}" after ${attempts} attempts — text shown in chat`);
-          narratedRef.current.add(sectionId);
-          setNarratedSections(new Set(narratedRef.current));
+          // Don't permanently give up — just stop the active retry loop.
+          // The gesture handler will re-enqueue with forceReplay when user interacts.
+          console.log(`[Arianna] Pausing narration for "${sectionId}" after ${attempts} attempts — waiting for user gesture`);
+          // Do NOT add to narratedRef — leave it as "not narrated" so gesture can retry
         }
       }
 
@@ -859,9 +859,11 @@ const EmpireVoiceAgent: React.FC = () => {
 
     const unlockAndRetry = () => {
       if (!isMounted) return;
-      // Only unlock ONCE — after that, narration is self-sustaining
-      if (audioUnlockedRef.current) return;
       if (unlockInFlightRef.current) return;
+
+      // Allow re-fire if hero hasn't been narrated yet (gesture unlock is needed)
+      const heroStillPending = !narratedRef.current.has("hero");
+      if (audioUnlockedRef.current && !heroStillPending) return;
 
       unlockInFlightRef.current = true;
       audioUnlockedRef.current = true;
@@ -888,7 +890,10 @@ const EmpireVoiceAgent: React.FC = () => {
       stopSplashNarration();
       abortRef.current = false;
       startIntroNarration();
-      if (!narratedRef.current.has("hero")) {
+      // Always force-enqueue hero if it hasn't been narrated yet
+      if (heroStillPending) {
+        // Ensure it's not already in queue
+        sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== "hero");
         enqueueSectionNarration("hero", true);
       }
 
