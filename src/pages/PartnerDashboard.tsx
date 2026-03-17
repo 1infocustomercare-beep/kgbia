@@ -13,6 +13,7 @@ import {
   ExternalLink, ChefHat, Smartphone, Monitor, ArrowLeft
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import PageGuide from "@/components/ui/page-guide";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import PartnerSandbox from "@/components/partner/PartnerSandbox";
