@@ -309,7 +309,7 @@ async function executeAction(
       }
 
       case "menu_add_item": {
-        const { error } = await supabase.from("menu_items").insert({
+        const { error, data: inserted } = await supabase.from("menu_items").insert({
           restaurant_id: resourceId,
           name: action.name,
           price: action.price,
@@ -318,9 +318,83 @@ async function executeAction(
           allergens: action.allergens || null,
           is_active: true,
           is_popular: false,
-        });
+        }).select("id").single();
         if (error) return { success: false, detail: `Errore: ${error.message}` };
-        return { success: true, detail: `"${action.name}" aggiunto (€${action.price}, ${action.category || "Altro"})` };
+        return { success: true, detail: `"${action.name}" aggiunto (€${action.price}, ${action.category || "Altro"})`, menuItemId: inserted?.id };
+      }
+
+      case "food_photo_generate": {
+        // Generate food-porn photo via ai-menu edge function
+        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+        const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+        
+        let plateImageUrl: string | undefined;
+        if (action.plate_name) {
+          const { data: plates } = await supabase.from("restaurant_plates")
+            .select("image_url, name").eq("restaurant_id", resourceId).eq("is_active", true)
+            .ilike("name", `%${action.plate_name}%`).limit(1);
+          if (plates?.length) plateImageUrl = plates[0].image_url;
+        }
+
+        const aiMenuBody: any = {
+          action: "generate-foodporn",
+          dishName: action.dish_name,
+          plateStyle: "elegant white ceramic plate",
+        };
+        if (plateImageUrl) aiMenuBody.plateImageUrl = plateImageUrl;
+
+        const aiResp = await fetch(`${supabaseUrl}/functions/v1/ai-menu`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${anonKey}` },
+          body: JSON.stringify(aiMenuBody),
+        });
+        const aiData = await aiResp.json();
+        if (aiData?.imageUrl) {
+          return { success: true, detail: `Foto food-porn di "${action.dish_name}" generata!`, imageUrl: aiData.imageUrl };
+        }
+        return { success: false, detail: `Foto non generata: ${aiData?.error || "errore sconosciuto"}` };
+      }
+
+      case "menu_add_with_photo": {
+        // Step 1: Add menu item
+        const { error: addErr, data: newItem } = await supabase.from("menu_items").insert({
+          restaurant_id: resourceId,
+          name: action.name,
+          price: action.price,
+          category: action.category || "Altro",
+          description: action.description || null,
+          is_active: true,
+          is_popular: false,
+        }).select("id").single();
+        if (addErr) return { success: false, detail: `Errore aggiunta: ${addErr.message}` };
+
+        // Step 2: Generate photo
+        const url = Deno.env.get("SUPABASE_URL")!;
+        const key = Deno.env.get("SUPABASE_ANON_KEY")!;
+        
+        let plateUrl: string | undefined;
+        if (action.plate_name) {
+          const { data: pl } = await supabase.from("restaurant_plates")
+            .select("image_url").eq("restaurant_id", resourceId).eq("is_active", true)
+            .ilike("name", `%${action.plate_name}%`).limit(1);
+          if (pl?.length) plateUrl = pl[0].image_url;
+        }
+
+        const photoBody: any = { action: "generate-foodporn", dishName: action.name, plateStyle: "elegant white ceramic plate" };
+        if (plateUrl) photoBody.plateImageUrl = plateUrl;
+
+        const photoResp = await fetch(`${url}/functions/v1/ai-menu`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
+          body: JSON.stringify(photoBody),
+        });
+        const photoData = await photoResp.json();
+        
+        if (photoData?.imageUrl && newItem?.id) {
+          await supabase.from("menu_items").update({ image_url: photoData.imageUrl }).eq("id", newItem.id);
+          return { success: true, detail: `"${action.name}" aggiunto a €${action.price} con foto food-porn generata!` };
+        }
+        return { success: true, detail: `"${action.name}" aggiunto a €${action.price} (foto in errore, puoi rigenerarla dalla dashboard)` };
       }
 
       case "menu_update_description": {
