@@ -279,6 +279,10 @@
   .text-foreground\/35 { color: hsl(var(--foreground) / 0.58) !important; }
   .text-foreground\/40 { color: hsl(var(--foreground) / 0.6) !important; }
   .text-foreground\/45 { color: hsl(var(--foreground) / 0.65) !important; }
+  .text-white\/15 { color: rgba(255,255,255, 0.35) !important; }
+  .text-white\/20 { color: rgba(255,255,255, 0.42) !important; }
+  .text-white\/25 { color: rgba(255,255,255, 0.48) !important; }
+  .text-white\/50 { color: rgba(255,255,255, 0.65) !important; }
 
   .text-brand-gradient {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
