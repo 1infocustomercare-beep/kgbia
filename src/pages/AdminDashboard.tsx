@@ -22,6 +22,7 @@ import ProfitTab from "@/components/admin/ProfitTab";
 import MoreMenu from "@/components/admin/MoreMenu";
 import EmpireAssistant from "@/components/admin/EmpireAssistant";
 import { GuidesToggle } from "@/components/ui/info-guide";
+import PageGuide from "@/components/ui/page-guide";
 
 type MainTab = "dashboard" | "studio" | "orders" | "profit" | "more";
 
@@ -469,6 +470,7 @@ const AdminDashboard = () => {
           ))}
         </div>
       </div>
+      <PageGuide />
     </div>
   );
 };
