@@ -4845,11 +4845,10 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <PremiumCarousel speed="slow" itemWidth={340} fullWidth>
+        <PremiumCarousel speed="slow" itemWidth={290} fullWidth>
           {testimonials.map((t, i) => (
             <div key={i} className="group relative h-full">
-              {/* Card */}
-              <div className="relative p-7 sm:p-8 rounded-2xl h-full flex flex-col overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
+              <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
                 style={{
                   background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
                   border: "1px solid hsla(265,40%,50%,0.12)",
@@ -4866,53 +4865,50 @@ const LandingPage = () => {
                 <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
                 
                 {/* Top gradient line */}
-                <div className="absolute top-0 left-8 right-8 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
-                
-                {/* Industry emoji badge */}
-                <div className="absolute top-5 right-5 w-8 h-8 rounded-lg flex items-center justify-center text-sm"
-                  style={{ background: "hsla(265,30%,20%,0.6)", border: "1px solid hsla(265,40%,50%,0.15)" }}>
-                  {t.emoji}
+                <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
+
+                {/* Avatar + emoji badge centered */}
+                <div className="relative mb-4 mt-1">
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center text-base font-bold font-heading mx-auto"
+                    style={{
+                      background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))",
+                      border: "2px solid hsla(265,50%,55%,0.25)",
+                      color: "hsl(var(--primary))",
+                      boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)",
+                    }}>
+                    {t.name.charAt(0)}
+                  </div>
+                  {/* Emoji badge positioned on avatar */}
+                  <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
+                    style={{ background: "hsla(265,30%,15%,0.9)", border: "1px solid hsla(265,40%,50%,0.2)", boxShadow: "0 4px 12px hsla(0,0%,0%,0.3)" }}>
+                    {t.emoji}
+                  </div>
+                  {/* Orbital ring */}
+                  <motion.div className="absolute -inset-2 rounded-full pointer-events-none"
+                    style={{ border: "1px dashed hsla(265,50%,55%,0.12)" }}
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
                 </div>
 
-                {/* Quote icon — gold accent */}
-                <div className="mb-5">
-                  <Quote className="w-5 h-5" style={{ color: "hsla(38,50%,55%,0.4)" }} />
-                </div>
+                {/* Author name & role */}
+                <h4 className="font-heading text-xs font-semibold mb-0.5" style={{ color: "hsla(0,0%,100%,0.85)" }}>{t.name}</h4>
+                <p className="text-[0.58rem] mb-4" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
 
-                {/* Testimonial text */}
-                <blockquote className="text-[0.8rem] sm:text-sm leading-[1.85] mb-6 flex-1"
-                  style={{ color: "hsla(0,0%,100%,0.55)" }}>
+                {/* Quote */}
+                <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1"
+                  style={{ color: "hsla(0,0%,100%,0.5)" }}>
+                  <Quote className="w-3.5 h-3.5 mx-auto mb-2" style={{ color: "hsla(38,50%,55%,0.3)" }} />
                   "{t.quote}"
                 </blockquote>
 
-                {/* Metric badge — glowing */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.65rem] font-semibold font-heading tracking-wider mb-5 self-start transition-all duration-500 group-hover:shadow-[0_0_20px_-4px_hsla(265,70%,60%,0.3)]"
+                {/* Metric badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.62rem] font-semibold font-heading tracking-wider transition-all duration-500 group-hover:shadow-[0_0_20px_-4px_hsla(265,70%,60%,0.3)]"
                   style={{
                     background: "linear-gradient(135deg, hsla(265,40%,25%,0.5), hsla(265,30%,18%,0.4))",
                     border: "1px solid hsla(265,60%,55%,0.2)",
                     color: "hsl(var(--primary))",
                   }}>
                   <TrendingUp className="w-3 h-3" /> {t.metric}
-                </div>
-
-                {/* Divider — gradient */}
-                <div className="h-px mb-5" style={{ background: "linear-gradient(90deg, hsla(38,50%,55%,0.15), hsla(265,40%,50%,0.1), transparent)" }} />
-
-                {/* Author */}
-                <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-full flex items-center justify-center text-xs font-bold font-heading"
-                    style={{
-                      background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))",
-                      border: "1px solid hsla(265,50%,55%,0.2)",
-                      color: "hsl(var(--primary))",
-                      boxShadow: "0 0 16px -4px hsla(265,70%,60%,0.2)",
-                    }}>
-                    {t.name.charAt(0)}
-                  </div>
-                  <div>
-                    <h4 className="font-heading text-xs font-semibold" style={{ color: "hsla(0,0%,100%,0.8)" }}>{t.name}</h4>
-                    <p className="text-[0.6rem] mt-0.5" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
-                  </div>
                 </div>
 
                 {/* Bottom glow */}
