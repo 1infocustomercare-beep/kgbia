@@ -364,7 +364,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
   <motion.div
     className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
     style={{
-      background: "linear-gradient(145deg, hsla(230,10%,17%,0.65), hsla(230,8%,13%,0.55))",
+      background: "linear-gradient(145deg, hsla(230,10%,14%,0.95), hsla(230,8%,10%,0.92))",
       backdropFilter: "blur(20px) saturate(1.4)",
       borderColor: "hsla(38,40%,55%,0.1)",
     }}
@@ -1727,7 +1727,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
 
               {/* ── Feature Request CTA ── */}
               <motion.div className="max-w-4xl mx-auto mt-8 text-center" initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <div className="p-5 rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background/40 to-accent/[0.03] backdrop-blur-sm">
+                <div className="p-5 rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background/90 to-accent/[0.03] backdrop-blur-sm">
                   <div className="w-12 h-12 mx-auto rounded-xl bg-vibrant-gradient flex items-center justify-center mb-3">
                     <Sparkles className="w-6 h-6 text-primary-foreground" />
                   </div>
@@ -2775,7 +2775,7 @@ const LandingPage = () => {
               {metrics.map((m, i) => (
                 <motion.div key={i} className="group relative rounded-2xl p-5 sm:p-6 text-center overflow-hidden backdrop-blur-xl"
                   style={{
-                    background: "linear-gradient(145deg, hsla(265,30%,18%,0.55), hsla(265,25%,12%,0.45))",
+                    background: "linear-gradient(145deg, hsla(265,30%,15%,0.92), hsla(265,25%,10%,0.88))",
                     border: "1px solid hsla(38,50%,55%,0.12)",
                     boxShadow: "inset 0 1px 0 hsla(38,50%,60%,0.08), inset 0 -1px 0 hsla(265,50%,30%,0.1), 0 12px 40px hsla(265,50%,10%,0.3), 0 0 60px hsla(265,60%,50%,0.04)"
                   }}
@@ -2820,7 +2820,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden bg-card/60 backdrop-blur-sm">
+      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden bg-card/90 backdrop-blur-sm">
         <div className="flex animate-marquee-scroll whitespace-nowrap">
           {[...Array(2)].map((_, repeat) => (
             <div key={repeat} className="flex items-center gap-12 px-6">
@@ -2916,8 +2916,8 @@ const LandingPage = () => {
                       
                       {/* Compact card */}
                       <div className="flex-1 min-w-0 rounded-xl border px-3 py-2.5" style={{
-                        background: "linear-gradient(145deg, hsla(260,18%,18%,0.6), hsla(260,16%,14%,0.5))",
-                        borderColor: "hsla(265,50%,60%,0.1)",
+                        background: "linear-gradient(145deg, hsla(260,18%,14%,0.92), hsla(260,16%,10%,0.88))",
+                        borderColor: "hsla(265,50%,60%,0.12)",
                       }}>
                         <div className="flex items-center gap-2">
                           <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${pain.color} flex items-center justify-center text-white flex-shrink-0`}>
@@ -3342,7 +3342,7 @@ const LandingPage = () => {
                   <motion.div key={i}
                     className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md"
                     style={{
-                      background: "linear-gradient(135deg, hsla(265,30%,15%,0.6), hsla(265,20%,10%,0.5))",
+                      background: "linear-gradient(135deg, hsla(265,30%,12%,0.92), hsla(265,20%,8%,0.88))",
                       border: "1px solid hsla(265,50%,50%,0.12)",
                       boxShadow: "0 4px 20px hsla(265,50%,10%,0.3)"
                     }}
@@ -4076,7 +4076,7 @@ const LandingPage = () => {
                     transition={{ delay: i * 0.12 + 0.3, duration: 0.35 }}
                   />
 
-                  <div className="relative rounded-xl border border-foreground/[0.07] bg-card/35 backdrop-blur-sm p-2.5 sm:p-3 overflow-hidden">
+                  <div className="relative rounded-xl border border-foreground/[0.07] bg-card/90 backdrop-blur-sm p-2.5 sm:p-3 overflow-hidden">
                     <motion.div
                       className="relative w-[58px] h-[58px] sm:w-[62px] sm:h-[62px] rounded-xl mx-auto mb-2.5 overflow-hidden"
                       style={{ background: "hsla(265,20%,8%,0.6)", border: "1px solid hsla(265,70%,60%,0.14)", backdropFilter: "blur(8px)" }}
