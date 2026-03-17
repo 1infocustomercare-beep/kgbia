@@ -79,6 +79,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const pointerRef = useRef({ x: size / 2, y: size / 2, active: false });
+  const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
