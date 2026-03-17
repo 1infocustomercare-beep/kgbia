@@ -487,29 +487,8 @@ const MoreMenu = ({
         </div>
       )}
 
-      {/* ACADEMY */}
-      {section === "academy" && (
-        <div className="space-y-3">
-          <div className="text-center py-2">
-            <GraduationCap className="w-10 h-10 mx-auto mb-2 text-primary" />
-            <h3 className="text-base font-display font-bold text-foreground">Empire Academy</h3>
-          </div>
-          {[
-            { title: "Fotografare piatti con impatto visivo", emoji: "📸", done: true },
-            { title: "Copywriting gastronomico", emoji: "✍️", done: true },
-            { title: "Instagram Stories per ristoranti", emoji: "📱", done: false },
-            { title: "Gestione recensioni", emoji: "💬", done: false },
-            { title: "Promozioni flash", emoji: "🔥", done: false },
-            { title: "QR Code strategico", emoji: "📋", done: false },
-          ].map((l, i) => (
-            <div key={i} className={`flex items-center gap-3 p-4 rounded-xl min-h-[56px] ${l.done ? "bg-primary/10 border border-primary/20" : "bg-secondary/50"}`}>
-              <span className="text-2xl flex-shrink-0">{l.emoji}</span>
-              <p className="text-sm font-medium text-foreground flex-1 min-w-0">{l.title}</p>
-              {l.done && <Check className="w-5 h-5 text-primary flex-shrink-0" />}
-            </div>
-          ))}
-        </div>
-      )}
+      {/* ACADEMY — Dynamic Tutorial Hub */}
+      {section === "academy" && <AcademySection />}
 
       {/* SETTINGS */}
       {section === "settings" && (
