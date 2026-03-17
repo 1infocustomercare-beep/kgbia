@@ -931,6 +931,16 @@ const EmpireVoiceAgent: React.FC = () => {
     };
   }, [enqueueSectionNarration, startIntroNarration]);
 
+  // ── Cleanup: stop all audio when component unmounts (e.g. navigating away) ──
+  useEffect(() => {
+    // Expose a global stop function so other voice agents can silence Arianna
+    (window as any).__empireVoiceAgentStopAll = stopAll;
+    return () => {
+      stopAll();
+      delete (window as any).__empireVoiceAgentStopAll;
+    };
+  }, [stopAll]);
+
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
     userInteractedRef.current = true;
