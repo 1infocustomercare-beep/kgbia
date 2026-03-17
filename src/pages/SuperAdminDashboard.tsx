@@ -1705,10 +1705,29 @@ const SuperAdminDashboard = () => {
                         </button>
                       ))}
                     </div>
+                    {/* Account usage chips */}
+                    <div className="flex flex-wrap gap-1">
+                      <span className="text-[0.5rem] text-muted-foreground/60 font-semibold self-center mr-0.5">Account:</span>
+                      {([
+                        { key: "all", label: "Tutti", color: "text-foreground bg-secondary/40" },
+                        { key: "subscribed", label: "📋 In Piano", color: "text-blue-400 bg-blue-500/10" },
+                        { key: "extra", label: "⭐ Extra", color: "text-amber-400 bg-amber-500/10" },
+                        { key: "requested", label: "📩 Richiesto", color: "text-purple-400 bg-purple-500/10" },
+                        { key: "none", label: "➖ Non attivo", color: "text-muted-foreground bg-muted/20" },
+                      ] as const).map(a => (
+                        <button
+                          key={a.key}
+                          onClick={() => setIntFilter(prev => ({ ...prev, account: a.key }))}
+                          className={`px-2 py-0.5 rounded-md text-[0.55rem] font-bold transition-all ${intFilter.account === a.key ? a.color + " ring-1 ring-primary/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
+                        >
+                          {a.label}
+                        </button>
+                      ))}
+                    </div>
                     {/* Reset */}
                     {hasActiveFilters && (
                       <button
-                        onClick={() => setIntFilter({ status: "all", category: "all", sector: "all", search: "" })}
+                        onClick={() => setIntFilter({ status: "all", category: "all", sector: "all", account: "all", search: "" })}
                         className="text-[0.55rem] text-primary font-bold flex items-center gap-0.5 hover:underline"
                       >
                         <X className="w-2.5 h-2.5" /> Reset filtri
