@@ -894,11 +894,17 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [isPaused]);
 
-   // ── Auto-narrate on section change — ONLY if user explicitly started narration ──
+  // ── Auto-narrate on section change — always follow user scroll ──
   useEffect(() => {
     if (!currentSection || !SECTION_SCRIPTS[currentSection]) return;
-    // Only narrate if user explicitly activated narration (not auto-boot)
-    if (!autoNarrating || !userInteractedRef.current) return;
+    // If audio has been unlocked (user interacted), always try to narrate new sections
+    if (!autoNarrating && !audioUnlockedRef.current) return;
+    
+    // Re-enable auto-narrating if gesture happened and it was disabled
+    if (!autoNarrating && audioUnlockedRef.current && !abortRef.current) {
+      autoNarratingRef.current = true;
+      setAutoNarrating(true);
+    }
     
     enqueueSectionNarration(currentSection);
   }, [autoNarrating, currentSection, enqueueSectionNarration]);
@@ -911,31 +917,148 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Auto-voice intro DISABLED — Arianna only speaks when user clicks the agent ──
-  // (Removed auto-boot polling that caused unwanted auto-narration)
+  // ── Auto-voice intro (hands-free) — waits for hero section to be visible (post-splash) ──
+  useEffect(() => {
+    if (autoBootedRef.current) return;
 
-  // ── Audio unlock helper — only used when user explicitly activates Arianna ──
-  const audioUnlockedRef = useRef(false);
+    const bootAttempt = () => {
+      if (autoBootedRef.current) return;
+      // Only boot once the hero section is actually rendered and visible (splash is done)
+      const heroEl = document.getElementById("hero");
+      if (!heroEl) return false;
+      const rect = heroEl.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0 && rect.height > 0;
+      if (!isVisible) return false;
 
-  const unlockAudioContext = useCallback(() => {
-    if (audioUnlockedRef.current) return;
-    audioUnlockedRef.current = true;
-    userInteractedRef.current = true;
-    setUserInteracted(true);
-    
-    // Unlock speechSynthesis with a silent utterance inside gesture context
-    if (window.speechSynthesis) {
-      try {
-        window.speechSynthesis.cancel();
-        const silent = new SpeechSynthesisUtterance(" ");
-        silent.volume = 0;
-        silent.lang = "it-IT";
-        window.speechSynthesis.speak(silent);
-      } catch {
-        // noop
+      autoBootedRef.current = true;
+      console.log("[Arianna] Boot attempt — hero visible, starting narration");
+      startIntroNarration();
+      if (!narratedRef.current.has("hero")) {
+        enqueueSectionNarration("hero", true);
       }
+      return true;
+    };
+
+    // Poll until hero section becomes visible (after splash completes)
+    const pollInterval = window.setInterval(() => {
+      if (bootAttempt()) {
+        window.clearInterval(pollInterval);
+      }
+    }, 500);
+
+    // Safety: stop polling after 30s
+    const safety = window.setTimeout(() => {
+      window.clearInterval(pollInterval);
+      if (!autoBootedRef.current) {
+        autoBootedRef.current = true;
+        startIntroNarration();
+      }
+    }, 30000);
+
+    return () => {
+      window.clearInterval(pollInterval);
+      window.clearTimeout(safety);
+    };
+  }, [startIntroNarration, enqueueSectionNarration]);
+
+  // ── Recovery: autoplay restrictions — gesture-driven unlock + re-enqueue current section ──
+  const audioUnlockedRef = useRef(false);
+  const lastGestureEnqueueRef = useRef(0);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const unlockAndRetry = () => {
+      if (!isMounted) return;
+      if (unlockInFlightRef.current) return;
+
+      // Throttle: don't fire more than once per 3 seconds
+      const now = Date.now();
+      if (now - lastGestureEnqueueRef.current < 3000 && audioUnlockedRef.current) return;
+
+      // Allow re-fire if there are un-narrated sections visible
+      const currentSec = currentSection;
+      const currentPending = currentSec ? !narratedRef.current.has(currentSec) : false;
+      const heroStillPending = !narratedRef.current.has("hero");
+
+      // If fully unlocked and nothing pending, skip
+      if (audioUnlockedRef.current && !heroStillPending && !currentPending) return;
+
+      unlockInFlightRef.current = true;
+      lastGestureEnqueueRef.current = now;
+      userInteractedRef.current = true;
+      setUserInteracted(true);
+
+      // Unlock speechSynthesis with a silent utterance inside gesture context
+      if (window.speechSynthesis) {
+        try {
+          window.speechSynthesis.cancel();
+          const silent = new SpeechSynthesisUtterance(" ");
+          silent.volume = 0;
+          silent.lang = "it-IT";
+          window.speechSynthesis.speak(silent);
+        } catch {
+          // noop
+        }
+      }
+
+      const isFirstUnlock = !audioUnlockedRef.current;
+      audioUnlockedRef.current = true;
+
+      // Force next narration attempt to run immediately in this gesture context
+      preferImmediateNarrationRef.current = true;
+
+      stopSplashNarration();
+      abortRef.current = false;
+
+      if (isFirstUnlock || heroStillPending) {
+        narrationAttemptsRef.current.hero = 0;
+        startIntroNarration();
+        if (heroStillPending) {
+          sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== "hero");
+          enqueueSectionNarration("hero", true);
+        }
+      }
+
+      // Also enqueue the currently visible section if it hasn't been narrated
+      if (currentSec && currentSec !== "hero" && currentPending && !queueProcessingRef.current) {
+        narrationAttemptsRef.current[currentSec] = 0;
+        sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== currentSec);
+        enqueueSectionNarration(currentSec, true);
+      }
+
+      unlockInFlightRef.current = false;
+    };
+
+    const options = { passive: true } as const;
+    window.addEventListener("empire-user-gesture", unlockAndRetry as EventListener);
+    window.addEventListener("pointerdown", unlockAndRetry, options);
+    window.addEventListener("touchstart", unlockAndRetry, options);
+    window.addEventListener("touchend", unlockAndRetry, options);
+    window.addEventListener("click", unlockAndRetry, options);
+    window.addEventListener("keydown", unlockAndRetry);
+    window.addEventListener("scroll", unlockAndRetry, options);
+
+    const maybeActivated =
+      (navigator as Navigator & { userActivation?: { hasBeenActive?: boolean } }).userActivation?.hasBeenActive;
+    if (maybeActivated) {
+      window.setTimeout(unlockAndRetry, 0);
+      window.setTimeout(unlockAndRetry, 600);
+      window.setTimeout(unlockAndRetry, 1800);
     }
-  }, []);
+
+    return () => {
+      isMounted = false;
+      unlockInFlightRef.current = false;
+      window.removeEventListener("empire-user-gesture", unlockAndRetry as EventListener);
+      window.removeEventListener("pointerdown", unlockAndRetry as EventListener);
+      window.removeEventListener("touchstart", unlockAndRetry as EventListener);
+      window.removeEventListener("touchend", unlockAndRetry as EventListener);
+      window.removeEventListener("click", unlockAndRetry as EventListener);
+      window.removeEventListener("keydown", unlockAndRetry as EventListener);
+      window.removeEventListener("scroll", unlockAndRetry as EventListener);
+    };
+  }, [enqueueSectionNarration, startIntroNarration, currentSection]);
 
   // ── Cleanup: stop all audio when component unmounts (e.g. navigating away) ──
   useEffect(() => {
@@ -952,18 +1075,17 @@ const EmpireVoiceAgent: React.FC = () => {
 
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
-    unlockAudioContext();
+    userInteractedRef.current = true;
+    setUserInteracted(true);
     setMobilePromptShown(false);
     setIsOpen(true);
-    stopSplashNarration();
-    abortRef.current = false;
     setTimeout(() => {
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
       }
     }, 50);
-  }, [startIntroNarration, enqueueSectionNarration, unlockAudioContext]);
+  }, [startIntroNarration, enqueueSectionNarration]);
 
   // ── Send user message ──
   const sendMessage = useCallback(async (text: string) => {
@@ -1307,9 +1429,6 @@ const EmpireVoiceAgent: React.FC = () => {
                     if (autoNarrating) {
                       stopAll();
                     } else {
-                      unlockAudioContext();
-                      stopSplashNarration();
-                      abortRef.current = false;
                       autoNarratingRef.current = true;
                       setAutoNarrating(true);
                       enqueueSectionNarration(currentSection, true);
