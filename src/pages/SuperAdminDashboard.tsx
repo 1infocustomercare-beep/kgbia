@@ -1438,17 +1438,20 @@ const SuperAdminDashboard = () => {
                 { name: "Meta Business", description: "Instagram/Facebook auto", status: "missing", detail: "Meta Graph API", scope: "client", sector: "all", usedBy: "Social Manager", actionLabel: "Configura", guideUrl: "https://business.facebook.com/settings/", guideSteps: ["1. App su business.facebook.com → Impostazioni", "2. Permessi pages_manage_posts"] },
                 { name: "Google My Business", description: "Recensioni & info", status: "missing", detail: "Business Profile API", scope: "client", sector: "all", usedBy: "Reputazione online", actionLabel: "Configura", guideUrl: "https://developers.google.com/my-business", guideSteps: ["1. Abilita Business Profile API", "2. Verifica scheda GMB"] },
                 // ─── NEW INTEGRATIONS ───
-                { name: "Telegram Bot", description: "Ordini & notifiche", status: "missing", detail: "Telegram Bot API", scope: "client", sector: "all", usedBy: "Ordini, notifiche", actionLabel: "Configura", guideUrl: "https://core.telegram.org/bots/api", guideSteps: ["1. @BotFather → /newbot", "2. Copia Bot Token", "3. Inserisci come secret"] },
-                { name: "Perplexity AI", description: "Ricerca semantica IA", status: "missing", detail: "PERPLEXITY_API_KEY", scope: "admin", usedBy: "Concierge, Analytics", actionLabel: "Configura", secretName: "PERPLEXITY_API_KEY", guideUrl: "https://docs.perplexity.ai/", guideSteps: ["1. perplexity.ai → API", "2. Genera API Key", "3. Inserisci come secret"] },
-                { name: "Firecrawl", description: "Web scraping IA", status: "missing", detail: "FIRECRAWL_API_KEY", scope: "admin", usedBy: "Competitor watch, Lead gen", actionLabel: "Configura", secretName: "FIRECRAWL_API_KEY", guideUrl: "https://firecrawl.dev/docs", guideSteps: ["1. firecrawl.dev → API", "2. Genera Key", "3. Inserisci come secret"] },
-                { name: "Slack Workspace", description: "Alert team interni", status: "missing", detail: "Slack Bot Token", scope: "admin", usedBy: "Alert operativi", actionLabel: "Configura", guideUrl: "https://api.slack.com/", guideSteps: ["1. Crea Slack App", "2. Abilita Bot Token", "3. Installa nel workspace"] },
-                { name: "Twilio Voice", description: "Chiamate VoIP", status: "missing", detail: "Twilio Voice API", scope: "client", sector: "all", usedBy: "IVR, conferme", actionLabel: "Configura", guideUrl: "https://www.twilio.com/docs/voice", guideSteps: ["1. Account Twilio", "2. Acquista numero", "3. Configura webhook"] },
-                { name: "Contentful CMS", description: "Gestione contenuti", status: "missing", detail: "Headless CMS", scope: "admin", usedBy: "Blog, Landing pages", actionLabel: "Configura", guideUrl: "https://www.contentful.com/developers/docs/", guideSteps: ["1. Crea Space Contentful", "2. API Key Delivery", "3. Inserisci come secret"] },
-                { name: "Cloudinary", description: "Ottimizzazione media", status: "missing", detail: "Image/Video CDN", scope: "admin", usedBy: "Menu foto, Gallery", actionLabel: "Configura", guideUrl: "https://cloudinary.com/documentation", guideSteps: ["1. cloudinary.com → Dashboard", "2. Copia API Key + Secret", "3. Inserisci come secret"] },
-                { name: "iFood / JustEat", description: "Marketplace food", status: "missing", detail: "API aggregatori", scope: "client", sector: "food", usedBy: "Ordini multi-canale", actionLabel: "Configura", guideSteps: ["1. Partner portal", "2. Richiedi API access", "3. Configura sync menu"] },
-                { name: "Booking.com", description: "OTA prenotazioni", status: "missing", detail: "Connectivity Partner API", scope: "client", sector: "hospitality", usedBy: "Hotel prenotazioni", actionLabel: "Configura", guideUrl: "https://connect.booking.com/", guideSteps: ["1. Booking Connectivity Partner", "2. Credenziali XML API", "3. Mapping camere"] },
-                { name: "Docusign", description: "Firma digitale", status: "missing", detail: "eSignature API", scope: "client", sector: "all", usedBy: "Contratti, preventivi", actionLabel: "Configura", guideUrl: "https://developers.docusign.com/", guideSteps: ["1. DocuSign Developer", "2. Integration Key", "3. Inserisci come secret"] },
-                { name: "Mailchimp", description: "Email marketing", status: "missing", detail: "Marketing automation", scope: "client", sector: "all", usedBy: "Newsletter, campagne", actionLabel: "Configura", guideUrl: "https://mailchimp.com/developer/", guideSteps: ["1. Mailchimp → API Keys", "2. Genera chiave", "3. Inserisci come secret"] },
+                { name: "Telegram Bot", description: "Ordini & notifiche via Telegram", status: "missing", detail: "Connector Lovable nativo — collegamento con un click", scope: "client", sector: "all", usedBy: "Ordini, notifiche", actionLabel: "Connetti", guideUrl: "https://core.telegram.org/bots/api", guideSteps: ["1. Clicca 'Connetti' → seleziona connessione Telegram", "2. Se non hai un bot: @BotFather → /newbot", "3. Il token viene salvato automaticamente come secret"] },
+                { name: "Perplexity AI", description: "Ricerca semantica IA avanzata", status: "missing", detail: "Connector Lovable nativo — collegamento con un click", scope: "admin", usedBy: "Concierge, Analytics, ricerca competitors", actionLabel: "Connetti", secretName: "PERPLEXITY_API_KEY", guideUrl: "https://docs.perplexity.ai/", guideSteps: ["1. Clicca 'Connetti' → seleziona connessione Perplexity", "2. Se non ne hai una: perplexity.ai → API → Genera Key", "3. Collegamento automatico"] },
+                { name: "Firecrawl", description: "Web scraping & crawling IA", status: "missing", detail: "Connector Lovable nativo — collegamento con un click", scope: "admin", usedBy: "Competitor watch, Lead gen, analisi prezzi", actionLabel: "Connetti", secretName: "FIRECRAWL_API_KEY", guideUrl: "https://firecrawl.dev/docs", guideSteps: ["1. Clicca 'Connetti' → seleziona connessione Firecrawl", "2. Se non ne hai una: firecrawl.dev → API → Genera Key", "3. Collegamento automatico"] },
+                { name: "Slack Workspace", description: "Alert team & notifiche interne", status: "missing", detail: "Connector Lovable nativo con Gateway — OAuth automatico", scope: "admin", usedBy: "Alert operativi, notifiche team", actionLabel: "Connetti", guideUrl: "https://api.slack.com/", guideSteps: ["1. Clicca 'Connetti' → autorizza workspace Slack", "2. OAuth gestito dal Gateway Lovable", "3. Nessuna API key manuale necessaria"] },
+                { name: "Twilio (SMS + Voice)", description: "SMS, chiamate VoIP, WhatsApp", status: "missing", detail: "Connector Lovable nativo con Gateway — OAuth automatico", scope: "client", sector: "all", usedBy: "IVR, conferme SMS, reminder", actionLabel: "Connetti", guideUrl: "https://www.twilio.com/docs", guideSteps: ["1. Clicca 'Connetti' → seleziona account Twilio", "2. Gateway gestisce autenticazione", "3. SMS, Voice e WhatsApp disponibili"] },
+                { name: "Contentful CMS", description: "Gestione contenuti headless", status: "missing", detail: "Connector Lovable nativo con Gateway — OAuth automatico", scope: "admin", usedBy: "Blog, Landing pages, contenuti dinamici", actionLabel: "Connetti", guideUrl: "https://www.contentful.com/developers/docs/", guideSteps: ["1. Clicca 'Connetti' → autorizza Space Contentful", "2. Gateway gestisce token", "3. Contenuti sincronizzati in tempo reale"] },
+                { name: "Linear", description: "Project management & issue tracking", status: "missing", detail: "Connector Lovable nativo con Gateway — OAuth automatico", scope: "admin", usedBy: "Task interni, bug tracking, roadmap", actionLabel: "Connetti", guideUrl: "https://linear.app/docs", guideSteps: ["1. Clicca 'Connetti' → autorizza workspace Linear", "2. OAuth gestito dal Gateway Lovable", "3. Sync automatico issue e progetti"] },
+                { name: "Twitch", description: "Live streaming & interazioni", status: "missing", detail: "Connector Lovable nativo con Gateway — OAuth automatico", scope: "client", sector: "all", usedBy: "Eventi live, interazioni real-time", actionLabel: "Connetti", guideUrl: "https://dev.twitch.tv/docs", guideSteps: ["1. Clicca 'Connetti' → autorizza account Twitch", "2. Gateway gestisce autenticazione", "3. Stream e chat API disponibili"] },
+                // ─── API KEY MANUALI ───
+                { name: "Cloudinary", description: "Ottimizzazione media & CDN", status: "missing", detail: "Image/Video CDN — richiede API Key", scope: "admin", usedBy: "Menu foto, Gallery, ottimizzazione", actionLabel: "Configura", guideUrl: "https://cloudinary.com/documentation", guideSteps: ["1. cloudinary.com → Dashboard", "2. Copia Cloud Name + API Key + Secret", "3. Inserisci come secret"] },
+                { name: "iFood / JustEat", description: "Marketplace food delivery", status: "missing", detail: "API aggregatori food — richiede partner access", scope: "client", sector: "food", usedBy: "Ordini multi-canale delivery", actionLabel: "Configura", guideSteps: ["1. Registrati come Partner sul portale", "2. Richiedi API access", "3. Configura webhook ordini e sync menù"] },
+                { name: "Booking.com", description: "OTA prenotazioni hotel", status: "missing", detail: "Connectivity Partner API — richiede partnership", scope: "client", sector: "hospitality", usedBy: "Hotel prenotazioni, tariffe, disponibilità", actionLabel: "Configura", guideUrl: "https://connect.booking.com/", guideSteps: ["1. Registrati come Connectivity Partner", "2. Ottieni credenziali XML API", "3. Configura mapping camere e tariffe"] },
+                { name: "Docusign", description: "Firma digitale contratti", status: "missing", detail: "eSignature API — richiede API Key", scope: "client", sector: "all", usedBy: "Contratti, preventivi, NDA", actionLabel: "Configura", guideUrl: "https://developers.docusign.com/", guideSteps: ["1. DocuSign Developer → Crea app", "2. Ottieni Integration Key", "3. Inserisci come secret"] },
+                { name: "Mailchimp", description: "Email marketing & newsletter", status: "missing", detail: "Marketing automation — richiede API Key", scope: "client", sector: "all", usedBy: "Newsletter, campagne email, automazioni", actionLabel: "Configura", guideUrl: "https://mailchimp.com/developer/", guideSteps: ["1. Mailchimp → Account → API Keys", "2. Genera nuova chiave", "3. Inserisci come secret"] },
               ];
 
               const allIntegrations = [...adminIntegrations, ...clientIntegrations];
@@ -1758,12 +1761,95 @@ const SuperAdminDashboard = () => {
                     </AnimatePresence>
                   </div>
 
-                  {/* Security note — minimal */}
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary/10 bg-primary/[0.02]">
-                    <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
-                    <p className="text-[0.5rem] text-muted-foreground leading-relaxed">
-                      Toggle singolo o per settore · API keys server-side · Mai esposti ai clienti
-                    </p>
+                  {/* ═══ LEGENDA STATI ═══ */}
+                  <div className="rounded-xl border border-border overflow-hidden">
+                    <button
+                      onClick={() => setExpandedSection(expandedSection === ("legend" as any) ? null : "legend" as any)}
+                      className="w-full flex items-center justify-between px-3 py-2.5 bg-card hover:bg-muted/20 transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Info className="w-3.5 h-3.5 text-muted-foreground" />
+                        <span className="text-xs font-display font-bold text-foreground">Legenda</span>
+                      </div>
+                      {expandedSection === ("legend" as any) ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
+                    </button>
+                    <AnimatePresence>
+                      {expandedSection === ("legend" as any) && (
+                        <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
+                          <div className="p-3 space-y-3">
+                            {/* Status legend */}
+                            <div>
+                              <p className="text-[0.6rem] font-bold text-foreground mb-1.5">📊 Stato Connessione</p>
+                              <div className="space-y-1.5">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                                  <span className="text-[0.55rem] font-semibold text-green-400">ON — Connesso</span>
+                                  <span className="text-[0.45rem] text-muted-foreground flex-1">API key configurata e funzionante. Pronto all'uso.</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                                  <span className="text-[0.55rem] font-semibold text-amber-400">⚠ Parziale</span>
+                                  <span className="text-[0.45rem] text-muted-foreground flex-1">Configurata ma con limitazioni (crediti bassi, scadenza vicina).</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2.5 h-2.5 rounded-full bg-destructive" />
+                                  <span className="text-[0.55rem] font-semibold text-destructive">OFF — Mancante</span>
+                                  <span className="text-[0.45rem] text-muted-foreground flex-1">Non configurata. Clicca "Configura" per aggiungere la API key.</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30" />
+                                  <span className="text-[0.55rem] font-semibold text-muted-foreground">⏸ Disattivata</span>
+                                  <span className="text-[0.45rem] text-muted-foreground flex-1">Configurata ma disabilitata manualmente con il toggle.</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Type legend */}
+                            <div>
+                              <p className="text-[0.6rem] font-bold text-foreground mb-1.5">🔌 Tipi di Connessione</p>
+                              <div className="space-y-1.5">
+                                <div className="flex items-start gap-2">
+                                  <span className="text-[0.55rem] font-bold text-primary shrink-0 w-20">🏗️ Infrastruttura</span>
+                                  <span className="text-[0.45rem] text-muted-foreground">Servizi core della piattaforma (DB, AI, Auth). Gestiti automaticamente.</span>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                  <span className="text-[0.55rem] font-bold text-accent shrink-0 w-20">🔗 Connector</span>
+                                  <span className="text-[0.45rem] text-muted-foreground">Integrazioni native Lovable (ElevenLabs, Slack, Telegram…). Si collegano con un click.</span>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                  <span className="text-[0.55rem] font-bold text-amber-400 shrink-0 w-20">🔑 API Key</span>
+                                  <span className="text-[0.45rem] text-muted-foreground">Servizi esterni (Stripe, Google Maps…). Richiedono copia/incolla della chiave.</span>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                  <span className="text-[0.55rem] font-bold text-blue-400 shrink-0 w-20">🏭 Per Settore</span>
+                                  <span className="text-[0.45rem] text-muted-foreground">Integrazioni attive solo per specifici settori (Food, NCC, Beauty…).</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* How to connect */}
+                            <div>
+                              <p className="text-[0.6rem] font-bold text-foreground mb-1.5">📋 Come Collegare</p>
+                              <div className="space-y-1 pl-1">
+                                <p className="text-[0.5rem] text-muted-foreground">1️⃣ Espandi l'integrazione cliccando la freccia ▼</p>
+                                <p className="text-[0.5rem] text-muted-foreground">2️⃣ Segui i passi indicati nella guida step-by-step</p>
+                                <p className="text-[0.5rem] text-muted-foreground">3️⃣ Clicca "Configura" per inserire la API key come secret sicuro</p>
+                                <p className="text-[0.5rem] text-muted-foreground">4️⃣ Il pallino diventerà 🟢 verde — connessione attiva</p>
+                                <p className="text-[0.5rem] text-muted-foreground">5️⃣ Usa il toggle per attivare/disattivare senza cancellare la key</p>
+                              </div>
+                            </div>
+
+                            {/* Security note */}
+                            <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary/10 bg-primary/[0.02]">
+                              <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
+                              <p className="text-[0.5rem] text-muted-foreground leading-relaxed">
+                                Tutte le API key sono archiviate server-side come <strong className="text-foreground">encrypted secrets</strong>. Mai esposte nel frontend. Toggle singolo o per settore.
+                              </p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </>
               );
