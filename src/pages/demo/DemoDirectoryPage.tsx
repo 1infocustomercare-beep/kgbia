@@ -136,77 +136,7 @@ export default function DemoDirectoryPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-6">
 
-        {/* ═══ FEATURED — Customized Premium Demos ═══ */}
-        {!search.trim() && (
-          <motion.div className="mb-10"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-
-            <div className="flex items-center gap-2 mb-5">
-              <Crown className="w-4 h-4 text-amber-400" />
-              <span className="text-xs font-bold tracking-[3px] uppercase text-amber-400/80">Showcase Premium</span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {FEATURED_DEMOS.map((demo, i) => (
-                <motion.div key={demo.id}
-                  className="rounded-2xl overflow-hidden cursor-pointer group"
-                  style={{
-                    background: demo.gradient,
-                    border: `1px solid ${demo.border}`,
-                  }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 + 0.2 }}
-                  whileHover={{ scale: 1.01 }}
-                  onClick={() => navigate(demo.route)}
-                >
-                  <div className="flex items-start gap-4 p-4 sm:p-5">
-                    {/* Phone mockup */}
-                    <div className="flex-shrink-0 hidden sm:block">
-                      <LivePhonePreview route={demo.route} color={demo.color} name={demo.name} />
-                    </div>
-
-                    {/* Info */}
-                    <div className="flex-1 min-w-0 py-2">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-2xl">{demo.emoji}</span>
-                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[8px] font-bold tracking-[2px] uppercase"
-                          style={{ background: `${demo.color}20`, color: demo.color, border: `1px solid ${demo.color}30` }}>
-                          <Star className="w-2.5 h-2.5" fill="currentColor" /> Personalizzato
-                        </div>
-                      </div>
-                      <h3 className="text-base sm:text-lg font-bold text-white mb-1">{demo.name}</h3>
-                      <p className="text-[11px] text-white/45 mb-4">{demo.tagline}</p>
-
-                      {/* Mini phone on mobile */}
-                      <div className="sm:hidden flex justify-center mb-4">
-                        <LivePhonePreview route={demo.route} color={demo.color} name={demo.name} />
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <motion.button
-                          className="px-4 py-2 rounded-xl text-[11px] font-bold text-white flex items-center gap-1.5"
-                          style={{ backgroundColor: demo.color }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={(e) => { e.stopPropagation(); navigate(demo.route); }}
-                        >
-                          Apri Demo Live <ArrowRight className="w-3 h-3" />
-                        </motion.button>
-                        <motion.button
-                          className="px-3 py-2 rounded-xl text-[11px] font-semibold text-white/60 border border-white/10 hover:bg-white/5"
-                          whileTap={{ scale: 0.95 }}
-                          onClick={(e) => { e.stopPropagation(); setExpandedSector(demo.id); }}
-                        >
-                          Vedi Mockup
-                        </motion.button>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+        {/* Featured demos are now integrated into the grid below */}
 
         {/* Search */}
         <div className="relative mb-8">
