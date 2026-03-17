@@ -132,8 +132,8 @@ const DashboardOverview = ({
             <Sparkles className="w-4 h-4 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground">Gettoni IA</p>
-            <p className="text-[11px] text-muted-foreground truncate">Menu Creator, Foto, Traduzioni</p>
+            <p className="text-sm font-medium text-foreground">Intelligenza Artificiale</p>
+            <p className="text-[0.55rem] uppercase tracking-[1.5px] text-muted-foreground/50 font-semibold truncate">Menu · Photo · Translate</p>
           </div>
           <span className={`text-lg font-display font-bold flex-shrink-0 ${aiTokens <= 5 ? "text-destructive" : "text-primary"}`}>{aiTokens}</span>
         </div>
