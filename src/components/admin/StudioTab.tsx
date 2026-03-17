@@ -507,6 +507,8 @@ const StudioTab = ({
                     </span>
                   </div>
                 )}
+                <textarea value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })}
+                  placeholder="Descrizione (opzionale)" rows={2} className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30" />
                 <div className="grid grid-cols-2 gap-2">
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">€</span>
