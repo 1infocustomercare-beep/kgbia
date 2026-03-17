@@ -607,9 +607,9 @@ export default function MultiSectorShowcase() {
         ))}
       </div>
 
-      {/* Sector grid — compact for mobile */}
-      <div className="relative mb-10 px-2">
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-1.5">
+      {/* Sector grid — ultra-compact scrollable pills */}
+      <div className="relative mb-8 px-2">
+        <div className="flex flex-wrap justify-center gap-1">
           {filteredSectors.map((s) => {
             const globalIdx = SHOWCASE_SECTORS.findIndex(ss => ss.id === s.id);
             const isActive = activeIdx === globalIdx;
@@ -617,22 +617,22 @@ export default function MultiSectorShowcase() {
               <motion.button
                 key={s.id}
                 onClick={() => { setActiveIdx(globalIdx); setIsAutoPlaying(false); setShowAllScreens(false); }}
-                className={`relative flex flex-col items-center gap-1 py-2 px-1.5 rounded-lg text-[0.5rem] font-heading font-semibold tracking-wider uppercase transition-all duration-300 border ${
+                className={`relative flex items-center gap-1 py-1 px-2 rounded-full text-[0.55rem] font-heading font-semibold tracking-wider uppercase transition-all duration-300 border whitespace-nowrap ${
                   isActive
                     ? "text-foreground border-primary/40"
-                    : "text-foreground/30 border-border/10 hover:text-foreground/50 hover:border-border/30"
+                    : "text-foreground/25 border-border/10 hover:text-foreground/50 hover:border-border/25"
                 }`}
                 style={isActive ? {
-                  background: `linear-gradient(135deg, ${s.color.replace("1)", "0.12)")}, hsla(265,20%,15%,0.3))`,
-                  boxShadow: `0 0 12px ${s.color.replace("1)", "0.1)")}`,
+                  background: `linear-gradient(135deg, ${s.color.replace("1)", "0.15)")}, hsla(265,20%,15%,0.3))`,
+                  boxShadow: `0 0 10px ${s.color.replace("1)", "0.08)")}`,
                 } : { background: "hsla(0,0%,100%,0.02)" }}
                 whileTap={{ scale: 0.95 }}
                 layout
               >
-                <span className="text-sm">{s.icon}</span>
-                <span className="relative z-10 text-center leading-tight line-clamp-2">{s.label}</span>
+                <span className="text-[0.65rem]">{s.icon}</span>
+                <span className="relative z-10 leading-none">{s.label}</span>
                 {isActive && isAutoPlaying && (
-                  <motion.div className="absolute bottom-0 left-1 right-1 h-[2px] rounded-full origin-left"
+                  <motion.div className="absolute bottom-0 left-2 right-2 h-[1.5px] rounded-full origin-left"
                     style={{ background: s.color }}
                     initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
                     transition={{ duration: 5, ease: "linear" }}
