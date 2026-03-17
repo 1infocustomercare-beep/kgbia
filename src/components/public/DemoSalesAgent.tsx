@@ -863,8 +863,15 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
                   <MessageCircle className="w-3.5 h-3.5 text-white/60" />
                 </button>
               )}
-              <button onClick={handleDismiss} className="p-1.5 rounded-lg hover:bg-white/10 transition">
-                <X className="w-3.5 h-3.5 text-white/60" />
+              <button
+                onClick={() => { stopAll(); stopRingTone(); if (callActive) { try { conversation.endSession(); } catch { /* */ } setCallActive(false); } setIsOpen(false); }}
+                className="p-1.5 rounded-lg hover:bg-white/10 transition"
+                title="Chiudi chat"
+              >
+                <ChevronDown className="w-3.5 h-3.5 text-white/60" />
+              </button>
+              <button onClick={handleDismiss} className="p-1.5 rounded-lg hover:bg-white/10 transition" title="Chiudi definitivamente">
+                <X className="w-3.5 h-3.5 text-white/40" />
               </button>
             </div>
           </div>
