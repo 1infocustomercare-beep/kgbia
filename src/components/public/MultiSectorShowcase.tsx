@@ -9,8 +9,12 @@ import {
   Umbrella, Wrench, Zap, Grape, SprayCan, Scale, Calculator,
   Hammer, Camera, TreePine, PawPrint, Brush, Baby, GraduationCap,
   PartyPopper, Truck, Settings, Stethoscope, Receipt, MapPin,
-  Sparkles, Route, Star, BookOpen, Grid,
+  Sparkles, Route, Star, BookOpen, Grid, Eye,
 } from "lucide-react";
+
+import { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
+import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
+import { DEMO_INDUSTRY_DATA } from "@/data/demo-industries";
 
 import cartoonFood from "@/assets/cartoon-sector-food.png";
 import cartoonNcc from "@/assets/cartoon-sector-ncc.png";
@@ -471,6 +475,47 @@ const SHOWCASE_SECTORS: SectorData[] = [
   },
 ];
 
+// Map sector IDs to their best screen type for iPhone preview
+const SECTOR_BEST_SCREEN: Record<string, { label: string; type: string }> = {
+  food: { label: "Menu", type: "services" },
+  ncc: { label: "Transfer", type: "services" },
+  beauty: { label: "Prenota", type: "booking" },
+  healthcare: { label: "Dashboard", type: "dashboard" },
+  retail: { label: "Analytics", type: "analytics" },
+  fitness: { label: "Clienti", type: "crm" },
+  hospitality: { label: "Vetrina", type: "hero" },
+  beach: { label: "Prenota", type: "booking" },
+  plumber: { label: "Interventi", type: "notifications" },
+  electrician: { label: "Dashboard", type: "dashboard" },
+  construction: { label: "Cantieri", type: "analytics" },
+  veterinary: { label: "Pazienti", type: "crm" },
+  tattoo: { label: "Portfolio", type: "hero" },
+  events: { label: "Eventi", type: "notifications" },
+  logistics: { label: "Tracking", type: "analytics" },
+  agriturismo: { label: "Camere", type: "services" },
+  cleaning: { label: "Servizi", type: "services" },
+  legal: { label: "Pratiche", type: "crm" },
+  accounting: { label: "Fiscale", type: "dashboard" },
+  garage: { label: "Officina", type: "notifications" },
+  photography: { label: "Studio", type: "hero" },
+  gardening: { label: "Servizi", type: "services" },
+  childcare: { label: "Iscrizioni", type: "booking" },
+  education: { label: "Corsi", type: "services" },
+  custom: { label: "Dashboard", type: "dashboard" },
+  bakery: { label: "Vetrina", type: "hero" },
+};
+
+const ALL_SCREENS = [
+  { label: "Home", type: "hero" },
+  { label: "Catalogo", type: "services" },
+  { label: "Prenota", type: "booking" },
+  { label: "Dashboard", type: "dashboard" },
+  { label: "Analytics", type: "analytics" },
+  { label: "Clienti", type: "crm" },
+  { label: "Notifiche", type: "notifications" },
+  { label: "Settings", type: "settings" },
+];
+
 interface SectionLabelProps { text: string; icon?: React.ReactNode }
 const SectionLabel = ({ text, icon }: SectionLabelProps) => (
   <motion.div className="inline-flex items-center gap-2.5 mb-5"
@@ -486,34 +531,29 @@ const SectionLabel = ({ text, icon }: SectionLabelProps) => (
   </motion.div>
 );
 
-// Placeholder gradient for sectors without images
-const SectorPlaceholder = ({ color, label, icon }: { color: string; label: string; icon: React.ReactNode }) => (
-  <div className="w-full aspect-[4/3] flex flex-col items-center justify-center relative overflow-hidden rounded-t-2xl"
-    style={{ background: `linear-gradient(135deg, ${color.replace("1)", "0.15)")}, hsla(260,14%,10%,0.95))` }}>
-    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-3"
-      style={{ background: color.replace("1)", "0.15)"), border: `1px solid ${color.replace("1)", "0.25)")}` }}>
-      <span style={{ color }}>{icon}</span>
-    </div>
-    <p className="text-sm font-heading font-bold text-foreground/60">{label}</p>
-    {/* Decorative grid */}
-    <div className="absolute inset-0 opacity-[0.03]" style={{
-      backgroundImage: `linear-gradient(${color.replace("1)", "0.3)")} 1px, transparent 1px), linear-gradient(90deg, ${color.replace("1)", "0.3)")} 1px, transparent 1px)`,
-      backgroundSize: "30px 30px",
-    }} />
-  </div>
-);
-
 export default function MultiSectorShowcase() {
   const navigate = useNavigate();
   const [activeIdx, setActiveIdx] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [showAllScreens, setShowAllScreens] = useState(false);
   const sector = SHOWCASE_SECTORS[activeIdx];
 
   useEffect(() => {
     if (!isAutoPlaying) return;
-    const timer = setInterval(() => setActiveIdx(p => (p + 1) % SHOWCASE_SECTORS.length), 5000);
+    const timer = setInterval(() => {
+      setActiveIdx(p => (p + 1) % SHOWCASE_SECTORS.length);
+      setShowAllScreens(false);
+    }, 5000);
     return () => clearInterval(timer);
   }, [isAutoPlaying]);
+
+  // Get iPhone preview data for current sector
+  const sectorId = sector.id as IndustryId;
+  const industryCfg = INDUSTRY_CONFIGS[sectorId];
+  const demoData = DEMO_INDUSTRY_DATA[sectorId];
+  const sectorStyle = industryCfg ? getSectorStyle(sectorId) : undefined;
+  const screenType = SECTOR_BEST_SCREEN[sector.id] || { label: "Home", type: "hero" };
+  const clr = industryCfg?.defaultPrimaryColor || sector.color;
 
   return (
     <>
@@ -535,7 +575,7 @@ export default function MultiSectorShowcase() {
           {SHOWCASE_SECTORS.map((s, i) => (
             <motion.button
               key={s.id}
-              onClick={() => { setActiveIdx(i); setIsAutoPlaying(false); }}
+              onClick={() => { setActiveIdx(i); setIsAutoPlaying(false); setShowAllScreens(false); }}
               className={`relative px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[0.6rem] sm:text-xs font-heading font-semibold tracking-wider uppercase transition-all duration-400 border whitespace-nowrap flex-shrink-0 ${
                 activeIdx === i
                   ? "text-foreground border-primary/40"
@@ -570,11 +610,11 @@ export default function MultiSectorShowcase() {
       {/* Content area */}
       <AnimatePresence mode="wait">
         <motion.div key={sector.id}
-          className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center"
+          className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-14 items-center"
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }}
           transition={{ duration: 0.4, ease: smoothEase }}>
 
-          {/* Left — Text */}
+          {/* Left — Text + features */}
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5 text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase"
               style={{ background: sector.color.replace("1)", "0.08)"), color: sector.color, border: `1px solid ${sector.color.replace("1)", "0.15)")}` }}>
@@ -601,60 +641,187 @@ export default function MultiSectorShowcase() {
               ))}
             </div>
 
-            <motion.button
-              onClick={() => navigate(`/demo/${sector.id}`)}
-              className="group px-7 py-3.5 rounded-full font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2 text-white"
-              style={{
-                background: `linear-gradient(135deg, ${sector.color}, ${sector.color.replace("1)", "0.7)")})`,
-                boxShadow: `0 8px 30px ${sector.color.replace("1)", "0.2)")}`,
-              }}
-              whileHover={{ scale: 1.03, boxShadow: `0 15px 50px ${sector.color.replace("1)", "0.3)")}` }}
-              whileTap={{ scale: 0.97 }}>
-              Scopri Demo {sector.label.split(" ")[0]} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
-            </motion.button>
+            {/* Action buttons */}
+            <div className="flex items-center gap-3 justify-center lg:justify-start">
+              <motion.button
+                onClick={() => navigate(`/demo/${sector.id}`)}
+                className="group px-6 py-3 rounded-full font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2 text-white"
+                style={{
+                  background: `linear-gradient(135deg, ${sector.color}, ${sector.color.replace("1)", "0.7)")})`,
+                  boxShadow: `0 8px 30px ${sector.color.replace("1)", "0.2)")}`,
+                }}
+                whileHover={{ scale: 1.03, boxShadow: `0 15px 50px ${sector.color.replace("1)", "0.3)")}` }}
+                whileTap={{ scale: 0.97 }}>
+                Scopri Demo <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+              </motion.button>
+
+              {/* Expand all screens button */}
+              {industryCfg && demoData && (
+                <motion.button
+                  onClick={() => { setShowAllScreens(p => !p); setIsAutoPlaying(false); }}
+                  className="px-4 py-3 rounded-full text-[0.6rem] font-heading font-semibold tracking-wider uppercase border inline-flex items-center gap-2 transition-all duration-300 hover:scale-105"
+                  style={{
+                    borderColor: `${sector.color.replace("1)", "0.2)")}`,
+                    color: sector.color,
+                    background: sector.color.replace("1)", "0.05)"),
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Layers className="w-3.5 h-3.5" />
+                  {showAllScreens ? "Chiudi Preview" : "Vedi Tutte le Schermate"}
+                </motion.button>
+              )}
+            </div>
           </div>
 
-          {/* Right — Visual */}
-          <div className="w-full">
-            <div className="relative rounded-2xl overflow-hidden" style={{
-              boxShadow: `0 0 60px ${sector.color.replace("1)", "0.08)")}, 0 20px 60px hsla(0,0%,0%,0.3)`,
-              border: `1px solid ${sector.color.replace("1)", "0.12)")}`,
-            }}>
-              {sector.img ? (
-                <img src={sector.img} alt={sector.label} className="w-full aspect-[4/3] object-cover" loading="lazy" />
+          {/* Right — iPhone Preview */}
+          <div className="w-full flex flex-col items-center">
+            <AnimatePresence mode="wait">
+              {!showAllScreens ? (
+                /* Single iPhone preview — the sector's best screen */
+                <motion.div
+                  key="single"
+                  className="cursor-pointer transition-transform duration-500 hover:-translate-y-2 hover:scale-[1.03]"
+                  onClick={() => { setShowAllScreens(true); setIsAutoPlaying(false); }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.4, ease: smoothEase }}
+                >
+                  {industryCfg && demoData ? (
+                    <div className="relative">
+                      <IPhoneFrame
+                        screen={screenType}
+                        color={clr}
+                        emoji={industryCfg.emoji}
+                        companyName={demoData.companyName}
+                        services={demoData.services}
+                        index={activeIdx}
+                        sectorStyle={sectorStyle}
+                        industryId={sectorId}
+                      />
+                      {/* Stats overlay below phone */}
+                      <div className="flex gap-2 mt-4 justify-center">
+                        {sector.stats.map((s, i) => (
+                          <motion.div key={i} className="px-3 py-2 rounded-xl text-center"
+                            style={{ background: "hsla(0,0%,100%,0.03)", border: `1px solid ${sector.color.replace("1)", "0.1)")}` }}
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.1 }}>
+                            <p className="text-[0.5rem] tracking-wider uppercase" style={{ color: sector.color.replace("1)", "0.6)") }}>{s.label}</p>
+                            <p className="text-[0.7rem] font-heading font-bold text-foreground">{s.val}</p>
+                          </motion.div>
+                        ))}
+                      </div>
+                      {/* Tap hint */}
+                      <motion.p className="text-center text-[0.55rem] text-foreground/25 mt-3 tracking-wider uppercase"
+                        animate={{ opacity: [0.3, 0.6, 0.3] }}
+                        transition={{ duration: 2, repeat: Infinity }}>
+                        <Layers className="w-3 h-3 inline mr-1" /> Tap per vedere tutte le schermate
+                      </motion.p>
+                    </div>
+                  ) : (
+                    /* Fallback for sectors without demo data */
+                    <div className="relative rounded-2xl overflow-hidden" style={{
+                      boxShadow: `0 0 60px ${sector.color.replace("1)", "0.08)")}, 0 20px 60px hsla(0,0%,0%,0.3)`,
+                      border: `1px solid ${sector.color.replace("1)", "0.12)")}`,
+                    }}>
+                      {sector.img ? (
+                        <img src={sector.img} alt={sector.label} className="w-full aspect-[4/3] object-cover" loading="lazy" />
+                      ) : (
+                        <div className="w-full aspect-[4/3] flex flex-col items-center justify-center relative overflow-hidden rounded-2xl"
+                          style={{ background: `linear-gradient(135deg, ${sector.color.replace("1)", "0.15)")}, hsla(260,14%,10%,0.95))` }}>
+                          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-3"
+                            style={{ background: sector.color.replace("1)", "0.15)"), border: `1px solid ${sector.color.replace("1)", "0.25)")}` }}>
+                            <span style={{ color: sector.color }}>{sector.icon}</span>
+                          </div>
+                          <p className="text-sm font-heading font-bold text-foreground/60">{sector.label}</p>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 pointer-events-none" style={{
+                        background: `linear-gradient(to top, hsla(260,14%,10%,0.8) 0%, transparent 50%, ${sector.color.replace("1)", "0.05)")} 100%)`,
+                      }} />
+                      <div className="absolute bottom-4 left-4 right-4 flex gap-2">
+                        {sector.stats.map((s, i) => (
+                          <motion.div key={i} className="flex-1 px-2 py-2 rounded-lg text-center"
+                            style={{ background: "hsla(0,0%,0%,0.6)", backdropFilter: "blur(8px)", border: `1px solid ${sector.color.replace("1)", "0.12)")}` }}
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.1 }}>
+                            <p className="text-[0.5rem] tracking-wider uppercase" style={{ color: sector.color.replace("1)", "0.7)") }}>{s.label}</p>
+                            <p className="text-[0.7rem] font-heading font-bold text-foreground">{s.val}</p>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
               ) : (
-                <SectorPlaceholder color={sector.color} label={sector.label} icon={sector.icon} />
+                /* Expanded: all 8 screens in grid */
+                <motion.div
+                  key="expanded"
+                  className="w-full"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.5, ease: smoothEase }}
+                >
+                  <div className="rounded-2xl border backdrop-blur-md p-4 sm:p-6"
+                    style={{ borderColor: `${sector.color.replace("1)", "0.15)")}`, background: `linear-gradient(135deg, hsla(0,0%,100%,0.02), ${sector.color.replace("1)", "0.05)")})` }}>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 justify-items-center mb-4">
+                      {ALL_SCREENS.map((screen, si) => (
+                        <motion.div key={screen.type} className="flex flex-col items-center"
+                          initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ duration: 0.4, delay: si * 0.06, ease: smoothEase }}>
+                          <div className="transform scale-[0.6] sm:scale-[0.7] origin-top">
+                            {industryCfg && demoData ? (
+                              <IPhoneFrame
+                                screen={screen}
+                                color={clr}
+                                emoji={industryCfg.emoji}
+                                companyName={demoData.companyName}
+                                services={demoData.services}
+                                index={si}
+                                sectorStyle={sectorStyle}
+                                industryId={sectorId}
+                              />
+                            ) : (
+                              <div className="w-[160px] h-[320px] rounded-2xl flex items-center justify-center"
+                                style={{ background: sector.color.replace("1)", "0.08)"), border: `1px solid ${sector.color.replace("1)", "0.15)")}` }}>
+                                <span className="text-foreground/30 text-xs">{screen.label}</span>
+                              </div>
+                            )}
+                          </div>
+                          <span className="text-[7px] font-bold tracking-widest uppercase mt-1"
+                            style={{ color: sector.color.replace("1)", "0.7)") }}>{screen.label}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-center gap-3">
+                      <motion.button
+                        onClick={() => navigate(`/demo/${sector.id}`)}
+                        className="px-4 py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-wider uppercase flex items-center gap-2 text-white"
+                        style={{
+                          background: `linear-gradient(135deg, ${sector.color}, ${sector.color.replace("1)", "0.8)")})`,
+                          boxShadow: `0 4px 20px ${sector.color.replace("1)", "0.25)")}`,
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Eye className="w-3.5 h-3.5" /> Prova Demo Live
+                      </motion.button>
+                      <motion.button
+                        onClick={() => setShowAllScreens(false)}
+                        className="px-4 py-2 rounded-xl text-[10px] sm:text-xs font-semibold border text-foreground/50 hover:text-foreground transition-all"
+                        style={{ borderColor: sector.color.replace("1)", "0.15)") }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Chiudi
+                      </motion.button>
+                    </div>
+                  </div>
+                </motion.div>
               )}
-              <div className="absolute inset-0 pointer-events-none" style={{
-                background: `linear-gradient(to top, hsla(260,14%,10%,0.8) 0%, transparent 50%, ${sector.color.replace("1)", "0.05)")} 100%)`,
-              }} />
-              {/* Scan line */}
-              <motion.div className="absolute inset-x-0 h-[2px] pointer-events-none"
-                style={{ background: `linear-gradient(90deg, transparent, ${sector.color.replace("1)", "0.3)")}, transparent)` }}
-                animate={{ top: ["0%", "100%"] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
-              {/* Corner accents */}
-              <div className="absolute top-3 right-3 w-8 h-8 border-t border-r rounded-tr-lg pointer-events-none" style={{ borderColor: sector.color.replace("1)", "0.25)") }} />
-              <div className="absolute bottom-14 left-3 w-6 h-6 border-b border-l rounded-bl-lg pointer-events-none" style={{ borderColor: sector.color.replace("1)", "0.2)") }} />
-
-              {/* Stats overlay */}
-              <div className="absolute bottom-4 left-4 right-4 flex gap-2">
-                {sector.stats.map((s, i) => (
-                  <motion.div key={i} className="flex-1 px-2 py-2 rounded-lg text-center"
-                    style={{ background: "hsla(0,0%,0%,0.6)", backdropFilter: "blur(8px)", border: `1px solid ${sector.color.replace("1)", "0.12)")}` }}
-                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.1 }}>
-                    <p className="text-[0.5rem] tracking-wider uppercase" style={{ color: sector.color.replace("1)", "0.7)") }}>{s.label}</p>
-                    <p className="text-[0.7rem] font-heading font-bold text-foreground">{s.val}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Floating orbit */}
-            <motion.div className="absolute -top-4 -right-4 w-20 h-20 rounded-full pointer-events-none hidden lg:block"
-              style={{ border: `1px dashed ${sector.color.replace("1)", "0.12)")}` }}
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }} />
+            </AnimatePresence>
           </div>
         </motion.div>
       </AnimatePresence>
