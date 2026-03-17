@@ -913,21 +913,42 @@ export function IPhoneFrame({
         <div className="absolute -inset-3 rounded-[32px] blur-2xl opacity-20 pointer-events-none"
           style={{ background: `radial-gradient(circle, ${color}40, transparent 70%)` }} />
 
-        {/* iPhone shell */}
+        {/* iPhone shell — titanium style */}
         <div className="relative rounded-[22px] sm:rounded-[26px] overflow-hidden"
           style={{
-            border: "2.5px solid rgba(255,255,255,0.12)",
-            background: "linear-gradient(180deg, #1c1c1e 0%, #0a0a0a 100%)",
-            boxShadow: `0 20px 60px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)`,
+            border: "2px solid rgba(255,255,255,0.15)",
+            background: "linear-gradient(180deg, #2c2c2e 0%, #1c1c1e 5%, #0a0a0a 100%)",
+            boxShadow: `0 25px 80px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(255,255,255,0.03)`,
           }}>
 
+          {/* Status bar */}
+          <div className="flex items-center justify-between px-3 pt-1.5 pb-0">
+            <span className="text-[5px] font-semibold text-white/60 tracking-tight" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>9:41</span>
+            <div className="flex items-center gap-[3px]">
+              <svg viewBox="0 0 16 12" className="w-[10px] h-[7px]" fill="none">
+                <rect x="0" y="4" width="3" height="8" rx="0.5" fill="white" opacity="0.5" />
+                <rect x="4" y="2.5" width="3" height="9.5" rx="0.5" fill="white" opacity="0.5" />
+                <rect x="8" y="1" width="3" height="11" rx="0.5" fill="white" opacity="0.5" />
+                <rect x="12" y="0" width="3" height="12" rx="0.5" fill="white" opacity="0.5" />
+              </svg>
+              <span className="text-[5px] text-white/50 font-medium">5G</span>
+              <svg viewBox="0 0 25 12" className="w-[14px] h-[7px]">
+                <rect x="0" y="0.5" width="21" height="11" rx="2" stroke="white" strokeOpacity="0.35" strokeWidth="1" fill="none" />
+                <rect x="22" y="3.5" width="2" height="5" rx="0.5" fill="white" fillOpacity="0.3" />
+                <rect x="1.5" y="2" width="14" height="8" rx="1" fill="white" fillOpacity="0.5" />
+              </svg>
+            </div>
+          </div>
+
           {/* Dynamic Island */}
-          <div className="flex justify-center pt-2 pb-0.5">
-            <div className="w-[48px] h-[13px] bg-black rounded-full" style={{ boxShadow: "inset 0 0 3px rgba(255,255,255,0.08)" }} />
+          <div className="flex justify-center pt-0.5 pb-0.5">
+            <div className="w-[42px] h-[12px] bg-black rounded-full relative" style={{ boxShadow: "0 0 0 0.5px rgba(255,255,255,0.06), inset 0 0 4px rgba(0,0,0,0.8)" }}>
+              <div className="absolute right-[7px] top-1/2 -translate-y-1/2 w-[4px] h-[4px] rounded-full" style={{ background: "radial-gradient(circle, #1a1a2e 40%, #0d0d15 100%)", boxShadow: "inset 0 0 1px rgba(255,255,255,0.08)" }} />
+            </div>
           </div>
 
           {/* Screen content */}
-          <div className="aspect-[9/17] overflow-hidden relative" style={{ minHeight: 210 }}>
+          <div className="aspect-[9/17] overflow-hidden relative" style={{ minHeight: 210, background: "#000" }}>
 
             {/* ═══ HERO SCREEN — 4 variants ═══ */}
             {screen.type === "hero" && (() => {
