@@ -3051,6 +3051,33 @@ const LandingPage = () => {
         {/* ═══ Mobile: Premium Carousel — iPhone frames ═══ */}
         <div className="sm:hidden">
           <PremiumCarousel speed="normal" itemWidth={160}>
+            {/* ── Featured: Live iframe previews ── */}
+            {[
+              { id: "food" as IndustryId, name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️", label: "Food Premium" },
+              { id: "ncc" as IndustryId, name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗", label: "NCC Premium" },
+            ].map((feat, i) => (
+              <div key={`feat-${i}`} className="group cursor-pointer" onClick={() => navigate(feat.route)}>
+                <div className="relative w-[160px] rounded-[28px] border-[2.5px] overflow-hidden" style={{ height: 310, borderColor: `${feat.color}40`, boxShadow: `0 12px 40px hsla(0,0%,0%,0.4), 0 0 30px ${feat.color}12` }}>
+                  {/* Dynamic Island */}
+                  <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[48px] h-[14px] bg-black rounded-full z-20" />
+                  {/* Live iframe */}
+                  <div className="absolute inset-[3px] rounded-[24px] overflow-hidden bg-black">
+                    <iframe src={feat.route} title={feat.name} className="w-[375px] h-[812px] border-0" style={{ transform: `scale(${154 / 375})`, transformOrigin: "top left", pointerEvents: "none" }} loading="lazy" />
+                  </div>
+                  {/* Bottom overlay with label */}
+                  <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.9), transparent)" }}>
+                    <div className="flex items-center gap-1 mb-1">
+                      <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${feat.color}25`, color: feat.color, border: `1px solid ${feat.color}35` }}>★ Live</span>
+                    </div>
+                    <p className="text-[10px] font-bold text-white">{feat.name}</p>
+                    <p className="text-[7px] text-white/40">{feat.label}</p>
+                  </div>
+                  {/* Home indicator */}
+                  <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] bg-white/20 rounded-full z-20" />
+                </div>
+              </div>
+            ))}
+            {/* ── Standard industry cards ── */}
             {industries.map((ind, i) => {
               const slug = DEMO_SLUGS[ind.id];
               const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
@@ -3091,6 +3118,35 @@ const LandingPage = () => {
         {/* ═══ Desktop: iPhone Grid ═══ */}
         <motion.div className="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 justify-items-center"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {/* ── Featured: Live iframe previews ── */}
+          {[
+            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", emoji: "🍽️" },
+            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", emoji: "🚗" },
+          ].map((feat, i) => (
+            <motion.div key={`feat-${i}`} className="group cursor-pointer" variants={fadeScale}
+              onClick={() => navigate(feat.route)} whileHover={{ y: -8, scale: 1.03 }}>
+              <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_20px_60px_hsla(0,0%,0%,0.3)]"
+                style={{ borderColor: `${feat.color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 40px ${feat.color}10` }}>
+                {/* Dynamic Island */}
+                <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
+                {/* Live iframe */}
+                <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
+                  <iframe src={feat.route} title={feat.name} className="w-[375px] h-[812px] border-0" style={{ transform: `scale(${174 / 375})`, transformOrigin: "top left", pointerEvents: "none" }} loading="lazy" />
+                </div>
+                {/* Bottom overlay */}
+                <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                  <div className="flex items-center gap-1 mb-1">
+                    <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${feat.color}25`, color: feat.color, border: `1px solid ${feat.color}35` }}>★ Live</span>
+                  </div>
+                  <p className="text-[11px] font-bold text-white">{feat.name}</p>
+                  <p className="text-[8px] text-white/40">{feat.label}</p>
+                </div>
+                {/* Home indicator */}
+                <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-white/20 rounded-full z-20" />
+              </div>
+            </motion.div>
+          ))}
+          {/* ── Standard industry cards ── */}
           {industries.map((ind, i) => {
             const slug = DEMO_SLUGS[ind.id];
             const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
@@ -3216,6 +3272,38 @@ const LandingPage = () => {
                   <div className="mx-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.2), transparent)" }} />
                   {/* Scrollable content */}
                   <div className="overflow-y-auto px-4 py-4 space-y-2" style={{ maxHeight: "60vh" }}>
+                    {/* ── Featured: Showcase Premium ── */}
+                    <p className="text-[0.55rem] font-heading font-bold tracking-[3px] uppercase px-2 mb-2" style={{ color: "hsla(38,50%,55%,0.7)" }}>★ Showcase Premium</p>
+                    {[
+                      { name: "Impero Roma", desc: "Ristorante Premium · Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️" },
+                      { name: "Amalfi Luxury Transfer", desc: "NCC Premium · Costiera Amalfitana", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗" },
+                    ].map((feat, i) => (
+                      <motion.div key={`featured-${i}`}
+                        className="flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all"
+                        style={{ background: `${feat.color}08`, border: `1px solid ${feat.color}20` }}
+                        whileHover={{ scale: 1.01, borderColor: `${feat.color}40` }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => { setSectorSheetOpen(false); navigate(feat.route); }}
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
+                      >
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg flex-shrink-0"
+                          style={{ background: `${feat.color}18`, border: `1px solid ${feat.color}25` }}>
+                          {feat.emoji}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-xs font-heading font-bold text-foreground truncate">{feat.name}</p>
+                            <span className="text-[6px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase flex-shrink-0" style={{ background: `${feat.color}20`, color: feat.color }}>Live</span>
+                          </div>
+                          <p className="text-[0.6rem] text-foreground/30 truncate">{feat.desc}</p>
+                        </div>
+                        <ArrowRight className="w-3 h-3 flex-shrink-0" style={{ color: feat.color }} />
+                      </motion.div>
+                    ))}
+                    {/* Divider */}
+                    <div className="py-2">
+                      <div className="h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.15), transparent)" }} />
+                    </div>
                     {/* Active sectors with demos */}
                     <p className="text-[0.55rem] font-heading font-bold text-primary/50 tracking-[3px] uppercase px-2 mb-2">Con Demo Live</p>
                     {industries.map((ind, i) => {
