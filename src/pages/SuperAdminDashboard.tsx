@@ -1759,7 +1759,8 @@ const SuperAdminDashboard = () => {
                         <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
                           <div className="p-2 space-y-3">
                             {clientSectors.map(sector => {
-                              const sectorItems = clientIntegrations.filter(i => i.sector === sector);
+                              const sectorItems = filteredClient.filter(i => i.sector === sector);
+                              if (sectorItems.length === 0) return null;
                               const sectorConn = sectorItems.filter(i => i.status === "connected").length;
                               const isSectorOff = disabledSectors[sector] || false;
                               return (
@@ -1786,6 +1787,7 @@ const SuperAdminDashboard = () => {
                                 </div>
                               );
                             })}
+                            {filteredClient.length === 0 && <p className="text-[0.55rem] text-muted-foreground/50 text-center py-3">Nessun risultato con i filtri attivi</p>}
                           </div>
                         </motion.div>
                       )}
