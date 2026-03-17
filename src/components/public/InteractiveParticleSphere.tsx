@@ -1,4 +1,21 @@
 import { useRef, useEffect, useCallback } from "react";
+import {
+  Atom,
+  Binary,
+  Brain,
+  BrainCircuit,
+  CircuitBoard,
+  Cpu,
+  Database,
+  Fingerprint,
+  Network,
+  Radar,
+  ScanLine,
+  Sparkles,
+  Waypoints,
+  Workflow,
+  type LucideIcon,
+} from "lucide-react";
 
 /**
  * InteractiveParticleSphere — Hyper-Tech AI DNA Neural Core
@@ -19,9 +36,25 @@ const ORBIT_DOTS = IS_MOBILE ? 30 : 48;
 const SYNAPSE_COUNT = IS_MOBILE ? 12 : 24;
 const DATA_STREAMS = IS_MOBILE ? 8 : 16;
 const FLOAT_PARTICLES = IS_MOBILE ? 20 : 45;
-const TECH_ICON_COUNT = IS_MOBILE ? 8 : 14;
 
-const TECH_ICONS = ["🧠", "⚡", "🔬", "💡", "🛡️", "📊", "🤖", "🔗", "⚙️", "🎯", "📡", "🧬", "💎", "🚀"];
+const TECH_ICON_SET: { Icon: LucideIcon; color: string; glow: string }[] = [
+  { Icon: Brain, color: "hsla(265,80%,65%,0.9)", glow: "hsla(265,80%,65%,0.3)" },
+  { Icon: Cpu, color: "hsla(38,55%,60%,0.9)", glow: "hsla(38,50%,55%,0.3)" },
+  { Icon: Fingerprint, color: "hsla(265,70%,70%,0.9)", glow: "hsla(265,70%,70%,0.3)" },
+  { Icon: Workflow, color: "hsla(38,60%,55%,0.9)", glow: "hsla(38,60%,55%,0.3)" },
+  { Icon: Database, color: "hsla(265,65%,65%,0.9)", glow: "hsla(265,65%,65%,0.3)" },
+  { Icon: ScanLine, color: "hsla(38,50%,60%,0.9)", glow: "hsla(38,50%,60%,0.3)" },
+  { Icon: BrainCircuit, color: "hsla(265,75%,70%,0.85)", glow: "hsla(265,75%,70%,0.25)" },
+  { Icon: Network, color: "hsla(38,55%,58%,0.85)", glow: "hsla(38,55%,58%,0.25)" },
+  { Icon: Atom, color: "hsla(265,60%,72%,0.85)", glow: "hsla(265,60%,72%,0.25)" },
+  { Icon: Radar, color: "hsla(38,50%,55%,0.85)", glow: "hsla(38,50%,55%,0.25)" },
+  { Icon: CircuitBoard, color: "hsla(265,70%,62%,0.85)", glow: "hsla(265,70%,62%,0.25)" },
+  { Icon: Waypoints, color: "hsla(38,60%,52%,0.85)", glow: "hsla(38,60%,52%,0.25)" },
+  { Icon: Sparkles, color: "hsla(265,85%,75%,0.85)", glow: "hsla(265,85%,75%,0.25)" },
+  { Icon: Binary, color: "hsla(38,45%,60%,0.85)", glow: "hsla(38,45%,60%,0.25)" },
+];
+
+const TECH_ICON_COUNT = IS_MOBILE ? 8 : TECH_ICON_SET.length;
 
 const COLORS = {
   gold: { h: 38, s: 50, l: 55 },
