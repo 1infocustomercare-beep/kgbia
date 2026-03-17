@@ -700,10 +700,35 @@ async function executeAction(
       // HOSPITALITY — Rooms
       // ════════════════════════════════════════
 
-      case "room_update_price":
+      case "room_update_price": {
+        // Store room prices via content_blocks (section=rooms, field_key=room_name)
+        const { data: block } = await supabase.from("content_blocks").select("id, value")
+          .eq("company_id", resourceId).eq("section", "rooms")
+          .ilike("field_key", `%${action.room_name}%`).limit(1);
+        if (!block?.length) return { success: false, detail: `Camera "${action.room_name}" non trovata` };
+        try {
+          const roomData = JSON.parse(block[0].value || "{}");
+          roomData.price = action.new_price;
+          const { error } = await supabase.from("content_blocks")
+            .update({ value: JSON.stringify(roomData), updated_at: new Date().toISOString() }).eq("id", block[0].id);
+          if (error) return { success: false, detail: `Errore: ${error.message}` };
+          return { success: true, detail: `Camera "${action.room_name}" prezzo → €${action.new_price}` };
+        } catch { return { success: false, detail: "Errore parsing dati camera" }; }
+      }
+
       case "room_update_status": {
-        // Hospitality doesn't have a rooms table yet; use content_blocks as a lightweight store
-        return { success: false, detail: "Gestione camere via comando sarà disponibile a breve" };
+        const { data: block } = await supabase.from("content_blocks").select("id, value")
+          .eq("company_id", resourceId).eq("section", "rooms")
+          .ilike("field_key", `%${action.room_name}%`).limit(1);
+        if (!block?.length) return { success: false, detail: `Camera "${action.room_name}" non trovata` };
+        try {
+          const roomData = JSON.parse(block[0].value || "{}");
+          roomData.status = action.status;
+          const { error } = await supabase.from("content_blocks")
+            .update({ value: JSON.stringify(roomData), updated_at: new Date().toISOString() }).eq("id", block[0].id);
+          if (error) return { success: false, detail: `Errore: ${error.message}` };
+          return { success: true, detail: `Camera "${action.room_name}" → ${action.status}` };
+        } catch { return { success: false, detail: "Errore parsing dati camera" }; }
       }
 
       case "booking_update": {
