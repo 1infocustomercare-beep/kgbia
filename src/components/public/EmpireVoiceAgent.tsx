@@ -952,17 +952,18 @@ const EmpireVoiceAgent: React.FC = () => {
 
   // ── Mobile: start speaking after user's tap on prompt ──
   const handleMobileActivate = useCallback(() => {
-    userInteractedRef.current = true;
-    setUserInteracted(true);
+    unlockAudioContext();
     setMobilePromptShown(false);
     setIsOpen(true);
+    stopSplashNarration();
+    abortRef.current = false;
     setTimeout(() => {
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
       }
     }, 50);
-  }, [startIntroNarration, enqueueSectionNarration]);
+  }, [startIntroNarration, enqueueSectionNarration, unlockAudioContext]);
 
   // ── Send user message ──
   const sendMessage = useCallback(async (text: string) => {
