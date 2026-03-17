@@ -145,23 +145,19 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       r: 0.5 + Math.random() * 1.5, ci: i % 4, pulse: Math.random() * Math.PI * 2,
     });
 
-    // ── Tech AI Icons — floating, orbiting, communicating ──
-    const techIcons: { x: number; y: number; vx: number; vy: number; icon: string; ci: number; orbitA: number; orbitR: number; orbitSp: number; pulse: number; fontSize: number }[] = [];
+    // ── Tech AI Icons — splash-identical set, floating & communicating ──
+    const techIcons: { x: number; y: number; ci: number; orbitA: number; orbitR: number; orbitSp: number; pulse: number }[] = [];
     for (let i = 0; i < TECH_ICON_COUNT; i++) {
+      const isInner = i < 6;
       const angle = (i / TECH_ICON_COUNT) * Math.PI * 2;
-      const r = 0.2 + Math.random() * 0.25;
       techIcons.push({
-        x: cx + Math.cos(angle) * r * w,
-        y: cy + Math.sin(angle) * r * h,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        icon: TECH_ICONS[i % TECH_ICONS.length],
+        x: cx,
+        y: cy,
         ci: i % 4,
         orbitA: angle,
-        orbitR: 0.18 + Math.random() * 0.22,
-        orbitSp: 0.15 + Math.random() * 0.35,
+        orbitR: isInner ? 0.2 + Math.random() * 0.06 : 0.28 + Math.random() * 0.1,
+        orbitSp: (isInner ? 0.45 : -0.3) + Math.random() * 0.2,
         pulse: Math.random() * Math.PI * 2,
-        fontSize: IS_MOBILE ? 10 : 13 + Math.floor(Math.random() * 4),
       });
     }
 
