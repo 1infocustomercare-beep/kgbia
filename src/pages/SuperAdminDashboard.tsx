@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import EmpireDNABackground from "@/components/EmpireDNABackground";
 
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -446,7 +447,7 @@ const SuperAdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden">
-      
+      <EmpireDNABackground />
       {/* Header */}
       <div className="relative overflow-hidden border-b border-empire-violet-deep/30 bg-gradient-to-br from-empire-violet-surface via-background to-empire-violet/5">
         {/* HUD grid — DNA violet */}
