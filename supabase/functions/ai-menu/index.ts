@@ -56,7 +56,7 @@ serve(async (req) => {
   const startTime = Date.now();
 
   try {
-    const { action, imageBase64, dishDescription, dishCategory, dishName, userPhotoBase64, plateStyle } = await req.json();
+    const { action, imageBase64, dishDescription, dishCategory, dishName, userPhotoBase64, plateStyle, plateImageUrl } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
