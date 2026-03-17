@@ -105,6 +105,43 @@ serve(async (req) => {
       );
     }
 
+    // 5b. Route actionable intents to Command Agent for direct DB execution
+    const ACTIONABLE_INTENTS = ["ADD_ITEM", "UPDATE_PRICE", "MENU_UPDATE", "MANAGE_BOOKING", "PANIC_MODE"];
+    if (ACTIONABLE_INTENTS.includes(detectedIntent)) {
+      try {
+        const cmdResp = await fetch(`${supabaseUrl}/functions/v1/ai-command-agent`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${supabaseKey}`,
+          },
+          body: JSON.stringify({
+            tenant_id,
+            command: message_text,
+            source: conversation_id ? "whatsapp" : "chat",
+          }),
+        });
+
+        const cmdData = await cmdResp.json();
+        if (cmdResp.ok && cmdData.message_it) {
+          return new Response(
+            JSON.stringify({
+              reply: cmdData.message_it,
+              intent: detectedIntent,
+              industry,
+              tenant_name: tenantName,
+              command_executed: true,
+              actions: cmdData.actions_executed || [],
+            }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+        // If command agent fails, fall through to AI chat
+      } catch (cmdErr) {
+        console.error("Command agent routing error:", cmdErr);
+      }
+    }
+
     // 6. Special handling for food items — ask allergens
     if (detectedIntent === "ADD_ITEM" && industry === "ristorazione") {
       const hasAllergenInfo = /allergen|glutin|lattosi|noce|crostac|uov|soia|pesce|arachid/i.test(message_text);
