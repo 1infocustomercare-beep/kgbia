@@ -116,6 +116,14 @@ const RestaurantVoiceAgent: React.FC<Props> = ({ restaurantName, menuItems, prim
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { addItem } = useCart();
 
+  // Stop homepage voice agent on mount to prevent overlap
+  useEffect(() => {
+    if ((window as any).__empireVoiceAgentStopAll) {
+      (window as any).__empireVoiceAgentStopAll();
+    }
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  }, []);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
