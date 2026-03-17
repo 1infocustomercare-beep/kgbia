@@ -470,6 +470,7 @@ const AdminDashboard = () => {
           ))}
         </div>
       </div>
+      <PageGuide />
     </div>
   );
 };
