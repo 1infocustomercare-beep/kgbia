@@ -1,4 +1,21 @@
 import { useRef, useEffect, useCallback } from "react";
+import {
+  Atom,
+  Binary,
+  Brain,
+  BrainCircuit,
+  CircuitBoard,
+  Cpu,
+  Database,
+  Fingerprint,
+  Network,
+  Radar,
+  ScanLine,
+  Sparkles,
+  Waypoints,
+  Workflow,
+  type LucideIcon,
+} from "lucide-react";
 
 /**
  * InteractiveParticleSphere — Hyper-Tech AI DNA Neural Core
@@ -19,9 +36,25 @@ const ORBIT_DOTS = IS_MOBILE ? 30 : 48;
 const SYNAPSE_COUNT = IS_MOBILE ? 12 : 24;
 const DATA_STREAMS = IS_MOBILE ? 8 : 16;
 const FLOAT_PARTICLES = IS_MOBILE ? 20 : 45;
-const TECH_ICON_COUNT = IS_MOBILE ? 8 : 14;
 
-const TECH_ICONS = ["🧠", "⚡", "🔬", "💡", "🛡️", "📊", "🤖", "🔗", "⚙️", "🎯", "📡", "🧬", "💎", "🚀"];
+const TECH_ICON_SET: { Icon: LucideIcon; color: string; glow: string }[] = [
+  { Icon: Brain, color: "hsla(265,80%,65%,0.9)", glow: "hsla(265,80%,65%,0.3)" },
+  { Icon: Cpu, color: "hsla(38,55%,60%,0.9)", glow: "hsla(38,50%,55%,0.3)" },
+  { Icon: Fingerprint, color: "hsla(265,70%,70%,0.9)", glow: "hsla(265,70%,70%,0.3)" },
+  { Icon: Workflow, color: "hsla(38,60%,55%,0.9)", glow: "hsla(38,60%,55%,0.3)" },
+  { Icon: Database, color: "hsla(265,65%,65%,0.9)", glow: "hsla(265,65%,65%,0.3)" },
+  { Icon: ScanLine, color: "hsla(38,50%,60%,0.9)", glow: "hsla(38,50%,60%,0.3)" },
+  { Icon: BrainCircuit, color: "hsla(265,75%,70%,0.85)", glow: "hsla(265,75%,70%,0.25)" },
+  { Icon: Network, color: "hsla(38,55%,58%,0.85)", glow: "hsla(38,55%,58%,0.25)" },
+  { Icon: Atom, color: "hsla(265,60%,72%,0.85)", glow: "hsla(265,60%,72%,0.25)" },
+  { Icon: Radar, color: "hsla(38,50%,55%,0.85)", glow: "hsla(38,50%,55%,0.25)" },
+  { Icon: CircuitBoard, color: "hsla(265,70%,62%,0.85)", glow: "hsla(265,70%,62%,0.25)" },
+  { Icon: Waypoints, color: "hsla(38,60%,52%,0.85)", glow: "hsla(38,60%,52%,0.25)" },
+  { Icon: Sparkles, color: "hsla(265,85%,75%,0.85)", glow: "hsla(265,85%,75%,0.25)" },
+  { Icon: Binary, color: "hsla(38,45%,60%,0.85)", glow: "hsla(38,45%,60%,0.25)" },
+];
+
+const TECH_ICON_COUNT = IS_MOBILE ? 8 : TECH_ICON_SET.length;
 
 const COLORS = {
   gold: { h: 38, s: 50, l: 55 },
@@ -46,6 +79,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const pointerRef = useRef({ x: size / 2, y: size / 2, active: false });
+  const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -111,23 +145,19 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       r: 0.5 + Math.random() * 1.5, ci: i % 4, pulse: Math.random() * Math.PI * 2,
     });
 
-    // ── Tech AI Icons — floating, orbiting, communicating ──
-    const techIcons: { x: number; y: number; vx: number; vy: number; icon: string; ci: number; orbitA: number; orbitR: number; orbitSp: number; pulse: number; fontSize: number }[] = [];
+    // ── Tech AI Icons — splash-identical set, floating & communicating ──
+    const techIcons: { x: number; y: number; ci: number; orbitA: number; orbitR: number; orbitSp: number; pulse: number }[] = [];
     for (let i = 0; i < TECH_ICON_COUNT; i++) {
+      const isInner = i < 6;
       const angle = (i / TECH_ICON_COUNT) * Math.PI * 2;
-      const r = 0.2 + Math.random() * 0.25;
       techIcons.push({
-        x: cx + Math.cos(angle) * r * w,
-        y: cy + Math.sin(angle) * r * h,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        icon: TECH_ICONS[i % TECH_ICONS.length],
+        x: cx,
+        y: cy,
         ci: i % 4,
         orbitA: angle,
-        orbitR: 0.18 + Math.random() * 0.22,
-        orbitSp: 0.15 + Math.random() * 0.35,
+        orbitR: isInner ? 0.2 + Math.random() * 0.06 : 0.28 + Math.random() * 0.1,
+        orbitSp: (isInner ? 0.45 : -0.3) + Math.random() * 0.2,
         pulse: Math.random() * Math.PI * 2,
-        fontSize: IS_MOBILE ? 10 : 13 + Math.floor(Math.random() * 4),
       });
     }
 
@@ -445,18 +475,30 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         }
       }
 
-      // ═══ L6.5: TECH AI ICONS — floating & communicating ═══
-      for (const ti of techIcons) {
+      // ═══ L6.5: TECH AI ICONS — splash-identical, floating & communicating ═══
+      for (let i = 0; i < techIcons.length; i++) {
+        const ti = techIcons[i];
         ti.orbitA += ti.orbitSp * 0.016;
         ti.pulse += 0.04;
         const baseR = Math.min(w, h) * ti.orbitR;
         const wobble = Math.sin(ti.orbitA * 2 + el) * 8 * sc;
         ti.x = cx + Math.cos(ti.orbitA) * (baseR + wobble);
         ti.y = cy + Math.sin(ti.orbitA) * (baseR + wobble);
-        // Pointer repulsion
+
         if (ptr.active) {
           const ddx = ti.x - ptr.x, ddy = ti.y - ptr.y, dd = Math.sqrt(ddx * ddx + ddy * ddy);
           if (dd > 1 && dd < repelR) { const f = (1 - dd / repelR) * 15; ti.x += (ddx / dd) * f; ti.y += (ddy / dd) * f; }
+        }
+
+        const iconEl = iconRefs.current[i];
+        if (iconEl) {
+          const iconCfg = TECH_ICON_SET[i];
+          const pA = 0.65 + Math.sin(ti.pulse) * 0.2;
+          iconEl.style.transform = `translate(${ti.x}px, ${ti.y}px) translate(-50%, -50%) scale(${0.92 + pA * 0.12})`;
+          iconEl.style.opacity = `${Math.max(0.35, anyA * pA)}`;
+          if (iconCfg) {
+            iconEl.style.boxShadow = `0 0 ${10 * sc}px ${iconCfg.glow}, inset 0 0 4px hsla(265,30%,35%,0.1)`;
+          }
         }
       }
 
@@ -470,14 +512,13 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
             const lineA = (1 - d / commR) * 0.25 * anyA;
             const pulseT = Math.sin(el * 2 + i * 0.5 + j * 0.3) * 0.5 + 0.5;
             const c = colorPalette[(i + j) % 4];
-            // Dashed data line
             ctx.beginPath();
             ctx.setLineDash([3, 4]);
             ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
             ctx.strokeStyle = hsl(c, lineA * 0.7);
             ctx.lineWidth = 0.6; ctx.stroke();
             ctx.setLineDash([]);
-            // Data packet traveling between icons
+
             const px = a.x + (b.x - a.x) * pulseT;
             const py = a.y + (b.y - a.y) * pulseT;
             const pg = ctx.createRadialGradient(px, py, 0, px, py, 4 * sc);
@@ -489,23 +530,17 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         }
       }
 
-      // Render icons with glow
+      // Render anchor glow (icons are HTML overlay for splash-identical look)
       for (const ti of techIcons) {
-        const pA = 0.5 + Math.sin(ti.pulse) * 0.15;
+        const pA = 0.55 + Math.sin(ti.pulse) * 0.2;
         const c = colorPalette[ti.ci];
-        // Glow halo
-        const gR = ti.fontSize * 1.3;
+        const gR = (IS_MOBILE ? 5 : 7) * (0.9 + pA * 0.3) * sc;
         const gg = ctx.createRadialGradient(ti.x, ti.y, 0, ti.x, ti.y, gR);
-        gg.addColorStop(0, hsl(c, 0.18 * anyA * pA));
-        gg.addColorStop(0.6, hsl(c, 0.05 * anyA));
+        gg.addColorStop(0, hsl(c, 0.2 * anyA * pA));
+        gg.addColorStop(0.7, hsl(c, 0.05 * anyA));
         gg.addColorStop(1, hsl(c, 0));
         ctx.beginPath(); ctx.arc(ti.x, ti.y, gR, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
-        // Icon text
-        ctx.font = `${ti.fontSize}px sans-serif`;
-        ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        ctx.globalAlpha = Math.min(1, 0.7 * anyA * pA + 0.3);
-        ctx.fillText(ti.icon, ti.x, ti.y);
-        ctx.globalAlpha = 1;
+        ctx.beginPath(); ctx.arc(ti.x, ti.y, 1.1 * sc, 0, Math.PI * 2); ctx.fillStyle = hsl(COLORS.white, 0.5 * anyA); ctx.fill();
       }
 
       // ═══ L7: RADAR SWEEP — always present ═══
@@ -535,16 +570,41 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={size}
-      height={size}
-      className="touch-none"
-      style={{ width: size, height: size }}
-      onPointerMove={handlePointerMove}
-      onPointerEnter={handlePointerMove}
-      onPointerLeave={() => { pointerRef.current.active = false; }}
-    />
+    <div className="relative touch-none" style={{ width: size, height: size }}>
+      <canvas
+        ref={canvasRef}
+        width={size}
+        height={size}
+        className="absolute inset-0 touch-none"
+        style={{ width: size, height: size }}
+        onPointerMove={handlePointerMove}
+        onPointerEnter={handlePointerMove}
+        onPointerLeave={() => { pointerRef.current.active = false; }}
+      />
+
+      <div className="pointer-events-none absolute inset-0">
+        {TECH_ICON_SET.slice(0, TECH_ICON_COUNT).map(({ Icon, color, glow }, i) => (
+          <div
+            key={`sphere-tech-icon-${i}`}
+            ref={(el) => { iconRefs.current[i] = el; }}
+            className="absolute flex items-center justify-center rounded-md border"
+            style={{
+              width: IS_MOBILE ? 18 : 22,
+              height: IS_MOBILE ? 18 : 22,
+              background: "hsla(260,15%,8%,0.88)",
+              borderColor: "hsla(265,40%,45%,0.25)",
+              backdropFilter: "blur(4px)",
+              color,
+              boxShadow: `0 0 10px ${glow}, inset 0 0 4px hsla(265,30%,35%,0.1)`,
+              transform: "translate(-50%, -50%)",
+              opacity: 0,
+            }}
+          >
+            <Icon style={{ width: IS_MOBILE ? 10 : 12, height: IS_MOBILE ? 10 : 12 }} />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
