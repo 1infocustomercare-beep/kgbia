@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   QrCode, Lock, MessageSquare, ShieldBan, Package, GraduationCap, Settings,
   Download, ExternalLink, Save, ShieldCheck, Bot, Send, Check, X,
   Phone, Mail, MapPin, Clock, Upload, Globe, Ban, FileCheck, Image,
-  ArrowLeft
+  ArrowLeft, ChevronDown, ChevronRight, BookOpen, Lightbulb, Layers
 } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
+import { pageGuides, featureGuides } from "@/config/feature-guides";
 import PrivateChat from "@/components/restaurant/PrivateChat";
 import SubscriptionSection from "@/components/admin/SubscriptionSection";
 import UpgradePrompt from "@/components/admin/UpgradePrompt";
@@ -54,6 +55,142 @@ interface MoreMenuProps {
   orders: any[];
   restaurantTables: any[];
 }
+
+/* ── Academy Section — auto-generated from feature-guides.ts ── */
+const AcademySection = () => {
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+
+  const categories = useMemo(() => {
+    const cats: Record<string, { title: string; description: string; steps?: string[]; key: string }[]> = {};
+
+    // Group page guides by category
+    const routeLabels: Record<string, string> = {
+      "/dashboard": "Dashboard", "/app": "Centro Operativo",
+      "/app/menu": "Menu", "/app/orders": "Ordini", "/app/reservations": "Prenotazioni",
+      "/app/reviews": "Recensioni", "/app/tables": "Tavoli", "/app/kitchen": "Cucina",
+      "/app/finance": "Finanza", "/app/staff": "Staff", "/app/settings": "Impostazioni",
+      "/app/whatsapp": "WhatsApp", "/app/inventory": "Inventario", "/app/loyalty": "Fedeltà",
+      "/app/social": "Social", "/app/automations": "Automazioni", "/app/clients": "CRM",
+      "/app/web-hub": "Web Hub", "/app/ai-marketplace": "AI Marketplace",
+      "/app/ncc-bookings": "NCC Prenotazioni", "/app/fleet": "Flotta", "/app/drivers": "Autisti",
+      "/app/appointments": "Appuntamenti", "/app/interventions": "Interventi", "/app/haccp": "HACCP",
+      "/partner": "Partner",
+    };
+
+    // Pages → "Guida Pagine"
+    Object.entries(pageGuides).forEach(([route, guide]) => {
+      const catName = "📄 Guide Pagine";
+      if (!cats[catName]) cats[catName] = [];
+      cats[catName].push({ ...guide, key: route, title: `${routeLabels[route] || route} — ${guide.title}` });
+    });
+
+    // Feature guides → grouped by prefix
+    const featureCatLabels: Record<string, string> = {
+      dashboard: "📊 Dashboard", studio: "🎨 Studio Creativo", checkout: "💳 Checkout",
+      restaurant: "🍽️ Ristorante", partner: "🤝 Partner", whatsapp: "💬 WhatsApp",
+      subscription: "💎 Abbonamento",
+    };
+
+    Object.entries(featureGuides).forEach(([key, guide]) => {
+      const prefix = key.split(":")[0];
+      const catName = featureCatLabels[prefix] || `🔧 ${prefix}`;
+      if (!cats[catName]) cats[catName] = [];
+      cats[catName].push({ ...guide, key });
+    });
+
+    return cats;
+  }, []);
+
+  const totalGuides = Object.values(categories).reduce((s, items) => s + items.length, 0);
+
+  return (
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="text-center py-3">
+        <div className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsla(38,50%,55%,0.2), hsla(265,60%,55%,0.15))", border: "1px solid hsla(38,50%,55%,0.15)" }}>
+          <GraduationCap className="w-7 h-7 text-primary" />
+        </div>
+        <h3 className="text-lg font-display font-bold text-foreground">Empire Academy</h3>
+        <p className="text-[0.55rem] uppercase tracking-[3px] text-muted-foreground/50 font-semibold mt-1">Tutorial Completo · {totalGuides} Guide</p>
+      </div>
+
+      {/* Stats bar */}
+      <div className="grid grid-cols-3 gap-2">
+        {[
+          { icon: BookOpen, label: "Guide", value: totalGuides },
+          { icon: Layers, label: "Categorie", value: Object.keys(categories).length },
+          { icon: Lightbulb, label: "Step", value: Object.values(categories).flat().reduce((s, g) => s + (g.steps?.length || 0), 0) },
+        ].map((stat, i) => (
+          <div key={i} className="text-center p-2.5 rounded-xl bg-card border border-border/50">
+            <stat.icon className="w-3.5 h-3.5 mx-auto text-primary mb-1" />
+            <p className="text-base font-display font-bold text-foreground">{stat.value}</p>
+            <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground/40 font-semibold">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Accordion categories */}
+      <div className="space-y-2">
+        {Object.entries(categories).map(([catName, items]) => (
+          <div key={catName} className="rounded-2xl bg-card border border-border/50 overflow-hidden">
+            <button
+              onClick={() => setExpandedCategory(expandedCategory === catName ? null : catName)}
+              className="w-full flex items-center justify-between p-3.5 min-h-[52px] text-left"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="text-base">{catName.slice(0, 2)}</span>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{catName.slice(3)}</p>
+                  <p className="text-[0.5rem] uppercase tracking-[2px] text-muted-foreground/40 font-semibold">{items.length} guide</p>
+                </div>
+              </div>
+              {expandedCategory === catName
+                ? <ChevronDown className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
+                : <ChevronRight className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
+              }
+            </button>
+            <AnimatePresence>
+              {expandedCategory === catName && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-3.5 pb-3.5 space-y-2">
+                    {items.map((guide) => (
+                      <div key={guide.key} className="p-3 rounded-xl bg-secondary/40 space-y-1.5">
+                        <p className="text-xs font-semibold text-foreground">{guide.title}</p>
+                        <p className="text-[0.65rem] text-muted-foreground/60 leading-relaxed">{guide.description}</p>
+                        {guide.steps && guide.steps.length > 0 && (
+                          <div className="pt-1 space-y-1">
+                            {guide.steps.map((step, si) => (
+                              <div key={si} className="flex items-start gap-2">
+                                <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                  <span className="text-[0.5rem] font-bold text-primary">{si + 1}</span>
+                                </div>
+                                <p className="text-[0.6rem] text-muted-foreground/50">{step}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-[0.5rem] text-center text-muted-foreground/30 uppercase tracking-[3px] pt-2">
+        Auto-aggiornato · Nuove guide appaiono automaticamente
+      </p>
+    </div>
+  );
+};
 
 const MoreMenu = ({
   restaurant,
@@ -486,29 +623,8 @@ const MoreMenu = ({
         </div>
       )}
 
-      {/* ACADEMY */}
-      {section === "academy" && (
-        <div className="space-y-3">
-          <div className="text-center py-2">
-            <GraduationCap className="w-10 h-10 mx-auto mb-2 text-primary" />
-            <h3 className="text-base font-display font-bold text-foreground">Empire Academy</h3>
-          </div>
-          {[
-            { title: "Fotografare piatti con impatto visivo", emoji: "📸", done: true },
-            { title: "Copywriting gastronomico", emoji: "✍️", done: true },
-            { title: "Instagram Stories per ristoranti", emoji: "📱", done: false },
-            { title: "Gestione recensioni", emoji: "💬", done: false },
-            { title: "Promozioni flash", emoji: "🔥", done: false },
-            { title: "QR Code strategico", emoji: "📋", done: false },
-          ].map((l, i) => (
-            <div key={i} className={`flex items-center gap-3 p-4 rounded-xl min-h-[56px] ${l.done ? "bg-primary/10 border border-primary/20" : "bg-secondary/50"}`}>
-              <span className="text-2xl flex-shrink-0">{l.emoji}</span>
-              <p className="text-sm font-medium text-foreground flex-1 min-w-0">{l.title}</p>
-              {l.done && <Check className="w-5 h-5 text-primary flex-shrink-0" />}
-            </div>
-          ))}
-        </div>
-      )}
+      {/* ACADEMY — Dynamic Tutorial Hub */}
+      {section === "academy" && <AcademySection />}
 
       {/* SETTINGS */}
       {section === "settings" && (
