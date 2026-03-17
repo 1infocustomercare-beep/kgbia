@@ -54,6 +54,7 @@ export default function AppLayout() {
           </main>
         </div>
         <BottomNav />
+        <PageGuide />
       </div>
     </SidebarProvider>
   );
