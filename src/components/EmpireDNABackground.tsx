@@ -296,7 +296,12 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ L1: CIRCUIT CONNECTIONS (straight lines, orthogonal feel) ═══
+      // ═══ L1: CIRCUIT CONNECTIONS — routing style morphs per topology ═══
+      // Routing modes: 0=L-shape, 1=straight horizontal bus, 2=step-down, 
+      // 3=diagonal, 4=vertical-first-L, 5=Z-route, 6=straight
+      const routeA = sIdx % SECTIONS;
+      const routeB = (sIdx + 1) % SECTIONS;
+
       ctx.lineCap = "square";
       ctx.lineJoin = "miter";
       for (let i = 0; i < NODE_COUNT; i++) {
@@ -310,18 +315,19 @@ const EmpireDNABackground = () => {
             ctx.strokeStyle = hsla(pLine, alpha * 0.07 * pulse);
             ctx.lineWidth = 0.5 + alpha * 0.5;
 
-            // L-shaped orthogonal routing (circuit style)
-            const midX = pos[j].x;
-            const midY = pos[i].y;
+            // Compute waypoints for route A and route B, then lerp
+            const wA = getRoutePoints(pos[i], pos[j], routeA, i, j);
+            const wB = getRoutePoints(pos[i], pos[j], routeB, i, j);
+            // Both arrays have same length (padded to 4 points)
+            const waypoints = wA.map((a, wi) => ({
+              x: lerp(a.x, wB[wi].x, t3),
+              y: lerp(a.y, wB[wi].y, t3),
+            }));
+
             ctx.beginPath();
-            ctx.moveTo(pos[i].x, pos[i].y);
-            if (Math.abs(dx) > Math.abs(dy) * 0.3 && Math.abs(dy) > Math.abs(dx) * 0.3) {
-              // L-route for non-aligned nodes
-              ctx.lineTo(midX, midY);
-              ctx.lineTo(pos[j].x, pos[j].y);
-            } else {
-              // Straight for near-aligned
-              ctx.lineTo(pos[j].x, pos[j].y);
+            ctx.moveTo(waypoints[0].x, waypoints[0].y);
+            for (let wi = 1; wi < waypoints.length; wi++) {
+              ctx.lineTo(waypoints[wi].x, waypoints[wi].y);
             }
             ctx.stroke();
           }
