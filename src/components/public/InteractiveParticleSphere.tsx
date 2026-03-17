@@ -475,18 +475,30 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         }
       }
 
-      // ═══ L6.5: TECH AI ICONS — floating & communicating ═══
-      for (const ti of techIcons) {
+      // ═══ L6.5: TECH AI ICONS — splash-identical, floating & communicating ═══
+      for (let i = 0; i < techIcons.length; i++) {
+        const ti = techIcons[i];
         ti.orbitA += ti.orbitSp * 0.016;
         ti.pulse += 0.04;
         const baseR = Math.min(w, h) * ti.orbitR;
         const wobble = Math.sin(ti.orbitA * 2 + el) * 8 * sc;
         ti.x = cx + Math.cos(ti.orbitA) * (baseR + wobble);
         ti.y = cy + Math.sin(ti.orbitA) * (baseR + wobble);
-        // Pointer repulsion
+
         if (ptr.active) {
           const ddx = ti.x - ptr.x, ddy = ti.y - ptr.y, dd = Math.sqrt(ddx * ddx + ddy * ddy);
           if (dd > 1 && dd < repelR) { const f = (1 - dd / repelR) * 15; ti.x += (ddx / dd) * f; ti.y += (ddy / dd) * f; }
+        }
+
+        const iconEl = iconRefs.current[i];
+        if (iconEl) {
+          const iconCfg = TECH_ICON_SET[i];
+          const pA = 0.65 + Math.sin(ti.pulse) * 0.2;
+          iconEl.style.transform = `translate(${ti.x}px, ${ti.y}px) translate(-50%, -50%) scale(${0.92 + pA * 0.12})`;
+          iconEl.style.opacity = `${Math.max(0.35, anyA * pA)}`;
+          if (iconCfg) {
+            iconEl.style.boxShadow = `0 0 ${10 * sc}px ${iconCfg.glow}, inset 0 0 4px hsla(265,30%,35%,0.1)`;
+          }
         }
       }
 
@@ -500,14 +512,13 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
             const lineA = (1 - d / commR) * 0.25 * anyA;
             const pulseT = Math.sin(el * 2 + i * 0.5 + j * 0.3) * 0.5 + 0.5;
             const c = colorPalette[(i + j) % 4];
-            // Dashed data line
             ctx.beginPath();
             ctx.setLineDash([3, 4]);
             ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
             ctx.strokeStyle = hsl(c, lineA * 0.7);
             ctx.lineWidth = 0.6; ctx.stroke();
             ctx.setLineDash([]);
-            // Data packet traveling between icons
+
             const px = a.x + (b.x - a.x) * pulseT;
             const py = a.y + (b.y - a.y) * pulseT;
             const pg = ctx.createRadialGradient(px, py, 0, px, py, 4 * sc);
@@ -519,23 +530,17 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         }
       }
 
-      // Render icons with glow
+      // Render anchor glow (icons are HTML overlay for splash-identical look)
       for (const ti of techIcons) {
-        const pA = 0.5 + Math.sin(ti.pulse) * 0.15;
+        const pA = 0.55 + Math.sin(ti.pulse) * 0.2;
         const c = colorPalette[ti.ci];
-        // Glow halo
-        const gR = ti.fontSize * 1.3;
+        const gR = (IS_MOBILE ? 5 : 7) * (0.9 + pA * 0.3) * sc;
         const gg = ctx.createRadialGradient(ti.x, ti.y, 0, ti.x, ti.y, gR);
-        gg.addColorStop(0, hsl(c, 0.18 * anyA * pA));
-        gg.addColorStop(0.6, hsl(c, 0.05 * anyA));
+        gg.addColorStop(0, hsl(c, 0.2 * anyA * pA));
+        gg.addColorStop(0.7, hsl(c, 0.05 * anyA));
         gg.addColorStop(1, hsl(c, 0));
         ctx.beginPath(); ctx.arc(ti.x, ti.y, gR, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
-        // Icon text
-        ctx.font = `${ti.fontSize}px sans-serif`;
-        ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        ctx.globalAlpha = Math.min(1, 0.7 * anyA * pA + 0.3);
-        ctx.fillText(ti.icon, ti.x, ti.y);
-        ctx.globalAlpha = 1;
+        ctx.beginPath(); ctx.arc(ti.x, ti.y, 1.1 * sc, 0, Math.PI * 2); ctx.fillStyle = hsl(COLORS.white, 0.5 * anyA); ctx.fill();
       }
 
       // ═══ L7: RADAR SWEEP — always present ═══
