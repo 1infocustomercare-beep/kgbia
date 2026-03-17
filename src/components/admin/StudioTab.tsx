@@ -675,6 +675,13 @@ const StudioTab = ({
         />
       )}
 
+      {/* ===== PLATE GALLERY ===== */}
+      {section === "plates" && restaurant && (
+        <div className="space-y-4">
+          <PlateGallery restaurantId={restaurant.id} />
+        </div>
+      )}
+
       {/* ===== TRANSLATE ===== */}
       {section === "translate" && (
         <div className="space-y-4">
