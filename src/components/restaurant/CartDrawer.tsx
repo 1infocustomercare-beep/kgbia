@@ -10,9 +10,10 @@ interface CartDrawerProps {
   open: boolean;
   onClose: () => void;
   allMenuItems?: MenuItem[];
+  restaurantId?: string;
 }
 
-const CartDrawer = ({ open, onClose, allMenuItems = [] }: CartDrawerProps) => {
+const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDrawerProps) => {
   const { items, updateQuantity, removeItem, total } = useCart();
   const navigate = useNavigate();
   const { slug } = useParams();
