@@ -1627,32 +1627,147 @@ export default function AgentsPage() {
 
                 {/* TAB: Edit */}
                 <TabsContent value="edit" className="space-y-4 mt-4">
-                  <div>
-                    <Label className="text-xs text-muted-foreground">Nome Visualizzato</Label>
-                    <Input value={editDisplayName} onChange={e => setEditDisplayName(e.target.value)} className="mt-1" />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">Descrizione</Label>
-                    <Textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} className="mt-1 min-h-[80px] text-sm" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  {/* ── Sezione: Identità ── */}
+                  <div className="rounded-xl border border-primary/15 bg-primary/[0.02] p-4 space-y-4">
+                    <h4 className="text-xs font-bold text-primary flex items-center gap-2 uppercase tracking-wider">
+                      <Sparkles className="w-3.5 h-3.5" /> Identità Agente
+                    </h4>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Modello AI</Label>
-                      <Input value={editModel} onChange={e => setEditModel(e.target.value)} className="mt-1" />
+                      <Label className="text-xs text-muted-foreground">Nome Visualizzato</Label>
+                      <Input value={editDisplayName} onChange={e => setEditDisplayName(e.target.value)} className="mt-1" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Costo per Chiamata (€)</Label>
-                      <Input type="number" step="0.001" value={editCostPerCall} onChange={e => setEditCostPerCall(parseFloat(e.target.value) || 0)} className="mt-1" />
+                      <Label className="text-xs text-muted-foreground">Descrizione</Label>
+                      <Textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} className="mt-1 min-h-[80px] text-sm" />
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Icona / Emoji</Label>
+                        <Input value={editIconEmoji} onChange={e => setEditIconEmoji(e.target.value)} className="mt-1 text-center text-lg" placeholder="🤖" />
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Colore Primario</Label>
+                        <div className="flex items-center gap-2 mt-1">
+                          <input type="color" value={editColorHex} onChange={e => setEditColorHex(e.target.value)}
+                            className="w-10 h-9 rounded-lg border border-border cursor-pointer bg-transparent" />
+                          <Input value={editColorHex} onChange={e => setEditColorHex(e.target.value)} className="flex-1 font-mono text-xs" />
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Tipo</Label>
+                        <Select value={editType} onValueChange={(v: "universal" | "sector") => setEditType(v)}>
+                          <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="universal">🌐 Universale</SelectItem>
+                            <SelectItem value="sector">🎯 Settoriale</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Categoria</Label>
+                        <Select value={editCategory} onValueChange={setEditCategory}>
+                          <SelectTrigger className="mt-1"><SelectValue placeholder="Seleziona..." /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="automation">🤖 Automazione</SelectItem>
+                            <SelectItem value="analytics">📊 Analytics</SelectItem>
+                            <SelectItem value="communication">💬 Comunicazione</SelectItem>
+                            <SelectItem value="sales">💰 Vendite</SelectItem>
+                            <SelectItem value="compliance">🛡 Compliance</SelectItem>
+                            <SelectItem value="operations">⚙️ Operations</SelectItem>
+                            <SelectItem value="content">📝 Contenuti</SelectItem>
+                            <SelectItem value="voice">🎙 Voice</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Prezzo Abbonamento (€/mese)</Label>
+                        <Input type="number" step="1" value={editPricingBase} onChange={e => setEditPricingBase(parseFloat(e.target.value) || 0)} className="mt-1" />
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">Trigger / Attivazione</Label>
-                    <Input value={editTrigger} onChange={e => setEditTrigger(e.target.value)} className="mt-1" />
+
+                  {/* ── Sezione: Modello AI e Tecnica ── */}
+                  <div className="rounded-xl border border-accent/15 bg-accent/[0.02] p-4 space-y-4">
+                    <h4 className="text-xs font-bold text-accent flex items-center gap-2 uppercase tracking-wider">
+                      <Brain className="w-3.5 h-3.5" /> Configurazione Tecnica
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Modello AI</Label>
+                        <Select value={editModel} onValueChange={setEditModel}>
+                          <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Gemini 3 Flash">Gemini 3 Flash</SelectItem>
+                            <SelectItem value="Gemini 2.5 Flash">Gemini 2.5 Flash</SelectItem>
+                            <SelectItem value="Gemini 2.5 Flash Lite">Gemini 2.5 Flash Lite</SelectItem>
+                            <SelectItem value="Gemini 2.5 Pro">Gemini 2.5 Pro</SelectItem>
+                            <SelectItem value="Gemini 2.5 Flash Image">Gemini 2.5 Flash Image</SelectItem>
+                            <SelectItem value="GPT-5">GPT-5</SelectItem>
+                            <SelectItem value="GPT-5 Mini">GPT-5 Mini</SelectItem>
+                            <SelectItem value="Google TTS API">Google TTS API</SelectItem>
+                            <SelectItem value="Custom">Custom</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Costo per Chiamata (€)</Label>
+                        <Input type="number" step="0.001" value={editCostPerCall} onChange={e => setEditCostPerCall(parseFloat(e.target.value) || 0)} className="mt-1" />
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Trigger / Attivazione</Label>
+                      <Input value={editTrigger} onChange={e => setEditTrigger(e.target.value)} className="mt-1" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Input Descrizione</Label>
+                        <Input value={editInputDesc} onChange={e => setEditInputDesc(e.target.value)} className="mt-1 text-xs" />
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Output Descrizione</Label>
+                        <Input value={editOutputDesc} onChange={e => setEditOutputDesc(e.target.value)} className="mt-1 text-xs" />
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Livello Autonomia: <span className="font-bold text-foreground">{editAutonomy}/10</span></Label>
+                      <input type="range" min={1} max={10} value={editAutonomy} onChange={e => setEditAutonomy(parseInt(e.target.value))}
+                        className="w-full mt-2 accent-primary h-2 rounded-full" />
+                      <div className="flex justify-between text-[9px] text-muted-foreground mt-1">
+                        <span>Manuale</span><span>Semi-auto</span><span>Autonomo</span>
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Livello Privacy</Label>
+                      <Select value={editPrivacy} onValueChange={setEditPrivacy}>
+                        <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="strict">🔒 Strict — Dati mai condivisi</SelectItem>
+                          <SelectItem value="standard">🔐 Standard — Analytics aggregati</SelectItem>
+                          <SelectItem value="minimal">🔓 Minimal — Dati anonimi condivisi</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">System Prompt Override</Label>
-                    <Textarea value={editPromptOverride} onChange={e => setEditPromptOverride(e.target.value)} className="mt-1 min-h-[100px] text-xs font-mono" placeholder="Lascia vuoto per usare il prompt di default..." />
+
+                  {/* ── Sezione: Capacità e Prompt ── */}
+                  <div className="rounded-xl border border-border p-4 space-y-4">
+                    <h4 className="text-xs font-bold text-foreground flex items-center gap-2 uppercase tracking-wider">
+                      <Zap className="w-3.5 h-3.5 text-amber-400" /> Capacità & Prompt
+                    </h4>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Capacità (separate da virgola)</Label>
+                      <Textarea value={editCapabilities} onChange={e => setEditCapabilities(e.target.value)}
+                        className="mt-1 min-h-[60px] text-xs" placeholder="es: ordini vocali, analisi menu, suggerimenti piatti..." />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">System Prompt Override</Label>
+                      <Textarea value={editPromptOverride} onChange={e => setEditPromptOverride(e.target.value)} className="mt-1 min-h-[100px] text-xs font-mono" placeholder="Lascia vuoto per usare il prompt di default..." />
+                    </div>
                   </div>
+
+                  {/* ── Sezione: Settori ── */}
                   <div>
                     <Label className="text-xs text-muted-foreground mb-2 block">Settori Abilitati</Label>
                     <div className="flex flex-wrap gap-2">
@@ -1672,23 +1787,36 @@ export default function AgentsPage() {
                       ))}
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border">
-                    <div>
-                      <span className="text-sm font-medium">Agente Abilitato</span>
-                      <p className="text-[10px] text-muted-foreground">Attiva o disattiva questo agente globalmente</p>
+
+                  {/* ── Toggle finali ── */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border">
+                      <div>
+                        <span className="text-sm font-medium">Agente Abilitato</span>
+                        <p className="text-[10px] text-muted-foreground">Attiva o disattiva questo agente globalmente</p>
+                      </div>
+                      <Switch checked={editEnabled} onCheckedChange={setEditEnabled} />
                     </div>
-                    <Switch checked={editEnabled} onCheckedChange={setEditEnabled} />
+                    <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border">
+                      <div>
+                        <span className="text-sm font-medium">Apprendimento Continuo</span>
+                        <p className="text-[10px] text-muted-foreground">L'agente impara dalle interazioni per migliorare nel tempo</p>
+                      </div>
+                      <Switch checked={editLearning} onCheckedChange={setEditLearning} />
+                    </div>
                   </div>
+
+                  {/* ── Save ── */}
                   <div className="flex gap-2">
-                    <Button className="flex-1 gap-2" onClick={handleSaveConfig} disabled={upsertConfig.isPending}>
+                    <Button className="flex-1 gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground" onClick={handleSaveConfig} disabled={upsertConfig.isPending}>
                       {upsertConfig.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                      Salva Modifiche
+                      Salva Tutte le Modifiche
                     </Button>
                   </div>
                   <div className="bg-muted/20 border border-border rounded-lg p-3 space-y-1">
                     <p className="text-[10px] text-muted-foreground flex items-center gap-1"><span>📁</span> <code className="bg-muted px-1.5 py-0.5 rounded text-[10px]">{selectedAgent.file}</code></p>
-                    <p className="text-[10px] text-muted-foreground">📥 {selectedAgent.inputDesc}</p>
-                    <p className="text-[10px] text-muted-foreground">📤 {selectedAgent.outputDesc}</p>
+                    <p className="text-[10px] text-muted-foreground">📥 {editInputDesc || selectedAgent.inputDesc}</p>
+                    <p className="text-[10px] text-muted-foreground">📤 {editOutputDesc || selectedAgent.outputDesc}</p>
                   </div>
                 </TabsContent>
 
