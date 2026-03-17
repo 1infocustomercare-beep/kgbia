@@ -732,14 +732,13 @@ const EmpireVoiceAgent: React.FC = () => {
         const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
         console.warn(`[Arianna] Narration failed for "${sectionId}", attempt ${attempts}`);
         if (attempts < 3) {
-          // Short retry for transient failures
           await new Promise(r => setTimeout(r, 2000));
           sectionQueueRef.current.push(sectionId);
         } else {
-          // Don't permanently give up — just stop the active retry loop.
-          // The gesture handler will re-enqueue with forceReplay when user interacts.
-          console.log(`[Arianna] Pausing narration for "${sectionId}" after ${attempts} attempts — waiting for user gesture`);
-          // Do NOT add to narratedRef — leave it as "not narrated" so gesture can retry
+          // Reset attempts so scroll or gesture can re-enqueue later
+          console.log(`[Arianna] Pausing narration for "${sectionId}" after ${attempts} attempts — will retry on next scroll/gesture`);
+          narrationAttemptsRef.current[sectionId] = 0;
+          // Do NOT add to narratedRef — leave it as "not narrated"
         }
       }
 
