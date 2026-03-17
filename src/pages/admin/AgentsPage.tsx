@@ -675,6 +675,18 @@ export default function AgentsPage() {
   const [editModel, setEditModel] = useState("");
   const [editCostPerCall, setEditCostPerCall] = useState(0);
   const [editTrigger, setEditTrigger] = useState("");
+  // New professional fields
+  const [editIconEmoji, setEditIconEmoji] = useState("");
+  const [editColorHex, setEditColorHex] = useState("#C8963E");
+  const [editCategory, setEditCategory] = useState("");
+  const [editType, setEditType] = useState<"universal" | "sector">("universal");
+  const [editAutonomy, setEditAutonomy] = useState(7);
+  const [editPrivacy, setEditPrivacy] = useState("strict");
+  const [editCapabilities, setEditCapabilities] = useState("");
+  const [editPricingBase, setEditPricingBase] = useState(0);
+  const [editLearning, setEditLearning] = useState(false);
+  const [editInputDesc, setEditInputDesc] = useState("");
+  const [editOutputDesc, setEditOutputDesc] = useState("");
 
   // Bulk action states
   const [bulkAction, setBulkAction] = useState<"enable_all" | "disable_all" | null>(null);
