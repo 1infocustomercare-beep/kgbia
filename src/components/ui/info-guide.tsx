@@ -1,23 +1,30 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HelpCircle, X } from "lucide-react";
+import { HelpCircle, X, ChevronRight } from "lucide-react";
 import { useFeatureGuides } from "@/hooks/useFeatureGuides";
+import { featureGuides, type GuideEntry } from "@/config/feature-guides";
 
 interface InfoGuideProps {
-  title: string;
-  description: string;
-  /** Optional: short usage steps */
+  /** Registry key — if set, content loads from feature-guides.ts */
+  guideKey?: string;
+  /** Manual override */
+  title?: string;
+  description?: string;
   steps?: string[];
-  /** Compact inline mode vs standalone */
   inline?: boolean;
-  /** Custom icon size */
   size?: "sm" | "md";
 }
 
-export const InfoGuide = ({ title, description, steps, inline = true, size = "sm" }: InfoGuideProps) => {
+export const InfoGuide = ({ guideKey, title, description, steps, inline = true, size = "sm" }: InfoGuideProps) => {
   const { guidesEnabled } = useFeatureGuides();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Resolve from registry if guideKey provided
+  const entry: GuideEntry | undefined = guideKey ? featureGuides[guideKey] : undefined;
+  const resolvedTitle = title || entry?.title || "Info";
+  const resolvedDesc = description || entry?.description || "";
+  const resolvedSteps = steps || entry?.steps;
 
   useEffect(() => {
     if (!open) return;
@@ -28,18 +35,26 @@ export const InfoGuide = ({ title, description, steps, inline = true, size = "sm
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
 
+  // Lock body scroll when mobile sheet is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [open]);
+
   if (!guidesEnabled) return null;
 
-  const iconSize = size === "sm" ? "w-4 h-4" : "w-5 h-5";
-  const btnSize = size === "sm" ? "w-6 h-6 min-w-[24px] min-h-[24px]" : "w-8 h-8 min-w-[32px] min-h-[32px]";
+  const iconSize = size === "sm" ? "w-3.5 h-3.5" : "w-4 h-4";
+  const btnSize = size === "sm" ? "w-6 h-6 min-w-[24px] min-h-[24px]" : "w-7 h-7 min-w-[28px] min-h-[28px]";
 
   return (
-    <div ref={ref} className={`relative ${inline ? "inline-flex" : ""}`}>
+    <div ref={ref} className={`relative ${inline ? "inline-flex" : ""}`} style={{ zIndex: open ? 201 : "auto" }}>
       <motion.button
         onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
-        className={`${btnSize} rounded-full flex items-center justify-center bg-primary/10 hover:bg-primary/20 text-primary transition-colors`}
+        className={`${btnSize} rounded-full flex items-center justify-center bg-primary/8 hover:bg-primary/15 text-primary/70 hover:text-primary transition-colors`}
         whileTap={{ scale: 0.9 }}
-        aria-label={`Info: ${title}`}
+        aria-label={`Info: ${resolvedTitle}`}
       >
         <HelpCircle className={iconSize} />
       </motion.button>
@@ -47,35 +62,29 @@ export const InfoGuide = ({ title, description, steps, inline = true, size = "sm
       <AnimatePresence>
         {open && (
           <>
-            {/* Mobile: bottom sheet overlay */}
+            {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 z-[200] bg-black/40 md:hidden"
+              className="fixed inset-0 z-[200] bg-black/30 backdrop-blur-[2px]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
             />
 
-            {/* Desktop: positioned popover */}
+            {/* Bottom sheet — safe for all mobile viewports */}
             <motion.div
-              className="hidden md:block absolute z-[201] w-72 top-full mt-2 right-0"
-              initial={{ opacity: 0, y: -8, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-            >
-              <GuideCard title={title} description={description} steps={steps} onClose={() => setOpen(false)} />
-            </motion.div>
-
-            {/* Mobile: bottom sheet */}
-            <motion.div
-              className="md:hidden fixed bottom-0 left-0 right-0 z-[201] px-4 pb-6"
-              initial={{ opacity: 0, y: 100 }}
+              className="fixed bottom-0 left-0 right-0 z-[201] px-3 pb-[max(env(safe-area-inset-bottom,12px),12px)]"
+              initial={{ opacity: 0, y: 80 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 100 }}
-              transition={{ type: "spring", damping: 28, stiffness: 300 }}
+              exit={{ opacity: 0, y: 80 }}
+              transition={{ type: "spring", damping: 30, stiffness: 350 }}
             >
-              <GuideCard title={title} description={description} steps={steps} onClose={() => setOpen(false)} mobile />
+              <GuideCard
+                title={resolvedTitle}
+                description={resolvedDesc}
+                steps={resolvedSteps}
+                onClose={() => setOpen(false)}
+              />
             </motion.div>
           </>
         )}
@@ -89,46 +98,45 @@ const GuideCard = ({
   description,
   steps,
   onClose,
-  mobile,
 }: {
   title: string;
   description: string;
   steps?: string[];
   onClose: () => void;
-  mobile?: boolean;
 }) => (
-  <div className={`bg-card border border-border/60 shadow-xl ${mobile ? "rounded-2xl" : "rounded-xl"} overflow-hidden`}>
-    {/* Drag handle on mobile */}
-    {mobile && (
-      <div className="flex justify-center pt-3 pb-1">
-        <div className="w-10 h-1 rounded-full bg-muted-foreground/20" />
-      </div>
-    )}
+  <div className="bg-card/95 backdrop-blur-xl border border-border/40 shadow-2xl rounded-2xl overflow-hidden max-h-[70dvh] overflow-y-auto">
+    {/* Drag indicator */}
+    <div className="flex justify-center pt-2.5 pb-1">
+      <div className="w-9 h-1 rounded-full bg-muted-foreground/15" />
+    </div>
 
-    <div className="p-4 space-y-2.5">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+    <div className="px-4 pb-4 pt-1 space-y-3">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
             <HelpCircle className="w-4 h-4 text-primary" />
           </div>
-          <h4 className="text-sm font-bold text-foreground leading-tight">{title}</h4>
+          <h4 className="text-sm font-bold text-foreground leading-tight truncate">{title}</h4>
         </div>
         <button
           onClick={onClose}
-          className="p-1.5 rounded-lg hover:bg-secondary transition-colors flex-shrink-0"
+          className="p-1.5 rounded-xl hover:bg-secondary/80 active:bg-secondary transition-colors flex-shrink-0 -mt-0.5"
         >
-          <X className="w-3.5 h-3.5 text-muted-foreground" />
+          <X className="w-4 h-4 text-muted-foreground" />
         </button>
       </div>
 
-      <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
+      {/* Description */}
+      <p className="text-xs text-muted-foreground/90 leading-relaxed">{description}</p>
 
+      {/* Steps */}
       {steps && steps.length > 0 && (
-        <div className="space-y-1.5 pt-1">
-          <p className="text-[10px] font-semibold text-primary uppercase tracking-widest">Come si usa</p>
+        <div className="space-y-2 pt-1">
+          <p className="text-[10px] font-semibold text-primary/80 uppercase tracking-wider">Come fare</p>
           {steps.map((step, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+            <div key={i} className="flex items-start gap-2.5">
+              <span className="w-5 h-5 rounded-lg bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                 {i + 1}
               </span>
               <p className="text-[11px] text-muted-foreground leading-relaxed">{step}</p>
@@ -147,7 +155,7 @@ export const GuidesToggle = () => {
   return (
     <motion.button
       onClick={toggleGuides}
-      className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+      className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
         guidesEnabled
           ? "bg-primary/10 text-primary border border-primary/20"
           : "bg-secondary text-muted-foreground border border-border/50"
@@ -155,7 +163,7 @@ export const GuidesToggle = () => {
       whileTap={{ scale: 0.95 }}
     >
       <HelpCircle className="w-3.5 h-3.5" />
-      {guidesEnabled ? "Guide Attive" : "Guide Disattivate"}
+      {guidesEnabled ? "Guide ?" : "Guide Off"}
     </motion.button>
   );
 };
