@@ -44,6 +44,7 @@ import cartoonFitnessDefault from "@/assets/cartoon-sector-fitness.png";
 import cartoonHotelDefault from "@/assets/cartoon-sector-hotel.png";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
+import MultiSectorShowcase from "@/components/public/MultiSectorShowcase";
 const EmpireTeamStory = lazy(() => import("@/components/public/EmpireTeamStory"));
 
 /* Build a lookup from site_assets — custom URL overrides bundled default */
