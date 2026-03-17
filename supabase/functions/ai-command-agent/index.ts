@@ -769,9 +769,19 @@ async function executeAction(
         return { success: true, detail: `Corso "${items[0].name}" ${action.is_active ? "attivato" : "disattivato"}` };
       }
 
-      case "membership_update": {
-        // Not yet a dedicated table, use CRM
-        return { success: false, detail: "Gestione membership via comando sarà disponibile a breve" };
+      case "intervention_add": {
+        const { error } = await supabase.from("interventions").insert({
+          company_id: resourceId,
+          client_name: action.client_name,
+          client_phone: action.client_phone || null,
+          intervention_type: action.intervention_type || "generico",
+          address: action.address || null,
+          notes: action.notes || null,
+          urgency: action.urgency || "media",
+          status: "richiesta",
+        });
+        if (error) return { success: false, detail: `Errore: ${error.message}` };
+        return { success: true, detail: `Intervento per "${action.client_name}" creato (${action.intervention_type})` };
       }
 
       default:

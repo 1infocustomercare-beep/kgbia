@@ -110,7 +110,7 @@ serve(async (req) => {
     }
 
     // 5b. Route actionable intents to Command Agent for direct DB execution
-    const ACTIONABLE_INTENTS = ["ADD_ITEM", "UPDATE_PRICE", "MENU_UPDATE", "MANAGE_BOOKING", "PANIC_MODE"];
+    const ACTIONABLE_INTENTS = ["ADD_ITEM", "UPDATE_PRICE", "MENU_UPDATE", "MANAGE_BOOKING", "PANIC_MODE", "MANAGE_STAFF", "MANAGE_INTERVENTION", "MANAGE_FLEET", "MANAGE_CLIENT"];
     if (ACTIONABLE_INTENTS.includes(detectedIntent)) {
       try {
         const cmdResp = await fetch(`${supabaseUrl}/functions/v1/ai-command-agent`, {

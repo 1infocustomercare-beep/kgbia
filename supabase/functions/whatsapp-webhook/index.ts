@@ -335,7 +335,7 @@ async function generateAIReply(
 
   const systemPrompt = `${sectorPrompt.system_prompt}\n\nAzioni consentite: ${JSON.stringify(sectorPrompt.allowed_actions)}\nAzioni bloccate: ${JSON.stringify(sectorPrompt.blocked_actions)}\n\nRispondi in modo conciso e professionale. Max 300 caratteri per messaggio WhatsApp.`;
 
-  const resp = await fetch("https://api.lovable.dev/v1/chat/completions", {
+  const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
