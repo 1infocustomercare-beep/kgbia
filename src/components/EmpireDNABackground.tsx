@@ -1,186 +1,50 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Empire Background v11 — DNA Biotech Neural Canvas
- * Enhanced with prominent double-helix strands, base-pair rungs,
- * hex-grid tech overlay, flowing data particles, and organic topology morphing.
+ * Empire Background v12 — AI Neural Circuit
+ * Professional tech aesthetic: orthogonal circuit traces, neural network nodes,
+ * data-flow particles along straight/angled paths, subtle grid underlay.
+ * No spirals, no helixes, no biological shapes.
  */
 
 const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 70 : 140;
-const MAX_DIST = IS_MOBILE ? 140 : 185;
-const FLOW_COUNT = IS_MOBILE ? 28 : 65;
-const PULSE_COUNT = IS_MOBILE ? 12 : 28;
-const DNA_STRANDS = IS_MOBILE ? 2 : 3; // Prominent DNA helixes
-const HEX_COLS = IS_MOBILE ? 8 : 14;
-const HEX_ROWS = IS_MOBILE ? 12 : 18;
+const NODE_COUNT = IS_MOBILE ? 50 : 100;
+const CIRCUIT_LINES = IS_MOBILE ? 12 : 24;
+const DATA_PARTICLES = IS_MOBILE ? 18 : 40;
+const GRID_SPACING = IS_MOBILE ? 50 : 60;
 
 type Pt = { x: number; y: number };
 
-// ── Organic topologies (no grids, no squares) ──
-const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = [
-  // 0: Neural nebula
-  (n, w, h, t) => Array.from({ length: n }, (_, i) => {
-    const seed = i * 137.508;
-    const r = 0.08 + (i / n) * 0.42;
-    const wobble = Math.sin(t * 0.12 + i * 0.7) * 0.04;
-    return {
-      x: w * 0.5 + Math.cos(seed + t * 0.03) * (r + wobble) * w,
-      y: h * 0.5 + Math.sin(seed * 0.7 + t * 0.025) * (r + wobble) * h,
-    };
-  }),
-  // 1: Flowing river streams
-  (n, w, h, t) => {
-    const streams = 5;
-    const per = Math.ceil(n / streams);
-    return Array.from({ length: n }, (_, i) => {
-      const s = Math.floor(i / per), li = i % per;
-      const f = li / Math.max(per - 1, 1);
-      const baseY = 0.1 + s * 0.18;
-      const wave = Math.sin(f * Math.PI * 3 + t * 0.25 + s * 1.4) * 0.06
-        + Math.sin(f * Math.PI * 7 + t * 0.15) * 0.02
-        + Math.cos(f * Math.PI * 1.5 - t * 0.1 + s) * 0.03;
-      return { x: f * w, y: h * (baseY + wave) };
-    });
-  },
-  // 2: Organic clusters
-  (n, w, h, t) => {
-    const clusters = 5;
-    const per = Math.ceil(n / clusters);
-    const centers = [[0.2, 0.25], [0.75, 0.2], [0.5, 0.55], [0.25, 0.78], [0.8, 0.72]];
-    return Array.from({ length: n }, (_, i) => {
-      const ci = Math.floor(i / per) % clusters, li = i % per;
-      const [cx, cy] = centers[ci];
-      const angle = li * 2.39996 + t * 0.04 + ci * 2.1;
-      const r = Math.pow(li / per, 0.6) * Math.min(w, h) * 0.12;
-      const breathe = 1 + Math.sin(t * 0.15 + ci * 1.3) * 0.15;
-      return {
-        x: w * cx + Math.cos(angle) * r * breathe + Math.sin(t * 0.08 + i * 0.3) * 8,
-        y: h * cy + Math.sin(angle) * r * breathe + Math.cos(t * 0.06 + i * 0.5) * 6,
-      };
-    });
-  },
-  // 3: DNA double helix
-  (n, w, h, t) => Array.from({ length: n }, (_, i) => {
-    const f = i / n;
-    const turns = 4;
-    const angle = f * Math.PI * 2 * turns + t * 0.2;
-    const strand = i % 2 === 0 ? 1 : -1;
-    const amp = 0.15 + Math.sin(f * Math.PI) * 0.08;
-    const drift = Math.sin(f * Math.PI * 6 + t * 0.12) * 0.015;
-    return {
-      x: w * (0.5 + Math.sin(angle) * amp * strand + drift),
-      y: h * (0.05 + f * 0.9) + Math.cos(angle * 0.5 + t * 0.1) * 8,
-    };
-  }),
-  // 4: Converging vortex
-  (n, w, h, t) => Array.from({ length: n }, (_, i) => {
-    const f = i / n;
-    const spiralAngle = f * Math.PI * 6 + t * 0.08;
-    const r = (1 - f * 0.7) * Math.min(w, h) * 0.45;
-    const wobble = Math.sin(f * Math.PI * 8 + t * 0.2) * 12;
-    return {
-      x: w * 0.5 + Math.cos(spiralAngle) * r + wobble,
-      y: h * 0.5 + Math.sin(spiralAngle) * r * 0.65 + Math.cos(spiralAngle * 0.3) * wobble * 0.5,
-    };
-  }),
-  // 5: Constellation drift
-  (n, w, h, t) => {
-    const wells = [[0.3, 0.3], [0.7, 0.5], [0.4, 0.8]];
-    return Array.from({ length: n }, (_, i) => {
-      const seed = i * 137.508;
-      let bx = (Math.sin(seed) * 0.5 + 0.5) * w;
-      let by = (Math.cos(seed * 0.7) * 0.5 + 0.5) * h;
-      for (const [gx, gy] of wells) {
-        const dx = gx * w - bx, dy = gy * h - by;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        const pull = Math.max(0, 1 - d / (Math.min(w, h) * 0.4)) * 0.3;
-        bx += dx * pull * (1 + Math.sin(t * 0.1 + i * 0.2) * 0.3);
-        by += dy * pull * (1 + Math.cos(t * 0.08 + i * 0.15) * 0.3);
-      }
-      return {
-        x: bx + Math.sin(t * 0.05 + seed) * 10,
-        y: by + Math.cos(t * 0.04 + seed * 0.6) * 8,
-      };
-    });
-  },
-  // 6: Wave interference
-  (n, w, h, t) => Array.from({ length: n }, (_, i) => {
-    const ix = i % Math.ceil(Math.sqrt(n));
-    const iy = Math.floor(i / Math.ceil(Math.sqrt(n)));
-    const cols = Math.ceil(Math.sqrt(n));
-    const rows = Math.ceil(n / cols);
-    const fx = ix / Math.max(cols - 1, 1);
-    const fy = iy / Math.max(rows - 1, 1);
-    const wave1 = Math.sin(fx * Math.PI * 4 + t * 0.3) * 30;
-    const wave2 = Math.cos(fy * Math.PI * 3 + t * 0.2) * 25;
-    const wave3 = Math.sin((fx + fy) * Math.PI * 2 + t * 0.15) * 20;
-    return {
-      x: w * (0.05 + fx * 0.9) + wave2 * 0.5 + wave3 * 0.3,
-      y: h * (0.05 + fy * 0.9) + wave1 + wave3 * 0.4,
-    };
-  }),
-];
-
-const SECTIONS = topologies.length;
-
-const PALETTES = [
-  { node: [220, 8, 50], line: [220, 6, 45], glow: [220, 12, 55], dna: [180, 20, 50] },
-  { node: [200, 10, 48], line: [200, 8, 42], glow: [200, 14, 52], dna: [160, 22, 48] },
-  { node: [265, 8, 48], line: [265, 6, 42], glow: [265, 12, 52], dna: [240, 18, 50] },
-  { node: [180, 10, 46], line: [180, 8, 40], glow: [180, 14, 50], dna: [170, 20, 46] },
-  { node: [240, 8, 47], line: [240, 6, 41], glow: [240, 12, 51], dna: [220, 18, 48] },
-  { node: [210, 10, 49], line: [210, 8, 43], glow: [210, 14, 53], dna: [190, 20, 50] },
-  { node: [195, 8, 48], line: [195, 6, 42], glow: [195, 12, 52], dna: [175, 18, 48] },
-];
-
-interface FlowParticle {
-  fromIdx: number;
-  toIdx: number;
-  progress: number;
+interface CircuitPath {
+  points: Pt[];
   speed: number;
-  life: number;
+  phase: number;
 }
 
-interface PulseRing {
-  x: number; y: number;
-  radius: number;
-  maxRadius: number;
+interface DataParticle {
+  pathIdx: number;
+  progress: number;
   speed: number;
-  alpha: number;
-  color: number[];
+  size: number;
 }
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const lerpC = (a: number[], b: number[], t: number): number[] =>
-  a.map((v, i) => lerp(v, b[i], t));
-const hsl = (c: number[], a: number) => `hsla(${c[0]},${c[1]}%,${c[2]}%,${a})`;
+const hsl = (h: number, s: number, l: number, a: number) => `hsla(${h},${s}%,${l}%,${a})`;
 
 const EmpireDNABackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
-  const scrollRef = useRef(0);
   const [ready, setReady] = useState(false);
-  const posRef = useRef<Pt[]>([]);
-  const velRef = useRef<Pt[]>([]);
   const timeRef = useRef(0);
-  const flowsRef = useRef<FlowParticle[]>([]);
-  const pulsesRef = useRef<PulseRing[]>([]);
+  const nodesRef = useRef<Pt[]>([]);
+  const circuitsRef = useRef<CircuitPath[]>([]);
+  const particlesRef = useRef<DataParticle[]>([]);
   const ptrRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
-  useEffect(() => { const t = setTimeout(() => setReady(true), 250); return () => clearTimeout(t); }, []);
-
-  useEffect(() => {
-    const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
-    window.addEventListener("scroll", fn, { passive: true });
-    const mainEl = document.querySelector("main");
-    if (mainEl) mainEl.addEventListener("scroll", () => { scrollRef.current = mainEl.scrollTop; }, { passive: true });
-    fn();
-    return () => { window.removeEventListener("scroll", fn); };
-  }, []);
+  useEffect(() => { const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
     const move = (e: PointerEvent) => { ptrRef.current = { x: e.clientX, y: e.clientY, active: true }; };
@@ -204,36 +68,88 @@ const EmpireDNABackground = () => {
       canvas.width = w * dpr; canvas.height = h * dpr;
       canvas.style.width = w + "px"; canvas.style.height = h + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      generateLayout();
     };
+
+    const generateLayout = () => {
+      if (!w || !h) return;
+
+      // Generate grid-snapped nodes (circuit junctions)
+      const nodes: Pt[] = [];
+      const cols = Math.floor(w / GRID_SPACING);
+      const rows = Math.floor(h / GRID_SPACING);
+      for (let i = 0; i < NODE_COUNT; i++) {
+        const col = Math.floor(Math.random() * cols);
+        const row = Math.floor(Math.random() * rows);
+        nodes.push({
+          x: (col + 0.5) * GRID_SPACING + (Math.random() - 0.5) * 8,
+          y: (row + 0.5) * GRID_SPACING + (Math.random() - 0.5) * 8,
+        });
+      }
+      nodesRef.current = nodes;
+
+      // Generate circuit paths (orthogonal/45° traces between nodes)
+      const circuits: CircuitPath[] = [];
+      for (let i = 0; i < CIRCUIT_LINES; i++) {
+        const startIdx = Math.floor(Math.random() * nodes.length);
+        const start = nodes[startIdx];
+        const segments = 2 + Math.floor(Math.random() * 4);
+        const points: Pt[] = [{ ...start }];
+
+        let cx = start.x, cy = start.y;
+        for (let s = 0; s < segments; s++) {
+          // Choose orthogonal or 45° direction
+          const dirs = [
+            { dx: 1, dy: 0 }, { dx: -1, dy: 0 },
+            { dx: 0, dy: 1 }, { dx: 0, dy: -1 },
+            { dx: 1, dy: 1 }, { dx: -1, dy: -1 },
+            { dx: 1, dy: -1 }, { dx: -1, dy: 1 },
+          ];
+          const dir = dirs[Math.floor(Math.random() * dirs.length)];
+          const len = (2 + Math.floor(Math.random() * 5)) * GRID_SPACING;
+          cx = Math.max(20, Math.min(w - 20, cx + dir.dx * len));
+          cy = Math.max(20, Math.min(h - 20, cy + dir.dy * len));
+          points.push({ x: cx, y: cy });
+        }
+
+        circuits.push({
+          points,
+          speed: 0.002 + Math.random() * 0.004,
+          phase: Math.random() * Math.PI * 2,
+        });
+      }
+      circuitsRef.current = circuits;
+
+      // Generate data particles
+      const particles: DataParticle[] = [];
+      for (let i = 0; i < DATA_PARTICLES; i++) {
+        particles.push({
+          pathIdx: Math.floor(Math.random() * circuits.length),
+          progress: Math.random(),
+          speed: 0.001 + Math.random() * 0.003,
+          size: 1 + Math.random() * 2,
+        });
+      }
+      particlesRef.current = particles;
+    };
+
     resize();
     window.addEventListener("resize", resize);
 
-    if (!posRef.current.length) {
-      posRef.current = Array.from({ length: NODE_COUNT }, () => ({ x: Math.random() * (w || 1000), y: Math.random() * (h || 800) }));
-      velRef.current = Array.from({ length: NODE_COUNT }, () => ({ x: 0, y: 0 }));
-    }
+    // Color palette — cool blue-grey, desaturated, professional
+    const HUE = 215;
+    const SAT = 10;
 
-    const spawnFlow = (): FlowParticle => ({
-      fromIdx: Math.floor(Math.random() * NODE_COUNT),
-      toIdx: Math.floor(Math.random() * NODE_COUNT),
-      progress: 0,
-      speed: 0.005 + Math.random() * 0.015,
-      life: 0,
-    });
-
-    if (!flowsRef.current.length) {
-      flowsRef.current = Array.from({ length: FLOW_COUNT }, spawnFlow);
-    }
-
-    const spawnPulse = (x: number, y: number, color: number[]): PulseRing => ({
-      x, y, radius: 0,
-      maxRadius: 40 + Math.random() * 80,
-      speed: 0.3 + Math.random() * 0.5,
-      alpha: 0.15 + Math.random() * 0.1,
-      color,
-    });
-
-    let lastPulseTime = 0;
+    const getPointOnPath = (path: Pt[], t: number): Pt => {
+      const totalSegs = path.length - 1;
+      if (totalSegs <= 0) return path[0];
+      const seg = Math.min(Math.floor(t * totalSegs), totalSegs - 1);
+      const localT = (t * totalSegs) - seg;
+      return {
+        x: lerp(path[seg].x, path[seg + 1].x, localT),
+        y: lerp(path[seg].y, path[seg + 1].y, localT),
+      };
+    };
 
     const animate = () => {
       if (!w || !h) { animRef.current = requestAnimationFrame(animate); return; }
@@ -241,301 +157,164 @@ const EmpireDNABackground = () => {
       const time = timeRef.current;
       ctx.clearRect(0, 0, w, h);
 
-      scrollRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
-      const pageH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - h;
-      const scrollN = pageH > 0 ? Math.max(0, Math.min(scrollRef.current / pageH, 1)) : 0;
-      const sF = scrollN * (SECTIONS - 1);
-      const sIdx = Math.min(Math.floor(sF), SECTIONS - 2);
-      const blend = sF - sIdx;
-      const t3 = blend * blend * (3 - 2 * blend);
-
-      const pNode = lerpC(PALETTES[sIdx].node, PALETTES[sIdx + 1].node, t3);
-      const pLine = lerpC(PALETTES[sIdx].line, PALETTES[sIdx + 1].line, t3);
-      const pGlow = lerpC(PALETTES[sIdx].glow, PALETTES[sIdx + 1].glow, t3);
-      const pDna = lerpC(PALETTES[sIdx].dna, PALETTES[sIdx + 1].dna, t3);
-
-      // ═══ L0: HEX TECH GRID UNDERLAY ═══
-      const hexR = IS_MOBILE ? 28 : 38;
-      const hexH = hexR * Math.sqrt(3);
-      ctx.strokeStyle = hsl(pLine, 0.025);
-      ctx.lineWidth = 0.5;
-      for (let row = -1; row < HEX_ROWS + 1; row++) {
-        for (let col = -1; col < HEX_COLS + 1; col++) {
-          const cx = col * hexR * 1.5 + (row % 2) * hexR * 0.75;
-          const cy = row * hexH * 0.5;
-          const driftX = Math.sin(time * 0.02 + row * 0.3 + col * 0.2) * 2;
-          const driftY = Math.cos(time * 0.015 + col * 0.4) * 1.5;
-          ctx.beginPath();
-          for (let s = 0; s < 6; s++) {
-            const a = (Math.PI / 3) * s + Math.PI / 6;
-            const hx = cx + driftX + Math.cos(a) * hexR * 0.45;
-            const hy = cy + driftY + Math.sin(a) * hexR * 0.45;
-            s === 0 ? ctx.moveTo(hx, hy) : ctx.lineTo(hx, hy);
-          }
-          ctx.closePath();
-          ctx.stroke();
-        }
-      }
-
-      // ═══ L0.5: DNA DOUBLE HELIX STRANDS ═══
-      for (let si = 0; si < DNA_STRANDS; si++) {
-        const helixX = w * (0.15 + si * 0.35); // spread across screen
-        const turns = 3.5;
-        const amp = IS_MOBILE ? 35 : 55;
-        const helixSpeed = 0.12 + si * 0.03;
-        const rungs = IS_MOBILE ? 20 : 35;
-
-        // Draw base-pair rungs first
-        ctx.lineWidth = 0.6;
-        for (let r = 0; r < rungs; r++) {
-          const f = r / rungs;
-          const yPos = h * (0.02 + f * 0.96);
-          const angle = f * Math.PI * 2 * turns + time * helixSpeed + si * Math.PI * 0.7;
-          const x1 = helixX + Math.sin(angle) * amp;
-          const x2 = helixX + Math.sin(angle + Math.PI) * amp;
-          const depth = (Math.cos(angle) + 1) * 0.5; // 0-1 for depth illusion
-
-          // Only draw rungs that face "forward"
-          if (depth > 0.3) {
-            const rungAlpha = depth * 0.06;
-            ctx.strokeStyle = hsl(pDna, rungAlpha);
-            ctx.beginPath();
-            ctx.moveTo(x1, yPos);
-            ctx.lineTo(x2, yPos);
-            ctx.stroke();
-
-            // Base pair dots at each end
-            const dotR = 1.5 * depth;
-            ctx.fillStyle = hsl(pDna, rungAlpha * 2.5);
-            ctx.beginPath();
-            ctx.arc(x1, yPos, dotR, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(x2, yPos, dotR, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-
-        // Draw the two backbone strands
-        for (let strand = 0; strand < 2; strand++) {
-          const phaseOffset = strand * Math.PI;
-          ctx.beginPath();
-          ctx.strokeStyle = hsl(pDna, 0.08);
-          ctx.lineWidth = IS_MOBILE ? 1 : 1.4;
-
-          for (let step = 0; step <= 80; step++) {
-            const f = step / 80;
-            const yPos = h * (0.02 + f * 0.96);
-            const angle = f * Math.PI * 2 * turns + time * helixSpeed + si * Math.PI * 0.7 + phaseOffset;
-            const xPos = helixX + Math.sin(angle) * amp;
-            const depth = (Math.cos(angle) + 1) * 0.5;
-            // Vary line opacity by depth
-            if (step === 0) {
-              ctx.moveTo(xPos, yPos);
-            } else {
-              ctx.lineTo(xPos, yPos);
-            }
-          }
-          ctx.stroke();
-
-          // Glow pass for backbone
-          ctx.beginPath();
-          ctx.strokeStyle = hsl(pDna, 0.03);
-          ctx.lineWidth = IS_MOBILE ? 3 : 5;
-          for (let step = 0; step <= 80; step++) {
-            const f = step / 80;
-            const yPos = h * (0.02 + f * 0.96);
-            const angle = f * Math.PI * 2 * turns + time * helixSpeed + si * Math.PI * 0.7 + phaseOffset;
-            const xPos = helixX + Math.sin(angle) * amp;
-            step === 0 ? ctx.moveTo(xPos, yPos) : ctx.lineTo(xPos, yPos);
-          }
-          ctx.stroke();
-        }
-      }
-
-      // Morph topology
-      const shA = sIdx % topologies.length, shB = (sIdx + 1) % topologies.length;
-      const tA = topologies[shA](NODE_COUNT, w, h, time);
-      const tB = topologies[shB](NODE_COUNT, w, h, time);
-      const targets = tA.map((a, i) => ({ x: lerp(a.x, tB[i].x, t3), y: lerp(a.y, tB[i].y, t3) }));
-
-      const pos = posRef.current;
-      const vel = velRef.current;
       const ptr = ptrRef.current;
-      const repR = IS_MOBILE ? 80 : 120;
+      const nodes = nodesRef.current;
+      const circuits = circuitsRef.current;
+      const particles = particlesRef.current;
 
-      for (let i = 0; i < NODE_COUNT; i++) {
-        if (!pos[i]) { pos[i] = { ...targets[i] }; vel[i] = { x: 0, y: 0 }; }
-        let tx = targets[i].x, ty = targets[i].y;
-        if (ptr.active) {
-          const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < repR && d > 1) {
-            const f = (1 - d / repR) * 35;
-            tx = pos[i].x + (dx / d) * f;
-            ty = pos[i].y + (dy / d) * f;
-          }
+      // ═══ L0: SUBTLE DOT GRID ═══
+      ctx.fillStyle = hsl(HUE, SAT, 40, 0.04);
+      const gridStep = GRID_SPACING;
+      for (let gx = gridStep * 0.5; gx < w; gx += gridStep) {
+        for (let gy = gridStep * 0.5; gy < h; gy += gridStep) {
+          ctx.beginPath();
+          ctx.arc(gx, gy, 0.6, 0, Math.PI * 2);
+          ctx.fill();
         }
-        const springK = 0.06;
-        const damping = 0.82;
-        vel[i].x = vel[i].x * damping + (tx - pos[i].x) * springK;
-        vel[i].y = vel[i].y * damping + (ty - pos[i].y) * springK;
-        pos[i].x += vel[i].x;
-        pos[i].y += vel[i].y;
       }
 
-      // ═══ L1: ORGANIC NEURAL CONNECTIONS ═══
+      // ═══ L1: CIRCUIT TRACES ═══
+      for (let ci = 0; ci < circuits.length; ci++) {
+        const c = circuits[ci];
+        const pulse = 0.5 + Math.sin(time * 0.8 + c.phase) * 0.5;
+        const baseAlpha = 0.035 + pulse * 0.025;
+
+        ctx.strokeStyle = hsl(HUE, SAT + 4, 45, baseAlpha);
+        ctx.lineWidth = 0.8;
+        ctx.lineCap = "square";
+        ctx.lineJoin = "miter";
+        ctx.beginPath();
+        ctx.moveTo(c.points[0].x, c.points[0].y);
+        for (let pi = 1; pi < c.points.length; pi++) {
+          ctx.lineTo(c.points[pi].x, c.points[pi].y);
+        }
+        ctx.stroke();
+
+        // Junction dots at bends
+        for (let pi = 0; pi < c.points.length; pi++) {
+          const p = c.points[pi];
+          const jSize = pi === 0 || pi === c.points.length - 1 ? 2 : 1.5;
+          ctx.fillStyle = hsl(HUE, SAT + 6, 50, baseAlpha * 2);
+          ctx.fillRect(p.x - jSize / 2, p.y - jSize / 2, jSize, jSize);
+        }
+      }
+
+      // ═══ L2: NEURAL NETWORK CONNECTIONS (node-to-node) ═══
+      const maxDist = IS_MOBILE ? 110 : 150;
       ctx.lineCap = "round";
-      for (let i = 0; i < NODE_COUNT; i++) {
-        const maxJ = Math.min(i + (IS_MOBILE ? 6 : 10), NODE_COUNT);
-        for (let j = i + 1; j < maxJ; j++) {
-          const dx = pos[i].x - pos[j].x, dy = pos[i].y - pos[j].y;
+      for (let i = 0; i < nodes.length; i++) {
+        const limitJ = Math.min(i + (IS_MOBILE ? 5 : 8), nodes.length);
+        for (let j = i + 1; j < limitJ; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
           const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < MAX_DIST) {
-            const alpha = Math.pow(1 - d / MAX_DIST, 1.5);
-            const breathe = 0.5 + Math.sin(time * 1.5 + i * 0.4 + j * 0.3) * 0.5;
-            ctx.strokeStyle = hsl(pLine, alpha * 0.08 * breathe);
-            ctx.lineWidth = 0.4 + alpha * 0.6;
-            const mx = (pos[i].x + pos[j].x) * 0.5 + Math.sin(time * 0.3 + i * 0.7 + j * 0.2) * d * 0.15;
-            const my = (pos[i].y + pos[j].y) * 0.5 + Math.cos(time * 0.25 + j * 0.5) * d * 0.12;
+          if (d < maxDist) {
+            const alpha = Math.pow(1 - d / maxDist, 2);
+            const breathe = 0.5 + Math.sin(time * 1.2 + i * 0.3 + j * 0.2) * 0.5;
+            ctx.strokeStyle = hsl(HUE, SAT, 45, alpha * 0.06 * breathe);
+            ctx.lineWidth = 0.4 + alpha * 0.4;
             ctx.beginPath();
-            ctx.moveTo(pos[i].x, pos[i].y);
-            ctx.quadraticCurveTo(mx, my, pos[j].x, pos[j].y);
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
             ctx.stroke();
           }
         }
       }
 
-      // ═══ L2: NODES ═══
-      for (let i = 0; i < NODE_COUNT; i++) {
-        const breathe = 0.4 + Math.sin(time * 1.2 + i * 0.9) * 0.6;
-        const baseR = IS_MOBILE ? 1.2 : 1.5;
-        let na = 0.12 * breathe;
+      // ═══ L3: NODES — small squares and crosses (no circles) ═══
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        const breathe = 0.4 + Math.sin(time * 1.0 + i * 0.7) * 0.6;
+        let na = 0.1 * breathe;
 
+        // Pointer proximity boost
         if (ptr.active) {
-          const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y;
+          const dx = n.x - ptr.x, dy = n.y - ptr.y;
           const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.25;
+          if (d < 120) na += (1 - d / 120) * 0.3;
         }
 
-        if (i % 4 === 0) {
-          const gr = baseR * 8;
-          const gg = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, gr);
-          gg.addColorStop(0, hsl(pGlow, na * 0.6));
-          gg.addColorStop(1, hsl(pGlow, 0));
+        if (i % 3 === 0) {
+          // Cross node (+)
+          const arm = 3 + breathe * 2;
+          ctx.strokeStyle = hsl(HUE, SAT + 8, 52, na + 0.12);
+          ctx.lineWidth = 0.8;
           ctx.beginPath();
-          ctx.arc(pos[i].x, pos[i].y, gr, 0, Math.PI * 2);
-          ctx.fillStyle = gg;
-          ctx.fill();
+          ctx.moveTo(n.x - arm, n.y); ctx.lineTo(n.x + arm, n.y);
+          ctx.moveTo(n.x, n.y - arm); ctx.lineTo(n.x, n.y + arm);
+          ctx.stroke();
+        } else {
+          // Square node
+          const s = 1.5 + breathe;
+          ctx.fillStyle = hsl(HUE, SAT + 6, 50, na + 0.12);
+          ctx.fillRect(n.x - s / 2, n.y - s / 2, s, s);
         }
 
-        ctx.beginPath();
-        ctx.arc(pos[i].x, pos[i].y, baseR * (0.8 + breathe * 0.4), 0, Math.PI * 2);
-        ctx.fillStyle = hsl(pNode, na + 0.15);
-        ctx.fill();
+        // Subtle glow for key nodes
+        if (i % 6 === 0) {
+          const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, 20);
+          gr.addColorStop(0, hsl(HUE, SAT + 12, 55, na * 0.5));
+          gr.addColorStop(1, hsl(HUE, SAT, 50, 0));
+          ctx.fillStyle = gr;
+          ctx.fillRect(n.x - 20, n.y - 20, 40, 40);
+        }
       }
 
-      // ═══ L3: FLOWING DATA PARTICLES ═══
-      const flows = flowsRef.current;
-      for (let fi = 0; fi < flows.length; fi++) {
-        const fl = flows[fi];
-        fl.progress += fl.speed;
-        fl.life++;
-
-        if (fl.progress > 1 || fl.life > 300) {
-          flows[fi] = spawnFlow();
-          continue;
+      // ═══ L4: DATA FLOW PARTICLES along circuit traces ═══
+      for (let pi = 0; pi < particles.length; pi++) {
+        const p = particles[pi];
+        p.progress += p.speed;
+        if (p.progress > 1) {
+          p.progress = 0;
+          p.pathIdx = Math.floor(Math.random() * circuits.length);
         }
 
-        const a = pos[fl.fromIdx], b = pos[fl.toIdx];
-        if (!a || !b) continue;
+        const circuit = circuits[p.pathIdx];
+        if (!circuit || circuit.points.length < 2) continue;
 
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d > MAX_DIST * 1.5) { flows[fi] = spawnFlow(); continue; }
+        const pos = getPointOnPath(circuit.points, p.progress);
+        const fadeAlpha = Math.sin(p.progress * Math.PI) * 0.45;
 
-        const mx = (a.x + b.x) * 0.5 + Math.sin(time * 0.3 + fl.fromIdx * 0.7 + fl.toIdx * 0.2) * d * 0.15;
-        const my = (a.y + b.y) * 0.5 + Math.cos(time * 0.25 + fl.toIdx * 0.5) * d * 0.12;
-        const t2 = fl.progress;
-        const t2i = 1 - t2;
-        const px = t2i * t2i * a.x + 2 * t2i * t2 * mx + t2 * t2 * b.x;
-        const py = t2i * t2i * a.y + 2 * t2i * t2 * my + t2 * t2 * b.y;
-
-        const fadeAlpha = Math.sin(fl.progress * Math.PI) * 0.5;
-
-        const tg = ctx.createRadialGradient(px, py, 0, px, py, 6);
-        tg.addColorStop(0, hsl(pGlow, fadeAlpha * 0.6));
-        tg.addColorStop(1, hsl(pGlow, 0));
-        ctx.beginPath();
-        ctx.arc(px, py, 6, 0, Math.PI * 2);
+        // Glow trail
+        const tg = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 8);
+        tg.addColorStop(0, hsl(HUE, SAT + 15, 58, fadeAlpha * 0.5));
+        tg.addColorStop(1, hsl(HUE, SAT, 50, 0));
         ctx.fillStyle = tg;
-        ctx.fill();
+        ctx.fillRect(pos.x - 8, pos.y - 8, 16, 16);
 
-        ctx.beginPath();
-        ctx.arc(px, py, 1.2, 0, Math.PI * 2);
-        ctx.fillStyle = hsl(pGlow, fadeAlpha + 0.1);
-        ctx.fill();
+        // Core particle (square)
+        const ps = p.size;
+        ctx.fillStyle = hsl(HUE, SAT + 12, 60, fadeAlpha + 0.1);
+        ctx.fillRect(pos.x - ps / 2, pos.y - ps / 2, ps, ps);
       }
 
-      // ═══ L4: PULSE RINGS ═══
-      if (time - lastPulseTime > (IS_MOBILE ? 3 : 1.8)) {
-        const ri = Math.floor(Math.random() * NODE_COUNT);
-        if (pos[ri]) {
-          pulsesRef.current.push(spawnPulse(pos[ri].x, pos[ri].y, pGlow));
-          lastPulseTime = time;
-        }
-      }
-
-      const pulses = pulsesRef.current;
-      for (let pi = pulses.length - 1; pi >= 0; pi--) {
-        const p = pulses[pi];
-        p.radius += p.speed;
-        const fade = 1 - p.radius / p.maxRadius;
-        if (fade <= 0) { pulses.splice(pi, 1); continue; }
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = hsl(p.color, p.alpha * fade * fade);
-        ctx.lineWidth = 0.5 + fade;
-        ctx.stroke();
-      }
-
-      // ═══ L5: AMBIENT SCAN LINE ═══
-      const scanY = h * (0.5 + Math.sin(time * 0.08) * 0.45);
-      const scanGrad = ctx.createLinearGradient(0, scanY - 60, 0, scanY + 60);
-      scanGrad.addColorStop(0, hsl(pGlow, 0));
-      scanGrad.addColorStop(0.5, hsl(pGlow, 0.025));
-      scanGrad.addColorStop(1, hsl(pGlow, 0));
+      // ═══ L5: HORIZONTAL SCAN LINE ═══
+      const scanY = h * (0.5 + Math.sin(time * 0.06) * 0.48);
+      const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
+      scanGrad.addColorStop(0, hsl(HUE, SAT, 50, 0));
+      scanGrad.addColorStop(0.5, hsl(HUE, SAT + 5, 50, 0.018));
+      scanGrad.addColorStop(1, hsl(HUE, SAT, 50, 0));
       ctx.fillStyle = scanGrad;
-      ctx.fillRect(0, scanY - 60, w, 120);
+      ctx.fillRect(0, scanY - 40, w, 80);
 
-      // ═══ L6: CIRCULATING DNA PARTICLES along helix backbones ═══
-      const dnaParticleCount = IS_MOBILE ? 6 : 12;
-      for (let si = 0; si < DNA_STRANDS; si++) {
-        const helixX = w * (0.15 + si * 0.35);
-        const turns = 3.5;
-        const amp = IS_MOBILE ? 35 : 55;
-        const helixSpeed = 0.12 + si * 0.03;
-        for (let pi = 0; pi < dnaParticleCount; pi++) {
-          const baseF = (pi / dnaParticleCount + time * 0.03) % 1;
-          const angle = baseF * Math.PI * 2 * turns + time * helixSpeed + si * Math.PI * 0.7;
-          const strand = pi % 2 === 0 ? 0 : Math.PI;
-          const xPos = helixX + Math.sin(angle + strand) * amp;
-          const yPos = h * (0.02 + baseF * 0.96);
+      // ═══ L6: VERTICAL DATA STREAMS (matrix-like, subtle) ═══
+      const streamCount = IS_MOBILE ? 4 : 8;
+      for (let si = 0; si < streamCount; si++) {
+        const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7) * 30;
+        const streamPhase = (time * 0.15 + si * 1.3) % 1;
+        const streamLen = h * 0.15;
+        const sy = streamPhase * (h + streamLen) - streamLen;
 
-          const pg = ctx.createRadialGradient(xPos, yPos, 0, xPos, yPos, 8);
-          pg.addColorStop(0, hsl(pDna, 0.25));
-          pg.addColorStop(1, hsl(pDna, 0));
-          ctx.beginPath();
-          ctx.arc(xPos, yPos, 8, 0, Math.PI * 2);
-          ctx.fillStyle = pg;
-          ctx.fill();
-
-          ctx.beginPath();
-          ctx.arc(xPos, yPos, 1.5, 0, Math.PI * 2);
-          ctx.fillStyle = hsl(pDna, 0.35);
-          ctx.fill();
-        }
+        const streamGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
+        streamGrad.addColorStop(0, hsl(HUE, SAT + 8, 50, 0));
+        streamGrad.addColorStop(0.5, hsl(HUE, SAT + 8, 52, 0.04));
+        streamGrad.addColorStop(1, hsl(HUE, SAT + 8, 50, 0));
+        ctx.strokeStyle = streamGrad;
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(sx, sy + streamLen);
+        ctx.stroke();
       }
 
       animRef.current = requestAnimationFrame(animate);
