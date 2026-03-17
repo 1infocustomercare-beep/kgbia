@@ -220,11 +220,13 @@ const StudioTab = ({
       category: newItem.category.trim() || "Altro", sort_order: menuItems.length,
       is_active: true, is_popular: false,
       allergens: newItem.allergens,
+      image_url: newItemImageUrl || null,
     }).select().single();
     if (error) { toast({ title: "Errore", description: error.message, variant: "destructive" }); return; }
     if (data) {
       setMenuItems(prev => [...prev, { id: data.id, name: data.name, description: data.description || "", price: Number(data.price), image: data.image_url || "", category: data.category, allergens: data.allergens || [], isPopular: data.is_popular }]);
       setNewItem({ name: "", description: "", price: 0, category: "Altro", allergens: [], tags: [], availability: "always" });
+      setNewItemImageUrl(null);
       setShowAddItem(false);
       toast({ title: "Piatto aggiunto!" });
     }
