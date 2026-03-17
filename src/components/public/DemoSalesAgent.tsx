@@ -290,6 +290,27 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
   useEffect(() => { isSpeakingRef.current = isSpeaking; }, [isSpeaking]);
   useEffect(() => { scrollNarrationRef.current = scrollNarrationActive; }, [scrollNarrationActive]);
 
+  // ── On mount: stop any homepage voice agent (Arianna) to prevent overlap ──
+  useEffect(() => {
+    if ((window as any).__empireVoiceAgentStopAll) {
+      (window as any).__empireVoiceAgentStopAll();
+    }
+    // Also stop any browser TTS that might be playing
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  }, []);
+
+  // ── Cleanup on unmount ──
+  useEffect(() => {
+    return () => {
+      abortRef.current = true;
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+      if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null; }
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+    };
+  }, []);
+
   // Show after 2s
   useEffect(() => {
     if (dismissed) return;
