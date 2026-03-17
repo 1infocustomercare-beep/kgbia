@@ -174,9 +174,13 @@ const EmpireDNABackground = () => {
   useEffect(() => { const t = setTimeout(() => setReady(true), 250); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
-    const fn = () => { scrollRef.current = window.scrollY; };
+    const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
     window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
+    // Also listen on possible scroll containers
+    const mainEl = document.querySelector("main");
+    if (mainEl) mainEl.addEventListener("scroll", () => { scrollRef.current = mainEl.scrollTop; }, { passive: true });
+    fn(); // init
+    return () => { window.removeEventListener("scroll", fn); };
   }, []);
 
   useEffect(() => {
