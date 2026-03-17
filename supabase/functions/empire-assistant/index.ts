@@ -177,6 +177,84 @@ async function fetchRestaurantContext(restaurantId: string): Promise<string> {
   }
 }
 
+async function fetchCompanyContext(companyId: string): Promise<string> {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !serviceRoleKey) return "";
+
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  try {
+    const { data: company } = await supabase
+      .from("companies")
+      .select("name, industry, city, address, tagline, phone, email, is_active, slug")
+      .eq("id", companyId)
+      .single();
+
+    if (!company) return "";
+
+    const [clientsRes, leadsRes, appointmentsRes, interventionsRes, staffRes] = await Promise.all([
+      supabase.from("crm_clients").select("first_name, last_name, total_spent, phone").eq("company_id", companyId).order("total_spent", { ascending: false }).limit(10),
+      supabase.from("leads").select("name, status, value, source, created_at").eq("company_id", companyId).order("created_at", { ascending: false }).limit(15),
+      supabase.from("appointments").select("client_name, service_name, scheduled_at, status, price").eq("company_id", companyId).order("scheduled_at", { ascending: false }).limit(15),
+      supabase.from("interventions").select("client_name, intervention_type, status, final_price, scheduled_at").eq("company_id", companyId).order("created_at", { ascending: false }).limit(15),
+      supabase.from("staff").select("name, role, is_active").eq("company_id", companyId).limit(20),
+    ]);
+
+    const clients = clientsRes.data || [];
+    const leads = leadsRes.data || [];
+    const appointments = appointmentsRes.data || [];
+    const interventions = interventionsRes.data || [];
+    const staff = staffRes.data || [];
+
+    let ctx = `\n\n--- DATI REALI DI "${company.name}" (${company.industry}) ---\n`;
+    ctx += `Città: ${company.city || "N/D"} | Indirizzo: ${company.address || "N/D"} | Tel: ${company.phone || "N/D"}\n`;
+    ctx += `Stato: ${company.is_active ? "Attivo" : "Inattivo"}\n\n`;
+
+    if (staff.length) {
+      const activeStaff = staff.filter(s => s.is_active !== false).length;
+      ctx += `👥 STAFF: ${activeStaff} attivi su ${staff.length}\n`;
+    }
+
+    if (clients.length) {
+      ctx += `\n📋 CLIENTI (top ${clients.length}):\n`;
+      clients.slice(0, 5).forEach(c => {
+        ctx += `  - ${c.first_name} ${c.last_name || ""} | €${Number(c.total_spent || 0).toFixed(2)}\n`;
+      });
+    }
+
+    if (leads.length) {
+      const newLeads = leads.filter(l => l.status === "new").length;
+      ctx += `\n🎯 LEADS: ${leads.length} totali | ${newLeads} nuovi\n`;
+      leads.slice(0, 5).forEach(l => {
+        ctx += `  - ${l.name} | ${l.status} | €${l.value} | ${l.source || "N/D"}\n`;
+      });
+    }
+
+    if (appointments.length) {
+      const pending = appointments.filter(a => a.status === "pending" || a.status === "confirmed").length;
+      ctx += `\n📅 APPUNTAMENTI: ${pending} in programma su ${appointments.length}\n`;
+      appointments.slice(0, 5).forEach(a => {
+        ctx += `  - ${a.scheduled_at?.slice(0, 16)} | ${a.client_name} | ${a.service_name || "N/D"} | ${a.status}\n`;
+      });
+    }
+
+    if (interventions.length) {
+      const active = interventions.filter(i => i.status === "in_corso" || i.status === "programmato").length;
+      ctx += `\n🔧 INTERVENTI: ${active} attivi su ${interventions.length}\n`;
+      interventions.slice(0, 5).forEach(i => {
+        ctx += `  - ${i.client_name} | ${i.intervention_type} | ${i.status} | €${i.final_price || "N/D"}\n`;
+      });
+    }
+
+    ctx += `\n--- FINE DATI AZIENDA ---`;
+    return ctx;
+  } catch (e) {
+    console.error("Error fetching company context:", e);
+    return "";
+  }
+}
+
 // ─── AI Usage Tracking Helper ───
 async function trackAIUsage(agentName: string, modelUsed: string, startTime: number, status: string, restaurantId?: string) {
   try {
