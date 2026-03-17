@@ -459,7 +459,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen relative">
-        <EmpireDNABackground />
         <TooltipProvider>
           <AuthProvider>
             <CartProvider>
