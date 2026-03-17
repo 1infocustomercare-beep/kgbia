@@ -2633,11 +2633,32 @@ export function IPhoneFrame({
             {/* Screen overlay glow */}
             <div className="absolute inset-0 pointer-events-none"
               style={{ background: `radial-gradient(circle at 50% 30%, ${color}08 0%, transparent 60%)` }} />
+
+            {/* iOS-style bottom tab bar — shows on dashboard-like screens */}
+            {["dashboard","analytics","crm","notifications","settings","inventory","staff","social","loyalty","reviews"].includes(screen.type) && (
+              <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 60%, transparent 100%)", backdropFilter: "blur(12px)" }}>
+                <div className="flex items-center justify-around px-1 pt-1.5 pb-1">
+                  {[
+                    { icon: "🏠", label: "Home", active: screen.type === "dashboard" },
+                    { icon: "📊", label: "Analytics", active: screen.type === "analytics" },
+                    { icon: "👥", label: "Clienti", active: screen.type === "crm" },
+                    { icon: "🔔", label: "Alert", active: screen.type === "notifications" },
+                    { icon: "⚙️", label: "Menu", active: screen.type === "settings" },
+                  ].map((tab, i) => (
+                    <div key={i} className="flex flex-col items-center gap-[1px]">
+                      <span className="text-[7px]" style={{ opacity: tab.active ? 1 : 0.4 }}>{tab.icon}</span>
+                      <span className="text-[3px] font-medium" style={{ color: tab.active ? color : "rgba(255,255,255,0.3)" }}>{tab.label}</span>
+                      {tab.active && <div className="w-1 h-[1px] rounded-full mt-[1px]" style={{ backgroundColor: color }} />}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Home indicator */}
           <div className="flex justify-center py-1.5">
-            <div className="w-9 h-[3px] rounded-full bg-white/15" />
+            <div className="w-9 h-[3px] rounded-full bg-white/20" />
           </div>
         </div>
       </div>
