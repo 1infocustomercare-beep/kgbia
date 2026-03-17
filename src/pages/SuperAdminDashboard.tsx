@@ -1734,7 +1734,7 @@ const SuperAdminDashboard = () => {
                       {expandedSection === "admin" && (
                         <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
                           <div className="p-2 space-y-1">
-                            {adminIntegrations.map(renderCompactItem)}
+                            {filteredAdmin.length > 0 ? filteredAdmin.map(renderCompactItem) : <p className="text-[0.55rem] text-muted-foreground/50 text-center py-3">Nessun risultato con i filtri attivi</p>}
                           </div>
                         </motion.div>
                       )}
