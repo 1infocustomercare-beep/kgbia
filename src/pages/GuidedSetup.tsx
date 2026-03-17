@@ -309,7 +309,7 @@ export default function GuidedSetup() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <EmpireDNABackground />
+      
       {/* Progress */}
       <div className="px-6 pt-6 pb-2 safe-top">
         <div className="flex gap-2">
