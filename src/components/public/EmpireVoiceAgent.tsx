@@ -664,6 +664,8 @@ const EmpireVoiceAgent: React.FC = () => {
 
     while (sectionQueueRef.current.length > 0) {
       if (abortRef.current) break;
+      // Check mutex — if another agent took over, stop narrating
+      if (!isVoiceAgentActive("arianna") && getActiveVoiceAgent() !== null) break;
 
       const sectionId = sectionQueueRef.current.shift();
       if (!sectionId) continue;
