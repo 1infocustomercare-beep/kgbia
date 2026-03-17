@@ -273,6 +273,7 @@ const StudioTab = ({
     { id: "menu", label: "Menu", icon: <UtensilsCrossed className="w-4 h-4" /> },
     { id: "ai", label: "OCR", icon: <Camera className="w-4 h-4" /> },
     { id: "foodphoto", label: "📸 Foto", icon: <Sparkles className="w-4 h-4" /> },
+    { id: "plates", label: "🍽️ Piatti", icon: <ImageIcon className="w-4 h-4" /> },
     { id: "preview", label: "Design", icon: <Palette className="w-4 h-4" /> },
     { id: "translate", label: "Lingue", icon: <Languages className="w-4 h-4" /> },
   ];
