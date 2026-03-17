@@ -445,6 +445,69 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         }
       }
 
+      // ═══ L6.5: TECH AI ICONS — floating & communicating ═══
+      for (const ti of techIcons) {
+        ti.orbitA += ti.orbitSp * 0.016;
+        ti.pulse += 0.04;
+        const baseR = Math.min(w, h) * ti.orbitR;
+        const wobble = Math.sin(ti.orbitA * 2 + el) * 8 * sc;
+        ti.x = cx + Math.cos(ti.orbitA) * (baseR + wobble);
+        ti.y = cy + Math.sin(ti.orbitA) * (baseR + wobble);
+        // Pointer repulsion
+        if (ptr.active) {
+          const ddx = ti.x - ptr.x, ddy = ti.y - ptr.y, dd = Math.sqrt(ddx * ddx + ddy * ddy);
+          if (dd > 1 && dd < repelR) { const f = (1 - dd / repelR) * 15; ti.x += (ddx / dd) * f; ti.y += (ddy / dd) * f; }
+        }
+      }
+
+      // Communication lines between nearby icons
+      const commR = Math.min(w, h) * 0.32;
+      for (let i = 0; i < techIcons.length; i++) {
+        for (let j = i + 1; j < techIcons.length; j++) {
+          const a = techIcons[i], b = techIcons[j];
+          const dx = a.x - b.x, dy = a.y - b.y, d = Math.sqrt(dx * dx + dy * dy);
+          if (d < commR) {
+            const lineA = (1 - d / commR) * 0.25 * anyA;
+            const pulseT = Math.sin(el * 2 + i * 0.5 + j * 0.3) * 0.5 + 0.5;
+            const c = colorPalette[(i + j) % 4];
+            // Dashed data line
+            ctx.beginPath();
+            ctx.setLineDash([3, 4]);
+            ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = hsl(c, lineA * 0.7);
+            ctx.lineWidth = 0.6; ctx.stroke();
+            ctx.setLineDash([]);
+            // Data packet traveling between icons
+            const px = a.x + (b.x - a.x) * pulseT;
+            const py = a.y + (b.y - a.y) * pulseT;
+            const pg = ctx.createRadialGradient(px, py, 0, px, py, 4 * sc);
+            pg.addColorStop(0, hsl(c, lineA * 1.5));
+            pg.addColorStop(1, hsl(c, 0));
+            ctx.beginPath(); ctx.arc(px, py, 4 * sc, 0, Math.PI * 2); ctx.fillStyle = pg; ctx.fill();
+            ctx.beginPath(); ctx.arc(px, py, 1.2 * sc, 0, Math.PI * 2); ctx.fillStyle = hsl(COLORS.white, lineA); ctx.fill();
+          }
+        }
+      }
+
+      // Render icons with glow
+      for (const ti of techIcons) {
+        const pA = 0.5 + Math.sin(ti.pulse) * 0.15;
+        const c = colorPalette[ti.ci];
+        // Glow halo
+        const gR = ti.fontSize * 1.3;
+        const gg = ctx.createRadialGradient(ti.x, ti.y, 0, ti.x, ti.y, gR);
+        gg.addColorStop(0, hsl(c, 0.18 * anyA * pA));
+        gg.addColorStop(0.6, hsl(c, 0.05 * anyA));
+        gg.addColorStop(1, hsl(c, 0));
+        ctx.beginPath(); ctx.arc(ti.x, ti.y, gR, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
+        // Icon text
+        ctx.font = `${ti.fontSize}px sans-serif`;
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.globalAlpha = Math.min(1, 0.7 * anyA * pA + 0.3);
+        ctx.fillText(ti.icon, ti.x, ti.y);
+        ctx.globalAlpha = 1;
+      }
+
       // ═══ L7: RADAR SWEEP — always present ═══
       const radarAngle = el * 0.8;
       const radarR = Math.min(w, h) * 0.42;
