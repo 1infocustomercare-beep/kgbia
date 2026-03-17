@@ -10,6 +10,7 @@ import {
   Hammer, Camera, TreePine, PawPrint, Brush, Baby, GraduationCap,
   PartyPopper, Truck, Settings, Stethoscope, Receipt, MapPin,
   Sparkles, Route, Star, BookOpen, Grid, Eye,
+  ChevronLeft, ChevronRight, Play, Pause, LayoutGrid, X,
 } from "lucide-react";
 
 import { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
