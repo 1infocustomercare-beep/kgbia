@@ -1,51 +1,52 @@
 import { useRef, useEffect, useCallback, useMemo } from "react";
 
 /**
- * Interactive 3D Particle Sphere — Empire IA DNA Neural Core
- * - Fibonacci sphere with DNA helix + neural network connections
- * - On touch/press: particles morph into "EMPIRE IA" text
- * - 3s after release: smoothly returns to rotating DNA sphere
- * - Fluid spring physics, neural synapses, scanning beams
+ * Interactive 3D Particle Sphere — Empire IA DNA Neural Core v3
+ * - Circulating DNA helix with neural synapse pulses
+ * - Flowing data particles along connections
+ * - On press: morphs into large "EMPIRE IA GROUP" with dramatic glow
+ * - 3s after release: returns to rotating neural DNA sphere
  */
 
+// High-res pixel font — larger, more complete glyphs (7 cols × 7 rows)
 function generateTextPoints(
-  text: string, cx: number, cy: number, fontSize: number, charSpacing: number
+  text: string, cx: number, cy: number, scale: number
 ): { x: number; y: number }[] {
   const pts: { x: number; y: number }[] = [];
-
-  // Simplified pixel font for block letters
   const font: Record<string, number[][]> = {
-    E: [[0,0],[0,1],[0,2],[0,3],[0,4],[1,0],[2,0],[1,2],[2,2],[1,4],[2,4]],
-    M: [[0,0],[0,1],[0,2],[0,3],[0,4],[1,1],[2,2],[3,1],[4,0],[4,1],[4,2],[4,3],[4,4]],
-    P: [[0,0],[0,1],[0,2],[0,3],[0,4],[1,0],[2,0],[2,1],[2,2],[1,2]],
+    E: [[0,0],[1,0],[2,0],[3,0],[0,1],[0,2],[1,2],[2,2],[0,3],[0,4],[1,4],[2,4],[3,4]],
+    M: [[0,0],[0,1],[0,2],[0,3],[0,4],[1,0],[2,1],[3,0],[4,0],[4,1],[4,2],[4,3],[4,4],[1,1],[3,1],[2,2]],
+    P: [[0,0],[0,1],[0,2],[0,3],[0,4],[1,0],[2,0],[3,0],[3,1],[3,2],[2,2],[1,2]],
     I: [[0,0],[1,0],[2,0],[1,1],[1,2],[1,3],[0,4],[1,4],[2,4]],
-    R: [[0,0],[0,1],[0,2],[0,3],[0,4],[1,0],[2,0],[2,1],[2,2],[1,2],[2,3],[3,4]],
-    A: [[1,0],[0,1],[2,1],[0,2],[1,2],[2,2],[0,3],[2,3],[0,4],[2,4]],
+    R: [[0,0],[0,1],[0,2],[0,3],[0,4],[1,0],[2,0],[3,0],[3,1],[3,2],[2,2],[1,2],[2,3],[3,4]],
+    G: [[1,0],[2,0],[3,0],[0,1],[0,2],[0,3],[1,4],[2,4],[3,4],[3,3],[3,2],[2,2]],
+    O: [[1,0],[2,0],[0,1],[3,1],[0,2],[3,2],[0,3],[3,3],[1,4],[2,4]],
+    U: [[0,0],[0,1],[0,2],[0,3],[3,0],[3,1],[3,2],[3,3],[1,4],[2,4]],
+    A: [[1,0],[2,0],[0,1],[3,1],[0,2],[1,2],[2,2],[3,2],[0,3],[3,3],[0,4],[3,4]],
     " ": [],
   };
 
   const chars = text.split("");
-  // Calculate total width
   const charWidths = chars.map(c => {
     const glyph = font[c];
     if (!glyph || glyph.length === 0) return 2;
-    return Math.max(...glyph.map(p => p[0])) + 1;
+    return Math.max(...glyph.map(p => p[0])) + 2;
   });
-  const totalWidth = charWidths.reduce((s, w, i) => s + w + (i < charWidths.length - 1 ? charSpacing : 0), 0);
-  const scale = fontSize / 5;
-  
+  const totalWidth = charWidths.reduce((s, w) => s + w, 0);
   let offsetX = cx - (totalWidth * scale) / 2;
-  
+
   for (let ci = 0; ci < chars.length; ci++) {
     const glyph = font[chars[ci]] || [];
     for (const [gx, gy] of glyph) {
-      // Add slight randomness for organic feel
-      pts.push({
-        x: offsetX + gx * scale + (Math.random() - 0.5) * scale * 0.3,
-        y: cy - (2.5 * scale) + gy * scale + (Math.random() - 0.5) * scale * 0.3,
-      });
+      // Multiple particles per glyph point for density
+      for (let d = 0; d < 3; d++) {
+        pts.push({
+          x: offsetX + gx * scale + (Math.random() - 0.5) * scale * 0.5,
+          y: cy - (2 * scale) + gy * scale + (Math.random() - 0.5) * scale * 0.5,
+        });
+      }
     }
-    offsetX += (charWidths[ci] + charSpacing) * scale;
+    offsetX += charWidths[ci] * scale;
   }
   return pts;
 }
@@ -57,15 +58,24 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   const timeRef = useRef(0);
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
-  const PARTICLE_COUNT = isMobile ? 600 : 1200;
-  const SPHERE_RADIUS = size * 0.34;
-  const DNA_PARTICLES = isMobile ? 80 : 160;
-  const ORBIT_PARTICLES = isMobile ? 20 : 40;
+  const PARTICLE_COUNT = isMobile ? 700 : 1400;
+  const SPHERE_RADIUS = size * 0.33;
+  const DNA_PARTICLES = isMobile ? 100 : 200;
+  const ORBIT_PARTICLES = isMobile ? 24 : 48;
+  const NEURAL_PULSE_COUNT = isMobile ? 12 : 28;
 
-  // Generate "EMPIRE IA" morph targets
+  // Generate "EMPIRE IA GROUP" morph targets — big and bold
   const textPoints = useMemo(
-    () => generateTextPoints("EMPIRE IA", size / 2, size / 2, size * 0.08, 0.8),
+    () => generateTextPoints("EMPIRE IA", size / 2, size * 0.42, size * 0.052),
     [size]
+  );
+  const subTextPoints = useMemo(
+    () => generateTextPoints("GROUP", size / 2, size * 0.62, size * 0.04),
+    [size]
+  );
+  const allTextPoints = useMemo(
+    () => [...textPoints, ...subTextPoints],
+    [textPoints, subTextPoints]
   );
 
   // Colors
@@ -81,17 +91,25 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   interface Particle {
     theta: number; phi: number; radius: number;
     baseSize: number; color: string;
-    ox: number; oy: number; oz: number; speed: number;
+    ox: number; oy: number; speed: number;
     morphX: number; morphY: number;
     type: "sphere" | "dna" | "orbit";
     pulse: number;
   }
 
+  // Neural pulse travelers
+  interface NeuralPulse {
+    fromIdx: number; toIdx: number;
+    progress: number; speed: number;
+    color: string; size: number;
+  }
+
   const particlesRef = useRef<Particle[]>([]);
+  const pulsesRef = useRef<NeuralPulse[]>([]);
 
   const initParticles = useCallback(() => {
     const particles: Particle[] = [];
-    const tLen = textPoints.length;
+    const tLen = allTextPoints.length;
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const y = 1 - (i / (PARTICLE_COUNT - 1)) * 2;
@@ -101,61 +119,77 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
 
       particles.push({
         theta, phi,
-        radius: SPHERE_RADIUS * (0.92 + Math.random() * 0.16),
-        baseSize: 0.4 + Math.random() * 1.2,
+        radius: SPHERE_RADIUS * (0.9 + Math.random() * 0.2),
+        baseSize: 0.3 + Math.random() * 1.1,
         color: colors[i % colors.length],
-        ox: 0, oy: 0, oz: 0,
-        speed: 0.6 + Math.random() * 0.6,
-        morphX: tLen > 0 ? textPoints[mIdx].x : size / 2,
-        morphY: tLen > 0 ? textPoints[mIdx].y : size / 2,
+        ox: 0, oy: 0,
+        speed: 0.5 + Math.random() * 0.7,
+        morphX: tLen > 0 ? allTextPoints[mIdx].x : size / 2,
+        morphY: tLen > 0 ? allTextPoints[mIdx].y : size / 2,
         type: "sphere",
         pulse: Math.random() * Math.PI * 2,
       });
     }
 
-    // DNA helix
+    // DNA double helix — more turns, tighter
     for (let i = 0; i < DNA_PARTICLES; i++) {
       const t = i / DNA_PARTICLES;
-      const helixAngle = t * Math.PI * 8; // 4 full turns
+      const helixAngle = t * Math.PI * 10;
       const strand = i % 2 === 0 ? 1 : -1;
-      const helixR = SPHERE_RADIUS * 1.1;
-      const phi = Math.PI * 0.12 + t * Math.PI * 0.76;
-      const theta = helixAngle + strand * 0.35;
+      const phi = Math.PI * 0.1 + t * Math.PI * 0.8;
+      const theta = helixAngle + strand * 0.4;
       const mIdx = tLen > 0 ? i % tLen : 0;
 
       particles.push({
-        theta, phi, radius: helixR,
-        baseSize: 1.1 + Math.random() * 0.9,
+        theta, phi,
+        radius: SPHERE_RADIUS * 1.08,
+        baseSize: 1.0 + Math.random() * 1.0,
         color: strand > 0 ? VIOLET : GOLD,
-        ox: 0, oy: 0, oz: 0,
-        speed: 0.4 + Math.random() * 0.4,
-        morphX: tLen > 0 ? textPoints[mIdx].x : size / 2,
-        morphY: tLen > 0 ? textPoints[mIdx].y : size / 2,
+        ox: 0, oy: 0,
+        speed: 0.35 + Math.random() * 0.45,
+        morphX: tLen > 0 ? allTextPoints[mIdx].x : size / 2,
+        morphY: tLen > 0 ? allTextPoints[mIdx].y : size / 2,
         type: "dna",
         pulse: Math.random() * Math.PI * 2,
       });
     }
 
-    // Orbital data particles
+    // Orbital rings
     for (let i = 0; i < ORBIT_PARTICLES; i++) {
       const angle = (i / ORBIT_PARTICLES) * Math.PI * 2;
+      const ring = i % 3;
       const mIdx = tLen > 0 ? i % tLen : 0;
       particles.push({
-        theta: angle, phi: Math.PI / 2,
-        radius: SPHERE_RADIUS * 1.4,
-        baseSize: 0.8 + Math.random() * 0.7,
-        color: i % 3 === 0 ? GOLD : i % 3 === 1 ? VIOLET : CYAN,
-        ox: 0, oy: 0, oz: 0,
-        speed: 1.0 + Math.random() * 0.7,
-        morphX: tLen > 0 ? textPoints[mIdx].x : size / 2,
-        morphY: tLen > 0 ? textPoints[mIdx].y : size / 2,
+        theta: angle,
+        phi: Math.PI / 2 + (ring - 1) * 0.3,
+        radius: SPHERE_RADIUS * (1.3 + ring * 0.12),
+        baseSize: 0.7 + Math.random() * 0.8,
+        color: i % 4 === 0 ? GOLD : i % 4 === 1 ? VIOLET : i % 4 === 2 ? CYAN : PURPLE,
+        ox: 0, oy: 0,
+        speed: 0.8 + Math.random() * 0.8 + ring * 0.2,
+        morphX: tLen > 0 ? allTextPoints[mIdx].x : size / 2,
+        morphY: tLen > 0 ? allTextPoints[mIdx].y : size / 2,
         type: "orbit",
         pulse: Math.random() * Math.PI * 2,
       });
     }
 
     particlesRef.current = particles;
-  }, [PARTICLE_COUNT, SPHERE_RADIUS, DNA_PARTICLES, ORBIT_PARTICLES, size, textPoints]);
+
+    // Init neural pulses
+    const pulses: NeuralPulse[] = [];
+    for (let i = 0; i < NEURAL_PULSE_COUNT; i++) {
+      pulses.push({
+        fromIdx: Math.floor(Math.random() * particles.length),
+        toIdx: Math.floor(Math.random() * particles.length),
+        progress: Math.random(),
+        speed: 0.003 + Math.random() * 0.006,
+        color: i % 3 === 0 ? GOLD : i % 3 === 1 ? VIOLET : CYAN,
+        size: 1.5 + Math.random() * 2,
+      });
+    }
+    pulsesRef.current = pulses;
+  }, [PARTICLE_COUNT, SPHERE_RADIUS, DNA_PARTICLES, ORBIT_PARTICLES, NEURAL_PULSE_COUNT, size, allTextPoints]);
 
   useEffect(() => { initParticles(); }, [initParticles]);
 
@@ -176,128 +210,131 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     const animate = () => {
       timeRef.current += 1;
       const t = timeRef.current;
-      const autoRot = t * 0.0005;
+      const autoRot = t * 0.0004;
 
       ctx.clearRect(0, 0, size, size);
 
       const mouse = mouseRef.current;
       const particles = particlesRef.current;
+      const pulses = pulsesRef.current;
 
-      // Morph logic: press to morph, 3s delay on release before returning
+      // Morph logic
       if (mouse.pressing) {
-        mouse.pressTime = Math.min(mouse.pressTime + 0.012, 1);
+        mouse.pressTime = Math.min(mouse.pressTime + 0.015, 1);
         mouse.releaseTime = 0;
       } else {
         mouse.releaseTime += 1;
-        // Wait 180 frames (~3s at 60fps) before morphing back
         if (mouse.releaseTime > 180) {
-          mouse.pressTime = Math.max(mouse.pressTime - 0.008, 0);
+          mouse.pressTime = Math.max(mouse.pressTime - 0.006, 0);
         }
       }
-      const morphFactor = mouse.pressTime * mouse.pressTime; // easeIn for smoother morph
+      const morphRaw = mouse.pressTime;
+      const morphFactor = morphRaw * morphRaw * (3 - 2 * morphRaw); // smoothstep
 
-      // === Ambient outer glow ===
-      const outerGlow = ctx.createRadialGradient(cx, cy, SPHERE_RADIUS * 0.8, cx, cy, SPHERE_RADIUS * 1.8);
-      outerGlow.addColorStop(0, `hsla(265,60%,55%,${0.03 + morphFactor * 0.05})`);
-      outerGlow.addColorStop(0.5, `hsla(38,50%,55%,${0.02 + morphFactor * 0.03})`);
-      outerGlow.addColorStop(1, "transparent");
-      ctx.fillStyle = outerGlow;
+      // === Background radial glow ===
+      const bgGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, SPHERE_RADIUS * 2);
+      bgGlow.addColorStop(0, `hsla(265,60%,55%,${0.04 + morphFactor * 0.08})`);
+      bgGlow.addColorStop(0.3, `hsla(38,50%,55%,${0.02 + morphFactor * 0.04})`);
+      bgGlow.addColorStop(1, "transparent");
+      ctx.fillStyle = bgGlow;
       ctx.fillRect(0, 0, size, size);
 
-      // === Orbital ring guides ===
-      ctx.save();
-      ctx.globalAlpha = 0.06 + morphFactor * 0.04;
-      ctx.strokeStyle = "hsla(38,45%,55%,0.5)";
-      ctx.lineWidth = 0.6;
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, SPHERE_RADIUS * 1.4, SPHERE_RADIUS * 0.4, autoRot * 2, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.strokeStyle = "hsla(265,50%,55%,0.4)";
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, SPHERE_RADIUS * 1.25, SPHERE_RADIUS * 0.32, -autoRot * 1.5 + 0.5, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.restore();
+      // === Orbital ring guides with rotation ===
+      for (let ring = 0; ring < 3; ring++) {
+        ctx.save();
+        ctx.globalAlpha = 0.04 + morphFactor * 0.03;
+        ctx.strokeStyle = ring === 0 ? "hsla(38,45%,55%,0.4)" : ring === 1 ? "hsla(265,50%,55%,0.3)" : "hsla(185,50%,55%,0.25)";
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        const rMult = 1.3 + ring * 0.12;
+        const flatMult = 0.35 + ring * 0.05;
+        ctx.ellipse(cx, cy, SPHERE_RADIUS * rMult, SPHERE_RADIUS * flatMult, autoRot * (2 + ring) + ring * 1.2, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
 
-      // === Project particles ===
-      type Proj = { x: number; y: number; z: number; sz: number; color: string; alpha: number; type: string; glow: number };
+      // === Project all particles ===
+      type Proj = { x: number; y: number; z: number; sz: number; color: string; alpha: number; type: string; idx: number };
       const projected: Proj[] = [];
 
-      for (const p of particles) {
-        const breathe = Math.sin(t * 0.003 + p.pulse) * 0.02;
+      for (let pi = 0; pi < particles.length; pi++) {
+        const p = particles[pi];
+        const breathe = Math.sin(t * 0.0025 + p.pulse) * 0.025;
+        const r = p.radius * (1 + breathe);
         const sinPhi = Math.sin(p.phi);
         const cosPhi = Math.cos(p.phi);
         const rotTheta = p.theta + autoRot * p.speed;
 
-        let sx = (p.radius + p.radius * breathe) * sinPhi * Math.cos(rotTheta);
-        let sy = (p.radius + p.radius * breathe) * cosPhi;
-        let sz = (p.radius + p.radius * breathe) * sinPhi * Math.sin(rotTheta);
+        let sx = r * sinPhi * Math.cos(rotTheta);
+        let sy = r * cosPhi;
+        let sz = r * sinPhi * Math.sin(rotTheta);
 
         // Tilt
-        const tiltA = 0.22;
-        const ry = sy * Math.cos(tiltA) - sz * Math.sin(tiltA);
-        const rz = sy * Math.sin(tiltA) + sz * Math.cos(tiltA);
+        const tA = 0.2;
+        const cosT = Math.cos(tA), sinT = Math.sin(tA);
+        const ry = sy * cosT - sz * sinT;
+        const rz = sy * sinT + sz * cosT;
         sy = ry; sz = rz;
 
         let worldX = cx + sx;
         let worldY = cy + sy;
 
-        // Morph toward text
+        // Morph
         if (morphFactor > 0.005) {
-          const ease = morphFactor;
-          worldX = worldX * (1 - ease) + p.morphX * ease;
-          worldY = worldY * (1 - ease) + p.morphY * ease;
-          sz = sz * (1 - ease * 0.9);
+          worldX = worldX * (1 - morphFactor) + p.morphX * morphFactor;
+          worldY = worldY * (1 - morphFactor) + p.morphY * morphFactor;
+          sz *= (1 - morphFactor * 0.92);
         }
 
-        // Mouse scatter (only when not fully morphed)
-        if (mouse.active && morphFactor < 0.4) {
+        // Mouse scatter
+        if (mouse.active && morphFactor < 0.35) {
           const dx = worldX - mouse.x;
           const dy = worldY - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           const force = Math.max(0, 1 - dist / (SPHERE_RADIUS * 1.2));
-          const push = force * force * 45;
-          p.ox += (dx / (dist || 1)) * push * 0.06;
-          p.oy += (dy / (dist || 1)) * push * 0.06;
+          const push = force * force * 40;
+          p.ox += (dx / (dist || 1)) * push * 0.05;
+          p.oy += (dy / (dist || 1)) * push * 0.05;
         }
 
-        // Smooth spring damping
-        p.ox *= 0.93;
-        p.oy *= 0.93;
+        p.ox *= 0.94;
+        p.oy *= 0.94;
 
         const finalX = worldX + p.ox;
         const finalY = worldY + p.oy;
-
         const depthNorm = (sz + SPHERE_RADIUS * 1.5) / (SPHERE_RADIUS * 3);
-        const alpha = 0.15 + depthNorm * 0.75 + morphFactor * 0.1;
-        const dotSize = p.baseSize * (0.3 + depthNorm * 0.9);
-        const glow = p.type !== "sphere" ? 1 : (Math.sin(t * 0.01 + p.pulse) > 0.7 ? 1 : 0);
+        const alpha = Math.min(0.12 + depthNorm * 0.8 + morphFactor * 0.15, 1);
+        const dotSize = p.baseSize * (0.25 + depthNorm * 0.95);
 
-        projected.push({ x: finalX, y: finalY, z: sz, sz: dotSize, color: p.color, alpha: Math.min(alpha, 1), type: p.type, glow });
+        projected.push({ x: finalX, y: finalY, z: sz, sz: dotSize, color: p.color, alpha, type: p.type, idx: pi });
       }
 
       projected.sort((a, b) => a.z - b.z);
 
-      // === Neural network connections (flowing synapses) ===
-      const connThreshold = isMobile ? 500 : 650;
-      const maxConns = isMobile ? 60 : 120;
-      const front = projected.filter(p => p.z > -SPHERE_RADIUS * 0.3);
-      const sample = front.slice(-maxConns);
-      ctx.lineWidth = 0.35;
+      // === Neural synapse connections ===
+      const connThreshold = isMobile ? 450 : 600;
+      const maxSample = isMobile ? 70 : 140;
+      const front = projected.filter(p => p.z > -SPHERE_RADIUS * 0.25);
+      const sample = front.slice(-maxSample);
+
+      ctx.lineWidth = 0.3;
       for (let i = 0; i < sample.length; i++) {
-        const limit = Math.min(i + 6, sample.length);
-        for (let j = i + 1; j < limit; j++) {
+        const lim = Math.min(i + 5, sample.length);
+        for (let j = i + 1; j < lim; j++) {
           const dx = sample[i].x - sample[j].x;
           const dy = sample[i].y - sample[j].y;
           const d2 = dx * dx + dy * dy;
           if (d2 < connThreshold) {
-            const a = (1 - d2 / connThreshold) * (0.1 + morphFactor * 0.08);
-            // Pulsing synapse effect
-            const pulse = Math.sin(t * 0.015 + i * 0.3) * 0.5 + 0.5;
-            const finalA = a * (0.6 + pulse * 0.4);
-            const isGold = sample[i].type === "dna" || sample[j].type === "dna";
-            ctx.strokeStyle = isGold
-              ? `hsla(38,50%,55%,${finalA.toFixed(3)})`
-              : `hsla(265,50%,60%,${(finalA * 0.8).toFixed(3)})`;
+            const base = (1 - d2 / connThreshold);
+            const pulse = Math.sin(t * 0.012 + i * 0.4) * 0.5 + 0.5;
+            const a = base * (0.08 + morphFactor * 0.06) * (0.5 + pulse * 0.5);
+            const isDna = sample[i].type === "dna" || sample[j].type === "dna";
+            const isOrbit = sample[i].type === "orbit" || sample[j].type === "orbit";
+            ctx.strokeStyle = isDna
+              ? `hsla(38,50%,55%,${a.toFixed(3)})`
+              : isOrbit
+                ? `hsla(185,50%,55%,${(a * 0.7).toFixed(3)})`
+                : `hsla(265,50%,60%,${(a * 0.6).toFixed(3)})`;
             ctx.beginPath();
             ctx.moveTo(sample[i].x, sample[i].y);
             ctx.lineTo(sample[j].x, sample[j].y);
@@ -306,69 +343,181 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         }
       }
 
-      // === DNA bridge lines ===
+      // === DNA bridge lines with flowing dashes ===
       const dnaP = projected.filter(p => p.type === "dna");
-      ctx.lineWidth = 0.5;
+      ctx.lineWidth = 0.4;
       for (let i = 0; i < dnaP.length - 1; i += 2) {
         const a = dnaP[i], b = dnaP[i + 1];
         if (!a || !b) continue;
         const dist = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
-        if (dist < SPHERE_RADIUS * 1.6) {
-          const lineAlpha = Math.max(0.05, (1 - dist / (SPHERE_RADIUS * 1.6)) * 0.2);
-          // Flowing data pulse along bridge
-          const flow = (Math.sin(t * 0.02 + i * 0.5) + 1) * 0.5;
-          ctx.strokeStyle = `hsla(38,45%,55%,${(lineAlpha * (0.5 + flow * 0.5)).toFixed(3)})`;
-          ctx.setLineDash([2 + flow * 3, 2]);
+        if (dist < SPHERE_RADIUS * 1.5) {
+          const la = Math.max(0.04, (1 - dist / (SPHERE_RADIUS * 1.5)) * 0.18);
+          const flow = (Math.sin(t * 0.018 + i * 0.6) + 1) * 0.5;
+          ctx.strokeStyle = `hsla(38,45%,55%,${(la * (0.4 + flow * 0.6)).toFixed(3)})`;
+          ctx.setLineDash([1.5 + flow * 4, 1.5]);
+          ctx.lineDashOffset = -t * 0.15;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
           ctx.stroke();
           ctx.setLineDash([]);
+          ctx.lineDashOffset = 0;
         }
       }
 
-      // === Draw particles with glow ===
+      // === Draw particles ===
       for (const pt of projected) {
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, pt.sz, 0, Math.PI * 2);
         ctx.fillStyle = pt.color + pt.alpha.toFixed(2) + ")";
         ctx.fill();
 
-        // Glow halo for DNA/orbit or randomly pulsing sphere particles
-        if (pt.glow && pt.sz > 0.6) {
+        // Glow halo
+        if (pt.type !== "sphere" && pt.sz > 0.5) {
           ctx.beginPath();
-          ctx.arc(pt.x, pt.y, pt.sz * 3, 0, Math.PI * 2);
-          ctx.fillStyle = pt.color + (pt.alpha * 0.08).toFixed(3) + ")";
+          ctx.arc(pt.x, pt.y, pt.sz * 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = pt.color + (pt.alpha * 0.06).toFixed(3) + ")";
           ctx.fill();
         }
       }
 
-      // === Central core glow (intensifies during morph) ===
-      const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, SPHERE_RADIUS * 0.3);
-      coreGrad.addColorStop(0, `hsla(265,70%,65%,${0.06 + morphFactor * 0.2})`);
-      coreGrad.addColorStop(0.5, `hsla(38,50%,55%,${0.03 + morphFactor * 0.1})`);
+      // === Neural traveling pulses ===
+      for (const np of pulses) {
+        np.progress += np.speed;
+        if (np.progress >= 1) {
+          np.progress = 0;
+          np.fromIdx = np.toIdx;
+          np.toIdx = Math.floor(Math.random() * projected.length);
+        }
+        const from = projected[np.fromIdx % projected.length];
+        const to = projected[np.toIdx % projected.length];
+        if (!from || !to) continue;
+
+        const px = from.x + (to.x - from.x) * np.progress;
+        const py = from.y + (to.y - from.y) * np.progress;
+        const pa = Math.sin(np.progress * Math.PI);
+
+        // Pulse glow
+        ctx.beginPath();
+        ctx.arc(px, py, np.size * 3, 0, Math.PI * 2);
+        ctx.fillStyle = np.color + (pa * 0.08).toFixed(3) + ")";
+        ctx.fill();
+        // Pulse core
+        ctx.beginPath();
+        ctx.arc(px, py, np.size, 0, Math.PI * 2);
+        ctx.fillStyle = np.color + (pa * 0.7).toFixed(2) + ")";
+        ctx.fill();
+        // Trail line
+        if (np.progress > 0.1) {
+          const trailX = from.x + (to.x - from.x) * (np.progress - 0.1);
+          const trailY = from.y + (to.y - from.y) * (np.progress - 0.1);
+          ctx.strokeStyle = np.color + (pa * 0.15).toFixed(3) + ")";
+          ctx.lineWidth = 0.4;
+          ctx.beginPath();
+          ctx.moveTo(trailX, trailY);
+          ctx.lineTo(px, py);
+          ctx.stroke();
+        }
+      }
+
+      // === Core glow ===
+      const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, SPHERE_RADIUS * 0.35);
+      coreGrad.addColorStop(0, `hsla(265,70%,65%,${0.05 + morphFactor * 0.25})`);
+      coreGrad.addColorStop(0.4, `hsla(38,50%,55%,${0.03 + morphFactor * 0.12})`);
       coreGrad.addColorStop(1, "transparent");
       ctx.fillStyle = coreGrad;
       ctx.fillRect(0, 0, size, size);
 
-      // === Horizontal scanning beam ===
-      const scanY = (Math.sin(t * 0.006) * 0.5 + 0.5) * size;
-      const scanGrad = ctx.createLinearGradient(0, scanY - 15, 0, scanY + 15);
-      scanGrad.addColorStop(0, "transparent");
-      scanGrad.addColorStop(0.5, `hsla(38,50%,55%,${0.025 + morphFactor * 0.04})`);
-      scanGrad.addColorStop(1, "transparent");
-      ctx.fillStyle = scanGrad;
-      ctx.fillRect(0, 0, size, size);
+      // === Scanning beam ===
+      const scanY = (Math.sin(t * 0.005) * 0.5 + 0.5) * size;
+      ctx.fillStyle = `hsla(38,50%,55%,${0.02 + morphFactor * 0.04})`;
+      ctx.fillRect(0, scanY - 1, size, 2);
 
-      // === "EMPIRE IA" label hint when morphing ===
-      if (morphFactor > 0.5) {
-        const labelAlpha = (morphFactor - 0.5) * 2; // 0→1 as morph goes 0.5→1
+      // === EMPIRE IA GROUP text during morph — big, futuristic, dramatic ===
+      if (morphFactor > 0.3) {
+        const labelAlpha = Math.min((morphFactor - 0.3) / 0.4, 1);
         ctx.save();
-        ctx.globalAlpha = labelAlpha * 0.6;
-        ctx.font = `${Math.round(size * 0.028)}px 'Inter', sans-serif`;
+
+        // Epic background glow behind text
+        const textGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.4);
+        textGlow.addColorStop(0, `hsla(265,70%,55%,${labelAlpha * 0.15})`);
+        textGlow.addColorStop(0.5, `hsla(38,55%,55%,${labelAlpha * 0.08})`);
+        textGlow.addColorStop(1, "transparent");
+        ctx.fillStyle = textGlow;
+        ctx.fillRect(0, 0, size, size);
+
+        // Main title: EMPIRE IA
+        const mainSize = Math.round(size * 0.085);
+        ctx.font = `900 ${mainSize}px 'Inter', system-ui, sans-serif`;
         ctx.textAlign = "center";
-        ctx.fillStyle = `hsla(38,55%,65%,0.8)`;
-        ctx.fillText("EMPIRE IA GROUP", cx, cy + size * 0.32);
+        ctx.letterSpacing = `${size * 0.008}px`;
+
+        // Text glow layers
+        ctx.globalAlpha = labelAlpha * 0.3;
+        ctx.fillStyle = `hsla(265,70%,65%,1)`;
+        ctx.filter = `blur(${size * 0.02}px)`;
+        ctx.fillText("EMPIRE IA", cx, cy - size * 0.02);
+        ctx.filter = "none";
+
+        ctx.globalAlpha = labelAlpha * 0.2;
+        ctx.fillStyle = `hsla(38,55%,60%,1)`;
+        ctx.filter = `blur(${size * 0.01}px)`;
+        ctx.fillText("EMPIRE IA", cx, cy - size * 0.02);
+        ctx.filter = "none";
+
+        // Crisp text with gradient effect (simulate with two colors)
+        ctx.globalAlpha = labelAlpha * 0.9;
+        ctx.fillStyle = `hsla(38,55%,72%,1)`;
+        ctx.fillText("EMPIRE IA", cx, cy - size * 0.02);
+
+        // Subtitle: GROUP
+        const subSize = Math.round(size * 0.04);
+        ctx.font = `600 ${subSize}px 'Inter', system-ui, sans-serif`;
+        ctx.letterSpacing = `${size * 0.025}px`;
+
+        ctx.globalAlpha = labelAlpha * 0.15;
+        ctx.fillStyle = `hsla(38,50%,60%,1)`;
+        ctx.filter = `blur(${size * 0.008}px)`;
+        ctx.fillText("G R O U P", cx, cy + size * 0.06);
+        ctx.filter = "none";
+
+        ctx.globalAlpha = labelAlpha * 0.65;
+        ctx.fillStyle = `hsla(38,45%,65%,0.9)`;
+        ctx.fillText("G R O U P", cx, cy + size * 0.06);
+
+        // Horizontal accent lines
+        ctx.globalAlpha = labelAlpha * 0.3;
+        ctx.strokeStyle = `hsla(38,50%,55%,0.5)`;
+        ctx.lineWidth = 0.5;
+        const lineW = size * 0.25;
+        // Left line
+        ctx.beginPath();
+        ctx.moveTo(cx - lineW, cy + size * 0.1);
+        ctx.lineTo(cx - size * 0.04, cy + size * 0.1);
+        ctx.stroke();
+        // Right line
+        ctx.beginPath();
+        ctx.moveTo(cx + size * 0.04, cy + size * 0.1);
+        ctx.lineTo(cx + lineW, cy + size * 0.1);
+        ctx.stroke();
+        // Center diamond
+        ctx.fillStyle = `hsla(38,55%,60%,${labelAlpha * 0.5})`;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy + size * 0.1 - 2);
+        ctx.lineTo(cx + 2, cy + size * 0.1);
+        ctx.lineTo(cx, cy + size * 0.1 + 2);
+        ctx.lineTo(cx - 2, cy + size * 0.1);
+        ctx.closePath();
+        ctx.fill();
+
+        // Tagline
+        const tagSize = Math.round(size * 0.022);
+        ctx.font = `500 ${tagSize}px 'Inter', system-ui, sans-serif`;
+        ctx.globalAlpha = labelAlpha * 0.4;
+        ctx.fillStyle = `hsla(265,40%,70%,0.7)`;
+        ctx.letterSpacing = `${size * 0.012}px`;
+        ctx.fillText("AI-POWERED BUSINESS PLATFORM", cx, cy + size * 0.16);
+
         ctx.restore();
       }
 
@@ -377,7 +526,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
 
     animRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animRef.current);
-  }, [size, SPHERE_RADIUS, isMobile, textPoints]);
+  }, [size, SPHERE_RADIUS, isMobile, allTextPoints, NEURAL_PULSE_COUNT]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     const rect = canvasRef.current?.getBoundingClientRect();
