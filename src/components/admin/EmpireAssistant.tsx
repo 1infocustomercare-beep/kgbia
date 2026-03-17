@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, Send, X, Bot, User, Sparkles, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-assistant`;
 
@@ -8,9 +9,10 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 interface EmpireAssistantProps {
   restaurantId?: string;
+  companyId?: string;
 }
 
-const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
+const EmpireAssistant = ({ restaurantId, companyId }: EmpireAssistantProps) => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
     { role: "assistant", content: "Ciao! 👋 Sono **Empire Assistant**, il tuo supporto tecnico 24/7. Come posso aiutarti?" }
