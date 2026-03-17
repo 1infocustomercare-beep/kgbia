@@ -287,6 +287,14 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
     return TAB_QUICK_ACTIONS[activeTab || "dashboard"] || DEFAULT_QUICK_ACTIONS;
   }, [activeTab]);
 
+  // Stop homepage voice agent on mount to prevent overlap
+  useEffect(() => {
+    if ((window as any).__empireVoiceAgentStopAll) {
+      (window as any).__empireVoiceAgentStopAll();
+    }
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  }, []);
+
   useEffect(() => { messagesRef.current = messages; }, [messages]);
   useEffect(() => { voiceEnabledRef.current = voiceEnabled; }, [voiceEnabled]);
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
