@@ -39,37 +39,40 @@ serve(async (req) => {
     const CUSTOM_VOICE_ID = "RXoaSpLaWTEckJgPUBG3";
 
     const VOICE_PROFILES = {
-      // Arianna — Allegra, emotiva, professionale e persuasiva
+      // Arianna — Naturale, umana, professionale, persuasiva
+      // Stability più alta = meno artefatti AI, più coerenza
+      // Similarity alta = fedeltà alla voce originale
+      // Style moderato = espressiva ma non esagerata
       arianna: {
         voiceId: CUSTOM_VOICE_ID,
         settings: {
-          stability: 0.32,
-          similarity_boost: 0.88,
-          style: 0.55,
+          stability: 0.52,
+          similarity_boost: 0.78,
+          style: 0.30,
           use_speaker_boost: true,
-          speed: 0.93,
+          speed: 0.92,
         },
       },
-      // Splash intro — Entusiasta e coinvolgente
+      // Splash intro — Stessa naturalezza, leggermente più enfatica
       splash: {
         voiceId: CUSTOM_VOICE_ID,
         settings: {
-          stability: 0.28,
-          similarity_boost: 0.90,
-          style: 0.60,
+          stability: 0.48,
+          similarity_boost: 0.80,
+          style: 0.35,
           use_speaker_boost: true,
-          speed: 0.90,
+          speed: 0.88,
         },
       },
-      // Sales agent — Energetica, emozionale, convincente
+      // Sales agent — Naturale, coinvolgente senza forzature
       sales: {
         voiceId: CUSTOM_VOICE_ID,
         settings: {
-          stability: 0.30,
-          similarity_boost: 0.85,
-          style: 0.58,
+          stability: 0.50,
+          similarity_boost: 0.76,
+          style: 0.32,
           use_speaker_boost: true,
-          speed: 0.95,
+          speed: 0.94,
         },
       },
     } as const;
