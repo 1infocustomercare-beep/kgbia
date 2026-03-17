@@ -1758,12 +1758,95 @@ const SuperAdminDashboard = () => {
                     </AnimatePresence>
                   </div>
 
-                  {/* Security note — minimal */}
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary/10 bg-primary/[0.02]">
-                    <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
-                    <p className="text-[0.5rem] text-muted-foreground leading-relaxed">
-                      Toggle singolo o per settore · API keys server-side · Mai esposti ai clienti
-                    </p>
+                  {/* ═══ LEGENDA STATI ═══ */}
+                  <div className="rounded-xl border border-border overflow-hidden">
+                    <button
+                      onClick={() => setExpandedSection(expandedSection === ("legend" as any) ? null : "legend" as any)}
+                      className="w-full flex items-center justify-between px-3 py-2.5 bg-card hover:bg-muted/20 transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Info className="w-3.5 h-3.5 text-muted-foreground" />
+                        <span className="text-xs font-display font-bold text-foreground">Legenda</span>
+                      </div>
+                      {expandedSection === ("legend" as any) ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
+                    </button>
+                    <AnimatePresence>
+                      {expandedSection === ("legend" as any) && (
+                        <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
+                          <div className="p-3 space-y-3">
+                            {/* Status legend */}
+                            <div>
+                              <p className="text-[0.6rem] font-bold text-foreground mb-1.5">📊 Stato Connessione</p>
+                              <div className="space-y-1.5">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                                  <span className="text-[0.55rem] font-semibold text-green-400">ON — Connesso</span>
+                                  <span className="text-[0.45rem] text-muted-foreground flex-1">API key configurata e funzionante. Pronto all'uso.</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                                  <span className="text-[0.55rem] font-semibold text-amber-400">⚠ Parziale</span>
+                                  <span className="text-[0.45rem] text-muted-foreground flex-1">Configurata ma con limitazioni (crediti bassi, scadenza vicina).</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2.5 h-2.5 rounded-full bg-destructive" />
+                                  <span className="text-[0.55rem] font-semibold text-destructive">OFF — Mancante</span>
+                                  <span className="text-[0.45rem] text-muted-foreground flex-1">Non configurata. Clicca "Configura" per aggiungere la API key.</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30" />
+                                  <span className="text-[0.55rem] font-semibold text-muted-foreground">⏸ Disattivata</span>
+                                  <span className="text-[0.45rem] text-muted-foreground flex-1">Configurata ma disabilitata manualmente con il toggle.</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Type legend */}
+                            <div>
+                              <p className="text-[0.6rem] font-bold text-foreground mb-1.5">🔌 Tipi di Connessione</p>
+                              <div className="space-y-1.5">
+                                <div className="flex items-start gap-2">
+                                  <span className="text-[0.55rem] font-bold text-primary shrink-0 w-20">🏗️ Infrastruttura</span>
+                                  <span className="text-[0.45rem] text-muted-foreground">Servizi core della piattaforma (DB, AI, Auth). Gestiti automaticamente.</span>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                  <span className="text-[0.55rem] font-bold text-accent shrink-0 w-20">🔗 Connector</span>
+                                  <span className="text-[0.45rem] text-muted-foreground">Integrazioni native Lovable (ElevenLabs, Slack, Telegram…). Si collegano con un click.</span>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                  <span className="text-[0.55rem] font-bold text-amber-400 shrink-0 w-20">🔑 API Key</span>
+                                  <span className="text-[0.45rem] text-muted-foreground">Servizi esterni (Stripe, Google Maps…). Richiedono copia/incolla della chiave.</span>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                  <span className="text-[0.55rem] font-bold text-blue-400 shrink-0 w-20">🏭 Per Settore</span>
+                                  <span className="text-[0.45rem] text-muted-foreground">Integrazioni attive solo per specifici settori (Food, NCC, Beauty…).</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* How to connect */}
+                            <div>
+                              <p className="text-[0.6rem] font-bold text-foreground mb-1.5">📋 Come Collegare</p>
+                              <div className="space-y-1 pl-1">
+                                <p className="text-[0.5rem] text-muted-foreground">1️⃣ Espandi l'integrazione cliccando la freccia ▼</p>
+                                <p className="text-[0.5rem] text-muted-foreground">2️⃣ Segui i passi indicati nella guida step-by-step</p>
+                                <p className="text-[0.5rem] text-muted-foreground">3️⃣ Clicca "Configura" per inserire la API key come secret sicuro</p>
+                                <p className="text-[0.5rem] text-muted-foreground">4️⃣ Il pallino diventerà 🟢 verde — connessione attiva</p>
+                                <p className="text-[0.5rem] text-muted-foreground">5️⃣ Usa il toggle per attivare/disattivare senza cancellare la key</p>
+                              </div>
+                            </div>
+
+                            {/* Security note */}
+                            <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary/10 bg-primary/[0.02]">
+                              <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
+                              <p className="text-[0.5rem] text-muted-foreground leading-relaxed">
+                                Tutte le API key sono archiviate server-side come <strong className="text-foreground">encrypted secrets</strong>. Mai esposte nel frontend. Toggle singolo o per settore.
+                              </p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </>
               );
