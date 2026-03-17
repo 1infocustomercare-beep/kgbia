@@ -10,11 +10,11 @@ const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 60 : 120;
+const NODE_COUNT = IS_MOBILE ? 40 : 80;
 const MAX_DIST = IS_MOBILE ? 110 : 150;
-const FLOW_COUNT = IS_MOBILE ? 30 : 60;
-const PULSE_COUNT = IS_MOBILE ? 6 : 14;
-const HIGHWAY_COUNT = IS_MOBILE ? 4 : 8;
+const FLOW_COUNT = IS_MOBILE ? 12 : 25;
+const PULSE_COUNT = IS_MOBILE ? 3 : 6;
+const HIGHWAY_COUNT = IS_MOBILE ? 2 : 4;
 
 type Pt = { x: number; y: number };
 
