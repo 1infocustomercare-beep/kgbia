@@ -3342,7 +3342,7 @@ const LandingPage = () => {
                   <motion.div key={i}
                     className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md"
                     style={{
-                      background: "linear-gradient(135deg, hsla(265,30%,15%,0.6), hsla(265,20%,10%,0.5))",
+                      background: "linear-gradient(135deg, hsla(265,30%,12%,0.92), hsla(265,20%,8%,0.88))",
                       border: "1px solid hsla(265,50%,50%,0.12)",
                       boxShadow: "0 4px 20px hsla(265,50%,10%,0.3)"
                     }}
