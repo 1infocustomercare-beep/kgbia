@@ -28,6 +28,8 @@ import { useCart } from "@/context/CartContext";
 import { applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
 import { getBusinessTypeConfig, normalizeBusinessType } from "@/lib/business-type";
 const RestaurantVoiceAgent = lazy(() => import("@/components/restaurant/RestaurantVoiceAgent"));
+const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent").then(m => ({ default: m.default })));
+import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
 
 const RestaurantPage = () => {
   const { slug } = useParams();
@@ -857,6 +859,37 @@ const RestaurantPage = () => {
         </section>
       )}
 
+      {/* ====== AI SHOWCASE — iPhone Previews ====== */}
+      {isDemo && (
+        <section className="relative py-16 sm:py-24 overflow-hidden" style={{ background: "linear-gradient(180deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%)" }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(232,93,4,0.08) 0%, transparent 60%)" }} />
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-12"
+            >
+              <span className="inline-block px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase mb-4"
+                style={{ background: "rgba(232,93,4,0.12)", color: "#e85d04", border: "1px solid rgba(232,93,4,0.2)" }}>
+                🍝 Tecnologia per la Ristorazione
+              </span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
+                Il Tuo Ristorante,{" "}
+                <span style={{ background: "linear-gradient(135deg, #e85d04, #ff6b35)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  Potenziato dall'IA
+                </span>
+              </h2>
+              <p className="mt-4 text-sm sm:text-base text-white/50 max-w-2xl mx-auto">
+                Gestione ordini, menu digitale, fidelity, analytics e molto altro — tutto in un'unica piattaforma premium progettata per la ristorazione moderna.
+              </p>
+            </motion.div>
+            <IndustryPhoneShowcase industryId="food" />
+          </div>
+        </section>
+      )}
+
       {/* ====== FOOTER ====== */}
       <motion.footer className="border-t border-border/30 py-6 sm:py-10 px-4 sm:px-5"
         initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
@@ -886,6 +919,11 @@ const RestaurantPage = () => {
           primaryColor={dbRestaurant?.primary_color || undefined}
         />
       </Suspense>
+      {isDemo && (
+        <Suspense fallback={null}>
+          <DemoSalesAgent industry="food" companyName={restaurantName} />
+        </Suspense>
+      )}
     </div>
   );
 };
