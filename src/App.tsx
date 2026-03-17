@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import EmpireDNABackground from "@/components/EmpireDNABackground";
 
 // Detect mobile for tighter safety timeouts
 const IS_MOBILE = typeof window !== "undefined" && (
