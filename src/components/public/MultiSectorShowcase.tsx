@@ -6,6 +6,10 @@ import {
   Calendar, Shield, TrendingUp, Bell, QrCode, MonitorSmartphone,
   Wallet, Users, Package, CreditCard, Target, BarChart3,
   Fingerprint, ClipboardCheck, Bot, ArrowRight, Layers,
+  Umbrella, Wrench, Zap, Grape, SprayCan, Scale, Calculator,
+  Hammer, Camera, TreePine, PawPrint, Brush, Baby, GraduationCap,
+  PartyPopper, Truck, Settings, Stethoscope, Receipt, MapPin,
+  Sparkles, Route, Star, BookOpen, Grid,
 } from "lucide-react";
 
 import cartoonFood from "@/assets/cartoon-sector-food.png";
@@ -18,7 +22,21 @@ import cartoonHotel from "@/assets/cartoon-sector-hotel.png";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
-const SHOWCASE_SECTORS = [
+interface SectorData {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  color: string;
+  headline: string;
+  shimmer: string;
+  desc: string;
+  features: { title: string; desc: string; icon: React.ReactNode }[];
+  img: string | null;
+  stats: { label: string; val: string }[];
+  slug: string;
+}
+
+const SHOWCASE_SECTORS: SectorData[] = [
   {
     id: "food",
     label: "Food & Ristorazione",
@@ -44,12 +62,12 @@ const SHOWCASE_SECTORS = [
     color: "hsla(38,50%,55%,1)",
     headline: "Trasporto Premium,",
     shimmer: "Automatizzato al 100%",
-    desc: "Gestisci flotta NCC, prenotazioni e autisti con un sistema AI che automatizza tariffe, assegnazioni e comunicazioni — tutto con il tuo brand.",
+    desc: "Gestisci flotta NCC, prenotazioni e autisti con un sistema AI che automatizza tariffe, assegnazioni e comunicazioni.",
     features: [
-      { title: "Booking Engine Intelligente", desc: "Prenotazioni con calcolo tariffe automatico per tratta e veicolo", icon: <Calendar className="w-3 h-3" /> },
-      { title: "Gestione Flotta & Autisti", desc: "Monitora scadenze CQC, patenti e revisioni in tempo reale", icon: <Shield className="w-3 h-3" /> },
+      { title: "Booking Engine Intelligente", desc: "Prenotazioni con calcolo tariffe automatico per tratta", icon: <Calendar className="w-3 h-3" /> },
+      { title: "Gestione Flotta & Autisti", desc: "Monitora scadenze CQC, patenti e revisioni", icon: <Shield className="w-3 h-3" /> },
       { title: "Tariffe Dinamiche", desc: "Prezzi custom per tratta, extra notturno e festivi", icon: <TrendingUp className="w-3 h-3" /> },
-      { title: "Tracking & Notifiche Live", desc: "Conferme, reminder e tracking in tempo reale per il cliente", icon: <Bell className="w-3 h-3" /> },
+      { title: "Tracking & Notifiche Live", desc: "Conferme, reminder e tracking in tempo reale", icon: <Bell className="w-3 h-3" /> },
     ],
     img: cartoonNcc,
     stats: [{ label: "Flotta", val: "12 veicoli" }, { label: "Rating", val: "4.9★" }, { label: "Revenue", val: "+40%" }],
@@ -145,6 +163,312 @@ const SHOWCASE_SECTORS = [
     stats: [{ label: "Occupancy", val: "+38%" }, { label: "RevPAR", val: "+52%" }, { label: "Review", val: "4.9★" }],
     slug: "villa-belvedere",
   },
+  {
+    id: "beach",
+    label: "Stabilimenti Balneari",
+    icon: <Umbrella className="w-3.5 h-3.5" />,
+    color: "hsla(190,70%,50%,1)",
+    headline: "Spiaggia Digitale,",
+    shimmer: "Ombrelloni Sempre Pieni",
+    desc: "Mappa interattiva ombrelloni, prenotazione online, abbonamenti stagionali e gestione bar integrata — ogni lettino monetizzato.",
+    features: [
+      { title: "Mappa Interattiva Spot", desc: "Griglia visuale con disponibilità in tempo reale", icon: <MapPin className="w-3 h-3" /> },
+      { title: "Booking Online", desc: "Prenotazioni da web/WhatsApp con conferma automatica", icon: <Calendar className="w-3 h-3" /> },
+      { title: "Abbonamenti & Pass", desc: "Stagionali, settimanali e giornalieri digitali", icon: <CreditCard className="w-3 h-3" /> },
+      { title: "Bar & Extra Ordering", desc: "Ordini cibo e bevande direttamente dal lettino", icon: <QrCode className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Occupazione", val: "+52%" }, { label: "Prenotazioni", val: "3x" }, { label: "Revenue bar", val: "+35%" }],
+    slug: "lido-azzurro",
+  },
+  {
+    id: "plumber",
+    label: "Idraulici",
+    icon: <Wrench className="w-3.5 h-3.5" />,
+    color: "hsla(210,60%,50%,1)",
+    headline: "Interventi Smart,",
+    shimmer: "Zero Carta, +Lavori",
+    desc: "Gestione interventi da richiesta a fattura, schede tecniche, foto cantiere e dispatch automatico — tutta la tua attività in tasca.",
+    features: [
+      { title: "Gestione Interventi", desc: "Workflow completo: richiesta → sopralluogo → fattura", icon: <ClipboardCheck className="w-3 h-3" /> },
+      { title: "Dispatch Automatico", desc: "Assegnazione tecnico per zona e disponibilità", icon: <MapPin className="w-3 h-3" /> },
+      { title: "Foto & Documenti", desc: "Report fotografico cantiere con firma digitale", icon: <Camera className="w-3 h-3" /> },
+      { title: "Preventivi & Fatture", desc: "Generazione automatica con materiali e manodopera", icon: <Receipt className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Interventi/mese", val: "+40%" }, { label: "Tempo admin", val: "-70%" }, { label: "Incassi", val: "+35%" }],
+    slug: "idraulico-express",
+  },
+  {
+    id: "electrician",
+    label: "Elettricisti",
+    icon: <Zap className="w-3.5 h-3.5" />,
+    color: "hsla(50,80%,50%,1)",
+    headline: "Elettricista Connesso,",
+    shimmer: "Lavori × Automatici",
+    desc: "Interventi, preventivi e gestione clienti — tutto digitalizzato per risparmiare tempo e guadagnare di più.",
+    features: [
+      { title: "Schede Intervento", desc: "Dettaglio materiali, ore e foto per ogni lavoro", icon: <ClipboardCheck className="w-3 h-3" /> },
+      { title: "Preventivi Rapidi", desc: "Template predefiniti con listino materiali", icon: <Receipt className="w-3 h-3" /> },
+      { title: "Gestione Scadenze", desc: "Certificazioni, verifiche e manutenzioni programmate", icon: <Shield className="w-3 h-3" /> },
+      { title: "CRM Clienti", desc: "Storico impianti, contratti e richiami automatici", icon: <Users className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Preventivi", val: "+55%" }, { label: "Tempo carta", val: "-65%" }, { label: "Clienti", val: "+30%" }],
+    slug: "elettricista-pro",
+  },
+  {
+    id: "agriturismo",
+    label: "Agriturismo",
+    icon: <Grape className="w-3.5 h-3.5" />,
+    color: "hsla(80,50%,45%,1)",
+    headline: "Agriturismo Digitale,",
+    shimmer: "Natura + Tecnologia",
+    desc: "Prenotazioni camere e ristorante, esperienze, degustazioni e vendita diretta — valorizza ogni aspetto della tua attività rurale.",
+    features: [
+      { title: "Booking Camere & Tavoli", desc: "Prenotazioni integrate con calendario unificato", icon: <Calendar className="w-3 h-3" /> },
+      { title: "Menu Km Zero", desc: "Menu digitale con prodotti dell'azienda agricola", icon: <QrCode className="w-3 h-3" /> },
+      { title: "Esperienze & Tour", desc: "Degustazioni, visite guidate e cooking class", icon: <Star className="w-3 h-3" /> },
+      { title: "Shop Prodotti Tipici", desc: "E-commerce per olio, vino e prodotti locali", icon: <Package className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Prenotazioni", val: "+48%" }, { label: "Shop online", val: "+120%" }, { label: "Review", val: "4.9★" }],
+    slug: "podere-toscano",
+  },
+  {
+    id: "cleaning",
+    label: "Imprese di Pulizia",
+    icon: <SprayCan className="w-3.5 h-3.5" />,
+    color: "hsla(160,50%,48%,1)",
+    headline: "Pulizie Professionali,",
+    shimmer: "Gestione Totale",
+    desc: "Pianificazione turni, checklist digitali, report fotografici e gestione contratti — professionalità certificata.",
+    features: [
+      { title: "Pianificazione Turni", desc: "Calendario squadre con assegnazione zone", icon: <Calendar className="w-3 h-3" /> },
+      { title: "Checklist Digitali", desc: "Verifiche per ogni ambiente con foto prima/dopo", icon: <ClipboardCheck className="w-3 h-3" /> },
+      { title: "Gestione Contratti", desc: "Scadenze, rinnovi e fatturazione automatica", icon: <Receipt className="w-3 h-3" /> },
+      { title: "Report Qualità", desc: "Dashboard soddisfazione cliente con KPI", icon: <BarChart3 className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Efficienza", val: "+45%" }, { label: "Reclami", val: "-60%" }, { label: "Contratti", val: "+30%" }],
+    slug: "clean-pro-service",
+  },
+  {
+    id: "legal",
+    label: "Studi Legali",
+    icon: <Scale className="w-3.5 h-3.5" />,
+    color: "hsla(220,40%,45%,1)",
+    headline: "Studio Legale Digitale,",
+    shimmer: "Casi × Organizzati",
+    desc: "Gestione pratiche, scadenze processuali, time tracking e fatturazione — ogni fascicolo sotto controllo.",
+    features: [
+      { title: "Gestione Fascicoli", desc: "Pratiche con documenti, scadenze e stato avanzamento", icon: <ClipboardCheck className="w-3 h-3" /> },
+      { title: "Scadenze & Udienze", desc: "Calendario con alert automatici per termini", icon: <Calendar className="w-3 h-3" /> },
+      { title: "Time Tracking", desc: "Registrazione ore per cliente e pratica", icon: <BarChart3 className="w-3 h-3" /> },
+      { title: "Fatturazione Legale", desc: "Note proforma e parcelle con calcolo automatico", icon: <Receipt className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Pratiche", val: "+35%" }, { label: "Scadenze mancate", val: "0" }, { label: "Fatturazione", val: "-50% tempo" }],
+    slug: "studio-legale-roma",
+  },
+  {
+    id: "accounting",
+    label: "Commercialisti",
+    icon: <Calculator className="w-3.5 h-3.5" />,
+    color: "hsla(200,35%,48%,1)",
+    headline: "Studio Commerciale,",
+    shimmer: "Efficienza ×5",
+    desc: "Gestione clienti, scadenze fiscali, raccolta documenti e collaborazione — lo studio del futuro è digitale.",
+    features: [
+      { title: "Portale Clienti", desc: "Area riservata per documenti e comunicazioni", icon: <Users className="w-3 h-3" /> },
+      { title: "Scadenzario Fiscale", desc: "Alert automatici per adempimenti e dichiarazioni", icon: <Bell className="w-3 h-3" /> },
+      { title: "Raccolta Documenti", desc: "Upload sicuro fatture e giustificativi", icon: <Package className="w-3 h-3" /> },
+      { title: "Dashboard Clienti", desc: "Panoramica situazione contabile per cliente", icon: <BarChart3 className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Tempo admin", val: "-55%" }, { label: "Clienti gestiti", val: "+40%" }, { label: "Soddisfazione", val: "4.7★" }],
+    slug: "studio-fiscale-pro",
+  },
+  {
+    id: "garage",
+    label: "Autofficine",
+    icon: <Settings className="w-3.5 h-3.5" />,
+    color: "hsla(0,65%,50%,1)",
+    headline: "Officina Connessa,",
+    shimmer: "Riparazioni × Smart",
+    desc: "Gestione veicoli, preventivi, stato riparazione in tempo reale e richiami automatici per tagliandi.",
+    features: [
+      { title: "Schede Veicolo", desc: "Storico completo riparazioni per ogni auto", icon: <ClipboardCheck className="w-3 h-3" /> },
+      { title: "Preventivi Rapidi", desc: "Template ricambi e manodopera con listino", icon: <Receipt className="w-3 h-3" /> },
+      { title: "Status Tracking", desc: "Il cliente vede lo stato della riparazione live", icon: <MonitorSmartphone className="w-3 h-3" /> },
+      { title: "Recall Tagliandi", desc: "Promemoria automatici per manutenzioni periodiche", icon: <Bell className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Riparazioni", val: "+38%" }, { label: "Recall", val: "85%" }, { label: "Revenue", val: "+30%" }],
+    slug: "auto-service-pro",
+  },
+  {
+    id: "photography",
+    label: "Fotografi",
+    icon: <Camera className="w-3.5 h-3.5" />,
+    color: "hsla(280,45%,55%,1)",
+    headline: "Studio Fotografico,",
+    shimmer: "Portfolio × Infinito",
+    desc: "Booking servizi, gallery clienti, contratti digitali e consegna automatica — concentrati sulla creatività.",
+    features: [
+      { title: "Booking Servizi", desc: "Calendario con tipologie shooting e pacchetti", icon: <Calendar className="w-3 h-3" /> },
+      { title: "Gallery Private", desc: "Consegna foto con download e selezione cliente", icon: <MonitorSmartphone className="w-3 h-3" /> },
+      { title: "Contratti Digitali", desc: "Liberatorie e contratti con firma elettronica", icon: <ClipboardCheck className="w-3 h-3" /> },
+      { title: "Portfolio & Social", desc: "Sito portfolio con integrazione social automatica", icon: <Target className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Booking", val: "+50%" }, { label: "Consegne", val: "-3 giorni" }, { label: "Clienti", val: "+45%" }],
+    slug: "photo-studio-art",
+  },
+  {
+    id: "construction",
+    label: "Edilizia",
+    icon: <Hammer className="w-3.5 h-3.5" />,
+    color: "hsla(30,60%,48%,1)",
+    headline: "Cantiere Digitale,",
+    shimmer: "Progetti × Controllati",
+    desc: "Gestione cantieri, timeline progetti, SAL, sicurezza e documentazione — tutto il cantiere in un'app.",
+    features: [
+      { title: "Timeline Progetti", desc: "Gantt interattivo con milestone e dipendenze", icon: <BarChart3 className="w-3 h-3" /> },
+      { title: "SAL & Contabilità", desc: "Stati avanzamento lavori con calcolo automatico", icon: <Receipt className="w-3 h-3" /> },
+      { title: "Sicurezza Cantiere", desc: "Checklist DPI, infortuni e documentazione", icon: <Shield className="w-3 h-3" /> },
+      { title: "Foto & Report", desc: "Documentazione fotografica georeferenziata", icon: <Camera className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Ritardi", val: "-40%" }, { label: "Margine", val: "+22%" }, { label: "Documentazione", val: "100%" }],
+    slug: "costruzioni-smart",
+  },
+  {
+    id: "gardening",
+    label: "Giardinieri",
+    icon: <TreePine className="w-3.5 h-3.5" />,
+    color: "hsla(120,45%,42%,1)",
+    headline: "Verde Professionale,",
+    shimmer: "Clienti × Automatici",
+    desc: "Pianificazione interventi, gestione clienti, preventivi e manutenzioni programmate — il tuo business verde cresce con l'AI.",
+    features: [
+      { title: "Calendario Interventi", desc: "Pianificazione settimanale con routing ottimizzato", icon: <Calendar className="w-3 h-3" /> },
+      { title: "Schede Giardino", desc: "Piante, trattamenti e foto per ogni cliente", icon: <ClipboardCheck className="w-3 h-3" /> },
+      { title: "Preventivi Automatici", desc: "Template con voci standard e personalizzate", icon: <Receipt className="w-3 h-3" /> },
+      { title: "Manutenzioni Ricorrenti", desc: "Alert per potature, concimazioni e trattamenti", icon: <Bell className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Clienti", val: "+35%" }, { label: "Efficienza", val: "+50%" }, { label: "Revenue", val: "+28%" }],
+    slug: "verde-pro-service",
+  },
+  {
+    id: "veterinary",
+    label: "Veterinari",
+    icon: <PawPrint className="w-3.5 h-3.5" />,
+    color: "hsla(140,50%,45%,1)",
+    headline: "Clinica Veterinaria,",
+    shimmer: "Cure × Smart",
+    desc: "Cartelle cliniche animali, vaccini, recall e telemedicina veterinaria — la salute dei pet è digitale.",
+    features: [
+      { title: "Cartelle Cliniche", desc: "Storico visite, diagnosi e terapie per animale", icon: <ClipboardCheck className="w-3 h-3" /> },
+      { title: "Scadenzario Vaccini", desc: "Reminder automatici per richiami e profilassi", icon: <Bell className="w-3 h-3" /> },
+      { title: "Telemedicina Vet", desc: "Consulti video per urgenze e follow-up", icon: <MonitorSmartphone className="w-3 h-3" /> },
+      { title: "Shop & Farmacia", desc: "Vendita alimenti e farmaci con prescrizione", icon: <Package className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Pazienti", val: "+42%" }, { label: "Recall vaccini", val: "95%" }, { label: "Soddisfazione", val: "4.9★" }],
+    slug: "clinica-pet-care",
+  },
+  {
+    id: "tattoo",
+    label: "Tattoo Studio",
+    icon: <Brush className="w-3.5 h-3.5" />,
+    color: "hsla(0,0%,40%,1)",
+    headline: "Tattoo Studio Pro,",
+    shimmer: "Arte × Digitale",
+    desc: "Portfolio artistico, prenotazioni, consensi digitali e gestione appuntamenti — ogni tatuaggio è un'esperienza premium.",
+    features: [
+      { title: "Portfolio Artisti", desc: "Gallery stili per artista con filtri avanzati", icon: <MonitorSmartphone className="w-3 h-3" /> },
+      { title: "Booking & Depositi", desc: "Prenotazioni con acconto online obbligatorio", icon: <CreditCard className="w-3 h-3" /> },
+      { title: "Consensi Digitali", desc: "Moduli sanitari e liberatorie con firma", icon: <Shield className="w-3 h-3" /> },
+      { title: "Aftercare AI", desc: "Istruzioni personalizzate post-sessione via WhatsApp", icon: <Bot className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Prenotazioni", val: "+55%" }, { label: "No-show", val: "-85%" }, { label: "Rating", val: "4.8★" }],
+    slug: "ink-art-studio",
+  },
+  {
+    id: "childcare",
+    label: "Asili & Infanzia",
+    icon: <Baby className="w-3.5 h-3.5" />,
+    color: "hsla(340,55%,58%,1)",
+    headline: "Asilo Connesso,",
+    shimmer: "Genitori × Sereni",
+    desc: "Diario digitale, comunicazioni ai genitori, presenze e menu settimanale — trasparenza totale per le famiglie.",
+    features: [
+      { title: "Diario Digitale", desc: "Foto, attività e pasti condivisi con i genitori", icon: <Camera className="w-3 h-3" /> },
+      { title: "Presenze & Check-in", desc: "Registro digitale con notifica ingresso/uscita", icon: <Fingerprint className="w-3 h-3" /> },
+      { title: "Comunicazioni", desc: "Avvisi, circolari e chat diretta con educatori", icon: <Bell className="w-3 h-3" /> },
+      { title: "Menu & Allergie", desc: "Piano alimentare con gestione intolleranze", icon: <QrCode className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Soddisfazione", val: "4.9★" }, { label: "Comunicazioni", val: "+80%" }, { label: "Admin", val: "-60%" }],
+    slug: "happy-kids-nursery",
+  },
+  {
+    id: "education",
+    label: "Formazione",
+    icon: <GraduationCap className="w-3.5 h-3.5" />,
+    color: "hsla(250,50%,55%,1)",
+    headline: "Scuola Digitale,",
+    shimmer: "Apprendimento × Smart",
+    desc: "Corsi online, iscrizioni digitali, certificati e community — la formazione professionale del futuro.",
+    features: [
+      { title: "Catalogo Corsi", desc: "Corsi con descrizione, prerequisiti e calendario", icon: <BookOpen className="w-3 h-3" /> },
+      { title: "Iscrizioni Online", desc: "Checkout con posti limitati e lista d'attesa", icon: <CreditCard className="w-3 h-3" /> },
+      { title: "Certificati Digitali", desc: "Attestati con verifica QR e badge", icon: <Shield className="w-3 h-3" /> },
+      { title: "Community Studenti", desc: "Forum, risorse e networking tra partecipanti", icon: <Users className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Iscrizioni", val: "+65%" }, { label: "Completion", val: "88%" }, { label: "Rating", val: "4.8★" }],
+    slug: "academy-pro",
+  },
+  {
+    id: "events",
+    label: "Eventi & Catering",
+    icon: <PartyPopper className="w-3.5 h-3.5" />,
+    color: "hsla(300,45%,52%,1)",
+    headline: "Eventi Perfetti,",
+    shimmer: "Organizzazione × AI",
+    desc: "Preventivi eventi, gestione fornitori, timeline e RSVP digitale — ogni evento diventa un successo pianificato.",
+    features: [
+      { title: "Preventivi Eventi", desc: "Configuratore menù, location e servizi accessori", icon: <Receipt className="w-3 h-3" /> },
+      { title: "Timeline Evento", desc: "Scaletta con assegnazione task al team", icon: <Calendar className="w-3 h-3" /> },
+      { title: "RSVP & Inviti", desc: "Inviti digitali con conferma e preferenze menu", icon: <Users className="w-3 h-3" /> },
+      { title: "Gestione Fornitori", desc: "Database fornitori con disponibilità e prezzi", icon: <Package className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "Eventi/anno", val: "+40%" }, { label: "Margine", val: "+25%" }, { label: "Referral", val: "60%" }],
+    slug: "events-luxury",
+  },
+  {
+    id: "logistics",
+    label: "Logistica & Spedizioni",
+    icon: <Truck className="w-3.5 h-3.5" />,
+    color: "hsla(215,55%,48%,1)",
+    headline: "Logistica Intelligente,",
+    shimmer: "Consegne × Ottimizzate",
+    desc: "Tracking spedizioni, routing ottimizzato, magazzino e notifiche clienti — ogni pacco consegnato in tempo.",
+    features: [
+      { title: "Tracking Real-Time", desc: "Posizione e stato spedizione per ogni ordine", icon: <MapPin className="w-3 h-3" /> },
+      { title: "Routing Ottimizzato", desc: "Percorsi calcolati per minimizzare tempi e costi", icon: <Route className="w-3 h-3" /> },
+      { title: "Gestione Magazzino", desc: "Inventario con barcode scan e movimentazioni", icon: <Package className="w-3 h-3" /> },
+      { title: "Notifiche Clienti", desc: "SMS e WhatsApp automatici per stato consegna", icon: <Bell className="w-3 h-3" /> },
+    ],
+    img: null,
+    stats: [{ label: "On-time", val: "96%" }, { label: "Costi route", val: "-30%" }, { label: "Soddisfazione", val: "4.7★" }],
+    slug: "express-delivery-pro",
+  },
 ];
 
 interface SectionLabelProps { text: string; icon?: React.ReactNode }
@@ -160,6 +484,23 @@ const SectionLabel = ({ text, icon }: SectionLabelProps) => (
       <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90 relative z-10">{text}</span>
     </div>
   </motion.div>
+);
+
+// Placeholder gradient for sectors without images
+const SectorPlaceholder = ({ color, label, icon }: { color: string; label: string; icon: React.ReactNode }) => (
+  <div className="w-full aspect-[4/3] flex flex-col items-center justify-center relative overflow-hidden rounded-t-2xl"
+    style={{ background: `linear-gradient(135deg, ${color.replace("1)", "0.15)")}, hsla(260,14%,10%,0.95))` }}>
+    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-3"
+      style={{ background: color.replace("1)", "0.15)"), border: `1px solid ${color.replace("1)", "0.25)")}` }}>
+      <span style={{ color }}>{icon}</span>
+    </div>
+    <p className="text-sm font-heading font-bold text-foreground/60">{label}</p>
+    {/* Decorative grid */}
+    <div className="absolute inset-0 opacity-[0.03]" style={{
+      backgroundImage: `linear-gradient(${color.replace("1)", "0.3)")} 1px, transparent 1px), linear-gradient(90deg, ${color.replace("1)", "0.3)")} 1px, transparent 1px)`,
+      backgroundSize: "30px 30px",
+    }} />
+  </div>
 );
 
 export default function MultiSectorShowcase() {
@@ -188,40 +529,42 @@ export default function MultiSectorShowcase() {
         </p>
       </div>
 
-      {/* Sector pills */}
-      <div className="flex gap-2 justify-center flex-wrap mb-10">
-        {SHOWCASE_SECTORS.map((s, i) => (
-          <motion.button
-            key={s.id}
-            onClick={() => { setActiveIdx(i); setIsAutoPlaying(false); }}
-            className={`relative px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all duration-400 border ${
-              activeIdx === i
-                ? "text-foreground border-primary/40"
-                : "text-foreground/30 border-border/20 hover:text-foreground/60 hover:border-border/40"
-            }`}
-            style={activeIdx === i ? {
-              background: "linear-gradient(135deg, hsla(265,40%,20%,0.6), hsla(265,20%,15%,0.4))",
-              boxShadow: `0 0 20px ${s.color.replace("1)", "0.12)")}, inset 0 1px 0 hsla(0,0%,100%,0.06)`,
-            } : { background: "hsla(0,0%,100%,0.03)" }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            {activeIdx === i && (
-              <motion.div className="absolute inset-0 rounded-full"
-                style={{ border: `1px solid ${s.color.replace("1)", "0.3)")}` }}
-                layoutId="sectorRing"
-                transition={{ type: "spring", stiffness: 300, damping: 30 }} />
-            )}
-            <span className="relative z-10 flex items-center gap-1.5">{s.icon} {s.label}</span>
-            {activeIdx === i && isAutoPlaying && (
-              <motion.div className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full origin-left"
-                style={{ background: s.color }}
-                initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-                transition={{ duration: 5, ease: "linear" }}
-                key={`progress-${activeIdx}`} />
-            )}
-          </motion.button>
-        ))}
+      {/* Sector pills — scrollable on mobile */}
+      <div className="relative mb-10">
+        <div className="flex gap-2 justify-start sm:justify-center flex-nowrap sm:flex-wrap overflow-x-auto pb-3 sm:pb-0 px-2 sm:px-0 scrollbar-hide">
+          {SHOWCASE_SECTORS.map((s, i) => (
+            <motion.button
+              key={s.id}
+              onClick={() => { setActiveIdx(i); setIsAutoPlaying(false); }}
+              className={`relative px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[0.6rem] sm:text-xs font-heading font-semibold tracking-wider uppercase transition-all duration-400 border whitespace-nowrap flex-shrink-0 ${
+                activeIdx === i
+                  ? "text-foreground border-primary/40"
+                  : "text-foreground/30 border-border/20 hover:text-foreground/60 hover:border-border/40"
+              }`}
+              style={activeIdx === i ? {
+                background: "linear-gradient(135deg, hsla(265,40%,20%,0.6), hsla(265,20%,15%,0.4))",
+                boxShadow: `0 0 20px ${s.color.replace("1)", "0.12)")}, inset 0 1px 0 hsla(0,0%,100%,0.06)`,
+              } : { background: "hsla(0,0%,100%,0.03)" }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {activeIdx === i && (
+                <motion.div className="absolute inset-0 rounded-full"
+                  style={{ border: `1px solid ${s.color.replace("1)", "0.3)")}` }}
+                  layoutId="sectorRing"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }} />
+              )}
+              <span className="relative z-10 flex items-center gap-1.5">{s.icon} {s.label}</span>
+              {activeIdx === i && isAutoPlaying && (
+                <motion.div className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full origin-left"
+                  style={{ background: s.color }}
+                  initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                  transition={{ duration: 5, ease: "linear" }}
+                  key={`progress-${activeIdx}`} />
+              )}
+            </motion.button>
+          ))}
+        </div>
       </div>
 
       {/* Content area */}
@@ -259,7 +602,7 @@ export default function MultiSectorShowcase() {
             </div>
 
             <motion.button
-              onClick={() => navigate(`/b/${sector.slug}`)}
+              onClick={() => navigate(`/demo/${sector.id}`)}
               className="group px-7 py-3.5 rounded-full font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2 text-white"
               style={{
                 background: `linear-gradient(135deg, ${sector.color}, ${sector.color.replace("1)", "0.7)")})`,
@@ -277,7 +620,11 @@ export default function MultiSectorShowcase() {
               boxShadow: `0 0 60px ${sector.color.replace("1)", "0.08)")}, 0 20px 60px hsla(0,0%,0%,0.3)`,
               border: `1px solid ${sector.color.replace("1)", "0.12)")}`,
             }}>
-              <img src={sector.img} alt={sector.label} className="w-full aspect-[4/3] object-cover" loading="lazy" />
+              {sector.img ? (
+                <img src={sector.img} alt={sector.label} className="w-full aspect-[4/3] object-cover" loading="lazy" />
+              ) : (
+                <SectorPlaceholder color={sector.color} label={sector.label} icon={sector.icon} />
+              )}
               <div className="absolute inset-0 pointer-events-none" style={{
                 background: `linear-gradient(to top, hsla(260,14%,10%,0.8) 0%, transparent 50%, ${sector.color.replace("1)", "0.05)")} 100%)`,
               }} />
@@ -316,7 +663,7 @@ export default function MultiSectorShowcase() {
       <motion.div className="text-center mt-12 pt-8 border-t border-border/10"
         initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
         <p className="text-foreground/25 text-xs font-heading tracking-wider uppercase">
-          <span style={{ color: "hsl(38,45%,52%)" }}>7 settori</span> · 95+ Agenti IA · 1 piattaforma · <span className="text-foreground/40">il tuo brand</span>
+          <span style={{ color: "hsl(38,45%,52%)" }}>{SHOWCASE_SECTORS.length} settori</span> · 95+ Agenti IA · 1 piattaforma · <span className="text-foreground/40">il tuo brand</span>
         </p>
       </motion.div>
     </>
