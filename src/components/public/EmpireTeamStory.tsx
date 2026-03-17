@@ -273,52 +273,87 @@ export default function EmpireTeamStory() {
           </p>
         </motion.div>
 
-        {/* ── Team Grid ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
+        {/* ── Team Grid — Premium DNA ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-7">
           {TEAM.map((member, i) => (
             <motion.div
               key={member.name}
               className="group relative rounded-2xl overflow-hidden"
-              style={{ background: "hsla(230,10%,15%,0.5)", border: "1px solid hsla(38,50%,55%,0.08)", backdropFilter: "blur(16px)" }}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              style={{
+                background: "linear-gradient(165deg, hsla(265,20%,12%,0.7), hsla(230,15%,8%,0.9))",
+                border: "1px solid hsla(265,60%,55%,0.08)",
+                backdropFilter: "blur(20px)",
+              }}
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={vpOnce}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              whileHover={{ y: -6, borderColor: "hsla(38,50%,55%,0.25)", boxShadow: `0 20px 50px ${member.accent}` }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{
+                y: -8,
+                borderColor: "hsla(265,60%,55%,0.3)",
+                boxShadow: `0 25px 60px -15px ${member.accent}, 0 0 30px -10px hsla(265,70%,60%,0.15)`,
+              }}
             >
-              {/* Top accent */}
-              <div className="absolute top-0 inset-x-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${member.accent}, transparent)` }} />
+              {/* Top DNA accent line */}
+              <div className="absolute top-0 inset-x-0 h-[2px] z-10" style={{ background: `linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.6) 30%, hsl(38,50%,55%) 70%, transparent 95%)` }} />
+
+              {/* Orbital corner glow */}
+              <motion.div
+                className="absolute -top-6 -right-6 w-16 h-16 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                style={{ background: `radial-gradient(circle, ${member.accent}, transparent 70%)` }}
+              />
 
               {/* Photo */}
               <div className="relative aspect-[4/5] overflow-hidden">
                 <img
                   src={member.photo}
                   alt={member.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
                   style={{ objectPosition: (member as any).objectPos || "center top" }}
                   loading="lazy"
                 />
-                {/* Gradient overlay */}
-                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 40%, hsla(230,15%,10%,0.95) 100%)" }} />
+                {/* Cinematic gradient overlay */}
+                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsla(265,30%,10%,0.1) 0%, transparent 30%, hsla(265,20%,8%,0.4) 60%, hsla(230,15%,6%,0.97) 100%)" }} />
+
+                {/* Scan line effect on hover */}
+                <motion.div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: "repeating-linear-gradient(0deg, transparent, transparent 3px, hsla(265,70%,60%,0.03) 3px, hsla(265,70%,60%,0.03) 4px)" }}
+                />
 
                 {/* Name overlay */}
-                <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4">
-                  <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">{member.name}</h3>
-                  <p className="text-[0.6rem] sm:text-xs font-semibold tracking-[1px] uppercase mt-0.5" style={{ color: "hsl(38,50%,60%)" }}>{member.role}</p>
+                <div className="absolute bottom-0 inset-x-0 p-3 sm:p-5">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <motion.div
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: "hsl(265,70%,60%)" }}
+                      animate={{ opacity: [0.4, 1, 0.4] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                    <p className="text-[0.5rem] sm:text-[0.6rem] font-bold tracking-[3px] uppercase" style={{ color: "hsl(265,60%,65%)" }}>{member.role}</p>
+                  </div>
+                  <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight leading-tight">{member.name}</h3>
                 </div>
               </div>
 
-              {/* Bio */}
-              <div className="p-3 sm:p-4 pt-2">
-                <p className="text-[0.65rem] sm:text-xs text-muted-foreground/60 leading-relaxed line-clamp-3">{member.bio}</p>
-                {/* LinkedIn icon */}
-                <motion.div className="mt-2.5 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="w-5 h-5 rounded flex items-center justify-center" style={{ background: "hsla(210,80%,55%,0.1)", border: "1px solid hsla(210,80%,55%,0.15)" }}>
-                    <Linkedin className="w-2.5 h-2.5" style={{ color: "hsl(210,80%,55%)" }} />
+              {/* Bio + Links */}
+              <div className="p-3 sm:p-5 pt-3 space-y-3">
+                <p className="text-[0.65rem] sm:text-xs leading-relaxed line-clamp-3" style={{ color: "hsla(230,20%,75%,0.5)" }}>{member.bio}</p>
+
+                {/* LinkedIn — always visible with premium style */}
+                <div className="flex items-center gap-2 pt-1">
+                  <div
+                    className="w-6 h-6 rounded-md flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                    style={{ background: "hsla(265,60%,55%,0.1)", border: "1px solid hsla(265,60%,55%,0.15)" }}
+                  >
+                    <Linkedin className="w-3 h-3" style={{ color: "hsl(265,60%,55%)" }} />
                   </div>
-                  <span className="text-[0.55rem] text-muted-foreground/40">LinkedIn</span>
-                </motion.div>
+                  <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, hsla(265,60%,55%,0.15), transparent)" }} />
+                </div>
               </div>
+
+              {/* Bottom accent */}
+              <div className="absolute bottom-0 inset-x-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${member.accent}, transparent)` }} />
             </motion.div>
           ))}
         </div>
