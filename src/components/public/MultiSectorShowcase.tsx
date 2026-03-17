@@ -547,6 +547,7 @@ export default function MultiSectorShowcase() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [showAllScreens, setShowAllScreens] = useState(false);
+  const [showAllSectors, setShowAllSectors] = useState(false);
   const [activeCat, setActiveCat] = useState("all");
   const sector = SHOWCASE_SECTORS[activeIdx];
 
