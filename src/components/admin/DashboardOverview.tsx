@@ -89,7 +89,7 @@ const DashboardOverview = ({
         <motion.div className="p-3 rounded-2xl bg-card border border-border/50 cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("profit")}>
           <div className="flex items-center gap-1.5 mb-1">
             <Star className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[11px] text-muted-foreground">Recensioni</span>
+            <span className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold">Reputazione</span>
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-xl font-display font-bold text-primary">{avgRating}</span>
@@ -99,7 +99,7 @@ const DashboardOverview = ({
         <motion.div className="p-3 rounded-2xl bg-card border border-border/50 cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")}>
           <div className="flex items-center gap-1.5 mb-1">
             <CalendarDays className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[11px] text-muted-foreground">Prenotazioni</span>
+            <span className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold">Prenotazioni</span>
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-xl font-display font-bold text-foreground">{todayReservations.length}</span>
