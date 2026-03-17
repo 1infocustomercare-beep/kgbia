@@ -574,9 +574,13 @@ const EmpireVoiceAgent: React.FC = () => {
     };
   }, [elevenlabsAvailable, getElevenlabsTokenSilently]);
 
+  // Ref to allow onDisconnect to trigger reconnect
+  const startElevenlabsConversationRef = useRef<(() => void) | null>(null);
+
   // Start ElevenLabs conversation
   const startElevenlabsConversation = useCallback(async () => {
     setElevenlabsConnecting(true);
+    elevenlabsIntentionalStopRef.current = false;
 
     // ── STOP all narration & TTS before starting live call ──
     abortRef.current = true;
@@ -604,12 +608,18 @@ const EmpireVoiceAgent: React.FC = () => {
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
+      // Always get a FRESH token for each connection attempt
       const token = await getElevenlabsTokenSilently();
       if (!token) {
+        console.warn("[Arianna LIVE] No token received — falling back to legacy");
         releaseVoiceAgent("arianna-live");
         setVoiceMode("legacy");
+        setMessages(prev => [...prev, { role: "assistant", content: "⚠️ Servizio vocale temporaneamente non disponibile. Usa la chat testuale." }]);
         return;
       }
+
+      console.log("[Arianna LIVE] 🎯 Starting session with fresh token...");
+      elevenlabsSessionStartRef.current = Date.now();
 
       await conversation.startSession({
         conversationToken: token,
@@ -617,16 +627,24 @@ const EmpireVoiceAgent: React.FC = () => {
       });
 
       setVoiceMode("elevenlabs");
-    } catch {
+    } catch (err) {
+      console.error("[Arianna LIVE] ❌ Start failed:", err);
       releaseVoiceAgent("arianna-live");
       setElevenlabsAvailable(false);
       setVoiceMode("legacy");
+      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ Impossibile avviare la chiamata. Riprova o usa la chat testuale." }]);
     } finally {
       setElevenlabsConnecting(false);
     }
   }, [conversation, getElevenlabsTokenSilently]);
 
+  // Keep ref in sync for onDisconnect reconnect
+  useEffect(() => {
+    startElevenlabsConversationRef.current = startElevenlabsConversation;
+  }, [startElevenlabsConversation]);
+
   const stopElevenlabsConversation = useCallback(async () => {
+    elevenlabsIntentionalStopRef.current = true;
     try {
       await conversation.endSession();
     } catch {
