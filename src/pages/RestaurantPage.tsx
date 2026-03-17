@@ -919,6 +919,11 @@ const RestaurantPage = () => {
           primaryColor={dbRestaurant?.primary_color || undefined}
         />
       </Suspense>
+      {isDemo && (
+        <Suspense fallback={null}>
+          <DemoSalesAgent industry="food" />
+        </Suspense>
+      )}
     </div>
   );
 };
