@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Crown, Zap, Sparkles, AlertTriangle, Check, Loader2, Shield, ArrowRight, Rocket, Star, TrendingUp } from "lucide-react";
+import { motion } from "framer-motion";
+import { Crown, Zap, Sparkles, AlertTriangle, Check, Loader2, Shield, ArrowRight, Rocket } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useIndustry } from "@/hooks/useIndustry";
+import { getIndustryPlanFeatures } from "@/lib/subscription-plans";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -16,45 +18,63 @@ interface SubscriptionData {
   cancel_at_period_end: boolean;
 }
 
-const PLANS = [
-  {
-    id: "essential",
-    name: "Essential",
-    price: 29,
-    icon: Zap,
-    tagline: "Per iniziare",
-    gradient: "from-blue-500 to-blue-600",
-    features: ["Dashboard completa", "Menu QR illimitato", "Ordini e prenotazioni", "Supporto email", "50 gettoni IA/mese"],
-  },
-  {
-    id: "smart_ia",
-    name: "Smart IA",
-    price: 59,
-    icon: Sparkles,
-    tagline: "Il più scelto",
-    popular: true,
-    gradient: "from-primary to-accent",
-    features: ["Tutto di Essential", "Assistente IA avanzato", "200 gettoni IA/mese", "Review Shield™", "Analytics avanzati", "Supporto prioritario"],
-  },
-  {
-    id: "empire_pro",
-    name: "Empire Pro",
-    price: 89,
-    icon: Crown,
-    tagline: "Per dominare",
-    gradient: "from-[hsl(var(--gold))] to-[hsl(var(--gold-dark))]",
-    features: ["Tutto di Smart IA", "500 gettoni IA/mese", "CRM clienti illimitato", "Multi-lingua", "Push notifications", "Account manager dedicato"],
-  },
-];
-
 export default function SubscriptionSection({ restaurantId }: { restaurantId: string }) {
+  const { industry, terminology } = useIndustry();
   const [sub, setSub] = useState<SubscriptionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [upgrading, setUpgrading] = useState<string | null>(null);
 
+  // Industry-adaptive features
+  const planFeatures = getIndustryPlanFeatures(industry);
+
+  const PLANS = [
+    {
+      id: "essential",
+      name: "Essential",
+      price: 29,
+      icon: Zap,
+      tagline: "Per iniziare",
+      gradient: "from-blue-500 to-blue-600",
+      features: planFeatures.essential.filter(f => f.included).map(f => f.text).slice(0, 5),
+    },
+    {
+      id: "smart_ia",
+      name: "Smart IA",
+      price: 59,
+      icon: Sparkles,
+      tagline: "Il più scelto",
+      popular: true,
+      gradient: "from-primary to-accent",
+      features: planFeatures.smart_ia.filter(f => f.included).map(f => f.text).slice(0, 6),
+    },
+    {
+      id: "empire_pro",
+      name: "Empire Pro",
+      price: 89,
+      icon: Crown,
+      tagline: "Per dominare",
+      gradient: "from-[hsl(var(--gold))] to-[hsl(var(--gold-dark))]",
+      features: planFeatures.empire_pro.filter(f => f.included).map(f => f.text).slice(0, 6),
+    },
+  ];
+
   useEffect(() => {
     if (!restaurantId) return;
-    const fetch = async () => {
+    const fetchSub = async () => {
+      // Try business_subscriptions first (all sectors)
+      const { data: bizSub } = await supabase
+        .from("business_subscriptions")
+        .select("id, plan, status, trial_start, trial_end, current_period_end, cancel_at_period_end")
+        .eq("company_id", restaurantId)
+        .maybeSingle();
+
+      if (bizSub) {
+        setSub(bizSub as SubscriptionData);
+        setLoading(false);
+        return;
+      }
+
+      // Fallback: restaurant_subscriptions (legacy food)
       const { data } = await supabase
         .from("restaurant_subscriptions")
         .select("id, plan, status, trial_start, trial_end, current_period_end, cancel_at_period_end")
@@ -63,13 +83,19 @@ export default function SubscriptionSection({ restaurantId }: { restaurantId: st
       if (data) setSub(data as SubscriptionData);
       setLoading(false);
     };
-    fetch();
+    fetchSub();
 
-    const channel = supabase
-      .channel("sub-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "restaurant_subscriptions", filter: `restaurant_id=eq.${restaurantId}` }, () => fetch())
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    const channels = [
+      supabase
+        .channel("biz-sub-section")
+        .on("postgres_changes", { event: "*", schema: "public", table: "business_subscriptions", filter: `company_id=eq.${restaurantId}` }, () => fetchSub())
+        .subscribe(),
+      supabase
+        .channel("rest-sub-section")
+        .on("postgres_changes", { event: "*", schema: "public", table: "restaurant_subscriptions", filter: `restaurant_id=eq.${restaurantId}` }, () => fetchSub())
+        .subscribe(),
+    ];
+    return () => { channels.forEach(ch => supabase.removeChannel(ch)); };
   }, [restaurantId]);
 
   const daysLeft = sub ? Math.max(0, Math.ceil((new Date(sub.trial_end).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0;
@@ -203,10 +229,8 @@ export default function SubscriptionSection({ restaurantId }: { restaurantId: st
                   : "border-border/50 bg-card/30"
               }`}
             >
-              {/* Top accent */}
               <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${plan.gradient} opacity-60`} />
 
-              {/* Popular badge */}
               {plan.popular && !isCurrent && (
                 <div className="absolute top-2.5 right-3">
                   <Badge className="bg-gradient-to-r from-primary to-accent text-primary-foreground text-[9px] px-2 py-0.5 border-0 shadow-lg shadow-primary/20">
@@ -271,7 +295,6 @@ export default function SubscriptionSection({ restaurantId }: { restaurantId: st
         })}
       </div>
 
-      {/* ── Trust line ── */}
       <div className="flex items-center justify-center gap-3 text-[10px] text-muted-foreground/40 pt-1">
         <Shield className="w-3 h-3" />
         <span>Pagamento sicuro con Stripe · Annulla in qualsiasi momento</span>
