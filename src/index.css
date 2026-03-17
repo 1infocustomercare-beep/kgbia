@@ -1106,3 +1106,10 @@ video::-webkit-media-controls-enclosure {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* ═══ Readability boost — prevent ultra-transparent text ═══ */
+/* Boost /20 → /35, /25 → /40, /30 → /45 for foreground text */
+.text-foreground\/20:not(.line-through):not([class*="line-through"]) { color: hsl(var(--foreground) / 0.38) !important; }
+.text-foreground\/25:not(.line-through):not([class*="line-through"]) { color: hsl(var(--foreground) / 0.42) !important; }
+.text-foreground\/30 { color: hsl(var(--foreground) / 0.48) !important; }
+.text-foreground\/35 { color: hsl(var(--foreground) / 0.52) !important; }
