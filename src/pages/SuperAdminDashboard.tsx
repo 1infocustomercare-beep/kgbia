@@ -1472,6 +1472,11 @@ const SuperAdminDashboard = () => {
                 if (intFilter.category === "client" && item.scope !== "client") return false;
                 // Sector filter
                 if (intFilter.sector !== "all" && item.sector && item.sector !== intFilter.sector && item.sector !== "all") return false;
+                // Account usage filter
+                if (intFilter.account !== "all") {
+                  const usage = item.accountUsage || "none";
+                  if (intFilter.account !== usage) return false;
+                }
                 // Search
                 if (intFilter.search) {
                   const q = intFilter.search.toLowerCase();
@@ -1482,7 +1487,7 @@ const SuperAdminDashboard = () => {
 
               const filteredAdmin = adminIntegrations.filter(filterItem);
               const filteredClient = clientIntegrations.filter(filterItem);
-              const hasActiveFilters = intFilter.status !== "all" || intFilter.category !== "all" || intFilter.sector !== "all" || intFilter.search !== "";
+              const hasActiveFilters = intFilter.status !== "all" || intFilter.category !== "all" || intFilter.sector !== "all" || intFilter.account !== "all" || intFilter.search !== "";
 
               const adminConnected = adminIntegrations.filter(i => i.status === "connected").length;
               const adminTotal = adminIntegrations.length;
