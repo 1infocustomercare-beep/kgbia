@@ -424,6 +424,8 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
   // Process narration queue
   useEffect(() => {
     if (narrationQueue.length === 0 || isSpeakingRef.current || abortRef.current || callActive) return;
+    // Check mutex — don't speak if another agent owns the channel
+    if (!isVoiceAgentActive("demo-sales") && getActiveVoiceAgent() !== null) return;
     const text = narrationQueue[0];
     
     const speak = async () => {
