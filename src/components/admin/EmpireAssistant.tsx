@@ -15,7 +15,7 @@ interface EmpireAssistantProps {
 const EmpireAssistant = ({ restaurantId, companyId }: EmpireAssistantProps) => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Ciao! 👋 Sono **Empire Assistant**, il tuo supporto tecnico 24/7. Come posso aiutarti?" }
+    { role: "assistant", content: "Ciao! 👋 Sono **Empire Assistant**, il tuo supporto tecnico 24/7.\n\n🎯 Posso anche **eseguire comandi** per te! Prova:\n• _\"Togli la lasagna dal menu\"_\n• _\"Aumenta il prezzo della carbonara di 3€\"_\n• _\"Conferma la prenotazione di Marco\"_\n\nCome posso aiutarti?" }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
