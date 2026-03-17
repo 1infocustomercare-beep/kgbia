@@ -80,12 +80,40 @@ function doSpeak() {
   }
 }
 
+/** Auto-unlock listener: any user gesture triggers narration */
+function addAutoUnlockListener() {
+  if (autoUnlockListenerAdded || typeof window === "undefined") return;
+  autoUnlockListenerAdded = true;
+
+  const handler = () => {
+    console.log("[SplashNarration] User gesture detected, unlocking audio");
+    removeListeners();
+    unlockAndStartSplashNarration();
+  };
+
+  const removeListeners = () => {
+    ["click", "touchstart", "pointerdown", "keydown", "scroll"].forEach(evt =>
+      document.removeEventListener(evt, handler, { capture: true } as EventListenerOptions)
+    );
+  };
+
+  ["click", "touchstart", "pointerdown", "keydown", "scroll"].forEach(evt =>
+    document.addEventListener(evt, handler, { capture: true, once: false, passive: true })
+  );
+
+  // Auto-remove after 15s if no interaction
+  setTimeout(removeListeners, 15000);
+}
+
 /** Start the hero narration during splash (desktop auto-call). */
 export function startSplashNarration(): void {
   if (splashNarrationStarted) return;
   if (typeof window === "undefined" || !window.speechSynthesis) return;
 
   splashNarrationStarted = true;
+
+  // Add auto-unlock listener for first user gesture
+  addAutoUnlockListener();
 
   const voices = window.speechSynthesis.getVoices();
   if (voices.length === 0) {
@@ -97,6 +125,8 @@ export function startSplashNarration(): void {
   } else {
     doSpeak();
   }
+  
+  console.log("[SplashNarration] Started, voices available:", window.speechSynthesis.getVoices().length);
 }
 
 /**
