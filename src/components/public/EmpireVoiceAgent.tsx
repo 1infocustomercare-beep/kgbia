@@ -1307,6 +1307,9 @@ const EmpireVoiceAgent: React.FC = () => {
                     if (autoNarrating) {
                       stopAll();
                     } else {
+                      unlockAudioContext();
+                      stopSplashNarration();
+                      abortRef.current = false;
                       autoNarratingRef.current = true;
                       setAutoNarrating(true);
                       enqueueSectionNarration(currentSection, true);
