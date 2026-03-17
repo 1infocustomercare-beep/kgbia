@@ -16,13 +16,46 @@ Deno.serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);
 
+    // ── Auth verification: ensure caller owns this restaurant ──
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Non autenticato" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const userClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(JSON.stringify({ error: "Non autenticato" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const userId = claimsData.claims.sub as string;
+
     const { restaurant_id, customer_phone, customer_name, discount_percent, restaurant_name } = await req.json();
 
     if (!restaurant_id || !discount_percent) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Verify ownership
+    const { data: ownership } = await supabase.from("restaurants").select("id")
+      .eq("id", restaurant_id).eq("owner_id", userId).maybeSingle();
+    if (!ownership) {
+      const { data: membership } = await supabase.from("restaurant_memberships").select("id")
+        .eq("restaurant_id", restaurant_id).eq("user_id", userId).maybeSingle();
+      if (!membership) {
+        console.warn(`SECURITY: User ${userId} tried to send discount for restaurant ${restaurant_id}`);
+        return new Response(JSON.stringify({ error: "Non autorizzato" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
     }
 
     // 1. Create wallet pass record
