@@ -1,14 +1,12 @@
 import { useRef, useEffect, useCallback, useMemo } from "react";
 
 /**
- * Interactive 3D Particle Sphere — Empire IA DNA Neural Core v3
- * - Circulating DNA helix with neural synapse pulses
- * - Flowing data particles along connections
- * - On press: morphs into large "EMPIRE IA GROUP" with dramatic glow
- * - 3s after release: returns to rotating neural DNA sphere
+ * Interactive 3D Particle Sphere — Empire IA DNA Neural Core v4
+ * Default state: Rotating DNA triple-helix ring (from splash) with neural communication
+ * On hover/touch: morphs into "EMPIRE IA GROUP"
+ * Drag: orbits the structure
  */
 
-// High-res pixel font — larger, more complete glyphs (7 cols × 7 rows)
 function generateTextPoints(
   text: string, cx: number, cy: number, scale: number
 ): { x: number; y: number }[] {
@@ -25,7 +23,6 @@ function generateTextPoints(
     A: [[1,0],[2,0],[0,1],[3,1],[0,2],[1,2],[2,2],[3,2],[0,3],[3,3],[0,4],[3,4]],
     " ": [],
   };
-
   const chars = text.split("");
   const charWidths = chars.map(c => {
     const glyph = font[c];
@@ -34,11 +31,9 @@ function generateTextPoints(
   });
   const totalWidth = charWidths.reduce((s, w) => s + w, 0);
   let offsetX = cx - (totalWidth * scale) / 2;
-
   for (let ci = 0; ci < chars.length; ci++) {
     const glyph = font[chars[ci]] || [];
     for (const [gx, gy] of glyph) {
-      // Multiple particles per glyph point for density
       for (let d = 0; d < 3; d++) {
         pts.push({
           x: offsetX + gx * scale + (Math.random() - 0.5) * scale * 0.5,
@@ -56,23 +51,18 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   const animRef = useRef<number>(0);
   const mouseRef = useRef({
     x: 0, y: 0,
-    active: false,    // pointer is over canvas
-    pressing: false,   // pointer is down (drag to orbit)
-    hoverTime: 0,      // time spent hovering → triggers morph
-    releaseTime: 0,    // frames since pointer left
-    dragAngleX: 0,
-    dragAngleY: 0,
+    active: false, pressing: false,
+    hoverTime: 0, releaseTime: 0,
+    dragAngleX: 0, dragAngleY: 0,
     lastX: 0, lastY: 0,
   });
   const timeRef = useRef(0);
-
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
-  const PARTICLE_COUNT = isMobile ? 700 : 1400;
-  const SPHERE_RADIUS = size * 0.33;
-  const DNA_PARTICLES = isMobile ? 100 : 200;
-  const ORBIT_PARTICLES = isMobile ? 24 : 48;
-  const NEURAL_PULSE_COUNT = isMobile ? 16 : 35;
-  const NEURAL_RING_COUNT = isMobile ? 30 : 60;
+
+  const GOLD = "hsla(38,55%,58%,";
+  const VIOLET = "hsla(265,70%,65%,";
+  const CYAN = "hsla(185,60%,55%,";
+  const GREEN = "hsla(160,55%,48%,";
 
   const textPoints = useMemo(
     () => generateTextPoints("EMPIRE IA", size / 2, size * 0.42, size * 0.052),
@@ -87,137 +77,37 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     [textPoints, subTextPoints]
   );
 
-  const GOLD = "hsla(38,55%,58%,";
-  const WARM = "hsla(35,50%,55%,";
-  const VIOLET = "hsla(265,70%,65%,";
-  const DEEP_V = "hsla(265,60%,58%,";
-  const LIGHT_G = "hsla(32,60%,62%,";
-  const PURPLE = "hsla(280,50%,60%,";
-  const CYAN = "hsla(185,60%,55%,";
-  const colors = [GOLD, WARM, VIOLET, DEEP_V, LIGHT_G, PURPLE, CYAN];
+  // DNA ring particles for the splash-style rotating helix
+  const HELIX_STRANDS = 3;
+  const HELIX_SEGMENTS = isMobile ? 60 : 100;
+  const HELIX_FREQ = 8;
+  const ORBIT_RADIUS = size * 0.34;
+  const HELIX_AMP = size * 0.035;
+  const RUNG_COUNT = isMobile ? 14 : 24;
+  const ORBIT_DOTS = isMobile ? 20 : 36;
+  const NEURAL_INNER = isMobile ? 8 : 14;
+  const SCAN_ARCS = 3;
 
-  interface Particle {
-    theta: number; phi: number; radius: number;
-    baseSize: number; color: string;
-    ox: number; oy: number; speed: number;
-    morphX: number; morphY: number;
-    type: "sphere" | "dna" | "orbit" | "neural_ring";
-    pulse: number;
-  }
-
+  // Neural pulse travelers
   interface NeuralPulse {
-    fromIdx: number; toIdx: number;
-    progress: number; speed: number;
-    color: string; size: number;
+    angle: number; speed: number; radius: number; color: string; size: number;
   }
-
-  const particlesRef = useRef<Particle[]>([]);
   const pulsesRef = useRef<NeuralPulse[]>([]);
 
-  const initParticles = useCallback(() => {
-    const particles: Particle[] = [];
-    const tLen = allTextPoints.length;
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const y = 1 - (i / (PARTICLE_COUNT - 1)) * 2;
-      const theta = ((Math.sqrt(5) + 1) / 2) * i * Math.PI * 2;
-      const phi = Math.acos(y);
-      const mIdx = tLen > 0 ? i % tLen : 0;
-      particles.push({
-        theta, phi,
-        radius: SPHERE_RADIUS * (0.9 + Math.random() * 0.2),
-        baseSize: 0.3 + Math.random() * 1.1,
-        color: colors[i % colors.length],
-        ox: 0, oy: 0,
-        speed: 0.5 + Math.random() * 0.7,
-        morphX: tLen > 0 ? allTextPoints[mIdx].x : size / 2,
-        morphY: tLen > 0 ? allTextPoints[mIdx].y : size / 2,
-        type: "sphere",
-        pulse: Math.random() * Math.PI * 2,
-      });
-    }
-
-    // DNA double helix
-    for (let i = 0; i < DNA_PARTICLES; i++) {
-      const t = i / DNA_PARTICLES;
-      const helixAngle = t * Math.PI * 10;
-      const strand = i % 2 === 0 ? 1 : -1;
-      const phi = Math.PI * 0.1 + t * Math.PI * 0.8;
-      const theta = helixAngle + strand * 0.4;
-      const mIdx = tLen > 0 ? i % tLen : 0;
-      particles.push({
-        theta, phi,
-        radius: SPHERE_RADIUS * 1.08,
-        baseSize: 1.0 + Math.random() * 1.0,
-        color: strand > 0 ? VIOLET : GOLD,
-        ox: 0, oy: 0,
-        speed: 0.35 + Math.random() * 0.45,
-        morphX: tLen > 0 ? allTextPoints[mIdx].x : size / 2,
-        morphY: tLen > 0 ? allTextPoints[mIdx].y : size / 2,
-        type: "dna",
-        pulse: Math.random() * Math.PI * 2,
-      });
-    }
-
-    // Orbital rings
-    for (let i = 0; i < ORBIT_PARTICLES; i++) {
-      const angle = (i / ORBIT_PARTICLES) * Math.PI * 2;
-      const ring = i % 3;
-      const mIdx = tLen > 0 ? i % tLen : 0;
-      particles.push({
-        theta: angle,
-        phi: Math.PI / 2 + (ring - 1) * 0.3,
-        radius: SPHERE_RADIUS * (1.3 + ring * 0.12),
-        baseSize: 0.7 + Math.random() * 0.8,
-        color: i % 4 === 0 ? GOLD : i % 4 === 1 ? VIOLET : i % 4 === 2 ? CYAN : PURPLE,
-        ox: 0, oy: 0,
-        speed: 0.8 + Math.random() * 0.8 + ring * 0.2,
-        morphX: tLen > 0 ? allTextPoints[mIdx].x : size / 2,
-        morphY: tLen > 0 ? allTextPoints[mIdx].y : size / 2,
-        type: "orbit",
-        pulse: Math.random() * Math.PI * 2,
-      });
-    }
-
-    // Neural ring particles — orbit around/inside sphere, communicate via pulses
-    for (let i = 0; i < NEURAL_RING_COUNT; i++) {
-      const angle = (i / NEURAL_RING_COUNT) * Math.PI * 2;
-      const layer = i % 4;
-      const r = SPHERE_RADIUS * (0.5 + layer * 0.25);
-      const mIdx = tLen > 0 ? i % tLen : 0;
-      particles.push({
-        theta: angle,
-        phi: Math.PI * 0.3 + (layer * 0.35),
-        radius: r,
-        baseSize: 1.2 + Math.random() * 0.8,
-        color: layer % 2 === 0 ? CYAN : VIOLET,
-        ox: 0, oy: 0,
-        speed: 1.2 + layer * 0.3 + Math.random() * 0.5,
-        morphX: tLen > 0 ? allTextPoints[mIdx].x : size / 2,
-        morphY: tLen > 0 ? allTextPoints[mIdx].y : size / 2,
-        type: "neural_ring",
-        pulse: Math.random() * Math.PI * 2,
-      });
-    }
-
-    particlesRef.current = particles;
-
-    // Init neural pulses — more of them, traveling between all types
+  useEffect(() => {
     const pulses: NeuralPulse[] = [];
-    for (let i = 0; i < NEURAL_PULSE_COUNT; i++) {
+    const count = isMobile ? 12 : 24;
+    for (let i = 0; i < count; i++) {
       pulses.push({
-        fromIdx: Math.floor(Math.random() * particles.length),
-        toIdx: Math.floor(Math.random() * particles.length),
-        progress: Math.random(),
-        speed: 0.004 + Math.random() * 0.008,
-        color: i % 4 === 0 ? GOLD : i % 4 === 1 ? VIOLET : i % 4 === 2 ? CYAN : PURPLE,
-        size: 1.5 + Math.random() * 2,
+        angle: Math.random() * Math.PI * 2,
+        speed: 0.008 + Math.random() * 0.015,
+        radius: ORBIT_RADIUS * (0.6 + Math.random() * 0.5),
+        color: i % 3 === 0 ? GOLD : i % 3 === 1 ? VIOLET : CYAN,
+        size: 1 + Math.random() * 1.5,
       });
     }
     pulsesRef.current = pulses;
-  }, [PARTICLE_COUNT, SPHERE_RADIUS, DNA_PARTICLES, ORBIT_PARTICLES, NEURAL_PULSE_COUNT, NEURAL_RING_COUNT, size, allTextPoints]);
-
-  useEffect(() => { initParticles(); }, [initParticles]);
+  }, [size, isMobile]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -233,352 +123,388 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     const cx = size / 2;
     const cy = size / 2;
 
+    // Morph target particles (scatter from text points)
+    const morphParticles = allTextPoints.map((tp, i) => ({
+      x: tp.x, y: tp.y,
+      color: i % 4 === 0 ? GOLD : i % 4 === 1 ? VIOLET : i % 4 === 2 ? CYAN : GREEN,
+      size: 0.5 + Math.random() * 1.2,
+    }));
+
     const animate = () => {
       timeRef.current += 1;
       const t = timeRef.current;
-
+      const elapsed = t * 0.016;
       ctx.clearRect(0, 0, size, size);
 
       const mouse = mouseRef.current;
-      const particles = particlesRef.current;
       const pulses = pulsesRef.current;
 
-      // ===== MORPH: triggered by HOVER (touch/enter), not click =====
+      // Morph logic
       if (mouse.active) {
         mouse.hoverTime = Math.min(mouse.hoverTime + 0.018, 1);
         mouse.releaseTime = 0;
       } else {
         mouse.releaseTime += 1;
-        if (mouse.releaseTime > 120) { // 2s delay then revert
+        if (mouse.releaseTime > 120) {
           mouse.hoverTime = Math.max(mouse.hoverTime - 0.008, 0);
         }
       }
-      const morphRaw = mouse.hoverTime;
-      const morphFactor = morphRaw * morphRaw * (3 - 2 * morphRaw);
+      const mf = mouse.hoverTime;
+      const morphFactor = mf * mf * (3 - 2 * mf);
+      const dnaFade = 1 - morphFactor;
 
-      // ===== DRAG TO ORBIT: holding + moving rotates the sphere =====
-      const dragX = mouse.dragAngleX;
-      const dragY = mouse.dragAngleY;
-      // Dampen drag when not pressing
+      // Drag damping
       if (!mouse.pressing) {
         mouse.dragAngleX *= 0.97;
         mouse.dragAngleY *= 0.97;
       }
+      const rotSpeed = elapsed * 0.6 + mouse.dragAngleX;
 
-      const autoRot = t * 0.0004 + dragX;
-      const tiltAngle = 0.2 + dragY * 0.3;
-
-      // === Background radial glow ===
-      const bgGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, SPHERE_RADIUS * 2);
+      // ═══ Background radial glow ═══
+      const bgGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, ORBIT_RADIUS * 1.8);
       bgGlow.addColorStop(0, `hsla(265,60%,55%,${0.04 + morphFactor * 0.08})`);
       bgGlow.addColorStop(0.3, `hsla(38,50%,55%,${0.02 + morphFactor * 0.04})`);
       bgGlow.addColorStop(1, "transparent");
       ctx.fillStyle = bgGlow;
       ctx.fillRect(0, 0, size, size);
 
-      // === Orbital ring guides ===
-      for (let ring = 0; ring < 3; ring++) {
+      // ═══ DNA TRIPLE HELIX RING (splash-style) ═══
+      if (dnaFade > 0.01) {
         ctx.save();
-        ctx.globalAlpha = 0.04 + morphFactor * 0.03;
-        ctx.strokeStyle = ring === 0 ? "hsla(38,45%,55%,0.4)" : ring === 1 ? "hsla(265,50%,55%,0.3)" : "hsla(185,50%,55%,0.25)";
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        const rMult = 1.3 + ring * 0.12;
-        const flatMult = 0.35 + ring * 0.05;
-        ctx.ellipse(cx, cy, SPHERE_RADIUS * rMult, SPHERE_RADIUS * flatMult, autoRot * (2 + ring) + ring * 1.2, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-      }
+        ctx.globalAlpha = dnaFade;
 
-      // === Project all particles ===
-      type Proj = { x: number; y: number; z: number; sz: number; color: string; alpha: number; type: string; idx: number };
-      const projected: Proj[] = [];
+        const colors = [
+          { h: 265, s: 75, l: 62 },  // violet
+          { h: 38, s: 50, l: 55 },   // gold
+          { h: 160, s: 55, l: 48 },  // green
+        ];
 
-      for (let pi = 0; pi < particles.length; pi++) {
-        const p = particles[pi];
-        const breathe = Math.sin(t * 0.0025 + p.pulse) * 0.025;
-        const r = p.radius * (1 + breathe);
-        const sinPhi = Math.sin(p.phi);
-        const cosPhi = Math.cos(p.phi);
-        const speedMult = p.type === "neural_ring" ? p.speed * 1.5 : p.speed;
-        const rotTheta = p.theta + autoRot * speedMult;
+        // Triple helix strands
+        for (let s = 0; s < HELIX_STRANDS; s++) {
+          const phaseOffset = (s / HELIX_STRANDS) * Math.PI * 2;
+          const c = colors[s];
+          const hslStr = `hsla(${c.h},${c.s}%,${c.l}%,`;
 
-        let sx = r * sinPhi * Math.cos(rotTheta);
-        let sy = r * cosPhi;
-        let sz = r * sinPhi * Math.sin(rotTheta);
+          // Main strand
+          ctx.beginPath();
+          for (let i = 0; i <= HELIX_SEGMENTS; i++) {
+            const frac = i / HELIX_SEGMENTS;
+            const baseAngle = frac * Math.PI * 2 + rotSpeed * (0.5 + s * 0.1);
+            const waveOffset = Math.sin(frac * Math.PI * 2 * HELIX_FREQ + phaseOffset + elapsed * 2.5) * HELIX_AMP;
+            const r = ORBIT_RADIUS + waveOffset;
+            const px = cx + Math.cos(baseAngle) * r;
+            const py = cy + Math.sin(baseAngle) * r;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.strokeStyle = hslStr + (0.45 * dnaFade).toFixed(3) + ")";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
 
-        // Tilt with drag influence
-        const cosT = Math.cos(tiltAngle), sinT = Math.sin(tiltAngle);
-        const ry = sy * cosT - sz * sinT;
-        const rz = sy * sinT + sz * cosT;
-        sy = ry; sz = rz;
-
-        let worldX = cx + sx;
-        let worldY = cy + sy;
-
-        // Morph toward text
-        if (morphFactor > 0.005) {
-          worldX = worldX * (1 - morphFactor) + p.morphX * morphFactor;
-          worldY = worldY * (1 - morphFactor) + p.morphY * morphFactor;
-          sz *= (1 - morphFactor * 0.92);
+          // Glow layer
+          ctx.beginPath();
+          for (let i = 0; i <= HELIX_SEGMENTS; i++) {
+            const frac = i / HELIX_SEGMENTS;
+            const baseAngle = frac * Math.PI * 2 + rotSpeed * (0.5 + s * 0.1);
+            const waveOffset = Math.sin(frac * Math.PI * 2 * HELIX_FREQ + phaseOffset + elapsed * 2.5) * HELIX_AMP;
+            const r = ORBIT_RADIUS + waveOffset;
+            const px = cx + Math.cos(baseAngle) * r;
+            const py = cy + Math.sin(baseAngle) * r;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.strokeStyle = hslStr + (0.08 * dnaFade).toFixed(3) + ")";
+          ctx.lineWidth = 6;
+          ctx.stroke();
         }
 
-        // Mouse scatter (only when NOT morphed)
-        if (mouse.active && morphFactor < 0.35 && !mouse.pressing) {
-          const dx = worldX - mouse.x;
-          const dy = worldY - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const force = Math.max(0, 1 - dist / (SPHERE_RADIUS * 1.2));
-          const push = force * force * 40;
-          p.ox += (dx / (dist || 1)) * push * 0.05;
-          p.oy += (dy / (dist || 1)) * push * 0.05;
+        // Cross-links (base pairs / rungs)
+        for (let i = 0; i < RUNG_COUNT; i++) {
+          const frac = i / RUNG_COUNT;
+          const baseAngle = frac * Math.PI * 2 + rotSpeed * 0.5;
+          const w1 = Math.sin(frac * Math.PI * 2 * HELIX_FREQ + elapsed * 2.5) * HELIX_AMP;
+          const w2 = Math.sin(frac * Math.PI * 2 * HELIX_FREQ + (2 / 3) * Math.PI * 2 + elapsed * 2.5) * HELIX_AMP;
+          const r1 = ORBIT_RADIUS + w1;
+          const r2 = ORBIT_RADIUS + w2;
+          const px1 = cx + Math.cos(baseAngle) * r1;
+          const py1 = cy + Math.sin(baseAngle) * r1;
+          const px2 = cx + Math.cos(baseAngle) * r2;
+          const py2 = cy + Math.sin(baseAngle) * r2;
+
+          const rungAlpha = 0.12 * dnaFade * (0.5 + 0.5 * Math.sin(frac * Math.PI * 4 + elapsed));
+          ctx.strokeStyle = `hsla(38,50%,55%,${rungAlpha.toFixed(3)})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(px1, py1);
+          ctx.lineTo(px2, py2);
+          ctx.stroke();
         }
 
-        p.ox *= 0.94;
-        p.oy *= 0.94;
+        // Data nodes on the ring
+        for (let i = 0; i < ORBIT_DOTS; i++) {
+          const angle = (i / ORBIT_DOTS) * Math.PI * 2;
+          const speed = 0.6 + (i % 5) * 0.1;
+          const a = angle + rotSpeed * speed;
+          const strandIdx = Math.floor(angle / (Math.PI * 2 / 3)) % 3;
+          const phaseOff = (strandIdx / 3) * Math.PI * 2;
+          const waveOff = Math.sin(angle * HELIX_FREQ + phaseOff + elapsed * 2.5) * HELIX_AMP;
+          const r = ORBIT_RADIUS + waveOff;
+          const px = cx + Math.cos(a) * r;
+          const py = cy + Math.sin(a) * r;
+          const c = colors[i % 3];
+          const pulse = 0.7 + 0.3 * Math.sin(elapsed * 3 + angle * 3);
+          const dotSize = (1.5 + (i % 3) * 0.8) * pulse;
 
-        const finalX = worldX + p.ox;
-        const finalY = worldY + p.oy;
-        const depthNorm = (sz + SPHERE_RADIUS * 1.5) / (SPHERE_RADIUS * 3);
-        const alpha = Math.min(0.12 + depthNorm * 0.8 + morphFactor * 0.15, 1);
-        const dotSize = p.baseSize * (0.25 + depthNorm * 0.95);
+          // Glow
+          const glowR = dotSize * 3.5;
+          const glowGrad = ctx.createRadialGradient(px, py, 0, px, py, glowR);
+          glowGrad.addColorStop(0, `hsla(${c.h},${c.s}%,${c.l}%,${(0.35 * dnaFade * pulse).toFixed(3)})`);
+          glowGrad.addColorStop(0.5, `hsla(${c.h},${c.s}%,${c.l}%,${(0.08 * dnaFade).toFixed(3)})`);
+          glowGrad.addColorStop(1, `hsla(${c.h},${c.s}%,${c.l}%,0)`);
+          ctx.beginPath();
+          ctx.arc(px, py, glowR, 0, Math.PI * 2);
+          ctx.fillStyle = glowGrad;
+          ctx.fill();
 
-        projected.push({ x: finalX, y: finalY, z: sz, sz: dotSize, color: p.color, alpha, type: p.type, idx: pi });
-      }
+          // Core dot
+          ctx.beginPath();
+          ctx.arc(px, py, dotSize * 0.7, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${c.h},${c.s}%,${c.l}%,${(0.9 * dnaFade).toFixed(2)})`;
+          ctx.fill();
+        }
 
-      projected.sort((a, b) => a.z - b.z);
+        // Rotating scan arcs
+        for (let i = 0; i < SCAN_ARCS; i++) {
+          const arcAngle = elapsed * (0.8 + i * 0.2) + (i * Math.PI * 2) / 3;
+          const arcLen = Math.PI * 0.25;
+          const arcR = ORBIT_RADIUS * (0.93 + i * 0.04);
+          const c = colors[i];
 
-      // === Neural synapse connections ===
-      const connThreshold = isMobile ? 450 : 600;
-      const maxSample = isMobile ? 80 : 160;
-      const front = projected.filter(p => p.z > -SPHERE_RADIUS * 0.25);
-      const sample = front.slice(-maxSample);
+          // Fading arc
+          ctx.beginPath();
+          ctx.arc(cx, cy, arcR, arcAngle - arcLen, arcAngle + arcLen);
+          ctx.strokeStyle = `hsla(${c.h},${c.s}%,${c.l}%,${(0.18 * dnaFade).toFixed(3)})`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
 
-      ctx.lineWidth = 0.3;
-      for (let i = 0; i < sample.length; i++) {
-        const lim = Math.min(i + 6, sample.length);
-        for (let j = i + 1; j < lim; j++) {
-          const dx = sample[i].x - sample[j].x;
-          const dy = sample[i].y - sample[j].y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < connThreshold) {
-            const base = (1 - d2 / connThreshold);
-            const pulse = Math.sin(t * 0.012 + i * 0.4) * 0.5 + 0.5;
-            const a = base * (0.08 + morphFactor * 0.06) * (0.5 + pulse * 0.5);
-            const isDna = sample[i].type === "dna" || sample[j].type === "dna";
-            const isNeural = sample[i].type === "neural_ring" || sample[j].type === "neural_ring";
-            const isOrbit = sample[i].type === "orbit" || sample[j].type === "orbit";
-            ctx.strokeStyle = isDna
-              ? `hsla(38,50%,55%,${a.toFixed(3)})`
-              : isNeural
-                ? `hsla(185,55%,58%,${(a * 0.9).toFixed(3)})`
-                : isOrbit
-                  ? `hsla(185,50%,55%,${(a * 0.7).toFixed(3)})`
-                  : `hsla(265,50%,60%,${(a * 0.6).toFixed(3)})`;
+          // Bright head
+          const headX = cx + Math.cos(arcAngle + arcLen) * arcR;
+          const headY = cy + Math.sin(arcAngle + arcLen) * arcR;
+          const headGrad = ctx.createRadialGradient(headX, headY, 0, headX, headY, 6);
+          headGrad.addColorStop(0, `hsla(${c.h},${c.s}%,${c.l}%,${(0.5 * dnaFade).toFixed(2)})`);
+          headGrad.addColorStop(1, `hsla(${c.h},${c.s}%,${c.l}%,0)`);
+          ctx.beginPath();
+          ctx.arc(headX, headY, 6, 0, Math.PI * 2);
+          ctx.fillStyle = headGrad;
+          ctx.fill();
+        }
+
+        // Inner neural network — communicating nodes
+        const neuralPositions: { x: number; y: number }[] = [];
+        for (let i = 0; i < NEURAL_INNER; i++) {
+          const na = (i / NEURAL_INNER) * Math.PI * 2 + elapsed * 0.25;
+          const nr = ORBIT_RADIUS * 0.5 * (0.3 + 0.7 * Math.abs(Math.sin(na * 2 + elapsed * 0.7)));
+          const nx = cx + Math.cos(na) * nr;
+          const ny = cy + Math.sin(na) * nr;
+          neuralPositions.push({ x: nx, y: ny });
+
+          // Node
+          const c = colors[i % 3];
+          ctx.beginPath();
+          ctx.arc(nx, ny, 2, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${c.h},${c.s}%,${c.l}%,${(0.7 * dnaFade).toFixed(2)})`;
+          ctx.fill();
+
+          // Glow
+          const ng = ctx.createRadialGradient(nx, ny, 0, nx, ny, 8);
+          ng.addColorStop(0, `hsla(${c.h},${c.s}%,${c.l}%,${(0.2 * dnaFade).toFixed(3)})`);
+          ng.addColorStop(1, `hsla(${c.h},${c.s}%,${c.l}%,0)`);
+          ctx.beginPath();
+          ctx.arc(nx, ny, 8, 0, Math.PI * 2);
+          ctx.fillStyle = ng;
+          ctx.fill();
+        }
+
+        // Neural connections (curved bezier)
+        ctx.lineWidth = 0.4;
+        for (let i = 0; i < neuralPositions.length; i++) {
+          const next = neuralPositions[(i + 1) % neuralPositions.length];
+          const cur = neuralPositions[i];
+          const dist = Math.hypot(cur.x - next.x, cur.y - next.y);
+          if (dist < ORBIT_RADIUS) {
+            const wave = (Math.sin(elapsed * 2 + i * 1.5) + 1) * 0.5;
+            const a = 0.12 * dnaFade * (0.4 + wave * 0.6);
+            ctx.strokeStyle = `hsla(185,60%,55%,${a.toFixed(3)})`;
+            const midX = (cur.x + next.x) / 2 + (cur.y - next.y) * 0.2;
+            const midY = (cur.y + next.y) / 2 + (next.x - cur.x) * 0.2;
             ctx.beginPath();
-            ctx.moveTo(sample[i].x, sample[i].y);
-            ctx.lineTo(sample[j].x, sample[j].y);
+            ctx.moveTo(cur.x, cur.y);
+            ctx.quadraticCurveTo(midX, midY, next.x, next.y);
+            ctx.stroke();
+          }
+          // Also connect to center
+          const cDist = Math.hypot(cur.x - cx, cur.y - cy);
+          if (cDist > 10) {
+            const a = 0.05 * dnaFade * (0.5 + Math.sin(elapsed + i) * 0.5);
+            ctx.strokeStyle = `hsla(265,70%,65%,${a.toFixed(3)})`;
+            ctx.beginPath();
+            ctx.moveTo(cur.x, cur.y);
+            ctx.lineTo(cx, cy);
             ctx.stroke();
           }
         }
-      }
 
-      // === DNA bridge lines with flowing dashes ===
-      const dnaP = projected.filter(p => p.type === "dna");
-      ctx.lineWidth = 0.4;
-      for (let i = 0; i < dnaP.length - 1; i += 2) {
-        const a = dnaP[i], b = dnaP[i + 1];
-        if (!a || !b) continue;
-        const dist = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
-        if (dist < SPHERE_RADIUS * 1.5) {
-          const la = Math.max(0.04, (1 - dist / (SPHERE_RADIUS * 1.5)) * 0.18);
-          const flow = (Math.sin(t * 0.018 + i * 0.6) + 1) * 0.5;
-          ctx.strokeStyle = `hsla(38,45%,55%,${(la * (0.4 + flow * 0.6)).toFixed(3)})`;
-          ctx.setLineDash([1.5 + flow * 4, 1.5]);
-          ctx.lineDashOffset = -t * 0.15;
+        // Traveling pulses along the ring
+        for (const p of pulses) {
+          p.angle += p.speed;
+          const px = cx + Math.cos(p.angle) * p.radius;
+          const py = cy + Math.sin(p.angle) * p.radius;
+          const pa = 0.6 * dnaFade;
+
+          // Trail
+          const trailAngle = p.angle - p.speed * 8;
+          const tx = cx + Math.cos(trailAngle) * p.radius;
+          const ty = cy + Math.sin(trailAngle) * p.radius;
+          ctx.strokeStyle = p.color + (pa * 0.2).toFixed(3) + ")";
+          ctx.lineWidth = 0.5;
           ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          ctx.lineDashOffset = 0;
-        }
-      }
-
-      // === Neural ring internal communication arcs ===
-      const neuralP = projected.filter(p => p.type === "neural_ring");
-      ctx.lineWidth = 0.35;
-      for (let i = 0; i < neuralP.length; i++) {
-        const next = neuralP[(i + 1) % neuralP.length];
-        const cur = neuralP[i];
-        const dx = cur.x - next.x;
-        const dy = cur.y - next.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < SPHERE_RADIUS * 1.2) {
-          const wave = (Math.sin(t * 0.015 + i * 0.8) + 1) * 0.5;
-          const a = (1 - dist / (SPHERE_RADIUS * 1.2)) * 0.15 * (0.5 + wave * 0.5);
-          ctx.strokeStyle = `hsla(185,55%,58%,${a.toFixed(3)})`;
-          // Curved connection (quadratic bezier through center-ish point)
-          const midX = (cur.x + next.x) / 2 + (cur.y - next.y) * 0.15;
-          const midY = (cur.y + next.y) / 2 + (next.x - cur.x) * 0.15;
-          ctx.beginPath();
-          ctx.moveTo(cur.x, cur.y);
-          ctx.quadraticCurveTo(midX, midY, next.x, next.y);
-          ctx.stroke();
-        }
-      }
-
-      // === Draw particles ===
-      for (const pt of projected) {
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, pt.sz, 0, Math.PI * 2);
-        ctx.fillStyle = pt.color + pt.alpha.toFixed(2) + ")";
-        ctx.fill();
-
-        if ((pt.type === "dna" || pt.type === "orbit" || pt.type === "neural_ring") && pt.sz > 0.5) {
-          ctx.beginPath();
-          ctx.arc(pt.x, pt.y, pt.sz * 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = pt.color + (pt.alpha * 0.06).toFixed(3) + ")";
-          ctx.fill();
-        }
-      }
-
-      // === Neural traveling pulses ===
-      for (const np of pulses) {
-        np.progress += np.speed;
-        if (np.progress >= 1) {
-          np.progress = 0;
-          np.fromIdx = np.toIdx;
-          np.toIdx = Math.floor(Math.random() * projected.length);
-        }
-        const from = projected[np.fromIdx % projected.length];
-        const to = projected[np.toIdx % projected.length];
-        if (!from || !to) continue;
-
-        const px = from.x + (to.x - from.x) * np.progress;
-        const py = from.y + (to.y - from.y) * np.progress;
-        const pa = Math.sin(np.progress * Math.PI);
-
-        ctx.beginPath();
-        ctx.arc(px, py, np.size * 3, 0, Math.PI * 2);
-        ctx.fillStyle = np.color + (pa * 0.08).toFixed(3) + ")";
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(px, py, np.size, 0, Math.PI * 2);
-        ctx.fillStyle = np.color + (pa * 0.7).toFixed(2) + ")";
-        ctx.fill();
-        if (np.progress > 0.1) {
-          const trailX = from.x + (to.x - from.x) * (np.progress - 0.1);
-          const trailY = from.y + (to.y - from.y) * (np.progress - 0.1);
-          ctx.strokeStyle = np.color + (pa * 0.15).toFixed(3) + ")";
-          ctx.lineWidth = 0.4;
-          ctx.beginPath();
-          ctx.moveTo(trailX, trailY);
+          ctx.moveTo(tx, ty);
           ctx.lineTo(px, py);
           ctx.stroke();
+
+          // Pulse dot
+          ctx.beginPath();
+          ctx.arc(px, py, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = p.color + pa.toFixed(2) + ")";
+          ctx.fill();
+
+          // Glow
+          const pg = ctx.createRadialGradient(px, py, 0, px, py, p.size * 4);
+          pg.addColorStop(0, p.color + (pa * 0.3).toFixed(3) + ")");
+          pg.addColorStop(1, p.color + "0)");
+          ctx.beginPath();
+          ctx.arc(px, py, p.size * 4, 0, Math.PI * 2);
+          ctx.fillStyle = pg;
+          ctx.fill();
         }
-      }
 
-      // === Core glow ===
-      const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, SPHERE_RADIUS * 0.35);
-      coreGrad.addColorStop(0, `hsla(265,70%,65%,${0.05 + morphFactor * 0.25})`);
-      coreGrad.addColorStop(0.4, `hsla(38,50%,55%,${0.03 + morphFactor * 0.12})`);
-      coreGrad.addColorStop(1, "transparent");
-      ctx.fillStyle = coreGrad;
-      ctx.fillRect(0, 0, size, size);
-
-      // === Scanning beam ===
-      const scanY = (Math.sin(t * 0.005) * 0.5 + 0.5) * size;
-      ctx.fillStyle = `hsla(38,50%,55%,${0.02 + morphFactor * 0.04})`;
-      ctx.fillRect(0, scanY - 1, size, 2);
-
-      // === Text during morph ===
-      if (morphFactor > 0.3) {
-        const labelAlpha = Math.min((morphFactor - 0.3) / 0.4, 1);
-        ctx.save();
-
-        const textGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.4);
-        textGlow.addColorStop(0, `hsla(265,70%,55%,${labelAlpha * 0.15})`);
-        textGlow.addColorStop(0.5, `hsla(38,55%,55%,${labelAlpha * 0.08})`);
-        textGlow.addColorStop(1, "transparent");
-        ctx.fillStyle = textGlow;
-        ctx.fillRect(0, 0, size, size);
-
-        const mainSize = Math.round(size * 0.085);
-        ctx.font = `900 ${mainSize}px 'Inter', system-ui, sans-serif`;
-        ctx.textAlign = "center";
-        ctx.letterSpacing = `${size * 0.008}px`;
-
-        ctx.globalAlpha = labelAlpha * 0.3;
-        ctx.fillStyle = `hsla(265,70%,65%,1)`;
-        ctx.filter = `blur(${size * 0.02}px)`;
-        ctx.fillText("EMPIRE IA", cx, cy - size * 0.02);
-        ctx.filter = "none";
-
-        ctx.globalAlpha = labelAlpha * 0.2;
-        ctx.fillStyle = `hsla(38,55%,60%,1)`;
-        ctx.filter = `blur(${size * 0.01}px)`;
-        ctx.fillText("EMPIRE IA", cx, cy - size * 0.02);
-        ctx.filter = "none";
-
-        ctx.globalAlpha = labelAlpha * 0.9;
-        ctx.fillStyle = `hsla(38,55%,72%,1)`;
-        ctx.fillText("EMPIRE IA", cx, cy - size * 0.02);
-
-        const subSize = Math.round(size * 0.04);
-        ctx.font = `600 ${subSize}px 'Inter', system-ui, sans-serif`;
-        ctx.letterSpacing = `${size * 0.025}px`;
-
-        ctx.globalAlpha = labelAlpha * 0.15;
-        ctx.fillStyle = `hsla(38,50%,60%,1)`;
-        ctx.filter = `blur(${size * 0.008}px)`;
-        ctx.fillText("G R O U P", cx, cy + size * 0.06);
-        ctx.filter = "none";
-
-        ctx.globalAlpha = labelAlpha * 0.65;
-        ctx.fillStyle = `hsla(38,45%,65%,0.9)`;
-        ctx.fillText("G R O U P", cx, cy + size * 0.06);
-
-        // Accent lines
-        ctx.globalAlpha = labelAlpha * 0.3;
-        ctx.strokeStyle = `hsla(38,50%,55%,0.5)`;
-        ctx.lineWidth = 0.5;
-        const lineW = size * 0.25;
+        // Central intelligence core
+        const corePulse = 1 + Math.sin(elapsed * 1.8) * 0.08;
+        const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, ORBIT_RADIUS * 0.25 * corePulse);
+        coreGrad.addColorStop(0, `hsla(265,75%,62%,${(0.25 * dnaFade).toFixed(3)})`);
+        coreGrad.addColorStop(0.4, `hsla(38,50%,55%,${(0.1 * dnaFade).toFixed(3)})`);
+        coreGrad.addColorStop(1, "hsla(265,75%,62%,0)");
         ctx.beginPath();
-        ctx.moveTo(cx - lineW, cy + size * 0.1);
-        ctx.lineTo(cx - size * 0.04, cy + size * 0.1);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(cx + size * 0.04, cy + size * 0.1);
-        ctx.lineTo(cx + lineW, cy + size * 0.1);
-        ctx.stroke();
-        // Diamond
-        ctx.fillStyle = `hsla(38,55%,60%,${labelAlpha * 0.5})`;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy + size * 0.1 - 2);
-        ctx.lineTo(cx + 2, cy + size * 0.1);
-        ctx.lineTo(cx, cy + size * 0.1 + 2);
-        ctx.lineTo(cx - 2, cy + size * 0.1);
-        ctx.closePath();
+        ctx.arc(cx, cy, ORBIT_RADIUS * 0.25 * corePulse, 0, Math.PI * 2);
+        ctx.fillStyle = coreGrad;
         ctx.fill();
 
-        // Tagline
-        const tagSize = Math.round(size * 0.022);
-        ctx.font = `500 ${tagSize}px 'Inter', system-ui, sans-serif`;
-        ctx.globalAlpha = labelAlpha * 0.4;
-        ctx.fillStyle = `hsla(265,40%,70%,0.7)`;
-        ctx.letterSpacing = `${size * 0.012}px`;
-        ctx.fillText("AI-POWERED BUSINESS PLATFORM", cx, cy + size * 0.16);
+        // Core concentric rings
+        const ringColors = [
+          { h: 265, s: 75, l: 62 },
+          { h: 38, s: 50, l: 55 },
+          { h: 160, s: 55, l: 48 },
+        ];
+        for (let i = 0; i < 3; i++) {
+          const rr = ORBIT_RADIUS * (0.12 + i * 0.06) * corePulse;
+          const rc = ringColors[i];
+          ctx.beginPath();
+          ctx.arc(cx, cy, rr, 0, Math.PI * 2);
+          ctx.strokeStyle = `hsla(${rc.h},${rc.s}%,${rc.l}%,${(0.25 * dnaFade * (1 - i * 0.2)).toFixed(3)})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
 
         ctx.restore();
       }
+
+      // ═══ MORPH STATE: Text particles ═══
+      if (morphFactor > 0.01) {
+        ctx.save();
+        ctx.globalAlpha = morphFactor;
+
+        for (const mp of morphParticles) {
+          ctx.beginPath();
+          ctx.arc(mp.x, mp.y, mp.size, 0, Math.PI * 2);
+          ctx.fillStyle = mp.color + "0.8)";
+          ctx.fill();
+        }
+
+        // Text overlay
+        if (morphFactor > 0.3) {
+          const labelAlpha = Math.min((morphFactor - 0.3) / 0.4, 1);
+
+          const textGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.4);
+          textGlow.addColorStop(0, `hsla(265,70%,55%,${labelAlpha * 0.15})`);
+          textGlow.addColorStop(0.5, `hsla(38,55%,55%,${labelAlpha * 0.08})`);
+          textGlow.addColorStop(1, "transparent");
+          ctx.fillStyle = textGlow;
+          ctx.fillRect(0, 0, size, size);
+
+          const mainSize = Math.round(size * 0.085);
+          ctx.font = `900 ${mainSize}px 'Inter', system-ui, sans-serif`;
+          ctx.textAlign = "center";
+
+          ctx.globalAlpha = labelAlpha * 0.3;
+          ctx.fillStyle = `hsla(265,70%,65%,1)`;
+          ctx.filter = `blur(${size * 0.02}px)`;
+          ctx.fillText("EMPIRE IA", cx, cy - size * 0.02);
+          ctx.filter = "none";
+
+          ctx.globalAlpha = labelAlpha * 0.9;
+          ctx.fillStyle = `hsla(38,55%,72%,1)`;
+          ctx.fillText("EMPIRE IA", cx, cy - size * 0.02);
+
+          const subSize = Math.round(size * 0.04);
+          ctx.font = `600 ${subSize}px 'Inter', system-ui, sans-serif`;
+
+          ctx.globalAlpha = labelAlpha * 0.65;
+          ctx.fillStyle = `hsla(38,45%,65%,0.9)`;
+          ctx.fillText("G R O U P", cx, cy + size * 0.06);
+
+          // Accent lines & diamond
+          ctx.globalAlpha = labelAlpha * 0.3;
+          ctx.strokeStyle = `hsla(38,50%,55%,0.5)`;
+          ctx.lineWidth = 0.5;
+          const lineW = size * 0.25;
+          ctx.beginPath();
+          ctx.moveTo(cx - lineW, cy + size * 0.1);
+          ctx.lineTo(cx - size * 0.04, cy + size * 0.1);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(cx + size * 0.04, cy + size * 0.1);
+          ctx.lineTo(cx + lineW, cy + size * 0.1);
+          ctx.stroke();
+          ctx.fillStyle = `hsla(38,55%,60%,${labelAlpha * 0.5})`;
+          ctx.beginPath();
+          ctx.moveTo(cx, cy + size * 0.1 - 2);
+          ctx.lineTo(cx + 2, cy + size * 0.1);
+          ctx.lineTo(cx, cy + size * 0.1 + 2);
+          ctx.lineTo(cx - 2, cy + size * 0.1);
+          ctx.closePath();
+          ctx.fill();
+
+          const tagSize = Math.round(size * 0.022);
+          ctx.font = `500 ${tagSize}px 'Inter', system-ui, sans-serif`;
+          ctx.globalAlpha = labelAlpha * 0.4;
+          ctx.fillStyle = `hsla(265,40%,70%,0.7)`;
+          ctx.fillText("AI-POWERED BUSINESS PLATFORM", cx, cy + size * 0.16);
+        }
+
+        ctx.restore();
+      }
+
+      // Scanning beam
+      const scanY = (Math.sin(elapsed * 0.3) * 0.5 + 0.5) * size;
+      ctx.fillStyle = `hsla(38,50%,55%,${0.015 + morphFactor * 0.03})`;
+      ctx.fillRect(0, scanY - 1, size, 2);
 
       animRef.current = requestAnimationFrame(animate);
     };
 
     animRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animRef.current);
-  }, [size, SPHERE_RADIUS, isMobile, allTextPoints, NEURAL_PULSE_COUNT]);
+  }, [size, isMobile, allTextPoints]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     const rect = canvasRef.current?.getBoundingClientRect();
@@ -586,19 +512,12 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
     const mouse = mouseRef.current;
-
-    // If pressing (dragging), orbit the sphere
     if (mouse.pressing) {
-      const dx = mx - mouse.lastX;
-      const dy = my - mouse.lastY;
-      mouse.dragAngleX += dx * 0.008;
-      mouse.dragAngleY += dy * 0.005;
+      mouse.dragAngleX += (mx - mouse.lastX) * 0.008;
+      mouse.dragAngleY += (my - mouse.lastY) * 0.005;
     }
-
-    mouse.x = mx;
-    mouse.y = my;
-    mouse.lastX = mx;
-    mouse.lastY = my;
+    mouse.x = mx; mouse.y = my;
+    mouse.lastX = mx; mouse.lastY = my;
     mouse.active = true;
   }, []);
 
@@ -633,9 +552,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         }
         mouseRef.current.pressing = true;
       }}
-      onPointerUp={() => {
-        mouseRef.current.pressing = false;
-      }}
+      onPointerUp={() => { mouseRef.current.pressing = false; }}
       onPointerLeave={handlePointerLeave}
     />
   );
