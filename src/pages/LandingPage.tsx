@@ -1727,7 +1727,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
 
               {/* ── Feature Request CTA ── */}
               <motion.div className="max-w-4xl mx-auto mt-8 text-center" initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <div className="p-5 rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background/40 to-accent/[0.03] backdrop-blur-sm">
+                <div className="p-5 rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background/90 to-accent/[0.03] backdrop-blur-sm">
                   <div className="w-12 h-12 mx-auto rounded-xl bg-vibrant-gradient flex items-center justify-center mb-3">
                     <Sparkles className="w-6 h-6 text-primary-foreground" />
                   </div>
