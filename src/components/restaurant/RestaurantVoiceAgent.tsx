@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { useCart } from "@/context/CartContext";
 import { toast } from "@/hooks/use-toast";
 import type { MenuItem } from "@/types/restaurant";
+import { claimVoiceAgent, releaseVoiceAgent } from "@/lib/voice-agent-mutex";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -116,13 +117,23 @@ const RestaurantVoiceAgent: React.FC<Props> = ({ restaurantName, menuItems, prim
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { addItem } = useCart();
 
-  // Stop homepage voice agent on mount to prevent overlap
+  const localStopAll = useCallback(() => {
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+    if (recognitionRef.current) { recognitionRef.current.stop(); }
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+    setIsListening(false);
+  }, []);
+
+  // Stop all other voice agents on mount via mutex
   useEffect(() => {
+    claimVoiceAgent("restaurant", localStopAll);
     if ((window as any).__empireVoiceAgentStopAll) {
       (window as any).__empireVoiceAgentStopAll();
     }
     if (window.speechSynthesis) window.speechSynthesis.cancel();
-  }, []);
+    return () => { releaseVoiceAgent("restaurant"); };
+  }, [localStopAll]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pause, Sparkles, Bot, Navigation } from "lucide-react";
 import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
+import { claimVoiceAgent, releaseVoiceAgent } from "@/lib/voice-agent-mutex";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -373,6 +374,12 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
     setLiveTranscript("");
     narratingRef.current = false;
   }, []);
+
+  // Register with global mutex
+  useEffect(() => {
+    claimVoiceAgent("partner", stopAll);
+    return () => { releaseVoiceAgent("partner"); };
+  }, [stopAll]);
 
   const togglePause = useCallback(() => {
     if (window.speechSynthesis) {

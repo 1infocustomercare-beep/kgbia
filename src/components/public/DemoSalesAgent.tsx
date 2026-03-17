@@ -5,6 +5,7 @@ import { Volume2, VolumeX, X, Pause, Play, MessageCircle, Send, Mic, MicOff, Squ
 import ReactMarkdown from "react-markdown";
 import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
+import { claimVoiceAgent, releaseVoiceAgent, isVoiceAgentActive, getActiveVoiceAgent } from "@/lib/voice-agent-mutex";
 
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-voice-agent`;
@@ -367,7 +368,7 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
   useEffect(() => { isSpeakingRef.current = isSpeaking; }, [isSpeaking]);
   useEffect(() => { scrollNarrationRef.current = scrollNarrationActive; }, [scrollNarrationActive]);
 
-  // ── Stop homepage voice agent on mount ──
+  // ── Stop all other voice agents on mount via mutex ──
   useEffect(() => {
     if ((window as any).__empireVoiceAgentStopAll) {
       (window as any).__empireVoiceAgentStopAll();
@@ -423,6 +424,8 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
   // Process narration queue
   useEffect(() => {
     if (narrationQueue.length === 0 || isSpeakingRef.current || abortRef.current || callActive) return;
+    // Check mutex — don't speak if another agent owns the channel
+    if (!isVoiceAgentActive("demo-sales") && getActiveVoiceAgent() !== null) return;
     const text = narrationQueue[0];
     
     const speak = async () => {
@@ -541,6 +544,12 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
     setLiveTranscript("");
     setNarrationQueue([]);
   }, []);
+
+  // Register with global mutex after stopAll is defined
+  useEffect(() => {
+    claimVoiceAgent("demo-sales", stopAll);
+    return () => { releaseVoiceAgent("demo-sales"); };
+  }, [stopAll]);
 
   const togglePause = useCallback(() => {
     if (!audioRef.current) return;

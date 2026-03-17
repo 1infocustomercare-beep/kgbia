@@ -8,6 +8,7 @@ import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { stopSplashNarration } from "@/lib/splash-narration";
 import { ARIANNA_SYSTEM_PROMPT } from "@/config/ariannaPrompt";
+import { claimVoiceAgent, releaseVoiceAgent, isVoiceAgentActive, getActiveVoiceAgent } from "@/lib/voice-agent-mutex";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type VoiceMode = "legacy" | "elevenlabs";
@@ -663,6 +664,8 @@ const EmpireVoiceAgent: React.FC = () => {
 
     while (sectionQueueRef.current.length > 0) {
       if (abortRef.current) break;
+      // Check mutex — if another agent took over, stop narrating
+      if (!isVoiceAgentActive("arianna") && getActiveVoiceAgent() !== null) break;
 
       const sectionId = sectionQueueRef.current.shift();
       if (!sectionId) continue;
@@ -736,6 +739,8 @@ const EmpireVoiceAgent: React.FC = () => {
 
   const startIntroNarration = useCallback(() => {
     if (introStartedRef.current || !voiceEnabledRef.current) return;
+    // Don't start if another agent already owns the channel
+    if (!isVoiceAgentActive("arianna") && getActiveVoiceAgent() !== null) return;
 
     introStartedRef.current = true;
     autoNarratingRef.current = true;
@@ -935,8 +940,11 @@ const EmpireVoiceAgent: React.FC = () => {
   useEffect(() => {
     // Expose a global stop function so other voice agents can silence Arianna
     (window as any).__empireVoiceAgentStopAll = stopAll;
+    // Register with global mutex
+    claimVoiceAgent("arianna", stopAll);
     return () => {
       stopAll();
+      releaseVoiceAgent("arianna");
       delete (window as any).__empireVoiceAgentStopAll;
     };
   }, [stopAll]);
