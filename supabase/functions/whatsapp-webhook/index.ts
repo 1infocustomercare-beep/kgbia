@@ -228,8 +228,64 @@ serve(async (req) => {
 
   return new Response("Method not allowed", { status: 405 });
 });
+// ── Detect if message is a business command (vs customer chat) ──
+function detectCommandIntent(text: string): boolean {
+  const lowerText = text.toLowerCase().trim();
+  
+  // Command prefixes
+  const commandPrefixes = [
+    "empire", "hey empire", "ehi empire", "ciao empire",
+    "aggiorna", "modifica", "cambia", "togli", "rimuovi",
+    "aggiungi", "inserisci", "attiva", "disattiva",
+    "aumenta", "diminuisci", "abbassa", "alza",
+    "imposta", "setta", "metti",
+    "conferma", "annulla", "cancella",
+    "prezzo", "stato",
+  ];
+  
+  return commandPrefixes.some(prefix => lowerText.startsWith(prefix));
+}
 
-// ── AI Reply Generator ──
+// ── Execute command via Command Agent edge function ──
+async function executeCommandAgent(
+  supabaseUrl: string,
+  tenantId: string,
+  command: string,
+  senderPhone: string,
+): Promise<string | null> {
+  try {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!serviceKey) return null;
+
+    const resp = await fetch(`${supabaseUrl}/functions/v1/ai-command-agent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${serviceKey}`,
+      },
+      body: JSON.stringify({
+        tenant_id: tenantId,
+        command,
+        source: "whatsapp",
+        sender_phone: senderPhone,
+      }),
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      return data.message_it || "❌ Comando non autorizzato o non valido.";
+    }
+
+    return data.message_it || "✅ Comando eseguito con successo.";
+  } catch (err) {
+    console.error("Command agent call error:", err);
+    return null;
+  }
+}
+
+
 async function generateAIReply(
   supabase: any,
   tenantId: string,
