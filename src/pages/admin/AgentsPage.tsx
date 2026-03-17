@@ -1520,6 +1520,12 @@ export default function AgentsPage() {
           </div>
         </div>
 
+        {/* ─── Agent Activation Requests from Tenants ─── */}
+        <AgentRequestsPanel />
+
+        {/* ─── Per-Account Agent Installations ─── */}
+        <PerAccountAgentsPanel />
+
         {/* ─── ElevenLabs Conversational AI Config ─── */}
         <ElevenLabsConvAIConfig />
       </div>
