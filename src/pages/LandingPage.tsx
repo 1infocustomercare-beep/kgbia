@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, forwardRef, useMemo } from "react";
+import { useState, useEffect, useRef, forwardRef, useMemo, lazy, Suspense } from "react";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import IndustryPhoneShowcase, { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
@@ -44,6 +44,7 @@ import cartoonFitnessDefault from "@/assets/cartoon-sector-fitness.png";
 import cartoonHotelDefault from "@/assets/cartoon-sector-hotel.png";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
+const EmpireTeamStory = lazy(() => import("@/components/public/EmpireTeamStory"));
 
 /* Build a lookup from site_assets — custom URL overrides bundled default */
 function useLandingAssets() {
@@ -5158,6 +5159,13 @@ const LandingPage = () => {
           </div>
         </motion.div>
       </Section>
+
+      <SectionDivider />
+
+      {/* ═══════ EMPIRE STORY & TEAM ═══════ */}
+      <Suspense fallback={null}>
+        <EmpireTeamStory />
+      </Suspense>
 
       <SectionDivider />
 
