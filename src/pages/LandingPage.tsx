@@ -3129,16 +3129,21 @@ const LandingPage = () => {
           {[
             { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", emoji: "🍽️" },
             { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", emoji: "🚗" },
-          ].map((feat, i) => (
+          ].map((feat, i) => {
+            const scale = 174 / 375;
+            const visibleH = 334 / scale;
+            return (
             <motion.div key={`feat-${i}`} className="group cursor-pointer" variants={fadeScale}
               onClick={() => navigate(feat.route)} whileHover={{ y: -8, scale: 1.03 }}>
               <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_20px_60px_hsla(0,0%,0%,0.3)]"
                 style={{ borderColor: `${feat.color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 40px ${feat.color}10` }}>
                 {/* Dynamic Island */}
                 <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
-                {/* Live iframe */}
+                {/* Live iframe — clipped */}
                 <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
-                  <iframe src={feat.route} title={feat.name} className="w-[375px] h-[812px] border-0" style={{ transform: `scale(${174 / 375})`, transformOrigin: "top left", pointerEvents: "none" }} loading="lazy" />
+                  <div style={{ width: 375, height: visibleH, transform: `scale(${scale})`, transformOrigin: "top left" }}>
+                    <iframe src={feat.route} title={feat.name} className="w-full border-0" style={{ height: visibleH, pointerEvents: "none" }} loading="lazy" />
+                  </div>
                 </div>
                 {/* Bottom overlay */}
                 <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
@@ -3152,7 +3157,8 @@ const LandingPage = () => {
                 <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-white/20 rounded-full z-20" />
               </div>
             </motion.div>
-          ))}
+            );
+          })}
           {/* ── Standard industry cards ── */}
           {industries.map((ind, i) => {
             const slug = DEMO_SLUGS[ind.id];
