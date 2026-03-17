@@ -9,6 +9,7 @@ import {
 import InfoGuide from "@/components/ui/info-guide";
 import LivePreview from "@/components/restaurant/LivePreview";
 import FoodPhotoGenerator from "@/components/admin/FoodPhotoGenerator";
+import PlateGallery from "@/components/admin/PlateGallery";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { applyBrandTheme, resetBrandTheme, extractDominantColor, hslToHex, DEFAULT_PRIMARY_HEX } from "@/lib/color-extract";
@@ -17,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import cartoonStudioMenu from "@/assets/cartoon-studio-menu-v2.png";
 
-type StudioSection = "menu" | "ai" | "foodphoto" | "translate" | "preview";
+type StudioSection = "menu" | "ai" | "foodphoto" | "plates" | "translate" | "preview";
 
 /* ── EU Allergen Icons ── */
 const EU_ALLERGENS = [
@@ -272,6 +273,7 @@ const StudioTab = ({
     { id: "menu", label: "Menu", icon: <UtensilsCrossed className="w-4 h-4" /> },
     { id: "ai", label: "OCR", icon: <Camera className="w-4 h-4" /> },
     { id: "foodphoto", label: "📸 Foto", icon: <Sparkles className="w-4 h-4" /> },
+    { id: "plates", label: "🍽️ Piatti", icon: <ImageIcon className="w-4 h-4" /> },
     { id: "preview", label: "Design", icon: <Palette className="w-4 h-4" /> },
     { id: "translate", label: "Lingue", icon: <Languages className="w-4 h-4" /> },
   ];
@@ -671,6 +673,13 @@ const StudioTab = ({
             }
           }}
         />
+      )}
+
+      {/* ===== PLATE GALLERY ===== */}
+      {section === "plates" && restaurant && (
+        <div className="space-y-4">
+          <PlateGallery restaurantId={restaurant.id} />
+        </div>
       )}
 
       {/* ===== TRANSLATE ===== */}

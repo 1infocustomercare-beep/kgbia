@@ -56,7 +56,7 @@ serve(async (req) => {
   const startTime = Date.now();
 
   try {
-    const { action, imageBase64, dishDescription, dishCategory, dishName, userPhotoBase64, plateStyle } = await req.json();
+    const { action, imageBase64, dishDescription, dishCategory, dishName, userPhotoBase64, plateStyle, plateImageUrl } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -216,6 +216,18 @@ serve(async (req) => {
           {
             type: "image_url",
             image_url: { url: userPhotoBase64 }
+          }
+        ];
+      } else if (plateImageUrl) {
+        // User selected one of their saved plates — generate food ON that plate
+        messageContent = [
+          {
+            type: "text",
+            text: `Generate an ultra-professional, magazine-quality food photography image of "${dishDesc}" served on EXACTLY this plate shown in the reference image. The plate, its color, shape, texture and style must be IDENTICAL to the reference. Place the "${dishDesc}" beautifully plated on it with Michelin-star presentation. Professional studio lighting with warm golden tones, extremely shallow depth of field with creamy bokeh background, steam rising naturally, garnished with fresh herbs and microgreens, droplets of olive oil or sauce glistening. The food must look absolutely irresistible and mouthwatering. 8K quality, vibrant natural colors, hyper-realistic food-porn photography.`
+          },
+          {
+            type: "image_url",
+            image_url: { url: plateImageUrl }
           }
         ];
       } else {
