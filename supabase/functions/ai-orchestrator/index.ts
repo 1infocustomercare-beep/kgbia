@@ -181,7 +181,14 @@ ISTRUZIONI:
 - Se autonomia < 7, chiedi conferma prima di modificare dati.
 - Rispondi sempre in italiano.
 - Usa emoji appropriati per il settore.
-- Sii conciso ma completo.`;
+- Sii conciso ma completo.
+
+⚠️ ISOLAMENTO ASSOLUTO (OBBLIGATORIO):
+- Ogni risposta DEVE basarsi ESCLUSIVAMENTE sui dati di QUESTO tenant (${tenant_id}).
+- NON fare MAI riferimento a dati, prezzi, clienti, menu, servizi o informazioni di QUALSIASI altro account, settore o azienda.
+- NON hai memoria di sessioni precedenti di altri tenant. La tua conoscenza è limitata SOLO a questo account.
+- Se l'utente chiede info su altre aziende: "Non ho accesso a informazioni di altre attività."
+- NON usare mai azioni di altri settori (es. un idraulico NON ha menu, un ristorante NON ha veicoli).`;
 
     // 8. Call AI
     if (!lovableKey) {
@@ -230,10 +237,11 @@ ISTRUZIONI:
     const aiData = await aiResponse.json();
     const reply = aiData.choices?.[0]?.message?.content || "Non ho capito. Riformula la richiesta.";
 
-    // 9. Log execution
+    // 9. Log execution — CRITICAL: log with correct tenant for audit trail
     await supabase.from("ai_usage_logs").insert({
       agent_name: "whatsapp-orchestrator",
-      company_id: company?.id || null,
+      company_id: company ? (await supabase.from("companies").select("id").eq("owner_id", tenant_id).maybeSingle())?.data?.id : null,
+      restaurant_id: restaurant ? (await supabase.from("restaurants").select("id").eq("owner_id", tenant_id).maybeSingle())?.data?.id : null,
       model_used: "gemini-3-flash-preview",
       status: "success",
       input_tokens: aiData.usage?.prompt_tokens || 0,

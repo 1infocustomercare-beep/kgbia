@@ -33,6 +33,42 @@ serve(async (req) => {
 
   try {
     const { restaurantId, orders, menuItems } = await req.json();
+
+    if (!restaurantId) {
+      return new Response(JSON.stringify({ error: "restaurantId richiesto" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ── Auth verification: ensure the caller owns this restaurant ──
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader?.startsWith("Bearer ")) {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+      const userClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const token = authHeader.replace("Bearer ", "");
+      const { data: claimsData } = await userClient.auth.getClaims(token);
+      if (claimsData?.claims) {
+        const userId = claimsData.claims.sub as string;
+        const sb = createClient(supabaseUrl, serviceKey);
+        const { data: ownership } = await sb.from("restaurants").select("id")
+          .eq("id", restaurantId).eq("owner_id", userId).maybeSingle();
+        if (!ownership) {
+          const { data: membership } = await sb.from("restaurant_memberships").select("id")
+            .eq("restaurant_id", restaurantId).eq("user_id", userId).maybeSingle();
+          if (!membership) {
+            console.warn(`SECURITY: User ${userId} tried to access inventory for restaurant ${restaurantId}`);
+            return new Response(JSON.stringify({ error: "Non autorizzato" }), {
+              status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+        }
+      }
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
