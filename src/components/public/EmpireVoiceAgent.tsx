@@ -732,14 +732,13 @@ const EmpireVoiceAgent: React.FC = () => {
         const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
         console.warn(`[Arianna] Narration failed for "${sectionId}", attempt ${attempts}`);
         if (attempts < 3) {
-          // Short retry for transient failures
           await new Promise(r => setTimeout(r, 2000));
           sectionQueueRef.current.push(sectionId);
         } else {
-          // Don't permanently give up — just stop the active retry loop.
-          // The gesture handler will re-enqueue with forceReplay when user interacts.
-          console.log(`[Arianna] Pausing narration for "${sectionId}" after ${attempts} attempts — waiting for user gesture`);
-          // Do NOT add to narratedRef — leave it as "not narrated" so gesture can retry
+          // Reset attempts so scroll or gesture can re-enqueue later
+          console.log(`[Arianna] Pausing narration for "${sectionId}" after ${attempts} attempts — will retry on next scroll/gesture`);
+          narrationAttemptsRef.current[sectionId] = 0;
+          // Do NOT add to narratedRef — leave it as "not narrated"
         }
       }
 
@@ -823,10 +822,18 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [isPaused]);
 
-  // ── Auto-narrate on section change ──
+  // ── Auto-narrate on section change — always follow user scroll ──
   useEffect(() => {
-    if (!autoNarrating) return;
     if (!currentSection || !SECTION_SCRIPTS[currentSection]) return;
+    // If audio has been unlocked (user interacted), always try to narrate new sections
+    if (!autoNarrating && !audioUnlockedRef.current) return;
+    
+    // Re-enable auto-narrating if gesture happened and it was disabled
+    if (!autoNarrating && audioUnlockedRef.current && !abortRef.current) {
+      autoNarratingRef.current = true;
+      setAutoNarrating(true);
+    }
+    
     enqueueSectionNarration(currentSection);
   }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
@@ -882,10 +889,9 @@ const EmpireVoiceAgent: React.FC = () => {
     };
   }, [startIntroNarration, enqueueSectionNarration]);
 
-  // ── Recovery: autoplay restrictions on mobile browsers (retry inside first gestures, also after splash) ──
-  // IMPORTANT: This only fires ONCE to unlock audio. After that, narration continues
-  // on its own via the queue system. Touching the screen must NOT restart narration.
+  // ── Recovery: autoplay restrictions — gesture-driven unlock + re-enqueue current section ──
   const audioUnlockedRef = useRef(false);
+  const lastGestureEnqueueRef = useRef(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -894,12 +900,20 @@ const EmpireVoiceAgent: React.FC = () => {
       if (!isMounted) return;
       if (unlockInFlightRef.current) return;
 
-      // Allow re-fire if hero hasn't been narrated yet (gesture unlock is needed)
+      // Throttle: don't fire more than once per 3 seconds
+      const now = Date.now();
+      if (now - lastGestureEnqueueRef.current < 3000 && audioUnlockedRef.current) return;
+
+      // Allow re-fire if there are un-narrated sections visible
+      const currentSec = currentSection;
+      const currentPending = currentSec ? !narratedRef.current.has(currentSec) : false;
       const heroStillPending = !narratedRef.current.has("hero");
-      if (audioUnlockedRef.current && !heroStillPending) return;
+
+      // If fully unlocked and nothing pending, skip
+      if (audioUnlockedRef.current && !heroStillPending && !currentPending) return;
 
       unlockInFlightRef.current = true;
-      audioUnlockedRef.current = true;
+      lastGestureEnqueueRef.current = now;
       userInteractedRef.current = true;
       setUserInteracted(true);
 
@@ -916,18 +930,29 @@ const EmpireVoiceAgent: React.FC = () => {
         }
       }
 
-      // Force next hero narration attempt to run immediately in this gesture context
+      const isFirstUnlock = !audioUnlockedRef.current;
+      audioUnlockedRef.current = true;
+
+      // Force next narration attempt to run immediately in this gesture context
       preferImmediateNarrationRef.current = true;
-      narrationAttemptsRef.current.hero = 0;
 
       stopSplashNarration();
       abortRef.current = false;
-      startIntroNarration();
-      // Always force-enqueue hero if it hasn't been narrated yet
-      if (heroStillPending) {
-        // Ensure it's not already in queue
-        sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== "hero");
-        enqueueSectionNarration("hero", true);
+
+      if (isFirstUnlock || heroStillPending) {
+        narrationAttemptsRef.current.hero = 0;
+        startIntroNarration();
+        if (heroStillPending) {
+          sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== "hero");
+          enqueueSectionNarration("hero", true);
+        }
+      }
+
+      // Also enqueue the currently visible section if it hasn't been narrated
+      if (currentSec && currentSec !== "hero" && currentPending && !queueProcessingRef.current) {
+        narrationAttemptsRef.current[currentSec] = 0;
+        sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== currentSec);
+        enqueueSectionNarration(currentSec, true);
       }
 
       unlockInFlightRef.current = false;
@@ -961,7 +986,7 @@ const EmpireVoiceAgent: React.FC = () => {
       window.removeEventListener("keydown", unlockAndRetry as EventListener);
       window.removeEventListener("scroll", unlockAndRetry as EventListener);
     };
-  }, [enqueueSectionNarration, startIntroNarration]);
+  }, [enqueueSectionNarration, startIntroNarration, currentSection]);
 
   // ── Cleanup: stop all audio when component unmounts (e.g. navigating away) ──
   useEffect(() => {
