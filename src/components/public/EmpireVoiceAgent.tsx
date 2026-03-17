@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { stopSplashNarration } from "@/lib/splash-narration";
+import { ARIANNA_SYSTEM_PROMPT } from "@/config/ariannaPrompt";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type VoiceMode = "legacy" | "elevenlabs";
