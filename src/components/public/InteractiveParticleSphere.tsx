@@ -690,15 +690,15 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       if (morph.active) {
         const mElapsed = (now - morph.startTime) / 1000;
         let mBlend = 0;
-        if (mElapsed < 0.8) { // morph IN
-          mBlend = mElapsed / 0.8;
-          mBlend = mBlend * mBlend * (3 - 2 * mBlend); // smoothstep
+        if (mElapsed < 1.2) { // morph IN — slower, more dramatic
+          mBlend = mElapsed / 1.2;
+          mBlend = mBlend * mBlend * (3 - 2 * mBlend);
           morph.phase = "in";
-        } else if (mElapsed < 3.0) { // HOLD
+        } else if (mElapsed < 6.5) { // HOLD — much longer (5.3s)
           mBlend = 1;
           morph.phase = "hold";
-        } else if (mElapsed < 3.8) { // morph OUT
-          mBlend = 1 - (mElapsed - 3.0) / 0.8;
+        } else if (mElapsed < 7.5) { // morph OUT
+          mBlend = 1 - (mElapsed - 6.5) / 1.0;
           mBlend = mBlend * mBlend * (3 - 2 * mBlend);
           morph.phase = "out";
         } else {
@@ -710,7 +710,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         if (mBlend > 0.01 && morph.textPts.length > 0) {
           const totalPts = morph.textPts.length;
 
-          // Collect all animatable positions (floats + mesh + helix nodes)
+          // Collect all animatable positions
           const allSources: { x: number; y: number }[] = [];
           for (const f of floats) allSources.push({ x: f.x, y: f.y });
           for (const m of mesh) allSources.push({ x: m.x * w, y: m.y * h });
@@ -720,31 +720,55 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
             allSources.push({ x: cx + Math.cos(ds.angle) * baseR, y: cy + Math.sin(ds.angle) * baseR });
           }
 
-          // Circuit trace connections between text points
+          // ── Background dim overlay for contrast ──
           ctx.save();
-          ctx.globalAlpha = mBlend * 0.3;
-          ctx.strokeStyle = hsl(COLORS.violet, 0.35);
-          ctx.lineWidth = 0.6;
-          ctx.setLineDash([3, 5]);
-          const traceCount = Math.min(totalPts, 60);
+          ctx.fillStyle = `hsla(260,20%,5%,${mBlend * 0.4})`;
+          ctx.fillRect(0, 0, w, h);
+          ctx.restore();
+
+          // ── Outer glow aura behind text formation ──
+          const auraR = Math.min(w, h) * 0.45;
+          const auraG = ctx.createRadialGradient(cx, cy, auraR * 0.15, cx, cy, auraR);
+          auraG.addColorStop(0, hsl(COLORS.violet, 0.18 * mBlend));
+          auraG.addColorStop(0.4, hsl(COLORS.gold, 0.06 * mBlend));
+          auraG.addColorStop(1, hsl(COLORS.violet, 0));
+          ctx.beginPath(); ctx.arc(cx, cy, auraR, 0, Math.PI * 2);
+          ctx.fillStyle = auraG; ctx.fill();
+
+          // ── Circuit trace connections — thicker, brighter, animated ──
+          ctx.save();
+          const traceCount = Math.min(totalPts, 80);
+          // Solid traces
+          ctx.globalAlpha = mBlend * 0.6;
+          ctx.strokeStyle = hsl(COLORS.violet, 0.5);
+          ctx.lineWidth = 1.0;
+          ctx.lineCap = "square";
           for (let i = 0; i < traceCount - 1; i++) {
             const a = morph.textPts[i], b = morph.textPts[i + 1];
-            // L-shaped circuit routing
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            if (i % 2 === 0) {
-              ctx.lineTo(b.x, a.y);
-              ctx.lineTo(b.x, b.y);
-            } else {
-              ctx.lineTo(a.x, b.y);
-              ctx.lineTo(b.x, b.y);
-            }
+            ctx.beginPath(); ctx.moveTo(a.x, a.y);
+            if (i % 3 === 0) { ctx.lineTo(b.x, a.y); ctx.lineTo(b.x, b.y); }
+            else if (i % 3 === 1) { ctx.lineTo(a.x, b.y); ctx.lineTo(b.x, b.y); }
+            else { const mx = (a.x + b.x) / 2; ctx.lineTo(mx, a.y); ctx.lineTo(mx, b.y); ctx.lineTo(b.x, b.y); }
+            ctx.stroke();
+          }
+          // Animated dashed overlay
+          ctx.setLineDash([5, 4]);
+          ctx.lineDashOffset = -(el * 60);
+          ctx.globalAlpha = mBlend * 0.35;
+          ctx.strokeStyle = hsl(COLORS.gold, 0.6);
+          ctx.lineWidth = 0.7;
+          for (let i = 0; i < traceCount - 1; i++) {
+            const a = morph.textPts[i], b = morph.textPts[i + 1];
+            ctx.beginPath(); ctx.moveTo(a.x, a.y);
+            if (i % 3 === 0) { ctx.lineTo(b.x, a.y); ctx.lineTo(b.x, b.y); }
+            else if (i % 3 === 1) { ctx.lineTo(a.x, b.y); ctx.lineTo(b.x, b.y); }
+            else { const mx = (a.x + b.x) / 2; ctx.lineTo(mx, a.y); ctx.lineTo(mx, b.y); ctx.lineTo(b.x, b.y); }
             ctx.stroke();
           }
           ctx.setLineDash([]);
           ctx.restore();
 
-          // Render morphed particles toward text positions
+          // ── Morphed particles — much bigger and brighter ──
           for (let i = 0; i < totalPts; i++) {
             const target = morph.textPts[i];
             const src = allSources[i % allSources.length];
@@ -752,62 +776,98 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
             const py = src.y + (target.y - src.y) * mBlend;
             const ci = i % 4;
             const c = colorPalette[ci];
-            const pulse = Math.sin(el * 4 + i * 0.3) * 0.3 + 0.7;
-            const nodeR = (1.5 + pulse * 1.2) * sc;
+            const pulse = Math.sin(el * 3 + i * 0.25) * 0.3 + 0.7;
+            const nodeR = (2.0 + pulse * 1.8) * sc;
 
-            // Glow halo
-            const glR = nodeR * 5;
+            // Big glow halo
+            const glR = nodeR * 6;
             const gg = ctx.createRadialGradient(px, py, 0, px, py, glR);
-            gg.addColorStop(0, hsl(c, 0.5 * mBlend * pulse));
-            gg.addColorStop(0.4, hsl(COLORS.violet, 0.15 * mBlend));
+            gg.addColorStop(0, hsl(c, 0.7 * mBlend * pulse));
+            gg.addColorStop(0.3, hsl(COLORS.violet, 0.25 * mBlend));
+            gg.addColorStop(0.6, hsl(COLORS.gold, 0.08 * mBlend));
             gg.addColorStop(1, hsl(c, 0));
             ctx.beginPath(); ctx.arc(px, py, glR, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
 
-            // Core dot — bright
+            // Core bright dot
             ctx.beginPath(); ctx.arc(px, py, nodeR, 0, Math.PI * 2);
             ctx.fillStyle = hsl(c, 0.95 * mBlend); ctx.fill();
 
             // White hot center
-            ctx.beginPath(); ctx.arc(px, py, nodeR * 0.4, 0, Math.PI * 2);
-            ctx.fillStyle = `hsla(0,0%,100%,${0.7 * mBlend * pulse})`; ctx.fill();
+            ctx.beginPath(); ctx.arc(px, py, nodeR * 0.5, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(0,0%,100%,${0.85 * mBlend * pulse})`; ctx.fill();
           }
 
-          // Data pulses flowing along circuit traces during hold
-          if (morph.phase === "hold") {
-            const pulseCount = IS_MOBILE ? 8 : 16;
+          // ── Data pulses — always during morph, not just hold ──
+          if (mBlend > 0.3) {
+            const pulseCount = IS_MOBILE ? 12 : 24;
             for (let p = 0; p < pulseCount; p++) {
-              const pIdx = Math.floor((el * 12 + p * 7) % Math.max(1, traceCount - 1));
+              const pIdx = Math.floor((el * 10 + p * 5) % Math.max(1, traceCount - 1));
               const a = morph.textPts[pIdx], b = morph.textPts[pIdx + 1];
               if (!a || !b) continue;
-              const pT = ((el * 2 + p * 0.4) % 1);
-              let ppx, ppy;
-              if (pIdx % 2 === 0) {
+              const pT = ((el * 1.5 + p * 0.35) % 1);
+              let ppx: number, ppy: number;
+              if (pIdx % 3 === 0) {
                 if (pT < 0.5) { ppx = a.x + (b.x - a.x) * (pT * 2); ppy = a.y; }
                 else { ppx = b.x; ppy = a.y + (b.y - a.y) * ((pT - 0.5) * 2); }
-              } else {
+              } else if (pIdx % 3 === 1) {
                 if (pT < 0.5) { ppx = a.x; ppy = a.y + (b.y - a.y) * (pT * 2); }
                 else { ppx = a.x + (b.x - a.x) * ((pT - 0.5) * 2); ppy = b.y; }
+              } else {
+                ppx = a.x + (b.x - a.x) * pT; ppy = a.y + (b.y - a.y) * pT;
               }
-              const dpg = ctx.createRadialGradient(ppx, ppy, 0, ppx, ppy, 6 * sc);
-              dpg.addColorStop(0, hsl(COLORS.gold, 0.8));
-              dpg.addColorStop(0.5, hsl(COLORS.violet, 0.3));
+              const dpg = ctx.createRadialGradient(ppx, ppy, 0, ppx, ppy, 8 * sc);
+              dpg.addColorStop(0, `hsla(0,0%,100%,${0.9 * mBlend})`);
+              dpg.addColorStop(0.3, hsl(COLORS.gold, 0.7 * mBlend));
+              dpg.addColorStop(0.6, hsl(COLORS.violet, 0.3 * mBlend));
               dpg.addColorStop(1, hsl(COLORS.gold, 0));
-              ctx.beginPath(); ctx.arc(ppx, ppy, 6 * sc, 0, Math.PI * 2); ctx.fillStyle = dpg; ctx.fill();
-              ctx.beginPath(); ctx.arc(ppx, ppy, 1.5 * sc, 0, Math.PI * 2);
-              ctx.fillStyle = `hsla(0,0%,100%,0.9)`; ctx.fill();
+              ctx.beginPath(); ctx.arc(ppx, ppy, 8 * sc, 0, Math.PI * 2); ctx.fillStyle = dpg; ctx.fill();
+              ctx.beginPath(); ctx.arc(ppx, ppy, 2 * sc, 0, Math.PI * 2);
+              ctx.fillStyle = `hsla(0,0%,100%,${0.95 * mBlend})`; ctx.fill();
             }
           }
 
-          // Premium text label overlay during hold
-          if (morph.phase === "hold" || (morph.phase === "in" && mBlend > 0.7)) {
-            const textAlpha = morph.phase === "hold" ? 0.6 : (mBlend - 0.7) / 0.3 * 0.6;
+          // ── Premium text label — large, glowing ──
+          if (mBlend > 0.4) {
+            const textAlpha = morph.phase === "hold" ? 0.85 : Math.min((mBlend - 0.4) / 0.3, 1) * 0.85;
             ctx.save();
-            const tFS = Math.min(w * 0.06, 18);
-            ctx.font = `300 ${tFS}px system-ui, -apple-system, sans-serif`;
+            // Text glow
+            const tFS = Math.min(w * 0.075, 22);
+            ctx.font = `700 ${tFS}px system-ui, -apple-system, sans-serif`;
             ctx.textAlign = "center"; ctx.textBaseline = "middle";
-            ctx.fillStyle = hsl(COLORS.violet, textAlpha * 0.5);
-            ctx.fillText("EMPIRE AI GROUP", cx, h * 0.88);
+            ctx.shadowColor = hsl(COLORS.violet, 0.6);
+            ctx.shadowBlur = 20;
+            ctx.fillStyle = hsl(COLORS.violet, textAlpha * 0.7);
+            ctx.fillText("EMPIRE AI GROUP", cx, h * 0.87);
+            // Second pass — bright core
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = hsl(COLORS.gold, 0.4);
+            ctx.font = `700 ${tFS}px system-ui, -apple-system, sans-serif`;
+            ctx.fillStyle = `hsla(0,0%,95%,${textAlpha * 0.5})`;
+            ctx.fillText("EMPIRE AI GROUP", cx, h * 0.87);
             ctx.restore();
+            // Underline circuit trace
+            const ulW = tFS * 7;
+            const ulY = h * 0.87 + tFS * 0.7;
+            ctx.strokeStyle = hsl(COLORS.gold, 0.3 * textAlpha);
+            ctx.lineWidth = 0.8;
+            ctx.beginPath(); ctx.moveTo(cx - ulW / 2, ulY); ctx.lineTo(cx + ulW / 2, ulY); ctx.stroke();
+            // Animated dash on underline
+            ctx.setLineDash([3, 3]); ctx.lineDashOffset = -(el * 30);
+            ctx.strokeStyle = hsl(COLORS.violet, 0.4 * textAlpha);
+            ctx.beginPath(); ctx.moveTo(cx - ulW / 2, ulY); ctx.lineTo(cx + ulW / 2, ulY); ctx.stroke();
+            ctx.setLineDash([]);
+          }
+
+          // ── Pulse rings expanding from center during hold ──
+          if (morph.phase === "hold") {
+            for (let pr = 0; pr < 3; pr++) {
+              const prPhase = ((el * 0.4 + pr * 1.1) % 3) / 3;
+              const prR = prPhase * Math.min(w, h) * 0.4;
+              const prA = (1 - prPhase) * 0.12 * mBlend;
+              ctx.strokeStyle = hsl(COLORS.violet, prA);
+              ctx.lineWidth = 0.8;
+              ctx.beginPath(); ctx.arc(cx, cy, prR, 0, Math.PI * 2); ctx.stroke();
+            }
           }
         }
       }
