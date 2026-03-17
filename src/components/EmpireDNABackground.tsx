@@ -1,144 +1,138 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Empire DNA Neural Background v6 — Ultra-tech AI neural network.
- * - Scroll-reactive topology morphing (7 layouts)
- * - Pointer proximity repulsion + glow aura
- * - Distributed horizontal DNA micro-strands on edges (not center)
- * - Circuit traces with dashed animation
- * - Neural bezier synapses with flickering
- * - Data pulses traveling between nodes with trails
- * - Section-blended color palettes
+ * Empire DNA Background v7 — Pure data-flow lines.
+ * No circles, no radial effects. Only flowing lines, data streams,
+ * circuit traces and neural connections that communicate.
  */
 
 const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 55 : 100;
-const MAX_DIST = IS_MOBILE ? 120 : 155;
-const PULSE_COUNT = IS_MOBILE ? 18 : 40;
-const CIRCUIT_TRACES = IS_MOBILE ? 6 : 14;
-const EDGE_DNA_COUNT = IS_MOBILE ? 3 : 5; // small horizontal DNA strands on edges
+const NODE_COUNT = IS_MOBILE ? 50 : 90;
+const MAX_DIST = IS_MOBILE ? 130 : 165;
+const STREAM_COUNT = IS_MOBILE ? 12 : 28;
+const CIRCUIT_TRACES = IS_MOBILE ? 8 : 18;
 
 /* ---------- palettes per section ---------- */
 const PALETTES = [
-  { line: [220,20,50,0.09], node: [220,30,60,0.18], pulse: [200,65,65,0.5], circuit: [210,40,55,0.14], dna: [265,60,60,0.18] },
-  { line: [185,18,45,0.08], node: [185,25,55,0.16], pulse: [175,60,62,0.45], circuit: [180,35,50,0.12], dna: [38,50,55,0.16] },
-  { line: [260,18,44,0.07], node: [260,24,54,0.14], pulse: [270,55,64,0.42], circuit: [265,30,50,0.10], dna: [185,55,55,0.15] },
-  { line: [195,22,48,0.08], node: [195,30,58,0.16], pulse: [190,65,68,0.48], circuit: [195,38,52,0.13], dna: [160,50,50,0.14] },
-  { line: [240,14,42,0.07], node: [240,22,52,0.13], pulse: [235,50,60,0.40], circuit: [240,28,48,0.10], dna: [280,45,55,0.15] },
-  { line: [170,18,46,0.08], node: [170,26,56,0.15], pulse: [165,60,64,0.45], circuit: [170,32,52,0.12], dna: [38,55,58,0.16] },
-  { line: [210,20,48,0.08], node: [210,28,58,0.16], pulse: [205,62,66,0.48], circuit: [210,36,54,0.13], dna: [265,55,58,0.16] },
+  { line: [220,16,48,0.07], trace: [210,35,52,0.12], stream: [200,55,60,0.35], accent: [220,25,55,0.10] },
+  { line: [185,14,44,0.06], trace: [180,30,48,0.10], stream: [175,50,58,0.32], accent: [185,22,50,0.09] },
+  { line: [260,14,42,0.06], trace: [265,28,46,0.09], stream: [270,48,58,0.30], accent: [255,20,48,0.08] },
+  { line: [195,18,46,0.07], trace: [195,33,50,0.11], stream: [190,55,62,0.34], accent: [195,25,52,0.09] },
+  { line: [240,12,40,0.06], trace: [240,26,46,0.09], stream: [235,45,56,0.28], accent: [240,20,46,0.08] },
+  { line: [170,15,44,0.06], trace: [170,28,48,0.10], stream: [165,50,60,0.32], accent: [170,22,50,0.09] },
+  { line: [210,16,46,0.07], trace: [210,32,50,0.11], stream: [205,52,62,0.34], accent: [210,24,52,0.09] },
 ];
 const SECTIONS = PALETTES.length;
 
 type Pt = { x: number; y: number };
-type ShapeGen = (n: number, w: number, h: number, t: number) => Pt[];
 
-const shapes: ShapeGen[] = [
-  // 0: Neural mesh — organic fibonacci scatter
-  (n, w, h, t) => {
-    const pts: Pt[] = [];
-    for (let i = 0; i < n; i++) {
-      const seed = i * 137.508;
-      const angle = seed + t * 0.08;
-      const r = 0.12 + (i / n) * 0.38;
-      pts.push({
-        x: w * 0.5 + Math.cos(angle) * r * w + Math.sin(seed * 2.1 + t * 0.05) * w * 0.1,
-        y: h * 0.5 + Math.sin(angle) * r * h + Math.cos(seed * 1.7 + t * 0.04) * h * 0.08,
-      });
-    }
-    return pts;
-  },
-  // 1: Circuit board grid
+/* Grid-based topology generators — all produce interconnectable points */
+const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = [
+  // 0: Staggered grid
   (n, w, h, t) => {
     const cols = Math.ceil(Math.sqrt(n * (w / h)));
     const rows = Math.ceil(n / cols);
-    const pts: Pt[] = [];
-    const px = w * 0.08, py = h * 0.08;
-    for (let i = 0; i < n; i++) {
+    const px = w * 0.06, py = h * 0.06;
+    return Array.from({ length: n }, (_, i) => {
       const col = i % cols, row = Math.floor(i / cols);
-      const j = Math.sin(t * 0.3 + i * 0.5) * 4;
-      pts.push({
+      const j = Math.sin(t * 0.25 + i * 0.4) * 3;
+      return {
         x: px + (col / Math.max(cols - 1, 1)) * (w - px * 2) + (row % 2 ? (w - px * 2) / cols * 0.5 : 0) + j,
-        y: py + (row / Math.max(rows - 1, 1)) * (h - py * 2) + j * 0.7,
-      });
-    }
-    return pts;
+        y: py + (row / Math.max(rows - 1, 1)) * (h - py * 2) + j * 0.6,
+      };
+    });
   },
-  // 2: Distributed neural clusters
+  // 1: Flowing wave rows
   (n, w, h, t) => {
-    const pts: Pt[] = [];
-    const clusters = 5;
-    const perCluster = Math.ceil(n / clusters);
-    for (let i = 0; i < n; i++) {
-      const ci = Math.floor(i / perCluster);
-      const li = i % perCluster;
-      const cx = w * (0.15 + (ci % 3) * 0.35);
-      const cy = h * (0.2 + Math.floor(ci / 3) * 0.55);
-      const angle = li * 2.4 + t * 0.06 + ci * 1.2;
-      const r = Math.sqrt(li / perCluster) * Math.min(w, h) * 0.14;
-      pts.push({ x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r });
-    }
-    return pts;
-  },
-  // 3: Fibonacci constellation spiral
-  (n, w, h, t) => {
-    const pts: Pt[] = [];
-    const cx = w * 0.5, cy = h * 0.5;
-    for (let i = 0; i < n; i++) {
-      const angle = i * 2.3999632 + t * 0.04;
-      const r = Math.sqrt(i / n) * Math.min(w, h) * 0.44;
-      pts.push({ x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r });
-    }
-    return pts;
-  },
-  // 4: Hexagonal lattice breathing
-  (n, w, h, t) => {
-    const pts: Pt[] = [];
-    const cols = Math.ceil(Math.sqrt(n * 1.15)), rows = Math.ceil(n / cols);
-    const sx = (w * 0.84) / cols, sy = (h * 0.84) / rows;
-    for (let i = 0; i < n; i++) {
-      const col = i % cols, row = Math.floor(i / cols);
-      const b = Math.sin(t * 0.2 + row * 0.4 + col * 0.3) * 5;
-      pts.push({
-        x: w * 0.08 + col * sx + (row % 2 ? sx * 0.5 : 0) + b,
-        y: h * 0.08 + row * sy + b * 0.6,
-      });
-    }
-    return pts;
-  },
-  // 5: Wave interference multi-row
-  (n, w, h, t) => {
-    const pts: Pt[] = [];
-    const rows = 4;
+    const rows = 5;
     const perRow = Math.ceil(n / rows);
-    for (let i = 0; i < n; i++) {
+    return Array.from({ length: n }, (_, i) => {
       const row = Math.floor(i / perRow), col = i % perRow;
       const f = col / (perRow - 1);
-      const x = w * 0.03 + f * w * 0.94;
-      const baseY = h * (0.15 + row * 0.2);
-      pts.push({ x, y: baseY + Math.sin(f * Math.PI * 4 + t * 0.5 + row) * h * 0.07 + Math.cos(f * Math.PI * 7 - t * 0.3) * h * 0.03 });
-    }
-    return pts;
+      return {
+        x: w * 0.02 + f * w * 0.96,
+        y: h * (0.1 + row * 0.18) + Math.sin(f * Math.PI * 3.5 + t * 0.4 + row * 1.1) * h * 0.06,
+      };
+    });
   },
-  // 6: Radial burst / processor core
+  // 2: Neural clusters
   (n, w, h, t) => {
-    const pts: Pt[] = [];
-    const cx = w * 0.5, cy = h * 0.5, rings = 5;
-    for (let i = 0; i < n; i++) {
-      const ring = Math.floor(i / (n / rings));
-      const idx = i % Math.ceil(n / rings), cnt = Math.ceil(n / rings);
-      const angle = (idx / cnt) * Math.PI * 2 + ring * 0.5 + t * (0.02 + ring * 0.01);
-      const r = ((ring + 1) / rings) * Math.min(w, h) * 0.42;
-      pts.push({ x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r });
-    }
-    return pts;
+    const clusters = 6;
+    const perCluster = Math.ceil(n / clusters);
+    return Array.from({ length: n }, (_, i) => {
+      const ci = Math.floor(i / perCluster);
+      const li = i % perCluster;
+      const cx = w * (0.12 + (ci % 3) * 0.38);
+      const cy = h * (0.18 + Math.floor(ci / 3) * 0.52);
+      const angle = li * 2.4 + t * 0.05 + ci * 1.2;
+      const r = Math.sqrt(li / perCluster) * Math.min(w, h) * 0.12;
+      return { x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r };
+    });
+  },
+  // 3: Fibonacci scatter
+  (n, w, h, t) => {
+    return Array.from({ length: n }, (_, i) => {
+      const seed = i * 137.508;
+      const angle = seed + t * 0.06;
+      const r = 0.1 + (i / n) * 0.4;
+      return {
+        x: w * 0.5 + Math.cos(angle) * r * w + Math.sin(seed * 2.1 + t * 0.04) * w * 0.08,
+        y: h * 0.5 + Math.sin(angle) * r * h + Math.cos(seed * 1.7 + t * 0.03) * h * 0.06,
+      };
+    });
+  },
+  // 4: Hexagonal lattice
+  (n, w, h, t) => {
+    const cols = Math.ceil(Math.sqrt(n * 1.15)), rows = Math.ceil(n / cols);
+    const sx = (w * 0.88) / cols, sy = (h * 0.86) / rows;
+    return Array.from({ length: n }, (_, i) => {
+      const col = i % cols, row = Math.floor(i / cols);
+      const b = Math.sin(t * 0.18 + row * 0.35 + col * 0.25) * 4;
+      return {
+        x: w * 0.06 + col * sx + (row % 2 ? sx * 0.5 : 0) + b,
+        y: h * 0.07 + row * sy + b * 0.5,
+      };
+    });
+  },
+  // 5: Diagonal data lanes
+  (n, w, h, t) => {
+    const lanes = 6;
+    const perLane = Math.ceil(n / lanes);
+    return Array.from({ length: n }, (_, i) => {
+      const lane = Math.floor(i / perLane);
+      const li = i % perLane;
+      const f = li / (perLane - 1);
+      const baseX = w * (-0.1 + f * 1.2);
+      const baseY = h * (0.05 + lane * 0.16) + f * h * 0.15;
+      const drift = Math.sin(f * Math.PI * 2 + t * 0.3 + lane) * h * 0.03;
+      return { x: baseX, y: baseY + drift };
+    });
+  },
+  // 6: Converging streams
+  (n, w, h, t) => {
+    const streams = 4;
+    const perStream = Math.ceil(n / streams);
+    return Array.from({ length: n }, (_, i) => {
+      const si = Math.floor(i / perStream);
+      const li = i % perStream;
+      const f = li / (perStream - 1);
+      const startX = si < 2 ? w * 0.02 : w * 0.98;
+      const startY = si % 2 === 0 ? h * 0.05 : h * 0.95;
+      const endX = w * 0.5 + Math.sin(t * 0.1 + si) * w * 0.15;
+      const endY = h * 0.5 + Math.cos(t * 0.08 + si) * h * 0.1;
+      const bend = Math.sin(f * Math.PI + t * 0.2 + si * 1.5) * Math.min(w, h) * 0.06;
+      return {
+        x: startX + (endX - startX) * f + bend * (si < 2 ? 1 : -1),
+        y: startY + (endY - startY) * f + bend * 0.5,
+      };
+    });
   },
 ];
 
-/* Circuit trace */
+/* Circuit trace — orthogonal data path */
 interface CircuitTrace {
   segments: Pt[]; progress: number; speed: number; life: number; maxLife: number;
 }
@@ -147,34 +141,44 @@ function spawnTrace(w: number, h: number): CircuitTrace {
   const segs: Pt[] = [];
   let x = Math.random() * w, y = Math.random() * h;
   segs.push({ x, y });
-  const steps = 3 + Math.floor(Math.random() * 5);
+  const steps = 4 + Math.floor(Math.random() * 6);
   for (let s = 0; s < steps; s++) {
     const horiz = Math.random() > 0.5;
-    const dist = 40 + Math.random() * 130;
+    const dist = 50 + Math.random() * 160;
     if (horiz) x += (Math.random() > 0.5 ? 1 : -1) * dist;
     else y += (Math.random() > 0.5 ? 1 : -1) * dist;
-    x = Math.max(10, Math.min(w - 10, x));
-    y = Math.max(10, Math.min(h - 10, y));
+    x = Math.max(5, Math.min(w - 5, x));
+    y = Math.max(5, Math.min(h - 5, y));
     segs.push({ x, y });
   }
-  return { segments: segs, progress: 0, speed: 0.003 + Math.random() * 0.006, life: 0, maxLife: 200 + Math.random() * 350 };
+  return { segments: segs, progress: 0, speed: 0.002 + Math.random() * 0.005, life: 0, maxLife: 250 + Math.random() * 400 };
 }
 
-/* Edge DNA strand definition */
-interface EdgeDNA {
-  y: number; // normalized 0-1 vertical position
-  side: "left" | "right"; // which edge
-  amp: number; freq: number; speed: number;
+/* Data stream — flowing particles along a path */
+interface DataStream {
+  points: Pt[]; speed: number; offset: number; width: number;
 }
 
-function spawnEdgeDNA(index: number, count: number): EdgeDNA {
-  return {
-    y: 0.1 + (index / count) * 0.8,
-    side: index % 2 === 0 ? "left" : "right",
-    amp: 15 + Math.random() * 20,
-    freq: 3 + Math.random() * 3,
-    speed: 0.4 + Math.random() * 0.4,
-  };
+function spawnStream(w: number, h: number): DataStream {
+  const pts: Pt[] = [];
+  const horizontal = Math.random() > 0.4;
+  const numPts = 4 + Math.floor(Math.random() * 4);
+
+  if (horizontal) {
+    const baseY = h * (0.05 + Math.random() * 0.9);
+    for (let i = 0; i < numPts; i++) {
+      const f = i / (numPts - 1);
+      pts.push({ x: f * w, y: baseY + (Math.random() - 0.5) * h * 0.15 });
+    }
+  } else {
+    const baseX = w * (0.05 + Math.random() * 0.9);
+    for (let i = 0; i < numPts; i++) {
+      const f = i / (numPts - 1);
+      pts.push({ x: baseX + (Math.random() - 0.5) * w * 0.12, y: f * h });
+    }
+  }
+
+  return { points: pts, speed: 0.15 + Math.random() * 0.3, offset: Math.random() * 100, width: 0.3 + Math.random() * 0.4 };
 }
 
 const hsl = (c: number[], ao?: number) => `hsla(${c[0]},${c[1]}%,${c[2]}%,${ao ?? c[3]})`;
@@ -190,7 +194,7 @@ const EmpireDNABackground = () => {
   const posRef = useRef<Pt[]>([]);
   const timeRef = useRef(0);
   const tracesRef = useRef<CircuitTrace[]>([]);
-  const edgeDNARef = useRef<EdgeDNA[]>([]);
+  const streamsRef = useRef<DataStream[]>([]);
   const pointerRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
   useEffect(() => { const t = setTimeout(() => setReady(true), 300); return () => clearTimeout(t); }, []);
@@ -244,8 +248,8 @@ const EmpireDNABackground = () => {
       for (let i = 0; i < CIRCUIT_TRACES; i++) tracesRef.current.push(spawnTrace(w, h));
     }
 
-    if (edgeDNARef.current.length === 0) {
-      for (let i = 0; i < EDGE_DNA_COUNT; i++) edgeDNARef.current.push(spawnEdgeDNA(i, EDGE_DNA_COUNT));
+    if (streamsRef.current.length === 0 && w && h) {
+      for (let i = 0; i < STREAM_COUNT; i++) streamsRef.current.push(spawnStream(w, h));
     }
 
     const animate = () => {
@@ -262,100 +266,86 @@ const EmpireDNABackground = () => {
       const t3 = blend * blend * (3 - 2 * blend);
 
       const palLine = lerpC(PALETTES[sIdx].line, PALETTES[sIdx + 1].line, t3);
-      const palNode = lerpC(PALETTES[sIdx].node, PALETTES[sIdx + 1].node, t3);
-      const palPulse = lerpC(PALETTES[sIdx].pulse, PALETTES[sIdx + 1].pulse, t3);
-      const palCircuit = lerpC(PALETTES[sIdx].circuit, PALETTES[sIdx + 1].circuit, t3);
-      const palDna = lerpC(PALETTES[sIdx].dna, PALETTES[sIdx + 1].dna, t3);
+      const palTrace = lerpC(PALETTES[sIdx].trace, PALETTES[sIdx + 1].trace, t3);
+      const palStream = lerpC(PALETTES[sIdx].stream, PALETTES[sIdx + 1].stream, t3);
+      const palAccent = lerpC(PALETTES[sIdx].accent, PALETTES[sIdx + 1].accent, t3);
 
-      // Shape morphing targets
-      const shA = sIdx % shapes.length, shB = (sIdx + 1) % shapes.length;
-      const tA = shapes[shA](NODE_COUNT, w, h, time);
-      const tB = shapes[shB](NODE_COUNT, w, h, time);
+      // Shape morphing
+      const shA = sIdx % topologies.length, shB = (sIdx + 1) % topologies.length;
+      const tA = topologies[shA](NODE_COUNT, w, h, time);
+      const tB = topologies[shB](NODE_COUNT, w, h, time);
       const targets = tA.map((a, i) => ({ x: lerp(a.x, tB[i].x, t3), y: lerp(a.y, tB[i].y, t3) }));
 
-      // Ease positions toward targets + pointer repulsion
       const pos = posRef.current;
       const ptr = pointerRef.current;
-      const repelRadius = IS_MOBILE ? 80 : 120;
+      const repelR = IS_MOBILE ? 80 : 110;
 
       for (let i = 0; i < NODE_COUNT; i++) {
         if (!pos[i]) pos[i] = { ...targets[i] };
         let tx = targets[i].x, ty = targets[i].y;
-
         if (ptr.active) {
-          const dx = tx - ptr.x;
-          const dy = ty - ptr.y;
+          const dx = tx - ptr.x, dy = ty - ptr.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < repelRadius && dist > 1) {
-            const force = (1 - dist / repelRadius) * 35;
+          if (dist < repelR && dist > 1) {
+            const force = (1 - dist / repelR) * 30;
             tx += (dx / dist) * force;
             ty += (dy / dist) * force;
           }
         }
-
-        pos[i].x += (tx - pos[i].x) * 0.045;
-        pos[i].y += (ty - pos[i].y) * 0.045;
+        pos[i].x += (tx - pos[i].x) * 0.04;
+        pos[i].y += (ty - pos[i].y) * 0.04;
       }
 
-      // ═══ LAYER 0: Edge DNA micro-strands (subtle, on margins) ═══
-      const edgeDNA = edgeDNARef.current;
-      const edgeSegs = IS_MOBILE ? 28 : 45;
-      const edgeWidth = IS_MOBILE ? w * 0.22 : w * 0.15;
+      // ═══ LAYER 0: Data Streams — flowing dashed lines across the canvas ═══
+      const streams = streamsRef.current;
+      for (const stream of streams) {
+        const pts = stream.points;
+        const dashOffset = -(time * stream.speed * 60 + stream.offset);
 
-      for (const dna of edgeDNA) {
-        const baseX = dna.side === "left" ? edgeWidth * 0.5 : w - edgeWidth * 0.5;
-        const baseY = dna.y * h;
-        const strandH = h * 0.18;
-
-        // Two strands
-        for (let strand = 0; strand < 2; strand++) {
-          const sign = strand === 0 ? 1 : -1;
-          ctx.beginPath();
-          for (let i = 0; i <= edgeSegs; i++) {
-            const f = i / edgeSegs;
-            const yy = baseY - strandH / 2 + f * strandH;
-            const phase = f * Math.PI * 2 * dna.freq + time * dna.speed + strand * Math.PI;
-            const xx = baseX + Math.sin(phase) * dna.amp * sign;
-
-            // Pointer warp
-            let fx = xx, fy = yy;
-            if (ptr.active) {
-              const dx = xx - ptr.x, dy = yy - ptr.y;
-              const dist = Math.hypot(dx, dy);
-              if (dist < repelRadius && dist > 1) {
-                const force = (1 - dist / repelRadius) * 15;
-                fx += (dx / dist) * force;
-                fy += (dy / dist) * force;
-              }
-            }
-
-            if (i === 0) ctx.moveTo(fx, fy);
-            else ctx.lineTo(fx, fy);
-          }
-          ctx.strokeStyle = hsl(palDna, palDna[3] * (strand === 0 ? 1.6 : 1.2));
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
+        // Main stream line
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for (let i = 1; i < pts.length; i++) {
+          const prev = pts[i - 1];
+          const cur = pts[i];
+          const mx = (prev.x + cur.x) / 2, my = (prev.y + cur.y) / 2;
+          ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
         }
+        ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+        ctx.strokeStyle = hsl(palStream, palStream[3] * 0.4);
+        ctx.lineWidth = stream.width;
+        ctx.setLineDash([2, 8]);
+        ctx.lineDashOffset = dashOffset;
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.lineDashOffset = 0;
 
-        // Rungs
-        const rungCount = IS_MOBILE ? 6 : 10;
-        for (let r = 0; r < rungCount; r++) {
-          const f = r / rungCount;
-          const yy = baseY - strandH / 2 + f * strandH;
-          const phase = f * Math.PI * 2 * dna.freq + time * dna.speed;
-          const x1 = baseX + Math.sin(phase) * dna.amp;
-          const x2 = baseX + Math.sin(phase + Math.PI) * dna.amp;
-          const rungAlpha = palDna[3] * 0.6 * (0.4 + 0.6 * Math.sin(f * Math.PI * 3 + time * 1.5));
-          ctx.strokeStyle = hsl(palDna, rungAlpha);
-          ctx.lineWidth = 0.4;
+        // Data packet traveling along stream
+        const packetPos = ((time * stream.speed + stream.offset) % 3) / 3;
+        if (packetPos >= 0 && packetPos <= 1 && pts.length >= 2) {
+          const totalSegs = pts.length - 1;
+          const segF = packetPos * totalSegs;
+          const segIdx = Math.min(Math.floor(segF), totalSegs - 1);
+          const segT = segF - segIdx;
+          const px = pts[segIdx].x + (pts[segIdx + 1].x - pts[segIdx].x) * segT;
+          const py = pts[segIdx].y + (pts[segIdx + 1].y - pts[segIdx].y) * segT;
+
+          // Small dash burst at packet position
+          const burstLen = 6;
+          const angle = Math.atan2(
+            pts[Math.min(segIdx + 1, pts.length - 1)].y - pts[segIdx].y,
+            pts[Math.min(segIdx + 1, pts.length - 1)].x - pts[segIdx].x
+          );
           ctx.beginPath();
-          ctx.moveTo(x1, yy);
-          ctx.lineTo(x2, yy);
+          ctx.moveTo(px - Math.cos(angle) * burstLen, py - Math.sin(angle) * burstLen);
+          ctx.lineTo(px + Math.cos(angle) * burstLen, py + Math.sin(angle) * burstLen);
+          ctx.strokeStyle = hsl(palStream, palStream[3] * 2.2);
+          ctx.lineWidth = stream.width * 2;
           ctx.stroke();
         }
       }
 
-      // ═══ LAYER 1: Circuit Traces ═══
+      // ═══ LAYER 1: Circuit Traces — orthogonal data paths ═══
       const traces = tracesRef.current;
       for (let ti = 0; ti < traces.length; ti++) {
         const tr = traces[ti];
@@ -368,10 +358,11 @@ const EmpireDNABackground = () => {
         for (let si = 1; si < segs.length; si++) totalLen += Math.hypot(segs[si].x - segs[si - 1].x, segs[si].y - segs[si - 1].y);
         const drawLen = totalLen * tr.progress;
 
+        // Trace line
         ctx.beginPath();
-        ctx.strokeStyle = hsl(palCircuit, palCircuit[3] * 2.5);
-        ctx.lineWidth = 0.7;
-        ctx.setLineDash([3, 5]);
+        ctx.strokeStyle = hsl(palTrace, palTrace[3] * 2);
+        ctx.lineWidth = 0.6;
+        ctx.setLineDash([4, 6]);
         let acc = 0;
         ctx.moveTo(segs[0].x, segs[0].y);
         for (let si = 1; si < segs.length; si++) {
@@ -386,7 +377,7 @@ const EmpireDNABackground = () => {
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Glowing trace head
+        // Bright head — small horizontal line, not a circle
         let ha = 0;
         const hd = totalLen * tr.progress;
         for (let si = 1; si < segs.length; si++) {
@@ -395,122 +386,92 @@ const EmpireDNABackground = () => {
             const f = (hd - ha) / sl;
             const hx = segs[si - 1].x + (segs[si].x - segs[si - 1].x) * f;
             const hy = segs[si - 1].y + (segs[si].y - segs[si - 1].y) * f;
-            const g = ctx.createRadialGradient(hx, hy, 0, hx, hy, IS_MOBILE ? 5 : 8);
-            g.addColorStop(0, hsl(palPulse, 0.55));
-            g.addColorStop(1, hsl(palPulse, 0));
-            ctx.fillStyle = g;
+            const dir = Math.atan2(segs[si].y - segs[si - 1].y, segs[si].x - segs[si - 1].x);
+            const headLen = IS_MOBILE ? 4 : 6;
             ctx.beginPath();
-            ctx.arc(hx, hy, IS_MOBILE ? 5 : 8, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.moveTo(hx - Math.cos(dir) * headLen, hy - Math.sin(dir) * headLen);
+            ctx.lineTo(hx + Math.cos(dir) * headLen, hy + Math.sin(dir) * headLen);
+            ctx.strokeStyle = hsl(palStream, 0.6);
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
             break;
           }
           ha += sl;
         }
       }
 
-      // ═══ LAYER 2: Neural connections (curved bezier) ═══
-      ctx.lineWidth = 0.35;
+      // ═══ LAYER 2: Neural connections — curved bezier lines ═══
+      ctx.lineWidth = 0.3;
       for (let i = 0; i < NODE_COUNT; i++) {
         for (let j = i + 1; j < NODE_COUNT; j++) {
           const dx = pos[i].x - pos[j].x, dy = pos[i].y - pos[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < MAX_DIST) {
             const alpha = (1 - dist / MAX_DIST);
-            const flicker = 0.5 + Math.sin(time * 3 + i * 0.7 + j * 0.3) * 0.5;
-            ctx.strokeStyle = hsl(palLine, palLine[3] * alpha * 5 * flicker);
+            const flicker = 0.6 + Math.sin(time * 2.5 + i * 0.6 + j * 0.3) * 0.4;
+            ctx.strokeStyle = hsl(palLine, palLine[3] * alpha * 4.5 * flicker);
             ctx.beginPath();
             ctx.moveTo(pos[i].x, pos[i].y);
-            const mx = (pos[i].x + pos[j].x) * 0.5 + Math.sin(time * 0.8 + i) * 10;
-            const my = (pos[i].y + pos[j].y) * 0.5 + Math.cos(time * 0.6 + j) * 8;
+            const mx = (pos[i].x + pos[j].x) * 0.5 + Math.sin(time * 0.7 + i) * 8;
+            const my = (pos[i].y + pos[j].y) * 0.5 + Math.cos(time * 0.5 + j) * 6;
             ctx.quadraticCurveTo(mx, my, pos[j].x, pos[j].y);
             ctx.stroke();
           }
         }
       }
 
-      // ═══ LAYER 3: Nodes with micro-rings + pointer glow ═══
+      // ═══ LAYER 3: Node intersection marks — tiny crosses, not circles ═══
       for (let i = 0; i < NODE_COUNT; i++) {
-        const breathe = 0.5 + Math.sin(time * 2.5 + i * 1.3) * 0.5;
-        const r = IS_MOBILE ? 1.5 : 1.1;
+        const breathe = 0.5 + Math.sin(time * 2 + i * 1.3) * 0.5;
+        const sz = IS_MOBILE ? 2 : 1.8;
 
-        // Pointer proximity glow
+        // Pointer proximity highlight — brighter cross
+        let nodeAlpha = palAccent[3] * 2.5 * breathe;
         if (ptr.active) {
           const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < repelRadius * 1.5) {
-            const glow = (1 - dist / (repelRadius * 1.5)) * 0.4;
-            const g = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 12);
-            g.addColorStop(0, hsl(palPulse, glow));
-            g.addColorStop(1, hsl(palPulse, 0));
-            ctx.fillStyle = g;
-            ctx.beginPath();
-            ctx.arc(pos[i].x, pos[i].y, 12, 0, Math.PI * 2);
-            ctx.fill();
+          if (dist < repelR * 1.3) {
+            nodeAlpha = Math.min(nodeAlpha + (1 - dist / (repelR * 1.3)) * 0.3, 0.6);
           }
         }
 
-        // Micro-ring on some nodes
-        if (i % (IS_MOBILE ? 6 : 4) === 0) {
-          ctx.strokeStyle = hsl(palNode, palNode[3] * 1.2 * breathe);
-          ctx.lineWidth = 0.3;
-          ctx.beginPath();
-          ctx.arc(pos[i].x, pos[i].y, r * 4, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-
-        ctx.globalAlpha = breathe;
-        ctx.fillStyle = hsl(palNode, palNode[3] * 3);
+        ctx.strokeStyle = hsl(palAccent, nodeAlpha);
+        ctx.lineWidth = 0.5;
+        // Horizontal tick
         ctx.beginPath();
-        ctx.arc(pos[i].x, pos[i].y, r, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.moveTo(pos[i].x - sz, pos[i].y);
+        ctx.lineTo(pos[i].x + sz, pos[i].y);
+        ctx.stroke();
+        // Vertical tick
+        ctx.beginPath();
+        ctx.moveTo(pos[i].x, pos[i].y - sz);
+        ctx.lineTo(pos[i].x, pos[i].y + sz);
+        ctx.stroke();
       }
-      ctx.globalAlpha = 1;
 
-      // ═══ LAYER 4: Data pulses with trails ═══
+      // ═══ LAYER 4: Data pulses — small dashes traveling between close nodes ═══
       let pulseN = 0;
-      for (let i = 0; i < NODE_COUNT && pulseN < PULSE_COUNT; i++) {
-        for (let j = i + 1; j < NODE_COUNT && pulseN < PULSE_COUNT; j++) {
+      const maxPulses = IS_MOBILE ? 15 : 35;
+      for (let i = 0; i < NODE_COUNT && pulseN < maxPulses; i++) {
+        for (let j = i + 1; j < NODE_COUNT && pulseN < maxPulses; j++) {
           const dx = pos[i].x - pos[j].x, dy = pos[i].y - pos[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < MAX_DIST * 0.55 && (i * 7 + j) % 8 === 0) {
-            const speed = 0.18 + (i % 5) * 0.05;
+          if (dist < MAX_DIST * 0.5 && (i * 7 + j) % 9 === 0) {
+            const speed = 0.15 + (i % 5) * 0.04;
             const prog = ((time * speed + i * 0.37 + j * 0.13) % 1);
-
-            for (let trail = 0; trail < 3; trail++) {
-              const tp = Math.max(0, prog - trail * 0.05);
-              const tx2 = pos[i].x + (pos[j].x - pos[i].x) * tp;
-              const ty2 = pos[i].y + (pos[j].y - pos[i].y) * tp;
-              ctx.globalAlpha = Math.sin(tp * Math.PI) * (0.15 - trail * 0.04);
-              ctx.fillStyle = hsl(palPulse);
-              ctx.beginPath();
-              ctx.arc(tx2, ty2, IS_MOBILE ? 1 : 0.8, 0, Math.PI * 2);
-              ctx.fill();
-            }
-
             const px = pos[i].x + (pos[j].x - pos[i].x) * prog;
             const py = pos[i].y + (pos[j].y - pos[i].y) * prog;
-            ctx.globalAlpha = Math.sin(prog * Math.PI) * 0.7;
-            ctx.fillStyle = hsl(palPulse);
-            ctx.beginPath();
-            ctx.arc(px, py, IS_MOBILE ? 1.8 : 1.5, 0, Math.PI * 2);
-            ctx.fill();
-            pulseN++;
-          }
-        }
-      }
-      ctx.globalAlpha = 1;
+            const angle = Math.atan2(pos[j].y - pos[i].y, pos[j].x - pos[i].x);
+            const fadeAlpha = Math.sin(prog * Math.PI) * 0.55;
+            const dashLen = IS_MOBILE ? 3 : 2.5;
 
-      // ═══ LAYER 5: Synapse flashes ═══
-      if (!IS_MOBILE) {
-        for (let i = 0; i < NODE_COUNT; i++) {
-          if (Math.sin(time * 8 + i * 37.7) > 0.97) {
-            const g = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 14);
-            g.addColorStop(0, hsl(palPulse, 0.45));
-            g.addColorStop(1, hsl(palPulse, 0));
-            ctx.fillStyle = g;
             ctx.beginPath();
-            ctx.arc(pos[i].x, pos[i].y, 14, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.moveTo(px - Math.cos(angle) * dashLen, py - Math.sin(angle) * dashLen);
+            ctx.lineTo(px + Math.cos(angle) * dashLen, py + Math.sin(angle) * dashLen);
+            ctx.strokeStyle = hsl(palStream, fadeAlpha);
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+            pulseN++;
           }
         }
       }
