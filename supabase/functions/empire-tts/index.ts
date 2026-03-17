@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { text } = await req.json();
+    const { text, voiceProfile } = await req.json();
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
     if (!ELEVENLABS_API_KEY) throw new Error("ELEVENLABS_API_KEY is not configured");
 
@@ -26,7 +26,7 @@ serve(async (req) => {
       .replace(/\s+/g, " ")
       .replace(/[*_#`>~]/g, "")
       .trim()
-      .slice(0, 1000);
+      .slice(0, 2000);
 
     if (!normalizedText) {
       return new Response(JSON.stringify({ error: "Text content is empty after normalization" }), {
@@ -34,11 +34,49 @@ serve(async (req) => {
       });
     }
 
-    // Sara — Professional, warm, persuasive Italian female voice
-    const voiceId = "EXAVITQu4vr4xnSDxMaL";
+    // Voice profiles optimized for different contexts
+    const VOICE_PROFILES = {
+      // Arianna — Premium consultant: warm, confident, persuasive
+      arianna: {
+        voiceId: "EXAVITQu4vr4xnSDxMaL", // Sarah — best Italian female voice
+        settings: {
+          stability: 0.42,
+          similarity_boost: 0.92,
+          style: 0.35,
+          use_speaker_boost: true,
+          speed: 0.88,
+        },
+      },
+      // Splash intro — slightly more dramatic and commanding
+      splash: {
+        voiceId: "EXAVITQu4vr4xnSDxMaL",
+        settings: {
+          stability: 0.38,
+          similarity_boost: 0.95,
+          style: 0.45,
+          use_speaker_boost: true,
+          speed: 0.85,
+        },
+      },
+      // Sales agent — energetic, convincing
+      sales: {
+        voiceId: "EXAVITQu4vr4xnSDxMaL",
+        settings: {
+          stability: 0.40,
+          similarity_boost: 0.90,
+          style: 0.40,
+          use_speaker_boost: true,
+          speed: 0.92,
+        },
+      },
+    } as const;
+
+    const profile = VOICE_PROFILES[voiceProfile as keyof typeof VOICE_PROFILES] || VOICE_PROFILES.arianna;
+
+    console.log(`[empire-tts] Generating speech: profile=${voiceProfile || "arianna"}, text length=${normalizedText.length}`);
 
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${profile.voiceId}?output_format=mp3_44100_128`,
       {
         method: "POST",
         headers: {
@@ -48,13 +86,7 @@ serve(async (req) => {
         body: JSON.stringify({
           text: normalizedText,
           model_id: "eleven_multilingual_v2",
-          voice_settings: {
-            stability: 0.45,
-            similarity_boost: 0.88,
-            style: 0.30,
-            use_speaker_boost: true,
-            speed: 0.90,
-          },
+          voice_settings: profile.settings,
         }),
       }
     );
@@ -62,8 +94,7 @@ serve(async (req) => {
     if (!response.ok) {
       const errText = await response.text();
       console.error("ElevenLabs TTS error:", response.status, errText);
-      // Return quota_exceeded so client can fall back to Web Speech API
-      if (errText.includes("quota_exceeded") || response.status === 401) {
+      if (errText.includes("quota_exceeded") || response.status === 401 || response.status === 403) {
         return new Response(JSON.stringify({ error: "quota_exceeded", fallback: true }), {
           status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -74,12 +105,14 @@ serve(async (req) => {
     const audioBuffer = await response.arrayBuffer();
     const base64Audio = base64Encode(audioBuffer);
 
+    console.log(`[empire-tts] ✅ Audio generated successfully: ${(audioBuffer.byteLength / 1024).toFixed(1)}KB`);
+
     return new Response(JSON.stringify({ audioContent: base64Audio }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("empire-tts error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error", fallback: true }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
