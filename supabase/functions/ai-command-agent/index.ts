@@ -159,8 +159,55 @@ const SECTOR_SCHEMAS: Record<string, string> = {
 };
 
 function getSectorSchema(sector: string): string {
-  const specific = SECTOR_SCHEMAS[sector] || (TRADES_SECTORS.includes(sector) ? TRADES_SCHEMA : FOOD_SCHEMA);
+  const specific = SECTOR_SCHEMAS[sector] || (TRADES_SECTORS.includes(sector) ? TRADES_SCHEMA : "");
+  if (!specific) {
+    // Unknown sector: only common actions, no sector-specific actions
+    return COMMON_ACTIONS + "\n\nNOTA: Questo settore non ha azioni specifiche configurate. Usa solo le azioni comuni.";
+  }
   return COMMON_ACTIONS + "\n" + specific;
+}
+
+// ══════════════════════════════════════════════════════════════
+// SECTOR → ALLOWED ACTIONS MAP (strict whitelist)
+// ══════════════════════════════════════════════════════════════
+
+const SECTOR_ALLOWED_ACTIONS: Record<string, Set<string>> = {
+  ristorazione: new Set(["menu_update_price","menu_remove_item","menu_add_item","menu_toggle_active","menu_update_description","menu_update_allergens","order_update_status","reservation_update","table_update_status","toggle_service"]),
+  food: new Set(["menu_update_price","menu_remove_item","menu_add_item","menu_toggle_active","menu_update_description","menu_update_allergens","order_update_status","reservation_update","table_update_status","toggle_service"]),
+  ncc: new Set(["vehicle_toggle","vehicle_update_price","ncc_booking_update","booking_update_status","driver_update_status","cross_sell_toggle","cross_sell_update_price"]),
+  transport: new Set(["vehicle_toggle","vehicle_update_price","ncc_booking_update","booking_update_status","driver_update_status","cross_sell_toggle","cross_sell_update_price"]),
+  beauty: new Set(["appointment_update","appointment_reschedule","service_update_price","service_toggle","service_update_duration"]),
+  wellness: new Set(["appointment_update","appointment_reschedule","service_update_price","service_toggle","service_update_duration"]),
+  healthcare: new Set(["appointment_update","service_update_price","client_add_note","client_add_technical_note"]),
+  medical: new Set(["appointment_update","service_update_price","client_add_note","client_add_technical_note"]),
+  retail: new Set(["product_update_price","product_toggle","product_update_stock","product_add"]),
+  shop: new Set(["product_update_price","product_toggle","product_update_stock","product_add"]),
+  fitness: new Set(["class_toggle","appointment_update","service_update_price"]),
+  sport: new Set(["class_toggle","appointment_update","service_update_price"]),
+  hospitality: new Set(["room_update_price","room_update_status","booking_update"]),
+  hotel: new Set(["room_update_price","room_update_status","booking_update"]),
+  beach: new Set(["spot_update_price","spot_toggle","beach_booking_update","beach_pass_toggle"]),
+  agriturismo: new Set(["menu_update_price","menu_remove_item","menu_add_item","menu_toggle_active","reservation_update","appointment_update"]),
+  events: new Set(["appointment_update","appointment_reschedule","intervention_update","intervention_set_price"]),
+  logistics: new Set(["vehicle_toggle","driver_update_status","intervention_update"]),
+};
+
+// Trades sectors all share the same allowed actions
+const TRADES_ALLOWED = new Set(["intervention_update","intervention_add_note","intervention_set_price","intervention_add"]);
+for (const ts of TRADES_SECTORS) {
+  SECTOR_ALLOWED_ACTIONS[ts] = TRADES_ALLOWED;
+}
+
+// Common actions allowed for ALL sectors
+const COMMON_ALLOWED = new Set(["lead_add","lead_update_status","client_add","client_add_note","staff_update_status","company_update_info","automation_toggle"]);
+
+function isActionAllowedForSector(actionName: string, sector: string): boolean {
+  // Common actions are always allowed
+  if (COMMON_ALLOWED.has(actionName)) return true;
+  // Sector-specific check
+  const allowed = SECTOR_ALLOWED_ACTIONS[sector];
+  if (!allowed) return false;
+  return allowed.has(actionName);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -182,6 +229,12 @@ REGOLE CRITICHE:
 7. I nomi devono essere cercati con corrispondenza fuzzy (case-insensitive)
 8. Adatta la terminologia al settore (es. "piatto" per food, "veicolo" per NCC, "servizio" per beauty)
 9. SICUREZZA: Non eseguire mai azioni che cancellano dati, solo disattivazioni
+
+⚠️ REGOLA ISOLAMENTO SETTORIALE (CRITICA):
+- Usa SOLO le azioni elencate per il settore corrente
+- NON usare azioni di altri settori! (es. un NCC NON può usare menu_update_price, un ristorante NON può usare vehicle_toggle)
+- Se l'utente chiede un'azione non pertinente al suo settore, restituisci:
+  { "actions": [], "error": "Questa azione non è disponibile per il tuo settore. Usa il pannello admin per gestire funzionalità avanzate." }
 
 FORMATO RISPOSTA (JSON puro, nessun markdown):
 {
@@ -981,9 +1034,18 @@ serve(async (req) => {
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // ── Execute actions ──
+    // ── Execute actions with sector isolation guard ──
     const results: Array<{ action: string; success: boolean; detail: string }> = [];
     for (const action of parsed.actions) {
+      // CRITICAL: Sector isolation — reject actions not allowed for this sector
+      if (!isActionAllowedForSector(action.action, resource.sector)) {
+        results.push({
+          action: action.action,
+          success: false,
+          detail: `⛔ Azione "${action.action}" non consentita per il settore ${resource.sector}`,
+        });
+        continue;
+      }
       const result = await executeAction(supabase, action, resource.resourceId, resource.tenantType);
       results.push({ action: action.action, ...result });
     }
