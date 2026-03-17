@@ -39,6 +39,10 @@ AZIONI SPECIFICHE per FOOD / RISTORAZIONE:
 - RESERVATION_UPDATE: { action: "reservation_update", customer_name: string, new_status: "confirmed"|"cancelled" }
 - TABLE_UPDATE_STATUS: { action: "table_update_status", table_number: number, status: "free"|"occupied"|"reserved" }
 - TOGGLE_SERVICE: { action: "toggle_service", service: "table_orders"|"takeaway"|"delivery", enabled: boolean }
+- FOOD_PHOTO_GENERATE: { action: "food_photo_generate", dish_name: string, plate_name?: string, category?: string }
+  Genera una foto food-porn IA del piatto. Se plate_name è specificato, cerca il piatto fisico nella galleria del ristoratore e usa quello come base.
+- MENU_ADD_WITH_PHOTO: { action: "menu_add_with_photo", name: string, price: number, category: string, description?: string, plate_name?: string }
+  Aggiunge un piatto al menu E genera automaticamente la foto food-porn. Combina MENU_ADD_ITEM + FOOD_PHOTO_GENERATE in un'unica azione.
 `;
 
 const NCC_SCHEMA = `
