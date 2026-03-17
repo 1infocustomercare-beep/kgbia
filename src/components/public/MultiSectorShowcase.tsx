@@ -590,15 +590,15 @@ export default function MultiSectorShowcase() {
       </div>
 
       {/* Category filter tabs */}
-      <div className="flex gap-1.5 justify-center flex-wrap mb-4 px-2">
+      <div className="flex gap-1 justify-center flex-wrap mb-3 px-3">
         {SECTOR_CATEGORIES.map((cat) => (
           <button
             key={cat.id}
             onClick={() => { setActiveCat(cat.id); setIsAutoPlaying(false); }}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.55rem] font-heading font-semibold tracking-wider uppercase transition-all duration-300 border ${
+            className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-[0.6rem] font-heading font-semibold tracking-wide uppercase transition-all duration-300 border ${
               activeCat === cat.id
-                ? "text-foreground border-primary/40 bg-primary/10"
-                : "text-foreground/30 border-border/15 hover:text-foreground/50 hover:border-border/30 bg-transparent"
+                ? "text-foreground border-primary/30 bg-primary/8"
+                : "text-foreground/30 border-transparent hover:text-foreground/50 hover:bg-muted/5"
             }`}
           >
             {cat.icon}
@@ -607,9 +607,9 @@ export default function MultiSectorShowcase() {
         ))}
       </div>
 
-      {/* Sector grid — ultra-compact scrollable pills */}
-      <div className="relative mb-8 px-2">
-        <div className="flex flex-wrap justify-center gap-1">
+      {/* Sector grid — clean uniform grid */}
+      <div className="relative mb-6 px-3">
+        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-[3px]">
           {filteredSectors.map((s) => {
             const globalIdx = SHOWCASE_SECTORS.findIndex(ss => ss.id === s.id);
             const isActive = activeIdx === globalIdx;
@@ -617,22 +617,21 @@ export default function MultiSectorShowcase() {
               <motion.button
                 key={s.id}
                 onClick={() => { setActiveIdx(globalIdx); setIsAutoPlaying(false); setShowAllScreens(false); }}
-                className={`relative flex items-center gap-1 py-1 px-2 rounded-full text-[0.55rem] font-heading font-semibold tracking-wider uppercase transition-all duration-300 border whitespace-nowrap ${
+                className={`relative flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-md text-[0.45rem] font-heading font-medium tracking-wide uppercase transition-all duration-200 border ${
                   isActive
-                    ? "text-foreground border-primary/40"
-                    : "text-foreground/25 border-border/10 hover:text-foreground/50 hover:border-border/25"
+                    ? "text-foreground border-primary/30 z-10"
+                    : "text-foreground/25 border-border/5 hover:text-foreground/45 hover:border-border/15"
                 }`}
                 style={isActive ? {
-                  background: `linear-gradient(135deg, ${s.color.replace("1)", "0.15)")}, hsla(265,20%,15%,0.3))`,
-                  boxShadow: `0 0 10px ${s.color.replace("1)", "0.08)")}`,
-                } : { background: "hsla(0,0%,100%,0.02)" }}
+                  background: `linear-gradient(135deg, ${s.color.replace("1)", "0.12)")}, hsla(265,20%,12%,0.25))`,
+                  boxShadow: `0 0 8px ${s.color.replace("1)", "0.06)")}`,
+                } : { background: "hsla(0,0%,100%,0.015)" }}
                 whileTap={{ scale: 0.95 }}
-                layout
               >
-                <span className="text-[0.65rem]">{s.icon}</span>
-                <span className="relative z-10 leading-none">{s.label}</span>
+                <span className="text-[0.7rem] leading-none">{s.icon}</span>
+                <span className="relative z-10 leading-tight text-center line-clamp-1 w-full">{s.label}</span>
                 {isActive && isAutoPlaying && (
-                  <motion.div className="absolute bottom-0 left-2 right-2 h-[1.5px] rounded-full origin-left"
+                  <motion.div className="absolute bottom-0 left-1 right-1 h-[1px] rounded-full origin-left"
                     style={{ background: s.color }}
                     initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
                     transition={{ duration: 5, ease: "linear" }}
