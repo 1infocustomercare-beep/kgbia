@@ -1629,7 +1629,89 @@ const SuperAdminDashboard = () => {
                     </div>
                   </div>
 
-                  {/* ═══ ACCORDION: Infrastruttura ═══ */}
+                  {/* ═══ FILTER BAR ═══ */}
+                  <div className="rounded-xl border border-border bg-card/50 p-2.5 space-y-2">
+                    {/* Search */}
+                    <div className="relative">
+                      <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground/50" />
+                      <input
+                        type="text"
+                        placeholder="Cerca integrazione..."
+                        value={intFilter.search}
+                        onChange={(e) => setIntFilter(prev => ({ ...prev, search: e.target.value }))}
+                        className="w-full pl-6 pr-2 py-1.5 rounded-lg bg-secondary/30 border border-border text-[0.65rem] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/30"
+                      />
+                    </div>
+                    {/* Status chips */}
+                    <div className="flex flex-wrap gap-1">
+                      <span className="text-[0.5rem] text-muted-foreground/60 font-semibold self-center mr-0.5">Stato:</span>
+                      {([
+                        { key: "all", label: "Tutti", color: "text-foreground bg-secondary/40" },
+                        { key: "connected", label: "🟢 Connessi", color: "text-green-400 bg-green-500/10" },
+                        { key: "missing", label: "🔴 Mancanti", color: "text-destructive bg-destructive/10" },
+                        { key: "disabled", label: "⏸ Disattivati", color: "text-muted-foreground bg-muted/20" },
+                      ] as const).map(s => (
+                        <button
+                          key={s.key}
+                          onClick={() => setIntFilter(prev => ({ ...prev, status: s.key }))}
+                          className={`px-2 py-0.5 rounded-md text-[0.55rem] font-bold transition-all ${intFilter.status === s.key ? s.color + " ring-1 ring-primary/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
+                        >
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
+                    {/* Category chips */}
+                    <div className="flex flex-wrap gap-1">
+                      <span className="text-[0.5rem] text-muted-foreground/60 font-semibold self-center mr-0.5">Tipo:</span>
+                      {([
+                        { key: "all", label: "Tutti" },
+                        { key: "admin", label: "🛡️ Infrastruttura" },
+                        { key: "client", label: "🏢 Settoriali" },
+                      ] as const).map(c => (
+                        <button
+                          key={c.key}
+                          onClick={() => setIntFilter(prev => ({ ...prev, category: c.key }))}
+                          className={`px-2 py-0.5 rounded-md text-[0.55rem] font-bold transition-all ${intFilter.category === c.key ? "text-primary bg-primary/10 ring-1 ring-primary/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
+                        >
+                          {c.label}
+                        </button>
+                      ))}
+                    </div>
+                    {/* Sector chips */}
+                    <div className="flex flex-wrap gap-1">
+                      <span className="text-[0.5rem] text-muted-foreground/60 font-semibold self-center mr-0.5">Settore:</span>
+                      {[
+                        { key: "all", label: "Tutti" },
+                        { key: "food", label: "🍽️ Food" },
+                        { key: "ncc", label: "🚗 NCC" },
+                        { key: "beauty", label: "💅 Beauty" },
+                        { key: "healthcare", label: "🏥 Sanità" },
+                        { key: "hospitality", label: "🏨 Hotel" },
+                        { key: "retail", label: "🛍️ Retail" },
+                      ].map(s => (
+                        <button
+                          key={s.key}
+                          onClick={() => setIntFilter(prev => ({ ...prev, sector: s.key }))}
+                          className={`px-2 py-0.5 rounded-md text-[0.55rem] font-bold transition-all ${intFilter.sector === s.key ? "text-accent bg-accent/10 ring-1 ring-accent/30" : "text-muted-foreground/50 bg-secondary/20 hover:bg-secondary/40"}`}
+                        >
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
+                    {/* Reset */}
+                    {hasActiveFilters && (
+                      <button
+                        onClick={() => setIntFilter({ status: "all", category: "all", sector: "all", search: "" })}
+                        className="text-[0.55rem] text-primary font-bold flex items-center gap-0.5 hover:underline"
+                      >
+                        <X className="w-2.5 h-2.5" /> Reset filtri
+                      </button>
+                    )}
+                    {hasActiveFilters && (
+                      <p className="text-[0.5rem] text-muted-foreground/50">{filteredAdmin.length + filteredClient.length} risultati</p>
+                    )}
+                  </div>
+
                   <div className="rounded-xl border border-primary/15 overflow-hidden">
                     <button
                       onClick={() => setExpandedSection(expandedSection === "admin" ? null : "admin")}
