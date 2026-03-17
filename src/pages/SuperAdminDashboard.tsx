@@ -1369,6 +1369,7 @@ const SuperAdminDashboard = () => {
 
             {(() => {
               type IntegrationStatus = "connected" | "missing" | "warning";
+              type AccountUsage = "subscribed" | "extra" | "requested" | "none";
               interface IntegrationItem {
                 name: string;
                 description: string;
@@ -1382,6 +1383,7 @@ const SuperAdminDashboard = () => {
                 guideUrl?: string;
                 guideSteps?: string[];
                 buyCreditsUrl?: string;
+                accountUsage?: AccountUsage;
               }
 
               // toggles & guides use component-level state
