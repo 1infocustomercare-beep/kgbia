@@ -599,6 +599,8 @@ const EmpireVoiceAgent: React.FC = () => {
     } catch {
       // silent fallback to legacy mode
     }
+    releaseVoiceAgent("arianna-live");
+    abortRef.current = false; // allow narration to resume if needed
     setVoiceMode("legacy");
   }, [conversation]);
 
