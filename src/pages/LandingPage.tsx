@@ -5162,6 +5162,13 @@ const LandingPage = () => {
 
       <SectionDivider />
 
+      {/* ═══════ EMPIRE STORY & TEAM ═══════ */}
+      <Suspense fallback={null}>
+        <EmpireTeamStory />
+      </Suspense>
+
+      <SectionDivider />
+
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
         <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.08] via-deep-black/80 to-accent/[0.04] border border-primary/15 overflow-hidden animated-border">
