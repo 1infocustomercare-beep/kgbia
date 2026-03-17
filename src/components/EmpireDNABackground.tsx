@@ -462,23 +462,19 @@ const EmpireDNABackground = () => {
       ctx.lineWidth = 0.5;
       ctx.beginPath(); ctx.moveTo(0, scanY); ctx.lineTo(w, scanY); ctx.stroke();
 
-      // ═══ L8: VERTICAL DATA STREAMS ═══
-      const streamCount = IS_MOBILE ? 4 : 8;
+      // ═══ L8: VERTICAL DATA STREAMS (subtle, slow) ═══
+      const streamCount = IS_MOBILE ? 3 : 5;
       for (let si = 0; si < streamCount; si++) {
-        const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7 + time * 0.1) * 15;
-        const streamPhase = (time * (0.08 + si * 0.01) + si * 1.1) % 1;
-        const streamLen = h * 0.15;
+        const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7 + time * 0.05) * 10;
+        const streamPhase = (time * (0.03 + si * 0.005) + si * 1.1) % 1;
+        const streamLen = h * 0.12;
         const sy = streamPhase * (h + streamLen * 2) - streamLen;
         const sGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
         sGrad.addColorStop(0, hsla(pGlow, 0));
-        sGrad.addColorStop(0.5, hsla(pGlow, 0.04));
+        sGrad.addColorStop(0.5, hsla(pGlow, 0.02));
         sGrad.addColorStop(1, hsla(pGlow, 0));
-        ctx.strokeStyle = sGrad; ctx.lineWidth = 0.8;
+        ctx.strokeStyle = sGrad; ctx.lineWidth = 0.5;
         ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy + streamLen); ctx.stroke();
-        // Stream head
-        const shg = ctx.createRadialGradient(sx, sy + streamLen, 0, sx, sy + streamLen, 4);
-        shg.addColorStop(0, hsla(pAccent, 0.12)); shg.addColorStop(1, hsla(pAccent, 0));
-        ctx.fillStyle = shg; ctx.beginPath(); ctx.arc(sx, sy + streamLen, 4, 0, Math.PI * 2); ctx.fill();
       }
 
       // ═══ L9: CORNER CIRCUIT BRACKETS — tech frame ═══
