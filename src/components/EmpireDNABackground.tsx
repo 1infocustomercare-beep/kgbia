@@ -398,7 +398,7 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ L3: DATA FLOW PARTICLES along connections ═══
+      // ═══ L3: DATA FLOW PARTICLES — follow morphed route ═══
       const flows = flowsRef.current;
       for (let fi = 0; fi < flows.length; fi++) {
         const fl = flows[fi];
@@ -412,36 +412,30 @@ const EmpireDNABackground = () => {
         const d = Math.sqrt(dx * dx + dy * dy);
         if (d > MAX_DIST * 1.5) { flows[fi] = spawnFlow(); continue; }
 
-        // L-shaped path for particles too
+        // Use same morphed route as connections
+        const wA = getRoutePoints(a, b, routeA, fl.fromIdx, fl.toIdx);
+        const wB = getRoutePoints(a, b, routeB, fl.fromIdx, fl.toIdx);
+        const wp = wA.map((pa, wi) => ({
+          x: lerp(pa.x, wB[wi].x, t3),
+          y: lerp(pa.y, wB[wi].y, t3),
+        }));
+
+        // Walk along the 4-point polyline
         const t2 = fl.progress;
-        let px: number, py: number;
-        const useLRoute = Math.abs(dx) > Math.abs(dy) * 0.3 && Math.abs(dy) > Math.abs(dx) * 0.3;
-        if (useLRoute) {
-          const midX = b.x, midY = a.y;
-          if (t2 < 0.5) {
-            const lt = t2 * 2;
-            px = lerp(a.x, midX, lt);
-            py = lerp(a.y, midY, lt);
-          } else {
-            const lt = (t2 - 0.5) * 2;
-            px = lerp(midX, b.x, lt);
-            py = lerp(midY, b.y, lt);
-          }
-        } else {
-          px = lerp(a.x, b.x, t2);
-          py = lerp(a.y, b.y, t2);
-        }
+        const totalSegs = wp.length - 1;
+        const seg = Math.min(Math.floor(t2 * totalSegs), totalSegs - 1);
+        const localT = (t2 * totalSegs) - seg;
+        const px = lerp(wp[seg].x, wp[seg + 1].x, localT);
+        const py = lerp(wp[seg].y, wp[seg + 1].y, localT);
 
         const fadeAlpha = Math.sin(fl.progress * Math.PI) * 0.5;
 
-        // Glow
         const tg = ctx.createRadialGradient(px, py, 0, px, py, 7);
         tg.addColorStop(0, hsla(pGlow, fadeAlpha * 0.55));
         tg.addColorStop(1, hsla(pGlow, 0));
         ctx.fillStyle = tg;
         ctx.fillRect(px - 7, py - 7, 14, 14);
 
-        // Core (square particle)
         const ps = 1.2;
         ctx.fillStyle = hsla(pGlow, fadeAlpha + 0.12);
         ctx.fillRect(px - ps / 2, py - ps / 2, ps, ps);
