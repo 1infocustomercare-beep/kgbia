@@ -1520,6 +1520,12 @@ export default function AgentsPage() {
           </div>
         </div>
 
+        {/* ─── Agent Activation Requests from Tenants ─── */}
+        <AgentRequestsPanel />
+
+        {/* ─── Per-Account Agent Installations ─── */}
+        <PerAccountAgentsPanel />
+
         {/* ─── ElevenLabs Conversational AI Config ─── */}
         <ElevenLabsConvAIConfig />
       </div>
@@ -1726,6 +1732,275 @@ export default function AgentsPage() {
         </SheetContent>
       </Sheet>
     </div>
+  );
+}
+
+// ─── Agent Activation Requests Panel ───
+function AgentRequestsPanel() {
+  const queryClient = useQueryClient();
+  const { data: requests, isLoading } = useQuery({
+    queryKey: ["agent-requests-superadmin"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("agent_requests")
+        .select("*, agents(name, category, icon_emoji, color_hex)")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      return data || [];
+    },
+    refetchInterval: 30000,
+  });
+
+  const handleResolve = async (id: string, status: "approved" | "rejected", agentId?: string, tenantId?: string) => {
+    await supabase.from("agent_requests").update({
+      status,
+      resolved_at: new Date().toISOString(),
+    }).eq("id", id);
+
+    if (status === "approved" && agentId && tenantId) {
+      // Install agent for tenant
+      await supabase.from("agent_installations").insert({
+        agent_id: agentId,
+        tenant_id: tenantId,
+        status: "active",
+        config: {},
+      });
+    }
+
+    queryClient.invalidateQueries({ queryKey: ["agent-requests-superadmin"] });
+    toast({ title: status === "approved" ? "✅ Agente attivato per il tenant" : "❌ Richiesta rifiutata" });
+  };
+
+  const pending = (requests || []).filter((r: any) => r.status === "pending");
+  const resolved = (requests || []).filter((r: any) => r.status !== "pending");
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      className="bg-card border border-border rounded-xl overflow-hidden">
+      <div className="p-4 border-b border-border flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center relative">
+            <Bell className="w-5 h-5 text-amber-400" />
+            {pending.length > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-destructive text-[9px] text-white flex items-center justify-center font-bold animate-pulse">
+                {pending.length}
+              </span>
+            )}
+          </div>
+          <div>
+            <h3 className="font-semibold text-sm">Richieste Attivazione Agenti</h3>
+            <p className="text-xs text-muted-foreground">Richieste dai tenant per attivare nuovi agenti IA</p>
+          </div>
+        </div>
+        <Badge variant="outline" className="text-[10px]">
+          {pending.length} in attesa · {resolved.length} risolte
+        </Badge>
+      </div>
+
+      {isLoading ? (
+        <div className="p-8 text-center"><Loader2 className="w-5 h-5 animate-spin mx-auto text-muted-foreground" /></div>
+      ) : pending.length === 0 && resolved.length === 0 ? (
+        <div className="p-8 text-center text-sm text-muted-foreground">Nessuna richiesta di attivazione</div>
+      ) : (
+        <div className="divide-y divide-border">
+          {/* Pending first */}
+          {pending.map((req: any) => (
+            <div key={req.id} className="flex items-center gap-3 px-4 py-3 bg-amber-500/[0.03]">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg"
+                style={{ background: (req.agents?.color_hex || "#C8963E") + "15" }}>
+                {req.agents?.icon_emoji || "🤖"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-foreground truncate">{req.agents?.name || req.agent_id}</p>
+                <p className="text-[10px] text-muted-foreground">
+                  Tenant: <span className="text-foreground font-medium">{req.tenant_name || req.tenant_id}</span>
+                  {" · "}{new Date(req.created_at).toLocaleDateString("it-IT")}
+                </p>
+              </div>
+              <Badge className="bg-amber-500/15 text-amber-400 border-amber-500/30 text-[9px]">In attesa</Badge>
+              <div className="flex gap-1.5">
+                <Button size="sm" className="h-7 text-[10px] gap-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+                  onClick={() => handleResolve(req.id, "approved", req.agent_id, req.tenant_id)}>
+                  <Check className="w-3 h-3" /> Attiva
+                </Button>
+                <Button size="sm" variant="outline" className="h-7 text-[10px] gap-1 border-destructive/30 text-destructive hover:bg-destructive/10"
+                  onClick={() => handleResolve(req.id, "rejected")}>
+                  <X className="w-3 h-3" /> Rifiuta
+                </Button>
+              </div>
+            </div>
+          ))}
+          {/* Resolved */}
+          {resolved.slice(0, 10).map((req: any) => (
+            <div key={req.id} className="flex items-center gap-3 px-4 py-2.5 opacity-60">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base"
+                style={{ background: (req.agents?.color_hex || "#C8963E") + "10" }}>
+                {req.agents?.icon_emoji || "🤖"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] font-medium text-foreground truncate">{req.agents?.name || req.agent_id}</p>
+                <p className="text-[9px] text-muted-foreground">{req.tenant_name || req.tenant_id}</p>
+              </div>
+              <Badge variant="outline" className={`text-[9px] ${
+                req.status === "approved" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-destructive/10 text-destructive border-destructive/20"
+              }`}>
+                {req.status === "approved" ? "✅ Attivato" : "❌ Rifiutato"}
+              </Badge>
+              <span className="text-[9px] text-muted-foreground">{req.resolved_at ? new Date(req.resolved_at).toLocaleDateString("it-IT") : ""}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+// ─── Per-Account Agent Installations Panel ───
+function PerAccountAgentsPanel() {
+  const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
+  const [searchTenant, setSearchTenant] = useState("");
+
+  const { data: tenants } = useQuery({
+    queryKey: ["tenants-for-agents"],
+    queryFn: async () => {
+      const { data: companies } = await supabase.from("companies").select("id, name, slug, industry, is_active").order("name");
+      const { data: restaurants } = await supabase.from("restaurants").select("id, name, slug, is_active").order("name");
+      const merged: { id: string; name: string; industry: string; active: boolean }[] = [];
+      (companies || []).forEach(c => merged.push({ id: c.id, name: c.name, industry: c.industry || "custom", active: c.is_active }));
+      (restaurants || []).forEach(r => {
+        if (!merged.find(m => m.name === r.name)) merged.push({ id: r.id, name: r.name, industry: "food", active: r.is_active });
+      });
+      return merged;
+    },
+  });
+
+  const { data: installations, refetch: refetchInstallations } = useQuery({
+    queryKey: ["installations-per-tenant", selectedTenantId],
+    enabled: !!selectedTenantId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("agent_installations")
+        .select("*, agents(name, category, icon_emoji, color_hex, description_it)")
+        .eq("tenant_id", selectedTenantId!)
+        .order("created_at", { ascending: false });
+      return data || [];
+    },
+  });
+
+  const handleToggleInstallation = async (installId: string, currentStatus: string) => {
+    const newStatus = currentStatus === "active" ? "disabled" : "active";
+    await supabase.from("agent_installations").update({ status: newStatus }).eq("id", installId);
+    refetchInstallations();
+    toast({ title: newStatus === "active" ? "✅ Agente riattivato" : "⏸ Agente disabilitato" });
+  };
+
+  const handleRemoveInstallation = async (installId: string) => {
+    await supabase.from("agent_installations").delete().eq("id", installId);
+    refetchInstallations();
+    toast({ title: "🗑 Agente rimosso dal tenant" });
+  };
+
+  const filteredTenants = (tenants || []).filter(t =>
+    t.name.toLowerCase().includes(searchTenant.toLowerCase())
+  );
+
+  const selectedTenantName = tenants?.find(t => t.id === selectedTenantId)?.name;
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      className="bg-card border border-border rounded-xl overflow-hidden">
+      <div className="p-4 border-b border-border flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <Eye className="w-5 h-5 text-primary" />
+        </div>
+        <div className="flex-1">
+          <h3 className="font-semibold text-sm">Agenti per Account</h3>
+          <p className="text-xs text-muted-foreground">Visualizza e gestisci gli agenti installati per ogni tenant · Privacy isolata</p>
+        </div>
+      </div>
+
+      <div className="p-4 space-y-4">
+        {/* Tenant selector */}
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input placeholder="Cerca tenant..." value={searchTenant} onChange={e => setSearchTenant(e.target.value)}
+              className="pl-9 h-9 text-xs" />
+          </div>
+        </div>
+
+        {/* Tenant list */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto">
+          {filteredTenants.slice(0, 30).map(t => (
+            <button key={t.id}
+              onClick={() => setSelectedTenantId(t.id === selectedTenantId ? null : t.id)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all border text-xs ${
+                t.id === selectedTenantId
+                  ? "border-primary/40 bg-primary/10 text-primary"
+                  : "border-border bg-muted/20 text-foreground hover:bg-muted/40"
+              }`}>
+              <span className={`w-2 h-2 rounded-full ${t.active ? "bg-emerald-400" : "bg-muted-foreground"}`} />
+              <span className="truncate flex-1 font-medium">{t.name}</span>
+              <Badge variant="outline" className="text-[8px] h-4 px-1">{INDUSTRY_LABELS[t.industry]?.split(" ")[0] || t.industry}</Badge>
+            </button>
+          ))}
+        </div>
+
+        {/* Selected tenant's agents */}
+        {selectedTenantId && (
+          <div className="border border-primary/20 rounded-xl p-4 space-y-3 bg-primary/[0.02]">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-primary" />
+                Agenti di "{selectedTenantName}"
+              </h4>
+              <Badge className="bg-primary/10 text-primary border-primary/20 text-[10px]">
+                {installations?.length || 0} installati
+              </Badge>
+            </div>
+
+            {!installations?.length ? (
+              <p className="text-xs text-muted-foreground text-center py-4">Nessun agente installato per questo tenant</p>
+            ) : (
+              <div className="space-y-2">
+                {installations.map((inst: any) => (
+                  <div key={inst.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-card border border-border">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base"
+                      style={{ background: (inst.agents?.color_hex || "#C8963E") + "15" }}>
+                      {inst.agents?.icon_emoji || "🤖"}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold truncate">{inst.agents?.name || inst.agent_id}</p>
+                      <p className="text-[9px] text-muted-foreground truncate">{inst.agents?.description_it || ""}</p>
+                    </div>
+                    <Badge variant="outline" className={`text-[9px] ${
+                      inst.status === "active" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-muted text-muted-foreground"
+                    }`}>
+                      {inst.status === "active" ? "Attivo" : "Disabilitato"}
+                    </Badge>
+                    <Switch
+                      checked={inst.status === "active"}
+                      onCheckedChange={() => handleToggleInstallation(inst.id, inst.status)}
+                    />
+                    <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive/60 hover:text-destructive"
+                      onClick={() => handleRemoveInstallation(inst.id)}>
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex items-center gap-2 pt-2 border-t border-border/50">
+              <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
+              <p className="text-[9px] text-muted-foreground">
+                Isolamento totale: i dati di questo tenant non sono mai accessibili da altri account · RLS attivo
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </motion.div>
   );
 }
 
