@@ -235,6 +235,31 @@ const EmpireDNABackground = () => {
       flowsRef.current = Array.from({ length: FLOW_COUNT }, spawnFlow);
     }
 
+    // Route styles — each returns 4 waypoints (start, mid1, mid2, end)
+    const getRoutePoints = (a: Pt, b: Pt, routeMode: number, _i: number, _j: number): Pt[] => {
+      const mx = (a.x + b.x) * 0.5, my = (a.y + b.y) * 0.5;
+      switch (routeMode) {
+        case 0: // L-shape: horizontal then vertical
+          return [a, { x: b.x, y: a.y }, { x: b.x, y: a.y }, b];
+        case 1: // Straight horizontal bus
+          return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b];
+        case 2: // Step-down: go right, step down, go right
+          return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b];
+        case 3: // Diagonal direct
+          return [a, { x: lerp(a.x, b.x, 0.33), y: lerp(a.y, b.y, 0.33) },
+                     { x: lerp(a.x, b.x, 0.66), y: lerp(a.y, b.y, 0.66) }, b];
+        case 4: // Vertical-first L: go down then across
+          return [a, { x: a.x, y: b.y }, { x: a.x, y: b.y }, b];
+        case 5: // Z-route: horizontal, diagonal, horizontal
+          return [a, { x: lerp(a.x, b.x, 0.3), y: a.y },
+                     { x: lerp(a.x, b.x, 0.7), y: b.y }, b];
+        case 6: // Straight line
+        default:
+          return [a, { x: lerp(a.x, b.x, 0.33), y: lerp(a.y, b.y, 0.33) },
+                     { x: lerp(a.x, b.x, 0.66), y: lerp(a.y, b.y, 0.66) }, b];
+      }
+    };
+
     const animate = () => {
       if (!w || !h) { animRef.current = requestAnimationFrame(animate); return; }
       timeRef.current += 0.016;
@@ -296,7 +321,12 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ L1: CIRCUIT CONNECTIONS (straight lines, orthogonal feel) ═══
+      // ═══ L1: CIRCUIT CONNECTIONS — routing style morphs per topology ═══
+      // Routing modes: 0=L-shape, 1=straight horizontal bus, 2=step-down, 
+      // 3=diagonal, 4=vertical-first-L, 5=Z-route, 6=straight
+      const routeA = sIdx % SECTIONS;
+      const routeB = (sIdx + 1) % SECTIONS;
+
       ctx.lineCap = "square";
       ctx.lineJoin = "miter";
       for (let i = 0; i < NODE_COUNT; i++) {
@@ -310,18 +340,19 @@ const EmpireDNABackground = () => {
             ctx.strokeStyle = hsla(pLine, alpha * 0.07 * pulse);
             ctx.lineWidth = 0.5 + alpha * 0.5;
 
-            // L-shaped orthogonal routing (circuit style)
-            const midX = pos[j].x;
-            const midY = pos[i].y;
+            // Compute waypoints for route A and route B, then lerp
+            const wA = getRoutePoints(pos[i], pos[j], routeA, i, j);
+            const wB = getRoutePoints(pos[i], pos[j], routeB, i, j);
+            // Both arrays have same length (padded to 4 points)
+            const waypoints = wA.map((a, wi) => ({
+              x: lerp(a.x, wB[wi].x, t3),
+              y: lerp(a.y, wB[wi].y, t3),
+            }));
+
             ctx.beginPath();
-            ctx.moveTo(pos[i].x, pos[i].y);
-            if (Math.abs(dx) > Math.abs(dy) * 0.3 && Math.abs(dy) > Math.abs(dx) * 0.3) {
-              // L-route for non-aligned nodes
-              ctx.lineTo(midX, midY);
-              ctx.lineTo(pos[j].x, pos[j].y);
-            } else {
-              // Straight for near-aligned
-              ctx.lineTo(pos[j].x, pos[j].y);
+            ctx.moveTo(waypoints[0].x, waypoints[0].y);
+            for (let wi = 1; wi < waypoints.length; wi++) {
+              ctx.lineTo(waypoints[wi].x, waypoints[wi].y);
             }
             ctx.stroke();
           }
@@ -367,7 +398,7 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ L3: DATA FLOW PARTICLES along connections ═══
+      // ═══ L3: DATA FLOW PARTICLES — follow morphed route ═══
       const flows = flowsRef.current;
       for (let fi = 0; fi < flows.length; fi++) {
         const fl = flows[fi];
@@ -381,36 +412,30 @@ const EmpireDNABackground = () => {
         const d = Math.sqrt(dx * dx + dy * dy);
         if (d > MAX_DIST * 1.5) { flows[fi] = spawnFlow(); continue; }
 
-        // L-shaped path for particles too
+        // Use same morphed route as connections
+        const wA = getRoutePoints(a, b, routeA, fl.fromIdx, fl.toIdx);
+        const wB = getRoutePoints(a, b, routeB, fl.fromIdx, fl.toIdx);
+        const wp = wA.map((pa, wi) => ({
+          x: lerp(pa.x, wB[wi].x, t3),
+          y: lerp(pa.y, wB[wi].y, t3),
+        }));
+
+        // Walk along the 4-point polyline
         const t2 = fl.progress;
-        let px: number, py: number;
-        const useLRoute = Math.abs(dx) > Math.abs(dy) * 0.3 && Math.abs(dy) > Math.abs(dx) * 0.3;
-        if (useLRoute) {
-          const midX = b.x, midY = a.y;
-          if (t2 < 0.5) {
-            const lt = t2 * 2;
-            px = lerp(a.x, midX, lt);
-            py = lerp(a.y, midY, lt);
-          } else {
-            const lt = (t2 - 0.5) * 2;
-            px = lerp(midX, b.x, lt);
-            py = lerp(midY, b.y, lt);
-          }
-        } else {
-          px = lerp(a.x, b.x, t2);
-          py = lerp(a.y, b.y, t2);
-        }
+        const totalSegs = wp.length - 1;
+        const seg = Math.min(Math.floor(t2 * totalSegs), totalSegs - 1);
+        const localT = (t2 * totalSegs) - seg;
+        const px = lerp(wp[seg].x, wp[seg + 1].x, localT);
+        const py = lerp(wp[seg].y, wp[seg + 1].y, localT);
 
         const fadeAlpha = Math.sin(fl.progress * Math.PI) * 0.5;
 
-        // Glow
         const tg = ctx.createRadialGradient(px, py, 0, px, py, 7);
         tg.addColorStop(0, hsla(pGlow, fadeAlpha * 0.55));
         tg.addColorStop(1, hsla(pGlow, 0));
         ctx.fillStyle = tg;
         ctx.fillRect(px - 7, py - 7, 14, 14);
 
-        // Core (square particle)
         const ps = 1.2;
         ctx.fillStyle = hsla(pGlow, fadeAlpha + 0.12);
         ctx.fillRect(px - ps / 2, py - ps / 2, ps, ps);
