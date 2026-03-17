@@ -256,12 +256,12 @@ const EmpireDNABackground = () => {
       // ═══ L0: AMBIENT DOT MATRIX — breathing grid ═══
       const gridSp = IS_MOBILE ? 45 : 55;
       const gridPulse = 0.5 + Math.sin(time * 0.3) * 0.5;
-      ctx.fillStyle = hsla(pLine, 0.02 + gridPulse * 0.015);
+      ctx.fillStyle = hsla(pLine, 0.015 + gridPulse * 0.008);
       for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
         for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
-          const localPulse = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.5) * 0.5 + 0.5;
-          const s = 0.5 + localPulse * 0.8;
-          ctx.globalAlpha = 0.4 + localPulse * 0.6;
+          const localPulse = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.25) * 0.5 + 0.5;
+          const s = 0.4 + localPulse * 0.4;
+          ctx.globalAlpha = 0.3 + localPulse * 0.3;
           ctx.fillRect(gx - s / 2, gy - s / 2, s, s);
         }
       }
