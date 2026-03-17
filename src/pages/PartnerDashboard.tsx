@@ -788,6 +788,7 @@ const PartnerDashboard = () => {
           ))}
         </div>
       </div>
+      <PageGuide />
     </div>
   );
 };
