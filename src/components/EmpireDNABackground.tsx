@@ -284,15 +284,11 @@ const EmpireDNABackground = () => {
           const px = p.x - p.len;
           const grad = ctx.createLinearGradient(px, hw.y, px + p.len, hw.y);
           grad.addColorStop(0, hsla(pAccent, 0));
-          grad.addColorStop(0.7, hsla(pAccent, 0.08));
-          grad.addColorStop(1, hsla(pGlow, 0.15));
+          grad.addColorStop(0.7, hsla(pAccent, 0.04));
+          grad.addColorStop(1, hsla(pGlow, 0.06));
           ctx.strokeStyle = grad;
-          ctx.lineWidth = 1.2;
+          ctx.lineWidth = 0.8;
           ctx.beginPath(); ctx.moveTo(px, hw.y); ctx.lineTo(px + p.len, hw.y); ctx.stroke();
-          // Head glow
-          const hg = ctx.createRadialGradient(px + p.len, hw.y, 0, px + p.len, hw.y, 5);
-          hg.addColorStop(0, hsla(pGlow, 0.25)); hg.addColorStop(1, hsla(pGlow, 0));
-          ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(px + p.len, hw.y, 5, 0, Math.PI * 2); ctx.fill();
         }
       }
 
