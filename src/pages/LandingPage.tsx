@@ -3064,11 +3064,9 @@ const LandingPage = () => {
                   style={{ borderColor: `${feat.color}40`, boxShadow: `0 12px 40px hsla(0,0%,0%,0.4), 0 0 20px ${feat.color}10` }}>
                   {/* Dynamic Island */}
                   <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[48px] h-[14px] bg-black rounded-full z-20" />
-                  {/* Live iframe — clipped to card height */}
+                  {/* Live iframe — absolute positioned to avoid layout push */}
                   <div className="absolute inset-[3px] rounded-[24px] overflow-hidden bg-black">
-                    <div style={{ width: 375, height: visibleH, transform: `scale(${scale})`, transformOrigin: "top left" }}>
-                      <iframe src={feat.route} title={feat.name} className="w-full border-0" style={{ height: visibleH, pointerEvents: "none" }} loading="lazy" />
-                    </div>
+                    <iframe src={feat.route} title={feat.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
                   </div>
                   {/* Bottom overlay with label */}
                   <div className="absolute bottom-0 left-0 right-0 z-20 p-2.5 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
@@ -3141,9 +3139,7 @@ const LandingPage = () => {
                 <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
                 {/* Live iframe — clipped */}
                 <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
-                  <div style={{ width: 375, height: visibleH, transform: `scale(${scale})`, transformOrigin: "top left" }}>
-                    <iframe src={feat.route} title={feat.name} className="w-full border-0" style={{ height: visibleH, pointerEvents: "none" }} loading="lazy" />
-                  </div>
+                  <iframe src={feat.route} title={feat.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
                 </div>
                 {/* Bottom overlay */}
                 <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>

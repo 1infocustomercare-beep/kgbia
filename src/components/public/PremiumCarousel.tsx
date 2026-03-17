@@ -117,7 +117,7 @@ export function PremiumCarousel({
             <div className={`overflow-hidden ${fullWidth ? "" : "-mx-4 sm:mx-0"}`}>
               <div
                 ref={trackRef}
-                className="flex will-change-transform"
+                className="flex flex-nowrap will-change-transform"
                 style={{ gap: `${gap}px`, padding: "16px 0" }}
               >
                 {tripled.map((child, i) => (
