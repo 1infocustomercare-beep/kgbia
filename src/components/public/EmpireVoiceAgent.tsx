@@ -545,11 +545,35 @@ const EmpireVoiceAgent: React.FC = () => {
   const startElevenlabsConversation = useCallback(async () => {
     setElevenlabsConnecting(true);
 
+    // ── STOP all narration & TTS before starting live call ──
+    abortRef.current = true;
+    sectionQueueRef.current = [];
+    queueProcessingRef.current = false;
+    setAutoNarrating(false);
+    setIsSpeaking(false);
+
+    // Stop any playing audio element (premium TTS)
+    if (audioRef.current) {
+      try { audioRef.current.pause(); audioRef.current.currentTime = 0; } catch { /* noop */ }
+      audioRef.current = null;
+    }
+
+    // Stop browser speech synthesis
+    if (window.speechSynthesis) {
+      try { window.speechSynthesis.cancel(); } catch { /* noop */ }
+    }
+
+    // Claim voice mutex for live call
+    claimVoiceAgent("arianna-live", () => {
+      try { conversation.endSession(); } catch { /* noop */ }
+    });
+
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
       const token = await getElevenlabsTokenSilently();
       if (!token) {
+        releaseVoiceAgent("arianna-live");
         setVoiceMode("legacy");
         return;
       }
@@ -561,6 +585,7 @@ const EmpireVoiceAgent: React.FC = () => {
 
       setVoiceMode("elevenlabs");
     } catch {
+      releaseVoiceAgent("arianna-live");
       setElevenlabsAvailable(false);
       setVoiceMode("legacy");
     } finally {
