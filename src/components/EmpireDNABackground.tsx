@@ -174,9 +174,13 @@ const EmpireDNABackground = () => {
   useEffect(() => { const t = setTimeout(() => setReady(true), 250); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
-    const fn = () => { scrollRef.current = window.scrollY; };
+    const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
     window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
+    // Also listen on possible scroll containers
+    const mainEl = document.querySelector("main");
+    if (mainEl) mainEl.addEventListener("scroll", () => { scrollRef.current = mainEl.scrollTop; }, { passive: true });
+    fn(); // init
+    return () => { window.removeEventListener("scroll", fn); };
   }, []);
 
   useEffect(() => {
@@ -276,8 +280,9 @@ const EmpireDNABackground = () => {
           }
         }
         // Spring-damped motion for organic feel
-        const springK = 0.02;
-        const damping = 0.88;
+        // Faster spring for visible morphing on scroll
+        const springK = 0.06;
+        const damping = 0.82;
         vel[i].x = vel[i].x * damping + (tx - pos[i].x) * springK;
         vel[i].y = vel[i].y * damping + (ty - pos[i].y) * springK;
         pos[i].x += vel[i].x;
