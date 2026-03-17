@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo } from "react";
+import BackButton from "@/components/BackButton";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Film, Image, Trash2, Eye, Copy, Check, Search, Grid3X3, List, Play,
@@ -325,6 +326,7 @@ const MediaVaultPage = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6">
+      <BackButton />
       {/* Hidden replace file input */}
       <input ref={replaceFileRef} type="file" accept="video/*,image/*" className="hidden"
         onChange={e => { if (e.target.files?.[0]) handleReplaceFile(e.target.files[0]); }} />
