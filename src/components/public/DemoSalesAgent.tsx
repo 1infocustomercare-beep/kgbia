@@ -368,13 +368,15 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
   useEffect(() => { isSpeakingRef.current = isSpeaking; }, [isSpeaking]);
   useEffect(() => { scrollNarrationRef.current = scrollNarrationActive; }, [scrollNarrationActive]);
 
-  // ── Stop homepage voice agent on mount ──
+  // ── Stop all other voice agents on mount via mutex ──
   useEffect(() => {
+    claimVoiceAgent("demo-sales", stopAll);
     if ((window as any).__empireVoiceAgentStopAll) {
       (window as any).__empireVoiceAgentStopAll();
     }
     if (window.speechSynthesis) window.speechSynthesis.cancel();
-  }, []);
+    return () => { releaseVoiceAgent("demo-sales"); };
+  }, [stopAll]);
 
   // ── Cleanup on unmount ──
   useEffect(() => {
