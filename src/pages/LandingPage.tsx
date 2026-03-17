@@ -2775,36 +2775,26 @@ const LandingPage = () => {
               {metrics.map((m, i) => (
                 <motion.div key={i} className="group relative rounded-2xl p-5 sm:p-6 text-center overflow-hidden backdrop-blur-xl"
                   style={{
-                    background: "linear-gradient(145deg, hsla(35,20%,10%,0.92), hsla(30,15%,7%,0.95))",
-                    border: "1px solid hsla(35,45%,50%,0.18)",
-                    boxShadow: "inset 0 1px 0 hsla(35,50%,60%,0.12), inset 0 -1px 0 hsla(35,30%,25%,0.08), 0 12px 40px hsla(30,20%,4%,0.5), 0 0 50px hsla(35,45%,45%,0.04)"
+                    background: "linear-gradient(145deg, hsla(230,12%,13%,0.97), hsla(230,10%,10%,0.98))",
+                    border: "1px solid hsla(35,30%,45%,0.15)",
+                    boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.08), 0 8px 30px hsla(230,10%,4%,0.5)"
                   }}
-                  whileHover={{ y: -5, scale: 1.03, boxShadow: "inset 0 1px 0 hsla(35,55%,60%,0.2), 0 16px 50px hsla(30,20%,4%,0.6), 0 0 80px hsla(35,50%,50%,0.08)" }}
+                  whileHover={{ y: -4, scale: 1.02, boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.12), 0 12px 40px hsla(230,10%,4%,0.6)" }}
                   transition={{ duration: 0.3, ease: "easeOut" }}>
-                  {/* Shimmer sweep — gold */}
+                  {/* Shimmer sweep — subtle */}
                   <motion.div className="absolute inset-0 pointer-events-none"
-                    style={{ background: "linear-gradient(105deg, transparent 25%, hsla(35,55%,55%,0.1) 45%, hsla(38,50%,60%,0.06) 55%, transparent 75%)" }}
+                    style={{ background: "linear-gradient(105deg, transparent 30%, hsla(35,30%,55%,0.06) 48%, transparent 70%)" }}
                     animate={{ x: ["-200%", "300%"] }}
-                    transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 2.5 + i, ease: "easeInOut" }}
+                    transition={{ duration: 4, repeat: Infinity, repeatDelay: 3 + i, ease: "easeInOut" }}
                   />
-                  {/* Top gold highlight line */}
-                  <div className="absolute top-0 left-[8%] right-[8%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(35,50%,55%,0.35), transparent)" }} />
-                  {/* Bottom subtle line */}
-                  <div className="absolute bottom-0 left-[15%] right-[15%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(35,40%,45%,0.12), transparent)" }} />
-                  {/* Corner accents — gold */}
-                  <div className="absolute top-2 left-2 w-3 h-3 border-t border-l rounded-tl-sm" style={{ borderColor: "hsla(35,50%,55%,0.28)" }} />
-                  <div className="absolute top-2 right-2 w-3 h-3 border-t border-r rounded-tr-sm" style={{ borderColor: "hsla(35,50%,55%,0.28)" }} />
-                  <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l rounded-bl-sm" style={{ borderColor: "hsla(35,40%,45%,0.15)" }} />
-                  <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r rounded-br-sm" style={{ borderColor: "hsla(35,40%,45%,0.15)" }} />
-                  {/* Ambient glow */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full blur-2xl" style={{ background: "hsla(35,50%,50%,0.07)" }} />
-                  {/* Hover glow */}
-                  <motion.div className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{ boxShadow: "inset 0 0 30px hsla(35,50%,55%,0.04), 0 0 40px hsla(35,45%,50%,0.06)" }} />
-                  <p className="text-3xl sm:text-4xl font-heading font-bold relative z-10" style={{ background: "linear-gradient(135deg, hsla(38,55%,65%,1), hsla(35,45%,52%,1), hsla(32,50%,58%,1))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 0 12px hsla(35,50%,50%,0.25))" }}>
+                  {/* Top highlight line */}
+                  <div className="absolute top-0 left-[10%] right-[10%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(35,35%,50%,0.2), transparent)" }} />
+                  {/* Number */}
+                  <p className="text-3xl sm:text-4xl font-heading font-bold relative z-10" style={{ color: "hsla(35,45%,82%,1)", textShadow: "0 0 20px hsla(35,40%,50%,0.15)" }}>
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="text-[0.6rem] sm:text-[0.65rem] mt-2.5 tracking-[3px] uppercase font-heading font-semibold relative z-10" style={{ color: "hsla(35,40%,60%,0.55)" }}>{m.label}</p>
+                  {/* Label */}
+                  <p className="text-[0.6rem] sm:text-[0.65rem] mt-2.5 tracking-[3px] uppercase font-heading font-semibold relative z-10" style={{ color: "hsla(35,20%,65%,0.7)" }}>{m.label}</p>
                 </motion.div>
               ))}
             </motion.div>
