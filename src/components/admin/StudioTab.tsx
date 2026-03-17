@@ -94,6 +94,9 @@ const StudioTab = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(new Set());
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [aiCompletingNew, setAiCompletingNew] = useState(false);
+  const [aiCompletingEdit, setAiCompletingEdit] = useState(false);
+  const [newItemImageUrl, setNewItemImageUrl] = useState<string | null>(null);
 
   const allCategories = [...new Set(menuItems.map(i => i.category))];
   const restaurantSlug = restaurant?.slug || "";
@@ -139,6 +142,76 @@ const StudioTab = ({
     }
   };
 
+  /* ── AI Complete Dish — generates description, allergens, category, photo, translations coherently ── */
+  const handleAICompleteDish = async (target: "new" | "edit") => {
+    const name = target === "new" ? newItem.name.trim() : editingItem?.name.trim();
+    if (!name || !restaurant) {
+      toast({ title: "Inserisci il nome del piatto prima", variant: "destructive" });
+      return;
+    }
+    if (aiTokens <= 0) {
+      toast({ title: "Gettoni IA esauriti", variant: "destructive" });
+      return;
+    }
+
+    target === "new" ? setAiCompletingNew(true) : setAiCompletingEdit(true);
+
+    try {
+      // Deduct token
+      const { data: tokenData } = await supabase.from("ai_tokens").select("balance").eq("restaurant_id", restaurant.id).single();
+      const currentBalance = tokenData?.balance ?? 0;
+      if (currentBalance <= 0) { toast({ title: "Gettoni IA esauriti", variant: "destructive" }); return; }
+      await supabase.from("ai_tokens").update({ balance: currentBalance - 1 }).eq("restaurant_id", restaurant.id);
+      await (supabase as any).from("ai_token_history").insert({ restaurant_id: restaurant.id, tokens: -1, action: `AI Complete: ${name}` });
+      setAiTokens(currentBalance - 1);
+
+      const { data, error } = await supabase.functions.invoke("ai-menu", {
+        body: {
+          action: "complete-dish",
+          dishName: name,
+          targetLanguages: settingsLanguages,
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      if (target === "new") {
+        setNewItem(prev => ({
+          ...prev,
+          description: data.description || prev.description,
+          category: data.category || prev.category,
+          allergens: data.allergens?.length ? data.allergens : prev.allergens,
+          tags: data.diet_tags?.length ? data.diet_tags : prev.tags,
+        }));
+        if (data.imageUrl) setNewItemImageUrl(data.imageUrl);
+      } else if (editingItem) {
+        setEditingItem(prev => prev ? {
+          ...prev,
+          description: data.description || prev.description,
+          category: data.category || prev.category,
+          allergens: data.allergens?.length ? data.allergens : prev.allergens,
+          tags: data.diet_tags?.length ? data.diet_tags : prev.tags,
+        } : prev);
+        // Save image + translations directly for existing item
+        if (data.imageUrl) {
+          await supabase.from("menu_items").update({ image_url: data.imageUrl }).eq("id", editingItem.id);
+          setMenuItems(prev => prev.map(i => i.id === editingItem.id ? { ...i, image: data.imageUrl } : i));
+        }
+        if (data.name_translations || data.description_translations) {
+          await supabase.from("menu_items").update({
+            name_translations: data.name_translations || null,
+            description_translations: data.description_translations || null,
+          } as any).eq("id", editingItem.id);
+        }
+      }
+
+      toast({ title: "✨ Piatto completato dall'IA!", description: `Descrizione, allergeni, foto e traduzioni generati in modo coerente. Token: ${currentBalance - 1}` });
+    } catch (err: any) {
+      toast({ title: "Errore IA", description: err?.message || "Riprova.", variant: "destructive" });
+    }
+    target === "new" ? setAiCompletingNew(false) : setAiCompletingEdit(false);
+  };
+
   const handleAddMenuItem = async () => {
     if (!restaurant || !newItem.name.trim()) return;
     const { data, error } = await supabase.from("menu_items").insert({
@@ -147,11 +220,13 @@ const StudioTab = ({
       category: newItem.category.trim() || "Altro", sort_order: menuItems.length,
       is_active: true, is_popular: false,
       allergens: newItem.allergens,
+      image_url: newItemImageUrl || null,
     }).select().single();
     if (error) { toast({ title: "Errore", description: error.message, variant: "destructive" }); return; }
     if (data) {
       setMenuItems(prev => [...prev, { id: data.id, name: data.name, description: data.description || "", price: Number(data.price), image: data.image_url || "", category: data.category, allergens: data.allergens || [], isPopular: data.is_popular }]);
       setNewItem({ name: "", description: "", price: 0, category: "Altro", allergens: [], tags: [], availability: "always" });
+      setNewItemImageUrl(null);
       setShowAddItem(false);
       toast({ title: "Piatto aggiunto!" });
     }
@@ -240,7 +315,7 @@ const StudioTab = ({
     if (!ocrResult?.length || !restaurant?.id) return;
     setOcrImporting(true);
     try {
-      const inserts = ocrResult.map((dish, i) => ({ restaurant_id: restaurant.id, name: dish.name, description: dish.description || "", price: dish.price || 0, category: dish.category || "Altro", image_url: dish.image_url || null, sort_order: i, is_active: true, is_popular: false }));
+      const inserts = ocrResult.map((dish, i) => ({ restaurant_id: restaurant.id, name: dish.name, description: dish.description || "", price: dish.price || 0, category: dish.category || "Altro", image_url: dish.image_url || null, sort_order: i, is_active: true, is_popular: false, allergens: (dish.allergens || []).filter((a: string) => EU_ALLERGENS.some(eu => eu.id === a)) }));
       const { error } = await supabase.from("menu_items").insert(inserts);
       if (error) throw error;
       const { data: items } = await supabase.from("menu_items").select("*").eq("restaurant_id", restaurant.id).order("sort_order", { ascending: true });
@@ -406,6 +481,32 @@ const StudioTab = ({
                 </div>
                 <input type="text" value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })}
                   placeholder="Nome piatto" className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                
+                {/* AI Auto-Complete Button */}
+                <motion.button
+                  onClick={() => handleAICompleteDish("new")}
+                  disabled={aiCompletingNew || !newItem.name.trim()}
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary/20 to-primary/10 text-primary text-xs font-semibold min-h-[40px] disabled:opacity-30 flex items-center justify-center gap-2 border border-primary/20 hover:border-primary/40 transition-all"
+                  whileTap={{ scale: 0.97 }}>
+                  {aiCompletingNew ? (
+                    <><Loader2 className="w-3.5 h-3.5 animate-spin" /> IA sta generando descrizione, allergeni, foto e traduzioni...</>
+                  ) : (
+                    <><Sparkles className="w-3.5 h-3.5" /> ✨ Compila tutto con IA (1 gettone)</>
+                  )}
+                </motion.button>
+
+                {/* AI Generated Image Preview */}
+                {newItemImageUrl && (
+                  <div className="relative">
+                    <img src={newItemImageUrl} alt="Anteprima AI" className="w-full h-32 object-cover rounded-xl border border-primary/20" />
+                    <button onClick={() => setNewItemImageUrl(null)} className="absolute top-2 right-2 w-6 h-6 rounded-full bg-background/80 flex items-center justify-center">
+                      <X className="w-3.5 h-3.5 text-foreground" />
+                    </button>
+                    <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-primary/80 text-primary-foreground text-[9px] font-bold flex items-center gap-1">
+                      <Sparkles className="w-2.5 h-2.5" /> AI
+                    </span>
+                  </div>
+                )}
                 <textarea value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })}
                   placeholder="Descrizione (opzionale)" rows={2} className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30" />
                 <div className="grid grid-cols-2 gap-2">
@@ -454,6 +555,20 @@ const StudioTab = ({
                   </div>
                   <input type="text" value={editingItem.name} onChange={e => setEditingItem({ ...editingItem, name: e.target.value })}
                     className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  
+                  {/* AI Auto-Complete Button for Edit */}
+                  <motion.button
+                    onClick={() => handleAICompleteDish("edit")}
+                    disabled={aiCompletingEdit || !editingItem.name.trim()}
+                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary/20 to-primary/10 text-primary text-xs font-semibold min-h-[40px] disabled:opacity-30 flex items-center justify-center gap-2 border border-primary/20 hover:border-primary/40 transition-all"
+                    whileTap={{ scale: 0.97 }}>
+                    {aiCompletingEdit ? (
+                      <><Loader2 className="w-3.5 h-3.5 animate-spin" /> IA in corso...</>
+                    ) : (
+                      <><Sparkles className="w-3.5 h-3.5" /> ✨ Rigenera con IA (desc, allergeni, foto, traduzioni)</>
+                    )}
+                  </motion.button>
+
                   <textarea value={editingItem.description} onChange={e => setEditingItem({ ...editingItem, description: e.target.value })}
                     rows={2} className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30" />
                   <div className="grid grid-cols-2 gap-2">
