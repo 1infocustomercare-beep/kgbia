@@ -555,6 +555,20 @@ const StudioTab = ({
                   </div>
                   <input type="text" value={editingItem.name} onChange={e => setEditingItem({ ...editingItem, name: e.target.value })}
                     className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
+                  
+                  {/* AI Auto-Complete Button for Edit */}
+                  <motion.button
+                    onClick={() => handleAICompleteDish("edit")}
+                    disabled={aiCompletingEdit || !editingItem.name.trim()}
+                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary/20 to-primary/10 text-primary text-xs font-semibold min-h-[40px] disabled:opacity-30 flex items-center justify-center gap-2 border border-primary/20 hover:border-primary/40 transition-all"
+                    whileTap={{ scale: 0.97 }}>
+                    {aiCompletingEdit ? (
+                      <><Loader2 className="w-3.5 h-3.5 animate-spin" /> IA in corso...</>
+                    ) : (
+                      <><Sparkles className="w-3.5 h-3.5" /> ✨ Rigenera con IA (desc, allergeni, foto, traduzioni)</>
+                    )}
+                  </motion.button>
+
                   <textarea value={editingItem.description} onChange={e => setEditingItem({ ...editingItem, description: e.target.value })}
                     rows={2} className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30" />
                   <div className="grid grid-cols-2 gap-2">
