@@ -44,7 +44,7 @@ const DashboardOverview = ({
         <img src={cartoonDashboard} alt="" className="w-24 h-24 object-contain" />
         <div>
           <h2 className="text-lg font-display font-bold text-foreground">{restaurantName}</h2>
-          <p className="text-xs text-muted-foreground">Panoramica giornaliera</p>
+          <p className="text-[0.6rem] uppercase tracking-[3px] text-muted-foreground/50 font-semibold">Command Center · Oggi</p>
         </div>
         <InfoGuide
           title="Dashboard Principale"
@@ -62,12 +62,12 @@ const DashboardOverview = ({
         <motion.div className="p-3.5 rounded-2xl bg-card border border-primary/20 cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("profit")}>
           <DollarSign className="w-5 h-5 text-primary mb-1.5" />
           <p className="text-2xl font-display font-bold text-primary leading-tight">€{todayRevenue.toFixed(0)}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Incasso oggi</p>
+          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">Revenue Giornaliero</p>
         </motion.div>
         <motion.div className="p-3.5 rounded-2xl bg-card cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")}>
           <ShoppingCart className="w-5 h-5 text-primary mb-1.5" />
           <p className="text-2xl font-display font-bold text-foreground leading-tight">{todayOrderCount}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Ordini oggi</p>
+          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">Ordini Ricevuti</p>
         </motion.div>
         <motion.div className="p-3.5 rounded-2xl bg-card cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")}>
           <ChefHat className="w-5 h-5 text-primary mb-1.5" />
@@ -75,12 +75,12 @@ const DashboardOverview = ({
             <p className="text-2xl font-display font-bold text-foreground leading-tight">{activeOrderCount}</p>
             {activeOrderCount > 0 && <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />}
           </div>
-          <p className="text-[11px] text-muted-foreground mt-0.5">In cucina</p>
+          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">In Preparazione</p>
         </motion.div>
         <motion.div className="p-3.5 rounded-2xl bg-card cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("studio")}>
           <TrendingUp className="w-5 h-5 text-primary mb-1.5" />
           <p className="text-2xl font-display font-bold text-foreground leading-tight">{menuItemCount}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Piatti in menu</p>
+          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">Catalogo Piatti</p>
         </motion.div>
       </div>
 
