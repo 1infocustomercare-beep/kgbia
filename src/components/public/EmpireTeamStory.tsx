@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Crown, Rocket, Heart, Brain, Target, Users, Sparkles, Linkedin } from "lucide-react";
+import { Crown, Rocket, Heart, Brain, Target, Users, Sparkles, Linkedin, Dna, Zap, Globe, Network, ShieldCheck } from "lucide-react";
 
 import teamKevin from "@/assets/team-kevin-ceo.jpg";
 import teamAlessandra from "@/assets/team-alessandra-cto.jpg";
@@ -57,12 +57,89 @@ const TEAM = [
   },
 ];
 
+/* ── DNA Helix Node ── */
+const DnaNode = ({ delay = 0 }: { delay?: number }) => (
+  <motion.div
+    className="absolute left-4 sm:left-1/2 -translate-x-1/2 z-10"
+    initial={{ scale: 0 }}
+    whileInView={{ scale: 1 }}
+    viewport={vpOnce}
+    transition={{ type: "spring", stiffness: 300, delay }}
+  >
+    <div className="relative">
+      {/* Outer orbital ring */}
+      <motion.div
+        className="absolute -inset-2 rounded-full"
+        style={{ border: "1px solid hsla(265,70%,60%,0.15)" }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+      />
+      {/* Pulse ring */}
+      <motion.div
+        className="absolute -inset-1 rounded-full"
+        style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.2), transparent 70%)" }}
+        animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0, 0.6] }}
+        transition={{ duration: 2.5, repeat: Infinity, delay }}
+      />
+      {/* Core */}
+      <div
+        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center relative"
+        style={{
+          background: "linear-gradient(135deg, hsla(265,70%,55%,0.3), hsla(38,50%,55%,0.2))",
+          border: "1.5px solid hsla(265,70%,60%,0.3)",
+          boxShadow: "0 0 20px hsla(265,70%,60%,0.15), inset 0 0 12px hsla(265,70%,60%,0.1)",
+        }}
+      />
+    </div>
+  </motion.div>
+);
+
 const MILESTONES = [
-  { year: "2022", label: "L'idea nasce", desc: "Kevin fonda Empire AI con la visione di un OS intelligente per le imprese italiane.", icon: Sparkles },
-  { year: "2023", label: "Primo Prodotto", desc: "Lancio della piattaforma food con menu AI, ordini digitali e gestione completa.", icon: Rocket },
-  { year: "2024", label: "Espansione Multi-Settore", desc: "Da 1 a 25+ settori: NCC, Beauty, Healthcare, Fitness, Retail, Hospitality e oltre.", icon: Target },
-  { year: "2025", label: "91 Agenti IA", desc: "Ecosistema completo di intelligenze artificiali specializzate per ogni verticale.", icon: Brain },
-  { year: "2026", label: "Rete Partner Nazionale", desc: "Oltre 150 partner attivi, 500+ aziende servite e crescita del 300% anno su anno.", icon: Users },
+  {
+    year: "2022",
+    label: "Genesi — Il Codice Zero",
+    desc: "Un singolo sviluppatore. Una visione: creare il DNA digitale che avrebbe dato vita all'intelligenza operativa per le imprese italiane. La prima cellula di Empire AI prende forma.",
+    icon: Dna,
+    metric: "Giorno 1",
+    color: "hsla(265,70%,60%,0.2)",
+    glowColor: "hsla(265,70%,60%,0.12)",
+  },
+  {
+    year: "2023",
+    label: "Prima Mutazione — Food OS",
+    desc: "Il primo organismo digitale respira: menu IA generativi, ordini zero-attrito, cucina connessa in tempo reale. I ristoranti pilota registrano +40% efficienza dal primo mese.",
+    icon: Zap,
+    metric: "+40% efficienza",
+    color: "hsla(38,55%,55%,0.25)",
+    glowColor: "hsla(38,55%,55%,0.12)",
+  },
+  {
+    year: "2024",
+    label: "Replicazione — 25 Settori",
+    desc: "Il DNA si replica. NCC, Beauty, Healthcare, Fitness, Retail, Hotel: ogni settore riceve il proprio genoma operativo personalizzato. La piattaforma diventa un ecosistema.",
+    icon: Network,
+    metric: "25+ verticali",
+    color: "hsla(180,60%,50%,0.2)",
+    glowColor: "hsla(180,60%,50%,0.1)",
+  },
+  {
+    year: "2025",
+    label: "Coscienza — 91 Agenti IA",
+    desc: "L'intelligenza collettiva emerge: 91 agenti specializzati che apprendono, collaborano e si evolvono. Ogni business riceve un team di menti artificiali dedicate 24/7.",
+    icon: Brain,
+    metric: "91 AI agents",
+    color: "hsla(265,70%,60%,0.2)",
+    glowColor: "hsla(265,70%,60%,0.12)",
+  },
+  {
+    year: "2026",
+    label: "Simbiosi — Rete Nazionale",
+    desc: "L'organismo raggiunge la massa critica: 150+ partner, 500+ aziende connesse, crescita 300% YoY. Empire AI è il sistema nervoso digitale delle PMI italiane.",
+    icon: Globe,
+    metric: "500+ aziende",
+    color: "hsla(38,55%,55%,0.25)",
+    glowColor: "hsla(38,55%,55%,0.12)",
+  },
 ];
 
 export default function EmpireTeamStory() {
@@ -76,27 +153,44 @@ export default function EmpireTeamStory() {
         {/* ── Story Header ── */}
         <motion.div className="text-center mb-16 sm:mb-20" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce} transition={{ duration: 0.7 }}>
           <motion.div className="inline-flex items-center gap-2.5 mb-5">
-            <div className="relative flex items-center gap-2 px-4 py-2 rounded-full overflow-hidden" style={{ background: "hsla(38,50%,55%,0.06)", border: "1px solid hsla(38,50%,55%,0.12)" }}>
-              <Heart className="w-3 h-3" style={{ color: "hsl(38,50%,55%)" }} />
-              <span className="text-[0.65rem] font-semibold tracking-[3px] uppercase" style={{ color: "hsl(38,50%,55%)" }}>La Nostra Storia</span>
+            <div className="relative flex items-center gap-2 px-4 py-2 rounded-full overflow-hidden" style={{ background: "hsla(265,70%,60%,0.06)", border: "1px solid hsla(265,70%,60%,0.15)" }}>
+              <Dna className="w-3 h-3" style={{ color: "hsl(265,70%,60%)" }} />
+              <span className="text-[0.65rem] font-semibold tracking-[3px] uppercase" style={{ color: "hsl(265,70%,60%)" }}>Evoluzione Digitale</span>
             </div>
           </motion.div>
           <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-5">
-            <span className="text-foreground">Nati per </span>
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(135deg, hsl(38,50%,55%), hsl(32,45%,60%), hsl(38,55%,50%))" }}>
-              Rivoluzionare
+            <span className="text-foreground">Il DNA di </span>
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(135deg, hsl(265,70%,60%), hsl(38,50%,55%), hsl(265,60%,55%))" }}>
+              Empire AI
             </span>
           </h2>
           <p className="text-muted-foreground/70 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-            Empire AI nasce dalla convinzione che ogni impresa italiana merita la stessa potenza tecnologica delle multinazionali. 
-            Un team di appassionati che ha trasformato questa visione in una piattaforma che serve 25+ settori con intelligenza artificiale dedicata.
+            Non un semplice software — un organismo digitale in continua evoluzione. 
+            Ogni milestone è una mutazione che ha reso la nostra piattaforma più intelligente, più potente, più adattiva.
           </p>
         </motion.div>
 
-        {/* ── Timeline ── */}
+        {/* ── DNA Evolution Timeline ── */}
         <div className="relative mb-20 sm:mb-28">
-          {/* Vertical line */}
-          <div className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px" style={{ background: "linear-gradient(180deg, transparent, hsla(38,50%,55%,0.25), hsla(265,60%,55%,0.2), transparent)" }} />
+          {/* DNA Double Helix vertical line */}
+          <div className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px" style={{ background: "linear-gradient(180deg, transparent 0%, hsla(265,70%,60%,0.35) 15%, hsla(38,55%,55%,0.3) 50%, hsla(265,70%,60%,0.35) 85%, transparent 100%)" }} />
+          {/* Second strand (helix effect) */}
+          <div className="absolute left-[18px] sm:left-[calc(50%+2px)] top-0 bottom-0 w-px opacity-40" style={{ background: "linear-gradient(180deg, transparent 5%, hsla(38,55%,55%,0.3) 20%, hsla(265,70%,60%,0.2) 50%, hsla(38,55%,55%,0.3) 80%, transparent 95%)" }} />
+          
+          {/* Floating DNA particles */}
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={`particle-${i}`}
+              className="absolute w-1 h-1 rounded-full"
+              style={{
+                left: `${i % 2 === 0 ? 'calc(50% - 8px)' : 'calc(50% + 8px)'}`,
+                top: `${15 + i * 16}%`,
+                background: i % 2 === 0 ? "hsla(265,70%,65%,0.5)" : "hsla(38,55%,55%,0.5)",
+              }}
+              animate={{ y: [-5, 5, -5], opacity: [0.3, 0.8, 0.3] }}
+              transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}
+            />
+          ))}
           
           {MILESTONES.map((m, i) => {
             const Icon = m.icon;
@@ -104,38 +198,56 @@ export default function EmpireTeamStory() {
             return (
               <motion.div
                 key={m.year}
-                className={`relative flex items-start gap-4 sm:gap-0 mb-10 sm:mb-14 ${isLeft ? "sm:flex-row" : "sm:flex-row-reverse"}`}
-                initial={{ opacity: 0, x: isLeft ? -40 : 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                className={`relative flex items-start gap-4 sm:gap-0 mb-8 sm:mb-14 ${isLeft ? "sm:flex-row" : "sm:flex-row-reverse"}`}
+                initial={{ opacity: 0, x: isLeft ? -30 : 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
                 viewport={vpOnce}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
+                transition={{ duration: 0.7, delay: i * 0.12 }}
               >
-                {/* Node */}
-                <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 z-10">
+                {/* DNA Node with orbital animation */}
+                <DnaNode delay={i * 0.12} />
+                <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 z-20 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12">
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: "hsl(38,50%,60%)" }} />
+                </div>
+
+                {/* Content card — futuristic glass morphism */}
+                <div className={`ml-16 sm:ml-0 ${isLeft ? "sm:w-1/2 sm:pr-14 sm:text-right" : "sm:w-1/2 sm:pl-14"}`}>
                   <motion.div
-                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center"
-                    style={{ background: "linear-gradient(135deg, hsla(38,50%,55%,0.2), hsla(265,60%,55%,0.15))", border: "1px solid hsla(38,50%,55%,0.2)" }}
-                    whileHover={{ scale: 1.2, borderColor: "hsla(38,50%,55%,0.5)" }}
+                    className="relative p-4 sm:p-5 rounded-2xl overflow-hidden group"
+                    style={{
+                      background: "linear-gradient(135deg, hsla(230,12%,12%,0.7), hsla(265,15%,14%,0.5))",
+                      border: "1px solid hsla(265,50%,50%,0.1)",
+                      backdropFilter: "blur(16px)",
+                    }}
+                    whileHover={{ borderColor: "hsla(265,70%,60%,0.3)", y: -4, boxShadow: `0 16px 40px ${m.glowColor}` }}
+                    transition={{ duration: 0.35 }}
                   >
-                    <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+                    {/* Top glow line */}
+                    <div className="absolute top-0 inset-x-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${m.color}, transparent)` }} />
+                    
+                    {/* Corner DNA micro-detail */}
+                    <div className={`absolute top-2 ${isLeft ? 'sm:left-auto sm:right-3 right-3' : 'left-3'}`}>
+                      <Dna className="w-3 h-3 opacity-20" style={{ color: "hsl(265,60%,60%)" }} />
+                    </div>
+
+                    {/* Year badge */}
+                    <div className="inline-flex items-center gap-1.5 mb-2">
+                      <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: m.color }} />
+                      <span className="text-[0.6rem] font-black tracking-[3px] uppercase" style={{ color: "hsl(265,70%,65%)" }}>{m.year}</span>
+                    </div>
+
+                    <h4 className="text-[0.85rem] sm:text-base font-bold text-foreground leading-tight">{m.label}</h4>
+                    <p className="text-[0.7rem] sm:text-xs text-muted-foreground/55 mt-2 leading-relaxed">{m.desc}</p>
+
+                    {/* Metric badge */}
+                    <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: m.color, border: `1px solid ${m.color}` }}>
+                      <ShieldCheck className="w-2.5 h-2.5" style={{ color: "hsl(38,50%,65%)" }} />
+                      <span className="text-[0.55rem] font-bold tracking-wider uppercase text-foreground/90">{m.metric}</span>
+                    </div>
                   </motion.div>
                 </div>
 
-                {/* Content card */}
-                <div className={`ml-14 sm:ml-0 ${isLeft ? "sm:w-1/2 sm:pr-12 sm:text-right" : "sm:w-1/2 sm:pl-12"}`}>
-                  <motion.div
-                    className="p-4 sm:p-5 rounded-2xl"
-                    style={{ background: "hsla(230,10%,15%,0.5)", border: "1px solid hsla(38,50%,55%,0.08)", backdropFilter: "blur(12px)" }}
-                    whileHover={{ borderColor: "hsla(38,50%,55%,0.2)", y: -3 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <span className="text-[0.65rem] font-bold tracking-[2px] uppercase text-primary/70">{m.year}</span>
-                    <h4 className="text-sm sm:text-base font-bold text-foreground mt-1">{m.label}</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground/60 mt-1.5 leading-relaxed">{m.desc}</p>
-                  </motion.div>
-                </div>
-
-                {/* Spacer for the other side */}
+                {/* Spacer */}
                 <div className="hidden sm:block sm:w-1/2" />
               </motion.div>
             );
