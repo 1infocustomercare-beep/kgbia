@@ -410,16 +410,8 @@ const EmpireDNABackground = () => {
           ctx.fillRect(tp.x - 1, tp.y - 1, 2, 2);
         }
 
-        // Main particle glow
-        const tg = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, 8);
-        tg.addColorStop(0, hsla(pAccent, fadeA * 0.5));
-        tg.addColorStop(0.5, hsla(pGlow, fadeA * 0.15));
-        tg.addColorStop(1, hsla(pGlow, 0));
-        ctx.fillStyle = tg;
-        ctx.beginPath(); ctx.arc(pt.x, pt.y, 8, 0, Math.PI * 2); ctx.fill();
-
-        // Core dot
-        ctx.fillStyle = hsla(pAccent, fadeA * 0.7 + 0.15);
+        // Small subtle core dot only — no big glowing ball
+        ctx.fillStyle = hsla(pAccent, fadeA * 0.25);
         ctx.fillRect(pt.x - 1, pt.y - 1, 2, 2);
       }
 
