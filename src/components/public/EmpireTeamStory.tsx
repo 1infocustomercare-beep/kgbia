@@ -45,7 +45,7 @@ const TEAM = [
     name: "Luca Marchetti",
     role: "AI Research Lead",
     photo: teamLuca,
-    bio: "PhD in Machine Learning. Progetta i 91 agenti IA specializzati che automatizzano ogni aspetto del business.",
+    bio: "PhD in Machine Learning. Progetta gli oltre 95 agenti IA specializzati che automatizzano ogni aspetto del business.",
     accent: "hsla(220,60%,55%,0.3)",
   },
   {
