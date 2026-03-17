@@ -10,11 +10,11 @@ const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 60 : 120;
+const NODE_COUNT = IS_MOBILE ? 40 : 80;
 const MAX_DIST = IS_MOBILE ? 110 : 150;
-const FLOW_COUNT = IS_MOBILE ? 30 : 60;
-const PULSE_COUNT = IS_MOBILE ? 6 : 14;
-const HIGHWAY_COUNT = IS_MOBILE ? 4 : 8;
+const FLOW_COUNT = IS_MOBILE ? 12 : 25;
+const PULSE_COUNT = IS_MOBILE ? 3 : 6;
+const HIGHWAY_COUNT = IS_MOBILE ? 2 : 4;
 
 type Pt = { x: number; y: number };
 
@@ -163,7 +163,7 @@ const EmpireDNABackground = () => {
       velRef.current = Array.from({ length: NODE_COUNT }, () => ({ x: 0, y: 0 }));
     }
 
-    const spawnFlow = (): FlowParticle => ({ fromIdx: Math.floor(Math.random() * NODE_COUNT), toIdx: Math.floor(Math.random() * NODE_COUNT), progress: 0, speed: 0.005 + Math.random() * 0.015, life: 0 });
+    const spawnFlow = (): FlowParticle => ({ fromIdx: Math.floor(Math.random() * NODE_COUNT), toIdx: Math.floor(Math.random() * NODE_COUNT), progress: 0, speed: 0.002 + Math.random() * 0.006, life: 0 });
     if (!flowsRef.current.length) flowsRef.current = Array.from({ length: FLOW_COUNT }, spawnFlow);
 
     // Initialize pulse rings
@@ -178,9 +178,9 @@ const EmpireDNABackground = () => {
     if (!hwRef.current.length) {
       hwRef.current = Array.from({ length: HIGHWAY_COUNT }, (_, i) => ({
         y: (h || 800) * (0.1 + (i / HIGHWAY_COUNT) * 0.8),
-        speed: 0.5 + Math.random() * 1.5,
-        particles: Array.from({ length: IS_MOBILE ? 4 : 8 }, () => ({
-          x: Math.random() * (w || 1000), sp: 1 + Math.random() * 3, len: 15 + Math.random() * 40,
+        speed: 0.15 + Math.random() * 0.4,
+        particles: Array.from({ length: IS_MOBILE ? 2 : 4 }, () => ({
+          x: Math.random() * (w || 1000), sp: 0.3 + Math.random() * 0.8, len: 15 + Math.random() * 40,
         })),
       }));
     }
@@ -256,12 +256,12 @@ const EmpireDNABackground = () => {
       // ═══ L0: AMBIENT DOT MATRIX — breathing grid ═══
       const gridSp = IS_MOBILE ? 45 : 55;
       const gridPulse = 0.5 + Math.sin(time * 0.3) * 0.5;
-      ctx.fillStyle = hsla(pLine, 0.02 + gridPulse * 0.015);
+      ctx.fillStyle = hsla(pLine, 0.015 + gridPulse * 0.008);
       for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
         for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
-          const localPulse = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.5) * 0.5 + 0.5;
-          const s = 0.5 + localPulse * 0.8;
-          ctx.globalAlpha = 0.4 + localPulse * 0.6;
+          const localPulse = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.25) * 0.5 + 0.5;
+          const s = 0.4 + localPulse * 0.4;
+          ctx.globalAlpha = 0.3 + localPulse * 0.3;
           ctx.fillRect(gx - s / 2, gy - s / 2, s, s);
         }
       }
@@ -284,15 +284,11 @@ const EmpireDNABackground = () => {
           const px = p.x - p.len;
           const grad = ctx.createLinearGradient(px, hw.y, px + p.len, hw.y);
           grad.addColorStop(0, hsla(pAccent, 0));
-          grad.addColorStop(0.7, hsla(pAccent, 0.08));
-          grad.addColorStop(1, hsla(pGlow, 0.15));
+          grad.addColorStop(0.7, hsla(pAccent, 0.04));
+          grad.addColorStop(1, hsla(pGlow, 0.06));
           ctx.strokeStyle = grad;
-          ctx.lineWidth = 1.2;
+          ctx.lineWidth = 0.8;
           ctx.beginPath(); ctx.moveTo(px, hw.y); ctx.lineTo(px + p.len, hw.y); ctx.stroke();
-          // Head glow
-          const hg = ctx.createRadialGradient(px + p.len, hw.y, 0, px + p.len, hw.y, 5);
-          hg.addColorStop(0, hsla(pGlow, 0.25)); hg.addColorStop(1, hsla(pGlow, 0));
-          ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(px + p.len, hw.y, 5, 0, Math.PI * 2); ctx.fill();
         }
       }
 
@@ -371,12 +367,11 @@ const EmpireDNABackground = () => {
           ctx.fillRect(pos[i].x - s / 2, pos[i].y - s / 2, s, s);
         }
 
-        // Glow halo for junction/active nodes
-        if (isJunction || isActive) {
-          const glowR = isActive ? 24 : 16;
+        // Subtle halo for active nodes only (no big white balls)
+        if (isActive) {
+          const glowR = 10;
           const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, glowR);
-          gr.addColorStop(0, hsla(isActive ? pAccent : pGlow, na * 0.6));
-          gr.addColorStop(0.5, hsla(pGlow, na * 0.15));
+          gr.addColorStop(0, hsla(pAccent, na * 0.2));
           gr.addColorStop(1, hsla(pGlow, 0));
           ctx.fillStyle = gr;
           ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, glowR, 0, Math.PI * 2); ctx.fill();
@@ -415,16 +410,8 @@ const EmpireDNABackground = () => {
           ctx.fillRect(tp.x - 1, tp.y - 1, 2, 2);
         }
 
-        // Main particle glow
-        const tg = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, 8);
-        tg.addColorStop(0, hsla(pAccent, fadeA * 0.5));
-        tg.addColorStop(0.5, hsla(pGlow, fadeA * 0.15));
-        tg.addColorStop(1, hsla(pGlow, 0));
-        ctx.fillStyle = tg;
-        ctx.beginPath(); ctx.arc(pt.x, pt.y, 8, 0, Math.PI * 2); ctx.fill();
-
-        // Core dot
-        ctx.fillStyle = hsla(pAccent, fadeA * 0.7 + 0.15);
+        // Small subtle core dot only — no big glowing ball
+        ctx.fillStyle = hsla(pAccent, fadeA * 0.25);
         ctx.fillRect(pt.x - 1, pt.y - 1, 2, 2);
       }
 
@@ -432,8 +419,8 @@ const EmpireDNABackground = () => {
       const pulses = pulsesRef.current;
       for (let pi = 0; pi < pulses.length; pi++) {
         const p = pulses[pi];
-        p.r += 0.6 + Math.sin(time + pi) * 0.2;
-        p.alpha = (1 - p.r / p.maxR) * 0.08;
+        p.r += 0.25 + Math.sin(time + pi) * 0.1;
+        p.alpha = (1 - p.r / p.maxR) * 0.03;
         if (p.r >= p.maxR) {
           // Respawn at a random node
           const ni = Math.floor(Math.random() * NODE_COUNT);
@@ -452,7 +439,7 @@ const EmpireDNABackground = () => {
       }
 
       // ═══ L6: RADAR SWEEP — rotating scanner ═══
-      const radarAngle = time * 0.25;
+      const radarAngle = time * 0.1;
       const radarR = Math.min(w, h) * 0.5;
       const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
       rGrad.addColorStop(0, hsla(pGlow, 0));
@@ -475,23 +462,19 @@ const EmpireDNABackground = () => {
       ctx.lineWidth = 0.5;
       ctx.beginPath(); ctx.moveTo(0, scanY); ctx.lineTo(w, scanY); ctx.stroke();
 
-      // ═══ L8: VERTICAL DATA STREAMS ═══
-      const streamCount = IS_MOBILE ? 4 : 8;
+      // ═══ L8: VERTICAL DATA STREAMS (subtle, slow) ═══
+      const streamCount = IS_MOBILE ? 3 : 5;
       for (let si = 0; si < streamCount; si++) {
-        const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7 + time * 0.1) * 15;
-        const streamPhase = (time * (0.08 + si * 0.01) + si * 1.1) % 1;
-        const streamLen = h * 0.15;
+        const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7 + time * 0.05) * 10;
+        const streamPhase = (time * (0.03 + si * 0.005) + si * 1.1) % 1;
+        const streamLen = h * 0.12;
         const sy = streamPhase * (h + streamLen * 2) - streamLen;
         const sGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
         sGrad.addColorStop(0, hsla(pGlow, 0));
-        sGrad.addColorStop(0.5, hsla(pGlow, 0.04));
+        sGrad.addColorStop(0.5, hsla(pGlow, 0.02));
         sGrad.addColorStop(1, hsla(pGlow, 0));
-        ctx.strokeStyle = sGrad; ctx.lineWidth = 0.8;
+        ctx.strokeStyle = sGrad; ctx.lineWidth = 0.5;
         ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy + streamLen); ctx.stroke();
-        // Stream head
-        const shg = ctx.createRadialGradient(sx, sy + streamLen, 0, sx, sy + streamLen, 4);
-        shg.addColorStop(0, hsla(pAccent, 0.12)); shg.addColorStop(1, hsla(pAccent, 0));
-        ctx.fillStyle = shg; ctx.beginPath(); ctx.arc(sx, sy + streamLen, 4, 0, Math.PI * 2); ctx.fill();
       }
 
       // ═══ L9: CORNER CIRCUIT BRACKETS — tech frame ═══
@@ -518,7 +501,7 @@ const EmpireDNABackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: 0.35, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: 0.12, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };
