@@ -163,7 +163,7 @@ const EmpireDNABackground = () => {
       velRef.current = Array.from({ length: NODE_COUNT }, () => ({ x: 0, y: 0 }));
     }
 
-    const spawnFlow = (): FlowParticle => ({ fromIdx: Math.floor(Math.random() * NODE_COUNT), toIdx: Math.floor(Math.random() * NODE_COUNT), progress: 0, speed: 0.005 + Math.random() * 0.015, life: 0 });
+    const spawnFlow = (): FlowParticle => ({ fromIdx: Math.floor(Math.random() * NODE_COUNT), toIdx: Math.floor(Math.random() * NODE_COUNT), progress: 0, speed: 0.002 + Math.random() * 0.006, life: 0 });
     if (!flowsRef.current.length) flowsRef.current = Array.from({ length: FLOW_COUNT }, spawnFlow);
 
     // Initialize pulse rings
