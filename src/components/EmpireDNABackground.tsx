@@ -419,8 +419,8 @@ const EmpireDNABackground = () => {
       const pulses = pulsesRef.current;
       for (let pi = 0; pi < pulses.length; pi++) {
         const p = pulses[pi];
-        p.r += 0.6 + Math.sin(time + pi) * 0.2;
-        p.alpha = (1 - p.r / p.maxR) * 0.08;
+        p.r += 0.25 + Math.sin(time + pi) * 0.1;
+        p.alpha = (1 - p.r / p.maxR) * 0.03;
         if (p.r >= p.maxR) {
           // Respawn at a random node
           const ni = Math.floor(Math.random() * NODE_COUNT);
