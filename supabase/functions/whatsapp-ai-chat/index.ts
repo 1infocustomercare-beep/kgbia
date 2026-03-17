@@ -104,7 +104,7 @@ serve(async (req) => {
       ? `${sectorPrompt.system_prompt}\n\nCliente: ${conv.contact_name || conv.contact_phone}\nAzioni consentite: ${JSON.stringify(sectorPrompt.allowed_actions)}\nAzioni bloccate: ${JSON.stringify(sectorPrompt.blocked_actions)}${isolationRule}\n\nGenera una risposta suggerita. L'operatore potrà modificarla prima di inviarla.`
       : `Sei un assistente AI per WhatsApp Business. Genera una risposta professionale in italiano per il cliente ${conv.contact_name || conv.contact_phone}.${isolationRule}`;
 
-    const aiResp = await fetch("https://api.lovable.dev/v1/chat/completions", {
+    const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
