@@ -75,11 +75,38 @@ const ORBIT_START = 4;
 const ORBIT_END = 11;
 const HELIX_RESTART = 10;
 
+// ── Sample text outline into point cloud ──
+const sampleTextPoints = (text: string, w: number, h: number, maxPts: number): { x: number; y: number }[] => {
+  const offC = document.createElement("canvas");
+  offC.width = w; offC.height = h;
+  const offCtx = offC.getContext("2d");
+  if (!offCtx) return [];
+  offCtx.clearRect(0, 0, w, h);
+  const fontSize = Math.min(w / (text.length * 0.52), h * 0.22);
+  offCtx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
+  offCtx.textAlign = "center";
+  offCtx.textBaseline = "middle";
+  offCtx.fillStyle = "#fff";
+  offCtx.fillText(text, w / 2, h / 2);
+  const imgData = offCtx.getImageData(0, 0, w, h).data;
+  const pts: { x: number; y: number }[] = [];
+  const step = Math.max(2, Math.floor(Math.sqrt((w * h) / (maxPts * 3))));
+  for (let y = 0; y < h; y += step) {
+    for (let x = 0; x < w; x += step) {
+      if (imgData[(y * w + x) * 4 + 3] > 128) pts.push({ x, y });
+    }
+  }
+  // Shuffle and limit
+  for (let i = pts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pts[i], pts[j]] = [pts[j], pts[i]]; }
+  return pts.slice(0, maxPts);
+};
+
 const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const pointerRef = useRef({ x: size / 2, y: size / 2, active: false });
   const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const morphRef = useRef<{ active: boolean; startTime: number; textPts: { x: number; y: number }[]; phase: "in" | "hold" | "out" | "idle" }>({ active: false, startTime: 0, textPts: [], phase: "idle" });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -658,6 +685,133 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, radarR, radarAngle, radarAngle + Math.PI * 0.25); ctx.closePath();
       ctx.fillStyle = rGrad; ctx.fill();
 
+      // ═══ L8: TEXT MORPH — "EMPIRE AI GROUP" on touch release ═══
+      const morph = morphRef.current;
+      if (morph.active) {
+        const mElapsed = (now - morph.startTime) / 1000;
+        let mBlend = 0;
+        if (mElapsed < 0.8) { // morph IN
+          mBlend = mElapsed / 0.8;
+          mBlend = mBlend * mBlend * (3 - 2 * mBlend); // smoothstep
+          morph.phase = "in";
+        } else if (mElapsed < 3.0) { // HOLD
+          mBlend = 1;
+          morph.phase = "hold";
+        } else if (mElapsed < 3.8) { // morph OUT
+          mBlend = 1 - (mElapsed - 3.0) / 0.8;
+          mBlend = mBlend * mBlend * (3 - 2 * mBlend);
+          morph.phase = "out";
+        } else {
+          morph.active = false;
+          morph.phase = "idle";
+          mBlend = 0;
+        }
+
+        if (mBlend > 0.01 && morph.textPts.length > 0) {
+          const totalPts = morph.textPts.length;
+
+          // Collect all animatable positions (floats + mesh + helix nodes)
+          const allSources: { x: number; y: number }[] = [];
+          for (const f of floats) allSources.push({ x: f.x, y: f.y });
+          for (const m of mesh) allSources.push({ x: m.x * w, y: m.y * h });
+          for (const n of helix) allSources.push({ x: n.x * w, y: n.y * h });
+          for (const ds of streams) {
+            const baseR = Math.min(w, h) * 0.35 * ds.rMult;
+            allSources.push({ x: cx + Math.cos(ds.angle) * baseR, y: cy + Math.sin(ds.angle) * baseR });
+          }
+
+          // Circuit trace connections between text points
+          ctx.save();
+          ctx.globalAlpha = mBlend * 0.3;
+          ctx.strokeStyle = hsl(COLORS.violet, 0.35);
+          ctx.lineWidth = 0.6;
+          ctx.setLineDash([3, 5]);
+          const traceCount = Math.min(totalPts, 60);
+          for (let i = 0; i < traceCount - 1; i++) {
+            const a = morph.textPts[i], b = morph.textPts[i + 1];
+            // L-shaped circuit routing
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            if (i % 2 === 0) {
+              ctx.lineTo(b.x, a.y);
+              ctx.lineTo(b.x, b.y);
+            } else {
+              ctx.lineTo(a.x, b.y);
+              ctx.lineTo(b.x, b.y);
+            }
+            ctx.stroke();
+          }
+          ctx.setLineDash([]);
+          ctx.restore();
+
+          // Render morphed particles toward text positions
+          for (let i = 0; i < totalPts; i++) {
+            const target = morph.textPts[i];
+            const src = allSources[i % allSources.length];
+            const px = src.x + (target.x - src.x) * mBlend;
+            const py = src.y + (target.y - src.y) * mBlend;
+            const ci = i % 4;
+            const c = colorPalette[ci];
+            const pulse = Math.sin(el * 4 + i * 0.3) * 0.3 + 0.7;
+            const nodeR = (1.5 + pulse * 1.2) * sc;
+
+            // Glow halo
+            const glR = nodeR * 5;
+            const gg = ctx.createRadialGradient(px, py, 0, px, py, glR);
+            gg.addColorStop(0, hsl(c, 0.5 * mBlend * pulse));
+            gg.addColorStop(0.4, hsl(COLORS.violet, 0.15 * mBlend));
+            gg.addColorStop(1, hsl(c, 0));
+            ctx.beginPath(); ctx.arc(px, py, glR, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
+
+            // Core dot — bright
+            ctx.beginPath(); ctx.arc(px, py, nodeR, 0, Math.PI * 2);
+            ctx.fillStyle = hsl(c, 0.95 * mBlend); ctx.fill();
+
+            // White hot center
+            ctx.beginPath(); ctx.arc(px, py, nodeR * 0.4, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(0,0%,100%,${0.7 * mBlend * pulse})`; ctx.fill();
+          }
+
+          // Data pulses flowing along circuit traces during hold
+          if (morph.phase === "hold") {
+            const pulseCount = IS_MOBILE ? 8 : 16;
+            for (let p = 0; p < pulseCount; p++) {
+              const pIdx = Math.floor((el * 12 + p * 7) % Math.max(1, traceCount - 1));
+              const a = morph.textPts[pIdx], b = morph.textPts[pIdx + 1];
+              if (!a || !b) continue;
+              const pT = ((el * 2 + p * 0.4) % 1);
+              let ppx, ppy;
+              if (pIdx % 2 === 0) {
+                if (pT < 0.5) { ppx = a.x + (b.x - a.x) * (pT * 2); ppy = a.y; }
+                else { ppx = b.x; ppy = a.y + (b.y - a.y) * ((pT - 0.5) * 2); }
+              } else {
+                if (pT < 0.5) { ppx = a.x; ppy = a.y + (b.y - a.y) * (pT * 2); }
+                else { ppx = a.x + (b.x - a.x) * ((pT - 0.5) * 2); ppy = b.y; }
+              }
+              const dpg = ctx.createRadialGradient(ppx, ppy, 0, ppx, ppy, 6 * sc);
+              dpg.addColorStop(0, hsl(COLORS.gold, 0.8));
+              dpg.addColorStop(0.5, hsl(COLORS.violet, 0.3));
+              dpg.addColorStop(1, hsl(COLORS.gold, 0));
+              ctx.beginPath(); ctx.arc(ppx, ppy, 6 * sc, 0, Math.PI * 2); ctx.fillStyle = dpg; ctx.fill();
+              ctx.beginPath(); ctx.arc(ppx, ppy, 1.5 * sc, 0, Math.PI * 2);
+              ctx.fillStyle = `hsla(0,0%,100%,0.9)`; ctx.fill();
+            }
+          }
+
+          // Premium text label overlay during hold
+          if (morph.phase === "hold" || (morph.phase === "in" && mBlend > 0.7)) {
+            const textAlpha = morph.phase === "hold" ? 0.6 : (mBlend - 0.7) / 0.3 * 0.6;
+            ctx.save();
+            const tFS = Math.min(w * 0.06, 18);
+            ctx.font = `300 ${tFS}px system-ui, -apple-system, sans-serif`;
+            ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            ctx.fillStyle = hsl(COLORS.violet, textAlpha * 0.5);
+            ctx.fillText("EMPIRE AI GROUP", cx, h * 0.88);
+            ctx.restore();
+          }
+        }
+      }
+
       animRef.current = requestAnimationFrame(draw);
     };
 
@@ -673,6 +827,18 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     pointerRef.current.active = true;
   }, []);
 
+  const handlePointerUp = useCallback(() => {
+    const morph = morphRef.current;
+    if (morph.active) return; // already morphing
+    const totalParticles = FLOAT_PARTICLES + MESH_COUNT + HELIX_NODES + DATA_STREAMS;
+    const pts = sampleTextPoints("EMPIRE AI GROUP", size, size, totalParticles);
+    if (pts.length < 10) return;
+    morph.textPts = pts;
+    morph.startTime = performance.now();
+    morph.active = true;
+    morph.phase = "in";
+  }, [size]);
+
   return (
     <div className="relative touch-none" style={{ width: size, height: size }}>
       <canvas
@@ -683,6 +849,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         style={{ width: size, height: size }}
         onPointerMove={handlePointerMove}
         onPointerEnter={handlePointerMove}
+        onPointerUp={handlePointerUp}
         onPointerLeave={() => { pointerRef.current.active = false; }}
       />
 
