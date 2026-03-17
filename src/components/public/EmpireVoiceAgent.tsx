@@ -859,9 +859,11 @@ const EmpireVoiceAgent: React.FC = () => {
 
     const unlockAndRetry = () => {
       if (!isMounted) return;
-      // Only unlock ONCE — after that, narration is self-sustaining
-      if (audioUnlockedRef.current) return;
       if (unlockInFlightRef.current) return;
+
+      // Allow re-fire if hero hasn't been narrated yet (gesture unlock is needed)
+      const heroStillPending = !narratedRef.current.has("hero");
+      if (audioUnlockedRef.current && !heroStillPending) return;
 
       unlockInFlightRef.current = true;
       audioUnlockedRef.current = true;
@@ -888,7 +890,10 @@ const EmpireVoiceAgent: React.FC = () => {
       stopSplashNarration();
       abortRef.current = false;
       startIntroNarration();
-      if (!narratedRef.current.has("hero")) {
+      // Always force-enqueue hero if it hasn't been narrated yet
+      if (heroStillPending) {
+        // Ensure it's not already in queue
+        sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== "hero");
         enqueueSectionNarration("hero", true);
       }
 
