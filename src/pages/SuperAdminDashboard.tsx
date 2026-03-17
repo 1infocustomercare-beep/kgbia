@@ -1822,7 +1822,7 @@ const SuperAdminDashboard = () => {
               </h3>
               <div className="space-y-2">
                 {[
-                  { step: "1", title: "Crea App su Meta Business", desc: "Vai su developers.facebook.com → Crea App → Business → Aggiungi prodotto WhatsApp", url: "https://developers.facebook.com/apps/" },
+                  { step: "1", title: "Crea App su Meta Business", desc: "Vai su business.facebook.com → Impostazioni → App Business → Crea App → Aggiungi prodotto WhatsApp", url: "https://business.facebook.com/settings/" },
                   { step: "2", title: "Ottieni credenziali API", desc: "WhatsApp → API Setup → Copia Phone Number ID, Token permanente e Business Account ID" },
                   { step: "3", title: "Configura Webhook", desc: "Imposta webhook URL: la tua edge function whatsapp-webhook riceve i messaggi in entrata" },
                   { step: "4", title: "Inserisci nel pannello", desc: "Vai su /app/whatsapp nel tuo account → Tab Impostazioni → Inserisci Phone Number ID, Token e Business ID" },
