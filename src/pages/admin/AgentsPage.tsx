@@ -9,7 +9,7 @@ import {
   ArrowUpRight, ArrowDownRight, Medal, ChevronDown, X, Send,
   ToggleLeft, ToggleRight, Check, Loader2, Sparkles, Mic, Volume2, Phone, MessageSquare,
   Pencil, Save, Trash2, Plus, Power, PowerOff, Copy, CheckCircle2,
-  Bell, ShieldCheck, FileText, Car, Scissors, Heart, Wrench, ChefHat
+  Bell, ShieldCheck, FileText, Car, Scissors, Heart, Wrench, ChefHat, Crown, Users
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
@@ -1432,164 +1432,306 @@ export default function AgentsPage() {
           </motion.div>
         </div>
 
-        {/* Agent Grid */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-bold flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-primary" /> Agenti ({AGENTS.length})
-            </h2>
-            <Button size="sm" className="h-7 text-[9px] gap-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground"
-              disabled={bulkActivateAll.isPending}
-              onClick={() => bulkActivateAll.mutate()}>
-              {bulkActivateAll.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
-              Attiva Tutti · {ALL_INDUSTRIES.length} Settori
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-            {AGENTS.map((agent, idx) => {
-              const enabled = isAgentEnabled(agent.name);
-              const dayData = mock.dailyData[mock.dailyData.length - 1];
-              const agentCallsToday = (dayData as any)?.[agent.name] || 0;
-              const callsMonth = mock.dailyData.reduce((s, d) => s + ((d as any)[agent.name] || 0), 0);
-              const config = getAgentConfig(agent.name);
-              return (
-                <motion.div key={agent.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.04 }}
-                  className={`relative overflow-hidden rounded-xl transition-all cursor-pointer group ${
-                    enabled
-                      ? "hover:shadow-xl hover:shadow-primary/10"
-                      : "opacity-40 grayscale"
-                  }`}
-                  style={{
-                    background: enabled
-                      ? `linear-gradient(160deg, hsl(var(--card)), ${agent.color}08)`
-                      : "hsl(var(--card))",
-                    border: `1px solid ${enabled ? agent.color + "25" : "hsl(var(--border))"}`,
-                  }}
-                  onClick={() => setSelectedAgent(agent)}
-                  whileHover={enabled ? { y: -3, borderColor: agent.color + "55" } : {}}
-                >
-                  {/* Top gradient accent */}
-                  <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${agent.color}66, transparent)` }} />
-                  {/* Ambient corner glow */}
-                  <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700" style={{ background: agent.color }} />
+        {/* ═══ AGENT CATALOG — 3 Organized Views ═══ */}
+        <div className="space-y-4">
+          <Tabs defaultValue="my-agents" className="w-full">
+            <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
+              <TabsList className="h-9 bg-card border border-border">
+                <TabsTrigger value="my-agents" className="text-[10px] gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                  <Crown className="w-3 h-3" /> I Miei Agenti
+                </TabsTrigger>
+                <TabsTrigger value="all-agents" className="text-[10px] gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                  <Package className="w-3 h-3" /> Catalogo ({AGENTS.length})
+                </TabsTrigger>
+                <TabsTrigger value="per-account" className="text-[10px] gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                  <Users className="w-3 h-3" /> Per Account
+                </TabsTrigger>
+              </TabsList>
+              <Button size="sm" className="h-7 text-[9px] gap-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground"
+                disabled={bulkActivateAll.isPending}
+                onClick={() => bulkActivateAll.mutate()}>
+                {bulkActivateAll.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
+                Attiva Tutti · {ALL_INDUSTRIES.length} Settori
+              </Button>
+            </div>
 
-                  <div className="p-4">
-                    {/* Header with avatar */}
-                    <div className="flex items-start gap-3 mb-3">
-                      <AgentAvatar agent={agent} size={52} />
-                      <div className="flex-1 min-w-0 pt-1">
-                        <h3 className="font-bold text-sm truncate text-foreground">{config?.display_name || agent.displayName}</h3>
-                        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                          <Badge className={`${agent.modelBadgeColor} text-[9px] h-5`}>{agent.model}</Badge>
-                          <StatusBadge status={enabled ? "active" : "disabled"} />
-                        </div>
-                      </div>
-                      <Switch checked={enabled}
-                        onCheckedChange={(checked) => toggleAgent.mutate({ agent_name: agent.name, is_enabled: checked })}
-                        onClick={(e) => e.stopPropagation()} className="mt-1" />
+            {/* ── TAB 1: I Miei Agenti (Super Admin personal active agents) ── */}
+            <TabsContent value="my-agents" className="mt-0 space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "hsla(38,50%,55%,0.12)", border: "1px solid hsla(38,50%,55%,0.2)" }}>
+                  <Crown className="w-3.5 h-3.5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-foreground">I Miei Agenti Personali</p>
+                  <p className="text-[9px] text-muted-foreground">Agenti attivi nel tuo account Super Admin — gestione diretta</p>
+                </div>
+              </div>
+
+              {(() => {
+                const myAgents = AGENTS.filter(a => isAgentEnabled(a.name));
+                if (myAgents.length === 0) return (
+                  <div className="text-center py-10 text-muted-foreground text-sm">Nessun agente attivo. Attivali dal Catalogo.</div>
+                );
+
+                // Group by category
+                const categories: Record<string, typeof myAgents> = {};
+                myAgents.forEach(a => {
+                  const cat = a.industries.length === 1
+                    ? `🎯 ${INDUSTRY_LABELS[a.industries[0]] || a.industries[0]}`
+                    : a.industries.length > 10
+                      ? "🌐 Universali"
+                      : "🔧 Multi-Settore";
+                  if (!categories[cat]) categories[cat] = [];
+                  categories[cat].push(a);
+                });
+
+                return Object.entries(categories).map(([catName, agents]) => (
+                  <div key={catName} className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold text-foreground">{catName}</span>
+                      <div className="flex-1 h-px bg-border/50" />
+                      <Badge variant="outline" className="text-[9px] h-4">{agents.length}</Badge>
                     </div>
-
-                    <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{config?.description || agent.description}</p>
-
-                    {/* Industries */}
-                    <div className="flex items-center gap-1 flex-wrap mb-2">
-                      <span className="text-[10px] text-muted-foreground mr-1">🎯</span>
-                      {(config?.allowed_industries || agent.industries).slice(0, 3).map((ind: string) => (
-                        <Badge key={ind} variant="outline" className="text-[9px] h-4 px-1.5"
-                          style={{ borderColor: `${agent.color}30`, color: `${agent.color}cc` }}>
-                          {INDUSTRY_LABELS[ind]?.split(" ")[0] || ind}
-                        </Badge>
-                      ))}
-                      {(config?.allowed_industries || agent.industries).length > 3 && (
-                        <Badge variant="outline" className="text-[9px] h-4 px-1.5">+{(config?.allowed_industries || agent.industries).length - 3}</Badge>
-                      )}
-                    </div>
-
-                    <div className="text-[10px] text-muted-foreground mb-3">⚡ {agent.trigger}</div>
-
-                    {/* Stats row */}
-                    <div className="border-t border-border/50 pt-2 grid grid-cols-3 gap-2 text-center">
-                      <div>
-                        <div className="text-xs font-bold" style={{ color: agent.color }}>€{agent.costPerCall}</div>
-                        <div className="text-[9px] text-muted-foreground">per call</div>
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-foreground">{agentCallsToday}</div>
-                        <div className="text-[9px] text-muted-foreground">oggi</div>
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-foreground">{callsMonth.toLocaleString()}</div>
-                        <div className="text-[9px] text-muted-foreground">mese</div>
-                      </div>
-                    </div>
-
-                    {/* Action buttons */}
-                    <div className="flex gap-2 mt-3 pt-2 border-t border-border/50">
-                      {agent.testable && (
-                        <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
-                          style={{ borderColor: `${agent.color}30` }}
-                          onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
-                          <Play className="w-3 h-3" /> Test
-                        </Button>
-                      )}
-                      <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
-                        onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
-                        <BarChart3 className="w-3 h-3" /> Analytics
-                      </Button>
-                      <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
-                        onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
-                        <Pencil className="w-3 h-3" /> Modifica
-                      </Button>
+                    <div className="space-y-1.5">
+                      {agents.map(agent => {
+                        const config = getAgentConfig(agent.name);
+                        const dayData = mock.dailyData[mock.dailyData.length - 1];
+                        const agentCallsToday = (dayData as any)?.[agent.name] || 0;
+                        return (
+                          <motion.div
+                            key={agent.name}
+                            className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer group transition-all"
+                            style={{
+                              background: `linear-gradient(135deg, hsl(var(--card)), ${agent.color}06)`,
+                              border: `1px solid ${agent.color}15`,
+                            }}
+                            whileHover={{ borderColor: agent.color + "40", y: -1 }}
+                            onClick={() => setSelectedAgent(agent)}
+                          >
+                            <AgentAvatar agent={agent} size={42} />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <p className="text-xs font-bold text-foreground truncate">{config?.display_name || agent.displayName}</p>
+                                <StatusBadge status="active" />
+                              </div>
+                              <p className="text-[10px] text-muted-foreground truncate mt-0.5">{config?.description || agent.description}</p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Badge className={`${agent.modelBadgeColor} text-[8px] h-4`}>{agent.model}</Badge>
+                                <span className="text-[9px] text-muted-foreground">⚡ {agent.trigger.split(" ")[0]}</span>
+                              </div>
+                            </div>
+                            <div className="text-right shrink-0 space-y-0.5">
+                              <p className="text-xs font-bold" style={{ color: agent.color }}>{agentCallsToday}</p>
+                              <p className="text-[8px] text-muted-foreground uppercase tracking-wider">oggi</p>
+                            </div>
+                            <div className="flex gap-1 shrink-0">
+                              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
+                                <Pencil className="w-3 h-3 text-muted-foreground" />
+                              </Button>
+                              <Switch checked={true} className="scale-75"
+                                onCheckedChange={(checked) => toggleAgent.mutate({ agent_name: agent.name, is_enabled: checked })}
+                                onClick={(e) => e.stopPropagation()} />
+                            </div>
+                          </motion.div>
+                        );
+                      })}
                     </div>
                   </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
+                ));
+              })()}
+            </TabsContent>
 
-        {/* Top Accounts Table */}
-        <div className="bg-card border border-border rounded-xl overflow-hidden">
-          <div className="p-4 border-b border-border flex items-center justify-between">
-            <h3 className="font-semibold text-sm">🏆 Top Account per Consumo AI</h3>
-            <Input placeholder="Cerca account..." className="w-48 h-7 text-xs" value={searchAccount} onChange={e => setSearchAccount(e.target.value)} />
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead><tr className="border-b border-border text-muted-foreground text-xs">
-                <th className="p-3 text-left w-10">#</th><th className="p-3 text-left">Account</th>
-                <th className="p-3 text-left hidden md:table-cell">Settore</th>
-                <th className="p-3 text-right">Chiamate</th><th className="p-3 text-right hidden md:table-cell">Tokens</th>
-                <th className="p-3 text-right">Costo</th><th className="p-3 text-right hidden lg:table-cell">Trend</th>
-              </tr></thead>
-              <tbody>
+            {/* ── TAB 2: Catalogo Completo (grid cards) ── */}
+            <TabsContent value="all-agents" className="mt-0 space-y-3">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "hsla(265,60%,55%,0.12)", border: "1px solid hsla(265,60%,55%,0.2)" }}>
+                  <Package className="w-3.5 h-3.5" style={{ color: "hsl(265,60%,55%)" }} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-foreground">Catalogo Completo Agenti</p>
+                  <p className="text-[9px] text-muted-foreground">Tutti i {AGENTS.length} agenti disponibili — attiva/disattiva e configura</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+                {AGENTS.map((agent, idx) => {
+                  const enabled = isAgentEnabled(agent.name);
+                  const dayData = mock.dailyData[mock.dailyData.length - 1];
+                  const agentCallsToday = (dayData as any)?.[agent.name] || 0;
+                  const callsMonth = mock.dailyData.reduce((s, d) => s + ((d as any)[agent.name] || 0), 0);
+                  const config = getAgentConfig(agent.name);
+                  return (
+                    <motion.div key={agent.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.04 }}
+                      className={`relative overflow-hidden rounded-xl transition-all cursor-pointer group ${
+                        enabled ? "hover:shadow-xl hover:shadow-primary/10" : "opacity-40 grayscale"
+                      }`}
+                      style={{
+                        background: enabled ? `linear-gradient(160deg, hsl(var(--card)), ${agent.color}08)` : "hsl(var(--card))",
+                        border: `1px solid ${enabled ? agent.color + "25" : "hsl(var(--border))"}`,
+                      }}
+                      onClick={() => setSelectedAgent(agent)}
+                      whileHover={enabled ? { y: -3, borderColor: agent.color + "55" } : {}}
+                    >
+                      <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${agent.color}66, transparent)` }} />
+                      <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700" style={{ background: agent.color }} />
+
+                      <div className="p-4">
+                        <div className="flex items-start gap-3 mb-3">
+                          <AgentAvatar agent={agent} size={52} />
+                          <div className="flex-1 min-w-0 pt-1">
+                            <h3 className="font-bold text-sm truncate text-foreground">{config?.display_name || agent.displayName}</h3>
+                            <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                              <Badge className={`${agent.modelBadgeColor} text-[9px] h-5`}>{agent.model}</Badge>
+                              <StatusBadge status={enabled ? "active" : "disabled"} />
+                            </div>
+                          </div>
+                          <Switch checked={enabled}
+                            onCheckedChange={(checked) => toggleAgent.mutate({ agent_name: agent.name, is_enabled: checked })}
+                            onClick={(e) => e.stopPropagation()} className="mt-1" />
+                        </div>
+                        <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{config?.description || agent.description}</p>
+                        <div className="flex items-center gap-1 flex-wrap mb-2">
+                          <span className="text-[10px] text-muted-foreground mr-1">🎯</span>
+                          {(config?.allowed_industries || agent.industries).slice(0, 3).map((ind: string) => (
+                            <Badge key={ind} variant="outline" className="text-[9px] h-4 px-1.5"
+                              style={{ borderColor: `${agent.color}30`, color: `${agent.color}cc` }}>
+                              {INDUSTRY_LABELS[ind]?.split(" ")[0] || ind}
+                            </Badge>
+                          ))}
+                          {(config?.allowed_industries || agent.industries).length > 3 && (
+                            <Badge variant="outline" className="text-[9px] h-4 px-1.5">+{(config?.allowed_industries || agent.industries).length - 3}</Badge>
+                          )}
+                        </div>
+                        <div className="text-[10px] text-muted-foreground mb-3">⚡ {agent.trigger}</div>
+                        <div className="border-t border-border/50 pt-2 grid grid-cols-3 gap-2 text-center">
+                          <div>
+                            <div className="text-xs font-bold" style={{ color: agent.color }}>€{agent.costPerCall}</div>
+                            <div className="text-[9px] text-muted-foreground">per call</div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold text-foreground">{agentCallsToday}</div>
+                            <div className="text-[9px] text-muted-foreground">oggi</div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold text-foreground">{callsMonth.toLocaleString()}</div>
+                            <div className="text-[9px] text-muted-foreground">mese</div>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 mt-3 pt-2 border-t border-border/50">
+                          {agent.testable && (
+                            <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
+                              style={{ borderColor: `${agent.color}30` }}
+                              onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
+                              <Play className="w-3 h-3" /> Test
+                            </Button>
+                          )}
+                          <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
+                            onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
+                            <BarChart3 className="w-3 h-3" /> Analytics
+                          </Button>
+                          <Button variant="outline" size="sm" className="flex-1 h-7 text-[10px] gap-1"
+                            onClick={(e) => { e.stopPropagation(); setSelectedAgent(agent); }}>
+                            <Pencil className="w-3 h-3" /> Modifica
+                          </Button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </TabsContent>
+
+            {/* ── TAB 3: Per Account Abbonati ── */}
+            <TabsContent value="per-account" className="mt-0 space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "hsla(180,50%,50%,0.12)", border: "1px solid hsla(180,50%,50%,0.2)" }}>
+                  <Users className="w-3.5 h-3.5" style={{ color: "hsl(180,50%,50%)" }} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-foreground">Agenti per Account Abbonati</p>
+                  <p className="text-[9px] text-muted-foreground">Consumo AI suddiviso per ogni account attivo</p>
+                </div>
+              </div>
+
+              {/* Search */}
+              <Input placeholder="Cerca account..." className="h-8 text-xs" value={searchAccount} onChange={e => setSearchAccount(e.target.value)} />
+
+              {/* Account cards with agents */}
+              <div className="space-y-3">
                 {filteredAccounts.map((acc, i) => (
-                  <tr key={acc.name} className="border-b border-border/50 hover:bg-muted/30 transition">
-                    <td className="p-3 font-bold text-muted-foreground">{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}</td>
-                    <td className="p-3 font-medium">{acc.name}</td>
-                    <td className="p-3 hidden md:table-cell"><Badge variant="outline" className="text-[10px]">{INDUSTRY_LABELS[acc.industry] || acc.industry}</Badge></td>
-                    <td className="p-3 text-right">{acc.calls.toLocaleString()}</td>
-                    <td className="p-3 text-right hidden md:table-cell">{(acc.tokens / 1000).toFixed(0)}K</td>
-                    <td className="p-3 text-right font-bold">€{acc.cost.toFixed(2)}</td>
-                    <td className="p-3 text-right hidden lg:table-cell">
-                      <span className={`flex items-center justify-end gap-0.5 text-xs ${acc.trend > 0 ? "text-red-400" : "text-emerald-400"}`}>
-                        {acc.trend > 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                        {Math.abs(acc.trend)}%
-                      </span>
-                    </td>
-                  </tr>
+                  <motion.div key={acc.name}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="rounded-xl overflow-hidden"
+                    style={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
+                  >
+                    {/* Account header */}
+                    <div className="p-3 flex items-center gap-3 border-b border-border/50">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center text-lg" style={{
+                        background: i === 0 ? "hsla(38,50%,55%,0.15)" : i === 1 ? "hsla(0,0%,75%,0.15)" : "hsla(30,50%,50%,0.15)"
+                      }}>
+                        {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-foreground truncate">{acc.name}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <Badge variant="outline" className="text-[9px] h-4">{INDUSTRY_LABELS[acc.industry] || acc.industry}</Badge>
+                          <span className={`text-[9px] flex items-center gap-0.5 ${acc.trend > 0 ? "text-destructive" : "text-emerald-400"}`}>
+                            {acc.trend > 0 ? <ArrowUpRight className="w-2.5 h-2.5" /> : <ArrowDownRight className="w-2.5 h-2.5" />}
+                            {Math.abs(acc.trend)}%
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-sm font-bold text-primary">€{acc.cost.toFixed(2)}</p>
+                        <p className="text-[8px] text-muted-foreground uppercase tracking-wider">Costo Mese</p>
+                      </div>
+                    </div>
+
+                    {/* Stats row */}
+                    <div className="grid grid-cols-3 gap-px bg-border/30">
+                      {[
+                        { label: "Chiamate", value: acc.calls.toLocaleString() },
+                        { label: "Tokens", value: `${(acc.tokens / 1000).toFixed(0)}K` },
+                        { label: "€/Call", value: `€${(acc.cost / acc.calls).toFixed(4)}` },
+                      ].map((s, si) => (
+                        <div key={si} className="text-center py-2 bg-card">
+                          <p className="text-xs font-bold text-foreground">{s.value}</p>
+                          <p className="text-[8px] text-muted-foreground uppercase tracking-wider">{s.label}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Agent chips for this account */}
+                    <div className="p-2.5 flex flex-wrap gap-1.5">
+                      {AGENTS.filter(a => a.industries.includes(acc.industry)).slice(0, 8).map(a => (
+                        <button key={a.name}
+                          onClick={() => setSelectedAgent(a)}
+                          className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-[9px] font-medium transition-all hover:brightness-110"
+                          style={{ background: `${a.color}12`, border: `1px solid ${a.color}20`, color: a.color }}
+                        >
+                          <img src={AGENT_IMAGES[a.name] || a.image} className="w-4 h-4 rounded" alt="" />
+                          {a.displayName.split(" — ")[0].split(" ").slice(0, 2).join(" ")}
+                        </button>
+                      ))}
+                      {AGENTS.filter(a => a.industries.includes(acc.industry)).length > 8 && (
+                        <span className="text-[9px] text-muted-foreground self-center">+{AGENTS.filter(a => a.industries.includes(acc.industry)).length - 8} altri</span>
+                      )}
+                    </div>
+                  </motion.div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </div>
+
+              {/* ─── Per-Account Agent Installations from DB ─── */}
+              <PerAccountAgentsPanel />
+            </TabsContent>
+          </Tabs>
         </div>
 
         {/* ─── Agent Activation Requests from Tenants ─── */}
         <AgentRequestsPanel />
-
-        {/* ─── Per-Account Agent Installations ─── */}
-        <PerAccountAgentsPanel />
 
         {/* ─── ElevenLabs Conversational AI Config ─── */}
         <ElevenLabsConvAIConfig />
