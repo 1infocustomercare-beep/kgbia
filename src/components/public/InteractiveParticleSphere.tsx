@@ -1,23 +1,19 @@
 import { useRef, useEffect, useCallback } from "react";
 
 /**
- * InteractiveParticleSphere v3 — Unified DNA + Data Flow Entity
- *
- * Combines the splash DNA helix with flowing data lines that communicate
- * between nodes. One single living organism: rotating double helix with
- * neural mesh, circuit data paths, energy particles, and data streams
- * all interconnected. No separate effects — everything is one system.
+ * InteractiveParticleSphere — Exact splash DNA effect (assemble+pulse)
+ * running as infinite loop. No orbit, no collapse, no rose.
+ * Identical visuals to UnifiedIntro's DNA phases with pointer interactivity.
  */
 
 const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const HELIX_NODES = IS_MOBILE ? 52 : 80;
-const MESH_COUNT = IS_MOBILE ? 20 : 38;
+const HELIX_NODES = IS_MOBILE ? 48 : 72;
+const MESH_COUNT = IS_MOBILE ? 18 : 36;
 const ENERGY_PARTICLES = IS_MOBILE ? 14 : 28;
-const DATA_STREAMS = IS_MOBILE ? 6 : 14;
-const CIRCUIT_PATHS = IS_MOBILE ? 10 : 20;
+const CIRCUIT_LINES = IS_MOBILE ? 10 : 18;
 
 const COLORS = {
   gold: { h: 38, s: 50, l: 55 },
@@ -30,40 +26,6 @@ const palette = [COLORS.violet, COLORS.gold, COLORS.green];
 
 const hsl = (c: { h: number; s: number; l: number }, a: number) =>
   `hsla(${c.h},${c.s}%,${c.l}%,${a})`;
-
-interface DataStream {
-  fromNode: number;
-  toNode: number;
-  progress: number;
-  speed: number;
-  ci: number;
-}
-
-interface CircuitPath {
-  segments: { x: number; y: number }[];
-  progress: number;
-  speed: number;
-  life: number;
-  maxLife: number;
-  ci: number;
-}
-
-function spawnCircuit(w: number, h: number, ci: number): CircuitPath {
-  const segs: { x: number; y: number }[] = [];
-  let x = Math.random() * w, y = Math.random() * h;
-  segs.push({ x, y });
-  const steps = 3 + Math.floor(Math.random() * 4);
-  for (let s = 0; s < steps; s++) {
-    const horiz = Math.random() > 0.5;
-    const dist = 20 + Math.random() * (w * 0.25);
-    if (horiz) x += (Math.random() > 0.5 ? 1 : -1) * dist;
-    else y += (Math.random() > 0.5 ? 1 : -1) * dist;
-    x = Math.max(5, Math.min(w - 5, x));
-    y = Math.max(5, Math.min(h - 5, y));
-    segs.push({ x, y });
-  }
-  return { segments: segs, progress: 0, speed: 0.003 + Math.random() * 0.005, life: 0, maxLife: 200 + Math.random() * 300, ci };
-}
 
 const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -82,55 +44,58 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     canvas.height = h * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const turns = 5;
     const cx = w / 2, cy = h / 2;
-    const scale = Math.min(w, h) / (IS_MOBILE ? 400 : 600);
+    const turns = 5;
+    const baseScale = Math.min(w, h) / (IS_MOBILE ? 400 : 700);
 
-    // ── Mesh nodes (neural dust) ──
+    // ── Mesh nodes ──
     const meshNodes = Array.from({ length: MESH_COUNT }, (_, i) => ({
       x: Math.random(), y: Math.random(),
-      vx: (Math.random() - 0.5) * 0.0004,
-      vy: (Math.random() - 0.5) * 0.0004,
-      r: 0.8 + Math.random() * 1,
+      vx: (Math.random() - 0.5) * 0.0003,
+      vy: (Math.random() - 0.5) * 0.0003,
+      r: 1 + Math.random() * 1.5,
       ci: i % 3,
     }));
 
-    // ── DNA Helix nodes ──
+    // ── DNA helix nodes ──
     const helixNodes = Array.from({ length: HELIX_NODES }, (_, i) => {
       const t = i / HELIX_NODES;
       const angle = t * Math.PI * 2 * turns;
+      const yPos = 0.05 + t * 0.90;
+      const amp = 0.18;
+      const ampVar = amp + Math.sin(t * Math.PI) * 0.06;
       const strand = i % 2 === 0 ? 1 : -1;
+      const xPos = 0.5 + Math.sin(angle) * ampVar * strand;
       return {
-        ty: 0.05 + t * 0.9,
-        baseAngle: angle,
-        strand,
-        ci: i % 3,
-        r: i % 3 === 1 ? 2.8 : 2,
-        glow: i % 5 === 0,
+        sx: Math.random(), sy: Math.random(),
+        tx: xPos, ty: yPos,
+        x: xPos, y: yPos,
+        r: i % 3 === 1 ? 3.5 : 2.5,
+        ci: i % 3, strand, baseAngle: angle,
+        glow: i % 4 === 0,
       };
     });
 
-    // ── Energy particles flowing on helix ──
+    // ── Energy particles ──
     const energyParticles = Array.from({ length: ENERGY_PARTICLES }, (_, i) => ({
       t: Math.random(),
-      speed: 0.06 + Math.random() * 0.1,
+      speed: 0.08 + Math.random() * 0.12,
       strand: Math.random() > 0.5 ? 1 : -1,
       ci: i % 3,
     }));
 
-    // ── Circuit data paths (orthogonal lines) ──
-    const circuits: CircuitPath[] = Array.from({ length: CIRCUIT_PATHS }, (_, i) =>
-      spawnCircuit(w, h, i % 3)
-    );
-
-    // ── Data streams between helix nodes ──
-    const dataStreams: DataStream[] = Array.from({ length: DATA_STREAMS }, (_, i) => ({
-      fromNode: Math.floor(Math.random() * HELIX_NODES),
-      toNode: Math.floor(Math.random() * MESH_COUNT),
-      progress: Math.random(),
-      speed: 0.4 + Math.random() * 0.6,
-      ci: i % 3,
-    }));
+    // ── Circuit lines ──
+    const circuitLines = Array.from({ length: CIRCUIT_LINES }, (_, i) => {
+      const isH = i % 2 === 0;
+      return {
+        x1: isH ? 0.05 : (0.15 + Math.random() * 0.7),
+        y1: isH ? (0.1 + Math.random() * 0.8) : 0.05,
+        x2: isH ? 0.95 : (0.15 + Math.random() * 0.7),
+        y2: isH ? (0.1 + Math.random() * 0.8) : 0.95,
+        ci: i % 3,
+        progress: 0,
+      };
+    });
 
     const startTime = performance.now();
     let lastFrame = 0;
@@ -144,139 +109,127 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       lastFrame = now;
 
       const elapsed = (now - startTime) / 1000;
+      const scale = baseScale;
       const ptr = pointerRef.current;
-      const helixRotation = elapsed * 0.45;
-      const repelR = w * 0.18;
-      const amp = 0.18;
+      const helixRotation = elapsed * 0.4;
+      const repelR = w * 0.2;
+      const coreRadius = Math.min(w, h) * 0.16;
 
       ctx.clearRect(0, 0, w, h);
 
-      // ═══ L0: CIRCUIT DATA PATHS — orthogonal tech lines ═══
-      for (let ci = 0; ci < circuits.length; ci++) {
-        const ct = circuits[ci];
-        ct.progress = Math.min(ct.progress + ct.speed, 1);
-        ct.life++;
-        if (ct.life > ct.maxLife || ct.progress >= 1) {
-          circuits[ci] = spawnCircuit(w, h, ci % 3);
-          continue;
-        }
+      // ═══ SUBTLE DATA PATHWAYS (circuit lines) ═══
+      for (const cl of circuitLines) {
+        cl.progress = (cl.progress + 0.003) % 1.2; // loop
+        const p = Math.min(cl.progress, 1);
+        const c = palette[cl.ci];
+        const lx = cl.x1 + (cl.x2 - cl.x1) * p;
+        const ly = cl.y1 + (cl.y2 - cl.y1) * p;
 
-        const segs = ct.segments;
-        let totalLen = 0;
-        for (let si = 1; si < segs.length; si++)
-          totalLen += Math.hypot(segs[si].x - segs[si - 1].x, segs[si].y - segs[si - 1].y);
-        const drawLen = totalLen * ct.progress;
-
-        const c = palette[ct.ci];
         ctx.beginPath();
-        ctx.strokeStyle = hsl(c, 0.08);
+        ctx.moveTo(cl.x1 * w, cl.y1 * h);
+        ctx.lineTo(lx * w, ly * h);
+        ctx.strokeStyle = hsl(c, 0.04);
         ctx.lineWidth = 0.5;
-        ctx.setLineDash([3, 6]);
-        let acc = 0;
-        ctx.moveTo(segs[0].x, segs[0].y);
-        let headX = segs[0].x, headY = segs[0].y, headAngle = 0;
-        for (let si = 1; si < segs.length; si++) {
-          const segLen = Math.hypot(segs[si].x - segs[si - 1].x, segs[si].y - segs[si - 1].y);
-          if (acc + segLen <= drawLen) {
-            ctx.lineTo(segs[si].x, segs[si].y);
-            headX = segs[si].x; headY = segs[si].y;
-            headAngle = Math.atan2(segs[si].y - segs[si - 1].y, segs[si].x - segs[si - 1].x);
-            acc += segLen;
-          } else {
-            const f = (drawLen - acc) / segLen;
-            headX = segs[si - 1].x + (segs[si].x - segs[si - 1].x) * f;
-            headY = segs[si - 1].y + (segs[si].y - segs[si - 1].y) * f;
-            headAngle = Math.atan2(segs[si].y - segs[si - 1].y, segs[si].x - segs[si - 1].x);
-            ctx.lineTo(headX, headY);
-            break;
-          }
-        }
         ctx.stroke();
-        ctx.setLineDash([]);
 
-        // Head dash (not circle)
-        const hl = 4;
+        // Junction node
+        if (p > 0.5) {
+          ctx.beginPath();
+          ctx.arc(lx * w, ly * h, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = hsl(c, 0.12);
+          ctx.fill();
+        }
+      }
+
+      // ═══ CENTRAL INTELLIGENCE CORE ═══
+      const corePulse = 1 + Math.sin(elapsed * 1.8) * 0.08;
+      const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreRadius * corePulse * 1.5);
+      coreGrad.addColorStop(0, hsl(COLORS.violet, 0.2));
+      coreGrad.addColorStop(0.3, hsl(COLORS.gold, 0.1));
+      coreGrad.addColorStop(0.6, hsl(COLORS.green, 0.05));
+      coreGrad.addColorStop(1, "hsla(265,75%,62%,0)");
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreRadius * corePulse * 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = coreGrad;
+      ctx.fill();
+
+      // Thin concentric rings
+      const ringColors = [COLORS.violet, COLORS.gold, COLORS.green];
+      const ringRadii = [0.45, 0.65, 0.85];
+      for (let i = 0; i < 3; i++) {
         ctx.beginPath();
-        ctx.moveTo(headX - Math.cos(headAngle) * hl, headY - Math.sin(headAngle) * hl);
-        ctx.lineTo(headX + Math.cos(headAngle) * hl, headY + Math.sin(headAngle) * hl);
-        ctx.strokeStyle = hsl(c, 0.35);
-        ctx.lineWidth = 1.2;
+        ctx.arc(cx, cy, coreRadius * ringRadii[i] * corePulse, 0, Math.PI * 2);
+        ctx.strokeStyle = hsl(ringColors[i], 0.3 * (1 - i * 0.2));
+        ctx.lineWidth = 1;
         ctx.stroke();
       }
 
-      // ═══ L1: NEURAL MESH — floating nodes + connections ═══
-      const meshPositions: { x: number; y: number }[] = [];
+      // ═══ NEURAL MESH BACKGROUND ═══
+      const checkRange = IS_MOBILE ? 4 : 6;
       for (const n of meshNodes) {
         n.x += n.vx;
         n.y += n.vy;
-        if (n.x < 0.02 || n.x > 0.98) n.vx *= -1;
-        if (n.y < 0.02 || n.y > 0.98) n.vy *= -1;
-        meshPositions.push({ x: n.x * w, y: n.y * h });
-
-        // Tiny cross mark (not circle)
-        const sz = n.r;
-        const mx = n.x * w, my = n.y * h;
-        ctx.strokeStyle = hsl(palette[n.ci], 0.12);
-        ctx.lineWidth = 0.4;
+        if (n.x < 0 || n.x > 1) n.vx *= -1;
+        if (n.y < 0 || n.y > 1) n.vy *= -1;
+        const c = palette[n.ci];
         ctx.beginPath();
-        ctx.moveTo(mx - sz, my); ctx.lineTo(mx + sz, my);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(mx, my - sz); ctx.lineTo(mx, my + sz);
-        ctx.stroke();
+        ctx.arc(n.x * w, n.y * h, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = hsl(c, 0.1);
+        ctx.fill();
       }
-
-      // Mesh connections
-      const checkR = IS_MOBILE ? 5 : 7;
       for (let i = 0; i < meshNodes.length; i++) {
-        for (let j = i + 1; j < Math.min(i + checkR, meshNodes.length); j++) {
+        for (let j = i + 1; j < Math.min(i + checkRange, meshNodes.length); j++) {
           const dx = meshNodes[i].x - meshNodes[j].x;
           const dy = meshNodes[i].y - meshNodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 0.2) {
+          if (dist < 0.16) {
             ctx.beginPath();
             ctx.moveTo(meshNodes[i].x * w, meshNodes[i].y * h);
             ctx.lineTo(meshNodes[j].x * w, meshNodes[j].y * h);
-            ctx.strokeStyle = hsl(palette[meshNodes[i].ci], (1 - dist / 0.2) * 0.06);
-            ctx.lineWidth = 0.3;
+            ctx.strokeStyle = hsl(palette[meshNodes[i].ci], (1 - dist / 0.16) * 0.04);
+            ctx.lineWidth = 0.4;
             ctx.stroke();
           }
         }
       }
 
-      // ═══ L2: DNA DOUBLE HELIX ═══
-      const helixPositions: { x: number; y: number }[] = [];
-
+      // ═══ DNA DOUBLE HELIX ═══
+      const amp = 0.18;
       for (const n of helixNodes) {
         const rotAngle = n.baseAngle + helixRotation;
         const ampVar = amp + Math.sin(n.ty * Math.PI) * 0.06;
-        let nx = (0.5 + Math.sin(rotAngle) * ampVar * n.strand) * w;
-        let ny = n.ty * h;
-
-        if (ptr.active) {
-          const dx = nx - ptr.x, dy = ny - ptr.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist > 1 && dist < repelR) {
-            const force = (1 - dist / repelR) * 16;
-            nx += (dx / dist) * force;
-            ny += (dy / dist) * force;
-          }
-        }
-        helixPositions.push({ x: nx, y: ny });
+        n.x = 0.5 + Math.sin(rotAngle) * ampVar * n.strand;
+        n.y = n.ty;
       }
 
-      // Backbone lines
-      for (let i = 0; i < helixPositions.length - 1; i++) {
-        const a = helixPositions[i], b = helixPositions[i + 1];
-        const dx = a.x - b.x, dy = a.y - b.y;
+      // Backbone connections
+      for (let i = 0; i < helixNodes.length - 1; i++) {
+        const a = helixNodes[i], b = helixNodes[i + 1];
+        const ax = a.x * w, ay = a.y * h, bx = b.x * w, by = b.y * h;
+
+        // Pointer repulsion
+        let fax = ax, fay = ay, fbx = bx, fby = by;
+        if (ptr.active) {
+          for (const [px, py] of [[ax, ay], [bx, by]] as [number, number][]) {
+            const ddx = px - ptr.x, ddy = py - ptr.y;
+            const dd = Math.sqrt(ddx * ddx + ddy * ddy);
+            if (dd > 1 && dd < repelR) {
+              const force = (1 - dd / repelR) * 18;
+              if (px === ax) { fax += (ddx / dd) * force; fay += (ddy / dd) * force; }
+              else { fbx += (ddx / dd) * force; fby += (ddy / dd) * force; }
+            }
+          }
+        }
+
+        const dx = fax - fbx, dy = fay - fby;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < w * 0.14) {
-          const alpha = (1 - dist / (w * 0.14)) * 0.3;
+          const alpha = (1 - dist / (w * 0.14)) * 0.35;
           ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = hsl(palette[helixNodes[i].ci], alpha);
-          ctx.lineWidth = 0.9;
+          ctx.moveTo(fax, fay);
+          ctx.lineTo(fbx, fby);
+          ctx.strokeStyle = hsl(palette[a.ci], alpha);
+          ctx.lineWidth = 1;
           ctx.stroke();
         }
       }
@@ -284,134 +237,101 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       // Cross-connections (base pairs)
       for (let i = 0; i < helixNodes.length - 1; i += 2) {
         if (i + 1 < helixNodes.length && helixNodes[i].strand !== helixNodes[i + 1].strand) {
-          const a = helixPositions[i], b = helixPositions[i + 1];
+          const a = helixNodes[i], b = helixNodes[i + 1];
+          let ax = a.x * w, ay = a.y * h, bx = b.x * w, by = b.y * h;
+          if (ptr.active) {
+            for (const pp of [{ rx: ax, ry: ay, set: 'a' }, { rx: bx, ry: by, set: 'b' }]) {
+              const ddx = pp.rx - ptr.x, ddy = pp.ry - ptr.y;
+              const dd = Math.sqrt(ddx * ddx + ddy * ddy);
+              if (dd > 1 && dd < repelR) {
+                const force = (1 - dd / repelR) * 18;
+                if (pp.set === 'a') { ax += (ddx / dd) * force; ay += (ddy / dd) * force; }
+                else { bx += (ddx / dd) * force; by += (ddy / dd) * force; }
+              }
+            }
+          }
           ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = hsl(palette[(i / 2) % 3], 0.08);
-          ctx.lineWidth = 0.35;
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(bx, by);
+          ctx.strokeStyle = hsl(palette[(i / 2) % 3], 0.1);
+          ctx.lineWidth = 0.4;
           ctx.stroke();
         }
       }
 
-      // Helix node marks — small crosses with subtle glow lines
-      helixNodes.forEach((n, i) => {
-        const p = helixPositions[i];
-        const c = palette[n.ci];
-        const sz = n.r * scale * 0.6;
-
-        if (n.glow) {
-          // Radial line burst (not circle)
-          const rays = 4;
-          const rayLen = sz * 3;
-          const breathe = 0.15 + Math.sin(elapsed * 2 + i) * 0.1;
-          for (let r = 0; r < rays; r++) {
-            const angle = (r / rays) * Math.PI + elapsed * 0.3 + i * 0.5;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p.x + Math.cos(angle) * rayLen, p.y + Math.sin(angle) * rayLen);
-            ctx.strokeStyle = hsl(c, breathe);
-            ctx.lineWidth = 0.3;
-            ctx.stroke();
+      // Helix nodes with glow
+      for (const n of helixNodes) {
+        let px = n.x * w, py = n.y * h;
+        if (ptr.active) {
+          const ddx = px - ptr.x, ddy = py - ptr.y;
+          const dd = Math.sqrt(ddx * ddx + ddy * ddy);
+          if (dd > 1 && dd < repelR) {
+            const force = (1 - dd / repelR) * 18;
+            px += (ddx / dd) * force;
+            py += (ddy / dd) * force;
           }
         }
+        const c = palette[n.ci];
 
-        // Node cross
-        ctx.strokeStyle = hsl(c, 0.7);
-        ctx.lineWidth = 0.6;
-        ctx.beginPath();
-        ctx.moveTo(p.x - sz, p.y); ctx.lineTo(p.x + sz, p.y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y - sz); ctx.lineTo(p.x, p.y + sz);
-        ctx.stroke();
-      });
+        if (n.glow) {
+          const glowR = n.r * 4;
+          const gg = ctx.createRadialGradient(px, py, 0, px, py, glowR);
+          gg.addColorStop(0, hsl(c, 0.2));
+          gg.addColorStop(1, hsl(c, 0));
+          ctx.beginPath();
+          ctx.arc(px, py, glowR, 0, Math.PI * 2);
+          ctx.fillStyle = gg;
+          ctx.fill();
+        }
 
-      // ═══ L3: ENERGY PARTICLES flowing on helix strands ═══
+        ctx.beginPath();
+        ctx.arc(px, py, n.r * scale * 0.8, 0, Math.PI * 2);
+        ctx.fillStyle = hsl(c, 0.85);
+        ctx.fill();
+      }
+
+      // ═══ ENERGY PARTICLES — flowing data ═══
       for (const ep of energyParticles) {
         ep.t = (ep.t + ep.speed * 0.016) % 1;
         const angle = ep.t * Math.PI * 2 * turns + helixRotation;
         const ampVar = amp + Math.sin(ep.t * Math.PI) * 0.06;
-        const epx = (0.5 + Math.sin(angle) * ampVar * ep.strand) * w;
-        const epy = (0.05 + ep.t * 0.9) * h;
-        const epAlpha = 0.45 * Math.sin(ep.t * Math.PI);
+        let epx = (0.5 + Math.sin(angle) * ampVar * ep.strand) * w;
+        let epy = (0.05 + ep.t * 0.9) * h;
+        const epAlpha = 0.6 * Math.sin(ep.t * Math.PI);
         const c = palette[ep.ci];
 
-        // Directional dash (not circle)
-        const dir = Math.atan2(
-          Math.cos(angle) * ampVar * ep.strand,
-          0.9 / HELIX_NODES
-        );
-        const dashLen = 4 * scale;
-        ctx.beginPath();
-        ctx.moveTo(epx - Math.cos(dir) * dashLen, epy - Math.sin(dir) * dashLen);
-        ctx.lineTo(epx + Math.cos(dir) * dashLen, epy + Math.sin(dir) * dashLen);
-        ctx.strokeStyle = hsl(c, epAlpha);
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-
-        // Trail
-        for (let tr = 1; tr <= 3; tr++) {
-          const tOff = ep.t - tr * 0.015;
-          if (tOff < 0) continue;
-          const tAngle = tOff * Math.PI * 2 * turns + helixRotation;
-          const tAmp = amp + Math.sin(tOff * Math.PI) * 0.06;
-          const tx = (0.5 + Math.sin(tAngle) * tAmp * ep.strand) * w;
-          const ty = (0.05 + tOff * 0.9) * h;
-          ctx.beginPath();
-          ctx.moveTo(tx - 1.5, ty);
-          ctx.lineTo(tx + 1.5, ty);
-          ctx.strokeStyle = hsl(c, epAlpha * (0.3 - tr * 0.08));
-          ctx.lineWidth = 0.6;
-          ctx.stroke();
+        if (ptr.active) {
+          const ddx = epx - ptr.x, ddy = epy - ptr.y;
+          const dd = Math.sqrt(ddx * ddx + ddy * ddy);
+          if (dd > 1 && dd < repelR) {
+            const force = (1 - dd / repelR) * 12;
+            epx += (ddx / dd) * force;
+            epy += (ddy / dd) * force;
+          }
         }
+
+        const tg = ctx.createRadialGradient(epx, epy, 0, epx, epy, 8 * scale);
+        tg.addColorStop(0, hsl(c, epAlpha));
+        tg.addColorStop(1, hsl(c, 0));
+        ctx.beginPath();
+        ctx.arc(epx, epy, 8 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = tg;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(epx, epy, 1.5 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(0,0%,100%,${epAlpha * 0.8})`;
+        ctx.fill();
       }
 
-      // ═══ L4: DATA STREAMS — lines connecting helix to mesh (communication) ═══
-      for (const ds of dataStreams) {
-        ds.progress = (ds.progress + ds.speed * 0.016) % 1;
-        const from = helixPositions[ds.fromNode % helixPositions.length];
-        const to = meshPositions[ds.toNode % meshPositions.length];
-        if (!from || !to) continue;
-
-        const c = palette[ds.ci];
-        const fadeAlpha = Math.sin(ds.progress * Math.PI) * 0.12;
-
-        // Faint connection line
-        ctx.beginPath();
-        ctx.moveTo(from.x, from.y);
-        const midX = (from.x + to.x) / 2 + Math.sin(elapsed + ds.fromNode) * 10;
-        const midY = (from.y + to.y) / 2 + Math.cos(elapsed + ds.toNode) * 8;
-        ctx.quadraticCurveTo(midX, midY, to.x, to.y);
-        ctx.strokeStyle = hsl(c, fadeAlpha * 0.5);
-        ctx.lineWidth = 0.25;
-        ctx.stroke();
-
-        // Data packet traveling along the curve
-        const t = ds.progress;
-        const invT = 1 - t;
-        const px = invT * invT * from.x + 2 * invT * t * midX + t * t * to.x;
-        const py = invT * invT * from.y + 2 * invT * t * midY + t * t * to.y;
-
-        // Packet as short dash
-        const pAngle = Math.atan2(to.y - from.y, to.x - from.x);
-        const pLen = 3;
-        ctx.beginPath();
-        ctx.moveTo(px - Math.cos(pAngle) * pLen, py - Math.sin(pAngle) * pLen);
-        ctx.lineTo(px + Math.cos(pAngle) * pLen, py + Math.sin(pAngle) * pLen);
-        ctx.strokeStyle = hsl(c, Math.sin(ds.progress * Math.PI) * 0.5);
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
-      }
-
-      // ═══ L5: SCANNING BEAM ═══
-      const scanY = (Math.sin(elapsed * 0.8) * 0.5 + 0.5) * h;
-      const sg = ctx.createLinearGradient(0, scanY - 25, 0, scanY + 25);
+      // ═══ SCANNING BEAM ═══
+      const scanY = (Math.sin(elapsed * 1.2) * 0.5 + 0.5) * h;
+      const sg = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
       sg.addColorStop(0, hsl(COLORS.cyan, 0));
-      sg.addColorStop(0.5, hsl(COLORS.cyan, 0.03));
+      sg.addColorStop(0.5, hsl(COLORS.cyan, 0.06));
       sg.addColorStop(1, hsl(COLORS.cyan, 0));
       ctx.fillStyle = sg;
-      ctx.fillRect(0, scanY - 25, w, 50);
+      ctx.fillRect(0, scanY - 40, w, 80);
 
       animRef.current = requestAnimationFrame(draw);
     };
