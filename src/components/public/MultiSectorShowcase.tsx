@@ -587,41 +587,58 @@ export default function MultiSectorShowcase() {
         </p>
       </div>
 
-      {/* Sector pills — scrollable on mobile */}
-      <div className="relative mb-10">
-        <div className="flex gap-2 justify-start sm:justify-center flex-nowrap sm:flex-wrap overflow-x-auto pb-3 sm:pb-0 px-2 sm:px-0 scrollbar-hide">
-          {SHOWCASE_SECTORS.map((s, i) => (
-            <motion.button
-              key={s.id}
-              onClick={() => { setActiveIdx(i); setIsAutoPlaying(false); setShowAllScreens(false); }}
-              className={`relative px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[0.6rem] sm:text-xs font-heading font-semibold tracking-wider uppercase transition-all duration-400 border whitespace-nowrap flex-shrink-0 ${
-                activeIdx === i
-                  ? "text-foreground border-primary/40"
-                  : "text-foreground/30 border-border/20 hover:text-foreground/60 hover:border-border/40"
-              }`}
-              style={activeIdx === i ? {
-                background: "linear-gradient(135deg, hsla(265,40%,20%,0.6), hsla(265,20%,15%,0.4))",
-                boxShadow: `0 0 20px ${s.color.replace("1)", "0.12)")}, inset 0 1px 0 hsla(0,0%,100%,0.06)`,
-              } : { background: "hsla(0,0%,100%,0.03)" }}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              {activeIdx === i && (
-                <motion.div className="absolute inset-0 rounded-full"
-                  style={{ border: `1px solid ${s.color.replace("1)", "0.3)")}` }}
-                  layoutId="sectorRing"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }} />
-              )}
-              <span className="relative z-10 flex items-center gap-1.5">{s.icon} {s.label}</span>
-              {activeIdx === i && isAutoPlaying && (
-                <motion.div className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full origin-left"
-                  style={{ background: s.color }}
-                  initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-                  transition={{ duration: 5, ease: "linear" }}
-                  key={`progress-${activeIdx}`} />
-              )}
-            </motion.button>
-          ))}
+      {/* Category filter tabs */}
+      <div className="flex gap-1.5 justify-center flex-wrap mb-4 px-2">
+        {SECTOR_CATEGORIES.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => { setActiveCat(cat.id); setIsAutoPlaying(false); }}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.55rem] font-heading font-semibold tracking-wider uppercase transition-all duration-300 border ${
+              activeCat === cat.id
+                ? "text-foreground border-primary/40 bg-primary/10"
+                : "text-foreground/30 border-border/15 hover:text-foreground/50 hover:border-border/30 bg-transparent"
+            }`}
+          >
+            {cat.icon}
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Sector grid — compact for mobile */}
+      <div className="relative mb-10 px-2">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-1.5">
+          {filteredSectors.map((s) => {
+            const globalIdx = SHOWCASE_SECTORS.findIndex(ss => ss.id === s.id);
+            const isActive = activeIdx === globalIdx;
+            return (
+              <motion.button
+                key={s.id}
+                onClick={() => { setActiveIdx(globalIdx); setIsAutoPlaying(false); setShowAllScreens(false); }}
+                className={`relative flex flex-col items-center gap-1 py-2 px-1.5 rounded-lg text-[0.5rem] font-heading font-semibold tracking-wider uppercase transition-all duration-300 border ${
+                  isActive
+                    ? "text-foreground border-primary/40"
+                    : "text-foreground/30 border-border/10 hover:text-foreground/50 hover:border-border/30"
+                }`}
+                style={isActive ? {
+                  background: `linear-gradient(135deg, ${s.color.replace("1)", "0.12)")}, hsla(265,20%,15%,0.3))`,
+                  boxShadow: `0 0 12px ${s.color.replace("1)", "0.1)")}`,
+                } : { background: "hsla(0,0%,100%,0.02)" }}
+                whileTap={{ scale: 0.95 }}
+                layout
+              >
+                <span className="text-sm">{s.icon}</span>
+                <span className="relative z-10 text-center leading-tight line-clamp-2">{s.label}</span>
+                {isActive && isAutoPlaying && (
+                  <motion.div className="absolute bottom-0 left-1 right-1 h-[2px] rounded-full origin-left"
+                    style={{ background: s.color }}
+                    initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                    transition={{ duration: 5, ease: "linear" }}
+                    key={`progress-${activeIdx}`} />
+                )}
+              </motion.button>
+            );
+          })}
         </div>
       </div>
 
