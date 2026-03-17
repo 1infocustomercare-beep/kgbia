@@ -1580,54 +1580,68 @@ export function IPhoneFrame({
             {/* ═══ DASHBOARD SCREEN — 4 variants ═══ */}
             {screen.type === "dashboard" && (() => {
               if (v === 0) return (
-                /* V0: KPI Grid + chart + activity feed */
-                <div className="h-full p-2.5">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
-                      <p className="text-[7px] font-bold text-white/70">Dashboard</p>
+                /* V0: KPI Grid + chart + activity feed — iOS-style */
+                <div className="h-full" style={{ background: "linear-gradient(180deg, #111 0%, #0a0a0a 100%)" }}>
+                  <div className="px-2.5 pt-2 pb-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <p className="text-[8px] font-bold text-white/90 tracking-tight">Dashboard</p>
+                        <p className="text-[4px] text-white/25 mt-0.5">Oggi, {new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}</p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: `${color}15` }}>
+                          <span className="text-[7px]">{emoji}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="px-1.5 py-0.5 rounded-full text-[4px] font-bold" style={{ backgroundColor: `${color}15`, color: `${color}CC` }}>Live ●</div>
                   </div>
-                  <div className="grid grid-cols-2 gap-1">
+                  {/* KPI cards with glassmorphism */}
+                  <div className="grid grid-cols-2 gap-[3px] px-2.5 mb-1.5">
                     {sectorStyle.kpis.map((kpi, i) => (
-                      <motion.div key={i} className="p-1.5 rounded-lg relative overflow-hidden"
-                        style={{ backgroundColor: `${color}08`, border: `0.5px solid ${color}10` }}
+                      <motion.div key={i} className="p-2 rounded-xl relative overflow-hidden"
+                        style={{ background: i === 0 ? `linear-gradient(135deg, ${color}18, ${color}08)` : "rgba(255,255,255,0.03)", border: `0.5px solid ${i === 0 ? `${color}25` : 'rgba(255,255,255,0.06)'}` }}
                         initial={{ scale: 0.8, opacity: 0 }}
                         whileInView={{ scale: 1, opacity: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.4 + i * 0.08 }}>
-                        <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${color}30, transparent)` }} />
-                        <p className="text-[5px] text-white/30 tracking-wider uppercase">{kpi.label}</p>
-                        <div className="flex items-baseline gap-0.5">
-                          <p className="text-[9px] font-bold" style={{ color }}>{kpi.val}</p>
-                          <span className="text-[4px] text-emerald-400">↑{(3 + i * 2)}%</span>
+                        {i === 0 && <div className="absolute top-0 right-0 w-8 h-8 rounded-full opacity-20 blur-lg" style={{ background: color }} />}
+                        <p className="text-[4px] text-white/35 tracking-wider uppercase font-medium">{kpi.label}</p>
+                        <div className="flex items-baseline gap-0.5 mt-0.5">
+                          <p className="text-[10px] font-black tracking-tight" style={{ color: i === 0 ? color : 'white', opacity: i === 0 ? 1 : 0.85 }}>{kpi.val}</p>
+                          <span className="text-[4px] font-semibold text-emerald-400">+{(3 + i * 2)}%</span>
                         </div>
                       </motion.div>
                     ))}
                   </div>
-                  <div className="mt-1.5 rounded-lg p-1.5 relative overflow-hidden" style={{ backgroundColor: `${color}06`, border: `0.5px solid ${color}08` }}>
-                    <div className="flex items-center justify-between mb-0.5">
-                      <span className="text-[4px] text-white/25 uppercase tracking-wider">Revenue</span>
-                      <span className="text-[5px] font-bold" style={{ color }}>+18%</span>
+                  {/* Revenue chart */}
+                  <div className="mx-2.5 rounded-xl p-2 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.02)", border: "0.5px solid rgba(255,255,255,0.06)" }}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[5px] text-white/30 font-semibold uppercase tracking-wider">Revenue</span>
+                      <div className="flex items-center gap-1">
+                        <div className="w-1 h-1 rounded-full bg-emerald-400" />
+                        <span className="text-[4px] font-bold text-emerald-400">+18%</span>
+                      </div>
                     </div>
                     <svg viewBox="0 0 120 30" className="w-full h-8">
                       <defs><linearGradient id={`dg-${industryId}-${index}`} x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor={color} stopOpacity="0.3" /><stop offset="100%" stopColor={color} stopOpacity="0" />
+                        <stop offset="0%" stopColor={color} stopOpacity="0.25" /><stop offset="100%" stopColor={color} stopOpacity="0" />
                       </linearGradient></defs>
                       <path d="M0,28 C10,25 20,20 30,18 C40,16 50,22 60,15 C70,8 80,12 90,6 C100,4 110,8 120,3 L120,30 L0,30 Z" fill={`url(#dg-${industryId}-${index})`} />
                       <path d="M0,28 C10,25 20,20 30,18 C40,16 50,22 60,15 C70,8 80,12 90,6 C100,4 110,8 120,3" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-                      <circle cx="120" cy="3" r="2" fill={color}><animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite" /></circle>
+                      <circle cx="120" cy="3" r="2.5" fill={color}><animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" /></circle>
+                      <circle cx="120" cy="3" r="5" fill={color} opacity="0.15"><animate attributeName="r" values="3;6;3" dur="2s" repeatCount="indefinite" /></circle>
                     </svg>
                   </div>
-                  <div className="mt-1.5 space-y-0.5">
-                    {sectorStyle.activityFeed.map((item, i) => (
-                      <div key={i} className="flex items-center gap-1 px-1 py-0.5 rounded text-[5px]" style={{ backgroundColor: `${color}06` }}>
-                        <div className="w-1 h-1 rounded-full" style={{ backgroundColor: item.status === "ok" ? "#22c55e" : item.status === "star" ? "#fbbf24" : color }} />
-                        <span className="text-[8px] mr-0.5">{item.icon}</span>
-                        <span className="text-white/40 flex-1 truncate">{item.text}</span>
-                        <span className="text-[3px] text-white/20">{item.time}</span>
-                      </div>
+                  {/* Activity feed */}
+                  <div className="px-2.5 mt-1.5 space-y-[2px] pb-8">
+                    {sectorStyle.notifications.slice(0, 2).map((n, i) => (
+                      <motion.div key={i} className="flex items-center gap-1.5 px-1.5 py-1 rounded-lg"
+                        style={{ background: i === 0 ? `${color}08` : "rgba(255,255,255,0.02)", border: `0.5px solid ${i === 0 ? `${color}10` : 'rgba(255,255,255,0.04)'}` }}
+                        initial={{ opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.6 + i * 0.1 }}>
+                        <span className="text-[7px]">{n.icon}</span>
+                        <span className="text-[5px] text-white/50 flex-1 truncate">{n.text}</span>
+                        <span className="text-[3px] text-white/20 font-medium">{n.time}</span>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
