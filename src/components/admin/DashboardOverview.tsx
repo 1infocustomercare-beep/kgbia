@@ -44,7 +44,7 @@ const DashboardOverview = ({
         <img src={cartoonDashboard} alt="" className="w-24 h-24 object-contain" />
         <div>
           <h2 className="text-lg font-display font-bold text-foreground">{restaurantName}</h2>
-          <p className="text-xs text-muted-foreground">Panoramica giornaliera</p>
+          <p className="text-[0.6rem] uppercase tracking-[3px] text-muted-foreground/50 font-semibold">Command Center · Oggi</p>
         </div>
         <InfoGuide
           title="Dashboard Principale"
@@ -62,12 +62,12 @@ const DashboardOverview = ({
         <motion.div className="p-3.5 rounded-2xl bg-card border border-primary/20 cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("profit")}>
           <DollarSign className="w-5 h-5 text-primary mb-1.5" />
           <p className="text-2xl font-display font-bold text-primary leading-tight">€{todayRevenue.toFixed(0)}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Incasso oggi</p>
+          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">Revenue Giornaliero</p>
         </motion.div>
         <motion.div className="p-3.5 rounded-2xl bg-card cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")}>
           <ShoppingCart className="w-5 h-5 text-primary mb-1.5" />
           <p className="text-2xl font-display font-bold text-foreground leading-tight">{todayOrderCount}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Ordini oggi</p>
+          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">Ordini Ricevuti</p>
         </motion.div>
         <motion.div className="p-3.5 rounded-2xl bg-card cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")}>
           <ChefHat className="w-5 h-5 text-primary mb-1.5" />
@@ -75,12 +75,12 @@ const DashboardOverview = ({
             <p className="text-2xl font-display font-bold text-foreground leading-tight">{activeOrderCount}</p>
             {activeOrderCount > 0 && <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />}
           </div>
-          <p className="text-[11px] text-muted-foreground mt-0.5">In cucina</p>
+          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">In Preparazione</p>
         </motion.div>
         <motion.div className="p-3.5 rounded-2xl bg-card cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("studio")}>
           <TrendingUp className="w-5 h-5 text-primary mb-1.5" />
           <p className="text-2xl font-display font-bold text-foreground leading-tight">{menuItemCount}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Piatti in menu</p>
+          <p className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold mt-1">Catalogo Piatti</p>
         </motion.div>
       </div>
 
@@ -89,7 +89,7 @@ const DashboardOverview = ({
         <motion.div className="p-3 rounded-2xl bg-card border border-border/50 cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("profit")}>
           <div className="flex items-center gap-1.5 mb-1">
             <Star className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[11px] text-muted-foreground">Recensioni</span>
+            <span className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold">Reputazione</span>
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-xl font-display font-bold text-primary">{avgRating}</span>
@@ -99,7 +99,7 @@ const DashboardOverview = ({
         <motion.div className="p-3 rounded-2xl bg-card border border-border/50 cursor-pointer active:scale-[0.97] transition-transform" onClick={() => onNavigate("orders")}>
           <div className="flex items-center gap-1.5 mb-1">
             <CalendarDays className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[11px] text-muted-foreground">Prenotazioni</span>
+            <span className="text-[0.55rem] uppercase tracking-[2px] text-muted-foreground/50 font-semibold">Prenotazioni</span>
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-xl font-display font-bold text-foreground">{todayReservations.length}</span>
@@ -132,8 +132,8 @@ const DashboardOverview = ({
             <Sparkles className="w-4 h-4 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground">Gettoni IA</p>
-            <p className="text-[11px] text-muted-foreground truncate">Menu Creator, Foto, Traduzioni</p>
+            <p className="text-sm font-medium text-foreground">Intelligenza Artificiale</p>
+            <p className="text-[0.55rem] uppercase tracking-[1.5px] text-muted-foreground/50 font-semibold truncate">Menu · Photo · Translate</p>
           </div>
           <span className={`text-lg font-display font-bold flex-shrink-0 ${aiTokens <= 5 ? "text-destructive" : "text-primary"}`}>{aiTokens}</span>
         </div>
@@ -241,7 +241,7 @@ const DashboardOverview = ({
 
       {/* Quick Actions */}
       <div className="space-y-2">
-        <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider">Azioni rapide</p>
+        <p className="text-[0.55rem] uppercase tracking-[3px] text-muted-foreground/40 font-semibold">Accesso Rapido</p>
         <div className="grid grid-cols-2 gap-2">
           <motion.button onClick={() => window.open(menuUrl, "_blank")}
             className="flex items-center gap-2 p-3 rounded-xl bg-secondary/50 text-sm text-foreground min-h-[48px] active:bg-secondary transition-colors"
