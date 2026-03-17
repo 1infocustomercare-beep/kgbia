@@ -19,6 +19,9 @@ const ORBIT_DOTS = IS_MOBILE ? 30 : 48;
 const SYNAPSE_COUNT = IS_MOBILE ? 12 : 24;
 const DATA_STREAMS = IS_MOBILE ? 8 : 16;
 const FLOAT_PARTICLES = IS_MOBILE ? 20 : 45;
+const TECH_ICON_COUNT = IS_MOBILE ? 8 : 14;
+
+const TECH_ICONS = ["🧠", "⚡", "🔬", "💡", "🛡️", "📊", "🤖", "🔗", "⚙️", "🎯", "📡", "🧬", "💎", "🚀"];
 
 const COLORS = {
   gold: { h: 38, s: 50, l: 55 },
