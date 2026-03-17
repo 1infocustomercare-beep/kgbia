@@ -5,6 +5,7 @@ import { Volume2, VolumeX, X, Pause, Play, MessageCircle, Send, Mic, MicOff, Squ
 import ReactMarkdown from "react-markdown";
 import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
+import { claimVoiceAgent, releaseVoiceAgent } from "@/lib/voice-agent-mutex";
 
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-voice-agent`;
