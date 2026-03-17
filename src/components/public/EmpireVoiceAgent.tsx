@@ -936,8 +936,11 @@ const EmpireVoiceAgent: React.FC = () => {
   useEffect(() => {
     // Expose a global stop function so other voice agents can silence Arianna
     (window as any).__empireVoiceAgentStopAll = stopAll;
+    // Register with global mutex
+    claimVoiceAgent("arianna", stopAll);
     return () => {
       stopAll();
+      releaseVoiceAgent("arianna");
       delete (window as any).__empireVoiceAgentStopAll;
     };
   }, [stopAll]);
