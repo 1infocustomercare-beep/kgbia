@@ -18,6 +18,7 @@ const TEAM = [
     photo: teamKevin,
     bio: "Visionario tech con 10+ anni nell'automazione aziendale. Ha fondato Empire AI per democratizzare l'intelligenza artificiale nelle PMI italiane.",
     accent: "hsla(38,50%,55%,0.3)",
+    objectPos: "center 30%",
   },
   {
     name: "Alessandra Vitali",
