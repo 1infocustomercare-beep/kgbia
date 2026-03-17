@@ -218,6 +218,18 @@ serve(async (req) => {
             image_url: { url: userPhotoBase64 }
           }
         ];
+      } else if (plateImageUrl) {
+        // User selected one of their saved plates — generate food ON that plate
+        messageContent = [
+          {
+            type: "text",
+            text: `Generate an ultra-professional, magazine-quality food photography image of "${dishDesc}" served on EXACTLY this plate shown in the reference image. The plate, its color, shape, texture and style must be IDENTICAL to the reference. Place the "${dishDesc}" beautifully plated on it with Michelin-star presentation. Professional studio lighting with warm golden tones, extremely shallow depth of field with creamy bokeh background, steam rising naturally, garnished with fresh herbs and microgreens, droplets of olive oil or sauce glistening. The food must look absolutely irresistible and mouthwatering. 8K quality, vibrant natural colors, hyper-realistic food-porn photography.`
+          },
+          {
+            type: "image_url",
+            image_url: { url: plateImageUrl }
+          }
+        ];
       } else {
         // No photo — generate from scratch based on description
         messageContent = [
