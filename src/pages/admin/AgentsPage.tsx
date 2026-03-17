@@ -503,11 +503,11 @@ const AGENTS: AgentDef[] = [
 const INDUSTRY_LABELS: Record<string, string> = {
   food: "🍽 Food", ncc: "🚗 NCC", beauty: "💇 Beauty", healthcare: "🏥 Salute",
   retail: "🛍 Retail", fitness: "💪 Fitness", hospitality: "🏨 Hotel",
-  plumber: "🔧 Idraulico", electrician: "⚡ Elettricista", cleaning: "🧹 Pulizie",
-  legal: "⚖️ Legale", accounting: "🧮 Commercialista", photography: "📷 Foto",
-  veterinary: "🐾 Veterinario", tattoo: "🎨 Tattoo", childcare: "👶 Infanzia",
-  education: "🎓 Formazione", events: "🎉 Eventi", logistics: "🚚 Logistica",
-  construction: "🏗 Edilizia", gardening: "🌿 Giardinaggio",
+  beach: "🏖 Stabilimenti", plumber: "🔧 Idraulico", electrician: "⚡ Elettricista",
+  cleaning: "🧹 Pulizie", legal: "⚖️ Legale", accounting: "🧮 Commercialista",
+  photography: "📷 Foto", veterinary: "🐾 Veterinario", tattoo: "🎨 Tattoo",
+  childcare: "👶 Infanzia", education: "🎓 Formazione", events: "🎉 Eventi",
+  logistics: "🚚 Logistica", construction: "🏗 Edilizia", gardening: "🌿 Giardinaggio",
 };
 
 const PIE_COLORS = ["#C8963E", "#8B5CF6", "#10B981", "#EC4899", "#F97316", "#EF4444", "#3B82F6", "#6366F1", "#0EA5E9", "#14B8A6", "#1E3A5F", "#E91E8C", "#F59E0B", "#22C55E", "#A855F7", "#06B6D4", "#D946EF", "#84CC16", "#FB923C", "#64748B"];
