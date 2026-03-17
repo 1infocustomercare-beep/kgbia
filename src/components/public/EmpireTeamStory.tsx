@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Crown, Rocket, Heart, Brain, Target, Users, Sparkles, Linkedin } from "lucide-react";
+import { Crown, Rocket, Heart, Brain, Target, Users, Sparkles, Linkedin, Dna, Zap, Globe, Network, ShieldCheck } from "lucide-react";
 
 import teamKevin from "@/assets/team-kevin-ceo.jpg";
 import teamAlessandra from "@/assets/team-alessandra-cto.jpg";
@@ -57,12 +57,89 @@ const TEAM = [
   },
 ];
 
+/* ── DNA Helix Node ── */
+const DnaNode = ({ delay = 0 }: { delay?: number }) => (
+  <motion.div
+    className="absolute left-4 sm:left-1/2 -translate-x-1/2 z-10"
+    initial={{ scale: 0 }}
+    whileInView={{ scale: 1 }}
+    viewport={vpOnce}
+    transition={{ type: "spring", stiffness: 300, delay }}
+  >
+    <div className="relative">
+      {/* Outer orbital ring */}
+      <motion.div
+        className="absolute -inset-2 rounded-full"
+        style={{ border: "1px solid hsla(265,70%,60%,0.15)" }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+      />
+      {/* Pulse ring */}
+      <motion.div
+        className="absolute -inset-1 rounded-full"
+        style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.2), transparent 70%)" }}
+        animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0, 0.6] }}
+        transition={{ duration: 2.5, repeat: Infinity, delay }}
+      />
+      {/* Core */}
+      <div
+        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center relative"
+        style={{
+          background: "linear-gradient(135deg, hsla(265,70%,55%,0.3), hsla(38,50%,55%,0.2))",
+          border: "1.5px solid hsla(265,70%,60%,0.3)",
+          boxShadow: "0 0 20px hsla(265,70%,60%,0.15), inset 0 0 12px hsla(265,70%,60%,0.1)",
+        }}
+      />
+    </div>
+  </motion.div>
+);
+
 const MILESTONES = [
-  { year: "2022", label: "L'idea nasce", desc: "Kevin fonda Empire AI con la visione di un OS intelligente per le imprese italiane.", icon: Sparkles },
-  { year: "2023", label: "Primo Prodotto", desc: "Lancio della piattaforma food con menu AI, ordini digitali e gestione completa.", icon: Rocket },
-  { year: "2024", label: "Espansione Multi-Settore", desc: "Da 1 a 25+ settori: NCC, Beauty, Healthcare, Fitness, Retail, Hospitality e oltre.", icon: Target },
-  { year: "2025", label: "91 Agenti IA", desc: "Ecosistema completo di intelligenze artificiali specializzate per ogni verticale.", icon: Brain },
-  { year: "2026", label: "Rete Partner Nazionale", desc: "Oltre 150 partner attivi, 500+ aziende servite e crescita del 300% anno su anno.", icon: Users },
+  {
+    year: "2022",
+    label: "Genesi — Il Codice Zero",
+    desc: "Un singolo sviluppatore. Una visione: creare il DNA digitale che avrebbe dato vita all'intelligenza operativa per le imprese italiane. La prima cellula di Empire AI prende forma.",
+    icon: Dna,
+    metric: "Giorno 1",
+    color: "hsla(265,70%,60%,0.2)",
+    glowColor: "hsla(265,70%,60%,0.12)",
+  },
+  {
+    year: "2023",
+    label: "Prima Mutazione — Food OS",
+    desc: "Il primo organismo digitale respira: menu IA generativi, ordini zero-attrito, cucina connessa in tempo reale. I ristoranti pilota registrano +40% efficienza dal primo mese.",
+    icon: Zap,
+    metric: "+40% efficienza",
+    color: "hsla(38,55%,55%,0.25)",
+    glowColor: "hsla(38,55%,55%,0.12)",
+  },
+  {
+    year: "2024",
+    label: "Replicazione — 25 Settori",
+    desc: "Il DNA si replica. NCC, Beauty, Healthcare, Fitness, Retail, Hotel: ogni settore riceve il proprio genoma operativo personalizzato. La piattaforma diventa un ecosistema.",
+    icon: Network,
+    metric: "25+ verticali",
+    color: "hsla(180,60%,50%,0.2)",
+    glowColor: "hsla(180,60%,50%,0.1)",
+  },
+  {
+    year: "2025",
+    label: "Coscienza — 91 Agenti IA",
+    desc: "L'intelligenza collettiva emerge: 91 agenti specializzati che apprendono, collaborano e si evolvono. Ogni business riceve un team di menti artificiali dedicate 24/7.",
+    icon: Brain,
+    metric: "91 AI agents",
+    color: "hsla(265,70%,60%,0.2)",
+    glowColor: "hsla(265,70%,60%,0.12)",
+  },
+  {
+    year: "2026",
+    label: "Simbiosi — Rete Nazionale",
+    desc: "L'organismo raggiunge la massa critica: 150+ partner, 500+ aziende connesse, crescita 300% YoY. Empire AI è il sistema nervoso digitale delle PMI italiane.",
+    icon: Globe,
+    metric: "500+ aziende",
+    color: "hsla(38,55%,55%,0.25)",
+    glowColor: "hsla(38,55%,55%,0.12)",
+  },
 ];
 
 export default function EmpireTeamStory() {
