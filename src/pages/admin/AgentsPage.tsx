@@ -913,16 +913,42 @@ export default function AgentsPage() {
   );
   const unresolvedAlerts = mock.alerts.filter(a => !a.isRead);
 
-  const handleSaveConfig = () => {
+  const handleSaveConfig = async () => {
     if (!selectedAgent) return;
+    // Save to ai_agent_configs (overlay)
     upsertConfig.mutate({
       agent_name: selectedAgent.name, is_enabled: editEnabled,
       max_calls_per_hour: editMaxCalls, max_monthly_budget_usd: editMaxBudget,
       allowed_industries: editIndustries, system_prompt_override: editPromptOverride || null,
       display_name: editDisplayName || selectedAgent.displayName,
       description: editDescription || selectedAgent.description,
-      icon: selectedAgent.icon, color: selectedAgent.color,
+      icon: editIconEmoji || selectedAgent.icon, color: editColorHex || selectedAgent.color,
     });
+    // Also persist to agents table (the catalog)
+    const capabilitiesArr = editCapabilities.split(",").map(s => s.trim()).filter(Boolean);
+    const agentPayload = {
+      name: selectedAgent.name,
+      description_it: editDescription || selectedAgent.description,
+      category: editCategory || "automation",
+      type: editType,
+      sectors: editIndustries,
+      ai_model: editModel || selectedAgent.model,
+      autonomy_level: editAutonomy,
+      privacy_level: editPrivacy,
+      capabilities: capabilitiesArr.length > 0 ? capabilitiesArr : null,
+      icon_emoji: editIconEmoji || null,
+      color_hex: editColorHex || null,
+      pricing: { base: editPricingBase, currency: "EUR" },
+      learning_enabled: editLearning,
+      status: editEnabled ? "active" : "inactive",
+    };
+    const { data: existingAgent } = await supabase.from("agents").select("id").eq("name", selectedAgent.name).maybeSingle();
+    if (existingAgent) {
+      await supabase.from("agents").update({ ...agentPayload, updated_at: new Date().toISOString() }).eq("id", existingAgent.id);
+    } else {
+      await supabase.from("agents").insert(agentPayload);
+    }
+    queryClient.invalidateQueries({ queryKey: ["agents"] });
   };
 
   const handleTest = async () => {
