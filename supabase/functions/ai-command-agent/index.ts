@@ -103,24 +103,59 @@ AZIONI SPECIFICHE per SERVIZI TECNICI (Idraulico, Elettricista, Edilizia, Giardi
 - INTERVENTION_UPDATE: { action: "intervention_update", client_name: string, new_status: "richiesta"|"programmato"|"in_corso"|"completato"|"fatturato"|"annullato" }
 - INTERVENTION_ADD_NOTE: { action: "intervention_add_note", client_name: string, note: string }
 - INTERVENTION_SET_PRICE: { action: "intervention_set_price", client_name: string, final_price: number }
+- INTERVENTION_ADD: { action: "intervention_add", client_name: string, client_phone?: string, intervention_type: string, address?: string, notes?: string, urgency?: "bassa"|"media"|"alta"|"urgente" }
+`;
+
+const AGRITURISMO_SCHEMA = `
+AZIONI SPECIFICHE per AGRITURISMO:
+- MENU_UPDATE_PRICE: { action: "menu_update_price", item_name: string, new_price?: number, price_delta?: number }
+- MENU_REMOVE_ITEM: { action: "menu_remove_item", item_name: string }
+- MENU_ADD_ITEM: { action: "menu_add_item", name: string, price: number, category: string, description?: string }
+- MENU_TOGGLE_ACTIVE: { action: "menu_toggle_active", item_name: string, is_active: boolean }
+- RESERVATION_UPDATE: { action: "reservation_update", customer_name: string, new_status: "confirmed"|"cancelled" }
+- APPOINTMENT_UPDATE: { action: "appointment_update", client_name: string, new_status: "pending"|"confirmed"|"completed"|"cancelled" }
+`;
+
+const EVENTS_SCHEMA = `
+AZIONI SPECIFICHE per EVENTS / ORGANIZZAZIONE EVENTI:
+- APPOINTMENT_UPDATE: { action: "appointment_update", client_name: string, new_status: "pending"|"confirmed"|"completed"|"cancelled" }
+- APPOINTMENT_RESCHEDULE: { action: "appointment_reschedule", client_name: string, new_date: string, new_time: string }
+- INTERVENTION_UPDATE: { action: "intervention_update", client_name: string, new_status: "richiesta"|"programmato"|"in_corso"|"completato"|"fatturato"|"annullato" }
+- INTERVENTION_SET_PRICE: { action: "intervention_set_price", client_name: string, final_price: number }
+`;
+
+const LOGISTICS_SCHEMA = `
+AZIONI SPECIFICHE per LOGISTICS / LOGISTICA:
+- VEHICLE_TOGGLE: { action: "vehicle_toggle", vehicle_name: string, is_active: boolean }
+- DRIVER_UPDATE_STATUS: { action: "driver_update_status", driver_name: string, status: "available"|"busy"|"off_duty" }
+- INTERVENTION_UPDATE: { action: "intervention_update", client_name: string, new_status: "richiesta"|"programmato"|"in_corso"|"completato"|"fatturato"|"annullato" }
 `;
 
 const TRADES_SECTORS = [
   "plumber", "electrician", "construction", "gardening", "cleaning",
   "garage", "veterinary", "tattoo", "childcare", "education",
-  "events", "logistics", "photography", "legal", "accounting", "agriturismo",
+  "photography", "legal", "accounting",
 ];
 
 const SECTOR_SCHEMAS: Record<string, string> = {
   ristorazione: FOOD_SCHEMA,
   food: FOOD_SCHEMA,
   ncc: NCC_SCHEMA,
+  transport: NCC_SCHEMA,
   beauty: BEAUTY_SCHEMA,
+  wellness: BEAUTY_SCHEMA,
   healthcare: HEALTHCARE_SCHEMA,
+  medical: HEALTHCARE_SCHEMA,
   retail: RETAIL_SCHEMA,
+  shop: RETAIL_SCHEMA,
   fitness: FITNESS_SCHEMA,
+  sport: FITNESS_SCHEMA,
   hospitality: HOSPITALITY_SCHEMA,
+  hotel: HOSPITALITY_SCHEMA,
   beach: BEACH_SCHEMA,
+  agriturismo: AGRITURISMO_SCHEMA,
+  events: EVENTS_SCHEMA,
+  logistics: LOGISTICS_SCHEMA,
 };
 
 function getSectorSchema(sector: string): string {
