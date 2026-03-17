@@ -3272,6 +3272,38 @@ const LandingPage = () => {
                   <div className="mx-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.2), transparent)" }} />
                   {/* Scrollable content */}
                   <div className="overflow-y-auto px-4 py-4 space-y-2" style={{ maxHeight: "60vh" }}>
+                    {/* ── Featured: Showcase Premium ── */}
+                    <p className="text-[0.55rem] font-heading font-bold tracking-[3px] uppercase px-2 mb-2" style={{ color: "hsla(38,50%,55%,0.7)" }}>★ Showcase Premium</p>
+                    {[
+                      { name: "Impero Roma", desc: "Ristorante Premium · Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️" },
+                      { name: "Amalfi Luxury Transfer", desc: "NCC Premium · Costiera Amalfitana", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗" },
+                    ].map((feat, i) => (
+                      <motion.div key={`featured-${i}`}
+                        className="flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all"
+                        style={{ background: `${feat.color}08`, border: `1px solid ${feat.color}20` }}
+                        whileHover={{ scale: 1.01, borderColor: `${feat.color}40` }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => { setSectorSheetOpen(false); navigate(feat.route); }}
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
+                      >
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg flex-shrink-0"
+                          style={{ background: `${feat.color}18`, border: `1px solid ${feat.color}25` }}>
+                          {feat.emoji}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-xs font-heading font-bold text-foreground truncate">{feat.name}</p>
+                            <span className="text-[6px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase flex-shrink-0" style={{ background: `${feat.color}20`, color: feat.color }}>Live</span>
+                          </div>
+                          <p className="text-[0.6rem] text-foreground/30 truncate">{feat.desc}</p>
+                        </div>
+                        <ArrowRight className="w-3 h-3 flex-shrink-0" style={{ color: feat.color }} />
+                      </motion.div>
+                    ))}
+                    {/* Divider */}
+                    <div className="py-2">
+                      <div className="h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.15), transparent)" }} />
+                    </div>
                     {/* Active sectors with demos */}
                     <p className="text-[0.55rem] font-heading font-bold text-primary/50 tracking-[3px] uppercase px-2 mb-2">Con Demo Live</p>
                     {industries.map((ind, i) => {
