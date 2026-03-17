@@ -103,24 +103,59 @@ AZIONI SPECIFICHE per SERVIZI TECNICI (Idraulico, Elettricista, Edilizia, Giardi
 - INTERVENTION_UPDATE: { action: "intervention_update", client_name: string, new_status: "richiesta"|"programmato"|"in_corso"|"completato"|"fatturato"|"annullato" }
 - INTERVENTION_ADD_NOTE: { action: "intervention_add_note", client_name: string, note: string }
 - INTERVENTION_SET_PRICE: { action: "intervention_set_price", client_name: string, final_price: number }
+- INTERVENTION_ADD: { action: "intervention_add", client_name: string, client_phone?: string, intervention_type: string, address?: string, notes?: string, urgency?: "bassa"|"media"|"alta"|"urgente" }
+`;
+
+const AGRITURISMO_SCHEMA = `
+AZIONI SPECIFICHE per AGRITURISMO:
+- MENU_UPDATE_PRICE: { action: "menu_update_price", item_name: string, new_price?: number, price_delta?: number }
+- MENU_REMOVE_ITEM: { action: "menu_remove_item", item_name: string }
+- MENU_ADD_ITEM: { action: "menu_add_item", name: string, price: number, category: string, description?: string }
+- MENU_TOGGLE_ACTIVE: { action: "menu_toggle_active", item_name: string, is_active: boolean }
+- RESERVATION_UPDATE: { action: "reservation_update", customer_name: string, new_status: "confirmed"|"cancelled" }
+- APPOINTMENT_UPDATE: { action: "appointment_update", client_name: string, new_status: "pending"|"confirmed"|"completed"|"cancelled" }
+`;
+
+const EVENTS_SCHEMA = `
+AZIONI SPECIFICHE per EVENTS / ORGANIZZAZIONE EVENTI:
+- APPOINTMENT_UPDATE: { action: "appointment_update", client_name: string, new_status: "pending"|"confirmed"|"completed"|"cancelled" }
+- APPOINTMENT_RESCHEDULE: { action: "appointment_reschedule", client_name: string, new_date: string, new_time: string }
+- INTERVENTION_UPDATE: { action: "intervention_update", client_name: string, new_status: "richiesta"|"programmato"|"in_corso"|"completato"|"fatturato"|"annullato" }
+- INTERVENTION_SET_PRICE: { action: "intervention_set_price", client_name: string, final_price: number }
+`;
+
+const LOGISTICS_SCHEMA = `
+AZIONI SPECIFICHE per LOGISTICS / LOGISTICA:
+- VEHICLE_TOGGLE: { action: "vehicle_toggle", vehicle_name: string, is_active: boolean }
+- DRIVER_UPDATE_STATUS: { action: "driver_update_status", driver_name: string, status: "available"|"busy"|"off_duty" }
+- INTERVENTION_UPDATE: { action: "intervention_update", client_name: string, new_status: "richiesta"|"programmato"|"in_corso"|"completato"|"fatturato"|"annullato" }
 `;
 
 const TRADES_SECTORS = [
   "plumber", "electrician", "construction", "gardening", "cleaning",
   "garage", "veterinary", "tattoo", "childcare", "education",
-  "events", "logistics", "photography", "legal", "accounting", "agriturismo",
+  "photography", "legal", "accounting",
 ];
 
 const SECTOR_SCHEMAS: Record<string, string> = {
   ristorazione: FOOD_SCHEMA,
   food: FOOD_SCHEMA,
   ncc: NCC_SCHEMA,
+  transport: NCC_SCHEMA,
   beauty: BEAUTY_SCHEMA,
+  wellness: BEAUTY_SCHEMA,
   healthcare: HEALTHCARE_SCHEMA,
+  medical: HEALTHCARE_SCHEMA,
   retail: RETAIL_SCHEMA,
+  shop: RETAIL_SCHEMA,
   fitness: FITNESS_SCHEMA,
+  sport: FITNESS_SCHEMA,
   hospitality: HOSPITALITY_SCHEMA,
+  hotel: HOSPITALITY_SCHEMA,
   beach: BEACH_SCHEMA,
+  agriturismo: AGRITURISMO_SCHEMA,
+  events: EVENTS_SCHEMA,
+  logistics: LOGISTICS_SCHEMA,
 };
 
 function getSectorSchema(sector: string): string {
@@ -665,10 +700,35 @@ async function executeAction(
       // HOSPITALITY — Rooms
       // ════════════════════════════════════════
 
-      case "room_update_price":
+      case "room_update_price": {
+        // Store room prices via content_blocks (section=rooms, field_key=room_name)
+        const { data: block } = await supabase.from("content_blocks").select("id, value")
+          .eq("company_id", resourceId).eq("section", "rooms")
+          .ilike("field_key", `%${action.room_name}%`).limit(1);
+        if (!block?.length) return { success: false, detail: `Camera "${action.room_name}" non trovata` };
+        try {
+          const roomData = JSON.parse(block[0].value || "{}");
+          roomData.price = action.new_price;
+          const { error } = await supabase.from("content_blocks")
+            .update({ value: JSON.stringify(roomData), updated_at: new Date().toISOString() }).eq("id", block[0].id);
+          if (error) return { success: false, detail: `Errore: ${error.message}` };
+          return { success: true, detail: `Camera "${action.room_name}" prezzo → €${action.new_price}` };
+        } catch { return { success: false, detail: "Errore parsing dati camera" }; }
+      }
+
       case "room_update_status": {
-        // Hospitality doesn't have a rooms table yet; use content_blocks as a lightweight store
-        return { success: false, detail: "Gestione camere via comando sarà disponibile a breve" };
+        const { data: block } = await supabase.from("content_blocks").select("id, value")
+          .eq("company_id", resourceId).eq("section", "rooms")
+          .ilike("field_key", `%${action.room_name}%`).limit(1);
+        if (!block?.length) return { success: false, detail: `Camera "${action.room_name}" non trovata` };
+        try {
+          const roomData = JSON.parse(block[0].value || "{}");
+          roomData.status = action.status;
+          const { error } = await supabase.from("content_blocks")
+            .update({ value: JSON.stringify(roomData), updated_at: new Date().toISOString() }).eq("id", block[0].id);
+          if (error) return { success: false, detail: `Errore: ${error.message}` };
+          return { success: true, detail: `Camera "${action.room_name}" → ${action.status}` };
+        } catch { return { success: false, detail: "Errore parsing dati camera" }; }
       }
 
       case "booking_update": {
@@ -709,9 +769,19 @@ async function executeAction(
         return { success: true, detail: `Corso "${items[0].name}" ${action.is_active ? "attivato" : "disattivato"}` };
       }
 
-      case "membership_update": {
-        // Not yet a dedicated table, use CRM
-        return { success: false, detail: "Gestione membership via comando sarà disponibile a breve" };
+      case "intervention_add": {
+        const { error } = await supabase.from("interventions").insert({
+          company_id: resourceId,
+          client_name: action.client_name,
+          client_phone: action.client_phone || null,
+          intervention_type: action.intervention_type || "generico",
+          address: action.address || null,
+          notes: action.notes || null,
+          urgency: action.urgency || "media",
+          status: "richiesta",
+        });
+        if (error) return { success: false, detail: `Errore: ${error.message}` };
+        return { success: true, detail: `Intervento per "${action.client_name}" creato (${action.intervention_type})` };
       }
 
       default:

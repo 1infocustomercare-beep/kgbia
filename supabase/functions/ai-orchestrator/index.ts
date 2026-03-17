@@ -9,15 +9,19 @@ const corsHeaders = {
 
 const AI_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
-// Intent detection patterns
+// Intent detection patterns — multi-sector
 const INTENTS: Record<string, RegExp> = {
-  ADD_ITEM: /aggiung(i|ere|iamo)\s+(piatt|prodott|servizi|voce|item)/i,
-  UPDATE_PRICE: /aggiorn(a|are|iamo)\s+(prezz|cost|tariff)/i,
+  ADD_ITEM: /aggiung(i|ere|iamo)\s+(piatt|prodott|servizi|voce|item|camera|veicol|cors|trattament)/i,
+  UPDATE_PRICE: /(aggiorn|cambia|modifica|aumenta|diminuisci|abbassa|alza|metti|imposta)\s*(il\s+)?(prezz|cost|tariff|prezzo)/i,
   GENERATE_IMAGE: /(genera|crea|fai)\s+(foto|immagine|image)/i,
-  MANAGE_BOOKING: /(prenota|riserva|booking|appuntament)/i,
+  MANAGE_BOOKING: /(prenota|riserva|booking|appuntament|conferma|annulla)\s/i,
   PANIC_MODE: /panic\s*mode|emergenz|chiudi\s*tutto/i,
-  VIEW_STATS: /(stat|analisi|report|incass|fatturato)/i,
-  MENU_UPDATE: /(menu|carta|listino)/i,
+  VIEW_STATS: /(stat|analisi|report|incass|fatturato|guadagn|revenue)/i,
+  MENU_UPDATE: /(menu|carta|listino|catalogo|togli|rimuovi|disattiva|attiva)/i,
+  MANAGE_STAFF: /(staff|dipendent|autista|driver|tecnico|operatore)/i,
+  MANAGE_INTERVENTION: /(intervent|lavoro|riparazion|manutenzione|sopralluogo)/i,
+  MANAGE_FLEET: /(veicol|auto|flotta|macchina|furgone|bus)/i,
+  MANAGE_CLIENT: /(client|pazient|ospite|contatt)/i,
 };
 
 serve(async (req) => {
@@ -106,7 +110,7 @@ serve(async (req) => {
     }
 
     // 5b. Route actionable intents to Command Agent for direct DB execution
-    const ACTIONABLE_INTENTS = ["ADD_ITEM", "UPDATE_PRICE", "MENU_UPDATE", "MANAGE_BOOKING", "PANIC_MODE"];
+    const ACTIONABLE_INTENTS = ["ADD_ITEM", "UPDATE_PRICE", "MENU_UPDATE", "MANAGE_BOOKING", "PANIC_MODE", "MANAGE_STAFF", "MANAGE_INTERVENTION", "MANAGE_FLEET", "MANAGE_CLIENT"];
     if (ACTIONABLE_INTENTS.includes(detectedIntent)) {
       try {
         const cmdResp = await fetch(`${supabaseUrl}/functions/v1/ai-command-agent`, {
