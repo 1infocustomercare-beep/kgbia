@@ -531,12 +531,30 @@ const SectionLabel = ({ text, icon }: SectionLabelProps) => (
   </motion.div>
 );
 
+// Category groups for filtering
+const SECTOR_CATEGORIES: { id: string; label: string; icon: React.ReactNode; sectorIds: string[] }[] = [
+  { id: "all", label: "Tutti", icon: <Grid className="w-3 h-3" />, sectorIds: [] },
+  { id: "food-hosp", label: "Food & Hotel", icon: <ChefHat className="w-3 h-3" />, sectorIds: ["food", "hospitality", "beach", "agriturismo", "events"] },
+  { id: "services", label: "Servizi", icon: <Scissors className="w-3 h-3" />, sectorIds: ["beauty", "fitness", "photography", "tattoo", "childcare", "education"] },
+  { id: "health", label: "Salute", icon: <Heart className="w-3 h-3" />, sectorIds: ["healthcare", "veterinary"] },
+  { id: "trade", label: "Artigiani", icon: <Wrench className="w-3 h-3" />, sectorIds: ["plumber", "electrician", "construction", "gardening", "garage", "cleaning"] },
+  { id: "business", label: "Business", icon: <Store className="w-3 h-3" />, sectorIds: ["retail", "ncc", "legal", "accounting", "logistics"] },
+];
+
 export default function MultiSectorShowcase() {
   const navigate = useNavigate();
   const [activeIdx, setActiveIdx] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [showAllScreens, setShowAllScreens] = useState(false);
+  const [activeCat, setActiveCat] = useState("all");
   const sector = SHOWCASE_SECTORS[activeIdx];
+
+  const filteredSectors = useMemo(() => {
+    if (activeCat === "all") return SHOWCASE_SECTORS;
+    const cat = SECTOR_CATEGORIES.find(c => c.id === activeCat);
+    if (!cat) return SHOWCASE_SECTORS;
+    return SHOWCASE_SECTORS.filter(s => cat.sectorIds.includes(s.id));
+  }, [activeCat]);
 
   useEffect(() => {
     if (!isAutoPlaying) return;
