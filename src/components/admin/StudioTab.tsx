@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import cartoonStudioMenu from "@/assets/cartoon-studio-menu-v2.png";
 
-type StudioSection = "menu" | "ai" | "foodphoto" | "translate" | "preview";
+type StudioSection = "menu" | "ai" | "foodphoto" | "plates" | "translate" | "preview";
 
 /* ── EU Allergen Icons ── */
 const EU_ALLERGENS = [
