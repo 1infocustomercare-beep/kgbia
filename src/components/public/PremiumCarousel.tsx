@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useEffect, ReactNode } from "react";
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight, Pause, Play, LayoutGrid, X } from "lucide-react";
 
 interface PremiumCarouselProps {
   children: ReactNode[];
@@ -23,6 +23,7 @@ export function PremiumCarousel({
 }: PremiumCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const animRef = useRef<number>();
   const posRef = useRef(0);
   const lastTimeRef = useRef(0);
@@ -33,7 +34,7 @@ export function PremiumCarousel({
   const gap = 20;
   const singleSetWidth = children.length * (itemWidth + gap);
 
-  useEffect(() => { pausedRef.current = isPaused; }, [isPaused]);
+  useEffect(() => { pausedRef.current = isPaused || isExpanded; }, [isPaused, isExpanded]);
 
   const tick = useCallback((ts: number) => {
     if (!lastTimeRef.current) lastTimeRef.current = ts;
@@ -77,26 +78,64 @@ export function PremiumCarousel({
       onTouchStart={() => setIsPaused(true)}
       onTouchEnd={() => setTimeout(() => setIsPaused(false), 3500)}
     >
-      {/* Clean scrolling track — NO edge masks, NO gradients */}
-      <div className={`overflow-hidden ${fullWidth ? "" : "-mx-4 sm:mx-0"}`}>
-        <div
-          ref={trackRef}
-          className="flex will-change-transform"
-          style={{ gap: `${gap}px`, padding: "16px 0" }}
-        >
-          {tripled.map((child, i) => (
-            <div
-              key={i}
-              className="flex-shrink-0"
-              style={{ width: itemWidth }}
-            >
-              {child}
+      {/* ═══ EXPANDED GRID VIEW ═══ */}
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
+              {children.map((child, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                >
+                  {child}
+                </motion.div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Luxury floating controls — pill glassmorphism */}
+      {/* ═══ CAROUSEL VIEW ═══ */}
+      <AnimatePresence>
+        {!isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className={`overflow-hidden ${fullWidth ? "" : "-mx-4 sm:mx-0"}`}>
+              <div
+                ref={trackRef}
+                className="flex will-change-transform"
+                style={{ gap: `${gap}px`, padding: "16px 0" }}
+              >
+                {tripled.map((child, i) => (
+                  <div
+                    key={i}
+                    className="flex-shrink-0"
+                    style={{ width: itemWidth }}
+                  >
+                    {child}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Luxury floating controls */}
       {showControls && (
         <div className="flex justify-center mt-6">
           <motion.div
@@ -110,45 +149,54 @@ export function PremiumCarousel({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <button
-              onClick={() => jump("left")}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90"
-              style={{ 
-                color: accentColor,
-                background: "rgba(255,255,255,0.04)",
-              }}
-              aria-label="Precedente"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
+            {!isExpanded && (
+              <>
+                <button
+                  onClick={() => jump("left")}
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90"
+                  style={{ color: accentColor, background: "rgba(255,255,255,0.04)" }}
+                  aria-label="Precedente"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={() => setIsPaused(!isPaused)}
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90"
+                  style={{
+                    background: isPaused ? `${accentColor}20` : "rgba(255,255,255,0.04)",
+                    color: accentColor,
+                    boxShadow: isPaused ? `0 0 12px ${accentColor}25` : "none",
+                  }}
+                  aria-label={isPaused ? "Play" : "Pause"}
+                >
+                  {isPaused ? <Play className="w-3.5 h-3.5 ml-0.5" /> : <Pause className="w-3.5 h-3.5" />}
+                </button>
+
+                <button
+                  onClick={() => jump("right")}
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90"
+                  style={{ color: accentColor, background: "rgba(255,255,255,0.04)" }}
+                  aria-label="Successivo"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                <div className="w-px h-5 mx-0.5" style={{ background: "rgba(255,255,255,0.08)" }} />
+              </>
+            )}
 
             <button
-              onClick={() => setIsPaused(!isPaused)}
+              onClick={() => setIsExpanded(!isExpanded)}
               className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90"
               style={{
-                background: isPaused ? `${accentColor}20` : "rgba(255,255,255,0.04)",
+                background: isExpanded ? `${accentColor}20` : "rgba(255,255,255,0.04)",
                 color: accentColor,
-                boxShadow: isPaused ? `0 0 12px ${accentColor}25` : "none",
+                boxShadow: isExpanded ? `0 0 12px ${accentColor}25` : "none",
               }}
-              aria-label={isPaused ? "Play" : "Pause"}
+              aria-label={isExpanded ? "Chiudi griglia" : "Mostra tutti"}
             >
-              {isPaused ? (
-                <Play className="w-3.5 h-3.5 ml-0.5" />
-              ) : (
-                <Pause className="w-3.5 h-3.5" />
-              )}
-            </button>
-
-            <button
-              onClick={() => jump("right")}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90"
-              style={{ 
-                color: accentColor,
-                background: "rgba(255,255,255,0.04)",
-              }}
-              aria-label="Successivo"
-            >
-              <ChevronRight className="w-4 h-4" />
+              {isExpanded ? <X className="w-4 h-4" /> : <LayoutGrid className="w-3.5 h-3.5" />}
             </button>
           </motion.div>
         </div>
