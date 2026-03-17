@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   QrCode, Lock, MessageSquare, ShieldBan, Package, GraduationCap, Settings,
   Download, ExternalLink, Save, ShieldCheck, Bot, Send, Check, X,
   Phone, Mail, MapPin, Clock, Upload, Globe, Ban, FileCheck, Image,
-  ArrowLeft
+  ArrowLeft, ChevronDown, ChevronRight, BookOpen, Lightbulb, Layers
 } from "lucide-react";
 import InfoGuide from "@/components/ui/info-guide";
+import { pageGuides, featureGuides } from "@/config/feature-guides";
 import PrivateChat from "@/components/restaurant/PrivateChat";
 import SubscriptionSection from "@/components/admin/SubscriptionSection";
 import UpgradePrompt from "@/components/admin/UpgradePrompt";
