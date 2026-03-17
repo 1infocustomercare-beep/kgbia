@@ -44,6 +44,7 @@ import cartoonFitnessDefault from "@/assets/cartoon-sector-fitness.png";
 import cartoonHotelDefault from "@/assets/cartoon-sector-hotel.png";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
+import MultiSectorShowcase from "@/components/public/MultiSectorShowcase";
 const EmpireTeamStory = lazy(() => import("@/components/public/EmpireTeamStory"));
 
 /* Build a lookup from site_assets — custom URL overrides bundled default */
@@ -4747,69 +4748,10 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          NCC & LUXURY TRANSPORT SHOWCASE — Compact
+          MULTI-SECTOR POWER SHOWCASE — Auto-rotating
          ═══════════════════════════════════════════ */}
       <Section id="app" style={{ background: "linear-gradient(180deg, hsla(260,14%,13%,1) 0%, hsla(265,16%,11%,1) 50%, hsla(260,14%,13%,1) 100%)" }}>
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="text-center lg:text-left">
-            <SectionLabel text="NCC & Trasporti" icon={<Car className="w-3 h-3 text-primary" />} />
-            <h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
-              Trasporto Premium,<br /><span className="text-shimmer">Automatizzato al 100%</span>
-            </h2>
-            <p className="text-foreground/40 leading-[1.7] max-w-lg mx-auto lg:mx-0 mb-7 text-sm">
-              Gestisci flotta NCC, prenotazioni e autisti con un sistema AI che automatizza tariffe, assegnazioni e comunicazioni — tutto con il tuo brand.
-            </p>
-            <div className="space-y-3 mb-8 text-left max-w-md mx-auto lg:mx-0">
-              {[
-                { title: "Booking Engine Intelligente", desc: "Prenotazioni con calcolo tariffe automatico per tratta e veicolo", icon: <Calendar className="w-3 h-3" /> },
-                { title: "Gestione Flotta & Autisti", desc: "Monitora scadenze CQC, patenti e revisioni in tempo reale", icon: <Shield className="w-3 h-3" /> },
-                { title: "Tariffe Dinamiche", desc: "Prezzi custom per tratta, extra notturno e festivi", icon: <TrendingUp className="w-3 h-3" /> },
-                { title: "Tracking & Notifiche Live", desc: "Conferme, reminder e tracking in tempo reale per il cliente", icon: <Bell className="w-3 h-3" /> },
-              ].map((f, i) => (
-                <motion.div key={i} className="flex gap-3 items-start group"
-                  initial={{ opacity: 0, x: -15 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                  <div className="w-7 h-7 min-w-[28px] rounded-lg bg-primary/10 flex items-center justify-center mt-0.5 group-hover:bg-primary/20 transition-colors">
-                    <span className="text-primary">{f.icon}</span>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-foreground">{f.title}</p>
-                    <p className="text-[0.6rem] text-foreground/35 mt-0.5">{f.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            <motion.button
-              onClick={() => navigate("/b/amalfi-luxury-transfer")}
-              className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-              whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.2)" }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Scopri Demo NCC <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
-            </motion.button>
-          </motion.div>
-
-          <motion.div variants={slideInRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="w-full">
-            <div className="relative rounded-2xl overflow-hidden glow-card">
-              <img src={nccFleetShowcase} alt="NCC Fleet Management" className="w-full aspect-[4/3] object-cover" loading="lazy" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent pointer-events-none" />
-              {/* Overlay stats */}
-              <div className="absolute bottom-4 left-4 right-4 flex gap-2">
-                {[
-                  { label: "Flotta", val: "12 veicoli" },
-                  { label: "Rating", val: "4.9★" },
-                  { label: "Revenue", val: "+40%" },
-                ].map((s, i) => (
-                  <div key={i} className="flex-1 px-2 py-2 rounded-lg text-center" style={{ background: "hsla(0,0%,0%,0.6)", backdropFilter: "blur(8px)", border: "1px solid hsla(0,0%,100%,0.08)" }}>
-                    <p className="text-[0.5rem] text-foreground/40 tracking-wider uppercase">{s.label}</p>
-                    <p className="text-[0.65rem] font-heading font-bold text-foreground">{s.val}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </div>
+        <MultiSectorShowcase />
       </Section>
 
       {/* ═══════════════════════════════════════════
