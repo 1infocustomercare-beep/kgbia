@@ -186,12 +186,24 @@ serve(async (req) => {
               metadata: { raw_type: msg.type, timestamp: msg.timestamp },
             });
 
-            // ── AI Auto-reply ──
+            // ── Check for owner command or regular AI auto-reply ──
             if (msg.type === "text" && msg.text?.body) {
               try {
-                const aiReply = await generateAIReply(supabase, tenantId, conversationId, msg.text.body);
-                if (aiReply) {
-                  await sendWhatsAppMessage(supabase, tenantId, contactPhone, aiReply, conversationId);
+                const messageText = msg.text.body;
+                const isCommand = detectCommandIntent(messageText);
+
+                if (isCommand) {
+                  // Route to Command Agent — owner is managing their business
+                  const commandReply = await executeCommandAgent(supabaseUrl, tenantId, messageText, contactPhone);
+                  if (commandReply) {
+                    await sendWhatsAppMessage(supabase, tenantId, contactPhone, commandReply, conversationId);
+                  }
+                } else {
+                  // Regular AI reply for customer conversations
+                  const aiReply = await generateAIReply(supabase, tenantId, conversationId, messageText);
+                  if (aiReply) {
+                    await sendWhatsAppMessage(supabase, tenantId, contactPhone, aiReply, conversationId);
+                  }
                 }
               } catch (err) {
                 console.error("AI auto-reply error:", err);
