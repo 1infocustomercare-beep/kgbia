@@ -292,11 +292,12 @@ async function generateAIReply(
   conversationId: string,
   userMessage: string,
 ): Promise<string | null> {
-  // Get conversation context
+  // Get conversation context — CRITICAL: filter by tenant_id for absolute isolation
   const { data: conv } = await supabase
     .from("whatsapp_conversations")
     .select("sector, context, contact_name")
     .eq("id", conversationId)
+    .eq("tenant_id", tenantId)
     .single();
 
   if (!conv) return null;
@@ -311,11 +312,12 @@ async function generateAIReply(
 
   if (!sectorPrompt) return null;
 
-  // Get recent conversation history (last 10 messages)
+  // CRITICAL: double-filter by tenant_id for absolute data isolation
   const { data: recentMessages } = await supabase
     .from("whatsapp_messages")
     .select("direction, content, created_at")
     .eq("conversation_id", conversationId)
+    .eq("tenant_id", tenantId)
     .order("created_at", { ascending: false })
     .limit(10);
 
@@ -333,7 +335,7 @@ async function generateAIReply(
     return null;
   }
 
-  const systemPrompt = `${sectorPrompt.system_prompt}\n\nAzioni consentite: ${JSON.stringify(sectorPrompt.allowed_actions)}\nAzioni bloccate: ${JSON.stringify(sectorPrompt.blocked_actions)}\n\nRispondi in modo conciso e professionale. Max 300 caratteri per messaggio WhatsApp.`;
+  const systemPrompt = `${sectorPrompt.system_prompt}\n\nAzioni consentite: ${JSON.stringify(sectorPrompt.allowed_actions)}\nAzioni bloccate: ${JSON.stringify(sectorPrompt.blocked_actions)}\n\n⚠️ ISOLAMENTO ASSOLUTO: Rispondi SOLO con informazioni di QUESTO specifico account business (tenant: ${tenantId}). NON fare MAI riferimento a dati, prezzi, menu, servizi o clienti di altri account. Se non hai dati, chiedi al cliente.\n\nRispondi in modo conciso e professionale. Max 300 caratteri per messaggio WhatsApp.`;
 
   const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",

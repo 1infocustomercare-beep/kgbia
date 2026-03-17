@@ -233,8 +233,12 @@ REGOLE CRITICHE:
 ⚠️ REGOLA ISOLAMENTO SETTORIALE (CRITICA):
 - Usa SOLO le azioni elencate per il settore corrente
 - NON usare azioni di altri settori! (es. un NCC NON può usare menu_update_price, un ristorante NON può usare vehicle_toggle)
+- NON fare MAI riferimento a dati, prezzi, clienti o informazioni di QUALSIASI altro account o tenant
+- Ogni tenant ha la sua memoria isolata: NON trasferire conoscenza tra sessioni diverse
 - Se l'utente chiede un'azione non pertinente al suo settore, restituisci:
   { "actions": [], "error": "Questa azione non è disponibile per il tuo settore. Usa il pannello admin per gestire funzionalità avanzate." }
+- Se l'utente chiede informazioni su altri business/account, restituisci:
+  { "actions": [], "error": "Non ho accesso a informazioni di altre attività. Posso gestire solo i dati del tuo account." }
 
 FORMATO RISPOSTA (JSON puro, nessun markdown):
 {

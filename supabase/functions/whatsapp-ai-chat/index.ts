@@ -52,15 +52,16 @@ serve(async (req) => {
       });
     }
 
-    // Verify ownership
+    // Verify strict tenant ownership — CRITICAL: prevents cross-tenant data access
     const { data: conv } = await supabase
       .from("whatsapp_conversations")
-      .select("sector, context, contact_name, contact_phone")
+      .select("sector, context, contact_name, contact_phone, tenant_id")
       .eq("id", conversation_id)
       .eq("tenant_id", user.id)
       .maybeSingle();
 
     if (!conv) {
+      console.warn(`SECURITY: User ${user.id} attempted to access conversation ${conversation_id} — denied`);
       return new Response(JSON.stringify({ error: "Conversazione non trovata" }), {
         status: 404,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -76,10 +77,12 @@ serve(async (req) => {
       .maybeSingle();
 
     // Get conversation history
+    // CRITICAL: Filter by BOTH conversation_id AND tenant_id for absolute isolation
     const { data: history } = await supabase
       .from("whatsapp_messages")
       .select("direction, content")
       .eq("conversation_id", conversation_id)
+      .eq("tenant_id", user.id)
       .order("created_at", { ascending: false })
       .limit(20);
 
@@ -96,11 +99,12 @@ serve(async (req) => {
       });
     }
 
+    const isolationRule = `\n\n⚠️ REGOLA ISOLAMENTO ASSOLUTO: Ogni risposta DEVE essere basata ESCLUSIVAMENTE sui dati di QUESTO tenant (${user.id}). NON menzionare, suggerire o fare riferimento a dati, prezzi, servizi, clienti o informazioni di qualsiasi altro account o settore. Se non hai informazioni sufficienti, chiedi al cliente — NON inventare.`;
     const systemContent = sectorPrompt
-      ? `${sectorPrompt.system_prompt}\n\nCliente: ${conv.contact_name || conv.contact_phone}\nAzioni consentite: ${JSON.stringify(sectorPrompt.allowed_actions)}\nAzioni bloccate: ${JSON.stringify(sectorPrompt.blocked_actions)}\n\nGenera una risposta suggerita. L'operatore potrà modificarla prima di inviarla.`
-      : `Sei un assistente AI per WhatsApp Business. Genera una risposta professionale in italiano per il cliente ${conv.contact_name || conv.contact_phone}.`;
+      ? `${sectorPrompt.system_prompt}\n\nCliente: ${conv.contact_name || conv.contact_phone}\nAzioni consentite: ${JSON.stringify(sectorPrompt.allowed_actions)}\nAzioni bloccate: ${JSON.stringify(sectorPrompt.blocked_actions)}${isolationRule}\n\nGenera una risposta suggerita. L'operatore potrà modificarla prima di inviarla.`
+      : `Sei un assistente AI per WhatsApp Business. Genera una risposta professionale in italiano per il cliente ${conv.contact_name || conv.contact_phone}.${isolationRule}`;
 
-    const aiResp = await fetch("https://api.lovable.dev/v1/chat/completions", {
+    const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
