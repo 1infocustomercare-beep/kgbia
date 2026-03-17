@@ -2775,7 +2775,7 @@ const LandingPage = () => {
               {metrics.map((m, i) => (
                 <motion.div key={i} className="group relative rounded-2xl p-5 sm:p-6 text-center overflow-hidden backdrop-blur-xl"
                   style={{
-                    background: "linear-gradient(145deg, hsla(265,30%,18%,0.55), hsla(265,25%,12%,0.45))",
+                    background: "linear-gradient(145deg, hsla(265,30%,15%,0.92), hsla(265,25%,10%,0.88))",
                     border: "1px solid hsla(38,50%,55%,0.12)",
                     boxShadow: "inset 0 1px 0 hsla(38,50%,60%,0.08), inset 0 -1px 0 hsla(265,50%,30%,0.1), 0 12px 40px hsla(265,50%,10%,0.3), 0 0 60px hsla(265,60%,50%,0.04)"
                   }}
