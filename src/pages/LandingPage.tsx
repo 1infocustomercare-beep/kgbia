@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, forwardRef, useMemo } from "react";
+import { useState, useEffect, useRef, forwardRef, useMemo, lazy, Suspense } from "react";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import IndustryPhoneShowcase, { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
