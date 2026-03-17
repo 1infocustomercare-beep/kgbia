@@ -1,50 +1,193 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Empire Background v12 — AI Neural Circuit
- * Professional tech aesthetic: orthogonal circuit traces, neural network nodes,
- * data-flow particles along straight/angled paths, subtle grid underlay.
- * No spirals, no helixes, no biological shapes.
+ * Empire Background v13 — AI Circuit Morphing
+ * Scroll-reactive: nodes morph between circuit topologies per section.
+ * Orthogonal traces, square/cross nodes, data-flow particles.
+ * Professional tech aesthetic — no spirals, no biology.
  */
 
 const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 50 : 100;
-const CIRCUIT_LINES = IS_MOBILE ? 12 : 24;
-const DATA_PARTICLES = IS_MOBILE ? 18 : 40;
+const NODE_COUNT = IS_MOBILE ? 55 : 110;
+const MAX_DIST = IS_MOBILE ? 120 : 160;
+const FLOW_COUNT = IS_MOBILE ? 20 : 45;
 const GRID_SPACING = IS_MOBILE ? 50 : 60;
 
 type Pt = { x: number; y: number };
 
-interface CircuitPath {
-  points: Pt[];
-  speed: number;
-  phase: number;
-}
+// ── Circuit topologies that morph on scroll ──
+const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = [
+  // 0: Uniform grid — classic circuit board
+  (n, w, h, t) => {
+    const cols = Math.ceil(Math.sqrt(n * (w / h)));
+    const rows = Math.ceil(n / cols);
+    return Array.from({ length: n }, (_, i) => {
+      const col = i % cols, row = Math.floor(i / cols);
+      const fx = (col + 0.5) / cols, fy = (row + 0.5) / rows;
+      const drift = Math.sin(t * 0.08 + i * 0.4) * 3;
+      return { x: w * (0.04 + fx * 0.92) + drift, y: h * (0.04 + fy * 0.92) + Math.cos(t * 0.06 + i * 0.3) * 2 };
+    });
+  },
+  // 1: Horizontal bus lanes — data highway
+  (n, w, h, t) => {
+    const lanes = 6;
+    const per = Math.ceil(n / lanes);
+    return Array.from({ length: n }, (_, i) => {
+      const lane = Math.floor(i / per);
+      const li = i % per;
+      const fx = li / Math.max(per - 1, 1);
+      const baseY = 0.08 + lane * 0.15;
+      const offset = Math.sin(fx * Math.PI * 2 + t * 0.12 + lane * 1.5) * 0.012;
+      return { x: w * (0.02 + fx * 0.96), y: h * (baseY + offset) };
+    });
+  },
+  // 2: Branching tree — hierarchical network
+  (n, w, h, t) => Array.from({ length: n }, (_, i) => {
+    const depth = Math.floor(Math.log2(i + 1));
+    const maxDepth = Math.floor(Math.log2(n));
+    const posInLevel = i - (Math.pow(2, depth) - 1);
+    const levelSize = Math.pow(2, depth);
+    const fx = (posInLevel + 0.5) / levelSize;
+    const fy = (depth + 0.5) / (maxDepth + 1);
+    const sway = Math.sin(t * 0.1 + depth * 0.8 + posInLevel * 0.5) * 8;
+    return {
+      x: w * (0.05 + fx * 0.9) + sway,
+      y: h * (0.05 + fy * 0.9) + Math.cos(t * 0.07 + i * 0.2) * 4,
+    };
+  }),
+  // 3: Converging diamond — central processor
+  (n, w, h, t) => Array.from({ length: n }, (_, i) => {
+    const f = i / n;
+    const ring = Math.floor(f * 5);
+    const ringF = (f * 5) - ring;
+    const ringR = 0.08 + ring * 0.09;
+    // Diamond shape (45° rotated square)
+    const side = Math.floor(ringF * 4);
+    const sideF = (ringF * 4) - side;
+    const corners = [
+      [0, -1], [1, 0], [0, 1], [-1, 0]
+    ];
+    const [ax, ay] = corners[side % 4];
+    const [bx, by] = corners[(side + 1) % 4];
+    const px = lerp(ax, bx, sideF) * ringR;
+    const py = lerp(ay, by, sideF) * ringR;
+    const breathe = 1 + Math.sin(t * 0.1 + ring * 0.8) * 0.06;
+    return {
+      x: w * (0.5 + px * breathe) + Math.sin(t * 0.05 + i * 0.3) * 3,
+      y: h * (0.5 + py * breathe) + Math.cos(t * 0.04 + i * 0.2) * 3,
+    };
+  }),
+  // 4: Vertical columns — server rack / data center
+  (n, w, h, t) => {
+    const cols = IS_MOBILE ? 5 : 8;
+    const per = Math.ceil(n / cols);
+    return Array.from({ length: n }, (_, i) => {
+      const col = Math.floor(i / per);
+      const li = i % per;
+      const fy = li / Math.max(per - 1, 1);
+      const baseX = 0.06 + col * (0.88 / (cols - 1));
+      const offset = Math.sin(fy * Math.PI * 3 + t * 0.15 + col * 1.2) * 0.01;
+      return { x: w * (baseX + offset), y: h * (0.03 + fy * 0.94) + Math.cos(t * 0.08 + i * 0.4) * 3 };
+    });
+  },
+  // 5: Scattered clusters — microchip zones
+  (n, w, h, t) => {
+    const zones = [[0.2, 0.2], [0.8, 0.2], [0.5, 0.5], [0.2, 0.8], [0.8, 0.8]];
+    const per = Math.ceil(n / zones.length);
+    return Array.from({ length: n }, (_, i) => {
+      const zi = Math.floor(i / per) % zones.length;
+      const li = i % per;
+      const [cx, cy] = zones[zi];
+      const gridLocal = Math.ceil(Math.sqrt(per));
+      const lx = (li % gridLocal) / gridLocal - 0.5;
+      const ly = Math.floor(li / gridLocal) / gridLocal - 0.5;
+      const spread = 0.14 + Math.sin(t * 0.12 + zi * 1.5) * 0.02;
+      return {
+        x: w * (cx + lx * spread) + Math.sin(t * 0.06 + i * 0.5) * 2,
+        y: h * (cy + ly * spread) + Math.cos(t * 0.05 + i * 0.3) * 2,
+      };
+    });
+  },
+  // 6: Cross-hatch — intersecting orthogonal lines
+  (n, w, h, t) => {
+    const half = Math.floor(n / 2);
+    return Array.from({ length: n }, (_, i) => {
+      if (i < half) {
+        // Horizontal set
+        const row = Math.floor(i / Math.ceil(Math.sqrt(half)));
+        const col = i % Math.ceil(Math.sqrt(half));
+        const totalRows = Math.ceil(half / Math.ceil(Math.sqrt(half)));
+        const totalCols = Math.ceil(Math.sqrt(half));
+        return {
+          x: w * (0.05 + (col / Math.max(totalCols - 1, 1)) * 0.9) + Math.sin(t * 0.07 + i) * 3,
+          y: h * (0.1 + (row / Math.max(totalRows - 1, 1)) * 0.8) + Math.cos(t * 0.09 + i * 0.4) * 3,
+        };
+      } else {
+        // Diagonal offset set
+        const j = i - half;
+        const f = j / Math.max(half - 1, 1);
+        const row = Math.floor(f * 6);
+        const col = j % Math.ceil(Math.sqrt(half));
+        const totalCols = Math.ceil(Math.sqrt(half));
+        return {
+          x: w * (0.08 + (col / Math.max(totalCols - 1, 1)) * 0.84) + Math.sin(t * 0.06 + j * 0.6) * 4,
+          y: h * (0.12 + (row / 5) * 0.76) + Math.cos(t * 0.08 + j * 0.3) * 4,
+        };
+      }
+    });
+  },
+];
 
-interface DataParticle {
-  pathIdx: number;
+const SECTIONS = topologies.length;
+
+// Desaturated blue-grey palette per section
+const PALETTES = [
+  { node: [215, 10, 48], line: [215, 8, 42], glow: [215, 14, 54] },
+  { node: [200, 12, 46], line: [200, 8, 40], glow: [200, 16, 52] },
+  { node: [225, 10, 47], line: [225, 7, 41], glow: [225, 15, 53] },
+  { node: [190, 12, 46], line: [190, 8, 40], glow: [190, 16, 52] },
+  { node: [210, 10, 48], line: [210, 7, 42], glow: [210, 14, 54] },
+  { node: [220, 12, 47], line: [220, 8, 41], glow: [220, 16, 53] },
+  { node: [205, 10, 48], line: [205, 7, 42], glow: [205, 14, 54] },
+];
+
+interface FlowParticle {
+  fromIdx: number;
+  toIdx: number;
   progress: number;
   speed: number;
-  size: number;
+  life: number;
 }
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const hsl = (h: number, s: number, l: number, a: number) => `hsla(${h},${s}%,${l}%,${a})`;
+const lerpC = (a: number[], b: number[], t: number): number[] =>
+  a.map((v, i) => lerp(v, b[i], t));
+const hsla = (c: number[], a: number) => `hsla(${c[0]},${c[1]}%,${c[2]}%,${a})`;
 
 const EmpireDNABackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
+  const scrollRef = useRef(0);
   const [ready, setReady] = useState(false);
+  const posRef = useRef<Pt[]>([]);
+  const velRef = useRef<Pt[]>([]);
   const timeRef = useRef(0);
-  const nodesRef = useRef<Pt[]>([]);
-  const circuitsRef = useRef<CircuitPath[]>([]);
-  const particlesRef = useRef<DataParticle[]>([]);
+  const flowsRef = useRef<FlowParticle[]>([]);
   const ptrRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
   useEffect(() => { const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
+
+  useEffect(() => {
+    const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
+    window.addEventListener("scroll", fn, { passive: true });
+    const mainEl = document.querySelector("main");
+    if (mainEl) mainEl.addEventListener("scroll", () => { scrollRef.current = mainEl.scrollTop; }, { passive: true });
+    fn();
+    return () => { window.removeEventListener("scroll", fn); };
+  }, []);
 
   useEffect(() => {
     const move = (e: PointerEvent) => { ptrRef.current = { x: e.clientX, y: e.clientY, active: true }; };
@@ -68,88 +211,29 @@ const EmpireDNABackground = () => {
       canvas.width = w * dpr; canvas.height = h * dpr;
       canvas.style.width = w + "px"; canvas.style.height = h + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      generateLayout();
     };
-
-    const generateLayout = () => {
-      if (!w || !h) return;
-
-      // Generate grid-snapped nodes (circuit junctions)
-      const nodes: Pt[] = [];
-      const cols = Math.floor(w / GRID_SPACING);
-      const rows = Math.floor(h / GRID_SPACING);
-      for (let i = 0; i < NODE_COUNT; i++) {
-        const col = Math.floor(Math.random() * cols);
-        const row = Math.floor(Math.random() * rows);
-        nodes.push({
-          x: (col + 0.5) * GRID_SPACING + (Math.random() - 0.5) * 8,
-          y: (row + 0.5) * GRID_SPACING + (Math.random() - 0.5) * 8,
-        });
-      }
-      nodesRef.current = nodes;
-
-      // Generate circuit paths (orthogonal/45° traces between nodes)
-      const circuits: CircuitPath[] = [];
-      for (let i = 0; i < CIRCUIT_LINES; i++) {
-        const startIdx = Math.floor(Math.random() * nodes.length);
-        const start = nodes[startIdx];
-        const segments = 2 + Math.floor(Math.random() * 4);
-        const points: Pt[] = [{ ...start }];
-
-        let cx = start.x, cy = start.y;
-        for (let s = 0; s < segments; s++) {
-          // Choose orthogonal or 45° direction
-          const dirs = [
-            { dx: 1, dy: 0 }, { dx: -1, dy: 0 },
-            { dx: 0, dy: 1 }, { dx: 0, dy: -1 },
-            { dx: 1, dy: 1 }, { dx: -1, dy: -1 },
-            { dx: 1, dy: -1 }, { dx: -1, dy: 1 },
-          ];
-          const dir = dirs[Math.floor(Math.random() * dirs.length)];
-          const len = (2 + Math.floor(Math.random() * 5)) * GRID_SPACING;
-          cx = Math.max(20, Math.min(w - 20, cx + dir.dx * len));
-          cy = Math.max(20, Math.min(h - 20, cy + dir.dy * len));
-          points.push({ x: cx, y: cy });
-        }
-
-        circuits.push({
-          points,
-          speed: 0.002 + Math.random() * 0.004,
-          phase: Math.random() * Math.PI * 2,
-        });
-      }
-      circuitsRef.current = circuits;
-
-      // Generate data particles
-      const particles: DataParticle[] = [];
-      for (let i = 0; i < DATA_PARTICLES; i++) {
-        particles.push({
-          pathIdx: Math.floor(Math.random() * circuits.length),
-          progress: Math.random(),
-          speed: 0.001 + Math.random() * 0.003,
-          size: 1 + Math.random() * 2,
-        });
-      }
-      particlesRef.current = particles;
-    };
-
     resize();
     window.addEventListener("resize", resize);
 
-    // Color palette — cool blue-grey, desaturated, professional
-    const HUE = 215;
-    const SAT = 10;
+    if (!posRef.current.length) {
+      posRef.current = Array.from({ length: NODE_COUNT }, () => ({
+        x: Math.random() * (w || 1000),
+        y: Math.random() * (h || 800),
+      }));
+      velRef.current = Array.from({ length: NODE_COUNT }, () => ({ x: 0, y: 0 }));
+    }
 
-    const getPointOnPath = (path: Pt[], t: number): Pt => {
-      const totalSegs = path.length - 1;
-      if (totalSegs <= 0) return path[0];
-      const seg = Math.min(Math.floor(t * totalSegs), totalSegs - 1);
-      const localT = (t * totalSegs) - seg;
-      return {
-        x: lerp(path[seg].x, path[seg + 1].x, localT),
-        y: lerp(path[seg].y, path[seg + 1].y, localT),
-      };
-    };
+    const spawnFlow = (): FlowParticle => ({
+      fromIdx: Math.floor(Math.random() * NODE_COUNT),
+      toIdx: Math.floor(Math.random() * NODE_COUNT),
+      progress: 0,
+      speed: 0.006 + Math.random() * 0.012,
+      life: 0,
+    });
+
+    if (!flowsRef.current.length) {
+      flowsRef.current = Array.from({ length: FLOW_COUNT }, spawnFlow);
+    }
 
     const animate = () => {
       if (!w || !h) { animRef.current = requestAnimationFrame(animate); return; }
@@ -157,158 +241,201 @@ const EmpireDNABackground = () => {
       const time = timeRef.current;
       ctx.clearRect(0, 0, w, h);
 
+      // Live scroll read
+      scrollRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+      // Scroll-based section blending
+      const pageH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - h;
+      const scrollN = pageH > 0 ? Math.max(0, Math.min(scrollRef.current / pageH, 1)) : 0;
+      const sF = scrollN * (SECTIONS - 1);
+      const sIdx = Math.min(Math.floor(sF), SECTIONS - 2);
+      const blend = sF - sIdx;
+      const t3 = blend * blend * (3 - 2 * blend); // smoothstep
+
+      const pNode = lerpC(PALETTES[sIdx].node, PALETTES[sIdx + 1].node, t3);
+      const pLine = lerpC(PALETTES[sIdx].line, PALETTES[sIdx + 1].line, t3);
+      const pGlow = lerpC(PALETTES[sIdx].glow, PALETTES[sIdx + 1].glow, t3);
+
+      // Morph between topologies
+      const shA = sIdx % topologies.length, shB = (sIdx + 1) % topologies.length;
+      const tA = topologies[shA](NODE_COUNT, w, h, time);
+      const tB = topologies[shB](NODE_COUNT, w, h, time);
+      const targets = tA.map((a, i) => ({ x: lerp(a.x, tB[i].x, t3), y: lerp(a.y, tB[i].y, t3) }));
+
+      const pos = posRef.current;
+      const vel = velRef.current;
       const ptr = ptrRef.current;
-      const nodes = nodesRef.current;
-      const circuits = circuitsRef.current;
-      const particles = particlesRef.current;
+      const repR = IS_MOBILE ? 80 : 120;
+
+      // Spring physics + pointer repulsion
+      for (let i = 0; i < NODE_COUNT; i++) {
+        if (!pos[i]) { pos[i] = { ...targets[i] }; vel[i] = { x: 0, y: 0 }; }
+        let tx = targets[i].x, ty = targets[i].y;
+        if (ptr.active) {
+          const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < repR && d > 1) {
+            const f = (1 - d / repR) * 30;
+            tx = pos[i].x + (dx / d) * f;
+            ty = pos[i].y + (dy / d) * f;
+          }
+        }
+        const springK = 0.07;
+        const damping = 0.8;
+        vel[i].x = vel[i].x * damping + (tx - pos[i].x) * springK;
+        vel[i].y = vel[i].y * damping + (ty - pos[i].y) * springK;
+        pos[i].x += vel[i].x;
+        pos[i].y += vel[i].y;
+      }
 
       // ═══ L0: SUBTLE DOT GRID ═══
-      ctx.fillStyle = hsl(HUE, SAT, 40, 0.04);
-      const gridStep = GRID_SPACING;
-      for (let gx = gridStep * 0.5; gx < w; gx += gridStep) {
-        for (let gy = gridStep * 0.5; gy < h; gy += gridStep) {
-          ctx.beginPath();
-          ctx.arc(gx, gy, 0.6, 0, Math.PI * 2);
-          ctx.fill();
+      ctx.fillStyle = hsla(pLine, 0.03);
+      for (let gx = GRID_SPACING * 0.5; gx < w; gx += GRID_SPACING) {
+        for (let gy = GRID_SPACING * 0.5; gy < h; gy += GRID_SPACING) {
+          ctx.fillRect(gx - 0.5, gy - 0.5, 1, 1);
         }
       }
 
-      // ═══ L1: CIRCUIT TRACES ═══
-      for (let ci = 0; ci < circuits.length; ci++) {
-        const c = circuits[ci];
-        const pulse = 0.5 + Math.sin(time * 0.8 + c.phase) * 0.5;
-        const baseAlpha = 0.035 + pulse * 0.025;
-
-        ctx.strokeStyle = hsl(HUE, SAT + 4, 45, baseAlpha);
-        ctx.lineWidth = 0.8;
-        ctx.lineCap = "square";
-        ctx.lineJoin = "miter";
-        ctx.beginPath();
-        ctx.moveTo(c.points[0].x, c.points[0].y);
-        for (let pi = 1; pi < c.points.length; pi++) {
-          ctx.lineTo(c.points[pi].x, c.points[pi].y);
-        }
-        ctx.stroke();
-
-        // Junction dots at bends
-        for (let pi = 0; pi < c.points.length; pi++) {
-          const p = c.points[pi];
-          const jSize = pi === 0 || pi === c.points.length - 1 ? 2 : 1.5;
-          ctx.fillStyle = hsl(HUE, SAT + 6, 50, baseAlpha * 2);
-          ctx.fillRect(p.x - jSize / 2, p.y - jSize / 2, jSize, jSize);
-        }
-      }
-
-      // ═══ L2: NEURAL NETWORK CONNECTIONS (node-to-node) ═══
-      const maxDist = IS_MOBILE ? 110 : 150;
-      ctx.lineCap = "round";
-      for (let i = 0; i < nodes.length; i++) {
-        const limitJ = Math.min(i + (IS_MOBILE ? 5 : 8), nodes.length);
-        for (let j = i + 1; j < limitJ; j++) {
-          const dx = nodes[i].x - nodes[j].x;
-          const dy = nodes[i].y - nodes[j].y;
+      // ═══ L1: CIRCUIT CONNECTIONS (straight lines, orthogonal feel) ═══
+      ctx.lineCap = "square";
+      ctx.lineJoin = "miter";
+      for (let i = 0; i < NODE_COUNT; i++) {
+        const maxJ = Math.min(i + (IS_MOBILE ? 5 : 8), NODE_COUNT);
+        for (let j = i + 1; j < maxJ; j++) {
+          const dx = pos[i].x - pos[j].x, dy = pos[i].y - pos[j].y;
           const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < maxDist) {
-            const alpha = Math.pow(1 - d / maxDist, 2);
-            const breathe = 0.5 + Math.sin(time * 1.2 + i * 0.3 + j * 0.2) * 0.5;
-            ctx.strokeStyle = hsl(HUE, SAT, 45, alpha * 0.06 * breathe);
-            ctx.lineWidth = 0.4 + alpha * 0.4;
+          if (d < MAX_DIST) {
+            const alpha = Math.pow(1 - d / MAX_DIST, 1.8);
+            const pulse = 0.5 + Math.sin(time * 1.0 + i * 0.3 + j * 0.2) * 0.5;
+            ctx.strokeStyle = hsla(pLine, alpha * 0.07 * pulse);
+            ctx.lineWidth = 0.5 + alpha * 0.5;
+
+            // L-shaped orthogonal routing (circuit style)
+            const midX = pos[j].x;
+            const midY = pos[i].y;
             ctx.beginPath();
-            ctx.moveTo(nodes[i].x, nodes[i].y);
-            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.moveTo(pos[i].x, pos[i].y);
+            if (Math.abs(dx) > Math.abs(dy) * 0.3 && Math.abs(dy) > Math.abs(dx) * 0.3) {
+              // L-route for non-aligned nodes
+              ctx.lineTo(midX, midY);
+              ctx.lineTo(pos[j].x, pos[j].y);
+            } else {
+              // Straight for near-aligned
+              ctx.lineTo(pos[j].x, pos[j].y);
+            }
             ctx.stroke();
           }
         }
       }
 
-      // ═══ L3: NODES — small squares and crosses (no circles) ═══
-      for (let i = 0; i < nodes.length; i++) {
-        const n = nodes[i];
+      // ═══ L2: NODES — crosses (+) and squares ═══
+      for (let i = 0; i < NODE_COUNT; i++) {
         const breathe = 0.4 + Math.sin(time * 1.0 + i * 0.7) * 0.6;
         let na = 0.1 * breathe;
 
-        // Pointer proximity boost
         if (ptr.active) {
-          const dx = n.x - ptr.x, dy = n.y - ptr.y;
+          const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y;
           const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 120) na += (1 - d / 120) * 0.3;
+          if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.3;
         }
 
         if (i % 3 === 0) {
-          // Cross node (+)
-          const arm = 3 + breathe * 2;
-          ctx.strokeStyle = hsl(HUE, SAT + 8, 52, na + 0.12);
-          ctx.lineWidth = 0.8;
+          // Cross (+)
+          const arm = 2.5 + breathe * 1.5;
+          ctx.strokeStyle = hsla(pNode, na + 0.14);
+          ctx.lineWidth = 0.7;
           ctx.beginPath();
-          ctx.moveTo(n.x - arm, n.y); ctx.lineTo(n.x + arm, n.y);
-          ctx.moveTo(n.x, n.y - arm); ctx.lineTo(n.x, n.y + arm);
+          ctx.moveTo(pos[i].x - arm, pos[i].y);
+          ctx.lineTo(pos[i].x + arm, pos[i].y);
+          ctx.moveTo(pos[i].x, pos[i].y - arm);
+          ctx.lineTo(pos[i].x, pos[i].y + arm);
           ctx.stroke();
         } else {
-          // Square node
-          const s = 1.5 + breathe;
-          ctx.fillStyle = hsl(HUE, SAT + 6, 50, na + 0.12);
-          ctx.fillRect(n.x - s / 2, n.y - s / 2, s, s);
+          // Square
+          const s = 1.2 + breathe * 0.8;
+          ctx.fillStyle = hsla(pNode, na + 0.14);
+          ctx.fillRect(pos[i].x - s / 2, pos[i].y - s / 2, s, s);
         }
 
-        // Subtle glow for key nodes
-        if (i % 6 === 0) {
-          const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, 20);
-          gr.addColorStop(0, hsl(HUE, SAT + 12, 55, na * 0.5));
-          gr.addColorStop(1, hsl(HUE, SAT, 50, 0));
+        // Glow halo for key nodes
+        if (i % 5 === 0) {
+          const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 18);
+          gr.addColorStop(0, hsla(pGlow, na * 0.5));
+          gr.addColorStop(1, hsla(pGlow, 0));
           ctx.fillStyle = gr;
-          ctx.fillRect(n.x - 20, n.y - 20, 40, 40);
+          ctx.fillRect(pos[i].x - 18, pos[i].y - 18, 36, 36);
         }
       }
 
-      // ═══ L4: DATA FLOW PARTICLES along circuit traces ═══
-      for (let pi = 0; pi < particles.length; pi++) {
-        const p = particles[pi];
-        p.progress += p.speed;
-        if (p.progress > 1) {
-          p.progress = 0;
-          p.pathIdx = Math.floor(Math.random() * circuits.length);
+      // ═══ L3: DATA FLOW PARTICLES along connections ═══
+      const flows = flowsRef.current;
+      for (let fi = 0; fi < flows.length; fi++) {
+        const fl = flows[fi];
+        fl.progress += fl.speed;
+        fl.life++;
+        if (fl.progress > 1 || fl.life > 250) { flows[fi] = spawnFlow(); continue; }
+
+        const a = pos[fl.fromIdx], b = pos[fl.toIdx];
+        if (!a || !b) continue;
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d > MAX_DIST * 1.5) { flows[fi] = spawnFlow(); continue; }
+
+        // L-shaped path for particles too
+        const t2 = fl.progress;
+        let px: number, py: number;
+        const useLRoute = Math.abs(dx) > Math.abs(dy) * 0.3 && Math.abs(dy) > Math.abs(dx) * 0.3;
+        if (useLRoute) {
+          const midX = b.x, midY = a.y;
+          if (t2 < 0.5) {
+            const lt = t2 * 2;
+            px = lerp(a.x, midX, lt);
+            py = lerp(a.y, midY, lt);
+          } else {
+            const lt = (t2 - 0.5) * 2;
+            px = lerp(midX, b.x, lt);
+            py = lerp(midY, b.y, lt);
+          }
+        } else {
+          px = lerp(a.x, b.x, t2);
+          py = lerp(a.y, b.y, t2);
         }
 
-        const circuit = circuits[p.pathIdx];
-        if (!circuit || circuit.points.length < 2) continue;
+        const fadeAlpha = Math.sin(fl.progress * Math.PI) * 0.5;
 
-        const pos = getPointOnPath(circuit.points, p.progress);
-        const fadeAlpha = Math.sin(p.progress * Math.PI) * 0.45;
-
-        // Glow trail
-        const tg = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 8);
-        tg.addColorStop(0, hsl(HUE, SAT + 15, 58, fadeAlpha * 0.5));
-        tg.addColorStop(1, hsl(HUE, SAT, 50, 0));
+        // Glow
+        const tg = ctx.createRadialGradient(px, py, 0, px, py, 7);
+        tg.addColorStop(0, hsla(pGlow, fadeAlpha * 0.55));
+        tg.addColorStop(1, hsla(pGlow, 0));
         ctx.fillStyle = tg;
-        ctx.fillRect(pos.x - 8, pos.y - 8, 16, 16);
+        ctx.fillRect(px - 7, py - 7, 14, 14);
 
-        // Core particle (square)
-        const ps = p.size;
-        ctx.fillStyle = hsl(HUE, SAT + 12, 60, fadeAlpha + 0.1);
-        ctx.fillRect(pos.x - ps / 2, pos.y - ps / 2, ps, ps);
+        // Core (square particle)
+        const ps = 1.2;
+        ctx.fillStyle = hsla(pGlow, fadeAlpha + 0.12);
+        ctx.fillRect(px - ps / 2, py - ps / 2, ps, ps);
       }
 
-      // ═══ L5: HORIZONTAL SCAN LINE ═══
+      // ═══ L4: HORIZONTAL SCAN LINE ═══
       const scanY = h * (0.5 + Math.sin(time * 0.06) * 0.48);
-      const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
-      scanGrad.addColorStop(0, hsl(HUE, SAT, 50, 0));
-      scanGrad.addColorStop(0.5, hsl(HUE, SAT + 5, 50, 0.018));
-      scanGrad.addColorStop(1, hsl(HUE, SAT, 50, 0));
+      const scanGrad = ctx.createLinearGradient(0, scanY - 50, 0, scanY + 50);
+      scanGrad.addColorStop(0, hsla(pGlow, 0));
+      scanGrad.addColorStop(0.5, hsla(pGlow, 0.02));
+      scanGrad.addColorStop(1, hsla(pGlow, 0));
       ctx.fillStyle = scanGrad;
-      ctx.fillRect(0, scanY - 40, w, 80);
+      ctx.fillRect(0, scanY - 50, w, 100);
 
-      // ═══ L6: VERTICAL DATA STREAMS (matrix-like, subtle) ═══
-      const streamCount = IS_MOBILE ? 4 : 8;
+      // ═══ L5: VERTICAL DATA STREAMS ═══
+      const streamCount = IS_MOBILE ? 3 : 6;
       for (let si = 0; si < streamCount; si++) {
-        const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7) * 30;
-        const streamPhase = (time * 0.15 + si * 1.3) % 1;
-        const streamLen = h * 0.15;
+        const sx = w * (0.12 + (si / streamCount) * 0.76) + Math.sin(si * 2.7) * 20;
+        const streamPhase = (time * 0.12 + si * 1.1) % 1;
+        const streamLen = h * 0.12;
         const sy = streamPhase * (h + streamLen) - streamLen;
-
         const streamGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
-        streamGrad.addColorStop(0, hsl(HUE, SAT + 8, 50, 0));
-        streamGrad.addColorStop(0.5, hsl(HUE, SAT + 8, 52, 0.04));
-        streamGrad.addColorStop(1, hsl(HUE, SAT + 8, 50, 0));
+        streamGrad.addColorStop(0, hsla(pGlow, 0));
+        streamGrad.addColorStop(0.5, hsla(pGlow, 0.035));
+        streamGrad.addColorStop(1, hsla(pGlow, 0));
         ctx.strokeStyle = streamGrad;
         ctx.lineWidth = 0.6;
         ctx.beginPath();
