@@ -280,8 +280,9 @@ const EmpireDNABackground = () => {
           }
         }
         // Spring-damped motion for organic feel
-        const springK = 0.02;
-        const damping = 0.88;
+        // Faster spring for visible morphing on scroll
+        const springK = 0.06;
+        const damping = 0.82;
         vel[i].x = vel[i].x * damping + (tx - pos[i].x) * springK;
         vel[i].y = vel[i].y * damping + (ty - pos[i].y) * springK;
         pos[i].x += vel[i].x;
