@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, Send, X, Bot, User, Sparkles, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useIndustry } from "@/hooks/useIndustry";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-assistant`;
 
@@ -12,10 +13,34 @@ interface EmpireAssistantProps {
   companyId?: string;
 }
 
+const SECTOR_WELCOME: Record<string, string> = {
+  ristorazione: "🍽️ Posso **eseguire comandi** per te! Prova:\n• _\"Togli la lasagna dal menu\"_\n• _\"Aumenta il prezzo della carbonara di 3€\"_\n• _\"Conferma la prenotazione di Marco\"_",
+  food: "🍽️ Posso **eseguire comandi** per te! Prova:\n• _\"Togli la lasagna dal menu\"_\n• _\"Aumenta il prezzo della carbonara di 3€\"_\n• _\"Conferma la prenotazione di Marco\"_",
+  ncc: "🚗 Posso **gestire la tua flotta** via chat! Prova:\n• _\"Disattiva la Mercedes Classe S\"_\n• _\"Conferma la prenotazione di Rossi\"_\n• _\"Metti autista Marco in pausa\"_",
+  beauty: "💅 Posso **gestire il tuo salone** via chat! Prova:\n• _\"Conferma l'appuntamento di Laura\"_\n• _\"Cambia prezzo taglio donna a 35€\"_\n• _\"Aggiungi cliente Anna Verdi\"_",
+  healthcare: "🏥 Posso **gestire il tuo studio** via chat! Prova:\n• _\"Conferma visita di Bianchi\"_\n• _\"Aggiungi nota clinica per Rossi\"_\n• _\"Aggiorna prezzo ecografia a 80€\"_",
+  retail: "🛍️ Posso **gestire il tuo negozio** via chat! Prova:\n• _\"Aggiorna prezzo t-shirt a 29€\"_\n• _\"Disattiva prodotto scarpe rosse\"_\n• _\"Aggiungi prodotto borsa pelle 120€\"_",
+  fitness: "🏋️ Posso **gestire la tua palestra** via chat! Prova:\n• _\"Disattiva corso yoga\"_\n• _\"Conferma appuntamento di Marco\"_\n• _\"Cambia prezzo personal training a 50€\"_",
+  hospitality: "🏨 Posso **gestire il tuo hotel** via chat! Prova:\n• _\"Aggiorna prezzo suite a 250€\"_\n• _\"Metti camera deluxe in manutenzione\"_\n• _\"Conferma prenotazione di Rossi\"_",
+  beach: "🏖️ Posso **gestire il tuo stabilimento** via chat! Prova:\n• _\"Aggiorna prezzo fila A a 30€\"_\n• _\"Disattiva ombrellone B5\"_\n• _\"Conferma prenotazione di Marco\"_",
+  agriturismo: "🌿 Posso **gestire il tuo agriturismo** via chat! Prova:\n• _\"Aggiungi piatto bruschetta 8€\"_\n• _\"Conferma prenotazione Bianchi\"_\n• _\"Togli la ribollita dal menu\"_",
+  default: "🎯 Posso anche **eseguire comandi** per te! Prova:\n• _\"Conferma appuntamento di Marco\"_\n• _\"Aggiungi un nuovo cliente\"_\n• _\"Aggiorna le informazioni dell'attività\"_",
+};
+
+const getSectorWelcome = (industry: string): string => {
+  return SECTOR_WELCOME[industry] || SECTOR_WELCOME.default;
+};
+
 const EmpireAssistant = ({ restaurantId, companyId }: EmpireAssistantProps) => {
+  const { industry } = useIndustry();
+  const welcomeMessage = useMemo(() => {
+    const sectorTips = getSectorWelcome(industry || "default");
+    return `Ciao! 👋 Sono **Empire Assistant**, il tuo supporto tecnico 24/7.\n\n${sectorTips}\n\nCome posso aiutarti?`;
+  }, [industry]);
+
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Ciao! 👋 Sono **Empire Assistant**, il tuo supporto tecnico 24/7.\n\n🎯 Posso anche **eseguire comandi** per te! Prova:\n• _\"Togli la lasagna dal menu\"_\n• _\"Aumenta il prezzo della carbonara di 3€\"_\n• _\"Conferma la prenotazione di Marco\"_\n\nCome posso aiutarti?" }
+    { role: "assistant", content: welcomeMessage }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
