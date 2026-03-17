@@ -142,6 +142,76 @@ const StudioTab = ({
     }
   };
 
+  /* ── AI Complete Dish — generates description, allergens, category, photo, translations coherently ── */
+  const handleAICompleteDish = async (target: "new" | "edit") => {
+    const name = target === "new" ? newItem.name.trim() : editingItem?.name.trim();
+    if (!name || !restaurant) {
+      toast({ title: "Inserisci il nome del piatto prima", variant: "destructive" });
+      return;
+    }
+    if (aiTokens <= 0) {
+      toast({ title: "Gettoni IA esauriti", variant: "destructive" });
+      return;
+    }
+
+    target === "new" ? setAiCompletingNew(true) : setAiCompletingEdit(true);
+
+    try {
+      // Deduct token
+      const { data: tokenData } = await supabase.from("ai_tokens").select("balance").eq("restaurant_id", restaurant.id).single();
+      const currentBalance = tokenData?.balance ?? 0;
+      if (currentBalance <= 0) { toast({ title: "Gettoni IA esauriti", variant: "destructive" }); return; }
+      await supabase.from("ai_tokens").update({ balance: currentBalance - 1 }).eq("restaurant_id", restaurant.id);
+      await (supabase as any).from("ai_token_history").insert({ restaurant_id: restaurant.id, tokens: -1, action: `AI Complete: ${name}` });
+      setAiTokens(currentBalance - 1);
+
+      const { data, error } = await supabase.functions.invoke("ai-menu", {
+        body: {
+          action: "complete-dish",
+          dishName: name,
+          targetLanguages: settingsLanguages,
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      if (target === "new") {
+        setNewItem(prev => ({
+          ...prev,
+          description: data.description || prev.description,
+          category: data.category || prev.category,
+          allergens: data.allergens?.length ? data.allergens : prev.allergens,
+          tags: data.diet_tags?.length ? data.diet_tags : prev.tags,
+        }));
+        if (data.imageUrl) setNewItemImageUrl(data.imageUrl);
+      } else if (editingItem) {
+        setEditingItem(prev => prev ? {
+          ...prev,
+          description: data.description || prev.description,
+          category: data.category || prev.category,
+          allergens: data.allergens?.length ? data.allergens : prev.allergens,
+          tags: data.diet_tags?.length ? data.diet_tags : prev.tags,
+        } : prev);
+        // Save image + translations directly for existing item
+        if (data.imageUrl) {
+          await supabase.from("menu_items").update({ image_url: data.imageUrl }).eq("id", editingItem.id);
+          setMenuItems(prev => prev.map(i => i.id === editingItem.id ? { ...i, image: data.imageUrl } : i));
+        }
+        if (data.name_translations || data.description_translations) {
+          await supabase.from("menu_items").update({
+            name_translations: data.name_translations || null,
+            description_translations: data.description_translations || null,
+          } as any).eq("id", editingItem.id);
+        }
+      }
+
+      toast({ title: "✨ Piatto completato dall'IA!", description: `Descrizione, allergeni, foto e traduzioni generati in modo coerente. Token: ${currentBalance - 1}` });
+    } catch (err: any) {
+      toast({ title: "Errore IA", description: err?.message || "Riprova.", variant: "destructive" });
+    }
+    target === "new" ? setAiCompletingNew(false) : setAiCompletingEdit(false);
+  };
+
   const handleAddMenuItem = async () => {
     if (!restaurant || !newItem.name.trim()) return;
     const { data, error } = await supabase.from("menu_items").insert({
