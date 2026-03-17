@@ -921,7 +921,7 @@ const RestaurantPage = () => {
       </Suspense>
       {isDemo && (
         <Suspense fallback={null}>
-          <DemoSalesAgent industry="food" />
+          <DemoSalesAgent industry="food" companyName={restaurantName} />
         </Suspense>
       )}
     </div>
