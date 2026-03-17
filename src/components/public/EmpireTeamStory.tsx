@@ -153,20 +153,20 @@ export default function EmpireTeamStory() {
         {/* ── Story Header ── */}
         <motion.div className="text-center mb-16 sm:mb-20" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce} transition={{ duration: 0.7 }}>
           <motion.div className="inline-flex items-center gap-2.5 mb-5">
-            <div className="relative flex items-center gap-2 px-4 py-2 rounded-full overflow-hidden" style={{ background: "hsla(38,50%,55%,0.06)", border: "1px solid hsla(38,50%,55%,0.12)" }}>
-              <Heart className="w-3 h-3" style={{ color: "hsl(38,50%,55%)" }} />
-              <span className="text-[0.65rem] font-semibold tracking-[3px] uppercase" style={{ color: "hsl(38,50%,55%)" }}>La Nostra Storia</span>
+            <div className="relative flex items-center gap-2 px-4 py-2 rounded-full overflow-hidden" style={{ background: "hsla(265,70%,60%,0.06)", border: "1px solid hsla(265,70%,60%,0.15)" }}>
+              <Dna className="w-3 h-3" style={{ color: "hsl(265,70%,60%)" }} />
+              <span className="text-[0.65rem] font-semibold tracking-[3px] uppercase" style={{ color: "hsl(265,70%,60%)" }}>Evoluzione Digitale</span>
             </div>
           </motion.div>
           <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-5">
-            <span className="text-foreground">Nati per </span>
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(135deg, hsl(38,50%,55%), hsl(32,45%,60%), hsl(38,55%,50%))" }}>
-              Rivoluzionare
+            <span className="text-foreground">Il DNA di </span>
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(135deg, hsl(265,70%,60%), hsl(38,50%,55%), hsl(265,60%,55%))" }}>
+              Empire AI
             </span>
           </h2>
           <p className="text-muted-foreground/70 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-            Empire AI nasce dalla convinzione che ogni impresa italiana merita la stessa potenza tecnologica delle multinazionali. 
-            Un team di appassionati che ha trasformato questa visione in una piattaforma che serve 25+ settori con intelligenza artificiale dedicata.
+            Non un semplice software — un organismo digitale in continua evoluzione. 
+            Ogni milestone è una mutazione che ha reso la nostra piattaforma più intelligente, più potente, più adattiva.
           </p>
         </motion.div>
 
