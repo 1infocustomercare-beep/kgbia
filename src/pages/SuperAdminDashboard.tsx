@@ -1434,7 +1434,7 @@ const SuperAdminDashboard = () => {
                 { name: "PMS Integration", description: "Gestionale alberghiero", status: "missing", detail: "Check-in/out, housekeeping", scope: "client", sector: "hospitality", usedBy: "Hotel ops", actionLabel: "Configura", guideSteps: ["1. Identifica PMS", "2. Configura API"] },
                 { name: "POS Integration", description: "Cassa & inventario", status: "missing", detail: "Registratore di cassa", scope: "client", sector: "retail", usedBy: "Retail vendite", actionLabel: "Configura", guideSteps: ["1. Identifica modello POS", "2. Installa connector"] },
                 { name: "Shopify/Woo", description: "E-commerce sync", status: "missing", detail: "Catalogo + ordini", scope: "client", sector: "retail", usedBy: "Retail e-commerce", actionLabel: "Configura", guideUrl: "https://shopify.dev/docs/api", guideSteps: ["1. Genera API Key Shopify", "2. Webhook ordini"] },
-                { name: "Meta Business", description: "Instagram/Facebook auto", status: "missing", detail: "Meta Graph API", scope: "client", sector: "all", usedBy: "Social Manager", actionLabel: "Configura", guideUrl: "https://developers.facebook.com/docs/graph-api/", guideSteps: ["1. App su developers.facebook.com", "2. Permessi pages_manage_posts"] },
+                { name: "Meta Business", description: "Instagram/Facebook auto", status: "missing", detail: "Meta Graph API", scope: "client", sector: "all", usedBy: "Social Manager", actionLabel: "Configura", guideUrl: "https://business.facebook.com/settings/", guideSteps: ["1. App su business.facebook.com → Impostazioni", "2. Permessi pages_manage_posts"] },
                 { name: "Google My Business", description: "Recensioni & info", status: "missing", detail: "Business Profile API", scope: "client", sector: "all", usedBy: "Reputazione online", actionLabel: "Configura", guideUrl: "https://developers.google.com/my-business", guideSteps: ["1. Abilita Business Profile API", "2. Verifica scheda GMB"] },
               ];
 
@@ -1822,7 +1822,7 @@ const SuperAdminDashboard = () => {
               </h3>
               <div className="space-y-2">
                 {[
-                  { step: "1", title: "Crea App su Meta Business", desc: "Vai su developers.facebook.com → Crea App → Business → Aggiungi prodotto WhatsApp", url: "https://developers.facebook.com/apps/" },
+                  { step: "1", title: "Crea App su Meta Business", desc: "Vai su business.facebook.com → Impostazioni → App Business → Crea App → Aggiungi prodotto WhatsApp", url: "https://business.facebook.com/settings/" },
                   { step: "2", title: "Ottieni credenziali API", desc: "WhatsApp → API Setup → Copia Phone Number ID, Token permanente e Business Account ID" },
                   { step: "3", title: "Configura Webhook", desc: "Imposta webhook URL: la tua edge function whatsapp-webhook riceve i messaggi in entrata" },
                   { step: "4", title: "Inserisci nel pannello", desc: "Vai su /app/whatsapp nel tuo account → Tab Impostazioni → Inserisci Phone Number ID, Token e Business ID" },
