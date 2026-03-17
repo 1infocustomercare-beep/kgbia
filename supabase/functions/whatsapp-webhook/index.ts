@@ -312,11 +312,12 @@ async function generateAIReply(
 
   if (!sectorPrompt) return null;
 
-  // Get recent conversation history (last 10 messages)
+  // CRITICAL: double-filter by tenant_id for absolute data isolation
   const { data: recentMessages } = await supabase
     .from("whatsapp_messages")
     .select("direction, content, created_at")
     .eq("conversation_id", conversationId)
+    .eq("tenant_id", tenantId)
     .order("created_at", { ascending: false })
     .limit(10);
 
