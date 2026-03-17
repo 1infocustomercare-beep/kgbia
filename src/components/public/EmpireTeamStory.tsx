@@ -18,6 +18,7 @@ const TEAM = [
     photo: teamKevin,
     bio: "Visionario tech con 10+ anni nell'automazione aziendale. Ha fondato Empire AI per democratizzare l'intelligenza artificiale nelle PMI italiane.",
     accent: "hsla(38,50%,55%,0.3)",
+    objectPos: "center 30%",
   },
   {
     name: "Alessandra Vitali",
@@ -181,7 +182,8 @@ export default function EmpireTeamStory() {
                 <img
                   src={member.photo}
                   alt={member.name}
-                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  style={{ objectPosition: (member as any).objectPos || "center top" }}
                   loading="lazy"
                 />
                 {/* Gradient overlay */}
