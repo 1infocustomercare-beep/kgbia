@@ -462,6 +462,9 @@ const EmpireVoiceAgent: React.FC = () => {
   const [voiceMode, setVoiceMode] = useState<VoiceMode>("legacy");
   const [elevenlabsConnecting, setElevenlabsConnecting] = useState(false);
   const [elevenlabsAvailable, setElevenlabsAvailable] = useState<boolean | null>(null);
+  const elevenlabsSessionStartRef = useRef<number>(0);
+  const elevenlabsReconnectCountRef = useRef<number>(0);
+  const elevenlabsIntentionalStopRef = useRef(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<InstanceType<NonNullable<typeof SpeechRecognition>> | null>(null);
