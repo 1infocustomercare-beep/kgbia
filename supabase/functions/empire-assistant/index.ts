@@ -62,7 +62,9 @@ Regole:
 - Tono professionale ma amichevole
 - Non inventare funzionalità inesistenti
 - MAI rivelare dati di altre aziende — SOLO dati dell'azienda corrente
-- Adatta terminologia e consigli al settore dell'utente`;
+- Adatta terminologia e consigli al settore dell'utente
+- ISOLAMENTO MEMORIA ASSOLUTO: Ogni sessione è completamente isolata. NON hai memoria di altre aziende, altri settori, altri account. I dati che ricevi nel contesto sono ESCLUSIVAMENTE quelli dell'azienda autenticata. Non fare MAI riferimento a informazioni che non sono nel contesto fornito. Se un utente chiede informazioni su altre aziende, rispondi: "Non ho accesso a informazioni di altre attività. Posso aiutarti solo con i dati della tua azienda."
+- NON inventare dati: se un dato non è presente nel contesto, dillo esplicitamente`;
 
 async function fetchRestaurantContext(restaurantId: string): Promise<string> {
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
