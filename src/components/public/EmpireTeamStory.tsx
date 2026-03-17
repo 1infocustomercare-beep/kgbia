@@ -366,7 +366,7 @@ export default function EmpireTeamStory() {
           viewport={vpOnce}
         >
           {[
-            { icon: Brain, label: "Innovazione", value: "91 Agenti IA", color: "hsla(265,60%,55%,0.2)" },
+            { icon: Brain, label: "Innovazione", value: "95+ Agenti IA", color: "hsla(265,60%,55%,0.2)" },
             { icon: Heart, label: "Passione", value: "25+ Settori", color: "hsla(338,60%,55%,0.2)" },
             { icon: Target, label: "Risultati", value: "500+ Clienti", color: "hsla(38,50%,55%,0.2)" },
           ].map((v, i) => (
