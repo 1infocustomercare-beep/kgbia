@@ -50,23 +50,36 @@ function getBestItalianVoice(): SpeechSynthesisVoice | null {
 
 function doSpeak() {
   if (splashNarrationCompleted) return;
-  if (!window.speechSynthesis) return;
+  if (!window.speechSynthesis) {
+    console.warn("[SplashNarration] speechSynthesis not available");
+    return;
+  }
 
   window.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(HERO_SCRIPT);
   const voice = getBestItalianVoice();
-  if (voice) utterance.voice = voice;
+  if (voice) {
+    utterance.voice = voice;
+    console.log("[SplashNarration] Using voice:", voice.name, voice.lang);
+  } else {
+    console.warn("[SplashNarration] No Italian voice found, using default");
+  }
   utterance.lang = "it-IT";
   utterance.rate = 0.95;
   utterance.pitch = 1.05;
   utterance.volume = 1;
 
+  utterance.onstart = () => {
+    console.log("[SplashNarration] ✅ Speech started playing");
+  };
   utterance.onend = () => {
+    console.log("[SplashNarration] Speech ended");
     splashNarrationCompleted = true;
     currentUtterance = null;
   };
-  utterance.onerror = () => {
+  utterance.onerror = (e) => {
+    console.warn("[SplashNarration] Speech error:", e.error);
     currentUtterance = null;
   };
 
@@ -74,7 +87,9 @@ function doSpeak() {
   armSafetyTimeout();
   try {
     window.speechSynthesis.speak(utterance);
-  } catch {
+    console.log("[SplashNarration] speak() called, speaking:", window.speechSynthesis.speaking);
+  } catch (err) {
+    console.error("[SplashNarration] speak() threw:", err);
     currentUtterance = null;
     splashNarrationCompleted = true;
   }
