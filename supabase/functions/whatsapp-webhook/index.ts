@@ -292,11 +292,12 @@ async function generateAIReply(
   conversationId: string,
   userMessage: string,
 ): Promise<string | null> {
-  // Get conversation context
+  // Get conversation context — CRITICAL: filter by tenant_id for absolute isolation
   const { data: conv } = await supabase
     .from("whatsapp_conversations")
     .select("sector, context, contact_name")
     .eq("id", conversationId)
+    .eq("tenant_id", tenantId)
     .single();
 
   if (!conv) return null;
