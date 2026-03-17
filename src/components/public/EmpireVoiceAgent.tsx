@@ -265,23 +265,23 @@ async function speakText(
   const normalizedText = normalizeTextForSpeech(text);
   if (!normalizedText) return false;
 
-  if (isBrowserOnlyTTS()) {
+  const quotaKnownExhausted = isBrowserOnlyTTS();
+  if (quotaKnownExhausted) {
     useBrowserFallbackRef.current = true;
   }
 
-  // Use browser TTS first for reliability, then fallback to premium for hero when needed.
-  const isPremiumSection = sectionId ? PREMIUM_SECTIONS.has(sectionId) : false;
-  if (!isPremiumSection || useBrowserFallbackRef.current) {
-    const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
-    if (playedInBrowser || abortRef.current) return playedInBrowser;
+  // Always try browser TTS first — it's free and reliable when gesture context is available
+  const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
+  if (playedInBrowser || abortRef.current) return playedInBrowser;
 
-    // If browser speech is blocked, always allow premium fallback for hero.
-    if (sectionId !== "hero") {
-      return false;
-    }
+  // If we KNOW premium quota is exhausted, don't waste API calls — just return false
+  // The gesture handler will retry browser TTS in a proper gesture context later
+  if (quotaKnownExhausted) {
+    console.log("[Arianna] Skipping premium API (quota exhausted) — waiting for gesture to retry browser TTS");
+    return false;
   }
 
-  // Premium voice (ElevenLabs) — fallback path for blocked hero autoplay
+  // Premium voice (ElevenLabs) — only try if quota might still be available
   try {
     const resp = await fetch(TTS_URL, {
       method: "POST",
@@ -293,9 +293,8 @@ async function speakText(
     });
 
     if (!resp.ok || abortRef.current) {
-      // Transient API/network errors should not permanently force browser-only mode.
       useBrowserFallbackRef.current = true;
-      return speakWithBrowserTTS(normalizedText, abortRef, options);
+      return false;
     }
 
     const data = await resp.json();
@@ -305,7 +304,7 @@ async function speakText(
       if (data?.error === "quota_exceeded" || data?.fallback) {
         setBrowserOnlyTTS(true);
       }
-      return speakWithBrowserTTS(normalizedText, abortRef, options);
+      return false;
     }
 
     // Premium path worked: allow future premium attempts again
@@ -321,7 +320,7 @@ async function speakText(
       audio.onended = () => resolve(true);
       audio.onerror = () => {
         useBrowserFallbackRef.current = true;
-        speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
+        resolve(false);
       };
 
       if (abortRef.current) {
@@ -332,12 +331,12 @@ async function speakText(
 
       audio.play().catch(() => {
         useBrowserFallbackRef.current = true;
-        speakWithBrowserTTS(normalizedText, abortRef, options).then(resolve);
+        resolve(false);
       });
     });
   } catch {
     useBrowserFallbackRef.current = true;
-    return speakWithBrowserTTS(normalizedText, abortRef, options);
+    return false;
   }
 }
 
