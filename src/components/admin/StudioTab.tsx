@@ -315,7 +315,7 @@ const StudioTab = ({
     if (!ocrResult?.length || !restaurant?.id) return;
     setOcrImporting(true);
     try {
-      const inserts = ocrResult.map((dish, i) => ({ restaurant_id: restaurant.id, name: dish.name, description: dish.description || "", price: dish.price || 0, category: dish.category || "Altro", image_url: dish.image_url || null, sort_order: i, is_active: true, is_popular: false }));
+      const inserts = ocrResult.map((dish, i) => ({ restaurant_id: restaurant.id, name: dish.name, description: dish.description || "", price: dish.price || 0, category: dish.category || "Altro", image_url: dish.image_url || null, sort_order: i, is_active: true, is_popular: false, allergens: (dish.allergens || []).filter((a: string) => EU_ALLERGENS.some(eu => eu.id === a)) }));
       const { error } = await supabase.from("menu_items").insert(inserts);
       if (error) throw error;
       const { data: items } = await supabase.from("menu_items").select("*").eq("restaurant_id", restaurant.id).order("sort_order", { ascending: true });
