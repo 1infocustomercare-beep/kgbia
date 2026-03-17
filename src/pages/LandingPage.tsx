@@ -3331,33 +3331,30 @@ const LandingPage = () => {
           </motion.div>
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="order-1 lg:order-2">
-            <div className="relative rounded-2xl overflow-hidden glow-card aspect-video border border-primary/10">
-              <FunnelDNAVisual />
-              {/* Conversion benefit labels overlaid */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none z-10 px-4">
-                {[
-                  { text: "Zero Costi Fissi", icon: "💰" },
-                  { text: "Solo 2% Commissioni", icon: "📉" },
-                  { text: "25+ Settori Pronti", icon: "🏢" },
-                  { text: "IA che Lavora per Te", icon: "🧠" },
-                ].map((b, i) => (
-                  <motion.div key={i}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md"
-                    style={{
-                      background: "linear-gradient(135deg, hsla(265,30%,15%,0.6), hsla(265,20%,10%,0.5))",
-                      border: "1px solid hsla(265,50%,50%,0.12)",
-                      boxShadow: "0 4px 20px hsla(265,50%,10%,0.3)"
-                    }}
-                    initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.8 + i * 0.15, duration: 0.5 }}
-                  >
-                    <span className="text-sm">{b.icon}</span>
-                    <span className="text-[0.6rem] sm:text-xs font-heading font-bold tracking-wider uppercase" style={{ color: "hsla(35,45%,60%,0.9)" }}>{b.text}</span>
-                  </motion.div>
-                ))}
-              </div>
+            <div className="relative rounded-2xl overflow-hidden glow-card border border-primary/10 p-6 sm:p-8 flex flex-col items-center justify-center gap-4"
+              style={{ background: "linear-gradient(145deg, hsla(265,20%,14%,0.6), hsla(230,10%,10%,0.5))" }}>
+              {/* Conversion benefit labels */}
+              {[
+                { text: "Zero Costi Fissi", icon: "💰" },
+                { text: "Solo 2% Commissioni", icon: "📉" },
+                { text: "25+ Settori Pronti", icon: "🏢" },
+                { text: "IA che Lavora per Te", icon: "🧠" },
+              ].map((b, i) => (
+                <motion.div key={i}
+                  className="flex items-center gap-3 w-full px-5 py-3 rounded-xl backdrop-blur-md"
+                  style={{
+                    background: "linear-gradient(135deg, hsla(265,30%,15%,0.5), hsla(265,20%,10%,0.4))",
+                    border: "1px solid hsla(265,50%,50%,0.12)",
+                  }}
+                  initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
+                >
+                  <span className="text-lg">{b.icon}</span>
+                  <span className="text-xs sm:text-sm font-heading font-bold tracking-wider uppercase" style={{ color: "hsla(35,45%,60%,0.9)" }}>{b.text}</span>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
