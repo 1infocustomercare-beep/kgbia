@@ -3055,28 +3055,35 @@ const LandingPage = () => {
             {[
               { id: "food" as IndustryId, name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️", label: "Food Premium" },
               { id: "ncc" as IndustryId, name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗", label: "NCC Premium" },
-            ].map((feat, i) => (
+            ].map((feat, i) => {
+              const scale = 154 / 375;
+              const visibleH = 284 / scale; // iframe pixels visible in 284px container
+              return (
               <div key={`feat-${i}`} className="group cursor-pointer" onClick={() => navigate(feat.route)}>
-                <div className="relative w-[160px] rounded-[28px] border-[2.5px] overflow-hidden" style={{ height: 310, borderColor: `${feat.color}40`, boxShadow: `0 12px 40px hsla(0,0%,0%,0.4), 0 0 30px ${feat.color}12` }}>
+                <div className="relative w-[160px] h-[290px] rounded-[28px] border-[2.5px] overflow-hidden"
+                  style={{ borderColor: `${feat.color}40`, boxShadow: `0 12px 40px hsla(0,0%,0%,0.4), 0 0 20px ${feat.color}10` }}>
                   {/* Dynamic Island */}
                   <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[48px] h-[14px] bg-black rounded-full z-20" />
-                  {/* Live iframe */}
+                  {/* Live iframe — clipped to card height */}
                   <div className="absolute inset-[3px] rounded-[24px] overflow-hidden bg-black">
-                    <iframe src={feat.route} title={feat.name} className="w-[375px] h-[812px] border-0" style={{ transform: `scale(${154 / 375})`, transformOrigin: "top left", pointerEvents: "none" }} loading="lazy" />
+                    <div style={{ width: 375, height: visibleH, transform: `scale(${scale})`, transformOrigin: "top left" }}>
+                      <iframe src={feat.route} title={feat.name} className="w-full border-0" style={{ height: visibleH, pointerEvents: "none" }} loading="lazy" />
+                    </div>
                   </div>
                   {/* Bottom overlay with label */}
-                  <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.9), transparent)" }}>
-                    <div className="flex items-center gap-1 mb-1">
+                  <div className="absolute bottom-0 left-0 right-0 z-20 p-2.5 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                    <div className="flex items-center gap-1 mb-0.5">
                       <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${feat.color}25`, color: feat.color, border: `1px solid ${feat.color}35` }}>★ Live</span>
                     </div>
-                    <p className="text-[10px] font-bold text-white">{feat.name}</p>
+                    <p className="text-[10px] font-bold text-white leading-tight">{feat.name}</p>
                     <p className="text-[7px] text-white/40">{feat.label}</p>
                   </div>
                   {/* Home indicator */}
                   <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] bg-white/20 rounded-full z-20" />
                 </div>
               </div>
-            ))}
+              );
+            })}
             {/* ── Standard industry cards ── */}
             {industries.map((ind, i) => {
               const slug = DEMO_SLUGS[ind.id];
