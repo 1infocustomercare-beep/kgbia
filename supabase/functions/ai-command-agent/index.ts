@@ -176,8 +176,8 @@ function getSectorSchema(sector: string): string {
 // ══════════════════════════════════════════════════════════════
 
 const SECTOR_ALLOWED_ACTIONS: Record<string, Set<string>> = {
-  ristorazione: new Set(["menu_update_price","menu_remove_item","menu_add_item","menu_toggle_active","menu_update_description","menu_update_allergens","order_update_status","reservation_update","table_update_status","toggle_service"]),
-  food: new Set(["menu_update_price","menu_remove_item","menu_add_item","menu_toggle_active","menu_update_description","menu_update_allergens","order_update_status","reservation_update","table_update_status","toggle_service"]),
+  ristorazione: new Set(["menu_update_price","menu_remove_item","menu_add_item","menu_toggle_active","menu_update_description","menu_update_allergens","order_update_status","reservation_update","table_update_status","toggle_service","food_photo_generate","menu_add_with_photo"]),
+  food: new Set(["menu_update_price","menu_remove_item","menu_add_item","menu_toggle_active","menu_update_description","menu_update_allergens","order_update_status","reservation_update","table_update_status","toggle_service","food_photo_generate","menu_add_with_photo"]),
   ncc: new Set(["vehicle_toggle","vehicle_update_price","ncc_booking_update","booking_update_status","driver_update_status","cross_sell_toggle","cross_sell_update_price"]),
   transport: new Set(["vehicle_toggle","vehicle_update_price","ncc_booking_update","booking_update_status","driver_update_status","cross_sell_toggle","cross_sell_update_price"]),
   beauty: new Set(["appointment_update","appointment_reschedule","service_update_price","service_toggle","service_update_duration"]),
