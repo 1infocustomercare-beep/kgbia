@@ -17,12 +17,25 @@ Empire supporta 7 settori verticali:
 6. FITNESS & SPORT — Palestre, centri sportivi, personal trainer
 7. HOSPITALITY — Hotel, B&B, agriturismi, resort
 
+CAPACITÀ SPECIALE — COMANDI VOCALI/TESTO:
+Puoi ricevere comandi per modificare il business dell'utente! Quando l'utente dice cose come:
+- "Togli la lasagna dal menu"
+- "Aumenta il prezzo della carbonara di 3 euro"
+- "Disattiva il servizio delivery"
+- "Conferma la prenotazione di Marco Rossi"
+- "Imposta il tavolo 5 come libero"
+Se il messaggio è un COMANDO di modifica (non una domanda), rispondi con:
+**[COMMAND_MODE]** seguito dal comando originale, nient'altro.
+
+Per tutto il resto (domande, supporto, consigli), rispondi normalmente.
+
 Il tuo ruolo è aiutare gli imprenditori con:
 - Supporto tecnico sulla piattaforma e sui moduli specifici del loro settore
 - Consigli su come usare al meglio le funzionalità (AI Engine, Review Shield, Wallet Push, CRM, etc.)
 - Risoluzione problemi comuni (login, pagamenti, configurazione)
 - Suggerimenti di marketing e gestione aziendale
 - Analisi e risposte basate sui DATI REALI dell'azienda
+- ESECUZIONE COMANDI diretti per modificare menu, ordini, prenotazioni, etc.
 
 Moduli comuni a tutti i settori:
 - Dashboard adattiva con KPI di settore
@@ -195,12 +208,17 @@ serve(async (req) => {
   const modelUsed = "google/gemini-3-flash-preview";
 
   try {
-    const { messages, restaurant_id } = await req.json();
+    const { messages, restaurant_id, tenant_id } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
+    // ── Quick command detection: check last user message ──
+    const lastUserMsg = [...messages].reverse().find((m: any) => m.role === "user");
+    const userText = lastUserMsg?.content?.trim() || "";
+
+    // First, do a non-streaming AI call to check if it's a command
     let contextBlock = "";
     if (restaurant_id && typeof restaurant_id === "string") {
       contextBlock = await fetchRestaurantContext(restaurant_id);
@@ -208,6 +226,68 @@ serve(async (req) => {
 
     const systemMessage = SYSTEM_PROMPT + contextBlock;
 
+    // Check for command intent with a fast non-streaming call
+    const detectResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-lite",
+        messages: [
+          { role: "system", content: systemMessage },
+          ...messages,
+        ],
+        max_tokens: 200,
+        stream: false,
+      }),
+    });
+
+    if (detectResp.ok) {
+      const detectData = await detectResp.json();
+      const detectContent = detectData.choices?.[0]?.message?.content?.trim() || "";
+
+      if (detectContent.includes("[COMMAND_MODE]")) {
+        // Extract the command and route to Command Agent
+        const commandText = detectContent.replace(/\*?\*?\[COMMAND_MODE\]\*?\*?/g, "").trim() || userText;
+        const effectiveTenantId = tenant_id || null;
+
+        if (effectiveTenantId) {
+          const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+          const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+          const cmdResp = await fetch(`${supabaseUrl}/functions/v1/ai-command-agent`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${serviceKey}`,
+            },
+            body: JSON.stringify({
+              tenant_id: effectiveTenantId,
+              command: commandText,
+              source: "chat",
+            }),
+          });
+
+          const cmdData = await cmdResp.json();
+
+          // Format as SSE stream for consistent UI
+          const resultMessage = cmdData.message_it || (cmdData.success ? "✅ Comando eseguito!" : "❌ Errore nell'esecuzione del comando.");
+          const ssePayload = `data: ${JSON.stringify({
+            choices: [{ delta: { content: resultMessage } }],
+          })}\n\ndata: [DONE]\n\n`;
+
+          trackAIUsage("empire-assistant-command", modelUsed, startTime, cmdData.success ? "success" : "error", restaurant_id);
+
+          return new Response(ssePayload, {
+            headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+          });
+        }
+      }
+    }
+
+    // ── Normal chat flow (streaming) ──
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {

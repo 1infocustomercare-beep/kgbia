@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, Send, X, Bot, User, Sparkles, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-assistant`;
 
@@ -8,12 +9,13 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 interface EmpireAssistantProps {
   restaurantId?: string;
+  companyId?: string;
 }
 
-const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
+const EmpireAssistant = ({ restaurantId, companyId }: EmpireAssistantProps) => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Ciao! 👋 Sono **Empire Assistant**, il tuo supporto tecnico 24/7. Come posso aiutarti?" }
+    { role: "assistant", content: "Ciao! 👋 Sono **Empire Assistant**, il tuo supporto tecnico 24/7.\n\n🎯 Posso anche **eseguire comandi** per te! Prova:\n• _\"Togli la lasagna dal menu\"_\n• _\"Aumenta il prezzo della carbonara di 3€\"_\n• _\"Conferma la prenotazione di Marco\"_\n\nCome posso aiutarti?" }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +57,9 @@ const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
     };
 
     try {
+      // Get current user for tenant_id
+      const { data: { user } } = await supabase.auth.getUser();
+
       const resp = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
@@ -64,6 +69,7 @@ const EmpireAssistant = ({ restaurantId }: EmpireAssistantProps) => {
         body: JSON.stringify({
           messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
           restaurant_id: restaurantId || null,
+          tenant_id: user?.id || null,
         }),
       });
 

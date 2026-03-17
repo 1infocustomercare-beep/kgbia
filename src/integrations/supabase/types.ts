@@ -981,6 +981,51 @@ export type Database = {
           },
         ]
       }
+      command_audit_log: {
+        Row: {
+          actions_executed: Json
+          created_at: string
+          error_message: string | null
+          id: string
+          parsed_intent: Json
+          raw_command: string
+          resource_id: string
+          sender_phone: string | null
+          source: string
+          status: string
+          tenant_id: string
+          tenant_type: string
+        }
+        Insert: {
+          actions_executed?: Json
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          parsed_intent?: Json
+          raw_command: string
+          resource_id: string
+          sender_phone?: string | null
+          source?: string
+          status?: string
+          tenant_id: string
+          tenant_type?: string
+        }
+        Update: {
+          actions_executed?: Json
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          parsed_intent?: Json
+          raw_command?: string
+          resource_id?: string
+          sender_phone?: string | null
+          source?: string
+          status?: string
+          tenant_id?: string
+          tenant_type?: string
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           address: string | null
