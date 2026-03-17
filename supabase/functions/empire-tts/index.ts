@@ -36,7 +36,7 @@ serve(async (req) => {
 
     // Voice profiles optimized for different contexts
     // Custom voice from ElevenLabs Voice Library
-    const CUSTOM_VOICE_ID = "x89KUxIfWuOxMog310Aq";
+    const CUSTOM_VOICE_ID = "RXoaSpLaWTEckJgPUBG3";
 
     const VOICE_PROFILES = {
       // Arianna — Allegra, emotiva, professionale e persuasiva
