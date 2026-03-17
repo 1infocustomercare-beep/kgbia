@@ -375,6 +375,12 @@ const PartnerVoiceAgent: React.FC<PartnerVoiceAgentProps> = ({ activeTab, demoMo
     narratingRef.current = false;
   }, []);
 
+  // Register with global mutex
+  useEffect(() => {
+    claimVoiceAgent("partner", stopAll);
+    return () => { releaseVoiceAgent("partner"); };
+  }, [stopAll]);
+
   const togglePause = useCallback(() => {
     if (window.speechSynthesis) {
       if (isPaused) { window.speechSynthesis.resume(); setIsPaused(false); }
