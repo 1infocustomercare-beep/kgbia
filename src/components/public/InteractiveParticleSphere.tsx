@@ -570,16 +570,41 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={size}
-      height={size}
-      className="touch-none"
-      style={{ width: size, height: size }}
-      onPointerMove={handlePointerMove}
-      onPointerEnter={handlePointerMove}
-      onPointerLeave={() => { pointerRef.current.active = false; }}
-    />
+    <div className="relative touch-none" style={{ width: size, height: size }}>
+      <canvas
+        ref={canvasRef}
+        width={size}
+        height={size}
+        className="absolute inset-0 touch-none"
+        style={{ width: size, height: size }}
+        onPointerMove={handlePointerMove}
+        onPointerEnter={handlePointerMove}
+        onPointerLeave={() => { pointerRef.current.active = false; }}
+      />
+
+      <div className="pointer-events-none absolute inset-0">
+        {TECH_ICON_SET.slice(0, TECH_ICON_COUNT).map(({ Icon, color, glow }, i) => (
+          <div
+            key={`sphere-tech-icon-${i}`}
+            ref={(el) => { iconRefs.current[i] = el; }}
+            className="absolute flex items-center justify-center rounded-md border"
+            style={{
+              width: IS_MOBILE ? 18 : 22,
+              height: IS_MOBILE ? 18 : 22,
+              background: "hsla(260,15%,8%,0.88)",
+              borderColor: "hsla(265,40%,45%,0.25)",
+              backdropFilter: "blur(4px)",
+              color,
+              boxShadow: `0 0 10px ${glow}, inset 0 0 4px hsla(265,30%,35%,0.1)`,
+              transform: "translate(-50%, -50%)",
+              opacity: 0,
+            }}
+          >
+            <Icon style={{ width: IS_MOBILE ? 10 : 12, height: IS_MOBILE ? 10 : 12 }} />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
