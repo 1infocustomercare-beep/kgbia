@@ -852,7 +852,34 @@ export default function AgentsPage() {
       setEditModel(selectedAgent.model);
       setEditCostPerCall(selectedAgent.costPerCall);
       setEditTrigger(selectedAgent.trigger);
+      setEditIconEmoji(selectedAgent.icon);
+      setEditColorHex(selectedAgent.color);
+      setEditCategory("");
+      setEditType("universal");
+      setEditAutonomy(7);
+      setEditPrivacy("strict");
+      setEditCapabilities("");
+      setEditPricingBase(selectedAgent.costPerCall * 1000);
+      setEditLearning(false);
+      setEditInputDesc(selectedAgent.inputDesc);
+      setEditOutputDesc(selectedAgent.outputDesc);
       setTestPrompt(""); setTestResult("");
+
+      // Try to load from agents table for persistent fields
+      supabase.from("agents").select("*").eq("name", selectedAgent.name).maybeSingle().then(({ data: agentRow }) => {
+        if (agentRow) {
+          setEditIconEmoji(agentRow.icon_emoji || selectedAgent.icon);
+          setEditColorHex(agentRow.color_hex || selectedAgent.color);
+          setEditCategory(agentRow.category || "");
+          setEditType((agentRow.type as "universal" | "sector") || "universal");
+          setEditAutonomy(agentRow.autonomy_level ?? 7);
+          setEditPrivacy(agentRow.privacy_level || "strict");
+          setEditCapabilities((agentRow.capabilities || []).join(", "));
+          const pricing = agentRow.pricing as { base?: number } | null;
+          setEditPricingBase(pricing?.base ?? 0);
+          setEditLearning(agentRow.learning_enabled ?? false);
+        }
+      });
     }
   }, [selectedAgent, getAgentConfig]);
 
