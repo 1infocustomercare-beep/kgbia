@@ -2059,8 +2059,6 @@ const LandingPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeIndustry, setActiveIndustry] = useState(0);
   const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
-  const [showAllSectors, setShowAllSectors] = useState(false);
-  const [expandedSector, setExpandedSector] = useState<IndustryId | null>(null);
   const mockupCarouselRef = useRef<HTMLDivElement>(null);
   const [mockupCarouselPaused, setMockupCarouselPaused] = useState(false);
 
