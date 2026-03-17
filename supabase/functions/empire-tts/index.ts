@@ -35,10 +35,13 @@ serve(async (req) => {
     }
 
     // Voice profiles optimized for different contexts
+    // Custom voice from ElevenLabs Voice Library
+    const CUSTOM_VOICE_ID = "x89KUxIfWuOxMog310Aq";
+
     const VOICE_PROFILES = {
       // Arianna — Premium consultant: warm, confident, persuasive
       arianna: {
-        voiceId: "EXAVITQu4vr4xnSDxMaL", // Sarah — best Italian female voice
+        voiceId: CUSTOM_VOICE_ID,
         settings: {
           stability: 0.42,
           similarity_boost: 0.92,
@@ -49,7 +52,7 @@ serve(async (req) => {
       },
       // Splash intro — slightly more dramatic and commanding
       splash: {
-        voiceId: "EXAVITQu4vr4xnSDxMaL",
+        voiceId: CUSTOM_VOICE_ID,
         settings: {
           stability: 0.38,
           similarity_boost: 0.95,
@@ -60,7 +63,7 @@ serve(async (req) => {
       },
       // Sales agent — energetic, convincing
       sales: {
-        voiceId: "EXAVITQu4vr4xnSDxMaL",
+        voiceId: CUSTOM_VOICE_ID,
         settings: {
           stability: 0.40,
           similarity_boost: 0.90,
