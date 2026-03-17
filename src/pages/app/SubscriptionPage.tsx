@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useIndustry } from "@/hooks/useIndustry";
 import { useSubscription } from "@/hooks/useSubscription";
+import { getIndustryPlanFeatures } from "@/lib/subscription-plans";
 import { motion } from "framer-motion";
 import {
   Crown, CheckCircle2, Zap, Shield, Star, Sparkles,
@@ -13,98 +14,84 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const PLANS = [
-  {
-    key: "essential",
-    name: "Essential",
-    price: 29,
-    yearlyPrice: 24,
-    icon: Zap,
-    tagline: "Per iniziare con il digitale",
-    gradient: "from-[hsl(210,60%,50%)] to-[hsl(230,60%,40%)]",
-    glowColor: "hsla(220,70%,55%,0.15)",
-    borderColor: "border-[hsl(220,50%,40%)]/30",
-    features: [
-      { text: "Dashboard completa", included: true },
-      { text: "Menu / Catalogo digitale", included: true },
-      { text: "Ordini e prenotazioni", included: true },
-      { text: "CRM clienti base", included: true },
-      { text: "50 gettoni IA/mese", included: true },
-      { text: "2 membri team", included: true },
-      { text: "Sito pubblico base", included: true },
-      { text: "Supporto email", included: true },
-      { text: "Automazioni avanzate", included: false },
-      { text: "Agent IA", included: false },
-      { text: "Multi-lingua", included: false },
-    ],
-  },
-  {
-    key: "smart_ia",
-    name: "Smart IA",
-    price: 59,
-    yearlyPrice: 49,
-    icon: Sparkles,
-    tagline: "Il più scelto dai professionisti",
-    popular: true,
-    gradient: "from-[hsl(var(--primary))] to-[hsl(280,60%,50%)]",
-    glowColor: "hsla(265,70%,60%,0.2)",
-    borderColor: "border-primary/40",
-    features: [
-      { text: "Tutto di Essential", included: true },
-      { text: "IA avanzata — 200 gettoni", included: true },
-      { text: "10 membri team", included: true },
-      { text: "Dominio personalizzato", included: true },
-      { text: "Automazioni WhatsApp", included: true },
-      { text: "Report e analytics avanzati", included: true },
-      { text: "Review Shield™", included: true },
-      { text: "Supporto prioritario", included: true },
-      { text: "1 Agent IA incluso", included: true },
-      { text: "Multi-sede", included: false },
-      { text: "API access", included: false },
-    ],
-  },
-  {
-    key: "empire_pro",
-    name: "Empire Pro",
-    price: 89,
-    yearlyPrice: 74,
-    icon: Crown,
-    tagline: "Per chi vuole dominare il mercato",
-    gradient: "from-[hsl(var(--gold))] to-[hsl(var(--gold-dark))]",
-    glowColor: "hsla(35,60%,50%,0.2)",
-    borderColor: "border-[hsl(var(--gold))]/40",
-    features: [
-      { text: "Tutto di Smart IA", included: true },
-      { text: "500 gettoni IA/mese", included: true },
-      { text: "Team illimitato", included: true },
-      { text: "Multi-sede", included: true },
-      { text: "API access completo", included: true },
-      { text: "3 Agent IA inclusi", included: true },
-      { text: "Account manager dedicato", included: true },
-      { text: "Funzioni custom prioritarie", included: true },
-      { text: "Cross-selling IA", included: true },
-      { text: "Programma fedeltà avanzato", included: true },
-      { text: "SLA garantito", included: true },
-    ],
-  },
-];
-
-const AI_TOKEN_COSTS: Record<string, { label: string; cost: number; icon: typeof Bot }> = {
-  menu_description: { label: "Descrizione piatto IA", cost: 5, icon: Bot },
-  translate_menu: { label: "Traduzione menu", cost: 10, icon: Globe },
-  seo_text: { label: "Testo SEO", cost: 10, icon: BarChart3 },
-  auto_reply_review: { label: "Risposta recensione", cost: 3, icon: Star },
-  forecast: { label: "Previsione revenue", cost: 5, icon: TrendingUp },
-};
-
 export default function SubscriptionPage() {
-  const { company } = useIndustry();
-  const { plan, trialEnd, status } = useSubscription(company?.id);
+  const { company, industry, terminology } = useIndustry();
+  const entityType = industry === "food" ? "restaurant" as const : "company" as const;
+  const { plan, trialEnd, status } = useSubscription(company?.id, entityType);
   const isTrialing = status === "trialing";
   const daysLeft = trialEnd ? Math.max(0, Math.ceil((new Date(trialEnd).getTime() - Date.now()) / 86400000)) : 0;
   const [aiUsed, setAiUsed] = useState(0);
   const [loading, setLoading] = useState(true);
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+
+  // Industry-adaptive plan features
+  const planFeatures = getIndustryPlanFeatures(industry);
+
+  const PLANS = [
+    {
+      key: "essential",
+      name: "Essential",
+      price: 29,
+      yearlyPrice: 24,
+      icon: Zap,
+      tagline: `Per iniziare con ${terminology.company.toLowerCase()}`,
+      gradient: "from-[hsl(210,60%,50%)] to-[hsl(230,60%,40%)]",
+      glowColor: "hsla(220,70%,55%,0.15)",
+      borderColor: "border-[hsl(220,50%,40%)]/30",
+      features: planFeatures.essential,
+    },
+    {
+      key: "smart_ia",
+      name: "Smart IA",
+      price: 59,
+      yearlyPrice: 49,
+      icon: Sparkles,
+      tagline: "Il più scelto dai professionisti",
+      popular: true,
+      gradient: "from-[hsl(var(--primary))] to-[hsl(280,60%,50%)]",
+      glowColor: "hsla(265,70%,60%,0.2)",
+      borderColor: "border-primary/40",
+      features: planFeatures.smart_ia,
+    },
+    {
+      key: "empire_pro",
+      name: "Empire Pro",
+      price: 89,
+      yearlyPrice: 74,
+      icon: Crown,
+      tagline: "Per chi vuole dominare il mercato",
+      gradient: "from-[hsl(var(--gold))] to-[hsl(var(--gold-dark))]",
+      glowColor: "hsla(35,60%,50%,0.2)",
+      borderColor: "border-[hsl(var(--gold))]/40",
+      features: planFeatures.empire_pro,
+    },
+  ];
+
+  const AI_TOKEN_COSTS: Record<string, { label: string; cost: number; icon: typeof Bot }> = industry === "food" ? {
+    menu_description: { label: "Descrizione piatto IA", cost: 5, icon: Bot },
+    translate_menu: { label: "Traduzione menu", cost: 10, icon: Globe },
+    seo_text: { label: "Testo SEO", cost: 10, icon: BarChart3 },
+    auto_reply_review: { label: "Risposta recensione", cost: 3, icon: Star },
+    forecast: { label: "Previsione revenue", cost: 5, icon: TrendingUp },
+  } : industry === "ncc" ? {
+    route_suggest: { label: "Suggerimento tratta IA", cost: 5, icon: Bot },
+    translate: { label: "Traduzione sito", cost: 10, icon: Globe },
+    seo_text: { label: "Testo SEO", cost: 10, icon: BarChart3 },
+    auto_reply_review: { label: "Risposta recensione", cost: 3, icon: Star },
+    pricing_suggest: { label: "Suggerimento prezzo", cost: 5, icon: TrendingUp },
+  } : industry === "beauty" ? {
+    service_desc: { label: "Descrizione trattamento", cost: 5, icon: Bot },
+    translate: { label: "Traduzione sito", cost: 10, icon: Globe },
+    seo_text: { label: "Testo SEO", cost: 10, icon: BarChart3 },
+    auto_reply_review: { label: "Risposta recensione", cost: 3, icon: Star },
+    forecast: { label: "Previsione ricavi", cost: 5, icon: TrendingUp },
+  } : {
+    content_gen: { label: "Generazione contenuti IA", cost: 5, icon: Bot },
+    translate: { label: "Traduzione", cost: 10, icon: Globe },
+    seo_text: { label: "Testo SEO", cost: 10, icon: BarChart3 },
+    auto_reply_review: { label: "Risposta recensione", cost: 3, icon: Star },
+    forecast: { label: "Previsione ricavi", cost: 5, icon: TrendingUp },
+  };
 
   const currentPlan = PLANS.find(p => p.key === plan) || PLANS[0];
   const aiLimit = currentPlan.key === "empire_pro" ? 500 : currentPlan.key === "smart_ia" ? 200 : 50;
@@ -117,10 +104,12 @@ export default function SubscriptionPage() {
   async function loadAiUsage() {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+    // Try company_id first (all sectors), fallback to restaurant_id (food)
     const { data } = await supabase
       .from('ai_usage_logs')
       .select('input_tokens, output_tokens')
-      .eq('company_id', company?.id || '')
+      .or(`company_id.eq.${company?.id},restaurant_id.eq.${company?.id}`)
       .gte('created_at', startOfMonth);
     const total = data?.reduce((sum, r) => sum + (r.input_tokens || 0) + (r.output_tokens || 0), 0) || 0;
     setAiUsed(Math.floor(total / 100));
@@ -150,7 +139,7 @@ export default function SubscriptionPage() {
           Il Tuo Abbonamento
         </h1>
         <p className="text-sm text-muted-foreground mt-2 max-w-lg">
-          Gestisci il tuo piano, monitora i gettoni IA e sblocca funzionalità avanzate per far crescere la tua attività.
+          Gestisci il tuo piano, monitora i gettoni IA e sblocca funzionalità avanzate per far crescere {terminology.company.toLowerCase() === "ristorante" ? "il tuo ristorante" : `la tua ${terminology.company.toLowerCase()}`}.
         </p>
       </motion.div>
 
@@ -190,7 +179,6 @@ export default function SubscriptionPage() {
               </Button>
             )}
           </div>
-          {/* Progress bar for trial */}
           <div className="mt-4">
             <div className="flex justify-between text-[10px] text-muted-foreground mb-1">
               <span>Giorno {90 - daysLeft} di 90</span>
@@ -288,10 +276,8 @@ export default function SubscriptionPage() {
                   : ""
               }`}
             >
-              {/* Top gradient line */}
               <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${p.gradient}`} />
 
-              {/* Popular badge */}
               {p.popular && (
                 <div className="absolute -top-0 left-1/2 -translate-x-1/2 z-10">
                   <div className="px-4 py-1.5 rounded-b-xl bg-gradient-to-r from-primary to-accent text-primary-foreground text-[10px] font-bold tracking-wider uppercase">
@@ -305,7 +291,6 @@ export default function SubscriptionPage() {
                   ? "border-primary/50 bg-primary/[0.04]"
                   : `${p.borderColor} bg-card/40 backdrop-blur-sm`
               } flex flex-col`}>
-                {/* Plan header */}
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${p.gradient} flex items-center justify-center mb-4 ${p.popular ? "mt-4" : ""}`}>
                   <Icon className="w-6 h-6 text-white" />
                 </div>
@@ -313,7 +298,6 @@ export default function SubscriptionPage() {
                 <h3 className="text-lg font-bold">{p.name}</h3>
                 <p className="text-xs text-muted-foreground mt-0.5 mb-4">{p.tagline}</p>
 
-                {/* Price */}
                 <div className="mb-5">
                   <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-bold">€{displayPrice}</span>
@@ -327,7 +311,6 @@ export default function SubscriptionPage() {
                   )}
                 </div>
 
-                {/* Features list */}
                 <div className="space-y-2.5 flex-1 mb-6">
                   {p.features.map((f, j) => (
                     <div key={j} className="flex items-start gap-2.5 text-[13px]">
@@ -343,7 +326,6 @@ export default function SubscriptionPage() {
                   ))}
                 </div>
 
-                {/* CTA */}
                 {isCurrent ? (
                   <div className="w-full py-3 rounded-xl bg-primary/10 text-center text-sm font-semibold text-primary border border-primary/20">
                     ✓ Piano Attuale
