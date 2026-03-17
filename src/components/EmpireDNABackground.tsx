@@ -439,7 +439,7 @@ const EmpireDNABackground = () => {
       }
 
       // ═══ L6: RADAR SWEEP — rotating scanner ═══
-      const radarAngle = time * 0.25;
+      const radarAngle = time * 0.1;
       const radarR = Math.min(w, h) * 0.5;
       const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
       rGrad.addColorStop(0, hsla(pGlow, 0));
