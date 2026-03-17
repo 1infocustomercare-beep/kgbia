@@ -28,6 +28,8 @@ import { useCart } from "@/context/CartContext";
 import { applyBrandTheme, resetBrandTheme } from "@/lib/color-extract";
 import { getBusinessTypeConfig, normalizeBusinessType } from "@/lib/business-type";
 const RestaurantVoiceAgent = lazy(() => import("@/components/restaurant/RestaurantVoiceAgent"));
+const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent").then(m => ({ default: m.default })));
+import { IndustryPhoneShowcase } from "@/components/public/IndustryPhoneShowcase";
 
 const RestaurantPage = () => {
   const { slug } = useParams();
