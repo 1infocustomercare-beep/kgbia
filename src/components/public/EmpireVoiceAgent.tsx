@@ -462,6 +462,9 @@ const EmpireVoiceAgent: React.FC = () => {
   const [voiceMode, setVoiceMode] = useState<VoiceMode>("legacy");
   const [elevenlabsConnecting, setElevenlabsConnecting] = useState(false);
   const [elevenlabsAvailable, setElevenlabsAvailable] = useState<boolean | null>(null);
+  const elevenlabsSessionStartRef = useRef<number>(0);
+  const elevenlabsReconnectCountRef = useRef<number>(0);
+  const elevenlabsIntentionalStopRef = useRef(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<InstanceType<NonNullable<typeof SpeechRecognition>> | null>(null);
@@ -485,12 +488,40 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── ElevenLabs Conversational AI hook ──
   const conversation = useConversation({
     onConnect: () => {
+      console.log("[Arianna LIVE] ✅ Connessa — sessione avviata");
+      elevenlabsSessionStartRef.current = Date.now();
+      elevenlabsReconnectCountRef.current = 0;
       setMessages(prev => [...prev, { role: "assistant", content: "📞 Arianna in linea! Parlami pure, ti ascolto..." }]);
     },
     onDisconnect: () => {
+      const sessionDuration = Date.now() - elevenlabsSessionStartRef.current;
+      console.log(`[Arianna LIVE] 🔌 Disconnessa dopo ${sessionDuration}ms (intentional: ${elevenlabsIntentionalStopRef.current})`);
+      
+      // If session was very short (<8s) and not intentionally stopped, auto-reconnect (up to 2 times)
+      if (
+        !elevenlabsIntentionalStopRef.current &&
+        sessionDuration < 8000 &&
+        elevenlabsReconnectCountRef.current < 2
+      ) {
+        elevenlabsReconnectCountRef.current += 1;
+        console.log(`[Arianna LIVE] ⚡ Riconnessione automatica #${elevenlabsReconnectCountRef.current}...`);
+        setMessages(prev => [...prev, { role: "assistant", content: `🔄 Riconnessione in corso... (tentativo ${elevenlabsReconnectCountRef.current})` }]);
+        
+        // Small delay then reconnect
+        setTimeout(() => {
+          // Re-trigger connection
+          startElevenlabsConversationRef.current?.();
+        }, 1500);
+        return;
+      }
+      
       setVoiceMode("legacy");
+      if (!elevenlabsIntentionalStopRef.current && sessionDuration < 8000) {
+        setMessages(prev => [...prev, { role: "assistant", content: "⚠️ La chiamata si è interrotta. Riprova tra qualche secondo oppure usa la chat testuale." }]);
+      }
     },
     onMessage: (message: any) => {
+      console.log("[Arianna LIVE] 📨 Message:", message?.type);
       if (message?.type === "user_transcript") {
         const text = message?.user_transcription_event?.user_transcript;
         if (text) setMessages(prev => [...prev, { role: "user", content: text }]);
@@ -499,9 +530,11 @@ const EmpireVoiceAgent: React.FC = () => {
         if (text) setMessages(prev => [...prev, { role: "assistant", content: text }]);
       }
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error("[Arianna LIVE] ❌ Error:", error);
       setElevenlabsAvailable(false);
       setVoiceMode("legacy");
+      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ Errore di connessione con l'agente vocale. Usa la chat testuale." }]);
     },
   });
 
@@ -541,9 +574,13 @@ const EmpireVoiceAgent: React.FC = () => {
     };
   }, [elevenlabsAvailable, getElevenlabsTokenSilently]);
 
+  // Ref to allow onDisconnect to trigger reconnect
+  const startElevenlabsConversationRef = useRef<(() => void) | null>(null);
+
   // Start ElevenLabs conversation
   const startElevenlabsConversation = useCallback(async () => {
     setElevenlabsConnecting(true);
+    elevenlabsIntentionalStopRef.current = false;
 
     // ── STOP all narration & TTS before starting live call ──
     abortRef.current = true;
@@ -571,12 +608,18 @@ const EmpireVoiceAgent: React.FC = () => {
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
+      // Always get a FRESH token for each connection attempt
       const token = await getElevenlabsTokenSilently();
       if (!token) {
+        console.warn("[Arianna LIVE] No token received — falling back to legacy");
         releaseVoiceAgent("arianna-live");
         setVoiceMode("legacy");
+        setMessages(prev => [...prev, { role: "assistant", content: "⚠️ Servizio vocale temporaneamente non disponibile. Usa la chat testuale." }]);
         return;
       }
+
+      console.log("[Arianna LIVE] 🎯 Starting session with fresh token...");
+      elevenlabsSessionStartRef.current = Date.now();
 
       await conversation.startSession({
         conversationToken: token,
@@ -584,16 +627,24 @@ const EmpireVoiceAgent: React.FC = () => {
       });
 
       setVoiceMode("elevenlabs");
-    } catch {
+    } catch (err) {
+      console.error("[Arianna LIVE] ❌ Start failed:", err);
       releaseVoiceAgent("arianna-live");
       setElevenlabsAvailable(false);
       setVoiceMode("legacy");
+      setMessages(prev => [...prev, { role: "assistant", content: "⚠️ Impossibile avviare la chiamata. Riprova o usa la chat testuale." }]);
     } finally {
       setElevenlabsConnecting(false);
     }
   }, [conversation, getElevenlabsTokenSilently]);
 
+  // Keep ref in sync for onDisconnect reconnect
+  useEffect(() => {
+    startElevenlabsConversationRef.current = startElevenlabsConversation;
+  }, [startElevenlabsConversation]);
+
   const stopElevenlabsConversation = useCallback(async () => {
+    elevenlabsIntentionalStopRef.current = true;
     try {
       await conversation.endSession();
     } catch {
