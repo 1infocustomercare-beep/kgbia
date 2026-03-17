@@ -15,6 +15,7 @@ let splashNarrationCompleted = false;
 let currentUtterance: SpeechSynthesisUtterance | null = null;
 let audioUnlocked = false;
 let safetyTimer: ReturnType<typeof setTimeout> | null = null;
+let autoUnlockListenerAdded = false;
 
 // Safety: force-complete after 12s max so Arianna is never permanently blocked
 function armSafetyTimeout() {
