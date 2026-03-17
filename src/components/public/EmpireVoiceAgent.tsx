@@ -914,104 +914,28 @@ const EmpireVoiceAgent: React.FC = () => {
   // ── Auto-voice intro DISABLED — Arianna only speaks when user clicks the agent ──
   // (Removed auto-boot polling that caused unwanted auto-narration)
 
-  // ── Recovery: autoplay restrictions — gesture-driven unlock + re-enqueue current section ──
+  // ── Audio unlock helper — only used when user explicitly activates Arianna ──
   const audioUnlockedRef = useRef(false);
-  const lastGestureEnqueueRef = useRef(0);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const unlockAndRetry = () => {
-      if (!isMounted) return;
-      if (unlockInFlightRef.current) return;
-
-      // Throttle: don't fire more than once per 3 seconds
-      const now = Date.now();
-      if (now - lastGestureEnqueueRef.current < 3000 && audioUnlockedRef.current) return;
-
-      // Allow re-fire if there are un-narrated sections visible
-      const currentSec = currentSection;
-      const currentPending = currentSec ? !narratedRef.current.has(currentSec) : false;
-      const heroStillPending = !narratedRef.current.has("hero");
-
-      // If fully unlocked and nothing pending, skip
-      if (audioUnlockedRef.current && !heroStillPending && !currentPending) return;
-
-      unlockInFlightRef.current = true;
-      lastGestureEnqueueRef.current = now;
-      userInteractedRef.current = true;
-      setUserInteracted(true);
-
-      // Unlock speechSynthesis with a silent utterance inside gesture context
-      if (window.speechSynthesis) {
-        try {
-          window.speechSynthesis.cancel();
-          const silent = new SpeechSynthesisUtterance(" ");
-          silent.volume = 0;
-          silent.lang = "it-IT";
-          window.speechSynthesis.speak(silent);
-        } catch {
-          // noop
-        }
+  const unlockAudioContext = useCallback(() => {
+    if (audioUnlockedRef.current) return;
+    audioUnlockedRef.current = true;
+    userInteractedRef.current = true;
+    setUserInteracted(true);
+    
+    // Unlock speechSynthesis with a silent utterance inside gesture context
+    if (window.speechSynthesis) {
+      try {
+        window.speechSynthesis.cancel();
+        const silent = new SpeechSynthesisUtterance(" ");
+        silent.volume = 0;
+        silent.lang = "it-IT";
+        window.speechSynthesis.speak(silent);
+      } catch {
+        // noop
       }
-
-      const isFirstUnlock = !audioUnlockedRef.current;
-      audioUnlockedRef.current = true;
-
-      // Force next narration attempt to run immediately in this gesture context
-      preferImmediateNarrationRef.current = true;
-
-      stopSplashNarration();
-      abortRef.current = false;
-
-      if (isFirstUnlock || heroStillPending) {
-        narrationAttemptsRef.current.hero = 0;
-        startIntroNarration();
-        if (heroStillPending) {
-          sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== "hero");
-          enqueueSectionNarration("hero", true);
-        }
-      }
-
-      // Also enqueue the currently visible section if it hasn't been narrated
-      if (currentSec && currentSec !== "hero" && currentPending && !queueProcessingRef.current) {
-        narrationAttemptsRef.current[currentSec] = 0;
-        sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== currentSec);
-        enqueueSectionNarration(currentSec, true);
-      }
-
-      unlockInFlightRef.current = false;
-    };
-
-    const options = { passive: true } as const;
-    window.addEventListener("empire-user-gesture", unlockAndRetry as EventListener);
-    window.addEventListener("pointerdown", unlockAndRetry, options);
-    window.addEventListener("touchstart", unlockAndRetry, options);
-    window.addEventListener("touchend", unlockAndRetry, options);
-    window.addEventListener("click", unlockAndRetry, options);
-    window.addEventListener("keydown", unlockAndRetry);
-    window.addEventListener("scroll", unlockAndRetry, options);
-
-    const maybeActivated =
-      (navigator as Navigator & { userActivation?: { hasBeenActive?: boolean } }).userActivation?.hasBeenActive;
-    if (maybeActivated) {
-      window.setTimeout(unlockAndRetry, 0);
-      window.setTimeout(unlockAndRetry, 600);
-      window.setTimeout(unlockAndRetry, 1800);
     }
-
-    return () => {
-      isMounted = false;
-      unlockInFlightRef.current = false;
-      window.removeEventListener("empire-user-gesture", unlockAndRetry as EventListener);
-      window.removeEventListener("pointerdown", unlockAndRetry as EventListener);
-      window.removeEventListener("touchstart", unlockAndRetry as EventListener);
-      window.removeEventListener("touchend", unlockAndRetry as EventListener);
-      window.removeEventListener("click", unlockAndRetry as EventListener);
-      window.removeEventListener("keydown", unlockAndRetry as EventListener);
-      window.removeEventListener("scroll", unlockAndRetry as EventListener);
-    };
-  }, [enqueueSectionNarration, startIntroNarration, currentSection]);
+  }, []);
 
   // ── Cleanup: stop all audio when component unmounts (e.g. navigating away) ──
   useEffect(() => {
