@@ -543,6 +543,12 @@ const DemoSalesAgent: React.FC<DemoSalesAgentProps> = ({ industry, companyName, 
     setNarrationQueue([]);
   }, []);
 
+  // Register with global mutex after stopAll is defined
+  useEffect(() => {
+    claimVoiceAgent("demo-sales", stopAll);
+    return () => { releaseVoiceAgent("demo-sales"); };
+  }, [stopAll]);
+
   const togglePause = useCallback(() => {
     if (!audioRef.current) return;
     if (isPaused) {
