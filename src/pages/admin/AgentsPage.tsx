@@ -544,6 +544,19 @@ function generateMockData() {
       "ops-beauty": Math.floor(8 + Math.random() * 15),
       "ops-healthcare": Math.floor(5 + Math.random() * 12),
       "ops-construction": Math.floor(4 + Math.random() * 10),
+      "ops-retail": Math.floor(12 + Math.random() * 18),
+      "ops-fitness": Math.floor(8 + Math.random() * 14),
+      "ops-hotel": Math.floor(6 + Math.random() * 12),
+      "ops-beach": Math.floor(5 + Math.random() * 10),
+      "ops-trades": Math.floor(10 + Math.random() * 16),
+      "ops-legal": Math.floor(4 + Math.random() * 8),
+      "ops-veterinary": Math.floor(6 + Math.random() * 10),
+      "ops-events": Math.floor(5 + Math.random() * 12),
+      "reputation-manager": Math.floor(15 + Math.random() * 25),
+      "whatsapp-commerce": Math.floor(25 + Math.random() * 40),
+      "loyalty-engine": Math.floor(18 + Math.random() * 30),
+      "scheduling-optimizer": Math.floor(8 + Math.random() * 14),
+      "payment-recovery": Math.floor(6 + Math.random() * 12),
     };
   });
   const topAccounts = [
