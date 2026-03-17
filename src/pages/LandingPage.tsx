@@ -2916,8 +2916,8 @@ const LandingPage = () => {
                       
                       {/* Compact card */}
                       <div className="flex-1 min-w-0 rounded-xl border px-3 py-2.5" style={{
-                        background: "linear-gradient(145deg, hsla(260,18%,18%,0.6), hsla(260,16%,14%,0.5))",
-                        borderColor: "hsla(265,50%,60%,0.1)",
+                        background: "linear-gradient(145deg, hsla(260,18%,14%,0.92), hsla(260,16%,10%,0.88))",
+                        borderColor: "hsla(265,50%,60%,0.12)",
                       }}>
                         <div className="flex items-center gap-2">
                           <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${pain.color} flex items-center justify-center text-white flex-shrink-0`}>

@@ -515,7 +515,7 @@ export function AIAgentsShowcase() {
                       transition={{ delay: i * 0.09 + 0.35, duration: 0.3 }}
                     />
 
-                    <div className="relative rounded-xl border border-primary/10 bg-gradient-to-br from-card/80 via-card/60 to-primary/[0.04] backdrop-blur-md p-3 overflow-hidden hover:border-primary/25 transition-all duration-400 hover:shadow-[0_0_20px_hsl(var(--primary)/0.1)] shadow-[0_2px_12px_hsl(var(--background)/0.5)]">
+                    <div className="relative rounded-xl border border-primary/10 bg-gradient-to-br from-[hsla(230,12%,13%,0.95)] via-[hsla(230,10%,11%,0.92)] to-primary/[0.06] backdrop-blur-md p-3 overflow-hidden hover:border-primary/25 transition-all duration-400 hover:shadow-[0_0_20px_hsl(var(--primary)/0.1)] shadow-[0_2px_12px_hsl(var(--background)/0.5)]">
                       <motion.div
                         className="absolute top-0 right-0 w-6 h-6"
                         initial={{ opacity: 0 }}
