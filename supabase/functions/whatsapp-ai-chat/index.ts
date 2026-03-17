@@ -52,15 +52,16 @@ serve(async (req) => {
       });
     }
 
-    // Verify ownership
+    // Verify strict tenant ownership — CRITICAL: prevents cross-tenant data access
     const { data: conv } = await supabase
       .from("whatsapp_conversations")
-      .select("sector, context, contact_name, contact_phone")
+      .select("sector, context, contact_name, contact_phone, tenant_id")
       .eq("id", conversation_id)
       .eq("tenant_id", user.id)
       .maybeSingle();
 
     if (!conv) {
+      console.warn(`SECURITY: User ${user.id} attempted to access conversation ${conversation_id} — denied`);
       return new Response(JSON.stringify({ error: "Conversazione non trovata" }), {
         status: 404,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
