@@ -161,6 +161,33 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       });
     }
 
+    // ── DNA Neural Labels — like "Il DNA Tecnologico" section ──
+    const DNA_LABELS = [
+      { label: "AI CORE", primary: true },
+      { label: "CRM", primary: false },
+      { label: "ORDINI", primary: false },
+      { label: "ANALYTICS", primary: false },
+      { label: "PAGAMENTI", primary: false },
+      { label: "CATALOGO", primary: false },
+      { label: "BOOKING", primary: false },
+      { label: "STAFF", primary: false },
+      { label: "MARKETING", primary: false },
+    ];
+    const dnaNodes: { x: number; y: number; label: string; primary: boolean; orbitA: number; orbitR: number; orbitSp: number; pulse: number }[] = [];
+    for (let i = 0; i < DNA_LABELS.length; i++) {
+      const d = DNA_LABELS[i];
+      const angle = (i / DNA_LABELS.length) * Math.PI * 2;
+      dnaNodes.push({
+        x: cx, y: cy,
+        label: d.label,
+        primary: d.primary,
+        orbitA: angle,
+        orbitR: d.primary ? 0 : 0.12 + (i % 2 === 0 ? 0.05 : 0.1),
+        orbitSp: d.primary ? 0 : (0.08 + (i % 3) * 0.04) * (i % 2 === 0 ? 1 : -1),
+        pulse: Math.random() * Math.PI * 2,
+      });
+    }
+
     const startTime = performance.now();
     let lastFrame = 0;
     const FI = IS_MOBILE ? 22 : 0;
