@@ -54,7 +54,16 @@ function generateTextPoints(
 const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
-  const mouseRef = useRef({ x: 0, y: 0, active: false, pressing: false, pressTime: 0, releaseTime: 0 });
+  const mouseRef = useRef({
+    x: 0, y: 0,
+    active: false,    // pointer is over canvas
+    pressing: false,   // pointer is down (drag to orbit)
+    hoverTime: 0,      // time spent hovering → triggers morph
+    releaseTime: 0,    // frames since pointer left
+    dragAngleX: 0,
+    dragAngleY: 0,
+    lastX: 0, lastY: 0,
+  });
   const timeRef = useRef(0);
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
@@ -62,9 +71,9 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   const SPHERE_RADIUS = size * 0.33;
   const DNA_PARTICLES = isMobile ? 100 : 200;
   const ORBIT_PARTICLES = isMobile ? 24 : 48;
-  const NEURAL_PULSE_COUNT = isMobile ? 12 : 28;
+  const NEURAL_PULSE_COUNT = isMobile ? 16 : 35;
+  const NEURAL_RING_COUNT = isMobile ? 30 : 60;
 
-  // Generate "EMPIRE IA GROUP" morph targets — big and bold
   const textPoints = useMemo(
     () => generateTextPoints("EMPIRE IA", size / 2, size * 0.42, size * 0.052),
     [size]
@@ -78,7 +87,6 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     [textPoints, subTextPoints]
   );
 
-  // Colors
   const GOLD = "hsla(38,55%,58%,";
   const WARM = "hsla(35,50%,55%,";
   const VIOLET = "hsla(265,70%,65%,";
@@ -93,11 +101,10 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     baseSize: number; color: string;
     ox: number; oy: number; speed: number;
     morphX: number; morphY: number;
-    type: "sphere" | "dna" | "orbit";
+    type: "sphere" | "dna" | "orbit" | "neural_ring";
     pulse: number;
   }
 
-  // Neural pulse travelers
   interface NeuralPulse {
     fromIdx: number; toIdx: number;
     progress: number; speed: number;
@@ -116,7 +123,6 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       const theta = ((Math.sqrt(5) + 1) / 2) * i * Math.PI * 2;
       const phi = Math.acos(y);
       const mIdx = tLen > 0 ? i % tLen : 0;
-
       particles.push({
         theta, phi,
         radius: SPHERE_RADIUS * (0.9 + Math.random() * 0.2),
@@ -131,7 +137,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       });
     }
 
-    // DNA double helix — more turns, tighter
+    // DNA double helix
     for (let i = 0; i < DNA_PARTICLES; i++) {
       const t = i / DNA_PARTICLES;
       const helixAngle = t * Math.PI * 10;
@@ -139,7 +145,6 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       const phi = Math.PI * 0.1 + t * Math.PI * 0.8;
       const theta = helixAngle + strand * 0.4;
       const mIdx = tLen > 0 ? i % tLen : 0;
-
       particles.push({
         theta, phi,
         radius: SPHERE_RADIUS * 1.08,
@@ -174,22 +179,43 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       });
     }
 
+    // Neural ring particles — orbit around/inside sphere, communicate via pulses
+    for (let i = 0; i < NEURAL_RING_COUNT; i++) {
+      const angle = (i / NEURAL_RING_COUNT) * Math.PI * 2;
+      const layer = i % 4;
+      const r = SPHERE_RADIUS * (0.5 + layer * 0.25);
+      const mIdx = tLen > 0 ? i % tLen : 0;
+      particles.push({
+        theta: angle,
+        phi: Math.PI * 0.3 + (layer * 0.35),
+        radius: r,
+        baseSize: 1.2 + Math.random() * 0.8,
+        color: layer % 2 === 0 ? CYAN : VIOLET,
+        ox: 0, oy: 0,
+        speed: 1.2 + layer * 0.3 + Math.random() * 0.5,
+        morphX: tLen > 0 ? allTextPoints[mIdx].x : size / 2,
+        morphY: tLen > 0 ? allTextPoints[mIdx].y : size / 2,
+        type: "neural_ring",
+        pulse: Math.random() * Math.PI * 2,
+      });
+    }
+
     particlesRef.current = particles;
 
-    // Init neural pulses
+    // Init neural pulses — more of them, traveling between all types
     const pulses: NeuralPulse[] = [];
     for (let i = 0; i < NEURAL_PULSE_COUNT; i++) {
       pulses.push({
         fromIdx: Math.floor(Math.random() * particles.length),
         toIdx: Math.floor(Math.random() * particles.length),
         progress: Math.random(),
-        speed: 0.003 + Math.random() * 0.006,
-        color: i % 3 === 0 ? GOLD : i % 3 === 1 ? VIOLET : CYAN,
+        speed: 0.004 + Math.random() * 0.008,
+        color: i % 4 === 0 ? GOLD : i % 4 === 1 ? VIOLET : i % 4 === 2 ? CYAN : PURPLE,
         size: 1.5 + Math.random() * 2,
       });
     }
     pulsesRef.current = pulses;
-  }, [PARTICLE_COUNT, SPHERE_RADIUS, DNA_PARTICLES, ORBIT_PARTICLES, NEURAL_PULSE_COUNT, size, allTextPoints]);
+  }, [PARTICLE_COUNT, SPHERE_RADIUS, DNA_PARTICLES, ORBIT_PARTICLES, NEURAL_PULSE_COUNT, NEURAL_RING_COUNT, size, allTextPoints]);
 
   useEffect(() => { initParticles(); }, [initParticles]);
 
@@ -210,7 +236,6 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     const animate = () => {
       timeRef.current += 1;
       const t = timeRef.current;
-      const autoRot = t * 0.0004;
 
       ctx.clearRect(0, 0, size, size);
 
@@ -218,18 +243,30 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       const particles = particlesRef.current;
       const pulses = pulsesRef.current;
 
-      // Morph logic
-      if (mouse.pressing) {
-        mouse.pressTime = Math.min(mouse.pressTime + 0.015, 1);
+      // ===== MORPH: triggered by HOVER (touch/enter), not click =====
+      if (mouse.active) {
+        mouse.hoverTime = Math.min(mouse.hoverTime + 0.018, 1);
         mouse.releaseTime = 0;
       } else {
         mouse.releaseTime += 1;
-        if (mouse.releaseTime > 180) {
-          mouse.pressTime = Math.max(mouse.pressTime - 0.006, 0);
+        if (mouse.releaseTime > 120) { // 2s delay then revert
+          mouse.hoverTime = Math.max(mouse.hoverTime - 0.008, 0);
         }
       }
-      const morphRaw = mouse.pressTime;
-      const morphFactor = morphRaw * morphRaw * (3 - 2 * morphRaw); // smoothstep
+      const morphRaw = mouse.hoverTime;
+      const morphFactor = morphRaw * morphRaw * (3 - 2 * morphRaw);
+
+      // ===== DRAG TO ORBIT: holding + moving rotates the sphere =====
+      const dragX = mouse.dragAngleX;
+      const dragY = mouse.dragAngleY;
+      // Dampen drag when not pressing
+      if (!mouse.pressing) {
+        mouse.dragAngleX *= 0.97;
+        mouse.dragAngleY *= 0.97;
+      }
+
+      const autoRot = t * 0.0004 + dragX;
+      const tiltAngle = 0.2 + dragY * 0.3;
 
       // === Background radial glow ===
       const bgGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, SPHERE_RADIUS * 2);
@@ -239,7 +276,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       ctx.fillStyle = bgGlow;
       ctx.fillRect(0, 0, size, size);
 
-      // === Orbital ring guides with rotation ===
+      // === Orbital ring guides ===
       for (let ring = 0; ring < 3; ring++) {
         ctx.save();
         ctx.globalAlpha = 0.04 + morphFactor * 0.03;
@@ -263,15 +300,15 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         const r = p.radius * (1 + breathe);
         const sinPhi = Math.sin(p.phi);
         const cosPhi = Math.cos(p.phi);
-        const rotTheta = p.theta + autoRot * p.speed;
+        const speedMult = p.type === "neural_ring" ? p.speed * 1.5 : p.speed;
+        const rotTheta = p.theta + autoRot * speedMult;
 
         let sx = r * sinPhi * Math.cos(rotTheta);
         let sy = r * cosPhi;
         let sz = r * sinPhi * Math.sin(rotTheta);
 
-        // Tilt
-        const tA = 0.2;
-        const cosT = Math.cos(tA), sinT = Math.sin(tA);
+        // Tilt with drag influence
+        const cosT = Math.cos(tiltAngle), sinT = Math.sin(tiltAngle);
         const ry = sy * cosT - sz * sinT;
         const rz = sy * sinT + sz * cosT;
         sy = ry; sz = rz;
@@ -279,15 +316,15 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         let worldX = cx + sx;
         let worldY = cy + sy;
 
-        // Morph
+        // Morph toward text
         if (morphFactor > 0.005) {
           worldX = worldX * (1 - morphFactor) + p.morphX * morphFactor;
           worldY = worldY * (1 - morphFactor) + p.morphY * morphFactor;
           sz *= (1 - morphFactor * 0.92);
         }
 
-        // Mouse scatter
-        if (mouse.active && morphFactor < 0.35) {
+        // Mouse scatter (only when NOT morphed)
+        if (mouse.active && morphFactor < 0.35 && !mouse.pressing) {
           const dx = worldX - mouse.x;
           const dy = worldY - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -313,13 +350,13 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
 
       // === Neural synapse connections ===
       const connThreshold = isMobile ? 450 : 600;
-      const maxSample = isMobile ? 70 : 140;
+      const maxSample = isMobile ? 80 : 160;
       const front = projected.filter(p => p.z > -SPHERE_RADIUS * 0.25);
       const sample = front.slice(-maxSample);
 
       ctx.lineWidth = 0.3;
       for (let i = 0; i < sample.length; i++) {
-        const lim = Math.min(i + 5, sample.length);
+        const lim = Math.min(i + 6, sample.length);
         for (let j = i + 1; j < lim; j++) {
           const dx = sample[i].x - sample[j].x;
           const dy = sample[i].y - sample[j].y;
@@ -329,12 +366,15 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
             const pulse = Math.sin(t * 0.012 + i * 0.4) * 0.5 + 0.5;
             const a = base * (0.08 + morphFactor * 0.06) * (0.5 + pulse * 0.5);
             const isDna = sample[i].type === "dna" || sample[j].type === "dna";
+            const isNeural = sample[i].type === "neural_ring" || sample[j].type === "neural_ring";
             const isOrbit = sample[i].type === "orbit" || sample[j].type === "orbit";
             ctx.strokeStyle = isDna
               ? `hsla(38,50%,55%,${a.toFixed(3)})`
-              : isOrbit
-                ? `hsla(185,50%,55%,${(a * 0.7).toFixed(3)})`
-                : `hsla(265,50%,60%,${(a * 0.6).toFixed(3)})`;
+              : isNeural
+                ? `hsla(185,55%,58%,${(a * 0.9).toFixed(3)})`
+                : isOrbit
+                  ? `hsla(185,50%,55%,${(a * 0.7).toFixed(3)})`
+                  : `hsla(265,50%,60%,${(a * 0.6).toFixed(3)})`;
             ctx.beginPath();
             ctx.moveTo(sample[i].x, sample[i].y);
             ctx.lineTo(sample[j].x, sample[j].y);
@@ -365,6 +405,29 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         }
       }
 
+      // === Neural ring internal communication arcs ===
+      const neuralP = projected.filter(p => p.type === "neural_ring");
+      ctx.lineWidth = 0.35;
+      for (let i = 0; i < neuralP.length; i++) {
+        const next = neuralP[(i + 1) % neuralP.length];
+        const cur = neuralP[i];
+        const dx = cur.x - next.x;
+        const dy = cur.y - next.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < SPHERE_RADIUS * 1.2) {
+          const wave = (Math.sin(t * 0.015 + i * 0.8) + 1) * 0.5;
+          const a = (1 - dist / (SPHERE_RADIUS * 1.2)) * 0.15 * (0.5 + wave * 0.5);
+          ctx.strokeStyle = `hsla(185,55%,58%,${a.toFixed(3)})`;
+          // Curved connection (quadratic bezier through center-ish point)
+          const midX = (cur.x + next.x) / 2 + (cur.y - next.y) * 0.15;
+          const midY = (cur.y + next.y) / 2 + (next.x - cur.x) * 0.15;
+          ctx.beginPath();
+          ctx.moveTo(cur.x, cur.y);
+          ctx.quadraticCurveTo(midX, midY, next.x, next.y);
+          ctx.stroke();
+        }
+      }
+
       // === Draw particles ===
       for (const pt of projected) {
         ctx.beginPath();
@@ -372,8 +435,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         ctx.fillStyle = pt.color + pt.alpha.toFixed(2) + ")";
         ctx.fill();
 
-        // Glow halo
-        if (pt.type !== "sphere" && pt.sz > 0.5) {
+        if ((pt.type === "dna" || pt.type === "orbit" || pt.type === "neural_ring") && pt.sz > 0.5) {
           ctx.beginPath();
           ctx.arc(pt.x, pt.y, pt.sz * 3.5, 0, Math.PI * 2);
           ctx.fillStyle = pt.color + (pt.alpha * 0.06).toFixed(3) + ")";
@@ -397,17 +459,14 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         const py = from.y + (to.y - from.y) * np.progress;
         const pa = Math.sin(np.progress * Math.PI);
 
-        // Pulse glow
         ctx.beginPath();
         ctx.arc(px, py, np.size * 3, 0, Math.PI * 2);
         ctx.fillStyle = np.color + (pa * 0.08).toFixed(3) + ")";
         ctx.fill();
-        // Pulse core
         ctx.beginPath();
         ctx.arc(px, py, np.size, 0, Math.PI * 2);
         ctx.fillStyle = np.color + (pa * 0.7).toFixed(2) + ")";
         ctx.fill();
-        // Trail line
         if (np.progress > 0.1) {
           const trailX = from.x + (to.x - from.x) * (np.progress - 0.1);
           const trailY = from.y + (to.y - from.y) * (np.progress - 0.1);
@@ -433,12 +492,11 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       ctx.fillStyle = `hsla(38,50%,55%,${0.02 + morphFactor * 0.04})`;
       ctx.fillRect(0, scanY - 1, size, 2);
 
-      // === EMPIRE IA GROUP text during morph — big, futuristic, dramatic ===
+      // === Text during morph ===
       if (morphFactor > 0.3) {
         const labelAlpha = Math.min((morphFactor - 0.3) / 0.4, 1);
         ctx.save();
 
-        // Epic background glow behind text
         const textGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.4);
         textGlow.addColorStop(0, `hsla(265,70%,55%,${labelAlpha * 0.15})`);
         textGlow.addColorStop(0.5, `hsla(38,55%,55%,${labelAlpha * 0.08})`);
@@ -446,13 +504,11 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         ctx.fillStyle = textGlow;
         ctx.fillRect(0, 0, size, size);
 
-        // Main title: EMPIRE IA
         const mainSize = Math.round(size * 0.085);
         ctx.font = `900 ${mainSize}px 'Inter', system-ui, sans-serif`;
         ctx.textAlign = "center";
         ctx.letterSpacing = `${size * 0.008}px`;
 
-        // Text glow layers
         ctx.globalAlpha = labelAlpha * 0.3;
         ctx.fillStyle = `hsla(265,70%,65%,1)`;
         ctx.filter = `blur(${size * 0.02}px)`;
@@ -465,12 +521,10 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         ctx.fillText("EMPIRE IA", cx, cy - size * 0.02);
         ctx.filter = "none";
 
-        // Crisp text with gradient effect (simulate with two colors)
         ctx.globalAlpha = labelAlpha * 0.9;
         ctx.fillStyle = `hsla(38,55%,72%,1)`;
         ctx.fillText("EMPIRE IA", cx, cy - size * 0.02);
 
-        // Subtitle: GROUP
         const subSize = Math.round(size * 0.04);
         ctx.font = `600 ${subSize}px 'Inter', system-ui, sans-serif`;
         ctx.letterSpacing = `${size * 0.025}px`;
@@ -485,22 +539,20 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         ctx.fillStyle = `hsla(38,45%,65%,0.9)`;
         ctx.fillText("G R O U P", cx, cy + size * 0.06);
 
-        // Horizontal accent lines
+        // Accent lines
         ctx.globalAlpha = labelAlpha * 0.3;
         ctx.strokeStyle = `hsla(38,50%,55%,0.5)`;
         ctx.lineWidth = 0.5;
         const lineW = size * 0.25;
-        // Left line
         ctx.beginPath();
         ctx.moveTo(cx - lineW, cy + size * 0.1);
         ctx.lineTo(cx - size * 0.04, cy + size * 0.1);
         ctx.stroke();
-        // Right line
         ctx.beginPath();
         ctx.moveTo(cx + size * 0.04, cy + size * 0.1);
         ctx.lineTo(cx + lineW, cy + size * 0.1);
         ctx.stroke();
-        // Center diamond
+        // Diamond
         ctx.fillStyle = `hsla(38,55%,60%,${labelAlpha * 0.5})`;
         ctx.beginPath();
         ctx.moveTo(cx, cy + size * 0.1 - 2);
@@ -531,14 +583,29 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
-    mouseRef.current.x = e.clientX - rect.left;
-    mouseRef.current.y = e.clientY - rect.top;
-    mouseRef.current.active = true;
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const mouse = mouseRef.current;
+
+    // If pressing (dragging), orbit the sphere
+    if (mouse.pressing) {
+      const dx = mx - mouse.lastX;
+      const dy = my - mouse.lastY;
+      mouse.dragAngleX += dx * 0.008;
+      mouse.dragAngleY += dy * 0.005;
+    }
+
+    mouse.x = mx;
+    mouse.y = my;
+    mouse.lastX = mx;
+    mouse.lastY = my;
+    mouse.active = true;
   }, []);
 
   const handlePointerLeave = useCallback(() => {
     mouseRef.current.active = false;
     mouseRef.current.pressing = false;
+    mouseRef.current.releaseTime = 0;
   }, []);
 
   return (
@@ -549,19 +616,25 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       className="touch-none cursor-grab active:cursor-grabbing"
       style={{ width: size, height: size }}
       onPointerMove={handlePointerMove}
-      onPointerDown={(e) => {
+      onPointerEnter={(e) => {
         const rect = canvasRef.current?.getBoundingClientRect();
         if (rect) {
           mouseRef.current.x = e.clientX - rect.left;
           mouseRef.current.y = e.clientY - rect.top;
         }
         mouseRef.current.active = true;
-        mouseRef.current.pressing = true;
         mouseRef.current.releaseTime = 0;
+      }}
+      onPointerDown={(e) => {
+        const rect = canvasRef.current?.getBoundingClientRect();
+        if (rect) {
+          mouseRef.current.lastX = e.clientX - rect.left;
+          mouseRef.current.lastY = e.clientY - rect.top;
+        }
+        mouseRef.current.pressing = true;
       }}
       onPointerUp={() => {
         mouseRef.current.pressing = false;
-        mouseRef.current.releaseTime = 0;
       }}
       onPointerLeave={handlePointerLeave}
     />
