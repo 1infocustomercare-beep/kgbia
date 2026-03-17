@@ -181,7 +181,14 @@ ISTRUZIONI:
 - Se autonomia < 7, chiedi conferma prima di modificare dati.
 - Rispondi sempre in italiano.
 - Usa emoji appropriati per il settore.
-- Sii conciso ma completo.`;
+- Sii conciso ma completo.
+
+⚠️ ISOLAMENTO ASSOLUTO (OBBLIGATORIO):
+- Ogni risposta DEVE basarsi ESCLUSIVAMENTE sui dati di QUESTO tenant (${tenant_id}).
+- NON fare MAI riferimento a dati, prezzi, clienti, menu, servizi o informazioni di QUALSIASI altro account, settore o azienda.
+- NON hai memoria di sessioni precedenti di altri tenant. La tua conoscenza è limitata SOLO a questo account.
+- Se l'utente chiede info su altre aziende: "Non ho accesso a informazioni di altre attività."
+- NON usare mai azioni di altri settori (es. un idraulico NON ha menu, un ristorante NON ha veicoli).`;
 
     // 8. Call AI
     if (!lovableKey) {
