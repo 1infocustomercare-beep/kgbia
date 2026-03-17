@@ -827,6 +827,18 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     pointerRef.current.active = true;
   }, []);
 
+  const handlePointerUp = useCallback(() => {
+    const morph = morphRef.current;
+    if (morph.active) return; // already morphing
+    const totalParticles = FLOAT_PARTICLES + MESH_COUNT + HELIX_NODES + DATA_STREAMS;
+    const pts = sampleTextPoints("EMPIRE AI GROUP", size, size, totalParticles);
+    if (pts.length < 10) return;
+    morph.textPts = pts;
+    morph.startTime = performance.now();
+    morph.active = true;
+    morph.phase = "in";
+  }, [size]);
+
   return (
     <div className="relative touch-none" style={{ width: size, height: size }}>
       <canvas
@@ -837,6 +849,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         style={{ width: size, height: size }}
         onPointerMove={handlePointerMove}
         onPointerEnter={handlePointerMove}
+        onPointerUp={handlePointerUp}
         onPointerLeave={() => { pointerRef.current.active = false; }}
       />
 
