@@ -822,10 +822,18 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [isPaused]);
 
-  // ── Auto-narrate on section change ──
+  // ── Auto-narrate on section change — always follow user scroll ──
   useEffect(() => {
-    if (!autoNarrating) return;
     if (!currentSection || !SECTION_SCRIPTS[currentSection]) return;
+    // If audio has been unlocked (user interacted), always try to narrate new sections
+    if (!autoNarrating && !audioUnlockedRef.current) return;
+    
+    // Re-enable auto-narrating if gesture happened and it was disabled
+    if (!autoNarrating && audioUnlockedRef.current && !abortRef.current) {
+      autoNarratingRef.current = true;
+      setAutoNarrating(true);
+    }
+    
     enqueueSectionNarration(currentSection);
   }, [autoNarrating, currentSection, enqueueSectionNarration]);
 
