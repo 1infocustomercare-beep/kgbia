@@ -237,10 +237,11 @@ ISTRUZIONI:
     const aiData = await aiResponse.json();
     const reply = aiData.choices?.[0]?.message?.content || "Non ho capito. Riformula la richiesta.";
 
-    // 9. Log execution
+    // 9. Log execution — CRITICAL: log with correct tenant for audit trail
     await supabase.from("ai_usage_logs").insert({
       agent_name: "whatsapp-orchestrator",
-      company_id: company?.id || null,
+      company_id: company ? (await supabase.from("companies").select("id").eq("owner_id", tenant_id).maybeSingle())?.data?.id : null,
+      restaurant_id: restaurant ? (await supabase.from("restaurants").select("id").eq("owner_id", tenant_id).maybeSingle())?.data?.id : null,
       model_used: "gemini-3-flash-preview",
       status: "success",
       input_tokens: aiData.usage?.prompt_tokens || 0,
