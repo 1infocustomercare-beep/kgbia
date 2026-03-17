@@ -805,27 +805,48 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Auto-voice intro (hands-free) — starts at splash/home without opening chat ──
+  // ── Auto-voice intro (hands-free) — waits for hero section to be visible (post-splash) ──
   useEffect(() => {
     if (autoBootedRef.current) return;
-    autoBootedRef.current = true;
 
     const bootAttempt = () => {
-      console.log("[Arianna] Boot attempt — hero narrated:", narratedRef.current.has("hero"), "voiceEnabled:", voiceEnabledRef.current);
+      if (autoBootedRef.current) return;
+      // Only boot once the hero section is actually rendered and visible (splash is done)
+      const heroEl = document.getElementById("hero");
+      if (!heroEl) return false;
+      const rect = heroEl.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0 && rect.height > 0;
+      if (!isVisible) return false;
+
+      autoBootedRef.current = true;
+      console.log("[Arianna] Boot attempt — hero visible, starting narration");
       startIntroNarration();
       if (!narratedRef.current.has("hero")) {
         enqueueSectionNarration("hero", true);
       }
+      return true;
     };
 
-    const timers = [
-      window.setTimeout(bootAttempt, 120),
-      window.setTimeout(bootAttempt, 1100),
-      window.setTimeout(bootAttempt, 2500),
-      window.setTimeout(bootAttempt, 4200),
-    ];
+    // Poll until hero section becomes visible (after splash completes)
+    const pollInterval = window.setInterval(() => {
+      if (bootAttempt()) {
+        window.clearInterval(pollInterval);
+      }
+    }, 500);
 
-    return () => timers.forEach((t) => window.clearTimeout(t));
+    // Safety: stop polling after 30s
+    const safety = window.setTimeout(() => {
+      window.clearInterval(pollInterval);
+      if (!autoBootedRef.current) {
+        autoBootedRef.current = true;
+        startIntroNarration();
+      }
+    }, 30000);
+
+    return () => {
+      window.clearInterval(pollInterval);
+      window.clearTimeout(safety);
+    };
   }, [startIntroNarration, enqueueSectionNarration]);
 
   // ── Recovery: autoplay restrictions on mobile browsers (retry inside first gestures, also after splash) ──
