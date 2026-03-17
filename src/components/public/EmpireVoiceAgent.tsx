@@ -911,49 +911,8 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Auto-voice intro (hands-free) — waits for hero section to be visible (post-splash) ──
-  useEffect(() => {
-    if (autoBootedRef.current) return;
-
-    const bootAttempt = () => {
-      if (autoBootedRef.current) return;
-      // Only boot once the hero section is actually rendered and visible (splash is done)
-      const heroEl = document.getElementById("hero");
-      if (!heroEl) return false;
-      const rect = heroEl.getBoundingClientRect();
-      const isVisible = rect.top < window.innerHeight && rect.bottom > 0 && rect.height > 0;
-      if (!isVisible) return false;
-
-      autoBootedRef.current = true;
-      console.log("[Arianna] Boot attempt — hero visible, starting narration");
-      startIntroNarration();
-      if (!narratedRef.current.has("hero")) {
-        enqueueSectionNarration("hero", true);
-      }
-      return true;
-    };
-
-    // Poll until hero section becomes visible (after splash completes)
-    const pollInterval = window.setInterval(() => {
-      if (bootAttempt()) {
-        window.clearInterval(pollInterval);
-      }
-    }, 500);
-
-    // Safety: stop polling after 30s
-    const safety = window.setTimeout(() => {
-      window.clearInterval(pollInterval);
-      if (!autoBootedRef.current) {
-        autoBootedRef.current = true;
-        startIntroNarration();
-      }
-    }, 30000);
-
-    return () => {
-      window.clearInterval(pollInterval);
-      window.clearTimeout(safety);
-    };
-  }, [startIntroNarration, enqueueSectionNarration]);
+  // ── Auto-voice intro DISABLED — Arianna only speaks when user clicks the agent ──
+  // (Removed auto-boot polling that caused unwanted auto-narration)
 
   // ── Recovery: autoplay restrictions — gesture-driven unlock + re-enqueue current section ──
   const audioUnlockedRef = useRef(false);
