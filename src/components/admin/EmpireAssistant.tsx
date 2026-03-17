@@ -57,6 +57,9 @@ const EmpireAssistant = ({ restaurantId, companyId }: EmpireAssistantProps) => {
     };
 
     try {
+      // Get current user for tenant_id
+      const { data: { user } } = await supabase.auth.getUser();
+
       const resp = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
@@ -66,6 +69,7 @@ const EmpireAssistant = ({ restaurantId, companyId }: EmpireAssistantProps) => {
         body: JSON.stringify({
           messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
           restaurant_id: restaurantId || null,
+          tenant_id: user?.id || null,
         }),
       });
 
