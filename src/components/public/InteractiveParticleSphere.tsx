@@ -75,11 +75,38 @@ const ORBIT_START = 4;
 const ORBIT_END = 11;
 const HELIX_RESTART = 10;
 
+// ── Sample text outline into point cloud ──
+const sampleTextPoints = (text: string, w: number, h: number, maxPts: number): { x: number; y: number }[] => {
+  const offC = document.createElement("canvas");
+  offC.width = w; offC.height = h;
+  const offCtx = offC.getContext("2d");
+  if (!offCtx) return [];
+  offCtx.clearRect(0, 0, w, h);
+  const fontSize = Math.min(w / (text.length * 0.52), h * 0.22);
+  offCtx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
+  offCtx.textAlign = "center";
+  offCtx.textBaseline = "middle";
+  offCtx.fillStyle = "#fff";
+  offCtx.fillText(text, w / 2, h / 2);
+  const imgData = offCtx.getImageData(0, 0, w, h).data;
+  const pts: { x: number; y: number }[] = [];
+  const step = Math.max(2, Math.floor(Math.sqrt((w * h) / (maxPts * 3))));
+  for (let y = 0; y < h; y += step) {
+    for (let x = 0; x < w; x += step) {
+      if (imgData[(y * w + x) * 4 + 3] > 128) pts.push({ x, y });
+    }
+  }
+  // Shuffle and limit
+  for (let i = pts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pts[i], pts[j]] = [pts[j], pts[i]]; }
+  return pts.slice(0, maxPts);
+};
+
 const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const pointerRef = useRef({ x: size / 2, y: size / 2, active: false });
   const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const morphRef = useRef<{ active: boolean; startTime: number; textPts: { x: number; y: number }[]; phase: "in" | "hold" | "out" | "idle" }>({ active: false, startTime: 0, textPts: [], phase: "idle" });
 
   useEffect(() => {
     const canvas = canvasRef.current;
