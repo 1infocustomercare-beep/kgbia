@@ -8,6 +8,7 @@ import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { stopSplashNarration } from "@/lib/splash-narration";
 import { ARIANNA_SYSTEM_PROMPT } from "@/config/ariannaPrompt";
+import { claimVoiceAgent, releaseVoiceAgent, isVoiceAgentActive } from "@/lib/voice-agent-mutex";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type VoiceMode = "legacy" | "elevenlabs";
