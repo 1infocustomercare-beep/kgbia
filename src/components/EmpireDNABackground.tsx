@@ -235,6 +235,31 @@ const EmpireDNABackground = () => {
       flowsRef.current = Array.from({ length: FLOW_COUNT }, spawnFlow);
     }
 
+    // Route styles — each returns 4 waypoints (start, mid1, mid2, end)
+    const getRoutePoints = (a: Pt, b: Pt, routeMode: number, _i: number, _j: number): Pt[] => {
+      const mx = (a.x + b.x) * 0.5, my = (a.y + b.y) * 0.5;
+      switch (routeMode) {
+        case 0: // L-shape: horizontal then vertical
+          return [a, { x: b.x, y: a.y }, { x: b.x, y: a.y }, b];
+        case 1: // Straight horizontal bus
+          return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b];
+        case 2: // Step-down: go right, step down, go right
+          return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b];
+        case 3: // Diagonal direct
+          return [a, { x: lerp(a.x, b.x, 0.33), y: lerp(a.y, b.y, 0.33) },
+                     { x: lerp(a.x, b.x, 0.66), y: lerp(a.y, b.y, 0.66) }, b];
+        case 4: // Vertical-first L: go down then across
+          return [a, { x: a.x, y: b.y }, { x: a.x, y: b.y }, b];
+        case 5: // Z-route: horizontal, diagonal, horizontal
+          return [a, { x: lerp(a.x, b.x, 0.3), y: a.y },
+                     { x: lerp(a.x, b.x, 0.7), y: b.y }, b];
+        case 6: // Straight line
+        default:
+          return [a, { x: lerp(a.x, b.x, 0.33), y: lerp(a.y, b.y, 0.33) },
+                     { x: lerp(a.x, b.x, 0.66), y: lerp(a.y, b.y, 0.66) }, b];
+      }
+    };
+
     const animate = () => {
       if (!w || !h) { animRef.current = requestAnimationFrame(animate); return; }
       timeRef.current += 0.016;
