@@ -4076,7 +4076,7 @@ const LandingPage = () => {
                     transition={{ delay: i * 0.12 + 0.3, duration: 0.35 }}
                   />
 
-                  <div className="relative rounded-xl border border-foreground/[0.07] bg-card/35 backdrop-blur-sm p-2.5 sm:p-3 overflow-hidden">
+                  <div className="relative rounded-xl border border-foreground/[0.07] bg-card/90 backdrop-blur-sm p-2.5 sm:p-3 overflow-hidden">
                     <motion.div
                       className="relative w-[58px] h-[58px] sm:w-[62px] sm:h-[62px] rounded-xl mx-auto mb-2.5 overflow-hidden"
                       style={{ background: "hsla(265,20%,8%,0.6)", border: "1px solid hsla(265,70%,60%,0.14)", backdropFilter: "blur(8px)" }}
