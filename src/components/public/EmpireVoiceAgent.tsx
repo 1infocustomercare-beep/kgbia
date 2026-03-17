@@ -738,8 +738,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const startIntroNarration = useCallback(() => {
     if (introStartedRef.current || !voiceEnabledRef.current) return;
     // Don't start if another agent already owns the channel
-    const currentOwner = (window as any).__voiceAgentActiveId;
-    if (currentOwner && currentOwner !== "arianna") return;
+    if (!isVoiceAgentActive("arianna") && getActiveVoiceAgent() !== null) return;
 
     introStartedRef.current = true;
     autoNarratingRef.current = true;
@@ -747,11 +746,10 @@ const EmpireVoiceAgent: React.FC = () => {
 
     // Hard handoff: prevent splash TTS from blocking/canceling Arianna.
     stopSplashNarration();
-    claimVoiceAgent("arianna", stopAll);
     abortRef.current = false;
 
     enqueueSectionNarration("hero", true);
-  }, [enqueueSectionNarration, stopAll]);
+  }, [enqueueSectionNarration]);
 
   const stopAll = useCallback(() => {
     abortRef.current = true;
