@@ -114,7 +114,7 @@ export function PremiumCarousel({
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <div className={`overflow-hidden ${fullWidth ? "" : "-mx-4 sm:mx-0"}`}>
+            <div className={`overflow-hidden ${fullWidth ? "" : "-mx-4 sm:mx-0"}`} style={{ maxHeight: "340px" }}>
               <div
                 ref={trackRef}
                 className="flex flex-nowrap will-change-transform"
