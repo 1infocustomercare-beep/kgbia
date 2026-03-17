@@ -8,22 +8,27 @@ const corsHeaders = {
 
 const SYSTEM_PROMPT = `Sei Empire Assistant, l'assistente AI di Empire — la piattaforma all-in-one multi-settore per imprenditori italiani.
 
-Empire supporta 7 settori verticali:
-1. FOOD & RISTORAZIONE — Ristoranti, pizzerie, bar, pasticcerie, sushi bar
-2. NCC & TRASPORTO — Noleggio con conducente, transfer, limousine service
+Empire supporta 25+ settori verticali:
+1. FOOD & RISTORAZIONE — Ristoranti, pizzerie, bar, pasticcerie
+2. NCC & TRASPORTO — Noleggio con conducente, transfer, limousine
 3. BEAUTY & WELLNESS — Saloni, centri estetici, SPA, barbieri
 4. HEALTHCARE — Studi medici, dentisti, fisioterapisti, cliniche
 5. RETAIL & NEGOZI — Negozi, boutique, e-commerce locale
 6. FITNESS & SPORT — Palestre, centri sportivi, personal trainer
-7. HOSPITALITY — Hotel, B&B, agriturismi, resort
+7. HOSPITALITY — Hotel, B&B, resort
+8. BEACH — Stabilimenti balneari, lidi
+9. AGRITURISMO — Agriturismi, fattorie didattiche
+10. SERVIZI TECNICI — Idraulico, Elettricista, Edilizia, Giardinaggio, Pulizie, Garage, Veterinario, Tatuatore
+11. SERVIZI PROFESSIONALI — Legale, Contabilità, Fotografia, Educazione, Asilo
+12. EVENTI & LOGISTICA — Organizzazione eventi, Logistica e spedizioni
 
 CAPACITÀ SPECIALE — COMANDI VOCALI/TESTO:
 Puoi ricevere comandi per modificare il business dell'utente! Quando l'utente dice cose come:
-- "Togli la lasagna dal menu"
-- "Aumenta il prezzo della carbonara di 3 euro"
-- "Disattiva il servizio delivery"
-- "Conferma la prenotazione di Marco Rossi"
-- "Imposta il tavolo 5 come libero"
+- "Togli la lasagna dal menu" / "Disattiva la Mercedes"
+- "Aumenta il prezzo della carbonara di 3 euro" / "Aggiorna tariffa transfer a 120€"
+- "Conferma la prenotazione di Marco" / "Conferma appuntamento di Laura"
+- "Aggiungi intervento per Rossi" / "Aggiungi lead Mario Bianchi"
+- "Imposta il tavolo 5 come libero" / "Metti autista Paolo in pausa"
 Se il messaggio è un COMANDO di modifica (non una domanda), rispondi con:
 **[COMMAND_MODE]** seguito dal comando originale, nient'altro.
 
@@ -31,40 +36,32 @@ Per tutto il resto (domande, supporto, consigli), rispondi normalmente.
 
 Il tuo ruolo è aiutare gli imprenditori con:
 - Supporto tecnico sulla piattaforma e sui moduli specifici del loro settore
-- Consigli su come usare al meglio le funzionalità (AI Engine, Review Shield, Wallet Push, CRM, etc.)
-- Risoluzione problemi comuni (login, pagamenti, configurazione)
+- Consigli su come usare al meglio le funzionalità AI
+- Risoluzione problemi comuni
 - Suggerimenti di marketing e gestione aziendale
 - Analisi e risposte basate sui DATI REALI dell'azienda
-- ESECUZIONE COMANDI diretti per modificare menu, ordini, prenotazioni, etc.
+- ESECUZIONE COMANDI diretti per modificare dati aziendali
 
 Moduli comuni a tutti i settori:
-- Dashboard adattiva con KPI di settore
-- Staff & Payroll management
-- CRM Leads & Clienti
-- Finanza & Fatturazione B2B
-- Social Media management
-- HACCP (per settori alimentari)
-- Inventario / Magazzino
-- Impostazioni brand e personalizzazione
+- Dashboard adattiva con KPI, Staff & Payroll, CRM Leads & Clienti
+- Finanza & Fatturazione, Social Media, Inventario, Impostazioni brand
 
 Moduli specifici per settore:
-- FOOD: Menu digitale, QR code, ordini real-time, Kitchen View, tavoli, prenotazioni, allergie
-- NCC: Flotta veicoli, tratte con tariffe fisse, prenotazioni corsa, autisti, destinazioni/tour
-- BEAUTY: Appuntamenti, catalogo servizi, storico clienti, operatori
-- HEALTHCARE: Agenda medica, pazienti, prestazioni, fatturazione sanitaria
-- RETAIL: Catalogo prodotti, ordini, magazzino, POS
-- FITNESS: Corsi, membri, trainer, abbonamenti
-- HOSPITALITY: Camere, prenotazioni, ospiti, housekeeping
+- FOOD: Menu digitale, QR, ordini real-time, Kitchen View, tavoli, prenotazioni
+- NCC: Flotta veicoli, tratte/tariffe, prenotazioni, autisti, cross-sell
+- BEAUTY/HEALTHCARE: Appuntamenti, catalogo servizi, storico clienti
+- RETAIL: Catalogo prodotti, ordini, magazzino
+- FITNESS: Corsi, abbonamenti, trainer
+- HOSPITALITY: Camere, prenotazioni ospiti
+- BEACH: Ombrelloni, abbonamenti stagionali
+- TRADES: Interventi, preventivi, programmazione lavori
 
 Regole:
 - Rispondi SEMPRE in italiano
 - Sii conciso ma esaustivo
-- Usa un tono professionale ma amichevole
-- Se non sai qualcosa, dillo onestamente
-- Non inventare funzionalità che non esistono
-- Per problemi tecnici complessi, suggerisci di contattare il supporto Empire
-- Quando rispondi con dati aziendali, sii preciso e cita numeri reali
-- MAI rivelare dati di altre aziende — rispondi SOLO con i dati dell'azienda corrente
+- Tono professionale ma amichevole
+- Non inventare funzionalità inesistenti
+- MAI rivelare dati di altre aziende — SOLO dati dell'azienda corrente
 - Adatta terminologia e consigli al settore dell'utente`;
 
 async function fetchRestaurantContext(restaurantId: string): Promise<string> {
@@ -180,6 +177,84 @@ async function fetchRestaurantContext(restaurantId: string): Promise<string> {
   }
 }
 
+async function fetchCompanyContext(companyId: string): Promise<string> {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !serviceRoleKey) return "";
+
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  try {
+    const { data: company } = await supabase
+      .from("companies")
+      .select("name, industry, city, address, tagline, phone, email, is_active, slug")
+      .eq("id", companyId)
+      .single();
+
+    if (!company) return "";
+
+    const [clientsRes, leadsRes, appointmentsRes, interventionsRes, staffRes] = await Promise.all([
+      supabase.from("crm_clients").select("first_name, last_name, total_spent, phone").eq("company_id", companyId).order("total_spent", { ascending: false }).limit(10),
+      supabase.from("leads").select("name, status, value, source, created_at").eq("company_id", companyId).order("created_at", { ascending: false }).limit(15),
+      supabase.from("appointments").select("client_name, service_name, scheduled_at, status, price").eq("company_id", companyId).order("scheduled_at", { ascending: false }).limit(15),
+      supabase.from("interventions").select("client_name, intervention_type, status, final_price, scheduled_at").eq("company_id", companyId).order("created_at", { ascending: false }).limit(15),
+      supabase.from("staff").select("name, role, is_active").eq("company_id", companyId).limit(20),
+    ]);
+
+    const clients = clientsRes.data || [];
+    const leads = leadsRes.data || [];
+    const appointments = appointmentsRes.data || [];
+    const interventions = interventionsRes.data || [];
+    const staff = staffRes.data || [];
+
+    let ctx = `\n\n--- DATI REALI DI "${company.name}" (${company.industry}) ---\n`;
+    ctx += `Città: ${company.city || "N/D"} | Indirizzo: ${company.address || "N/D"} | Tel: ${company.phone || "N/D"}\n`;
+    ctx += `Stato: ${company.is_active ? "Attivo" : "Inattivo"}\n\n`;
+
+    if (staff.length) {
+      const activeStaff = staff.filter(s => s.is_active !== false).length;
+      ctx += `👥 STAFF: ${activeStaff} attivi su ${staff.length}\n`;
+    }
+
+    if (clients.length) {
+      ctx += `\n📋 CLIENTI (top ${clients.length}):\n`;
+      clients.slice(0, 5).forEach(c => {
+        ctx += `  - ${c.first_name} ${c.last_name || ""} | €${Number(c.total_spent || 0).toFixed(2)}\n`;
+      });
+    }
+
+    if (leads.length) {
+      const newLeads = leads.filter(l => l.status === "new").length;
+      ctx += `\n🎯 LEADS: ${leads.length} totali | ${newLeads} nuovi\n`;
+      leads.slice(0, 5).forEach(l => {
+        ctx += `  - ${l.name} | ${l.status} | €${l.value} | ${l.source || "N/D"}\n`;
+      });
+    }
+
+    if (appointments.length) {
+      const pending = appointments.filter(a => a.status === "pending" || a.status === "confirmed").length;
+      ctx += `\n📅 APPUNTAMENTI: ${pending} in programma su ${appointments.length}\n`;
+      appointments.slice(0, 5).forEach(a => {
+        ctx += `  - ${a.scheduled_at?.slice(0, 16)} | ${a.client_name} | ${a.service_name || "N/D"} | ${a.status}\n`;
+      });
+    }
+
+    if (interventions.length) {
+      const active = interventions.filter(i => i.status === "in_corso" || i.status === "programmato").length;
+      ctx += `\n🔧 INTERVENTI: ${active} attivi su ${interventions.length}\n`;
+      interventions.slice(0, 5).forEach(i => {
+        ctx += `  - ${i.client_name} | ${i.intervention_type} | ${i.status} | €${i.final_price || "N/D"}\n`;
+      });
+    }
+
+    ctx += `\n--- FINE DATI AZIENDA ---`;
+    return ctx;
+  } catch (e) {
+    console.error("Error fetching company context:", e);
+    return "";
+  }
+}
+
 // ─── AI Usage Tracking Helper ───
 async function trackAIUsage(agentName: string, modelUsed: string, startTime: number, status: string, restaurantId?: string) {
   try {
@@ -222,6 +297,17 @@ serve(async (req) => {
     let contextBlock = "";
     if (restaurant_id && typeof restaurant_id === "string") {
       contextBlock = await fetchRestaurantContext(restaurant_id);
+    } else if (tenant_id && typeof tenant_id === "string") {
+      // For non-food sectors, resolve company and fetch context
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const sb = createClient(supabaseUrl, serviceKey);
+      const { data: membership } = await sb
+        .from("company_memberships").select("company_id")
+        .eq("user_id", tenant_id).limit(1).maybeSingle();
+      if (membership?.company_id) {
+        contextBlock = await fetchCompanyContext(membership.company_id);
+      }
     }
 
     const systemMessage = SYSTEM_PROMPT + contextBlock;
