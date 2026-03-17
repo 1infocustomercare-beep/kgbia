@@ -272,74 +272,69 @@ async function speakText(
     useBrowserFallbackRef.current = true;
   }
 
-  // Always try browser TTS first — it's free and reliable when gesture context is available
-  const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
-  if (playedInBrowser || abortRef.current) return playedInBrowser;
-
-  // If we KNOW premium quota is exhausted, don't waste API calls — just return false
-  // The gesture handler will retry browser TTS in a proper gesture context later
-  if (quotaKnownExhausted) {
-    console.log("[Arianna] Skipping premium API (quota exhausted) — waiting for gesture to retry browser TTS");
-    return false;
-  }
-
-  // Premium voice (ElevenLabs) — only try if quota might still be available
-  try {
-    const resp = await fetch(TTS_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      },
-      body: JSON.stringify({ text: normalizedText }),
-    });
-
-    if (!resp.ok || abortRef.current) {
-      useBrowserFallbackRef.current = true;
-      return false;
-    }
-
-    const data = await resp.json();
-
-    if (data?.error || data?.fallback || !data?.audioContent || abortRef.current) {
-      useBrowserFallbackRef.current = true;
-      if (data?.error === "quota_exceeded" || data?.fallback) {
-        setBrowserOnlyTTS(true);
-      }
-      return false;
-    }
-
-    // Premium path worked: allow future premium attempts again
-    setBrowserOnlyTTS(false);
-
-    return await new Promise<boolean>((resolve) => {
-      const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-      audio.preload = "auto";
-
-      if (audioRef.current) audioRef.current.pause();
-      audioRef.current = audio;
-
-      audio.onended = () => resolve(true);
-      audio.onerror = () => {
-        useBrowserFallbackRef.current = true;
-        resolve(false);
-      };
-
-      if (abortRef.current) {
-        audio.pause();
-        resolve(false);
-        return;
-      }
-
-      audio.play().catch(() => {
-        useBrowserFallbackRef.current = true;
-        resolve(false);
+  // ── STRATEGY: Try PREMIUM first, fall back to browser TTS ──
+  // Only skip premium if we KNOW quota is exhausted
+  if (!quotaKnownExhausted) {
+    try {
+      const resp = await fetch(TTS_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ text: normalizedText }),
       });
-    });
-  } catch {
-    useBrowserFallbackRef.current = true;
-    return false;
+
+      if (resp.ok && !abortRef.current) {
+        const data = await resp.json();
+
+        if (data?.audioContent && !data?.error && !data?.fallback && !abortRef.current) {
+          // Premium path worked — clear exhausted flag
+          setBrowserOnlyTTS(false);
+          useBrowserFallbackRef.current = false;
+          console.log("[Arianna TTS] 🎤 Premium voice active");
+
+          const played = await new Promise<boolean>((resolve) => {
+            const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
+            audio.preload = "auto";
+
+            if (audioRef.current) audioRef.current.pause();
+            audioRef.current = audio;
+
+            audio.onended = () => resolve(true);
+            audio.onerror = () => resolve(false);
+
+            if (abortRef.current) {
+              audio.pause();
+              resolve(false);
+              return;
+            }
+
+            audio.play().catch(() => resolve(false));
+          });
+
+          if (played) return true;
+        } else {
+          // Premium failed (quota or error) — mark as exhausted
+          if (data?.error === "quota_exceeded" || data?.fallback) {
+            setBrowserOnlyTTS(true);
+            console.log("[Arianna TTS] ⚠️ Premium quota exhausted — switching to free voice");
+          }
+          useBrowserFallbackRef.current = true;
+        }
+      } else {
+        useBrowserFallbackRef.current = true;
+      }
+    } catch {
+      useBrowserFallbackRef.current = true;
+    }
   }
+
+  // ── FALLBACK: Browser TTS (free) ──
+  if (abortRef.current) return false;
+  console.log("[Arianna TTS] 🔊 Using free browser voice");
+  const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
+  return playedInBrowser;
 }
 
 // ── Stream chat helper ──
