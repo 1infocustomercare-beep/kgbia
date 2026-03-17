@@ -1095,33 +1095,55 @@ const EmpireVoiceAgent: React.FC = () => {
     });
   }, [startIntroNarration, enqueueSectionNarration, elevenlabsAvailable, voiceMode, startElevenlabsConversation, stopElevenlabsConversation, conversation.status, stopAll]);
 
-  // ── Ring tone for phone call effect ──
-  const ringToneRef = useRef<{ ctx: AudioContext; osc: OscillatorNode; gain: GainNode } | null>(null);
+  // ── Realistic Italian phone ring tone (dual-tone: 425Hz + 350Hz pattern) ──
+  const ringToneRef = useRef<{ ctx: AudioContext; intervalId: ReturnType<typeof setInterval> } | null>(null);
 
   const playRingTone = useCallback(() => {
     try {
       const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = 440;
-      gain.gain.value = 0.15;
-      osc.connect(gain).connect(ctx.destination);
-      osc.start();
+      
+      // Italian phone ring pattern: 1s ring, 4s pause, repeat
+      // Uses dual-tone: 425Hz (European standard) + harmonic
+      const playBurst = () => {
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+        
+        osc1.type = "sine";
+        osc1.frequency.value = 425; // Italian standard ring frequency
+        osc2.type = "sine";
+        osc2.frequency.value = 350; // Secondary tone for realism
+        
+        gain.gain.value = 0;
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(ctx.destination);
+        
+        const now = ctx.currentTime;
+        // Fade in
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + 0.02);
+        // Hold
+        gain.gain.setValueAtTime(0.12, now + 0.9);
+        // Fade out
+        gain.gain.linearRampToValueAtTime(0, now + 1.0);
+        
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 1.1);
+        osc2.stop(now + 1.1);
+      };
 
-      // Ring pattern: beep-pause-beep
-      const now = ctx.currentTime;
-      gain.gain.setValueAtTime(0.15, now);
-      gain.gain.setValueAtTime(0, now + 0.4);
-      gain.gain.setValueAtTime(0.15, now + 0.6);
-      gain.gain.setValueAtTime(0, now + 1.0);
-      gain.gain.setValueAtTime(0.15, now + 1.4);
-      gain.gain.setValueAtTime(0, now + 1.8);
+      // First ring immediately
+      playBurst();
+      
+      // Then ring every 2s (1s ring + 1s silence)
+      const intervalId = setInterval(playBurst, 2000);
 
-      ringToneRef.current = { ctx, osc, gain };
+      ringToneRef.current = { ctx, intervalId };
 
-      // Auto-stop after 3s max
-      setTimeout(() => stopRingTone(), 3000);
+      // Auto-stop after 6s max (3 rings)
+      setTimeout(() => stopRingTone(), 6000);
     } catch {
       // AudioContext not available
     }
@@ -1130,7 +1152,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const stopRingTone = useCallback(() => {
     if (ringToneRef.current) {
       try {
-        ringToneRef.current.osc.stop();
+        clearInterval(ringToneRef.current.intervalId);
         ringToneRef.current.ctx.close();
       } catch { /* noop */ }
       ringToneRef.current = null;
