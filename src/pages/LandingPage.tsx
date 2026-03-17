@@ -150,8 +150,8 @@ const NeuralCellsBackground = () => {
     return () => clearTimeout(t);
   }, []);
 
-  // Mobile: more cells spread across taller viewport ratio
-  const CELL_COUNT = isMobile ? 35 : 40;
+  // Mobile: fewer cells to reduce DOM node count
+  const CELL_COUNT = isMobile ? 20 : 40;
   const VB_W = isMobile ? 60 : 100;
   const VB_H = isMobile ? 130 : 100;
 
@@ -178,14 +178,14 @@ const NeuralCellsBackground = () => {
     return conns;
   }, [cells, isMobile]);
 
-  // On mobile, limit animated pulses to reduce GPU load
-  const pulseConns = isMobile ? connections.filter((_, i) => i % 4 === 0) : connections.filter((_, i) => i % 2 === 0);
-  const goldConns = isMobile ? connections.filter((_, i) => i % 6 === 0) : connections.filter((_, i) => i % 4 === 0);
+  // On mobile, drastically limit animated pulses to prevent GPU thrashing
+  const pulseConns = isMobile ? connections.filter((_, i) => i % 8 === 0) : connections.filter((_, i) => i % 2 === 0);
+  const goldConns = isMobile ? connections.filter((_, i) => i % 12 === 0) : connections.filter((_, i) => i % 4 === 0);
 
   return (
     <motion.div
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: isMobile ? 0.8 : 0.7 }}
+      style={{ opacity: isMobile ? 0.8 : 0.7, willChange: "opacity, transform", transform: "translateZ(0)" }}
       initial={{ opacity: 0, scale: 1.3 }}
       animate={born ? { opacity: isMobile ? 0.8 : 0.7, scale: 1 } : { opacity: 0, scale: 1.3 }}
       transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
@@ -207,34 +207,49 @@ const NeuralCellsBackground = () => {
       />
 
       <svg className="w-full h-full" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <filter id="pulseGlow">
-            <feGaussianBlur stdDeviation="0.3" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-        </defs>
+        {/* Only add SVG filter on desktop — feGaussianBlur is expensive on mobile GPU */}
+        {!isMobile && (
+          <defs>
+            <filter id="pulseGlow">
+              <feGaussianBlur stdDeviation="0.3" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+        )}
 
-        {/* Connection lines */}
-        {connections.map(({ a, b }, i) => (
-          <motion.line
-            key={`ln${i}`}
-            x1={cells[a].x} y1={cells[a].y}
-            x2={cells[b].x} y2={cells[b].y}
-            stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.35)" : "hsla(220,15%,55%,0.18)"}
-            strokeWidth={isMobile ? "0.2" : "0.15"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0.1, 0.4, 0.1] }}
-            transition={{ duration: 5 + (i % 4) * 2, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
-          />
-        ))}
+        {/* Connection lines — STATIC on mobile (no motion.line), animated on desktop */}
+        {isMobile ? (
+          connections.map(({ a, b }, i) => (
+            <line
+              key={`ln${i}`}
+              x1={cells[a].x} y1={cells[a].y}
+              x2={cells[b].x} y2={cells[b].y}
+              stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.25)" : "hsla(220,15%,55%,0.12)"}
+              strokeWidth="0.2"
+            />
+          ))
+        ) : (
+          connections.map(({ a, b }, i) => (
+            <motion.line
+              key={`ln${i}`}
+              x1={cells[a].x} y1={cells[a].y}
+              x2={cells[b].x} y2={cells[b].y}
+              stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.35)" : "hsla(220,15%,55%,0.18)"}
+              strokeWidth="0.15"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0.1, 0.4, 0.1] }}
+              transition={{ duration: 5 + (i % 4) * 2, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
+            />
+          ))
+        )}
 
-        {/* Warm data pulses */}
+        {/* Warm data pulses — no SVG filter on mobile */}
         {pulseConns.map(({ a, b }, i) => (
           <motion.circle
             key={`vp${i}`}
             r={isMobile ? "0.35" : "0.25"}
             fill="hsla(32,55%,60%,0.85)"
-            filter="url(#pulseGlow)"
+            filter={isMobile ? undefined : "url(#pulseGlow)"}
             initial={{ cx: cells[a].x, cy: cells[a].y, opacity: 0 }}
             animate={{
               cx: [cells[a].x, cells[b].x],
@@ -245,13 +260,13 @@ const NeuralCellsBackground = () => {
           />
         ))}
 
-        {/* Gold data pulses */}
+        {/* Gold data pulses — no SVG filter on mobile */}
         {goldConns.map(({ a, b }, i) => (
           <motion.circle
             key={`gp${i}`}
             r={isMobile ? "0.3" : "0.2"}
             fill="hsla(38,60%,58%,0.9)"
-            filter="url(#pulseGlow)"
+            filter={isMobile ? undefined : "url(#pulseGlow)"}
             initial={{ cx: cells[b].x, cy: cells[b].y, opacity: 0 }}
             animate={{
               cx: [cells[b].x, cells[a].x],
@@ -262,20 +277,31 @@ const NeuralCellsBackground = () => {
           />
         ))}
 
-        {/* Junction nodes */}
-        {cells.filter((_, i) => i % 2 === 0).map((cell) => (
-          <motion.circle
-            key={`node${cell.id}`}
-            cx={cell.x} cy={cell.y}
-            r={isMobile ? "0.35" : "0.25"}
-            fill="hsla(38,45%,55%,0.35)"
-            animate={{
-              r: [isMobile ? 0.2 : 0.15, isMobile ? 0.5 : 0.4, isMobile ? 0.2 : 0.15],
-              opacity: [0.25, 0.6, 0.25],
-            }}
-            transition={{ duration: 3.5, repeat: Infinity, delay: cell.delay, ease: "easeInOut" }}
-          />
-        ))}
+        {/* Junction nodes — static on mobile, animated on desktop */}
+        {isMobile ? (
+          cells.filter((_, i) => i % 3 === 0).map((cell) => (
+            <circle
+              key={`node${cell.id}`}
+              cx={cell.x} cy={cell.y}
+              r="0.3"
+              fill="hsla(38,45%,55%,0.3)"
+            />
+          ))
+        ) : (
+          cells.filter((_, i) => i % 2 === 0).map((cell) => (
+            <motion.circle
+              key={`node${cell.id}`}
+              cx={cell.x} cy={cell.y}
+              r="0.25"
+              fill="hsla(38,45%,55%,0.35)"
+              animate={{
+                r: [0.15, 0.4, 0.15],
+                opacity: [0.25, 0.6, 0.25],
+              }}
+              transition={{ duration: 3.5, repeat: Infinity, delay: cell.delay, ease: "easeInOut" }}
+            />
+          ))
+        )}
       </svg>
     </motion.div>
   );
