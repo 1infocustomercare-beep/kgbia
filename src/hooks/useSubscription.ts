@@ -16,7 +16,16 @@ interface SubscriptionState {
   loading: boolean;
 }
 
-export function useSubscription(restaurantId: string | undefined) {
+/**
+ * Universal subscription hook — works for both Food (restaurant_subscriptions)
+ * and all other sectors (business_subscriptions).
+ * @param entityId - restaurant ID or company ID
+ * @param entityType - "restaurant" | "company" (defaults to auto-detect)
+ */
+export function useSubscription(
+  entityId: string | undefined,
+  entityType?: "restaurant" | "company",
+) {
   const [state, setState] = useState<SubscriptionState>({
     plan: "essential",
     status: "trialing",
@@ -25,44 +34,84 @@ export function useSubscription(restaurantId: string | undefined) {
   });
 
   useEffect(() => {
-    if (!restaurantId) {
+    if (!entityId) {
       setState(s => ({ ...s, loading: false }));
       return;
     }
 
-    const fetch = async () => {
-      const { data } = await supabase
+    const fetchSub = async () => {
+      // Try business_subscriptions first (covers all sectors including food via companies)
+      if (entityType !== "restaurant") {
+        const { data: bizSub } = await supabase
+          .from("business_subscriptions")
+          .select("plan, status, trial_end")
+          .eq("company_id", entityId)
+          .maybeSingle();
+
+        if (bizSub) {
+          setState({
+            plan: normalizePlanId(bizSub.plan),
+            status: bizSub.status,
+            trialEnd: bizSub.trial_end,
+            loading: false,
+          });
+          return;
+        }
+      }
+
+      // Fallback: restaurant_subscriptions (legacy food sector)
+      const { data: restSub } = await supabase
         .from("restaurant_subscriptions")
         .select("plan, status, trial_end")
-        .eq("restaurant_id", restaurantId)
+        .eq("restaurant_id", entityId)
         .maybeSingle();
 
-      if (data) {
+      if (restSub) {
         setState({
-          plan: normalizePlanId(data.plan),
-          status: data.status,
-          trialEnd: data.trial_end,
+          plan: normalizePlanId(restSub.plan),
+          status: restSub.status,
+          trialEnd: restSub.trial_end,
           loading: false,
         });
-      } else {
-        setState(s => ({ ...s, loading: false }));
+        return;
       }
+
+      setState(s => ({ ...s, loading: false }));
     };
 
-    fetch();
+    fetchSub();
 
-    const channel = supabase
-      .channel(`sub-${restaurantId}`)
+    // Listen to both tables for realtime updates
+    const channels: ReturnType<typeof supabase.channel>[] = [];
+
+    if (entityType !== "restaurant") {
+      const bizChannel = supabase
+        .channel(`biz-sub-${entityId}`)
+        .on("postgres_changes", {
+          event: "*",
+          schema: "public",
+          table: "business_subscriptions",
+          filter: `company_id=eq.${entityId}`,
+        }, () => fetchSub())
+        .subscribe();
+      channels.push(bizChannel);
+    }
+
+    const restChannel = supabase
+      .channel(`rest-sub-${entityId}`)
       .on("postgres_changes", {
         event: "*",
         schema: "public",
         table: "restaurant_subscriptions",
-        filter: `restaurant_id=eq.${restaurantId}`,
-      }, () => fetch())
+        filter: `restaurant_id=eq.${entityId}`,
+      }, () => fetchSub())
       .subscribe();
+    channels.push(restChannel);
 
-    return () => { supabase.removeChannel(channel); };
-  }, [restaurantId]);
+    return () => {
+      channels.forEach(ch => supabase.removeChannel(ch));
+    };
+  }, [entityId, entityType]);
 
   const can = (feature: FeatureKey) =>
     hasFeature(state.plan, state.status, feature);
