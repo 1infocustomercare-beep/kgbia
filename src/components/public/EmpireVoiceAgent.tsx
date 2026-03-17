@@ -250,8 +250,7 @@ function speakWithBrowserTTS(
   });
 }
 
-// ── TTS helper — browser-first for reliable auto-start on landing/splash ──
-// Premium audio element playback can be blocked by autoplay policies on mobile.
+// ── TTS helper — premium when credits available, browser TTS when not ──
 const PREMIUM_SECTIONS = new Set<string>();
 
 async function speakText(
@@ -272,69 +271,96 @@ async function speakText(
     useBrowserFallbackRef.current = true;
   }
 
-  // ── STRATEGY: Try PREMIUM first, fall back to browser TTS ──
-  // Only skip premium if we KNOW quota is exhausted
-  if (!quotaKnownExhausted) {
-    try {
-      const resp = await fetch(TTS_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
-        body: JSON.stringify({ text: normalizedText }),
-      });
+  // ── STRATEGY A: Quota exhausted → go STRAIGHT to browser TTS (preserve gesture context) ──
+  if (quotaKnownExhausted || useBrowserFallbackRef.current) {
+    console.log("[Arianna TTS] 🔊 Free voice (quota exhausted)");
+    const played = await speakWithBrowserTTS(normalizedText, abortRef, options);
+    if (played) return true;
 
-      if (resp.ok && !abortRef.current) {
-        const data = await resp.json();
-
-        if (data?.audioContent && !data?.error && !data?.fallback && !abortRef.current) {
-          // Premium path worked — clear exhausted flag
-          setBrowserOnlyTTS(false);
-          useBrowserFallbackRef.current = false;
-          console.log("[Arianna TTS] 🎤 Premium voice active");
-
-          const played = await new Promise<boolean>((resolve) => {
+    // If browser TTS also failed (no gesture), still try a quick premium check
+    // in case credits were refilled — but only as a background check
+    if (!abortRef.current) {
+      try {
+        const resp = await fetch(TTS_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ text: normalizedText }),
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data?.audioContent && !data?.error && !data?.fallback) {
+            // Credits restored! Clear exhausted flag
+            setBrowserOnlyTTS(false);
+            useBrowserFallbackRef.current = false;
+            console.log("[Arianna TTS] 🎤 Premium credits restored!");
             const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-            audio.preload = "auto";
-
             if (audioRef.current) audioRef.current.pause();
             audioRef.current = audio;
-
-            audio.onended = () => resolve(true);
-            audio.onerror = () => resolve(false);
-
-            if (abortRef.current) {
-              audio.pause();
-              resolve(false);
-              return;
-            }
-
-            audio.play().catch(() => resolve(false));
-          });
-
-          if (played) return true;
-        } else {
-          // Premium failed (quota or error) — mark as exhausted
-          if (data?.error === "quota_exceeded" || data?.fallback) {
-            setBrowserOnlyTTS(true);
-            console.log("[Arianna TTS] ⚠️ Premium quota exhausted — switching to free voice");
+            const ok = await audio.play().then(() => new Promise<boolean>(r => {
+              audio.onended = () => r(true);
+              audio.onerror = () => r(false);
+            })).catch(() => false);
+            if (ok) return true;
           }
-          useBrowserFallbackRef.current = true;
         }
-      } else {
-        useBrowserFallbackRef.current = true;
-      }
-    } catch {
-      useBrowserFallbackRef.current = true;
+      } catch { /* noop — stay on browser TTS */ }
     }
+    return false;
   }
 
-  // ── FALLBACK: Browser TTS (free) ──
+  // ── STRATEGY B: Quota available → try premium first ──
+  try {
+    const resp = await fetch(TTS_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      body: JSON.stringify({ text: normalizedText }),
+    });
+
+    if (resp.ok && !abortRef.current) {
+      const data = await resp.json();
+
+      if (data?.audioContent && !data?.error && !data?.fallback && !abortRef.current) {
+        setBrowserOnlyTTS(false);
+        useBrowserFallbackRef.current = false;
+        console.log("[Arianna TTS] 🎤 Premium voice active");
+
+        const played = await new Promise<boolean>((resolve) => {
+          const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
+          audio.preload = "auto";
+          if (audioRef.current) audioRef.current.pause();
+          audioRef.current = audio;
+          audio.onended = () => resolve(true);
+          audio.onerror = () => resolve(false);
+          if (abortRef.current) { audio.pause(); resolve(false); return; }
+          audio.play().catch(() => resolve(false));
+        });
+
+        if (played) return true;
+      } else {
+        // Premium failed — mark exhausted, fall back to browser
+        if (data?.error === "quota_exceeded" || data?.fallback) {
+          setBrowserOnlyTTS(true);
+          console.log("[Arianna TTS] ⚠️ Quota exhausted — switching to free voice");
+        }
+        useBrowserFallbackRef.current = true;
+      }
+    } else {
+      useBrowserFallbackRef.current = true;
+    }
+  } catch {
+    useBrowserFallbackRef.current = true;
+  }
+
+  // ── FALLBACK: Browser TTS after premium failure ──
   if (abortRef.current) return false;
-  console.log("[Arianna TTS] 🔊 Using free browser voice");
-  const playedInBrowser = await speakWithBrowserTTS(normalizedText, abortRef, options);
-  return playedInBrowser;
+  console.log("[Arianna TTS] 🔊 Fallback to free browser voice");
+  return await speakWithBrowserTTS(normalizedText, abortRef, options);
 }
 
 // ── Stream chat helper ──
