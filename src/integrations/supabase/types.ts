@@ -131,6 +131,53 @@ export type Database = {
           },
         ]
       }
+      agent_requests: {
+        Row: {
+          admin_note: string | null
+          agent_id: string
+          created_at: string
+          id: string
+          requested_by: string
+          resolved_at: string | null
+          status: string
+          tenant_id: string
+          tenant_name: string | null
+          tenant_type: string | null
+        }
+        Insert: {
+          admin_note?: string | null
+          agent_id: string
+          created_at?: string
+          id?: string
+          requested_by: string
+          resolved_at?: string | null
+          status?: string
+          tenant_id: string
+          tenant_name?: string | null
+          tenant_type?: string | null
+        }
+        Update: {
+          admin_note?: string | null
+          agent_id?: string
+          created_at?: string
+          id?: string
+          requested_by?: string
+          resolved_at?: string | null
+          status?: string
+          tenant_id?: string
+          tenant_name?: string | null
+          tenant_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_requests_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agents: {
         Row: {
           ai_model: string
