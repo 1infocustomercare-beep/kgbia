@@ -1,31 +1,35 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Empire DNA Neural Background v5 — scroll-reactive + pointer-interactive.
- * 7 topologies morph per scroll section. Pointer proximity creates ripple effects.
- * Features: DNA helix strands, neural bezier synapses, circuit traces, traveling pulses.
+ * Empire DNA Neural Background v6 — Ultra-tech AI neural network.
+ * - Scroll-reactive topology morphing (7 layouts)
+ * - Pointer proximity repulsion + glow aura
+ * - Distributed horizontal DNA micro-strands on edges (not center)
+ * - Circuit traces with dashed animation
+ * - Neural bezier synapses with flickering
+ * - Data pulses traveling between nodes with trails
+ * - Section-blended color palettes
  */
 
 const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 50 : 90;
-const MAX_DIST = IS_MOBILE ? 130 : 170;
-const PULSE_COUNT = IS_MOBILE ? 16 : 35;
-const CIRCUIT_TRACES = IS_MOBILE ? 5 : 12;
-const DNA_STRANDS = IS_MOBILE ? 2 : 3;
-const DNA_SEGMENTS = IS_MOBILE ? 40 : 70;
+const NODE_COUNT = IS_MOBILE ? 55 : 100;
+const MAX_DIST = IS_MOBILE ? 120 : 155;
+const PULSE_COUNT = IS_MOBILE ? 18 : 40;
+const CIRCUIT_TRACES = IS_MOBILE ? 6 : 14;
+const EDGE_DNA_COUNT = IS_MOBILE ? 3 : 5; // small horizontal DNA strands on edges
 
 /* ---------- palettes per section ---------- */
 const PALETTES = [
-  { line: [220,20,50,0.09], node: [220,30,60,0.18], pulse: [200,65,65,0.5], circuit: [210,40,55,0.14], dna: [265,60,60,0.3] },
-  { line: [185,18,45,0.08], node: [185,25,55,0.16], pulse: [175,60,62,0.45], circuit: [180,35,50,0.12], dna: [38,50,55,0.28] },
-  { line: [260,18,44,0.07], node: [260,24,54,0.14], pulse: [270,55,64,0.42], circuit: [265,30,50,0.10], dna: [185,55,55,0.26] },
-  { line: [195,22,48,0.08], node: [195,30,58,0.16], pulse: [190,65,68,0.48], circuit: [195,38,52,0.13], dna: [160,50,50,0.25] },
-  { line: [240,14,42,0.07], node: [240,22,52,0.13], pulse: [235,50,60,0.40], circuit: [240,28,48,0.10], dna: [280,45,55,0.24] },
-  { line: [170,18,46,0.08], node: [170,26,56,0.15], pulse: [165,60,64,0.45], circuit: [170,32,52,0.12], dna: [38,55,58,0.28] },
-  { line: [210,20,48,0.08], node: [210,28,58,0.16], pulse: [205,62,66,0.48], circuit: [210,36,54,0.13], dna: [265,55,58,0.27] },
+  { line: [220,20,50,0.09], node: [220,30,60,0.18], pulse: [200,65,65,0.5], circuit: [210,40,55,0.14], dna: [265,60,60,0.18] },
+  { line: [185,18,45,0.08], node: [185,25,55,0.16], pulse: [175,60,62,0.45], circuit: [180,35,50,0.12], dna: [38,50,55,0.16] },
+  { line: [260,18,44,0.07], node: [260,24,54,0.14], pulse: [270,55,64,0.42], circuit: [265,30,50,0.10], dna: [185,55,55,0.15] },
+  { line: [195,22,48,0.08], node: [195,30,58,0.16], pulse: [190,65,68,0.48], circuit: [195,38,52,0.13], dna: [160,50,50,0.14] },
+  { line: [240,14,42,0.07], node: [240,22,52,0.13], pulse: [235,50,60,0.40], circuit: [240,28,48,0.10], dna: [280,45,55,0.15] },
+  { line: [170,18,46,0.08], node: [170,26,56,0.15], pulse: [165,60,64,0.45], circuit: [170,32,52,0.12], dna: [38,55,58,0.16] },
+  { line: [210,20,48,0.08], node: [210,28,58,0.16], pulse: [205,62,66,0.48], circuit: [210,36,54,0.13], dna: [265,55,58,0.16] },
 ];
 const SECTIONS = PALETTES.length;
 
@@ -63,16 +67,19 @@ const shapes: ShapeGen[] = [
     }
     return pts;
   },
-  // 2: DNA Double helix vertical
+  // 2: Distributed neural clusters
   (n, w, h, t) => {
     const pts: Pt[] = [];
-    const cx = w * 0.5, amp = w * 0.22;
+    const clusters = 5;
+    const perCluster = Math.ceil(n / clusters);
     for (let i = 0; i < n; i++) {
-      const f = i / (n - 1);
-      const y = h * 0.04 + f * h * 0.92;
-      const phase = f * Math.PI * 6 + t * 0.7;
-      const strand = i % 2 === 0 ? 1 : -1;
-      pts.push({ x: cx + Math.sin(phase) * amp * strand * (Math.cos(phase) * 0.3 + 0.7), y });
+      const ci = Math.floor(i / perCluster);
+      const li = i % perCluster;
+      const cx = w * (0.15 + (ci % 3) * 0.35);
+      const cy = h * (0.2 + Math.floor(ci / 3) * 0.55);
+      const angle = li * 2.4 + t * 0.06 + ci * 1.2;
+      const r = Math.sqrt(li / perCluster) * Math.min(w, h) * 0.14;
+      pts.push({ x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r });
     }
     return pts;
   },
@@ -153,7 +160,24 @@ function spawnTrace(w: number, h: number): CircuitTrace {
   return { segments: segs, progress: 0, speed: 0.003 + Math.random() * 0.006, life: 0, maxLife: 200 + Math.random() * 350 };
 }
 
-const hsla = (c: number[], ao?: number) => `hsla(${c[0]},${c[1]}%,${c[2]}%,${ao ?? c[3]})`;
+/* Edge DNA strand definition */
+interface EdgeDNA {
+  y: number; // normalized 0-1 vertical position
+  side: "left" | "right"; // which edge
+  amp: number; freq: number; speed: number;
+}
+
+function spawnEdgeDNA(index: number, count: number): EdgeDNA {
+  return {
+    y: 0.1 + (index / count) * 0.8,
+    side: index % 2 === 0 ? "left" : "right",
+    amp: 15 + Math.random() * 20,
+    freq: 3 + Math.random() * 3,
+    speed: 0.4 + Math.random() * 0.4,
+  };
+}
+
+const hsl = (c: number[], ao?: number) => `hsla(${c[0]},${c[1]}%,${c[2]}%,${ao ?? c[3]})`;
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const lerpC = (a: number[], b: number[], t: number): number[] =>
   [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t), lerp(a[3], b[3], t)];
@@ -166,6 +190,7 @@ const EmpireDNABackground = () => {
   const posRef = useRef<Pt[]>([]);
   const timeRef = useRef(0);
   const tracesRef = useRef<CircuitTrace[]>([]);
+  const edgeDNARef = useRef<EdgeDNA[]>([]);
   const pointerRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
   useEffect(() => { const t = setTimeout(() => setReady(true), 300); return () => clearTimeout(t); }, []);
@@ -176,7 +201,6 @@ const EmpireDNABackground = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Pointer tracking for interactivity
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
       pointerRef.current.x = e.clientX;
@@ -220,6 +244,10 @@ const EmpireDNABackground = () => {
       for (let i = 0; i < CIRCUIT_TRACES; i++) tracesRef.current.push(spawnTrace(w, h));
     }
 
+    if (edgeDNARef.current.length === 0) {
+      for (let i = 0; i < EDGE_DNA_COUNT; i++) edgeDNARef.current.push(spawnEdgeDNA(i, EDGE_DNA_COUNT));
+    }
+
     const animate = () => {
       if (!w || !h) { animRef.current = requestAnimationFrame(animate); return; }
       timeRef.current += 0.016;
@@ -254,7 +282,6 @@ const EmpireDNABackground = () => {
         if (!pos[i]) pos[i] = { ...targets[i] };
         let tx = targets[i].x, ty = targets[i].y;
 
-        // Pointer repulsion
         if (ptr.active) {
           const dx = tx - ptr.x;
           const dy = ty - ptr.y;
@@ -270,7 +297,63 @@ const EmpireDNABackground = () => {
         pos[i].y += (ty - pos[i].y) * 0.045;
       }
 
-      // ═══ LAYER 0: (DNA helix removed for cleaner readability) ═══
+      // ═══ LAYER 0: Edge DNA micro-strands (subtle, on margins) ═══
+      const edgeDNA = edgeDNARef.current;
+      const edgeSegs = IS_MOBILE ? 28 : 45;
+      const edgeWidth = IS_MOBILE ? w * 0.22 : w * 0.15;
+
+      for (const dna of edgeDNA) {
+        const baseX = dna.side === "left" ? edgeWidth * 0.5 : w - edgeWidth * 0.5;
+        const baseY = dna.y * h;
+        const strandH = h * 0.18;
+
+        // Two strands
+        for (let strand = 0; strand < 2; strand++) {
+          const sign = strand === 0 ? 1 : -1;
+          ctx.beginPath();
+          for (let i = 0; i <= edgeSegs; i++) {
+            const f = i / edgeSegs;
+            const yy = baseY - strandH / 2 + f * strandH;
+            const phase = f * Math.PI * 2 * dna.freq + time * dna.speed + strand * Math.PI;
+            const xx = baseX + Math.sin(phase) * dna.amp * sign;
+
+            // Pointer warp
+            let fx = xx, fy = yy;
+            if (ptr.active) {
+              const dx = xx - ptr.x, dy = yy - ptr.y;
+              const dist = Math.hypot(dx, dy);
+              if (dist < repelRadius && dist > 1) {
+                const force = (1 - dist / repelRadius) * 15;
+                fx += (dx / dist) * force;
+                fy += (dy / dist) * force;
+              }
+            }
+
+            if (i === 0) ctx.moveTo(fx, fy);
+            else ctx.lineTo(fx, fy);
+          }
+          ctx.strokeStyle = hsl(palDna, palDna[3] * (strand === 0 ? 1.6 : 1.2));
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+
+        // Rungs
+        const rungCount = IS_MOBILE ? 6 : 10;
+        for (let r = 0; r < rungCount; r++) {
+          const f = r / rungCount;
+          const yy = baseY - strandH / 2 + f * strandH;
+          const phase = f * Math.PI * 2 * dna.freq + time * dna.speed;
+          const x1 = baseX + Math.sin(phase) * dna.amp;
+          const x2 = baseX + Math.sin(phase + Math.PI) * dna.amp;
+          const rungAlpha = palDna[3] * 0.6 * (0.4 + 0.6 * Math.sin(f * Math.PI * 3 + time * 1.5));
+          ctx.strokeStyle = hsl(palDna, rungAlpha);
+          ctx.lineWidth = 0.4;
+          ctx.beginPath();
+          ctx.moveTo(x1, yy);
+          ctx.lineTo(x2, yy);
+          ctx.stroke();
+        }
+      }
 
       // ═══ LAYER 1: Circuit Traces ═══
       const traces = tracesRef.current;
@@ -286,7 +369,7 @@ const EmpireDNABackground = () => {
         const drawLen = totalLen * tr.progress;
 
         ctx.beginPath();
-        ctx.strokeStyle = hsla(palCircuit, palCircuit[3] * 2.5);
+        ctx.strokeStyle = hsl(palCircuit, palCircuit[3] * 2.5);
         ctx.lineWidth = 0.7;
         ctx.setLineDash([3, 5]);
         let acc = 0;
@@ -313,8 +396,8 @@ const EmpireDNABackground = () => {
             const hx = segs[si - 1].x + (segs[si].x - segs[si - 1].x) * f;
             const hy = segs[si - 1].y + (segs[si].y - segs[si - 1].y) * f;
             const g = ctx.createRadialGradient(hx, hy, 0, hx, hy, IS_MOBILE ? 5 : 8);
-            g.addColorStop(0, hsla(palPulse, 0.55));
-            g.addColorStop(1, hsla(palPulse, 0));
+            g.addColorStop(0, hsl(palPulse, 0.55));
+            g.addColorStop(1, hsl(palPulse, 0));
             ctx.fillStyle = g;
             ctx.beginPath();
             ctx.arc(hx, hy, IS_MOBILE ? 5 : 8, 0, Math.PI * 2);
@@ -334,7 +417,7 @@ const EmpireDNABackground = () => {
           if (dist < MAX_DIST) {
             const alpha = (1 - dist / MAX_DIST);
             const flicker = 0.5 + Math.sin(time * 3 + i * 0.7 + j * 0.3) * 0.5;
-            ctx.strokeStyle = hsla(palLine, palLine[3] * alpha * 5 * flicker);
+            ctx.strokeStyle = hsl(palLine, palLine[3] * alpha * 5 * flicker);
             ctx.beginPath();
             ctx.moveTo(pos[i].x, pos[i].y);
             const mx = (pos[i].x + pos[j].x) * 0.5 + Math.sin(time * 0.8 + i) * 10;
@@ -357,8 +440,8 @@ const EmpireDNABackground = () => {
           if (dist < repelRadius * 1.5) {
             const glow = (1 - dist / (repelRadius * 1.5)) * 0.4;
             const g = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 12);
-            g.addColorStop(0, hsla(palPulse, glow));
-            g.addColorStop(1, hsla(palPulse, 0));
+            g.addColorStop(0, hsl(palPulse, glow));
+            g.addColorStop(1, hsl(palPulse, 0));
             ctx.fillStyle = g;
             ctx.beginPath();
             ctx.arc(pos[i].x, pos[i].y, 12, 0, Math.PI * 2);
@@ -366,9 +449,9 @@ const EmpireDNABackground = () => {
           }
         }
 
-        // Micro-ring
-        if (!IS_MOBILE && i % 4 === 0) {
-          ctx.strokeStyle = hsla(palNode, palNode[3] * 1.2 * breathe);
+        // Micro-ring on some nodes
+        if (i % (IS_MOBILE ? 6 : 4) === 0) {
+          ctx.strokeStyle = hsl(palNode, palNode[3] * 1.2 * breathe);
           ctx.lineWidth = 0.3;
           ctx.beginPath();
           ctx.arc(pos[i].x, pos[i].y, r * 4, 0, Math.PI * 2);
@@ -376,7 +459,7 @@ const EmpireDNABackground = () => {
         }
 
         ctx.globalAlpha = breathe;
-        ctx.fillStyle = hsla(palNode, palNode[3] * 3);
+        ctx.fillStyle = hsl(palNode, palNode[3] * 3);
         ctx.beginPath();
         ctx.arc(pos[i].x, pos[i].y, r, 0, Math.PI * 2);
         ctx.fill();
@@ -395,19 +478,19 @@ const EmpireDNABackground = () => {
 
             for (let trail = 0; trail < 3; trail++) {
               const tp = Math.max(0, prog - trail * 0.05);
-              const tx = pos[i].x + (pos[j].x - pos[i].x) * tp;
-              const ty = pos[i].y + (pos[j].y - pos[i].y) * tp;
+              const tx2 = pos[i].x + (pos[j].x - pos[i].x) * tp;
+              const ty2 = pos[i].y + (pos[j].y - pos[i].y) * tp;
               ctx.globalAlpha = Math.sin(tp * Math.PI) * (0.15 - trail * 0.04);
-              ctx.fillStyle = hsla(palPulse);
+              ctx.fillStyle = hsl(palPulse);
               ctx.beginPath();
-              ctx.arc(tx, ty, IS_MOBILE ? 1 : 0.8, 0, Math.PI * 2);
+              ctx.arc(tx2, ty2, IS_MOBILE ? 1 : 0.8, 0, Math.PI * 2);
               ctx.fill();
             }
 
             const px = pos[i].x + (pos[j].x - pos[i].x) * prog;
             const py = pos[i].y + (pos[j].y - pos[i].y) * prog;
             ctx.globalAlpha = Math.sin(prog * Math.PI) * 0.7;
-            ctx.fillStyle = hsla(palPulse);
+            ctx.fillStyle = hsl(palPulse);
             ctx.beginPath();
             ctx.arc(px, py, IS_MOBILE ? 1.8 : 1.5, 0, Math.PI * 2);
             ctx.fill();
@@ -422,8 +505,8 @@ const EmpireDNABackground = () => {
         for (let i = 0; i < NODE_COUNT; i++) {
           if (Math.sin(time * 8 + i * 37.7) > 0.97) {
             const g = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 14);
-            g.addColorStop(0, hsla(palPulse, 0.45));
-            g.addColorStop(1, hsla(palPulse, 0));
+            g.addColorStop(0, hsl(palPulse, 0.45));
+            g.addColorStop(1, hsl(palPulse, 0));
             ctx.fillStyle = g;
             ctx.beginPath();
             ctx.arc(pos[i].x, pos[i].y, 14, 0, Math.PI * 2);
@@ -443,7 +526,11 @@ const EmpireDNABackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: ready ? 0.55 : 0, transition: "opacity 1.5s ease" }}
+      style={{
+        opacity: 0.85,
+        willChange: "transform",
+        transform: "translateZ(0)",
+      }}
     />
   );
 };
