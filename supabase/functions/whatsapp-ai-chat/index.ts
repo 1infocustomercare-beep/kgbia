@@ -77,10 +77,12 @@ serve(async (req) => {
       .maybeSingle();
 
     // Get conversation history
+    // CRITICAL: Filter by BOTH conversation_id AND tenant_id for absolute isolation
     const { data: history } = await supabase
       .from("whatsapp_messages")
       .select("direction, content")
       .eq("conversation_id", conversation_id)
+      .eq("tenant_id", user.id)
       .order("created_at", { ascending: false })
       .limit(20);
 
