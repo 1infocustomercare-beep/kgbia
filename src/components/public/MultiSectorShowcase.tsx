@@ -10,6 +10,7 @@ import {
   Hammer, Camera, TreePine, PawPrint, Brush, Baby, GraduationCap,
   PartyPopper, Truck, Settings, Stethoscope, Receipt, MapPin,
   Sparkles, Route, Star, BookOpen, Grid, Eye,
+  ChevronLeft, ChevronRight, Play, Pause, LayoutGrid, X,
 } from "lucide-react";
 
 import { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
@@ -546,6 +547,7 @@ export default function MultiSectorShowcase() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [showAllScreens, setShowAllScreens] = useState(false);
+  const [showAllSectors, setShowAllSectors] = useState(false);
   const [activeCat, setActiveCat] = useState("all");
   const sector = SHOWCASE_SECTORS[activeIdx];
 
@@ -642,7 +644,122 @@ export default function MultiSectorShowcase() {
         </div>
       </div>
 
-      {/* Content area */}
+      {/* Carousel controls: Prev / Play-Pause / Next + Show All Previews */}
+      <div className="flex items-center justify-center gap-2 mb-8">
+        <button
+          onClick={() => { setActiveIdx(p => (p - 1 + SHOWCASE_SECTORS.length) % SHOWCASE_SECTORS.length); setIsAutoPlaying(false); setShowAllScreens(false); }}
+          className="w-8 h-8 rounded-full border border-border/20 flex items-center justify-center text-foreground/40 hover:text-foreground/70 hover:border-border/40 transition-all bg-background/5"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => setIsAutoPlaying(p => !p)}
+          className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all ${
+            isAutoPlaying 
+              ? "border-primary/40 text-primary bg-primary/10" 
+              : "border-border/20 text-foreground/40 hover:text-foreground/70 hover:border-border/40 bg-background/5"
+          }`}
+        >
+          {isAutoPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
+        </button>
+        <button
+          onClick={() => { setActiveIdx(p => (p + 1) % SHOWCASE_SECTORS.length); setIsAutoPlaying(false); setShowAllScreens(false); }}
+          className="w-8 h-8 rounded-full border border-border/20 flex items-center justify-center text-foreground/40 hover:text-foreground/70 hover:border-border/40 transition-all bg-background/5"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+
+        <div className="w-px h-5 bg-border/15 mx-1" />
+
+        <button
+          onClick={() => { setShowAllSectors(p => !p); setIsAutoPlaying(false); }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.55rem] font-heading font-semibold tracking-wider uppercase border transition-all ${
+            showAllSectors
+              ? "border-primary/40 text-primary bg-primary/10"
+              : "border-border/20 text-foreground/40 hover:text-foreground/60 hover:border-border/30 bg-background/5"
+          }`}
+        >
+          <LayoutGrid className="w-3 h-3" />
+          {showAllSectors ? "Chiudi Gallery" : "Tutti i Mockup"}
+        </button>
+
+        {/* Progress indicator */}
+        <span className="text-[0.5rem] text-foreground/25 font-mono ml-1">
+          {activeIdx + 1}/{SHOWCASE_SECTORS.length}
+        </span>
+      </div>
+
+      {/* All sectors iPhone gallery */}
+      <AnimatePresence>
+        {showAllSectors && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.5, ease: smoothEase }}
+            className="mb-10 overflow-hidden"
+          >
+            <div className="rounded-2xl border border-border/15 backdrop-blur-md p-4"
+              style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.02), hsla(265,20%,12%,0.3))" }}>
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-[0.6rem] font-heading font-semibold tracking-widest uppercase text-foreground/40">
+                  <LayoutGrid className="w-3 h-3 inline mr-1.5" />
+                  Preview di tutti i {SHOWCASE_SECTORS.length} settori
+                </p>
+                <button onClick={() => setShowAllSectors(false)} className="w-6 h-6 rounded-full border border-border/20 flex items-center justify-center text-foreground/30 hover:text-foreground/60 transition-all">
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                {SHOWCASE_SECTORS.map((s, idx) => {
+                  const sid = s.id as IndustryId;
+                  const cfg = INDUSTRY_CONFIGS[sid];
+                  const dd = DEMO_INDUSTRY_DATA[sid];
+                  const ss = cfg ? getSectorStyle(sid) : undefined;
+                  const sc = SECTOR_BEST_SCREEN[s.id] || { label: "Home", type: "hero" };
+                  const c = cfg?.defaultPrimaryColor || s.color;
+                  return (
+                    <motion.div
+                      key={s.id}
+                      className="flex flex-col items-center cursor-pointer group"
+                      initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ duration: 0.3, delay: idx * 0.03 }}
+                      onClick={() => { setActiveIdx(idx); setShowAllSectors(false); setShowAllScreens(false); }}
+                    >
+                      <div className={`transform scale-[0.45] sm:scale-[0.5] origin-top transition-all duration-300 group-hover:scale-[0.52] ${activeIdx === idx ? "ring-2 ring-primary/40 rounded-[2rem]" : ""}`}>
+                        {cfg && dd ? (
+                          <IPhoneFrame
+                            screen={sc}
+                            color={c}
+                            emoji={cfg.emoji}
+                            companyName={dd.companyName}
+                            services={dd.services}
+                            index={idx}
+                            sectorStyle={ss}
+                            industryId={sid}
+                          />
+                        ) : (
+                          <div className="w-[180px] h-[360px] rounded-[2rem] flex flex-col items-center justify-center gap-2"
+                            style={{ background: s.color.replace("1)", "0.08)"), border: `1px solid ${s.color.replace("1)", "0.15)")}` }}>
+                            <span style={{ color: s.color }}>{s.icon}</span>
+                            <span className="text-foreground/30 text-[0.55rem]">{s.label}</span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-[6px] font-heading font-bold tracking-widest uppercase mt-[-2rem] relative z-10 text-center"
+                        style={{ color: activeIdx === idx ? s.color : "hsla(0,0%,100%,0.35)" }}>
+                        {s.icon} {s.label}
+                      </span>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         <motion.div key={sector.id}
           className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-14 items-center"
