@@ -3118,6 +3118,35 @@ const LandingPage = () => {
         {/* ═══ Desktop: iPhone Grid ═══ */}
         <motion.div className="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 justify-items-center"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {/* ── Featured: Live iframe previews ── */}
+          {[
+            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", emoji: "🍽️" },
+            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", emoji: "🚗" },
+          ].map((feat, i) => (
+            <motion.div key={`feat-${i}`} className="group cursor-pointer" variants={fadeScale}
+              onClick={() => navigate(feat.route)} whileHover={{ y: -8, scale: 1.03 }}>
+              <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_20px_60px_hsla(0,0%,0%,0.3)]"
+                style={{ borderColor: `${feat.color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 40px ${feat.color}10` }}>
+                {/* Dynamic Island */}
+                <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
+                {/* Live iframe */}
+                <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
+                  <iframe src={feat.route} title={feat.name} className="w-[375px] h-[812px] border-0" style={{ transform: `scale(${174 / 375})`, transformOrigin: "top left", pointerEvents: "none" }} loading="lazy" />
+                </div>
+                {/* Bottom overlay */}
+                <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                  <div className="flex items-center gap-1 mb-1">
+                    <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${feat.color}25`, color: feat.color, border: `1px solid ${feat.color}35` }}>★ Live</span>
+                  </div>
+                  <p className="text-[11px] font-bold text-white">{feat.name}</p>
+                  <p className="text-[8px] text-white/40">{feat.label}</p>
+                </div>
+                {/* Home indicator */}
+                <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-white/20 rounded-full z-20" />
+              </div>
+            </motion.div>
+          ))}
+          {/* ── Standard industry cards ── */}
           {industries.map((ind, i) => {
             const slug = DEMO_SLUGS[ind.id];
             const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
