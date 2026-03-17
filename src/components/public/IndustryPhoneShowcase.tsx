@@ -953,28 +953,32 @@ export function IPhoneFrame({
             {/* ═══ HERO SCREEN — 4 variants ═══ */}
             {screen.type === "hero" && (() => {
               if (v === 0) return (
-                /* V0: Centered with orbit rings */
-                <div className="h-full flex flex-col" style={{ background: sectorStyle.heroGradient }}>
-                  <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `radial-gradient(circle at 30% 40%, ${color} 1px, transparent 1px), radial-gradient(circle at 70% 60%, ${color} 0.5px, transparent 0.5px)`, backgroundSize: "20px 20px, 15px 15px" }} />
+                /* V0: Centered with orbit rings + realistic iOS hero */
+                <div className="h-full flex flex-col" style={{ background: `linear-gradient(180deg, ${color}12 0%, #000 50%, ${color}06 100%)` }}>
+                  <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(circle at 30% 40%, ${color} 1px, transparent 1px), radial-gradient(circle at 70% 60%, ${color} 0.5px, transparent 0.5px)`, backgroundSize: "20px 20px, 15px 15px" }} />
                   <div className="flex-1 flex flex-col items-center justify-center p-3 text-center relative">
-                    <motion.div className="absolute w-20 h-20 rounded-full border border-dashed opacity-10"
+                    <motion.div className="absolute w-24 h-24 rounded-full border border-dashed opacity-[0.06]"
                       style={{ borderColor: color }} animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} />
-                    <motion.span className="text-3xl mb-2 drop-shadow-lg" animate={{ scale: [1, 1.1, 1], y: [0, -3, 0] }} transition={{ duration: 3, repeat: Infinity }}>{emoji}</motion.span>
+                    <motion.div className="absolute w-16 h-16 rounded-full border opacity-[0.04]"
+                      style={{ borderColor: color }} animate={{ rotate: -360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
+                    <div className="w-10 h-10 rounded-2xl flex items-center justify-center mb-2 relative" style={{ background: `linear-gradient(135deg, ${color}30, ${color}10)`, border: `1px solid ${color}25`, boxShadow: `0 8px 24px ${color}20` }}>
+                      <motion.span className="text-xl drop-shadow-lg" animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 3, repeat: Infinity }}>{emoji}</motion.span>
+                    </div>
                     <p className="text-[10px] font-bold text-white/90 leading-tight tracking-wide">{companyName}</p>
-                    <p className="text-[7px] text-white/35 mt-0.5 tracking-widest uppercase">{sectorStyle.heroSubtext}</p>
-                    <motion.div className="mt-3 px-4 py-1.5 rounded-full text-[7px] font-bold text-white tracking-wider uppercase relative overflow-hidden"
-                      style={{ backgroundColor: color, boxShadow: `0 4px 15px ${color}50` }}>
-                      <motion.div className="absolute inset-0" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)" }}
+                    <p className="text-[6px] text-white/30 mt-0.5 tracking-[0.2em] uppercase font-medium">{sectorStyle.heroSubtext}</p>
+                    <motion.div className="mt-3 px-5 py-1.5 rounded-full text-[7px] font-bold text-white tracking-wider uppercase relative overflow-hidden"
+                      style={{ background: `linear-gradient(135deg, ${color}, ${sectorStyle.chartColors[1] || color})`, boxShadow: `0 4px 20px ${color}40` }}>
+                      <motion.div className="absolute inset-0" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%)" }}
                         animate={{ x: ["-200%", "200%"] }} transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }} />
                       <span className="relative">Scopri di più</span>
                     </motion.div>
                   </div>
-                  <div className="flex gap-0.5 p-1.5">
+                  <div className="flex gap-0.5 p-1.5 pb-8">
                     {sectorStyle.kpis.slice(0, 3).map((k, i) => (
-                      <motion.div key={i} className="flex-1 text-center p-1 rounded-md backdrop-blur-sm" style={{ backgroundColor: `${color}10`, border: `0.5px solid ${color}08` }}
+                      <motion.div key={i} className="flex-1 text-center p-1.5 rounded-lg" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(8px)", border: `0.5px solid rgba(255,255,255,0.06)` }}
                         initial={{ opacity: 0, y: 5 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 + i * 0.1 }}>
-                        <p className="text-[6px] text-white/25">{k.label}</p>
-                        <p className="text-[7px] font-bold" style={{ color }}>{k.val}</p>
+                        <p className="text-[5px] text-white/30">{k.label}</p>
+                        <p className="text-[8px] font-bold" style={{ color }}>{k.val}</p>
                       </motion.div>
                     ))}
                   </div>
