@@ -94,6 +94,9 @@ const StudioTab = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(new Set());
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [aiCompletingNew, setAiCompletingNew] = useState(false);
+  const [aiCompletingEdit, setAiCompletingEdit] = useState(false);
+  const [newItemImageUrl, setNewItemImageUrl] = useState<string | null>(null);
 
   const allCategories = [...new Set(menuItems.map(i => i.category))];
   const restaurantSlug = restaurant?.slug || "";
