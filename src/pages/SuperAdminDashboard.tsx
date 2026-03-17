@@ -1456,6 +1456,32 @@ const SuperAdminDashboard = () => {
               ];
 
               const allIntegrations = [...adminIntegrations, ...clientIntegrations];
+
+              // Apply filters
+              const filterItem = (item: IntegrationItem) => {
+                const isDisabled = disabledIntegrations[item.name] || false;
+                // Status filter
+                if (intFilter.status === "connected" && item.status !== "connected") return false;
+                if (intFilter.status === "missing" && item.status !== "missing") return false;
+                if (intFilter.status === "disabled" && !isDisabled) return false;
+                if (intFilter.status !== "disabled" && intFilter.status !== "all" && isDisabled) return false;
+                // Category filter
+                if (intFilter.category === "admin" && item.scope !== "admin") return false;
+                if (intFilter.category === "client" && item.scope !== "client") return false;
+                // Sector filter
+                if (intFilter.sector !== "all" && item.sector && item.sector !== intFilter.sector && item.sector !== "all") return false;
+                // Search
+                if (intFilter.search) {
+                  const q = intFilter.search.toLowerCase();
+                  if (!item.name.toLowerCase().includes(q) && !item.description.toLowerCase().includes(q) && !item.usedBy.toLowerCase().includes(q)) return false;
+                }
+                return true;
+              };
+
+              const filteredAdmin = adminIntegrations.filter(filterItem);
+              const filteredClient = clientIntegrations.filter(filterItem);
+              const hasActiveFilters = intFilter.status !== "all" || intFilter.category !== "all" || intFilter.sector !== "all" || intFilter.search !== "";
+
               const adminConnected = adminIntegrations.filter(i => i.status === "connected").length;
               const adminTotal = adminIntegrations.length;
               const clientConnected = clientIntegrations.filter(i => i.status === "connected").length;
