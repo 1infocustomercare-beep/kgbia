@@ -481,8 +481,32 @@ const StudioTab = ({
                 </div>
                 <input type="text" value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })}
                   placeholder="Nome piatto" className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 min-h-[44px]" />
-                <textarea value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })}
-                  placeholder="Descrizione (opzionale)" rows={2} className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                
+                {/* AI Auto-Complete Button */}
+                <motion.button
+                  onClick={() => handleAICompleteDish("new")}
+                  disabled={aiCompletingNew || !newItem.name.trim()}
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary/20 to-primary/10 text-primary text-xs font-semibold min-h-[40px] disabled:opacity-30 flex items-center justify-center gap-2 border border-primary/20 hover:border-primary/40 transition-all"
+                  whileTap={{ scale: 0.97 }}>
+                  {aiCompletingNew ? (
+                    <><Loader2 className="w-3.5 h-3.5 animate-spin" /> IA sta generando descrizione, allergeni, foto e traduzioni...</>
+                  ) : (
+                    <><Sparkles className="w-3.5 h-3.5" /> ✨ Compila tutto con IA (1 gettone)</>
+                  )}
+                </motion.button>
+
+                {/* AI Generated Image Preview */}
+                {newItemImageUrl && (
+                  <div className="relative">
+                    <img src={newItemImageUrl} alt="Anteprima AI" className="w-full h-32 object-cover rounded-xl border border-primary/20" />
+                    <button onClick={() => setNewItemImageUrl(null)} className="absolute top-2 right-2 w-6 h-6 rounded-full bg-background/80 flex items-center justify-center">
+                      <X className="w-3.5 h-3.5 text-foreground" />
+                    </button>
+                    <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-primary/80 text-primary-foreground text-[9px] font-bold flex items-center gap-1">
+                      <Sparkles className="w-2.5 h-2.5" /> AI
+                    </span>
+                  </div>
+                )}
                 <div className="grid grid-cols-2 gap-2">
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">€</span>
