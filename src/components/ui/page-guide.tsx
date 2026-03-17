@@ -68,7 +68,7 @@ export const PageGuide = () => {
       {/* Floating Action Button — bottom-right, above BottomNav */}
       <motion.button
         onClick={handleOpen}
-        className="fixed z-[100] right-3 bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] w-10 h-10 rounded-full bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 flex items-center justify-center"
+        className="fixed z-[90] left-3 bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] w-9 h-9 rounded-full bg-primary/80 text-primary-foreground shadow-md shadow-primary/15 flex items-center justify-center"
         whileTap={{ scale: 0.9 }}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
