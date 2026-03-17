@@ -283,9 +283,12 @@ export default function IndustryDemoPage() {
 
   const resolvedIndustry: IndustryId = useMemo(() => {
     if (company?.industry) return company.industry as IndustryId;
+    // Match by demo slug value (e.g. "amalfi-luxury-transfer" → ncc)
     for (const [ind, s] of Object.entries(DEMO_SLUGS)) {
       if (s === slug) return ind as IndustryId;
     }
+    // Also accept industry ID directly as slug (e.g. /demo/ncc, /demo/food)
+    if (slug && slug in INDUSTRY_CONFIGS) return slug as IndustryId;
     return "custom";
   }, [company, slug]);
 
