@@ -170,10 +170,27 @@ export default function EmpireTeamStory() {
           </p>
         </motion.div>
 
-        {/* ── Timeline ── */}
+        {/* ── DNA Evolution Timeline ── */}
         <div className="relative mb-20 sm:mb-28">
-          {/* Vertical line */}
-          <div className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px" style={{ background: "linear-gradient(180deg, transparent, hsla(38,50%,55%,0.25), hsla(265,60%,55%,0.2), transparent)" }} />
+          {/* DNA Double Helix vertical line */}
+          <div className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px" style={{ background: "linear-gradient(180deg, transparent 0%, hsla(265,70%,60%,0.35) 15%, hsla(38,55%,55%,0.3) 50%, hsla(265,70%,60%,0.35) 85%, transparent 100%)" }} />
+          {/* Second strand (helix effect) */}
+          <div className="absolute left-[18px] sm:left-[calc(50%+2px)] top-0 bottom-0 w-px opacity-40" style={{ background: "linear-gradient(180deg, transparent 5%, hsla(38,55%,55%,0.3) 20%, hsla(265,70%,60%,0.2) 50%, hsla(38,55%,55%,0.3) 80%, transparent 95%)" }} />
+          
+          {/* Floating DNA particles */}
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={`particle-${i}`}
+              className="absolute w-1 h-1 rounded-full"
+              style={{
+                left: `${i % 2 === 0 ? 'calc(50% - 8px)' : 'calc(50% + 8px)'}`,
+                top: `${15 + i * 16}%`,
+                background: i % 2 === 0 ? "hsla(265,70%,65%,0.5)" : "hsla(38,55%,55%,0.5)",
+              }}
+              animate={{ y: [-5, 5, -5], opacity: [0.3, 0.8, 0.3] }}
+              transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}
+            />
+          ))}
           
           {MILESTONES.map((m, i) => {
             const Icon = m.icon;
@@ -181,38 +198,56 @@ export default function EmpireTeamStory() {
             return (
               <motion.div
                 key={m.year}
-                className={`relative flex items-start gap-4 sm:gap-0 mb-10 sm:mb-14 ${isLeft ? "sm:flex-row" : "sm:flex-row-reverse"}`}
-                initial={{ opacity: 0, x: isLeft ? -40 : 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                className={`relative flex items-start gap-4 sm:gap-0 mb-8 sm:mb-14 ${isLeft ? "sm:flex-row" : "sm:flex-row-reverse"}`}
+                initial={{ opacity: 0, x: isLeft ? -30 : 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
                 viewport={vpOnce}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
+                transition={{ duration: 0.7, delay: i * 0.12 }}
               >
-                {/* Node */}
-                <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 z-10">
+                {/* DNA Node with orbital animation */}
+                <DnaNode delay={i * 0.12} />
+                <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 z-20 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12">
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: "hsl(38,50%,60%)" }} />
+                </div>
+
+                {/* Content card — futuristic glass morphism */}
+                <div className={`ml-16 sm:ml-0 ${isLeft ? "sm:w-1/2 sm:pr-14 sm:text-right" : "sm:w-1/2 sm:pl-14"}`}>
                   <motion.div
-                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center"
-                    style={{ background: "linear-gradient(135deg, hsla(38,50%,55%,0.2), hsla(265,60%,55%,0.15))", border: "1px solid hsla(38,50%,55%,0.2)" }}
-                    whileHover={{ scale: 1.2, borderColor: "hsla(38,50%,55%,0.5)" }}
+                    className="relative p-4 sm:p-5 rounded-2xl overflow-hidden group"
+                    style={{
+                      background: "linear-gradient(135deg, hsla(230,12%,12%,0.7), hsla(265,15%,14%,0.5))",
+                      border: "1px solid hsla(265,50%,50%,0.1)",
+                      backdropFilter: "blur(16px)",
+                    }}
+                    whileHover={{ borderColor: "hsla(265,70%,60%,0.3)", y: -4, boxShadow: `0 16px 40px ${m.glowColor}` }}
+                    transition={{ duration: 0.35 }}
                   >
-                    <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+                    {/* Top glow line */}
+                    <div className="absolute top-0 inset-x-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${m.color}, transparent)` }} />
+                    
+                    {/* Corner DNA micro-detail */}
+                    <div className={`absolute top-2 ${isLeft ? 'sm:left-auto sm:right-3 right-3' : 'left-3'}`}>
+                      <Dna className="w-3 h-3 opacity-20" style={{ color: "hsl(265,60%,60%)" }} />
+                    </div>
+
+                    {/* Year badge */}
+                    <div className="inline-flex items-center gap-1.5 mb-2">
+                      <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: m.color }} />
+                      <span className="text-[0.6rem] font-black tracking-[3px] uppercase" style={{ color: "hsl(265,70%,65%)" }}>{m.year}</span>
+                    </div>
+
+                    <h4 className="text-[0.85rem] sm:text-base font-bold text-foreground leading-tight">{m.label}</h4>
+                    <p className="text-[0.7rem] sm:text-xs text-muted-foreground/55 mt-2 leading-relaxed">{m.desc}</p>
+
+                    {/* Metric badge */}
+                    <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: m.color, border: `1px solid ${m.color}` }}>
+                      <ShieldCheck className="w-2.5 h-2.5" style={{ color: "hsl(38,50%,65%)" }} />
+                      <span className="text-[0.55rem] font-bold tracking-wider uppercase text-foreground/90">{m.metric}</span>
+                    </div>
                   </motion.div>
                 </div>
 
-                {/* Content card */}
-                <div className={`ml-14 sm:ml-0 ${isLeft ? "sm:w-1/2 sm:pr-12 sm:text-right" : "sm:w-1/2 sm:pl-12"}`}>
-                  <motion.div
-                    className="p-4 sm:p-5 rounded-2xl"
-                    style={{ background: "hsla(230,10%,15%,0.5)", border: "1px solid hsla(38,50%,55%,0.08)", backdropFilter: "blur(12px)" }}
-                    whileHover={{ borderColor: "hsla(38,50%,55%,0.2)", y: -3 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <span className="text-[0.65rem] font-bold tracking-[2px] uppercase text-primary/70">{m.year}</span>
-                    <h4 className="text-sm sm:text-base font-bold text-foreground mt-1">{m.label}</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground/60 mt-1.5 leading-relaxed">{m.desc}</p>
-                  </motion.div>
-                </div>
-
-                {/* Spacer for the other side */}
+                {/* Spacer */}
                 <div className="hidden sm:block sm:w-1/2" />
               </motion.div>
             );
