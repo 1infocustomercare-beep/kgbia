@@ -178,9 +178,9 @@ const EmpireDNABackground = () => {
     if (!hwRef.current.length) {
       hwRef.current = Array.from({ length: HIGHWAY_COUNT }, (_, i) => ({
         y: (h || 800) * (0.1 + (i / HIGHWAY_COUNT) * 0.8),
-        speed: 0.5 + Math.random() * 1.5,
-        particles: Array.from({ length: IS_MOBILE ? 4 : 8 }, () => ({
-          x: Math.random() * (w || 1000), sp: 1 + Math.random() * 3, len: 15 + Math.random() * 40,
+        speed: 0.15 + Math.random() * 0.4,
+        particles: Array.from({ length: IS_MOBILE ? 2 : 4 }, () => ({
+          x: Math.random() * (w || 1000), sp: 0.3 + Math.random() * 0.8, len: 15 + Math.random() * 40,
         })),
       }));
     }
