@@ -296,11 +296,40 @@ serve(async (req) => {
     const userText = lastUserMsg?.content?.trim() || "";
 
     // First, do a non-streaming AI call to check if it's a command
+    // ── Strict ownership verification + context loading ──
     let contextBlock = "";
     if (restaurant_id && typeof restaurant_id === "string") {
-      contextBlock = await fetchRestaurantContext(restaurant_id);
+      // CRITICAL: Verify the authenticated user actually owns this restaurant
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const sb = createClient(supabaseUrl, serviceKey);
+      const { data: ownership } = await sb
+        .from("restaurants")
+        .select("id")
+        .eq("id", restaurant_id)
+        .eq("owner_id", tenant_id)
+        .maybeSingle();
+      
+      if (!ownership) {
+        // Check membership as fallback
+        const { data: membership } = await sb
+          .from("restaurant_memberships")
+          .select("id")
+          .eq("restaurant_id", restaurant_id)
+          .eq("user_id", tenant_id)
+          .maybeSingle();
+        
+        if (!membership) {
+          console.warn(`SECURITY: User ${tenant_id} attempted to access restaurant ${restaurant_id} — denied`);
+          contextBlock = "\n\n⚠️ Accesso non autorizzato a questo ristorante.";
+        } else {
+          contextBlock = await fetchRestaurantContext(restaurant_id);
+        }
+      } else {
+        contextBlock = await fetchRestaurantContext(restaurant_id);
+      }
     } else if (tenant_id && typeof tenant_id === "string") {
-      // For non-food sectors, resolve company and fetch context
+      // For non-food sectors, resolve company with ownership check
       const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
       const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
       const sb = createClient(supabaseUrl, serviceKey);
