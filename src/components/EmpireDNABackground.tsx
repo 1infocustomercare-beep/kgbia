@@ -243,9 +243,12 @@ const EmpireDNABackground = () => {
       const time = timeRef.current;
       ctx.clearRect(0, 0, w, h);
 
-      // Scroll-based section blending
-      const pageH = document.documentElement.scrollHeight - h;
-      const scrollN = pageH > 0 ? Math.min(scrollRef.current / pageH, 1) : 0;
+      // Read scroll live every frame for maximum responsiveness
+      scrollRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+      // Scroll-based section blending — use full page height
+      const pageH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - h;
+      const scrollN = pageH > 0 ? Math.max(0, Math.min(scrollRef.current / pageH, 1)) : 0;
       const sF = scrollN * (SECTIONS - 1);
       const sIdx = Math.min(Math.floor(sF), SECTIONS - 2);
       const blend = sF - sIdx;
