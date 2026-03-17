@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import EmpireDNABackground from "@/components/EmpireDNABackground";
 
 import { motion, AnimatePresence } from "framer-motion";
 import {
