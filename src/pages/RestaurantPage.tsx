@@ -910,7 +910,7 @@ const RestaurantPage = () => {
       {dbRestaurant?.id && <ReviewForm restaurantId={dbRestaurant.id} />}
       <NotificationOptIn restaurantId={dbRestaurant?.id} restaurantName={restaurantName} />
       <FloatingCartButton onClick={() => setCartOpen(true)} />
-      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} allMenuItems={menu} />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} allMenuItems={menu} restaurantId={dbRestaurant?.id} />
       <CookieBanner restaurantId={dbRestaurant?.id} />
       <Suspense fallback={null}>
         <RestaurantVoiceAgent

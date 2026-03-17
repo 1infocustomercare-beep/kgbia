@@ -72,6 +72,7 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
                 lastAddedCategory={lastAddedCat}
                 onClose={() => setShowUpsell(false)}
                 visible={showUpsell && items.length > 0}
+                restaurantId={restaurantId}
               />
             )}
 
