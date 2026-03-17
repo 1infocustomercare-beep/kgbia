@@ -297,6 +297,17 @@ serve(async (req) => {
     let contextBlock = "";
     if (restaurant_id && typeof restaurant_id === "string") {
       contextBlock = await fetchRestaurantContext(restaurant_id);
+    } else if (tenant_id && typeof tenant_id === "string") {
+      // For non-food sectors, resolve company and fetch context
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const sb = createClient(supabaseUrl, serviceKey);
+      const { data: membership } = await sb
+        .from("company_memberships").select("company_id")
+        .eq("user_id", tenant_id).limit(1).maybeSingle();
+      if (membership?.company_id) {
+        contextBlock = await fetchCompanyContext(membership.company_id);
+      }
     }
 
     const systemMessage = SYSTEM_PROMPT + contextBlock;
