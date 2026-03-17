@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import EmpireDNABackground from "@/components/EmpireDNABackground";
+
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -154,7 +154,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <EmpireDNABackground />
+      
       <div className="w-full max-w-3xl">
         {/* Progress bar — 5 steps */}
         <div className="flex items-center justify-center gap-2 mb-6">

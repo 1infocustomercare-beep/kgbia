@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Empire Background v10 — Organic Neural Data Flow
- * Fluid, non-geometric lines. Bezier curves, flowing particles,
- * organic topology morphing on scroll. Professional & alive.
+ * Empire Background v11 — DNA Biotech Neural Canvas
+ * Enhanced with prominent double-helix strands, base-pair rungs,
+ * hex-grid tech overlay, flowing data particles, and organic topology morphing.
  */
 
 const IS_MOBILE =
@@ -14,12 +14,15 @@ const NODE_COUNT = IS_MOBILE ? 70 : 140;
 const MAX_DIST = IS_MOBILE ? 140 : 185;
 const FLOW_COUNT = IS_MOBILE ? 28 : 65;
 const PULSE_COUNT = IS_MOBILE ? 12 : 28;
+const DNA_STRANDS = IS_MOBILE ? 2 : 3; // Prominent DNA helixes
+const HEX_COLS = IS_MOBILE ? 8 : 14;
+const HEX_ROWS = IS_MOBILE ? 12 : 18;
 
 type Pt = { x: number; y: number };
 
 // ── Organic topologies (no grids, no squares) ──
 const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = [
-  // 0: Neural nebula — scattered with organic drift
+  // 0: Neural nebula
   (n, w, h, t) => Array.from({ length: n }, (_, i) => {
     const seed = i * 137.508;
     const r = 0.08 + (i / n) * 0.42;
@@ -43,13 +46,11 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
       return { x: f * w, y: h * (baseY + wave) };
     });
   },
-  // 2: Organic clusters — amoeba-like groupings
+  // 2: Organic clusters
   (n, w, h, t) => {
     const clusters = 5;
     const per = Math.ceil(n / clusters);
-    const centers = [
-      [0.2, 0.25], [0.75, 0.2], [0.5, 0.55], [0.25, 0.78], [0.8, 0.72],
-    ];
+    const centers = [[0.2, 0.25], [0.75, 0.2], [0.5, 0.55], [0.25, 0.78], [0.8, 0.72]];
     return Array.from({ length: n }, (_, i) => {
       const ci = Math.floor(i / per) % clusters, li = i % per;
       const [cx, cy] = centers[ci];
@@ -62,7 +63,7 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
       };
     });
   },
-  // 3: DNA double helix — organic spiral
+  // 3: DNA double helix
   (n, w, h, t) => Array.from({ length: n }, (_, i) => {
     const f = i / n;
     const turns = 4;
@@ -86,7 +87,7 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
       y: h * 0.5 + Math.sin(spiralAngle) * r * 0.65 + Math.cos(spiralAngle * 0.3) * wobble * 0.5,
     };
   }),
-  // 5: Constellation drift — scattered stars with gravity wells
+  // 5: Constellation drift
   (n, w, h, t) => {
     const wells = [[0.3, 0.3], [0.7, 0.5], [0.4, 0.8]];
     return Array.from({ length: n }, (_, i) => {
@@ -106,7 +107,7 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
       };
     });
   },
-  // 6: Wave interference pattern
+  // 6: Wave interference
   (n, w, h, t) => Array.from({ length: n }, (_, i) => {
     const ix = i % Math.ceil(Math.sqrt(n));
     const iy = Math.floor(i / Math.ceil(Math.sqrt(n)));
@@ -126,15 +127,14 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
 
 const SECTIONS = topologies.length;
 
-// Subtle, desaturated palette per section
 const PALETTES = [
-  { node: [220, 8, 50], line: [220, 6, 45], glow: [220, 12, 55] },
-  { node: [200, 10, 48], line: [200, 8, 42], glow: [200, 14, 52] },
-  { node: [265, 8, 48], line: [265, 6, 42], glow: [265, 12, 52] },
-  { node: [180, 10, 46], line: [180, 8, 40], glow: [180, 14, 50] },
-  { node: [240, 8, 47], line: [240, 6, 41], glow: [240, 12, 51] },
-  { node: [210, 10, 49], line: [210, 8, 43], glow: [210, 14, 53] },
-  { node: [195, 8, 48], line: [195, 6, 42], glow: [195, 12, 52] },
+  { node: [220, 8, 50], line: [220, 6, 45], glow: [220, 12, 55], dna: [180, 20, 50] },
+  { node: [200, 10, 48], line: [200, 8, 42], glow: [200, 14, 52], dna: [160, 22, 48] },
+  { node: [265, 8, 48], line: [265, 6, 42], glow: [265, 12, 52], dna: [240, 18, 50] },
+  { node: [180, 10, 46], line: [180, 8, 40], glow: [180, 14, 50], dna: [170, 20, 46] },
+  { node: [240, 8, 47], line: [240, 6, 41], glow: [240, 12, 51], dna: [220, 18, 48] },
+  { node: [210, 10, 49], line: [210, 8, 43], glow: [210, 14, 53], dna: [190, 20, 50] },
+  { node: [195, 8, 48], line: [195, 6, 42], glow: [195, 12, 52], dna: [175, 18, 48] },
 ];
 
 interface FlowParticle {
@@ -176,10 +176,9 @@ const EmpireDNABackground = () => {
   useEffect(() => {
     const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
     window.addEventListener("scroll", fn, { passive: true });
-    // Also listen on possible scroll containers
     const mainEl = document.querySelector("main");
     if (mainEl) mainEl.addEventListener("scroll", () => { scrollRef.current = mainEl.scrollTop; }, { passive: true });
-    fn(); // init
+    fn();
     return () => { window.removeEventListener("scroll", fn); };
   }, []);
 
@@ -209,7 +208,6 @@ const EmpireDNABackground = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Init positions with velocity
     if (!posRef.current.length) {
       posRef.current = Array.from({ length: NODE_COUNT }, () => ({ x: Math.random() * (w || 1000), y: Math.random() * (h || 800) }));
       velRef.current = Array.from({ length: NODE_COUNT }, () => ({ x: 0, y: 0 }));
@@ -243,20 +241,118 @@ const EmpireDNABackground = () => {
       const time = timeRef.current;
       ctx.clearRect(0, 0, w, h);
 
-      // Read scroll live every frame for maximum responsiveness
       scrollRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
-      // Scroll-based section blending — use full page height
       const pageH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - h;
       const scrollN = pageH > 0 ? Math.max(0, Math.min(scrollRef.current / pageH, 1)) : 0;
       const sF = scrollN * (SECTIONS - 1);
       const sIdx = Math.min(Math.floor(sF), SECTIONS - 2);
       const blend = sF - sIdx;
-      const t3 = blend * blend * (3 - 2 * blend); // smoothstep
+      const t3 = blend * blend * (3 - 2 * blend);
 
       const pNode = lerpC(PALETTES[sIdx].node, PALETTES[sIdx + 1].node, t3);
       const pLine = lerpC(PALETTES[sIdx].line, PALETTES[sIdx + 1].line, t3);
       const pGlow = lerpC(PALETTES[sIdx].glow, PALETTES[sIdx + 1].glow, t3);
+      const pDna = lerpC(PALETTES[sIdx].dna, PALETTES[sIdx + 1].dna, t3);
+
+      // ═══ L0: HEX TECH GRID UNDERLAY ═══
+      const hexR = IS_MOBILE ? 28 : 38;
+      const hexH = hexR * Math.sqrt(3);
+      ctx.strokeStyle = hsl(pLine, 0.025);
+      ctx.lineWidth = 0.5;
+      for (let row = -1; row < HEX_ROWS + 1; row++) {
+        for (let col = -1; col < HEX_COLS + 1; col++) {
+          const cx = col * hexR * 1.5 + (row % 2) * hexR * 0.75;
+          const cy = row * hexH * 0.5;
+          const driftX = Math.sin(time * 0.02 + row * 0.3 + col * 0.2) * 2;
+          const driftY = Math.cos(time * 0.015 + col * 0.4) * 1.5;
+          ctx.beginPath();
+          for (let s = 0; s < 6; s++) {
+            const a = (Math.PI / 3) * s + Math.PI / 6;
+            const hx = cx + driftX + Math.cos(a) * hexR * 0.45;
+            const hy = cy + driftY + Math.sin(a) * hexR * 0.45;
+            s === 0 ? ctx.moveTo(hx, hy) : ctx.lineTo(hx, hy);
+          }
+          ctx.closePath();
+          ctx.stroke();
+        }
+      }
+
+      // ═══ L0.5: DNA DOUBLE HELIX STRANDS ═══
+      for (let si = 0; si < DNA_STRANDS; si++) {
+        const helixX = w * (0.15 + si * 0.35); // spread across screen
+        const turns = 3.5;
+        const amp = IS_MOBILE ? 35 : 55;
+        const helixSpeed = 0.12 + si * 0.03;
+        const rungs = IS_MOBILE ? 20 : 35;
+
+        // Draw base-pair rungs first
+        ctx.lineWidth = 0.6;
+        for (let r = 0; r < rungs; r++) {
+          const f = r / rungs;
+          const yPos = h * (0.02 + f * 0.96);
+          const angle = f * Math.PI * 2 * turns + time * helixSpeed + si * Math.PI * 0.7;
+          const x1 = helixX + Math.sin(angle) * amp;
+          const x2 = helixX + Math.sin(angle + Math.PI) * amp;
+          const depth = (Math.cos(angle) + 1) * 0.5; // 0-1 for depth illusion
+
+          // Only draw rungs that face "forward"
+          if (depth > 0.3) {
+            const rungAlpha = depth * 0.06;
+            ctx.strokeStyle = hsl(pDna, rungAlpha);
+            ctx.beginPath();
+            ctx.moveTo(x1, yPos);
+            ctx.lineTo(x2, yPos);
+            ctx.stroke();
+
+            // Base pair dots at each end
+            const dotR = 1.5 * depth;
+            ctx.fillStyle = hsl(pDna, rungAlpha * 2.5);
+            ctx.beginPath();
+            ctx.arc(x1, yPos, dotR, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x2, yPos, dotR, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // Draw the two backbone strands
+        for (let strand = 0; strand < 2; strand++) {
+          const phaseOffset = strand * Math.PI;
+          ctx.beginPath();
+          ctx.strokeStyle = hsl(pDna, 0.08);
+          ctx.lineWidth = IS_MOBILE ? 1 : 1.4;
+
+          for (let step = 0; step <= 80; step++) {
+            const f = step / 80;
+            const yPos = h * (0.02 + f * 0.96);
+            const angle = f * Math.PI * 2 * turns + time * helixSpeed + si * Math.PI * 0.7 + phaseOffset;
+            const xPos = helixX + Math.sin(angle) * amp;
+            const depth = (Math.cos(angle) + 1) * 0.5;
+            // Vary line opacity by depth
+            if (step === 0) {
+              ctx.moveTo(xPos, yPos);
+            } else {
+              ctx.lineTo(xPos, yPos);
+            }
+          }
+          ctx.stroke();
+
+          // Glow pass for backbone
+          ctx.beginPath();
+          ctx.strokeStyle = hsl(pDna, 0.03);
+          ctx.lineWidth = IS_MOBILE ? 3 : 5;
+          for (let step = 0; step <= 80; step++) {
+            const f = step / 80;
+            const yPos = h * (0.02 + f * 0.96);
+            const angle = f * Math.PI * 2 * turns + time * helixSpeed + si * Math.PI * 0.7 + phaseOffset;
+            const xPos = helixX + Math.sin(angle) * amp;
+            step === 0 ? ctx.moveTo(xPos, yPos) : ctx.lineTo(xPos, yPos);
+          }
+          ctx.stroke();
+        }
+      }
 
       // Morph topology
       const shA = sIdx % topologies.length, shB = (sIdx + 1) % topologies.length;
@@ -269,7 +365,6 @@ const EmpireDNABackground = () => {
       const ptr = ptrRef.current;
       const repR = IS_MOBILE ? 80 : 120;
 
-      // Update positions with spring physics + pointer repulsion
       for (let i = 0; i < NODE_COUNT; i++) {
         if (!pos[i]) { pos[i] = { ...targets[i] }; vel[i] = { x: 0, y: 0 }; }
         let tx = targets[i].x, ty = targets[i].y;
@@ -282,8 +377,6 @@ const EmpireDNABackground = () => {
             ty = pos[i].y + (dy / d) * f;
           }
         }
-        // Spring-damped motion for organic feel
-        // Faster spring for visible morphing on scroll
         const springK = 0.06;
         const damping = 0.82;
         vel[i].x = vel[i].x * damping + (tx - pos[i].x) * springK;
@@ -292,7 +385,7 @@ const EmpireDNABackground = () => {
         pos[i].y += vel[i].y;
       }
 
-      // ═══ L1: ORGANIC NEURAL CONNECTIONS (Bezier curves) ═══
+      // ═══ L1: ORGANIC NEURAL CONNECTIONS ═══
       ctx.lineCap = "round";
       for (let i = 0; i < NODE_COUNT; i++) {
         const maxJ = Math.min(i + (IS_MOBILE ? 6 : 10), NODE_COUNT);
@@ -304,7 +397,6 @@ const EmpireDNABackground = () => {
             const breathe = 0.5 + Math.sin(time * 1.5 + i * 0.4 + j * 0.3) * 0.5;
             ctx.strokeStyle = hsl(pLine, alpha * 0.08 * breathe);
             ctx.lineWidth = 0.4 + alpha * 0.6;
-            // Organic bezier — control point drifts with time
             const mx = (pos[i].x + pos[j].x) * 0.5 + Math.sin(time * 0.3 + i * 0.7 + j * 0.2) * d * 0.15;
             const my = (pos[i].y + pos[j].y) * 0.5 + Math.cos(time * 0.25 + j * 0.5) * d * 0.12;
             ctx.beginPath();
@@ -315,20 +407,18 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ L2: NODES — soft dots with glow ═══
+      // ═══ L2: NODES ═══
       for (let i = 0; i < NODE_COUNT; i++) {
         const breathe = 0.4 + Math.sin(time * 1.2 + i * 0.9) * 0.6;
         const baseR = IS_MOBILE ? 1.2 : 1.5;
         let na = 0.12 * breathe;
 
-        // Proximity boost near pointer
         if (ptr.active) {
           const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y;
           const d = Math.sqrt(dx * dx + dy * dy);
           if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.25;
         }
 
-        // Glow for every 4th node
         if (i % 4 === 0) {
           const gr = baseR * 8;
           const gg = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, gr);
@@ -340,14 +430,13 @@ const EmpireDNABackground = () => {
           ctx.fill();
         }
 
-        // Core dot
         ctx.beginPath();
         ctx.arc(pos[i].x, pos[i].y, baseR * (0.8 + breathe * 0.4), 0, Math.PI * 2);
         ctx.fillStyle = hsl(pNode, na + 0.15);
         ctx.fill();
       }
 
-      // ═══ L3: FLOWING DATA PARTICLES along connections ═══
+      // ═══ L3: FLOWING DATA PARTICLES ═══
       const flows = flowsRef.current;
       for (let fi = 0; fi < flows.length; fi++) {
         const fl = flows[fi];
@@ -366,7 +455,6 @@ const EmpireDNABackground = () => {
         const d = Math.sqrt(dx * dx + dy * dy);
         if (d > MAX_DIST * 1.5) { flows[fi] = spawnFlow(); continue; }
 
-        // Bezier path matching connections
         const mx = (a.x + b.x) * 0.5 + Math.sin(time * 0.3 + fl.fromIdx * 0.7 + fl.toIdx * 0.2) * d * 0.15;
         const my = (a.y + b.y) * 0.5 + Math.cos(time * 0.25 + fl.toIdx * 0.5) * d * 0.12;
         const t2 = fl.progress;
@@ -376,7 +464,6 @@ const EmpireDNABackground = () => {
 
         const fadeAlpha = Math.sin(fl.progress * Math.PI) * 0.5;
 
-        // Trailing glow
         const tg = ctx.createRadialGradient(px, py, 0, px, py, 6);
         tg.addColorStop(0, hsl(pGlow, fadeAlpha * 0.6));
         tg.addColorStop(1, hsl(pGlow, 0));
@@ -385,14 +472,13 @@ const EmpireDNABackground = () => {
         ctx.fillStyle = tg;
         ctx.fill();
 
-        // Core particle
         ctx.beginPath();
         ctx.arc(px, py, 1.2, 0, Math.PI * 2);
         ctx.fillStyle = hsl(pGlow, fadeAlpha + 0.1);
         ctx.fill();
       }
 
-      // ═══ L4: PULSE RINGS — occasional ripple effects ═══
+      // ═══ L4: PULSE RINGS ═══
       if (time - lastPulseTime > (IS_MOBILE ? 3 : 1.8)) {
         const ri = Math.floor(Math.random() * NODE_COUNT);
         if (pos[ri]) {
@@ -414,14 +500,43 @@ const EmpireDNABackground = () => {
         ctx.stroke();
       }
 
-      // ═══ L5: AMBIENT SCAN — soft horizontal glow that drifts ═══
+      // ═══ L5: AMBIENT SCAN LINE ═══
       const scanY = h * (0.5 + Math.sin(time * 0.08) * 0.45);
       const scanGrad = ctx.createLinearGradient(0, scanY - 60, 0, scanY + 60);
       scanGrad.addColorStop(0, hsl(pGlow, 0));
-      scanGrad.addColorStop(0.5, hsl(pGlow, 0.02));
+      scanGrad.addColorStop(0.5, hsl(pGlow, 0.025));
       scanGrad.addColorStop(1, hsl(pGlow, 0));
       ctx.fillStyle = scanGrad;
       ctx.fillRect(0, scanY - 60, w, 120);
+
+      // ═══ L6: CIRCULATING DNA PARTICLES along helix backbones ═══
+      const dnaParticleCount = IS_MOBILE ? 6 : 12;
+      for (let si = 0; si < DNA_STRANDS; si++) {
+        const helixX = w * (0.15 + si * 0.35);
+        const turns = 3.5;
+        const amp = IS_MOBILE ? 35 : 55;
+        const helixSpeed = 0.12 + si * 0.03;
+        for (let pi = 0; pi < dnaParticleCount; pi++) {
+          const baseF = (pi / dnaParticleCount + time * 0.03) % 1;
+          const angle = baseF * Math.PI * 2 * turns + time * helixSpeed + si * Math.PI * 0.7;
+          const strand = pi % 2 === 0 ? 0 : Math.PI;
+          const xPos = helixX + Math.sin(angle + strand) * amp;
+          const yPos = h * (0.02 + baseF * 0.96);
+
+          const pg = ctx.createRadialGradient(xPos, yPos, 0, xPos, yPos, 8);
+          pg.addColorStop(0, hsl(pDna, 0.25));
+          pg.addColorStop(1, hsl(pDna, 0));
+          ctx.beginPath();
+          ctx.arc(xPos, yPos, 8, 0, Math.PI * 2);
+          ctx.fillStyle = pg;
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(xPos, yPos, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = hsl(pDna, 0.35);
+          ctx.fill();
+        }
+      }
 
       animRef.current = requestAnimationFrame(animate);
     };

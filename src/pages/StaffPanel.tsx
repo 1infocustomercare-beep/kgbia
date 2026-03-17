@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import EmpireDNABackground from "@/components/EmpireDNABackground";
+
 import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
 import {
@@ -87,7 +87,7 @@ const StaffPanel = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <EmpireDNABackground />
+      
       {/* Back integrated in header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-border">
         <div className="flex items-center gap-3">
