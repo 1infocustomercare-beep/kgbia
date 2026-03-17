@@ -15,6 +15,7 @@ let splashNarrationCompleted = false;
 let currentUtterance: SpeechSynthesisUtterance | null = null;
 let audioUnlocked = false;
 let safetyTimer: ReturnType<typeof setTimeout> | null = null;
+let autoUnlockListenerAdded = false;
 
 // Safety: force-complete after 12s max so Arianna is never permanently blocked
 function armSafetyTimeout() {
@@ -49,23 +50,36 @@ function getBestItalianVoice(): SpeechSynthesisVoice | null {
 
 function doSpeak() {
   if (splashNarrationCompleted) return;
-  if (!window.speechSynthesis) return;
+  if (!window.speechSynthesis) {
+    console.warn("[SplashNarration] speechSynthesis not available");
+    return;
+  }
 
   window.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(HERO_SCRIPT);
   const voice = getBestItalianVoice();
-  if (voice) utterance.voice = voice;
+  if (voice) {
+    utterance.voice = voice;
+    console.log("[SplashNarration] Using voice:", voice.name, voice.lang);
+  } else {
+    console.warn("[SplashNarration] No Italian voice found, using default");
+  }
   utterance.lang = "it-IT";
   utterance.rate = 0.95;
   utterance.pitch = 1.05;
   utterance.volume = 1;
 
+  utterance.onstart = () => {
+    console.log("[SplashNarration] ✅ Speech started playing");
+  };
   utterance.onend = () => {
+    console.log("[SplashNarration] Speech ended");
     splashNarrationCompleted = true;
     currentUtterance = null;
   };
-  utterance.onerror = () => {
+  utterance.onerror = (e) => {
+    console.warn("[SplashNarration] Speech error:", e.error);
     currentUtterance = null;
   };
 
@@ -73,10 +87,37 @@ function doSpeak() {
   armSafetyTimeout();
   try {
     window.speechSynthesis.speak(utterance);
-  } catch {
+    console.log("[SplashNarration] speak() called, speaking:", window.speechSynthesis.speaking);
+  } catch (err) {
+    console.error("[SplashNarration] speak() threw:", err);
     currentUtterance = null;
     splashNarrationCompleted = true;
   }
+}
+
+/** Auto-unlock listener: any user gesture triggers narration */
+function addAutoUnlockListener() {
+  if (autoUnlockListenerAdded || typeof window === "undefined") return;
+  autoUnlockListenerAdded = true;
+
+  const handler = () => {
+    console.log("[SplashNarration] User gesture detected, unlocking audio");
+    removeListeners();
+    unlockAndStartSplashNarration();
+  };
+
+  const removeListeners = () => {
+    ["click", "touchstart", "pointerdown", "keydown", "scroll"].forEach(evt =>
+      document.removeEventListener(evt, handler, { capture: true } as EventListenerOptions)
+    );
+  };
+
+  ["click", "touchstart", "pointerdown", "keydown", "scroll"].forEach(evt =>
+    document.addEventListener(evt, handler, { capture: true, once: false, passive: true })
+  );
+
+  // Auto-remove after 15s if no interaction
+  setTimeout(removeListeners, 15000);
 }
 
 /** Start the hero narration during splash (desktop auto-call). */
@@ -85,6 +126,9 @@ export function startSplashNarration(): void {
   if (typeof window === "undefined" || !window.speechSynthesis) return;
 
   splashNarrationStarted = true;
+
+  // Add auto-unlock listener for first user gesture
+  addAutoUnlockListener();
 
   const voices = window.speechSynthesis.getVoices();
   if (voices.length === 0) {
@@ -96,6 +140,8 @@ export function startSplashNarration(): void {
   } else {
     doSpeak();
   }
+  
+  console.log("[SplashNarration] Started, voices available:", window.speechSynthesis.getVoices().length);
 }
 
 /**
