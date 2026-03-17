@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { useCart } from "@/context/CartContext";
 import { toast } from "@/hooks/use-toast";
 import type { MenuItem } from "@/types/restaurant";
+import { claimVoiceAgent, releaseVoiceAgent } from "@/lib/voice-agent-mutex";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
