@@ -161,6 +161,33 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
       });
     }
 
+    // ── DNA Neural Labels — like "Il DNA Tecnologico" section ──
+    const DNA_LABELS = [
+      { label: "AI CORE", primary: true },
+      { label: "CRM", primary: false },
+      { label: "ORDINI", primary: false },
+      { label: "ANALYTICS", primary: false },
+      { label: "PAGAMENTI", primary: false },
+      { label: "CATALOGO", primary: false },
+      { label: "BOOKING", primary: false },
+      { label: "STAFF", primary: false },
+      { label: "MARKETING", primary: false },
+    ];
+    const dnaNodes: { x: number; y: number; label: string; primary: boolean; orbitA: number; orbitR: number; orbitSp: number; pulse: number }[] = [];
+    for (let i = 0; i < DNA_LABELS.length; i++) {
+      const d = DNA_LABELS[i];
+      const angle = (i / DNA_LABELS.length) * Math.PI * 2;
+      dnaNodes.push({
+        x: cx, y: cy,
+        label: d.label,
+        primary: d.primary,
+        orbitA: angle,
+        orbitR: d.primary ? 0 : 0.12 + (i % 2 === 0 ? 0.05 : 0.1),
+        orbitSp: d.primary ? 0 : (0.08 + (i % 3) * 0.04) * (i % 2 === 0 ? 1 : -1),
+        pulse: Math.random() * Math.PI * 2,
+      });
+    }
+
     const startTime = performance.now();
     let lastFrame = 0;
     const FI = IS_MOBILE ? 22 : 0;
@@ -541,6 +568,83 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         gg.addColorStop(1, hsl(c, 0));
         ctx.beginPath(); ctx.arc(ti.x, ti.y, gR, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
         ctx.beginPath(); ctx.arc(ti.x, ti.y, 1.1 * sc, 0, Math.PI * 2); ctx.fillStyle = hsl(COLORS.white, 0.5 * anyA); ctx.fill();
+      }
+
+      // ═══ L6.8: DNA NEURAL LABELS — "Il DNA Tecnologico" effect ═══
+      const coreNode = dnaNodes[0];
+      coreNode.x = cx; coreNode.y = cy; coreNode.pulse += 0.035;
+
+      // Update satellite positions
+      for (let i = 1; i < dnaNodes.length; i++) {
+        const dn = dnaNodes[i];
+        dn.orbitA += dn.orbitSp * 0.016;
+        dn.pulse += 0.03;
+        const baseR = Math.min(w, h) * dn.orbitR;
+        const wobble = Math.sin(dn.orbitA * 3 + el * 1.5) * 4 * sc;
+        dn.x = cx + Math.cos(dn.orbitA) * (baseR + wobble);
+        dn.y = cy + Math.sin(dn.orbitA) * (baseR + wobble);
+      }
+
+      // Connection lines from AI CORE to satellites — animated dashes
+      for (let i = 1; i < dnaNodes.length; i++) {
+        const dn = dnaNodes[i];
+        const dashOffset = (el * 30 + i * 8) % 16;
+        ctx.beginPath();
+        ctx.setLineDash([4, 4]);
+        ctx.lineDashOffset = -dashOffset;
+        ctx.moveTo(cx, cy); ctx.lineTo(dn.x, dn.y);
+        ctx.strokeStyle = hsl(COLORS.violet, 0.18 * anyA);
+        ctx.lineWidth = 0.7; ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Data packet traveling to node
+        const pktT = (el * 0.5 + i * 0.12) % 1;
+        const pktX = cx + (dn.x - cx) * pktT;
+        const pktY = cy + (dn.y - cy) * pktT;
+        const pktA = Math.sin(pktT * Math.PI) * 0.6 * anyA;
+        ctx.beginPath(); ctx.arc(pktX, pktY, 1.5 * sc, 0, Math.PI * 2);
+        ctx.fillStyle = hsl(COLORS.violet, pktA); ctx.fill();
+        const pktG = ctx.createRadialGradient(pktX, pktY, 0, pktX, pktY, 6 * sc);
+        pktG.addColorStop(0, hsl(COLORS.violet, pktA * 0.5));
+        pktG.addColorStop(1, hsl(COLORS.violet, 0));
+        ctx.beginPath(); ctx.arc(pktX, pktY, 6 * sc, 0, Math.PI * 2); ctx.fillStyle = pktG; ctx.fill();
+      }
+
+      // Render all DNA nodes with labels
+      const labelFS = IS_MOBILE ? 5 : 7;
+      const coreLabelFS = IS_MOBILE ? 6 : 8;
+      for (const dn of dnaNodes) {
+        const pA = 0.7 + Math.sin(dn.pulse) * 0.2;
+        const nodeR = dn.primary ? (IS_MOBILE ? 8 : 12) * sc : (IS_MOBILE ? 4 : 6) * sc;
+
+        // Node glow
+        const glowR = nodeR * 3;
+        const ng = ctx.createRadialGradient(dn.x, dn.y, 0, dn.x, dn.y, glowR);
+        ng.addColorStop(0, hsl(COLORS.violet, (dn.primary ? 0.4 : 0.2) * anyA * pA));
+        ng.addColorStop(0.5, hsl(COLORS.violet, (dn.primary ? 0.12 : 0.05) * anyA));
+        ng.addColorStop(1, hsl(COLORS.violet, 0));
+        ctx.beginPath(); ctx.arc(dn.x, dn.y, glowR, 0, Math.PI * 2); ctx.fillStyle = ng; ctx.fill();
+
+        // Node circle — gradient like landing page
+        const ncg = ctx.createRadialGradient(dn.x, dn.y, 0, dn.x, dn.y, nodeR);
+        if (dn.primary) {
+          ncg.addColorStop(0, hsl(COLORS.violet, 0.9 * anyA));
+          ncg.addColorStop(1, hsl(COLORS.gold, 0.6 * anyA));
+        } else {
+          ncg.addColorStop(0, hsl(COLORS.violet, 0.5 * anyA));
+          ncg.addColorStop(1, hsl(COLORS.gold, 0.2 * anyA));
+        }
+        ctx.beginPath(); ctx.arc(dn.x, dn.y, nodeR * pA, 0, Math.PI * 2); ctx.fillStyle = ncg; ctx.fill();
+
+        // Label text
+        ctx.font = `700 ${dn.primary ? coreLabelFS : labelFS}px system-ui, sans-serif`;
+        ctx.textAlign = "center"; ctx.textBaseline = "top";
+        ctx.letterSpacing = "1.5px";
+        ctx.fillStyle = dn.primary
+          ? hsl(COLORS.violet, 0.85 * anyA)
+          : hsl(COLORS.white, 0.4 * anyA);
+        ctx.fillText(dn.label, dn.x, dn.y + nodeR * pA + 2 * sc);
+        ctx.letterSpacing = "0px";
       }
 
       // ═══ L7: RADAR SWEEP — always present ═══
