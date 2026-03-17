@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo } from "react";
+import BackButton from "@/components/BackButton";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Film, Image, Trash2, Eye, Copy, Check, Search, Grid3X3, List, Play,
