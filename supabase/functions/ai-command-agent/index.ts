@@ -1034,9 +1034,18 @@ serve(async (req) => {
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // ── Execute actions ──
+    // ── Execute actions with sector isolation guard ──
     const results: Array<{ action: string; success: boolean; detail: string }> = [];
     for (const action of parsed.actions) {
+      // CRITICAL: Sector isolation — reject actions not allowed for this sector
+      if (!isActionAllowedForSector(action.action, resource.sector)) {
+        results.push({
+          action: action.action,
+          success: false,
+          detail: `⛔ Azione "${action.action}" non consentita per il settore ${resource.sector}`,
+        });
+        continue;
+      }
       const result = await executeAction(supabase, action, resource.resourceId, resource.tenantType);
       results.push({ action: action.action, ...result });
     }
