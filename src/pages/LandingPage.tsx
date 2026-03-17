@@ -2880,86 +2880,97 @@ const LandingPage = () => {
             { icon: <Target className="w-4 h-4" />, title: "Marketing Cieco", desc: "Pubblicità senza tracking. Zero segmentazione, zero automazione.", stat: "0%", color: "from-amber-600/80 to-orange-500/80" },
           ];
           return (
-            <>
-              {/* Mobile: compact DNA helix list */}
-              <div className="sm:hidden relative">
-                {/* Central DNA spine */}
-                <motion.div
-                  className="absolute left-[22px] top-0 bottom-0 w-px"
-                  style={{ background: "linear-gradient(180deg, transparent, hsla(265,70%,60%,0.25) 8%, hsla(265,70%,60%,0.25) 92%, transparent)" }}
-                  initial={{ scaleY: 0, originY: 0 }}
-                  whileInView={{ scaleY: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.2, ease: "easeOut" }}
+            <div className="relative">
+              {/* Horizontal connecting line behind cards */}
+              <motion.div
+                className="absolute top-1/2 left-0 right-0 h-px hidden lg:block"
+                style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.2) 10%, hsla(38,50%,55%,0.15) 50%, hsla(265,70%,60%,0.2) 90%, transparent)" }}
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+              />
+              {/* Data pulse dots on the line */}
+              {[0, 1, 2].map(d => (
+                <motion.div key={d} className="absolute top-1/2 -translate-y-1/2 w-1 h-1 rounded-full hidden lg:block"
+                  style={{ left: `${25 + d * 25}%`, background: "hsla(265,80%,65%,0.6)", boxShadow: "0 0 8px hsla(265,80%,65%,0.4)" }}
+                  animate={{ opacity: [0, 1, 0], scale: [0.5, 1.5, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: d * 0.7 }}
                 />
-                
-                <div className="flex flex-col gap-3">
-                  {painData.map((pain, i) => (
-                    <motion.div
-                      key={i}
-                      className="relative flex items-start gap-3 pl-0"
-                      initial={{ opacity: 0, x: -30, scale: 0.92 }}
-                      whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                      viewport={{ once: true, margin: "-20px" }}
-                      transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      {/* DNA node on spine */}
-                      <motion.div
-                        className="relative z-10 flex-shrink-0 mt-3"
-                        initial={{ scale: 0 }}
-                        whileInView={{ scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.1 + 0.15, type: "spring", stiffness: 500, damping: 15 }}
-                      >
-                        <div className="w-[10px] h-[10px] rounded-full" style={{ background: `linear-gradient(135deg, hsla(265,80%,65%,0.7), hsla(38,50%,55%,0.5))`, boxShadow: "0 0 10px hsla(265,80%,65%,0.4)" }} />
-                      </motion.div>
-                      
-                      {/* Compact card */}
-                      <div className="flex-1 min-w-0 rounded-xl border px-3 py-2.5" style={{
-                        background: "linear-gradient(145deg, hsla(260,18%,14%,0.92), hsla(260,16%,10%,0.88))",
-                        borderColor: "hsla(265,50%,60%,0.12)",
-                      }}>
-                        <div className="flex items-center gap-2">
-                          <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${pain.color} flex items-center justify-center text-white flex-shrink-0`}>
-                            {pain.icon}
-                          </div>
-                          <h3 className="font-heading text-xs font-semibold text-foreground flex-1">{pain.title}</h3>
-                          <span className="text-[0.55rem] font-heading font-bold tracking-wider px-1.5 py-0.5 rounded-full border border-primary/15" style={{ color: "hsla(35,45%,55%,0.6)" }}>{pain.stat}</span>
-                        </div>
-                        <p className="text-[0.6rem] text-foreground/35 leading-[1.5] mt-1 ml-9">{pain.desc}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
+              ))}
 
-              {/* Desktop: Staggered grid with enhanced animations */}
-              <motion.div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4"
-                variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
                 {painData.map((pain, i) => (
-                  <motion.div key={i} variants={fadeUp}
-                    whileHover={{ scale: 1.03, y: -8 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 25 }}>
-                    <PremiumCard glow scan delay={i} className="p-5 sm:p-6">
-                      <motion.div className="absolute -top-2.5 right-3 px-2.5 py-0.5 rounded-full bg-background border border-primary/15 text-[0.6rem] font-heading font-bold text-accent/60 tracking-wider shadow-lg z-20 overflow-hidden"
-                        animate={{ borderColor: ["hsla(265,70%,60%,0.1)", "hsla(265,70%,60%,0.3)", "hsla(265,70%,60%,0.1)"] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>
-                        <motion.div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)" }}
-                          animate={{ x: ["-150%", "250%"] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
-                        <span className="relative z-10">{pain.stat}</span>
-                      </motion.div>
-                      <PremiumIcon gradient={pain.color} size="sm" delay={i * 0.3}>
-                        <span className="[&>svg]:w-5 [&>svg]:h-5">{pain.icon}</span>
-                      </PremiumIcon>
-                      <div className="mt-4">
-                        <h3 className="font-heading text-sm font-semibold text-foreground mb-2">{pain.title}</h3>
-                        <p className="text-xs text-foreground/35 leading-[1.7]">{pain.desc}</p>
+                  <motion.div
+                    key={i}
+                    className="relative group"
+                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true, margin: "-30px" }}
+                    transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                    whileHover={{ y: -6, scale: 1.04 }}
+                  >
+                    <div className="relative rounded-xl border overflow-hidden h-full" style={{
+                      background: "linear-gradient(160deg, hsla(260,18%,13%,0.95), hsla(260,16%,9%,0.92))",
+                      borderColor: "hsla(265,50%,55%,0.1)",
+                      boxShadow: "0 4px 24px hsla(260,40%,5%,0.5), inset 0 1px 0 hsla(265,60%,65%,0.06)",
+                    }}>
+                      {/* Top accent line */}
+                      <div className="h-[2px] w-full" style={{ background: `linear-gradient(90deg, transparent, ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,55%,0.5)" : pain.color.includes("amber") || pain.color.includes("yellow") ? "hsla(38,70%,55%,0.5)" : "hsla(25,70%,55%,0.5)"}, transparent)` }} />
+
+                      {/* Scan line */}
+                      <motion.div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,70%,60%,0.04) 50%, transparent 60%)" }}
+                        animate={{ y: ["-100%", "200%"] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                      />
+
+                      <div className="p-3 sm:p-4 flex flex-col items-center text-center">
+                        {/* Stat badge */}
+                        <motion.div className="mb-2.5 px-2 py-0.5 rounded-full text-[0.5rem] font-heading font-bold tracking-widest border"
+                          style={{
+                            color: "hsla(0,60%,60%,0.7)",
+                            borderColor: "hsla(0,50%,50%,0.15)",
+                            background: "hsla(0,50%,50%,0.06)",
+                          }}
+                          animate={{ borderColor: ["hsla(0,50%,50%,0.1)", "hsla(0,50%,50%,0.25)", "hsla(0,50%,50%,0.1)"] }}
+                          transition={{ duration: 3, repeat: Infinity, delay: i * 0.4 }}
+                        >
+                          {pain.stat}
+                        </motion.div>
+
+                        {/* Icon */}
+                        <motion.div
+                          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-3 relative`}
+                          style={{ boxShadow: `0 0 20px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.2)" : "hsla(38,70%,50%,0.2)"}` }}
+                        >
+                          {pain.icon}
+                          {/* Corner HUD marks */}
+                          <div className="absolute -top-px -left-px w-1.5 h-1.5 border-t border-l border-white/20 rounded-tl-sm" />
+                          <div className="absolute -bottom-px -right-px w-1.5 h-1.5 border-b border-r border-white/20 rounded-br-sm" />
+                        </motion.div>
+
+                        {/* Title */}
+                        <h3 className="font-heading text-[0.7rem] sm:text-xs font-semibold text-foreground mb-1.5 leading-tight">{pain.title}</h3>
+
+                        {/* Description */}
+                        <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/30 leading-[1.6]">{pain.desc}</p>
                       </div>
-                    </PremiumCard>
+
+                      {/* Bottom circuit trace */}
+                      <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, hsla(265,50%,55%,0.08), transparent)" }} />
+                    </div>
+
+                    {/* Connector dot to horizontal line (desktop) */}
+                    <motion.div className="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-[5px] h-[5px] rounded-full hidden lg:block"
+                      style={{ background: "hsla(265,70%,60%,0.4)", boxShadow: "0 0 6px hsla(265,70%,60%,0.3)" }}
+                      animate={{ boxShadow: ["0 0 4px hsla(265,70%,60%,0.2)", "0 0 10px hsla(265,70%,60%,0.5)", "0 0 4px hsla(265,70%,60%,0.2)"] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                    />
                   </motion.div>
                 ))}
-              </motion.div>
-            </>
+              </div>
+            </div>
           );
         })()}
 
