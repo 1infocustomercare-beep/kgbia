@@ -5,7 +5,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { useIndustry } from "@/hooks/useIndustry";
 import { motion, AnimatePresence } from "framer-motion";
-import EmpireDNABackground from "@/components/EmpireDNABackground";
+
 import PageGuide from "@/components/ui/page-guide";
 
 export default function AppLayout() {
@@ -33,9 +33,6 @@ export default function AppLayout() {
   return (
     <SidebarProvider>
       <div className="min-h-[100dvh] flex w-full bg-background relative overflow-hidden">
-        {/* Empire DNA Neural Background */}
-        <EmpireDNABackground />
-
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0 relative z-10">
           <TopBar />

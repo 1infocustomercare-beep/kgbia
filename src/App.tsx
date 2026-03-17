@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import EmpireDNABackground from "@/components/EmpireDNABackground";
 import type { ErrorInfo, ReactNode } from 'react';
 import UnifiedIntro from "@/components/UnifiedIntro";
 import { Toaster } from "@/components/ui/toaster";
@@ -458,7 +459,8 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen">
+      <div className="min-h-screen relative">
+        <EmpireDNABackground />
         <TooltipProvider>
           <AuthProvider>
             <CartProvider>

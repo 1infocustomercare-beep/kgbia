@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import EmpireDNABackground from "@/components/EmpireDNABackground";
+
 import BackButton from "@/components/BackButton";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -274,7 +274,7 @@ const PartnerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
-      <EmpireDNABackground />
+      
       {/* Back integrated in header */}
       {/* Header — Vibrant FLAVR style */}
       <div className="relative flex items-center justify-between px-4 pt-3 pb-2 border-b border-empire-violet-deep/20 safe-top overflow-hidden" style={{ background: 'var(--gradient-dna-subtle)' }}>
