@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import EmpireDNABackground from "@/components/EmpireDNABackground";
+
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
