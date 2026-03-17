@@ -45,7 +45,7 @@ const TEAM = [
     name: "Luca Marchetti",
     role: "AI Research Lead",
     photo: teamLuca,
-    bio: "PhD in Machine Learning. Progetta i 91 agenti IA specializzati che automatizzano ogni aspetto del business.",
+    bio: "PhD in Machine Learning. Progetta gli oltre 95 agenti IA specializzati che automatizzano ogni aspetto del business.",
     accent: "hsla(220,60%,55%,0.3)",
   },
   {
@@ -124,10 +124,10 @@ const MILESTONES = [
   },
   {
     year: "2025",
-    label: "Coscienza — 91 Agenti IA",
-    desc: "L'intelligenza collettiva emerge: 91 agenti specializzati che apprendono, collaborano e si evolvono. Ogni business riceve un team di menti artificiali dedicate 24/7.",
+    label: "Coscienza — 95+ Agenti IA",
+    desc: "L'intelligenza collettiva emerge: oltre 95 agenti specializzati che apprendono, collaborano e si evolvono. Ogni business riceve un team di menti artificiali dedicate 24/7.",
     icon: Brain,
-    metric: "91 AI agents",
+    metric: "95+ AI agents",
     color: "hsla(265,70%,60%,0.2)",
     glowColor: "hsla(265,70%,60%,0.12)",
   },
@@ -366,7 +366,7 @@ export default function EmpireTeamStory() {
           viewport={vpOnce}
         >
           {[
-            { icon: Brain, label: "Innovazione", value: "91 Agenti IA", color: "hsla(265,60%,55%,0.2)" },
+            { icon: Brain, label: "Innovazione", value: "95+ Agenti IA", color: "hsla(265,60%,55%,0.2)" },
             { icon: Heart, label: "Passione", value: "25+ Settori", color: "hsla(338,60%,55%,0.2)" },
             { icon: Target, label: "Risultati", value: "500+ Clienti", color: "hsla(38,50%,55%,0.2)" },
           ].map((v, i) => (

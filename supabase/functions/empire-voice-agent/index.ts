@@ -84,8 +84,8 @@ FACCIAMO TUTTO NOI SU MISURA: il team Empire costruisce, configura e personalizz
 ## 25 SETTORI SUPPORTATI
 Food & Ristorazione, NCC & Trasporto, Beauty & Wellness, Healthcare, Retail & Negozi, Fitness & Sport, Hospitality, Stabilimento Balneare, Idraulico, Elettricista, Agriturismo, Impresa Pulizie, Studio Legale, Commercialista, Autofficina, Fotografo/Videomaker, Edilizia/Muratori, Giardiniere, Veterinario, Tatuatore/Piercing, Baby-sitter/Asilo, Formazione/Corsi, Organizzazione Eventi, Trasporti/Logistica, Settore Personalizzato
 
-## 91 AGENTI IA
-7 universali + 84 settoriali, 6 categorie: Concierge (15), Analytics (12), Content (10), Sales (8), Operations (24), Compliance (22)
+## 95+ AGENTI IA
+27 universali + 68 settoriali, 6 categorie: Concierge (16), Analytics (12), Content (10), Sales (11), Operations (40), Compliance (6)
 
 ## INTEGRAZIONI
 Stripe Connect (2% vs 30%), ElevenLabs (voce IA), Lovable AI (Gemini/GPT-5), SDI, WhatsApp/Push/Email, Kitchen Display, QR Code, GPS Fleet

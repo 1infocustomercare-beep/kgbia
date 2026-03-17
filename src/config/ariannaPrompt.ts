@@ -125,14 +125,14 @@ FACCIAMO TUTTO NOI SU MISURA: il team Empire costruisce, configura e personalizz
 Food & Ristorazione, NCC & Trasporto, Beauty & Wellness, Healthcare, Retail & Negozi, Fitness & Sport, Hospitality, Stabilimento Balneare, Idraulico, Elettricista, Agriturismo, Impresa Pulizie, Studio Legale, Commercialista, Autofficina, Fotografo/Videomaker, Edilizia/Muratori, Giardiniere, Veterinario, Tatuatore/Piercing, Baby-sitter/Asilo, Formazione/Corsi, Organizzazione Eventi, Trasporti/Logistica, Settore Personalizzato
 
 ## ═══════════════════════════════════════════════
-## 91 AGENTI IA
+## 95+ AGENTI IA
 ## ═══════════════════════════════════════════════
-7 universali + 84 settoriali, organizzati in 6 categorie:
-- Concierge (15 agenti): assistenza clienti 24/7
+27 universali + 68 settoriali, organizzati in 6 categorie:
+- Concierge (16 agenti): assistenza clienti 24/7
 - Analytics (12 agenti): analisi predittive e reportistica
 - Content (10 agenti): creazione contenuti e social media
-- Sales (8 agenti): automazione vendite e lead generation
-- Operations (24 agenti): gestione operativa e logistica
+- Sales (11 agenti): automazione vendite e lead generation
+- Operations (40 agenti): gestione operativa e logistica
 - Compliance (22 agenti): normative, HACCP, GDPR, scadenze
 
 ## INTEGRAZIONI ATTIVE
