@@ -1,4 +1,5 @@
 import { useState, useEffect, forwardRef } from "react";
+import BackButton from "@/components/BackButton";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, Crown, ChefHat, ArrowLeft, Users, Mail, KeyRound, Phone, MapPin, Briefcase } from "lucide-react";
@@ -265,6 +266,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   if (mode === "choose") {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
+        <BackButton to="/" theme="glass" />
         <Blob className="w-[500px] h-[500px] -top-20 -left-40 animate-blob-float" color="bg-violet-600" />
         <Blob className="w-[400px] h-[400px] bottom-10 -right-20 animate-blob-float-reverse" color="bg-orange-500" />
         <Blob className="w-[300px] h-[300px] top-1/2 left-1/2 animate-blob-float-slow" color="bg-pink-500" />
