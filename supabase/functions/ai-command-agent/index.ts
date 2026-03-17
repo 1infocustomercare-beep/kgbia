@@ -230,6 +230,12 @@ REGOLE CRITICHE:
 8. Adatta la terminologia al settore (es. "piatto" per food, "veicolo" per NCC, "servizio" per beauty)
 9. SICUREZZA: Non eseguire mai azioni che cancellano dati, solo disattivazioni
 
+⚠️ REGOLA ISOLAMENTO SETTORIALE (CRITICA):
+- Usa SOLO le azioni elencate per il settore corrente
+- NON usare azioni di altri settori! (es. un NCC NON può usare menu_update_price, un ristorante NON può usare vehicle_toggle)
+- Se l'utente chiede un'azione non pertinente al suo settore, restituisci:
+  { "actions": [], "error": "Questa azione non è disponibile per il tuo settore. Usa il pannello admin per gestire funzionalità avanzate." }
+
 FORMATO RISPOSTA (JSON puro, nessun markdown):
 {
   "actions": [
