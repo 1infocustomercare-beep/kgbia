@@ -4069,101 +4069,104 @@ const LandingPage = () => {
           };
 
           return (
-            <div className="relative overflow-hidden -mx-5 sm:-mx-6 px-5 sm:px-6">
-              {/* Fade edges */}
-              <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(var(--background)), transparent)" }} />
-              <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(var(--background)), transparent)" }} />
-
-              {/* Controls */}
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <button
-                  onClick={() => scrollCarousel('left')}
-                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
-                  aria-label="Indietro"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setCarouselPaused(p => !p)}
-                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
-                  aria-label={carouselPaused ? "Play" : "Pausa"}
-                >
-                  {carouselPaused ? <Play className="w-3.5 h-3.5 ml-0.5" /> : <Pause className="w-3.5 h-3.5" />}
-                </button>
-                <button
-                  onClick={() => scrollCarousel('right')}
-                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
-                  aria-label="Avanti"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-              
-              <div
-                ref={carouselRef}
-                className="flex gap-5 sm:gap-6"
-                style={{
-                  animation: `carousel-scroll 22s linear infinite`,
-                  animationPlayState: carouselPaused ? 'paused' : 'running',
-                  width: "max-content",
-                }}>
-                {[...mockups, ...mockups].map((mock, i) => {
-                  const tagColors: Record<string, string> = {
-                    "FRONT-END": "hsl(var(--primary))",
-                    "BACK-OFFICE": "hsl(var(--accent))",
-                    "OPERATIONS": "hsl(160, 60%, 45%)",
-                  };
-                  const tagColor = tagColors[mock.tag] || "hsl(var(--primary))";
-                  return (
-                  <div key={i} className="group flex flex-col items-center flex-shrink-0 w-[195px]">
-                    {/* iPhone frame */}
-                    <div className="relative mb-4">
-                      {/* Ambient glow */}
-                      <div className="absolute -inset-3 rounded-[46px] opacity-10 blur-xl pointer-events-none group-hover:opacity-20 transition-opacity duration-700" style={{ background: tagColor }} />
-                      
-                      {/* Phone body */}
-                      <div className="relative w-[185px] h-[380px] rounded-[34px] border-[2.5px] border-foreground/12 shadow-[0_12px_40px_hsla(0,0%,0%,0.5)] overflow-hidden transition-all duration-500 group-hover:shadow-[0_16px_50px_hsla(265,70%,60%,0.12)]" style={{ background: "hsl(var(--card))" }}>
-                        {/* Dynamic Island */}
-                        <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[60px] h-[18px] bg-foreground/80 rounded-full z-20" />
-                        
-                        {/* Screen */}
-                        <div className="absolute inset-[2px] rounded-[31px] overflow-hidden" style={{ background: "hsl(var(--background))" }}>
-                          <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top group-hover:scale-[1.04] transition-transform duration-700" loading="lazy" />
-                          
-                          {/* Content overlay — clean gradient */}
-                          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.85) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
-                          
-                          {/* Tag + Sector — top bar */}
-                          <div className="absolute top-[30px] left-3 right-3 z-20 flex items-center gap-1.5">
-                            <span className="px-2 py-[2px] rounded-md text-[0.42rem] font-bold tracking-[1.5px] uppercase" style={{ background: `${tagColor}22`, color: tagColor, border: `1px solid ${tagColor}30` }}>
-                              {mock.tag}
-                            </span>
-                            <span className="text-[0.4rem] text-white/50 tracking-wider">{mock.sector}</span>
-                          </div>
-
-                          {/* Bottom content card */}
-                          <div className="absolute bottom-5 left-2.5 right-2.5 z-10">
-                            <h3 className="font-heading text-[0.8rem] font-bold text-white mb-1 drop-shadow-lg">{mock.title}</h3>
-                            <p className="text-[0.5rem] text-white/60 leading-[1.6] mb-2.5 line-clamp-2">{mock.desc}</p>
-                            {/* Feature pills inside phone */}
-                            <div className="flex flex-wrap gap-[3px]">
-                              {mock.features.slice(0, 4).map((f, j) => (
-                                <span key={j} className="px-1.5 py-[2px] rounded-md text-[0.4rem] font-medium text-white/70 backdrop-blur-sm" style={{ background: "hsla(0,0%,100%,0.08)", border: "1px solid hsla(0,0%,100%,0.1)" }}>
-                                  {f}
-                                </span>
-                              ))}
+            <AnimatePresence mode="wait">
+              {expandMockups ? (
+                <motion.div key="mockups-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                  className="grid grid-cols-2 gap-4 px-1">
+                  {mockups.map((mock, i) => {
+                    const tagColors: Record<string, string> = {
+                      "FRONT-END": "hsl(var(--primary))",
+                      "BACK-OFFICE": "hsl(var(--accent))",
+                      "OPERATIONS": "hsl(160, 60%, 45%)",
+                    };
+                    const tagColor = tagColors[mock.tag] || "hsl(var(--primary))";
+                    return (
+                      <div key={i} className="group flex flex-col items-center">
+                        <div className="relative mb-3">
+                          <div className="relative w-full max-w-[160px] aspect-[9/18] rounded-[28px] border-[2px] border-foreground/12 shadow-lg overflow-hidden" style={{ background: "hsl(var(--card))" }}>
+                            <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[50px] h-[14px] bg-foreground/80 rounded-full z-20" />
+                            <div className="absolute inset-[2px] rounded-[25px] overflow-hidden" style={{ background: "hsl(var(--background))" }}>
+                              <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top" loading="lazy" />
+                              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.85) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
+                              <div className="absolute bottom-4 left-2 right-2 z-10">
+                                <span className="px-1.5 py-[2px] rounded-md text-[0.38rem] font-bold tracking-[1px] uppercase" style={{ background: `${tagColor}22`, color: tagColor, border: `1px solid ${tagColor}30` }}>{mock.tag}</span>
+                                <h3 className="font-heading text-[0.7rem] font-bold text-white mt-1">{mock.title}</h3>
+                              </div>
                             </div>
                           </div>
                         </div>
-
-                        {/* Home indicator */}
-                        <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[70px] h-[3px] bg-foreground/15 rounded-full z-20" />
                       </div>
-                    </div>
+                    );
+                  })}
+                </motion.div>
+              ) : (
+                <motion.div key="mockups-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  className="relative overflow-hidden -mx-5 sm:-mx-6 px-5 sm:px-6">
+                  <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(var(--background)), transparent)" }} />
+                  <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(var(--background)), transparent)" }} />
+
+                  <div className="flex items-center justify-center gap-3 mb-5">
+                    <button onClick={() => scrollCarousel('left')} className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300" aria-label="Indietro">
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => setCarouselPaused(p => !p)} className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300" aria-label={carouselPaused ? "Play" : "Pausa"}>
+                      {carouselPaused ? <Play className="w-3.5 h-3.5 ml-0.5" /> : <Pause className="w-3.5 h-3.5" />}
+                    </button>
+                    <button onClick={() => scrollCarousel('right')} className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300" aria-label="Avanti">
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
                   </div>
-                  );
-                })}
-              </div>
+                  
+                  <div ref={carouselRef} className="flex gap-5 sm:gap-6" style={{
+                    animation: `carousel-scroll 22s linear infinite`,
+                    animationPlayState: carouselPaused ? 'paused' : 'running',
+                    width: "max-content",
+                  }}>
+                    {[...mockups, ...mockups].map((mock, i) => {
+                      const tagColors: Record<string, string> = {
+                        "FRONT-END": "hsl(var(--primary))",
+                        "BACK-OFFICE": "hsl(var(--accent))",
+                        "OPERATIONS": "hsl(160, 60%, 45%)",
+                      };
+                      const tagColor = tagColors[mock.tag] || "hsl(var(--primary))";
+                      return (
+                        <div key={i} className="group flex flex-col items-center flex-shrink-0 w-[195px]">
+                          <div className="relative mb-4">
+                            <div className="absolute -inset-3 rounded-[46px] opacity-10 blur-xl pointer-events-none group-hover:opacity-20 transition-opacity duration-700" style={{ background: tagColor }} />
+                            <div className="relative w-[185px] h-[380px] rounded-[34px] border-[2.5px] border-foreground/12 shadow-[0_12px_40px_hsla(0,0%,0%,0.5)] overflow-hidden transition-all duration-500 group-hover:shadow-[0_16px_50px_hsla(265,70%,60%,0.12)]" style={{ background: "hsl(var(--card))" }}>
+                              <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[60px] h-[18px] bg-foreground/80 rounded-full z-20" />
+                              <div className="absolute inset-[2px] rounded-[31px] overflow-hidden" style={{ background: "hsl(var(--background))" }}>
+                                <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top group-hover:scale-[1.04] transition-transform duration-700" loading="lazy" />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.85) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
+                                <div className="absolute top-[30px] left-3 right-3 z-20 flex items-center gap-1.5">
+                                  <span className="px-2 py-[2px] rounded-md text-[0.42rem] font-bold tracking-[1.5px] uppercase" style={{ background: `${tagColor}22`, color: tagColor, border: `1px solid ${tagColor}30` }}>{mock.tag}</span>
+                                  <span className="text-[0.4rem] text-white/50 tracking-wider">{mock.sector}</span>
+                                </div>
+                                <div className="absolute bottom-5 left-2.5 right-2.5 z-10">
+                                  <h3 className="font-heading text-[0.8rem] font-bold text-white mb-1 drop-shadow-lg">{mock.title}</h3>
+                                  <p className="text-[0.5rem] text-white/60 leading-[1.6] mb-2.5 line-clamp-2">{mock.desc}</p>
+                                  <div className="flex flex-wrap gap-[3px]">
+                                    {mock.features.slice(0, 4).map((f, j) => (
+                                      <span key={j} className="px-1.5 py-[2px] rounded-md text-[0.4rem] font-medium text-white/70 backdrop-blur-sm" style={{ background: "hsla(0,0%,100%,0.08)", border: "1px solid hsla(0,0%,100%,0.1)" }}>{f}</span>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[70px] h-[3px] bg-foreground/15 rounded-full z-20" />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <div className="flex justify-center mt-4">
+              <button onClick={() => { setExpandMockups(p => !p); if (!expandMockups) setCarouselPaused(true); }}
+                className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+                <Layers className="w-3 h-3" /> {expandMockups ? "Chiudi" : "Vedi Tutti"}
+              </button>
             </div>
           );
         })()}
