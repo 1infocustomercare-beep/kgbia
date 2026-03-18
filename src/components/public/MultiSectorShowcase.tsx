@@ -578,24 +578,24 @@ export default function MultiSectorShowcase() {
   return (
     <>
       {/* Section header */}
-      <div className="text-center mb-10">
+      <div className="text-center mb-6 sm:mb-10">
         <SectionLabel text="Il Tuo Settore, Potenziato" icon={<Layers className="w-3 h-3 text-primary" />} />
-        <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+        <motion.h2 className="text-[clamp(1.3rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-2 sm:mb-3"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           Una Piattaforma, <span className="text-shimmer">Ogni Business</span>
         </motion.h2>
-        <p className="text-foreground/35 text-sm max-w-xl mx-auto">
+        <p className="text-foreground/35 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
           Non importa il settore — Empire AI si adatta al tuo business con moduli verticali, automazioni specifiche e un'AI che parla la lingua del tuo mercato.
         </p>
       </div>
 
       {/* Category filter tabs */}
-      <div className="flex gap-1 justify-center flex-wrap mb-3 px-3">
+      <div className="flex gap-0.5 sm:gap-1 justify-center flex-wrap mb-2 sm:mb-3 px-2">
         {SECTOR_CATEGORIES.map((cat) => (
           <button
             key={cat.id}
             onClick={() => { setActiveCat(cat.id); setIsAutoPlaying(false); }}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-[0.6rem] font-heading font-semibold tracking-wide uppercase transition-all duration-300 border ${
+            className={`flex items-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-[0.5rem] sm:text-[0.6rem] font-heading font-semibold tracking-wide uppercase transition-all duration-300 border ${
               activeCat === cat.id
                 ? "text-foreground border-primary/30 bg-primary/8"
                 : "text-foreground/30 border-transparent hover:text-foreground/50 hover:bg-muted/5"
@@ -608,8 +608,8 @@ export default function MultiSectorShowcase() {
       </div>
 
       {/* Sector grid — clean uniform grid */}
-      <div className="relative mb-6 px-3">
-        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-[3px]">
+      <div className="relative mb-4 sm:mb-6 px-2 sm:px-3">
+        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-[2px] sm:gap-[3px]">
           {filteredSectors.map((s) => {
             const globalIdx = SHOWCASE_SECTORS.findIndex(ss => ss.id === s.id);
             const isActive = activeIdx === globalIdx;
@@ -617,7 +617,7 @@ export default function MultiSectorShowcase() {
               <motion.button
                 key={s.id}
                 onClick={() => { setActiveIdx(globalIdx); setIsAutoPlaying(false); setShowAllScreens(false); }}
-                className={`relative flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-md text-[0.45rem] font-heading font-medium tracking-wide uppercase transition-all duration-200 border ${
+                className={`relative flex flex-col items-center justify-center gap-0.5 py-1 sm:py-1.5 px-0.5 sm:px-1 rounded-md text-[0.4rem] sm:text-[0.45rem] font-heading font-medium tracking-wide uppercase transition-all duration-200 border ${
                   isActive
                     ? "text-foreground border-primary/30 z-10"
                     : "text-foreground/25 border-border/5 hover:text-foreground/45 hover:border-border/15"
@@ -644,7 +644,7 @@ export default function MultiSectorShowcase() {
       </div>
 
       {/* Carousel controls: Prev / Play-Pause / Next + Show All Previews */}
-      <div className="flex items-center justify-center gap-2 mb-8">
+      <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-5 sm:mb-8 flex-wrap">
         <button
           onClick={() => { setActiveIdx(p => (p - 1 + SHOWCASE_SECTORS.length) % SHOWCASE_SECTORS.length); setIsAutoPlaying(false); setShowAllScreens(false); }}
           className="w-8 h-8 rounded-full border border-border/20 flex items-center justify-center text-foreground/40 hover:text-foreground/70 hover:border-border/40 transition-all bg-background/5"
@@ -767,36 +767,36 @@ export default function MultiSectorShowcase() {
 
           {/* Left — Text + features */}
           <div className="text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5 text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase"
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full mb-3 sm:mb-5 text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase"
               style={{ background: sector.color.replace("1)", "0.08)"), color: sector.color, border: `1px solid ${sector.color.replace("1)", "0.15)")}` }}>
               {sector.icon} {sector.label}
             </div>
-            <h3 className="text-[clamp(1.5rem,3.5vw,2.4rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
+            <h3 className="text-[clamp(1.2rem,3.5vw,2.4rem)] font-heading font-bold text-foreground leading-[1.08] mb-3 sm:mb-5">
               {sector.headline}<br /><span className="text-shimmer">{sector.shimmer}</span>
             </h3>
-            <p className="text-foreground/40 leading-[1.7] max-w-lg mx-auto lg:mx-0 mb-7 text-sm">{sector.desc}</p>
+            <p className="text-foreground/40 leading-[1.6] max-w-lg mx-auto lg:mx-0 mb-5 sm:mb-7 text-xs sm:text-sm">{sector.desc}</p>
 
-            <div className="space-y-3 mb-8 text-left max-w-md mx-auto lg:mx-0">
+            <div className="space-y-2 sm:space-y-3 mb-5 sm:mb-8 text-left max-w-md mx-auto lg:mx-0">
               {sector.features.map((f, i) => (
-                <motion.div key={i} className="flex gap-3 items-start group"
+                <motion.div key={i} className="flex gap-2 sm:gap-3 items-start group"
                   initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}>
-                  <div className="w-7 h-7 min-w-[28px] rounded-lg flex items-center justify-center mt-0.5 transition-colors"
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 min-w-[24px] sm:min-w-[28px] rounded-lg flex items-center justify-center mt-0.5 transition-colors"
                     style={{ background: sector.color.replace("1)", "0.1)") }}>
                     <span style={{ color: sector.color }}>{f.icon}</span>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-foreground">{f.title}</p>
-                    <p className="text-[0.6rem] text-foreground/35 mt-0.5">{f.desc}</p>
+                    <p className="text-[0.65rem] sm:text-xs font-semibold text-foreground">{f.title}</p>
+                    <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/35 mt-0.5">{f.desc}</p>
                   </div>
                 </motion.div>
               ))}
             </div>
 
             {/* Action buttons */}
-            <div className="flex items-center gap-3 justify-center lg:justify-start">
+            <div className="flex items-center gap-2 sm:gap-3 justify-center lg:justify-start flex-wrap">
               <motion.button
                 onClick={() => navigate(`/demo/${sector.id}`)}
-                className="group px-6 py-3 rounded-full font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2 text-white"
+                className="group px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm font-heading tracking-wider uppercase inline-flex items-center gap-1.5 sm:gap-2 text-white"
                 style={{
                   background: `linear-gradient(135deg, ${sector.color}, ${sector.color.replace("1)", "0.7)")})`,
                   boxShadow: `0 8px 30px ${sector.color.replace("1)", "0.2)")}`,
@@ -810,7 +810,7 @@ export default function MultiSectorShowcase() {
               {industryCfg && demoData && (
                 <motion.button
                   onClick={() => { setShowAllScreens(p => !p); setIsAutoPlaying(false); }}
-                  className="px-4 py-3 rounded-full text-[0.6rem] font-heading font-semibold tracking-wider uppercase border inline-flex items-center gap-2 transition-all duration-300 hover:scale-105"
+                  className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-full text-[0.5rem] sm:text-[0.6rem] font-heading font-semibold tracking-wider uppercase border inline-flex items-center gap-1.5 sm:gap-2 transition-all duration-300 hover:scale-105"
                   style={{
                     borderColor: `${sector.color.replace("1)", "0.2)")}`,
                     color: sector.color,
@@ -978,7 +978,7 @@ export default function MultiSectorShowcase() {
       </AnimatePresence>
 
       {/* Bottom persuasion */}
-      <motion.div className="text-center mt-12 pt-8 border-t border-border/10"
+      <motion.div className="text-center mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border/10"
         initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
         <p className="text-foreground/25 text-xs font-heading tracking-wider uppercase">
           <span style={{ color: "hsl(38,45%,52%)" }}>{SHOWCASE_SECTORS.length} settori</span> · 95+ Agenti IA · 1 piattaforma · <span className="text-foreground/40">il tuo brand</span>
