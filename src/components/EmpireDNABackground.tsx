@@ -471,8 +471,6 @@ const EmpireDNABackgroundCanvas = () => {
     return () => { cancelAnimationFrame(animRef.current); window.removeEventListener("resize", resize); };
   }, [ready]);
 
-  // Skip entirely on mobile — too heavy for phone GPUs
-  if (IS_MOBILE) return null;
 
   return (
     <canvas
