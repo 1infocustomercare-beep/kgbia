@@ -1012,6 +1012,37 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           </LayoutGroup>
         </div>
 
+        {/* ══════ EXPAND / COLLAPSE BUTTON ══════ */}
+        {activeSector === "all" && totalFiltered > INITIAL_VISIBLE && (
+          <motion.div className="flex justify-center my-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <motion.button
+              onClick={() => setShowAll(!showAll)}
+              className="group relative flex items-center gap-2.5 px-6 py-3 rounded-full border border-primary/30 bg-card/90 backdrop-blur-sm hover:border-primary/50 transition-all overflow-hidden"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {/* Scanning beam */}
+              <motion.div className="absolute inset-0 pointer-events-none"
+                style={{ background: "linear-gradient(90deg, transparent 30%, hsla(215,60%,60%,0.08) 50%, transparent 70%)" }}
+                animate={{ x: ["-200%", "300%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <CircuitBoard className="w-4 h-4 text-primary/80" />
+              <span className="text-xs font-bold text-foreground/90 tracking-wider uppercase relative z-10">
+                {showAll ? "Mostra Principali" : `Mostra Tutti i ${totalFiltered} Agenti`}
+              </span>
+              {showAll
+                ? <ChevronUp className="w-4 h-4 text-primary/70" />
+                : <ChevronDown className="w-4 h-4 text-primary/70 group-hover:translate-y-0.5 transition-transform" />
+              }
+              <motion.div className="w-2 h-2 rounded-full bg-primary/60"
+                animate={{ scale: [1, 1.4, 1], opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            </motion.button>
+          </motion.div>
+        )}
+
         {/* ══════ NEURAL BUS ══════ */}
         <motion.div className="relative h-12 sm:h-16 my-4" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-px bg-primary/20" />
