@@ -3312,11 +3312,18 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           SETTORI
          ═══════════════════════════════════════════ */}
-      <Section id="industries" className="relative overflow-hidden" style={{ background: "linear-gradient(180deg, hsla(260,16%,6%,1) 0%, hsla(265,18%,10%,1) 35%, hsla(260,14%,8%,1) 65%, hsla(260,16%,6%,1) 100%)" }}>
+      <Section id="industries" className="relative overflow-hidden" style={{
+        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,16%,9%,1) 20%, hsla(155,10%,7%,1) 45%, hsla(265,14%,8%,1) 70%, hsla(230,16%,5%,1) 100%)",
+      }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-0 left-0 w-[350px] h-full opacity-[0.06]" style={{ background: "radial-gradient(ellipse at left, hsla(265,70%,55%,0.5), transparent 70%)" }} />
-          <div className="absolute top-0 right-0 w-[350px] h-full opacity-[0.06]" style={{ background: "radial-gradient(ellipse at right, hsla(265,70%,55%,0.5), transparent 70%)" }} />
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(ellipse, hsla(38,50%,50%,0.35), transparent 70%)", filter: "blur(120px)" }} />
+          <div className="absolute top-[10%] left-[15%] w-[450px] h-[450px] rounded-full opacity-[0.07]"
+               style={{ background: "radial-gradient(circle, hsla(265,65%,55%,0.5), transparent 70%)", filter: "blur(120px)" }} />
+          <div className="absolute top-[40%] right-[10%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
+               style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.4), transparent 70%)", filter: "blur(110px)" }} />
+          <div className="absolute bottom-[15%] left-[40%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
+               style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[1px]"
+               style={{ background: "linear-gradient(90deg, transparent, hsla(265,50%,60%,0.15), hsla(155,45%,50%,0.1), transparent)" }} />
         </div>
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
