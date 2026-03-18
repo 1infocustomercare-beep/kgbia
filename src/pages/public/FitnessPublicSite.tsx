@@ -414,6 +414,7 @@ export default function FitnessPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="fitness" />
       <SectorValueProposition sectorKey="fitness" accentColor={VOLT} darkMode={true} sectorLabel="Palestra" />
       <AutomationShowcase accentColor={VOLT} accentBg="bg-lime-400" sectorName="palestre e fitness" darkMode={true} />
 

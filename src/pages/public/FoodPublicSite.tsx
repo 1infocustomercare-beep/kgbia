@@ -549,6 +549,7 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
       </Section>
 
       {/* ── SECTOR VALUE + AUTOMATION ── */}
+      <AIAgentsShowcase sector="food" />
       <SectorValueProposition sectorKey="food" accentColor={F.bordeaux} darkMode={true} sectorLabel="Ristorante" />
       <AutomationShowcase accentColor={F.bordeaux} accentBg="bg-rose-800" sectorName="la ristorazione" darkMode={true} />
 

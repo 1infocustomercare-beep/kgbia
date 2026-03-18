@@ -446,6 +446,7 @@ export default function HotelPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="hotel" />
       <SectorValueProposition sectorKey="hotel" accentColor={H.emerald} darkMode={true} sectorLabel="Hotel" />
       <AutomationShowcase accentColor={H.emerald} accentBg="bg-emerald-700" sectorName="hotel e hospitality" darkMode={true} />
 

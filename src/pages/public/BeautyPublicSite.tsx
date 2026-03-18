@@ -531,6 +531,7 @@ export default function BeautyPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="beauty" />
       <SectorValueProposition sectorKey="beauty" accentColor={B.rose} darkMode={true} sectorLabel="Salone" />
       <AutomationShowcase accentColor={B.rose} accentBg="bg-pink-500" sectorName="saloni e centri estetici" darkMode={true} />
 

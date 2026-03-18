@@ -340,6 +340,7 @@ export default function BeachPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="beach" />
       <SectorValueProposition sectorKey="beach" accentColor={CORAL} darkMode={false} sectorLabel="Stabilimento Balneare" />
       <AutomationShowcase accentColor={CORAL} accentBg="bg-orange-500" sectorName="stabilimenti balneari" darkMode={false} />
 

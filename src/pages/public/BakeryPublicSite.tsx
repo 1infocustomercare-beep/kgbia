@@ -368,6 +368,7 @@ export default function BakeryPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="bakery" />
       <SectorValueProposition sectorKey="bakery" accentColor={TERRA} darkMode={false} sectorLabel="Panificio" />
       <AutomationShowcase accentColor={TERRA} accentBg="bg-amber-700" sectorName="panifici e pasticcerie" darkMode={false} />
 

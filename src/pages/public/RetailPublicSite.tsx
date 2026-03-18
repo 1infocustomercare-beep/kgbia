@@ -316,6 +316,7 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="retail" />
       <SectorValueProposition sectorKey="retail" accentColor={CHAMPAGNE} darkMode={true} sectorLabel="Negozio" />
       <AutomationShowcase accentColor={CHAMPAGNE} accentBg="bg-amber-600" sectorName="negozi e retail" darkMode={true} />
 

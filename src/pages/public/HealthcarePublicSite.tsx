@@ -408,6 +408,7 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="healthcare" />
       <SectorValueProposition sectorKey="healthcare" accentColor={SAGE} darkMode={false} sectorLabel="Studio Medico" />
       <AutomationShowcase accentColor={SAGE} accentBg="bg-emerald-600" sectorName="studi medici e cliniche" darkMode={false} />
 
