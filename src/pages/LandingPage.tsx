@@ -4250,11 +4250,12 @@ const LandingPage = () => {
         </div>
 
         {/* ═══ Bottom Promise ═══ */}
-        <motion.div className="max-w-2xl mx-auto text-center p-8 sm:p-10 rounded-2xl border border-primary/10 overflow-hidden relative"
-          style={{ background: "hsla(265,20%,10%,0.4)" }}
+        <motion.div className="max-w-2xl mx-auto text-center p-8 sm:p-10 rounded-2xl border border-accent/20 overflow-hidden relative shadow-[0_8px_50px_hsla(265,50%,30%,0.15),0_0_80px_hsla(38,50%,50%,0.06)]"
+          style={{ background: "linear-gradient(165deg, hsla(265,18%,12%,0.97), hsla(230,14%,9%,0.98))" }}
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="absolute inset-0 premium-holo-grid opacity-[0.04] pointer-events-none" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.3), transparent)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsla(38,55%,55%,0.4), hsla(265,70%,60%,0.3), transparent)" }} />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[200px] h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsla(265,60%,55%,0.2), transparent)" }} />
           <div className="relative z-10">
             <div className="flex items-center justify-center gap-4 mb-6">
               {[
