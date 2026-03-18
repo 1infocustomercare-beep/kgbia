@@ -3076,31 +3076,31 @@ const LandingPage = () => {
                   </div>
                 </div>
               ));
+              const INDUSTRY_COLORS: Record<string, string> = {
+                food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
+                retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
+              };
               const industryItems = industries.map((ind, i) => {
                 const slug = DEMO_SLUGS[ind.id];
+                const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
                 const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+                const color = INDUSTRY_COLORS[ind.id] || "#8b5cf6";
                 return (
                   <div key={`ind-${i}`} className="group cursor-pointer" onClick={() => navigate(demoPath)}>
-                    <div className="relative w-[160px] h-[290px] rounded-[28px] border-[2.5px] border-foreground/15 bg-foreground/[0.03] shadow-[0_12px_40px_hsla(0,0%,0%,0.4)] overflow-hidden transition-transform duration-500 group-hover:scale-[1.03]">
-                      <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[48px] h-[14px] bg-foreground/80 rounded-full z-20" />
-                      <div className="absolute inset-[3px] rounded-[24px] overflow-hidden flex flex-col items-center text-center"
-                        style={{ background: `linear-gradient(160deg, hsl(var(--background)), hsl(var(--card)))` }}>
-                        <div className="relative w-full h-[130px] overflow-hidden rounded-t-[24px]">
-                          <img src={ind.image} alt={ind.title} className="w-full h-full object-cover" loading="lazy" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-                        </div>
-                        <div className="relative z-10 flex flex-col items-center px-3 -mt-4">
-                          <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white shadow-lg mb-2`}>
-                            <span className="text-[13px]">{ind.icon}</span>
-                          </div>
-                          <h3 className="font-heading text-[11px] font-bold text-foreground mb-1 leading-tight">{ind.title}</h3>
-                          <p className="text-[7px] text-primary/50 font-heading tracking-wider mb-2">{ind.modules}</p>
-                          <span className="inline-flex items-center gap-1 text-[9px] font-bold text-primary/70 group-hover:text-primary transition-colors">
-                            Demo <ArrowRight className="w-2.5 h-2.5" />
-                          </span>
-                        </div>
+                    <div className="relative w-[160px] h-[290px] rounded-[28px] border-[2.5px] overflow-hidden"
+                      style={{ borderColor: `${color}40`, boxShadow: `0 12px 40px hsla(0,0%,0%,0.4), 0 0 20px ${color}10` }}>
+                      <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[48px] h-[14px] bg-black rounded-full z-20" />
+                      <div className="absolute inset-[3px] rounded-[24px] overflow-hidden bg-black">
+                        <iframe src={siteRoute} title={ind.title} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
                       </div>
-                      <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] bg-foreground/20 rounded-full z-20" />
+                      <div className="absolute bottom-0 left-0 right-0 z-20 p-2.5 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                        <div className="flex items-center gap-1 mb-0.5">
+                          <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${color}25`, color, border: `1px solid ${color}35` }}>★ Live</span>
+                        </div>
+                        <p className="text-[10px] font-bold text-white leading-tight">{ind.title}</p>
+                        <p className="text-[7px] text-white/40">{ind.modules}</p>
+                      </div>
+                      <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] bg-white/20 rounded-full z-20" />
                     </div>
                   </div>
                 );
@@ -3145,10 +3145,17 @@ const LandingPage = () => {
             </motion.div>
             );
           })}
-          {/* ── Standard industry cards ── */}
+          {/* ── Standard industry cards — Live iframe previews ── */}
           {industries.map((ind, i) => {
             const slug = DEMO_SLUGS[ind.id];
+            const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
             const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+            const INDUSTRY_COLORS_DESKTOP: Record<string, string> = {
+              food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
+              retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
+            };
+            const color = INDUSTRY_COLORS_DESKTOP[ind.id] || "#8b5cf6";
+            const dScale = 174 / 375;
             return (
               <motion.div key={i}
                 className="group cursor-pointer"
@@ -3156,36 +3163,20 @@ const LandingPage = () => {
                 onClick={() => navigate(demoPath)}
                 whileHover={{ y: -8, scale: 1.03 }}
               >
-                {/* iPhone shell */}
-                <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] border-foreground/15 bg-foreground/[0.03] shadow-[0_16px_50px_hsla(0,0%,0%,0.45)] overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_20px_60px_hsla(265,70%,60%,0.15)]">
-                  {/* Notch */}
-                  <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-foreground/80 rounded-full z-20" />
-                  {/* Inner screen */}
-                <div className="absolute inset-[3px] rounded-[28px] overflow-hidden flex flex-col items-center text-center"
-                    style={{ background: `linear-gradient(160deg, hsl(var(--background)), hsl(var(--card)))` }}>
-                    {/* Cartoon image */}
-                    <div className="relative w-full h-[150px] overflow-hidden rounded-t-[28px]">
-                      <img src={ind.image} alt={ind.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-                    </div>
-                    <div className="relative z-10 flex flex-col items-center px-4 -mt-5">
-                      <div className="relative mb-3">
-                        <div className={`absolute -inset-1.5 rounded-2xl bg-gradient-to-br ${ind.gradient} opacity-30 blur-md group-hover:opacity-60 transition-opacity duration-700`} />
-                        <div className={`relative w-11 h-11 rounded-2xl bg-gradient-to-br ${ind.gradient} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-all duration-500 overflow-hidden`}>
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                          <span className="relative z-10 drop-shadow-md">{ind.icon}</span>
-                        </div>
-                      </div>
-                      <h3 className="font-heading text-sm font-bold text-foreground mb-1">{ind.title}</h3>
-                      <p className="text-[8px] text-primary/50 font-heading tracking-wider mb-3">{ind.modules}</p>
-                      <motion.span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-primary/60 group-hover:text-primary transition-colors"
-                        whileHover={{ x: 3 }}>
-                        Vedi Demo <ArrowRight className="w-3 h-3" />
-                      </motion.span>
-                    </div>
+                <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] overflow-hidden transition-shadow duration-500"
+                  style={{ borderColor: `${color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 25px ${color}10` }}>
+                  <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
+                  <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
+                    <iframe src={siteRoute} title={ind.title} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${dScale})`, pointerEvents: "none" }} loading="lazy" />
                   </div>
-                  {/* Home indicator */}
-                  <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-foreground/20 rounded-full z-20" />
+                  <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                    <div className="flex items-center gap-1 mb-1">
+                      <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${color}25`, color, border: `1px solid ${color}35` }}>★ Live</span>
+                    </div>
+                    <h3 className="text-[11px] font-bold text-white leading-tight">{ind.title}</h3>
+                    <p className="text-[7px] text-white/40 mt-0.5">{ind.modules}</p>
+                  </div>
+                  <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-white/20 rounded-full z-20" />
                 </div>
               </motion.div>
             );
