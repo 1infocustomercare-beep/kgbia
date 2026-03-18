@@ -11,12 +11,12 @@ const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 14 : 55;
-const MAX_DIST = IS_MOBILE ? 90 : 145;
-const FLOW_COUNT = IS_MOBILE ? 2 : 18;
-const PULSE_COUNT = IS_MOBILE ? 1 : 3;
-const HUB_COUNT = IS_MOBILE ? 3 : 7;
-const TARGET_FPS = IS_MOBILE ? 20 : 60;
+const NODE_COUNT = IS_MOBILE ? 18 : 55;
+const MAX_DIST = IS_MOBILE ? 110 : 145;
+const FLOW_COUNT = IS_MOBILE ? 4 : 18;
+const PULSE_COUNT = IS_MOBILE ? 2 : 3;
+const HUB_COUNT = IS_MOBILE ? 4 : 7;
+const TARGET_FPS = IS_MOBILE ? 24 : 60;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 type Pt = { x: number; y: number };
@@ -119,7 +119,8 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
 const SECTIONS = topologies.length;
 
 // Uniform palette — consistent intensity per section
-const BASE_ALPHA = 0.04; // Master intensity — very subtle
+const BASE_ALPHA = 0.04;
+const MOBILE_BOOST = IS_MOBILE ? 3.5 : 1; // Multiplier for all alpha values on mobile
 const PALETTES = [
   { node: [215, 15, 40], line: [215, 12, 32], glow: [215, 20, 45], accent: [38, 30, 45] },
   { node: [265, 18, 40], line: [265, 14, 32], glow: [265, 22, 45], accent: [38, 28, 43] },
@@ -320,8 +321,8 @@ const EmpireDNABackground = () => {
             const route = rA.map((a, wi) => ({ x: lerp(a.x, rB[wi].x, t3), y: lerp(a.y, rB[wi].y, t3) }));
 
             // Uniform line rendering
-            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.08 : 0.04) * (0.6 + pulse * 0.4));
-            ctx.lineWidth = activeTrace ? 0.4 : 0.2 + alpha * 0.2;
+            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.08 : 0.04) * (0.6 + pulse * 0.4) * MOBILE_BOOST);
+            ctx.lineWidth = activeTrace ? 0.6 : 0.3 + alpha * 0.3;
             ctx.beginPath();
             ctx.moveTo(route[0].x, route[0].y);
             for (let wi = 1; wi < route.length; wi++) ctx.lineTo(route[wi].x, route[wi].y);
@@ -331,8 +332,8 @@ const EmpireDNABackground = () => {
             if (activeTrace && alpha > 0.3) {
               ctx.setLineDash([3, 5]);
               ctx.lineDashOffset = -(time * 35);
-              ctx.strokeStyle = hsla(pGlow, alpha * 0.12);
-              ctx.lineWidth = 0.5;
+              ctx.strokeStyle = hsla(pGlow, alpha * 0.12 * MOBILE_BOOST);
+              ctx.lineWidth = 0.7;
               ctx.beginPath();
               ctx.moveTo(route[0].x, route[0].y);
               for (let wi = 1; wi < route.length; wi++) ctx.lineTo(route[wi].x, route[wi].y);
@@ -347,7 +348,7 @@ const EmpireDNABackground = () => {
       // ═══ LAYER 3: Nodes — uniform crosses and squares ═══
       for (let i = 0; i < NODE_COUNT; i++) {
         const breathe = 0.4 + Math.sin(time * 1 + i * 0.7) * 0.6;
-        let na = 0.06 * breathe;
+        let na = 0.06 * breathe * MOBILE_BOOST;
         const isActive = (i + Math.floor(time * 0.3)) % 10 === 0;
 
         if (ptr.active) {
@@ -358,22 +359,22 @@ const EmpireDNABackground = () => {
 
         if (i % 3 === 0) {
           const arm = 2 + breathe * 1.5;
-          ctx.strokeStyle = hsla(isActive ? pAccent : pNode, na + 0.08);
-          ctx.lineWidth = isActive ? 0.6 : 0.4;
+          ctx.strokeStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
+          ctx.lineWidth = isActive ? 0.8 : 0.5;
           ctx.beginPath();
           ctx.moveTo(pos[i].x - arm, pos[i].y); ctx.lineTo(pos[i].x + arm, pos[i].y);
           ctx.moveTo(pos[i].x, pos[i].y - arm); ctx.lineTo(pos[i].x, pos[i].y + arm);
           ctx.stroke();
         } else {
           const s = 1.2 + breathe;
-          ctx.fillStyle = hsla(isActive ? pAccent : pNode, na + 0.08);
+          ctx.fillStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
           ctx.fillRect(pos[i].x - s / 2, pos[i].y - s / 2, s, s);
         }
 
         // Halo for active
         if (isActive) {
           const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 8);
-          gr.addColorStop(0, hsla(pAccent, na * 0.1));
+          gr.addColorStop(0, hsla(pAccent, na * 0.15 * MOBILE_BOOST));
           gr.addColorStop(1, hsla(pGlow, 0));
           ctx.fillStyle = gr;
           ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, 8, 0, Math.PI * 2); ctx.fill();
@@ -413,8 +414,9 @@ const EmpireDNABackground = () => {
           }
         }
 
-        ctx.fillStyle = hsla(pAccent, fadeA * 0.15);
-        ctx.fillRect(pt.x - 0.8, pt.y - 0.8, 1.6, 1.6);
+        ctx.fillStyle = hsla(pAccent, fadeA * 0.15 * MOBILE_BOOST);
+        const pSize = IS_MOBILE ? 1.2 : 0.8;
+        ctx.fillRect(pt.x - pSize, pt.y - pSize, pSize * 2, pSize * 2);
       }
 
       // ═══ LAYER 5: Pulse Rings ═══
@@ -422,7 +424,7 @@ const EmpireDNABackground = () => {
       for (let pi = 0; pi < pulses.length; pi++) {
         const p = pulses[pi];
         p.r += 0.2 + Math.sin(time + pi) * 0.08;
-        p.alpha = (1 - p.r / p.maxR) * 0.018;
+        p.alpha = (1 - p.r / p.maxR) * 0.018 * MOBILE_BOOST;
         if (p.r >= p.maxR) {
           const ni = Math.floor(Math.random() * NODE_COUNT);
           const node = pos[ni];
@@ -435,14 +437,14 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ LAYER 6: Desktop-only (radar, scan) ═══
-      if (!IS_MOBILE) {
-        // Radar
+      // ═══ LAYER 6: Radar & scan ═══
+      {
+        // Radar sweep
         const radarAngle = time * 0.08;
-        const radarR = Math.min(w, h) * 0.45;
+        const radarR = Math.min(w, h) * (IS_MOBILE ? 0.4 : 0.45);
         const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
         rGrad.addColorStop(0, hsla(pGlow, 0));
-        rGrad.addColorStop(0.02, hsla(pGlow, 0.012));
+        rGrad.addColorStop(0.02, hsla(pGlow, 0.012 * MOBILE_BOOST));
         rGrad.addColorStop(0.06, hsla(pGlow, 0));
         rGrad.addColorStop(1, hsla(pGlow, 0));
         ctx.beginPath(); ctx.moveTo(w * 0.5, h * 0.5);
@@ -453,14 +455,14 @@ const EmpireDNABackground = () => {
         const scanY = h * (0.5 + Math.sin(time * 0.06) * 0.45);
         const scanGrad = ctx.createLinearGradient(0, scanY - 35, 0, scanY + 35);
         scanGrad.addColorStop(0, hsla(pAccent, 0));
-        scanGrad.addColorStop(0.5, hsla(pAccent, 0.012));
+        scanGrad.addColorStop(0.5, hsla(pAccent, 0.012 * MOBILE_BOOST));
         scanGrad.addColorStop(1, hsla(pAccent, 0));
         ctx.fillStyle = scanGrad; ctx.fillRect(0, scanY - 35, w, 70);
       }
 
       // ═══ LAYER 7: Corner brackets ═══
       const brk = 28;
-      ctx.strokeStyle = hsla(pLine, 0.022 + Math.sin(time * 0.25) * 0.008);
+      ctx.strokeStyle = hsla(pLine, (0.022 + Math.sin(time * 0.25) * 0.008) * MOBILE_BOOST);
       ctx.lineWidth = 0.35;
       ctx.beginPath(); ctx.moveTo(8, 8 + brk); ctx.lineTo(8, 8); ctx.lineTo(8 + brk, 8); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(w - 8 - brk, 8); ctx.lineTo(w - 8, 8); ctx.lineTo(w - 8, 8 + brk); ctx.stroke();
@@ -476,7 +478,7 @@ const EmpireDNABackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: IS_MOBILE ? 0.06 : 0.045, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: IS_MOBILE ? 0.14 : 0.045, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };
