@@ -325,36 +325,11 @@ const AlwaysOnNetwork = ({
   if (!lines.length) return null;
 
   return (
-    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ overflow: "visible", zIndex: 1 }}>
+    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ overflow: "visible", zIndex: 1, willChange: "transform" }}>
       <defs>
-        <filter id="line-glow">
-          <feGaussianBlur stdDeviation="5" result="blur" />
-          <feFlood floodColor="hsl(215 60% 60%)" floodOpacity="0.25" result="flood" />
-          <feComposite in="flood" in2="blur" operator="in" result="colorBlur" />
-          <feMerge>
-            <feMergeNode in="colorBlur" />
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <filter id="line-glow-soft">
-          <feGaussianBlur stdDeviation="2.5" result="blur" />
-          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-        <filter id="particle-glow">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feFlood floodColor="hsl(200 80% 70%)" floodOpacity="0.4" result="flood" />
-          <feComposite in="flood" in2="blur" operator="in" result="colorBlur" />
-          <feMerge>
-            <feMergeNode in="colorBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
         <linearGradient id="line-gradient-idle" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="hsl(200 60% 60%)" stopOpacity="0.05" />
-          <stop offset="30%" stopColor="hsl(215 60% 65%)" stopOpacity="0.4" />
-          <stop offset="50%" stopColor="hsl(210 70% 72%)" stopOpacity="0.6" />
-          <stop offset="70%" stopColor="hsl(215 60% 65%)" stopOpacity="0.4" />
+          <stop offset="50%" stopColor="hsl(215 55% 65%)" stopOpacity="0.35" />
           <stop offset="100%" stopColor="hsl(200 60% 60%)" stopOpacity="0.05" />
         </linearGradient>
       </defs>
@@ -362,84 +337,34 @@ const AlwaysOnNetwork = ({
       {lines.map((line, li) => {
         const dx = line.x2 - line.x1;
         const dy = line.y2 - line.y1;
-        const mx = (line.x1 + line.x2) / 2 + dy * 0.15;
-        const my = (line.y1 + line.y2) / 2 - dx * 0.15;
-        const pathD = `M ${line.x1} ${line.y1} Q ${mx} ${my} ${line.x2} ${line.y2}`;
-        const reversePath = `M ${line.x2} ${line.y2} Q ${mx} ${my} ${line.x1} ${line.y1}`;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        /* straight lines for short distances, gentle curve for longer */
+        const curveAmt = dist > 200 ? 0.08 : 0;
+        const mx = (line.x1 + line.x2) / 2 + dy * curveAmt;
+        const my = (line.y1 + line.y2) / 2 - dx * curveAmt;
+        const pathD = curveAmt ? `M ${line.x1} ${line.y1} Q ${mx} ${my} ${line.x2} ${line.y2}` : `M ${line.x1} ${line.y1} L ${line.x2} ${line.y2}`;
         const isActive = line.isActive;
 
-        /* ── Idle = cool cyber-blue, active = agent glow color ── */
-        const lineOpacity = isActive ? 0.9 : 0.55;
-        const lineWidth = isActive ? 2.8 : 1.5;
-        const dash = isActive ? "12 3" : "5 4";
-        const particleColor = isActive ? line.color : "hsla(200,70%,75%,0.85)";
-        const lineColor = isActive ? line.color : "hsla(210,50%,65%,0.55)";
-        const junctionR = isActive ? 4.5 : 3;
-        const junctionOpacity = isActive ? 0.85 : 0.5;
-        const particleDur = isActive ? "1.4s" : "4s";
-        const particleR = isActive ? 4.5 : 2.8;
-        const stagger = `${(li * 0.6) % 3}s`;
+        const lineColor = isActive ? line.color : "hsla(210,40%,60%,0.25)";
+        const lineWidth = isActive ? 1.8 : 0.8;
+        const particleColor = isActive ? line.color : "hsla(200,70%,75%,0.6)";
+        /* Longer durations = smoother on slow connections (no frame drops) */
+        const particleDur = isActive ? "3s" : "8s";
+        const stagger = `${(li * 1.1) % 6}s`;
 
         return (
           <g key={line.id}>
-            {/* Wide glow layer — always visible, professional shimmer */}
-            <path d={pathD} fill="none" stroke={lineColor}
-              strokeWidth={isActive ? 8 : 5}
-              opacity={isActive ? 0.15 : 0.06}
-              filter="url(#line-glow)" />
-
-            {/* Main connection line — always visible, solid + professional */}
+            {/* Single clean connection line */}
             <path d={pathD} fill="none" stroke={lineColor}
               strokeWidth={lineWidth}
-              strokeDasharray={dash}
-              opacity={lineOpacity}
-              filter="url(#line-glow-soft)"
               strokeLinecap="round"
+              opacity={isActive ? 0.8 : 0.5}
             />
 
-            {/* Solid underline — gives permanence to idle connections */}
-            {!isActive && (
-              <path d={pathD} fill="none" stroke="url(#line-gradient-idle)"
-                strokeWidth={0.6}
-                opacity={0.6}
-              />
-            )}
-
-            {/* Junction dots — always visible */}
-            <circle cx={line.x1} cy={line.y1} r={junctionR}
-              fill={lineColor} opacity={junctionOpacity} />
-            <circle cx={line.x2} cy={line.y2} r={junctionR}
-              fill={lineColor} opacity={junctionOpacity} />
-
-            {/* Flowing particle — always animating, with tech glow */}
-            <circle r={particleR} fill={particleColor}
-              filter="url(#particle-glow)">
-              <animateMotion dur={particleDur} repeatCount="indefinite" path={pathD} begin={stagger} />
+            {/* Single flowing particle — CSS-friendly long duration */}
+            <circle r={isActive ? 2.5 : 1.5} fill={particleColor} opacity={isActive ? 0.9 : 0.5}>
+              <animateMotion dur={particleDur} repeatCount="indefinite" path={pathD} begin={stagger} calcMode="linear" />
             </circle>
-
-            {/* Reverse particle — bidirectional data flow */}
-            <circle r={isActive ? 3 : 1.8} fill={particleColor} opacity={isActive ? 0.6 : 0.4}>
-              <animateMotion dur={isActive ? "2s" : "6s"} repeatCount="indefinite"
-                path={reversePath} begin={`${(li * 0.9 + 1.2) % 4}s`} />
-            </circle>
-
-            {/* Third micro-particle — gives tech density */}
-            <circle r={1} fill="hsla(200,80%,80%,0.5)" opacity={0.35}>
-              <animateMotion dur={isActive ? "3s" : "8s"} repeatCount="indefinite"
-                path={pathD} begin={`${(li * 1.3 + 0.7) % 5}s`} />
-            </circle>
-
-            {/* Extra particles on active — intense burst */}
-            {isActive && (
-              <>
-                <circle r={1.8} fill="hsla(0,0%,100%,0.7)">
-                  <animateMotion dur="2.8s" repeatCount="indefinite" path={pathD} begin="0.5s" />
-                </circle>
-                <circle r={1.2} fill={particleColor} opacity="0.4">
-                  <animateMotion dur="3.2s" repeatCount="indefinite" path={reversePath} begin="1.1s" />
-                </circle>
-              </>
-            )}
           </g>
         );
       })}
