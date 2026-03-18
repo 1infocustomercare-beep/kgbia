@@ -717,11 +717,11 @@ const NetworkNode = ({
       </div>
 
       {/* Name + role */}
-      <div className="text-center max-w-[68px] sm:max-w-[100px]">
-        <h3 className="font-bold text-[0.48rem] sm:text-[0.6rem] text-foreground leading-tight truncate">
+      <div className="text-center max-w-[60px] sm:max-w-[100px]">
+        <h3 className="font-bold text-[0.42rem] sm:text-[0.6rem] text-foreground leading-tight truncate">
           {agent.name}
         </h3>
-        <p className="text-[0.36rem] sm:text-[0.44rem] text-primary/85 tracking-wider uppercase truncate">
+        <p className="text-[0.32rem] sm:text-[0.44rem] text-primary/85 tracking-wider uppercase truncate leading-tight">
           {agent.role}
         </p>
       </div>
