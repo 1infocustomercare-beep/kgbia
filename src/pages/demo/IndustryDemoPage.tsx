@@ -360,12 +360,22 @@ export default function IndustryDemoPage() {
     beach: BeachPublicSite,
     food: FoodPublicSite,
     restaurant: FoodPublicSite,
+    bakery: FoodPublicSite,
     plumber: TradesPublicSite,
     electrician: TradesPublicSite,
     cleaning: TradesPublicSite,
     gardening: TradesPublicSite,
     construction: TradesPublicSite,
     garage: TradesPublicSite,
+    photography: TradesPublicSite,
+    veterinary: TradesPublicSite,
+    tattoo: TradesPublicSite,
+    childcare: TradesPublicSite,
+    education: TradesPublicSite,
+    events: TradesPublicSite,
+    logistics: TradesPublicSite,
+    legal: TradesPublicSite,
+    accounting: TradesPublicSite,
   };
 
   const PremiumTemplate = PREMIUM_TEMPLATES[resolvedIndustry];
