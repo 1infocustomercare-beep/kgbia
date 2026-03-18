@@ -2772,10 +2772,10 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
 
   return (
     <div className={`${className}`}>
-      {/* Desktop: horizontal scroll with 8 phones */}
+      {/* Desktop: horizontal scroll with 3D perspective showcase */}
       <div className={`hidden sm:block relative ${compact ? "scale-[0.85] origin-center" : ""}`}>
         <div className="overflow-x-auto pb-3 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
-          <div className="flex items-end gap-3 min-w-max justify-center px-2" style={{ perspective: "1000px" }}>
+          <div className="flex items-end gap-3 min-w-max justify-center px-2" style={{ perspective: "1200px" }}>
             {SCREENS.map((screen, i) => (
               <IPhoneFrame
                 key={screen.type}
@@ -2787,6 +2787,7 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
                 index={i}
                 sectorStyle={sectorStyle}
                 industryId={industryId}
+                totalCount={SCREENS.length}
               />
             ))}
           </div>
