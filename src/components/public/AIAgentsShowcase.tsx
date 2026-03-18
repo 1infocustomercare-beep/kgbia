@@ -414,24 +414,11 @@ const RobotAvatar = ({ agent, size = 72, isActive, isConnected }: {
         background: `radial-gradient(circle at 50% 50%, hsla(150,60%,30%,0.25), transparent 80%)`,
       }} />
 
-      {/* Clean single-path circuit overlay */}
+      {/* Minimal circuit accent — static, no animation */}
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 60 60">
-        {/* Simple orthogonal circuit — one clean path per icon */}
-        <path d="M0,30 L18,30 L18,15 L42,15 L42,30 L60,30" fill="none" stroke="hsla(150,80%,65%,0.35)" strokeWidth="0.6" />
-        <path d="M30,0 L30,20 M30,40 L30,60" fill="none" stroke="hsla(150,80%,65%,0.2)" strokeWidth="0.4" />
-        
-        {/* Junction nodes — only at intersections */}
-        <circle cx="18" cy="30" r="1.5" fill="hsla(150,80%,65%,0.5)" />
-        <circle cx="42" cy="30" r="1.5" fill="hsla(150,80%,65%,0.5)" />
-        <circle cx="18" cy="15" r="1.2" fill="hsla(150,80%,65%,0.4)" />
-        <circle cx="42" cy="15" r="1.2" fill="hsla(150,80%,65%,0.4)" />
-        <circle cx="30" cy="20" r="1" fill="hsla(150,80%,65%,0.3)" />
-
-        {/* Single clean data particle */}
-        <circle r="1.2" fill="hsla(150,90%,70%,0.8)">
-          <animateMotion dur={isActive ? "1.8s" : "3.5s"} repeatCount="indefinite"
-            path="M0,30 L18,30 L18,15 L42,15 L42,30 L60,30" />
-        </circle>
+        <path d="M0,30 L18,30 L18,15 L42,15 L42,30 L60,30" fill="none" stroke="hsla(150,80%,65%,0.2)" strokeWidth="0.5" />
+        <circle cx="18" cy="30" r="1" fill="hsla(150,80%,65%,0.3)" />
+        <circle cx="42" cy="30" r="1" fill="hsla(150,80%,65%,0.3)" />
       </svg>
 
       {/* Inner glow */}
