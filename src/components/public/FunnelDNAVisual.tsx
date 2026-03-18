@@ -71,7 +71,7 @@ const FunnelDNAVisual = memo(() => {
       : null;
     resizeObserver?.observe(canvas);
 
-    const draw = () => {
+    const draw = (ts: number) => {
       const w = width;
       const h = height;
 
@@ -80,12 +80,18 @@ const FunnelDNAVisual = memo(() => {
         return;
       }
 
+      if (ts - lastTs < frameIntervalMs) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
+      lastTs = ts;
+
       ctx.clearRect(0, 0, w, h);
-      t += 0.008;
+      t += isMobile ? 0.006 : 0.008;
 
       const cx = w / 2;
-      const points = 48;
-      const amp = Math.min(w, h) * 0.28;
+      const points = isMobile ? 24 : 48;
+      const amp = Math.min(w, h) * (isMobile ? 0.23 : 0.28);
       const spacing = h / points;
 
       // Connecting rungs between strands
