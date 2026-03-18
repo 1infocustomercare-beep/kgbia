@@ -24,9 +24,9 @@ import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 
 /* ── PREMIUM ADAPTIVE PALETTE SYSTEM ── */
 const INDUSTRY_VIDEOS: Record<string, string> = {
-  beauty: "https://videos.pexels.com/video-files/3997889/3997889-uhd_2560_1440_25fps.mp4",
-  healthcare: "https://videos.pexels.com/video-files/3209211/3209211-uhd_2560_1440_25fps.mp4",
-  fitness: "https://videos.pexels.com/video-files/4761434/4761434-uhd_2560_1440_25fps.mp4",
+  beauty: "https://videos.pexels.com/video-files/3998269/3998269-uhd_2732_1440_25fps.mp4",
+  healthcare: "https://videos.pexels.com/video-files/7579341/7579341-uhd_2560_1440_25fps.mp4",
+  fitness: "https://videos.pexels.com/video-files/4761507/4761507-uhd_2560_1440_25fps.mp4",
   hotel: "https://videos.pexels.com/video-files/6527282/6527282-uhd_2560_1440_25fps.mp4",
   retail: "https://videos.pexels.com/video-files/5527834/5527834-uhd_2560_1440_25fps.mp4",
   veterinary: "https://videos.pexels.com/video-files/4921969/4921969-uhd_2560_1440_25fps.mp4",
