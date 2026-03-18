@@ -4839,79 +4839,91 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <PremiumCarousel speed="slow" itemWidth={290} fullWidth>
-          {testimonials.map((t, i) => (
-            <div key={i} className="group relative h-full">
-              <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
-                style={{
-                  background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
-                  border: "1px solid hsla(265,40%,50%,0.12)",
-                  boxShadow: "0 16px 48px -12px hsla(265,50%,8%,0.5), inset 0 1px 0 hsla(265,60%,70%,0.06)",
-                  backdropFilter: "blur(24px)",
-                }}>
-                
-                {/* Shimmer sweep */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: "linear-gradient(105deg, transparent 40%, hsla(38,50%,55%,0.06) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
-                
-                {/* HUD corner accents */}
-                <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsla(38,50%,55%,0.2)" }} />
-                <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
-                
-                {/* Top gradient line */}
-                <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
-
-                {/* Avatar + emoji badge centered */}
-                <div className="relative mb-4 mt-1">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center text-base font-bold font-heading mx-auto"
-                    style={{
-                      background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))",
-                      border: "2px solid hsla(265,50%,55%,0.25)",
-                      color: "hsl(var(--primary))",
-                      boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)",
-                    }}>
-                    {t.name.charAt(0)}
-                  </div>
-                  {/* Emoji badge positioned on avatar */}
-                  <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
-                    style={{ background: "hsla(265,30%,15%,0.9)", border: "1px solid hsla(265,40%,50%,0.2)", boxShadow: "0 4px 12px hsla(0,0%,0%,0.3)" }}>
-                    {t.emoji}
-                  </div>
-                  {/* Orbital ring */}
-                  <motion.div className="absolute -inset-2 rounded-full pointer-events-none"
-                    style={{ border: "1px dashed hsla(265,50%,55%,0.12)" }}
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
-                </div>
-
-                {/* Author name & role */}
-                <h4 className="font-heading text-xs font-semibold mb-0.5" style={{ color: "hsla(0,0%,100%,0.85)" }}>{t.name}</h4>
-                <p className="text-[0.58rem] mb-4" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
-
-                {/* Quote */}
-                <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1"
-                  style={{ color: "hsla(0,0%,100%,0.5)" }}>
-                  <Quote className="w-3.5 h-3.5 mx-auto mb-2" style={{ color: "hsla(38,50%,55%,0.3)" }} />
-                  "{t.quote}"
-                </blockquote>
-
-                {/* Metric badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.62rem] font-semibold font-heading tracking-wider transition-all duration-500 group-hover:shadow-[0_0_20px_-4px_hsla(265,70%,60%,0.3)]"
+        <AnimatePresence mode="wait">
+          {expandTestimonials ? (
+            <motion.div key="testimonials-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {testimonials.map((t, i) => (
+                <div key={i} className="relative p-4 rounded-xl overflow-hidden"
                   style={{
-                    background: "linear-gradient(135deg, hsla(265,40%,25%,0.5), hsla(265,30%,18%,0.4))",
-                    border: "1px solid hsla(265,60%,55%,0.2)",
-                    color: "hsl(var(--primary))",
+                    background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
+                    border: "1px solid hsla(265,40%,50%,0.12)",
+                    backdropFilter: "blur(24px)",
                   }}>
-                  <TrendingUp className="w-3 h-3" /> {t.metric}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold font-heading flex-shrink-0"
+                      style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))", border: "2px solid hsla(265,50%,55%,0.25)", color: "hsl(var(--primary))" }}>
+                      {t.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h4 className="font-heading text-[0.7rem] font-semibold" style={{ color: "hsla(0,0%,100%,0.85)" }}>{t.name}</h4>
+                      <p className="text-[0.5rem]" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
+                    </div>
+                    <span className="ml-auto text-base">{t.emoji}</span>
+                  </div>
+                  <p className="text-[0.65rem] leading-[1.7] mb-2" style={{ color: "hsla(0,0%,100%,0.5)" }}>"{t.quote}"</p>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[0.55rem] font-semibold font-heading"
+                    style={{ background: "hsla(265,40%,25%,0.5)", border: "1px solid hsla(265,60%,55%,0.2)", color: "hsl(var(--primary))" }}>
+                    <TrendingUp className="w-2.5 h-2.5" /> {t.metric}
+                  </div>
                 </div>
-
-                {/* Bottom glow */}
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-16 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                  style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent 70%)" }} />
-              </div>
-            </div>
-          ))}
-        </PremiumCarousel>
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div key="testimonials-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <PremiumCarousel speed="slow" itemWidth={290} fullWidth>
+                {testimonials.map((t, i) => (
+                  <div key={i} className="group relative h-full">
+                    <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
+                      style={{
+                        background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
+                        border: "1px solid hsla(265,40%,50%,0.12)",
+                        boxShadow: "0 16px 48px -12px hsla(265,50%,8%,0.5), inset 0 1px 0 hsla(265,60%,70%,0.06)",
+                        backdropFilter: "blur(24px)",
+                      }}>
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                        style={{ background: "linear-gradient(105deg, transparent 40%, hsla(38,50%,55%,0.06) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
+                      <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsla(38,50%,55%,0.2)" }} />
+                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
+                      <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
+                      <div className="relative mb-4 mt-1">
+                        <div className="w-14 h-14 rounded-full flex items-center justify-center text-base font-bold font-heading mx-auto"
+                          style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))", border: "2px solid hsla(265,50%,55%,0.25)", color: "hsl(var(--primary))", boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)" }}>
+                          {t.name.charAt(0)}
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
+                          style={{ background: "hsla(265,30%,15%,0.9)", border: "1px solid hsla(265,40%,50%,0.2)", boxShadow: "0 4px 12px hsla(0,0%,0%,0.3)" }}>
+                          {t.emoji}
+                        </div>
+                        <motion.div className="absolute -inset-2 rounded-full pointer-events-none"
+                          style={{ border: "1px dashed hsla(265,50%,55%,0.12)" }}
+                          animate={{ rotate: [0, 360] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
+                      </div>
+                      <h4 className="font-heading text-xs font-semibold mb-0.5" style={{ color: "hsla(0,0%,100%,0.85)" }}>{t.name}</h4>
+                      <p className="text-[0.58rem] mb-4" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
+                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1" style={{ color: "hsla(0,0%,100%,0.5)" }}>
+                        <Quote className="w-3.5 h-3.5 mx-auto mb-2" style={{ color: "hsla(38,50%,55%,0.3)" }} />
+                        "{t.quote}"
+                      </blockquote>
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.62rem] font-semibold font-heading tracking-wider"
+                        style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.5), hsla(265,30%,18%,0.4))", border: "1px solid hsla(265,60%,55%,0.2)", color: "hsl(var(--primary))" }}>
+                        <TrendingUp className="w-3 h-3" /> {t.metric}
+                      </div>
+                      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-16 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                        style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent 70%)" }} />
+                    </div>
+                  </div>
+                ))}
+              </PremiumCarousel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="flex justify-center mt-4">
+          <button onClick={() => setExpandTestimonials(p => !p)}
+            className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+            <Layers className="w-3 h-3" /> {expandTestimonials ? "Chiudi" : "Vedi Tutti"}
+          </button>
+        </div>
       </Section>
 
       {/* ═══════════════════════════════════════════
