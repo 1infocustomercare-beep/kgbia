@@ -891,10 +891,9 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [isPaused]);
 
-  // ── Auto-narrate on section change — desktop auto, mobile only when panel is open ──
+   // ── Auto-narrate on section change ──
   useEffect(() => {
     if (!currentSection || !SECTION_SCRIPTS[currentSection]) return;
-    if (isTouchDeviceRef.current && !isOpen) return;
     // If audio has been unlocked (user interacted), always try to narrate new sections
     if (!autoNarrating && !audioUnlockedRef.current) return;
 
