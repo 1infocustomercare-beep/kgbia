@@ -395,7 +395,16 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                     </div>
 
                     {/* Description */}
-                    <p className="text-[0.68rem] text-foreground/40 leading-[1.55] mb-2.5 relative z-10 line-clamp-2">{agent.desc}</p>
+                    <p className="text-[0.68rem] text-foreground/40 leading-[1.55] mb-2 relative z-10 line-clamp-2">{agent.desc}</p>
+
+                    {/* Why you need this — persuasive */}
+                    {agent.whyNeed && (
+                      <div className="relative z-10 mb-2.5 px-2.5 py-1.5 rounded-lg bg-primary/[0.04] border border-primary/10">
+                        <p className="text-[0.6rem] text-primary/70 leading-[1.5] italic">
+                          💡 <strong className="not-italic text-primary/90">Perché ti serve:</strong> {agent.whyNeed}
+                        </p>
+                      </div>
+                    )}
 
                     {/* Capabilities */}
                     <div className="flex flex-wrap gap-x-2.5 gap-y-0.5 relative z-10">
