@@ -561,6 +561,7 @@ export default function BeautyPublicSite({ company, afterHero }: Props) {
           <MessageCircle className="w-7 h-7 text-white" />
         </motion.a>
       )}
+      <DemoAdminAccessButton sector="beauty" accentColor={B.roseGold} />
     </div>
   );
 }

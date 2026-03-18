@@ -1395,6 +1395,7 @@ export default function NCCPublicSite({ company, afterHero }: Props) {
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         html { scroll-behavior: smooth; }
       `}</style>
+      <DemoAdminAccessButton sector="ncc" accentColor="#C9A84C" />
     </div>
   );
 }

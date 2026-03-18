@@ -576,6 +576,7 @@ export default function FoodPublicSite({ company, afterHero }: Props) {
           <MessageCircle className="w-7 h-7 text-white" />
         </a>
       )}
+      <DemoAdminAccessButton sector="food" accentColor={F.bordeaux} />
     </div>
   );
 }

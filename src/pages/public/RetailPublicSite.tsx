@@ -337,6 +337,7 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
           <MessageCircle className="w-7 h-7 text-white" />
         </motion.a>
       )}
+      <DemoAdminAccessButton sector="retail" accentColor="#B8860B" />
     </div>
   );
 }

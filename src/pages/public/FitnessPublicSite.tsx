@@ -438,6 +438,7 @@ export default function FitnessPublicSite({ company, afterHero }: Props) {
           <MessageCircle className="w-7 h-7" style={{ color: CARBON }} />
         </motion.a>
       )}
+      <DemoAdminAccessButton sector="fitness" accentColor="#FF6B00" />
     </div>
   );
 }
