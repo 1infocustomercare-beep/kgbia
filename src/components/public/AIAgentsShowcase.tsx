@@ -788,7 +788,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
       <div className="max-w-[1300px] mx-auto relative z-10">
         {/* ══════ HEADER ══════ */}
-        <div className="text-center mb-8 sm:mb-12">
+        <div className="text-center mb-5 sm:mb-12">
           <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={isInView ? { opacity: 1, scale: 1 } : {}}
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-card/90 backdrop-blur-sm mb-4">
             <Network className="w-3.5 h-3.5 text-primary animate-pulse" />
