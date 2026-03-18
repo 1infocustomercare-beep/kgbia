@@ -148,13 +148,24 @@ const AlwaysOnNetwork = ({
     <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ overflow: "visible", zIndex: 1 }}>
       <defs>
         <filter id="line-glow">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          <feGaussianBlur stdDeviation="6" result="blur" />
+          <feFlood floodColor="hsl(var(--primary))" floodOpacity="0.15" result="flood" />
+          <feComposite in="flood" in2="blur" operator="in" result="colorBlur" />
+          <feMerge>
+            <feMergeNode in="colorBlur" />
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
         </filter>
         <filter id="line-glow-soft">
-          <feGaussianBlur stdDeviation="2" result="blur" />
+          <feGaussianBlur stdDeviation="3" result="blur" />
           <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
+        <linearGradient id="line-gradient-idle" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="hsl(215 60% 65%)" stopOpacity="0.15" />
+          <stop offset="50%" stopColor="hsl(215 60% 70%)" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="hsl(215 60% 65%)" stopOpacity="0.15" />
+        </linearGradient>
       </defs>
 
       {lines.map((line, li) => {
@@ -166,33 +177,42 @@ const AlwaysOnNetwork = ({
         const reversePath = `M ${line.x2} ${line.y2} Q ${mx} ${my} ${line.x1} ${line.y1}`;
         const isActive = line.isActive;
 
-        /* ── Always visible: idle = softer/slower, active = bright/fast ── */
-        const lineOpacity = isActive ? 0.7 : 0.35;
-        const lineWidth = isActive ? 2 : 0.9;
-        const dash = isActive ? "8 5" : "3 6";
-        const particleColor = isActive ? line.color : "hsla(215,50%,65%,0.55)";
-        const lineColor = isActive ? line.color : "hsla(215,35%,55%,0.4)";
-        const junctionR = isActive ? 3 : 2;
-        const junctionOpacity = isActive ? 0.65 : 0.3;
-        const particleDur = isActive ? "1.6s" : "5s";
-        const particleR = isActive ? 3.5 : 2;
+        /* ── Always visible: idle = professional glow, active = bright/fast ── */
+        const lineOpacity = isActive ? 0.85 : 0.5;
+        const lineWidth = isActive ? 2.5 : 1.4;
+        const dash = isActive ? "10 4" : "6 4";
+        const particleColor = isActive ? line.color : "hsla(215,60%,72%,0.7)";
+        const lineColor = isActive ? line.color : "hsla(215,45%,62%,0.5)";
+        const junctionR = isActive ? 4 : 2.5;
+        const junctionOpacity = isActive ? 0.8 : 0.45;
+        const particleDur = isActive ? "1.6s" : "4.5s";
+        const particleR = isActive ? 4 : 2.5;
         const stagger = `${(li * 0.6) % 3}s`;
 
         return (
           <g key={line.id}>
-            {/* Glow line — always on, stronger when active */}
+            {/* Wide glow layer — always visible, professional shimmer */}
             <path d={pathD} fill="none" stroke={lineColor}
-              strokeWidth={isActive ? 5 : 3}
-              opacity={isActive ? 0.12 : 0.04}
+              strokeWidth={isActive ? 8 : 5}
+              opacity={isActive ? 0.15 : 0.06}
               filter="url(#line-glow)" />
 
-            {/* Main connection line — always visible */}
+            {/* Main connection line — always visible, solid + professional */}
             <path d={pathD} fill="none" stroke={lineColor}
               strokeWidth={lineWidth}
               strokeDasharray={dash}
               opacity={lineOpacity}
               filter="url(#line-glow-soft)"
+              strokeLinecap="round"
             />
+
+            {/* Solid underline — gives permanence to idle connections */}
+            {!isActive && (
+              <path d={pathD} fill="none" stroke="url(#line-gradient-idle)"
+                strokeWidth={0.6}
+                opacity={0.6}
+              />
+            )}
 
             {/* Junction dots — always visible */}
             <circle cx={line.x1} cy={line.y1} r={junctionR}
@@ -430,7 +450,35 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const connectedIds = useMemo(() => new Set(activeAgent?.connections || []), [activeAgent]);
 
   return (
-    <section ref={sectionRef} className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden">
+    <section ref={sectionRef} className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden"
+      style={{
+        background: `linear-gradient(180deg, 
+          hsl(220 25% 6%) 0%, 
+          hsl(225 30% 8%) 25%, 
+          hsl(230 25% 10%) 50%, 
+          hsl(225 30% 8%) 75%, 
+          hsl(220 25% 6%) 100%)`,
+      }}
+    >
+      {/* Professional dark background overlays */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Subtle radial glow — center focal point */}
+        <div className="absolute inset-0" style={{
+          background: `radial-gradient(ellipse 80% 60% at 50% 40%, hsla(215,50%,30%,0.12), transparent 70%)`
+        }} />
+        {/* Top edge fade */}
+        <div className="absolute top-0 left-0 right-0 h-24" style={{
+          background: `linear-gradient(180deg, hsla(220,25%,4%,0.8), transparent)`
+        }} />
+        {/* Bottom edge fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-24" style={{
+          background: `linear-gradient(0deg, hsla(220,25%,4%,0.8), transparent)`
+        }} />
+        {/* Side vignettes */}
+        <div className="absolute inset-0" style={{
+          background: `radial-gradient(ellipse at center, transparent 50%, hsla(220,25%,4%,0.5) 100%)`
+        }} />
+      </div>
       <CircuitBackground />
 
       <div className="max-w-[1300px] mx-auto relative z-10">
