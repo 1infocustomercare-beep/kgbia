@@ -14,8 +14,8 @@ const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 const FEATURED_DEMOS = [
   {
     id: "food" as IndustryId,
-    name: "Impero Roma",
-    tagline: "Ristorante Premium · Roma",
+    name: "Food & Ristorazione",
+    tagline: "Menu Digitale · Ordini · QR · Cucina Live",
     route: "/r/impero-roma",
     emoji: "🍽️",
     color: "#e85d04",
