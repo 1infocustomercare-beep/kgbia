@@ -2040,6 +2040,116 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
 };
 
 /* ═══════════════════════════════════════════
+   MOBILE IPHONE CAROUSEL — 3 at a time, auto-scroll
+   ═══════════════════════════════════════════ */
+type CarouselItem = { name: string; route: string; color: string; label: string; nav: string };
+
+const MobileIPhoneCarousel = ({ items, scale, navigate }: { items: CarouselItem[]; scale: number; navigate: (p: string) => void }) => {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [expanded, setExpanded] = useState(false);
+  const animRef = useRef<number>(0);
+  const scrollPos = useRef(0);
+  const speed = 0.4; // px per frame
+  const itemW = 122; // card width + gap
+  const totalW = items.length * itemW;
+
+  // Auto-scroll via rAF
+  useEffect(() => {
+    if (!isPlaying || expanded) return;
+    const track = trackRef.current;
+    if (!track) return;
+    let running = true;
+    const tick = () => {
+      if (!running) return;
+      scrollPos.current += speed;
+      if (scrollPos.current >= totalW) scrollPos.current -= totalW;
+      track.style.transform = `translate3d(-${scrollPos.current}px, 0, 0)`;
+      animRef.current = requestAnimationFrame(tick);
+    };
+    animRef.current = requestAnimationFrame(tick);
+    return () => { running = false; cancelAnimationFrame(animRef.current); };
+  }, [isPlaying, expanded, totalW]);
+
+  const nudge = (dir: number) => {
+    scrollPos.current += dir * itemW;
+    if (scrollPos.current < 0) scrollPos.current += totalW;
+    if (scrollPos.current >= totalW) scrollPos.current -= totalW;
+    if (trackRef.current) trackRef.current.style.transform = `translate3d(-${scrollPos.current}px, 0, 0)`;
+  };
+
+  // Render a single iPhone card
+  const IPhoneCard = ({ item, compact = false }: { item: CarouselItem; compact?: boolean }) => (
+    <div className={`flex-shrink-0 cursor-pointer ${compact ? "w-[118px]" : "w-[118px]"}`} onClick={() => navigate(item.nav)}>
+      <div className="relative w-full aspect-[9/18] rounded-[20px] border-[2px] overflow-hidden"
+        style={{ borderColor: `${item.color}40`, boxShadow: `0 8px 24px hsla(0,0%,0%,0.4), 0 0 12px ${item.color}10` }}>
+        <div className="absolute top-[4px] left-1/2 -translate-x-1/2 w-[36px] h-[10px] bg-black rounded-full z-20" />
+        <div className="absolute inset-[2px] rounded-[18px] overflow-hidden bg-black">
+          <iframe src={item.route} title={item.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 z-20 p-1.5 pt-5" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+          <div className="flex items-center gap-1 mb-0.5">
+            <span className="text-[5px] px-1 py-[1px] rounded-full font-bold tracking-wider uppercase" style={{ background: `${item.color}25`, color: item.color, border: `1px solid ${item.color}35` }}>★ Live</span>
+          </div>
+          <p className="text-[8px] font-bold text-white leading-tight truncate">{item.name}</p>
+          <p className="text-[5px] text-white/40 truncate">{item.label}</p>
+        </div>
+        <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[30px] h-[2.5px] bg-white/20 rounded-full z-20" />
+      </div>
+    </div>
+  );
+
+  if (expanded) {
+    return (
+      <div className="sm:hidden px-2">
+        {/* Controls */}
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[10px] font-heading font-bold text-foreground/50 uppercase tracking-widest">{items.length} Demo Live</span>
+          <button onClick={() => setExpanded(false)} className="text-[10px] font-semibold text-primary/70 flex items-center gap-1">
+            <X className="w-3 h-3" /> Chiudi
+          </button>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {items.map((item, i) => <IPhoneCard key={i} item={item} compact />)}
+        </div>
+      </div>
+    );
+  }
+
+  // Duplicate items for infinite loop
+  const loopItems = [...items, ...items];
+
+  return (
+    <div className="sm:hidden">
+      {/* Controls bar */}
+      <div className="flex items-center justify-between px-3 mb-3">
+        <div className="flex items-center gap-2">
+          <button onClick={() => nudge(-1)} className="w-7 h-7 rounded-full border border-foreground/10 flex items-center justify-center hover:border-primary/30 transition-colors">
+            <ChevronLeft className="w-3.5 h-3.5 text-foreground/50" />
+          </button>
+          <button onClick={() => setIsPlaying(p => !p)} className="w-7 h-7 rounded-full border border-foreground/10 flex items-center justify-center hover:border-primary/30 transition-colors">
+            {isPlaying ? <Pause className="w-3 h-3 text-foreground/50" /> : <Play className="w-3 h-3 text-foreground/50" />}
+          </button>
+          <button onClick={() => nudge(1)} className="w-7 h-7 rounded-full border border-foreground/10 flex items-center justify-center hover:border-primary/30 transition-colors">
+            <ChevronRight className="w-3.5 h-3.5 text-foreground/50" />
+          </button>
+        </div>
+        <button onClick={() => { setIsPlaying(false); setExpanded(true); }} className="text-[10px] font-semibold text-primary/70 flex items-center gap-1">
+          <Layers className="w-3 h-3" /> Vedi Tutti
+        </button>
+      </div>
+
+      {/* Carousel track */}
+      <div className="overflow-hidden mx-2">
+        <div ref={trackRef} className="flex gap-[4px] will-change-transform" style={{ width: `${loopItems.length * itemW}px` }}>
+          {loopItems.map((item, i) => <IPhoneCard key={i} item={item} />)}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════
    MAIN
    ═══════════════════════════════════════════ */
 
