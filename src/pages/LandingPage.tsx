@@ -4069,6 +4069,7 @@ const LandingPage = () => {
           };
 
           return (
+            <>
             <AnimatePresence mode="wait">
               {expandMockups ? (
                 <motion.div key="mockups-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
