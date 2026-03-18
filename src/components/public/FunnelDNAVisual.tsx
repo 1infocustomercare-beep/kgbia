@@ -15,11 +15,12 @@ const FunnelDNAVisual = memo(() => {
   const isInView = useInView(containerRef, { margin: "220px 0px 220px 0px", amount: 0.05 });
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
-  // Rotate active funnel step
+  // Rotate active funnel step only when visible
   useEffect(() => {
+    if (!isInView) return;
     const iv = setInterval(() => setActiveStep(p => (p + 1) % FUNNEL_STEPS.length), 3000);
     return () => clearInterval(iv);
-  }, []);
+  }, [isInView]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
