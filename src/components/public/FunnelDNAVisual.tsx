@@ -183,7 +183,7 @@ const FunnelDNAVisual = memo(() => {
       resizeObserver?.disconnect();
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [isInView, isMobile]);
 
   const step = FUNNEL_STEPS[activeStep];
 
