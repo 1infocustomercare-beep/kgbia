@@ -4439,7 +4439,7 @@ const LandingPage = () => {
            3 INTERFACCE — Mockup Showcase
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,12%,7%,1) 18%, hsla(265,16%,8%,1) 35%, hsla(38,10%,6%,1) 55%, hsla(265,14%,7%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,18%,9%,1) 18%, hsla(265,20%,10%,1) 35%, hsla(38,14%,8%,1) 55%, hsla(265,18%,9%,1) 75%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
