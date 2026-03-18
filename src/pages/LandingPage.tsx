@@ -4609,7 +4609,7 @@ const LandingPage = () => {
            BUILD ANYTHING — Streamlined Conversion Section
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,20%,8%,1) 15%, hsla(38,12%,7%,1) 35%, hsla(265,16%,8%,1) 55%, hsla(38,8%,6%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(38,18%,9%,1) 35%, hsla(265,20%,10%,1) 55%, hsla(38,14%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
