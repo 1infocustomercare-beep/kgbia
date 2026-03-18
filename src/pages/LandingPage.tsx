@@ -3093,8 +3093,18 @@ const LandingPage = () => {
                 animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               />
-              {isHeroInView && (
-                <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : 300} />
+              {isHeroInView && !isMobileViewport && (
+                <InteractiveParticleSphere size={300} />
+              )}
+              {isHeroInView && isMobileViewport && (
+                <div
+                  className="w-[200px] h-[200px] rounded-full"
+                  style={{
+                    background: "radial-gradient(circle at 50% 45%, hsla(265,70%,62%,0.22), hsla(38,50%,52%,0.1), transparent 70%)",
+                    border: "1px solid hsla(265,45%,55%,0.18)",
+                    boxShadow: "0 0 42px hsla(265,60%,55%,0.12)",
+                  }}
+                />
               )}
             </motion.div>
 
