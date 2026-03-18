@@ -17,6 +17,7 @@ const ICON_MAP: Record<string, any> = {
   Zap, Heart, Star, Scale, Leaf, Route, CreditCard, Target,
   Briefcase, Sparkles, Receipt, BarChart3, PenTool, Lightbulb,
   Store, MapPin, UserCog, FileText, Shield, Clock, MoreHorizontal,
+  Truck, MessageSquare,
 };
 
 type NavItem = { label: string; icon: string; path: string };
