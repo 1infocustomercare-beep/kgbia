@@ -4921,35 +4921,72 @@ const LandingPage = () => {
         </div>
 
         {/* ═══ Mobile: Auto-scrolling carousel or expanded grid ═══ */}
-        <div className="sm:hidden">
+        <div className="sm:hidden relative">
+          {/* Opaque backdrop for circuit visibility */}
+          <div className="absolute inset-0 rounded-2xl z-0"
+            style={{ background: "linear-gradient(160deg, hsla(230,16%,9%,0.97), hsla(265,14%,7%,0.96))", border: "1px solid hsla(265,35%,40%,0.06)" }} />
+
+          {/* Circuit SVG connections between service cards */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" viewBox="0 0 320 600" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <filter id="svcCircuitGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="0.6" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+            </defs>
+            {/* Vertical spine */}
+            <line x1="160" y1="30" x2="160" y2="570" stroke="hsl(var(--primary) / 0.18)" strokeWidth="0.7" strokeDasharray="4,5" strokeLinecap="round" />
+            {/* Horizontal connections at each card level */}
+            {[80, 160, 240, 320, 400, 480].map((y, i) => (
+              <g key={`svc-h-${i}`}>
+                <line x1="40" y1={y} x2="280" y2={y} stroke="hsl(var(--accent) / 0.14)" strokeWidth="0.6" strokeDasharray="3,5" strokeLinecap="round" />
+                <circle cx="40" cy={y} r="1.5" fill="hsl(var(--primary) / 0.4)" />
+                <circle cx="160" cy={y} r="2" fill="hsl(var(--primary) / 0.5)">
+                  <animate attributeName="r" values="1.5;2.5;1.5" dur={`${2.5 + i * 0.3}s`} repeatCount="indefinite" />
+                </circle>
+                <circle cx="280" cy={y} r="1.5" fill="hsl(var(--primary) / 0.4)" />
+                {/* Diagonal links */}
+                {i < 5 && <line x1="60" y1={y + 10} x2="260" y2={y + 70} stroke="hsl(var(--primary) / 0.1)" strokeWidth="0.4" strokeLinecap="round" />}
+              </g>
+            ))}
+            {/* Animated data pulse */}
+            <circle r="2.2" fill="hsl(var(--primary) / 0.85)" filter="url(#svcCircuitGlow)">
+              <animateMotion dur="5s" repeatCount="indefinite" path="M160,30 L160,570" />
+            </circle>
+            <circle r="1.8" fill="hsl(var(--accent) / 0.8)" filter="url(#svcCircuitGlow)">
+              <animateMotion dur="7s" repeatCount="indefinite" path="M40,80 L280,80 L280,240 L40,240 L40,400 L280,400 L280,480" />
+            </circle>
+          </svg>
+
+          <div className="relative z-[2] px-2 py-3">
           <AnimatePresence mode="wait">
             {expandServices ?
-            <motion.div key="services-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-1 gap-2.5 px-1">
+            <motion.div key="services-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-1 gap-2.5">
                 {services.map((s, i) =>
               <div key={i}>
-                    <PremiumCard glow scan delay={i * 0.05} className="p-4 h-full">
-                      <div className="flex items-center gap-2 mb-2">
+                    <PremiumCard glow scan delay={i * 0.05} className="p-3 h-full">
+                      <div className="flex items-center gap-2 mb-1.5">
                         <PremiumIcon gradient={s.color} size="sm" delay={0}>{s.icon}</PremiumIcon>
                         <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
                       </div>
-                      <h3 className="font-heading text-[0.75rem] font-semibold text-foreground mb-1 leading-tight">{s.title}</h3>
-                      <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
+                      <h3 className="font-heading text-[0.7rem] font-semibold text-foreground mb-1 leading-tight">{s.title}</h3>
+                      <p className="text-[0.55rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
                     </PremiumCard>
                   </div>
               )}
               </motion.div> :
 
             <motion.div key="services-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <PremiumCarousel speed="slow" itemWidth={220} showControls={false}>
+                <PremiumCarousel speed="slow" itemWidth={200} showControls={false}>
                   {services.map((s, i) =>
-                <div key={i} className="w-[220px]">
-                      <PremiumCard glow scan delay={i} className="p-4 h-full">
-                        <div className="flex items-center gap-2 mb-3">
+                <div key={i} className="w-[200px]">
+                      <PremiumCard glow scan delay={i} className="p-3 h-full">
+                        <div className="flex items-center gap-2 mb-2">
                           <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>{s.icon}</PremiumIcon>
                           <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
                         </div>
-                        <h3 className="font-heading text-[0.75rem] font-semibold text-foreground mb-1.5 leading-tight">{s.title}</h3>
-                        <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
+                        <h3 className="font-heading text-[0.7rem] font-semibold text-foreground mb-1 leading-tight">{s.title}</h3>
+                        <p className="text-[0.55rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
                       </PremiumCard>
                     </div>
                 )}
@@ -4959,9 +4996,10 @@ const LandingPage = () => {
           </AnimatePresence>
           <div className="flex justify-center mt-3">
             <button onClick={() => setExpandServices((p) => !p)}
-            className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+            className="text-[0.55rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
               <Layers className="w-3 h-3" /> {expandServices ? "Chiudi" : "Vedi Tutti"}
             </button>
+          </div>
           </div>
         </div>
 
