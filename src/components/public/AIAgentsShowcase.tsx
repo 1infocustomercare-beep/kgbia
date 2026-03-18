@@ -320,9 +320,19 @@ const SECTOR_TABS = [
   { id: "retail", label: "Retail", icon: <Store className="w-3 h-3" /> },
   { id: "beach", label: "Beach", icon: <Umbrella className="w-3 h-3" /> },
   { id: "trades", label: "Artigiani", icon: <Workflow className="w-3 h-3" /> },
+  { id: "construction", label: "Edilizia", icon: <Hammer className="w-3 h-3" /> },
+  { id: "legal", label: "Legale", icon: <Scale className="w-3 h-3" /> },
+  { id: "veterinary", label: "Veterinario", icon: <Dog className="w-3 h-3" /> },
+  { id: "events", label: "Eventi", icon: <PartyPopper className="w-3 h-3" /> },
+  { id: "logistics", label: "Logistica", icon: <Truck className="w-3 h-3" /> },
+  { id: "education", label: "Formazione", icon: <GraduationCap className="w-3 h-3" /> },
+  { id: "photography", label: "Fotografia", icon: <Camera className="w-3 h-3" /> },
+  { id: "agriturismo", label: "Agriturismo", icon: <Leaf className="w-3 h-3" /> },
+  { id: "cleaning", label: "Pulizie", icon: <Droplets className="w-3 h-3" /> },
 ];
 
 const TOTAL_AGENTS_COUNT = 95;
+const INITIAL_VISIBLE = 12;
 
 /* ═══ ALWAYS-ON SVG NETWORK LINES ═══ */
 const AlwaysOnNetwork = ({
