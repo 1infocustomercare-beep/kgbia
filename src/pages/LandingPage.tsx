@@ -3624,13 +3624,17 @@ const LandingPage = () => {
           PERCHÉ EMPIRE — Unified Section
          ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(150,15%,7%,1) 30%, hsla(150,18%,6%,1) 60%, hsla(230,16%,5%,1) 100%)",
+        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,14%,9%,1) 20%, hsla(155,12%,7%,1) 45%, hsla(265,12%,8%,1) 70%, hsla(230,16%,5%,1) 100%)",
       }}>
-        {/* Premium luxury ambient glows */}
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.09]" style={{ background: "radial-gradient(circle, hsla(150,55%,40%,0.45), transparent 70%)", filter: "blur(130px)" }} />
-          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.3), transparent 70%)", filter: "blur(110px)" }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(ellipse, hsla(160,50%,45%,0.3), transparent 70%)", filter: "blur(150px)" }} />
+          <div className="absolute top-[12%] left-[25%] w-[480px] h-[480px] rounded-full opacity-[0.07]"
+               style={{ background: "radial-gradient(circle, hsla(265,65%,55%,0.5), transparent 70%)", filter: "blur(125px)" }} />
+          <div className="absolute top-[40%] right-[15%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
+               style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.4), transparent 70%)", filter: "blur(110px)" }} />
+          <div className="absolute bottom-[18%] left-[35%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
+               style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[1px]"
+               style={{ background: "linear-gradient(90deg, transparent, hsla(265,50%,60%,0.15), hsla(155,45%,50%,0.1), transparent)" }} />
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-14">
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
