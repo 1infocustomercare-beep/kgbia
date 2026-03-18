@@ -3624,7 +3624,7 @@ const LandingPage = () => {
            SETTORI
           ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,18%,8%,1) 15%, hsla(220,16%,9%,1) 30%, hsla(155,12%,7%,1) 50%, hsla(265,14%,8%,1) 70%, hsla(220,12%,6%,1) 85%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,10%,1) 15%, hsla(220,20%,11%,1) 30%, hsla(155,18%,9%,1) 50%, hsla(265,20%,10%,1) 70%, hsla(220,16%,8%,1) 85%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
