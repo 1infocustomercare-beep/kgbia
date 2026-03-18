@@ -479,6 +479,14 @@ function App() {
             <CartProvider>
               <Toaster />
               <Sonner />
+
+              {/* Cinematic Intro — shown on first load for / and /home */}
+              {!introCompleted && (
+                <IntroErrorBoundary onFail={handleIntroComplete}>
+                  <UnifiedIntro onComplete={handleIntroComplete} />
+                </IntroErrorBoundary>
+              )}
+
               <BrowserRouter>
                 <ConditionalDNABackground />
                 <RouteErrorBoundary>
