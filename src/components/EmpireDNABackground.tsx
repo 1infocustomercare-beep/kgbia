@@ -10,11 +10,13 @@ const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 40 : 80;
-const MAX_DIST = IS_MOBILE ? 110 : 150;
-const FLOW_COUNT = IS_MOBILE ? 12 : 25;
-const PULSE_COUNT = IS_MOBILE ? 3 : 6;
-const HIGHWAY_COUNT = IS_MOBILE ? 2 : 4;
+const NODE_COUNT = IS_MOBILE ? 22 : 80;
+const MAX_DIST = IS_MOBILE ? 100 : 150;
+const FLOW_COUNT = IS_MOBILE ? 5 : 25;
+const PULSE_COUNT = IS_MOBILE ? 2 : 6;
+const HIGHWAY_COUNT = IS_MOBILE ? 1 : 4;
+const TARGET_FPS = IS_MOBILE ? 24 : 60;
+const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 type Pt = { x: number; y: number };
 
@@ -208,12 +210,19 @@ const EmpireDNABackground = () => {
       return { x: lerp(pts[seg].x, pts[seg + 1].x, lt), y: lerp(pts[seg].y, pts[seg + 1].y, lt) };
     };
 
-    const animate = () => {
-      if (!w || !h) { animRef.current = requestAnimationFrame(animate); return; }
+    let lastFrameTime = 0;
+
+    const animate = (now: number) => {
+      animRef.current = requestAnimationFrame(animate);
+
+      // Throttle FPS on mobile
+      if (now - lastFrameTime < FRAME_INTERVAL) return;
+      lastFrameTime = now;
+
+      if (!w || !h) return;
       timeRef.current += 0.016;
       const time = timeRef.current;
       ctx.clearRect(0, 0, w, h);
-
       scrollRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
       const pageH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - h;
       const scrollN = pageH > 0 ? Math.max(0, Math.min(scrollRef.current / pageH, 1)) : 0;
@@ -254,18 +263,20 @@ const EmpireDNABackground = () => {
       const routeA = sIdx % SECTIONS, routeB = (sIdx + 1) % SECTIONS;
 
       // ═══ L0: AMBIENT DOT MATRIX — breathing grid ═══
-      const gridSp = IS_MOBILE ? 45 : 55;
-      const gridPulse = 0.5 + Math.sin(time * 0.3) * 0.5;
-      ctx.fillStyle = hsla(pLine, 0.015 + gridPulse * 0.008);
-      for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
-        for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
-          const localPulse = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.25) * 0.5 + 0.5;
-          const s = 0.4 + localPulse * 0.4;
-          ctx.globalAlpha = 0.3 + localPulse * 0.3;
-          ctx.fillRect(gx - s / 2, gy - s / 2, s, s);
+      const gridSp = IS_MOBILE ? 60 : 55;
+      if (!IS_MOBILE) {
+        const gridPulse = 0.5 + Math.sin(time * 0.3) * 0.5;
+        ctx.fillStyle = hsla(pLine, 0.015 + gridPulse * 0.008);
+        for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
+          for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
+            const localPulse = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.25) * 0.5 + 0.5;
+            const s = 0.4 + localPulse * 0.4;
+            ctx.globalAlpha = 0.3 + localPulse * 0.3;
+            ctx.fillRect(gx - s / 2, gy - s / 2, s, s);
+          }
         }
+        ctx.globalAlpha = 1;
       }
-      ctx.globalAlpha = 1;
 
       // ═══ L1: DATA HIGHWAYS — horizontal energy streams ═══
       const hws = hwRef.current;
@@ -295,7 +306,7 @@ const EmpireDNABackground = () => {
       // ═══ L2: CIRCUIT CONNECTIONS — morphing route style ═══
       ctx.lineCap = "square"; ctx.lineJoin = "miter";
       for (let i = 0; i < NODE_COUNT; i++) {
-        const maxJ = Math.min(i + (IS_MOBILE ? 5 : 7), NODE_COUNT);
+        const maxJ = Math.min(i + (IS_MOBILE ? 3 : 7), NODE_COUNT);
         for (let j = i + 1; j < maxJ; j++) {
           const dx = pos[i].x - pos[j].x, dy = pos[i].y - pos[j].y, d = Math.sqrt(dx * dx + dy * dy);
           if (d < MAX_DIST) {
@@ -401,13 +412,15 @@ const EmpireDNABackground = () => {
         const pt = walkPolyline(route, fl.progress);
         const fadeA = Math.sin(fl.progress * Math.PI);
 
-        // Trail (3 ghost positions)
-        for (let ti = 1; ti <= 3; ti++) {
-          const trailT = Math.max(0, fl.progress - ti * 0.04);
-          const tp = walkPolyline(route, trailT);
-          const ta = fadeA * (1 - ti * 0.3) * 0.15;
-          ctx.fillStyle = hsla(pGlow, ta);
-          ctx.fillRect(tp.x - 1, tp.y - 1, 2, 2);
+        // Trail (desktop only — too many draw calls for mobile)
+        if (!IS_MOBILE) {
+          for (let ti = 1; ti <= 3; ti++) {
+            const trailT = Math.max(0, fl.progress - ti * 0.04);
+            const tp = walkPolyline(route, trailT);
+            const ta = fadeA * (1 - ti * 0.3) * 0.15;
+            ctx.fillStyle = hsla(pGlow, ta);
+            ctx.fillRect(tp.x - 1, tp.y - 1, 2, 2);
+          }
         }
 
         // Small subtle core dot only — no big glowing ball
@@ -438,43 +451,45 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ L6: RADAR SWEEP — rotating scanner ═══
-      const radarAngle = time * 0.1;
-      const radarR = Math.min(w, h) * 0.5;
-      const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
-      rGrad.addColorStop(0, hsla(pGlow, 0));
-      rGrad.addColorStop(0.02, hsla(pGlow, 0.03));
-      rGrad.addColorStop(0.08, hsla(pGlow, 0));
-      rGrad.addColorStop(1, hsla(pGlow, 0));
-      ctx.beginPath(); ctx.moveTo(w * 0.5, h * 0.5);
-      ctx.arc(w * 0.5, h * 0.5, radarR, radarAngle, radarAngle + Math.PI * 0.18); ctx.closePath();
-      ctx.fillStyle = rGrad; ctx.fill();
+      // ═══ L6-L8: Desktop-only layers (radar, scan, streams) ═══
+      if (!IS_MOBILE) {
+        // Radar sweep
+        const radarAngle = time * 0.1;
+        const radarR = Math.min(w, h) * 0.5;
+        const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
+        rGrad.addColorStop(0, hsla(pGlow, 0));
+        rGrad.addColorStop(0.02, hsla(pGlow, 0.03));
+        rGrad.addColorStop(0.08, hsla(pGlow, 0));
+        rGrad.addColorStop(1, hsla(pGlow, 0));
+        ctx.beginPath(); ctx.moveTo(w * 0.5, h * 0.5);
+        ctx.arc(w * 0.5, h * 0.5, radarR, radarAngle, radarAngle + Math.PI * 0.18); ctx.closePath();
+        ctx.fillStyle = rGrad; ctx.fill();
 
-      // ═══ L7: HORIZONTAL SCAN LINE ═══
-      const scanY = h * (0.5 + Math.sin(time * 0.08) * 0.48);
-      const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
-      scanGrad.addColorStop(0, hsla(pAccent, 0));
-      scanGrad.addColorStop(0.5, hsla(pAccent, 0.025));
-      scanGrad.addColorStop(1, hsla(pAccent, 0));
-      ctx.fillStyle = scanGrad; ctx.fillRect(0, scanY - 40, w, 80);
-      // Scan line core
-      ctx.strokeStyle = hsla(pGlow, 0.04);
-      ctx.lineWidth = 0.5;
-      ctx.beginPath(); ctx.moveTo(0, scanY); ctx.lineTo(w, scanY); ctx.stroke();
+        // Horizontal scan line
+        const scanY = h * (0.5 + Math.sin(time * 0.08) * 0.48);
+        const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
+        scanGrad.addColorStop(0, hsla(pAccent, 0));
+        scanGrad.addColorStop(0.5, hsla(pAccent, 0.025));
+        scanGrad.addColorStop(1, hsla(pAccent, 0));
+        ctx.fillStyle = scanGrad; ctx.fillRect(0, scanY - 40, w, 80);
+        ctx.strokeStyle = hsla(pGlow, 0.04);
+        ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.moveTo(0, scanY); ctx.lineTo(w, scanY); ctx.stroke();
 
-      // ═══ L8: VERTICAL DATA STREAMS (subtle, slow) ═══
-      const streamCount = IS_MOBILE ? 3 : 5;
-      for (let si = 0; si < streamCount; si++) {
-        const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7 + time * 0.05) * 10;
-        const streamPhase = (time * (0.03 + si * 0.005) + si * 1.1) % 1;
-        const streamLen = h * 0.12;
-        const sy = streamPhase * (h + streamLen * 2) - streamLen;
-        const sGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
-        sGrad.addColorStop(0, hsla(pGlow, 0));
-        sGrad.addColorStop(0.5, hsla(pGlow, 0.02));
-        sGrad.addColorStop(1, hsla(pGlow, 0));
-        ctx.strokeStyle = sGrad; ctx.lineWidth = 0.5;
-        ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy + streamLen); ctx.stroke();
+        // Vertical data streams
+        const streamCount = 5;
+        for (let si = 0; si < streamCount; si++) {
+          const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7 + time * 0.05) * 10;
+          const streamPhase = (time * (0.03 + si * 0.005) + si * 1.1) % 1;
+          const streamLen = h * 0.12;
+          const sy = streamPhase * (h + streamLen * 2) - streamLen;
+          const sGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
+          sGrad.addColorStop(0, hsla(pGlow, 0));
+          sGrad.addColorStop(0.5, hsla(pGlow, 0.02));
+          sGrad.addColorStop(1, hsla(pGlow, 0));
+          ctx.strokeStyle = sGrad; ctx.lineWidth = 0.5;
+          ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy + streamLen); ctx.stroke();
+        }
       }
 
       // ═══ L9: CORNER CIRCUIT BRACKETS — tech frame ═══
@@ -490,7 +505,6 @@ const EmpireDNABackground = () => {
       // Bottom-right
       ctx.beginPath(); ctx.moveTo(w - 8 - brk, h - 8); ctx.lineTo(w - 8, h - 8); ctx.lineTo(w - 8, h - 8 - brk); ctx.stroke();
 
-      animRef.current = requestAnimationFrame(animate);
     };
 
     animRef.current = requestAnimationFrame(animate);
