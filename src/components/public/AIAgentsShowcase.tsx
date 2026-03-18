@@ -666,7 +666,7 @@ const NetworkNode = ({
 
       {/* Robot avatar node */}
       <div className="relative z-10 mb-1">
-        <RobotAvatar agent={agent} size={44} isActive={isActive} isConnected={isConnected} />
+        <RobotAvatar agent={agent} size={38} isActive={isActive} isConnected={isConnected} />
 
         {/* Status pulse */}
         <motion.div
