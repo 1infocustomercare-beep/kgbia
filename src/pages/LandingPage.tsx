@@ -4696,64 +4696,87 @@ const LandingPage = () => {
         </div>
 
         <div className="relative mb-1">
-          {/* DNA futuristico informatico — più visibile */}
+          {/* AI Tech Network Schema — connected nodes like neural network */}
           <div className="absolute inset-0 pointer-events-none -z-[1] overflow-hidden">
-            <div className="absolute inset-0 opacity-[0.12]">
-              <svg className="w-full h-full" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <radialGradient id="node-glow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="hsl(265,70%,60%)" stopOpacity="0.6" />
-                    <stop offset="100%" stopColor="hsl(265,70%,60%)" stopOpacity="0" />
-                  </radialGradient>
-                </defs>
-                {/* Network connections */}
-                {[
-                  [150,80, 300,180], [150,80, 450,120], [150,80, 200,280],
-                  [300,180, 450,120], [300,180, 500,280], [300,180, 600,200],
-                  [450,120, 600,200], [450,120, 750,100], [450,120, 500,280],
-                  [600,200, 750,100], [600,200, 850,220], [600,200, 700,320],
-                  [750,100, 850,220], [750,100, 900,80], [750,100, 1050,160],
-                  [850,220, 1050,160], [850,220, 700,320], [850,220, 950,300],
-                  [1050,160, 900,80], [1050,160, 950,300],
-                  [200,280, 500,280], [200,280, 300,180],
-                  [500,280, 700,320], [700,320, 950,300],
-                ].map(([x1,y1,x2,y2], i) => (
-                  <motion.line key={`l${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
-                    stroke="hsl(265,50%,55%)" strokeWidth="1" strokeOpacity="0.4"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    whileInView={{ pathLength: 1, opacity: 1 }}
+            <svg className="w-full h-full" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="proc-node-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="hsl(265,70%,60%)" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="hsl(265,70%,60%)" stopOpacity="0" />
+                </radialGradient>
+                <linearGradient id="proc-line-g" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="hsl(265,55%,55%)" stopOpacity="0.25" />
+                  <stop offset="50%" stopColor="hsl(38,45%,52%)" stopOpacity="0.18" />
+                  <stop offset="100%" stopColor="hsl(265,55%,55%)" stopOpacity="0.25" />
+                </linearGradient>
+              </defs>
+              {/* Dense network connections — all nodes interconnected */}
+              {[
+                /* Row 1 ↔ Row 2 */
+                [100,45, 200,45], [200,45, 300,45], [100,45, 300,45],
+                [100,45, 60,110], [100,45, 160,110], [100,45, 260,110],
+                [200,45, 60,110], [200,45, 160,110], [200,45, 260,110], [200,45, 340,110],
+                [300,45, 160,110], [300,45, 260,110], [300,45, 340,110],
+                /* Row 2 ↔ Row 3 */
+                [60,110, 160,110], [160,110, 260,110], [260,110, 340,110], [60,110, 340,110],
+                [60,110, 100,180], [60,110, 200,180], 
+                [160,110, 100,180], [160,110, 200,180], [160,110, 300,180],
+                [260,110, 100,180], [260,110, 200,180], [260,110, 300,180],
+                [340,110, 200,180], [340,110, 300,180],
+                /* Row 3 internal */
+                [100,180, 200,180], [200,180, 300,180], [100,180, 300,180],
+                /* Cross diagonals */
+                [100,45, 340,110], [300,45, 60,110],
+                [60,110, 300,180], [340,110, 100,180],
+              ].map(([x1,y1,x2,y2], i) => (
+                <motion.line key={`pl${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
+                  stroke="url(#proc-line-g)" strokeWidth="0.6"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.02, duration: 0.5 }}
+                />
+              ))}
+              {/* Network nodes — 3 rows like the reference image */}
+              {[
+                /* Top row */
+                [100,45], [200,45], [300,45],
+                /* Middle row */
+                [60,110], [160,110], [260,110], [340,110],
+                /* Bottom row */
+                [100,180], [200,180], [300,180],
+              ].map(([cx,cy], i) => (
+                <g key={`pn${i}`}>
+                  <circle cx={cx} cy={cy} r="14" fill="url(#proc-node-glow)" />
+                  <motion.circle cx={cx} cy={cy} r="5"
+                    fill="hsla(265,55%,50%,0.35)" stroke="hsla(265,60%,60%,0.45)" strokeWidth="1"
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.03, duration: 0.6 }}
+                    transition={{ delay: 0.2 + i * 0.04, type: "spring", stiffness: 200 }}
                   />
-                ))}
-                {/* Network nodes */}
-                {[
-                  [150,80], [300,180], [450,120], [600,200], [750,100],
-                  [850,220], [1050,160], [200,280], [500,280], [700,320],
-                  [900,80], [950,300],
-                ].map(([cx,cy], i) => (
-                  <g key={`n${i}`}>
-                    <circle cx={cx} cy={cy} r="18" fill="url(#node-glow)" />
-                    <motion.circle cx={cx} cy={cy} r="6"
-                      fill="hsl(265,60%,55%)" fillOpacity="0.5"
-                      stroke="hsl(265,60%,60%)" strokeWidth="1.5" strokeOpacity="0.6"
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3 + i * 0.05, type: "spring", stiffness: 200 }}
-                    />
-                    <motion.circle cx={cx} cy={cy} r="3"
-                      fill="hsl(155,50%,50%)" fillOpacity="0.7"
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: [0, 1.3, 1] }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.5 + i * 0.05, duration: 0.4 }}
-                    />
-                  </g>
-                ))}
-              </svg>
-            </div>
-            <div className="hidden lg:block absolute top-[44px] left-[calc(12.5%+28px)] right-[calc(12.5%+28px)] h-px bg-gradient-to-r from-primary/25 via-primary/15 to-primary/25" />
+                  <motion.circle cx={cx} cy={cy} r="2.5"
+                    fill="hsla(38,50%,55%,0.5)"
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: [0, 1.3, 1] }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.35 + i * 0.04, duration: 0.35 }}
+                  >
+                    <animate attributeName="opacity" values="0.4;0.8;0.4" dur={`${2 + i * 0.2}s`} repeatCount="indefinite" />
+                  </motion.circle>
+                </g>
+              ))}
+              {/* Animated data pulses traveling along key paths */}
+              {[
+                "M100,45 L260,110", "M300,45 L60,110", "M160,110 L300,180",
+                "M60,110 L300,180", "M200,45 L200,180",
+              ].map((d, pi) => (
+                <circle key={`pp${pi}`} r="1.5" fill="hsla(38,55%,58%,0.5)">
+                  <animateMotion dur={`${2.5 + pi * 0.4}s`} begin={`${pi * 0.6}s`} repeatCount="indefinite" path={d} />
+                  <animate attributeName="opacity" values="0;0.7;0" dur={`${2.5 + pi * 0.4}s`} begin={`${pi * 0.6}s`} repeatCount="indefinite" />
+                </circle>
+              ))}
+            </svg>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
