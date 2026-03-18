@@ -20,11 +20,11 @@ import {
   Zap, Target, TrendingUp, Gem
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import { HeroPhotoCarousel } from "@/components/public/HeroPhotoCarousel";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 
-/* ── PREMIUM ADAPTIVE PALETTE SYSTEM ── */
+/* ── VERIFIED MATCHING VIDEOS — only sectors with confirmed correct content ── */
 const INDUSTRY_VIDEOS: Record<string, string> = {
-  // Dedicated public sites — verified correct
   food: "https://videos.pexels.com/video-files/3196487/3196487-uhd_2560_1440_25fps.mp4",
   beauty: "https://videos.pexels.com/video-files/3998269/3998269-uhd_2732_1440_25fps.mp4",
   healthcare: "https://videos.pexels.com/video-files/7579341/7579341-uhd_2560_1440_25fps.mp4",
@@ -32,23 +32,102 @@ const INDUSTRY_VIDEOS: Record<string, string> = {
   hotel: "https://videos.pexels.com/video-files/6527282/6527282-uhd_2560_1440_25fps.mp4",
   retail: "https://videos.pexels.com/video-files/5527834/5527834-uhd_2560_1440_25fps.mp4",
   beach: "https://videos.pexels.com/video-files/20446096/20446096-uhd_2560_1440_25fps.mp4",
-  // Trades — synced from TradesPublicSite
-  electrician: "https://videos.pexels.com/video-files/5532771/5532771-uhd_2560_1440_25fps.mp4",
-  plumber: "https://videos.pexels.com/video-files/6538938/6538938-uhd_2560_1440_25fps.mp4",
   construction: "https://videos.pexels.com/video-files/5698648/5698648-uhd_2560_1440_25fps.mp4",
-  gardening: "https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_25fps.mp4",
-  cleaning: "https://videos.pexels.com/video-files/4107096/4107096-uhd_2560_1440_25fps.mp4",
-  garage: "https://videos.pexels.com/video-files/5691524/5691524-uhd_2560_1440_25fps.mp4",
-  photography: "https://videos.pexels.com/video-files/3743009/3743009-uhd_2560_1440_25fps.mp4",
-  veterinary: "https://videos.pexels.com/video-files/4921969/4921969-uhd_2560_1440_25fps.mp4",
-  tattoo: "https://videos.pexels.com/video-files/5765792/5765792-uhd_2560_1440_25fps.mp4",
-  childcare: "https://videos.pexels.com/video-files/8088245/8088245-uhd_2560_1440_25fps.mp4",
   education: "https://videos.pexels.com/video-files/5198164/5198164-uhd_2560_1440_25fps.mp4",
-  events: "https://videos.pexels.com/video-files/3400768/3400768-uhd_2560_1440_25fps.mp4",
-  logistics: "https://videos.pexels.com/video-files/2928223/2928223-uhd_2560_1440_25fps.mp4",
-  agriturismo: "https://videos.pexels.com/video-files/4880441/4880441-uhd_2560_1440_25fps.mp4",
-  legal: "https://videos.pexels.com/video-files/5519894/5519894-uhd_2560_1440_25fps.mp4",
-  accounting: "https://videos.pexels.com/video-files/6774523/6774523-uhd_2560_1440_25fps.mp4",
+};
+
+/* ── HERO PHOTO CAROUSELS for sectors without verified video ── */
+const INDUSTRY_PHOTO_CAROUSELS: Record<string, string[]> = {
+  electrician: [
+    "https://images.pexels.com/photos/8005397/pexels-photo-8005397.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/5691659/pexels-photo-5691659.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/8005368/pexels-photo-8005368.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/257886/pexels-photo-257886.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  plumber: [
+    "https://images.pexels.com/photos/6419128/pexels-photo-6419128.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6419073/pexels-photo-6419073.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6419071/pexels-photo-6419071.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/585419/pexels-photo-585419.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  gardening: [
+    "https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1105019/pexels-photo-1105019.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1072824/pexels-photo-1072824.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/2132227/pexels-photo-2132227.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  cleaning: [
+    "https://images.pexels.com/photos/4239091/pexels-photo-4239091.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4239035/pexels-photo-4239035.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4108715/pexels-photo-4108715.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4239036/pexels-photo-4239036.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  garage: [
+    "https://images.pexels.com/photos/3807517/pexels-photo-3807517.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3642618/pexels-photo-3642618.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4489702/pexels-photo-4489702.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4116193/pexels-photo-4116193.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  photography: [
+    "https://images.pexels.com/photos/1264210/pexels-photo-1264210.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3379934/pexels-photo-3379934.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3062541/pexels-photo-3062541.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1983037/pexels-photo-1983037.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  veterinary: [
+    "https://images.pexels.com/photos/6234603/pexels-photo-6234603.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6235116/pexels-photo-6235116.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6234984/pexels-photo-6234984.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/7469214/pexels-photo-7469214.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  tattoo: [
+    "https://images.pexels.com/photos/1304469/pexels-photo-1304469.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/955938/pexels-photo-955938.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/2183131/pexels-photo-2183131.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4125659/pexels-photo-4125659.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  childcare: [
+    "https://images.pexels.com/photos/3662667/pexels-photo-3662667.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3661193/pexels-photo-3661193.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3662579/pexels-photo-3662579.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  events: [
+    "https://images.pexels.com/photos/2263436/pexels-photo-2263436.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/587741/pexels-photo-587741.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  logistics: [
+    "https://images.pexels.com/photos/4481259/pexels-photo-4481259.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6169668/pexels-photo-6169668.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4246120/pexels-photo-4246120.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/4481326/pexels-photo-4481326.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  agriturismo: [
+    "https://images.pexels.com/photos/2252584/pexels-photo-2252584.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/5462249/pexels-photo-5462249.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1353938/pexels-photo-1353938.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/235725/pexels-photo-235725.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  legal: [
+    "https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/5668882/pexels-photo-5668882.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/5669619/pexels-photo-5669619.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  accounting: [
+    "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/7681091/pexels-photo-7681091.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/6694543/pexels-photo-6694543.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/5483071/pexels-photo-5483071.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
+  custom: [
+    "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  ],
 };
 
 const INDUSTRY_POSTERS: Record<string, string> = {
@@ -202,6 +281,7 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
 
   const heroVideo = siteConfig?.hero_video_url || INDUSTRY_VIDEOS[industry];
   const heroPoster = siteConfig?.hero_image_url || INDUSTRY_POSTERS[industry] || INDUSTRY_POSTERS.custom;
+  const heroPhotos = INDUSTRY_PHOTO_CAROUSELS[industry] || INDUSTRY_PHOTO_CAROUSELS.custom;
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: p.bg, color: p.text, fontFamily: "'DM Sans', sans-serif" }}>
@@ -272,6 +352,8 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
             style={{ filter: "brightness(0.4) saturate(1.1)" }}
             accentColor={`${accentHex}30`}
           />
+        ) : heroPhotos ? (
+          <HeroPhotoCarousel images={heroPhotos} className="absolute inset-0 w-full h-full" style={{ filter: "brightness(0.4) saturate(1.1)" }} overlay={false} />
         ) : (
           <img src={heroPoster} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.4) saturate(1.1)" }} />
         )}
