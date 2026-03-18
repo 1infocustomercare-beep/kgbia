@@ -5134,7 +5134,7 @@ const LandingPage = () => {
             {faqs.map((faq, i) => (
               <motion.div key={i} className="rounded-xl glow-card overflow-hidden" variants={fadeUp}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between p-5 text-left hover:bg-foreground/[0.02] transition-colors">
+                  className="relative z-10 w-full flex items-center justify-between p-5 text-left hover:bg-foreground/[0.02] transition-colors">
                   <span className="text-xs sm:text-sm font-semibold text-foreground pr-3 font-heading">{faq.q}</span>
                   <motion.div
                     animate={{ rotate: openFaq === i ? 45 : 0 }}
