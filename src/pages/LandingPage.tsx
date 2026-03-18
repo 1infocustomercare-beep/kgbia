@@ -269,9 +269,9 @@ const NeuralCellsBackground = () => {
     return conns;
   }, [cells, isMobile]);
 
-  // On mobile, drastically limit animated pulses to prevent GPU thrashing
-  const pulseConns = isMobile ? connections.filter((_, i) => i % 8 === 0) : connections.filter((_, i) => i % 2 === 0);
-  const goldConns = isMobile ? connections.filter((_, i) => i % 12 === 0) : connections.filter((_, i) => i % 4 === 0);
+  // On mobile, skip ALL animated SVG pulses to prevent GPU thrashing
+  const pulseConns = isMobile ? [] : connections.filter((_, i) => i % 2 === 0);
+  const goldConns = isMobile ? [] : connections.filter((_, i) => i % 4 === 0);
 
   return (
     <motion.div
