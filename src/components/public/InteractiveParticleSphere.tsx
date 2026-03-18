@@ -597,9 +597,10 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         ctx.beginPath(); ctx.arc(ti.x, ti.y, 1.1 * sc, 0, Math.PI * 2); ctx.fillStyle = hsl(COLORS.white, 0.5 * anyA); ctx.fill();
       }
 
-      // ═══ L6.8: DNA NEURAL LABELS — "Il DNA Tecnologico" effect ═══
-      const coreNode = dnaNodes[0];
-      coreNode.x = cx; coreNode.y = cy; coreNode.pulse += 0.035;
+      // ═══ L6.8: DNA NEURAL LABELS — "Il DNA Tecnologico" effect (desktop only) ═══
+      if (!IS_MOBILE) {
+        const coreNode = dnaNodes[0];
+        coreNode.x = cx; coreNode.y = cy; coreNode.pulse += 0.035;
 
       // Update satellite positions
       for (let i = 1; i < dnaNodes.length; i++) {
