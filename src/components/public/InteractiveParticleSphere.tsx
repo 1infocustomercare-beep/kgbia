@@ -54,7 +54,7 @@ const TECH_ICON_SET: { Icon: LucideIcon; color: string; glow: string }[] = [
   { Icon: Binary, color: "hsla(38,45%,60%,0.85)", glow: "hsla(38,45%,60%,0.25)" },
 ];
 
-const TECH_ICON_COUNT = IS_MOBILE ? 8 : TECH_ICON_SET.length;
+const TECH_ICON_COUNT = IS_MOBILE ? 4 : TECH_ICON_SET.length;
 
 const COLORS = {
   gold: { h: 38, s: 50, l: 55 },
