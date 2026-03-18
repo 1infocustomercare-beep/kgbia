@@ -1117,7 +1117,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ EVOLVING NETWORK FOOTER ══════ */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-          className="text-center py-6">
+          className="text-center py-4">
           <p className="text-foreground/90 text-xs sm:text-sm font-semibold mb-3">
             Una Rete che Evolve per Sempre.
           </p>
