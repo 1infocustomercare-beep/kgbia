@@ -1105,7 +1105,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="text-center p-3 rounded-xl border border-border bg-background/70 hover:border-primary/30 transition-colors">
                 <div className="text-primary/80 flex justify-center mb-1.5">{stat.icon}</div>
-                <div className="text-2xl sm:text-3xl font-bold text-foreground mb-0.5">
+                <div className="text-xl sm:text-3xl font-bold text-foreground mb-0.5">
                   <Counter value={stat.value} suffix={stat.suffix} />
                 </div>
                 <div className="text-[0.55rem] sm:text-xs font-semibold text-foreground/90">{stat.label}</div>
