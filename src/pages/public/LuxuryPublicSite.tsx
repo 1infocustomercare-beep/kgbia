@@ -600,7 +600,8 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
-      {/* ═══ SECTOR VALUE + AUTOMATION ═══ */}
+      {/* ═══ AI AGENTS + SECTOR VALUE + AUTOMATION ═══ */}
+      <AIAgentsShowcase sector={industry} />
       <SectorValueProposition sectorKey={industry} accentColor={accentHex} darkMode={isDark} sectorLabel={config.label} />
       <AutomationShowcase accentColor={p.accent} accentBg="bg-primary" sectorName={config.label.toLowerCase()} darkMode={isDark} />
 
