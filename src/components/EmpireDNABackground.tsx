@@ -131,9 +131,7 @@ const PALETTES = [
 interface FlowParticle { fromIdx: number; toIdx: number; progress: number; speed: number; life: number; }
 interface PulseRing { x: number; y: number; r: number; maxR: number; alpha: number; color: number[]; }
 
-const EmpireDNABackground = () => {
-  // Early exit for mobile — no hooks needed
-  if (IS_MOBILE) return null;
+const EmpireDNABackgroundCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const scrollRef = useRef(0);
