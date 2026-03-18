@@ -994,7 +994,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                   <motion.div key={agent.id}
                     layout
                     initial={{ opacity: 0, scale: 0.6 }}
-                    animate={{ opacity: 1, scale: 1, marginTop: i % 2 === 1 ? 28 : 0 }}
+                    animate={{ opacity: 1, scale: 1, marginTop: i % 2 === 1 ? 14 : 0 }}
                     exit={{ opacity: 0, scale: 0.4, transition: { duration: 0.2 } }}
                     transition={{ type: "spring", stiffness: 400, damping: 28, mass: 0.7 }}
                   >
