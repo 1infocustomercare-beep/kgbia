@@ -3737,13 +3737,13 @@ const LandingPage = () => {
           COMPARISON TABLE — Empire vs Others
          ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: `linear-gradient(180deg, hsla(150,20%,6%,1) 0%, hsla(155,28%,9%,1) 40%, hsla(150,22%,7%,1) 70%, hsla(150,18%,5%,1) 100%)`,
+        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,14%,8%,1) 35%, hsla(38,8%,7%,1) 60%, hsla(230,16%,5%,1) 100%)",
       }}>
-        {/* Green tech AI ambient glows */}
+        {/* Premium luxury ambient glows */}
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.10]" style={{ background: "radial-gradient(circle, hsla(150,60%,45%,0.4), transparent 70%)", filter: "blur(120px)" }} />
-          <div className="absolute bottom-1/4 right-1/5 w-[350px] h-[350px] rounded-full opacity-[0.07]" style={{ background: "radial-gradient(circle, hsla(160,55%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(ellipse, hsla(140,50%,55%,0.3), transparent 70%)", filter: "blur(150px)" }} />
+          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.08]" style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.4), transparent 70%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(110px)" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(ellipse, hsla(265,50%,55%,0.25), transparent 70%)", filter: "blur(150px)" }} />
         </div>
         <div className="text-center mb-10">
           <SectionLabel text="Confronto" icon={<Activity className="w-3 h-3 text-primary" />} />
