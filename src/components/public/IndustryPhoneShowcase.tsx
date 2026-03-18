@@ -2838,6 +2838,7 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
                   index={i}
                   sectorStyle={sectorStyle}
                   industryId={industryId}
+                  totalCount={SCREENS.length}
                 />
               </div>
             ))}
