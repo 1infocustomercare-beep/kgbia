@@ -455,19 +455,17 @@ const NetworkNode = ({
       style={{ zIndex: isActive ? 30 : isConnected ? 20 : 10 }}
       transition={{ type: "spring", stiffness: 350, damping: 30, mass: 0.8 }}
     >
-      {/* Outer circuit glow ring */}
+      {/* Outer glow — static, no animation */}
       {(isActive || isConnected) && (
-        <motion.div
+        <div
           className="absolute rounded-xl pointer-events-none"
           style={{
             width: isActive ? 64 : 54,
             height: isActive ? 64 : 54,
             top: "50%", left: "50%", transform: "translate(-50%, -55%)",
             background: `radial-gradient(circle, ${agent.glow}18 0%, transparent 70%)`,
-            boxShadow: isActive ? `0 0 30px ${agent.glow}20` : `0 0 15px ${agent.glow}12`,
+            boxShadow: isActive ? `0 0 25px ${agent.glow}18` : `0 0 12px ${agent.glow}0C`,
           }}
-          animate={isActive ? { scale: [1, 1.12, 1], opacity: [0.5, 0.9, 0.5] } : { opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 3, repeat: Infinity }}
         />
       )}
 
