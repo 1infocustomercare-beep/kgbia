@@ -973,46 +973,61 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
           <motion.div key="packages" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
 
             {/* Urgency banner */}
-            <motion.div className="max-w-3xl mx-auto mb-5 p-3 rounded-xl border border-accent/20 bg-accent/[0.04] text-center"
-              animate={{ borderColor: ["hsla(35,45%,50%,0.2)", "hsla(35,45%,50%,0.4)", "hsla(35,45%,50%,0.2)"] }}
-              transition={{ duration: 3, repeat: Infinity }}>
-              <p className="text-[0.65rem] sm:text-xs text-accent font-semibold flex items-center justify-center gap-2">
-                <Timer className="w-3.5 h-3.5" />
-                <span>Prezzo lancio valido ancora per pochi giorni — Risparmia fino a <strong>€6.403</strong></span>
+            {/* Urgency banner — mobile optimized */}
+            <motion.div className="mx-auto mb-4 p-2.5 rounded-xl border border-accent/25 bg-accent/[0.06] text-center"
+              animate={{ borderColor: ["hsla(35,45%,50%,0.25)", "hsla(35,45%,50%,0.5)", "hsla(35,45%,50%,0.25)"] }}
+              transition={{ duration: 2.5, repeat: Infinity }}>
+              <p className="text-[0.7rem] text-accent font-bold flex items-center justify-center gap-1.5">
+                <Timer className="w-3.5 h-3.5 animate-pulse" />
+                Offerta lancio — Risparmia fino a <strong className="text-sm">€6.403</strong>
               </p>
+              <p className="text-[0.5rem] text-accent/50 mt-0.5">Solo 7 posti rimasti a questo prezzo</p>
             </motion.div>
 
-            {/* Package Cards — stacked on mobile */}
-            <div className="sm:hidden space-y-4 mb-6">
-              {PACKAGE_TIERS.map((p) => {
+            {/* Social proof bar */}
+            <div className="flex items-center justify-center gap-3 mb-4 px-2">
+              <div className="flex -space-x-2">
+                {["👨‍🍳","👩‍💼","👨‍⚕️","💇‍♀️","🏋️"].map((e, i) => (
+                  <div key={i} className="w-6 h-6 rounded-full bg-primary/10 border-2 border-background flex items-center justify-center text-[0.55rem]">{e}</div>
+                ))}
+              </div>
+              <p className="text-[0.55rem] text-foreground/40"><strong className="text-foreground/60">127+ attività</strong> hanno già scelto Empire questa settimana</p>
+            </div>
+
+            {/* Package Cards — mobile conversion-optimized */}
+            <div className="sm:hidden space-y-3 mb-5">
+              {PACKAGE_TIERS.map((p, idx) => {
                 const isSelected = selectedPackage === p.id;
                 const isEmpire = p.id === "empire";
+                const isGrowth = p.id === "growth";
+                const discountPct = Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
                 return (
                   <motion.div key={p.id}
                     onClick={() => setSelectedPackage(p.id)}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
                     className={`relative w-full rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                       isEmpire
-                        ? "border-2 border-accent/50 shadow-[0_0_60px_hsla(35,45%,50%,0.2),0_8px_32px_hsla(0,0%,0%,0.5)]"
+                        ? "border-2 border-accent/50 shadow-[0_0_50px_hsla(35,45%,50%,0.25),0_8px_32px_hsla(0,0%,0%,0.5)] scale-[1.02]"
                         : isSelected
-                          ? "border-2 border-primary/50 shadow-[0_0_40px_hsla(265,50%,55%,0.12),0_8px_32px_hsla(0,0%,0%,0.4)]"
-                          : "border border-border/40 shadow-[0_4px_24px_hsla(0,0%,0%,0.3)]"
+                          ? "border-2 border-primary/50 shadow-[0_0_30px_hsla(265,50%,55%,0.12)]"
+                          : "border border-border/30 shadow-[0_4px_20px_hsla(0,0%,0%,0.25)]"
                     }`}
                     style={{
                       background: isEmpire
-                        ? "linear-gradient(165deg, hsla(35,25%,14%,0.95), hsla(230,12%,9%,0.98))"
-                        : "linear-gradient(165deg, hsla(230,12%,14%,0.95), hsla(230,10%,10%,0.98))"
+                        ? "linear-gradient(165deg, hsla(35,25%,14%,0.97), hsla(230,12%,8%,0.99))"
+                        : "linear-gradient(165deg, hsla(230,12%,13%,0.96), hsla(230,10%,9%,0.99))"
                     }}
-                    whileTap={{ scale: 0.99 }}>
+                    whileTap={{ scale: 0.985 }}>
 
-                    {/* Top accent line */}
-                    <div className={`h-[2px] w-full ${isEmpire ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />
+                    {/* Top gradient bar */}
+                    <div className={`h-[3px] w-full ${isEmpire ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : isGrowth ? "bg-vibrant-gradient" : "bg-gradient-to-r from-primary/60 to-primary/30"}`} />
 
                     {/* Badge */}
                     {p.badge && (
-                      <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
+                      <div className={`absolute top-0 right-0 px-3 py-1.5 rounded-bl-2xl text-[0.55rem] font-bold tracking-[1.5px] font-heading uppercase ${
                         isEmpire
                           ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black"
                           : p.badge === "Più Scelto" ? "bg-vibrant-gradient text-primary-foreground"
@@ -1020,61 +1035,72 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                       }`}>{p.badge}</div>
                     )}
 
-                    <div className="p-5">
-                      {/* Header: Name + Price */}
-                      <div className="flex items-start justify-between">
+                    <div className="p-4">
+                      {/* Header row: Name + Discount */}
+                      <div className="flex items-start justify-between mb-2">
                         <div>
-                          <p className="text-[0.6rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
-                          <div className="mt-1 flex items-baseline gap-2">
-                            <span className="text-3xl font-heading font-bold text-foreground">€{p.price.toLocaleString("it-IT")}</span>
-                            <span className="text-xs text-foreground/20 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
+                          <p className="text-[0.55rem] font-heading font-semibold text-foreground/35 tracking-[3px] uppercase">{p.name}</p>
+                          <div className="flex items-baseline gap-2 mt-1">
+                            <span className="text-[2rem] font-heading font-extrabold text-foreground leading-none">€{p.price.toLocaleString("it-IT")}</span>
+                            <div className="flex flex-col">
+                              <span className="text-[0.65rem] text-foreground/20 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
+                              <span className="text-[0.5rem] text-foreground/25">una tantum</span>
+                            </div>
                           </div>
-                          <p className="text-[0.55rem] text-foreground/25 mt-0.5">
-                            oppure 6×€{Math.round(p.price / 6)}/mese · <span className="text-accent/60 font-semibold">0% interessi</span>
-                          </p>
                         </div>
-                        {/* Discount badge */}
-                        <div className={`px-2.5 py-1.5 rounded-xl text-center ${isEmpire ? "bg-accent/15" : "bg-primary/10"}`}>
-                          <span className={`text-lg font-heading font-bold ${isEmpire ? "text-accent" : "text-primary"}`}>
-                            -{Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)}%
-                          </span>
-                        </div>
+                        <motion.div
+                          className={`px-2.5 py-2 rounded-xl text-center ${isEmpire ? "bg-accent/15 border border-accent/20" : "bg-primary/10 border border-primary/15"}`}
+                          animate={isEmpire ? { scale: [1, 1.05, 1] } : {}}
+                          transition={{ duration: 2, repeat: Infinity }}>
+                          <span className={`text-xl font-heading font-black ${isEmpire ? "text-accent" : "text-primary"}`}>-{discountPct}%</span>
+                        </motion.div>
                       </div>
 
-                      {/* Monthly + Commission pills */}
+                      {/* Installment info */}
+                      <p className="text-[0.6rem] text-foreground/30">
+                        oppure <strong className="text-foreground/50">€{Math.round(p.price / 3)}/mese ×3</strong> (TAN 0%) · oppure €{Math.round(p.price / 6)}/mese ×6
+                      </p>
+
+                      {/* Monthly + Commission pills — KEY conversion element */}
                       <div className="flex items-center gap-2 mt-3">
-                        <span className={`flex-1 text-center px-2 py-1.5 rounded-xl text-[0.6rem] font-bold border ${
+                        <span className={`flex-1 text-center py-2 rounded-xl text-[0.65rem] font-bold border ${
                           p.monthlyFee === 0
-                            ? "bg-accent/10 text-accent border-accent/20"
-                            : "bg-foreground/[0.03] text-foreground/50 border-border/20"
+                            ? "bg-accent/12 text-accent border-accent/25"
+                            : "bg-foreground/[0.03] text-foreground/45 border-border/15"
                         }`}>
                           {p.monthlyFee === 0 ? "€0/mese ✓" : `poi €${p.monthlyFee}/mese`}
                         </span>
-                        <span className={`flex-1 text-center px-2 py-1.5 rounded-xl text-[0.6rem] font-bold border ${
+                        <span className={`flex-1 text-center py-2 rounded-xl text-[0.65rem] font-bold border ${
                           p.commission === "0%"
-                            ? "bg-accent/10 text-accent border-accent/20"
-                            : "bg-foreground/[0.03] text-foreground/50 border-border/20"
+                            ? "bg-accent/12 text-accent border-accent/25"
+                            : "bg-foreground/[0.03] text-foreground/45 border-border/15"
                         }`}>
                           {p.commission === "0%" ? "0% commissioni ✓" : `${p.commission} transazioni`}
                         </span>
                       </div>
 
-                      {/* Empire daily nudge */}
+                      {/* Empire daily cost nudge */}
                       {isEmpire && (
-                        <div className="mt-3 p-2.5 rounded-xl bg-accent/[0.06] border border-accent/15 text-center">
-                          <p className="text-[0.65rem] text-accent font-bold">
-                            💰 Solo €11/giorno per 24 mesi — poi è tutto tuo, per sempre
+                        <motion.div
+                          className="mt-3 p-3 rounded-xl bg-accent/[0.08] border border-accent/20 text-center"
+                          animate={{ boxShadow: ["0 0 0px hsla(35,45%,50%,0)", "0 0 20px hsla(35,45%,50%,0.1)", "0 0 0px hsla(35,45%,50%,0)"] }}
+                          transition={{ duration: 3, repeat: Infinity }}>
+                          <p className="text-[0.7rem] text-accent font-bold">
+                            💰 Solo €11/giorno per 24 mesi
                           </p>
-                          <p className="text-[0.5rem] text-accent/40 mt-0.5">Meno di un caffè al bar. Zero costi nascosti.</p>
-                        </div>
+                          <p className="text-[0.5rem] text-accent/50 mt-0.5">Poi è tutto tuo, per sempre. Meno di un caffè al bar.</p>
+                        </motion.div>
                       )}
 
-                      {/* Features */}
+                      {/* Tagline */}
+                      <p className="text-[0.6rem] text-foreground/30 mt-2.5 leading-relaxed italic">{p.tagline}</p>
+
+                      {/* Features with expand */}
                       <ul className="mt-3 space-y-1.5">
                         {p.features.slice(0, isSelected ? p.features.length : 4).map((f, fi) => (
-                          <li key={fi} className="flex items-start gap-2 text-[0.65rem] text-foreground/50">
-                            <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                              f.includes("ZERO") || f.includes("0%") ? "bg-accent/20" : "bg-primary/10"
+                          <li key={fi} className="flex items-start gap-2 text-[0.7rem] text-foreground/50">
+                            <div className={`w-4.5 h-4.5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                              f.includes("ZERO") || f.includes("0%") ? "bg-accent/20" : "bg-primary/12"
                             }`}>
                               <Check className={`w-2.5 h-2.5 ${
                                 f.includes("ZERO") || f.includes("0%") ? "text-accent" : "text-primary"
@@ -1084,18 +1110,66 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                           </li>
                         ))}
                         {!isSelected && p.features.length > 4 && (
-                          <li className="text-[0.55rem] text-primary/60 font-semibold pl-6 pt-0.5">
-                            Tocca per vedere +{p.features.length - 4} funzionalità →
+                          <li className="text-[0.6rem] text-primary/70 font-semibold pl-6 pt-1 flex items-center gap-1">
+                            <ChevronDown className="w-3 h-3" />
+                            Vedi +{p.features.length - 4} funzionalità
                           </li>
                         )}
                       </ul>
 
+                      {/* Bonus inclusi */}
+                      {isSelected && (
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
+                          className="mt-3 pt-3 border-t border-border/15 overflow-hidden">
+                          <p className="text-[0.5rem] font-heading font-bold text-accent/60 tracking-[2px] uppercase mb-1.5">
+                            <Gift className="w-3 h-3 inline mr-1" />Bonus inclusi
+                          </p>
+                          {p.extras.map((e, ei) => (
+                            <p key={ei} className="text-[0.6rem] text-foreground/35 flex items-center gap-1.5 mb-0.5">
+                              <Star className="w-2.5 h-2.5 text-accent/40 flex-shrink-0" /> {e}
+                            </p>
+                          ))}
+                        </motion.div>
+                      )}
+
                       {/* Savings bar */}
-                      <div className={`mt-3 p-2.5 rounded-xl text-[0.6rem] font-bold text-center ${
-                        isEmpire ? "bg-accent/10 text-accent border border-accent/15" : "bg-primary/[0.06] text-primary/70 border border-primary/10"
+                      <div className={`mt-3 p-2.5 rounded-xl text-[0.65rem] font-bold text-center ${
+                        isEmpire ? "bg-accent/12 text-accent border border-accent/20" : "bg-primary/[0.06] text-primary/70 border border-primary/10"
                       }`}>
-                        {p.savings}
+                        💸 {p.savings}
                       </div>
+
+                      {/* CTA button per card */}
+                      <motion.button
+                        onClick={(e) => { e.stopPropagation(); setSelectedPackage(p.id); navigate("/admin"); }}
+                        className={`w-full mt-3 py-3 rounded-xl text-[0.7rem] font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
+                          isEmpire
+                            ? "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20"
+                            : isGrowth
+                              ? "bg-vibrant-gradient text-primary-foreground"
+                              : "bg-primary/15 text-primary border border-primary/20"
+                        }`}
+                        whileTap={{ scale: 0.97 }}>
+                        {(isEmpire || isGrowth) && (
+                          <motion.div className="absolute inset-0 pointer-events-none"
+                            style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)" }}
+                            animate={{ x: ["-200%", "300%"] }}
+                            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }}
+                          />
+                        )}
+                        <span className="relative z-10">
+                          {isEmpire ? "👑 Scelgo Empire — Domina Ora" : isGrowth ? "🚀 Scelgo Growth AI" : "Inizia con Digital Start"}
+                        </span>
+                      </motion.button>
+
+                      {/* Empire upsell on non-empire cards */}
+                      {!isEmpire && (
+                        <div className="mt-2 p-2 rounded-lg bg-accent/[0.04] border border-accent/10 cursor-pointer" onClick={(e) => { e.stopPropagation(); setSelectedPackage("empire"); }}>
+                          <p className="text-[0.5rem] text-accent/70 text-center">
+                            ⚡ Con Empire risparmi <strong>€{p.commission === "2%" ? "6.403" : "4.200"}</strong> in più e hai <strong>0% commissioni per sempre</strong> →
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 );
