@@ -2468,10 +2468,6 @@ const LandingPage = () => {
     return () => window.removeEventListener("scroll", h);
   }, []);
 
-  useEffect(() => {
-    const timer = setInterval(() => setActiveIndustry(p => (p + 1) % 7), 3000);
-    return () => clearInterval(timer);
-  }, []);
 
   const manualMonthlyCost = weeklyHours * hourlyCost * 4.3;
   const automatedCost = manualMonthlyCost * 0.2; // 80% automated
