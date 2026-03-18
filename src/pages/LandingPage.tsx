@@ -3601,13 +3601,14 @@ const LandingPage = () => {
       {/*
           PERCHÉ EMPIRE — Unified Section
          ═══════════════════════════════════════════ */}
-      <Section style={{
-        background: `linear-gradient(180deg, hsla(150,20%,6%,1) 0%, hsla(155,25%,8%,1) 40%, hsla(150,22%,7%,1) 70%, hsla(150,20%,6%,1) 100%)`,
+      <Section className="relative overflow-hidden" style={{
+        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(150,15%,7%,1) 30%, hsla(150,18%,6%,1) 60%, hsla(230,16%,5%,1) 100%)",
       }}>
-        {/* Green tech ambient glows */}
+        {/* Premium luxury ambient glows */}
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/4 left-1/3 w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.08]" style={{ background: "hsl(150 60% 40%)" }} />
-          <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full blur-[180px] opacity-[0.05]" style={{ background: "hsl(160 50% 45%)" }} />
+          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.09]" style={{ background: "radial-gradient(circle, hsla(150,55%,40%,0.45), transparent 70%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.3), transparent 70%)", filter: "blur(110px)" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(ellipse, hsla(160,50%,45%,0.3), transparent 70%)", filter: "blur(150px)" }} />
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-14">
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
