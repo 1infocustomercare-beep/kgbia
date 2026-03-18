@@ -583,7 +583,7 @@ const CircuitBackground = () => (
   </div>
 );
 
-/* ═══ ROBOT AVATAR — gradient icon node ═══ */
+/* ═══ ROBOT AVATAR — gradient icon node with FULL CIRCUIT ═══ */
 const RobotAvatar = ({ agent, size = 72, isActive, isConnected }: {
   agent: AgentNode; size?: number; isActive: boolean; isConnected: boolean;
 }) => {
@@ -599,19 +599,47 @@ const RobotAvatar = ({ agent, size = 72, isActive, isConnected }: {
       {/* Gradient background */}
       <div className={`absolute inset-0 bg-gradient-to-br ${agent.gradient} opacity-90`} />
 
-      {/* Circuit pattern overlay */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.12]" viewBox="0 0 60 60">
-        <line x1="0" y1="15" x2="60" y2="15" stroke="white" strokeWidth="0.3" />
-        <line x1="0" y1="30" x2="60" y2="30" stroke="white" strokeWidth="0.3" />
-        <line x1="0" y1="45" x2="60" y2="45" stroke="white" strokeWidth="0.3" />
-        <line x1="15" y1="0" x2="15" y2="60" stroke="white" strokeWidth="0.3" />
-        <line x1="30" y1="0" x2="30" y2="60" stroke="white" strokeWidth="0.3" />
-        <line x1="45" y1="0" x2="45" y2="60" stroke="white" strokeWidth="0.3" />
-        <circle cx="15" cy="15" r="1.5" fill="white" opacity="0.4" />
-        <circle cx="45" cy="15" r="1.5" fill="white" opacity="0.4" />
-        <circle cx="15" cy="45" r="1.5" fill="white" opacity="0.4" />
-        <circle cx="45" cy="45" r="1.5" fill="white" opacity="0.4" />
-        <circle cx="30" cy="30" r="2" fill="white" opacity="0.3" />
+      {/* Hexagonal circuit grid overlay */}
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 60 60">
+        <defs>
+          <pattern id={`hex-${agent.id}`} x="0" y="0" width="20" height="17.3" patternUnits="userSpaceOnUse">
+            <path d="M10 0 L20 5 L20 12.3 L10 17.3 L0 12.3 L0 5 Z" fill="none" stroke="white" strokeWidth="0.25" opacity="0.18" />
+            <circle cx="10" cy="0" r="0.6" fill="white" opacity="0.3" />
+            <circle cx="20" cy="5" r="0.6" fill="white" opacity="0.25" />
+          </pattern>
+        </defs>
+        <rect width="60" height="60" fill={`url(#hex-${agent.id})`} />
+        
+        {/* Circuit traces */}
+        <line x1="0" y1="20" x2="25" y2="20" stroke="white" strokeWidth="0.3" opacity="0.15" />
+        <line x1="25" y1="20" x2="25" y2="40" stroke="white" strokeWidth="0.3" opacity="0.15" />
+        <line x1="35" y1="15" x2="60" y2="15" stroke="white" strokeWidth="0.3" opacity="0.12" />
+        <line x1="35" y1="15" x2="35" y2="45" stroke="white" strokeWidth="0.3" opacity="0.12" />
+        <line x1="15" y1="40" x2="45" y2="40" stroke="white" strokeWidth="0.3" opacity="0.1" />
+        
+        {/* Junction nodes */}
+        <circle cx="25" cy="20" r="1.2" fill="white" opacity="0.35" />
+        <circle cx="35" cy="15" r="1.2" fill="white" opacity="0.3" />
+        <circle cx="25" cy="40" r="1" fill="white" opacity="0.25" />
+        <circle cx="35" cy="45" r="1" fill="white" opacity="0.2" />
+        <circle cx="15" cy="40" r="0.8" fill="white" opacity="0.2" />
+
+        {/* Animated data particle on trace */}
+        <circle r="1" fill="white" opacity="0.6">
+          <animateMotion dur={isActive ? "1.5s" : "3s"} repeatCount="indefinite"
+            path="M0,20 L25,20 L25,40 L45,40" />
+        </circle>
+        {(isActive || isConnected) && (
+          <circle r="0.8" fill="white" opacity="0.4">
+            <animateMotion dur="2.5s" repeatCount="indefinite"
+              path="M60,15 L35,15 L35,45 L15,45" begin="0.8s" />
+          </circle>
+        )}
+
+        {/* Scanning line */}
+        <line x1="0" y1="0" x2="60" y2="0" stroke="white" strokeWidth="0.5" opacity="0.15">
+          <animateTransform attributeName="transform" type="translate" values="0,0;0,60;0,0" dur={isActive ? "2s" : "4s"} repeatCount="indefinite" />
+        </line>
       </svg>
 
       {/* Inner glow */}
@@ -648,13 +676,13 @@ const NetworkNode = ({
       style={{ zIndex: isActive ? 30 : isConnected ? 20 : 10 }}
       transition={{ type: "spring", stiffness: 350, damping: 30, mass: 0.8 }}
     >
-      {/* Outer glow */}
+      {/* Outer circuit glow ring */}
       {(isActive || isConnected) && (
         <motion.div
           className="absolute rounded-xl pointer-events-none"
           style={{
-            width: isActive ? 72 : 60,
-            height: isActive ? 72 : 60,
+            width: isActive ? 64 : 54,
+            height: isActive ? 64 : 54,
             top: "50%", left: "50%", transform: "translate(-50%, -55%)",
             background: `radial-gradient(circle, ${agent.glow}18 0%, transparent 70%)`,
             boxShadow: isActive ? `0 0 30px ${agent.glow}20` : `0 0 15px ${agent.glow}12`,
@@ -663,6 +691,25 @@ const NetworkNode = ({
           transition={{ duration: 3, repeat: Infinity }}
         />
       )}
+
+      {/* Circuit connector lines extending from node */}
+      <svg className="absolute pointer-events-none z-[1]" style={{ width: 70, height: 70, top: "50%", left: "50%", transform: "translate(-50%, -55%)" }} viewBox="0 0 70 70">
+        {/* Diagonal circuit traces */}
+        <line x1="0" y1="35" x2="8" y2="35" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
+        <line x1="62" y1="35" x2="70" y2="35" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
+        <line x1="35" y1="0" x2="35" y2="8" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
+        <line x1="35" y1="62" x2="35" y2="70" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
+        {/* Corner traces */}
+        <path d="M8,8 L15,8 L15,15" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
+        <path d="M62,8 L55,8 L55,15" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
+        <path d="M8,62 L15,62 L15,55" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
+        <path d="M62,62 L55,62 L55,55" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
+        {/* Corner junction dots */}
+        <circle cx="8" cy="8" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
+        <circle cx="62" cy="8" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
+        <circle cx="8" cy="62" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
+        <circle cx="62" cy="62" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
+      </svg>
 
       {/* Robot avatar node */}
       <div className="relative z-10 mb-1">
