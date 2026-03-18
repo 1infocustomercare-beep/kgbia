@@ -492,8 +492,8 @@ const EmpireDNABackground = () => {
 
       // ═══ L9: CORNER CIRCUIT BRACKETS — tech frame ═══
       const brk = 30;
-      ctx.strokeStyle = hsla(pLine, 0.04 + Math.sin(time * 0.3) * 0.015);
-      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = hsla(pLine, 0.025 + Math.sin(time * 0.3) * 0.01);
+      ctx.lineWidth = 0.4;
       // Top-left
       ctx.beginPath(); ctx.moveTo(8, 8 + brk); ctx.lineTo(8, 8); ctx.lineTo(8 + brk, 8); ctx.stroke();
       // Top-right
