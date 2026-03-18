@@ -9,8 +9,11 @@ const FUNNEL_STEPS = [
 ] as const;
 
 const FunnelDNAVisual = memo(() => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const isInView = useInView(containerRef, { margin: "220px 0px 220px 0px", amount: 0.05 });
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
   // Rotate active funnel step
   useEffect(() => {
