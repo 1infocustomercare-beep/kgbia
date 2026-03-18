@@ -3527,24 +3527,52 @@ const LandingPage = () => {
           const INDUSTRY_COLORS: Record<string, string> = {
             food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
             retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
+            beach: "#06b6d4", plumber: "#3b82f6", electrician: "#eab308",
+            agriturismo: "#65a30d", cleaning: "#14b8a6", legal: "#64748b",
+            accounting: "#6366f1", garage: "#ef4444", photography: "#a855f7",
+            construction: "#f59e0b", gardening: "#22c55e", veterinary: "#ec4899",
+            tattoo: "#6d28d9", childcare: "#f472b6", education: "#0891b2",
+            events: "#d946ef", logistics: "#0ea5e9", custom: "#8b5cf6",
           };
           const SECTOR_HERO_IMAGES: Record<string, string> = {
             food: sectorHeroFood, ncc: sectorHeroNcc, beauty: sectorHeroBeauty,
             healthcare: sectorHeroHealthcare, retail: sectorHeroRetail,
             fitness: sectorHeroFitness, hospitality: sectorHeroHotel,
           };
-          const allItems: CarouselItem[] = [
-            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", nav: "/r/impero-roma", image: sectorHeroFood },
-            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", nav: "/b/amalfi-luxury-transfer", image: sectorHeroNcc },
-            ...industries.map(ind => {
-              const slug = DEMO_SLUGS[ind.id];
-              const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
-              const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
-              const color = INDUSTRY_COLORS[ind.id] || "#8b5cf6";
-              const image = SECTOR_HERO_IMAGES[ind.id] || sectorHeroFood;
-              return { name: ind.title, route: siteRoute, color, label: ind.modules, nav: demoPath, image };
-            }),
-          ];
+          const allItems: CarouselItem[] = industries.map(ind => {
+            const slug = DEMO_SLUGS[ind.id];
+            const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
+            const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+            const color = INDUSTRY_COLORS[ind.id] || "#8b5cf6";
+            const image = SECTOR_HERO_IMAGES[ind.id] || sectorHeroFood;
+            return { name: ind.title, route: siteRoute, color, label: ind.modules, nav: demoPath, image };
+          });
+          // Add extra sectors from extraSectors that have demo slugs
+          const EXTRA_SECTOR_MAP: Record<string, { id: string; modules: string }> = {
+            "Stabilimenti Balneari": { id: "beach", modules: "Ombrelloni · Lettini · Bar · Stagionali" },
+            "Artigiani & Impiantisti": { id: "plumber", modules: "Interventi · Preventivi · Clienti" },
+            "Studi Creativi": { id: "photography", modules: "Portfolio · Booking · Galleria" },
+            "Formazione & Coaching": { id: "education", modules: "Corsi · Iscrizioni · Certificazioni" },
+            "Veterinari & Pet Care": { id: "veterinary", modules: "Schede · Visite · Vaccini" },
+            "Edilizia & Costruzioni": { id: "construction", modules: "Cantieri · SAL · Preventivi" },
+            "Eventi & Catering": { id: "events", modules: "Booking · Menu · Staff · Logistica" },
+            "Autofficine & Carrozzerie": { id: "garage", modules: "Interventi · Ricambi · Preventivi" },
+            "Logistica & Spedizioni": { id: "logistics", modules: "Tracking · Magazzino · Consegne" },
+            "Giardinaggio & Vivaisti": { id: "gardening", modules: "Interventi · Manutenzione · Vendita" },
+            "Asili & Doposcuola": { id: "childcare", modules: "Iscrizioni · Presenze · Comunicazioni" },
+          };
+          extraSectors.forEach(es => {
+            const mapped = EXTRA_SECTOR_MAP[es.title];
+            if (mapped) {
+              const slug = DEMO_SLUGS[mapped.id as keyof typeof DEMO_SLUGS];
+              if (slug) {
+                allItems.push({
+                  name: es.title, route: `/demo/${slug}`, color: INDUSTRY_COLORS[mapped.id] || "#8b5cf6",
+                  label: mapped.modules, nav: `/demo/${slug}`, image: sectorHeroFood,
+                });
+              }
+            }
+          });
           return <MobileIPhoneCarousel items={allItems} navigate={navigate} />;
         })()}
 
