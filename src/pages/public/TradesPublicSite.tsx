@@ -23,8 +23,49 @@ import { type IndustryId, getIndustryConfig } from "@/config/industry-config";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { HeroPhotoCarousel } from "@/components/public/HeroPhotoCarousel";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
+/* ─── DYNAMIC PALETTE PER TRADE TYPE ─── */
+const PALETTES: Record<string, { accent: string; dark: string; glow: string }> = {
+  electrician: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4" },
+  plumber: { accent: "#3B82F6", dark: "#060A10", glow: "#DBEAFE" },
+  construction: { accent: "#EF6C00", dark: "#0A0704", glow: "#FFE0B2" },
+  gardening: { accent: "#4CAF50", dark: "#040A04", glow: "#C8E6C9" },
+  cleaning: { accent: "#00BCD4", dark: "#040A0A", glow: "#B2EBF2" },
+  garage: { accent: "#E53935", dark: "#0A0404", glow: "#FFCDD2" },
+  photography: { accent: "#AB47BC", dark: "#0A040A", glow: "#E1BEE7" },
+  veterinary: { accent: "#66BB6A", dark: "#040A04", glow: "#C8E6C9" },
+  tattoo: { accent: "#F44336", dark: "#0A0404", glow: "#FFCDD2" },
+  childcare: { accent: "#FF9800", dark: "#0A0804", glow: "#FFE0B2" },
+  education: { accent: "#2196F3", dark: "#04080A", glow: "#BBDEFB" },
+  events: { accent: "#E91E63", dark: "#0A0408", glow: "#F8BBD0" },
+  logistics: { accent: "#607D8B", dark: "#060808", glow: "#CFD8DC" },
+  agriturismo: { accent: "#8BC34A", dark: "#060A04", glow: "#DCEDC8" },
+  legal: { accent: "#795548", dark: "#080604", glow: "#D7CCC8" },
+  accounting: { accent: "#009688", dark: "#040A08", glow: "#B2DFDB" },
+  default: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4" },
+};
 
-/* ─── VERIFIED MATCHING VIDEOS (only sectors with confirmed correct content) ─── */
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08, duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } }),
+};
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
+
+const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
+  ({ id, children, className = "", style }, _ref) => {
+    const localRef = useRef(null);
+    const isInView = useInView(localRef, { once: true, margin: "-60px" });
+    return (
+      <section id={id} ref={localRef} className={className} style={style}>
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>{children}</motion.div>
+      </section>
+    );
+  }
+);
+Section.displayName = "Section";
+
+interface Props { company: any; afterHero?: React.ReactNode; }
+
+
 const HERO_VIDEOS: Record<string, string> = {
   construction: "https://videos.pexels.com/video-files/5698648/5698648-uhd_2560_1440_25fps.mp4",
   education: "https://videos.pexels.com/video-files/5198164/5198164-uhd_2560_1440_25fps.mp4",
