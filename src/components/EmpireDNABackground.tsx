@@ -146,7 +146,6 @@ const EmpireDNABackground = () => {
   useEffect(() => { const t = setTimeout(() => setReady(true), IS_MOBILE ? 800 : 200); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
-    if (IS_MOBILE) return;
     const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
     window.addEventListener("scroll", fn, { passive: true });
     const mainEl = document.querySelector("main");
