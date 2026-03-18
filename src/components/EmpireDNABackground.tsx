@@ -131,7 +131,7 @@ const PALETTES = [
 interface FlowParticle { fromIdx: number; toIdx: number; progress: number; speed: number; life: number; }
 interface PulseRing { x: number; y: number; r: number; maxR: number; alpha: number; color: number[]; }
 
-const EmpireDNABackgroundCanvas = () => {
+const EmpireDNABackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const scrollRef = useRef(0);
@@ -471,7 +471,6 @@ const EmpireDNABackgroundCanvas = () => {
     return () => { cancelAnimationFrame(animRef.current); window.removeEventListener("resize", resize); };
   }, [ready]);
 
-
   return (
     <canvas
       ref={canvasRef}
@@ -479,12 +478,6 @@ const EmpireDNABackgroundCanvas = () => {
       style={{ opacity: 0.045, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
-};
-
-// Wrapper: skip entirely on mobile to avoid canvas overhead
-const EmpireDNABackground = () => {
-  if (IS_MOBILE) return null;
-  return <EmpireDNABackgroundCanvas />;
 };
 
 export default EmpireDNABackground;

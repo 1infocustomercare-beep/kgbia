@@ -41,13 +41,11 @@ const isConstrainedNetwork = () => {
 };
 
 // Keep cinematic intro, but never trap users on splash
-const INTRO_FAILSAFE_MS = IS_MOBILE ? 4500 : 9000;
-const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 6000 : 12000;
-// Skip intro on client/demo routes OR on constrained mobile networks
-const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" && (
-  /^\/(r|b|demo)\//.test(window.location.pathname) ||
-  (IS_MOBILE && isConstrainedNetwork())
-);
+const INTRO_FAILSAFE_MS = IS_MOBILE ? 8000 : 9000;
+const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
+// Skip intro only on client/demo routes where branded business splash should appear immediately
+const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
+  /^\/(r|b|demo)\//.test(window.location.pathname);
 
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
