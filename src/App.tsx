@@ -43,13 +43,9 @@ const isConstrainedNetwork = () => {
 // Keep cinematic intro, but never trap users on splash
 const INTRO_FAILSAFE_MS = IS_MOBILE ? 8000 : 9000;
 const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
-const IS_IN_IFRAME = typeof window !== "undefined" && window.self !== window.top;
-// Only skip intro for tiny embedded mockup iframes (e.g. iPhone previews inside the app)
-const IS_EMBED_IFRAME = IS_IN_IFRAME && typeof window !== "undefined" && window.innerWidth < 500;
-const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" && (
-  IS_EMBED_IFRAME ||
-  /^\/(r|b|demo)\//.test(window.location.pathname)
-);
+// Skip intro only on client/demo routes where branded business splash should appear immediately
+const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
+  /^\/(r|b|demo)\//.test(window.location.pathname);
 
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
@@ -371,31 +367,17 @@ function App() {
 
     const onVisibilityChange = () => {
       if (document.visibilityState !== "visible") return;
-      if (performance.now() - startedAt >= INTRO_FAILSAFE_MS || isConstrainedNetwork()) {
+      if (performance.now() - startedAt >= INTRO_FAILSAFE_MS) {
         completeIntroSafely("visibility");
       }
     };
 
-    const onConnectivityChange = () => {
-      if (isConstrainedNetwork()) {
-        completeIntroSafely("connectivity");
-      }
-    };
-
-    const nav = navigator as ExtendedNavigator;
-    nav.connection?.addEventListener?.("change", onConnectivityChange);
-
     document.addEventListener("visibilitychange", onVisibilityChange);
-    window.addEventListener("offline", onConnectivityChange);
-    window.addEventListener("online", onConnectivityChange);
 
     return () => {
       window.clearTimeout(introFailsafe);
       window.cancelAnimationFrame(rafId);
-      nav.connection?.removeEventListener?.("change", onConnectivityChange);
       document.removeEventListener("visibilitychange", onVisibilityChange);
-      window.removeEventListener("offline", onConnectivityChange);
-      window.removeEventListener("online", onConnectivityChange);
     };
   }, []);
 
@@ -630,9 +612,6 @@ function App() {
         </TooltipProvider>
       </div>
 
-      <IntroErrorBoundary onFail={handleIntroComplete}>
-        {!introCompleted && <UnifiedIntro onComplete={handleIntroComplete} />}
-      </IntroErrorBoundary>
     </QueryClientProvider>
   );
 }
