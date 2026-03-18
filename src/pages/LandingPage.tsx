@@ -4339,11 +4339,124 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-          MULTI-SECTOR POWER SHOWCASE — Auto-rotating
+          EMPIRE AI LIVE — Real-time Automation Feed
          ═══════════════════════════════════════════ */}
-      <Section id="app" style={{ background: "linear-gradient(180deg, hsla(260,14%,13%,1) 0%, hsla(265,16%,11%,1) 50%, hsla(260,14%,13%,1) 100%)" }}>
-        <MultiSectorShowcase />
-      </Section>
+      <section className="relative py-16 sm:py-24 px-5 sm:px-6 overflow-hidden"
+        style={{
+          background: `linear-gradient(180deg, hsla(230,18%,6%,1) 0%, hsla(235,22%,8%,1) 40%, hsla(240,20%,7%,1) 70%, hsla(230,18%,6%,1) 100%)`,
+        }}>
+        {/* Circuit grid bg */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="live-grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="hsl(215 50% 60%)" strokeWidth="0.3" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#live-grid)" />
+          </svg>
+        </div>
+        {/* Ambient glows */}
+        <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.06]" style={{ background: "hsl(var(--primary))" }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full blur-[180px] opacity-[0.04]" style={{ background: "hsl(150 60% 45%)" }} />
+
+        <div className="max-w-[1100px] mx-auto relative z-10">
+          {/* Header */}
+          <div className="text-center mb-8 sm:mb-14">
+            <SectionLabel text="Empire AI Live" icon={<Activity className="w-3 h-3 text-accent" />} />
+            <motion.h2 className="text-[clamp(1.5rem,4.5vw,2.8rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
+              I Tuoi Agenti Lavorano <span className="text-shimmer">Mentre Tu Dormi</span>
+            </motion.h2>
+            <motion.p className="text-foreground/40 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed"
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.15 }}>
+              Ogni secondo, la rete neurale esegue azioni autonome — ordini, notifiche, analisi, risposte.
+              Ecco cosa sta succedendo <strong className="text-foreground/70">adesso</strong>.
+            </motion.p>
+          </div>
+
+          {/* Live feed + stats */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
+            {/* Live feed column */}
+            <motion.div className="lg:col-span-3 relative rounded-2xl overflow-hidden"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}
+              style={{
+                background: "linear-gradient(145deg, hsla(230,20%,10%,0.95), hsla(235,25%,8%,0.98))",
+                border: "1px solid hsla(215,40%,35%,0.12)",
+              }}>
+              {/* Top bar */}
+              <div className="flex items-center gap-2 px-4 py-2.5 border-b" style={{ borderColor: "hsla(215,40%,35%,0.1)" }}>
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[0.55rem] font-bold text-emerald-400 tracking-[2px] uppercase">Live — Automazioni in Corso</span>
+                <div className="flex-1" />
+                <span className="text-[0.5rem] text-foreground/30 font-mono">stream:active</span>
+              </div>
+
+              {/* Feed items */}
+              <div className="p-3 sm:p-4 space-y-2">
+                <LiveFeedSimulator />
+              </div>
+            </motion.div>
+
+            {/* Stats column */}
+            <motion.div className="lg:col-span-2 space-y-3"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce} transition={{ delay: 0.2 }}>
+              {[
+                { label: "Azioni Oggi", value: 12847, suffix: "", icon: <Zap className="w-4 h-4" />, color: "hsla(265,70%,60%,1)", delta: "+23%" },
+                { label: "Clienti Serviti", value: 3429, suffix: "", icon: <Users className="w-4 h-4" />, color: "hsla(150,70%,50%,1)", delta: "+18%" },
+                { label: "Revenue Generato", value: 47, suffix: "K", icon: <TrendingUp className="w-4 h-4" />, color: "hsla(38,80%,55%,1)", delta: "+31%" },
+                { label: "Tempo Risparmiato", value: 156, suffix: "h", icon: <Timer className="w-4 h-4" />, color: "hsla(200,70%,55%,1)", delta: "questa settimana" },
+              ].map((stat, i) => (
+                <motion.div key={i} className="relative rounded-xl overflow-hidden group"
+                  initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={vpOnce} transition={{ delay: 0.1 * i + 0.3 }}
+                  style={{
+                    background: "linear-gradient(135deg, hsla(230,20%,10%,0.95), hsla(235,22%,8%,0.98))",
+                    border: "1px solid hsla(215,40%,35%,0.1)",
+                  }}>
+                  {/* Shimmer */}
+                  <motion.div className="absolute inset-0 pointer-events-none"
+                    style={{ background: `linear-gradient(105deg, transparent 40%, ${stat.color}08 50%, transparent 60%)`, backgroundSize: "200% 100%" }}
+                    animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "linear", delay: i * 1.2 }}
+                  />
+                  <div className="relative z-10 flex items-center gap-3 px-4 py-3.5">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: `${stat.color}15`, color: stat.color }}>
+                      {stat.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[0.55rem] text-foreground/40 tracking-wider uppercase font-semibold">{stat.label}</p>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-lg sm:text-xl font-bold text-foreground font-heading">
+                          <AnimatedNumber value={stat.value} suffix={stat.suffix} prefix={stat.label === "Revenue Generato" ? "€" : ""} />
+                        </span>
+                        <span className="text-[0.5rem] font-semibold" style={{ color: stat.color }}>{stat.delta}</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Bottom trust bar */}
+          <motion.div className="mt-6 sm:mt-10 flex flex-wrap justify-center gap-3 sm:gap-5"
+            initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce} transition={{ delay: 0.5 }}>
+            {[
+              { text: "Zero downtime", icon: <Shield className="w-3 h-3" /> },
+              { text: "GDPR compliant", icon: <Lock className="w-3 h-3" /> },
+              { text: "Enterprise-grade", icon: <ServerCog className="w-3 h-3" /> },
+              { text: "99.9% uptime SLA", icon: <Gauge className="w-3 h-3" /> },
+            ].map((t, i) => (
+              <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+                style={{ background: "hsla(215,20%,15%,0.6)", border: "1px solid hsla(215,30%,30%,0.12)" }}>
+                <span className="text-primary/70">{t.icon}</span>
+                <span className="text-[0.5rem] text-foreground/50 font-semibold tracking-wider uppercase">{t.text}</span>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
       {/* ═══════════════════════════════════════════
           ROI CALCULATOR
