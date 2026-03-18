@@ -191,19 +191,28 @@ const AlwaysOnNetwork = ({
 
         return (
           <g key={line.id}>
-            {/* Glow line — always on, stronger when active */}
+            {/* Wide glow layer — always visible, professional shimmer */}
             <path d={pathD} fill="none" stroke={lineColor}
-              strokeWidth={isActive ? 5 : 3}
-              opacity={isActive ? 0.12 : 0.04}
+              strokeWidth={isActive ? 8 : 5}
+              opacity={isActive ? 0.15 : 0.06}
               filter="url(#line-glow)" />
 
-            {/* Main connection line — always visible */}
+            {/* Main connection line — always visible, solid + professional */}
             <path d={pathD} fill="none" stroke={lineColor}
               strokeWidth={lineWidth}
               strokeDasharray={dash}
               opacity={lineOpacity}
               filter="url(#line-glow-soft)"
+              strokeLinecap="round"
             />
+
+            {/* Solid underline — gives permanence to idle connections */}
+            {!isActive && (
+              <path d={pathD} fill="none" stroke="url(#line-gradient-idle)"
+                strokeWidth={0.6}
+                opacity={0.6}
+              />
+            )}
 
             {/* Junction dots — always visible */}
             <circle cx={line.x1} cy={line.y1} r={junctionR}
