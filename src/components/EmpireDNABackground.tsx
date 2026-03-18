@@ -422,8 +422,8 @@ const EmpireDNABackground = () => {
         }
 
         // Small subtle core dot only — no big glowing ball
-        ctx.fillStyle = hsla(pAccent, fadeA * 0.25);
-        ctx.fillRect(pt.x - 1, pt.y - 1, 2, 2);
+        ctx.fillStyle = hsla(pAccent, fadeA * 0.15);
+        ctx.fillRect(pt.x - 0.8, pt.y - 0.8, 1.6, 1.6);
       }
 
       // ═══ L5: PULSE RINGS — junction flashes ═══
