@@ -583,7 +583,7 @@ const SuperAdminDashboard = () => {
         <div className="grid grid-cols-5 gap-1">
           {tabs.map((tab) => (
             <button key={tab.id}
-              onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : setActiveTab(tab.id)}
+              onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : setActiveTab(tab.id)}
               className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px] ${
                 activeTab === tab.id ? "bg-empire-violet text-white shadow-[0_0_16px_hsl(265_85%_65%/0.3)]" : "bg-empire-violet-surface/50 text-muted-foreground hover:bg-empire-violet-surface"
               }`}>
