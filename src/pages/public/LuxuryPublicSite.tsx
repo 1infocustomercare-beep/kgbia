@@ -352,6 +352,8 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
             style={{ filter: "brightness(0.4) saturate(1.1)" }}
             accentColor={`${accentHex}30`}
           />
+        ) : heroPhotos ? (
+          <HeroPhotoCarousel images={heroPhotos} className="absolute inset-0 w-full h-full" style={{ filter: "brightness(0.4) saturate(1.1)" }} overlay={false} />
         ) : (
           <img src={heroPoster} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.4) saturate(1.1)" }} />
         )}
