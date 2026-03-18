@@ -3048,24 +3048,26 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: 2-col Grid — lightweight placeholders (no iframes) ═══ */}
+        {/* ═══ Mobile: 2-col Grid — iPhone frames ═══ */}
         <div className="grid grid-cols-2 gap-3 px-2 sm:hidden">
           {(() => {
+            const scale = 150 / 375;
             const featured = [
-              { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️", label: "Food Premium", nav: "/r/impero-roma" },
-              { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗", label: "NCC Premium", nav: "/b/amalfi-luxury-transfer" },
+              { id: "food" as IndustryId, name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️", label: "Food Premium" },
+              { id: "ncc" as IndustryId, name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗", label: "NCC Premium" },
             ];
             const INDUSTRY_COLORS: Record<string, string> = {
               food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
               retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
             };
             const allItems = [
-              ...featured,
+              ...featured.map(f => ({ name: f.name, route: f.route, color: f.color, label: f.label, nav: f.route })),
               ...industries.map(ind => {
                 const slug = DEMO_SLUGS[ind.id];
+                const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
                 const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
                 const color = INDUSTRY_COLORS[ind.id] || "#8b5cf6";
-                return { name: ind.title, route: "", color, emoji: ind.emoji || "🏢", label: ind.modules, nav: demoPath };
+                return { name: ind.title, route: siteRoute, color, label: ind.modules, nav: demoPath };
               }),
             ];
             return allItems.map((item, i) => (
@@ -3073,12 +3075,8 @@ const LandingPage = () => {
                 <div className="relative w-full aspect-[9/17] rounded-[24px] border-[2px] overflow-hidden"
                   style={{ borderColor: `${item.color}40`, boxShadow: `0 10px 30px hsla(0,0%,0%,0.4), 0 0 15px ${item.color}10` }}>
                   <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[42px] h-[12px] bg-black rounded-full z-20" />
-                  {/* Static placeholder instead of iframe */}
-                  <div className="absolute inset-[2px] rounded-[22px] overflow-hidden bg-black flex flex-col items-center justify-center"
-                    style={{ background: `linear-gradient(160deg, ${item.color}15 0%, #0a0a0a 50%, ${item.color}08 100%)` }}>
-                    <span className="text-3xl mb-2 opacity-60 group-hover:opacity-90 transition-opacity">{item.emoji}</span>
-                    <div className="w-8 h-[1px] rounded-full mb-2" style={{ background: `${item.color}40` }} />
-                    <p className="text-[8px] text-white/30 font-medium text-center px-3">Tap per preview</p>
+                  <div className="absolute inset-[2px] rounded-[22px] overflow-hidden bg-black">
+                    <iframe src={item.route} title={item.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 z-20 p-2 pt-6" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
                     <div className="flex items-center gap-1 mb-0.5">
@@ -3129,15 +3127,17 @@ const LandingPage = () => {
             </motion.div>
             );
           })}
-          {/* ── Standard industry cards — static placeholders (no iframes) ── */}
+          {/* ── Standard industry cards — Live iframe previews ── */}
           {industries.map((ind, i) => {
             const slug = DEMO_SLUGS[ind.id];
+            const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
             const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
             const INDUSTRY_COLORS_DESKTOP: Record<string, string> = {
               food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
               retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
             };
             const color = INDUSTRY_COLORS_DESKTOP[ind.id] || "#8b5cf6";
+            const dScale = 174 / 375;
             return (
               <motion.div key={i}
                 className="group cursor-pointer"
@@ -3148,11 +3148,8 @@ const LandingPage = () => {
                 <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] overflow-hidden transition-shadow duration-500"
                   style={{ borderColor: `${color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 25px ${color}10` }}>
                   <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
-                  <div className="absolute inset-[3px] rounded-[28px] overflow-hidden flex flex-col items-center justify-center"
-                    style={{ background: `linear-gradient(160deg, ${color}12 0%, #0a0a0a 50%, ${color}06 100%)` }}>
-                    <span className="text-4xl mb-3 opacity-50 group-hover:opacity-80 transition-opacity">{ind.emoji || "🏢"}</span>
-                    <div className="w-10 h-[1px] rounded-full mb-2" style={{ background: `${color}35` }} />
-                    <p className="text-[9px] text-white/25 font-medium">Clicca per preview</p>
+                  <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
+                    <iframe src={siteRoute} title={ind.title} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${dScale})`, pointerEvents: "none" }} loading="lazy" />
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
                     <div className="flex items-center gap-1 mb-1">
