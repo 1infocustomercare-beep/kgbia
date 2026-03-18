@@ -5333,7 +5333,7 @@ const LandingPage = () => {
 
                   <div className="relative rounded-xl border border-foreground/[0.07] bg-card/95 sm:bg-card/90 backdrop-blur-sm p-2 sm:p-3 overflow-hidden">
                     <motion.div
-                      className="relative w-[46px] h-[46px] sm:w-[62px] sm:h-[62px] rounded-xl mx-auto mb-2 sm:mb-2.5 overflow-hidden"
+                      className="relative w-[36px] h-[36px] sm:w-[62px] sm:h-[62px] rounded-lg mx-auto mb-1.5 sm:mb-2.5 overflow-hidden"
                       style={{ background: "hsla(265,20%,8%,0.7)", border: "1px solid hsla(265,70%,60%,0.14)", backdropFilter: "blur(8px)" }}
                       whileHover={{ rotate: 4, scale: 1.06, borderColor: "hsla(265,70%,60%,0.28)" }}>
 
