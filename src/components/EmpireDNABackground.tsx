@@ -143,7 +143,7 @@ const EmpireDNABackground = () => {
   const pulsesRef = useRef<PulseRing[]>([]);
   const ptrRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
-  useEffect(() => { if (IS_MOBILE) return; const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
+  useEffect(() => { const t = setTimeout(() => setReady(true), IS_MOBILE ? 800 : 200); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
     if (IS_MOBILE) return;
