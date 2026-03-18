@@ -472,6 +472,7 @@ function App() {
                     <Routes>
                       {/* Public routes */}
                       <Route path="/" element={<Index />} />
+                      <Route path="/index" element={<Index />} />
                       <Route path="/home" element={<LandingPage />} />
                       <Route path="/marketing" element={<MarketingPage />} />
                       <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
