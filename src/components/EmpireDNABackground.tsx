@@ -199,16 +199,9 @@ const EmpireDNABackground = () => {
       }));
     }
 
-    // Route styles
-    const getRoute = (a: Pt, b: Pt, mode: number): Pt[] => {
-      const mx = (a.x + b.x) * 0.5, my = (a.y + b.y) * 0.5;
-      switch (mode % 4) {
-        case 0: return [a, { x: b.x, y: a.y }, b];
-        case 1: return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b];
-        case 2: return [a, b];
-        case 3: return [a, { x: a.x, y: b.y }, b];
-        default: return [a, { x: mx, y: my }, b];
-      }
+    // Simple straight-line routes only (no rectangular/orthogonal patterns)
+    const getRoute = (a: Pt, b: Pt, _mode: number): Pt[] => {
+      return [a, b];
     };
 
     const walkPolyline = (pts: Pt[], t: number): Pt => {
