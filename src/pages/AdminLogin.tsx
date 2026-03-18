@@ -265,7 +265,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Mode Chooser ───
   if (mode === "choose") {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      <div className="min-h-screen bg-transparent flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <BackButton to="/" theme="glass" />
         <Blob className="w-[500px] h-[500px] -top-20 -left-40 animate-blob-float" color="bg-violet-600" />
         <Blob className="w-[400px] h-[400px] bottom-10 -right-20 animate-blob-float-reverse" color="bg-orange-500" />
