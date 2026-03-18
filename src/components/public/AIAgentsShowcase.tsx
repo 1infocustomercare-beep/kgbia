@@ -37,12 +37,17 @@ const Counter = ({ value, suffix = "" }: { value: number; suffix?: string }) => 
 };
 
 /* ═══ AGENT DATA ═══ */
+interface FeatureNode {
+  id: string; name: string; desc: string; icon: React.ReactNode;
+}
+
 interface AgentNode {
   id: string; name: string; role: string; desc: string; whyNeed: string;
   icon: React.ReactNode; gradient: string; glow: string;
   stat: { value: number; suffix: string; label: string };
   capabilities: string[]; category: string; sectors: string[];
   connections: string[];
+  features?: FeatureNode[];
 }
 
 const ALL_AGENTS: AgentNode[] = [
