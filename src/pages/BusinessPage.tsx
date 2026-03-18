@@ -2,9 +2,14 @@ import { lazy, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { type IndustryId } from "@/config/industry-config";
+import { type IndustryId, getIndustryConfig } from "@/config/industry-config";
+import { getSectorTheme } from "@/config/sector-themes";
 import BackButton from "@/components/BackButton";
+import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
+import EmpireTeamStory from "@/components/public/EmpireTeamStory";
+import { LuxuryTicker } from "@/components/public/LuxuryTicker";
 
+const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
 const NCCPublicSite = lazy(() => import("@/pages/public/NCCPublicSite"));
 const FoodPublicSite = lazy(() => import("@/pages/public/FoodPublicSite"));
 const BakeryPublicSite = lazy(() => import("@/pages/public/BakeryPublicSite"));
@@ -53,6 +58,19 @@ const TEMPLATE_MAP: Record<string, React.LazyExoticComponent<React.ComponentType
   accounting: TradesPublicSite,
 };
 
+/* ── Ticker items per sector ── */
+const TICKER_ITEMS: Record<string, string[]> = {
+  food: ["Menu Digitale", "Ordini Live", "QR Intelligente", "Cucina Display", "Recensioni AI", "Fidelity Card", "Delivery Integrato", "Prenotazioni Smart"],
+  ncc: ["Flotta Premium", "Booking Real-Time", "Gestione Autisti", "Tratte Dinamiche", "CRM Clienti VIP", "Fatturazione Auto", "GPS Live", "Pagamenti Sicuri"],
+  beauty: ["Agenda Smart", "Booking Online", "Schede Clienti", "Marketing Auto", "Prodotti & Stock", "Loyalty Program", "WhatsApp Bot", "Analytics Trend"],
+  healthcare: ["Appuntamenti", "Telemedicina", "Cartelle Digitali", "Promemoria Auto", "Fatturazione", "Prescrizioni", "CRM Pazienti", "GDPR Compliant"],
+  fitness: ["Abbonamenti", "Classe Booking", "Check-in QR", "Trainer Assign", "Piani Workout", "Analytics Corpo", "Loyalty Points", "Push Promo"],
+  hotel: ["Room Manager", "Check-in Digital", "Concierge AI", "F&B Integration", "Revenue Mgmt", "Housekeeping", "Guest CRM", "Channel Manager"],
+  retail: ["POS Cloud", "Inventario Smart", "E-commerce Sync", "Fidelity Card", "Sconti Dinamici", "Analytics Vendite", "Fornitori Mgmt", "Omnichannel"],
+  beach: ["Mappa Ombrelloni", "Booking Spot", "Abbonamenti", "Bar Service", "Meteo Widget", "Pass Stagionali", "CRM Ospiti", "Cassa Veloce"],
+  default: ["Dashboard Pro", "CRM Integrato", "Booking Smart", "AI Assistente", "Fatturazione", "Marketing Auto", "Analytics Live", "WhatsApp Bot"],
+};
+
 export default function BusinessPage() {
   const { slug } = useParams<{ slug: string }>();
 
@@ -98,11 +116,50 @@ export default function BusinessPage() {
 
   const industry = (company.industry || "custom") as IndustryId;
   const Template = TEMPLATE_MAP[industry] || LuxuryPublicSite;
+  const config = getIndustryConfig(industry);
+  const theme = getSectorTheme(industry);
+  const accentHex = theme.palette.accentHex;
+  const tickerItems = TICKER_ITEMS[industry] || TICKER_ITEMS.default;
 
   return (
     <Suspense fallback={<SiteLoader />}>
       <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
       <Template company={company} />
+
+      {/* ═══ CONVERSION MAXIMIZER — After template content ═══ */}
+
+      {/* Luxury Ticker — social proof ribbon */}
+      <LuxuryTicker items={tickerItems} accentColor={accentHex} />
+
+      {/* Industry Phone Showcase — 14 app screens in iPhone mockups */}
+      <div className="py-16 sm:py-24" style={{ background: "#0a0a0a" }}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-10">
+            <span className="text-[10px] tracking-[0.3em] uppercase font-semibold" style={{ color: accentHex }}>
+              La Tua App Completa
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-bold text-white mt-3" style={{ fontFamily: "'DM Serif Display', serif" }}>
+              Tutto Quello Che Ti Serve, In Un'Unica Piattaforma
+            </h2>
+            <p className="text-sm text-white/40 mt-3 max-w-xl mx-auto">
+              Gestisci ogni aspetto della tua attività {config.label.toLowerCase()} con 14+ moduli professionali integrati — dalla prenotazione alla fatturazione, dall'AI al marketing.
+            </p>
+          </div>
+          <IndustryPhoneShowcase industryId={industry} />
+        </div>
+      </div>
+
+      {/* Empire Team — credibility & trust */}
+      <EmpireTeamStory />
+
+      {/* DemoSalesAgent — AI sales consultant with voice */}
+      <Suspense fallback={null}>
+        <DemoSalesAgent
+          industry={industry}
+          companyName={company.name || config.label}
+          accentColor={accentHex}
+        />
+      </Suspense>
     </Suspense>
   );
 }
