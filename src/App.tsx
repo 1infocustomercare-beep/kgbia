@@ -367,31 +367,17 @@ function App() {
 
     const onVisibilityChange = () => {
       if (document.visibilityState !== "visible") return;
-      if (performance.now() - startedAt >= INTRO_FAILSAFE_MS || isConstrainedNetwork()) {
+      if (performance.now() - startedAt >= INTRO_FAILSAFE_MS) {
         completeIntroSafely("visibility");
       }
     };
 
-    const onConnectivityChange = () => {
-      if (isConstrainedNetwork()) {
-        completeIntroSafely("connectivity");
-      }
-    };
-
-    const nav = navigator as ExtendedNavigator;
-    nav.connection?.addEventListener?.("change", onConnectivityChange);
-
     document.addEventListener("visibilitychange", onVisibilityChange);
-    window.addEventListener("offline", onConnectivityChange);
-    window.addEventListener("online", onConnectivityChange);
 
     return () => {
       window.clearTimeout(introFailsafe);
       window.cancelAnimationFrame(rafId);
-      nav.connection?.removeEventListener?.("change", onConnectivityChange);
       document.removeEventListener("visibilitychange", onVisibilityChange);
-      window.removeEventListener("offline", onConnectivityChange);
-      window.removeEventListener("online", onConnectivityChange);
     };
   }, []);
 
