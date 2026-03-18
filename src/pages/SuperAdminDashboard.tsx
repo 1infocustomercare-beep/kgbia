@@ -11,7 +11,7 @@ import {
   ChevronRight, Filter, Plus, ArrowUpRight, ArrowDownRight,
   Building2, MapPin, Zap, Activity, Lightbulb,
   ToggleLeft, ToggleRight, BookOpen, Link2, ChevronDown, ChevronUp, Info, ImageIcon, ArrowLeft,
-  MessageCircle, Phone, Shield, X
+  MessageCircle, Phone, Shield, X, Key
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -68,7 +68,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts";
 
 interface SubscriptionRecord {
   id: string;
@@ -432,6 +432,7 @@ const SuperAdminDashboard = () => {
     { id: "showcase", label: "Settori", icon: <Eye className="w-5 h-5" /> },
     { id: "integrations" as SuperTab, label: "Integrazioni", icon: <Wifi className="w-5 h-5" /> },
     { id: "whatsapp" as SuperTab, label: "WhatsApp", icon: <MessageCircle className="w-5 h-5" /> },
+    { id: "demo_accounts" as SuperTab, label: "Demo", icon: <Key className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => { await signOut(); navigate("/admin"); };
@@ -582,7 +583,7 @@ const SuperAdminDashboard = () => {
         <div className="grid grid-cols-5 gap-1">
           {tabs.map((tab) => (
             <button key={tab.id}
-              onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : setActiveTab(tab.id)}
+              onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : setActiveTab(tab.id)}
               className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px] ${
                 activeTab === tab.id ? "bg-empire-violet text-white shadow-[0_0_16px_hsl(265_85%_65%/0.3)]" : "bg-empire-violet-surface/50 text-muted-foreground hover:bg-empire-violet-surface"
               }`}>
