@@ -214,7 +214,7 @@ const FunnelDNAVisual = memo(() => {
         </div>
 
         {/* Active metric — right side, animated */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="sync">
           <motion.div
             key={activeStep}
             className="absolute top-5 right-5 text-right"
