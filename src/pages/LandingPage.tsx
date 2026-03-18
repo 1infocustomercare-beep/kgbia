@@ -276,26 +276,30 @@ const NeuralCellsBackground = () => {
   return (
     <motion.div
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: isMobile ? 0.8 : 0.7, willChange: "opacity, transform", transform: "translateZ(0)" }}
-      initial={{ opacity: 0, scale: 1.3 }}
-      animate={born ? { opacity: isMobile ? 0.8 : 0.7, scale: 1 } : { opacity: 0, scale: 1.3 }}
-      transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
+      style={{ opacity: isMobile ? 0.5 : 0.7, willChange: "transform", transform: "translateZ(0)" }}
+      initial={{ opacity: 0 }}
+      animate={born ? { opacity: isMobile ? 0.5 : 0.7 } : { opacity: 0 }}
+      transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* DNA Birth Pulse — expanding ring from center when page loads */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-        style={{ border: "2px solid hsla(38,50%,55%,0.35)" }}
-        initial={{ width: 0, height: 0, opacity: 1 }}
-        animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
-        transition={{ duration: 2, ease: "easeOut" }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-        style={{ border: "1px solid hsla(38,50%,55%,0.3)" }}
-        initial={{ width: 0, height: 0, opacity: 1 }}
-        animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
-        transition={{ duration: 2.5, ease: "easeOut", delay: 0.3 }}
-      />
+      {/* DNA Birth Pulse — desktop only */}
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+            style={{ border: "2px solid hsla(38,50%,55%,0.35)" }}
+            initial={{ width: 0, height: 0, opacity: 1 }}
+            animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
+            transition={{ duration: 2, ease: "easeOut" }}
+          />
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+            style={{ border: "1px solid hsla(38,50%,55%,0.3)" }}
+            initial={{ width: 0, height: 0, opacity: 1 }}
+            animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
+            transition={{ duration: 2.5, ease: "easeOut", delay: 0.3 }}
+          />
+        </>
+      )}
 
       {/* ═══ TECH CIRCUIT GRID — hexagonal + micro-grid overlay ═══ */}
       <svg className="absolute inset-0 w-full h-full" style={{ opacity: isMobile ? 0.04 : 0.045 }} xmlns="http://www.w3.org/2000/svg">
