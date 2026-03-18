@@ -5131,10 +5131,28 @@ const LandingPage = () => {
             ))}
           </svg>
         </div>
-        {/* Luxury ambient glows */}
-        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full opacity-[0.1]" style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.5), transparent 70%)", filter: "blur(150px)" }} />
-        <div className="absolute bottom-1/4 right-1/5 w-[500px] h-[500px] rounded-full opacity-[0.07]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.4), transparent 70%)", filter: "blur(120px)" }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsla(150,60%,50%,0.5), transparent 70%)", filter: "blur(100px)" }} />
+        {/* Premium ambient glows */}
+        <div className="absolute top-[6%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
+             style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+        <div className="absolute top-[35%] right-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
+             style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+        <div className="absolute bottom-[12%] left-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
+             style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(110px)" }} />
+        <div className="absolute bottom-[30%] right-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
+             style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+        <div className="absolute top-[10%] right-[28%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
+             style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
+        {/* Top accent border */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
+             style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.22), hsla(155,45%,50%,0.1), transparent)" }} />
+        {/* Bottom fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-[70px]"
+             style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
+        {/* Noise texture */}
+        <div className="absolute inset-0 opacity-[0.012] pointer-events-none" style={{
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
+          backgroundRepeat: "repeat", backgroundSize: "128px 128px",
+        }} />
 
         <div className="max-w-[1100px] mx-auto relative z-10">
           {/* Header — more dramatic */}
