@@ -177,16 +177,16 @@ const AlwaysOnNetwork = ({
         const reversePath = `M ${line.x2} ${line.y2} Q ${mx} ${my} ${line.x1} ${line.y1}`;
         const isActive = line.isActive;
 
-        /* ── Always visible: idle = softer/slower, active = bright/fast ── */
-        const lineOpacity = isActive ? 0.7 : 0.35;
-        const lineWidth = isActive ? 2 : 0.9;
-        const dash = isActive ? "8 5" : "3 6";
-        const particleColor = isActive ? line.color : "hsla(215,50%,65%,0.55)";
-        const lineColor = isActive ? line.color : "hsla(215,35%,55%,0.4)";
-        const junctionR = isActive ? 3 : 2;
-        const junctionOpacity = isActive ? 0.65 : 0.3;
-        const particleDur = isActive ? "1.6s" : "5s";
-        const particleR = isActive ? 3.5 : 2;
+        /* ── Always visible: idle = professional glow, active = bright/fast ── */
+        const lineOpacity = isActive ? 0.85 : 0.5;
+        const lineWidth = isActive ? 2.5 : 1.4;
+        const dash = isActive ? "10 4" : "6 4";
+        const particleColor = isActive ? line.color : "hsla(215,60%,72%,0.7)";
+        const lineColor = isActive ? line.color : "hsla(215,45%,62%,0.5)";
+        const junctionR = isActive ? 4 : 2.5;
+        const junctionOpacity = isActive ? 0.8 : 0.45;
+        const particleDur = isActive ? "1.6s" : "4.5s";
+        const particleR = isActive ? 4 : 2.5;
         const stagger = `${(li * 0.6) % 3}s`;
 
         return (
