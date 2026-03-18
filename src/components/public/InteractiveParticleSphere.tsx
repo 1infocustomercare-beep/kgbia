@@ -217,7 +217,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
 
     const startTime = performance.now();
     let lastFrame = 0;
-    const FI = IS_MOBILE ? 22 : 0;
+    const FI = IS_MOBILE ? 50 : 0; // ~20fps on mobile, 60fps on desktop
     const repelR = w * 0.2;
 
     const ss = (e0: number, e1: number, x: number) => { const t = Math.max(0, Math.min(1, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); };
