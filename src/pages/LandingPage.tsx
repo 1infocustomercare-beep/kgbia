@@ -509,15 +509,20 @@ const slideInLeft = { hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 
 const slideInRight = { hidden: { opacity: 0, x: 30 }, visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: smoothEase } } };
 const popIn = { hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 200, damping: 24 } } };
 
-/* ═══ Floating Particle ═══ */
-const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => (
-  <motion.div
-    className="absolute rounded-full"
-    style={{ width: size, height: size, left: x, top: y, background: delay % 2 === 0 ? "hsl(38, 45%, 52%)" : "hsl(32, 35%, 55%)" }}
-    animate={{ y: [0, -25, 0], opacity: [0.1, 0.35, 0.1], scale: [1, 1.3, 1] }}
-    transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
-  />
-);
+/* ═══ Floating Particle — skipped on mobile ═══ */
+const IS_MOBILE_DEVICE = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
+
+const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => {
+  if (IS_MOBILE_DEVICE) return null;
+  return (
+    <motion.div
+      className="absolute rounded-full"
+      style={{ width: size, height: size, left: x, top: y, background: delay % 2 === 0 ? "hsl(38, 45%, 52%)" : "hsl(32, 35%, 55%)" }}
+      animate={{ y: [0, -25, 0], opacity: [0.1, 0.35, 0.1], scale: [1, 1.3, 1] }}
+      transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
+    />
+  );
+};
 
 /* ═══ Section Divider ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
