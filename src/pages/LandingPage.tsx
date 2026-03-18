@@ -2427,35 +2427,42 @@ const LandingPage = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
-  /* Mobile viewport-animation safety: force-reveal any elements stuck at opacity 0 */
+  /* Mobile viewport-animation safety: reveal stuck elements without scroll polling */
   useEffect(() => {
     if (window.innerWidth >= 640) return;
-    const revealHidden = () => {
-      document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]').forEach(el => {
-        const rect = el.getBoundingClientRect();
-        // If element should be visible (above viewport bottom + 100px buffer)
-        if (rect.top < window.innerHeight + 100 && rect.bottom > -100) {
-          el.style.opacity = '1';
-          el.style.transform = 'none';
-        }
-      });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const el = entry.target as HTMLElement;
+          const computedOpacity = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
+          if (computedOpacity > 0.02) {
+            observer.unobserve(el);
+            return;
+          }
+
+          el.style.willChange = "opacity, transform";
+          el.style.transition = "opacity 220ms ease-out, transform 220ms ease-out";
+          el.style.opacity = "1";
+          el.style.transform = "none";
+          observer.unobserve(el);
+        });
+      },
+      { root: null, rootMargin: "120px 0px", threshold: 0.01 }
+    );
+
+    const observeHiddenCandidates = () => {
+      document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]').forEach((el) => observer.observe(el));
     };
-    // Run periodically during scroll
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(() => { revealHidden(); ticking = false; });
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    // Also run after initial render
-    const initialTimer = setTimeout(revealHidden, 800);
-    const secondTimer = setTimeout(revealHidden, 2000);
+
+    observeHiddenCandidates();
+    const lateScan = window.setTimeout(observeHiddenCandidates, 1200);
+
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      clearTimeout(initialTimer);
-      clearTimeout(secondTimer);
+      observer.disconnect();
+      window.clearTimeout(lateScan);
     };
   }, []);
 
