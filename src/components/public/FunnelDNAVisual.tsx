@@ -1,5 +1,5 @@
 import { useEffect, useRef, memo, useState } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const FUNNEL_STEPS = [
   { icon: "📲", label: "QR Scan", metric: "1.240", sub: "scansioni/mese", color: "primary" },
@@ -9,22 +9,16 @@ const FUNNEL_STEPS = [
 ] as const;
 
 const FunnelDNAVisual = memo(() => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeStep, setActiveStep] = useState(0);
-  const isInView = useInView(containerRef, { margin: "220px 0px 220px 0px", amount: 0.05 });
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
-  // Rotate active funnel step only when visible
+  // Rotate active funnel step
   useEffect(() => {
-    if (!isInView) return;
     const iv = setInterval(() => setActiveStep(p => (p + 1) % FUNNEL_STEPS.length), 3000);
     return () => clearInterval(iv);
-  }, [isInView]);
+  }, []);
 
   useEffect(() => {
-    if (!isInView) return;
-
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -35,8 +29,6 @@ const FunnelDNAVisual = memo(() => {
     let t = 0;
     let width = 0;
     let height = 0;
-    let lastTs = 0;
-    const frameIntervalMs = isMobile ? 50 : 33; // ~20fps mobile, ~30fps desktop
 
     const isValidDimension = (value: number) => Number.isFinite(value) && value > 0;
 
@@ -71,7 +63,7 @@ const FunnelDNAVisual = memo(() => {
       : null;
     resizeObserver?.observe(canvas);
 
-    const draw = (ts: number) => {
+    const draw = () => {
       const w = width;
       const h = height;
 
@@ -80,18 +72,12 @@ const FunnelDNAVisual = memo(() => {
         return;
       }
 
-      if (ts - lastTs < frameIntervalMs) {
-        animId = requestAnimationFrame(draw);
-        return;
-      }
-      lastTs = ts;
-
       ctx.clearRect(0, 0, w, h);
-      t += isMobile ? 0.006 : 0.008;
+      t += 0.008;
 
       const cx = w / 2;
-      const points = isMobile ? 24 : 48;
-      const amp = Math.min(w, h) * (isMobile ? 0.23 : 0.28);
+      const points = 48;
+      const amp = Math.min(w, h) * 0.28;
       const spacing = h / points;
 
       // Connecting rungs between strands
@@ -154,7 +140,7 @@ const FunnelDNAVisual = memo(() => {
       }
 
       // Floating particles
-      for (let i = 0; i < (isMobile ? 12 : 30); i++) {
+      for (let i = 0; i < 30; i++) {
         const px = cx + Math.sin(t * 0.7 + i * 2.1) * amp * 1.3;
         const py = h * ((i * 0.618 + t * 0.1) % 1);
         const pa = 0.08 + 0.06 * Math.sin(t * 2 + i);
@@ -183,12 +169,12 @@ const FunnelDNAVisual = memo(() => {
       resizeObserver?.disconnect();
       window.removeEventListener("resize", resize);
     };
-  }, [isInView, isMobile]);
+  }, []);
 
   const step = FUNNEL_STEPS[activeStep];
 
   return (
-    <div ref={containerRef} className="relative w-full aspect-video rounded-2xl overflow-hidden" style={{
+    <div className="relative w-full aspect-video rounded-2xl overflow-hidden" style={{
       background: `linear-gradient(145deg, hsla(150,30%,8%,1) 0%, hsla(160,25%,10%,1) 40%, hsla(140,20%,12%,1) 70%, hsla(150,30%,8%,1) 100%)`
     }}>
       {/* Green tech ambient glow */}
