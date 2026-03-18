@@ -348,7 +348,7 @@ const EmpireDNABackground = () => {
       // ═══ LAYER 3: Nodes — uniform crosses and squares ═══
       for (let i = 0; i < NODE_COUNT; i++) {
         const breathe = 0.4 + Math.sin(time * 1 + i * 0.7) * 0.6;
-        let na = 0.06 * breathe;
+        let na = 0.06 * breathe * MOBILE_BOOST;
         const isActive = (i + Math.floor(time * 0.3)) % 10 === 0;
 
         if (ptr.active) {
