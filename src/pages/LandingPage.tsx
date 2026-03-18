@@ -3297,10 +3297,12 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           SETTORI
          ═══════════════════════════════════════════ */}
-      <Section id="industries" style={{ background: "linear-gradient(180deg, hsla(260,14%,13%,1) 0%, hsla(265,16%,12%,1) 50%, hsla(260,14%,13%,1) 100%)" }}>
-        {/* Subtle violet side glows */}
-        <div className="absolute top-0 left-0 w-[300px] h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at left, hsla(265,70%,60%,0.04), transparent 70%)" }} />
-        <div className="absolute top-0 right-0 w-[300px] h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at right, hsla(265,70%,60%,0.04), transparent 70%)" }} />
+      <Section id="industries" className="relative overflow-hidden" style={{ background: "linear-gradient(180deg, hsla(260,16%,6%,1) 0%, hsla(265,18%,10%,1) 35%, hsla(260,14%,8%,1) 65%, hsla(260,16%,6%,1) 100%)" }}>
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-0 left-0 w-[350px] h-full opacity-[0.06]" style={{ background: "radial-gradient(ellipse at left, hsla(265,70%,55%,0.5), transparent 70%)" }} />
+          <div className="absolute top-0 right-0 w-[350px] h-full opacity-[0.06]" style={{ background: "radial-gradient(ellipse at right, hsla(265,70%,55%,0.5), transparent 70%)" }} />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(ellipse, hsla(38,50%,50%,0.35), transparent 70%)", filter: "blur(120px)" }} />
+        </div>
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
