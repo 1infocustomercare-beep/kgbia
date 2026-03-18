@@ -52,6 +52,8 @@ export default function DemoAdminPage() {
   const [activeModule, setActiveModule] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
+  const [agentsTab, setAgentsTab] = useState<"overview" | "activity" | "detail">("overview");
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
 
   const config = getSectorConfig(slug || "food");
   const allAgents = useMemo(() => getAllAgentsForSector(slug || "food"), [slug]);
@@ -327,58 +329,217 @@ export default function DemoAdminPage() {
     </div>
   );
 
-  const renderAgents = () => (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-base font-bold text-white mb-1">Agenti AI Attivi</h2>
-        <p className="text-xs text-white/40">{allAgents.length} agenti operativi per {config.name}</p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {allAgents.map((agent, i) => (
-          <motion.div key={agent.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-            <Card className="bg-white/[0.03] border-white/[0.06] hover:border-white/[0.12] transition-all">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl">{agent.emoji}</span>
-                    <div>
-                      <p className="text-xs font-bold text-white">{agent.name}</p>
-                      <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        <span className="text-[0.5rem] text-emerald-400 font-medium uppercase tracking-wider">Attivo</span>
-                        {agent.isUniversal && <Badge className="text-[0.45rem] px-1 py-0 bg-purple-500/20 text-purple-300">Universal</Badge>}
+
+  const renderAgents = () => {
+    const totalHours = allAgents.reduce((s, a) => s + (a.hoursPerWeek || 8), 0);
+    const avgAccuracy = Math.round(allAgents.reduce((s, a) => s + (a.accuracy || 90), 0) / allAgents.length);
+    const totalActions = allAgents.length * 142;
+
+    const mockActivityFeed = [
+      { agent: allAgents[0]?.name || "Arianna", action: "Ha prenotato un appuntamento", time: "2 min fa", emoji: allAgents[0]?.emoji || "🎧" },
+      { agent: allAgents[1]?.name || "Analytics", action: "Report settimanale generato", time: "15 min fa", emoji: allAgents[1]?.emoji || "📊" },
+      { agent: allAgents[2]?.name || "Marketing", action: "Post Instagram pubblicato", time: "32 min fa", emoji: allAgents[2]?.emoji || "📣" },
+      { agent: allAgents[3]?.name || "Sales", action: "Lead qualificato: score 87/100", time: "1 ora fa", emoji: allAgents[3]?.emoji || "💼" },
+      { agent: allAgents[4]?.name || "Operations", action: "Turno assegnato automaticamente", time: "2 ore fa", emoji: allAgents[4]?.emoji || "⚙️" },
+      { agent: allAgents[5]?.name || "Compliance", action: "GDPR audit completato", time: "3 ore fa", emoji: allAgents[5]?.emoji || "🛡️" },
+      { agent: allAgents[6]?.name || "Customer", action: "Win-back inviato a cliente inattivo", time: "4 ore fa", emoji: allAgents[6]?.emoji || "❤️" },
+      ...allAgents.slice(7).map((a, i) => ({ agent: a.name, action: `${a.capabilities[0] || 'Azione'} eseguita`, time: `${5 + i} ore fa`, emoji: a.emoji })),
+    ];
+
+    const detailAgent = allAgents.find(a => a.name === selectedAgent) || allAgents[0];
+
+    return (
+      <div className="space-y-5">
+        <div>
+          <h2 className="text-base font-bold text-white mb-1">Agenti AI Attivi</h2>
+          <p className="text-xs text-white/40">{allAgents.length} agenti operativi per {config.name}</p>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-1 p-1 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+          {([["overview", "Panoramica"], ["activity", "Attività Recente"], ["detail", "Dettaglio Agente"]] as const).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setAgentsTab(key)}
+              className={`flex-1 py-2 rounded-lg text-[0.6rem] font-bold transition-all ${agentsTab === key ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
+              style={agentsTab === key ? { background: `${accentColor}20`, color: accentColor } : {}}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Aggregate KPIs */}
+        {agentsTab === "overview" && (
+          <>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: "Azioni Totali", value: totalActions.toLocaleString("it-IT"), icon: Activity },
+                { label: "Ore Risparmiate/Sett", value: `${totalHours}h`, icon: Clock },
+                { label: "Accuratezza Media", value: `${avgAccuracy}%`, icon: CheckCircle },
+              ].map((s, i) => (
+                <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
+                  <CardContent className="p-3 text-center">
+                    <s.icon className="w-4 h-4 mx-auto mb-1" style={{ color: accentColor }} />
+                    <p className="text-sm font-bold text-white">{s.value}</p>
+                    <p className="text-[0.5rem] text-white/30">{s.label}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {allAgents.map((agent, i) => (
+                <motion.div key={agent.name} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
+                  <Card
+                    className="bg-white/[0.03] border-white/[0.06] hover:border-white/[0.12] transition-all cursor-pointer"
+                    onClick={() => { setSelectedAgent(agent.name); setAgentsTab("detail"); }}
+                  >
+                    <CardContent className="p-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg">{agent.emoji}</span>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[0.65rem] font-bold text-white truncate">{agent.name}</p>
+                          <div className="flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className="text-[0.45rem] text-emerald-400">ATTIVO</span>
+                            {agent.isUniversal && <Badge className="text-[0.4rem] px-1 py-0 bg-purple-500/20 text-purple-300 ml-1">Universal</Badge>}
+                          </div>
+                        </div>
+                        <MoreHorizontal className="w-3.5 h-3.5 text-white/20" />
                       </div>
+                      <div className="flex items-center justify-between text-center">
+                        <div><p className="text-[0.6rem] font-bold text-white">{agent.accuracy || 95}%</p><p className="text-[0.4rem] text-white/25">Accuracy</p></div>
+                        <div><p className="text-[0.6rem] font-bold text-white">{agent.hoursPerWeek || 8}h</p><p className="text-[0.4rem] text-white/25">Ore/sett</p></div>
+                        <div><p className="text-[0.6rem] font-bold text-white">{120 + i * 25}</p><p className="text-[0.4rem] text-white/25">Azioni</p></div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Activity Feed */}
+        {agentsTab === "activity" && (
+          <Card className="bg-white/[0.03] border-white/[0.06]">
+            <CardContent className="p-4 space-y-1">
+              {mockActivityFeed.map((a, i) => (
+                <motion.div
+                  key={i}
+                  className="flex items-center gap-3 py-2.5 border-b border-white/[0.04] last:border-0"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <span className="text-base shrink-0">{a.emoji}</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs text-white/80"><strong className="text-white">{a.agent}</strong> — {a.action}</p>
+                  </div>
+                  <span className="text-[0.55rem] text-white/25 shrink-0">{a.time}</span>
+                </motion.div>
+              ))}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Detail view */}
+        {agentsTab === "detail" && detailAgent && (
+          <div className="space-y-4">
+            {/* Agent selector */}
+            <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
+              {allAgents.map(a => (
+                <button
+                  key={a.name}
+                  onClick={() => setSelectedAgent(a.name)}
+                  className={`shrink-0 px-2.5 py-1.5 rounded-lg text-[0.55rem] font-medium transition-all whitespace-nowrap ${selectedAgent === a.name || (!selectedAgent && a === allAgents[0]) ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
+                  style={(selectedAgent === a.name || (!selectedAgent && a === allAgents[0])) ? { background: `${accentColor}20`, color: accentColor } : { background: 'rgba(255,255,255,0.03)' }}
+                >
+                  {a.emoji} {a.name.split(' — ')[0].split(' ').slice(0, 2).join(' ')}
+                </button>
+              ))}
+            </div>
+
+            <Card className="bg-white/[0.03] border-white/[0.06]">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">{detailAgent.emoji}</span>
+                  <div>
+                    <p className="text-sm font-bold text-white">{detailAgent.name}</p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-[0.6rem] text-emerald-400 font-medium">ATTIVO 24/7</span>
                     </div>
                   </div>
-                  <MoreHorizontal className="w-4 h-4 text-white/20" />
                 </div>
-                <p className="text-[0.65rem] text-white/50 leading-relaxed mb-3">{agent.desc}</p>
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {agent.capabilities.slice(0, 3).map(c => (
-                    <Badge key={c} variant="outline" className="text-[0.5rem] border-white/10 text-white/40 px-1.5">{c}</Badge>
+                <p className="text-xs text-white/60 mb-4">{detailAgent.desc}</p>
+
+                {/* Metrics */}
+                <div className="grid grid-cols-3 gap-3 mb-4">
+                  <div className="text-center p-2.5 rounded-lg bg-white/[0.03]">
+                    <p className="text-base font-bold text-white">{detailAgent.accuracy || 95}%</p>
+                    <p className="text-[0.5rem] text-white/30">Accuratezza</p>
+                  </div>
+                  <div className="text-center p-2.5 rounded-lg bg-white/[0.03]">
+                    <p className="text-base font-bold text-white">{detailAgent.hoursPerWeek || 10}h</p>
+                    <p className="text-[0.5rem] text-white/30">Risparmio/Sett</p>
+                  </div>
+                  <div className="text-center p-2.5 rounded-lg bg-white/[0.03]">
+                    <p className="text-base font-bold" style={{ color: accentColor }}>142</p>
+                    <p className="text-[0.5rem] text-white/30">Azioni eseguite</p>
+                  </div>
+                </div>
+
+                {/* Capabilities */}
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {detailAgent.capabilities.map(c => (
+                    <Badge key={c} variant="outline" className="text-[0.55rem] border-white/10 text-white/50 px-2">{c}</Badge>
                   ))}
                 </div>
-                <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
-                  <div className="text-center">
-                    <p className="text-xs font-bold text-white">{agent.accuracy || 95}%</p>
-                    <p className="text-[0.5rem] text-white/30">Accuracy</p>
+
+                {/* Workflow */}
+                {detailAgent.workflow && detailAgent.workflow.length > 0 && (
+                  <div className="pt-4 border-t border-white/[0.06]">
+                    <p className="text-[0.6rem] font-bold text-white/50 uppercase tracking-wider mb-3">⚡ Come Lavora</p>
+                    <div className="space-y-2.5">
+                      {detailAgent.workflow.map((step, i) => (
+                        <div key={i} className="flex items-start gap-3 relative">
+                          {i < detailAgent.workflow!.length - 1 && (
+                            <div className="absolute left-[15px] top-[30px] w-[1px] h-[calc(100%+4px)]" style={{ background: `${accentColor}20` }} />
+                          )}
+                          <div className="w-[30px] h-[30px] rounded-lg flex items-center justify-center text-sm shrink-0 relative z-10" style={{ background: `${accentColor}15`, border: `1px solid ${accentColor}30` }}>
+                            {step.icon}
+                          </div>
+                          <div className="pt-0.5">
+                            <p className="text-[0.65rem] font-bold text-white/80">{step.label}</p>
+                            <p className="text-[0.55rem] text-white/40">{step.detail}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-xs font-bold text-white">{agent.hoursPerWeek || (5 + i * 2)}h</p>
-                    <p className="text-[0.5rem] text-white/30">Ore/sett</p>
+                )}
+
+                {/* Example */}
+                {detailAgent.example && (
+                  <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                    <p className="text-[0.55rem] font-bold text-white/50 mb-1">💡 Esempio Concreto</p>
+                    <p className="text-[0.6rem] text-white/60 leading-relaxed italic">{detailAgent.example}</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-xs font-bold text-white">{120 + i * 35}</p>
-                    <p className="text-[0.5rem] text-white/30">Azioni</p>
+                )}
+
+                {detailAgent.result && (
+                  <div className="mt-3 p-2.5 rounded-lg text-center" style={{ background: `${accentColor}10`, border: `1px solid ${accentColor}20` }}>
+                    <p className="text-[0.6rem] font-bold" style={{ color: accentColor }}>{detailAgent.result}</p>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
-          </motion.div>
-        ))}
+          </div>
+        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderGenericModule = () => {
     const mod = config.adminModules.find(m => m.route === activeModule);

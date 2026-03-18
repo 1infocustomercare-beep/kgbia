@@ -10,6 +10,12 @@ export interface FeatureItem {
   category: "crm" | "booking" | "marketing" | "finance" | "analytics" | "operations" | "ai" | "sector";
 }
 
+export interface WorkflowStep {
+  icon: string;
+  label: string;
+  detail: string;
+}
+
 export interface AIAgent {
   name: string;
   emoji: string;
@@ -18,6 +24,10 @@ export interface AIAgent {
   isUniversal: boolean;
   hoursPerWeek?: number;
   accuracy?: number;
+  category?: string;
+  workflow?: WorkflowStep[];
+  example?: string;
+  result?: string;
 }
 
 // ═══════════════════════════════════════════
@@ -51,13 +61,34 @@ export const UNIVERSAL_FEATURES: FeatureItem[] = [
 // 7 UNIVERSAL AI AGENTS
 // ═══════════════════════════════════════════
 export const UNIVERSAL_AGENTS: AIAgent[] = [
-  { name: "Arianna — AI Concierge", emoji: "🎧", desc: "Receptionist 24/7 in 12 lingue: prende prenotazioni, qualifica lead e risponde a ogni domanda", capabilities: ["Booking automatico", "Lead qualification", "12 lingue", "Risposta istantanea"], isUniversal: true, hoursPerWeek: 168, accuracy: 97 },
-  { name: "Analytics Agent", emoji: "📊", desc: "Business Intelligence con KPI real-time, report automatici e previsioni vendite predittive", capabilities: ["KPI real-time", "Report automatici", "Forecast vendite", "Trend analysis"], isUniversal: true, hoursPerWeek: 15, accuracy: 94 },
-  { name: "Marketing Agent", emoji: "📣", desc: "Content & Campaigns: post social, newsletter, ads con ROI +240% medio", capabilities: ["Post social AI", "Newsletter", "Ads management", "ROI +240%"], isUniversal: true, hoursPerWeek: 20, accuracy: 91 },
-  { name: "Sales Agent", emoji: "💼", desc: "Lead scoring, follow-up automatici e sequenze personalizzate per chiudere più vendite", capabilities: ["Lead scoring", "Follow-up auto", "Sequenze email", "Pipeline CRM"], isUniversal: true, hoursPerWeek: 12, accuracy: 89 },
-  { name: "Operations Agent", emoji: "⚙️", desc: "Workflow automation: scheduling, assegnazioni e notifiche — risparmia 15h/settimana", capabilities: ["Scheduling AI", "Assegnazioni auto", "Notifiche smart", "15h risparmiate"], isUniversal: true, hoursPerWeek: 15, accuracy: 96 },
-  { name: "Compliance Agent", emoji: "🛡️", desc: "Normative GDPR, scadenze documenti e compliance automatica per ogni settore", capabilities: ["GDPR audit", "Scadenze auto", "Documenti conformi", "Alert normativi"], isUniversal: true, hoursPerWeek: 8, accuracy: 99 },
-  { name: "Customer Success", emoji: "❤️", desc: "Prevede abbandoni, gestisce NPS e campagne win-back — retention +35%", capabilities: ["Churn prediction", "NPS tracking", "Win-back auto", "Retention +35%"], isUniversal: true, hoursPerWeek: 10, accuracy: 92 },
+  { name: "Arianna — AI Concierge", emoji: "🎧", desc: "Receptionist 24/7 in 12 lingue: prende prenotazioni, qualifica lead e risponde a ogni domanda", capabilities: ["Booking automatico", "Lead qualification", "12 lingue", "Risposta istantanea"], isUniversal: true, hoursPerWeek: 168, accuracy: 97, category: "Concierge",
+    workflow: [{ icon: "📩", label: "Messaggio in arrivo", detail: "Il cliente scrive via chat, WhatsApp o telefono" }, { icon: "🧠", label: "Analisi AI", detail: "Arianna identifica lingua, intento e urgenza" }, { icon: "📅", label: "Azione", detail: "Prenota, risponde o qualifica il lead in autonomia" }, { icon: "✅", label: "Conferma", detail: "Invia conferma al cliente e notifica al team" }],
+    example: "Cliente scrive 'Vorrei prenotare per domani sera' → Arianna verifica disponibilità, propone 20:30, conferma e invia reminder",
+    result: "Risparmio: 168h/settimana · Conversion rate: +42%" },
+  { name: "Analytics Agent", emoji: "📊", desc: "Business Intelligence con KPI real-time, report automatici e previsioni vendite predittive", capabilities: ["KPI real-time", "Report automatici", "Forecast vendite", "Trend analysis"], isUniversal: true, hoursPerWeek: 15, accuracy: 94, category: "Analytics",
+    workflow: [{ icon: "📥", label: "Raccolta dati", detail: "Aggrega dati da vendite, CRM, prenotazioni" }, { icon: "📈", label: "Analisi trend", detail: "Identifica pattern, anomalie e stagionalità" }, { icon: "🔮", label: "Previsioni", detail: "Genera forecast con machine learning" }, { icon: "📧", label: "Report", detail: "Invia report settimanale con suggerimenti" }],
+    example: "Lunedì mattina ricevi: 'Fatturato +18% vs settimana scorsa. Il martedì sera è il tuo slot più redditizio (+€340). Suggerimento: promo lunedì per bilanciare.'",
+    result: "Risparmio: 15h/settimana · Decisioni data-driven: +94%" },
+  { name: "Marketing Agent", emoji: "📣", desc: "Content & Campaigns: post social, newsletter, ads con ROI +240% medio", capabilities: ["Post social AI", "Newsletter", "Ads management", "ROI +240%"], isUniversal: true, hoursPerWeek: 20, accuracy: 91, category: "Marketing",
+    workflow: [{ icon: "🎯", label: "Strategia", detail: "Analizza target, trend e competitor" }, { icon: "✍️", label: "Creazione", detail: "Genera testi, immagini e hashtag ottimizzati" }, { icon: "📱", label: "Pubblicazione", detail: "Pubblica su Instagram, Facebook, TikTok" }, { icon: "📊", label: "Ottimizzazione", detail: "Misura risultati e migliora in automatico" }],
+    example: "Crea post Instagram con foto del piatto del giorno → Hashtag ottimizzati → Pubblica alle 12:30 (orario migliore) → +340 impression",
+    result: "Risparmio: 20h/settimana · ROI medio: +240%" },
+  { name: "Sales Agent", emoji: "💼", desc: "Lead scoring, follow-up automatici e sequenze personalizzate per chiudere più vendite", capabilities: ["Lead scoring", "Follow-up auto", "Sequenze email", "Pipeline CRM"], isUniversal: true, hoursPerWeek: 12, accuracy: 89, category: "Vendite",
+    workflow: [{ icon: "🎣", label: "Lead capture", detail: "Cattura lead da sito, social e referral" }, { icon: "⭐", label: "Scoring", detail: "Assegna punteggio in base a interesse e budget" }, { icon: "📧", label: "Follow-up", detail: "Sequenza email/WhatsApp personalizzata" }, { icon: "🤝", label: "Chiusura", detail: "Notifica al team quando il lead è pronto" }],
+    example: "Nuovo lead da Google → Score 85/100 (alto interesse) → Email personalizzata dopo 2h → Follow-up WhatsApp dopo 24h → Conversione",
+    result: "Risparmio: 12h/settimana · Conversion rate: +35%" },
+  { name: "Operations Agent", emoji: "⚙️", desc: "Workflow automation: scheduling, assegnazioni e notifiche — risparmia 15h/settimana", capabilities: ["Scheduling AI", "Assegnazioni auto", "Notifiche smart", "15h risparmiate"], isUniversal: true, hoursPerWeek: 15, accuracy: 96, category: "Operazioni",
+    workflow: [{ icon: "📋", label: "Task detection", detail: "Identifica attività ricorrenti e bottleneck" }, { icon: "🤖", label: "Automazione", detail: "Crea workflow automatici senza codice" }, { icon: "👥", label: "Assegnazione", detail: "Distribuisce task al team in base a carico" }, { icon: "🔔", label: "Notifiche", detail: "Alert smart solo quando serve" }],
+    example: "Nuova prenotazione → Assegna operatore libero → Prepara materiali → Invia conferma al cliente → Reminder 24h prima",
+    result: "Risparmio: 15h/settimana · Errori operativi: -72%" },
+  { name: "Compliance Agent", emoji: "🛡️", desc: "Normative GDPR, scadenze documenti e compliance automatica per ogni settore", capabilities: ["GDPR audit", "Scadenze auto", "Documenti conformi", "Alert normativi"], isUniversal: true, hoursPerWeek: 8, accuracy: 99, category: "Compliance",
+    workflow: [{ icon: "🔍", label: "Scan", detail: "Analizza dati e processi per conformità" }, { icon: "⚠️", label: "Alert", detail: "Identifica scadenze e non-conformità" }, { icon: "📄", label: "Documenti", detail: "Genera documenti GDPR e consensi" }, { icon: "✅", label: "Certificazione", detail: "Report compliance aggiornato" }],
+    example: "Scadenza certificato tra 30gg → Alert al responsabile → Prepara documentazione → Reminder settimanali fino al rinnovo",
+    result: "Risparmio: 8h/settimana · Compliance: 100%" },
+  { name: "Customer Success", emoji: "❤️", desc: "Prevede abbandoni, gestisce NPS e campagne win-back — retention +35%", capabilities: ["Churn prediction", "NPS tracking", "Win-back auto", "Retention +35%"], isUniversal: true, hoursPerWeek: 10, accuracy: 92, category: "Retention",
+    workflow: [{ icon: "📉", label: "Monitoring", detail: "Analizza comportamento e frequenza clienti" }, { icon: "🚨", label: "Churn alert", detail: "Identifica clienti a rischio abbandono" }, { icon: "🎁", label: "Win-back", detail: "Invia offerta personalizzata automatica" }, { icon: "📊", label: "NPS", detail: "Misura soddisfazione e migliora servizio" }],
+    example: "Cliente non torna da 45gg → Churn risk 78% → Invia sconto 15% personalizzato → Cliente ritorna entro 7gg",
+    result: "Risparmio: 10h/settimana · Retention: +35%" },
 ];
 
 // ═══════════════════════════════════════════
