@@ -832,6 +832,8 @@ const EmpireVoiceAgent: React.FC = () => {
 
   const startIntroNarration = useCallback(() => {
     if (introStartedRef.current || !voiceEnabledRef.current) return;
+    // On touch devices, start only after explicit interaction (tap/open)
+    if (isTouchDeviceRef.current && !userInteractedRef.current) return;
     // Don't start if another agent already owns the channel
     if (!isVoiceAgentActive("arianna") && getActiveVoiceAgent() !== null) return;
 
@@ -889,20 +891,20 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [isPaused]);
 
-  // ── Auto-narrate on section change — always follow user scroll ──
+   // ── Auto-narrate on section change ──
   useEffect(() => {
     if (!currentSection || !SECTION_SCRIPTS[currentSection]) return;
     // If audio has been unlocked (user interacted), always try to narrate new sections
     if (!autoNarrating && !audioUnlockedRef.current) return;
-    
+
     // Re-enable auto-narrating if gesture happened and it was disabled
     if (!autoNarrating && audioUnlockedRef.current && !abortRef.current) {
       autoNarratingRef.current = true;
       setAutoNarrating(true);
     }
-    
+
     enqueueSectionNarration(currentSection);
-  }, [autoNarrating, currentSection, enqueueSectionNarration]);
+  }, [autoNarrating, currentSection, enqueueSectionNarration, isOpen]);
 
   // ── Visibility ──
   useEffect(() => {
@@ -912,9 +914,9 @@ const EmpireVoiceAgent: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Auto-voice intro (hands-free) — waits for hero section to be visible (post-splash) ──
+  // ── Auto-voice intro (hands-free) — desktop only ──
   useEffect(() => {
-    if (autoBootedRef.current) return;
+    if (autoBootedRef.current || isTouchDevice) return;
 
     const bootAttempt = () => {
       if (autoBootedRef.current) return;
@@ -954,7 +956,7 @@ const EmpireVoiceAgent: React.FC = () => {
       window.clearInterval(pollInterval);
       window.clearTimeout(safety);
     };
-  }, [startIntroNarration, enqueueSectionNarration]);
+  }, [startIntroNarration, enqueueSectionNarration, isTouchDevice]);
 
   // ── Recovery: autoplay restrictions — gesture-driven unlock + re-enqueue current section ──
   const audioUnlockedRef = useRef(false);
@@ -1032,6 +1034,7 @@ const EmpireVoiceAgent: React.FC = () => {
     window.addEventListener("touchend", unlockAndRetry, options);
     window.addEventListener("click", unlockAndRetry, options);
     window.addEventListener("keydown", unlockAndRetry);
+
     window.addEventListener("scroll", unlockAndRetry, options);
 
     const maybeActivated =

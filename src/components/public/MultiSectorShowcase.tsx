@@ -759,7 +759,7 @@ export default function MultiSectorShowcase() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="sync">
         <motion.div key={sector.id}
           className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-14 items-center"
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }}
@@ -827,7 +827,7 @@ export default function MultiSectorShowcase() {
 
           {/* Right — iPhone Preview */}
           <div className="w-full flex flex-col items-center">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               {!showAllScreens ? (
                 /* Single iPhone preview — the sector's best screen */
                 <motion.div
