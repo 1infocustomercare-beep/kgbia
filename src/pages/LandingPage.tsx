@@ -2316,6 +2316,10 @@ const LandingPage = () => {
   const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
   const mockupCarouselRef = useRef<HTMLDivElement>(null);
   const [mockupCarouselPaused, setMockupCarouselPaused] = useState(false);
+  const [expandBenefits, setExpandBenefits] = useState(false);
+  const [expandServices, setExpandServices] = useState(false);
+  const [expandMockups, setExpandMockups] = useState(false);
+  const [expandTestimonials, setExpandTestimonials] = useState(false);
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -3763,21 +3767,45 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
-        {/* Benefits — Mobile: auto-scroll carousel */}
+        {/* Benefits — Mobile: carousel or expanded grid */}
         <div className="sm:hidden">
-          <PremiumCarousel speed="slow" itemWidth={160} showControls={false}>
-            {whyUs.map((item, i) => (
-              <div key={i} className="w-[160px]">
-                <PremiumCard scan delay={i * 0.3} className="p-4 text-center h-full">
-                  <motion.div className="text-primary/50 mb-2 flex justify-center"
-                    animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
-                  <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
-                  <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
-                </PremiumCard>
-              </div>
-            ))}
-          </PremiumCarousel>
+          <AnimatePresence mode="wait">
+            {expandBenefits ? (
+              <motion.div key="benefits-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-2 gap-2 px-1">
+                {whyUs.map((item, i) => (
+                  <div key={i}>
+                    <PremiumCard scan delay={i * 0.1} className="p-3 text-center h-full">
+                      <div className="text-primary/50 mb-2 flex justify-center">{item.icon}</div>
+                      <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
+                      <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
+                    </PremiumCard>
+                  </div>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div key="benefits-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <PremiumCarousel speed="slow" itemWidth={160} showControls={false}>
+                  {whyUs.map((item, i) => (
+                    <div key={i} className="w-[160px]">
+                      <PremiumCard scan delay={i * 0.3} className="p-4 text-center h-full">
+                        <motion.div className="text-primary/50 mb-2 flex justify-center"
+                          animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
+                          transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
+                        <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
+                        <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
+                      </PremiumCard>
+                    </div>
+                  ))}
+                </PremiumCarousel>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <div className="flex justify-center mt-3">
+            <button onClick={() => setExpandBenefits(p => !p)}
+              className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+              <Layers className="w-3 h-3" /> {expandBenefits ? "Chiudi" : "Vedi Tutti"}
+            </button>
+          </div>
         </div>
 
         {/* Benefits — Desktop: staggered grid */}
@@ -4041,102 +4069,107 @@ const LandingPage = () => {
           };
 
           return (
-            <div className="relative overflow-hidden -mx-5 sm:-mx-6 px-5 sm:px-6">
-              {/* Fade edges */}
-              <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(var(--background)), transparent)" }} />
-              <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(var(--background)), transparent)" }} />
-
-              {/* Controls */}
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <button
-                  onClick={() => scrollCarousel('left')}
-                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
-                  aria-label="Indietro"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setCarouselPaused(p => !p)}
-                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
-                  aria-label={carouselPaused ? "Play" : "Pausa"}
-                >
-                  {carouselPaused ? <Play className="w-3.5 h-3.5 ml-0.5" /> : <Pause className="w-3.5 h-3.5" />}
-                </button>
-                <button
-                  onClick={() => scrollCarousel('right')}
-                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
-                  aria-label="Avanti"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-              
-              <div
-                ref={carouselRef}
-                className="flex gap-5 sm:gap-6"
-                style={{
-                  animation: `carousel-scroll 22s linear infinite`,
-                  animationPlayState: carouselPaused ? 'paused' : 'running',
-                  width: "max-content",
-                }}>
-                {[...mockups, ...mockups].map((mock, i) => {
-                  const tagColors: Record<string, string> = {
-                    "FRONT-END": "hsl(var(--primary))",
-                    "BACK-OFFICE": "hsl(var(--accent))",
-                    "OPERATIONS": "hsl(160, 60%, 45%)",
-                  };
-                  const tagColor = tagColors[mock.tag] || "hsl(var(--primary))";
-                  return (
-                  <div key={i} className="group flex flex-col items-center flex-shrink-0 w-[195px]">
-                    {/* iPhone frame */}
-                    <div className="relative mb-4">
-                      {/* Ambient glow */}
-                      <div className="absolute -inset-3 rounded-[46px] opacity-10 blur-xl pointer-events-none group-hover:opacity-20 transition-opacity duration-700" style={{ background: tagColor }} />
-                      
-                      {/* Phone body */}
-                      <div className="relative w-[185px] h-[380px] rounded-[34px] border-[2.5px] border-foreground/12 shadow-[0_12px_40px_hsla(0,0%,0%,0.5)] overflow-hidden transition-all duration-500 group-hover:shadow-[0_16px_50px_hsla(265,70%,60%,0.12)]" style={{ background: "hsl(var(--card))" }}>
-                        {/* Dynamic Island */}
-                        <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[60px] h-[18px] bg-foreground/80 rounded-full z-20" />
-                        
-                        {/* Screen */}
-                        <div className="absolute inset-[2px] rounded-[31px] overflow-hidden" style={{ background: "hsl(var(--background))" }}>
-                          <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top group-hover:scale-[1.04] transition-transform duration-700" loading="lazy" />
-                          
-                          {/* Content overlay — clean gradient */}
-                          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.85) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
-                          
-                          {/* Tag + Sector — top bar */}
-                          <div className="absolute top-[30px] left-3 right-3 z-20 flex items-center gap-1.5">
-                            <span className="px-2 py-[2px] rounded-md text-[0.42rem] font-bold tracking-[1.5px] uppercase" style={{ background: `${tagColor}22`, color: tagColor, border: `1px solid ${tagColor}30` }}>
-                              {mock.tag}
-                            </span>
-                            <span className="text-[0.4rem] text-white/50 tracking-wider">{mock.sector}</span>
-                          </div>
-
-                          {/* Bottom content card */}
-                          <div className="absolute bottom-5 left-2.5 right-2.5 z-10">
-                            <h3 className="font-heading text-[0.8rem] font-bold text-white mb-1 drop-shadow-lg">{mock.title}</h3>
-                            <p className="text-[0.5rem] text-white/60 leading-[1.6] mb-2.5 line-clamp-2">{mock.desc}</p>
-                            {/* Feature pills inside phone */}
-                            <div className="flex flex-wrap gap-[3px]">
-                              {mock.features.slice(0, 4).map((f, j) => (
-                                <span key={j} className="px-1.5 py-[2px] rounded-md text-[0.4rem] font-medium text-white/70 backdrop-blur-sm" style={{ background: "hsla(0,0%,100%,0.08)", border: "1px solid hsla(0,0%,100%,0.1)" }}>
-                                  {f}
-                                </span>
-                              ))}
+            <>
+            <AnimatePresence mode="wait">
+              {expandMockups ? (
+                <motion.div key="mockups-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                  className="grid grid-cols-2 gap-4 px-1">
+                  {mockups.map((mock, i) => {
+                    const tagColors: Record<string, string> = {
+                      "FRONT-END": "hsl(var(--primary))",
+                      "BACK-OFFICE": "hsl(var(--accent))",
+                      "OPERATIONS": "hsl(160, 60%, 45%)",
+                    };
+                    const tagColor = tagColors[mock.tag] || "hsl(var(--primary))";
+                    return (
+                      <div key={i} className="group flex flex-col items-center">
+                        <div className="relative mb-3">
+                          <div className="relative w-full max-w-[160px] aspect-[9/18] rounded-[28px] border-[2px] border-foreground/12 shadow-lg overflow-hidden" style={{ background: "hsl(var(--card))" }}>
+                            <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[50px] h-[14px] bg-foreground/80 rounded-full z-20" />
+                            <div className="absolute inset-[2px] rounded-[25px] overflow-hidden" style={{ background: "hsl(var(--background))" }}>
+                              <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top" loading="lazy" />
+                              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.85) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
+                              <div className="absolute bottom-4 left-2 right-2 z-10">
+                                <span className="px-1.5 py-[2px] rounded-md text-[0.38rem] font-bold tracking-[1px] uppercase" style={{ background: `${tagColor}22`, color: tagColor, border: `1px solid ${tagColor}30` }}>{mock.tag}</span>
+                                <h3 className="font-heading text-[0.7rem] font-bold text-white mt-1">{mock.title}</h3>
+                              </div>
                             </div>
                           </div>
                         </div>
-
-                        {/* Home indicator */}
-                        <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[70px] h-[3px] bg-foreground/15 rounded-full z-20" />
                       </div>
-                    </div>
+                    );
+                  })}
+                </motion.div>
+              ) : (
+                <motion.div key="mockups-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  className="relative overflow-hidden -mx-5 sm:-mx-6 px-5 sm:px-6">
+                  <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(var(--background)), transparent)" }} />
+                  <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(var(--background)), transparent)" }} />
+
+                  <div className="flex items-center justify-center gap-3 mb-5">
+                    <button onClick={() => scrollCarousel('left')} className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300" aria-label="Indietro">
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => setCarouselPaused(p => !p)} className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300" aria-label={carouselPaused ? "Play" : "Pausa"}>
+                      {carouselPaused ? <Play className="w-3.5 h-3.5 ml-0.5" /> : <Pause className="w-3.5 h-3.5" />}
+                    </button>
+                    <button onClick={() => scrollCarousel('right')} className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md flex items-center justify-center text-foreground/60 hover:text-foreground hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300" aria-label="Avanti">
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
                   </div>
-                  );
-                })}
-              </div>
+                  
+                  <div ref={carouselRef} className="flex gap-5 sm:gap-6" style={{
+                    animation: `carousel-scroll 22s linear infinite`,
+                    animationPlayState: carouselPaused ? 'paused' : 'running',
+                    width: "max-content",
+                  }}>
+                    {[...mockups, ...mockups].map((mock, i) => {
+                      const tagColors: Record<string, string> = {
+                        "FRONT-END": "hsl(var(--primary))",
+                        "BACK-OFFICE": "hsl(var(--accent))",
+                        "OPERATIONS": "hsl(160, 60%, 45%)",
+                      };
+                      const tagColor = tagColors[mock.tag] || "hsl(var(--primary))";
+                      return (
+                        <div key={i} className="group flex flex-col items-center flex-shrink-0 w-[195px]">
+                          <div className="relative mb-4">
+                            <div className="absolute -inset-3 rounded-[46px] opacity-10 blur-xl pointer-events-none group-hover:opacity-20 transition-opacity duration-700" style={{ background: tagColor }} />
+                            <div className="relative w-[185px] h-[380px] rounded-[34px] border-[2.5px] border-foreground/12 shadow-[0_12px_40px_hsla(0,0%,0%,0.5)] overflow-hidden transition-all duration-500 group-hover:shadow-[0_16px_50px_hsla(265,70%,60%,0.12)]" style={{ background: "hsl(var(--card))" }}>
+                              <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[60px] h-[18px] bg-foreground/80 rounded-full z-20" />
+                              <div className="absolute inset-[2px] rounded-[31px] overflow-hidden" style={{ background: "hsl(var(--background))" }}>
+                                <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top group-hover:scale-[1.04] transition-transform duration-700" loading="lazy" />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.85) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
+                                <div className="absolute top-[30px] left-3 right-3 z-20 flex items-center gap-1.5">
+                                  <span className="px-2 py-[2px] rounded-md text-[0.42rem] font-bold tracking-[1.5px] uppercase" style={{ background: `${tagColor}22`, color: tagColor, border: `1px solid ${tagColor}30` }}>{mock.tag}</span>
+                                  <span className="text-[0.4rem] text-white/50 tracking-wider">{mock.sector}</span>
+                                </div>
+                                <div className="absolute bottom-5 left-2.5 right-2.5 z-10">
+                                  <h3 className="font-heading text-[0.8rem] font-bold text-white mb-1 drop-shadow-lg">{mock.title}</h3>
+                                  <p className="text-[0.5rem] text-white/60 leading-[1.6] mb-2.5 line-clamp-2">{mock.desc}</p>
+                                  <div className="flex flex-wrap gap-[3px]">
+                                    {mock.features.slice(0, 4).map((f, j) => (
+                                      <span key={j} className="px-1.5 py-[2px] rounded-md text-[0.4rem] font-medium text-white/70 backdrop-blur-sm" style={{ background: "hsla(0,0%,100%,0.08)", border: "1px solid hsla(0,0%,100%,0.1)" }}>{f}</span>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[70px] h-[3px] bg-foreground/15 rounded-full z-20" />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <div className="flex justify-center mt-4">
+              <button onClick={() => { setExpandMockups(p => !p); if (!expandMockups) setCarouselPaused(true); }}
+                className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+                <Layers className="w-3 h-3" /> {expandMockups ? "Chiudi" : "Vedi Tutti"}
+              </button>
             </div>
+            </>
           );
         })()}
       </Section>
@@ -4379,24 +4412,49 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: Auto-scrolling carousel ═══ */}
+        {/* ═══ Mobile: Auto-scrolling carousel or expanded grid ═══ */}
         <div className="sm:hidden">
-          <PremiumCarousel speed="slow" itemWidth={220} showControls={false}>
-            {services.map((s, i) => (
-              <div key={i} className="w-[220px]">
-                <PremiumCard glow scan delay={i} className="p-4 h-full">
-                  <div className="flex items-center gap-2 mb-3">
-                    <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>
-                      {s.icon}
-                    </PremiumIcon>
-                    <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
+          <AnimatePresence mode="wait">
+            {expandServices ? (
+              <motion.div key="services-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-1 gap-2.5 px-1">
+                {services.map((s, i) => (
+                  <div key={i}>
+                    <PremiumCard glow scan delay={i * 0.05} className="p-4 h-full">
+                      <div className="flex items-center gap-2 mb-2">
+                        <PremiumIcon gradient={s.color} size="sm" delay={0}>{s.icon}</PremiumIcon>
+                        <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
+                      </div>
+                      <h3 className="font-heading text-[0.75rem] font-semibold text-foreground mb-1 leading-tight">{s.title}</h3>
+                      <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
+                    </PremiumCard>
                   </div>
-                  <h3 className="font-heading text-[0.75rem] font-semibold text-foreground mb-1.5 leading-tight">{s.title}</h3>
-                  <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
-                </PremiumCard>
-              </div>
-            ))}
-          </PremiumCarousel>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div key="services-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <PremiumCarousel speed="slow" itemWidth={220} showControls={false}>
+                  {services.map((s, i) => (
+                    <div key={i} className="w-[220px]">
+                      <PremiumCard glow scan delay={i} className="p-4 h-full">
+                        <div className="flex items-center gap-2 mb-3">
+                          <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>{s.icon}</PremiumIcon>
+                          <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
+                        </div>
+                        <h3 className="font-heading text-[0.75rem] font-semibold text-foreground mb-1.5 leading-tight">{s.title}</h3>
+                        <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
+                      </PremiumCard>
+                    </div>
+                  ))}
+                </PremiumCarousel>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <div className="flex justify-center mt-3">
+            <button onClick={() => setExpandServices(p => !p)}
+              className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+              <Layers className="w-3 h-3" /> {expandServices ? "Chiudi" : "Vedi Tutti"}
+            </button>
+          </div>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
@@ -4781,79 +4839,91 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        <PremiumCarousel speed="slow" itemWidth={290} fullWidth>
-          {testimonials.map((t, i) => (
-            <div key={i} className="group relative h-full">
-              <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
-                style={{
-                  background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
-                  border: "1px solid hsla(265,40%,50%,0.12)",
-                  boxShadow: "0 16px 48px -12px hsla(265,50%,8%,0.5), inset 0 1px 0 hsla(265,60%,70%,0.06)",
-                  backdropFilter: "blur(24px)",
-                }}>
-                
-                {/* Shimmer sweep */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: "linear-gradient(105deg, transparent 40%, hsla(38,50%,55%,0.06) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
-                
-                {/* HUD corner accents */}
-                <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsla(38,50%,55%,0.2)" }} />
-                <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
-                
-                {/* Top gradient line */}
-                <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
-
-                {/* Avatar + emoji badge centered */}
-                <div className="relative mb-4 mt-1">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center text-base font-bold font-heading mx-auto"
-                    style={{
-                      background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))",
-                      border: "2px solid hsla(265,50%,55%,0.25)",
-                      color: "hsl(var(--primary))",
-                      boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)",
-                    }}>
-                    {t.name.charAt(0)}
-                  </div>
-                  {/* Emoji badge positioned on avatar */}
-                  <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
-                    style={{ background: "hsla(265,30%,15%,0.9)", border: "1px solid hsla(265,40%,50%,0.2)", boxShadow: "0 4px 12px hsla(0,0%,0%,0.3)" }}>
-                    {t.emoji}
-                  </div>
-                  {/* Orbital ring */}
-                  <motion.div className="absolute -inset-2 rounded-full pointer-events-none"
-                    style={{ border: "1px dashed hsla(265,50%,55%,0.12)" }}
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
-                </div>
-
-                {/* Author name & role */}
-                <h4 className="font-heading text-xs font-semibold mb-0.5" style={{ color: "hsla(0,0%,100%,0.85)" }}>{t.name}</h4>
-                <p className="text-[0.58rem] mb-4" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
-
-                {/* Quote */}
-                <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1"
-                  style={{ color: "hsla(0,0%,100%,0.5)" }}>
-                  <Quote className="w-3.5 h-3.5 mx-auto mb-2" style={{ color: "hsla(38,50%,55%,0.3)" }} />
-                  "{t.quote}"
-                </blockquote>
-
-                {/* Metric badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.62rem] font-semibold font-heading tracking-wider transition-all duration-500 group-hover:shadow-[0_0_20px_-4px_hsla(265,70%,60%,0.3)]"
+        <AnimatePresence mode="wait">
+          {expandTestimonials ? (
+            <motion.div key="testimonials-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {testimonials.map((t, i) => (
+                <div key={i} className="relative p-4 rounded-xl overflow-hidden"
                   style={{
-                    background: "linear-gradient(135deg, hsla(265,40%,25%,0.5), hsla(265,30%,18%,0.4))",
-                    border: "1px solid hsla(265,60%,55%,0.2)",
-                    color: "hsl(var(--primary))",
+                    background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
+                    border: "1px solid hsla(265,40%,50%,0.12)",
+                    backdropFilter: "blur(24px)",
                   }}>
-                  <TrendingUp className="w-3 h-3" /> {t.metric}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold font-heading flex-shrink-0"
+                      style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))", border: "2px solid hsla(265,50%,55%,0.25)", color: "hsl(var(--primary))" }}>
+                      {t.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h4 className="font-heading text-[0.7rem] font-semibold" style={{ color: "hsla(0,0%,100%,0.85)" }}>{t.name}</h4>
+                      <p className="text-[0.5rem]" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
+                    </div>
+                    <span className="ml-auto text-base">{t.emoji}</span>
+                  </div>
+                  <p className="text-[0.65rem] leading-[1.7] mb-2" style={{ color: "hsla(0,0%,100%,0.5)" }}>"{t.quote}"</p>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[0.55rem] font-semibold font-heading"
+                    style={{ background: "hsla(265,40%,25%,0.5)", border: "1px solid hsla(265,60%,55%,0.2)", color: "hsl(var(--primary))" }}>
+                    <TrendingUp className="w-2.5 h-2.5" /> {t.metric}
+                  </div>
                 </div>
-
-                {/* Bottom glow */}
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-16 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                  style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent 70%)" }} />
-              </div>
-            </div>
-          ))}
-        </PremiumCarousel>
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div key="testimonials-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <PremiumCarousel speed="slow" itemWidth={290} fullWidth>
+                {testimonials.map((t, i) => (
+                  <div key={i} className="group relative h-full">
+                    <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
+                      style={{
+                        background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
+                        border: "1px solid hsla(265,40%,50%,0.12)",
+                        boxShadow: "0 16px 48px -12px hsla(265,50%,8%,0.5), inset 0 1px 0 hsla(265,60%,70%,0.06)",
+                        backdropFilter: "blur(24px)",
+                      }}>
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                        style={{ background: "linear-gradient(105deg, transparent 40%, hsla(38,50%,55%,0.06) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
+                      <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsla(38,50%,55%,0.2)" }} />
+                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
+                      <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
+                      <div className="relative mb-4 mt-1">
+                        <div className="w-14 h-14 rounded-full flex items-center justify-center text-base font-bold font-heading mx-auto"
+                          style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))", border: "2px solid hsla(265,50%,55%,0.25)", color: "hsl(var(--primary))", boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)" }}>
+                          {t.name.charAt(0)}
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
+                          style={{ background: "hsla(265,30%,15%,0.9)", border: "1px solid hsla(265,40%,50%,0.2)", boxShadow: "0 4px 12px hsla(0,0%,0%,0.3)" }}>
+                          {t.emoji}
+                        </div>
+                        <motion.div className="absolute -inset-2 rounded-full pointer-events-none"
+                          style={{ border: "1px dashed hsla(265,50%,55%,0.12)" }}
+                          animate={{ rotate: [0, 360] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
+                      </div>
+                      <h4 className="font-heading text-xs font-semibold mb-0.5" style={{ color: "hsla(0,0%,100%,0.85)" }}>{t.name}</h4>
+                      <p className="text-[0.58rem] mb-4" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
+                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1" style={{ color: "hsla(0,0%,100%,0.5)" }}>
+                        <Quote className="w-3.5 h-3.5 mx-auto mb-2" style={{ color: "hsla(38,50%,55%,0.3)" }} />
+                        "{t.quote}"
+                      </blockquote>
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.62rem] font-semibold font-heading tracking-wider"
+                        style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.5), hsla(265,30%,18%,0.4))", border: "1px solid hsla(265,60%,55%,0.2)", color: "hsl(var(--primary))" }}>
+                        <TrendingUp className="w-3 h-3" /> {t.metric}
+                      </div>
+                      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-16 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                        style={{ background: "radial-gradient(circle, hsla(265,70%,60%,0.08), transparent 70%)" }} />
+                    </div>
+                  </div>
+                ))}
+              </PremiumCarousel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="flex justify-center mt-4">
+          <button onClick={() => setExpandTestimonials(p => !p)}
+            className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+            <Layers className="w-3 h-3" /> {expandTestimonials ? "Chiudi" : "Vedi Tutti"}
+          </button>
+        </div>
       </Section>
 
       {/* ═══════════════════════════════════════════
