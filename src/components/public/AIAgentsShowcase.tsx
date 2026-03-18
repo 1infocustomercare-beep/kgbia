@@ -541,22 +541,11 @@ const RobotAvatar = ({ agent, size = 72, isActive, isConnected }: {
         <circle cx="42" cy="15" r="1.2" fill="hsla(150,80%,65%,0.4)" />
         <circle cx="30" cy="20" r="1" fill="hsla(150,80%,65%,0.3)" />
 
-        {/* Animated data particle on trace */}
-        <circle r="1" fill="white" opacity="0.6">
-          <animateMotion dur={isActive ? "1.5s" : "3s"} repeatCount="indefinite"
-            path="M0,20 L25,20 L25,40 L45,40" />
+        {/* Single clean data particle */}
+        <circle r="1.2" fill="hsla(150,90%,70%,0.8)">
+          <animateMotion dur={isActive ? "1.8s" : "3.5s"} repeatCount="indefinite"
+            path="M0,30 L18,30 L18,15 L42,15 L42,30 L60,30" />
         </circle>
-        {(isActive || isConnected) && (
-          <circle r="0.8" fill="white" opacity="0.4">
-            <animateMotion dur="2.5s" repeatCount="indefinite"
-              path="M60,15 L35,15 L35,45 L15,45" begin="0.8s" />
-          </circle>
-        )}
-
-        {/* Scanning line */}
-        <line x1="0" y1="0" x2="60" y2="0" stroke="white" strokeWidth="0.5" opacity="0.15">
-          <animateTransform attributeName="transform" type="translate" values="0,0;0,60;0,0" dur={isActive ? "2s" : "4s"} repeatCount="indefinite" />
-        </line>
       </svg>
 
       {/* Inner glow */}
