@@ -483,4 +483,10 @@ const EmpireDNABackgroundCanvas = () => {
   );
 };
 
+// Wrapper: skip entirely on mobile to avoid canvas overhead
+const EmpireDNABackground = () => {
+  if (IS_MOBILE) return null;
+  return <EmpireDNABackgroundCanvas />;
+};
+
 export default EmpireDNABackground;
