@@ -2443,6 +2443,12 @@ const LandingPage = () => {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
   useEffect(() => {
+    const onResize = () => setIsMobileViewport(window.innerWidth < 640);
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
     let ticking = false;
     const h = () => {
       if (ticking) return;
