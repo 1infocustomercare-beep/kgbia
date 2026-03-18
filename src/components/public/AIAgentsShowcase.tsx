@@ -148,8 +148,8 @@ const AlwaysOnNetwork = ({
     <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ overflow: "visible", zIndex: 1 }}>
       <defs>
         <filter id="line-glow">
-          <feGaussianBlur stdDeviation="6" result="blur" />
-          <feFlood floodColor="hsl(var(--primary))" floodOpacity="0.15" result="flood" />
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feFlood floodColor="hsl(215 60% 60%)" floodOpacity="0.25" result="flood" />
           <feComposite in="flood" in2="blur" operator="in" result="colorBlur" />
           <feMerge>
             <feMergeNode in="colorBlur" />
@@ -158,13 +158,24 @@ const AlwaysOnNetwork = ({
           </feMerge>
         </filter>
         <filter id="line-glow-soft">
-          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feGaussianBlur stdDeviation="2.5" result="blur" />
           <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
+        <filter id="particle-glow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feFlood floodColor="hsl(200 80% 70%)" floodOpacity="0.4" result="flood" />
+          <feComposite in="flood" in2="blur" operator="in" result="colorBlur" />
+          <feMerge>
+            <feMergeNode in="colorBlur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
         <linearGradient id="line-gradient-idle" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="hsl(215 60% 65%)" stopOpacity="0.15" />
-          <stop offset="50%" stopColor="hsl(215 60% 70%)" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="hsl(215 60% 65%)" stopOpacity="0.15" />
+          <stop offset="0%" stopColor="hsl(200 60% 60%)" stopOpacity="0.05" />
+          <stop offset="30%" stopColor="hsl(215 60% 65%)" stopOpacity="0.4" />
+          <stop offset="50%" stopColor="hsl(210 70% 72%)" stopOpacity="0.6" />
+          <stop offset="70%" stopColor="hsl(215 60% 65%)" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="hsl(200 60% 60%)" stopOpacity="0.05" />
         </linearGradient>
       </defs>
 
@@ -177,16 +188,16 @@ const AlwaysOnNetwork = ({
         const reversePath = `M ${line.x2} ${line.y2} Q ${mx} ${my} ${line.x1} ${line.y1}`;
         const isActive = line.isActive;
 
-        /* ── Always visible: idle = professional glow, active = bright/fast ── */
-        const lineOpacity = isActive ? 0.85 : 0.5;
-        const lineWidth = isActive ? 2.5 : 1.4;
-        const dash = isActive ? "10 4" : "6 4";
-        const particleColor = isActive ? line.color : "hsla(215,60%,72%,0.7)";
-        const lineColor = isActive ? line.color : "hsla(215,45%,62%,0.5)";
-        const junctionR = isActive ? 4 : 2.5;
-        const junctionOpacity = isActive ? 0.8 : 0.45;
-        const particleDur = isActive ? "1.6s" : "4.5s";
-        const particleR = isActive ? 4 : 2.5;
+        /* ── Idle = cool cyber-blue, active = agent glow color ── */
+        const lineOpacity = isActive ? 0.9 : 0.55;
+        const lineWidth = isActive ? 2.8 : 1.5;
+        const dash = isActive ? "12 3" : "5 4";
+        const particleColor = isActive ? line.color : "hsla(200,70%,75%,0.85)";
+        const lineColor = isActive ? line.color : "hsla(210,50%,65%,0.55)";
+        const junctionR = isActive ? 4.5 : 3;
+        const junctionOpacity = isActive ? 0.85 : 0.5;
+        const particleDur = isActive ? "1.4s" : "4s";
+        const particleR = isActive ? 4.5 : 2.8;
         const stagger = `${(li * 0.6) % 3}s`;
 
         return (
@@ -220,16 +231,22 @@ const AlwaysOnNetwork = ({
             <circle cx={line.x2} cy={line.y2} r={junctionR}
               fill={lineColor} opacity={junctionOpacity} />
 
-            {/* Flowing particle — always animating */}
+            {/* Flowing particle — always animating, with tech glow */}
             <circle r={particleR} fill={particleColor}
-              filter={isActive ? "url(#line-glow)" : "url(#line-glow-soft)"}>
+              filter="url(#particle-glow)">
               <animateMotion dur={particleDur} repeatCount="indefinite" path={pathD} begin={stagger} />
             </circle>
 
-            {/* Reverse particle — always present, faster when active */}
-            <circle r={isActive ? 2.5 : 1.5} fill={particleColor} opacity={isActive ? 0.55 : 0.3}>
-              <animateMotion dur={isActive ? "2.2s" : "7s"} repeatCount="indefinite"
+            {/* Reverse particle — bidirectional data flow */}
+            <circle r={isActive ? 3 : 1.8} fill={particleColor} opacity={isActive ? 0.6 : 0.4}>
+              <animateMotion dur={isActive ? "2s" : "6s"} repeatCount="indefinite"
                 path={reversePath} begin={`${(li * 0.9 + 1.2) % 4}s`} />
+            </circle>
+
+            {/* Third micro-particle — gives tech density */}
+            <circle r={1} fill="hsla(200,80%,80%,0.5)" opacity={0.35}>
+              <animateMotion dur={isActive ? "3s" : "8s"} repeatCount="indefinite"
+                path={pathD} begin={`${(li * 1.3 + 0.7) % 5}s`} />
             </circle>
 
             {/* Extra particles on active — intense burst */}
@@ -250,38 +267,63 @@ const AlwaysOnNetwork = ({
   );
 };
 
-/* ═══ CIRCUIT GRID BACKGROUND ═══ */
+/* ═══ CIRCUIT GRID BACKGROUND — Advanced Tech ═══ */
 const CircuitBackground = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden">
-    <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
+    {/* Hexagonal circuit pattern */}
+    <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="circuit-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(1.8)">
-          <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.3" />
+          <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(215 50% 55%)" strokeWidth="0.4" />
+          <circle cx="30" cy="0" r="1.2" fill="hsl(215 50% 55%)" opacity="0.5" />
+          <circle cx="60" cy="15" r="1.2" fill="hsl(215 50% 55%)" opacity="0.5" />
+          <circle cx="0" cy="15" r="1.2" fill="hsl(215 50% 55%)" opacity="0.5" />
+        </pattern>
+        {/* Micro-grid for tech density */}
+        <pattern id="micro-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(215 40% 50%)" strokeWidth="0.15" opacity="0.4" />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#circuit-hex)" />
+      <rect width="100%" height="100%" fill="url(#micro-grid)" opacity="0.3" />
     </svg>
 
-    {[0, 1].map((i) => (
-      <motion.div key={i} className="absolute left-0 right-0 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.08), transparent)" }}
+    {/* Horizontal scan lines — tech feel */}
+    {[0, 1, 2].map((i) => (
+      <motion.div key={`h-${i}`} className="absolute left-0 right-0 h-px"
+        style={{ background: `linear-gradient(90deg, transparent 5%, hsla(215,50%,60%,0.15) 30%, hsla(215,50%,70%,0.25) 50%, hsla(215,50%,60%,0.15) 70%, transparent 95%)` }}
         animate={{ top: ["-5%", "105%"] }}
-        transition={{ duration: 15 + i * 5, repeat: Infinity, ease: "linear", delay: i * 4 }}
+        transition={{ duration: 12 + i * 4, repeat: Infinity, ease: "linear", delay: i * 3 }}
       />
     ))}
 
-    {[15, 50, 85].map((x, i) => (
-      <div key={i} className="absolute top-0 bottom-0 w-px opacity-[0.03]" style={{ left: `${x}%`, background: "hsl(var(--primary))" }}>
-        <motion.div className="absolute h-16 w-full left-0 rounded-full"
-          style={{ background: "hsl(var(--primary))", opacity: 0.6 }}
-          animate={{ top: ["-10%", "110%"] }}
-          transition={{ duration: 12 + i * 3, repeat: Infinity, ease: "linear", delay: i * 2 }}
+    {/* Vertical data streams */}
+    {[12, 30, 50, 70, 88].map((x, i) => (
+      <div key={`v-${i}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${x}%`, background: `hsla(215,40%,50%,0.04)` }}>
+        <motion.div className="absolute h-24 w-full left-0 rounded-full"
+          style={{ background: `linear-gradient(180deg, transparent, hsla(215,60%,65%,0.4), transparent)` }}
+          animate={{ top: ["-15%", "115%"] }}
+          transition={{ duration: 8 + i * 2, repeat: Infinity, ease: "linear", delay: i * 1.5 }}
         />
       </div>
     ))}
 
-    <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] top-1/4 left-1/4" style={{ background: "hsl(var(--primary))" }} />
-    <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.03] bottom-1/4 right-1/4" style={{ background: "hsl(var(--accent))" }} />
+    {/* Data nodes — pulsing tech dots at intersections */}
+    {[
+      { x: 12, y: 20 }, { x: 30, y: 45 }, { x: 50, y: 15 }, { x: 70, y: 65 }, { x: 88, y: 35 },
+      { x: 20, y: 75 }, { x: 60, y: 85 }, { x: 40, y: 55 },
+    ].map((pos, i) => (
+      <motion.div key={`node-${i}`} className="absolute w-1 h-1 rounded-full"
+        style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(215,60%,65%,0.35)`, boxShadow: `0 0 6px hsla(215,60%,65%,0.2)` }}
+        animate={{ opacity: [0.2, 0.7, 0.2], scale: [0.8, 1.3, 0.8] }}
+        transition={{ duration: 3 + i * 0.5, repeat: Infinity, delay: i * 0.4 }}
+      />
+    ))}
+
+    {/* Ambient glow orbs */}
+    <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.05] top-1/4 left-1/4" style={{ background: "hsl(215 50% 50%)" }} />
+    <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] bottom-1/4 right-1/4" style={{ background: "hsl(225 40% 45%)" }} />
+    <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.03] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ background: "hsl(var(--primary))" }} />
   </div>
 );
 
@@ -450,14 +492,14 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const connectedIds = useMemo(() => new Set(activeAgent?.connections || []), [activeAgent]);
 
   return (
-    <section ref={sectionRef} className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden"
+    <section ref={sectionRef} className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden isolate z-10"
       style={{
         background: `linear-gradient(180deg, 
-          hsl(220 25% 6%) 0%, 
-          hsl(225 30% 8%) 25%, 
-          hsl(230 25% 10%) 50%, 
-          hsl(225 30% 8%) 75%, 
-          hsl(220 25% 6%) 100%)`,
+          hsl(220 25% 5%) 0%, 
+          hsl(225 30% 7%) 25%, 
+          hsl(230 28% 9%) 50%, 
+          hsl(225 30% 7%) 75%, 
+          hsl(220 25% 5%) 100%)`,
       }}
     >
       {/* Professional dark background overlays */}
