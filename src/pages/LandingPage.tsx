@@ -3048,66 +3048,48 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: Premium Carousel — iPhone frames ═══ */}
-        <div className="sm:hidden">
-          <PremiumCarousel speed="normal" itemWidth={160}>
-            {(() => {
-              const scale = 154 / 375;
-              const featured = [
-                { id: "food" as IndustryId, name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️", label: "Food Premium" },
-                { id: "ncc" as IndustryId, name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗", label: "NCC Premium" },
-              ];
-              const featuredItems = featured.map((feat, i) => (
-                <div key={`feat-${i}`} className="group cursor-pointer" onClick={() => navigate(feat.route)}>
-                  <div className="relative w-[160px] h-[290px] rounded-[28px] border-[2.5px] overflow-hidden"
-                    style={{ borderColor: `${feat.color}40`, boxShadow: `0 12px 40px hsla(0,0%,0%,0.4), 0 0 20px ${feat.color}10` }}>
-                    <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[48px] h-[14px] bg-black rounded-full z-20" />
-                    <div className="absolute inset-[3px] rounded-[24px] overflow-hidden bg-black">
-                      <iframe src={feat.route} title={feat.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 z-20 p-2.5 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
-                      <div className="flex items-center gap-1 mb-0.5">
-                        <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${feat.color}25`, color: feat.color, border: `1px solid ${feat.color}35` }}>★ Live</span>
-                      </div>
-                      <p className="text-[10px] font-bold text-white leading-tight">{feat.name}</p>
-                      <p className="text-[7px] text-white/40">{feat.label}</p>
-                    </div>
-                    <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] bg-white/20 rounded-full z-20" />
-                  </div>
-                </div>
-              ));
-              const INDUSTRY_COLORS: Record<string, string> = {
-                food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
-                retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
-              };
-              const industryItems = industries.map((ind, i) => {
+        {/* ═══ Mobile: 2-col Grid — iPhone frames ═══ */}
+        <div className="grid grid-cols-2 gap-3 px-2 sm:hidden">
+          {(() => {
+            const scale = 150 / 375;
+            const featured = [
+              { id: "food" as IndustryId, name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️", label: "Food Premium" },
+              { id: "ncc" as IndustryId, name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗", label: "NCC Premium" },
+            ];
+            const INDUSTRY_COLORS: Record<string, string> = {
+              food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
+              retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
+            };
+            const allItems = [
+              ...featured.map(f => ({ name: f.name, route: f.route, color: f.color, label: f.label, nav: f.route })),
+              ...industries.map(ind => {
                 const slug = DEMO_SLUGS[ind.id];
                 const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
                 const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
                 const color = INDUSTRY_COLORS[ind.id] || "#8b5cf6";
-                return (
-                  <div key={`ind-${i}`} className="group cursor-pointer" onClick={() => navigate(demoPath)}>
-                    <div className="relative w-[160px] h-[290px] rounded-[28px] border-[2.5px] overflow-hidden"
-                      style={{ borderColor: `${color}40`, boxShadow: `0 12px 40px hsla(0,0%,0%,0.4), 0 0 20px ${color}10` }}>
-                      <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[48px] h-[14px] bg-black rounded-full z-20" />
-                      <div className="absolute inset-[3px] rounded-[24px] overflow-hidden bg-black">
-                        <iframe src={siteRoute} title={ind.title} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 z-20 p-2.5 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
-                        <div className="flex items-center gap-1 mb-0.5">
-                          <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${color}25`, color, border: `1px solid ${color}35` }}>★ Live</span>
-                        </div>
-                        <p className="text-[10px] font-bold text-white leading-tight">{ind.title}</p>
-                        <p className="text-[7px] text-white/40">{ind.modules}</p>
-                      </div>
-                      <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] bg-white/20 rounded-full z-20" />
-                    </div>
+                return { name: ind.title, route: siteRoute, color, label: ind.modules, nav: demoPath };
+              }),
+            ];
+            return allItems.map((item, i) => (
+              <div key={i} className="group cursor-pointer" onClick={() => navigate(item.nav)}>
+                <div className="relative w-full aspect-[9/17] rounded-[24px] border-[2px] overflow-hidden"
+                  style={{ borderColor: `${item.color}40`, boxShadow: `0 10px 30px hsla(0,0%,0%,0.4), 0 0 15px ${item.color}10` }}>
+                  <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[42px] h-[12px] bg-black rounded-full z-20" />
+                  <div className="absolute inset-[2px] rounded-[22px] overflow-hidden bg-black">
+                    <iframe src={item.route} title={item.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
                   </div>
-                );
-              });
-              return [...featuredItems, ...industryItems];
-            })()}
-          </PremiumCarousel>
+                  <div className="absolute bottom-0 left-0 right-0 z-20 p-2 pt-6" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                    <div className="flex items-center gap-1 mb-0.5">
+                      <span className="text-[6px] px-1 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${item.color}25`, color: item.color, border: `1px solid ${item.color}35` }}>★ Live</span>
+                    </div>
+                    <p className="text-[9px] font-bold text-white leading-tight">{item.name}</p>
+                    <p className="text-[6px] text-white/40">{item.label}</p>
+                  </div>
+                  <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[36px] h-[3px] bg-white/20 rounded-full z-20" />
+                </div>
+              </div>
+            ));
+          })()}
         </div>
 
         {/* ═══ Desktop: iPhone Grid ═══ */}
