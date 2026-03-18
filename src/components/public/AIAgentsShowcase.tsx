@@ -471,18 +471,12 @@ const NetworkNode = ({
         />
       )}
 
-      {/* Green tech circuit connector lines */}
-      <svg className="absolute pointer-events-none z-[1]" style={{ width: 70, height: 70, top: "50%", left: "50%", transform: "translate(-50%, -55%)" }} viewBox="0 0 70 70">
-        {/* Clean cardinal traces */}
-        <line x1="0" y1="35" x2="10" y2="35" stroke={isActive ? "hsla(150,80%,55%,0.8)" : "hsla(150,60%,50%,0.2)"} strokeWidth="0.7" />
-        <line x1="60" y1="35" x2="70" y2="35" stroke={isActive ? "hsla(150,80%,55%,0.8)" : "hsla(150,60%,50%,0.2)"} strokeWidth="0.7" />
-        <line x1="35" y1="0" x2="35" y2="10" stroke={isActive ? "hsla(150,80%,55%,0.8)" : "hsla(150,60%,50%,0.2)"} strokeWidth="0.7" />
-        <line x1="35" y1="60" x2="35" y2="70" stroke={isActive ? "hsla(150,80%,55%,0.8)" : "hsla(150,60%,50%,0.2)"} strokeWidth="0.7" />
-        {/* Corner junction dots */}
-        <circle cx="0" cy="35" r="1.2" fill={isActive ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.25)"} />
-        <circle cx="70" cy="35" r="1.2" fill={isActive ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.25)"} />
-        <circle cx="35" cy="0" r="1.2" fill={isActive ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.25)"} />
-        <circle cx="35" cy="70" r="1.2" fill={isActive ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.25)"} />
+      {/* Minimal connector stubs — static, no animation */}
+      <svg className="absolute pointer-events-none z-[1]" style={{ width: 60, height: 60, top: "50%", left: "50%", transform: "translate(-50%, -55%)" }} viewBox="0 0 60 60">
+        <line x1="0" y1="30" x2="8" y2="30" stroke={isActive ? "hsla(150,80%,55%,0.6)" : "hsla(150,60%,50%,0.12)"} strokeWidth="0.5" />
+        <line x1="52" y1="30" x2="60" y2="30" stroke={isActive ? "hsla(150,80%,55%,0.6)" : "hsla(150,60%,50%,0.12)"} strokeWidth="0.5" />
+        <line x1="30" y1="0" x2="30" y2="8" stroke={isActive ? "hsla(150,80%,55%,0.6)" : "hsla(150,60%,50%,0.12)"} strokeWidth="0.5" />
+        <line x1="30" y1="52" x2="30" y2="60" stroke={isActive ? "hsla(150,80%,55%,0.6)" : "hsla(150,60%,50%,0.12)"} strokeWidth="0.5" />
       </svg>
 
       {/* Robot avatar node */}
