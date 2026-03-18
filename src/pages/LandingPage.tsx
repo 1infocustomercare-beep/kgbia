@@ -3781,9 +3781,14 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           TECH DNA — Neural Network Visualization
          ═══════════════════════════════════════════ */}
-      <Section>
-        <div className="text-center mb-10 sm:mb-14">
-          <SectionLabel text="Tecnologia" icon={<Cpu className="w-3 h-3 text-primary" />} />
+      <Section className="relative overflow-hidden" style={{
+        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,15%,8%,1) 35%, hsla(230,14%,7%,1) 70%, hsla(230,16%,5%,1) 100%)",
+      }}>
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-1/4 left-1/4 w-[520px] h-[520px] rounded-full opacity-[0.08]" style={{ background: "radial-gradient(circle, hsla(265,60%,52%,0.4), transparent 70%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-1/4 right-1/4 w-[420px] h-[420px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(110px)" }} />
+        </div>
+        <div className="relative z-10 text-center mb-10 sm:mb-14">
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Il DNA Tecnologico di <span className="text-shimmer">Empire</span>
