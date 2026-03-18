@@ -147,7 +147,20 @@ export default function EmpireTeamStory() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden">
+    <section ref={ref} className="relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden" style={{
+      background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,14%,9%,1) 25%, hsla(38,8%,7%,1) 55%, hsla(265,12%,8%,1) 80%, hsla(230,16%,5%,1) 100%)",
+    }}>
+      {/* Ambient luxury glows */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-[10%] right-[20%] w-[500px] h-[500px] rounded-full opacity-[0.07]"
+             style={{ background: "radial-gradient(circle, hsla(265,65%,55%,0.5), transparent 70%)", filter: "blur(130px)" }} />
+        <div className="absolute top-[40%] left-[10%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
+             style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.45), transparent 70%)", filter: "blur(110px)" }} />
+        <div className="absolute bottom-[15%] right-[30%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
+             style={{ background: "radial-gradient(circle, hsla(265,50%,50%,0.4), transparent 70%)", filter: "blur(100px)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[1px]"
+             style={{ background: "linear-gradient(90deg, transparent, hsla(265,50%,60%,0.15), hsla(38,50%,55%,0.12), transparent)" }} />
+      </div>
       <div className="max-w-[1100px] mx-auto relative z-10">
 
         {/* ── Story Header ── */}
