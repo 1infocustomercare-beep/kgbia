@@ -43,6 +43,13 @@ import cartoonHealthcareDefault from "@/assets/cartoon-sector-healthcare.png";
 import cartoonRetailDefault from "@/assets/cartoon-sector-retail.png";
 import cartoonFitnessDefault from "@/assets/cartoon-sector-fitness.png";
 import cartoonHotelDefault from "@/assets/cartoon-sector-hotel.png";
+import sectorHeroFood from "@/assets/sector-hero-food.jpg";
+import sectorHeroNcc from "@/assets/sector-hero-ncc.jpg";
+import sectorHeroBeauty from "@/assets/sector-hero-beauty.jpg";
+import sectorHeroHealthcare from "@/assets/sector-hero-healthcare.jpg";
+import sectorHeroRetail from "@/assets/sector-hero-retail.jpg";
+import sectorHeroFitness from "@/assets/sector-hero-fitness.jpg";
+import sectorHeroHotel from "@/assets/sector-hero-hotel.jpg";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 import MultiSectorShowcase from "@/components/public/MultiSectorShowcase";
@@ -2042,9 +2049,9 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
 /* ═══════════════════════════════════════════
    MOBILE IPHONE CAROUSEL — 3 at a time, auto-scroll
    ═══════════════════════════════════════════ */
-type CarouselItem = { name: string; route: string; color: string; label: string; nav: string };
+type CarouselItem = { name: string; route: string; color: string; label: string; nav: string; image: string };
 
-const MobileIPhoneCarousel = ({ items, scale, navigate }: { items: CarouselItem[]; scale: number; navigate: (p: string) => void }) => {
+const MobileIPhoneCarousel = ({ items, navigate }: { items: CarouselItem[]; navigate: (p: string) => void }) => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [expanded, setExpanded] = useState(false);
@@ -2085,9 +2092,9 @@ const MobileIPhoneCarousel = ({ items, scale, navigate }: { items: CarouselItem[
         style={{ borderColor: `${item.color}40`, boxShadow: `0 8px 24px hsla(0,0%,0%,0.4), 0 0 12px ${item.color}10` }}>
         <div className="absolute top-[4px] left-1/2 -translate-x-1/2 w-[36px] h-[10px] bg-black rounded-full z-20" />
         <div className="absolute inset-[2px] rounded-[18px] overflow-hidden bg-black">
-          <iframe src={item.route} title={item.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
+          <img src={item.image} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
         </div>
-        <div className="absolute bottom-0 left-0 right-0 z-20 p-1.5 pt-5" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+        <div className="absolute bottom-0 left-0 right-0 z-20 p-1.5 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.95) 30%, transparent)" }}>
           <div className="flex items-center gap-1 mb-0.5">
             <span className="text-[5px] px-1 py-[1px] rounded-full font-bold tracking-wider uppercase" style={{ background: `${item.color}25`, color: item.color, border: `1px solid ${item.color}35` }}>★ Live</span>
           </div>
@@ -3160,47 +3167,46 @@ const LandingPage = () => {
 
         {/* ═══ Mobile: Auto-scroll Carousel — 3 iPhones ═══ */}
         {(() => {
-          const scale = 115 / 375;
           const INDUSTRY_COLORS: Record<string, string> = {
             food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
             retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
           };
-          const allItems = [
-            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", nav: "/r/impero-roma" },
-            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", nav: "/b/amalfi-luxury-transfer" },
+          const SECTOR_HERO_IMAGES: Record<string, string> = {
+            food: sectorHeroFood, ncc: sectorHeroNcc, beauty: sectorHeroBeauty,
+            healthcare: sectorHeroHealthcare, retail: sectorHeroRetail,
+            fitness: sectorHeroFitness, hospitality: sectorHeroHotel,
+          };
+          const allItems: CarouselItem[] = [
+            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", nav: "/r/impero-roma", image: sectorHeroFood },
+            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", nav: "/b/amalfi-luxury-transfer", image: sectorHeroNcc },
             ...industries.map(ind => {
               const slug = DEMO_SLUGS[ind.id];
               const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
               const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
               const color = INDUSTRY_COLORS[ind.id] || "#8b5cf6";
-              return { name: ind.title, route: siteRoute, color, label: ind.modules, nav: demoPath };
+              const image = SECTOR_HERO_IMAGES[ind.id] || sectorHeroFood;
+              return { name: ind.title, route: siteRoute, color, label: ind.modules, nav: demoPath, image };
             }),
           ];
-          return <MobileIPhoneCarousel items={allItems} scale={scale} navigate={navigate} />;
+          return <MobileIPhoneCarousel items={allItems} navigate={navigate} />;
         })()}
 
         {/* ═══ Desktop: iPhone Grid ═══ */}
         <motion.div className="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 justify-items-center"
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {/* ── Featured: Live iframe previews ── */}
+          {/* ── Featured: Hero image previews ── */}
           {[
-            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", emoji: "🍽️" },
-            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", emoji: "🚗" },
-          ].map((feat, i) => {
-            const scale = 174 / 375;
-            const visibleH = 334 / scale;
-            return (
+            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", image: sectorHeroFood },
+            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", image: sectorHeroNcc },
+          ].map((feat, i) => (
             <motion.div key={`feat-${i}`} className="group cursor-pointer" variants={fadeScale}
               onClick={() => navigate(feat.route)} whileHover={{ y: -8, scale: 1.03 }}>
               <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_20px_60px_hsla(0,0%,0%,0.3)]"
                 style={{ borderColor: `${feat.color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 40px ${feat.color}10` }}>
-                {/* Dynamic Island */}
                 <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
-                {/* Live iframe — clipped */}
                 <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
-                  <iframe src={feat.route} title={feat.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
+                  <img src={feat.image} alt={feat.name} className="w-full h-full object-cover" loading="lazy" />
                 </div>
-                {/* Bottom overlay */}
                 <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
                   <div className="flex items-center gap-1 mb-1">
                     <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${feat.color}25`, color: feat.color, border: `1px solid ${feat.color}35` }}>★ Live</span>
@@ -3208,48 +3214,48 @@ const LandingPage = () => {
                   <p className="text-[11px] font-bold text-white">{feat.name}</p>
                   <p className="text-[8px] text-white/40">{feat.label}</p>
                 </div>
-                {/* Home indicator */}
                 <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-white/20 rounded-full z-20" />
               </div>
             </motion.div>
-            );
-          })}
-          {/* ── Standard industry cards — Live iframe previews ── */}
-          {industries.map((ind, i) => {
-            const slug = DEMO_SLUGS[ind.id];
-            const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
-            const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
-            const INDUSTRY_COLORS_DESKTOP: Record<string, string> = {
+          ))}
+          {/* ── Standard industry cards — Hero image previews ── */}
+          {(() => {
+            const SECTOR_IMAGES_D: Record<string, string> = {
+              food: sectorHeroFood, ncc: sectorHeroNcc, beauty: sectorHeroBeauty,
+              healthcare: sectorHeroHealthcare, retail: sectorHeroRetail,
+              fitness: sectorHeroFitness, hospitality: sectorHeroHotel,
+            };
+            const INDUSTRY_COLORS_D: Record<string, string> = {
               food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
               retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
             };
-            const color = INDUSTRY_COLORS_DESKTOP[ind.id] || "#8b5cf6";
-            const dScale = 174 / 375;
-            return (
-              <motion.div key={i}
-                className="group cursor-pointer"
-                variants={fadeScale}
-                onClick={() => navigate(demoPath)}
-                whileHover={{ y: -8, scale: 1.03 }}
-              >
-                <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] overflow-hidden transition-shadow duration-500"
-                  style={{ borderColor: `${color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 25px ${color}10` }}>
-                  <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
-                  <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
-                    <iframe src={siteRoute} title={ind.title} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${dScale})`, pointerEvents: "none" }} loading="lazy" />
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
-                    <div className="flex items-center gap-1 mb-1">
-                      <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${color}25`, color, border: `1px solid ${color}35` }}>★ Live</span>
+            return industries.map((ind, i) => {
+              const slug = DEMO_SLUGS[ind.id];
+              const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+              const color = INDUSTRY_COLORS_D[ind.id] || "#8b5cf6";
+              const heroImg = SECTOR_IMAGES_D[ind.id] || sectorHeroFood;
+              return (
+                <motion.div key={i} className="group cursor-pointer" variants={fadeScale}
+                  onClick={() => navigate(demoPath)} whileHover={{ y: -8, scale: 1.03 }}>
+                  <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] overflow-hidden transition-shadow duration-500"
+                    style={{ borderColor: `${color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 25px ${color}10` }}>
+                    <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
+                    <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
+                      <img src={heroImg} alt={ind.title} className="w-full h-full object-cover" loading="lazy" />
                     </div>
-                    <h3 className="text-[11px] font-bold text-white leading-tight">{ind.title}</h3>
-                    <p className="text-[7px] text-white/40 mt-0.5">{ind.modules}</p>
+                    <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                      <div className="flex items-center gap-1 mb-1">
+                        <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${color}25`, color, border: `1px solid ${color}35` }}>★ Live</span>
+                      </div>
+                      <h3 className="text-[11px] font-bold text-white leading-tight">{ind.title}</h3>
+                      <p className="text-[7px] text-white/40 mt-0.5">{ind.modules}</p>
+                    </div>
+                    <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-white/20 rounded-full z-20" />
                   </div>
-                  <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-white/20 rounded-full z-20" />
-                </div>
-              </motion.div>
-            );
-          })}
+                </motion.div>
+              );
+            });
+          })()}
           <motion.div
             className="group cursor-pointer"
             variants={fadeScale}
