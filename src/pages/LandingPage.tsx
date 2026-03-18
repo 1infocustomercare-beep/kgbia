@@ -3048,49 +3048,26 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: 2-col Grid — iPhone frames ═══ */}
-        <div className="grid grid-cols-2 gap-3 px-2 sm:hidden">
-          {(() => {
-            const scale = 150 / 375;
-            const featured = [
-              { id: "food" as IndustryId, name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️", label: "Food Premium" },
-              { id: "ncc" as IndustryId, name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗", label: "NCC Premium" },
-            ];
-            const INDUSTRY_COLORS: Record<string, string> = {
-              food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
-              retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
-            };
-            const allItems = [
-              ...featured.map(f => ({ name: f.name, route: f.route, color: f.color, label: f.label, nav: f.route })),
-              ...industries.map(ind => {
-                const slug = DEMO_SLUGS[ind.id];
-                const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
-                const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
-                const color = INDUSTRY_COLORS[ind.id] || "#8b5cf6";
-                return { name: ind.title, route: siteRoute, color, label: ind.modules, nav: demoPath };
-              }),
-            ];
-            return allItems.map((item, i) => (
-              <div key={i} className="group cursor-pointer" onClick={() => navigate(item.nav)}>
-                <div className="relative w-full aspect-[9/17] rounded-[24px] border-[2px] overflow-hidden"
-                  style={{ borderColor: `${item.color}40`, boxShadow: `0 10px 30px hsla(0,0%,0%,0.4), 0 0 15px ${item.color}10` }}>
-                  <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[42px] h-[12px] bg-black rounded-full z-20" />
-                  <div className="absolute inset-[2px] rounded-[22px] overflow-hidden bg-black">
-                    <iframe src={item.route} title={item.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 z-20 p-2 pt-6" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
-                    <div className="flex items-center gap-1 mb-0.5">
-                      <span className="text-[6px] px-1 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${item.color}25`, color: item.color, border: `1px solid ${item.color}35` }}>★ Live</span>
-                    </div>
-                    <p className="text-[9px] font-bold text-white leading-tight">{item.name}</p>
-                    <p className="text-[6px] text-white/40">{item.label}</p>
-                  </div>
-                  <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[36px] h-[3px] bg-white/20 rounded-full z-20" />
-                </div>
-              </div>
-            ));
-          })()}
-        </div>
+        {/* ═══ Mobile: Auto-scroll Carousel — 3 iPhones ═══ */}
+        {(() => {
+          const scale = 115 / 375;
+          const INDUSTRY_COLORS: Record<string, string> = {
+            food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
+            retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
+          };
+          const allItems = [
+            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", nav: "/r/impero-roma" },
+            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", nav: "/b/amalfi-luxury-transfer" },
+            ...industries.map(ind => {
+              const slug = DEMO_SLUGS[ind.id];
+              const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
+              const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+              const color = INDUSTRY_COLORS[ind.id] || "#8b5cf6";
+              return { name: ind.title, route: siteRoute, color, label: ind.modules, nav: demoPath };
+            }),
+          ];
+          return <MobileIPhoneCarousel items={allItems} scale={scale} navigate={navigate} />;
+        })()}
 
         {/* ═══ Desktop: iPhone Grid ═══ */}
         <motion.div className="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 justify-items-center"
