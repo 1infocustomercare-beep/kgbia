@@ -2460,9 +2460,16 @@ const LandingPage = () => {
   }, []);
 
   useEffect(() => {
+    let ticking = false;
     const h = () => {
-      setNavScrolled(window.scrollY > 60);
-      setCtaVisible(window.scrollY > 400);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        setNavScrolled(prev => { const next = y > 60; return prev === next ? prev : next; });
+        setCtaVisible(prev => { const next = y > 400; return prev === next ? prev : next; });
+        ticking = false;
+      });
     };
     window.addEventListener("scroll", h, { passive: true });
     return () => window.removeEventListener("scroll", h);
