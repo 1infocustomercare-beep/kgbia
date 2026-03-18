@@ -3101,7 +3101,14 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           IL PROBLEMA — Pain Points
          ═══════════════════════════════════════════ */}
-      <Section>
+      <Section className="relative overflow-hidden" style={{
+        background: "linear-gradient(180deg, hsla(230,15%,6%,1) 0%, hsla(0,8%,8%,1) 40%, hsla(230,12%,7%,1) 70%, hsla(230,15%,6%,1) 100%)",
+      }}>
+        {/* Premium ambient glows */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsla(0,50%,40%,0.4), transparent 70%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
+        </div>
         <div className="text-center mb-10 sm:mb-14">
           <SectionLabel text="Il Problema" icon={<AlertTriangle className="w-3 h-3 text-accent" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
