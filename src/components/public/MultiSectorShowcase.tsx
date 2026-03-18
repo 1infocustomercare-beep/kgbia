@@ -978,7 +978,7 @@ export default function MultiSectorShowcase() {
       </AnimatePresence>
 
       {/* Bottom persuasion */}
-      <motion.div className="text-center mt-12 pt-8 border-t border-border/10"
+      <motion.div className="text-center mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border/10"
         initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
         <p className="text-foreground/25 text-xs font-heading tracking-wider uppercase">
           <span style={{ color: "hsl(38,45%,52%)" }}>{SHOWCASE_SECTORS.length} settori</span> · 95+ Agenti IA · 1 piattaforma · <span className="text-foreground/40">il tuo brand</span>
