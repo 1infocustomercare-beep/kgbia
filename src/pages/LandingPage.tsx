@@ -3142,23 +3142,63 @@ const LandingPage = () => {
           ];
           return (
             <div className="relative">
-              {/* Horizontal connecting line behind cards */}
-              <motion.div
-                className="absolute top-1/2 left-0 right-0 h-px hidden lg:block"
-                style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.2) 10%, hsla(38,50%,55%,0.15) 50%, hsla(265,70%,60%,0.2) 90%, transparent)" }}
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-              />
-              {/* Data pulse dots on the line */}
-              {[0, 1, 2].map(d => (
-                <motion.div key={d} className="absolute top-1/2 -translate-y-1/2 w-1 h-1 rounded-full hidden lg:block"
-                  style={{ left: `${25 + d * 25}%`, background: "hsla(265,80%,65%,0.6)", boxShadow: "0 0 8px hsla(265,80%,65%,0.4)" }}
-                  animate={{ opacity: [0, 1, 0], scale: [0.5, 1.5, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: d * 0.7 }}
-                />
-              ))}
+              {/* AI Neural Network background */}
+              <div className="absolute inset-0 pointer-events-none -z-[1] overflow-hidden">
+                <div className="absolute inset-0 opacity-[0.10]">
+                  <svg className="w-full h-full" viewBox="0 0 1200 350" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <radialGradient id="pain-node-glow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stopColor="hsl(350,60%,55%)" stopOpacity="0.5" />
+                        <stop offset="100%" stopColor="hsl(350,60%,55%)" stopOpacity="0" />
+                      </radialGradient>
+                    </defs>
+                    {/* Connections */}
+                    {[
+                      [120,70, 280,160], [120,70, 400,90], [120,70, 250,270],
+                      [280,160, 400,90], [280,160, 520,250], [280,160, 600,170],
+                      [400,90, 600,170], [400,90, 720,80], [400,90, 520,250],
+                      [600,170, 720,80], [600,170, 830,200], [600,170, 680,300],
+                      [720,80, 830,200], [720,80, 950,120], [720,80, 1080,170],
+                      [830,200, 1080,170], [830,200, 680,300], [830,200, 980,290],
+                      [1080,170, 950,120], [1080,170, 980,290],
+                      [250,270, 520,250], [520,250, 680,300], [680,300, 980,290],
+                    ].map(([x1,y1,x2,y2], i) => (
+                      <motion.line key={`pl${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
+                        stroke="hsl(350,45%,50%)" strokeWidth="1" strokeOpacity="0.35"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        whileInView={{ pathLength: 1, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.025, duration: 0.5 }}
+                      />
+                    ))}
+                    {/* Nodes */}
+                    {[
+                      [120,70],[280,160],[400,90],[600,170],[720,80],
+                      [830,200],[1080,170],[250,270],[520,250],[680,300],
+                      [950,120],[980,290],
+                    ].map(([cx,cy], i) => (
+                      <g key={`pn${i}`}>
+                        <circle cx={cx} cy={cy} r="16" fill="url(#pain-node-glow)" />
+                        <motion.circle cx={cx} cy={cy} r="5"
+                          fill="hsl(350,55%,50%)" fillOpacity="0.45"
+                          stroke="hsl(350,55%,55%)" strokeWidth="1.2" strokeOpacity="0.5"
+                          initial={{ scale: 0, opacity: 0 }}
+                          whileInView={{ scale: 1, opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: 0.3 + i * 0.04, type: "spring", stiffness: 200 }}
+                        />
+                        <motion.circle cx={cx} cy={cy} r="2.5"
+                          fill="hsl(38,50%,55%)" fillOpacity="0.6"
+                          initial={{ scale: 0 }}
+                          whileInView={{ scale: [0, 1.3, 1] }}
+                          viewport={{ once: true }}
+                          transition={{ delay: 0.5 + i * 0.04, duration: 0.35 }}
+                        />
+                      </g>
+                    ))}
+                  </svg>
+                </div>
+              </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
                 {painData.map((pain, i) => (
