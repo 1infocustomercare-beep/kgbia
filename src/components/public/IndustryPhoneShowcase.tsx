@@ -886,7 +886,7 @@ function getVariant(industryId: IndustryId, screenIdx: number): number {
    ═══════════════════════════════════════════ */
 
 export function IPhoneFrame({
-  screen, color, emoji, companyName, services, index, sectorStyle, industryId,
+  screen, color, emoji, companyName, services, index, sectorStyle, industryId, totalCount = 14,
 }: {
   screen: { label: string; type: string; desc?: string };
   color: string;
@@ -896,30 +896,54 @@ export function IPhoneFrame({
   index: number;
   sectorStyle: SectorStyle;
   industryId: IndustryId;
+  totalCount?: number;
 }) {
-  const isCenter = index === 1 || index === 2;
+  const centerIdx = Math.floor(totalCount / 2);
+  const distFromCenter = Math.abs(index - centerIdx);
+  const isCenter = distFromCenter === 0;
+  const isNear = distFromCenter <= 1;
   const v = getVariant(industryId, index);
+
+  // 3D perspective: lateral phones rotate toward center
+  const rotateY = index < centerIdx ? 4 - distFromCenter * 0.5 : index > centerIdx ? -4 + distFromCenter * 0.5 : 0;
+  const phoneScale = isCenter ? 1.08 : isNear ? 1.0 : 0.92;
+  const blurAmount = isCenter ? 0 : isNear ? 0 : 1.5;
 
   return (
     <motion.div
       className="flex-shrink-0 w-[105px] sm:w-[155px]"
-      initial={{ opacity: 0, y: 40 + (isCenter ? 0 : 15), scale: 0.9 }}
-      whileInView={{ opacity: 1, y: isCenter ? -8 : 0, scale: 1 }}
+      initial={{ opacity: 0, y: 40 + (isCenter ? 0 : 15), scale: 0.85 }}
+      whileInView={{ opacity: 1, y: isCenter ? -12 : isNear ? -4 : 0, scale: phoneScale }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.7, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        transform: `perspective(1200px) rotateY(${rotateY}deg)`,
+        filter: blurAmount > 0 ? `blur(${blurAmount}px)` : undefined,
+        zIndex: isCenter ? 10 : isNear ? 5 : 1,
+      }}
     >
       <div className="relative">
         {/* Ambient glow */}
-        <div className="absolute -inset-3 rounded-[32px] blur-2xl opacity-20 pointer-events-none"
-          style={{ background: `radial-gradient(circle, ${color}40, transparent 70%)` }} />
+        <div className="absolute -inset-4 rounded-[48px] blur-2xl pointer-events-none transition-opacity"
+          style={{ background: `radial-gradient(circle, ${color}${isCenter ? '50' : '25'}, transparent 70%)`, opacity: isCenter ? 0.35 : 0.15 }} />
 
-        {/* iPhone shell — titanium style */}
-        <div className="relative rounded-[22px] sm:rounded-[26px] overflow-hidden"
+        {/* iPhone 15 Pro shell — titanium bezel */}
+        <div className="relative rounded-[28px] sm:rounded-[40px] overflow-hidden"
           style={{
-            border: "2px solid rgba(255,255,255,0.15)",
-            background: "linear-gradient(180deg, #2c2c2e 0%, #1c1c1e 5%, #0a0a0a 100%)",
-            boxShadow: `0 25px 80px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(255,255,255,0.03)`,
+            border: "3px solid rgba(180,180,190,0.22)",
+            background: "linear-gradient(180deg, #3a3a3c 0%, #2c2c2e 3%, #1c1c1e 6%, #0a0a0a 100%)",
+            boxShadow: `0 30px 90px rgba(0,0,0,0.7), 0 0 0 0.5px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(255,255,255,0.04)`,
           }}>
+
+          {/* Glass reflection overlay */}
+          <div className="absolute inset-0 pointer-events-none z-30 rounded-[28px] sm:rounded-[40px]"
+            style={{ background: "linear-gradient(165deg, rgba(255,255,255,0.08) 0%, transparent 35%, transparent 70%, rgba(255,255,255,0.03) 100%)" }} />
+
+          {/* Side buttons — power + volume */}
+          <div className="absolute -left-[4px] top-[28%] w-[3px] h-[14%] rounded-l-full" style={{ background: "rgba(180,180,190,0.25)" }} />
+          <div className="absolute -left-[4px] top-[44%] w-[3px] h-[10%] rounded-l-full" style={{ background: "rgba(180,180,190,0.25)" }} />
+          <div className="absolute -left-[4px] top-[56%] w-[3px] h-[10%] rounded-l-full" style={{ background: "rgba(180,180,190,0.25)" }} />
+          <div className="absolute -right-[4px] top-[36%] w-[3px] h-[14%] rounded-r-full" style={{ background: "rgba(180,180,190,0.25)" }} />
 
           {/* Status bar */}
           <div className="flex items-center justify-between px-3 pt-1.5 pb-0">
