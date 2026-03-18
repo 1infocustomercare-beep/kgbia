@@ -437,14 +437,14 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ LAYER 6: Desktop-only (radar, scan) ═══
-      if (!IS_MOBILE) {
-        // Radar
+      // ═══ LAYER 6: Radar & scan ═══
+      {
+        // Radar sweep
         const radarAngle = time * 0.08;
-        const radarR = Math.min(w, h) * 0.45;
+        const radarR = Math.min(w, h) * (IS_MOBILE ? 0.4 : 0.45);
         const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
         rGrad.addColorStop(0, hsla(pGlow, 0));
-        rGrad.addColorStop(0.02, hsla(pGlow, 0.012));
+        rGrad.addColorStop(0.02, hsla(pGlow, 0.012 * MOBILE_BOOST));
         rGrad.addColorStop(0.06, hsla(pGlow, 0));
         rGrad.addColorStop(1, hsla(pGlow, 0));
         ctx.beginPath(); ctx.moveTo(w * 0.5, h * 0.5);
@@ -455,7 +455,7 @@ const EmpireDNABackground = () => {
         const scanY = h * (0.5 + Math.sin(time * 0.06) * 0.45);
         const scanGrad = ctx.createLinearGradient(0, scanY - 35, 0, scanY + 35);
         scanGrad.addColorStop(0, hsla(pAccent, 0));
-        scanGrad.addColorStop(0.5, hsla(pAccent, 0.012));
+        scanGrad.addColorStop(0.5, hsla(pAccent, 0.012 * MOBILE_BOOST));
         scanGrad.addColorStop(1, hsla(pAccent, 0));
         ctx.fillStyle = scanGrad; ctx.fillRect(0, scanY - 35, w, 70);
       }
