@@ -1,7 +1,13 @@
 import { useState, useEffect, useRef, forwardRef, useMemo, lazy, Suspense } from "react";
-import InteractiveParticleSphere from "@/components/public/InteractiveParticleSphere";
+
+const IS_LANDING_MOBILE = typeof window !== "undefined" && (
+  /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768
+);
+
+// Lazy-load heavy canvas components — skip on mobile entirely
+const InteractiveParticleSphere = lazy(() => import("@/components/public/InteractiveParticleSphere"));
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
-import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
+const FunnelDNAVisual = lazy(() => import("@/components/public/FunnelDNAVisual"));
 import IndustryPhoneShowcase, { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA } from "@/data/demo-industries";
