@@ -870,24 +870,39 @@ const EmpireVoiceAgent: React.FC = () => {
     setAutoNarrating(false);
   }, []);
 
-  // ── Pause / Resume ──
+  // ── Pause / Resume (BUG 2 FIX: MUTE stops credit consumption) ──
   const togglePause = useCallback(() => {
-    if (audioRef.current) {
-      if (isPaused) {
+    if (isPaused) {
+      // Resume
+      abortRef.current = false;
+      if (audioRef.current) {
         audioRef.current.play().catch(() => undefined);
-        setIsPaused(false);
-      } else {
-        audioRef.current.pause();
-        setIsPaused(true);
-      }
-    } else if (window.speechSynthesis) {
-      if (isPaused) {
+      } else if (window.speechSynthesis) {
         window.speechSynthesis.resume();
-        setIsPaused(false);
-      } else {
-        window.speechSynthesis.pause();
-        setIsPaused(true);
       }
+      setIsPaused(false);
+    } else {
+      // PAUSE: Actually STOP generation & streaming, not just mute output
+      abortRef.current = true; // This aborts any in-flight TTS fetch or speech
+      
+      // Stop premium TTS audio playback
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+      }
+      
+      // Stop browser speech synthesis completely (not just pause)
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      
+      // Clear narration queue to stop credit consumption
+      sectionQueueRef.current = [];
+      queueProcessingRef.current = false;
+      
+      setIsPaused(true);
+      setIsSpeaking(false);
     }
   }, [isPaused]);
 
