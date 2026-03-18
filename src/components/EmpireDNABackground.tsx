@@ -120,8 +120,8 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
 const SECTIONS = topologies.length;
 
 // Uniform palette — consistent intensity per section
-const BASE_ALPHA = 0.04;
-const MOBILE_BOOST = IS_MOBILE ? 2.4 : 1; // Boosted for high-impact visibility on mobile
+const BASE_ALPHA = 0.12;
+const MOBILE_BOOST = IS_MOBILE ? 2.8 : 1.8; // High visibility — cell-like circuit lines
 const PALETTES = [
   { node: [215, 15, 40], line: [215, 12, 32], glow: [215, 20, 45], accent: [38, 30, 45] },
   { node: [265, 18, 40], line: [265, 14, 32], glow: [265, 22, 45], accent: [38, 28, 43] },
