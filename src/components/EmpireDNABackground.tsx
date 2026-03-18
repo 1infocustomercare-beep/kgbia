@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Empire Background v15 — Hyper-Dynamic AI Circuit System
- * Multi-layer: morphing topologies, pulsing traces, active data highways,
- * scan beams, circuit junction flashes, flowing energy, radar sweeps.
+ * Empire Background v16 — Sector Circuit Network
+ * Nodes represent industry sectors communicating via data flows.
+ * Topology morphs on scroll: grid → hub → clusters → mesh.
+ * Uniform intensity across all layers. Mobile-optimized at 24fps.
  */
 
 const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 18 : 60;
-const MAX_DIST = IS_MOBILE ? 90 : 140;
-const FLOW_COUNT = IS_MOBILE ? 3 : 15;
-const PULSE_COUNT = IS_MOBILE ? 1 : 4;
-const HIGHWAY_COUNT = IS_MOBILE ? 1 : 3;
+const NODE_COUNT = IS_MOBILE ? 20 : 55;
+const MAX_DIST = IS_MOBILE ? 100 : 145;
+const FLOW_COUNT = IS_MOBILE ? 4 : 18;
+const PULSE_COUNT = IS_MOBILE ? 1 : 3;
+const HUB_COUNT = IS_MOBILE ? 4 : 7; // Sector hubs
 const TARGET_FPS = IS_MOBILE ? 24 : 60;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
@@ -25,90 +26,110 @@ const lerpC = (a: number[], b: number[], t: number): number[] => a.map((v, i) =>
 const hsla = (c: number[], a: number) => `hsla(${c[0]},${c[1]}%,${c[2]}%,${a})`;
 const ss = (t: number) => t * t * (3 - 2 * t);
 
-// ── 7 Circuit topologies ──
+// ── Sector hub positions (normalized 0-1) ──
+const SECTOR_HUBS = [
+  { label: "Food", cx: 0.15, cy: 0.2 },
+  { label: "Beauty", cx: 0.5, cy: 0.12 },
+  { label: "Health", cx: 0.85, cy: 0.2 },
+  { label: "Hotel", cx: 0.22, cy: 0.55 },
+  { label: "NCC", cx: 0.78, cy: 0.55 },
+  { label: "Retail", cx: 0.35, cy: 0.85 },
+  { label: "Fitness", cx: 0.65, cy: 0.85 },
+];
+
+// ── 5 Scroll-driven topologies (sector communication patterns) ──
 const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = [
-  // 0: Uniform grid
+  // 0: Scattered grid — independent sectors
   (n, w, h, t) => {
     const cols = Math.ceil(Math.sqrt(n * (w / h))), rows = Math.ceil(n / cols);
     return Array.from({ length: n }, (_, i) => {
       const col = i % cols, row = Math.floor(i / cols);
-      return { x: w * (0.04 + (col + 0.5) / cols * 0.92) + Math.sin(t * 0.1 + i * 0.4) * 4, y: h * (0.04 + (row + 0.5) / rows * 0.92) + Math.cos(t * 0.08 + i * 0.3) * 3 };
+      return {
+        x: w * (0.06 + (col + 0.5) / cols * 0.88) + Math.sin(t * 0.08 + i * 0.5) * 3,
+        y: h * (0.06 + (row + 0.5) / rows * 0.88) + Math.cos(t * 0.06 + i * 0.4) * 3,
+      };
     });
   },
-  // 1: Horizontal bus lanes
+  // 1: Hub-spoke — sectors forming clusters
   (n, w, h, t) => {
-    const lanes = 7, per = Math.ceil(n / lanes);
+    const hubs = SECTOR_HUBS.slice(0, HUB_COUNT);
+    const perHub = Math.ceil(n / hubs.length);
     return Array.from({ length: n }, (_, i) => {
-      const lane = Math.floor(i / per), li = i % per;
-      const fx = li / Math.max(per - 1, 1);
-      return { x: w * (0.02 + fx * 0.96), y: h * (0.06 + lane * 0.13 + Math.sin(fx * Math.PI * 3 + t * 0.15 + lane) * 0.015) };
+      const hi = Math.floor(i / perHub) % hubs.length;
+      const li = i % perHub;
+      const hub = hubs[hi];
+      const angle = (li / perHub) * Math.PI * 2 + t * 0.04 + hi;
+      const radius = 0.06 + (li / perHub) * 0.08;
+      return {
+        x: w * (hub.cx + Math.cos(angle) * radius) + Math.sin(t * 0.1 + i) * 2,
+        y: h * (hub.cy + Math.sin(angle) * radius) + Math.cos(t * 0.08 + i) * 2,
+      };
     });
   },
-  // 2: Branching tree
+  // 2: Diamond processor — centralized AI
   (n, w, h, t) => Array.from({ length: n }, (_, i) => {
-    const depth = Math.floor(Math.log2(i + 1)), maxD = Math.floor(Math.log2(n));
-    const pos = i - (Math.pow(2, depth) - 1), lSize = Math.pow(2, depth);
-    return { x: w * (0.05 + (pos + 0.5) / lSize * 0.9) + Math.sin(t * 0.12 + depth + pos * 0.5) * 8, y: h * (0.05 + (depth + 0.5) / (maxD + 1) * 0.9) + Math.cos(t * 0.09 + i * 0.2) * 5 };
-  }),
-  // 3: Diamond processor
-  (n, w, h, t) => Array.from({ length: n }, (_, i) => {
-    const f = i / n, ring = Math.floor(f * 6), rF = (f * 6) - ring, rR = 0.06 + ring * 0.075;
+    const f = i / n, ring = Math.floor(f * 5), rF = (f * 5) - ring, rR = 0.08 + ring * 0.08;
     const side = Math.floor(rF * 4), sF = (rF * 4) - side;
     const corners = [[0, -1], [1, 0], [0, 1], [-1, 0]];
     const [ax, ay] = corners[side % 4], [bx, by] = corners[(side + 1) % 4];
-    const breathe = 1 + Math.sin(t * 0.12 + ring) * 0.08;
-    return { x: w * (0.5 + lerp(ax, bx, sF) * rR * breathe) + Math.sin(t * 0.06 + i) * 3, y: h * (0.5 + lerp(ay, by, sF) * rR * breathe) + Math.cos(t * 0.05 + i) * 3 };
+    const breathe = 1 + Math.sin(t * 0.1 + ring) * 0.06;
+    return {
+      x: w * (0.5 + lerp(ax, bx, sF) * rR * breathe) + Math.sin(t * 0.05 + i) * 2,
+      y: h * (0.5 + lerp(ay, by, sF) * rR * breathe) + Math.cos(t * 0.04 + i) * 2,
+    };
   }),
-  // 4: Vertical columns — server rack
-  (n, w, h, t) => {
-    const cols = IS_MOBILE ? 6 : 9, per = Math.ceil(n / cols);
-    return Array.from({ length: n }, (_, i) => {
-      const col = Math.floor(i / per), li = i % per, fy = li / Math.max(per - 1, 1);
-      return { x: w * (0.05 + col * (0.9 / (cols - 1)) + Math.sin(fy * Math.PI * 4 + t * 0.18 + col) * 0.008), y: h * (0.03 + fy * 0.94) + Math.cos(t * 0.1 + i * 0.4) * 4 };
-    });
-  },
-  // 5: Microchip clusters
-  (n, w, h, t) => {
-    const zones = [[0.18, 0.18], [0.82, 0.18], [0.5, 0.5], [0.18, 0.82], [0.82, 0.82], [0.5, 0.2], [0.5, 0.8]];
-    const per = Math.ceil(n / zones.length);
-    return Array.from({ length: n }, (_, i) => {
-      const zi = Math.floor(i / per) % zones.length, li = i % per, [cx, cy] = zones[zi];
-      const g = Math.ceil(Math.sqrt(per)), lx = (li % g) / g - 0.5, ly = Math.floor(li / g) / g - 0.5;
-      const spread = 0.12 + Math.sin(t * 0.14 + zi * 1.5) * 0.025;
-      return { x: w * (cx + lx * spread) + Math.sin(t * 0.08 + i * 0.5) * 3, y: h * (cy + ly * spread) + Math.cos(t * 0.07 + i * 0.3) * 3 };
-    });
-  },
-  // 6: Cross-hatch matrix
+  // 3: Cross-mesh — full integration
   (n, w, h, t) => {
     const half = Math.floor(n / 2);
     return Array.from({ length: n }, (_, i) => {
       if (i < half) {
         const g = Math.ceil(Math.sqrt(half));
         const row = Math.floor(i / g), col = i % g;
-        return { x: w * (0.05 + (col / Math.max(g - 1, 1)) * 0.9) + Math.sin(t * 0.09 + i) * 4, y: h * (0.1 + (row / Math.max(Math.ceil(half / g) - 1, 1)) * 0.8) + Math.cos(t * 0.11 + i * 0.4) * 4 };
+        return {
+          x: w * (0.08 + (col / Math.max(g - 1, 1)) * 0.84) + Math.sin(t * 0.07 + i) * 3,
+          y: h * (0.12 + (row / Math.max(Math.ceil(half / g) - 1, 1)) * 0.76) + Math.cos(t * 0.09 + i * 0.3) * 3,
+        };
       }
       const j = i - half, f = j / Math.max(half - 1, 1);
-      const diag = Math.sin(f * Math.PI * 2 + t * 0.08) * 0.04;
-      return { x: w * (0.08 + f * 0.84 + diag) + Math.sin(t * 0.07 + j * 0.6) * 5, y: h * (0.12 + f * 0.76 - diag) + Math.cos(t * 0.1 + j * 0.3) * 5 };
+      const diag = Math.sin(f * Math.PI * 2 + t * 0.06) * 0.03;
+      return {
+        x: w * (0.1 + f * 0.8 + diag) + Math.sin(t * 0.06 + j * 0.5) * 3,
+        y: h * (0.14 + f * 0.72 - diag) + Math.cos(t * 0.08 + j * 0.3) * 3,
+      };
+    });
+  },
+  // 4: Hub-spoke v2 — sectors with stronger radial
+  (n, w, h, t) => {
+    const hubs = SECTOR_HUBS.slice(0, HUB_COUNT);
+    const perHub = Math.ceil(n / hubs.length);
+    return Array.from({ length: n }, (_, i) => {
+      const hi = Math.floor(i / perHub) % hubs.length;
+      const li = i % perHub;
+      const hub = hubs[hi];
+      if (li === 0) return { x: w * hub.cx, y: h * hub.cy };
+      const angle = (li / perHub) * Math.PI * 2 + hi * 0.9 + t * 0.03;
+      const radius = 0.04 + (li / perHub) * 0.1 + Math.sin(t * 0.12 + hi) * 0.015;
+      return {
+        x: w * (hub.cx + Math.cos(angle) * radius) + Math.sin(t * 0.07 + i) * 2,
+        y: h * (hub.cy + Math.sin(angle) * radius) + Math.cos(t * 0.06 + i) * 2,
+      };
     });
   },
 ];
 const SECTIONS = topologies.length;
 
-// Professional palette — cool steel-blue base with warm champagne-gold accents
+// Uniform palette — consistent intensity per section
+const BASE_ALPHA = 0.08; // Master intensity
 const PALETTES = [
-  { node: [215, 25, 42], line: [215, 20, 36], glow: [215, 35, 50], accent: [38, 45, 52] },
-  { node: [220, 22, 40], line: [220, 18, 34], glow: [220, 32, 48], accent: [38, 40, 50] },
-  { node: [210, 28, 44], line: [210, 22, 38], glow: [210, 38, 52], accent: [42, 42, 54] },
-  { node: [218, 24, 38], line: [218, 18, 32], glow: [218, 34, 46], accent: [35, 48, 50] },
-  { node: [222, 26, 42], line: [222, 20, 36], glow: [222, 36, 50], accent: [40, 44, 52] },
-  { node: [212, 22, 40], line: [212, 16, 34], glow: [212, 32, 48], accent: [38, 46, 54] },
-  { node: [216, 24, 42], line: [216, 18, 36], glow: [216, 34, 50], accent: [36, 42, 52] },
+  { node: [215, 25, 45], line: [215, 20, 38], glow: [215, 35, 52], accent: [38, 45, 55] },
+  { node: [265, 30, 45], line: [265, 22, 38], glow: [265, 40, 52], accent: [38, 42, 53] },
+  { node: [210, 28, 46], line: [210, 22, 40], glow: [210, 38, 54], accent: [42, 42, 56] },
+  { node: [220, 26, 44], line: [220, 20, 38], glow: [220, 36, 52], accent: [35, 48, 54] },
+  { node: [218, 24, 44], line: [218, 18, 38], glow: [218, 34, 50], accent: [40, 44, 55] },
 ];
 
 interface FlowParticle { fromIdx: number; toIdx: number; progress: number; speed: number; life: number; }
 interface PulseRing { x: number; y: number; r: number; maxR: number; alpha: number; color: number[]; }
-interface Highway { y: number; speed: number; particles: { x: number; sp: number; len: number }[]; }
 
 const EmpireDNABackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -120,7 +141,6 @@ const EmpireDNABackground = () => {
   const timeRef = useRef(0);
   const flowsRef = useRef<FlowParticle[]>([]);
   const pulsesRef = useRef<PulseRing[]>([]);
-  const hwRef = useRef<Highway[]>([]);
   const ptrRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
   useEffect(() => { const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
@@ -165,43 +185,32 @@ const EmpireDNABackground = () => {
       velRef.current = Array.from({ length: NODE_COUNT }, () => ({ x: 0, y: 0 }));
     }
 
-    const spawnFlow = (): FlowParticle => ({ fromIdx: Math.floor(Math.random() * NODE_COUNT), toIdx: Math.floor(Math.random() * NODE_COUNT), progress: 0, speed: 0.002 + Math.random() * 0.006, life: 0 });
+    const spawnFlow = (): FlowParticle => ({
+      fromIdx: Math.floor(Math.random() * NODE_COUNT),
+      toIdx: Math.floor(Math.random() * NODE_COUNT),
+      progress: 0, speed: 0.003 + Math.random() * 0.005, life: 0,
+    });
     if (!flowsRef.current.length) flowsRef.current = Array.from({ length: FLOW_COUNT }, spawnFlow);
 
-    // Initialize pulse rings
     if (!pulsesRef.current.length) {
       pulsesRef.current = Array.from({ length: PULSE_COUNT }, () => ({
         x: Math.random() * (w || 1000), y: Math.random() * (h || 800),
-        r: 0, maxR: 40 + Math.random() * 80, alpha: 0, color: PALETTES[0].glow,
+        r: 0, maxR: 35 + Math.random() * 60, alpha: 0, color: PALETTES[0].glow,
       }));
     }
 
-    // Initialize data highways
-    if (!hwRef.current.length) {
-      hwRef.current = Array.from({ length: HIGHWAY_COUNT }, (_, i) => ({
-        y: (h || 800) * (0.1 + (i / HIGHWAY_COUNT) * 0.8),
-        speed: 0.15 + Math.random() * 0.4,
-        particles: Array.from({ length: IS_MOBILE ? 2 : 4 }, () => ({
-          x: Math.random() * (w || 1000), sp: 0.3 + Math.random() * 0.8, len: 15 + Math.random() * 40,
-        })),
-      }));
-    }
-
-    // Route styles morphing
+    // Route styles
     const getRoute = (a: Pt, b: Pt, mode: number): Pt[] => {
       const mx = (a.x + b.x) * 0.5, my = (a.y + b.y) * 0.5;
-      switch (mode) {
-        case 0: return [a, { x: b.x, y: a.y }, b]; // L-shape
-        case 1: return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b]; // step horizontal
-        case 2: return [a, { x: a.x + (b.x - a.x) * 0.3, y: a.y }, { x: a.x + (b.x - a.x) * 0.7, y: b.y }, b]; // step-down
-        case 3: return [a, b]; // diagonal
-        case 4: return [a, { x: a.x, y: b.y }, b]; // vertical-first L
-        case 5: return [a, { x: lerp(a.x, b.x, 0.3), y: a.y }, { x: lerp(a.x, b.x, 0.7), y: b.y }, b]; // Z-route
-        default: return [a, { x: mx, y: my }, b]; // through midpoint
+      switch (mode % 4) {
+        case 0: return [a, { x: b.x, y: a.y }, b];
+        case 1: return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b];
+        case 2: return [a, b];
+        case 3: return [a, { x: a.x, y: b.y }, b];
+        default: return [a, { x: mx, y: my }, b];
       }
     };
 
-    // Walk a polyline at parameter t (0..1)
     const walkPolyline = (pts: Pt[], t: number): Pt => {
       if (pts.length < 2) return pts[0] || { x: 0, y: 0 };
       const segs = pts.length - 1;
@@ -214,15 +223,14 @@ const EmpireDNABackground = () => {
 
     const animate = (now: number) => {
       animRef.current = requestAnimationFrame(animate);
-
-      // Throttle FPS on mobile
       if (now - lastFrameTime < FRAME_INTERVAL) return;
       lastFrameTime = now;
-
       if (!w || !h) return;
+
       timeRef.current += 0.016;
       const time = timeRef.current;
       ctx.clearRect(0, 0, w, h);
+
       scrollRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
       const pageH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - h;
       const scrollN = pageH > 0 ? Math.max(0, Math.min(scrollRef.current / pageH, 1)) : 0;
@@ -231,10 +239,10 @@ const EmpireDNABackground = () => {
       const blend = sF - sIdx;
       const t3 = ss(blend);
 
-      const pNode = lerpC(PALETTES[sIdx].node, PALETTES[sIdx + 1].node, t3);
-      const pLine = lerpC(PALETTES[sIdx].line, PALETTES[sIdx + 1].line, t3);
-      const pGlow = lerpC(PALETTES[sIdx].glow, PALETTES[sIdx + 1].glow, t3);
-      const pAccent = lerpC(PALETTES[sIdx].accent, PALETTES[sIdx + 1].accent, t3);
+      const pNode = lerpC(PALETTES[sIdx % PALETTES.length].node, PALETTES[(sIdx + 1) % PALETTES.length].node, t3);
+      const pLine = lerpC(PALETTES[sIdx % PALETTES.length].line, PALETTES[(sIdx + 1) % PALETTES.length].line, t3);
+      const pGlow = lerpC(PALETTES[sIdx % PALETTES.length].glow, PALETTES[(sIdx + 1) % PALETTES.length].glow, t3);
+      const pAccent = lerpC(PALETTES[sIdx % PALETTES.length].accent, PALETTES[(sIdx + 1) % PALETTES.length].accent, t3);
 
       // Morph topologies
       const shA = sIdx % SECTIONS, shB = (sIdx + 1) % SECTIONS;
@@ -247,93 +255,89 @@ const EmpireDNABackground = () => {
       const ptr = ptrRef.current;
       const repR = IS_MOBILE ? 80 : 120;
 
-      // Spring physics + repulsion
+      // Spring physics
       for (let i = 0; i < NODE_COUNT; i++) {
         if (!pos[i]) { pos[i] = { ...targets[i] }; vel[i] = { x: 0, y: 0 }; }
         let tx = targets[i].x, ty = targets[i].y;
         if (ptr.active) {
           const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y, d = Math.sqrt(dx * dx + dy * dy);
-          if (d < repR && d > 1) { const f = (1 - d / repR) * 35; tx = pos[i].x + (dx / d) * f; ty = pos[i].y + (dy / d) * f; }
+          if (d < repR && d > 1) { const f = (1 - d / repR) * 30; tx = pos[i].x + (dx / d) * f; ty = pos[i].y + (dy / d) * f; }
         }
         vel[i].x = vel[i].x * 0.78 + (tx - pos[i].x) * 0.08;
         vel[i].y = vel[i].y * 0.78 + (ty - pos[i].y) * 0.08;
         pos[i].x += vel[i].x; pos[i].y += vel[i].y;
       }
 
-      const routeA = sIdx % SECTIONS, routeB = (sIdx + 1) % SECTIONS;
+      const routeMode = sIdx;
 
-      // ═══ L0: AMBIENT DOT MATRIX — breathing grid ═══
-      const gridSp = IS_MOBILE ? 60 : 55;
+      // ═══ LAYER 0: Dot Matrix ═══
       if (!IS_MOBILE) {
-        const gridPulse = 0.5 + Math.sin(time * 0.3) * 0.5;
-        ctx.fillStyle = hsla(pLine, 0.01 + gridPulse * 0.005);
+        const gridSp = 55;
+        const gridPulse = 0.5 + Math.sin(time * 0.25) * 0.5;
+        ctx.fillStyle = hsla(pLine, 0.012 + gridPulse * 0.006);
         for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
           for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
-            const localPulse = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.25) * 0.5 + 0.5;
-            const s = 0.3 + localPulse * 0.3;
-            ctx.globalAlpha = 0.25 + localPulse * 0.2;
+            const lp = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.2) * 0.5 + 0.5;
+            const s = 0.3 + lp * 0.3;
+            ctx.globalAlpha = 0.2 + lp * 0.2;
             ctx.fillRect(gx - s / 2, gy - s / 2, s, s);
           }
         }
         ctx.globalAlpha = 1;
       }
 
-      // ═══ L1: DATA HIGHWAYS — horizontal energy streams ═══
-      const hws = hwRef.current;
-      for (const hw of hws) {
-        const baseAlpha = 0.025 + Math.sin(time * 0.2 + hw.y * 0.01) * 0.01;
-        ctx.strokeStyle = hsla(pLine, baseAlpha);
-        ctx.lineWidth = 0.25;
-        ctx.setLineDash([6, 14]);
-        ctx.beginPath(); ctx.moveTo(0, hw.y); ctx.lineTo(w, hw.y); ctx.stroke();
-        ctx.setLineDash([]);
-
-        for (const p of hw.particles) {
-          p.x = (p.x + p.sp * hw.speed) % (w + p.len * 2);
-          const px = p.x - p.len;
-          const grad = ctx.createLinearGradient(px, hw.y, px + p.len, hw.y);
-          grad.addColorStop(0, hsla(pAccent, 0));
-          grad.addColorStop(0.7, hsla(pAccent, 0.025));
-          grad.addColorStop(1, hsla(pGlow, 0.04));
-          ctx.strokeStyle = grad;
-          ctx.lineWidth = 0.6;
-          ctx.beginPath(); ctx.moveTo(px, hw.y); ctx.lineTo(px + p.len, hw.y); ctx.stroke();
+      // ═══ LAYER 1: Sector Hub Labels (subtle text markers) ═══
+      const hubCount = Math.min(HUB_COUNT, SECTOR_HUBS.length);
+      const hubBlend = 0.3 + t3 * 0.4; // More visible in hub topologies
+      const isHubTopo = shA === 1 || shA === 4 || shB === 1 || shB === 4;
+      if (!IS_MOBILE && isHubTopo) {
+        ctx.font = "600 7px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        for (let hi = 0; hi < hubCount; hi++) {
+          const hub = SECTOR_HUBS[hi];
+          const hx = w * hub.cx, hy = h * hub.cy;
+          // Subtle ring
+          ctx.strokeStyle = hsla(pAccent, 0.04 * hubBlend);
+          ctx.lineWidth = 0.5;
+          const ringR = 25 + Math.sin(time * 0.3 + hi) * 5;
+          ctx.beginPath(); ctx.arc(hx, hy, ringR, 0, Math.PI * 2); ctx.stroke();
+          // Label
+          ctx.fillStyle = hsla(pAccent, 0.06 * hubBlend);
+          ctx.fillText(hub.label.toUpperCase(), hx, hy + ringR + 10);
         }
       }
 
-      // ═══ L2: CIRCUIT CONNECTIONS — morphing route style ═══
+      // ═══ LAYER 2: Circuit Connections ═══
       ctx.lineCap = "square"; ctx.lineJoin = "miter";
       for (let i = 0; i < NODE_COUNT; i++) {
-        const maxJ = Math.min(i + (IS_MOBILE ? 3 : 7), NODE_COUNT);
+        const maxJ = Math.min(i + (IS_MOBILE ? 3 : 6), NODE_COUNT);
         for (let j = i + 1; j < maxJ; j++) {
           const dx = pos[i].x - pos[j].x, dy = pos[i].y - pos[j].y, d = Math.sqrt(dx * dx + dy * dy);
           if (d < MAX_DIST) {
             const alpha = Math.pow(1 - d / MAX_DIST, 2);
-            const pulse = 0.5 + Math.sin(time * 1.2 + i * 0.3 + j * 0.2) * 0.5;
-            const activeTrace = (i + j + Math.floor(time * 0.5)) % 7 === 0;
+            const pulse = 0.5 + Math.sin(time * 1 + i * 0.3 + j * 0.2) * 0.5;
+            const activeTrace = (i + j + Math.floor(time * 0.4)) % 8 === 0;
 
-            // Compute morphed route
-            const rA = getRoute(pos[i], pos[j], routeA);
-            const rB = getRoute(pos[i], pos[j], routeB);
+            const rA = getRoute(pos[i], pos[j], routeMode);
+            const rB = getRoute(pos[i], pos[j], (routeMode + 1) % 4);
             const maxLen = Math.max(rA.length, rB.length);
-            // Pad shorter array
             while (rA.length < maxLen) rA.push(rA[rA.length - 1]);
             while (rB.length < maxLen) rB.push(rB[rB.length - 1]);
             const route = rA.map((a, wi) => ({ x: lerp(a.x, rB[wi].x, t3), y: lerp(a.y, rB[wi].y, t3) }));
 
-            // Draw trace
-            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.2 : 0.1) * (0.6 + pulse * 0.4));
-            ctx.lineWidth = activeTrace ? 0.8 : 0.4 + alpha * 0.4;
+            // Uniform line rendering
+            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.18 : 0.09) * (0.6 + pulse * 0.4));
+            ctx.lineWidth = activeTrace ? 0.7 : 0.35 + alpha * 0.35;
             ctx.beginPath();
             ctx.moveTo(route[0].x, route[0].y);
             for (let wi = 1; wi < route.length; wi++) ctx.lineTo(route[wi].x, route[wi].y);
             ctx.stroke();
 
-            // Active traces get animated dashes
+            // Active dashes
             if (activeTrace && alpha > 0.3) {
-              ctx.setLineDash([4, 6]);
-              ctx.lineDashOffset = -(time * 40);
-              ctx.strokeStyle = hsla(pGlow, alpha * 0.15);
+              ctx.setLineDash([3, 5]);
+              ctx.lineDashOffset = -(time * 35);
+              ctx.strokeStyle = hsla(pGlow, alpha * 0.12);
               ctx.lineWidth = 0.5;
               ctx.beginPath();
               ctx.moveTo(route[0].x, route[0].y);
@@ -346,62 +350,57 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ L3: NODES — crosses, squares, with energy halos ═══
+      // ═══ LAYER 3: Nodes — uniform crosses and squares ═══
       for (let i = 0; i < NODE_COUNT; i++) {
-        const breathe = 0.4 + Math.sin(time * 1.2 + i * 0.7) * 0.6;
+        const breathe = 0.4 + Math.sin(time * 1 + i * 0.7) * 0.6;
         let na = 0.06 * breathe;
-        const isJunction = i % 4 === 0;
-        const isActive = (i + Math.floor(time * 0.3)) % 11 === 0;
+        const isActive = (i + Math.floor(time * 0.3)) % 10 === 0;
 
         if (ptr.active) {
           const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y, d = Math.sqrt(dx * dx + dy * dy);
-          if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.2;
+          if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.15;
         }
-
-        if (isActive) na = Math.min(na + 0.15, 0.35);
+        if (isActive) na = Math.min(na + 0.12, 0.3);
 
         if (i % 3 === 0) {
-          // Cross (+) node
-          const arm = 2.5 + breathe * 2;
+          const arm = 2 + breathe * 1.5;
           ctx.strokeStyle = hsla(isActive ? pAccent : pNode, na + 0.08);
-          ctx.lineWidth = isActive ? 0.7 : 0.5;
+          ctx.lineWidth = isActive ? 0.6 : 0.4;
           ctx.beginPath();
           ctx.moveTo(pos[i].x - arm, pos[i].y); ctx.lineTo(pos[i].x + arm, pos[i].y);
           ctx.moveTo(pos[i].x, pos[i].y - arm); ctx.lineTo(pos[i].x, pos[i].y + arm);
           ctx.stroke();
         } else {
-          // Square node
-          const s = 1.5 + breathe;
+          const s = 1.2 + breathe;
           ctx.fillStyle = hsla(isActive ? pAccent : pNode, na + 0.08);
           ctx.fillRect(pos[i].x - s / 2, pos[i].y - s / 2, s, s);
         }
 
-        // Subtle halo for active nodes only (no big white balls)
+        // Halo for active
         if (isActive) {
-          const glowR = 8;
-          const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, glowR);
+          const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 8);
           gr.addColorStop(0, hsla(pAccent, na * 0.1));
           gr.addColorStop(1, hsla(pGlow, 0));
           ctx.fillStyle = gr;
-          ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, glowR, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, 8, 0, Math.PI * 2); ctx.fill();
         }
       }
 
-      // ═══ L4: DATA FLOW PARTICLES — follow morphed routes ═══
+      // ═══ LAYER 4: Data Flow Particles ═══
       const flows = flowsRef.current;
       for (let fi = 0; fi < flows.length; fi++) {
         const fl = flows[fi];
         fl.progress += fl.speed;
         fl.life++;
-        if (fl.progress > 1 || fl.life > 220) { flows[fi] = spawnFlow(); continue; }
+        if (fl.progress > 1 || fl.life > 200) { flows[fi] = spawnFlow(); continue; }
 
         const a = pos[fl.fromIdx], b = pos[fl.toIdx];
         if (!a || !b) continue;
         const dx = a.x - b.x, dy = a.y - b.y, d = Math.sqrt(dx * dx + dy * dy);
         if (d > MAX_DIST * 1.5 || d < 5) { flows[fi] = spawnFlow(); continue; }
 
-        const rA = getRoute(a, b, routeA);
-        const rB = getRoute(a, b, routeB);
+        const rA = getRoute(a, b, routeMode);
+        const rB = getRoute(a, b, (routeMode + 1) % 4);
         const maxLen = Math.max(rA.length, rB.length);
         while (rA.length < maxLen) rA.push(rA[rA.length - 1]);
         while (rB.length < maxLen) rB.push(rB[rB.length - 1]);
@@ -410,99 +409,69 @@ const EmpireDNABackground = () => {
         const pt = walkPolyline(route, fl.progress);
         const fadeA = Math.sin(fl.progress * Math.PI);
 
-        // Trail (desktop only — too many draw calls for mobile)
+        // Trail (desktop)
         if (!IS_MOBILE) {
           for (let ti = 1; ti <= 3; ti++) {
             const trailT = Math.max(0, fl.progress - ti * 0.04);
             const tp = walkPolyline(route, trailT);
-            const ta = fadeA * (1 - ti * 0.3) * 0.15;
-            ctx.fillStyle = hsla(pGlow, ta);
-            ctx.fillRect(tp.x - 1, tp.y - 1, 2, 2);
+            ctx.fillStyle = hsla(pGlow, fadeA * (1 - ti * 0.3) * 0.12);
+            ctx.fillRect(tp.x - 0.8, tp.y - 0.8, 1.6, 1.6);
           }
         }
 
-        // Small subtle core dot only — no big glowing ball
         ctx.fillStyle = hsla(pAccent, fadeA * 0.15);
         ctx.fillRect(pt.x - 0.8, pt.y - 0.8, 1.6, 1.6);
       }
 
-      // ═══ L5: PULSE RINGS — junction flashes ═══
+      // ═══ LAYER 5: Pulse Rings ═══
       const pulses = pulsesRef.current;
       for (let pi = 0; pi < pulses.length; pi++) {
         const p = pulses[pi];
-        p.r += 0.25 + Math.sin(time + pi) * 0.1;
-        p.alpha = (1 - p.r / p.maxR) * 0.02;
+        p.r += 0.2 + Math.sin(time + pi) * 0.08;
+        p.alpha = (1 - p.r / p.maxR) * 0.018;
         if (p.r >= p.maxR) {
-          // Respawn at a random node
           const ni = Math.floor(Math.random() * NODE_COUNT);
           const node = pos[ni];
-          if (node) {
-            p.x = node.x; p.y = node.y;
-            p.r = 0; p.maxR = 35 + Math.random() * 70;
-            p.color = (pi % 2 === 0) ? pGlow : pAccent;
-          }
+          if (node) { p.x = node.x; p.y = node.y; p.r = 0; p.maxR = 30 + Math.random() * 55; p.color = (pi % 2 === 0) ? pGlow : pAccent; }
         }
-        if (p.alpha > 0.005) {
+        if (p.alpha > 0.004) {
           ctx.strokeStyle = hsla(p.color, p.alpha);
-          ctx.lineWidth = 0.4;
+          ctx.lineWidth = 0.35;
           ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.stroke();
         }
       }
 
-      // ═══ L6-L8: Desktop-only layers (radar, scan, streams) ═══
+      // ═══ LAYER 6: Desktop-only (radar, scan) ═══
       if (!IS_MOBILE) {
-        // Radar sweep
-        const radarAngle = time * 0.1;
-        const radarR = Math.min(w, h) * 0.5;
+        // Radar
+        const radarAngle = time * 0.08;
+        const radarR = Math.min(w, h) * 0.45;
         const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
         rGrad.addColorStop(0, hsla(pGlow, 0));
-        rGrad.addColorStop(0.02, hsla(pGlow, 0.015));
-        rGrad.addColorStop(0.08, hsla(pGlow, 0));
+        rGrad.addColorStop(0.02, hsla(pGlow, 0.012));
+        rGrad.addColorStop(0.06, hsla(pGlow, 0));
         rGrad.addColorStop(1, hsla(pGlow, 0));
         ctx.beginPath(); ctx.moveTo(w * 0.5, h * 0.5);
-        ctx.arc(w * 0.5, h * 0.5, radarR, radarAngle, radarAngle + Math.PI * 0.18); ctx.closePath();
+        ctx.arc(w * 0.5, h * 0.5, radarR, radarAngle, radarAngle + Math.PI * 0.15); ctx.closePath();
         ctx.fillStyle = rGrad; ctx.fill();
 
-        // Horizontal scan line
-        const scanY = h * (0.5 + Math.sin(time * 0.08) * 0.48);
-        const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
+        // Scan line
+        const scanY = h * (0.5 + Math.sin(time * 0.06) * 0.45);
+        const scanGrad = ctx.createLinearGradient(0, scanY - 35, 0, scanY + 35);
         scanGrad.addColorStop(0, hsla(pAccent, 0));
-        scanGrad.addColorStop(0.5, hsla(pAccent, 0.015));
+        scanGrad.addColorStop(0.5, hsla(pAccent, 0.012));
         scanGrad.addColorStop(1, hsla(pAccent, 0));
-        ctx.fillStyle = scanGrad; ctx.fillRect(0, scanY - 40, w, 80);
-        ctx.strokeStyle = hsla(pGlow, 0.025);
-        ctx.lineWidth = 0.4;
-        ctx.beginPath(); ctx.moveTo(0, scanY); ctx.lineTo(w, scanY); ctx.stroke();
-
-        // Vertical data streams
-        const streamCount = 5;
-        for (let si = 0; si < streamCount; si++) {
-          const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7 + time * 0.05) * 10;
-          const streamPhase = (time * (0.03 + si * 0.005) + si * 1.1) % 1;
-          const streamLen = h * 0.12;
-          const sy = streamPhase * (h + streamLen * 2) - streamLen;
-          const sGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
-          sGrad.addColorStop(0, hsla(pGlow, 0));
-          sGrad.addColorStop(0.5, hsla(pGlow, 0.012));
-          sGrad.addColorStop(1, hsla(pGlow, 0));
-          ctx.strokeStyle = sGrad; ctx.lineWidth = 0.4;
-          ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy + streamLen); ctx.stroke();
-        }
+        ctx.fillStyle = scanGrad; ctx.fillRect(0, scanY - 35, w, 70);
       }
 
-      // ═══ L9: CORNER CIRCUIT BRACKETS — tech frame ═══
-      const brk = 30;
-      ctx.strokeStyle = hsla(pLine, 0.025 + Math.sin(time * 0.3) * 0.01);
-      ctx.lineWidth = 0.4;
-      // Top-left
+      // ═══ LAYER 7: Corner brackets ═══
+      const brk = 28;
+      ctx.strokeStyle = hsla(pLine, 0.022 + Math.sin(time * 0.25) * 0.008);
+      ctx.lineWidth = 0.35;
       ctx.beginPath(); ctx.moveTo(8, 8 + brk); ctx.lineTo(8, 8); ctx.lineTo(8 + brk, 8); ctx.stroke();
-      // Top-right
       ctx.beginPath(); ctx.moveTo(w - 8 - brk, 8); ctx.lineTo(w - 8, 8); ctx.lineTo(w - 8, 8 + brk); ctx.stroke();
-      // Bottom-left
       ctx.beginPath(); ctx.moveTo(8, h - 8 - brk); ctx.lineTo(8, h - 8); ctx.lineTo(8 + brk, h - 8); ctx.stroke();
-      // Bottom-right
       ctx.beginPath(); ctx.moveTo(w - 8 - brk, h - 8); ctx.lineTo(w - 8, h - 8); ctx.lineTo(w - 8, h - 8 - brk); ctx.stroke();
-
     };
 
     animRef.current = requestAnimationFrame(animate);
@@ -513,7 +482,7 @@ const EmpireDNABackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: 0.08, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: 0.1, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };
