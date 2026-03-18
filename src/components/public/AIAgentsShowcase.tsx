@@ -676,13 +676,13 @@ const NetworkNode = ({
       style={{ zIndex: isActive ? 30 : isConnected ? 20 : 10 }}
       transition={{ type: "spring", stiffness: 350, damping: 30, mass: 0.8 }}
     >
-      {/* Outer glow */}
+      {/* Outer circuit glow ring */}
       {(isActive || isConnected) && (
         <motion.div
           className="absolute rounded-xl pointer-events-none"
           style={{
-            width: isActive ? 72 : 60,
-            height: isActive ? 72 : 60,
+            width: isActive ? 64 : 54,
+            height: isActive ? 64 : 54,
             top: "50%", left: "50%", transform: "translate(-50%, -55%)",
             background: `radial-gradient(circle, ${agent.glow}18 0%, transparent 70%)`,
             boxShadow: isActive ? `0 0 30px ${agent.glow}20` : `0 0 15px ${agent.glow}12`,
@@ -691,6 +691,25 @@ const NetworkNode = ({
           transition={{ duration: 3, repeat: Infinity }}
         />
       )}
+
+      {/* Circuit connector lines extending from node */}
+      <svg className="absolute pointer-events-none z-[1]" style={{ width: 70, height: 70, top: "50%", left: "50%", transform: "translate(-50%, -55%)" }} viewBox="0 0 70 70">
+        {/* Diagonal circuit traces */}
+        <line x1="0" y1="35" x2="8" y2="35" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
+        <line x1="62" y1="35" x2="70" y2="35" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
+        <line x1="35" y1="0" x2="35" y2="8" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
+        <line x1="35" y1="62" x2="35" y2="70" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
+        {/* Corner traces */}
+        <path d="M8,8 L15,8 L15,15" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
+        <path d="M62,8 L55,8 L55,15" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
+        <path d="M8,62 L15,62 L15,55" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
+        <path d="M62,62 L55,62 L55,55" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
+        {/* Corner junction dots */}
+        <circle cx="8" cy="8" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
+        <circle cx="62" cy="8" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
+        <circle cx="8" cy="62" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
+        <circle cx="62" cy="62" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
+      </svg>
 
       {/* Robot avatar node */}
       <div className="relative z-10 mb-1">
