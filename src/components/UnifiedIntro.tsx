@@ -28,19 +28,19 @@ const IS_MOBILE =
   6. exit     — dissolves into the landing page
 */
 
-// Unified counts — desktop gets more detail but same structure
-const HELIX_NODES = IS_MOBILE ? 48 : 72;
-const MESH_COUNT = IS_MOBILE ? 18 : 36;
-const ENERGY_PARTICLES = IS_MOBILE ? 14 : 28;
-const CIRCUIT_LINES = IS_MOBILE ? 10 : 18;
-const ORBIT_DOTS = IS_MOBILE ? 24 : 36;
+// Unified counts — mobile drastically reduced for smooth performance
+const HELIX_NODES = IS_MOBILE ? 20 : 72;
+const MESH_COUNT = IS_MOBILE ? 8 : 36;
+const ENERGY_PARTICLES = IS_MOBILE ? 6 : 28;
+const CIRCUIT_LINES = IS_MOBILE ? 4 : 18;
+const ORBIT_DOTS = IS_MOBILE ? 12 : 36;
 
-// Same dramatic timing for both — desktop should feel equally cinematic
+// Mobile intro is faster to get users to content quickly
 const TIMINGS = IS_MOBILE
-  ? { brand: 0, assemble: 1200, pulse: 2800, orbit: 4200, collapse: 5400, exit: 6200, complete: 6800 }
+  ? { brand: 0, assemble: 800, pulse: 1800, orbit: 2800, collapse: 3600, exit: 4000, complete: 4400 }
   : { brand: 0, assemble: 1400, pulse: 3000, orbit: 4400, collapse: 5600, exit: 6400, complete: 7000 };
 
-const SAFETY_TIMEOUT = IS_MOBILE ? 8000 : 10000;
+const SAFETY_TIMEOUT = IS_MOBILE ? 5000 : 10000;
 
 type Phase = "brand" | "assemble" | "pulse" | "orbit" | "collapse" | "exit";
 

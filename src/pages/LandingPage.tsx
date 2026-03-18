@@ -1,7 +1,13 @@
 import { useState, useEffect, useRef, forwardRef, useMemo, lazy, Suspense } from "react";
-import InteractiveParticleSphere from "@/components/public/InteractiveParticleSphere";
+
+const IS_LANDING_MOBILE = typeof window !== "undefined" && (
+  /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768
+);
+
+// Lazy-load heavy canvas components — skip on mobile entirely
+const InteractiveParticleSphere = lazy(() => import("@/components/public/InteractiveParticleSphere"));
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
-import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
+const FunnelDNAVisual = lazy(() => import("@/components/public/FunnelDNAVisual"));
 import IndustryPhoneShowcase, { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA } from "@/data/demo-industries";
@@ -3036,26 +3042,31 @@ const LandingPage = () => {
          style={{ opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Cinematic video background ═══ */}
-        <div className="absolute inset-0" style={{ zIndex: 2 }}>
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            controls={false}
-            disablePictureInPicture
-            disableRemotePlayback
-            className="absolute inset-0 w-full h-full object-cover [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-enclosure]:hidden [&::-webkit-media-controls-panel]:hidden [&::-webkit-media-controls-start-playback-button]:hidden"
-            style={{ filter: "brightness(0.3) saturate(1.15)", WebkitAppearance: "none" } as any}
-          >
-            <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4" />
-          </video>
-          {/* Cinematic vignette overlays */}
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsl(var(--background)) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 15%, transparent 85%, hsl(var(--background)) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
-        </div>
+        {!IS_LANDING_MOBILE && (
+          <div className="absolute inset-0" style={{ zIndex: 2 }}>
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
+              controls={false}
+              disablePictureInPicture
+              disableRemotePlayback
+              className="absolute inset-0 w-full h-full object-cover [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-enclosure]:hidden [&::-webkit-media-controls-panel]:hidden [&::-webkit-media-controls-start-playback-button]:hidden"
+              style={{ filter: "brightness(0.3) saturate(1.15)", WebkitAppearance: "none" } as any}
+            >
+              <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4" />
+            </video>
+            {/* Cinematic vignette overlays */}
+            <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsl(var(--background)) 100%)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 15%, transparent 85%, hsl(var(--background)) 100%)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
+          </div>
+        )}
+        {IS_LANDING_MOBILE && (
+          <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(135deg, hsla(265,25%,8%,1) 0%, hsla(230,20%,6%,1) 50%, hsla(38,15%,8%,1) 100%)" }} />
+        )}
 
         {/* ═══ LAYER 1: Central glow orb ═══ */}
         <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
@@ -3106,7 +3117,11 @@ const LandingPage = () => {
                 animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               />
-              <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : 300} />
+              {!IS_LANDING_MOBILE && (
+                <Suspense fallback={<div className="w-[200px] h-[200px]" />}>
+                  <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : 300} />
+                </Suspense>
+              )}
             </motion.div>
 
             {/* CTA */}
@@ -3522,7 +3537,18 @@ const LandingPage = () => {
           initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
           transition={{ duration: 0.6 }}>
           <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
-          <FunnelDNAVisual />
+          {!IS_LANDING_MOBILE ? (
+            <Suspense fallback={<div className="aspect-video bg-card/50 rounded-2xl animate-pulse" />}>
+              <FunnelDNAVisual />
+            </Suspense>
+          ) : (
+            <div className="aspect-video bg-card/30 rounded-2xl flex items-center justify-center border border-primary/10">
+              <div className="text-center space-y-2 px-4">
+                <div className="text-2xl">🧠</div>
+                <p className="text-xs text-muted-foreground font-heading tracking-wider uppercase">Dashboard IA Live</p>
+              </div>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
           <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
             <div className="px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-sm border border-primary/10">
@@ -4008,7 +4034,15 @@ const LandingPage = () => {
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="order-1 lg:order-2">
             <div className="relative rounded-2xl overflow-hidden glow-card aspect-video border border-primary/10">
-              <FunnelDNAVisual />
+              {!IS_LANDING_MOBILE ? (
+                <Suspense fallback={<div className="aspect-video bg-card/50 rounded-2xl animate-pulse" />}>
+                  <FunnelDNAVisual />
+                </Suspense>
+              ) : (
+                <div className="aspect-video bg-card/30 rounded-2xl flex items-center justify-center">
+                  <div className="text-2xl">📊</div>
+                </div>
+              )}
               {/* Conversion benefit labels overlaid */}
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none z-10 px-4">
                 {[
