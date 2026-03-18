@@ -634,13 +634,13 @@ const NetworkNode = ({
           <span className="text-foreground/60 text-[0.3rem]">{agent.stat.label}</span>
         </div>
 
-        {/* Cardinal connection dots */}
+        {/* Cardinal connection dots — green tech */}
         {(["top", "bottom", "left", "right"] as const).map((pos) => (
           <motion.div key={pos}
             className="absolute w-1 h-1 rounded-full z-20"
             style={{
-              background: isActive || isConnected ? agent.glow : "hsla(var(--primary) / 0.15)",
-              boxShadow: isActive ? `0 0 6px ${agent.glow}` : "none",
+              background: isActive || isConnected ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.2)",
+              boxShadow: isActive ? "0 0 6px hsla(150,80%,55%,0.7)" : "none",
               ...(pos === "top" ? { top: -1, left: "50%", marginLeft: -2 } : {}),
               ...(pos === "bottom" ? { bottom: -1, left: "50%", marginLeft: -2 } : {}),
               ...(pos === "left" ? { left: -1, top: "50%", marginTop: -2 } : {}),
