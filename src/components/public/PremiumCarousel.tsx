@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useEffect, ReactNode } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Pause, Play, LayoutGrid, X } from "lucide-react";
 
 interface PremiumCarouselProps {
@@ -78,53 +78,62 @@ export function PremiumCarousel({
       onTouchStart={() => setIsPaused(true)}
       onTouchEnd={() => setTimeout(() => setIsPaused(false), 3500)}
     >
-      {isExpanded ? (
-        <motion.div
-          key="expanded"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="overflow-hidden"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
-            {children.map((child, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.35, delay: i * 0.04 }}
-              >
-                {child}
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      ) : (
-        <motion.div
-          key="carousel"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className={`overflow-hidden ${fullWidth ? "" : "-mx-4 sm:mx-0"}`}>
-            <div
-              ref={trackRef}
-              className="flex flex-nowrap will-change-transform"
-              style={{ gap: `${gap}px`, padding: "16px 0" }}
-            >
-              {tripled.map((child, i) => (
-                <div
+      {/* ═══ EXPANDED GRID VIEW ═══ */}
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
+              {children.map((child, i) => (
+                <motion.div
                   key={i}
-                  className="flex-shrink-0"
-                  style={{ width: itemWidth }}
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
                 >
                   {child}
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ CAROUSEL VIEW ═══ */}
+      <AnimatePresence>
+        {!isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className={`overflow-hidden ${fullWidth ? "" : "-mx-4 sm:mx-0"}`}>
+              <div
+                ref={trackRef}
+                className="flex flex-nowrap will-change-transform"
+                style={{ gap: `${gap}px`, padding: "16px 0" }}
+              >
+                {tripled.map((child, i) => (
+                  <div
+                    key={i}
+                    className="flex-shrink-0"
+                    style={{ width: itemWidth }}
+                  >
+                    {child}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Luxury floating controls */}
       {showControls && (

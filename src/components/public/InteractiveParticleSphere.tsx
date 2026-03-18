@@ -28,14 +28,14 @@ const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const HELIX_NODES = IS_MOBILE ? 28 : 80;
-const MESH_COUNT = IS_MOBILE ? 14 : 50;
-const ENERGY_PARTICLES = IS_MOBILE ? 10 : 40;
-const CIRCUIT_LINES = IS_MOBILE ? 6 : 24;
-const ORBIT_DOTS = IS_MOBILE ? 16 : 48;
-const SYNAPSE_COUNT = IS_MOBILE ? 6 : 24;
-const DATA_STREAMS = IS_MOBILE ? 4 : 16;
-const FLOAT_PARTICLES = IS_MOBILE ? 10 : 45;
+const HELIX_NODES = IS_MOBILE ? 54 : 80;
+const MESH_COUNT = IS_MOBILE ? 28 : 50;
+const ENERGY_PARTICLES = IS_MOBILE ? 20 : 40;
+const CIRCUIT_LINES = IS_MOBILE ? 14 : 24;
+const ORBIT_DOTS = IS_MOBILE ? 30 : 48;
+const SYNAPSE_COUNT = IS_MOBILE ? 12 : 24;
+const DATA_STREAMS = IS_MOBILE ? 8 : 16;
+const FLOAT_PARTICLES = IS_MOBILE ? 20 : 45;
 
 const TECH_ICON_SET: { Icon: LucideIcon; color: string; glow: string }[] = [
   { Icon: Brain, color: "hsla(265,80%,65%,0.9)", glow: "hsla(265,80%,65%,0.3)" },
@@ -217,7 +217,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
 
     const startTime = performance.now();
     let lastFrame = 0;
-    const FI = IS_MOBILE ? 50 : 0; // ~20fps on mobile, 60fps on desktop
+    const FI = IS_MOBILE ? 22 : 0;
     const repelR = w * 0.2;
 
     const ss = (e0: number, e1: number, x: number) => { const t = Math.max(0, Math.min(1, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); };

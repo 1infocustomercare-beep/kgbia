@@ -119,13 +119,13 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
 const SECTIONS = topologies.length;
 
 // Uniform palette — consistent intensity per section
-const BASE_ALPHA = 0.04; // Master intensity — very subtle
+const BASE_ALPHA = 0.08; // Master intensity
 const PALETTES = [
-  { node: [215, 15, 40], line: [215, 12, 32], glow: [215, 20, 45], accent: [38, 30, 45] },
-  { node: [265, 18, 40], line: [265, 14, 32], glow: [265, 22, 45], accent: [38, 28, 43] },
-  { node: [210, 16, 40], line: [210, 12, 34], glow: [210, 20, 45], accent: [42, 28, 46] },
-  { node: [220, 15, 38], line: [220, 12, 32], glow: [220, 20, 44], accent: [35, 30, 44] },
-  { node: [218, 14, 38], line: [218, 10, 32], glow: [218, 18, 42], accent: [40, 28, 45] },
+  { node: [215, 25, 45], line: [215, 20, 38], glow: [215, 35, 52], accent: [38, 45, 55] },
+  { node: [265, 30, 45], line: [265, 22, 38], glow: [265, 40, 52], accent: [38, 42, 53] },
+  { node: [210, 28, 46], line: [210, 22, 40], glow: [210, 38, 54], accent: [42, 42, 56] },
+  { node: [220, 26, 44], line: [220, 20, 38], glow: [220, 36, 52], accent: [35, 48, 54] },
+  { node: [218, 24, 44], line: [218, 18, 38], glow: [218, 34, 50], accent: [40, 44, 55] },
 ];
 
 interface FlowParticle { fromIdx: number; toIdx: number; progress: number; speed: number; life: number; }
@@ -143,10 +143,9 @@ const EmpireDNABackground = () => {
   const pulsesRef = useRef<PulseRing[]>([]);
   const ptrRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
-  useEffect(() => { if (IS_MOBILE) return; const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
+  useEffect(() => { const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
-    if (IS_MOBILE) return;
     const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
     window.addEventListener("scroll", fn, { passive: true });
     const mainEl = document.querySelector("main");
@@ -156,7 +155,6 @@ const EmpireDNABackground = () => {
   }, []);
 
   useEffect(() => {
-    if (IS_MOBILE) return;
     const move = (e: PointerEvent) => { ptrRef.current = { x: e.clientX, y: e.clientY, active: true }; };
     const leave = () => { ptrRef.current.active = false; };
     window.addEventListener("pointermove", move, { passive: true });
@@ -201,9 +199,16 @@ const EmpireDNABackground = () => {
       }));
     }
 
-    // Simple straight-line routes only (no rectangular/orthogonal patterns)
-    const getRoute = (a: Pt, b: Pt, _mode: number): Pt[] => {
-      return [a, b];
+    // Route styles
+    const getRoute = (a: Pt, b: Pt, mode: number): Pt[] => {
+      const mx = (a.x + b.x) * 0.5, my = (a.y + b.y) * 0.5;
+      switch (mode % 4) {
+        case 0: return [a, { x: b.x, y: a.y }, b];
+        case 1: return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b];
+        case 2: return [a, b];
+        case 3: return [a, { x: a.x, y: b.y }, b];
+        default: return [a, { x: mx, y: my }, b];
+      }
     };
 
     const walkPolyline = (pts: Pt[], t: number): Pt => {
@@ -321,8 +326,8 @@ const EmpireDNABackground = () => {
             const route = rA.map((a, wi) => ({ x: lerp(a.x, rB[wi].x, t3), y: lerp(a.y, rB[wi].y, t3) }));
 
             // Uniform line rendering
-            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.08 : 0.04) * (0.6 + pulse * 0.4));
-            ctx.lineWidth = activeTrace ? 0.4 : 0.2 + alpha * 0.2;
+            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.18 : 0.09) * (0.6 + pulse * 0.4));
+            ctx.lineWidth = activeTrace ? 0.7 : 0.35 + alpha * 0.35;
             ctx.beginPath();
             ctx.moveTo(route[0].x, route[0].y);
             for (let wi = 1; wi < route.length; wi++) ctx.lineTo(route[wi].x, route[wi].y);
@@ -473,14 +478,11 @@ const EmpireDNABackground = () => {
     return () => { cancelAnimationFrame(animRef.current); window.removeEventListener("resize", resize); };
   }, [ready]);
 
-  // On mobile, skip the entire canvas — at 0.045 opacity it's invisible but burns GPU
-  if (IS_MOBILE) return null;
-
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: 0.045, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: 0.1, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };
