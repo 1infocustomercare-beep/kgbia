@@ -4125,75 +4125,110 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
-        {/* Benefits — Mobile: Circuit-connected icon grid */}
-        <div className="sm:hidden relative py-3">
-          {/* Opaque backdrop to block DNA background */}
+        {/* Benefits — Mobile: Professional AI Circuit Funnel Pipeline */}
+        <div className="sm:hidden relative py-4 px-1">
+          {/* Opaque backdrop */}
           <div className="absolute inset-0 rounded-2xl z-0"
-            style={{ background: "linear-gradient(160deg, hsla(265,18%,10%,0.97), hsla(230,16%,8%,0.96))", border: "1px solid hsla(265,40%,45%,0.08)" }} />
+            style={{ background: "linear-gradient(180deg, hsl(var(--background) / 0.98), hsl(var(--card) / 0.97))", border: "1px solid hsl(var(--border) / 0.15)" }} />
 
-          {/* Circuit SVG connections */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet">
+          {/* Central vertical pipeline spine */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" preserveAspectRatio="none">
             <defs>
-              <filter id="mobileCircuitGlow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="0.55" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
+              <linearGradient id="whyFunnelSpine" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--primary) / 0.05)" />
+                <stop offset="20%" stopColor="hsl(var(--primary) / 0.35)" />
+                <stop offset="80%" stopColor="hsl(var(--primary) / 0.35)" />
+                <stop offset="100%" stopColor="hsl(var(--primary) / 0.05)" />
+              </linearGradient>
+              <filter id="whyPulseGlow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="2" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
               </filter>
             </defs>
-            {/* Horizontal circuit lines */}
-            <line x1="55" y1="50" x2="145" y2="50" stroke="hsl(var(--primary) / 0.36)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
-            <line x1="155" y1="50" x2="245" y2="50" stroke="hsl(var(--primary) / 0.32)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
-            <line x1="55" y1="150" x2="145" y2="150" stroke="hsl(var(--primary) / 0.32)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
-            <line x1="155" y1="150" x2="245" y2="150" stroke="hsl(var(--primary) / 0.36)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
-            {/* Vertical circuit lines */}
-            <line x1="50" y1="55" x2="50" y2="145" stroke="hsl(var(--accent) / 0.34)" strokeWidth="0.85" strokeDasharray="3,4" strokeLinecap="round" />
-            <line x1="150" y1="55" x2="150" y2="145" stroke="hsl(var(--accent) / 0.3)" strokeWidth="0.85" strokeDasharray="3,4" strokeLinecap="round" />
-            <line x1="250" y1="55" x2="250" y2="145" stroke="hsl(var(--accent) / 0.34)" strokeWidth="0.85" strokeDasharray="3,4" strokeLinecap="round" />
-            {/* Diagonal cross-links */}
-            <line x1="55" y1="55" x2="145" y2="145" stroke="hsl(var(--primary) / 0.22)" strokeWidth="0.55" strokeLinecap="round" />
-            <line x1="155" y1="55" x2="245" y2="145" stroke="hsl(var(--primary) / 0.22)" strokeWidth="0.55" strokeLinecap="round" />
-            <line x1="145" y1="55" x2="55" y2="145" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.55" strokeLinecap="round" />
-            <line x1="245" y1="55" x2="155" y2="145" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.55" strokeLinecap="round" />
-            {/* Junction dots at intersections */}
-            {[
-            [50, 50], [150, 50], [250, 50],
-            [50, 150], [150, 150], [250, 150],
-            [100, 100], [200, 100]].
-            map(([cx, cy], di) =>
-            <circle key={di} cx={cx} cy={cy} r="1.8" fill="hsl(var(--primary) / 0.5)" />
-            )}
-            {/* Animated pulse traveling along paths */}
-            <circle r="2.4" fill="hsl(var(--primary) / 0.92)" filter="url(#mobileCircuitGlow)">
-              <animateMotion dur="4.8s" repeatCount="indefinite" path="M55,50 L145,50 L245,50 L245,150 L155,150 L55,150 Z" />
+            {/* Central spine */}
+            <line x1="50%" y1="8%" x2="50%" y2="92%" stroke="url(#whyFunnelSpine)" strokeWidth="1.5" strokeDasharray="4,6" />
+            {/* Horizontal branch lines from center to cards — left side */}
+            {[17, 50, 83].map((y, i) => (
+              <line key={`wl${i}`} x1="20%" y1={`${y}%`} x2="48%" y2={`${y}%`} stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.8" strokeDasharray="3,5" />
+            ))}
+            {/* Horizontal branch lines from center to cards — right side */}
+            {[17, 50, 83].map((y, i) => (
+              <line key={`wr${i}`} x1="52%" y1={`${y}%`} x2="80%" y2={`${y}%`} stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.8" strokeDasharray="3,5" />
+            ))}
+            {/* Junction nodes on spine */}
+            {[17, 50, 83].map((y, i) => (
+              <g key={`wn${i}`}>
+                <circle cx="50%" cy={`${y}%`} r="4" fill="hsl(var(--primary) / 0.15)" />
+                <circle cx="50%" cy={`${y}%`} r="2" fill="hsl(var(--primary) / 0.55)">
+                  <animate attributeName="r" values="1.5;3;1.5" dur={`${2.5 + i * 0.4}s`} repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.4;1;0.4" dur={`${2.5 + i * 0.4}s`} repeatCount="indefinite" />
+                </circle>
+              </g>
+            ))}
+            {/* Animated data pulse flowing down the spine */}
+            <circle r="3" fill="hsl(var(--primary) / 0.9)" filter="url(#whyPulseGlow)">
+              <animate attributeName="cy" values="8%;92%;8%" dur="5s" repeatCount="indefinite" />
+              <animate attributeName="cx" values="50%;50%;50%" dur="5s" repeatCount="indefinite" />
             </circle>
-            <circle r="2" fill="hsl(var(--accent) / 0.86)" filter="url(#mobileCircuitGlow)">
-              <animateMotion dur="6.2s" repeatCount="indefinite" path="M50,55 L50,145 L150,145 L150,55 L250,55 L250,145" />
+            {/* Secondary accent pulse */}
+            <circle r="2" fill="hsl(var(--accent) / 0.8)" filter="url(#whyPulseGlow)">
+              <animate attributeName="cy" values="92%;8%;92%" dur="6.5s" repeatCount="indefinite" />
+              <animate attributeName="cx" values="50%;50%;50%" dur="6.5s" repeatCount="indefinite" />
             </circle>
           </svg>
-          {/* Icon grid */}
-          <div className="relative z-[2] grid grid-cols-3 gap-x-3 gap-y-5 px-2 py-4">
-            {whyUs.map((item, i) =>
-            <motion.div key={i} className="flex flex-col items-center text-center"
-            initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.3 }}>
-                <div className="w-6 h-6 rounded-md flex items-center justify-center mb-1.5 relative"
+
+          {/* Funnel pipeline cards — 2-col staggered layout */}
+          <div className="relative z-[2] grid grid-cols-2 gap-x-8 gap-y-4 px-3 py-5">
+            {whyUs.map((item, i) => {
+              const isLeft = i % 2 === 0;
+              return (
+                <motion.div key={i}
+                  className={`flex flex-col ${isLeft ? "items-end text-right" : "items-start text-left"}`}
+                  initial={{ opacity: 0, x: isLeft ? -20 : 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.4 }}>
+                  
+                  {/* Step number badge */}
+                  <div className="flex items-center gap-1.5 mb-1.5" style={{ flexDirection: isLeft ? "row-reverse" : "row" }}>
+                    <div className="w-5 h-5 rounded-md flex items-center justify-center relative"
+                      style={{
+                        background: "linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--primary) / 0.08))",
+                        border: "1px solid hsl(var(--primary) / 0.2)",
+                        boxShadow: "0 0 12px hsl(var(--primary) / 0.1)"
+                      }}>
+                      <div className="text-primary/80 [&>svg]:w-2.5 [&>svg]:h-2.5">{item.icon}</div>
+                      {/* HUD corners */}
+                      <div className="absolute -top-[1.5px] -left-[1.5px] w-[3px] h-[3px] border-t border-l border-primary/30" />
+                      <div className="absolute -top-[1.5px] -right-[1.5px] w-[3px] h-[3px] border-t border-r border-primary/30" />
+                      <div className="absolute -bottom-[1.5px] -left-[1.5px] w-[3px] h-[3px] border-b border-l border-primary/30" />
+                      <div className="absolute -bottom-[1.5px] -right-[1.5px] w-[3px] h-[3px] border-b border-r border-primary/30" />
+                    </div>
+                    <span className="text-[0.42rem] font-mono text-primary/40 tracking-widest uppercase">0{i + 1}</span>
+                  </div>
+
+                  <h4 className="text-[0.55rem] font-heading font-bold text-foreground/80 leading-tight mb-0.5">{item.title}</h4>
+                  <p className="text-[0.42rem] text-foreground/35 leading-[1.5]">{item.desc}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Bottom funnel convergence label */}
+          <div className="relative z-[2] flex justify-center pt-1 pb-2">
+            <motion.div
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
               style={{
-                background: "linear-gradient(135deg, hsla(265,30%,18%,0.92), hsla(230,20%,14%,0.92))",
-                border: "1px solid hsla(265,40%,45%,0.18)",
-                boxShadow: "0 0 10px hsla(265,50%,50%,0.1)"
-              }}>
-                  <div className="text-primary/70 [&>svg]:w-3 [&>svg]:h-3">{item.icon}</div>
-                  {/* Corner brackets on icon */}
-                  <div className="absolute -top-[2px] -left-[2px] w-[4px] h-[4px] border-t border-l border-primary/25" />
-                  <div className="absolute -top-[2px] -right-[2px] w-[4px] h-[4px] border-t border-r border-primary/25" />
-                  <div className="absolute -bottom-[2px] -left-[2px] w-[4px] h-[4px] border-b border-l border-primary/25" />
-                  <div className="absolute -bottom-[2px] -right-[2px] w-[4px] h-[4px] border-b border-r border-primary/25" />
-                </div>
-                <h4 className="text-[0.5rem] font-heading font-bold text-foreground/70 leading-tight">{item.title}</h4>
-              </motion.div>
-            )}
+                background: "linear-gradient(135deg, hsl(var(--primary) / 0.12), hsl(var(--primary) / 0.05))",
+                border: "1px solid hsl(var(--primary) / 0.18)"
+              }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6 }}>
+              <Sparkles className="w-3 h-3 text-primary/60" />
+              <span className="text-[0.5rem] font-heading font-bold text-primary/70 tracking-widest uppercase">Risultato: Business Automatizzato</span>
+            </motion.div>
           </div>
         </div>
 
