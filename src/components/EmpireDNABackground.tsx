@@ -424,7 +424,7 @@ const EmpireDNABackground = () => {
       for (let pi = 0; pi < pulses.length; pi++) {
         const p = pulses[pi];
         p.r += 0.2 + Math.sin(time + pi) * 0.08;
-        p.alpha = (1 - p.r / p.maxR) * 0.018;
+        p.alpha = (1 - p.r / p.maxR) * 0.018 * MOBILE_BOOST;
         if (p.r >= p.maxR) {
           const ni = Math.floor(Math.random() * NODE_COUNT);
           const node = pos[ni];
