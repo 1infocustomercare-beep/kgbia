@@ -891,10 +891,9 @@ const EmpireVoiceAgent: React.FC = () => {
     }
   }, [isPaused]);
 
-  // ── Auto-narrate on section change — desktop auto, mobile only when panel is open ──
+   // ── Auto-narrate on section change ──
   useEffect(() => {
     if (!currentSection || !SECTION_SCRIPTS[currentSection]) return;
-    if (isTouchDeviceRef.current && !isOpen) return;
     // If audio has been unlocked (user interacted), always try to narrate new sections
     if (!autoNarrating && !audioUnlockedRef.current) return;
 
@@ -1036,14 +1035,11 @@ const EmpireVoiceAgent: React.FC = () => {
     window.addEventListener("click", unlockAndRetry, options);
     window.addEventListener("keydown", unlockAndRetry);
 
-    // Scroll listener only on non-touch devices to reduce mobile main-thread load
-    if (!isTouchDeviceRef.current) {
-      window.addEventListener("scroll", unlockAndRetry, options);
-    }
+    window.addEventListener("scroll", unlockAndRetry, options);
 
     const maybeActivated =
       (navigator as Navigator & { userActivation?: { hasBeenActive?: boolean } }).userActivation?.hasBeenActive;
-    if (maybeActivated && !isTouchDeviceRef.current) {
+    if (maybeActivated) {
       window.setTimeout(unlockAndRetry, 0);
       window.setTimeout(unlockAndRetry, 600);
       window.setTimeout(unlockAndRetry, 1800);

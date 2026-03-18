@@ -2412,7 +2412,7 @@ const LandingPage = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [ctaVisible, setCtaVisible] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [activeIndustry, setActiveIndustry] = useState(0);
+  
   const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
   const mockupCarouselRef = useRef<HTMLDivElement>(null);
   const [mockupCarouselPaused, setMockupCarouselPaused] = useState(false);
@@ -2460,18 +2460,21 @@ const LandingPage = () => {
   }, []);
 
   useEffect(() => {
+    let ticking = false;
     const h = () => {
-      setNavScrolled(window.scrollY > 60);
-      setCtaVisible(window.scrollY > 400);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        setNavScrolled(prev => { const next = y > 60; return prev === next ? prev : next; });
+        setCtaVisible(prev => { const next = y > 400; return prev === next ? prev : next; });
+        ticking = false;
+      });
     };
     window.addEventListener("scroll", h, { passive: true });
     return () => window.removeEventListener("scroll", h);
   }, []);
 
-  useEffect(() => {
-    const timer = setInterval(() => setActiveIndustry(p => (p + 1) % 7), 3000);
-    return () => clearInterval(timer);
-  }, []);
 
   const manualMonthlyCost = weeklyHours * hourlyCost * 4.3;
   const automatedCost = manualMonthlyCost * 0.2; // 80% automated
