@@ -16,7 +16,7 @@ const NODE_COUNT = IS_MOBILE ? 42 : 55;
 const MAX_DIST = IS_MOBILE ? 132 : 145;
 const FLOW_COUNT = IS_MOBILE ? 12 : 18;
 const PULSE_COUNT = 3;
-const HUB_COUNT = IS_MOBILE ? 7 : 7;
+const HUB_COUNT = 7;
 const TARGET_FPS = IS_MOBILE ? 30 : 60;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
