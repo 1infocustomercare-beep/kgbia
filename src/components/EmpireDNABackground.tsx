@@ -444,7 +444,7 @@ const EmpireDNABackground = () => {
         }
         if (p.alpha > 0.005) {
           ctx.strokeStyle = hsla(p.color, p.alpha);
-          ctx.lineWidth = 0.6;
+          ctx.lineWidth = 0.4;
           ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.stroke();
         }
       }
