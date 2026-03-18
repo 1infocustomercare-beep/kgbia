@@ -3901,17 +3901,38 @@ const LandingPage = () => {
           PERCHÉ EMPIRE — Unified Section
          ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,14%,9%,1) 20%, hsla(155,12%,7%,1) 45%, hsla(265,12%,8%,1) 70%, hsla(230,16%,5%,1) 100%)",
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,20%,8%,1) 15%, hsla(220,14%,9%,1) 30%, hsla(155,12%,7%,1) 50%, hsla(265,16%,8%,1) 70%, hsla(220,12%,6%,1) 85%, hsla(230,16%,4%,1) 100%)",
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[12%] left-[25%] w-[480px] h-[480px] rounded-full opacity-[0.07]"
-               style={{ background: "radial-gradient(circle, hsla(265,65%,55%,0.5), transparent 70%)", filter: "blur(125px)" }} />
-          <div className="absolute top-[40%] right-[15%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
-               style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.4), transparent 70%)", filter: "blur(110px)" }} />
-          <div className="absolute bottom-[18%] left-[35%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
-               style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[1px]"
-               style={{ background: "linear-gradient(90deg, transparent, hsla(265,50%,60%,0.15), hsla(155,45%,50%,0.1), transparent)" }} />
+          {/* Primary violet — top-left */}
+          <div className="absolute top-[6%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
+               style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          {/* Emerald tech — center-right */}
+          <div className="absolute top-[35%] right-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
+               style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          {/* Gold accent — bottom-center */}
+          <div className="absolute bottom-[12%] left-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
+               style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(110px)" }} />
+          {/* Secondary violet — bottom-right */}
+          <div className="absolute bottom-[30%] right-[20%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
+               style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          {/* Soft emerald spark — top-right */}
+          <div className="absolute top-[10%] right-[28%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
+               style={{ background: "radial-gradient(circle, hsla(155,55%,48%,0.3), transparent 60%)", filter: "blur(85px)" }} />
+          {/* Top accent border */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
+               style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(155,45%,50%,0.12), hsla(38,50%,50%,0.06), transparent)" }} />
+          {/* Vertical light shaft */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.06]"
+               style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
+          {/* Bottom fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-[70px]"
+               style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
+          {/* Noise texture */}
+          <div className="absolute inset-0 opacity-[0.012]" style={{
+            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
+            backgroundRepeat: "repeat", backgroundSize: "128px 128px",
+          }} />
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-14">
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
