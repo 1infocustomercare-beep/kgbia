@@ -2424,9 +2424,54 @@ const LandingPage = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
-  /* Mobile viewport-animation safety: reveal stuck elements without scroll polling */
+  const getMobilePerformanceMode = () => {
+    if (typeof window === "undefined") return false;
+
+    const connection = (
+      navigator as Navigator & {
+        connection?: {
+          saveData?: boolean;
+          effectiveType?: string;
+          addEventListener?: (type: "change", listener: EventListener) => void;
+          removeEventListener?: (type: "change", listener: EventListener) => void;
+        };
+      }
+    ).connection;
+
+    const slowNetwork = Boolean(
+      connection?.saveData || /2g|3g/.test(connection?.effectiveType ?? "")
+    );
+
+    return window.innerWidth < 768 || slowNetwork;
+  };
+
+  const [isMobilePerformanceMode, setIsMobilePerformanceMode] = useState(getMobilePerformanceMode);
+
   useEffect(() => {
-    if (window.innerWidth >= 640) return;
+    const evaluateMode = () => setIsMobilePerformanceMode(getMobilePerformanceMode());
+    evaluateMode();
+
+    const connection = (
+      navigator as Navigator & {
+        connection?: {
+          addEventListener?: (type: "change", listener: EventListener) => void;
+          removeEventListener?: (type: "change", listener: EventListener) => void;
+        };
+      }
+    ).connection;
+
+    window.addEventListener("resize", evaluateMode, { passive: true });
+    connection?.addEventListener?.("change", evaluateMode);
+
+    return () => {
+      window.removeEventListener("resize", evaluateMode);
+      connection?.removeEventListener?.("change", evaluateMode);
+    };
+  }, []);
+
+  /* Mobile reveal safety without expensive style computations */
+  useEffect(() => {
+    if (!isMobilePerformanceMode) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -2434,34 +2479,35 @@ const LandingPage = () => {
           if (!entry.isIntersecting) return;
 
           const el = entry.target as HTMLElement;
-          const computedOpacity = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
-          if (computedOpacity > 0.02) {
-            observer.unobserve(el);
-            return;
+          if (el.style.opacity === "0" || el.style.opacity === "0.0") {
+            el.style.willChange = "opacity, transform";
+            el.style.transition = "opacity 220ms ease-out, transform 220ms ease-out";
+            el.style.opacity = "1";
+            if (el.style.transform && el.style.transform !== "none") {
+              el.style.transform = "none";
+            }
           }
 
-          el.style.willChange = "opacity, transform";
-          el.style.transition = "opacity 220ms ease-out, transform 220ms ease-out";
-          el.style.opacity = "1";
-          el.style.transform = "none";
           observer.unobserve(el);
         });
       },
       { root: null, rootMargin: "120px 0px", threshold: 0.01 }
     );
 
-    const observeHiddenCandidates = () => {
-      document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]').forEach((el) => observer.observe(el));
-    };
+    const hiddenCandidates = Array.from(
+      document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]')
+    );
 
-    observeHiddenCandidates();
-    const lateScan = window.setTimeout(observeHiddenCandidates, 1200);
+    hiddenCandidates.slice(0, 180).forEach((el) => {
+      if (el.dataset.mobileRevealObserved === "1") return;
+      el.dataset.mobileRevealObserved = "1";
+      observer.observe(el);
+    });
 
     return () => {
       observer.disconnect();
-      window.clearTimeout(lateScan);
     };
-  }, []);
+  }, [isMobilePerformanceMode]);
 
   useEffect(() => {
     let ticking = false;
@@ -2580,21 +2626,23 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative noise-overlay">
+    <div className={`min-h-screen bg-background overflow-x-hidden relative ${isMobilePerformanceMode ? "" : "noise-overlay"}`}>
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Subtle violet ambient orbs */}
-        <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.04] bg-primary -top-[200px] left-1/4" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.03] bg-accent top-[50vh] -right-[100px]" />
-        {/* Particles - reduced */}
-        <Particle delay={0} size={2} x="10%" y="30%" />
-        <Particle delay={2} size={2} x="70%" y="60%" />
-        <Particle delay={1.5} size={2} x="50%" y="45%" />
-      </div>
+      {!isMobilePerformanceMode && (
+        <div className="fixed inset-0 pointer-events-none z-0">
+          {/* Subtle violet ambient orbs */}
+          <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.04] bg-primary -top-[200px] left-1/4" />
+          <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.03] bg-accent top-[50vh] -right-[100px]" />
+          {/* Particles - reduced */}
+          <Particle delay={0} size={2} x="10%" y="30%" />
+          <Particle delay={2} size={2} x="70%" y="60%" />
+          <Particle delay={1.5} size={2} x="50%" y="45%" />
+        </div>
+      )}
 
       {/* ═══════ NEURAL CELLS BACKGROUND ═══════ */}
-      <NeuralCellsBackground />
+      {!isMobilePerformanceMode && <NeuralCellsBackground />}
 
       {/* ═══════ NAVIGATION — Ultra Premium Luxury Futuristic ═══════ */}
       <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 pt-[env(safe-area-inset-top)] ${navScrolled ? "pb-0" : "pb-1"}`}>

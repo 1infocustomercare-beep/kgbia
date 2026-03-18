@@ -822,6 +822,12 @@
     mix-blend-mode: overlay;
   }
 
+  @media (max-width: 767px) {
+    .noise-overlay::after {
+      content: none;
+    }
+  }
+
   /* ═══ PREMIUM LABEL ═══ */
   .premium-label {
     background: linear-gradient(135deg, hsla(230, 12%, 10%, 0.9), hsla(230, 10%, 6%, 0.95));
