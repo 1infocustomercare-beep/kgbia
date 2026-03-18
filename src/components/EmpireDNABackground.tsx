@@ -503,7 +503,6 @@ const EmpireDNABackground = () => {
       // Bottom-right
       ctx.beginPath(); ctx.moveTo(w - 8 - brk, h - 8); ctx.lineTo(w - 8, h - 8); ctx.lineTo(w - 8, h - 8 - brk); ctx.stroke();
 
-      animRef.current = requestAnimationFrame(animate);
     };
 
     animRef.current = requestAnimationFrame(animate);
