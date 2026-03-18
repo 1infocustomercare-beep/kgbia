@@ -449,43 +449,45 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ L6: RADAR SWEEP — rotating scanner ═══
-      const radarAngle = time * 0.1;
-      const radarR = Math.min(w, h) * 0.5;
-      const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
-      rGrad.addColorStop(0, hsla(pGlow, 0));
-      rGrad.addColorStop(0.02, hsla(pGlow, 0.03));
-      rGrad.addColorStop(0.08, hsla(pGlow, 0));
-      rGrad.addColorStop(1, hsla(pGlow, 0));
-      ctx.beginPath(); ctx.moveTo(w * 0.5, h * 0.5);
-      ctx.arc(w * 0.5, h * 0.5, radarR, radarAngle, radarAngle + Math.PI * 0.18); ctx.closePath();
-      ctx.fillStyle = rGrad; ctx.fill();
+      // ═══ L6-L8: Desktop-only layers (radar, scan, streams) ═══
+      if (!IS_MOBILE) {
+        // Radar sweep
+        const radarAngle = time * 0.1;
+        const radarR = Math.min(w, h) * 0.5;
+        const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
+        rGrad.addColorStop(0, hsla(pGlow, 0));
+        rGrad.addColorStop(0.02, hsla(pGlow, 0.03));
+        rGrad.addColorStop(0.08, hsla(pGlow, 0));
+        rGrad.addColorStop(1, hsla(pGlow, 0));
+        ctx.beginPath(); ctx.moveTo(w * 0.5, h * 0.5);
+        ctx.arc(w * 0.5, h * 0.5, radarR, radarAngle, radarAngle + Math.PI * 0.18); ctx.closePath();
+        ctx.fillStyle = rGrad; ctx.fill();
 
-      // ═══ L7: HORIZONTAL SCAN LINE ═══
-      const scanY = h * (0.5 + Math.sin(time * 0.08) * 0.48);
-      const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
-      scanGrad.addColorStop(0, hsla(pAccent, 0));
-      scanGrad.addColorStop(0.5, hsla(pAccent, 0.025));
-      scanGrad.addColorStop(1, hsla(pAccent, 0));
-      ctx.fillStyle = scanGrad; ctx.fillRect(0, scanY - 40, w, 80);
-      // Scan line core
-      ctx.strokeStyle = hsla(pGlow, 0.04);
-      ctx.lineWidth = 0.5;
-      ctx.beginPath(); ctx.moveTo(0, scanY); ctx.lineTo(w, scanY); ctx.stroke();
+        // Horizontal scan line
+        const scanY = h * (0.5 + Math.sin(time * 0.08) * 0.48);
+        const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
+        scanGrad.addColorStop(0, hsla(pAccent, 0));
+        scanGrad.addColorStop(0.5, hsla(pAccent, 0.025));
+        scanGrad.addColorStop(1, hsla(pAccent, 0));
+        ctx.fillStyle = scanGrad; ctx.fillRect(0, scanY - 40, w, 80);
+        ctx.strokeStyle = hsla(pGlow, 0.04);
+        ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.moveTo(0, scanY); ctx.lineTo(w, scanY); ctx.stroke();
 
-      // ═══ L8: VERTICAL DATA STREAMS (subtle, slow) ═══
-      const streamCount = IS_MOBILE ? 3 : 5;
-      for (let si = 0; si < streamCount; si++) {
-        const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7 + time * 0.05) * 10;
-        const streamPhase = (time * (0.03 + si * 0.005) + si * 1.1) % 1;
-        const streamLen = h * 0.12;
-        const sy = streamPhase * (h + streamLen * 2) - streamLen;
-        const sGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
-        sGrad.addColorStop(0, hsla(pGlow, 0));
-        sGrad.addColorStop(0.5, hsla(pGlow, 0.02));
-        sGrad.addColorStop(1, hsla(pGlow, 0));
-        ctx.strokeStyle = sGrad; ctx.lineWidth = 0.5;
-        ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy + streamLen); ctx.stroke();
+        // Vertical data streams
+        const streamCount = 5;
+        for (let si = 0; si < streamCount; si++) {
+          const sx = w * (0.1 + (si / streamCount) * 0.8) + Math.sin(si * 2.7 + time * 0.05) * 10;
+          const streamPhase = (time * (0.03 + si * 0.005) + si * 1.1) % 1;
+          const streamLen = h * 0.12;
+          const sy = streamPhase * (h + streamLen * 2) - streamLen;
+          const sGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
+          sGrad.addColorStop(0, hsla(pGlow, 0));
+          sGrad.addColorStop(0.5, hsla(pGlow, 0.02));
+          sGrad.addColorStop(1, hsla(pGlow, 0));
+          ctx.strokeStyle = sGrad; ctx.lineWidth = 0.5;
+          ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy + streamLen); ctx.stroke();
+        }
       }
 
       // ═══ L9: CORNER CIRCUIT BRACKETS — tech frame ═══
