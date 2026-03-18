@@ -896,7 +896,14 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
   };
 
   return (
-    <Section id="pricing">
+    <Section id="pricing" className="relative overflow-hidden" style={{
+      background: "linear-gradient(180deg, hsla(230,15%,6%,1) 0%, hsla(230,12%,8%,1) 30%, hsla(35,8%,8%,1) 60%, hsla(230,15%,6%,1) 100%)",
+    }}>
+      {/* Premium ambient glows */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(ellipse, hsla(38,50%,50%,0.5), transparent 70%)", filter: "blur(120px)" }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsla(265,60%,55%,0.4), transparent 70%)", filter: "blur(100px)" }} />
+      </div>
       <div className="text-center mb-8 sm:mb-12">
         <SectionLabel text="Piani & Prezzi" icon={<Gem className="w-3 h-3 text-accent" />} />
         <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
@@ -988,15 +995,15 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     viewport={{ once: true }}
                     className={`relative w-full rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                       isEmpire
-                        ? "border-2 border-accent/40 shadow-[0_0_50px_hsla(35,45%,50%,0.15)]"
+                        ? "border-2 border-accent/50 shadow-[0_0_60px_hsla(35,45%,50%,0.2),0_8px_32px_hsla(0,0%,0%,0.5)]"
                         : isSelected
-                          ? "border-2 border-primary/40 shadow-[0_0_30px_hsla(38,50%,55%,0.1)]"
-                          : "border border-border/30"
+                          ? "border-2 border-primary/50 shadow-[0_0_40px_hsla(265,50%,55%,0.12),0_8px_32px_hsla(0,0%,0%,0.4)]"
+                          : "border border-border/40 shadow-[0_4px_24px_hsla(0,0%,0%,0.3)]"
                     }`}
                     style={{
                       background: isEmpire
-                        ? "linear-gradient(165deg, hsla(35,30%,12%,0.6), hsla(230,10%,10%,0.8))"
-                        : "hsla(230,10%,12%,0.4)"
+                        ? "linear-gradient(165deg, hsla(35,25%,14%,0.95), hsla(230,12%,9%,0.98))"
+                        : "linear-gradient(165deg, hsla(230,12%,14%,0.95), hsla(230,10%,10%,0.98))"
                     }}
                     whileTap={{ scale: 0.99 }}>
 
@@ -1106,10 +1113,17 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                       isSelected
                         ? p.id === "empire"
-                          ? "border-2 border-accent/40 bg-gradient-to-b from-accent/[0.08] via-background/60 to-background shadow-[0_0_50px_hsla(35,45%,50%,0.12)]"
-                          : "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(38,50%,55%,0.1)]"
-                        : "border border-border/30 hover:border-primary/20 bg-background/40"
-                    }`}>
+                          ? "border-2 border-accent/50 shadow-[0_0_60px_hsla(35,45%,50%,0.18),0_8px_40px_hsla(0,0%,0%,0.5)]"
+                          : "border-2 border-primary/50 shadow-[0_0_50px_hsla(265,50%,55%,0.14),0_8px_40px_hsla(0,0%,0%,0.4)]"
+                        : "border border-border/40 hover:border-primary/25 shadow-[0_4px_24px_hsla(0,0%,0%,0.3)]"
+                    }`}
+                    style={{
+                      background: isSelected
+                        ? p.id === "empire"
+                          ? "linear-gradient(165deg, hsla(35,22%,14%,0.97), hsla(230,12%,9%,0.98))"
+                          : "linear-gradient(165deg, hsla(265,15%,14%,0.95), hsla(230,10%,9%,0.98))"
+                        : "linear-gradient(165deg, hsla(230,12%,13%,0.95), hsla(230,10%,10%,0.97))"
+                    }}>
                     {p.badge && (
                       <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
                         p.id === "empire"
