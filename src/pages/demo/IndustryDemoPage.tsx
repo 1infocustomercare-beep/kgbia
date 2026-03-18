@@ -1,6 +1,9 @@
 import { useState, useMemo, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
 const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
+import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
+import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
+import DemoAdminCTA from "@/components/demo/DemoAdminCTA";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
