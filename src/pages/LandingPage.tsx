@@ -4085,13 +4085,38 @@ const LandingPage = () => {
           COMPARISON TABLE — Empire vs Others
          ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,14%,8%,1) 35%, hsla(38,8%,7%,1) 60%, hsla(230,16%,5%,1) 100%)",
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,20%,8%,1) 15%, hsla(38,10%,7%,1) 35%, hsla(265,14%,8%,1) 55%, hsla(38,8%,6%,1) 75%, hsla(230,16%,4%,1) 100%)",
       }}>
-        {/* Premium luxury ambient glows */}
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.08]" style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.4), transparent 70%)", filter: "blur(130px)" }} />
-          <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(110px)" }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(ellipse, hsla(265,50%,55%,0.25), transparent 70%)", filter: "blur(150px)" }} />
+          {/* Primary violet — top-left */}
+          <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
+               style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          {/* Gold accent — center-right */}
+          <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
+               style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          {/* Wide violet wash — center */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] rounded-full opacity-[0.04]"
+               style={{ background: "radial-gradient(ellipse, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(150px)" }} />
+          {/* Secondary gold — bottom-left */}
+          <div className="absolute bottom-[15%] left-[15%] w-[400px] h-[400px] rounded-full opacity-[0.035]"
+               style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          {/* Emerald spark — top-right */}
+          <div className="absolute top-[12%] right-[28%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
+               style={{ background: "radial-gradient(circle, hsla(155,50%,48%,0.25), transparent 60%)", filter: "blur(85px)" }} />
+          {/* Top accent border */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
+               style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(38,50%,50%,0.12), transparent)" }} />
+          {/* Vertical light shaft */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]"
+               style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
+          {/* Bottom fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-[70px]"
+               style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
+          {/* Noise texture */}
+          <div className="absolute inset-0 opacity-[0.012]" style={{
+            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
+            backgroundRepeat: "repeat", backgroundSize: "128px 128px",
+          }} />
         </div>
         <div className="text-center mb-10">
           <SectionLabel text="Confronto" icon={<Activity className="w-3 h-3 text-primary" />} />
