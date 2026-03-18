@@ -4050,34 +4050,43 @@ const LandingPage = () => {
           }} />
           {/* Circuit SVG connections */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <filter id="mobileCircuitGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="0.55" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
             {/* Horizontal circuit lines */}
-            <line x1="55" y1="50" x2="145" y2="50" stroke="hsla(265,50%,55%,0.15)" strokeWidth="0.5" strokeDasharray="3,4" />
-            <line x1="155" y1="50" x2="245" y2="50" stroke="hsla(265,50%,55%,0.12)" strokeWidth="0.5" strokeDasharray="3,4" />
-            <line x1="55" y1="150" x2="145" y2="150" stroke="hsla(265,50%,55%,0.12)" strokeWidth="0.5" strokeDasharray="3,4" />
-            <line x1="155" y1="150" x2="245" y2="150" stroke="hsla(265,50%,55%,0.15)" strokeWidth="0.5" strokeDasharray="3,4" />
+            <line x1="55" y1="50" x2="145" y2="50" stroke="hsl(var(--primary) / 0.36)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
+            <line x1="155" y1="50" x2="245" y2="50" stroke="hsl(var(--primary) / 0.32)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
+            <line x1="55" y1="150" x2="145" y2="150" stroke="hsl(var(--primary) / 0.32)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
+            <line x1="155" y1="150" x2="245" y2="150" stroke="hsl(var(--primary) / 0.36)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
             {/* Vertical circuit lines */}
-            <line x1="50" y1="55" x2="50" y2="145" stroke="hsla(155,40%,45%,0.12)" strokeWidth="0.5" strokeDasharray="3,4" />
-            <line x1="150" y1="55" x2="150" y2="145" stroke="hsla(38,45%,50%,0.1)" strokeWidth="0.5" strokeDasharray="3,4" />
-            <line x1="250" y1="55" x2="250" y2="145" stroke="hsla(155,40%,45%,0.12)" strokeWidth="0.5" strokeDasharray="3,4" />
+            <line x1="50" y1="55" x2="50" y2="145" stroke="hsl(var(--accent) / 0.34)" strokeWidth="0.85" strokeDasharray="3,4" strokeLinecap="round" />
+            <line x1="150" y1="55" x2="150" y2="145" stroke="hsl(var(--accent) / 0.3)" strokeWidth="0.85" strokeDasharray="3,4" strokeLinecap="round" />
+            <line x1="250" y1="55" x2="250" y2="145" stroke="hsl(var(--accent) / 0.34)" strokeWidth="0.85" strokeDasharray="3,4" strokeLinecap="round" />
             {/* Diagonal cross-links */}
-            <line x1="55" y1="55" x2="145" y2="145" stroke="hsla(265,40%,50%,0.06)" strokeWidth="0.3" />
-            <line x1="155" y1="55" x2="245" y2="145" stroke="hsla(265,40%,50%,0.06)" strokeWidth="0.3" />
-            <line x1="145" y1="55" x2="55" y2="145" stroke="hsla(155,35%,45%,0.05)" strokeWidth="0.3" />
-            <line x1="245" y1="55" x2="155" y2="145" stroke="hsla(155,35%,45%,0.05)" strokeWidth="0.3" />
+            <line x1="55" y1="55" x2="145" y2="145" stroke="hsl(var(--primary) / 0.22)" strokeWidth="0.55" strokeLinecap="round" />
+            <line x1="155" y1="55" x2="245" y2="145" stroke="hsl(var(--primary) / 0.22)" strokeWidth="0.55" strokeLinecap="round" />
+            <line x1="145" y1="55" x2="55" y2="145" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.55" strokeLinecap="round" />
+            <line x1="245" y1="55" x2="155" y2="145" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.55" strokeLinecap="round" />
             {/* Junction dots at intersections */}
             {[
               [50,50],[150,50],[250,50],
               [50,150],[150,150],[250,150],
               [100,100],[200,100],
             ].map(([cx,cy], di) => (
-              <circle key={di} cx={cx} cy={cy} r="1.5" fill="hsla(265,50%,55%,0.2)" />
+              <circle key={di} cx={cx} cy={cy} r="1.8" fill="hsl(var(--primary) / 0.5)" />
             ))}
             {/* Animated pulse traveling along paths */}
-            <circle r="2" fill="hsla(265,60%,65%,0.4)">
-              <animateMotion dur="6s" repeatCount="indefinite" path="M55,50 L145,50 L245,50 L245,150 L155,150 L55,150 Z" />
+            <circle r="2.4" fill="hsl(var(--primary) / 0.92)" filter="url(#mobileCircuitGlow)">
+              <animateMotion dur="4.8s" repeatCount="indefinite" path="M55,50 L145,50 L245,50 L245,150 L155,150 L55,150 Z" />
             </circle>
-            <circle r="1.5" fill="hsla(155,50%,55%,0.3)">
-              <animateMotion dur="8s" repeatCount="indefinite" path="M50,55 L50,145 L150,145 L150,55 L250,55 L250,145" />
+            <circle r="2" fill="hsl(var(--accent) / 0.86)" filter="url(#mobileCircuitGlow)">
+              <animateMotion dur="6.2s" repeatCount="indefinite" path="M50,55 L50,145 L150,145 L150,55 L250,55 L250,145" />
             </circle>
           </svg>
           {/* Icon grid */}
