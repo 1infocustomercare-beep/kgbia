@@ -776,17 +776,17 @@ export default function MultiSectorShowcase() {
             </h3>
             <p className="text-foreground/40 leading-[1.6] max-w-lg mx-auto lg:mx-0 mb-5 sm:mb-7 text-xs sm:text-sm">{sector.desc}</p>
 
-            <div className="space-y-3 mb-8 text-left max-w-md mx-auto lg:mx-0">
+            <div className="space-y-2 sm:space-y-3 mb-5 sm:mb-8 text-left max-w-md mx-auto lg:mx-0">
               {sector.features.map((f, i) => (
-                <motion.div key={i} className="flex gap-3 items-start group"
+                <motion.div key={i} className="flex gap-2 sm:gap-3 items-start group"
                   initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}>
-                  <div className="w-7 h-7 min-w-[28px] rounded-lg flex items-center justify-center mt-0.5 transition-colors"
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 min-w-[24px] sm:min-w-[28px] rounded-lg flex items-center justify-center mt-0.5 transition-colors"
                     style={{ background: sector.color.replace("1)", "0.1)") }}>
                     <span style={{ color: sector.color }}>{f.icon}</span>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-foreground">{f.title}</p>
-                    <p className="text-[0.6rem] text-foreground/35 mt-0.5">{f.desc}</p>
+                    <p className="text-[0.65rem] sm:text-xs font-semibold text-foreground">{f.title}</p>
+                    <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/35 mt-0.5">{f.desc}</p>
                   </div>
                 </motion.div>
               ))}
