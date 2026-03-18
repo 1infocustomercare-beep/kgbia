@@ -4409,40 +4409,59 @@ const LandingPage = () => {
         <div className="relative mb-1">
           {/* DNA futuristico informatico — più visibile */}
           <div className="absolute inset-0 pointer-events-none -z-[1] overflow-hidden">
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[240px] opacity-100">
-              <svg className="w-full h-full" viewBox="0 0 1200 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <div className="absolute inset-0 opacity-[0.12]">
+              <svg className="w-full h-full" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <linearGradient id="process-dna-a" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0" />
-                    <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.5" />
-                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
-                  </linearGradient>
-                  <linearGradient id="process-dna-b" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0" />
-                    <stop offset="50%" stopColor="hsl(var(--accent))" stopOpacity="0.38" />
-                    <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0" />
-                  </linearGradient>
+                  <radialGradient id="node-glow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="hsl(265,70%,60%)" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="hsl(265,70%,60%)" stopOpacity="0" />
+                  </radialGradient>
                 </defs>
-                <motion.path
-                  d="M 0 78 C 150 18, 300 140, 450 78 C 600 18, 750 140, 900 78 C 1050 18, 1125 96, 1200 78"
-                  fill="none"
-                  stroke="url(#process-dna-a)"
-                  strokeWidth="2"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  whileInView={{ pathLength: 1, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.2, ease: "easeOut" }}
-                />
-                <motion.path
-                  d="M 0 164 C 150 224, 300 102, 450 164 C 600 224, 750 102, 900 164 C 1050 224, 1125 146, 1200 164"
-                  fill="none"
-                  stroke="url(#process-dna-b)"
-                  strokeWidth="2"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  whileInView={{ pathLength: 1, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
-                />
+                {/* Network connections */}
+                {[
+                  [150,80, 300,180], [150,80, 450,120], [150,80, 200,280],
+                  [300,180, 450,120], [300,180, 500,280], [300,180, 600,200],
+                  [450,120, 600,200], [450,120, 750,100], [450,120, 500,280],
+                  [600,200, 750,100], [600,200, 850,220], [600,200, 700,320],
+                  [750,100, 850,220], [750,100, 900,80], [750,100, 1050,160],
+                  [850,220, 1050,160], [850,220, 700,320], [850,220, 950,300],
+                  [1050,160, 900,80], [1050,160, 950,300],
+                  [200,280, 500,280], [200,280, 300,180],
+                  [500,280, 700,320], [700,320, 950,300],
+                ].map(([x1,y1,x2,y2], i) => (
+                  <motion.line key={`l${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
+                    stroke="hsl(265,50%,55%)" strokeWidth="1" strokeOpacity="0.4"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    whileInView={{ pathLength: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.03, duration: 0.6 }}
+                  />
+                ))}
+                {/* Network nodes */}
+                {[
+                  [150,80], [300,180], [450,120], [600,200], [750,100],
+                  [850,220], [1050,160], [200,280], [500,280], [700,320],
+                  [900,80], [950,300],
+                ].map(([cx,cy], i) => (
+                  <g key={`n${i}`}>
+                    <circle cx={cx} cy={cy} r="18" fill="url(#node-glow)" />
+                    <motion.circle cx={cx} cy={cy} r="6"
+                      fill="hsl(265,60%,55%)" fillOpacity="0.5"
+                      stroke="hsl(265,60%,60%)" strokeWidth="1.5" strokeOpacity="0.6"
+                      initial={{ scale: 0, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.3 + i * 0.05, type: "spring", stiffness: 200 }}
+                    />
+                    <motion.circle cx={cx} cy={cy} r="3"
+                      fill="hsl(155,50%,50%)" fillOpacity="0.7"
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: [0, 1.3, 1] }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.5 + i * 0.05, duration: 0.4 }}
+                    />
+                  </g>
+                ))}
               </svg>
             </div>
             <div className="hidden lg:block absolute top-[44px] left-[calc(12.5%+28px)] right-[calc(12.5%+28px)] h-px bg-gradient-to-r from-primary/25 via-primary/15 to-primary/25" />
