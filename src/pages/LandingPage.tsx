@@ -995,15 +995,15 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
                     viewport={{ once: true }}
                     className={`relative w-full rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                       isEmpire
-                        ? "border-2 border-accent/40 shadow-[0_0_50px_hsla(35,45%,50%,0.15)]"
+                        ? "border-2 border-accent/50 shadow-[0_0_60px_hsla(35,45%,50%,0.2),0_8px_32px_hsla(0,0%,0%,0.5)]"
                         : isSelected
-                          ? "border-2 border-primary/40 shadow-[0_0_30px_hsla(38,50%,55%,0.1)]"
-                          : "border border-border/30"
+                          ? "border-2 border-primary/50 shadow-[0_0_40px_hsla(265,50%,55%,0.12),0_8px_32px_hsla(0,0%,0%,0.4)]"
+                          : "border border-border/40 shadow-[0_4px_24px_hsla(0,0%,0%,0.3)]"
                     }`}
                     style={{
                       background: isEmpire
-                        ? "linear-gradient(165deg, hsla(35,30%,12%,0.6), hsla(230,10%,10%,0.8))"
-                        : "hsla(230,10%,12%,0.4)"
+                        ? "linear-gradient(165deg, hsla(35,25%,14%,0.95), hsla(230,12%,9%,0.98))"
+                        : "linear-gradient(165deg, hsla(230,12%,14%,0.95), hsla(230,10%,10%,0.98))"
                     }}
                     whileTap={{ scale: 0.99 }}>
 
