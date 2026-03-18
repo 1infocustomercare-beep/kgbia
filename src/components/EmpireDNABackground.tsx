@@ -408,13 +408,15 @@ const EmpireDNABackground = () => {
         const pt = walkPolyline(route, fl.progress);
         const fadeA = Math.sin(fl.progress * Math.PI);
 
-        // Trail (desktop)
-        if (!IS_MOBILE) {
-          for (let ti = 1; ti <= 3; ti++) {
+        // Trail
+        {
+          const trailSteps = IS_MOBILE ? 2 : 3;
+          for (let ti = 1; ti <= trailSteps; ti++) {
             const trailT = Math.max(0, fl.progress - ti * 0.04);
             const tp = walkPolyline(route, trailT);
-            ctx.fillStyle = hsla(pGlow, fadeA * (1 - ti * 0.3) * 0.12);
-            ctx.fillRect(tp.x - 0.8, tp.y - 0.8, 1.6, 1.6);
+            const trailSize = IS_MOBILE ? 1 : 0.8;
+            ctx.fillStyle = hsla(pGlow, fadeA * (1 - ti * 0.3) * (IS_MOBILE ? 0.09 : 0.12));
+            ctx.fillRect(tp.x - trailSize, tp.y - trailSize, trailSize * 2, trailSize * 2);
           }
         }
 
