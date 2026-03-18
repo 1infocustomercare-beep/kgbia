@@ -359,8 +359,9 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         </div>
       </section>
 
-      <SectorValueProposition sectorKey="trades" accentColor={A} darkMode={true} sectorLabel="Attività" />
-      <AutomationShowcase accentColor={A} accentBg={`bg-[${A}]`} sectorName="artigiani e professionisti" darkMode={true} />
+      <AIAgentsShowcase sector="trades" />
+      <SectorValueProposition sectorKey={industry === "electrician" || industry === "plumber" ? "trades" : (industry as string)} accentColor={A} darkMode={true} sectorLabel={config.label} />
+      <AutomationShowcase accentColor={A} accentBg={`bg-[${A}]`} sectorName={config.label.toLowerCase()} darkMode={true} />
 
       <footer className="py-10 px-4 border-t" style={{ borderColor: `${A}08` }}>
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4" style={{ fontFamily: "'Inter', sans-serif" }}>

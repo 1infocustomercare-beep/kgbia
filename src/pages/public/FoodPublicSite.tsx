@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { MarqueeCarousel, AmbientGlow, FloatingOrbs, NeonDivider, ScrollIndicator, PremiumStatsBar, PremiumSectionHeader } from "@/components/public/PremiumSiteKit";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
