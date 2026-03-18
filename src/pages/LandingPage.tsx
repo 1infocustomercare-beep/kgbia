@@ -2049,7 +2049,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
 /* ═══════════════════════════════════════════
    MOBILE IPHONE CAROUSEL — 3 at a time, auto-scroll
    ═══════════════════════════════════════════ */
-type CarouselItem = { name: string; route: string; color: string; label: string; nav: string };
+type CarouselItem = { name: string; route: string; color: string; label: string; nav: string; image: string };
 
 const MobileIPhoneCarousel = ({ items, scale, navigate }: { items: CarouselItem[]; scale: number; navigate: (p: string) => void }) => {
   const trackRef = useRef<HTMLDivElement>(null);
