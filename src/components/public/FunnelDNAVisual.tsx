@@ -23,6 +23,8 @@ const FunnelDNAVisual = memo(() => {
   }, [isInView]);
 
   useEffect(() => {
+    if (!isInView) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -33,6 +35,8 @@ const FunnelDNAVisual = memo(() => {
     let t = 0;
     let width = 0;
     let height = 0;
+    let lastTs = 0;
+    const frameIntervalMs = isMobile ? 50 : 33; // ~20fps mobile, ~30fps desktop
 
     const isValidDimension = (value: number) => Number.isFinite(value) && value > 0;
 
