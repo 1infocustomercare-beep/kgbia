@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -322,6 +322,15 @@ class IntroErrorBoundary extends React.Component<{ children: ReactNode; onFail: 
   }
 }
 
+/** Show Empire DNA background only on private/internal routes */
+const PUBLIC_ROUTE_PATTERN = /^\/(b|r|demo|ncc-demo|home|marketing|privacy|cookie-policy)\b/;
+
+function ConditionalDNABackground() {
+  const { pathname } = useLocation();
+  if (PUBLIC_ROUTE_PATTERN.test(pathname)) return null;
+  return <EmpireDNABackground />;
+}
+
 function App() {
   const [introCompleted, setIntroCompleted] = useState(() => SHOULD_SKIP_INTRO_DEFAULT);
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
@@ -461,13 +470,13 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen relative">
-        <EmpireDNABackground />
         <TooltipProvider>
           <AuthProvider>
             <CartProvider>
               <Toaster />
               <Sonner />
               <BrowserRouter>
+                <ConditionalDNABackground />
                 <RouteErrorBoundary>
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
