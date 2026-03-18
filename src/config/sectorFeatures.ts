@@ -10,6 +10,12 @@ export interface FeatureItem {
   category: "crm" | "booking" | "marketing" | "finance" | "analytics" | "operations" | "ai" | "sector";
 }
 
+export interface WorkflowStep {
+  icon: string;
+  label: string;
+  detail: string;
+}
+
 export interface AIAgent {
   name: string;
   emoji: string;
@@ -18,6 +24,10 @@ export interface AIAgent {
   isUniversal: boolean;
   hoursPerWeek?: number;
   accuracy?: number;
+  category?: string;
+  workflow?: WorkflowStep[];
+  example?: string;
+  result?: string;
 }
 
 // ═══════════════════════════════════════════
