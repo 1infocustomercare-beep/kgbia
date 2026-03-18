@@ -154,7 +154,7 @@ const FunnelDNAVisual = memo(() => {
       }
 
       // Floating particles
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < (isMobile ? 12 : 30); i++) {
         const px = cx + Math.sin(t * 0.7 + i * 2.1) * amp * 1.3;
         const py = h * ((i * 0.618 + t * 0.1) % 1);
         const pa = 0.08 + 0.06 * Math.sin(t * 2 + i);
