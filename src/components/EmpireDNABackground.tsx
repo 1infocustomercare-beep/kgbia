@@ -414,8 +414,9 @@ const EmpireDNABackground = () => {
           }
         }
 
-        ctx.fillStyle = hsla(pAccent, fadeA * 0.15);
-        ctx.fillRect(pt.x - 0.8, pt.y - 0.8, 1.6, 1.6);
+        ctx.fillStyle = hsla(pAccent, fadeA * 0.15 * MOBILE_BOOST);
+        const pSize = IS_MOBILE ? 1.2 : 0.8;
+        ctx.fillRect(pt.x - pSize, pt.y - pSize, pSize * 2, pSize * 2);
       }
 
       // ═══ LAYER 5: Pulse Rings ═══
