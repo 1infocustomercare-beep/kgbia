@@ -349,7 +349,7 @@ const EmpireDNABackground = () => {
       // ═══ L3: NODES — crosses, squares, with energy halos ═══
       for (let i = 0; i < NODE_COUNT; i++) {
         const breathe = 0.4 + Math.sin(time * 1.2 + i * 0.7) * 0.6;
-        let na = 0.12 * breathe;
+        let na = 0.06 * breathe;
         const isJunction = i % 4 === 0;
         const isActive = (i + Math.floor(time * 0.3)) % 11 === 0;
 
