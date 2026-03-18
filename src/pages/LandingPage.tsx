@@ -4080,8 +4080,11 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           BUILD ANYTHING — Streamlined Conversion Section
          ═══════════════════════════════════════════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsla(260,14%,13%,1) 0%, hsla(265,16%,11%,1) 50%, hsla(260,14%,13%,1) 100%)" }}>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] pointer-events-none" style={{ background: "radial-gradient(ellipse, hsla(265,70%,60%,0.05), transparent 70%)" }} />
+      <Section className="relative overflow-hidden" style={{ background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,14%,8%,1) 35%, hsla(38,8%,7%,1) 60%, hsla(230,16%,5%,1) 100%)" }}>
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[550px] h-[400px] rounded-full opacity-[0.07]" style={{ background: "radial-gradient(ellipse, hsla(265,60%,52%,0.45), transparent 70%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(110px)" }} />
+        </div>
 
         <div className="text-center mb-14">
           <SectionLabel text="Su Misura" icon={<Sparkles className="w-3 h-3 text-primary" />} />
