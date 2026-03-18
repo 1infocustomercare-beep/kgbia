@@ -52,6 +52,8 @@ export default function DemoAdminPage() {
   const [activeModule, setActiveModule] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
+  const [agentsTab, setAgentsTab] = useState<"overview" | "activity" | "detail">("overview");
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
 
   const config = getSectorConfig(slug || "food");
   const allAgents = useMemo(() => getAllAgentsForSector(slug || "food"), [slug]);
