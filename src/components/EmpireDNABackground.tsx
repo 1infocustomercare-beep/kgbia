@@ -336,7 +336,7 @@ const EmpireDNABackground = () => {
             if (activeTrace && alpha > 0.3) {
               ctx.setLineDash([3, 5]);
               ctx.lineDashOffset = -(time * 35);
-              ctx.strokeStyle = hsla(pGlow, alpha * 0.12 * MOBILE_BOOST);
+              ctx.strokeStyle = hsla(pGlow, alpha * 0.28 * MOBILE_BOOST);
               ctx.lineWidth = 0.7;
               ctx.beginPath();
               ctx.moveTo(route[0].x, route[0].y);
