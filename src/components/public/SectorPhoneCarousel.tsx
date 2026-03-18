@@ -83,7 +83,17 @@ export default function SectorPhoneCarousel({ items, onNavigate, onShowAll }: Pr
   const [showAll, setShowAll] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const [isSm, setIsSm] = useState(false);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 640px)");
+    setIsSm(mq.matches);
+    const h = (e: MediaQueryListEvent) => setIsSm(e.matches);
+    mq.addEventListener("change", h);
+    return () => mq.removeEventListener("change", h);
+  }, []);
+
+  const stepPx = isSm ? 200 : 172; // card + gap
   const visibleCount = 3;
   const maxIndex = Math.max(0, items.length - visibleCount);
 
