@@ -3427,8 +3427,8 @@ const LandingPage = () => {
                         </motion.div>
 
                         {/* Icon */}
-                        <motion.div
-                          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-3 relative`}
+                         <motion.div
+                          className={`w-6 h-6 sm:w-7 sm:h-7 rounded-md bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-3 relative [&>svg]:w-3 [&>svg]:h-3 sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5`}
                           style={{ boxShadow: `0 0 20px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.2)" : "hsla(38,70%,50%,0.2)"}` }}
                         >
                           {pain.icon}
