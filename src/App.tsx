@@ -550,6 +550,11 @@ function App() {
                           <BrandAssetsPage />
                         </ProtectedRoute>
                       } />
+                      <Route path="/superadmin/demo-accounts" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <DemoAccountsPage />
+                        </ProtectedRoute>
+                      } />
                       <Route path="/staff" element={
                         <ProtectedRoute requiredRole="staff">
                           <StaffPanel />
