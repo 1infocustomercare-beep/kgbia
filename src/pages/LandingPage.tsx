@@ -5768,29 +5768,73 @@ const LandingPage = () => {
           </motion.h2>
         </div>
 
-        <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10"
-        variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-          {[
-          { value: "€997", label: "Per vendita", icon: <Trophy className="w-5 h-5" /> },
-          { value: "€50", label: "Override TL", icon: <Award className="w-5 h-5" /> },
-          { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-5 h-5" /> },
-          { value: "€1.500", label: "Bonus Elite", icon: <Rocket className="w-5 h-5" /> }].
-          map((s, i) =>
-          <motion.div key={i} variants={popIn}>
-              <PremiumCard glow scan delay={i} className="p-5 sm:p-6 text-center">
-                <div className="flex justify-center mb-3">
-                  <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.4}>
-                    <span className="text-primary">{s.icon}</span>
-                  </PremiumIcon>
-                </div>
-                <motion.p className="text-xl sm:text-2xl font-heading font-bold text-vibrant-gradient"
-              animate={{ textShadow: ["0 0 10px hsla(265,70%,60%,0)", "0 0 20px hsla(265,70%,60%,0.3)", "0 0 10px hsla(265,70%,60%,0)"] }}
-              transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>{s.value}</motion.p>
-                <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/40 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
-              </PremiumCard>
-            </motion.div>
-          )}
-        </motion.div>
+        <div className="relative mb-10 rounded-2xl overflow-hidden isolate">
+          {/* Opaque mobile panel to prevent homepage background bleeding under circuit schema */}
+          <div
+            className="absolute inset-0 sm:hidden z-0"
+            style={{
+              background: "linear-gradient(155deg, hsla(230,16%,9%,0.97), hsla(265,18%,10%,0.96))",
+              border: "1px solid hsla(265,40%,45%,0.1)"
+            }}
+          />
+
+          {/* Mobile circuit communication schema between KPI icons */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1] sm:hidden" viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <filter id="partnerKpiCircuitGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="0.65" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            <line x1="78" y1="50" x2="222" y2="50" stroke="hsl(var(--primary) / 0.28)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
+            <line x1="78" y1="130" x2="222" y2="130" stroke="hsl(var(--primary) / 0.28)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
+            <line x1="72" y1="56" x2="72" y2="124" stroke="hsl(var(--accent) / 0.24)" strokeWidth="0.8" strokeDasharray="3,4" strokeLinecap="round" />
+            <line x1="228" y1="56" x2="228" y2="124" stroke="hsl(var(--accent) / 0.24)" strokeWidth="0.8" strokeDasharray="3,4" strokeLinecap="round" />
+            <line x1="78" y1="56" x2="222" y2="124" stroke="hsl(var(--primary) / 0.17)" strokeWidth="0.55" strokeLinecap="round" />
+            <line x1="222" y1="56" x2="78" y2="124" stroke="hsl(var(--accent) / 0.17)" strokeWidth="0.55" strokeLinecap="round" />
+
+            {[[72, 50], [228, 50], [72, 130], [228, 130], [150, 90]].map(([cx, cy], i) => (
+              <circle key={`partner-kpi-node-${i}`} cx={cx} cy={cy} r={i === 4 ? "2.2" : "1.8"} fill="hsl(var(--primary) / 0.52)">
+                <animate attributeName="opacity" values="0.35;0.85;0.35" dur={`${2.1 + i * 0.35}s`} repeatCount="indefinite" />
+              </circle>
+            ))}
+
+            <circle r="2.1" fill="hsl(var(--primary) / 0.88)" filter="url(#partnerKpiCircuitGlow)">
+              <animateMotion dur="4.9s" repeatCount="indefinite" path="M78,50 L222,50 L222,130 L78,130 Z" />
+            </circle>
+            <circle r="1.8" fill="hsl(var(--accent) / 0.86)" filter="url(#partnerKpiCircuitGlow)">
+              <animateMotion dur="6.3s" repeatCount="indefinite" path="M72,56 L228,124 L228,56 L72,124" />
+            </circle>
+          </svg>
+
+          <motion.div className="relative z-[2] grid grid-cols-2 sm:grid-cols-4 gap-3 p-2 sm:p-0"
+          variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+            {[
+            { value: "€997", label: "Per vendita", icon: <Trophy className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> },
+            { value: "€50", label: "Override TL", icon: <Award className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> },
+            { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> },
+            { value: "€1.500", label: "Bonus Elite", icon: <Rocket className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> }].
+            map((s, i) =>
+            <motion.div key={i} variants={popIn}>
+                <PremiumCard glow scan delay={i} className="p-3.5 sm:p-6 text-center">
+                  <div className="flex justify-center mb-2.5 sm:mb-3">
+                    <PremiumIcon gradient="from-primary/20 to-accent/15" size={IS_MOBILE_LP ? "sm" : "md"} delay={i * 0.4}>
+                      <span className="text-primary">{s.icon}</span>
+                    </PremiumIcon>
+                  </div>
+                  <motion.p className="text-lg sm:text-2xl font-heading font-bold text-vibrant-gradient"
+                animate={{ textShadow: ["0 0 10px hsla(265,70%,60%,0)", "0 0 20px hsla(265,70%,60%,0.3)", "0 0 10px hsla(265,70%,60%,0)"] }}
+                transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>{s.value}</motion.p>
+                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/40 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
+                </PremiumCard>
+              </motion.div>
+            )}
+          </motion.div>
+        </div>
 
         {/* Career path */}
         <motion.div className="p-6 rounded-2xl glow-card mb-10"
