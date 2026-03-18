@@ -680,10 +680,10 @@ const NetworkNode = ({
         />
 
         {/* Stat badge */}
-        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-[1px] rounded-full text-[0.42rem] font-bold whitespace-nowrap z-20 border border-foreground/10"
+        <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 px-1 py-[1px] rounded-full text-[0.38rem] font-bold whitespace-nowrap z-20 border border-foreground/10"
           style={{ background: "hsla(var(--background) / 0.92)", backdropFilter: "blur(6px)", color: agent.glow }}>
           <Counter value={agent.stat.value} suffix={agent.stat.suffix} />{" "}
-          <span className="text-foreground/60 text-[0.35rem]">{agent.stat.label}</span>
+          <span className="text-foreground/60 text-[0.3rem]">{agent.stat.label}</span>
         </div>
 
         {/* Cardinal connection dots */}
