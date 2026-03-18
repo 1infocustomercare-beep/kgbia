@@ -3572,7 +3572,14 @@ const LandingPage = () => {
       {/*
           PERCHÉ EMPIRE — Unified Section
          ═══════════════════════════════════════════ */}
-      <Section>
+      <Section style={{
+        background: `linear-gradient(180deg, hsla(150,20%,6%,1) 0%, hsla(155,25%,8%,1) 40%, hsla(150,22%,7%,1) 70%, hsla(150,20%,6%,1) 100%)`,
+      }}>
+        {/* Green tech ambient glows */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-1/4 left-1/3 w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.08]" style={{ background: "hsl(150 60% 40%)" }} />
+          <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full blur-[180px] opacity-[0.05]" style={{ background: "hsl(160 50% 45%)" }} />
+        </div>
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-14">
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="text-center lg:text-left order-2 lg:order-1">
