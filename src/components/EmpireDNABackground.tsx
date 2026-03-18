@@ -359,8 +359,8 @@ const EmpireDNABackground = () => {
 
         if (i % 3 === 0) {
           const arm = 2 + breathe * 1.5;
-          ctx.strokeStyle = hsla(isActive ? pAccent : pNode, na + 0.08);
-          ctx.lineWidth = isActive ? 0.6 : 0.4;
+          ctx.strokeStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
+          ctx.lineWidth = isActive ? 0.8 : 0.5;
           ctx.beginPath();
           ctx.moveTo(pos[i].x - arm, pos[i].y); ctx.lineTo(pos[i].x + arm, pos[i].y);
           ctx.moveTo(pos[i].x, pos[i].y - arm); ctx.lineTo(pos[i].x, pos[i].y + arm);
