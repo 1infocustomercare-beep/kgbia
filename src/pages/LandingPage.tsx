@@ -5786,7 +5786,7 @@ const LandingPage = () => {
            PARTNER PROGRAM
           ═══════════════════════════════════════════ */}
       <Section id="partner" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,16%,7%,1) 15%, hsla(265,18%,8%,1) 32%, hsla(38,12%,7%,1) 50%, hsla(265,14%,7%,1) 72%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,22%,9%,1) 15%, hsla(265,22%,10%,1) 32%, hsla(38,18%,9%,1) 50%, hsla(265,18%,9%,1) 72%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[6%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
