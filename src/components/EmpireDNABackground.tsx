@@ -11,12 +11,12 @@ const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 20 : 55;
-const MAX_DIST = IS_MOBILE ? 100 : 145;
-const FLOW_COUNT = IS_MOBILE ? 4 : 18;
+const NODE_COUNT = IS_MOBILE ? 14 : 55;
+const MAX_DIST = IS_MOBILE ? 90 : 145;
+const FLOW_COUNT = IS_MOBILE ? 2 : 18;
 const PULSE_COUNT = IS_MOBILE ? 1 : 3;
-const HUB_COUNT = IS_MOBILE ? 4 : 7; // Sector hubs
-const TARGET_FPS = IS_MOBILE ? 24 : 60;
+const HUB_COUNT = IS_MOBILE ? 3 : 7;
+const TARGET_FPS = IS_MOBILE ? 20 : 60;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 type Pt = { x: number; y: number };
@@ -143,10 +143,9 @@ const EmpireDNABackground = () => {
   const pulsesRef = useRef<PulseRing[]>([]);
   const ptrRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
-  useEffect(() => { if (IS_MOBILE) return; const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
+  useEffect(() => { const t = setTimeout(() => setReady(true), IS_MOBILE ? 800 : 200); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
-    if (IS_MOBILE) return;
     const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
     window.addEventListener("scroll", fn, { passive: true });
     const mainEl = document.querySelector("main");
@@ -156,7 +155,7 @@ const EmpireDNABackground = () => {
   }, []);
 
   useEffect(() => {
-    if (IS_MOBILE) return;
+    if (IS_MOBILE) return; // No pointer tracking on mobile
     const move = (e: PointerEvent) => { ptrRef.current = { x: e.clientX, y: e.clientY, active: true }; };
     const leave = () => { ptrRef.current.active = false; };
     window.addEventListener("pointermove", move, { passive: true });
@@ -172,7 +171,7 @@ const EmpireDNABackground = () => {
 
     let w = 0, h = 0;
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = IS_MOBILE ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       w = window.innerWidth; h = window.innerHeight;
       if (!w || !h) return;
       canvas.width = w * dpr; canvas.height = h * dpr;
@@ -473,14 +472,11 @@ const EmpireDNABackground = () => {
     return () => { cancelAnimationFrame(animRef.current); window.removeEventListener("resize", resize); };
   }, [ready]);
 
-  // On mobile, skip the entire canvas — at 0.045 opacity it's invisible but burns GPU
-  if (IS_MOBILE) return null;
-
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: 0.045, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: IS_MOBILE ? 0.06 : 0.045, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };
