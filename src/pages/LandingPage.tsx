@@ -4482,7 +4482,7 @@ const LandingPage = () => {
          ═══════════════════════════════════════════ */}
       <section className="relative py-16 sm:py-24 px-5 sm:px-6 overflow-hidden"
         style={{
-          background: `linear-gradient(180deg, hsla(230,18%,6%,1) 0%, hsla(235,22%,8%,1) 40%, hsla(240,20%,7%,1) 70%, hsla(230,18%,6%,1) 100%)`,
+          background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,14%,8%,1) 30%, hsla(38,8%,7%,1) 55%, hsla(230,16%,5%,1) 100%)",
         }}>
         {/* Circuit grid bg */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
@@ -4495,9 +4495,9 @@ const LandingPage = () => {
             <rect width="100%" height="100%" fill="url(#live-grid)" />
           </svg>
         </div>
-        {/* Ambient glows */}
-        <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.06]" style={{ background: "hsl(var(--primary))" }} />
-        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full blur-[180px] opacity-[0.04]" style={{ background: "hsl(150 60% 45%)" }} />
+        {/* Premium luxury ambient glows */}
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.08]" style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.4), transparent 70%)", filter: "blur(130px)" }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(110px)" }} />
 
         <div className="max-w-[1100px] mx-auto relative z-10">
           {/* Header */}
