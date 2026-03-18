@@ -2336,16 +2336,23 @@ const MobileIPhoneCarousel = ({ items, navigate }: {items: CarouselItem[];naviga
     if (trackRef.current) trackRef.current.style.transform = `translate3d(-${scrollPos.current}px, 0, 0)`;
   };
 
-  // Render a single iPhone card
+  // Render a single iPhone card with live iframe preview
   const IPhoneCard = ({ item, compact = false }: {item: CarouselItem;compact?: boolean;}) =>
   <div className={`flex-shrink-0 cursor-pointer ${compact ? "w-[118px]" : "w-[118px]"}`} onClick={() => navigate(item.nav)}>
       <div className="relative w-full aspect-[9/18] rounded-[20px] border-[2px] overflow-hidden"
     style={{ borderColor: `${item.color}40`, boxShadow: `0 8px 24px hsla(0,0%,0%,0.4), 0 0 12px ${item.color}10` }}>
         <div className="absolute top-[4px] left-1/2 -translate-x-1/2 w-[36px] h-[10px] bg-black rounded-full z-20" />
         <div className="absolute inset-[2px] rounded-[18px] overflow-hidden bg-black">
-          <img src={item.image} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
+          <iframe
+            src={item.route}
+            title={item.name}
+            className="w-[375px] h-[812px] border-0 pointer-events-none"
+            style={{ transform: "scale(0.302)", transformOrigin: "top left", width: "375px", height: "812px" }}
+            loading="lazy"
+            tabIndex={-1}
+          />
         </div>
-        <div className="absolute bottom-0 left-0 right-0 z-20 p-1.5 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.95) 30%, transparent)" }}>
+        <div className="absolute bottom-0 left-0 right-0 z-20 p-1.5 pt-6" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92) 20%, transparent)" }}>
           <div className="flex items-center gap-1 mb-0.5">
             <span className="text-[5px] px-1 py-[1px] rounded-full font-bold tracking-wider uppercase" style={{ background: `${item.color}25`, color: item.color, border: `1px solid ${item.color}35` }}>★ Live</span>
           </div>
