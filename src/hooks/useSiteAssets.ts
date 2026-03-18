@@ -12,18 +12,33 @@ export interface SiteAsset {
   updated_at: string;
 }
 
-// Vite glob for bundled assets
-const assetModules = import.meta.glob<{ default: string }>('/src/assets/**/*', { eager: true });
+// Lazy Vite glob: evita il preload di TUTTI gli asset al bootstrap
+const assetModules = import.meta.glob<{ default: string }>("/src/assets/**/*");
+const assetUrlCache = new Map<string, string>();
 
-function resolveAssetUrl(asset: SiteAsset): string {
-  // Custom URL takes priority
-  if (asset.url) return asset.url;
-  // Fallback to bundled
-  if (asset.default_file) {
-    const key = `/src/assets/${asset.default_file}`;
-    return assetModules[key]?.default || '';
+async function resolveBundledAsset(defaultFile: string | null): Promise<string> {
+  if (!defaultFile) return "";
+
+  const key = `/src/assets/${defaultFile}`;
+  const cached = assetUrlCache.get(key);
+  if (cached) return cached;
+
+  const loader = assetModules[key];
+  if (!loader) return "";
+
+  try {
+    const mod = await loader();
+    const resolved = mod?.default || "";
+    if (resolved) assetUrlCache.set(key, resolved);
+    return resolved;
+  } catch {
+    return "";
   }
-  return '';
+}
+
+async function resolveAssetUrl(asset: SiteAsset): Promise<string> {
+  if (asset.url) return asset.url;
+  return resolveBundledAsset(asset.default_file);
 }
 
 export function useSiteAssets(section?: string) {
@@ -34,7 +49,9 @@ export function useSiteAssets(section?: string) {
       if (section) q = q.eq("section", section);
       const { data, error } = await q;
       if (error) throw error;
-      return (data as SiteAsset[]).map(a => ({ ...a, resolvedUrl: resolveAssetUrl(a) }));
+
+      const rows = (data as SiteAsset[]) || [];
+      return Promise.all(rows.map(async (a) => ({ ...a, resolvedUrl: await resolveAssetUrl(a) })));
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -55,12 +72,15 @@ export function useSiteAssetByKey(slotKey: string, fallbackImport?: string) {
     staleTime: 5 * 60 * 1000,
   });
 
+  const { data: bundledUrl } = useQuery({
+    queryKey: ["site-assets", "bundled", data?.default_file],
+    queryFn: async () => resolveBundledAsset(data?.default_file ?? null),
+    enabled: !!data?.default_file && !data?.url,
+    staleTime: 5 * 60 * 1000,
+  });
+
   if (data?.url) return data.url;
-  if (data?.default_file) {
-    const key = `/src/assets/${data.default_file}`;
-    return assetModules[key]?.default || fallbackImport || '';
-  }
-  return fallbackImport || '';
+  return bundledUrl || fallbackImport || "";
 }
 
 export function useUpdateSiteAsset() {
