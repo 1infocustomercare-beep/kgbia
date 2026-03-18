@@ -4,19 +4,20 @@ import { useEffect, useRef, useState } from "react";
  * Empire Background v16 — Sector Circuit Network
  * Nodes represent industry sectors communicating via data flows.
  * Topology morphs on scroll: grid → hub → clusters → mesh.
- * Uniform intensity across all layers. Mobile-optimized at 24fps.
+ * Uniform intensity across all layers. Mobile tuned for desktop-parity at 30fps.
  */
 
 const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 18 : 55;
-const MAX_DIST = IS_MOBILE ? 110 : 145;
-const FLOW_COUNT = IS_MOBILE ? 4 : 18;
-const PULSE_COUNT = IS_MOBILE ? 2 : 3;
-const HUB_COUNT = IS_MOBILE ? 4 : 7;
-const TARGET_FPS = IS_MOBILE ? 24 : 60;
+// Mobile parity profile: keep desktop-like topology/motion while staying performant
+const NODE_COUNT = IS_MOBILE ? 42 : 55;
+const MAX_DIST = IS_MOBILE ? 132 : 145;
+const FLOW_COUNT = IS_MOBILE ? 12 : 18;
+const PULSE_COUNT = 3;
+const HUB_COUNT = 7;
+const TARGET_FPS = IS_MOBILE ? 30 : 60;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 type Pt = { x: number; y: number };
@@ -120,7 +121,7 @@ const SECTIONS = topologies.length;
 
 // Uniform palette — consistent intensity per section
 const BASE_ALPHA = 0.04;
-const MOBILE_BOOST = IS_MOBILE ? 3.5 : 1; // Multiplier for all alpha values on mobile
+const MOBILE_BOOST = IS_MOBILE ? 2.15 : 1; // Mobile boost tuned for desktop-like visibility without overglow
 const PALETTES = [
   { node: [215, 15, 40], line: [215, 12, 32], glow: [215, 20, 45], accent: [38, 30, 45] },
   { node: [265, 18, 40], line: [265, 14, 32], glow: [265, 22, 45], accent: [38, 28, 43] },
@@ -144,7 +145,7 @@ const EmpireDNABackground = () => {
   const pulsesRef = useRef<PulseRing[]>([]);
   const ptrRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
-  useEffect(() => { const t = setTimeout(() => setReady(true), IS_MOBILE ? 800 : 200); return () => clearTimeout(t); }, []);
+  useEffect(() => { const t = setTimeout(() => setReady(true), IS_MOBILE ? 280 : 200); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
     const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
@@ -218,11 +219,12 @@ const EmpireDNABackground = () => {
 
     const animate = (now: number) => {
       animRef.current = requestAnimationFrame(animate);
-      if (now - lastFrameTime < FRAME_INTERVAL) return;
+      const elapsed = now - lastFrameTime;
+      if (elapsed < FRAME_INTERVAL) return;
       lastFrameTime = now;
       if (!w || !h) return;
 
-      timeRef.current += 0.016;
+      timeRef.current += Math.min(elapsed / 1000, 0.05);
       const time = timeRef.current;
       ctx.clearRect(0, 0, w, h);
 
@@ -266,15 +268,15 @@ const EmpireDNABackground = () => {
       const routeMode = sIdx;
 
       // ═══ LAYER 0: Dot Matrix ═══
-      if (!IS_MOBILE) {
-        const gridSp = 55;
+      {
+        const gridSp = IS_MOBILE ? 72 : 55;
         const gridPulse = 0.5 + Math.sin(time * 0.25) * 0.5;
-        ctx.fillStyle = hsla(pLine, 0.012 + gridPulse * 0.006);
+        ctx.fillStyle = hsla(pLine, (IS_MOBILE ? 0.016 : 0.012) + gridPulse * (IS_MOBILE ? 0.007 : 0.006));
         for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
           for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
             const lp = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.2) * 0.5 + 0.5;
-            const s = 0.3 + lp * 0.3;
-            ctx.globalAlpha = 0.2 + lp * 0.2;
+            const s = (IS_MOBILE ? 0.45 : 0.3) + lp * (IS_MOBILE ? 0.45 : 0.3);
+            ctx.globalAlpha = IS_MOBILE ? 0.32 + lp * 0.24 : 0.2 + lp * 0.2;
             ctx.fillRect(gx - s / 2, gy - s / 2, s, s);
           }
         }
@@ -285,20 +287,22 @@ const EmpireDNABackground = () => {
       const hubCount = Math.min(HUB_COUNT, SECTOR_HUBS.length);
       const hubBlend = 0.3 + t3 * 0.4; // More visible in hub topologies
       const isHubTopo = shA === 1 || shA === 4 || shB === 1 || shB === 4;
-      if (!IS_MOBILE && isHubTopo) {
-        ctx.font = "600 7px system-ui, sans-serif";
+      if (isHubTopo) {
         ctx.textAlign = "center";
         for (let hi = 0; hi < hubCount; hi++) {
           const hub = SECTOR_HUBS[hi];
           const hx = w * hub.cx, hy = h * hub.cy;
           // Subtle ring
-          ctx.strokeStyle = hsla(pAccent, 0.04 * hubBlend);
-          ctx.lineWidth = 0.5;
-          const ringR = 25 + Math.sin(time * 0.3 + hi) * 5;
+          ctx.strokeStyle = hsla(pAccent, 0.04 * hubBlend * (IS_MOBILE ? 1.35 : 1));
+          ctx.lineWidth = IS_MOBILE ? 0.6 : 0.5;
+          const ringR = (IS_MOBILE ? 22 : 25) + Math.sin(time * 0.3 + hi) * (IS_MOBILE ? 4 : 5);
           ctx.beginPath(); ctx.arc(hx, hy, ringR, 0, Math.PI * 2); ctx.stroke();
-          // Label
-          ctx.fillStyle = hsla(pAccent, 0.06 * hubBlend);
-          ctx.fillText(hub.label.toUpperCase(), hx, hy + ringR + 10);
+          // Labels only on desktop to avoid clutter
+          if (!IS_MOBILE) {
+            ctx.font = "600 7px system-ui, sans-serif";
+            ctx.fillStyle = hsla(pAccent, 0.06 * hubBlend);
+            ctx.fillText(hub.label.toUpperCase(), hx, hy + ringR + 10);
+          }
         }
       }
 
@@ -404,13 +408,15 @@ const EmpireDNABackground = () => {
         const pt = walkPolyline(route, fl.progress);
         const fadeA = Math.sin(fl.progress * Math.PI);
 
-        // Trail (desktop)
-        if (!IS_MOBILE) {
-          for (let ti = 1; ti <= 3; ti++) {
+        // Trail
+        {
+          const trailSteps = IS_MOBILE ? 2 : 3;
+          for (let ti = 1; ti <= trailSteps; ti++) {
             const trailT = Math.max(0, fl.progress - ti * 0.04);
             const tp = walkPolyline(route, trailT);
-            ctx.fillStyle = hsla(pGlow, fadeA * (1 - ti * 0.3) * 0.12);
-            ctx.fillRect(tp.x - 0.8, tp.y - 0.8, 1.6, 1.6);
+            const trailSize = IS_MOBILE ? 1 : 0.8;
+            ctx.fillStyle = hsla(pGlow, fadeA * (1 - ti * 0.3) * (IS_MOBILE ? 0.09 : 0.12));
+            ctx.fillRect(tp.x - trailSize, tp.y - trailSize, trailSize * 2, trailSize * 2);
           }
         }
 
@@ -478,7 +484,7 @@ const EmpireDNABackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: IS_MOBILE ? 0.14 : 0.045, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: IS_MOBILE ? 0.12 : 0.045, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };
