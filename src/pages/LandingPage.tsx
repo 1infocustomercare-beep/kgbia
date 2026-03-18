@@ -5065,7 +5065,7 @@ const LandingPage = () => {
          ═══════════════════════════════════════════ */}
       <section className="relative py-16 sm:py-28 px-5 sm:px-6 overflow-hidden"
         style={{
-          background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,18%,6%,1) 25%, hsla(230,20%,4%,1) 60%, hsla(230,16%,5%,1) 100%)",
+          background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,7%,1) 15%, hsla(230,20%,5%,1) 40%, hsla(265,18%,6%,1) 65%, hsla(230,16%,4%,1) 100%)",
         }}>
         {/* AI Neural Network Schema Background */}
         <div className="absolute inset-0 pointer-events-none z-0">
