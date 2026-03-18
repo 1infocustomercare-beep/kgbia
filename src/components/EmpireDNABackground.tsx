@@ -95,15 +95,15 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
 ];
 const SECTIONS = topologies.length;
 
-// Vivid tech palettes per section (more saturated than before)
+// Professional palette — cool steel-blue base with warm champagne-gold accents
 const PALETTES = [
-  { node: [215, 18, 50], line: [215, 15, 44], glow: [215, 25, 58], accent: [180, 30, 52] },
-  { node: [200, 20, 48], line: [200, 14, 42], glow: [200, 28, 56], accent: [160, 25, 50] },
-  { node: [225, 18, 50], line: [225, 12, 44], glow: [225, 25, 58], accent: [265, 22, 55] },
-  { node: [190, 20, 48], line: [190, 14, 42], glow: [190, 28, 56], accent: [38, 30, 50] },
-  { node: [210, 18, 50], line: [210, 12, 44], glow: [210, 25, 58], accent: [180, 28, 52] },
-  { node: [220, 20, 50], line: [220, 14, 44], glow: [220, 28, 58], accent: [265, 25, 55] },
-  { node: [205, 18, 50], line: [205, 12, 44], glow: [205, 25, 58], accent: [38, 28, 52] },
+  { node: [215, 25, 42], line: [215, 20, 36], glow: [215, 35, 50], accent: [38, 45, 52] },
+  { node: [220, 22, 40], line: [220, 18, 34], glow: [220, 32, 48], accent: [38, 40, 50] },
+  { node: [210, 28, 44], line: [210, 22, 38], glow: [210, 38, 52], accent: [42, 42, 54] },
+  { node: [218, 24, 38], line: [218, 18, 32], glow: [218, 34, 46], accent: [35, 48, 50] },
+  { node: [222, 26, 42], line: [222, 20, 36], glow: [222, 36, 50], accent: [40, 44, 52] },
+  { node: [212, 22, 40], line: [212, 16, 34], glow: [212, 32, 48], accent: [38, 46, 54] },
+  { node: [216, 24, 42], line: [216, 18, 36], glow: [216, 34, 50], accent: [36, 42, 52] },
 ];
 
 interface FlowParticle { fromIdx: number; toIdx: number; progress: number; speed: number; life: number; }
