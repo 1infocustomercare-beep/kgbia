@@ -443,6 +443,11 @@ export default function IndustryDemoPage() {
         <div style={isPartnerBranded ? { paddingTop: "52px" } : {}}>
           <PremiumTemplate company={demoCompany} afterHero={phoneShowcaseSection} />
         </div>
+        {/* Full Features + Agents + Admin CTA sections */}
+        <DemoFeaturesSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
+        <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="section" />
+        <DemoAgentsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
+        <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="sticky" />
         <Suspense fallback={null}>
           <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={accentColor} />
         </Suspense>
