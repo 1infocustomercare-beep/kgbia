@@ -458,20 +458,16 @@ function App() {
     return () => window.clearTimeout(timer);
   }, [introCompleted]);
 
-  // Only show Empire DNA background on private/internal routes, not on public sites
-  const isPublicSitePath = typeof window !== "undefined" && 
-    /^\/(b|r|demo|ncc-demo|home|marketing|privacy|cookie-policy)\b/.test(window.location.pathname);
-
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen relative">
-        {!isPublicSitePath && <EmpireDNABackground />}
         <TooltipProvider>
           <AuthProvider>
             <CartProvider>
               <Toaster />
               <Sonner />
               <BrowserRouter>
+                <ConditionalDNABackground />
                 <RouteErrorBoundary>
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
