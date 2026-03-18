@@ -1035,14 +1035,11 @@ const EmpireVoiceAgent: React.FC = () => {
     window.addEventListener("click", unlockAndRetry, options);
     window.addEventListener("keydown", unlockAndRetry);
 
-    // Scroll listener only on non-touch devices to reduce mobile main-thread load
-    if (!isTouchDeviceRef.current) {
-      window.addEventListener("scroll", unlockAndRetry, options);
-    }
+    window.addEventListener("scroll", unlockAndRetry, options);
 
     const maybeActivated =
       (navigator as Navigator & { userActivation?: { hasBeenActive?: boolean } }).userActivation?.hasBeenActive;
-    if (maybeActivated && !isTouchDeviceRef.current) {
+    if (maybeActivated) {
       window.setTimeout(unlockAndRetry, 0);
       window.setTimeout(unlockAndRetry, 600);
       window.setTimeout(unlockAndRetry, 1800);
