@@ -538,8 +538,8 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
 };
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
-/** Shared viewport config — triggers animations 200px before element enters screen on mobile */
-const vpOnce = { once: true, margin: "0px 0px -150px 0px" as any } as const;
+/** Shared viewport config — pre-triggers section animations to avoid late pop-in on mobile */
+const vpOnce = { once: true, margin: "0px 0px 120px 0px" as any } as const;
 const fadeUp = { hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: smoothEase } } };
 const fadeScale = { hidden: { opacity: 0, y: 10, scale: 0.98 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: smoothEase } } };
 const staggerContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } } };
