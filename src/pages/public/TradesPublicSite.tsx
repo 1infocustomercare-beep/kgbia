@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import DemoAdminAccessButton from "@/components/public/DemoAdminAccessButton";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
@@ -462,6 +463,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           <p className="text-[10px] text-white/10">Powered by Empire Platform</p>
         </div>
       </footer>
+      <DemoAdminAccessButton sector="trades" accentColor="#2563eb" />
     </div>
   );
 }

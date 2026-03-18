@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import DemoAdminAccessButton from "@/components/public/DemoAdminAccessButton";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
@@ -389,6 +390,7 @@ export default function BakeryPublicSite({ company, afterHero }: Props) {
           <MessageCircle className="w-7 h-7 text-white" />
         </motion.a>
       )}
+      <DemoAdminAccessButton sector="bakery" accentColor="#A0522D" />
     </div>
   );
 }
