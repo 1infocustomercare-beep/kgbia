@@ -1,6 +1,9 @@
 import { useState, useMemo, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
 import BackButton from "@/components/BackButton";
 const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
+import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
+import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
+import DemoAdminCTA from "@/components/demo/DemoAdminCTA";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -440,6 +443,11 @@ export default function IndustryDemoPage() {
         <div style={isPartnerBranded ? { paddingTop: "52px" } : {}}>
           <PremiumTemplate company={demoCompany} afterHero={phoneShowcaseSection} />
         </div>
+        {/* Full Features + Agents + Admin CTA sections */}
+        <DemoFeaturesSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
+        <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="section" />
+        <DemoAgentsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
+        <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="sticky" />
         <Suspense fallback={null}>
           <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={accentColor} />
         </Suspense>
@@ -549,10 +557,7 @@ export default function IndustryDemoPage() {
                   style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)` }}>
                   {demoData.ctaLabel} <ChevronRight className="w-5 h-5 ml-1" />
                 </Button>
-                <Button onClick={() => scrollTo("booking")} size="lg" variant="outline"
-                  className="h-13 px-8 rounded-xl border-white/15 text-white hover:bg-white/5 text-base">
-                  {demoData.bookingLabel}
-                </Button>
+                <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="hero" />
               </div>
             </motion.div>
 
@@ -930,6 +935,11 @@ export default function IndustryDemoPage() {
 
       {/* Phone showcase moved to after hero */}
 
+      {/* ═══════ FULL FEATURES & AGENTS ═══════ */}
+      <DemoFeaturesSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
+      <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="section" />
+      <DemoAgentsSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
+
       {/* ═══════ FOOTER ═══════ */}
       <footer className="border-t border-white/5 py-8 px-4 text-center">
         <div className="max-w-5xl mx-auto">
@@ -941,6 +951,9 @@ export default function IndustryDemoPage() {
           </p>
         </div>
       </footer>
+
+      {/* Sticky mobile admin CTA */}
+      <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="sticky" />
 
       {/* ═══════ FLOATING BACK BUTTON (mobile) ═══════ */}
       <div className="fixed bottom-6 left-4 z-50 sm:hidden">

@@ -870,24 +870,39 @@ const EmpireVoiceAgent: React.FC = () => {
     setAutoNarrating(false);
   }, []);
 
-  // ── Pause / Resume ──
+  // ── Pause / Resume (BUG 2 FIX: MUTE stops credit consumption) ──
   const togglePause = useCallback(() => {
-    if (audioRef.current) {
-      if (isPaused) {
+    if (isPaused) {
+      // Resume
+      abortRef.current = false;
+      if (audioRef.current) {
         audioRef.current.play().catch(() => undefined);
-        setIsPaused(false);
-      } else {
-        audioRef.current.pause();
-        setIsPaused(true);
-      }
-    } else if (window.speechSynthesis) {
-      if (isPaused) {
+      } else if (window.speechSynthesis) {
         window.speechSynthesis.resume();
-        setIsPaused(false);
-      } else {
-        window.speechSynthesis.pause();
-        setIsPaused(true);
       }
+      setIsPaused(false);
+    } else {
+      // PAUSE: Actually STOP generation & streaming, not just mute output
+      abortRef.current = true; // This aborts any in-flight TTS fetch or speech
+      
+      // Stop premium TTS audio playback
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+      }
+      
+      // Stop browser speech synthesis completely (not just pause)
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      
+      // Clear narration queue to stop credit consumption
+      sectionQueueRef.current = [];
+      queueProcessingRef.current = false;
+      
+      setIsPaused(true);
+      setIsSpeaking(false);
     }
   }, [isPaused]);
 
@@ -1386,9 +1401,10 @@ const EmpireVoiceAgent: React.FC = () => {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-foreground/[0.06]">
               <div className="flex items-center gap-3">
-                <div className="relative">
+                <div className="relative" style={{ willChange: "transform" }}>
                   <motion.div
-                    className="absolute -inset-1 rounded-full bg-primary/20 blur-sm"
+                    className="absolute -inset-1 rounded-full bg-primary/20"
+                    style={{ willChange: "opacity, transform", filter: isTouchDevice ? "none" : "blur(4px)" }}
                     animate={isSpeaking && !isPaused ? { opacity: [0.25, 0.45, 0.25], scale: [1, 1.08, 1] } : { opacity: 0.2, scale: 1 }}
                     transition={{ duration: 1.4, repeat: isSpeaking && !isPaused ? Infinity : 0, ease: "easeInOut" }}
                   />
@@ -1408,7 +1424,8 @@ const EmpireVoiceAgent: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-foreground">Arianna</h3>
-                  <p className="text-[0.55rem] text-foreground/40 tracking-wider uppercase">
+                  <div className="flex items-center gap-1">
+                    <p className="text-[0.55rem] text-foreground/40 tracking-wider uppercase">
                     {voiceMode === "elevenlabs" && conversation.status === "connected"
                       ? conversation.isSpeaking ? "🔊 Conversazione attiva" : "🎙️ Ti ascolta..."
                       : isPaused ? "⏸ In pausa"
@@ -1417,7 +1434,12 @@ const EmpireVoiceAgent: React.FC = () => {
                       : isLoading ? "💭 Sta pensando..."
                       : autoNarrating ? `📍 ${currentSection}`
                       : "Empire AI Agent"}
-                  </p>
+                    </p>
+                    {/* BUG 3: HD badge when premium voice active */}
+                    {!useBrowserFallbackRef.current && !isBrowserOnlyTTS() && isSpeaking && (
+                      <span className="text-[0.45rem] px-1 py-0.5 rounded bg-primary/20 text-primary font-bold">HD</span>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -1520,17 +1542,18 @@ const EmpireVoiceAgent: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Voice Wave Visualizer */}
+            {/* Voice Wave Visualizer (BUG 1 FIX: reduced bars on mobile for perf) */}
             {(isSpeaking && !isPaused) || (voiceMode === "elevenlabs" && conversation.status === "connected") ? (
-              <div className="flex items-center justify-center gap-[3px] py-2 px-4">
-                {Array.from({ length: 20 }).map((_, i) => {
+              <div className="flex items-center justify-center gap-[3px] py-2 px-4 will-change-transform">
+                {Array.from({ length: isTouchDevice ? 12 : 20 }).map((_, i) => {
                   const peak = 8 + ((i * 7) % 14);
-                  const speed = 0.6 + ((i % 4) * 0.12);
+                  const speed = isTouchDevice ? 0.8 + ((i % 3) * 0.15) : 0.6 + ((i % 4) * 0.12);
                   const isActive = voiceMode === "elevenlabs" ? conversation.isSpeaking : true;
                   return (
                     <motion.div
                       key={i}
                       className="w-[3px] rounded-full bg-primary/50"
+                      style={{ willChange: "height" }}
                       animate={isActive ? { height: [4, peak, 4] } : { height: 4 }}
                       transition={{ duration: speed, repeat: isActive ? Infinity : 0, delay: i * 0.03, ease: "easeInOut" }}
                     />
