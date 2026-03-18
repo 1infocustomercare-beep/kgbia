@@ -114,7 +114,7 @@ const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !IS_MOBILE_LP || !style.background || typeof style.background !== "string") return style;
   // 1. Replace opacity 1→0.55 so the DNA circuit shows through strongly in empty areas
-  let tweaked = (style.background as string).replace(/,\s*1\)/g, ", 0.55)");
+  let tweaked = (style.background as string).replace(/,\s*1\)/g, ", 0.42)");
   // 2. Boost lightness by ~3% so color tints are visible (not flat black)
   tweaked = tweaked.replace(/hsla\((\d+),\s*(\d+)%,\s*(\d+)%/g, (_, h, s, l) => {
     const newL = Math.min(parseInt(l) + 3, 18);
