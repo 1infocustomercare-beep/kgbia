@@ -231,16 +231,23 @@ const AlwaysOnNetwork = ({
             <circle cx={line.x2} cy={line.y2} r={junctionR}
               fill={lineColor} opacity={junctionOpacity} />
 
-            {/* Flowing particle — always animating */}
+            {/* Flowing particle — always animating, with tech glow */}
             <circle r={particleR} fill={particleColor}
-              filter={isActive ? "url(#line-glow)" : "url(#line-glow-soft)"}>
+              filter="url(#particle-glow)">
               <animateMotion dur={particleDur} repeatCount="indefinite" path={pathD} begin={stagger} />
             </circle>
 
-            {/* Reverse particle — always present, faster when active */}
-            <circle r={isActive ? 2.5 : 1.5} fill={particleColor} opacity={isActive ? 0.55 : 0.3}>
-              <animateMotion dur={isActive ? "2.2s" : "7s"} repeatCount="indefinite"
+            {/* Reverse particle — bidirectional data flow */}
+            <circle r={isActive ? 3 : 1.8} fill={particleColor} opacity={isActive ? 0.6 : 0.4}>
+              <animateMotion dur={isActive ? "2s" : "6s"} repeatCount="indefinite"
                 path={reversePath} begin={`${(li * 0.9 + 1.2) % 4}s`} />
+            </circle>
+
+            {/* Third micro-particle — gives tech density */}
+            <circle r={1} fill="hsla(200,80%,80%,0.5)" opacity={0.35}>
+              <animateMotion dur={isActive ? "3s" : "8s"} repeatCount="indefinite"
+                path={pathD} begin={`${(li * 1.3 + 0.7) % 5}s`} />
+            </circle>
             </circle>
 
             {/* Extra particles on active — intense burst */}
