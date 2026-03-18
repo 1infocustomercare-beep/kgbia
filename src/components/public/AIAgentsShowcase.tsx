@@ -878,7 +878,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ NETWORK LABEL ══════ */}
         <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}
-          className="mb-5 flex items-center gap-2 px-1">
+          className="mb-3 flex items-center gap-2 px-1">
           <div className="relative">
             <div className="w-6 h-6 rounded bg-primary/15 flex items-center justify-center">
               <Brain className="w-3.5 h-3.5 text-primary" />
