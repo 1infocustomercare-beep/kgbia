@@ -2423,6 +2423,9 @@ const LandingPage = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [ctaVisible, setCtaVisible] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 640
+  );
   
   const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
   const mockupCarouselRef = useRef<HTMLDivElement>(null);
