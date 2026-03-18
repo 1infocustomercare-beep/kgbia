@@ -3334,7 +3334,7 @@ const LandingPage = () => {
                 </div>
               </div>
 
-              <div className="relative">
+              <div className="relative rounded-2xl p-3 sm:p-4" style={{ background: "hsla(260,18%,8%,1)" }}>
                 {/* AI Network Schema — connecting lines between cards */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" preserveAspectRatio="none">
                   <defs>
@@ -3358,35 +3358,41 @@ const LandingPage = () => {
                       <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                     </filter>
                   </defs>
-                  {/* Horizontal connectors — row 1 */}
-                  <line x1="25%" y1="33%" x2="75%" y2="33%" stroke="url(#pain-line-grad)" strokeWidth="1" filter="url(#pain-glow)" />
-                  {/* Horizontal connectors — row 2 */}
-                  <line x1="25%" y1="66%" x2="75%" y2="66%" stroke="url(#pain-line-grad)" strokeWidth="1" filter="url(#pain-glow)" />
-                  {/* Vertical connectors — col 1 */}
-                  <line x1="25%" y1="20%" x2="25%" y2="80%" stroke="url(#pain-line-grad-v)" strokeWidth="1" filter="url(#pain-glow)" />
-                  {/* Vertical connectors — col 2 */}
-                  <line x1="75%" y1="20%" x2="75%" y2="80%" stroke="url(#pain-line-grad-v)" strokeWidth="1" filter="url(#pain-glow)" />
+                  {/* Horizontal connectors */}
+                  <line x1="16%" y1="33%" x2="84%" y2="33%" stroke="url(#pain-line-grad)" strokeWidth="1" filter="url(#pain-glow)" />
+                  <line x1="16%" y1="66%" x2="84%" y2="66%" stroke="url(#pain-line-grad)" strokeWidth="1" filter="url(#pain-glow)" />
+                  {/* Vertical connectors */}
+                  <line x1="33%" y1="12%" x2="33%" y2="88%" stroke="url(#pain-line-grad-v)" strokeWidth="1" filter="url(#pain-glow)" />
+                  <line x1="66%" y1="12%" x2="66%" y2="88%" stroke="url(#pain-line-grad-v)" strokeWidth="1" filter="url(#pain-glow)" />
                   {/* Diagonal cross connectors */}
-                  <line x1="25%" y1="33%" x2="75%" y2="66%" stroke="url(#pain-line-diag)" strokeWidth="0.8" strokeDasharray="4 6" filter="url(#pain-glow)" />
-                  <line x1="75%" y1="33%" x2="25%" y2="66%" stroke="url(#pain-line-diag)" strokeWidth="0.8" strokeDasharray="4 6" filter="url(#pain-glow)" />
-                  {/* Outer frame connectors */}
-                  <line x1="25%" y1="16%" x2="75%" y2="16%" stroke="url(#pain-line-grad)" strokeWidth="0.5" opacity="0.4" />
-                  <line x1="25%" y1="84%" x2="75%" y2="84%" stroke="url(#pain-line-grad)" strokeWidth="0.5" opacity="0.4" />
+                  <line x1="16%" y1="33%" x2="84%" y2="66%" stroke="url(#pain-line-diag)" strokeWidth="0.8" strokeDasharray="4 6" filter="url(#pain-glow)" />
+                  <line x1="84%" y1="33%" x2="16%" y2="66%" stroke="url(#pain-line-diag)" strokeWidth="0.8" strokeDasharray="4 6" filter="url(#pain-glow)" />
+                  {/* Outer frame */}
+                  <line x1="16%" y1="10%" x2="84%" y2="10%" stroke="url(#pain-line-grad)" strokeWidth="0.5" opacity="0.3" />
+                  <line x1="16%" y1="90%" x2="84%" y2="90%" stroke="url(#pain-line-grad)" strokeWidth="0.5" opacity="0.3" />
+                  <line x1="16%" y1="10%" x2="16%" y2="90%" stroke="url(#pain-line-grad-v)" strokeWidth="0.5" opacity="0.3" />
+                  <line x1="84%" y1="10%" x2="84%" y2="90%" stroke="url(#pain-line-grad-v)" strokeWidth="0.5" opacity="0.3" />
                   {/* Node dots at intersections */}
-                  {["25%","75%"].map(x => ["33%","66%"].map(y => (
-                    <circle key={`${x}-${y}`} cx={x} cy={y} r="2.5" fill="hsla(265,60%,55%,0.25)" filter="url(#pain-glow)">
-                      <animate attributeName="r" values="2;3.5;2" dur="3s" repeatCount="indefinite" />
-                      <animate attributeName="opacity" values="0.4;0.8;0.4" dur="3s" repeatCount="indefinite" />
+                  {["33%","66%"].map(x => ["33%","66%"].map(y => (
+                    <circle key={`${x}-${y}`} cx={x} cy={y} r="3" fill="hsla(265,60%,55%,0.3)" filter="url(#pain-glow)">
+                      <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3s" repeatCount="indefinite" />
                     </circle>
                   )))}
-                  {/* Animated data pulse along horizontal lines */}
+                  {/* Corner junction dots */}
+                  {["16%","84%"].map(x => ["33%","66%"].map(y => (
+                    <circle key={`c-${x}-${y}`} cx={x} cy={y} r="2" fill="hsla(0,50%,55%,0.25)" filter="url(#pain-glow)">
+                      <animate attributeName="opacity" values="0.3;0.7;0.3" dur="4s" repeatCount="indefinite" />
+                    </circle>
+                  )))}
+                  {/* Data pulse */}
                   <circle r="2" fill="hsla(0,60%,55%,0.5)" filter="url(#pain-glow)">
                     <animateMotion dur="4s" repeatCount="indefinite" path="M 80,0 L 280,0" />
                     <animate attributeName="opacity" values="0;0.8;0" dur="4s" repeatCount="indefinite" />
                   </circle>
                 </svg>
 
-              <div className="relative z-[1] grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
+              <div className="relative z-[1] grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 sm:gap-3">
                 {painData.map((pain, i) => (
                   <motion.div
                     key={i}
@@ -3397,24 +3403,17 @@ const LandingPage = () => {
                     transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
                     whileHover={{ y: -6, scale: 1.04 }}
                   >
-                    <div className="relative rounded-xl border overflow-hidden h-full" style={{
+                    <div className="relative rounded-lg border overflow-hidden h-full" style={{
                       background: "linear-gradient(160deg, hsla(260,18%,13%,0.95), hsla(260,16%,9%,0.92))",
-                      borderColor: "hsla(265,50%,55%,0.1)",
+                      borderColor: "hsla(265,50%,55%,0.12)",
                       boxShadow: "0 4px 24px hsla(260,40%,5%,0.5), inset 0 1px 0 hsla(265,60%,65%,0.06)",
                     }}>
                       {/* Top accent line */}
                       <div className="h-[2px] w-full" style={{ background: `linear-gradient(90deg, transparent, ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,55%,0.5)" : pain.color.includes("amber") || pain.color.includes("yellow") ? "hsla(38,70%,55%,0.5)" : "hsla(25,70%,55%,0.5)"}, transparent)` }} />
 
-                      {/* Scan line */}
-                      <motion.div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
-                        style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,70%,60%,0.04) 50%, transparent 60%)" }}
-                        animate={{ y: ["-100%", "200%"] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                      />
-
-                      <div className="p-3 sm:p-4 flex flex-col items-center text-center">
+                      <div className="p-2 sm:p-3 flex flex-col items-center text-center">
                         {/* Stat badge */}
-                        <motion.div className="mb-2.5 px-2 py-0.5 rounded-full text-[0.5rem] font-heading font-bold tracking-widest border"
+                        <motion.div className="mb-1.5 px-1.5 py-px rounded-full text-[0.45rem] sm:text-[0.5rem] font-heading font-bold tracking-widest border"
                           style={{
                             color: "hsla(0,60%,60%,0.7)",
                             borderColor: "hsla(0,50%,50%,0.15)",
@@ -3426,30 +3425,29 @@ const LandingPage = () => {
                           {pain.stat}
                         </motion.div>
 
-                        {/* Icon */}
-                         <motion.div
-                          className={`w-6 h-6 sm:w-7 sm:h-7 rounded-md bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-3 relative [&>svg]:w-3 [&>svg]:h-3 sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5`}
-                          style={{ boxShadow: `0 0 20px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.2)" : "hsla(38,70%,50%,0.2)"}` }}
+                        {/* Icon — compact for mobile */}
+                        <motion.div
+                          className={`w-5 h-5 sm:w-6 sm:h-6 rounded bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-2 relative [&>svg]:w-2.5 [&>svg]:h-2.5 sm:[&>svg]:w-3 sm:[&>svg]:h-3`}
+                          style={{ boxShadow: `0 0 12px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.2)" : "hsla(38,70%,50%,0.2)"}` }}
                         >
                           {pain.icon}
-                          {/* Corner HUD marks */}
-                          <div className="absolute -top-px -left-px w-1.5 h-1.5 border-t border-l border-white/20 rounded-tl-sm" />
-                          <div className="absolute -bottom-px -right-px w-1.5 h-1.5 border-b border-r border-white/20 rounded-br-sm" />
+                          <div className="absolute -top-px -left-px w-1 h-1 border-t border-l border-white/20 rounded-tl-sm" />
+                          <div className="absolute -bottom-px -right-px w-1 h-1 border-b border-r border-white/20 rounded-br-sm" />
                         </motion.div>
 
                         {/* Title */}
-                        <h3 className="font-heading text-[0.7rem] sm:text-xs font-semibold text-foreground mb-1.5 leading-tight">{pain.title}</h3>
+                        <h3 className="font-heading text-[0.6rem] sm:text-xs font-semibold text-foreground mb-1 leading-tight">{pain.title}</h3>
 
                         {/* Description */}
-                        <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/30 leading-[1.6]">{pain.desc}</p>
+                        <p className="text-[0.5rem] sm:text-[0.55rem] text-foreground/30 leading-[1.5]">{pain.desc}</p>
                       </div>
 
                       {/* Bottom circuit trace */}
                       <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, hsla(265,50%,55%,0.08), transparent)" }} />
                     </div>
 
-                    {/* Connector dot to horizontal line (desktop) */}
-                    <motion.div className="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-[5px] h-[5px] rounded-full hidden lg:block"
+                    {/* Connector dot */}
+                    <motion.div className="absolute -bottom-[6px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full hidden lg:block"
                       style={{ background: "hsla(265,70%,60%,0.4)", boxShadow: "0 0 6px hsla(265,70%,60%,0.3)" }}
                       animate={{ boxShadow: ["0 0 4px hsla(265,70%,60%,0.2)", "0 0 10px hsla(265,70%,60%,0.5)", "0 0 4px hsla(265,70%,60%,0.2)"] }}
                       transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
