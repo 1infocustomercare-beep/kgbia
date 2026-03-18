@@ -210,12 +210,19 @@ const EmpireDNABackground = () => {
       return { x: lerp(pts[seg].x, pts[seg + 1].x, lt), y: lerp(pts[seg].y, pts[seg + 1].y, lt) };
     };
 
-    const animate = () => {
-      if (!w || !h) { animRef.current = requestAnimationFrame(animate); return; }
+    let lastFrameTime = 0;
+
+    const animate = (now: number) => {
+      animRef.current = requestAnimationFrame(animate);
+
+      // Throttle FPS on mobile
+      if (now - lastFrameTime < FRAME_INTERVAL) return;
+      lastFrameTime = now;
+
+      if (!w || !h) return;
       timeRef.current += 0.016;
       const time = timeRef.current;
       ctx.clearRect(0, 0, w, h);
-
       scrollRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
       const pageH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - h;
       const scrollN = pageH > 0 ? Math.max(0, Math.min(scrollRef.current / pageH, 1)) : 0;
