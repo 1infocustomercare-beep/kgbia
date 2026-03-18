@@ -143,7 +143,74 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
 );
 SectionLabel.displayName = "SectionLabel";
 
-/* ═══ Neural Cells Background — flowing DNA data network + Tech Circuit Grid ═══ */
+/* ═══ LIVE FEED SIMULATOR — auto-cycling agent actions ═══ */
+const LIVE_ACTIONS = [
+  { agent: "GhostManager™", action: "Ha processato 12 ordini simultanei", icon: <Bot className="w-3.5 h-3.5" />, color: "hsla(265,70%,60%,1)", time: "2s fa" },
+  { agent: "Concierge AI", action: "Ha risposto a cliente in tedesco", icon: <Globe className="w-3.5 h-3.5" />, color: "hsla(200,70%,55%,1)", time: "5s fa" },
+  { agent: "Review Shield™", action: "Ha intercettato recensione negativa", icon: <Shield className="w-3.5 h-3.5" />, color: "hsla(150,70%,50%,1)", time: "8s fa" },
+  { agent: "Predictive Engine", action: "Previsione domanda: +35% weekend", icon: <BarChart3 className="w-3.5 h-3.5" />, color: "hsla(38,80%,55%,1)", time: "12s fa" },
+  { agent: "AutoPilot Marketing", action: "Campagna WhatsApp inviata a 847 clienti", icon: <Rocket className="w-3.5 h-3.5" />, color: "hsla(25,90%,55%,1)", time: "15s fa" },
+  { agent: "Invoice AI", action: "Fattura elettronica #2847 generata", icon: <CreditCard className="w-3.5 h-3.5" />, color: "hsla(210,60%,55%,1)", time: "18s fa" },
+  { agent: "Smart Notifier", action: "Push inviata: offerta pranzo 12-14", icon: <Bell className="w-3.5 h-3.5" />, color: "hsla(45,90%,55%,1)", time: "22s fa" },
+  { agent: "Loyalty Angel", action: "Riattivato cliente inattivo da 30gg", icon: <Heart className="w-3.5 h-3.5" />, color: "hsla(340,70%,55%,1)", time: "25s fa" },
+  { agent: "Voice Assistant", action: "Prenotazione telefonica completata", icon: <Headphones className="w-3.5 h-3.5" />, color: "hsla(250,60%,55%,1)", time: "28s fa" },
+  { agent: "Social Creator", action: "Post Instagram generato e schedulato", icon: <Sparkles className="w-3.5 h-3.5" />, color: "hsla(280,60%,55%,1)", time: "31s fa" },
+  { agent: "Analytics Brain", action: "Report settimanale pronto", icon: <Brain className="w-3.5 h-3.5" />, color: "hsla(270,65%,55%,1)", time: "35s fa" },
+  { agent: "Data Guardian", action: "Audit GDPR completato — 100% OK", icon: <Lock className="w-3.5 h-3.5" />, color: "hsla(220,30%,50%,1)", time: "40s fa" },
+];
+
+const LiveFeedSimulator = () => {
+  const [offset, setOffset] = useState(0);
+  const VISIBLE = 6;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setOffset((o) => (o + 1) % LIVE_ACTIONS.length);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
+
+  const visible = useMemo(() => {
+    const items = [];
+    for (let i = 0; i < VISIBLE; i++) {
+      items.push(LIVE_ACTIONS[(offset + i) % LIVE_ACTIONS.length]);
+    }
+    return items;
+  }, [offset]);
+
+  return (
+    <AnimatePresence mode="popLayout">
+      {visible.map((item, i) => (
+        <motion.div
+          key={`${item.agent}-${(offset + i) % LIVE_ACTIONS.length}`}
+          initial={{ opacity: 0, y: -12, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 12, scale: 0.95 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="flex items-center gap-2.5 px-3 py-2 rounded-lg"
+          style={{
+            background: i === 0 ? `linear-gradient(135deg, ${item.color}0D, transparent)` : "transparent",
+            borderLeft: i === 0 ? `2px solid ${item.color}60` : "2px solid transparent",
+          }}
+        >
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: `${item.color}15`, color: item.color }}>
+            {item.icon}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[0.55rem] font-bold text-foreground/90 truncate">{item.agent}</span>
+              {i === 0 && <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />}
+            </div>
+            <p className="text-[0.5rem] text-foreground/40 truncate">{item.action}</p>
+          </div>
+          <span className="text-[0.4rem] text-foreground/25 whitespace-nowrap flex-shrink-0">{item.time}</span>
+        </motion.div>
+      ))}
+    </AnimatePresence>
+  );
+};
+
 const NeuralCellsBackground = () => {
   const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 640);
   const [born, setBorn] = useState(false);
