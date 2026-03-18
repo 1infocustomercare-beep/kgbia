@@ -896,7 +896,14 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
   };
 
   return (
-    <Section id="pricing">
+    <Section id="pricing" className="relative overflow-hidden" style={{
+      background: "linear-gradient(180deg, hsla(230,15%,6%,1) 0%, hsla(230,12%,8%,1) 30%, hsla(35,8%,8%,1) 60%, hsla(230,15%,6%,1) 100%)",
+    }}>
+      {/* Premium ambient glows */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(ellipse, hsla(38,50%,50%,0.5), transparent 70%)", filter: "blur(120px)" }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsla(265,60%,55%,0.4), transparent 70%)", filter: "blur(100px)" }} />
+      </div>
       <div className="text-center mb-8 sm:mb-12">
         <SectionLabel text="Piani & Prezzi" icon={<Gem className="w-3 h-3 text-accent" />} />
         <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
