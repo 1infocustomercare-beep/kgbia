@@ -4055,11 +4055,11 @@ const LandingPage = () => {
         </div>
 
         {/* Benefits — Mobile: Circuit-connected icon grid */}
-        <div className="sm:hidden relative">
+        <div className="sm:hidden relative py-3">
           {/* Opaque backdrop to block DNA background */}
-          
+          <div className="absolute inset-0 rounded-2xl z-0"
+            style={{ background: "linear-gradient(160deg, hsla(265,18%,10%,0.97), hsla(230,16%,8%,0.96))", border: "1px solid hsla(265,40%,45%,0.08)" }} />
 
-          
           {/* Circuit SVG connections */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet">
             <defs>
@@ -4107,20 +4107,20 @@ const LandingPage = () => {
             <motion.div key={i} className="flex flex-col items-center text-center"
             initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.3 }}>
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-1.5 relative"
+                <div className="w-6 h-6 rounded-md flex items-center justify-center mb-1.5 relative"
               style={{
-                background: "linear-gradient(135deg, hsla(265,30%,18%,0.9), hsla(230,20%,14%,0.9))",
-                border: "1px solid hsla(265,40%,45%,0.15)",
-                boxShadow: "0 0 12px hsla(265,50%,50%,0.08)"
+                background: "linear-gradient(135deg, hsla(265,30%,18%,0.92), hsla(230,20%,14%,0.92))",
+                border: "1px solid hsla(265,40%,45%,0.18)",
+                boxShadow: "0 0 10px hsla(265,50%,50%,0.1)"
               }}>
-                  <div className="text-primary/60 [&>svg]:w-3.5 [&>svg]:h-3.5">{item.icon}</div>
+                  <div className="text-primary/70 [&>svg]:w-3 [&>svg]:h-3">{item.icon}</div>
                   {/* Corner brackets on icon */}
-                  <div className="absolute -top-[2px] -left-[2px] w-[5px] h-[5px] border-t border-l border-primary/20" />
-                  <div className="absolute -top-[2px] -right-[2px] w-[5px] h-[5px] border-t border-r border-primary/20" />
-                  <div className="absolute -bottom-[2px] -left-[2px] w-[5px] h-[5px] border-b border-l border-primary/20" />
-                  <div className="absolute -bottom-[2px] -right-[2px] w-[5px] h-[5px] border-b border-r border-primary/20" />
+                  <div className="absolute -top-[2px] -left-[2px] w-[4px] h-[4px] border-t border-l border-primary/25" />
+                  <div className="absolute -top-[2px] -right-[2px] w-[4px] h-[4px] border-t border-r border-primary/25" />
+                  <div className="absolute -bottom-[2px] -left-[2px] w-[4px] h-[4px] border-b border-l border-primary/25" />
+                  <div className="absolute -bottom-[2px] -right-[2px] w-[4px] h-[4px] border-b border-r border-primary/25" />
                 </div>
-                <h4 className="text-[0.55rem] font-heading font-bold text-foreground/70 leading-tight">{item.title}</h4>
+                <h4 className="text-[0.5rem] font-heading font-bold text-foreground/70 leading-tight">{item.title}</h4>
               </motion.div>
             )}
           </div>
