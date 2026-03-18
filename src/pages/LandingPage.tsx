@@ -161,7 +161,7 @@ const LIVE_ACTIONS = [
 
 const LiveFeedSimulator = () => {
   const [offset, setOffset] = useState(0);
-  const VISIBLE = 6;
+  const VISIBLE = 4;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -183,28 +183,42 @@ const LiveFeedSimulator = () => {
       {visible.map((item, i) => (
         <motion.div
           key={`${item.agent}-${(offset + i) % LIVE_ACTIONS.length}`}
-          initial={{ opacity: 0, y: -12, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 12, scale: 0.95 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="flex items-center gap-2.5 px-3 py-2 rounded-lg"
+          initial={{ opacity: 0, x: -30, scale: 0.9 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          exit={{ opacity: 0, x: 30, scale: 0.9 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl overflow-hidden"
           style={{
-            background: i === 0 ? `linear-gradient(135deg, ${item.color}0D, transparent)` : "transparent",
-            borderLeft: i === 0 ? `2px solid ${item.color}60` : "2px solid transparent",
+            background: i === 0
+              ? `linear-gradient(135deg, ${item.color}18, ${item.color}06)`
+              : "hsla(230,20%,12%,0.4)",
+            border: i === 0 ? `1px solid ${item.color}30` : "1px solid hsla(215,30%,25%,0.08)",
           }}
         >
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-            style={{ background: `${item.color}15`, color: item.color }}>
+          {/* Scanning beam on active item */}
+          {i === 0 && (
+            <motion.div className="absolute inset-0 pointer-events-none"
+              style={{ background: `linear-gradient(90deg, transparent 30%, ${item.color}12 50%, transparent 70%)` }}
+              animate={{ x: ["-150%", "250%"] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
+          )}
+          <div className="relative w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: `${item.color}18`, color: item.color, border: `1px solid ${item.color}25` }}>
             {item.icon}
+            {i === 0 && (
+              <motion.div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400"
+                animate={{ scale: [1, 1.4, 1], opacity: [0.8, 1, 0.8] }}
+                transition={{ duration: 1.2, repeat: Infinity }} />
+            )}
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[0.55rem] font-bold text-foreground/90 truncate">{item.agent}</span>
-              {i === 0 && <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />}
+          <div className="flex-1 min-w-0 relative z-10">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <span className="text-[0.6rem] font-bold text-foreground/90 truncate">{item.agent}</span>
+              {i === 0 && <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-400 font-bold tracking-wider uppercase">LIVE</span>}
             </div>
-            <p className="text-[0.5rem] text-foreground/40 truncate">{item.action}</p>
+            <p className="text-[0.52rem] text-foreground/45 truncate">{item.action}</p>
           </div>
-          <span className="text-[0.4rem] text-foreground/25 whitespace-nowrap flex-shrink-0">{item.time}</span>
+          <span className="text-[0.42rem] text-foreground/25 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
         </motion.div>
       ))}
     </AnimatePresence>
