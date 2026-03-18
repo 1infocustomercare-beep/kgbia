@@ -14,8 +14,8 @@ const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 const FEATURED_DEMOS = [
   {
     id: "food" as IndustryId,
-    name: "Impero Roma",
-    tagline: "Ristorante Premium · Roma",
+    name: "Food & Ristorazione",
+    tagline: "Menu Digitale · Ordini · QR · Cucina Live",
     route: "/r/impero-roma",
     emoji: "🍽️",
     color: "#e85d04",
@@ -24,8 +24,8 @@ const FEATURED_DEMOS = [
   },
   {
     id: "ncc" as IndustryId,
-    name: "Amalfi Luxury Transfer",
-    tagline: "NCC Premium · Costiera Amalfitana",
+    name: "NCC & Trasporto Premium",
+    tagline: "Flotta · Tratte · Booking · Autisti",
     route: "/b/amalfi-luxury-transfer",
     emoji: "🚗",
     color: "#C9A84C",
