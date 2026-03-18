@@ -1434,7 +1434,12 @@ const EmpireVoiceAgent: React.FC = () => {
                       : isLoading ? "💭 Sta pensando..."
                       : autoNarrating ? `📍 ${currentSection}`
                       : "Empire AI Agent"}
-                  </p>
+                    </p>
+                    {/* BUG 3: HD badge when premium voice active */}
+                    {!useBrowserFallbackRef.current && !isBrowserOnlyTTS() && isSpeaking && (
+                      <span className="text-[0.45rem] px-1 py-0.5 rounded bg-primary/20 text-primary font-bold">HD</span>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-1">

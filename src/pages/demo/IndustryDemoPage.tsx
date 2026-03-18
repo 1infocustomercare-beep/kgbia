@@ -935,6 +935,11 @@ export default function IndustryDemoPage() {
 
       {/* Phone showcase moved to after hero */}
 
+      {/* ═══════ FULL FEATURES & AGENTS ═══════ */}
+      <DemoFeaturesSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
+      <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="section" />
+      <DemoAgentsSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
+
       {/* ═══════ FOOTER ═══════ */}
       <footer className="border-t border-white/5 py-8 px-4 text-center">
         <div className="max-w-5xl mx-auto">
@@ -946,6 +951,9 @@ export default function IndustryDemoPage() {
           </p>
         </div>
       </footer>
+
+      {/* Sticky mobile admin CTA */}
+      <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="sticky" />
 
       {/* ═══════ FLOATING BACK BUTTON (mobile) ═══════ */}
       <div className="fixed bottom-6 left-4 z-50 sm:hidden">
