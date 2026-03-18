@@ -16,6 +16,7 @@ import FitnessPublicSite from "@/pages/public/FitnessPublicSite";
 import HotelPublicSite from "@/pages/public/HotelPublicSite";
 import BeachPublicSite from "@/pages/public/BeachPublicSite";
 import FoodPublicSite from "@/pages/public/FoodPublicSite";
+import BakeryPublicSite from "@/pages/public/BakeryPublicSite";
 import TradesPublicSite from "@/pages/public/TradesPublicSite";
 import LuxuryPublicSite from "@/pages/public/LuxuryPublicSite";
 import { Button } from "@/components/ui/button";
@@ -360,12 +361,22 @@ export default function IndustryDemoPage() {
     beach: BeachPublicSite,
     food: FoodPublicSite,
     restaurant: FoodPublicSite,
+    bakery: BakeryPublicSite,
     plumber: TradesPublicSite,
     electrician: TradesPublicSite,
     cleaning: TradesPublicSite,
     gardening: TradesPublicSite,
     construction: TradesPublicSite,
     garage: TradesPublicSite,
+    photography: TradesPublicSite,
+    veterinary: TradesPublicSite,
+    tattoo: TradesPublicSite,
+    childcare: TradesPublicSite,
+    education: TradesPublicSite,
+    events: TradesPublicSite,
+    logistics: TradesPublicSite,
+    legal: TradesPublicSite,
+    accounting: TradesPublicSite,
   };
 
   const PremiumTemplate = PREMIUM_TEMPLATES[resolvedIndustry];
