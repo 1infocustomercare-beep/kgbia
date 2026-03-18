@@ -3767,21 +3767,45 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
-        {/* Benefits — Mobile: auto-scroll carousel */}
+        {/* Benefits — Mobile: carousel or expanded grid */}
         <div className="sm:hidden">
-          <PremiumCarousel speed="slow" itemWidth={160} showControls={false}>
-            {whyUs.map((item, i) => (
-              <div key={i} className="w-[160px]">
-                <PremiumCard scan delay={i * 0.3} className="p-4 text-center h-full">
-                  <motion.div className="text-primary/50 mb-2 flex justify-center"
-                    animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
-                  <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
-                  <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
-                </PremiumCard>
-              </div>
-            ))}
-          </PremiumCarousel>
+          <AnimatePresence mode="wait">
+            {expandBenefits ? (
+              <motion.div key="benefits-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-2 gap-2 px-1">
+                {whyUs.map((item, i) => (
+                  <div key={i}>
+                    <PremiumCard scan delay={i * 0.1} className="p-3 text-center h-full">
+                      <div className="text-primary/50 mb-2 flex justify-center">{item.icon}</div>
+                      <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
+                      <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
+                    </PremiumCard>
+                  </div>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div key="benefits-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <PremiumCarousel speed="slow" itemWidth={160} showControls={false}>
+                  {whyUs.map((item, i) => (
+                    <div key={i} className="w-[160px]">
+                      <PremiumCard scan delay={i * 0.3} className="p-4 text-center h-full">
+                        <motion.div className="text-primary/50 mb-2 flex justify-center"
+                          animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
+                          transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
+                        <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
+                        <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
+                      </PremiumCard>
+                    </div>
+                  ))}
+                </PremiumCarousel>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <div className="flex justify-center mt-3">
+            <button onClick={() => setExpandBenefits(p => !p)}
+              className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+              <Layers className="w-3 h-3" /> {expandBenefits ? "Chiudi" : "Vedi Tutti"}
+            </button>
+          </div>
         </div>
 
         {/* Benefits — Desktop: staggered grid */}
