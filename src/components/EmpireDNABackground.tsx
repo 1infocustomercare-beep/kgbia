@@ -120,8 +120,8 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
 const SECTIONS = topologies.length;
 
 // Uniform palette — consistent intensity per section
-const BASE_ALPHA = 0.04;
-const MOBILE_BOOST = IS_MOBILE ? 2.4 : 1; // Boosted for high-impact visibility on mobile
+const BASE_ALPHA = 0.12;
+const MOBILE_BOOST = IS_MOBILE ? 2.8 : 1.8; // High visibility — cell-like circuit lines
 const PALETTES = [
   { node: [215, 15, 40], line: [215, 12, 32], glow: [215, 20, 45], accent: [38, 30, 45] },
   { node: [265, 18, 40], line: [265, 14, 32], glow: [265, 22, 45], accent: [38, 28, 43] },
@@ -325,8 +325,8 @@ const EmpireDNABackground = () => {
             const route = rA.map((a, wi) => ({ x: lerp(a.x, rB[wi].x, t3), y: lerp(a.y, rB[wi].y, t3) }));
 
             // Uniform line rendering
-            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.08 : 0.04) * (0.6 + pulse * 0.4) * MOBILE_BOOST);
-            ctx.lineWidth = activeTrace ? 0.6 : 0.3 + alpha * 0.3;
+            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.22 : 0.14) * (0.6 + pulse * 0.4) * MOBILE_BOOST);
+            ctx.lineWidth = activeTrace ? 1.0 : 0.5 + alpha * 0.5;
             ctx.beginPath();
             ctx.moveTo(route[0].x, route[0].y);
             for (let wi = 1; wi < route.length; wi++) ctx.lineTo(route[wi].x, route[wi].y);
@@ -336,7 +336,7 @@ const EmpireDNABackground = () => {
             if (activeTrace && alpha > 0.3) {
               ctx.setLineDash([3, 5]);
               ctx.lineDashOffset = -(time * 35);
-              ctx.strokeStyle = hsla(pGlow, alpha * 0.12 * MOBILE_BOOST);
+              ctx.strokeStyle = hsla(pGlow, alpha * 0.28 * MOBILE_BOOST);
               ctx.lineWidth = 0.7;
               ctx.beginPath();
               ctx.moveTo(route[0].x, route[0].y);
@@ -352,14 +352,14 @@ const EmpireDNABackground = () => {
       // ═══ LAYER 3: Nodes — uniform crosses and squares ═══
       for (let i = 0; i < NODE_COUNT; i++) {
         const breathe = 0.4 + Math.sin(time * 1 + i * 0.7) * 0.6;
-        let na = 0.06 * breathe * MOBILE_BOOST;
+        let na = 0.15 * breathe * MOBILE_BOOST;
         const isActive = (i + Math.floor(time * 0.3)) % 10 === 0;
 
         if (ptr.active) {
           const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y, d = Math.sqrt(dx * dx + dy * dy);
           if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.15;
         }
-        if (isActive) na = Math.min(na + 0.12, 0.3);
+        if (isActive) na = Math.min(na + 0.2, 0.5);
 
         if (i % 3 === 0) {
           const arm = 2 + breathe * 1.5;
