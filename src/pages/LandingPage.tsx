@@ -2289,8 +2289,8 @@ const LandingPage = () => {
     nccHeroBg, nccPremiumCoast, nccPremiumInterior, nccFleetShowcase,
     cartoonFood, cartoonNcc, cartoonBeauty, cartoonHealthcare, cartoonRetail, cartoonFitness, cartoonHotel,
   } = useLandingAssets();
-  const [monthlyOrders, setMonthlyOrders] = useState(500);
-  const [avgOrder, setAvgOrder] = useState(25);
+  const [weeklyHours, setWeeklyHours] = useState(20);
+  const [hourlyCost, setHourlyCost] = useState(20);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
   const [ctaVisible, setCtaVisible] = useState(false);
@@ -2352,13 +2352,13 @@ const LandingPage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const setupCost = 2997;
-  const monthlyRevenue = monthlyOrders * avgOrder;
-  const thirdPartyCost = monthlyRevenue * 0.30;
-  const empireCost = monthlyRevenue * 0.02;
-  const monthlySaving = thirdPartyCost - empireCost;
-  const roiMonths = monthlySaving > 0 ? Math.ceil(setupCost / monthlySaving) : 0;
+  const manualMonthlyCost = weeklyHours * hourlyCost * 4.3;
+  const automatedCost = manualMonthlyCost * 0.2; // 80% automated
+  const monthlySaving = manualMonthlyCost - automatedCost;
   const yearSaving = monthlySaving * 12;
+  const hoursSavedMonth = Math.round(weeklyHours * 0.8 * 4.3);
+  const empirePlanCost = 49; // base monthly
+  const netMonthlySaving = monthlySaving - empirePlanCost;
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
@@ -4535,13 +4535,17 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Calcola Quanto <span className="text-shimmer">Stai Perdendo</span>
           </motion.h2>
+          <motion.p className="text-foreground/35 max-w-md mx-auto text-xs sm:text-sm leading-relaxed"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            Ore spese in attività manuali = soldi bruciati. Vedi quanto risparmieresti automatizzando con l'IA.
+          </motion.p>
         </div>
 
         <motion.div className="max-w-xl mx-auto p-7 sm:p-9 rounded-2xl glow-card space-y-6"
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           {[
-            { label: "Transazioni / mese", value: monthlyOrders, min: 100, max: 3000, step: 50, display: monthlyOrders.toString(), onChange: setMonthlyOrders },
-            { label: "Valore medio", value: avgOrder, min: 10, max: 80, step: 5, display: `€${avgOrder}`, onChange: setAvgOrder },
+            { label: "Ore manuali / settimana", value: weeklyHours, min: 5, max: 60, step: 5, display: `${weeklyHours}h`, onChange: setWeeklyHours },
+            { label: "Costo orario medio", value: hourlyCost, min: 10, max: 50, step: 5, display: `€${hourlyCost}/h`, onChange: setHourlyCost },
           ].map((sl, i) => (
             <div key={i}>
               <div className="flex justify-between text-sm mb-3">
@@ -4556,8 +4560,8 @@ const LandingPage = () => {
           <div className="space-y-3.5 pt-6 border-t border-border/30">
             <div>
               <div className="flex justify-between text-xs mb-2">
-                <span className="text-foreground/35">Piattaforme terze (30%)</span>
-                <span className="text-accent font-heading font-bold">-€{thirdPartyCost.toLocaleString("it-IT", { maximumFractionDigits: 0 })}/mese</span>
+                <span className="text-foreground/35">Costo attuale (manuale)</span>
+                <span className="text-accent font-heading font-bold">€{Math.round(manualMonthlyCost).toLocaleString("it-IT")}/mese</span>
               </div>
               <div className="h-3 rounded-full bg-foreground/[0.04] overflow-hidden">
                 <motion.div className="h-full rounded-full bg-gradient-to-r from-accent/50 to-accent/80"
@@ -4566,28 +4570,28 @@ const LandingPage = () => {
             </div>
             <div>
               <div className="flex justify-between text-xs mb-2">
-                <span className="text-foreground/35">Empire (2%)</span>
-                <span className="text-primary font-heading font-bold">-€{empireCost.toLocaleString("it-IT", { maximumFractionDigits: 0 })}/mese</span>
+                <span className="text-foreground/35">Con Empire AI (80% automatizzato)</span>
+                <span className="text-primary font-heading font-bold">€{Math.round(automatedCost).toLocaleString("it-IT")}/mese</span>
               </div>
               <div className="h-3 rounded-full bg-foreground/[0.04] overflow-hidden">
                 <motion.div className="h-full rounded-full bg-gradient-to-r from-primary/50 to-primary/80"
-                  initial={{ width: 0 }} whileInView={{ width: `${Math.max(5, (empireCost / thirdPartyCost) * 100)}%` }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.5 }} />
+                  initial={{ width: 0 }} whileInView={{ width: "20%" }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.5 }} />
               </div>
             </div>
           </div>
 
           <div className="p-6 rounded-xl bg-gradient-to-br from-primary/[0.06] to-accent/[0.03] border border-primary/10 space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-xs text-foreground/50 font-heading">Risparmi / mese</span>
-              <span className="text-2xl font-heading font-bold text-primary">€{monthlySaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}</span>
+              <span className="text-xs text-foreground/50 font-heading">Risparmi netti / mese</span>
+              <span className="text-2xl font-heading font-bold text-primary">€{Math.round(netMonthlySaving).toLocaleString("it-IT")}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-xs text-foreground/50 font-heading">Risparmi / anno</span>
-              <span className="text-2xl font-heading font-bold text-vibrant-gradient">€{yearSaving.toLocaleString("it-IT", { maximumFractionDigits: 0 })}</span>
+              <span className="text-2xl font-heading font-bold text-vibrant-gradient">€{Math.round(netMonthlySaving * 12).toLocaleString("it-IT")}</span>
             </div>
             <div className="flex justify-between items-center pt-3 border-t border-primary/10">
-              <span className="text-[0.65rem] text-foreground/35">ROI completo in</span>
-              <span className="text-foreground font-heading font-bold text-base">{roiMonths} {roiMonths === 1 ? "mese" : "mesi"}</span>
+              <span className="text-[0.65rem] text-foreground/35">Ore liberate / mese</span>
+              <span className="text-foreground font-heading font-bold text-base">{hoursSavedMonth}h</span>
             </div>
           </div>
         </motion.div>
