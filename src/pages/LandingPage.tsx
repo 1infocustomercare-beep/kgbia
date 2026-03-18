@@ -3744,9 +3744,16 @@ const LandingPage = () => {
             style={{ borderColor: `${feat.color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 40px ${feat.color}10` }}>
                 <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
                 <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
-                  <img src={feat.image} alt={feat.name} className="w-full h-full object-cover" loading="lazy" />
+                  <iframe
+                    src={feat.route}
+                    title={feat.name}
+                    className="border-0 pointer-events-none"
+                    style={{ transform: "scale(0.465)", transformOrigin: "top left", width: "375px", height: "720px" }}
+                    loading="lazy"
+                    tabIndex={-1}
+                  />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.9) 15%, transparent)" }}>
                   <div className="flex items-center gap-1 mb-1">
                     <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${feat.color}25`, color: feat.color, border: `1px solid ${feat.color}35` }}>★ Live</span>
                   </div>
