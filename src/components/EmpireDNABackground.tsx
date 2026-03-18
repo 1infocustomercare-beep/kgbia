@@ -355,10 +355,10 @@ const EmpireDNABackground = () => {
 
         if (ptr.active) {
           const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y, d = Math.sqrt(dx * dx + dy * dy);
-          if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.35;
+          if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.2;
         }
 
-        if (isActive) na = Math.min(na + 0.3, 0.6);
+        if (isActive) na = Math.min(na + 0.15, 0.35);
 
         if (i % 3 === 0) {
           // Cross (+) node
