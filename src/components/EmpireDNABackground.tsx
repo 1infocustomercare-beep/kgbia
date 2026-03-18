@@ -132,12 +132,6 @@ interface FlowParticle { fromIdx: number; toIdx: number; progress: number; speed
 interface PulseRing { x: number; y: number; r: number; maxR: number; alpha: number; color: number[]; }
 
 const EmpireDNABackground = () => {
-  // On mobile, skip the entire canvas animation — it's at 0.045 opacity 
-  // and invisible but burns GPU causing stuttering
-  if (IS_MOBILE) {
-    return null;
-  }
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const scrollRef = useRef(0);
@@ -149,7 +143,7 @@ const EmpireDNABackground = () => {
   const pulsesRef = useRef<PulseRing[]>([]);
   const ptrRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
-  useEffect(() => { const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
+  useEffect(() => { if (IS_MOBILE) return; const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
     const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
