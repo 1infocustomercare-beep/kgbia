@@ -7,6 +7,7 @@ import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA } from "@/data/demo-industries";
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
+import SectorPhoneCarousel from "@/components/public/SectorPhoneCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
   Crown, Check, Star, Zap, Shield, Smartphone,
