@@ -367,7 +367,7 @@ const EmpireDNABackground = () => {
           ctx.stroke();
         } else {
           const s = 1.2 + breathe;
-          ctx.fillStyle = hsla(isActive ? pAccent : pNode, na + 0.08);
+          ctx.fillStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
           ctx.fillRect(pos[i].x - s / 2, pos[i].y - s / 2, s, s);
         }
 
