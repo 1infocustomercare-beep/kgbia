@@ -24,16 +24,31 @@ import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 
 /* ── PREMIUM ADAPTIVE PALETTE SYSTEM ── */
 const INDUSTRY_VIDEOS: Record<string, string> = {
+  // Dedicated public sites — verified correct
+  food: "https://videos.pexels.com/video-files/3196487/3196487-uhd_2560_1440_25fps.mp4",
   beauty: "https://videos.pexels.com/video-files/3998269/3998269-uhd_2732_1440_25fps.mp4",
   healthcare: "https://videos.pexels.com/video-files/7579341/7579341-uhd_2560_1440_25fps.mp4",
   fitness: "https://videos.pexels.com/video-files/4761507/4761507-uhd_2560_1440_25fps.mp4",
   hotel: "https://videos.pexels.com/video-files/6527282/6527282-uhd_2560_1440_25fps.mp4",
   retail: "https://videos.pexels.com/video-files/5527834/5527834-uhd_2560_1440_25fps.mp4",
-  veterinary: "https://videos.pexels.com/video-files/4921969/4921969-uhd_2560_1440_25fps.mp4",
-  events: "https://videos.pexels.com/video-files/3400768/3400768-uhd_2560_1440_25fps.mp4",
+  beach: "https://videos.pexels.com/video-files/20446096/20446096-uhd_2560_1440_25fps.mp4",
+  // Trades — synced from TradesPublicSite
+  electrician: "https://videos.pexels.com/video-files/5532771/5532771-uhd_2560_1440_25fps.mp4",
+  plumber: "https://videos.pexels.com/video-files/6538938/6538938-uhd_2560_1440_25fps.mp4",
+  construction: "https://videos.pexels.com/video-files/5698648/5698648-uhd_2560_1440_25fps.mp4",
+  gardening: "https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_25fps.mp4",
+  cleaning: "https://videos.pexels.com/video-files/4107096/4107096-uhd_2560_1440_25fps.mp4",
+  garage: "https://videos.pexels.com/video-files/5691524/5691524-uhd_2560_1440_25fps.mp4",
   photography: "https://videos.pexels.com/video-files/3743009/3743009-uhd_2560_1440_25fps.mp4",
+  veterinary: "https://videos.pexels.com/video-files/4921969/4921969-uhd_2560_1440_25fps.mp4",
+  tattoo: "https://videos.pexels.com/video-files/5765792/5765792-uhd_2560_1440_25fps.mp4",
+  childcare: "https://videos.pexels.com/video-files/8088245/8088245-uhd_2560_1440_25fps.mp4",
   education: "https://videos.pexels.com/video-files/5198164/5198164-uhd_2560_1440_25fps.mp4",
+  events: "https://videos.pexels.com/video-files/3400768/3400768-uhd_2560_1440_25fps.mp4",
+  logistics: "https://videos.pexels.com/video-files/2928223/2928223-uhd_2560_1440_25fps.mp4",
+  agriturismo: "https://videos.pexels.com/video-files/4880441/4880441-uhd_2560_1440_25fps.mp4",
   legal: "https://videos.pexels.com/video-files/5519894/5519894-uhd_2560_1440_25fps.mp4",
+  accounting: "https://videos.pexels.com/video-files/6774523/6774523-uhd_2560_1440_25fps.mp4",
 };
 
 const INDUSTRY_POSTERS: Record<string, string> = {
