@@ -5050,9 +5050,18 @@ const LandingPage = () => {
           </motion.h2>
         </div>
 
-        <div className="relative mb-1">
-          {/* AI Tech Network Schema — connected nodes like neural network */}
-          <div className="absolute inset-0 pointer-events-none -z-[1] overflow-hidden">
+        <div className="relative mb-1 rounded-2xl overflow-hidden isolate">
+          {/* Opaque panel so global homepage background doesn't bleed under circuit schema */}
+          <div
+            className="absolute inset-0 z-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(160deg, hsla(230,16%,8%,0.97), hsla(265,16%,10%,0.96))",
+              border: "1px solid hsla(265,40%,45%,0.09)"
+            }}
+          />
+
+          {/* AI Tech Network Schema — Desktop */}
+          <div className="absolute inset-0 pointer-events-none z-[1] overflow-hidden hidden sm:block">
             <svg className="w-full h-full" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <radialGradient id="proc-node-glow" cx="50%" cy="50%" r="50%">
@@ -5109,14 +5118,14 @@ const LandingPage = () => {
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 + i * 0.04, type: "spring", stiffness: 200 }} />
-                
+
                   <motion.circle cx={cx} cy={cy} r="2.5"
                 fill="hsla(38,50%,55%,0.5)"
                 initial={{ scale: 0 }}
                 whileInView={{ scale: [0, 1.3, 1] }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.35 + i * 0.04, duration: 0.35 }}>
-                  
+
                     <animate attributeName="opacity" values="0.4;0.8;0.4" dur={`${2 + i * 0.2}s`} repeatCount="indefinite" />
                   </motion.circle>
                 </g>
@@ -5134,12 +5143,52 @@ const LandingPage = () => {
             </svg>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+          {/* AI Tech Network Schema — Mobile (optimized 2x2 icon communication grid) */}
+          <div className="absolute inset-0 pointer-events-none z-[1] overflow-hidden sm:hidden">
+            <svg className="w-full h-full" viewBox="0 0 300 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="proc-mobile-glow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="0.7" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Main communication links */}
+              <line x1="85" y1="62" x2="215" y2="62" stroke="hsl(var(--primary) / 0.28)" strokeWidth="0.85" strokeDasharray="3,4" strokeLinecap="round" />
+              <line x1="85" y1="158" x2="215" y2="158" stroke="hsl(var(--primary) / 0.28)" strokeWidth="0.85" strokeDasharray="3,4" strokeLinecap="round" />
+              <line x1="80" y1="68" x2="80" y2="152" stroke="hsl(var(--accent) / 0.24)" strokeWidth="0.75" strokeDasharray="3,4" strokeLinecap="round" />
+              <line x1="220" y1="68" x2="220" y2="152" stroke="hsl(var(--accent) / 0.24)" strokeWidth="0.75" strokeDasharray="3,4" strokeLinecap="round" />
+
+              {/* Diagonal links */}
+              <line x1="85" y1="68" x2="215" y2="152" stroke="hsl(var(--primary) / 0.18)" strokeWidth="0.55" strokeLinecap="round" />
+              <line x1="215" y1="68" x2="85" y2="152" stroke="hsl(var(--accent) / 0.18)" strokeWidth="0.55" strokeLinecap="round" />
+
+              {/* Junction nodes */}
+              {[[80, 62], [220, 62], [80, 158], [220, 158], [150, 110]].map(([cx, cy], i) => (
+                <circle key={`proc-m-node-${i}`} cx={cx} cy={cy} r={i === 4 ? "2.2" : "1.8"} fill="hsl(var(--primary) / 0.5)">
+                  <animate attributeName="opacity" values="0.35;0.85;0.35" dur={`${2.1 + i * 0.35}s`} repeatCount="indefinite" />
+                </circle>
+              ))}
+
+              {/* Data pulses */}
+              <circle r="2.1" fill="hsl(var(--primary) / 0.9)" filter="url(#proc-mobile-glow)">
+                <animateMotion dur="4.8s" repeatCount="indefinite" path="M85,62 L215,62 L215,158 L85,158 Z" />
+              </circle>
+              <circle r="1.7" fill="hsl(var(--accent) / 0.86)" filter="url(#proc-mobile-glow)">
+                <animateMotion dur="6.2s" repeatCount="indefinite" path="M80,68 L220,152 L220,68 L80,152" />
+              </circle>
+            </svg>
+          </div>
+
+          <div className="relative z-[2] grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 p-2 sm:p-0">
             {[
-            { step: "01", title: "Scegli il Settore", desc: "Empire configura moduli e flussi dedicati automaticamente.", icon: <Globe className="w-4 h-4" /> },
-            { step: "02", title: "Personalizza Brand", desc: "Logo, colori, dominio. L'IA genera il catalogo in 60 secondi.", icon: <Palette className="w-4 h-4" /> },
-            { step: "03", title: "Lancia il Sistema", desc: "App attiva, team formato, QR code installati. Operativo in 24h.", icon: <Rocket className="w-4 h-4" /> },
-            { step: "04", title: "Cresci con i Dati", desc: "Analytics real-time, suggerimenti IA, campagne automatizzate.", icon: <TrendingUp className="w-4 h-4" /> }].
+            { step: "01", title: "Scegli il Settore", desc: "Empire configura moduli e flussi dedicati automaticamente.", icon: <Globe className="w-3 h-3 sm:w-4 sm:h-4" /> },
+            { step: "02", title: "Personalizza Brand", desc: "Logo, colori, dominio. L'IA genera il catalogo in 60 secondi.", icon: <Palette className="w-3 h-3 sm:w-4 sm:h-4" /> },
+            { step: "03", title: "Lancia il Sistema", desc: "App attiva, team formato, QR code installati. Operativo in 24h.", icon: <Rocket className="w-3 h-3 sm:w-4 sm:h-4" /> },
+            { step: "04", title: "Cresci con i Dati", desc: "Analytics real-time, suggerimenti IA, campagne automatizzate.", icon: <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" /> }].
             map((s, i) => {
               const dnaWave = i % 2 === 0;
               return (
@@ -5151,36 +5200,35 @@ const LandingPage = () => {
                   viewport={{ once: true, margin: "-30px" }}
                   transition={{ delay: i * 0.12, duration: 0.58, type: "spring", stiffness: 160, damping: 18 }}
                   style={{ perspective: "900px" }}>
-                  
+
                   <motion.div
-                    className="absolute top-[42px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] hidden lg:block"
+                    className="absolute top-[34px] sm:top-[42px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] hidden lg:block"
                     initial={{ scale: 0 }}
                     whileInView={{ scale: [0, 1.45, 1] }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.12 + 0.3, duration: 0.35 }} />
-                  
 
-                  <div className="relative rounded-xl border border-foreground/[0.07] bg-card/90 backdrop-blur-sm p-2.5 sm:p-3 overflow-hidden">
+                  <div className="relative rounded-xl border border-foreground/[0.07] bg-card/95 sm:bg-card/90 backdrop-blur-sm p-2 sm:p-3 overflow-hidden">
                     <motion.div
-                      className="relative w-[58px] h-[58px] sm:w-[62px] sm:h-[62px] rounded-xl mx-auto mb-2.5 overflow-hidden"
-                      style={{ background: "hsla(265,20%,8%,0.6)", border: "1px solid hsla(265,70%,60%,0.14)", backdropFilter: "blur(8px)" }}
+                      className="relative w-[46px] h-[46px] sm:w-[62px] sm:h-[62px] rounded-xl mx-auto mb-2 sm:mb-2.5 overflow-hidden"
+                      style={{ background: "hsla(265,20%,8%,0.7)", border: "1px solid hsla(265,70%,60%,0.14)", backdropFilter: "blur(8px)" }}
                       whileHover={{ rotate: 4, scale: 1.06, borderColor: "hsla(265,70%,60%,0.28)" }}>
-                      
+
                       <motion.div className="absolute inset-0 pointer-events-none"
                       style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.08) 50%, transparent 60%)" }}
                       animate={{ y: ["-100%", "200%"] }}
                       transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 1.6 + i * 0.3, ease: "easeInOut" }} />
                       <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.28), transparent)" }} />
                       <div className="flex items-center justify-center w-full h-full text-primary relative z-10">{s.icon}</div>
-                      <motion.span className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-vibrant-gradient flex items-center justify-center text-[0.5rem] font-bold text-primary-foreground font-heading z-20"
+                      <motion.span className="absolute -top-1.5 -right-1.5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-vibrant-gradient flex items-center justify-center text-[0.45rem] sm:text-[0.5rem] font-bold text-primary-foreground font-heading z-20"
                       animate={{ boxShadow: ["0 0 8px hsla(265,70%,60%,0.2)", "0 0 20px hsla(265,70%,60%,0.45)", "0 0 8px hsla(265,70%,60%,0.2)"] }}
                       transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.25 }}>
                         {s.step}
                       </motion.span>
                     </motion.div>
 
-                    <h3 className="font-heading text-[0.68rem] sm:text-xs font-bold text-foreground mb-1">{s.title}</h3>
-                    <p className="text-[0.58rem] sm:text-[0.62rem] text-foreground/40 leading-[1.45]">{s.desc}</p>
+                    <h3 className="font-heading text-[0.64rem] sm:text-xs font-bold text-foreground mb-1">{s.title}</h3>
+                    <p className="text-[0.54rem] sm:text-[0.62rem] text-foreground/40 leading-[1.45]">{s.desc}</p>
                   </div>
                 </motion.div>);
 
