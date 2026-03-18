@@ -462,7 +462,7 @@ const EmpireDNABackground = () => {
 
       // ═══ LAYER 7: Corner brackets ═══
       const brk = 28;
-      ctx.strokeStyle = hsla(pLine, 0.022 + Math.sin(time * 0.25) * 0.008);
+      ctx.strokeStyle = hsla(pLine, (0.022 + Math.sin(time * 0.25) * 0.008) * MOBILE_BOOST);
       ctx.lineWidth = 0.35;
       ctx.beginPath(); ctx.moveTo(8, 8 + brk); ctx.lineTo(8, 8); ctx.lineTo(8 + brk, 8); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(w - 8 - brk, 8); ctx.lineTo(w - 8, 8); ctx.lineTo(w - 8, 8 + brk); ctx.stroke();
