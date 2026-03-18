@@ -472,14 +472,11 @@ const EmpireDNABackground = () => {
     return () => { cancelAnimationFrame(animRef.current); window.removeEventListener("resize", resize); };
   }, [ready]);
 
-  // On mobile, skip the entire canvas — at 0.045 opacity it's invisible but burns GPU
-  if (IS_MOBILE) return null;
-
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: 0.045, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: IS_MOBILE ? 0.06 : 0.045, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };
