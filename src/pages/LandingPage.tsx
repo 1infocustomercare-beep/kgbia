@@ -2051,7 +2051,7 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
    ═══════════════════════════════════════════ */
 type CarouselItem = { name: string; route: string; color: string; label: string; nav: string; image: string };
 
-const MobileIPhoneCarousel = ({ items, scale, navigate }: { items: CarouselItem[]; scale: number; navigate: (p: string) => void }) => {
+const MobileIPhoneCarousel = ({ items, navigate }: { items: CarouselItem[]; navigate: (p: string) => void }) => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [expanded, setExpanded] = useState(false);
