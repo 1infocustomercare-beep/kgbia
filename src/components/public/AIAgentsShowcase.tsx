@@ -250,38 +250,63 @@ const AlwaysOnNetwork = ({
   );
 };
 
-/* ═══ CIRCUIT GRID BACKGROUND ═══ */
+/* ═══ CIRCUIT GRID BACKGROUND — Advanced Tech ═══ */
 const CircuitBackground = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden">
-    <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
+    {/* Hexagonal circuit pattern */}
+    <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="circuit-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(1.8)">
-          <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.3" />
+          <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(215 50% 55%)" strokeWidth="0.4" />
+          <circle cx="30" cy="0" r="1.2" fill="hsl(215 50% 55%)" opacity="0.5" />
+          <circle cx="60" cy="15" r="1.2" fill="hsl(215 50% 55%)" opacity="0.5" />
+          <circle cx="0" cy="15" r="1.2" fill="hsl(215 50% 55%)" opacity="0.5" />
+        </pattern>
+        {/* Micro-grid for tech density */}
+        <pattern id="micro-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(215 40% 50%)" strokeWidth="0.15" opacity="0.4" />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#circuit-hex)" />
+      <rect width="100%" height="100%" fill="url(#micro-grid)" opacity="0.3" />
     </svg>
 
-    {[0, 1].map((i) => (
-      <motion.div key={i} className="absolute left-0 right-0 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.08), transparent)" }}
+    {/* Horizontal scan lines — tech feel */}
+    {[0, 1, 2].map((i) => (
+      <motion.div key={`h-${i}`} className="absolute left-0 right-0 h-px"
+        style={{ background: `linear-gradient(90deg, transparent 5%, hsla(215,50%,60%,0.15) 30%, hsla(215,50%,70%,0.25) 50%, hsla(215,50%,60%,0.15) 70%, transparent 95%)` }}
         animate={{ top: ["-5%", "105%"] }}
-        transition={{ duration: 15 + i * 5, repeat: Infinity, ease: "linear", delay: i * 4 }}
+        transition={{ duration: 12 + i * 4, repeat: Infinity, ease: "linear", delay: i * 3 }}
       />
     ))}
 
-    {[15, 50, 85].map((x, i) => (
-      <div key={i} className="absolute top-0 bottom-0 w-px opacity-[0.03]" style={{ left: `${x}%`, background: "hsl(var(--primary))" }}>
-        <motion.div className="absolute h-16 w-full left-0 rounded-full"
-          style={{ background: "hsl(var(--primary))", opacity: 0.6 }}
-          animate={{ top: ["-10%", "110%"] }}
-          transition={{ duration: 12 + i * 3, repeat: Infinity, ease: "linear", delay: i * 2 }}
+    {/* Vertical data streams */}
+    {[12, 30, 50, 70, 88].map((x, i) => (
+      <div key={`v-${i}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${x}%`, background: `hsla(215,40%,50%,0.04)` }}>
+        <motion.div className="absolute h-24 w-full left-0 rounded-full"
+          style={{ background: `linear-gradient(180deg, transparent, hsla(215,60%,65%,0.4), transparent)` }}
+          animate={{ top: ["-15%", "115%"] }}
+          transition={{ duration: 8 + i * 2, repeat: Infinity, ease: "linear", delay: i * 1.5 }}
         />
       </div>
     ))}
 
-    <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] top-1/4 left-1/4" style={{ background: "hsl(var(--primary))" }} />
-    <div className="absolute w-[400px] h-[400px] rounded-full blur-[180px] opacity-[0.03] bottom-1/4 right-1/4" style={{ background: "hsl(var(--accent))" }} />
+    {/* Data nodes — pulsing tech dots at intersections */}
+    {[
+      { x: 12, y: 20 }, { x: 30, y: 45 }, { x: 50, y: 15 }, { x: 70, y: 65 }, { x: 88, y: 35 },
+      { x: 20, y: 75 }, { x: 60, y: 85 }, { x: 40, y: 55 },
+    ].map((pos, i) => (
+      <motion.div key={`node-${i}`} className="absolute w-1 h-1 rounded-full"
+        style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(215,60%,65%,0.35)`, boxShadow: `0 0 6px hsla(215,60%,65%,0.2)` }}
+        animate={{ opacity: [0.2, 0.7, 0.2], scale: [0.8, 1.3, 0.8] }}
+        transition={{ duration: 3 + i * 0.5, repeat: Infinity, delay: i * 0.4 }}
+      />
+    ))}
+
+    {/* Ambient glow orbs */}
+    <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.05] top-1/4 left-1/4" style={{ background: "hsl(215 50% 50%)" }} />
+    <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.04] bottom-1/4 right-1/4" style={{ background: "hsl(225 40% 45%)" }} />
+    <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.03] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ background: "hsl(var(--primary))" }} />
   </div>
 );
 
