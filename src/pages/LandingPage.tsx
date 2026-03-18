@@ -3105,12 +3105,18 @@ const LandingPage = () => {
           IL PROBLEMA — Pain Points
          ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,15%,6%,1) 0%, hsla(0,8%,8%,1) 40%, hsla(230,12%,7%,1) 70%, hsla(230,15%,6%,1) 100%)",
+        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(350,12%,7%,1) 30%, hsla(265,10%,6%,1) 55%, hsla(350,8%,5%,1) 80%, hsla(230,16%,5%,1) 100%)",
       }}>
-        {/* Premium ambient glows */}
+        {/* Premium ambient glows — danger luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsla(0,50%,40%,0.4), transparent 70%)", filter: "blur(130px)" }} />
-          <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
+          <div className="absolute top-[15%] left-[25%] w-[450px] h-[450px] rounded-full opacity-[0.07]"
+               style={{ background: "radial-gradient(circle, hsla(350,55%,45%,0.5), transparent 70%)", filter: "blur(120px)" }} />
+          <div className="absolute bottom-[20%] right-[20%] w-[380px] h-[380px] rounded-full opacity-[0.05]"
+               style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.4), transparent 70%)", filter: "blur(110px)" }} />
+          <div className="absolute top-[50%] left-[60%] w-[300px] h-[300px] rounded-full opacity-[0.04]"
+               style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[1px]"
+               style={{ background: "linear-gradient(90deg, transparent, hsla(350,50%,50%,0.2), hsla(265,50%,55%,0.12), transparent)" }} />
         </div>
         <div className="text-center mb-10 sm:mb-14">
           <SectionLabel text="Il Problema" icon={<AlertTriangle className="w-3 h-3 text-accent" />} />
