@@ -315,19 +315,19 @@ const NeuralCellsBackground = () => {
         <rect width="100%" height="100%" fill="url(#bg-micro-grid)" opacity="0.25" />
       </svg>
 
-      {/* ═══ VERTICAL DATA STREAMS — tech flow lines ═══ */}
-      {(isMobile ? [15, 50, 85] : [8, 25, 42, 58, 75, 92]).map((x, i) => (
+      {/* ═══ VERTICAL DATA STREAMS — desktop only (GPU killer on mobile) ═══ */}
+      {!isMobile && [8, 25, 42, 58, 75, 92].map((x, i) => (
         <div key={`vstream-${i}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${x}%`, background: `hsla(215,35%,50%,0.03)` }}>
           <motion.div className="absolute w-full left-0 rounded-full"
-            style={{ height: isMobile ? "60px" : "100px", background: `linear-gradient(180deg, transparent, hsla(210,55%,62%,0.25), transparent)` }}
+            style={{ height: "100px", background: `linear-gradient(180deg, transparent, hsla(210,55%,62%,0.25), transparent)` }}
             animate={{ top: ["-10%", "110%"] }}
             transition={{ duration: 10 + i * 2.5, repeat: Infinity, ease: "linear", delay: i * 1.8 }}
           />
         </div>
       ))}
 
-      {/* ═══ HORIZONTAL SCAN LINES ═══ */}
-      {(isMobile ? [0] : [0, 1]).map((i) => (
+      {/* ═══ HORIZONTAL SCAN LINES — desktop only ═══ */}
+      {!isMobile && [0, 1].map((i) => (
         <motion.div key={`hscan-${i}`} className="absolute left-0 right-0 h-px"
           style={{ background: `linear-gradient(90deg, transparent 5%, hsla(210,45%,58%,0.08) 30%, hsla(215,50%,65%,0.14) 50%, hsla(210,45%,58%,0.08) 70%, transparent 95%)` }}
           animate={{ top: ["-3%", "103%"] }}
@@ -335,14 +335,11 @@ const NeuralCellsBackground = () => {
         />
       ))}
 
-      {/* ═══ PULSING TECH NODES — intersection dots ═══ */}
-      {(isMobile
-        ? [{ x: 15, y: 25 }, { x: 50, y: 50 }, { x: 85, y: 75 }]
-        : [
-            { x: 8, y: 18 }, { x: 25, y: 40 }, { x: 42, y: 12 }, { x: 58, y: 60 },
-            { x: 75, y: 30 }, { x: 92, y: 55 }, { x: 35, y: 80 }, { x: 65, y: 90 },
-          ]
-      ).map((pos, i) => (
+      {/* ═══ PULSING TECH NODES — desktop only ═══ */}
+      {!isMobile && [
+        { x: 8, y: 18 }, { x: 25, y: 40 }, { x: 42, y: 12 }, { x: 58, y: 60 },
+        { x: 75, y: 30 }, { x: 92, y: 55 }, { x: 35, y: 80 }, { x: 65, y: 90 },
+      ].map((pos, i) => (
         <motion.div key={`tnode-${i}`} className="absolute w-1 h-1 rounded-full"
           style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(210,55%,62%,0.25)`, boxShadow: `0 0 8px hsla(210,55%,62%,0.15)` }}
           animate={{ opacity: [0.15, 0.5, 0.15], scale: [0.7, 1.4, 0.7] }}
