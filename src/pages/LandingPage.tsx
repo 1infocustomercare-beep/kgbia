@@ -4042,44 +4042,66 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
-        {/* Benefits — Mobile: carousel or expanded grid */}
-        <div className="sm:hidden">
-          <AnimatePresence mode="wait">
-            {expandBenefits ? (
-              <motion.div key="benefits-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-2 gap-2 px-1">
-                {whyUs.map((item, i) => (
-                  <div key={i}>
-                    <PremiumCard scan delay={i * 0.1} className="p-3 text-center h-full">
-                      <div className="text-primary/50 mb-2 flex justify-center">{item.icon}</div>
-                      <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
-                      <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
-                    </PremiumCard>
-                  </div>
-                ))}
+        {/* Benefits — Mobile: Circuit-connected icon grid */}
+        <div className="sm:hidden relative">
+          {/* Opaque backdrop to block DNA background */}
+          <div className="absolute inset-0 -m-4 rounded-2xl" style={{
+            background: "linear-gradient(135deg, hsla(265,20%,8%,0.97) 0%, hsla(230,18%,6%,0.98) 50%, hsla(265,22%,10%,0.97) 100%)",
+          }} />
+          {/* Circuit SVG connections */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet">
+            {/* Horizontal circuit lines */}
+            <line x1="55" y1="50" x2="145" y2="50" stroke="hsla(265,50%,55%,0.15)" strokeWidth="0.5" strokeDasharray="3,4" />
+            <line x1="155" y1="50" x2="245" y2="50" stroke="hsla(265,50%,55%,0.12)" strokeWidth="0.5" strokeDasharray="3,4" />
+            <line x1="55" y1="150" x2="145" y2="150" stroke="hsla(265,50%,55%,0.12)" strokeWidth="0.5" strokeDasharray="3,4" />
+            <line x1="155" y1="150" x2="245" y2="150" stroke="hsla(265,50%,55%,0.15)" strokeWidth="0.5" strokeDasharray="3,4" />
+            {/* Vertical circuit lines */}
+            <line x1="50" y1="55" x2="50" y2="145" stroke="hsla(155,40%,45%,0.12)" strokeWidth="0.5" strokeDasharray="3,4" />
+            <line x1="150" y1="55" x2="150" y2="145" stroke="hsla(38,45%,50%,0.1)" strokeWidth="0.5" strokeDasharray="3,4" />
+            <line x1="250" y1="55" x2="250" y2="145" stroke="hsla(155,40%,45%,0.12)" strokeWidth="0.5" strokeDasharray="3,4" />
+            {/* Diagonal cross-links */}
+            <line x1="55" y1="55" x2="145" y2="145" stroke="hsla(265,40%,50%,0.06)" strokeWidth="0.3" />
+            <line x1="155" y1="55" x2="245" y2="145" stroke="hsla(265,40%,50%,0.06)" strokeWidth="0.3" />
+            <line x1="145" y1="55" x2="55" y2="145" stroke="hsla(155,35%,45%,0.05)" strokeWidth="0.3" />
+            <line x1="245" y1="55" x2="155" y2="145" stroke="hsla(155,35%,45%,0.05)" strokeWidth="0.3" />
+            {/* Junction dots at intersections */}
+            {[
+              [50,50],[150,50],[250,50],
+              [50,150],[150,150],[250,150],
+              [100,100],[200,100],
+            ].map(([cx,cy], di) => (
+              <circle key={di} cx={cx} cy={cy} r="1.5" fill="hsla(265,50%,55%,0.2)" />
+            ))}
+            {/* Animated pulse traveling along paths */}
+            <circle r="2" fill="hsla(265,60%,65%,0.4)">
+              <animateMotion dur="6s" repeatCount="indefinite" path="M55,50 L145,50 L245,50 L245,150 L155,150 L55,150 Z" />
+            </circle>
+            <circle r="1.5" fill="hsla(155,50%,55%,0.3)">
+              <animateMotion dur="8s" repeatCount="indefinite" path="M50,55 L50,145 L150,145 L150,55 L250,55 L250,145" />
+            </circle>
+          </svg>
+          {/* Icon grid */}
+          <div className="relative z-[2] grid grid-cols-3 gap-x-3 gap-y-5 px-2 py-4">
+            {whyUs.map((item, i) => (
+              <motion.div key={i} className="flex flex-col items-center text-center"
+                initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.3 }}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-1.5 relative"
+                  style={{
+                    background: "linear-gradient(135deg, hsla(265,30%,18%,0.9), hsla(230,20%,14%,0.9))",
+                    border: "1px solid hsla(265,40%,45%,0.15)",
+                    boxShadow: "0 0 12px hsla(265,50%,50%,0.08)",
+                  }}>
+                  <div className="text-primary/60 [&>svg]:w-3.5 [&>svg]:h-3.5">{item.icon}</div>
+                  {/* Corner brackets on icon */}
+                  <div className="absolute -top-[2px] -left-[2px] w-[5px] h-[5px] border-t border-l border-primary/20" />
+                  <div className="absolute -top-[2px] -right-[2px] w-[5px] h-[5px] border-t border-r border-primary/20" />
+                  <div className="absolute -bottom-[2px] -left-[2px] w-[5px] h-[5px] border-b border-l border-primary/20" />
+                  <div className="absolute -bottom-[2px] -right-[2px] w-[5px] h-[5px] border-b border-r border-primary/20" />
+                </div>
+                <h4 className="text-[0.55rem] font-heading font-bold text-foreground/70 leading-tight">{item.title}</h4>
               </motion.div>
-            ) : (
-              <motion.div key="benefits-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <PremiumCarousel speed="slow" itemWidth={160} showControls={false}>
-                  {whyUs.map((item, i) => (
-                    <div key={i} className="w-[160px]">
-                      <PremiumCard scan delay={i * 0.3} className="p-4 text-center h-full">
-                        <motion.div className="text-primary/50 mb-2 flex justify-center"
-                          animate={{ y: [0, -4, 0], scale: [1, 1.1, 1] }}
-                          transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{item.icon}</motion.div>
-                        <h4 className="text-[0.65rem] font-heading font-bold text-foreground mb-1">{item.title}</h4>
-                        <p className="text-[0.5rem] text-foreground/30 leading-[1.5]">{item.desc}</p>
-                      </PremiumCard>
-                    </div>
-                  ))}
-                </PremiumCarousel>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <div className="flex justify-center mt-3">
-            <button onClick={() => setExpandBenefits(p => !p)}
-              className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
-              <Layers className="w-3 h-3" /> {expandBenefits ? "Chiudi" : "Vedi Tutti"}
-            </button>
+            ))}
           </div>
         </div>
 
