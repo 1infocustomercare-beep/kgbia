@@ -2316,6 +2316,10 @@ const LandingPage = () => {
   const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
   const mockupCarouselRef = useRef<HTMLDivElement>(null);
   const [mockupCarouselPaused, setMockupCarouselPaused] = useState(false);
+  const [expandBenefits, setExpandBenefits] = useState(false);
+  const [expandServices, setExpandServices] = useState(false);
+  const [expandMockups, setExpandMockups] = useState(false);
+  const [expandTestimonials, setExpandTestimonials] = useState(false);
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
