@@ -412,13 +412,15 @@ const EmpireDNABackground = () => {
         const pt = walkPolyline(route, fl.progress);
         const fadeA = Math.sin(fl.progress * Math.PI);
 
-        // Trail (3 ghost positions)
-        for (let ti = 1; ti <= 3; ti++) {
-          const trailT = Math.max(0, fl.progress - ti * 0.04);
-          const tp = walkPolyline(route, trailT);
-          const ta = fadeA * (1 - ti * 0.3) * 0.15;
-          ctx.fillStyle = hsla(pGlow, ta);
-          ctx.fillRect(tp.x - 1, tp.y - 1, 2, 2);
+        // Trail (desktop only — too many draw calls for mobile)
+        if (!IS_MOBILE) {
+          for (let ti = 1; ti <= 3; ti++) {
+            const trailT = Math.max(0, fl.progress - ti * 0.04);
+            const tp = walkPolyline(route, trailT);
+            const ta = fadeA * (1 - ti * 0.3) * 0.15;
+            ctx.fillStyle = hsla(pGlow, ta);
+            ctx.fillRect(tp.x - 1, tp.y - 1, 2, 2);
+          }
         }
 
         // Small subtle core dot only — no big glowing ball
