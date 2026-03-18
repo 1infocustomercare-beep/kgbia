@@ -333,13 +333,13 @@ const NetworkNode = ({
       {/* Outer glow */}
       {(isActive || isConnected) && (
         <motion.div
-          className="absolute rounded-2xl pointer-events-none"
+          className="absolute rounded-xl pointer-events-none"
           style={{
-            width: isActive ? 120 : 100,
-            height: isActive ? 120 : 100,
+            width: isActive ? 72 : 60,
+            height: isActive ? 72 : 60,
             top: "50%", left: "50%", transform: "translate(-50%, -55%)",
             background: `radial-gradient(circle, ${agent.glow}18 0%, transparent 70%)`,
-            boxShadow: isActive ? `0 0 50px ${agent.glow}20, 0 0 100px ${agent.glow}08` : `0 0 25px ${agent.glow}12`,
+            boxShadow: isActive ? `0 0 30px ${agent.glow}20` : `0 0 15px ${agent.glow}12`,
           }}
           animate={isActive ? { scale: [1, 1.12, 1], opacity: [0.5, 0.9, 0.5] } : { opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 3, repeat: Infinity }}
@@ -347,38 +347,38 @@ const NetworkNode = ({
       )}
 
       {/* Robot avatar node */}
-      <div className="relative z-10 mb-2">
-        <RobotAvatar agent={agent} size={72} isActive={isActive} isConnected={isConnected} />
+      <div className="relative z-10 mb-1">
+        <RobotAvatar agent={agent} size={44} isActive={isActive} isConnected={isConnected} />
 
         {/* Status pulse */}
         <motion.div
-          className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full z-20"
+          className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full z-20"
           style={{
             background: `radial-gradient(circle, hsla(160,80%,55%,1), hsla(160,80%,40%,1))`,
-            boxShadow: "0 0 8px hsla(160,80%,55%,0.6)",
+            boxShadow: "0 0 6px hsla(160,80%,55%,0.6)",
           }}
           animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
           transition={{ duration: 2, repeat: Infinity, delay: index * 0.12 }}
         />
 
         {/* Stat badge */}
-        <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[0.5rem] font-bold whitespace-nowrap z-20 border border-foreground/10"
+        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-[1px] rounded-full text-[0.42rem] font-bold whitespace-nowrap z-20 border border-foreground/10"
           style={{ background: "hsla(var(--background) / 0.92)", backdropFilter: "blur(6px)", color: agent.glow }}>
           <Counter value={agent.stat.value} suffix={agent.stat.suffix} />{" "}
-          <span className="text-foreground/60 text-[0.4rem]">{agent.stat.label}</span>
+          <span className="text-foreground/60 text-[0.35rem]">{agent.stat.label}</span>
         </div>
 
         {/* Cardinal connection dots */}
         {(["top", "bottom", "left", "right"] as const).map((pos) => (
           <motion.div key={pos}
-            className="absolute w-[5px] h-[5px] rounded-full z-20"
+            className="absolute w-1 h-1 rounded-full z-20"
             style={{
               background: isActive || isConnected ? agent.glow : "hsla(var(--primary) / 0.15)",
-              boxShadow: isActive ? `0 0 8px ${agent.glow}` : "none",
-              ...(pos === "top" ? { top: -2, left: "50%", marginLeft: -2.5 } : {}),
-              ...(pos === "bottom" ? { bottom: -2, left: "50%", marginLeft: -2.5 } : {}),
-              ...(pos === "left" ? { left: -2, top: "50%", marginTop: -2.5 } : {}),
-              ...(pos === "right" ? { right: -2, top: "50%", marginTop: -2.5 } : {}),
+              boxShadow: isActive ? `0 0 6px ${agent.glow}` : "none",
+              ...(pos === "top" ? { top: -1, left: "50%", marginLeft: -2 } : {}),
+              ...(pos === "bottom" ? { bottom: -1, left: "50%", marginLeft: -2 } : {}),
+              ...(pos === "left" ? { left: -1, top: "50%", marginTop: -2 } : {}),
+              ...(pos === "right" ? { right: -1, top: "50%", marginTop: -2 } : {}),
             }}
             animate={isActive ? { scale: [1, 1.8, 1], opacity: [0.4, 1, 0.4] } : {}}
             transition={{ duration: 2, repeat: Infinity, delay: ["top", "right", "bottom", "left"].indexOf(pos) * 0.25 }}
@@ -387,7 +387,7 @@ const NetworkNode = ({
 
         {/* Rotating orbit ring */}
         {isActive && (
-          <motion.svg className="absolute -inset-3 w-[calc(100%+24px)] h-[calc(100%+24px)] pointer-events-none" viewBox="0 0 100 100">
+          <motion.svg className="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] pointer-events-none" viewBox="0 0 100 100">
             <motion.rect x="2" y="2" width="96" height="96" rx="20" fill="none"
               stroke={agent.glow} strokeWidth="0.5"
               strokeDasharray="8 6" strokeLinecap="round"
@@ -399,11 +399,11 @@ const NetworkNode = ({
       </div>
 
       {/* Name + role */}
-      <div className="text-center max-w-[100px] sm:max-w-[120px]">
-        <h3 className="font-bold text-[0.58rem] sm:text-[0.68rem] text-foreground leading-tight truncate">
+      <div className="text-center max-w-[68px] sm:max-w-[100px]">
+        <h3 className="font-bold text-[0.48rem] sm:text-[0.6rem] text-foreground leading-tight truncate">
           {agent.name}
         </h3>
-        <p className="text-[0.44rem] sm:text-[0.5rem] text-primary/85 tracking-wider uppercase truncate">
+        <p className="text-[0.36rem] sm:text-[0.44rem] text-primary/85 tracking-wider uppercase truncate">
           {agent.role}
         </p>
       </div>
@@ -633,7 +633,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
           <LayoutGroup>
             <motion.div
-              className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-8 gap-y-10 sm:gap-x-12 sm:gap-y-14 lg:gap-x-16 lg:gap-y-16 mb-8 relative z-[5]"
+              className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-3 gap-y-5 sm:gap-x-8 sm:gap-y-10 lg:gap-x-12 lg:gap-y-14 mb-6 relative z-[5]"
               layout
             >
               <AnimatePresence mode="popLayout">
