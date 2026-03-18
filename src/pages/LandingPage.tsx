@@ -4405,49 +4405,113 @@ const LandingPage = () => {
             <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2" style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--primary)/0.35), transparent)" }} />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
-            {[
-              { icon: <Palette className="w-4 h-4" />, title: "100% White Label", desc: "Colori, font, logo, layout — ogni pixel è il tuo brand.", accent: "Il TUO brand" },
-              { icon: <Workflow className="w-4 h-4" />, title: "Automazione Totale", desc: "Booking, fatture, reminder, marketing — tutto in autopilot.", accent: "Zero lavoro manuale" },
-              { icon: <Rocket className="w-4 h-4" />, title: "Sviluppo Custom", desc: "Moduli dedicati, integrazioni, logiche proprietarie su richiesta.", accent: "Nessun limite" },
-            ].map((card, i) => {
-              const fromLeft = i !== 1;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: fromLeft ? -45 : 45, y: 16, rotateY: fromLeft ? -14 : 14, scale: 0.86 }}
-                  whileInView={{ opacity: 1, x: 0, y: 0, rotateY: 0, scale: 1 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ delay: i * 0.12, duration: 0.6, type: "spring", stiffness: 145, damping: 16 }}
-                  className="relative"
-                  style={{ perspective: "900px" }}
-                >
-                  <motion.div
-                    className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] z-20 sm:block"
-                    style={i === 0 ? { right: "-5px" } : i === 2 ? { left: "-5px" } : { left: "50%", transform: "translate(-50%, -50%)" }}
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: [0, 1.45, 1] }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.12 + 0.35, duration: 0.35 }}
-                  />
+          {/* AI Tech Network Schema */}
+          <div className="relative">
+            {/* SVG Network Lines — connecting the 3 cards */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 400 200" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="net-line-v" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(265,60%,55%)" stopOpacity="0.15" />
+                  <stop offset="50%" stopColor="hsl(38,45%,52%)" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="hsl(265,60%,55%)" stopOpacity="0.1" />
+                </linearGradient>
+                <linearGradient id="net-line-h" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="hsl(265,60%,55%)" stopOpacity="0.12" />
+                  <stop offset="50%" stopColor="hsl(38,45%,52%)" stopOpacity="0.18" />
+                  <stop offset="100%" stopColor="hsl(265,60%,55%)" stopOpacity="0.12" />
+                </linearGradient>
+              </defs>
+              {/* Horizontal connections */}
+              <line x1="22%" y1="50%" x2="50%" y2="50%" stroke="url(#net-line-h)" strokeWidth="0.5" />
+              <line x1="50%" y1="50%" x2="78%" y2="50%" stroke="url(#net-line-h)" strokeWidth="0.5" />
+              {/* Diagonal cross-connections */}
+              <line x1="22%" y1="25%" x2="50%" y2="75%" stroke="url(#net-line-v)" strokeWidth="0.3" strokeDasharray="3 5" />
+              <line x1="78%" y1="25%" x2="50%" y2="75%" stroke="url(#net-line-v)" strokeWidth="0.3" strokeDasharray="3 5" />
+              <line x1="22%" y1="75%" x2="78%" y2="25%" stroke="url(#net-line-v)" strokeWidth="0.25" strokeDasharray="2 6" />
+              {/* Top arc connections */}
+              <line x1="22%" y1="20%" x2="78%" y2="20%" stroke="url(#net-line-h)" strokeWidth="0.3" strokeDasharray="4 4" />
+              <line x1="22%" y1="80%" x2="78%" y2="80%" stroke="url(#net-line-h)" strokeWidth="0.3" strokeDasharray="4 4" />
+              {/* Junction nodes */}
+              {[
+                [22, 50], [50, 50], [78, 50],
+                [22, 25], [50, 25], [78, 25],
+                [22, 75], [50, 75], [78, 75],
+                [36, 37], [64, 37], [36, 63], [64, 63],
+                [22, 20], [50, 20], [78, 20],
+                [22, 80], [50, 80], [78, 80],
+              ].map(([cx, cy], ni) => (
+                <g key={ni}>
+                  <circle cx={`${cx}%`} cy={`${cy}%`} r="1.8" fill="hsla(265,60%,55%,0.12)" stroke="hsla(38,45%,52%,0.15)" strokeWidth="0.4">
+                    <animate attributeName="r" values="1.5;2.2;1.5" dur={`${3 + ni * 0.3}s`} repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.4;0.8;0.4" dur={`${2.5 + ni * 0.2}s`} repeatCount="indefinite" />
+                  </circle>
+                </g>
+              ))}
+              {/* Animated data pulses traveling along lines */}
+              {[
+                { x1: "22%", y1: "50%", x2: "50%", y2: "50%", dur: "2.5s", delay: "0s" },
+                { x1: "50%", y1: "50%", x2: "78%", y2: "50%", dur: "2.8s", delay: "0.8s" },
+                { x1: "22%", y1: "25%", x2: "50%", y2: "75%", dur: "3.2s", delay: "1.2s" },
+                { x1: "78%", y1: "25%", x2: "50%", y2: "75%", dur: "3s", delay: "0.5s" },
+              ].map((p, pi) => (
+                <circle key={`pulse-${pi}`} r="1.2" fill="hsla(38,50%,55%,0.35)">
+                  <animateMotion dur={p.dur} begin={p.delay} repeatCount="indefinite" path={`M0,0 L100,0`}>
+                    <mpath xlinkHref={`#net-path-${pi}`} />
+                  </animateMotion>
+                  <animate attributeName="opacity" values="0;0.6;0" dur={p.dur} begin={p.delay} repeatCount="indefinite" />
+                </circle>
+              ))}
+              {/* Define motion paths */}
+              <path id="net-path-0" d="M88,100 L200,100" fill="none" />
+              <path id="net-path-1" d="M200,100 L312,100" fill="none" />
+              <path id="net-path-2" d="M88,50 L200,150" fill="none" />
+              <path id="net-path-3" d="M312,50 L200,150" fill="none" />
+            </svg>
 
-                  <PremiumCard glow scan delay={i} className="p-4 sm:p-4">
-                    <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
-                      <span className="text-primary">{card.icon}</span>
-                    </PremiumIcon>
-                    <div className="mt-2.5" />
-                    <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{card.title}</h3>
-                    <p className="text-[0.62rem] text-foreground/35 leading-[1.55] mb-2">{card.desc}</p>
-                    <motion.span className="text-[0.55rem] font-heading font-semibold text-primary/60 tracking-wider inline-flex items-center gap-1.5"
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.6 }}>
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
-                      {card.accent}
-                    </motion.span>
-                  </PremiumCard>
-                </motion.div>
-              );
-            })}
+            <div className="relative z-[1] grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+              {[
+                { icon: <Palette className="w-4 h-4" />, title: "100% White Label", desc: "Colori, font, logo, layout — ogni pixel è il tuo brand.", accent: "Il TUO brand" },
+                { icon: <Workflow className="w-4 h-4" />, title: "Automazione Totale", desc: "Booking, fatture, reminder, marketing — tutto in autopilot.", accent: "Zero lavoro manuale" },
+                { icon: <Rocket className="w-4 h-4" />, title: "Sviluppo Custom", desc: "Moduli dedicati, integrazioni, logiche proprietarie su richiesta.", accent: "Nessun limite" },
+              ].map((card, i) => {
+                const fromLeft = i !== 1;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: fromLeft ? -45 : 45, y: 16, rotateY: fromLeft ? -14 : 14, scale: 0.86 }}
+                    whileInView={{ opacity: 1, x: 0, y: 0, rotateY: 0, scale: 1 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ delay: i * 0.12, duration: 0.6, type: "spring", stiffness: 145, damping: 16 }}
+                    className="relative"
+                    style={{ perspective: "900px" }}
+                  >
+                    <motion.div
+                      className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] z-20 sm:block"
+                      style={i === 0 ? { right: "-5px" } : i === 2 ? { left: "-5px" } : { left: "50%", transform: "translate(-50%, -50%)" }}
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: [0, 1.45, 1] }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.12 + 0.35, duration: 0.35 }}
+                    />
+
+                    <PremiumCard glow scan delay={i} className="p-4 sm:p-4">
+                      <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
+                        <span className="text-primary">{card.icon}</span>
+                      </PremiumIcon>
+                      <div className="mt-2.5" />
+                      <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{card.title}</h3>
+                      <p className="text-[0.62rem] text-foreground/35 leading-[1.55] mb-2">{card.desc}</p>
+                      <motion.span className="text-[0.55rem] font-heading font-semibold text-primary/60 tracking-wider inline-flex items-center gap-1.5"
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.6 }}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                        {card.accent}
+                      </motion.span>
+                    </PremiumCard>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
