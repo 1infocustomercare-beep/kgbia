@@ -3532,7 +3532,18 @@ const LandingPage = () => {
           initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
           transition={{ duration: 0.6 }}>
           <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
-          <FunnelDNAVisual />
+          {!IS_LANDING_MOBILE ? (
+            <Suspense fallback={<div className="aspect-video bg-card/50 rounded-2xl animate-pulse" />}>
+              <FunnelDNAVisual />
+            </Suspense>
+          ) : (
+            <div className="aspect-video bg-card/30 rounded-2xl flex items-center justify-center border border-primary/10">
+              <div className="text-center space-y-2 px-4">
+                <div className="text-2xl">🧠</div>
+                <p className="text-xs text-muted-foreground font-heading tracking-wider uppercase">Dashboard IA Live</p>
+              </div>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
           <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
             <div className="px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-sm border border-primary/10">
