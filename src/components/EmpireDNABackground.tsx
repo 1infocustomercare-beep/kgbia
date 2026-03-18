@@ -119,13 +119,13 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
 const SECTIONS = topologies.length;
 
 // Uniform palette — consistent intensity per section
-const BASE_ALPHA = 0.08; // Master intensity
+const BASE_ALPHA = 0.04; // Master intensity — very subtle
 const PALETTES = [
-  { node: [215, 25, 45], line: [215, 20, 38], glow: [215, 35, 52], accent: [38, 45, 55] },
-  { node: [265, 30, 45], line: [265, 22, 38], glow: [265, 40, 52], accent: [38, 42, 53] },
-  { node: [210, 28, 46], line: [210, 22, 40], glow: [210, 38, 54], accent: [42, 42, 56] },
-  { node: [220, 26, 44], line: [220, 20, 38], glow: [220, 36, 52], accent: [35, 48, 54] },
-  { node: [218, 24, 44], line: [218, 18, 38], glow: [218, 34, 50], accent: [40, 44, 55] },
+  { node: [215, 15, 40], line: [215, 12, 32], glow: [215, 20, 45], accent: [38, 30, 45] },
+  { node: [265, 18, 40], line: [265, 14, 32], glow: [265, 22, 45], accent: [38, 28, 43] },
+  { node: [210, 16, 40], line: [210, 12, 34], glow: [210, 20, 45], accent: [42, 28, 46] },
+  { node: [220, 15, 38], line: [220, 12, 32], glow: [220, 20, 44], accent: [35, 30, 44] },
+  { node: [218, 14, 38], line: [218, 10, 32], glow: [218, 18, 42], accent: [40, 28, 45] },
 ];
 
 interface FlowParticle { fromIdx: number; toIdx: number; progress: number; speed: number; life: number; }
