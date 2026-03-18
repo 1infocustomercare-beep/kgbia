@@ -4719,49 +4719,76 @@ const LandingPage = () => {
               <path id="net-path-3" d="M312,50 L200,150" fill="none" />
             </svg>
 
-            <div className="relative z-[1] grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
-              {[
-                { icon: <Palette className="w-4 h-4" />, title: "100% White Label", desc: "Colori, font, logo, layout — ogni pixel è il tuo brand.", accent: "Il TUO brand" },
-                { icon: <Workflow className="w-4 h-4" />, title: "Automazione Totale", desc: "Booking, fatture, reminder, marketing — tutto in autopilot.", accent: "Zero lavoro manuale" },
-                { icon: <Rocket className="w-4 h-4" />, title: "Sviluppo Custom", desc: "Moduli dedicati, integrazioni, logiche proprietarie su richiesta.", accent: "Nessun limite" },
-              ].map((card, i) => {
-                const fromLeft = i !== 1;
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: fromLeft ? -45 : 45, y: 16, rotateY: fromLeft ? -14 : 14, scale: 0.86 }}
-                    whileInView={{ opacity: 1, x: 0, y: 0, rotateY: 0, scale: 1 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ delay: i * 0.12, duration: 0.6, type: "spring", stiffness: 145, damping: 16 }}
-                    className="relative"
-                    style={{ perspective: "900px" }}
-                  >
-                    <motion.div
-                      className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-primary/35 bg-primary/20 shadow-[0_0_10px_hsl(var(--primary)/0.35)] z-20 sm:block"
-                      style={i === 0 ? { right: "-5px" } : i === 2 ? { left: "-5px" } : { left: "50%", transform: "translate(-50%, -50%)" }}
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: [0, 1.45, 1] }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.12 + 0.35, duration: 0.35 }}
-                    />
+            {/* Opaque layer to block DNA background bleed */}
+            <div className="absolute inset-0 rounded-2xl" style={{
+              background: "linear-gradient(145deg, hsla(265,22%,8%,0.98) 0%, hsla(230,18%,6%,0.99) 50%, hsla(265,20%,9%,0.98) 100%)",
+            }} />
 
-                    <PremiumCard glow scan delay={i} className="p-4 sm:p-4">
-                      <PremiumIcon gradient="from-primary/20 to-accent/15" size="md" delay={i * 0.6}>
-                        <span className="text-primary">{card.icon}</span>
-                      </PremiumIcon>
-                      <div className="mt-2.5" />
-                      <h3 className="font-heading text-xs font-bold text-foreground mb-1.5">{card.title}</h3>
-                      <p className="text-[0.62rem] text-foreground/35 leading-[1.55] mb-2">{card.desc}</p>
-                      <motion.span className="text-[0.55rem] font-heading font-semibold text-primary/60 tracking-wider inline-flex items-center gap-1.5"
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.6 }}>
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
-                        {card.accent}
-                      </motion.span>
-                    </PremiumCard>
-                  </motion.div>
-                );
-              })}
+            {/* Circuit connection SVG between the 3 cards */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" preserveAspectRatio="none">
+              {/* Horizontal bus line connecting all 3 */}
+              <line x1="16.5%" y1="50%" x2="83.5%" y2="50%" stroke="hsla(265,50%,55%,0.18)" strokeWidth="0.5" strokeDasharray="4,6" />
+              {/* Vertical taps from bus to each card center */}
+              <line x1="16.5%" y1="35%" x2="16.5%" y2="65%" stroke="hsla(155,40%,45%,0.14)" strokeWidth="0.5" strokeDasharray="3,5" />
+              <line x1="50%" y1="30%" x2="50%" y2="70%" stroke="hsla(38,45%,50%,0.12)" strokeWidth="0.5" strokeDasharray="3,5" />
+              <line x1="83.5%" y1="35%" x2="83.5%" y2="65%" stroke="hsla(155,40%,45%,0.14)" strokeWidth="0.5" strokeDasharray="3,5" />
+              {/* Junction nodes */}
+              {[[16.5,50],[50,50],[83.5,50]].map(([cx,cy],ni) => (
+                <circle key={ni} cx={`${cx}%`} cy={`${cy}%`} r="2.5" fill="hsla(265,55%,55%,0.15)" stroke="hsla(265,50%,55%,0.25)" strokeWidth="0.4">
+                  <animate attributeName="r" values="2;3;2" dur={`${2.5+ni*0.4}s`} repeatCount="indefinite" />
+                </circle>
+              ))}
+              {/* Animated data pulse along the bus */}
+              <circle r="2" fill="hsla(38,50%,55%,0.5)">
+                <animate attributeName="cx" values="16.5%;50%;83.5%;50%;16.5%" dur="5s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="50%;50%;50%;50%;50%" dur="5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.2;0.7;0.2;0.7;0.2" dur="5s" repeatCount="indefinite" />
+              </circle>
+              <circle r="1.5" fill="hsla(265,60%,65%,0.4)">
+                <animate attributeName="cx" values="83.5%;50%;16.5%;50%;83.5%" dur="6s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="50%;50%;50%;50%;50%" dur="6s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.15;0.5;0.15;0.5;0.15" dur="6s" repeatCount="indefinite" />
+              </circle>
+            </svg>
+
+            <div className="relative z-[2] grid grid-cols-3 gap-2 sm:gap-3">
+              {[
+                { icon: <Palette className="w-3 h-3" />, title: "100% White Label", desc: "Ogni pixel è il tuo brand.", accent: "Il TUO brand" },
+                { icon: <Workflow className="w-3 h-3" />, title: "Automazione Totale", desc: "Tutto in autopilot.", accent: "Zero lavoro manuale" },
+                { icon: <Rocket className="w-3 h-3" />, title: "Sviluppo Custom", desc: "Integrazioni su richiesta.", accent: "Nessun limite" },
+              ].map((card, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 12, scale: 0.9 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ delay: i * 0.1, duration: 0.4 }}
+                  className="relative flex flex-col items-center text-center"
+                >
+                  {/* Compact tech icon */}
+                  <div className="w-7 h-7 rounded-md flex items-center justify-center mb-1.5 relative"
+                    style={{
+                      background: "linear-gradient(135deg, hsla(265,28%,16%,0.95), hsla(230,22%,12%,0.95))",
+                      border: "1px solid hsla(265,40%,45%,0.18)",
+                      boxShadow: "0 0 10px hsla(265,50%,50%,0.06), inset 0 1px 0 hsla(265,40%,60%,0.08)",
+                    }}>
+                    <div className="text-primary/70">{card.icon}</div>
+                    {/* Tech corner brackets */}
+                    <div className="absolute -top-[1.5px] -left-[1.5px] w-[4px] h-[4px] border-t border-l border-primary/25" />
+                    <div className="absolute -top-[1.5px] -right-[1.5px] w-[4px] h-[4px] border-t border-r border-primary/25" />
+                    <div className="absolute -bottom-[1.5px] -left-[1.5px] w-[4px] h-[4px] border-b border-l border-primary/25" />
+                    <div className="absolute -bottom-[1.5px] -right-[1.5px] w-[4px] h-[4px] border-b border-r border-primary/25" />
+                  </div>
+                  <h3 className="font-heading text-[0.55rem] font-bold text-foreground/80 leading-tight mb-0.5">{card.title}</h3>
+                  <p className="text-[0.45rem] text-foreground/30 leading-[1.4] mb-1">{card.desc}</p>
+                  <motion.span className="text-[0.45rem] font-heading font-semibold text-primary/50 tracking-wider inline-flex items-center gap-1"
+                    animate={{ opacity: [0.4, 0.9, 0.4] }}
+                    transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.6 }}>
+                    <span className="w-1 h-1 rounded-full bg-primary/40" />
+                    {card.accent}
+                  </motion.span>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
