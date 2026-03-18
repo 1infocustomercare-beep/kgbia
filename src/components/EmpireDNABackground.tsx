@@ -262,7 +262,21 @@ const EmpireDNABackground = () => {
 
       const routeA = sIdx % SECTIONS, routeB = (sIdx + 1) % SECTIONS;
 
-      // ═══ L0: AMBIENT DOT MATRIX — removed (user request) ═══
+      // ═══ L0: AMBIENT DOT MATRIX — breathing grid ═══
+      const gridSp = IS_MOBILE ? 60 : 55;
+      if (!IS_MOBILE) {
+        const gridPulse = 0.5 + Math.sin(time * 0.3) * 0.5;
+        ctx.fillStyle = hsla(pLine, 0.015 + gridPulse * 0.008);
+        for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
+          for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
+            const localPulse = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.25) * 0.5 + 0.5;
+            const s = 0.4 + localPulse * 0.4;
+            ctx.globalAlpha = 0.3 + localPulse * 0.3;
+            ctx.fillRect(gx - s / 2, gy - s / 2, s, s);
+          }
+        }
+        ctx.globalAlpha = 1;
+      }
 
       // ═══ L1: DATA HIGHWAYS — horizontal energy streams ═══
       const hws = hwRef.current;
