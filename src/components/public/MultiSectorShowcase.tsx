@@ -608,8 +608,8 @@ export default function MultiSectorShowcase() {
       </div>
 
       {/* Sector grid — clean uniform grid */}
-      <div className="relative mb-6 px-3">
-        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-[3px]">
+      <div className="relative mb-4 sm:mb-6 px-2 sm:px-3">
+        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-[2px] sm:gap-[3px]">
           {filteredSectors.map((s) => {
             const globalIdx = SHOWCASE_SECTORS.findIndex(ss => ss.id === s.id);
             const isActive = activeIdx === globalIdx;
