@@ -5308,10 +5308,10 @@ const LandingPage = () => {
 
           <div className="relative z-[2] grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 p-2 sm:p-0">
             {[
-            { step: "01", title: "Scegli il Settore", desc: "Empire configura moduli e flussi dedicati automaticamente.", icon: <Globe className="w-3 h-3 sm:w-4 sm:h-4" /> },
-            { step: "02", title: "Personalizza Brand", desc: "Logo, colori, dominio. L'IA genera il catalogo in 60 secondi.", icon: <Palette className="w-3 h-3 sm:w-4 sm:h-4" /> },
-            { step: "03", title: "Lancia il Sistema", desc: "App attiva, team formato, QR code installati. Operativo in 24h.", icon: <Rocket className="w-3 h-3 sm:w-4 sm:h-4" /> },
-            { step: "04", title: "Cresci con i Dati", desc: "Analytics real-time, suggerimenti IA, campagne automatizzate.", icon: <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" /> }].
+            { step: "01", title: "Scegli il Settore", desc: "Empire configura moduli e flussi dedicati automaticamente.", icon: <Globe className="w-2.5 h-2.5 sm:w-4 sm:h-4" /> },
+            { step: "02", title: "Personalizza Brand", desc: "Logo, colori, dominio. L'IA genera il catalogo in 60 secondi.", icon: <Palette className="w-2.5 h-2.5 sm:w-4 sm:h-4" /> },
+            { step: "03", title: "Lancia il Sistema", desc: "App attiva, team formato, QR code installati. Operativo in 24h.", icon: <Rocket className="w-2.5 h-2.5 sm:w-4 sm:h-4" /> },
+            { step: "04", title: "Cresci con i Dati", desc: "Analytics real-time, suggerimenti IA, campagne automatizzate.", icon: <TrendingUp className="w-2.5 h-2.5 sm:w-4 sm:h-4" /> }].
             map((s, i) => {
               const dnaWave = i % 2 === 0;
               return (
