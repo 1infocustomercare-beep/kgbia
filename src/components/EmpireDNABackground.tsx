@@ -219,11 +219,12 @@ const EmpireDNABackground = () => {
 
     const animate = (now: number) => {
       animRef.current = requestAnimationFrame(animate);
-      if (now - lastFrameTime < FRAME_INTERVAL) return;
+      const elapsed = now - lastFrameTime;
+      if (elapsed < FRAME_INTERVAL) return;
       lastFrameTime = now;
       if (!w || !h) return;
 
-      timeRef.current += 0.016;
+      timeRef.current += Math.min(elapsed / 1000, 0.05);
       const time = timeRef.current;
       ctx.clearRect(0, 0, w, h);
 
@@ -267,15 +268,15 @@ const EmpireDNABackground = () => {
       const routeMode = sIdx;
 
       // ═══ LAYER 0: Dot Matrix ═══
-      if (!IS_MOBILE) {
-        const gridSp = 55;
+      {
+        const gridSp = IS_MOBILE ? 72 : 55;
         const gridPulse = 0.5 + Math.sin(time * 0.25) * 0.5;
-        ctx.fillStyle = hsla(pLine, 0.012 + gridPulse * 0.006);
+        ctx.fillStyle = hsla(pLine, (IS_MOBILE ? 0.016 : 0.012) + gridPulse * (IS_MOBILE ? 0.007 : 0.006));
         for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
           for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
             const lp = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.2) * 0.5 + 0.5;
-            const s = 0.3 + lp * 0.3;
-            ctx.globalAlpha = 0.2 + lp * 0.2;
+            const s = (IS_MOBILE ? 0.45 : 0.3) + lp * (IS_MOBILE ? 0.45 : 0.3);
+            ctx.globalAlpha = IS_MOBILE ? 0.32 + lp * 0.24 : 0.2 + lp * 0.2;
             ctx.fillRect(gx - s / 2, gy - s / 2, s, s);
           }
         }
@@ -286,20 +287,22 @@ const EmpireDNABackground = () => {
       const hubCount = Math.min(HUB_COUNT, SECTOR_HUBS.length);
       const hubBlend = 0.3 + t3 * 0.4; // More visible in hub topologies
       const isHubTopo = shA === 1 || shA === 4 || shB === 1 || shB === 4;
-      if (!IS_MOBILE && isHubTopo) {
-        ctx.font = "600 7px system-ui, sans-serif";
+      if (isHubTopo) {
         ctx.textAlign = "center";
         for (let hi = 0; hi < hubCount; hi++) {
           const hub = SECTOR_HUBS[hi];
           const hx = w * hub.cx, hy = h * hub.cy;
           // Subtle ring
-          ctx.strokeStyle = hsla(pAccent, 0.04 * hubBlend);
-          ctx.lineWidth = 0.5;
-          const ringR = 25 + Math.sin(time * 0.3 + hi) * 5;
+          ctx.strokeStyle = hsla(pAccent, 0.04 * hubBlend * (IS_MOBILE ? 1.35 : 1));
+          ctx.lineWidth = IS_MOBILE ? 0.6 : 0.5;
+          const ringR = (IS_MOBILE ? 22 : 25) + Math.sin(time * 0.3 + hi) * (IS_MOBILE ? 4 : 5);
           ctx.beginPath(); ctx.arc(hx, hy, ringR, 0, Math.PI * 2); ctx.stroke();
-          // Label
-          ctx.fillStyle = hsla(pAccent, 0.06 * hubBlend);
-          ctx.fillText(hub.label.toUpperCase(), hx, hy + ringR + 10);
+          // Labels only on desktop to avoid clutter
+          if (!IS_MOBILE) {
+            ctx.font = "600 7px system-ui, sans-serif";
+            ctx.fillStyle = hsla(pAccent, 0.06 * hubBlend);
+            ctx.fillText(hub.label.toUpperCase(), hx, hy + ringR + 10);
+          }
         }
       }
 
