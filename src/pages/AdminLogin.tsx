@@ -439,7 +439,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Owner / Partner login/signup ───
   const isPartnerMode = mode === "partner";
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
+    <div className="min-h-screen bg-transparent flex flex-col items-center justify-center px-6 relative overflow-hidden">
       <Blob className="w-[500px] h-[500px] -top-20 -left-40 animate-blob-float" color="bg-violet-600" />
       <Blob className="w-[400px] h-[400px] bottom-10 -right-20 animate-blob-float-reverse" color="bg-orange-500" />
       <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
