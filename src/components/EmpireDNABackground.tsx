@@ -484,7 +484,7 @@ const EmpireDNABackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: IS_MOBILE ? 0.28 : 0.045, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: IS_MOBILE ? 0.48 : 0.07, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };
