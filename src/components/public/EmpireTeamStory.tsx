@@ -408,6 +408,7 @@ export default function EmpireTeamStory() {
             </div>
           ))}
         </motion.div>
+        </div>{/* close team luxury wrapper */}
       </div>
     </section>
   );
