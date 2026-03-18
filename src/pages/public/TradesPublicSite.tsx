@@ -247,7 +247,11 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
 
       {/* HERO */}
       <section className="relative min-h-[100svh] flex items-center pt-16 px-4 overflow-hidden">
-        <HeroVideoBackground primarySrc={heroVideo} fallbackSrc={fallbackHeroVideo} className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.4) saturate(1.1)" }} />
+        {heroVideo ? (
+          <HeroVideoBackground primarySrc={heroVideo} fallbackSrc={fallbackHeroVideo} className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.4) saturate(1.1)" }} />
+        ) : (
+          <HeroPhotoCarousel images={heroPhotos} className="absolute inset-0 w-full h-full" style={{ filter: "brightness(0.4) saturate(1.1)" }} overlay={false} />
+        )}
         <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${D}CC 0%, ${D}88 50%, transparent 100%)` }} />
         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `linear-gradient(${A}20 1px, transparent 1px), linear-gradient(90deg, ${A}20 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
 
