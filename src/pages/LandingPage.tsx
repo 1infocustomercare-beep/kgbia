@@ -114,6 +114,14 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number; pr
 const Section = forwardRef<HTMLElement, { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }>(
   ({ id, children, className = "", style }, ref) => (
     <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden ${className}`} style={style}>
+      {/* Premium luxury backdrop — isolates content from animated background */}
+      <div className="absolute inset-0 z-[2]" style={{
+        background: "linear-gradient(180deg, hsla(230,10%,12%,0.88) 0%, hsla(230,10%,11%,0.92) 30%, hsla(230,10%,10%,0.94) 70%, hsla(230,10%,12%,0.88) 100%)",
+        backdropFilter: "blur(8px) saturate(1.2)",
+      }} />
+      {/* Subtle gold top/bottom edge accents */}
+      <div className="absolute top-0 left-0 right-0 h-px z-[3]" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(38,45%,52%,0.08) 50%, transparent 90%)" }} />
+      <div className="absolute bottom-0 left-0 right-0 h-px z-[3]" style={{ background: "linear-gradient(90deg, transparent 10%, hsla(38,45%,52%,0.06) 50%, transparent 90%)" }} />
       <div className="max-w-[1100px] mx-auto relative z-10">{children}</div>
     </section>
   )
