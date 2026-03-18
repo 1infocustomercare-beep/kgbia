@@ -306,7 +306,7 @@ const EmpireDNABackground = () => {
       // ═══ L2: CIRCUIT CONNECTIONS — morphing route style ═══
       ctx.lineCap = "square"; ctx.lineJoin = "miter";
       for (let i = 0; i < NODE_COUNT; i++) {
-        const maxJ = Math.min(i + (IS_MOBILE ? 5 : 7), NODE_COUNT);
+        const maxJ = Math.min(i + (IS_MOBILE ? 3 : 7), NODE_COUNT);
         for (let j = i + 1; j < maxJ; j++) {
           const dx = pos[i].x - pos[j].x, dy = pos[i].y - pos[j].y, d = Math.sqrt(dx * dx + dy * dy);
           if (d < MAX_DIST) {
