@@ -157,53 +157,69 @@ const AlwaysOnNetwork = ({
         </filter>
       </defs>
 
-      {lines.map((line) => {
+      {lines.map((line, li) => {
         const dx = line.x2 - line.x1;
         const dy = line.y2 - line.y1;
         const mx = (line.x1 + line.x2) / 2 + dy * 0.15;
         const my = (line.y1 + line.y2) / 2 - dx * 0.15;
         const pathD = `M ${line.x1} ${line.y1} Q ${mx} ${my} ${line.x2} ${line.y2}`;
-        const baseOpacity = line.isActive ? 0.7 : 0.18;
-        const particleColor = line.isActive ? line.color : "hsla(265,60%,70%,0.6)";
+        const reversePath = `M ${line.x2} ${line.y2} Q ${mx} ${my} ${line.x1} ${line.y1}`;
+        const isActive = line.isActive;
+
+        /* ── Always visible: idle = softer/slower, active = bright/fast ── */
+        const lineOpacity = isActive ? 0.7 : 0.35;
+        const lineWidth = isActive ? 2 : 0.9;
+        const dash = isActive ? "8 5" : "3 6";
+        const particleColor = isActive ? line.color : "hsla(215,50%,65%,0.55)";
+        const lineColor = isActive ? line.color : "hsla(215,35%,55%,0.4)";
+        const junctionR = isActive ? 3 : 2;
+        const junctionOpacity = isActive ? 0.65 : 0.3;
+        const particleDur = isActive ? "1.6s" : "5s";
+        const particleR = isActive ? 3.5 : 2;
+        const stagger = `${(li * 0.6) % 3}s`;
 
         return (
           <g key={line.id}>
-            {/* Glow line for active */}
-            {line.isActive && (
-              <path d={pathD} fill="none" stroke={line.color} strokeWidth="4"
-                opacity="0.12" filter="url(#line-glow)" />
-            )}
+            {/* Glow line — always on, stronger when active */}
+            <path d={pathD} fill="none" stroke={lineColor}
+              strokeWidth={isActive ? 5 : 3}
+              opacity={isActive ? 0.12 : 0.04}
+              filter="url(#line-glow)" />
 
-            {/* Main connection line */}
-            <path d={pathD} fill="none" stroke={line.color}
-              strokeWidth={line.isActive ? 1.8 : 0.8}
-              strokeDasharray={line.isActive ? "8 5" : "4 8"}
-              opacity={baseOpacity}
-              filter={line.isActive ? undefined : "url(#line-glow-soft)"}
+            {/* Main connection line — always visible */}
+            <path d={pathD} fill="none" stroke={lineColor}
+              strokeWidth={lineWidth}
+              strokeDasharray={dash}
+              opacity={lineOpacity}
+              filter="url(#line-glow-soft)"
             />
 
-            {/* Junction dots at endpoints */}
-            <circle cx={line.x1} cy={line.y1} r={line.isActive ? 3 : 1.5}
-              fill={line.color} opacity={line.isActive ? 0.6 : 0.15} />
-            <circle cx={line.x2} cy={line.y2} r={line.isActive ? 3 : 1.5}
-              fill={line.color} opacity={line.isActive ? 0.6 : 0.15} />
+            {/* Junction dots — always visible */}
+            <circle cx={line.x1} cy={line.y1} r={junctionR}
+              fill={lineColor} opacity={junctionOpacity} />
+            <circle cx={line.x2} cy={line.y2} r={junctionR}
+              fill={lineColor} opacity={junctionOpacity} />
 
-            {/* Flowing particle */}
-            <circle r={line.isActive ? 3.5 : 2} fill={particleColor}
-              filter={line.isActive ? "url(#line-glow)" : undefined}>
-              <animateMotion dur={line.isActive ? "1.8s" : "4.5s"} repeatCount="indefinite" path={pathD} />
+            {/* Flowing particle — always animating */}
+            <circle r={particleR} fill={particleColor}
+              filter={isActive ? "url(#line-glow)" : "url(#line-glow-soft)"}>
+              <animateMotion dur={particleDur} repeatCount="indefinite" path={pathD} begin={stagger} />
             </circle>
 
-            {/* Second particle reverse for active */}
-            {line.isActive && (
+            {/* Reverse particle — always present, faster when active */}
+            <circle r={isActive ? 2.5 : 1.5} fill={particleColor} opacity={isActive ? 0.55 : 0.3}>
+              <animateMotion dur={isActive ? "2.2s" : "7s"} repeatCount="indefinite"
+                path={reversePath} begin={`${(li * 0.9 + 1.2) % 4}s`} />
+            </circle>
+
+            {/* Extra particles on active — intense burst */}
+            {isActive && (
               <>
-                <circle r={2.5} fill={particleColor} opacity="0.5">
-                  <animateMotion dur="2.5s" repeatCount="indefinite"
-                    path={`M ${line.x2} ${line.y2} Q ${mx} ${my} ${line.x1} ${line.y1}`} />
+                <circle r={1.8} fill="hsla(0,0%,100%,0.7)">
+                  <animateMotion dur="2.8s" repeatCount="indefinite" path={pathD} begin="0.5s" />
                 </circle>
-                {/* Third small particle */}
-                <circle r={1.5} fill="hsla(0,0%,100%,0.7)">
-                  <animateMotion dur="3.5s" repeatCount="indefinite" path={pathD} begin="0.8s" />
+                <circle r={1.2} fill={particleColor} opacity="0.4">
+                  <animateMotion dur="3.2s" repeatCount="indefinite" path={reversePath} begin="1.1s" />
                 </circle>
               </>
             )}
