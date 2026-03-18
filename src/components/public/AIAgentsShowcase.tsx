@@ -523,47 +523,29 @@ const RobotAvatar = ({ agent, size = 72, isActive, isConnected }: {
       {/* Gradient background */}
       <div className={`absolute inset-0 bg-gradient-to-br ${agent.gradient} opacity-90`} />
 
-      {/* Hexagonal circuit grid overlay */}
+      {/* Green tech glow background */}
+      <div className="absolute inset-0" style={{
+        background: `radial-gradient(circle at 50% 50%, hsla(150,60%,30%,0.25), transparent 80%)`,
+      }} />
+
+      {/* Clean single-path circuit overlay */}
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 60 60">
-        <defs>
-          <pattern id={`hex-${agent.id}`} x="0" y="0" width="20" height="17.3" patternUnits="userSpaceOnUse">
-            <path d="M10 0 L20 5 L20 12.3 L10 17.3 L0 12.3 L0 5 Z" fill="none" stroke="white" strokeWidth="0.25" opacity="0.18" />
-            <circle cx="10" cy="0" r="0.6" fill="white" opacity="0.3" />
-            <circle cx="20" cy="5" r="0.6" fill="white" opacity="0.25" />
-          </pattern>
-        </defs>
-        <rect width="60" height="60" fill={`url(#hex-${agent.id})`} />
+        {/* Simple orthogonal circuit — one clean path per icon */}
+        <path d="M0,30 L18,30 L18,15 L42,15 L42,30 L60,30" fill="none" stroke="hsla(150,80%,65%,0.35)" strokeWidth="0.6" />
+        <path d="M30,0 L30,20 M30,40 L30,60" fill="none" stroke="hsla(150,80%,65%,0.2)" strokeWidth="0.4" />
         
-        {/* Circuit traces */}
-        <line x1="0" y1="20" x2="25" y2="20" stroke="white" strokeWidth="0.3" opacity="0.15" />
-        <line x1="25" y1="20" x2="25" y2="40" stroke="white" strokeWidth="0.3" opacity="0.15" />
-        <line x1="35" y1="15" x2="60" y2="15" stroke="white" strokeWidth="0.3" opacity="0.12" />
-        <line x1="35" y1="15" x2="35" y2="45" stroke="white" strokeWidth="0.3" opacity="0.12" />
-        <line x1="15" y1="40" x2="45" y2="40" stroke="white" strokeWidth="0.3" opacity="0.1" />
-        
-        {/* Junction nodes */}
-        <circle cx="25" cy="20" r="1.2" fill="white" opacity="0.35" />
-        <circle cx="35" cy="15" r="1.2" fill="white" opacity="0.3" />
-        <circle cx="25" cy="40" r="1" fill="white" opacity="0.25" />
-        <circle cx="35" cy="45" r="1" fill="white" opacity="0.2" />
-        <circle cx="15" cy="40" r="0.8" fill="white" opacity="0.2" />
+        {/* Junction nodes — only at intersections */}
+        <circle cx="18" cy="30" r="1.5" fill="hsla(150,80%,65%,0.5)" />
+        <circle cx="42" cy="30" r="1.5" fill="hsla(150,80%,65%,0.5)" />
+        <circle cx="18" cy="15" r="1.2" fill="hsla(150,80%,65%,0.4)" />
+        <circle cx="42" cy="15" r="1.2" fill="hsla(150,80%,65%,0.4)" />
+        <circle cx="30" cy="20" r="1" fill="hsla(150,80%,65%,0.3)" />
 
-        {/* Animated data particle on trace */}
-        <circle r="1" fill="white" opacity="0.6">
-          <animateMotion dur={isActive ? "1.5s" : "3s"} repeatCount="indefinite"
-            path="M0,20 L25,20 L25,40 L45,40" />
+        {/* Single clean data particle */}
+        <circle r="1.2" fill="hsla(150,90%,70%,0.8)">
+          <animateMotion dur={isActive ? "1.8s" : "3.5s"} repeatCount="indefinite"
+            path="M0,30 L18,30 L18,15 L42,15 L42,30 L60,30" />
         </circle>
-        {(isActive || isConnected) && (
-          <circle r="0.8" fill="white" opacity="0.4">
-            <animateMotion dur="2.5s" repeatCount="indefinite"
-              path="M60,15 L35,15 L35,45 L15,45" begin="0.8s" />
-          </circle>
-        )}
-
-        {/* Scanning line */}
-        <line x1="0" y1="0" x2="60" y2="0" stroke="white" strokeWidth="0.5" opacity="0.15">
-          <animateTransform attributeName="transform" type="translate" values="0,0;0,60;0,0" dur={isActive ? "2s" : "4s"} repeatCount="indefinite" />
-        </line>
       </svg>
 
       {/* Inner glow */}
@@ -616,23 +598,18 @@ const NetworkNode = ({
         />
       )}
 
-      {/* Circuit connector lines extending from node */}
+      {/* Green tech circuit connector lines */}
       <svg className="absolute pointer-events-none z-[1]" style={{ width: 70, height: 70, top: "50%", left: "50%", transform: "translate(-50%, -55%)" }} viewBox="0 0 70 70">
-        {/* Diagonal circuit traces */}
-        <line x1="0" y1="35" x2="8" y2="35" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
-        <line x1="62" y1="35" x2="70" y2="35" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
-        <line x1="35" y1="0" x2="35" y2="8" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
-        <line x1="35" y1="62" x2="35" y2="70" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.15)"} strokeWidth="0.5" />
-        {/* Corner traces */}
-        <path d="M8,8 L15,8 L15,15" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
-        <path d="M62,8 L55,8 L55,15" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
-        <path d="M8,62 L15,62 L15,55" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
-        <path d="M62,62 L55,62 L55,55" fill="none" stroke={isActive ? agent.glow : "hsla(215,50%,60%,0.1)"} strokeWidth="0.4" />
+        {/* Clean cardinal traces */}
+        <line x1="0" y1="35" x2="10" y2="35" stroke={isActive ? "hsla(150,80%,55%,0.8)" : "hsla(150,60%,50%,0.2)"} strokeWidth="0.7" />
+        <line x1="60" y1="35" x2="70" y2="35" stroke={isActive ? "hsla(150,80%,55%,0.8)" : "hsla(150,60%,50%,0.2)"} strokeWidth="0.7" />
+        <line x1="35" y1="0" x2="35" y2="10" stroke={isActive ? "hsla(150,80%,55%,0.8)" : "hsla(150,60%,50%,0.2)"} strokeWidth="0.7" />
+        <line x1="35" y1="60" x2="35" y2="70" stroke={isActive ? "hsla(150,80%,55%,0.8)" : "hsla(150,60%,50%,0.2)"} strokeWidth="0.7" />
         {/* Corner junction dots */}
-        <circle cx="8" cy="8" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
-        <circle cx="62" cy="8" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
-        <circle cx="8" cy="62" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
-        <circle cx="62" cy="62" r="1" fill={isActive ? agent.glow : "hsla(215,50%,60%,0.2)"} />
+        <circle cx="0" cy="35" r="1.2" fill={isActive ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.25)"} />
+        <circle cx="70" cy="35" r="1.2" fill={isActive ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.25)"} />
+        <circle cx="35" cy="0" r="1.2" fill={isActive ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.25)"} />
+        <circle cx="35" cy="70" r="1.2" fill={isActive ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.25)"} />
       </svg>
 
       {/* Robot avatar node */}
@@ -657,13 +634,13 @@ const NetworkNode = ({
           <span className="text-foreground/60 text-[0.3rem]">{agent.stat.label}</span>
         </div>
 
-        {/* Cardinal connection dots */}
+        {/* Cardinal connection dots — green tech */}
         {(["top", "bottom", "left", "right"] as const).map((pos) => (
           <motion.div key={pos}
             className="absolute w-1 h-1 rounded-full z-20"
             style={{
-              background: isActive || isConnected ? agent.glow : "hsla(var(--primary) / 0.15)",
-              boxShadow: isActive ? `0 0 6px ${agent.glow}` : "none",
+              background: isActive || isConnected ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.2)",
+              boxShadow: isActive ? "0 0 6px hsla(150,80%,55%,0.7)" : "none",
               ...(pos === "top" ? { top: -1, left: "50%", marginLeft: -2 } : {}),
               ...(pos === "bottom" ? { bottom: -1, left: "50%", marginLeft: -2 } : {}),
               ...(pos === "left" ? { left: -1, top: "50%", marginTop: -2 } : {}),
