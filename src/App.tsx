@@ -226,6 +226,7 @@ const SubscriptionPage = lazy(() => import("./pages/app/SubscriptionPage"));
 // Demo pages
 const IndustryDemoPage = lazy(() => import("./pages/demo/IndustryDemoPage"));
 const DemoDirectoryPage = lazy(() => import("./pages/demo/DemoDirectoryPage"));
+const DemoAdminPage = lazy(() => import("./pages/demo/DemoAdminPage"));
 const AgentsPage = lazy(() => import("./pages/admin/AgentsPage"));
 const MediaVaultPage = lazy(() => import("./pages/admin/MediaVaultPage"));
 const BrandAssetsPage = lazy(() => import("./pages/superadmin/BrandAssetsPage"));
@@ -500,6 +501,7 @@ function App() {
                       <Route path="/b/:slug" element={<BusinessPage />} />
                       <Route path="/demo" element={<DemoDirectoryPage />} />
                       <Route path="/demo/:slug" element={<IndustryDemoPage />} />
+                      <Route path="/demo/:slug/admin" element={<DemoAdminPage />} />
                       <Route path="/r/:slug" element={<RestaurantPage />} />
                       <Route path="/r/:slug/checkout" element={<CheckoutPage />} />
                       <Route path="/admin" element={<AdminLogin />} />
