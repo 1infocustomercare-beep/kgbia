@@ -322,7 +322,15 @@ class IntroErrorBoundary extends React.Component<{ children: ReactNode; onFail: 
   }
 }
 
-function App() {
+/** Show Empire DNA background only on private/internal routes */
+const PUBLIC_ROUTE_PATTERN = /^\/(b|r|demo|ncc-demo|home|marketing|privacy|cookie-policy)\b/;
+
+function ConditionalDNABackground() {
+  const { pathname } = useLocation();
+  if (PUBLIC_ROUTE_PATTERN.test(pathname)) return null;
+  return <EmpireDNABackground />;
+}
+
   const [introCompleted, setIntroCompleted] = useState(() => SHOULD_SKIP_INTRO_DEFAULT);
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
