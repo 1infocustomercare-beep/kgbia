@@ -538,8 +538,8 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
 };
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
-/** Shared viewport config — triggers animations 200px before element enters screen on mobile */
-const vpOnce = { once: true, margin: "0px 0px -150px 0px" as any } as const;
+/** Shared viewport config — pre-triggers section animations to avoid late pop-in on mobile */
+const vpOnce = { once: true, margin: "0px 0px 120px 0px" as any } as const;
 const fadeUp = { hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: smoothEase } } };
 const fadeScale = { hidden: { opacity: 0, y: 10, scale: 0.98 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: smoothEase } } };
 const staggerContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } } };
@@ -2286,31 +2286,46 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
 type CarouselItem = { name: string; route: string; color: string; label: string; nav: string; image: string };
 
 const MobileIPhoneCarousel = ({ items, navigate }: { items: CarouselItem[]; navigate: (p: string) => void }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const animRef = useRef<number>(0);
   const scrollPos = useRef(0);
-  const speed = 0.4; // px per frame
+  const isCarouselInView = useInView(containerRef, { margin: "120px 0px 120px 0px", amount: 0.15 });
+  const speed = 0.28; // px per rendered frame
+  const frameIntervalMs = 33; // cap animation work ~30fps on mobile
   const itemW = 122; // card width + gap
   const totalW = items.length * itemW;
 
-  // Auto-scroll via rAF
+  // Auto-scroll via rAF (paused when offscreen)
   useEffect(() => {
-    if (!isPlaying || expanded) return;
+    if (!isPlaying || expanded || !isCarouselInView) return;
     const track = trackRef.current;
     if (!track) return;
+
     let running = true;
-    const tick = () => {
+    let lastTs = 0;
+
+    const tick = (ts: number) => {
       if (!running) return;
-      scrollPos.current += speed;
-      if (scrollPos.current >= totalW) scrollPos.current -= totalW;
-      track.style.transform = `translate3d(-${scrollPos.current}px, 0, 0)`;
+
+      if (ts - lastTs >= frameIntervalMs) {
+        scrollPos.current += speed;
+        if (scrollPos.current >= totalW) scrollPos.current -= totalW;
+        track.style.transform = `translate3d(-${scrollPos.current}px, 0, 0)`;
+        lastTs = ts;
+      }
+
       animRef.current = requestAnimationFrame(tick);
     };
+
     animRef.current = requestAnimationFrame(tick);
-    return () => { running = false; cancelAnimationFrame(animRef.current); };
-  }, [isPlaying, expanded, totalW]);
+    return () => {
+      running = false;
+      cancelAnimationFrame(animRef.current);
+    };
+  }, [isPlaying, expanded, isCarouselInView, totalW]);
 
   const nudge = (dir: number) => {
     scrollPos.current += dir * itemW;
@@ -2342,7 +2357,7 @@ const MobileIPhoneCarousel = ({ items, navigate }: { items: CarouselItem[]; navi
 
   if (expanded) {
     return (
-      <div className="sm:hidden px-2">
+      <div ref={containerRef} className="sm:hidden px-2">
         {/* Controls */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-[10px] font-heading font-bold text-foreground/50 uppercase tracking-widest">{items.length} Demo Live</span>
@@ -2361,7 +2376,7 @@ const MobileIPhoneCarousel = ({ items, navigate }: { items: CarouselItem[]; navi
   const loopItems = [...items, ...items];
 
   return (
-    <div className="sm:hidden">
+    <div ref={containerRef} className="sm:hidden">
       {/* Controls bar */}
       <div className="flex items-center justify-between px-3 mb-3">
         <div className="flex items-center gap-2">
@@ -2408,6 +2423,9 @@ const LandingPage = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [ctaVisible, setCtaVisible] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 640
+  );
   
   const [premiumGrid, setPremiumGrid] = useState(true); // kept for type safety
   const mockupCarouselRef = useRef<HTMLDivElement>(null);
@@ -2424,43 +2442,10 @@ const LandingPage = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
-  /* Mobile viewport-animation safety: reveal stuck elements without scroll polling */
   useEffect(() => {
-    if (window.innerWidth >= 640) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-
-          const el = entry.target as HTMLElement;
-          const computedOpacity = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
-          if (computedOpacity > 0.02) {
-            observer.unobserve(el);
-            return;
-          }
-
-          el.style.willChange = "opacity, transform";
-          el.style.transition = "opacity 220ms ease-out, transform 220ms ease-out";
-          el.style.opacity = "1";
-          el.style.transform = "none";
-          observer.unobserve(el);
-        });
-      },
-      { root: null, rootMargin: "120px 0px", threshold: 0.01 }
-    );
-
-    const observeHiddenCandidates = () => {
-      document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]').forEach((el) => observer.observe(el));
-    };
-
-    observeHiddenCandidates();
-    const lateScan = window.setTimeout(observeHiddenCandidates, 1200);
-
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(lateScan);
-    };
+    const onResize = () => setIsMobileViewport(window.innerWidth < 640);
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   useEffect(() => {
@@ -3108,8 +3093,18 @@ const LandingPage = () => {
                 animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               />
-              {isHeroInView && (
-                <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : 300} />
+              {isHeroInView && !isMobileViewport && (
+                <InteractiveParticleSphere size={300} />
+              )}
+              {isHeroInView && isMobileViewport && (
+                <div
+                  className="w-[200px] h-[200px] rounded-full"
+                  style={{
+                    background: "radial-gradient(circle at 50% 45%, hsla(265,70%,62%,0.22), hsla(38,50%,52%,0.1), transparent 70%)",
+                    border: "1px solid hsla(265,45%,55%,0.18)",
+                    boxShadow: "0 0 42px hsla(265,60%,55%,0.12)",
+                  }}
+                />
               )}
             </motion.div>
 

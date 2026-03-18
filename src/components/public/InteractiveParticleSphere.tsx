@@ -28,14 +28,14 @@ const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const HELIX_NODES = IS_MOBILE ? 28 : 80;
-const MESH_COUNT = IS_MOBILE ? 14 : 50;
-const ENERGY_PARTICLES = IS_MOBILE ? 10 : 40;
-const CIRCUIT_LINES = IS_MOBILE ? 6 : 24;
-const ORBIT_DOTS = IS_MOBILE ? 16 : 48;
-const SYNAPSE_COUNT = IS_MOBILE ? 6 : 24;
-const DATA_STREAMS = IS_MOBILE ? 4 : 16;
-const FLOAT_PARTICLES = IS_MOBILE ? 10 : 45;
+const HELIX_NODES = IS_MOBILE ? 16 : 80;
+const MESH_COUNT = IS_MOBILE ? 8 : 50;
+const ENERGY_PARTICLES = IS_MOBILE ? 5 : 40;
+const CIRCUIT_LINES = IS_MOBILE ? 4 : 24;
+const ORBIT_DOTS = IS_MOBILE ? 10 : 48;
+const SYNAPSE_COUNT = IS_MOBILE ? 3 : 24;
+const DATA_STREAMS = IS_MOBILE ? 3 : 16;
+const FLOAT_PARTICLES = IS_MOBILE ? 6 : 45;
 
 const TECH_ICON_SET: { Icon: LucideIcon; color: string; glow: string }[] = [
   { Icon: Brain, color: "hsla(265,80%,65%,0.9)", glow: "hsla(265,80%,65%,0.3)" },
@@ -54,7 +54,7 @@ const TECH_ICON_SET: { Icon: LucideIcon; color: string; glow: string }[] = [
   { Icon: Binary, color: "hsla(38,45%,60%,0.85)", glow: "hsla(38,45%,60%,0.25)" },
 ];
 
-const TECH_ICON_COUNT = IS_MOBILE ? 8 : TECH_ICON_SET.length;
+const TECH_ICON_COUNT = IS_MOBILE ? 4 : TECH_ICON_SET.length;
 
 const COLORS = {
   gold: { h: 38, s: 50, l: 55 },
@@ -217,7 +217,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
 
     const startTime = performance.now();
     let lastFrame = 0;
-    const FI = IS_MOBILE ? 50 : 0; // ~20fps on mobile, 60fps on desktop
+    const FI = IS_MOBILE ? 66 : 0; // ~15fps on mobile, 60fps on desktop
     const repelR = w * 0.2;
 
     const ss = (e0: number, e1: number, x: number) => { const t = Math.max(0, Math.min(1, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); };
@@ -597,9 +597,10 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         ctx.beginPath(); ctx.arc(ti.x, ti.y, 1.1 * sc, 0, Math.PI * 2); ctx.fillStyle = hsl(COLORS.white, 0.5 * anyA); ctx.fill();
       }
 
-      // ═══ L6.8: DNA NEURAL LABELS — "Il DNA Tecnologico" effect ═══
-      const coreNode = dnaNodes[0];
-      coreNode.x = cx; coreNode.y = cy; coreNode.pulse += 0.035;
+      // ═══ L6.8: DNA NEURAL LABELS — "Il DNA Tecnologico" effect (desktop only) ═══
+      if (!IS_MOBILE) {
+        const coreNode = dnaNodes[0];
+        coreNode.x = cx; coreNode.y = cy; coreNode.pulse += 0.035;
 
       // Update satellite positions
       for (let i = 1; i < dnaNodes.length; i++) {
@@ -672,6 +673,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           : hsl(COLORS.white, 0.4 * anyA);
         ctx.fillText(dn.label, dn.x, dn.y + nodeR * pA + 2 * sc);
         ctx.letterSpacing = "0px";
+      }
       }
 
       // ═══ L7: RADAR SWEEP — always present ═══
