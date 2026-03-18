@@ -3265,8 +3265,8 @@ const LandingPage = () => {
                     {/* ── Featured: Showcase Premium ── */}
                     <p className="text-[0.55rem] font-heading font-bold tracking-[3px] uppercase px-2 mb-2" style={{ color: "hsla(38,50%,55%,0.7)" }}>★ Showcase Premium</p>
                     {[
-                      { name: "Impero Roma", desc: "Ristorante Premium · Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️" },
-                      { name: "Amalfi Luxury Transfer", desc: "NCC Premium · Costiera Amalfitana", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗" },
+                      { name: "Food & Ristorazione", desc: "Menu Digitale · Ordini · QR · Cucina Live", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️" },
+                      { name: "NCC & Trasporto Premium", desc: "Flotta · Tratte · Booking · Autisti", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗" },
                     ].map((feat, i) => (
                       <motion.div key={`featured-${i}`}
                         className="flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all"
