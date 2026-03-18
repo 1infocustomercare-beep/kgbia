@@ -352,7 +352,7 @@ const NetworkNode = ({
         <h3 className="font-bold text-[0.58rem] sm:text-[0.68rem] text-foreground leading-tight truncate">
           {agent.name}
         </h3>
-        <p className="text-[0.44rem] sm:text-[0.5rem] text-primary/40 tracking-wider uppercase truncate">
+        <p className="text-[0.44rem] sm:text-[0.5rem] text-primary/85 tracking-wider uppercase truncate">
           {agent.role}
         </p>
       </div>
@@ -386,10 +386,10 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
         {/* ══════ HEADER ══════ */}
         <div className="text-center mb-8 sm:mb-12">
           <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/[0.06] backdrop-blur-sm mb-4">
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-card/90 backdrop-blur-sm mb-4">
             <Network className="w-3.5 h-3.5 text-primary animate-pulse" />
-            <span className="text-[0.6rem] font-bold text-primary/80 tracking-[0.15em] uppercase">Rete Neurale Operativa</span>
-            <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-primary/15 text-primary font-bold">{ALL_AGENTS.length} Agenti</span>
+            <span className="text-[0.6rem] font-bold text-primary tracking-[0.15em] uppercase">Rete Neurale Operativa</span>
+            <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-primary/20 text-primary font-bold">{ALL_AGENTS.length} Agenti</span>
           </motion.div>
 
           <motion.h2 initial={{ opacity: 0, y: 15 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 }}
@@ -401,9 +401,9 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           </motion.h2>
 
           <motion.p initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.2 }}
-            className="text-foreground/45 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed mb-5">
-            Ogni agente è un <strong className="text-foreground/70">nodo intelligente</strong> della tua rete operativa.
-            Si parlano, si scambiano dati, prendono decisioni <strong className="text-foreground/70">in autonomia</strong> —
+            className="text-foreground/80 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed mb-5">
+            Ogni agente è un <strong className="text-foreground">nodo intelligente</strong> della tua rete operativa.
+            Si parlano, si scambiano dati, prendono decisioni <strong className="text-foreground">in autonomia</strong> —
             come un team di 20 specialisti che non dorme mai.
           </motion.p>
 
@@ -415,9 +415,9 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
               { icon: <Network className="w-3 h-3" />, text: "Comunicano tra loro" },
               { icon: <Brain className="w-3 h-3" />, text: "Apprendono dal tuo business" },
             ].map((v, i) => (
-              <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/10 bg-primary/[0.03]">
-                <div className="text-primary/60">{v.icon}</div>
-                <span className="text-[0.55rem] text-foreground/50 font-medium">{v.text}</span>
+              <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/25 bg-card/85 backdrop-blur-sm">
+                <div className="text-primary/90">{v.icon}</div>
+                <span className="text-[0.55rem] text-foreground/85 font-medium">{v.text}</span>
               </div>
             ))}
           </motion.div>
@@ -425,33 +425,33 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ WHY SECTION ══════ */}
         <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="relative rounded-xl border border-primary/10 bg-primary/[0.02] p-4 sm:p-6 mb-8 sm:mb-12 overflow-hidden">
+          className="relative rounded-xl border border-primary/25 bg-card/85 backdrop-blur-sm p-4 sm:p-6 mb-8 sm:mb-12 overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-px">
             <motion.div className="absolute w-full h-full"
-              style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent)" }}
-              animate={{ opacity: [0.3, 0.6, 0.3] }}
+              style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.35), transparent)" }}
+              animate={{ opacity: [0.4, 0.8, 0.4] }}
               transition={{ duration: 4, repeat: Infinity }}
             />
           </div>
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-primary" />
               </div>
               <h3 className="font-bold text-sm sm:text-base text-foreground">Perché la Rete IA Cambia Tutto</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {[
-                { title: "Il Problema", desc: "Il tuo business ha 50+ attività quotidiane che rubano tempo. Ordini, clienti, marketing, inventario — tutto manuale, tutto lento.", color: "hsla(0,70%,55%,0.8)", icon: <Clock className="w-4 h-4" /> },
+                { title: "Il Problema", desc: "Il tuo business ha 50+ attività quotidiane che rubano tempo. Ordini, clienti, marketing, inventario — tutto manuale, tutto lento.", color: "hsla(0,70%,55%,0.9)", icon: <Clock className="w-4 h-4" /> },
                 { title: "La Soluzione", desc: "Ogni attività diventa un nodo della rete. Gli agenti lavorano in parallelo, si scambiano dati e decidono — come un team di 20 persone, a costo zero.", color: "hsl(var(--primary))", icon: <CircuitBoard className="w-4 h-4" /> },
-                { title: "Il Risultato", desc: "80% meno lavoro manuale. 45% più fatturato. 3× clienti che tornano. Tutto misurabile, tutto garantito.", color: "hsla(150,70%,50%,0.8)", icon: <TrendingUp className="w-4 h-4" /> },
+                { title: "Il Risultato", desc: "80% meno lavoro manuale. 45% più fatturato. 3× clienti che tornano. Tutto misurabile, tutto garantito.", color: "hsla(150,70%,50%,0.9)", icon: <TrendingUp className="w-4 h-4" /> },
               ].map((block, i) => (
-                <div key={i} className="rounded-lg border border-foreground/[0.06] bg-background/40 p-3.5 sm:p-4">
+                <div key={i} className="rounded-lg border border-border bg-background/85 p-3.5 sm:p-4">
                   <div className="flex items-center gap-1.5 mb-2">
                     <div style={{ color: block.color }}>{block.icon}</div>
                     <span className="text-[0.6rem] sm:text-xs font-bold tracking-wider uppercase" style={{ color: block.color }}>{block.title}</span>
                   </div>
-                  <p className="text-[0.55rem] sm:text-xs text-foreground/40 leading-[1.5]">{block.desc}</p>
+                  <p className="text-[0.55rem] sm:text-xs text-foreground/80 leading-[1.5]">{block.desc}</p>
                 </div>
               ))}
             </div>
@@ -464,8 +464,8 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
             <button key={tab.id} onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[0.5rem] sm:text-[0.55rem] font-semibold tracking-wider uppercase transition-all border ${
                 activeSector === tab.id
-                  ? "text-foreground border-primary/30 bg-primary/8"
-                  : "text-foreground/25 border-transparent hover:text-foreground/45"
+                  ? "text-foreground border-primary/40 bg-primary/15"
+                  : "text-foreground/70 border-border hover:text-foreground"
               }`}>
               {tab.icon} {tab.label}
             </button>
@@ -476,23 +476,23 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
         <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}
           className="mb-5 flex items-center gap-2 px-1">
           <div className="relative">
-            <div className="w-6 h-6 rounded bg-primary/10 flex items-center justify-center">
+            <div className="w-6 h-6 rounded bg-primary/15 flex items-center justify-center">
               <Brain className="w-3.5 h-3.5 text-primary" />
             </div>
-            <motion.div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-primary/40"
+            <motion.div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-primary/60"
               animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity }} />
           </div>
           <div className="flex-1 relative h-px">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />
-            <motion.div className="absolute w-6 h-full bg-primary/30 rounded-full"
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-transparent" />
+            <motion.div className="absolute w-6 h-full bg-primary/40 rounded-full"
               animate={{ left: ["0%", "100%"] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
           </div>
-          <span className="text-[0.5rem] font-bold text-primary/50 tracking-[3px] uppercase whitespace-nowrap">
-            {filteredAgents.length} Nodi Attivi · Clicca per esplorare
+          <span className="text-[0.5rem] font-bold text-primary/90 tracking-[3px] uppercase whitespace-nowrap">
+            {filteredAgents.length} Nodi Attivi · Clicca per esplorare connessioni
           </span>
           <div className="flex-1 relative h-px">
-            <div className="absolute inset-0 bg-gradient-to-l from-primary/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-l from-primary/30 to-transparent" />
           </div>
         </motion.div>
 
@@ -502,8 +502,8 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
               className="mb-6 overflow-hidden">
               <div className="rounded-xl border overflow-hidden" style={{
-                borderColor: `${activeAgent.glow}30`,
-                background: "linear-gradient(145deg, hsla(265,18%,13%,0.98), hsla(265,25%,9%,0.99))"
+                borderColor: `${activeAgent.glow}45`,
+                background: "linear-gradient(145deg, hsla(265,18%,13%,0.99), hsla(265,25%,9%,1))"
               }}>
                 {/* Animated top bar */}
                 <div className="relative h-[3px] overflow-hidden">
@@ -516,44 +516,44 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                 <div className="p-4 sm:p-5">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="relative w-14 h-14 rounded-full overflow-hidden border-2" style={{ borderColor: `${activeAgent.glow}50` }}>
+                      <div className="relative w-14 h-14 rounded-full overflow-hidden border-2" style={{ borderColor: `${activeAgent.glow}65` }}>
                         <img src={AGENT_PHOTOS[activeAgent.id]} alt={activeAgent.name} className="w-full h-full object-cover" />
                       </div>
                       <div>
                         <h3 className="font-bold text-sm sm:text-base text-foreground">{activeAgent.name}</h3>
-                        <p className="text-[0.5rem] text-primary/50 uppercase tracking-widest">{activeAgent.role}</p>
+                        <p className="text-[0.5rem] text-primary/85 uppercase tracking-widest">{activeAgent.role}</p>
                       </div>
                     </div>
-                    <button onClick={() => setExpandedAgent(null)} className="w-7 h-7 rounded-full border border-foreground/10 flex items-center justify-center hover:border-foreground/20 transition-colors">
-                      <X className="w-3.5 h-3.5 text-foreground/40" />
+                    <button onClick={() => setExpandedAgent(null)} className="w-7 h-7 rounded-full border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
+                      <X className="w-3.5 h-3.5 text-foreground/80" />
                     </button>
                   </div>
 
-                  <p className="text-xs text-foreground/45 leading-relaxed mb-3">{activeAgent.desc}</p>
+                  <p className="text-xs text-foreground/80 leading-relaxed mb-3">{activeAgent.desc}</p>
 
                   {/* Why you need — persuasive */}
-                  <div className="rounded-lg border p-3 mb-4" style={{ borderColor: `${activeAgent.glow}15`, background: `${activeAgent.glow}08` }}>
+                  <div className="rounded-lg border p-3 mb-4" style={{ borderColor: `${activeAgent.glow}55`, background: `${activeAgent.glow}1A` }}>
                     <p className="text-xs leading-[1.6]">
-                      <strong className="text-foreground/80">⚡ Perché ti serve:</strong>{" "}
-                      <span className="text-foreground/55">{activeAgent.whyNeed}</span>
+                      <strong className="text-foreground">⚡ Perché ti serve:</strong>{" "}
+                      <span className="text-foreground/90">{activeAgent.whyNeed}</span>
                     </p>
                   </div>
 
                   {/* Capabilities */}
                   <div className="grid grid-cols-2 gap-1.5 mb-4">
                     {activeAgent.capabilities.map((cap, ci) => (
-                      <div key={ci} className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-foreground/[0.05] bg-foreground/[0.02]">
+                      <div key={ci} className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-border bg-background/60">
                         <motion.div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: activeAgent.glow }}
                           animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity, delay: ci * 0.2 }} />
-                        <span className="text-[0.55rem] text-foreground/50">{cap}</span>
+                        <span className="text-[0.55rem] text-foreground/85">{cap}</span>
                       </div>
                     ))}
                   </div>
 
                   {/* Connected agents */}
                   <div className="flex items-center gap-1.5 mb-2">
-                    <Network className="w-3 h-3 text-primary/40" />
-                    <span className="text-[0.5rem] font-bold text-primary/40 tracking-widest uppercase">
+                    <Network className="w-3 h-3 text-primary/80" />
+                    <span className="text-[0.5rem] font-bold text-primary/80 tracking-widest uppercase">
                       Connesso a {activeAgent.connections.length} agenti
                     </span>
                   </div>
@@ -563,11 +563,11 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                       if (!conn) return null;
                       return (
                         <button key={connId} onClick={(e) => { e.stopPropagation(); setExpandedAgent(connId); }}
-                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
-                          <div className="w-5 h-5 rounded-full overflow-hidden border" style={{ borderColor: `${conn.glow}40` }}>
+                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-primary/25 bg-primary/[0.09] hover:bg-primary/[0.14] transition-colors">
+                          <div className="w-5 h-5 rounded-full overflow-hidden border" style={{ borderColor: `${conn.glow}60` }}>
                             <img src={AGENT_PHOTOS[conn.id]} alt={conn.name} className="w-full h-full object-cover" />
                           </div>
-                          <span className="text-[0.5rem] font-semibold text-foreground/60">{conn.name}</span>
+                          <span className="text-[0.5rem] font-semibold text-foreground/90">{conn.name}</span>
                           <motion.div className="w-1.5 h-1.5 rounded-full bg-emerald-400"
                             animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.5, repeat: Infinity }} />
                         </button>
@@ -612,16 +612,16 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ NEURAL BUS ══════ */}
         <motion.div className="relative h-12 sm:h-16 my-4" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-px bg-primary/10" />
+          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-px bg-primary/20" />
 
           {[8, 22, 36, 50, 64, 78, 92].map((x, i) => (
             <motion.div key={i}
-              className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border border-primary/20"
+              className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border border-primary/30"
               style={{ left: `${x}%`, background: "hsl(var(--background))" }}
-              animate={{ borderColor: ["hsl(var(--primary) / 0.15)", "hsl(var(--primary) / 0.4)", "hsl(var(--primary) / 0.15)"] }}
+              animate={{ borderColor: ["hsl(var(--primary) / 0.2)", "hsl(var(--primary) / 0.5)", "hsl(var(--primary) / 0.2)"] }}
               transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
             >
-              <motion.div className="absolute inset-[2px] rounded-full bg-primary/30"
+              <motion.div className="absolute inset-[2px] rounded-full bg-primary/45"
                 animate={{ scale: [0.5, 1, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
               />
@@ -637,13 +637,13 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
             />
           ))}
 
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/15 bg-background/90 backdrop-blur-sm">
-            <motion.div className="w-2 h-2 rounded-full bg-primary/50"
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-card/95 backdrop-blur-sm">
+            <motion.div className="w-2 h-2 rounded-full bg-primary/70"
               animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }} />
-            <CircuitBoard className="w-3.5 h-3.5 text-primary/50" />
-            <span className="text-[0.5rem] font-bold text-primary/50 tracking-[2px] uppercase">Neural Bus</span>
-            <motion.div className="w-2 h-2 rounded-full bg-accent/50"
+            <CircuitBoard className="w-3.5 h-3.5 text-primary/90" />
+            <span className="text-[0.5rem] font-bold text-primary/90 tracking-[2px] uppercase">Neural Bus</span>
+            <motion.div className="w-2 h-2 rounded-full bg-accent/70"
               animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity, delay: 0.7 }} />
           </div>
@@ -651,15 +651,15 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ IMPACT STATS ══════ */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="relative rounded-xl border border-foreground/[0.06] bg-card/30 backdrop-blur-sm p-5 sm:p-8 overflow-hidden mb-8 mt-4">
+          className="relative rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 sm:p-8 overflow-hidden mb-8 mt-4">
           <div className="absolute top-0 left-0 right-0 h-px">
-            <motion.div className="absolute w-12 h-full bg-primary/30"
+            <motion.div className="absolute w-12 h-full bg-primary/40"
               animate={{ left: ["-10%", "110%"] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
           </div>
           <div className="text-center mb-5">
             <h3 className="font-bold text-sm sm:text-lg text-foreground mb-1">Impatto Misurabile</h3>
-            <p className="text-foreground/35 text-[0.6rem] sm:text-xs">Risultati reali dei nostri clienti nei primi 90 giorni</p>
+            <p className="text-foreground/75 text-[0.6rem] sm:text-xs">Risultati reali dei nostri clienti nei primi 90 giorni</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
             {[
@@ -670,13 +670,13 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
             ].map((stat, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="text-center p-3 rounded-xl border border-foreground/[0.06] bg-background/40 hover:border-primary/15 transition-colors">
-                <div className="text-primary/50 flex justify-center mb-1.5">{stat.icon}</div>
+                className="text-center p-3 rounded-xl border border-border bg-background/70 hover:border-primary/30 transition-colors">
+                <div className="text-primary/80 flex justify-center mb-1.5">{stat.icon}</div>
                 <div className="text-2xl sm:text-3xl font-bold text-foreground mb-0.5">
                   <Counter value={stat.value} suffix={stat.suffix} />
                 </div>
-                <div className="text-[0.55rem] sm:text-xs font-semibold text-foreground/60">{stat.label}</div>
-                <div className="text-[0.45rem] sm:text-[0.55rem] text-foreground/30 mt-0.5">{stat.desc}</div>
+                <div className="text-[0.55rem] sm:text-xs font-semibold text-foreground/90">{stat.label}</div>
+                <div className="text-[0.45rem] sm:text-[0.55rem] text-foreground/75 mt-0.5">{stat.desc}</div>
               </motion.div>
             ))}
           </div>
