@@ -2376,7 +2376,7 @@ const MobileIPhoneCarousel = ({ items, navigate }: { items: CarouselItem[]; navi
   const loopItems = [...items, ...items];
 
   return (
-    <div className="sm:hidden">
+    <div ref={containerRef} className="sm:hidden">
       {/* Controls bar */}
       <div className="flex items-center justify-between px-3 mb-3">
         <div className="flex items-center gap-2">
