@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { MarqueeCarousel, AmbientGlow, FloatingOrbs, NeonDivider, ScrollIndicator, PremiumStatsBar, PremiumFAQ } from "@/components/public/PremiumSiteKit";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -413,6 +414,7 @@ export default function FitnessPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="fitness" />
       <SectorValueProposition sectorKey="fitness" accentColor={VOLT} darkMode={true} sectorLabel="Palestra" />
       <AutomationShowcase accentColor={VOLT} accentBg="bg-lime-400" sectorName="palestre e fitness" darkMode={true} />
 

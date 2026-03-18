@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { MarqueeCarousel, PremiumSectionHeader, PremiumStatsBar, ReviewsMarquee, AmbientGlow, GlassServiceCard } from "@/components/public/PremiumSiteKit";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -530,6 +531,7 @@ export default function BeautyPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="beauty" />
       <SectorValueProposition sectorKey="beauty" accentColor={B.rose} darkMode={true} sectorLabel="Salone" />
       <AutomationShowcase accentColor={B.rose} accentBg="bg-pink-500" sectorName="saloni e centri estetici" darkMode={true} />
 

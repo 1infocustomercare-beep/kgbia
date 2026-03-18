@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { MarqueeCarousel, NeonDivider, PremiumStatsBarLight, ScrollIndicator } from "@/components/public/PremiumSiteKit";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -367,6 +368,7 @@ export default function BakeryPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="bakery" />
       <SectorValueProposition sectorKey="bakery" accentColor={TERRA} darkMode={false} sectorLabel="Panificio" />
       <AutomationShowcase accentColor={TERRA} accentBg="bg-amber-700" sectorName="panifici e pasticcerie" darkMode={false} />
 

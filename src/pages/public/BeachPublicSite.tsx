@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { MarqueeCarousel, AmbientGlow, FloatingOrbs, NeonDivider, ScrollIndicator, PremiumStatsBar, PremiumFAQ } from "@/components/public/PremiumSiteKit";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -339,6 +340,7 @@ export default function BeachPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="beach" />
       <SectorValueProposition sectorKey="beach" accentColor={CORAL} darkMode={false} sectorLabel="Stabilimento Balneare" />
       <AutomationShowcase accentColor={CORAL} accentBg="bg-orange-500" sectorName="stabilimenti balneari" darkMode={false} />
 

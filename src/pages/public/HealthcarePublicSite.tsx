@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { MarqueeCarousel, NeonDivider, PremiumStatsBarLight, PremiumFAQ, ScrollIndicator } from "@/components/public/PremiumSiteKit";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -407,6 +408,7 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="healthcare" />
       <SectorValueProposition sectorKey="healthcare" accentColor={SAGE} darkMode={false} sectorLabel="Studio Medico" />
       <AutomationShowcase accentColor={SAGE} accentBg="bg-emerald-600" sectorName="studi medici e cliniche" darkMode={false} />
 

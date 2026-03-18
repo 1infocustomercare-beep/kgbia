@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import heroMercedesImg from "@/assets/ncc-hero-mercedes-amalfi.jpg";
 import heroBgImg from "@/assets/ncc-hero-bg-amalfi.jpg";
 import nccPremiumInterior from "@/assets/ncc-premium-interior.jpg";
@@ -1378,6 +1379,7 @@ export default function NCCPublicSite({ company, afterHero }: Props) {
         </div>
       </footer>
 
+      <AIAgentsShowcase sector="ncc" />
       <SectorValueProposition sectorKey="ncc" accentColor={NCC.gold} darkMode={true} sectorLabel="Servizio NCC" />
       <AutomationShowcase accentColor={NCC.gold} accentBg="bg-amber-600" sectorName="il trasporto NCC" darkMode={true} />
 

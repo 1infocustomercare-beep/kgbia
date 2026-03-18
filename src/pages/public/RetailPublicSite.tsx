@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
+import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { MarqueeCarousel, ScrollIndicator } from "@/components/public/PremiumSiteKit";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -315,6 +316,7 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <AIAgentsShowcase sector="retail" />
       <SectorValueProposition sectorKey="retail" accentColor={CHAMPAGNE} darkMode={true} sectorLabel="Negozio" />
       <AutomationShowcase accentColor={CHAMPAGNE} accentBg="bg-amber-600" sectorName="negozi e retail" darkMode={true} />
 
