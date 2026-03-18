@@ -146,6 +146,7 @@ const EmpireDNABackground = () => {
   useEffect(() => { if (IS_MOBILE) return; const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
+    if (IS_MOBILE) return;
     const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
     window.addEventListener("scroll", fn, { passive: true });
     const mainEl = document.querySelector("main");
@@ -155,6 +156,7 @@ const EmpireDNABackground = () => {
   }, []);
 
   useEffect(() => {
+    if (IS_MOBILE) return;
     const move = (e: PointerEvent) => { ptrRef.current = { x: e.clientX, y: e.clientY, active: true }; };
     const leave = () => { ptrRef.current.active = false; };
     window.addEventListener("pointermove", move, { passive: true });
