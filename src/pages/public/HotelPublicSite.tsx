@@ -71,7 +71,7 @@ function AnimatedNum({ value, suffix = "" }: { value: number; suffix?: string })
 
 interface Props { company: any; afterHero?: React.ReactNode; }
 
-const HERO_VIDEO = "https://videos.pexels.com/video-files/9503163/9503163-uhd_2560_1440_24fps.mp4";
+const HERO_VIDEO = "https://videos.pexels.com/video-files/6527282/6527282-uhd_2560_1440_25fps.mp4";
 
 const GALLERY = [
   "https://images.pexels.com/photos/1134176/pexels-photo-1134176.jpeg?auto=compress&cs=tinysrgb&w=800",

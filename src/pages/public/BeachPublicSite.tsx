@@ -49,7 +49,7 @@ Section.displayName = "Section";
 
 interface Props { company: any; afterHero?: React.ReactNode; }
 
-const HERO_VIDEO = "https://videos.pexels.com/video-files/17950850/17950850-uhd_2560_1440_60fps.mp4";
+const HERO_VIDEO = "https://videos.pexels.com/video-files/20446096/20446096-uhd_2560_1440_25fps.mp4";
 const GALLERY = [
   "https://images.pexels.com/photos/1032650/pexels-photo-1032650.jpeg?auto=compress&cs=tinysrgb&w=800",
   "https://images.pexels.com/photos/1449791/pexels-photo-1449791.jpeg?auto=compress&cs=tinysrgb&w=800",
