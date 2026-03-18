@@ -467,11 +467,11 @@ const EmpireDNABackground = () => {
         const scanY = h * (0.5 + Math.sin(time * 0.08) * 0.48);
         const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
         scanGrad.addColorStop(0, hsla(pAccent, 0));
-        scanGrad.addColorStop(0.5, hsla(pAccent, 0.025));
+        scanGrad.addColorStop(0.5, hsla(pAccent, 0.015));
         scanGrad.addColorStop(1, hsla(pAccent, 0));
         ctx.fillStyle = scanGrad; ctx.fillRect(0, scanY - 40, w, 80);
-        ctx.strokeStyle = hsla(pGlow, 0.04);
-        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = hsla(pGlow, 0.025);
+        ctx.lineWidth = 0.4;
         ctx.beginPath(); ctx.moveTo(0, scanY); ctx.lineTo(w, scanY); ctx.stroke();
 
         // Vertical data streams
