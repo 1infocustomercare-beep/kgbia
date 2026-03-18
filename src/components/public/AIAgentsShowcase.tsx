@@ -633,7 +633,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
           <LayoutGroup>
             <motion.div
-              className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-8 gap-y-10 sm:gap-x-12 sm:gap-y-14 lg:gap-x-16 lg:gap-y-16 mb-8 relative z-[5]"
+              className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-3 gap-y-5 sm:gap-x-8 sm:gap-y-10 lg:gap-x-12 lg:gap-y-14 mb-6 relative z-[5]"
               layout
             >
               <AnimatePresence mode="popLayout">
