@@ -2423,9 +2423,9 @@ const LandingPage = () => {
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const isHeroInView = useInView(heroRef, { margin: "300px 0px -35% 0px" });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
   /* Mobile viewport-animation safety: reveal stuck elements without scroll polling */
   useEffect(() => {
