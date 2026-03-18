@@ -804,17 +804,9 @@ const EmpireVoiceAgent: React.FC = () => {
         narratedRef.current.add(sectionId);
         setNarratedSections(new Set(narratedRef.current));
       } else if (!abortRef.current) {
-        const attempts = narrationAttemptsRef.current[sectionId] ?? 0;
-        console.warn(`[Arianna] Narration failed for "${sectionId}", attempt ${attempts}`);
-        if (attempts < 3) {
-          await new Promise(r => setTimeout(r, 2000));
-          sectionQueueRef.current.push(sectionId);
-        } else {
-          // Reset attempts so scroll or gesture can re-enqueue later
-          console.log(`[Arianna] Pausing narration for "${sectionId}" after ${attempts} attempts — will retry on next scroll/gesture`);
-          narrationAttemptsRef.current[sectionId] = 0;
-          // Do NOT add to narratedRef — leave it as "not narrated"
-        }
+        // Don't retry aggressively — just skip and let next scroll/gesture re-enqueue
+        console.log(`[Arianna] Narration skipped for "${sectionId}" — will retry on next interaction`);
+        narrationAttemptsRef.current[sectionId] = 0;
       }
 
       setIsSpeaking(false);
