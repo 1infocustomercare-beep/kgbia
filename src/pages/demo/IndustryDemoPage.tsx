@@ -361,7 +361,7 @@ export default function IndustryDemoPage() {
     beach: BeachPublicSite,
     food: FoodPublicSite,
     restaurant: FoodPublicSite,
-    bakery: FoodPublicSite,
+    bakery: BakeryPublicSite,
     plumber: TradesPublicSite,
     electrician: TradesPublicSite,
     cleaning: TradesPublicSite,
