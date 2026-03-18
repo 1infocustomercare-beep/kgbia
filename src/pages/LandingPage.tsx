@@ -452,46 +452,13 @@ const NeuralCellsBackground = () => {
 
 const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children: React.ReactNode; gradient: string; size?: "sm" | "md" | "lg"; delay?: number }) => {
   const sizeClasses = size === "sm" ? "w-8 h-8 sm:w-10 sm:h-10 rounded-xl" : size === "lg" ? "w-12 h-12 rounded-2xl" : "w-10 h-10 rounded-xl";
+  const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
+  
   return (
-    <motion.div className="relative group/icon" whileHover={{ scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
-      {/* Ambient glow */}
-      <motion.div
-        className={`absolute -inset-2 ${sizeClasses} opacity-0 group-hover/icon:opacity-100 transition-opacity duration-700 blur-xl`}
-        style={{ background: `linear-gradient(135deg, hsla(38,50%,55%,0.25), hsla(32,40%,50%,0.15))` }}
-      />
-      {/* Outer pulse ring */}
-      <motion.div
-        className={`absolute -inset-1.5 ${sizeClasses} pointer-events-none`}
-        style={{ border: "1px solid hsla(38,50%,55%,0.15)" }}
-        animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 3, repeat: Infinity, delay: delay * 0.5, ease: "easeInOut" }}
-      />
-      {/* Rotating ring */}
-      <motion.div
-        className={`absolute -inset-0.5 ${sizeClasses}`}
-        style={{ border: "1.5px solid transparent", borderTopColor: "hsla(38,50%,55%,0.35)", borderRightColor: "hsla(32,40%,50%,0.2)" }}
-        animate={{ rotate: [0, 360] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear", delay }}
-      />
-      {/* Counter ring */}
-      <motion.div
-        className={`absolute inset-0 ${sizeClasses}`}
-        style={{ border: "1px solid transparent", borderBottomColor: "hsla(32,35%,55%,0.2)" }}
-        animate={{ rotate: [360, 0] }}
-        transition={{ duration: 14, repeat: Infinity, ease: "linear", delay: delay + 1 }}
-      />
-      {/* Main container */}
+    <motion.div className="relative group/icon" whileHover={isMobileDevice ? undefined : { scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+      {/* Main container — no animated rings on mobile */}
       <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
         style={{ boxShadow: "0 4px 20px hsla(38,50%,50%,0.12), inset 0 1px 1px rgba(255,255,255,0.15)" }}>
-        {/* Shimmer sweep */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%)" }}
-          animate={{ x: ["-150%", "250%"] }}
-          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 + delay, ease: "easeInOut" }}
-        />
-        {/* Inner glow */}
-        <div className="absolute inset-px rounded-[inherit] border border-white/10 pointer-events-none" />
         <div className="relative z-10">{children}</div>
       </div>
     </motion.div>
@@ -499,54 +466,37 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
 };
 
 /* ═══ Premium Animated Card ═══ */
-const PremiumCard = ({ children, className = "", hover = true, glow = false, scan = false, delay = 0 }: { children: React.ReactNode; className?: string; hover?: boolean; glow?: boolean; scan?: boolean; delay?: number }) => (
+const PremiumCard = ({ children, className = "", hover = true, glow = false, scan = false, delay = 0 }: { children: React.ReactNode; className?: string; hover?: boolean; glow?: boolean; scan?: boolean; delay?: number }) => {
+  const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
+  
+  return (
   <motion.div
     className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
     style={{
       background: "linear-gradient(145deg, hsla(230,10%,14%,0.95), hsla(230,8%,10%,0.92))",
-      backdropFilter: "blur(20px) saturate(1.4)",
+      backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.4)",
       borderColor: "hsla(38,40%,55%,0.1)",
     }}
-    whileHover={hover ? {
+    whileHover={hover && !isMobileDevice ? {
       y: -6,
       borderColor: "hsla(38,45%,55%,0.25)",
       boxShadow: "0 20px 60px hsla(38,45%,50%,0.1), 0 0 30px hsla(38,45%,50%,0.05), inset 0 1px 0 hsla(38,50%,70%,0.08)",
       transition: { duration: 0.4, ease: "easeOut" },
     } : undefined}
   >
-    {/* Top accent line — animated gradient */}
-    <motion.div className="absolute top-0 left-0 right-0 h-px z-10"
+    {/* Top accent line — static on mobile */}
+    <div className="absolute top-0 left-0 right-0 h-px z-10"
       style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,55%,0.2), hsla(38,50%,60%,0.2), hsla(35,45%,55%,0.15), transparent)" }}
-      animate={{ backgroundPosition: ["0% 0%", "200% 0%"] }}
-      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
     />
-    {/* Corner accents — gold, always slightly visible */}
-    <div className="absolute top-2 left-2 w-4 h-4 border-t border-l rounded-tl-sm pointer-events-none opacity-20 group-hover/card:opacity-60 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
-    <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r rounded-br-sm pointer-events-none opacity-20 group-hover/card:opacity-60 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
-    {/* Scanning beam — more visible */}
-    {scan && (
-      <motion.div
-        className="absolute inset-0 pointer-events-none z-0"
-        style={{ background: "linear-gradient(180deg, transparent 35%, hsla(38,50%,60%,0.05) 50%, transparent 65%)" }}
-        animate={{ y: ["-100%", "200%"] }}
-        transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 1.5 + delay, ease: "easeInOut" }}
-      />
-    )}
-    {/* Ambient glow on hover — stronger */}
-    {glow && (
-      <motion.div className="absolute -top-8 -right-8 w-32 h-32 rounded-full pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"
-        style={{ background: "radial-gradient(circle, hsla(38,50%,55%,0.1), transparent)" }}
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      />
-    )}
-    {/* Bottom glow line */}
-    <div className="absolute bottom-0 left-3 right-3 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    {/* Corner accents */}
+    <div className="absolute top-2 left-2 w-4 h-4 border-t border-l rounded-tl-sm pointer-events-none opacity-20" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
+    <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r rounded-br-sm pointer-events-none opacity-20" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
     {/* Inner glass reflection */}
     <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(38,30%,70%,0.03) 0%, transparent 40%)" }} />
     <div className="relative z-10">{children}</div>
   </motion.div>
-);
+  );
+};
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 /** Shared viewport config — triggers animations 200px before element enters screen on mobile */
