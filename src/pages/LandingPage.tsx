@@ -2352,13 +2352,13 @@ const LandingPage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const setupCost = 2997;
-  const monthlyRevenue = monthlyOrders * avgOrder;
-  const thirdPartyCost = monthlyRevenue * 0.30;
-  const empireCost = monthlyRevenue * 0.02;
-  const monthlySaving = thirdPartyCost - empireCost;
-  const roiMonths = monthlySaving > 0 ? Math.ceil(setupCost / monthlySaving) : 0;
+  const manualMonthlyCost = weeklyHours * hourlyCost * 4.3;
+  const automatedCost = manualMonthlyCost * 0.2; // 80% automated
+  const monthlySaving = manualMonthlyCost - automatedCost;
   const yearSaving = monthlySaving * 12;
+  const hoursSavedMonth = Math.round(weeklyHours * 0.8 * 4.3);
+  const empirePlanCost = 49; // base monthly
+  const netMonthlySaving = monthlySaving - empirePlanCost;
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
