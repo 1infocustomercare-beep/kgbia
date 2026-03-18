@@ -456,7 +456,7 @@ const EmpireDNABackground = () => {
         const radarR = Math.min(w, h) * 0.5;
         const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
         rGrad.addColorStop(0, hsla(pGlow, 0));
-        rGrad.addColorStop(0.02, hsla(pGlow, 0.03));
+        rGrad.addColorStop(0.02, hsla(pGlow, 0.015));
         rGrad.addColorStop(0.08, hsla(pGlow, 0));
         rGrad.addColorStop(1, hsla(pGlow, 0));
         ctx.beginPath(); ctx.moveTo(w * 0.5, h * 0.5);
