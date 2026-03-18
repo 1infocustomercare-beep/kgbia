@@ -578,13 +578,13 @@ export default function MultiSectorShowcase() {
   return (
     <>
       {/* Section header */}
-      <div className="text-center mb-10">
+      <div className="text-center mb-6 sm:mb-10">
         <SectionLabel text="Il Tuo Settore, Potenziato" icon={<Layers className="w-3 h-3 text-primary" />} />
-        <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+        <motion.h2 className="text-[clamp(1.3rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-2 sm:mb-3"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           Una Piattaforma, <span className="text-shimmer">Ogni Business</span>
         </motion.h2>
-        <p className="text-foreground/35 text-sm max-w-xl mx-auto">
+        <p className="text-foreground/35 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
           Non importa il settore — Empire AI si adatta al tuo business con moduli verticali, automazioni specifiche e un'AI che parla la lingua del tuo mercato.
         </p>
       </div>
