@@ -145,6 +145,33 @@ const SECTOR_AGENTS: Record<string, AgentData[]> = {
   ],
 };
 
+const sectorCapabilities = [
+  { icon: <ChefHat className="w-4 h-4" />, sector: "Ristorazione", features: "Menu IA · Cucina Live · QR Ordini · HACCP Auto", color: "from-orange-500 to-amber-400" },
+  { icon: <Car className="w-4 h-4" />, sector: "NCC & Transfer", features: "Routing IA · Flotta Smart · Pricing Dinamico", color: "from-sky-500 to-blue-500" },
+  { icon: <Scissors className="w-4 h-4" />, sector: "Beauty & Wellness", features: "Agenda IA · No-Show Prediction · Remind Auto", color: "from-pink-500 to-rose-400" },
+  { icon: <Heart className="w-4 h-4" />, sector: "Healthcare", features: "Cartelle IA · Triage Smart · Fatturazione Auto", color: "from-emerald-500 to-teal-400" },
+  { icon: <Store className="w-4 h-4" />, sector: "Retail", features: "Inventario Predittivo · POS Smart · Promozioni IA", color: "from-cyan-500 to-blue-400" },
+  { icon: <Dumbbell className="w-4 h-4" />, sector: "Fitness", features: "Piani IA · Check-in Auto · Rinnovi Predittivi", color: "from-lime-500 to-green-400" },
+  { icon: <Building className="w-4 h-4" />, sector: "Hospitality", features: "Revenue Mgmt IA · Concierge Bot · Review Auto", color: "from-amber-400 to-orange-400" },
+  { icon: <Globe className="w-4 h-4" />, sector: "+18 Settori", features: "Ogni settore ha agenti IA dedicati e personalizzati", color: "from-primary to-accent" },
+];
+
+const impactStats = [
+  { icon: <Timer className="w-5 h-5" />, value: 80, suffix: "%", label: "Tempo Risparmiato", desc: "sulle operazioni manuali" },
+  { icon: <TrendingUp className="w-5 h-5" />, value: 45, suffix: "%", label: "Aumento Revenue", desc: "nei primi 90 giorni" },
+  { icon: <Users className="w-5 h-5" />, value: 3, suffix: "×", label: "Clienti Fidelizzati", desc: "tasso di ritorno" },
+  { icon: <Shield className="w-5 h-5" />, value: 99, suffix: ".9%", label: "Uptime Garantito", desc: "disponibilità continua" },
+];
+
+const autonomousProcesses = [
+  { icon: <Eye className="w-4 h-4" />, title: "Monitoraggio Continuo", desc: "Ogni dato del tuo business viene analizzato in tempo reale. Vendite, performance, anomalie — nulla sfugge." },
+  { icon: <Brain className="w-4 h-4" />, title: "Apprendimento Adattivo", desc: "L'IA impara dal TUO business. Più la usi, più diventa precisa nelle previsioni e nelle automazioni." },
+  { icon: <Workflow className="w-4 h-4" />, title: "Automazione Zero-Touch", desc: "Fatturazione, reminder, reorder scorte, campagne marketing — tutto accade senza il tuo intervento." },
+  { icon: <Fingerprint className="w-4 h-4" />, title: "Personalizzazione Totale", desc: "Ogni agente si adatta al tuo settore, ai tuoi prodotti, al tuo stile comunicativo e ai tuoi clienti." },
+  { icon: <Radio className="w-4 h-4" />, title: "Comunicazione Omnicanale", desc: "Email, WhatsApp, push notification, SMS — i tuoi agenti comunicano sul canale preferito di ogni cliente." },
+  { icon: <Layers className="w-4 h-4" />, title: "Evoluzione Perpetua", desc: "Nuovi agenti e capacità ogni settimana. Il tuo sistema non invecchia mai — migliora per sempre." },
+];
+
 function getAgentsForSector(sector?: string): AgentData[] {
   if (sector && SECTOR_AGENTS[sector]) return SECTOR_AGENTS[sector];
   return GENERIC_AGENTS;
