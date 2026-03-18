@@ -2286,31 +2286,46 @@ const PricingConfigurator = ({ navigate }: { navigate: (path: string) => void })
 type CarouselItem = { name: string; route: string; color: string; label: string; nav: string; image: string };
 
 const MobileIPhoneCarousel = ({ items, navigate }: { items: CarouselItem[]; navigate: (p: string) => void }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const animRef = useRef<number>(0);
   const scrollPos = useRef(0);
-  const speed = 0.4; // px per frame
+  const isCarouselInView = useInView(containerRef, { margin: "120px 0px 120px 0px", amount: 0.15 });
+  const speed = 0.28; // px per rendered frame
+  const frameIntervalMs = 33; // cap animation work ~30fps on mobile
   const itemW = 122; // card width + gap
   const totalW = items.length * itemW;
 
-  // Auto-scroll via rAF
+  // Auto-scroll via rAF (paused when offscreen)
   useEffect(() => {
-    if (!isPlaying || expanded) return;
+    if (!isPlaying || expanded || !isCarouselInView) return;
     const track = trackRef.current;
     if (!track) return;
+
     let running = true;
-    const tick = () => {
+    let lastTs = 0;
+
+    const tick = (ts: number) => {
       if (!running) return;
-      scrollPos.current += speed;
-      if (scrollPos.current >= totalW) scrollPos.current -= totalW;
-      track.style.transform = `translate3d(-${scrollPos.current}px, 0, 0)`;
+
+      if (ts - lastTs >= frameIntervalMs) {
+        scrollPos.current += speed;
+        if (scrollPos.current >= totalW) scrollPos.current -= totalW;
+        track.style.transform = `translate3d(-${scrollPos.current}px, 0, 0)`;
+        lastTs = ts;
+      }
+
       animRef.current = requestAnimationFrame(tick);
     };
+
     animRef.current = requestAnimationFrame(tick);
-    return () => { running = false; cancelAnimationFrame(animRef.current); };
-  }, [isPlaying, expanded, totalW]);
+    return () => {
+      running = false;
+      cancelAnimationFrame(animRef.current);
+    };
+  }, [isPlaying, expanded, isCarouselInView, totalW]);
 
   const nudge = (dir: number) => {
     scrollPos.current += dir * itemW;
