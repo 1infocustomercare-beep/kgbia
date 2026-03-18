@@ -353,9 +353,7 @@ function App() {
       });
     };
 
-    if (isConstrainedNetwork()) {
-      completeIntroSafely("constrained-network");
-    }
+    // Network constraints no longer skip intro — let the watchdog handle timeouts naturally
 
     const introFailsafe = window.setTimeout(() => {
       completeIntroSafely("timeout");
