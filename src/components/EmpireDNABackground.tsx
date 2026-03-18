@@ -11,12 +11,12 @@ const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 20 : 55;
-const MAX_DIST = IS_MOBILE ? 100 : 145;
-const FLOW_COUNT = IS_MOBILE ? 4 : 18;
+const NODE_COUNT = IS_MOBILE ? 14 : 55;
+const MAX_DIST = IS_MOBILE ? 90 : 145;
+const FLOW_COUNT = IS_MOBILE ? 2 : 18;
 const PULSE_COUNT = IS_MOBILE ? 1 : 3;
-const HUB_COUNT = IS_MOBILE ? 4 : 7; // Sector hubs
-const TARGET_FPS = IS_MOBILE ? 24 : 60;
+const HUB_COUNT = IS_MOBILE ? 3 : 7;
+const TARGET_FPS = IS_MOBILE ? 20 : 60;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 type Pt = { x: number; y: number };
