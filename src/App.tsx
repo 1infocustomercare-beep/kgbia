@@ -331,6 +331,7 @@ function ConditionalDNABackground() {
   return <EmpireDNABackground />;
 }
 
+function App() {
   const [introCompleted, setIntroCompleted] = useState(() => SHOULD_SKIP_INTRO_DEFAULT);
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
