@@ -16,6 +16,7 @@ import FitnessPublicSite from "@/pages/public/FitnessPublicSite";
 import HotelPublicSite from "@/pages/public/HotelPublicSite";
 import BeachPublicSite from "@/pages/public/BeachPublicSite";
 import FoodPublicSite from "@/pages/public/FoodPublicSite";
+import BakeryPublicSite from "@/pages/public/BakeryPublicSite";
 import TradesPublicSite from "@/pages/public/TradesPublicSite";
 import LuxuryPublicSite from "@/pages/public/LuxuryPublicSite";
 import { Button } from "@/components/ui/button";
