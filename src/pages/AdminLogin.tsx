@@ -325,7 +325,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Forgot Password ───
   if (mode === "forgot") {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      <div className="min-h-screen bg-transparent flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <Blob className="w-[400px] h-[400px] -top-20 -right-20 animate-blob-float" color="bg-violet-600" />
         <Blob className="w-[300px] h-[300px] bottom-20 -left-20 animate-blob-float-reverse" color="bg-pink-500" />
         <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
