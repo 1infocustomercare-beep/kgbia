@@ -3706,7 +3706,15 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           COMPARISON TABLE — Empire vs Others
          ═══════════════════════════════════════════ */}
-      <Section>
+      <Section className="relative overflow-hidden" style={{
+        background: `linear-gradient(180deg, hsla(150,20%,6%,1) 0%, hsla(155,28%,9%,1) 40%, hsla(150,22%,7%,1) 70%, hsla(150,18%,5%,1) 100%)`,
+      }}>
+        {/* Green tech AI ambient glows */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.10]" style={{ background: "radial-gradient(circle, hsla(150,60%,45%,0.4), transparent 70%)", filter: "blur(120px)" }} />
+          <div className="absolute bottom-1/4 right-1/5 w-[350px] h-[350px] rounded-full opacity-[0.07]" style={{ background: "radial-gradient(circle, hsla(160,55%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(ellipse, hsla(140,50%,55%,0.3), transparent 70%)", filter: "blur(150px)" }} />
+        </div>
         <div className="text-center mb-10">
           <SectionLabel text="Confronto" icon={<Activity className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
