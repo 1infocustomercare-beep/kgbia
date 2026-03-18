@@ -3042,26 +3042,31 @@ const LandingPage = () => {
          style={{ opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Cinematic video background ═══ */}
-        <div className="absolute inset-0" style={{ zIndex: 2 }}>
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            controls={false}
-            disablePictureInPicture
-            disableRemotePlayback
-            className="absolute inset-0 w-full h-full object-cover [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-enclosure]:hidden [&::-webkit-media-controls-panel]:hidden [&::-webkit-media-controls-start-playback-button]:hidden"
-            style={{ filter: "brightness(0.3) saturate(1.15)", WebkitAppearance: "none" } as any}
-          >
-            <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4" />
-          </video>
-          {/* Cinematic vignette overlays */}
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsl(var(--background)) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 15%, transparent 85%, hsl(var(--background)) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
-        </div>
+        {!IS_LANDING_MOBILE && (
+          <div className="absolute inset-0" style={{ zIndex: 2 }}>
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
+              controls={false}
+              disablePictureInPicture
+              disableRemotePlayback
+              className="absolute inset-0 w-full h-full object-cover [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-enclosure]:hidden [&::-webkit-media-controls-panel]:hidden [&::-webkit-media-controls-start-playback-button]:hidden"
+              style={{ filter: "brightness(0.3) saturate(1.15)", WebkitAppearance: "none" } as any}
+            >
+              <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4" />
+            </video>
+            {/* Cinematic vignette overlays */}
+            <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsl(var(--background)) 100%)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 15%, transparent 85%, hsl(var(--background)) 100%)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
+          </div>
+        )}
+        {IS_LANDING_MOBILE && (
+          <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(135deg, hsla(265,25%,8%,1) 0%, hsla(230,20%,6%,1) 50%, hsla(38,15%,8%,1) 100%)" }} />
+        )}
 
         {/* ═══ LAYER 1: Central glow orb ═══ */}
         <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
