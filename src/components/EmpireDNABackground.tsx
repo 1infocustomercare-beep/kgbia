@@ -171,7 +171,7 @@ const EmpireDNABackground = () => {
 
     let w = 0, h = 0;
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = IS_MOBILE ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       w = window.innerWidth; h = window.innerHeight;
       if (!w || !h) return;
       canvas.width = w * dpr; canvas.height = h * dpr;
