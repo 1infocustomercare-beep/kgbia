@@ -281,24 +281,22 @@ const EmpireDNABackground = () => {
       // ═══ L1: DATA HIGHWAYS — horizontal energy streams ═══
       const hws = hwRef.current;
       for (const hw of hws) {
-        const baseAlpha = 0.04 + Math.sin(time * 0.2 + hw.y * 0.01) * 0.02;
-        // Highway baseline
+        const baseAlpha = 0.025 + Math.sin(time * 0.2 + hw.y * 0.01) * 0.01;
         ctx.strokeStyle = hsla(pLine, baseAlpha);
-        ctx.lineWidth = 0.3;
-        ctx.setLineDash([6, 12]);
+        ctx.lineWidth = 0.25;
+        ctx.setLineDash([6, 14]);
         ctx.beginPath(); ctx.moveTo(0, hw.y); ctx.lineTo(w, hw.y); ctx.stroke();
         ctx.setLineDash([]);
 
-        // Fast particles on highway
         for (const p of hw.particles) {
           p.x = (p.x + p.sp * hw.speed) % (w + p.len * 2);
           const px = p.x - p.len;
           const grad = ctx.createLinearGradient(px, hw.y, px + p.len, hw.y);
           grad.addColorStop(0, hsla(pAccent, 0));
-          grad.addColorStop(0.7, hsla(pAccent, 0.04));
-          grad.addColorStop(1, hsla(pGlow, 0.06));
+          grad.addColorStop(0.7, hsla(pAccent, 0.025));
+          grad.addColorStop(1, hsla(pGlow, 0.04));
           ctx.strokeStyle = grad;
-          ctx.lineWidth = 0.8;
+          ctx.lineWidth = 0.6;
           ctx.beginPath(); ctx.moveTo(px, hw.y); ctx.lineTo(px + p.len, hw.y); ctx.stroke();
         }
       }
