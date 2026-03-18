@@ -148,8 +148,8 @@ const AlwaysOnNetwork = ({
     <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ overflow: "visible", zIndex: 1 }}>
       <defs>
         <filter id="line-glow">
-          <feGaussianBlur stdDeviation="6" result="blur" />
-          <feFlood floodColor="hsl(var(--primary))" floodOpacity="0.15" result="flood" />
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feFlood floodColor="hsl(215 60% 60%)" floodOpacity="0.25" result="flood" />
           <feComposite in="flood" in2="blur" operator="in" result="colorBlur" />
           <feMerge>
             <feMergeNode in="colorBlur" />
@@ -158,13 +158,24 @@ const AlwaysOnNetwork = ({
           </feMerge>
         </filter>
         <filter id="line-glow-soft">
-          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feGaussianBlur stdDeviation="2.5" result="blur" />
           <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
+        <filter id="particle-glow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feFlood floodColor="hsl(200 80% 70%)" floodOpacity="0.4" result="flood" />
+          <feComposite in="flood" in2="blur" operator="in" result="colorBlur" />
+          <feMerge>
+            <feMergeNode in="colorBlur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
         <linearGradient id="line-gradient-idle" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="hsl(215 60% 65%)" stopOpacity="0.15" />
-          <stop offset="50%" stopColor="hsl(215 60% 70%)" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="hsl(215 60% 65%)" stopOpacity="0.15" />
+          <stop offset="0%" stopColor="hsl(200 60% 60%)" stopOpacity="0.05" />
+          <stop offset="30%" stopColor="hsl(215 60% 65%)" stopOpacity="0.4" />
+          <stop offset="50%" stopColor="hsl(210 70% 72%)" stopOpacity="0.6" />
+          <stop offset="70%" stopColor="hsl(215 60% 65%)" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="hsl(200 60% 60%)" stopOpacity="0.05" />
         </linearGradient>
       </defs>
 
