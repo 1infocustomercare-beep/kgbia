@@ -413,11 +413,14 @@ export default function IndustryDemoPage() {
         <div className="max-w-4xl mx-auto text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] mb-3">
             <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: accentColor }} />
-            <span className="text-[9px] font-bold tracking-[3px] uppercase text-white/50">8 Interfacce · 8 Stili Diversi</span>
+            <span className="text-[9px] font-bold tracking-[3px] uppercase text-white/50">14 Interfacce · Stili Unici</span>
           </div>
-          <h3 className="text-lg sm:text-2xl font-bold text-white/90">Ogni Schermata, un Design Unico</h3>
+          <h3 className="text-lg sm:text-2xl font-bold text-white/90">
+            Scopri come potrebbe essere il tuo{" "}
+            <span style={{ color: accentColor }}>{industryConfig.label}</span>
+          </h3>
           <p className="text-[10px] sm:text-xs text-white/35 mt-1.5 max-w-lg mx-auto leading-relaxed">
-            Dalla vetrina al CRM, ogni sezione ha il suo stile dedicato — personalizzato per <span className="font-semibold" style={{ color: accentColor }}>{industryConfig.label}</span>
+            Dalla vetrina al CRM, ogni schermata è progettata su misura — dashboard, prenotazioni, analytics e agenti AI
           </p>
         </div>
         <IndustryPhoneShowcase industryId={resolvedIndustry} />
