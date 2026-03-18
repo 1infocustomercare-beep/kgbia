@@ -3112,7 +3112,11 @@ const LandingPage = () => {
                 animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               />
-              <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : 300} />
+              {!IS_LANDING_MOBILE && (
+                <Suspense fallback={<div className="w-[200px] h-[200px]" />}>
+                  <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : 300} />
+                </Suspense>
+              )}
             </motion.div>
 
             {/* CTA */}
