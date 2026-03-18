@@ -1401,9 +1401,10 @@ const EmpireVoiceAgent: React.FC = () => {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-foreground/[0.06]">
               <div className="flex items-center gap-3">
-                <div className="relative">
+                <div className="relative" style={{ willChange: "transform" }}>
                   <motion.div
-                    className="absolute -inset-1 rounded-full bg-primary/20 blur-sm"
+                    className="absolute -inset-1 rounded-full bg-primary/20"
+                    style={{ willChange: "opacity, transform", filter: isTouchDevice ? "none" : "blur(4px)" }}
                     animate={isSpeaking && !isPaused ? { opacity: [0.25, 0.45, 0.25], scale: [1, 1.08, 1] } : { opacity: 0.2, scale: 1 }}
                     transition={{ duration: 1.4, repeat: isSpeaking && !isPaused ? Infinity : 0, ease: "easeInOut" }}
                   />
