@@ -1084,7 +1084,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ IMPACT STATS ══════ */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="relative rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 sm:p-8 overflow-hidden mb-8 mt-4">
+          className="relative rounded-xl border border-border bg-card/80 backdrop-blur-sm p-3 sm:p-8 overflow-hidden mb-5 mt-2">
           <div className="absolute top-0 left-0 right-0 h-px">
             <motion.div className="absolute w-12 h-full bg-primary/40"
               animate={{ left: ["-10%", "110%"] }}
