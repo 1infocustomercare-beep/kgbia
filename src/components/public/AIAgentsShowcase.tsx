@@ -1044,7 +1044,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
         )}
 
         {/* ══════ NEURAL BUS ══════ */}
-        <motion.div className="relative h-12 sm:h-16 my-4" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+        <motion.div className="relative h-8 sm:h-16 my-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-px bg-primary/20" />
 
           {[8, 22, 36, 50, 64, 78, 92].map((x, i) => (
