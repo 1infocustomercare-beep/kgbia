@@ -617,7 +617,7 @@ export default function MultiSectorShowcase() {
               <motion.button
                 key={s.id}
                 onClick={() => { setActiveIdx(globalIdx); setIsAutoPlaying(false); setShowAllScreens(false); }}
-                className={`relative flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-md text-[0.45rem] font-heading font-medium tracking-wide uppercase transition-all duration-200 border ${
+                className={`relative flex flex-col items-center justify-center gap-0.5 py-1 sm:py-1.5 px-0.5 sm:px-1 rounded-md text-[0.4rem] sm:text-[0.45rem] font-heading font-medium tracking-wide uppercase transition-all duration-200 border ${
                   isActive
                     ? "text-foreground border-primary/30 z-10"
                     : "text-foreground/25 border-border/5 hover:text-foreground/45 hover:border-border/15"
