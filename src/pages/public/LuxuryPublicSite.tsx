@@ -281,6 +281,7 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
 
   const heroVideo = siteConfig?.hero_video_url || INDUSTRY_VIDEOS[industry];
   const heroPoster = siteConfig?.hero_image_url || INDUSTRY_POSTERS[industry] || INDUSTRY_POSTERS.custom;
+  const heroPhotos = INDUSTRY_PHOTO_CAROUSELS[industry] || INDUSTRY_PHOTO_CAROUSELS.custom;
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: p.bg, color: p.text, fontFamily: "'DM Sans', sans-serif" }}>
