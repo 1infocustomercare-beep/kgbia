@@ -13,7 +13,10 @@ import {
   Wrench, Briefcase, Truck, Leaf, Dog, Baby, GraduationCap,
   PartyPopper, Warehouse, Scale, Calculator, Hammer, Droplets,
   Palette as PaletteIcon, Lightbulb, Stethoscope, Bed, Utensils,
-  BookOpen, Megaphone, HandCoins, ShieldCheck, Gauge
+  BookOpen, Megaphone, HandCoins, ShieldCheck, Gauge,
+  Anchor, Music, Plane, Coffee, Pill, Bike, Gem, Shirt,
+  Glasses, Mic, Printer, Plug, Flame, Wind, TreePine, Scan,
+  Smartphone, Mail, Phone, Video, Clapperboard, PenTool
 } from "lucide-react";
 
 /* ═══ COUNTER ═══ */
