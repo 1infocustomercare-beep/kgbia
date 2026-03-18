@@ -3167,23 +3167,28 @@ const LandingPage = () => {
 
         {/* ═══ Mobile: Auto-scroll Carousel — 3 iPhones ═══ */}
         {(() => {
-          const scale = 115 / 375;
           const INDUSTRY_COLORS: Record<string, string> = {
             food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
             retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
           };
-          const allItems = [
-            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", nav: "/r/impero-roma" },
-            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", nav: "/b/amalfi-luxury-transfer" },
+          const SECTOR_HERO_IMAGES: Record<string, string> = {
+            food: sectorHeroFood, ncc: sectorHeroNcc, beauty: sectorHeroBeauty,
+            healthcare: sectorHeroHealthcare, retail: sectorHeroRetail,
+            fitness: sectorHeroFitness, hospitality: sectorHeroHotel,
+          };
+          const allItems: CarouselItem[] = [
+            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", nav: "/r/impero-roma", image: sectorHeroFood },
+            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", nav: "/b/amalfi-luxury-transfer", image: sectorHeroNcc },
             ...industries.map(ind => {
               const slug = DEMO_SLUGS[ind.id];
               const siteRoute = ind.id === "food" ? `/r/${slug}` : `/b/${slug}`;
               const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
               const color = INDUSTRY_COLORS[ind.id] || "#8b5cf6";
-              return { name: ind.title, route: siteRoute, color, label: ind.modules, nav: demoPath };
+              const image = SECTOR_HERO_IMAGES[ind.id] || sectorHeroFood;
+              return { name: ind.title, route: siteRoute, color, label: ind.modules, nav: demoPath, image };
             }),
           ];
-          return <MobileIPhoneCarousel items={allItems} scale={scale} navigate={navigate} />;
+          return <MobileIPhoneCarousel items={allItems} navigate={navigate} />;
         })()}
 
         {/* ═══ Desktop: iPhone Grid ═══ */}
