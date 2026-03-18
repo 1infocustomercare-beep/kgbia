@@ -261,6 +261,14 @@ export default function DemoDirectoryPage() {
                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
                           <div className="px-4 pb-5 pt-1">
+                            {/* Live preview */}
+                            <div className="flex justify-center mb-4">
+                              <LivePhonePreview
+                                route={id === "food" ? `/r/${DEMO_SLUGS[id]}` : `/b/${DEMO_SLUGS[id]}`}
+                                color={cfg.defaultPrimaryColor}
+                                name={cfg.label}
+                              />
+                            </div>
                             <IndustryPhoneShowcase industryId={id} />
                             <div className="flex justify-center mt-4">
                               <motion.button onClick={() => navigateToDemo(id)}
