@@ -168,16 +168,16 @@ export default function SectorPhoneCarousel({ items, onNavigate, onShowAll }: Pr
             transition={{ duration: 0.3 }}
           >
             <div
-              className="overflow-hidden"
+              className="overflow-hidden px-4"
               onMouseEnter={pauseOnHover}
               onMouseLeave={resumeOnLeave}
             >
               <motion.div
                 ref={trackRef}
-                className="flex gap-3 sm:gap-5 justify-center"
-                animate={{ x: `calc(-${currentIndex} * (calc(160px + 12px)))` }}
+                className="flex gap-3 sm:gap-5"
+                animate={{ x: -(currentIndex * 172) }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                style={{ width: "max-content", margin: "0 auto" }}
+                style={{ width: "max-content" }}
               >
                 {items.map((item, i) => (
                   <PhoneCard key={i} item={item} onClick={() => onNavigate(item.nav)} />
