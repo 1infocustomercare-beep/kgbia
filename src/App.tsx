@@ -44,12 +44,10 @@ const isConstrainedNetwork = () => {
 const INTRO_FAILSAFE_MS = IS_MOBILE ? 8000 : 9000;
 const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
 const IS_IN_IFRAME = typeof window !== "undefined" && window.self !== window.top;
-// Only skip intro for embedded mockup iframes (small viewports) and client routes — NOT for the main preview
+// Only skip intro for tiny embedded mockup iframes (e.g. iPhone previews inside the app)
 const IS_EMBED_IFRAME = IS_IN_IFRAME && typeof window !== "undefined" && window.innerWidth < 500;
 const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" && (
   IS_EMBED_IFRAME ||
-  isConstrainedNetwork() ||
-  window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true ||
   /^\/(r|b|demo)\//.test(window.location.pathname)
 );
 
