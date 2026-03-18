@@ -2092,9 +2092,9 @@ const MobileIPhoneCarousel = ({ items, navigate }: { items: CarouselItem[]; navi
         style={{ borderColor: `${item.color}40`, boxShadow: `0 8px 24px hsla(0,0%,0%,0.4), 0 0 12px ${item.color}10` }}>
         <div className="absolute top-[4px] left-1/2 -translate-x-1/2 w-[36px] h-[10px] bg-black rounded-full z-20" />
         <div className="absolute inset-[2px] rounded-[18px] overflow-hidden bg-black">
-          <iframe src={item.route} title={item.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
+          <img src={item.image} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
         </div>
-        <div className="absolute bottom-0 left-0 right-0 z-20 p-1.5 pt-5" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+        <div className="absolute bottom-0 left-0 right-0 z-20 p-1.5 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.95) 30%, transparent)" }}>
           <div className="flex items-center gap-1 mb-0.5">
             <span className="text-[5px] px-1 py-[1px] rounded-full font-bold tracking-wider uppercase" style={{ background: `${item.color}25`, color: item.color, border: `1px solid ${item.color}35` }}>★ Live</span>
           </div>
