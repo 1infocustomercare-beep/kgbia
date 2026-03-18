@@ -363,8 +363,8 @@ const EmpireDNABackground = () => {
         if (i % 3 === 0) {
           // Cross (+) node
           const arm = 2.5 + breathe * 2;
-          ctx.strokeStyle = hsla(isActive ? pAccent : pNode, na + 0.15);
-          ctx.lineWidth = isActive ? 1.0 : 0.7;
+          ctx.strokeStyle = hsla(isActive ? pAccent : pNode, na + 0.08);
+          ctx.lineWidth = isActive ? 0.7 : 0.5;
           ctx.beginPath();
           ctx.moveTo(pos[i].x - arm, pos[i].y); ctx.lineTo(pos[i].x + arm, pos[i].y);
           ctx.moveTo(pos[i].x, pos[i].y - arm); ctx.lineTo(pos[i].x, pos[i].y + arm);
