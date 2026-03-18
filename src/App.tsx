@@ -50,9 +50,11 @@ const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
 
+const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 7000 : 10000;
+
 const isRetryableImportError = (error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
-  return /failed to fetch dynamically imported module|importing a module script failed|load failed|loading chunk [\w-]+ failed|chunkloaderror|dynamically imported module/i.test(message);
+  return /failed to fetch dynamically imported module|importing a module script failed|load failed|loading chunk [\w-]+ failed|chunkloaderror|dynamically imported module|import timed out|timeout while loading module/i.test(message);
 };
 
 const CHUNK_RECOVERY_FLAG = "empire_chunk_recovery_once";
@@ -102,6 +104,24 @@ const tryRecoverFromChunkError = (error: unknown): boolean => {
   return true;
 };
 
+const withImportTimeout = <T,>(promise: Promise<T>, timeoutMs: number) =>
+  new Promise<T>((resolve, reject) => {
+    const timeoutId = window.setTimeout(() => {
+      reject(new Error(`Import timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+
+    promise.then(
+      (value) => {
+        window.clearTimeout(timeoutId);
+        resolve(value);
+      },
+      (error) => {
+        window.clearTimeout(timeoutId);
+        reject(error);
+      },
+    );
+  });
+
 const delay = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
 const importWithRetry = async <T,>(
@@ -112,7 +132,7 @@ const importWithRetry = async <T,>(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     try {
-      return await importer();
+      return await withImportTimeout(importer(), IMPORT_ATTEMPT_TIMEOUT_MS);
     } catch (error) {
       lastError = error;
 
@@ -126,7 +146,7 @@ const importWithRetry = async <T,>(
         throw error;
       }
 
-      await delay(350 * attempt);
+      await delay((IS_MOBILE ? 450 : 350) * attempt);
     }
   }
 

@@ -2,9 +2,6 @@ import { useState, useEffect, useRef, forwardRef, useMemo, lazy, Suspense } from
 import InteractiveParticleSphere from "@/components/public/InteractiveParticleSphere";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
-import IndustryPhoneShowcase, { IPhoneFrame, getSectorStyle } from "@/components/public/IndustryPhoneShowcase";
-import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
-import { DEMO_INDUSTRY_DATA } from "@/data/demo-industries";
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
@@ -52,7 +49,6 @@ import sectorHeroFitness from "@/assets/sector-hero-fitness.jpg";
 import sectorHeroHotel from "@/assets/sector-hero-hotel.jpg";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
-import MultiSectorShowcase from "@/components/public/MultiSectorShowcase";
 const EmpireTeamStory = lazy(() => import("@/components/public/EmpireTeamStory"));
 
 /* Build a lookup from site_assets — custom URL overrides bundled default */
