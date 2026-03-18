@@ -53,7 +53,7 @@ const EmpireTeamStory = lazy(() => import("@/components/public/EmpireTeamStory")
 
 /* Build a lookup from site_assets — custom URL overrides bundled default */
 function useLandingAssets() {
-  const { data: assets } = useSiteAssets("landing");
+  const { data: assets } = useSiteAssets();
   const map = useMemo(() => {
     const m: Record<string, string> = {};
     (assets || []).forEach(a => { if (a.resolvedUrl) m[a.slot_key] = a.resolvedUrl; });

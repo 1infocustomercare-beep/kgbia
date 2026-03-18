@@ -50,12 +50,7 @@ const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
 
-const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 20000 : 12000;
-
-const isImportTimeoutError = (error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  return /import timed out|timeout while loading module/i.test(message);
-};
+const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 7000 : 10000;
 
 const isRetryableImportError = (error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
@@ -73,16 +68,7 @@ const clearChunkRecoveryFlag = () => {
 };
 
 const tryRecoverFromChunkError = (error: unknown): boolean => {
-  if (typeof window === "undefined") {
-    return false;
-  }
-
-  // Un timeout su rete lenta non è un chunk corrotto: evita hard reload/cancel SW aggressivo.
-  if (isImportTimeoutError(error)) {
-    return false;
-  }
-
-  if (!isRetryableImportError(error)) {
+  if (!isRetryableImportError(error) || typeof window === "undefined") {
     return false;
   }
 
