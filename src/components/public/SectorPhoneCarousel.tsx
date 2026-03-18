@@ -185,7 +185,7 @@ export default function SectorPhoneCarousel({ items, onNavigate, onShowAll }: Pr
               <motion.div
                 ref={trackRef}
                 className="flex gap-3 sm:gap-5"
-                animate={{ x: -(currentIndex * 172) }}
+                animate={{ x: -(currentIndex * stepPx) }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 style={{ width: "max-content" }}
               >
