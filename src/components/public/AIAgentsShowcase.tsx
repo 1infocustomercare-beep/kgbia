@@ -863,8 +863,9 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
               animate={{ left: ["0%", "100%"] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
           </div>
-          <span className="text-[0.5rem] font-bold text-primary/90 tracking-[3px] uppercase whitespace-nowrap">
-            {filteredAgents.length} Nodi Attivi · Clicca per esplorare connessioni
+          <span className="text-[0.42rem] sm:text-[0.5rem] font-bold text-primary/90 tracking-[1.5px] sm:tracking-[3px] uppercase text-center leading-tight">
+            {filteredAgents.length} Nodi Attivi
+            <span className="hidden sm:inline"> · Clicca per esplorare connessioni</span>
           </span>
           <div className="flex-1 relative h-px">
             <div className="absolute inset-0 bg-gradient-to-l from-primary/30 to-transparent" />
