@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
+import DemoAdminAccessButton from "@/components/public/DemoAdminAccessButton";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
