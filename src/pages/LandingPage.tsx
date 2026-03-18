@@ -4155,11 +4155,29 @@ const LandingPage = () => {
           TECH DNA — Neural Network Visualization
          ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,5%,0.92) 0%, hsla(265,15%,8%,0.90) 35%, hsla(230,14%,7%,0.91) 70%, hsla(230,16%,5%,0.92) 100%)",
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,8%,1) 15%, hsla(230,16%,9%,1) 35%, hsla(265,18%,7%,1) 55%, hsla(230,14%,6%,1) 78%, hsla(230,16%,4%,1) 100%)",
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/4 left-1/4 w-[520px] h-[520px] rounded-full opacity-[0.08]" style={{ background: "radial-gradient(circle, hsla(265,60%,52%,0.4), transparent 70%)", filter: "blur(130px)" }} />
-          <div className="absolute bottom-1/4 right-1/4 w-[420px] h-[420px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(110px)" }} />
+          <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
+               style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          <div className="absolute top-[35%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
+               style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-[15%] left-[35%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
+               style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(110px)" }} />
+          <div className="absolute bottom-[30%] right-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
+               style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
+               style={{ background: "radial-gradient(circle, hsla(155,55%,48%,0.25), transparent 60%)", filter: "blur(85px)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
+               style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.22), hsla(155,45%,50%,0.1), transparent)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.06]"
+               style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
+          <div className="absolute bottom-0 left-0 right-0 h-[70px]"
+               style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
+          <div className="absolute inset-0 opacity-[0.012]" style={{
+            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
+            backgroundRepeat: "repeat", backgroundSize: "128px 128px",
+          }} />
         </div>
         <div className="relative z-10 text-center mb-10 sm:mb-14">
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
