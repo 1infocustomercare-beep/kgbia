@@ -121,7 +121,7 @@ const SECTIONS = topologies.length;
 
 // Uniform palette — consistent intensity per section
 const BASE_ALPHA = 0.04;
-const MOBILE_BOOST = IS_MOBILE ? 2.15 : 1; // Mobile boost tuned for desktop-like visibility without overglow
+const MOBILE_BOOST = IS_MOBILE ? 1.6 : 1; // Tuned for 0.28 canvas opacity on mobile
 const PALETTES = [
   { node: [215, 15, 40], line: [215, 12, 32], glow: [215, 20, 45], accent: [38, 30, 45] },
   { node: [265, 18, 40], line: [265, 14, 32], glow: [265, 22, 45], accent: [38, 28, 43] },
@@ -484,7 +484,7 @@ const EmpireDNABackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: IS_MOBILE ? 0.12 : 0.045, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: IS_MOBILE ? 0.28 : 0.045, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };

@@ -107,9 +107,19 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
   return <span ref={ref}>{prefix}{display.toLocaleString("it-IT")}{suffix}</span>;
 };
 
+const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
+
+/** Makes section backgrounds semi-transparent on mobile so the circuit canvas bleeds through */
+const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
+  if (!style || !IS_MOBILE_LP || !style.background || typeof style.background !== "string") return style;
+  // Replace opacity 1 with 0.88 in hsla stops so circuit shows through
+  const tweaked = (style.background as string).replace(/,\s*1\)/g, ", 0.88)");
+  return { ...style, background: tweaked };
+};
+
 const Section = forwardRef<HTMLElement, {id?: string;children: React.ReactNode;className?: string;style?: React.CSSProperties;}>(
   ({ id, children, className = "", style }, ref) =>
-  <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden ${className}`} style={style}>
+  <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden ${className}`} style={mobilifyBg(style)}>
       <div className="max-w-[1100px] mx-auto relative z-10">{children}</div>
     </section>
 
@@ -5145,9 +5155,9 @@ const LandingPage = () => {
            EMPIRE AI LIVE — Real-time Automation Feed
           ═══════════════════════════════════════════ */}
       <section className="relative py-16 sm:py-28 px-5 sm:px-6 overflow-hidden"
-      style={{
+      style={mobilifyBg({
         background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,7%,1) 15%, hsla(230,20%,5%,1) 40%, hsla(265,18%,6%,1) 65%, hsla(230,16%,4%,1) 100%)"
-      }}>
+      })}>
         {/* AI Neural Network Schema Background */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <svg className="absolute inset-0 w-full h-full opacity-[0.08]" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
