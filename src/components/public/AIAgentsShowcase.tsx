@@ -248,7 +248,6 @@ const AlwaysOnNetwork = ({
               <animateMotion dur={isActive ? "3s" : "8s"} repeatCount="indefinite"
                 path={pathD} begin={`${(li * 1.3 + 0.7) % 5}s`} />
             </circle>
-            </circle>
 
             {/* Extra particles on active — intense burst */}
             {isActive && (
