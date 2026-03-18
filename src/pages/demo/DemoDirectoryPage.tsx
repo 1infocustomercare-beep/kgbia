@@ -24,8 +24,8 @@ const FEATURED_DEMOS = [
   },
   {
     id: "ncc" as IndustryId,
-    name: "Amalfi Luxury Transfer",
-    tagline: "NCC Premium · Costiera Amalfitana",
+    name: "NCC & Trasporto Premium",
+    tagline: "Flotta · Tratte · Booking · Autisti",
     route: "/b/amalfi-luxury-transfer",
     emoji: "🚗",
     color: "#C9A84C",
