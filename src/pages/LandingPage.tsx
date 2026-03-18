@@ -143,7 +143,7 @@ const SectionLabel = forwardRef<HTMLDivElement, { text: string; icon?: React.Rea
 );
 SectionLabel.displayName = "SectionLabel";
 
-/* ═══ Neural Cells Background — flowing DNA data network ═══ */
+/* ═══ Neural Cells Background — flowing DNA data network + Tech Circuit Grid ═══ */
 const NeuralCellsBackground = () => {
   const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 640);
   const [born, setBorn] = useState(false);
@@ -216,6 +216,60 @@ const NeuralCellsBackground = () => {
         transition={{ duration: 2.5, ease: "easeOut", delay: 0.3 }}
       />
 
+      {/* ═══ TECH CIRCUIT GRID — hexagonal + micro-grid overlay ═══ */}
+      <svg className="absolute inset-0 w-full h-full" style={{ opacity: isMobile ? 0.04 : 0.045 }} xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="bg-circuit-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(2.2)">
+            <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(215 45% 55%)" strokeWidth="0.35" />
+            <circle cx="30" cy="0" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+            <circle cx="60" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+            <circle cx="0" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+            <circle cx="30" cy="52" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+          </pattern>
+          <pattern id="bg-micro-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="hsl(215 35% 50%)" strokeWidth="0.12" opacity="0.35" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#bg-circuit-hex)" />
+        <rect width="100%" height="100%" fill="url(#bg-micro-grid)" opacity="0.25" />
+      </svg>
+
+      {/* ═══ VERTICAL DATA STREAMS — tech flow lines ═══ */}
+      {(isMobile ? [15, 50, 85] : [8, 25, 42, 58, 75, 92]).map((x, i) => (
+        <div key={`vstream-${i}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${x}%`, background: `hsla(215,35%,50%,0.03)` }}>
+          <motion.div className="absolute w-full left-0 rounded-full"
+            style={{ height: isMobile ? "60px" : "100px", background: `linear-gradient(180deg, transparent, hsla(210,55%,62%,0.25), transparent)` }}
+            animate={{ top: ["-10%", "110%"] }}
+            transition={{ duration: 10 + i * 2.5, repeat: Infinity, ease: "linear", delay: i * 1.8 }}
+          />
+        </div>
+      ))}
+
+      {/* ═══ HORIZONTAL SCAN LINES ═══ */}
+      {(isMobile ? [0] : [0, 1]).map((i) => (
+        <motion.div key={`hscan-${i}`} className="absolute left-0 right-0 h-px"
+          style={{ background: `linear-gradient(90deg, transparent 5%, hsla(210,45%,58%,0.08) 30%, hsla(215,50%,65%,0.14) 50%, hsla(210,45%,58%,0.08) 70%, transparent 95%)` }}
+          animate={{ top: ["-3%", "103%"] }}
+          transition={{ duration: 18 + i * 7, repeat: Infinity, ease: "linear", delay: i * 5 }}
+        />
+      ))}
+
+      {/* ═══ PULSING TECH NODES — intersection dots ═══ */}
+      {(isMobile
+        ? [{ x: 15, y: 25 }, { x: 50, y: 50 }, { x: 85, y: 75 }]
+        : [
+            { x: 8, y: 18 }, { x: 25, y: 40 }, { x: 42, y: 12 }, { x: 58, y: 60 },
+            { x: 75, y: 30 }, { x: 92, y: 55 }, { x: 35, y: 80 }, { x: 65, y: 90 },
+          ]
+      ).map((pos, i) => (
+        <motion.div key={`tnode-${i}`} className="absolute w-1 h-1 rounded-full"
+          style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(210,55%,62%,0.25)`, boxShadow: `0 0 8px hsla(210,55%,62%,0.15)` }}
+          animate={{ opacity: [0.15, 0.5, 0.15], scale: [0.7, 1.4, 0.7] }}
+          transition={{ duration: 4 + i * 0.6, repeat: Infinity, delay: i * 0.5 }}
+        />
+      ))}
+
+      {/* ═══ ORIGINAL NEURAL CELLS SVG ═══ */}
       <svg className="w-full h-full" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid slice">
         {/* Only add SVG filter on desktop — feGaussianBlur is expensive on mobile GPU */}
         {!isMobile && (
