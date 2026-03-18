@@ -666,7 +666,7 @@ const NetworkNode = ({
 
       {/* Robot avatar node */}
       <div className="relative z-10 mb-1">
-        <RobotAvatar agent={agent} size={44} isActive={isActive} isConnected={isConnected} />
+        <RobotAvatar agent={agent} size={38} isActive={isActive} isConnected={isConnected} />
 
         {/* Status pulse */}
         <motion.div
@@ -680,10 +680,10 @@ const NetworkNode = ({
         />
 
         {/* Stat badge */}
-        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-[1px] rounded-full text-[0.42rem] font-bold whitespace-nowrap z-20 border border-foreground/10"
+        <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 px-1 py-[1px] rounded-full text-[0.38rem] font-bold whitespace-nowrap z-20 border border-foreground/10"
           style={{ background: "hsla(var(--background) / 0.92)", backdropFilter: "blur(6px)", color: agent.glow }}>
           <Counter value={agent.stat.value} suffix={agent.stat.suffix} />{" "}
-          <span className="text-foreground/60 text-[0.35rem]">{agent.stat.label}</span>
+          <span className="text-foreground/60 text-[0.3rem]">{agent.stat.label}</span>
         </div>
 
         {/* Cardinal connection dots */}
@@ -717,11 +717,11 @@ const NetworkNode = ({
       </div>
 
       {/* Name + role */}
-      <div className="text-center max-w-[68px] sm:max-w-[100px]">
-        <h3 className="font-bold text-[0.48rem] sm:text-[0.6rem] text-foreground leading-tight truncate">
+      <div className="text-center max-w-[60px] sm:max-w-[100px]">
+        <h3 className="font-bold text-[0.42rem] sm:text-[0.6rem] text-foreground leading-tight truncate">
           {agent.name}
         </h3>
-        <p className="text-[0.36rem] sm:text-[0.44rem] text-primary/85 tracking-wider uppercase truncate">
+        <p className="text-[0.32rem] sm:text-[0.44rem] text-primary/85 tracking-wider uppercase truncate leading-tight">
           {agent.role}
         </p>
       </div>
@@ -755,7 +755,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const connectedIds = useMemo(() => new Set(activeAgent?.connections || []), [activeAgent]);
 
   return (
-    <section ref={sectionRef} className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden isolate z-10"
+    <section ref={sectionRef} className="relative py-8 sm:py-24 px-3 sm:px-6 overflow-hidden isolate z-10"
       style={{
         background: `linear-gradient(180deg, 
           hsl(220 25% 5%) 0%, 
@@ -788,7 +788,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
       <div className="max-w-[1300px] mx-auto relative z-10">
         {/* ══════ HEADER ══════ */}
-        <div className="text-center mb-8 sm:mb-12">
+        <div className="text-center mb-5 sm:mb-12">
           <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={isInView ? { opacity: 1, scale: 1 } : {}}
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-card/90 backdrop-blur-sm mb-4">
             <Network className="w-3.5 h-3.5 text-primary animate-pulse" />
@@ -829,7 +829,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ WHY SECTION ══════ */}
         <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="relative rounded-xl border border-primary/25 bg-card/85 backdrop-blur-sm p-4 sm:p-6 mb-8 sm:mb-12 overflow-hidden">
+          className="relative rounded-xl border border-primary/25 bg-card/85 backdrop-blur-sm p-3 sm:p-6 mb-5 sm:mb-12 overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-px">
             <motion.div className="absolute w-full h-full"
               style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.35), transparent)" }}
@@ -863,10 +863,10 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
         </motion.div>
 
         {/* ══════ SECTOR FILTER ══════ */}
-        <div className="flex gap-1 justify-center flex-wrap mb-6 sm:mb-8 px-2">
+        <div className="flex gap-0.5 justify-center flex-wrap mb-4 sm:mb-8 px-1">
           {SECTOR_TABS.map((tab) => (
             <button key={tab.id} onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
-              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[0.5rem] sm:text-[0.55rem] font-semibold tracking-wider uppercase transition-all border ${
+              className={`flex items-center gap-0.5 px-1.5 py-1 rounded-md text-[0.42rem] sm:text-[0.55rem] font-semibold tracking-wider uppercase transition-all border ${
                 activeSector === tab.id
                   ? "text-foreground border-primary/40 bg-primary/15"
                   : "text-foreground/70 border-border hover:text-foreground"
@@ -878,7 +878,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ NETWORK LABEL ══════ */}
         <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}
-          className="mb-5 flex items-center gap-2 px-1">
+          className="mb-3 flex items-center gap-2 px-1">
           <div className="relative">
             <div className="w-6 h-6 rounded bg-primary/15 flex items-center justify-center">
               <Brain className="w-3.5 h-3.5 text-primary" />
@@ -986,7 +986,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
           <LayoutGroup>
             <motion.div
-              className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-3 gap-y-5 sm:gap-x-8 sm:gap-y-10 lg:gap-x-12 lg:gap-y-14 mb-6 relative z-[5]"
+              className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-2 gap-y-3 sm:gap-x-8 sm:gap-y-10 lg:gap-x-12 lg:gap-y-14 mb-4 relative z-[5]"
               layout
             >
               <AnimatePresence mode="popLayout">
@@ -994,7 +994,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                   <motion.div key={agent.id}
                     layout
                     initial={{ opacity: 0, scale: 0.6 }}
-                    animate={{ opacity: 1, scale: 1, marginTop: i % 2 === 1 ? 28 : 0 }}
+                    animate={{ opacity: 1, scale: 1, marginTop: i % 2 === 1 ? 14 : 0 }}
                     exit={{ opacity: 0, scale: 0.4, transition: { duration: 0.2 } }}
                     transition={{ type: "spring", stiffness: 400, damping: 28, mass: 0.7 }}
                   >
@@ -1044,7 +1044,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
         )}
 
         {/* ══════ NEURAL BUS ══════ */}
-        <motion.div className="relative h-12 sm:h-16 my-4" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+        <motion.div className="relative h-8 sm:h-16 my-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-px bg-primary/20" />
 
           {[8, 22, 36, 50, 64, 78, 92].map((x, i) => (
@@ -1084,7 +1084,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ IMPACT STATS ══════ */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="relative rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 sm:p-8 overflow-hidden mb-8 mt-4">
+          className="relative rounded-xl border border-border bg-card/80 backdrop-blur-sm p-3 sm:p-8 overflow-hidden mb-5 mt-2">
           <div className="absolute top-0 left-0 right-0 h-px">
             <motion.div className="absolute w-12 h-full bg-primary/40"
               animate={{ left: ["-10%", "110%"] }}
@@ -1105,7 +1105,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="text-center p-3 rounded-xl border border-border bg-background/70 hover:border-primary/30 transition-colors">
                 <div className="text-primary/80 flex justify-center mb-1.5">{stat.icon}</div>
-                <div className="text-2xl sm:text-3xl font-bold text-foreground mb-0.5">
+                <div className="text-xl sm:text-3xl font-bold text-foreground mb-0.5">
                   <Counter value={stat.value} suffix={stat.suffix} />
                 </div>
                 <div className="text-[0.55rem] sm:text-xs font-semibold text-foreground/90">{stat.label}</div>
@@ -1117,7 +1117,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ EVOLVING NETWORK FOOTER ══════ */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-          className="text-center py-6">
+          className="text-center py-4">
           <p className="text-foreground/90 text-xs sm:text-sm font-semibold mb-3">
             Una Rete che Evolve per Sempre.
           </p>
