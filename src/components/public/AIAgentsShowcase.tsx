@@ -450,7 +450,35 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const connectedIds = useMemo(() => new Set(activeAgent?.connections || []), [activeAgent]);
 
   return (
-    <section ref={sectionRef} className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden">
+    <section ref={sectionRef} className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden"
+      style={{
+        background: `linear-gradient(180deg, 
+          hsl(220 25% 6%) 0%, 
+          hsl(225 30% 8%) 25%, 
+          hsl(230 25% 10%) 50%, 
+          hsl(225 30% 8%) 75%, 
+          hsl(220 25% 6%) 100%)`,
+      }}
+    >
+      {/* Professional dark background overlays */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Subtle radial glow — center focal point */}
+        <div className="absolute inset-0" style={{
+          background: `radial-gradient(ellipse 80% 60% at 50% 40%, hsla(215,50%,30%,0.12), transparent 70%)`
+        }} />
+        {/* Top edge fade */}
+        <div className="absolute top-0 left-0 right-0 h-24" style={{
+          background: `linear-gradient(180deg, hsla(220,25%,4%,0.8), transparent)`
+        }} />
+        {/* Bottom edge fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-24" style={{
+          background: `linear-gradient(0deg, hsla(220,25%,4%,0.8), transparent)`
+        }} />
+        {/* Side vignettes */}
+        <div className="absolute inset-0" style={{
+          background: `radial-gradient(ellipse at center, transparent 50%, hsla(220,25%,4%,0.5) 100%)`
+        }} />
+      </div>
       <CircuitBackground />
 
       <div className="max-w-[1300px] mx-auto relative z-10">
