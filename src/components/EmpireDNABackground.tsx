@@ -10,11 +10,11 @@ const IS_MOBILE =
   typeof window !== "undefined" &&
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-const NODE_COUNT = IS_MOBILE ? 22 : 80;
-const MAX_DIST = IS_MOBILE ? 100 : 150;
-const FLOW_COUNT = IS_MOBILE ? 5 : 25;
-const PULSE_COUNT = IS_MOBILE ? 2 : 6;
-const HIGHWAY_COUNT = IS_MOBILE ? 1 : 4;
+const NODE_COUNT = IS_MOBILE ? 18 : 60;
+const MAX_DIST = IS_MOBILE ? 90 : 140;
+const FLOW_COUNT = IS_MOBILE ? 3 : 15;
+const PULSE_COUNT = IS_MOBILE ? 1 : 4;
+const HIGHWAY_COUNT = IS_MOBILE ? 1 : 3;
 const TARGET_FPS = IS_MOBILE ? 24 : 60;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
@@ -266,12 +266,12 @@ const EmpireDNABackground = () => {
       const gridSp = IS_MOBILE ? 60 : 55;
       if (!IS_MOBILE) {
         const gridPulse = 0.5 + Math.sin(time * 0.3) * 0.5;
-        ctx.fillStyle = hsla(pLine, 0.015 + gridPulse * 0.008);
+        ctx.fillStyle = hsla(pLine, 0.01 + gridPulse * 0.005);
         for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
           for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
             const localPulse = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.25) * 0.5 + 0.5;
-            const s = 0.4 + localPulse * 0.4;
-            ctx.globalAlpha = 0.3 + localPulse * 0.3;
+            const s = 0.3 + localPulse * 0.3;
+            ctx.globalAlpha = 0.25 + localPulse * 0.2;
             ctx.fillRect(gx - s / 2, gy - s / 2, s, s);
           }
         }
@@ -281,24 +281,22 @@ const EmpireDNABackground = () => {
       // ═══ L1: DATA HIGHWAYS — horizontal energy streams ═══
       const hws = hwRef.current;
       for (const hw of hws) {
-        const baseAlpha = 0.04 + Math.sin(time * 0.2 + hw.y * 0.01) * 0.02;
-        // Highway baseline
+        const baseAlpha = 0.025 + Math.sin(time * 0.2 + hw.y * 0.01) * 0.01;
         ctx.strokeStyle = hsla(pLine, baseAlpha);
-        ctx.lineWidth = 0.3;
-        ctx.setLineDash([6, 12]);
+        ctx.lineWidth = 0.25;
+        ctx.setLineDash([6, 14]);
         ctx.beginPath(); ctx.moveTo(0, hw.y); ctx.lineTo(w, hw.y); ctx.stroke();
         ctx.setLineDash([]);
 
-        // Fast particles on highway
         for (const p of hw.particles) {
           p.x = (p.x + p.sp * hw.speed) % (w + p.len * 2);
           const px = p.x - p.len;
           const grad = ctx.createLinearGradient(px, hw.y, px + p.len, hw.y);
           grad.addColorStop(0, hsla(pAccent, 0));
-          grad.addColorStop(0.7, hsla(pAccent, 0.04));
-          grad.addColorStop(1, hsla(pGlow, 0.06));
+          grad.addColorStop(0.7, hsla(pAccent, 0.025));
+          grad.addColorStop(1, hsla(pGlow, 0.04));
           ctx.strokeStyle = grad;
-          ctx.lineWidth = 0.8;
+          ctx.lineWidth = 0.6;
           ctx.beginPath(); ctx.moveTo(px, hw.y); ctx.lineTo(px + p.len, hw.y); ctx.stroke();
         }
       }
@@ -324,8 +322,8 @@ const EmpireDNABackground = () => {
             const route = rA.map((a, wi) => ({ x: lerp(a.x, rB[wi].x, t3), y: lerp(a.y, rB[wi].y, t3) }));
 
             // Draw trace
-            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.35 : 0.18) * (0.6 + pulse * 0.4));
-            ctx.lineWidth = activeTrace ? 1.2 : 0.6 + alpha * 0.6;
+            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.2 : 0.1) * (0.6 + pulse * 0.4));
+            ctx.lineWidth = activeTrace ? 0.8 : 0.4 + alpha * 0.4;
             ctx.beginPath();
             ctx.moveTo(route[0].x, route[0].y);
             for (let wi = 1; wi < route.length; wi++) ctx.lineTo(route[wi].x, route[wi].y);
@@ -335,8 +333,8 @@ const EmpireDNABackground = () => {
             if (activeTrace && alpha > 0.3) {
               ctx.setLineDash([4, 6]);
               ctx.lineDashOffset = -(time * 40);
-              ctx.strokeStyle = hsla(pGlow, alpha * 0.25);
-              ctx.lineWidth = 0.8;
+              ctx.strokeStyle = hsla(pGlow, alpha * 0.15);
+              ctx.lineWidth = 0.5;
               ctx.beginPath();
               ctx.moveTo(route[0].x, route[0].y);
               for (let wi = 1; wi < route.length; wi++) ctx.lineTo(route[wi].x, route[wi].y);
@@ -351,22 +349,22 @@ const EmpireDNABackground = () => {
       // ═══ L3: NODES — crosses, squares, with energy halos ═══
       for (let i = 0; i < NODE_COUNT; i++) {
         const breathe = 0.4 + Math.sin(time * 1.2 + i * 0.7) * 0.6;
-        let na = 0.12 * breathe;
+        let na = 0.06 * breathe;
         const isJunction = i % 4 === 0;
         const isActive = (i + Math.floor(time * 0.3)) % 11 === 0;
 
         if (ptr.active) {
           const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y, d = Math.sqrt(dx * dx + dy * dy);
-          if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.35;
+          if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.2;
         }
 
-        if (isActive) na = Math.min(na + 0.3, 0.6);
+        if (isActive) na = Math.min(na + 0.15, 0.35);
 
         if (i % 3 === 0) {
           // Cross (+) node
           const arm = 2.5 + breathe * 2;
-          ctx.strokeStyle = hsla(isActive ? pAccent : pNode, na + 0.15);
-          ctx.lineWidth = isActive ? 1.0 : 0.7;
+          ctx.strokeStyle = hsla(isActive ? pAccent : pNode, na + 0.08);
+          ctx.lineWidth = isActive ? 0.7 : 0.5;
           ctx.beginPath();
           ctx.moveTo(pos[i].x - arm, pos[i].y); ctx.lineTo(pos[i].x + arm, pos[i].y);
           ctx.moveTo(pos[i].x, pos[i].y - arm); ctx.lineTo(pos[i].x, pos[i].y + arm);
@@ -374,15 +372,15 @@ const EmpireDNABackground = () => {
         } else {
           // Square node
           const s = 1.5 + breathe;
-          ctx.fillStyle = hsla(isActive ? pAccent : pNode, na + 0.15);
+          ctx.fillStyle = hsla(isActive ? pAccent : pNode, na + 0.08);
           ctx.fillRect(pos[i].x - s / 2, pos[i].y - s / 2, s, s);
         }
 
         // Subtle halo for active nodes only (no big white balls)
         if (isActive) {
-          const glowR = 10;
+          const glowR = 8;
           const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, glowR);
-          gr.addColorStop(0, hsla(pAccent, na * 0.2));
+          gr.addColorStop(0, hsla(pAccent, na * 0.1));
           gr.addColorStop(1, hsla(pGlow, 0));
           ctx.fillStyle = gr;
           ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, glowR, 0, Math.PI * 2); ctx.fill();
@@ -424,8 +422,8 @@ const EmpireDNABackground = () => {
         }
 
         // Small subtle core dot only — no big glowing ball
-        ctx.fillStyle = hsla(pAccent, fadeA * 0.25);
-        ctx.fillRect(pt.x - 1, pt.y - 1, 2, 2);
+        ctx.fillStyle = hsla(pAccent, fadeA * 0.15);
+        ctx.fillRect(pt.x - 0.8, pt.y - 0.8, 1.6, 1.6);
       }
 
       // ═══ L5: PULSE RINGS — junction flashes ═══
@@ -433,7 +431,7 @@ const EmpireDNABackground = () => {
       for (let pi = 0; pi < pulses.length; pi++) {
         const p = pulses[pi];
         p.r += 0.25 + Math.sin(time + pi) * 0.1;
-        p.alpha = (1 - p.r / p.maxR) * 0.03;
+        p.alpha = (1 - p.r / p.maxR) * 0.02;
         if (p.r >= p.maxR) {
           // Respawn at a random node
           const ni = Math.floor(Math.random() * NODE_COUNT);
@@ -446,7 +444,7 @@ const EmpireDNABackground = () => {
         }
         if (p.alpha > 0.005) {
           ctx.strokeStyle = hsla(p.color, p.alpha);
-          ctx.lineWidth = 0.6;
+          ctx.lineWidth = 0.4;
           ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.stroke();
         }
       }
@@ -458,7 +456,7 @@ const EmpireDNABackground = () => {
         const radarR = Math.min(w, h) * 0.5;
         const rGrad = ctx.createConicGradient(radarAngle, w * 0.5, h * 0.5);
         rGrad.addColorStop(0, hsla(pGlow, 0));
-        rGrad.addColorStop(0.02, hsla(pGlow, 0.03));
+        rGrad.addColorStop(0.02, hsla(pGlow, 0.015));
         rGrad.addColorStop(0.08, hsla(pGlow, 0));
         rGrad.addColorStop(1, hsla(pGlow, 0));
         ctx.beginPath(); ctx.moveTo(w * 0.5, h * 0.5);
@@ -469,11 +467,11 @@ const EmpireDNABackground = () => {
         const scanY = h * (0.5 + Math.sin(time * 0.08) * 0.48);
         const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
         scanGrad.addColorStop(0, hsla(pAccent, 0));
-        scanGrad.addColorStop(0.5, hsla(pAccent, 0.025));
+        scanGrad.addColorStop(0.5, hsla(pAccent, 0.015));
         scanGrad.addColorStop(1, hsla(pAccent, 0));
         ctx.fillStyle = scanGrad; ctx.fillRect(0, scanY - 40, w, 80);
-        ctx.strokeStyle = hsla(pGlow, 0.04);
-        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = hsla(pGlow, 0.025);
+        ctx.lineWidth = 0.4;
         ctx.beginPath(); ctx.moveTo(0, scanY); ctx.lineTo(w, scanY); ctx.stroke();
 
         // Vertical data streams
@@ -485,17 +483,17 @@ const EmpireDNABackground = () => {
           const sy = streamPhase * (h + streamLen * 2) - streamLen;
           const sGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
           sGrad.addColorStop(0, hsla(pGlow, 0));
-          sGrad.addColorStop(0.5, hsla(pGlow, 0.02));
+          sGrad.addColorStop(0.5, hsla(pGlow, 0.012));
           sGrad.addColorStop(1, hsla(pGlow, 0));
-          ctx.strokeStyle = sGrad; ctx.lineWidth = 0.5;
+          ctx.strokeStyle = sGrad; ctx.lineWidth = 0.4;
           ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy + streamLen); ctx.stroke();
         }
       }
 
       // ═══ L9: CORNER CIRCUIT BRACKETS — tech frame ═══
       const brk = 30;
-      ctx.strokeStyle = hsla(pLine, 0.04 + Math.sin(time * 0.3) * 0.015);
-      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = hsla(pLine, 0.025 + Math.sin(time * 0.3) * 0.01);
+      ctx.lineWidth = 0.4;
       // Top-left
       ctx.beginPath(); ctx.moveTo(8, 8 + brk); ctx.lineTo(8, 8); ctx.lineTo(8 + brk, 8); ctx.stroke();
       // Top-right
@@ -515,7 +513,7 @@ const EmpireDNABackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: 0.12, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: 0.08, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };
