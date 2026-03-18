@@ -5018,11 +5018,17 @@ const LandingPage = () => {
 
       {/* ═══════ FOOTER ═══════ */}
       <footer id="contact" className="relative py-20 pb-10 px-5 sm:px-6 overflow-hidden"
-        style={{ background: "linear-gradient(180deg, hsla(260,25%,6%,1) 0%, hsla(265,30%,3%,1) 60%, hsla(260,20%,2%,1) 100%)" }}>
-        {/* Top accent line */}
-        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.3) 30%, hsla(280,45%,68%,0.4) 50%, hsla(265,70%,60%,0.3) 70%, transparent 95%)" }} />
-        {/* Subtle ambient glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[120px] blur-[80px] pointer-events-none" style={{ background: "hsla(265,70%,60%,0.06)" }} />
+        style={{ background: "linear-gradient(180deg, hsla(260,22%,6%,1) 0%, hsla(265,28%,4%,1) 30%, hsla(155,18%,5%,1) 60%, hsla(265,25%,3%,1) 85%, hsla(260,20%,2%,1) 100%)" }}>
+        {/* Top accent line — viola + verdolino AI */}
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.35) 25%, hsla(155,60%,50%,0.3) 50%, hsla(265,70%,60%,0.35) 75%, transparent 95%)" }} />
+        {/* Violet ambient glow */}
+        <div className="absolute top-0 left-[30%] w-[400px] h-[180px] blur-[100px] pointer-events-none" style={{ background: "hsla(265,65%,55%,0.08)" }} />
+        {/* Green AI tech glow */}
+        <div className="absolute top-[30%] right-[20%] w-[350px] h-[350px] rounded-full pointer-events-none opacity-[0.05]"
+             style={{ background: "radial-gradient(circle, hsla(155,55%,45%,0.5), transparent 70%)", filter: "blur(110px)" }} />
+        {/* Secondary violet glow bottom */}
+        <div className="absolute bottom-[15%] left-[15%] w-[300px] h-[300px] rounded-full pointer-events-none opacity-[0.04]"
+             style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 70%)", filter: "blur(100px)" }} />
         {/* Grid pattern overlay */}
         <div className="absolute inset-0 premium-holo-grid opacity-[0.03] pointer-events-none" />
 
