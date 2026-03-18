@@ -1,5 +1,5 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useRef, useState, useMemo, useEffect } from "react";
+import { useRef, useState, useMemo, useEffect, useCallback } from "react";
 import {
   Bot, Brain, Zap, TrendingUp, Shield, Sparkles,
   ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
@@ -11,7 +11,29 @@ import {
   Lock, Wifi, Database, Network, CircuitBoard, Activity,
   Settings, Receipt, ScanLine, Camera, X, ChevronDown
 } from "lucide-react";
-import { getAgentImage } from "@/lib/agent-images";
+
+/* ── Professional photos per agent ── */
+const AGENT_PHOTOS: Record<string, string> = {
+  "ghost-manager": "https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "concierge-ai": "https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "predictive-engine": "https://images.pexels.com/photos/7567443/pexels-photo-7567443.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "autopilot-marketing": "https://images.pexels.com/photos/6476808/pexels-photo-6476808.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "chef-intelligence": "https://images.pexels.com/photos/3814446/pexels-photo-3814446.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "kitchen-commander": "https://images.pexels.com/photos/2544829/pexels-photo-2544829.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "sommelier-ia": "https://images.pexels.com/photos/3171815/pexels-photo-3171815.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "review-shield": "https://images.pexels.com/photos/4350099/pexels-photo-4350099.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "smart-dispatcher": "https://images.pexels.com/photos/3764984/pexels-photo-3764984.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "dynamic-pricing": "https://images.pexels.com/photos/6120214/pexels-photo-6120214.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "smart-agenda": "https://images.pexels.com/photos/3985338/pexels-photo-3985338.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "loyalty-angel": "https://images.pexels.com/photos/5632399/pexels-photo-5632399.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "social-creator": "https://images.pexels.com/photos/3585088/pexels-photo-3585088.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "triage-ia": "https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "revenue-manager": "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "retention-ai": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "field-dispatcher": "https://images.pexels.com/photos/585419/pexels-photo-585419.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "beach-booker": "https://images.pexels.com/photos/1032650/pexels-photo-1032650.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "stock-intelligence": "https://images.pexels.com/photos/1884581/pexels-photo-1884581.jpeg?auto=compress&cs=tinysrgb&w=600",
+};
 
 /* ── Animated counter ── */
 const Counter = ({ value, suffix = "" }: { value: number; suffix?: string }) => {
@@ -41,7 +63,7 @@ interface AgentNode {
   icon: React.ReactNode; gradient: string; glow: string;
   stat: { value: number; suffix: string; label: string };
   capabilities: string[]; category: string; sectors: string[];
-  connections: string[]; // IDs of connected agents
+  connections: string[];
 }
 
 const ALL_AGENTS: AgentNode[] = [
@@ -90,169 +112,303 @@ const impactStats = [
 ];
 
 /* ═══════════════════════════════════════════
-   CIRCUIT CONNECTION LINE — animated particles
+   NETWORK NODE COMPONENT
    ═══════════════════════════════════════════ */
-const CircuitLine = ({ from, to, color, delay = 0 }: { from: string; to: string; color: string; delay?: number }) => (
-  <motion.div
-    className="absolute left-0 right-0 h-[1px] pointer-events-none"
-    style={{ background: `linear-gradient(90deg, transparent, ${color}30, transparent)` }}
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ delay }}
-  >
-    {/* Flowing particle */}
-    <motion.div
-      className="absolute w-2 h-2 rounded-full top-1/2 -translate-y-1/2"
-      style={{ background: color, boxShadow: `0 0 8px ${color}, 0 0 16px ${color}50` }}
-      animate={{ left: ["-5%", "105%"] }}
-      transition={{ duration: 2.5 + delay, repeat: Infinity, ease: "linear", delay }}
-    />
-  </motion.div>
-);
-
-/* ═══════════════════════════════════════════
-   AGENT CIRCUIT NODE
-   ═══════════════════════════════════════════ */
-const AgentCircuitNode = ({ agent, isActive, isConnected, onClick, index }: {
+const NetworkNode = ({ agent, isActive, isConnected, onClick, index }: {
   agent: AgentNode; isActive: boolean; isConnected: boolean; onClick: () => void; index: number;
 }) => {
-  const agentImg = getAgentImage(agent.name, agent.category, agent.sectors);
+  const photo = AGENT_PHOTOS[agent.id] || AGENT_PHOTOS["ghost-manager"];
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.6 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-20px" }}
-      transition={{ delay: index * 0.04, type: "spring", stiffness: 200, damping: 20 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ delay: index * 0.04, type: "spring", stiffness: 180, damping: 18 }}
       onClick={onClick}
-      className="group cursor-pointer relative"
+      className="group cursor-pointer relative flex flex-col items-center"
+      data-agent-id={agent.id}
     >
-      {/* Connection port indicators — top and bottom */}
-      <div className="absolute -top-[5px] left-1/2 -translate-x-1/2 z-30">
+      {/* Outer glow ring when active */}
+      {(isActive || isConnected) && (
         <motion.div
-          className="w-[6px] h-[6px] rounded-full border border-foreground/10"
-          style={{ background: isActive || isConnected ? agent.glow : "hsla(0,0%,100%,0.05)" }}
-          animate={isActive ? { scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] } : {}}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute rounded-full pointer-events-none z-0"
+          style={{
+            width: isActive ? 110 : 95,
+            height: isActive ? 110 : 95,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            marginTop: -10,
+            background: `radial-gradient(circle, ${agent.glow}20 0%, transparent 70%)`,
+            boxShadow: isActive ? `0 0 40px ${agent.glow}25, 0 0 80px ${agent.glow}10` : `0 0 20px ${agent.glow}15`,
+          }}
+          animate={isActive ? { scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] } : { opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity }}
         />
-      </div>
-      <div className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 z-30">
-        <motion.div
-          className="w-[6px] h-[6px] rounded-full border border-foreground/10"
-          style={{ background: isActive || isConnected ? agent.glow : "hsla(0,0%,100%,0.05)" }}
-          animate={isActive ? { scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] } : {}}
-          transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-        />
-      </div>
+      )}
 
-      <div className={`relative rounded-xl border overflow-hidden transition-all duration-500 ${
-        isActive
-          ? "border-primary/50 shadow-[0_0_30px_hsl(var(--primary)/0.15)]"
-          : isConnected
-            ? "border-primary/25 bg-primary/[0.03] shadow-[0_0_15px_hsl(var(--primary)/0.06)]"
-            : "border-foreground/[0.06] hover:border-primary/15"
-      }`}
-        style={{
-          background: isActive
-            ? "linear-gradient(145deg, hsla(265,20%,14%,0.98), hsla(265,30%,8%,0.99))"
+      {/* Hexagonal node container */}
+      <div className="relative z-10 mb-2">
+        {/* Photo circle */}
+        <div className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 transition-all duration-500 ${
+          isActive
+            ? "border-primary shadow-[0_0_25px_hsl(var(--primary)/0.3)]"
             : isConnected
-              ? "linear-gradient(145deg, hsla(265,15%,12%,0.6), hsla(265,20%,10%,0.8))"
-              : undefined
-        }}>
-
-        {/* Active circuit glow border */}
-        {isActive && (
-          <motion.div className="absolute inset-0 rounded-xl pointer-events-none z-0"
-            style={{ boxShadow: `inset 0 0 20px ${agent.glow}15, 0 0 30px ${agent.glow}10` }}
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 3, repeat: Infinity }}
+              ? "border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.15)]"
+              : "border-foreground/10 group-hover:border-primary/25"
+        }`}>
+          <img
+            src={photo}
+            alt={agent.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            loading="lazy"
           />
-        )}
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
-        {/* Agent photo header */}
-        <div className="relative h-14 sm:h-18 overflow-hidden">
-          <img src={agentImg} alt={agent.name} className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity" loading="lazy" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, hsla(260,15%,8%,0.95), hsla(260,15%,8%,0.2))" }} />
-
-          {/* Status LED */}
-          <div className="absolute top-1.5 right-1.5 flex items-center gap-1">
-            <motion.div className="w-1.5 h-1.5 rounded-full bg-emerald-400"
-              animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}
-              style={{ boxShadow: "0 0 4px hsla(160,80%,60%,0.6)" }} />
-            <span className="text-[5px] font-mono text-emerald-400/70 uppercase tracking-widest">Online</span>
-          </div>
+          {/* Status pulse */}
+          <motion.div
+            className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-emerald-300/50"
+            animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            style={{ boxShadow: "0 0 6px hsla(160,80%,55%,0.6)" }}
+          />
 
           {/* Stat badge */}
-          <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[0.5rem] font-heading font-bold"
-            style={{ background: "hsla(0,0%,0%,0.6)", backdropFilter: "blur(4px)", color: agent.glow }}>
-            <Counter value={agent.stat.value} suffix={agent.stat.suffix} /> {agent.stat.label}
-          </div>
-
-          {/* Circuit trace lines on image */}
-          <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 200 80">
-            <line x1="0" y1="40" x2="40" y2="40" stroke={agent.glow} strokeWidth="0.5" strokeDasharray="2 3" />
-            <line x1="160" y1="40" x2="200" y2="40" stroke={agent.glow} strokeWidth="0.5" strokeDasharray="2 3" />
-            <line x1="100" y1="0" x2="100" y2="20" stroke={agent.glow} strokeWidth="0.5" strokeDasharray="2 3" />
-          </svg>
-        </div>
-
-        {/* Content */}
-        <div className="p-2 sm:p-2.5 relative z-10">
-          <div className="flex items-center gap-1.5 mb-1">
-            <div className={`w-5 h-5 min-w-[20px] rounded-md bg-gradient-to-br ${agent.gradient} flex items-center justify-center text-white`}>
-              {agent.icon}
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="font-heading font-bold text-[0.6rem] sm:text-[0.65rem] text-foreground leading-tight truncate">{agent.name}</h3>
-              <p className="text-[0.42rem] sm:text-[0.48rem] text-primary/50 tracking-wider uppercase truncate">{agent.role}</p>
-            </div>
-          </div>
-
-          <p className="text-[0.5rem] text-foreground/30 leading-[1.4] line-clamp-2 mb-1.5">{agent.desc}</p>
-
-          {/* Capabilities */}
-          <div className="flex flex-wrap gap-0.5">
-            {agent.capabilities.slice(0, isActive ? 4 : 2).map((cap, ci) => (
-              <span key={ci} className="text-[0.42rem] px-1 py-[1px] rounded bg-foreground/[0.04] text-foreground/25 border border-foreground/[0.04]">
-                {cap}
-              </span>
-            ))}
-          </div>
-
-          {/* Connection count */}
-          <div className="flex items-center gap-1 mt-1.5">
-            <Network className="w-2.5 h-2.5 text-foreground/15" />
-            <span className="text-[0.42rem] text-foreground/15 font-mono">{agent.connections.length} link</span>
+          <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded-full text-[0.45rem] font-heading font-bold whitespace-nowrap"
+            style={{ background: "hsla(0,0%,0%,0.7)", backdropFilter: "blur(4px)", color: agent.glow }}>
+            <Counter value={agent.stat.value} suffix={agent.stat.suffix} />
           </div>
         </div>
 
-        {/* Bottom circuit trace */}
-        <div className="h-[2px] relative overflow-hidden">
+        {/* Connection port dots — cardinal directions */}
+        {["top", "bottom", "left", "right"].map(pos => (
           <motion.div
-            className="absolute inset-0"
-            style={{ background: `linear-gradient(90deg, transparent, ${agent.glow}60, transparent)` }}
-            animate={isActive ? { opacity: [0.3, 0.8, 0.3] } : { opacity: 0.1 }}
-            transition={{ duration: 2, repeat: Infinity }}
+            key={pos}
+            className="absolute w-[5px] h-[5px] rounded-full z-20"
+            style={{
+              background: isActive || isConnected ? agent.glow : "hsla(var(--primary) / 0.15)",
+              boxShadow: isActive ? `0 0 6px ${agent.glow}` : "none",
+              ...(pos === "top" ? { top: -2, left: "50%", marginLeft: -2.5 } : {}),
+              ...(pos === "bottom" ? { bottom: -2, left: "50%", marginLeft: -2.5 } : {}),
+              ...(pos === "left" ? { left: -2, top: "50%", marginTop: -2.5 } : {}),
+              ...(pos === "right" ? { right: -2, top: "50%", marginTop: -2.5 } : {}),
+            }}
+            animate={isActive ? { scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] } : {}}
+            transition={{ duration: 2, repeat: Infinity, delay: ["top", "right", "bottom", "left"].indexOf(pos) * 0.3 }}
           />
-          {isActive && (
-            <motion.div
-              className="absolute w-3 h-full top-0"
-              style={{ background: agent.glow, boxShadow: `0 0 6px ${agent.glow}` }}
-              animate={{ left: ["-10%", "110%"] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+        ))}
+
+        {/* Rotating ring for active state */}
+        {isActive && (
+          <motion.svg className="absolute -inset-1 w-[calc(100%+8px)] h-[calc(100%+8px)] pointer-events-none" viewBox="0 0 100 100">
+            <motion.circle cx="50" cy="50" r="48" fill="none" stroke={agent.glow} strokeWidth="0.5"
+              strokeDasharray="8 12" strokeLinecap="round"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+              style={{ transformOrigin: "center" }}
             />
-          )}
-        </div>
+          </motion.svg>
+        )}
+      </div>
+
+      {/* Name & role */}
+      <div className="text-center max-w-[100px] sm:max-w-[120px]">
+        <h3 className="font-heading font-bold text-[0.55rem] sm:text-[0.65rem] text-foreground leading-tight truncate">
+          {agent.name}
+        </h3>
+        <p className="text-[0.42rem] sm:text-[0.48rem] text-primary/45 tracking-wider uppercase truncate">
+          {agent.role}
+        </p>
       </div>
     </motion.div>
   );
 };
 
 /* ═══════════════════════════════════════════
+   SVG CONNECTION LINES WITH PARTICLES
+   ═══════════════════════════════════════════ */
+const NetworkConnections = ({ agents, activeId, connectedIds }: {
+  agents: AgentNode[];
+  activeId: string | null;
+  connectedIds: Set<string>;
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [lines, setLines] = useState<{ x1: number; y1: number; x2: number; y2: number; color: string; id: string }[]>([]);
+
+  const computeLines = useCallback(() => {
+    if (!containerRef.current || !activeId) { setLines([]); return; }
+    const container = containerRef.current;
+    const rect = container.getBoundingClientRect();
+    const activeEl = container.querySelector(`[data-agent-id="${activeId}"]`);
+    if (!activeEl) return;
+
+    const activeRect = activeEl.getBoundingClientRect();
+    const ax = activeRect.left + activeRect.width / 2 - rect.left;
+    const ay = activeRect.top + activeRect.height / 2 - rect.top;
+
+    const activeAgent = agents.find(a => a.id === activeId);
+    if (!activeAgent) return;
+
+    const newLines = activeAgent.connections
+      .filter(connId => agents.some(a => a.id === connId))
+      .map(connId => {
+        const connEl = container.querySelector(`[data-agent-id="${connId}"]`);
+        if (!connEl) return null;
+        const connRect = connEl.getBoundingClientRect();
+        const cx = connRect.left + connRect.width / 2 - rect.left;
+        const cy = connRect.top + connRect.height / 2 - rect.top;
+        return {
+          x1: ax, y1: ay, x2: cx, y2: cy,
+          color: activeAgent.glow,
+          id: `${activeId}-${connId}`,
+        };
+      })
+      .filter(Boolean) as typeof lines;
+
+    setLines(newLines);
+  }, [activeId, agents]);
+
+  useEffect(() => {
+    computeLines();
+    const timer = setTimeout(computeLines, 100);
+    window.addEventListener("resize", computeLines);
+    return () => { clearTimeout(timer); window.removeEventListener("resize", computeLines); };
+  }, [computeLines]);
+
+  return (
+    <div ref={containerRef} className="absolute inset-0 pointer-events-none z-[5]">
+      <svg className="absolute inset-0 w-full h-full" style={{ overflow: "visible" }}>
+        <defs>
+          {lines.map(line => (
+            <linearGradient key={`grad-${line.id}`} id={`grad-${line.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor={line.color} stopOpacity="0.6" />
+              <stop offset="50%" stopColor={line.color} stopOpacity="0.25" />
+              <stop offset="100%" stopColor={line.color} stopOpacity="0.6" />
+            </linearGradient>
+          ))}
+        </defs>
+
+        {lines.map((line) => {
+          const dx = line.x2 - line.x1;
+          const dy = line.y2 - line.y1;
+          const len = Math.sqrt(dx * dx + dy * dy);
+          // Midpoint with perpendicular offset for curved lines
+          const mx = (line.x1 + line.x2) / 2 + dy * 0.15;
+          const my = (line.y1 + line.y2) / 2 - dx * 0.15;
+
+          return (
+            <g key={line.id}>
+              {/* Main connection line - curved */}
+              <motion.path
+                d={`M ${line.x1} ${line.y1} Q ${mx} ${my} ${line.x2} ${line.y2}`}
+                fill="none"
+                stroke={`${line.color}35`}
+                strokeWidth="1.5"
+                strokeDasharray="4 6"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
+
+              {/* Glow line */}
+              <motion.path
+                d={`M ${line.x1} ${line.y1} Q ${mx} ${my} ${line.x2} ${line.y2}`}
+                fill="none"
+                stroke={`${line.color}15`}
+                strokeWidth="4"
+                filter="blur(2px)"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
+
+              {/* Flowing particle */}
+              <motion.circle r="3" fill={line.color} filter={`drop-shadow(0 0 4px ${line.color})`}>
+                <animateMotion
+                  dur="2.5s"
+                  repeatCount="indefinite"
+                  path={`M ${line.x1} ${line.y1} Q ${mx} ${my} ${line.x2} ${line.y2}`}
+                />
+              </motion.circle>
+
+              {/* Second particle, reverse */}
+              <motion.circle r="2" fill={line.color} opacity="0.5" filter={`drop-shadow(0 0 3px ${line.color})`}>
+                <animateMotion
+                  dur="3s"
+                  repeatCount="indefinite"
+                  path={`M ${line.x2} ${line.y2} Q ${mx} ${my} ${line.x1} ${line.y1}`}
+                />
+              </motion.circle>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════
+   HEXAGONAL GRID BACKGROUND
+   ═══════════════════════════════════════════ */
+const HexGridBackground = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    {/* Hexagonal grid pattern */}
+    <svg className="absolute inset-0 w-full h-full opacity-[0.035]" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="hex-grid" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(1.5)">
+          <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.4" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#hex-grid)" />
+    </svg>
+
+    {/* Animated scan lines */}
+    {[0, 1, 2].map(i => (
+      <motion.div key={i} className="absolute left-0 right-0 h-px"
+        style={{ background: `linear-gradient(90deg, transparent, hsl(var(--primary) / 0.12), transparent)` }}
+        animate={{ top: ["-5%", "105%"] }}
+        transition={{ duration: 12 + i * 4, repeat: Infinity, ease: "linear", delay: i * 3 }}
+      />
+    ))}
+
+    {/* Vertical pulse lines */}
+    {[20, 50, 80].map((x, i) => (
+      <div key={i} className="absolute top-0 bottom-0 w-px opacity-[0.04]" style={{ left: `${x}%`, background: "hsl(var(--primary))" }}>
+        <motion.div className="absolute h-12 w-full left-0 rounded-full"
+          style={{ background: "hsl(var(--primary))", opacity: 0.5 }}
+          animate={{ top: ["-5%", "105%"] }}
+          transition={{ duration: 10 + i * 3, repeat: Infinity, ease: "linear", delay: i * 2 }}
+        />
+      </div>
+    ))}
+
+    {/* Corner circuit traces */}
+    <svg className="absolute top-0 left-0 w-32 h-32 opacity-[0.06]" viewBox="0 0 100 100">
+      <path d="M 0 50 L 30 50 L 40 30 L 70 30" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+      <path d="M 50 0 L 50 20 L 35 35" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+      <circle cx="70" cy="30" r="2" fill="hsl(var(--primary))" opacity="0.5" />
+      <circle cx="35" cy="35" r="1.5" fill="hsl(var(--primary))" opacity="0.4" />
+    </svg>
+    <svg className="absolute bottom-0 right-0 w-32 h-32 opacity-[0.06] rotate-180" viewBox="0 0 100 100">
+      <path d="M 0 50 L 30 50 L 40 30 L 70 30" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+      <path d="M 50 0 L 50 20 L 35 35" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+      <circle cx="70" cy="30" r="2" fill="hsl(var(--primary))" opacity="0.5" />
+    </svg>
+
+    {/* Ambient glows */}
+    <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.06] top-0 left-1/2 -translate-x-1/2" style={{ background: "hsl(var(--primary))" }} />
+    <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.04] bottom-1/4 right-0" style={{ background: "hsl(var(--accent))" }} />
+  </div>
+);
+
+/* ═══════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════ */
 export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const sectionRef = useRef(null);
+  const networkRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
   const [activeSector, setActiveSector] = useState(sector || "all");
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null);
@@ -265,93 +421,41 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const activeAgent = useMemo(() => ALL_AGENTS.find(a => a.id === expandedAgent), [expandedAgent]);
   const connectedIds = useMemo(() => new Set(activeAgent?.connections || []), [activeAgent]);
 
-  // Build visible connection pairs for the circuit lines
-  const connectionPairs = useMemo(() => {
-    const pairs: { from: number; to: number; color: string }[] = [];
-    if (!expandedAgent) return pairs;
-    const agentIds = filteredAgents.map(a => a.id);
-    const fromIdx = agentIds.indexOf(expandedAgent);
-    if (fromIdx === -1) return pairs;
-    (activeAgent?.connections || []).forEach(connId => {
-      const toIdx = agentIds.indexOf(connId);
-      if (toIdx !== -1) {
-        pairs.push({ from: fromIdx, to: toIdx, color: activeAgent!.glow });
-      }
-    });
-    return pairs;
-  }, [expandedAgent, filteredAgents, activeAgent]);
-
   return (
     <section ref={sectionRef} className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden">
-      {/* ── Circuit Board Background ── */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Grid dots */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="circuit-dots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
-              <circle cx="16" cy="16" r="0.6" fill="hsl(var(--primary))" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#circuit-dots)" />
-        </svg>
+      <HexGridBackground />
 
-        {/* Circuit traces — horizontal */}
-        {[15, 35, 55, 75].map((y, i) => (
-          <div key={`h-${i}`} className="absolute left-0 right-0 h-px opacity-[0.03]" style={{ top: `${y}%`, background: "hsl(var(--primary))" }}>
-            <motion.div className="absolute w-8 h-full top-0 rounded-full"
-              style={{ background: "hsl(var(--primary))", opacity: 0.4 }}
-              animate={{ left: ["-5%", "105%"] }}
-              transition={{ duration: 8 + i * 2, repeat: Infinity, ease: "linear", delay: i * 1.5 }}
-            />
-          </div>
-        ))}
+      <div className="max-w-[1200px] mx-auto relative z-10">
 
-        {/* Circuit traces — vertical */}
-        {[20, 50, 80].map((x, i) => (
-          <div key={`v-${i}`} className="absolute top-0 bottom-0 w-px opacity-[0.03]" style={{ left: `${x}%`, background: "hsl(var(--primary))" }}>
-            <motion.div className="absolute h-8 w-full left-0 rounded-full"
-              style={{ background: "hsl(var(--primary))", opacity: 0.4 }}
-              animate={{ top: ["-5%", "105%"] }}
-              transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear", delay: i * 2 }}
-            />
-          </div>
-        ))}
-
-        {/* Ambient glows */}
-        <div className="absolute w-[500px] h-[500px] rounded-full blur-[200px] opacity-[0.08] top-0 left-1/2 -translate-x-1/2" style={{ background: "hsl(var(--primary))" }} />
-        <div className="absolute w-[300px] h-[300px] rounded-full blur-[150px] opacity-[0.05] bottom-1/4 right-0" style={{ background: "hsl(var(--accent))" }} />
-      </div>
-
-      <div className="max-w-[1100px] mx-auto relative z-10">
-
-        {/* ══════ PERSUASIVE HEADER ══════ */}
-        <div className="text-center mb-6 sm:mb-10">
+        {/* ══════ HEADER ══════ */}
+        <div className="text-center mb-8 sm:mb-12">
           <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={isInView ? { opacity: 1, scale: 1 } : {}}
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/[0.06] backdrop-blur-sm mb-4">
-            <CircuitBoard className="w-3.5 h-3.5 text-primary animate-pulse" />
+            <Network className="w-3.5 h-3.5 text-primary animate-pulse" />
             <span className="text-[0.6rem] font-heading font-bold text-primary/80 tracking-[0.15em] uppercase">Rete Neurale Operativa</span>
-            <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-primary/15 text-primary font-bold">{ALL_AGENTS.length} Nodi</span>
+            <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-primary/15 text-primary font-bold">{ALL_AGENTS.length} Agenti</span>
           </motion.div>
 
           <motion.h2 initial={{ opacity: 0, y: 15 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 }}
-            className="text-[clamp(1.3rem,4vw,2.8rem)] font-heading font-bold text-foreground leading-[1.05] mb-3">
-            Il Tuo Business è un{" "}
-            <span className="text-shimmer">Circuito IA</span>
+            className="text-[clamp(1.4rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.05] mb-3">
+            Un Ecosistema di{" "}
+            <span className="text-shimmer">Intelligenza Connessa</span>
           </motion.h2>
 
           <motion.p initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.2 }}
-            className="text-foreground/45 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed mb-4">
-            Ogni agente è un <strong className="text-foreground/70">nodo intelligente</strong> collegato agli altri. 
-            Insieme formano una rete neurale che <strong className="text-foreground/70">gestisce, analizza, vende e protegge</strong> il tuo business — 24 ore su 24, senza intervento umano.
+            className="text-foreground/45 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed mb-5">
+            Ogni agente è un <strong className="text-foreground/70">nodo intelligente</strong> della tua rete operativa.
+            Si parlano, si scambiano dati, prendono decisioni <strong className="text-foreground/70">in autonomia</strong> — 
+            come un team di 20 specialisti che non dorme mai.
           </motion.p>
 
-          {/* Persuasive value props */}
+          {/* Value props */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.3 }}
             className="flex flex-wrap justify-center gap-2 mb-2">
             {[
-              { icon: <Zap className="w-3 h-3" />, text: "Prendono decisioni in tempo reale" },
-              { icon: <Network className="w-3 h-3" />, text: "Si parlano tra loro" },
-              { icon: <Brain className="w-3 h-3" />, text: "Imparano dal tuo business" },
+              { icon: <Zap className="w-3 h-3" />, text: "Decisioni in tempo reale" },
+              { icon: <Network className="w-3 h-3" />, text: "Comunicano tra loro" },
+              { icon: <Brain className="w-3 h-3" />, text: "Apprendono dal tuo business" },
             ].map((v, i) => (
               <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/10 bg-primary/[0.03]">
                 <div className="text-primary/60">{v.icon}</div>
@@ -361,35 +465,35 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           </motion.div>
         </div>
 
-        {/* ══════ WHY YOU NEED THIS — Persuasive block ══════ */}
+        {/* ══════ WHY — Problem/Solution/Result ══════ */}
         <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="relative rounded-xl border border-primary/10 bg-primary/[0.02] p-4 sm:p-5 mb-8 overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none">
-            <motion.div className="absolute w-full h-[1px] top-0"
+          className="relative rounded-xl border border-primary/10 bg-primary/[0.02] p-4 sm:p-6 mb-8 sm:mb-12 overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-px">
+            <motion.div className="absolute w-full h-full"
               style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent)" }}
               animate={{ opacity: [0.3, 0.6, 0.3] }}
               transition={{ duration: 4, repeat: Infinity }}
             />
           </div>
           <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Sparkles className="w-3.5 h-3.5 text-primary" />
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-primary" />
               </div>
-              <h3 className="font-heading font-bold text-sm text-foreground">Perché la Rete IA Cambia Tutto</h3>
+              <h3 className="font-heading font-bold text-sm sm:text-base text-foreground">Perché la Rete IA Cambia Tutto</h3>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {[
-                { title: "Il Problema", desc: "Il tuo business ha 50+ attività quotidiane che rubano tempo. Ordini, clienti, marketing, inventario, prenotazioni — tutto manuale, tutto lento, tutto costoso.", color: "hsla(0,70%,55%,0.7)", icon: <Clock className="w-4 h-4" /> },
-                { title: "La Soluzione", desc: "Ogni attività diventa un nodo della rete. Gli agenti IA lavorano in parallelo, si scambiano dati e prendono decisioni — come un team di 20 persone, ma a costo zero.", color: "hsl(var(--primary))", icon: <CircuitBoard className="w-4 h-4" /> },
-                { title: "Il Risultato", desc: "80% meno lavoro manuale. 45% più fatturato. 3× clienti che tornano. Tutto misurabile, tutto garantito per contratto.", color: "hsla(150,70%,50%,0.8)", icon: <TrendingUp className="w-4 h-4" /> },
+                { title: "Il Problema", desc: "Il tuo business ha 50+ attività quotidiane che rubano tempo. Ordini, clienti, marketing, inventario — tutto manuale, tutto lento.", color: "hsla(0,70%,55%,0.8)", icon: <Clock className="w-4 h-4" /> },
+                { title: "La Soluzione", desc: "Ogni attività diventa un nodo della rete. Gli agenti lavorano in parallelo, si scambiano dati e decidono — come un team di 20 persone, a costo zero.", color: "hsl(var(--primary))", icon: <CircuitBoard className="w-4 h-4" /> },
+                { title: "Il Risultato", desc: "80% meno lavoro manuale. 45% più fatturato. 3× clienti che tornano. Tutto misurabile, tutto garantito.", color: "hsla(150,70%,50%,0.8)", icon: <TrendingUp className="w-4 h-4" /> },
               ].map((block, i) => (
-                <div key={i} className="rounded-lg border border-foreground/[0.05] bg-background/30 p-3">
+                <div key={i} className="rounded-lg border border-foreground/[0.06] bg-background/40 p-3.5 sm:p-4">
                   <div className="flex items-center gap-1.5 mb-2">
-                    <div className="text-foreground/40" style={{ color: block.color }}>{block.icon}</div>
-                    <span className="text-[0.6rem] font-heading font-bold tracking-wider uppercase" style={{ color: block.color }}>{block.title}</span>
+                    <div style={{ color: block.color }}>{block.icon}</div>
+                    <span className="text-[0.6rem] sm:text-xs font-heading font-bold tracking-wider uppercase" style={{ color: block.color }}>{block.title}</span>
                   </div>
-                  <p className="text-[0.55rem] text-foreground/35 leading-[1.5]">{block.desc}</p>
+                  <p className="text-[0.55rem] sm:text-xs text-foreground/40 leading-[1.5]">{block.desc}</p>
                 </div>
               ))}
             </div>
@@ -397,10 +501,10 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
         </motion.div>
 
         {/* ══════ SECTOR FILTER ══════ */}
-        <div className="flex gap-1 justify-center flex-wrap mb-5 sm:mb-7 px-2">
+        <div className="flex gap-1 justify-center flex-wrap mb-6 sm:mb-8 px-2">
           {SECTOR_TABS.map(tab => (
             <button key={tab.id} onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[0.5rem] sm:text-[0.55rem] font-heading font-semibold tracking-wider uppercase transition-all border ${
+              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[0.5rem] sm:text-[0.55rem] font-heading font-semibold tracking-wider uppercase transition-all border ${
                 activeSector === tab.id
                   ? "text-foreground border-primary/30 bg-primary/8"
                   : "text-foreground/25 border-transparent hover:text-foreground/45"
@@ -410,114 +514,119 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           ))}
         </div>
 
-        {/* ══════ CIRCUIT NETWORK MAP ══════ */}
-        <div className="relative">
+        {/* ══════ NETWORK SECTION LABEL ══════ */}
+        <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}
+          className="mb-4 flex items-center gap-2 px-1">
+          <div className="relative">
+            <div className="w-6 h-6 rounded bg-primary/10 flex items-center justify-center">
+              <Brain className="w-3.5 h-3.5 text-primary" />
+            </div>
+            <motion.div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-primary/40"
+              animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity }} />
+          </div>
+          <div className="flex-1 relative h-px">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />
+            <motion.div className="absolute w-6 h-full bg-primary/30 rounded-full"
+              animate={{ left: ["0%", "100%"] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
+          </div>
+          <span className="text-[0.5rem] font-heading font-bold text-primary/50 tracking-[3px] uppercase whitespace-nowrap">
+            {filteredAgents.length} Nodi Attivi · Clicca per esplorare connessioni
+          </span>
+          <div className="flex-1 relative h-px">
+            <div className="absolute inset-0 bg-gradient-to-l from-primary/20 to-transparent" />
+          </div>
+        </motion.div>
 
-          {/* Section label — circuit style */}
-          <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}
-            className="mb-3 flex items-center gap-2 px-1">
-            <div className="relative">
-              <div className="w-5 h-5 rounded bg-primary/10 flex items-center justify-center">
-                <Brain className="w-3 h-3 text-primary" />
-              </div>
-              {/* Port dot */}
-              <motion.div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-primary/40"
-                animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity }} />
-            </div>
-            <div className="flex-1 relative h-px">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />
-              <motion.div className="absolute w-4 h-full bg-primary/30 rounded-full"
-                animate={{ left: ["0%", "100%"] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
-            </div>
-            <span className="text-[0.5rem] font-heading font-bold text-primary/50 tracking-[3px] uppercase">Agenti IA — {filteredAgents.length} Nodi Attivi</span>
-            <div className="flex-1 relative h-px">
-              <div className="absolute inset-0 bg-gradient-to-l from-primary/20 to-transparent" />
-            </div>
-          </motion.div>
+        {/* ══════ EXPANDED AGENT DETAIL ══════ */}
+        <AnimatePresence>
+          {activeAgent && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+              className="mb-6 overflow-hidden">
+              <div className="rounded-xl border overflow-hidden" style={{ borderColor: `${activeAgent.glow}30`, background: "linear-gradient(145deg, hsla(265,18%,13%,0.98), hsla(265,25%,9%,0.99))" }}>
+                {/* Animated top bar */}
+                <div className="relative h-[3px] overflow-hidden">
+                  <motion.div className="absolute inset-0" style={{ background: `linear-gradient(90deg, transparent, ${activeAgent.glow}, transparent)` }}
+                    animate={{ opacity: [0.4, 0.8, 0.4] }} transition={{ duration: 2, repeat: Infinity }} />
+                  <motion.div className="absolute w-8 h-full" style={{ background: activeAgent.glow }}
+                    animate={{ left: ["-10%", "110%"] }} transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }} />
+                </div>
 
-          {/* ── Expanded agent detail panel ── */}
-          <AnimatePresence>
-            {activeAgent && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="mb-4 overflow-hidden"
-              >
-                <div className="rounded-xl border overflow-hidden" style={{ borderColor: `${activeAgent.glow}30`, background: "linear-gradient(145deg, hsla(265,18%,13%,0.98), hsla(265,25%,9%,0.99))" }}>
-                  {/* Circuit header bar */}
-                  <div className="relative h-[3px] overflow-hidden">
-                    <motion.div className="absolute inset-0"
-                      style={{ background: `linear-gradient(90deg, transparent, ${activeAgent.glow}, transparent)` }}
-                      animate={{ opacity: [0.4, 0.8, 0.4] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                    <motion.div className="absolute w-6 h-full"
-                      style={{ background: activeAgent.glow }}
-                      animate={{ left: ["-10%", "110%"] }}
-                      transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
-                    />
+                <div className="p-4 sm:p-5">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-12 h-12 rounded-full overflow-hidden border-2" style={{ borderColor: `${activeAgent.glow}50` }}>
+                        <img src={AGENT_PHOTOS[activeAgent.id]} alt={activeAgent.name} className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <h3 className="font-heading font-bold text-sm sm:text-base text-foreground">{activeAgent.name}</h3>
+                        <p className="text-[0.5rem] text-primary/50 uppercase tracking-widest">{activeAgent.role}</p>
+                      </div>
+                    </div>
+                    <button onClick={() => setExpandedAgent(null)} className="w-7 h-7 rounded-full border border-foreground/10 flex items-center justify-center hover:border-foreground/20 transition-colors">
+                      <X className="w-3.5 h-3.5 text-foreground/40" />
+                    </button>
                   </div>
 
-                  <div className="p-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${activeAgent.gradient} flex items-center justify-center text-white`}>
-                          {activeAgent.icon}
-                        </div>
-                        <div>
-                          <h3 className="font-heading font-bold text-sm text-foreground">{activeAgent.name}</h3>
-                          <p className="text-[0.5rem] text-primary/50 uppercase tracking-widest">{activeAgent.role}</p>
-                        </div>
+                  {/* Description */}
+                  <p className="text-xs text-foreground/45 leading-relaxed mb-3">{activeAgent.desc}</p>
+
+                  {/* Why you need — persuasive */}
+                  <div className="rounded-lg border p-3 mb-4" style={{ borderColor: `${activeAgent.glow}15`, background: `${activeAgent.glow}08` }}>
+                    <p className="text-xs leading-[1.6]">
+                      <strong className="text-foreground/80">⚡ Perché ti serve:</strong>{" "}
+                      <span className="text-foreground/55">{activeAgent.whyNeed}</span>
+                    </p>
+                  </div>
+
+                  {/* Capabilities grid */}
+                  <div className="grid grid-cols-2 gap-1.5 mb-4">
+                    {activeAgent.capabilities.map((cap, ci) => (
+                      <div key={ci} className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-foreground/[0.05] bg-foreground/[0.02]">
+                        <motion.div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: activeAgent.glow }}
+                          animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity, delay: ci * 0.2 }} />
+                        <span className="text-[0.55rem] text-foreground/50">{cap}</span>
                       </div>
-                      <button onClick={() => setExpandedAgent(null)} className="w-6 h-6 rounded-full border border-foreground/10 flex items-center justify-center hover:border-foreground/20 transition-colors">
-                        <X className="w-3 h-3 text-foreground/40" />
-                      </button>
-                    </div>
+                    ))}
+                  </div>
 
-                    {/* Why you need — persuasive */}
-                    <div className="rounded-lg border p-3 mb-3" style={{ borderColor: `${activeAgent.glow}15`, background: `${activeAgent.glow}05` }}>
-                      <p className="text-[0.6rem] leading-[1.6]" style={{ color: `${activeAgent.glow}CC` }}>
-                        <strong className="text-foreground/80">Perché ti serve:</strong>{" "}
-                        <span className="text-foreground/50">{activeAgent.whyNeed}</span>
-                      </p>
-                    </div>
-
-                    {/* Connected agents visualization */}
-                    <div className="flex items-center gap-1 mb-2">
-                      <Network className="w-3 h-3 text-primary/40" />
-                      <span className="text-[0.5rem] font-heading font-bold text-primary/40 tracking-widest uppercase">
-                        Connesso a {activeAgent.connections.length} agenti
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {activeAgent.connections.map(connId => {
-                        const conn = ALL_AGENTS.find(a => a.id === connId);
-                        if (!conn) return null;
-                        return (
-                          <button key={connId} onClick={(e) => { e.stopPropagation(); setExpandedAgent(connId); }}
-                            className="flex items-center gap-1 px-2 py-1 rounded-lg border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
-                            <div className={`w-3.5 h-3.5 rounded bg-gradient-to-br ${conn.gradient} flex items-center justify-center text-white`}>
-                              {conn.icon}
-                            </div>
-                            <span className="text-[0.5rem] font-heading font-semibold text-foreground/60">{conn.name}</span>
-                            <motion.div className="w-1 h-1 rounded-full bg-emerald-400"
-                              animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.5, repeat: Infinity }} />
-                          </button>
-                        );
-                      })}
-                    </div>
+                  {/* Connected agents */}
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <Network className="w-3 h-3 text-primary/40" />
+                    <span className="text-[0.5rem] font-heading font-bold text-primary/40 tracking-widest uppercase">
+                      Connesso a {activeAgent.connections.length} agenti nella rete
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {activeAgent.connections.map(connId => {
+                      const conn = ALL_AGENTS.find(a => a.id === connId);
+                      if (!conn) return null;
+                      return (
+                        <button key={connId} onClick={(e) => { e.stopPropagation(); setExpandedAgent(connId); }}
+                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+                          <div className="w-5 h-5 rounded-full overflow-hidden border" style={{ borderColor: `${conn.glow}40` }}>
+                            <img src={AGENT_PHOTOS[conn.id]} alt={conn.name} className="w-full h-full object-cover" />
+                          </div>
+                          <span className="text-[0.5rem] font-heading font-semibold text-foreground/60">{conn.name}</span>
+                          <motion.div className="w-1.5 h-1.5 rounded-full bg-emerald-400"
+                            animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.5, repeat: Infinity }} />
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-          {/* ── AGENT GRID — Circuit nodes ── */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-3.5 mb-4">
+        {/* ══════ NETWORK GRID WITH SVG CONNECTIONS ══════ */}
+        <div className="relative" ref={networkRef}>
+          <NetworkConnections agents={filteredAgents} activeId={expandedAgent} connectedIds={connectedIds} />
+
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 sm:gap-7 lg:gap-8 mb-6">
             {filteredAgents.map((agent, i) => (
-              <AgentCircuitNode
+              <NetworkNode
                 key={agent.id}
                 agent={agent}
                 isActive={expandedAgent === agent.id}
@@ -527,67 +636,53 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
               />
             ))}
           </div>
-
-          {/* ── Horizontal circuit bus — data flow ── */}
-          <motion.div className="relative h-10 sm:h-14 my-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            {/* Main bus line */}
-            <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-px bg-primary/10" />
-
-            {/* Bus junction dots */}
-            {[10, 25, 40, 55, 70, 85].map((x, i) => (
-              <motion.div key={i}
-                className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-primary/20"
-                style={{ left: `${x}%`, background: "hsla(265,30%,12%,1)" }}
-                animate={{ borderColor: ["hsla(265,70%,60%,0.15)", "hsla(265,70%,60%,0.4)", "hsla(265,70%,60%,0.15)"] }}
-                transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-              >
-                <motion.div className="absolute inset-[2px] rounded-full bg-primary/30"
-                  animate={{ scale: [0.5, 1, 0.5], opacity: [0.3, 0.8, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-                />
-              </motion.div>
-            ))}
-
-            {/* Flowing data particles */}
-            {[0, 1, 2, 3].map(i => (
-              <motion.div key={`particle-${i}`}
-                className="absolute top-1/2 -translate-y-1/2 w-3 h-[2px] rounded-full"
-                style={{ background: "hsl(var(--primary))", boxShadow: "0 0 6px hsl(var(--primary) / 0.5)" }}
-                animate={{ left: ["-3%", "103%"] }}
-                transition={{ duration: 4 + i * 0.8, repeat: Infinity, ease: "linear", delay: i * 1 }}
-              />
-            ))}
-
-            {/* Center label */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/15 bg-background/80 backdrop-blur-sm">
-              <motion.div className="w-1.5 h-1.5 rounded-full bg-primary/50"
-                animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }} />
-              <CircuitBoard className="w-3 h-3 text-primary/50" />
-              <span className="text-[0.45rem] font-heading font-bold text-primary/50 tracking-[2px] uppercase">Neural Bus Attivo</span>
-              <motion.div className="w-1.5 h-1.5 rounded-full bg-accent/50"
-                animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0.7 }} />
-            </div>
-          </motion.div>
-
-          {/* ── Vertical feeder lines from bus to stats ── */}
-          <div className="relative">
-            {[20, 40, 60, 80].map((x, i) => (
-              <div key={i} className="absolute w-px h-6 -top-3" style={{ left: `${x}%`, background: "linear-gradient(to bottom, hsl(var(--primary) / 0.15), transparent)" }}>
-                <motion.div className="absolute w-[2px] h-2 bg-primary/30 rounded-full left-0"
-                  animate={{ top: ["-20%", "120%"] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: i * 0.4 }}
-                />
-              </div>
-            ))}
-          </div>
         </div>
 
-        {/* ══════ IMPACT STATS — Circuit readout ══════ */}
+        {/* ══════ NEURAL BUS ══════ */}
+        <motion.div className="relative h-12 sm:h-16 my-4" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-px bg-primary/10" />
+          
+          {/* Junction nodes */}
+          {[8, 22, 36, 50, 64, 78, 92].map((x, i) => (
+            <motion.div key={i}
+              className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border border-primary/20"
+              style={{ left: `${x}%`, background: "hsl(var(--background))" }}
+              animate={{ borderColor: ["hsl(var(--primary) / 0.15)", "hsl(var(--primary) / 0.4)", "hsl(var(--primary) / 0.15)"] }}
+              transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+            >
+              <motion.div className="absolute inset-[2px] rounded-full bg-primary/30"
+                animate={{ scale: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+              />
+            </motion.div>
+          ))}
+
+          {/* Flowing particles */}
+          {[0, 1, 2].map(i => (
+            <motion.div key={i}
+              className="absolute top-1/2 -translate-y-1/2 w-4 h-[2px] rounded-full"
+              style={{ background: "hsl(var(--primary))", boxShadow: "0 0 8px hsl(var(--primary) / 0.5)" }}
+              animate={{ left: ["-3%", "103%"] }}
+              transition={{ duration: 5 + i * 1, repeat: Infinity, ease: "linear", delay: i * 1.5 }}
+            />
+          ))}
+
+          {/* Center label */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/15 bg-background/90 backdrop-blur-sm">
+            <motion.div className="w-2 h-2 rounded-full bg-primary/50"
+              animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }} />
+            <CircuitBoard className="w-3.5 h-3.5 text-primary/50" />
+            <span className="text-[0.5rem] font-heading font-bold text-primary/50 tracking-[2px] uppercase">Neural Bus</span>
+            <motion.div className="w-2 h-2 rounded-full bg-accent/50"
+              animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.7 }} />
+          </div>
+        </motion.div>
+
+        {/* ══════ IMPACT STATS ══════ */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="relative rounded-xl border border-foreground/[0.06] bg-card/30 backdrop-blur-sm p-5 sm:p-7 overflow-hidden mb-8 mt-4">
-          {/* Circuit trace top */}
+          className="relative rounded-xl border border-foreground/[0.06] bg-card/30 backdrop-blur-sm p-5 sm:p-8 overflow-hidden mb-8 mt-4">
           <div className="absolute top-0 left-0 right-0 h-px">
             <motion.div className="absolute w-12 h-full bg-primary/30"
               animate={{ left: ["-10%", "110%"] }}
@@ -596,37 +691,33 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-accent/[0.03]" />
 
-          <div className="relative z-10 text-center mb-5">
+          <div className="relative z-10 text-center mb-6">
             <div className="inline-flex items-center gap-2 mb-2">
-              <Crown className="w-4 h-4 text-primary" />
-              <span className="font-heading font-bold text-foreground text-sm sm:text-base">Output della Rete</span>
+              <Crown className="w-5 h-5 text-primary" />
+              <span className="font-heading font-bold text-foreground text-sm sm:text-lg">Output della Rete</span>
             </div>
-            <p className="text-foreground/30 text-[0.6rem] max-w-md mx-auto">Risultati misurabili — garantiti per contratto</p>
+            <p className="text-foreground/30 text-[0.6rem] sm:text-xs max-w-md mx-auto">Risultati misurabili — garantiti per contratto</p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5 relative z-10">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 relative z-10">
             {impactStats.map((stat, i) => (
               <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.1, type: "spring" }}
                 className="text-center relative">
-                {/* Circuit port */}
-                <motion.div className="absolute -top-3 left-1/2 -translate-x-1/2 w-1 h-3"
-                  style={{ background: "linear-gradient(to bottom, hsl(var(--primary) / 0.2), transparent)" }}
-                />
-                <div className="w-8 h-8 rounded-lg bg-primary/[0.08] border border-primary/10 flex items-center justify-center text-primary mx-auto mb-2">
+                <div className="w-10 h-10 rounded-lg bg-primary/[0.08] border border-primary/10 flex items-center justify-center text-primary mx-auto mb-2">
                   {stat.icon}
                 </div>
-                <div className="text-lg sm:text-xl font-heading font-bold text-foreground mb-0.5">
+                <div className="text-xl sm:text-2xl font-heading font-bold text-foreground mb-0.5">
                   <Counter value={stat.value} suffix={stat.suffix} />
                 </div>
-                <p className="text-[0.6rem] font-heading font-semibold text-foreground/60">{stat.label}</p>
+                <p className="text-[0.6rem] sm:text-xs font-heading font-semibold text-foreground/60">{stat.label}</p>
                 <p className="text-[0.5rem] text-foreground/25">{stat.desc}</p>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* ══════ FOREVER ADVANTAGE ══════ */}
+        {/* ══════ CLOSING CTA ══════ */}
         <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           className="text-center">
           <Sparkles className="w-6 h-6 text-primary mx-auto mb-3" />
@@ -638,11 +729,11 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
             <strong className="text-foreground/55"> Il tuo circuito IA diventa più intelligente ogni giorno.</strong>
           </p>
           <div className="flex flex-wrap justify-center gap-1.5">
-            {["Nuovi Nodi Settimanali", "Connessioni Auto-Discovery", "Zero Costi Extra", "Evoluzione Perpetua"].map((t, i) => (
+            {["Nuovi Agenti Settimanali", "Auto-Discovery Connessioni", "Zero Costi Extra", "Evoluzione Perpetua"].map((t, i) => (
               <motion.span key={i} initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.06 }}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-primary/12 bg-primary/[0.03] text-[0.5rem] font-heading font-semibold text-primary/60">
-                <motion.div className="w-1 h-1 rounded-full bg-primary/40"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-primary/12 bg-primary/[0.03] text-[0.5rem] font-heading font-semibold text-primary/60">
+                <motion.div className="w-1.5 h-1.5 rounded-full bg-primary/40"
                   animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }} />
                 {t}
               </motion.span>
