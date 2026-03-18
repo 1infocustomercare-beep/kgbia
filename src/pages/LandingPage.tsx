@@ -3278,7 +3278,59 @@ const LandingPage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
+              <div className="relative">
+                {/* AI Network Schema — connecting lines between cards */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="pain-line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="hsla(265,60%,55%,0)" />
+                      <stop offset="50%" stopColor="hsla(265,60%,55%,0.18)" />
+                      <stop offset="100%" stopColor="hsla(265,60%,55%,0)" />
+                    </linearGradient>
+                    <linearGradient id="pain-line-grad-v" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="hsla(265,60%,55%,0)" />
+                      <stop offset="50%" stopColor="hsla(265,60%,55%,0.18)" />
+                      <stop offset="100%" stopColor="hsla(265,60%,55%,0)" />
+                    </linearGradient>
+                    <linearGradient id="pain-line-diag" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="hsla(0,50%,50%,0)" />
+                      <stop offset="50%" stopColor="hsla(0,50%,50%,0.12)" />
+                      <stop offset="100%" stopColor="hsla(0,50%,50%,0)" />
+                    </linearGradient>
+                    <filter id="pain-glow">
+                      <feGaussianBlur stdDeviation="2" result="blur" />
+                      <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                    </filter>
+                  </defs>
+                  {/* Horizontal connectors — row 1 */}
+                  <line x1="25%" y1="33%" x2="75%" y2="33%" stroke="url(#pain-line-grad)" strokeWidth="1" filter="url(#pain-glow)" />
+                  {/* Horizontal connectors — row 2 */}
+                  <line x1="25%" y1="66%" x2="75%" y2="66%" stroke="url(#pain-line-grad)" strokeWidth="1" filter="url(#pain-glow)" />
+                  {/* Vertical connectors — col 1 */}
+                  <line x1="25%" y1="20%" x2="25%" y2="80%" stroke="url(#pain-line-grad-v)" strokeWidth="1" filter="url(#pain-glow)" />
+                  {/* Vertical connectors — col 2 */}
+                  <line x1="75%" y1="20%" x2="75%" y2="80%" stroke="url(#pain-line-grad-v)" strokeWidth="1" filter="url(#pain-glow)" />
+                  {/* Diagonal cross connectors */}
+                  <line x1="25%" y1="33%" x2="75%" y2="66%" stroke="url(#pain-line-diag)" strokeWidth="0.8" strokeDasharray="4 6" filter="url(#pain-glow)" />
+                  <line x1="75%" y1="33%" x2="25%" y2="66%" stroke="url(#pain-line-diag)" strokeWidth="0.8" strokeDasharray="4 6" filter="url(#pain-glow)" />
+                  {/* Outer frame connectors */}
+                  <line x1="25%" y1="16%" x2="75%" y2="16%" stroke="url(#pain-line-grad)" strokeWidth="0.5" opacity="0.4" />
+                  <line x1="25%" y1="84%" x2="75%" y2="84%" stroke="url(#pain-line-grad)" strokeWidth="0.5" opacity="0.4" />
+                  {/* Node dots at intersections */}
+                  {["25%","75%"].map(x => ["33%","66%"].map(y => (
+                    <circle key={`${x}-${y}`} cx={x} cy={y} r="2.5" fill="hsla(265,60%,55%,0.25)" filter="url(#pain-glow)">
+                      <animate attributeName="r" values="2;3.5;2" dur="3s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.4;0.8;0.4" dur="3s" repeatCount="indefinite" />
+                    </circle>
+                  )))}
+                  {/* Animated data pulse along horizontal lines */}
+                  <circle r="2" fill="hsla(0,60%,55%,0.5)" filter="url(#pain-glow)">
+                    <animateMotion dur="4s" repeatCount="indefinite" path="M 80,0 L 280,0" />
+                    <animate attributeName="opacity" values="0;0.8;0" dur="4s" repeatCount="indefinite" />
+                  </circle>
+                </svg>
+
+              <div className="relative z-[1] grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
                 {painData.map((pain, i) => (
                   <motion.div
                     key={i}
@@ -3348,6 +3400,7 @@ const LandingPage = () => {
                     />
                   </motion.div>
                 ))}
+              </div>
               </div>
             </div>
           );
