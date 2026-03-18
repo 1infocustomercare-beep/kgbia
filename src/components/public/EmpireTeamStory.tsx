@@ -267,8 +267,24 @@ export default function EmpireTeamStory() {
           })}
         </div>
 
+        {/* ── Team Section with luxury bg ── */}
+        <div className="relative rounded-3xl overflow-hidden p-8 sm:p-12 -mx-2 sm:mx-0" style={{
+          background: "linear-gradient(165deg, hsla(265,16%,11%,0.95), hsla(230,14%,8%,0.97) 50%, hsla(38,10%,9%,0.95))",
+          border: "1px solid hsla(265,40%,50%,0.08)",
+          boxShadow: "0 12px 60px hsla(265,50%,30%,0.1), 0 0 80px hsla(38,50%,50%,0.04), inset 0 1px 0 hsla(265,50%,60%,0.06)",
+        }}>
+          {/* Ambient glows */}
+          <div className="absolute inset-0 pointer-events-none z-0">
+            <div className="absolute top-[10%] right-[15%] w-[350px] h-[350px] rounded-full opacity-[0.06]"
+                 style={{ background: "radial-gradient(circle, hsla(265,60%,55%,0.5), transparent 70%)", filter: "blur(100px)" }} />
+            <div className="absolute bottom-[10%] left-[20%] w-[300px] h-[300px] rounded-full opacity-[0.04]"
+                 style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.4), transparent 70%)", filter: "blur(90px)" }} />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[40%] h-[1px]"
+                 style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.2), transparent)" }} />
+          </div>
+
         {/* ── Team Header ── */}
-        <motion.div className="text-center mb-12 sm:mb-16" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
+        <motion.div className="text-center mb-12 sm:mb-16 relative z-10" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
           <motion.div className="inline-flex items-center gap-2.5 mb-5">
             <div className="relative flex items-center gap-2 px-4 py-2 rounded-full overflow-hidden" style={{ background: "hsla(265,60%,55%,0.06)", border: "1px solid hsla(265,60%,55%,0.12)" }}>
               <Crown className="w-3 h-3" style={{ color: "hsl(265,60%,55%)" }} />
@@ -287,7 +303,7 @@ export default function EmpireTeamStory() {
         </motion.div>
 
         {/* ── Team Grid — Premium DNA ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-7">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-7 relative z-10">
           {TEAM.map((member, i) => (
             <motion.div
               key={member.name}
@@ -392,6 +408,7 @@ export default function EmpireTeamStory() {
             </div>
           ))}
         </motion.div>
+        </div>{/* close team luxury wrapper */}
       </div>
     </section>
   );
