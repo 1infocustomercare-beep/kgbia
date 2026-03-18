@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { AutomationShowcase } from "@/components/public/AutomationShowcase";
+import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import { SectorValueProposition } from "@/components/public/SectorValueProposition";
 import { MarqueeCarousel, AmbientGlow, FloatingOrbs, NeonDivider, ScrollIndicator, PremiumFAQ } from "@/components/public/PremiumSiteKit";
 import { motion, useInView, AnimatePresence } from "framer-motion";
