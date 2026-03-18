@@ -4169,6 +4169,7 @@ const LandingPage = () => {
                 <Layers className="w-3 h-3" /> {expandMockups ? "Chiudi" : "Vedi Tutti"}
               </button>
             </div>
+            </>
           );
         })()}
       </Section>
