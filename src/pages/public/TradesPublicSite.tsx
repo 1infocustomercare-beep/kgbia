@@ -134,7 +134,8 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
   const isElectrician = industry === "electrician";
   const isPlumber = industry === "plumber";
   const HeroIcon = isElectrician ? Zap : isPlumber ? Droplets : Wrench;
-  const heroVideo = HERO_VIDEOS[industry] || HERO_VIDEOS.default;
+  const heroVideo = HERO_VIDEOS[industry]; // only set for verified matching videos
+  const heroPhotos = HERO_PHOTOS[industry] || HERO_PHOTOS.default;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
 
