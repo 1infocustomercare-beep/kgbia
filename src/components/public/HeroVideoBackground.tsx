@@ -24,18 +24,23 @@ export function HeroVideoBackground({
   const [isLoaded, setIsLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const retryCount = useRef(0);
+  const isLoadedRef = useRef(false);
 
   const activeSrc = useFallback && fallbackSrc ? fallbackSrc : primarySrc;
+
+  useEffect(() => {
+    isLoadedRef.current = isLoaded;
+  }, [isLoaded]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     setIsLoaded(false);
+    isLoadedRef.current = false;
     retryCount.current = 0;
 
     const attemptPlay = () => {
-      video.load();
       const playPromise = video.play();
       if (playPromise) {
         playPromise.catch(() => {
@@ -43,23 +48,33 @@ export function HeroVideoBackground({
           video.play().catch(() => {
             if (retryCount.current < 3) {
               retryCount.current++;
-              setTimeout(attemptPlay, 1000 * retryCount.current);
+              setTimeout(attemptPlay, 1500 * retryCount.current);
             }
           });
         });
       }
     };
 
-    attemptPlay();
+    // Wait for canplay before attempting play
+    const onCanPlay = () => attemptPlay();
+    video.addEventListener("canplay", onCanPlay, { once: true });
+
+    // If video is already ready (cached), try immediately
+    if (video.readyState >= 3) {
+      attemptPlay();
+    }
 
     const timeout = setTimeout(() => {
-      if (!isLoaded && !useFallback && fallbackSrc) {
+      if (!isLoadedRef.current && !useFallback && fallbackSrc) {
         setUseFallback(true);
       }
     }, 8000);
 
-    return () => clearTimeout(timeout);
-  }, [activeSrc]);
+    return () => {
+      clearTimeout(timeout);
+      video.removeEventListener("canplay", onCanPlay);
+    };
+  }, [activeSrc, fallbackSrc]);
 
   return (
     <>

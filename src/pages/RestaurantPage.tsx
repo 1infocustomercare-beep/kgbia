@@ -59,7 +59,8 @@ const RestaurantPage = () => {
   const businessType = normalizeBusinessType((dbRestaurant as any)?.business_type);
   const businessConfig = getBusinessTypeConfig(businessType);
 
-  const [showSplash, setShowSplash] = useState(true);
+  const isInIframe = typeof window !== "undefined" && window.self !== window.top;
+  const [showSplash, setShowSplash] = useState(!isInIframe);
   const [cartOpen, setCartOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
