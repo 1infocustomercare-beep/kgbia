@@ -612,9 +612,6 @@ function App() {
         </TooltipProvider>
       </div>
 
-      <IntroErrorBoundary onFail={handleIntroComplete}>
-        {!introCompleted && <UnifiedIntro onComplete={handleIntroComplete} />}
-      </IntroErrorBoundary>
     </QueryClientProvider>
   );
 }
