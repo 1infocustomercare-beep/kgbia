@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
  * Empire Background v16 — Sector Circuit Network
  * Nodes represent industry sectors communicating via data flows.
  * Topology morphs on scroll: grid → hub → clusters → mesh.
- * Uniform intensity across all layers. Mobile-optimized at 24fps.
+ * Uniform intensity across all layers. Mobile tuned for desktop-parity at 30fps.
  */
 
 const IS_MOBILE =
@@ -15,8 +15,8 @@ const IS_MOBILE =
 const NODE_COUNT = IS_MOBILE ? 42 : 55;
 const MAX_DIST = IS_MOBILE ? 132 : 145;
 const FLOW_COUNT = IS_MOBILE ? 12 : 18;
-const PULSE_COUNT = IS_MOBILE ? 3 : 3;
-const HUB_COUNT = IS_MOBILE ? 6 : 7;
+const PULSE_COUNT = 3;
+const HUB_COUNT = IS_MOBILE ? 7 : 7;
 const TARGET_FPS = IS_MOBILE ? 30 : 60;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
