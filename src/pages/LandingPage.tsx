@@ -2357,7 +2357,7 @@ const MobileIPhoneCarousel = ({ items, navigate }: { items: CarouselItem[]; navi
 
   if (expanded) {
     return (
-      <div className="sm:hidden px-2">
+      <div ref={containerRef} className="sm:hidden px-2">
         {/* Controls */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-[10px] font-heading font-bold text-foreground/50 uppercase tracking-widest">{items.length} Demo Live</span>
