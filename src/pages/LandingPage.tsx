@@ -2594,7 +2594,9 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════ NEURAL CELLS BACKGROUND ═══════ */}
-      <NeuralCellsBackground />
+      <div className="hidden sm:block">
+        <NeuralCellsBackground />
+      </div>
 
       {/* ═══════ NAVIGATION — Ultra Premium Luxury Futuristic ═══════ */}
       <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 pt-[env(safe-area-inset-top)] ${navScrolled ? "pb-0" : "pb-1"}`}>
