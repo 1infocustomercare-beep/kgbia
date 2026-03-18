@@ -863,7 +863,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
         </motion.div>
 
         {/* ══════ SECTOR FILTER ══════ */}
-        <div className="flex gap-1 justify-center flex-wrap mb-6 sm:mb-8 px-2">
+        <div className="flex gap-0.5 justify-center flex-wrap mb-4 sm:mb-8 px-1">
           {SECTOR_TABS.map((tab) => (
             <button key={tab.id} onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[0.5rem] sm:text-[0.55rem] font-semibold tracking-wider uppercase transition-all border ${
