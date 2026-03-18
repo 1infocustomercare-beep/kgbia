@@ -161,14 +161,21 @@ const LIVE_ACTIONS = [
 
 const LiveFeedSimulator = () => {
   const [offset, setOffset] = useState(0);
-  const VISIBLE = 4;
+  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 640);
+  const VISIBLE = isMobile ? 1 : 4;
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setOffset((o) => (o + 1) % LIVE_ACTIONS.length);
-    }, 2800);
+    }, isMobile ? 4200 : 2800);
     return () => clearInterval(interval);
-  }, []);
+  }, [isMobile]);
 
   const visible = useMemo(() => {
     const items = [];
@@ -176,7 +183,37 @@ const LiveFeedSimulator = () => {
       items.push(LIVE_ACTIONS[(offset + i) % LIVE_ACTIONS.length]);
     }
     return items;
-  }, [offset]);
+  }, [offset, VISIBLE]);
+
+  if (isMobile) {
+    const item = visible[0];
+    if (!item) return null;
+
+    return (
+      <div
+        className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, ${item.color}14, ${item.color}05)`,
+          border: `1px solid ${item.color}24`,
+        }}
+      >
+        <div
+          className="relative w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ background: `${item.color}18`, color: item.color, border: `1px solid ${item.color}25` }}
+        >
+          {item.icon}
+        </div>
+        <div className="flex-1 min-w-0 relative z-10">
+          <div className="flex items-center gap-1.5 mb-0.5">
+            <span className="text-[0.6rem] font-bold text-foreground/90 truncate">{item.agent}</span>
+            <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-400 font-bold tracking-wider uppercase">LIVE</span>
+          </div>
+          <p className="text-[0.52rem] text-foreground/45 truncate">{item.action}</p>
+        </div>
+        <span className="text-[0.42rem] text-foreground/25 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
+      </div>
+    );
+  }
 
   return (
     <AnimatePresence mode="popLayout">
