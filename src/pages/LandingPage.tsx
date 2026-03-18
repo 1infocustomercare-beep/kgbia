@@ -3197,18 +3197,39 @@ const LandingPage = () => {
           IL PROBLEMA — Pain Points
          ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(350,12%,7%,1) 30%, hsla(265,10%,6%,1) 55%, hsla(350,8%,5%,1) 80%, hsla(230,16%,5%,1) 100%)",
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(345,14%,6%,1) 20%, hsla(350,10%,8%,1) 40%, hsla(265,12%,7%,1) 60%, hsla(345,8%,5%,1) 80%, hsla(230,16%,4%,1) 100%)",
       }}>
-        {/* Premium ambient glows — danger luxury */}
+        {/* Premium ambient glows — layered danger luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[15%] left-[25%] w-[450px] h-[450px] rounded-full opacity-[0.07]"
-               style={{ background: "radial-gradient(circle, hsla(350,55%,45%,0.5), transparent 70%)", filter: "blur(120px)" }} />
-          <div className="absolute bottom-[20%] right-[20%] w-[380px] h-[380px] rounded-full opacity-[0.05]"
-               style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.4), transparent 70%)", filter: "blur(110px)" }} />
-          <div className="absolute top-[50%] left-[60%] w-[300px] h-[300px] rounded-full opacity-[0.04]"
-               style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[1px]"
-               style={{ background: "linear-gradient(90deg, transparent, hsla(350,50%,50%,0.2), hsla(265,50%,55%,0.12), transparent)" }} />
+          {/* Primary crimson vignette — top-left */}
+          <div className="absolute top-[5%] left-[10%] w-[600px] h-[600px] rounded-full opacity-[0.06]"
+               style={{ background: "radial-gradient(circle, hsla(350,65%,40%,0.6), transparent 65%)", filter: "blur(140px)" }} />
+          {/* Deep violet anchor — center-right */}
+          <div className="absolute top-[30%] right-[10%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
+               style={{ background: "radial-gradient(circle, hsla(265,55%,45%,0.5), transparent 65%)", filter: "blur(130px)" }} />
+          {/* Warm amber warning — bottom center */}
+          <div className="absolute bottom-[10%] left-[40%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
+               style={{ background: "radial-gradient(circle, hsla(30,55%,45%,0.4), transparent 65%)", filter: "blur(120px)" }} />
+          {/* Secondary crimson — bottom-left */}
+          <div className="absolute bottom-[25%] left-[5%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
+               style={{ background: "radial-gradient(circle, hsla(0,50%,40%,0.35), transparent 65%)", filter: "blur(100px)" }} />
+          {/* Subtle gold highlight — top-right */}
+          <div className="absolute top-[8%] right-[20%] w-[300px] h-[300px] rounded-full opacity-[0.03]"
+               style={{ background: "radial-gradient(circle, hsla(38,60%,50%,0.3), transparent 60%)", filter: "blur(90px)" }} />
+          {/* Top accent border */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[70%] h-[1px]"
+               style={{ background: "linear-gradient(90deg, transparent, hsla(350,50%,45%,0.25), hsla(0,60%,50%,0.15), hsla(265,50%,55%,0.1), transparent)" }} />
+          {/* Subtle vertical light shaft */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[120px] opacity-[0.08]"
+               style={{ background: "linear-gradient(180deg, hsla(350,50%,50%,0.4), transparent)" }} />
+          {/* Bottom fade-out gradient */}
+          <div className="absolute bottom-0 left-0 right-0 h-[80px]"
+               style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
+          {/* Noise texture overlay */}
+          <div className="absolute inset-0 opacity-[0.015]" style={{
+            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
+            backgroundRepeat: "repeat", backgroundSize: "128px 128px",
+          }} />
         </div>
         <div className="text-center mb-10 sm:mb-14">
           <SectionLabel text="Il Problema" icon={<AlertTriangle className="w-3 h-3 text-accent" />} />
