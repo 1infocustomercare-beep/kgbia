@@ -432,6 +432,7 @@ const SuperAdminDashboard = () => {
     { id: "showcase", label: "Settori", icon: <Eye className="w-5 h-5" /> },
     { id: "integrations" as SuperTab, label: "Integrazioni", icon: <Wifi className="w-5 h-5" /> },
     { id: "whatsapp" as SuperTab, label: "WhatsApp", icon: <MessageCircle className="w-5 h-5" /> },
+    { id: "demo_accounts" as SuperTab, label: "Demo", icon: <Key className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => { await signOut(); navigate("/admin"); };
