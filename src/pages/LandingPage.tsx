@@ -109,11 +109,18 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-/** Makes section backgrounds semi-transparent on mobile so the circuit canvas bleeds through */
+/** Makes section backgrounds semi-transparent on mobile so the circuit canvas bleeds through,
+ *  and boosts lightness slightly so sections have visible premium color character instead of flat black */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !IS_MOBILE_LP || !style.background || typeof style.background !== "string") return style;
-  // Replace opacity 1 with 0.88 in hsla stops so circuit shows through
-  const tweaked = (style.background as string).replace(/,\s*1\)/g, ", 0.88)");
+  // 1. Replace opacity 1→0.72 so the DNA circuit shows through
+  let tweaked = (style.background as string).replace(/,\s*1\)/g, ", 0.72)");
+  // 2. Boost lightness by ~3% so color tints are visible (not flat black)
+  tweaked = tweaked.replace(/hsla\((\d+),\s*(\d+)%,\s*(\d+)%/g, (_, h, s, l) => {
+    const newL = Math.min(parseInt(l) + 3, 18);
+    const newS = Math.min(parseInt(s) + 4, 30);
+    return `hsla(${h}, ${newS}%, ${newL}%`;
+  });
   return { ...style, background: tweaked };
 };
 
@@ -912,7 +919,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
   return (
     <Section id="pricing" className="relative overflow-hidden" style={{
-      background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,14%,7%,1) 15%, hsla(265,18%,8%,1) 32%, hsla(38,10%,7%,1) 50%, hsla(265,14%,7%,1) 70%, hsla(230,16%,4%,1) 100%)"
+      background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,20%,9%,1) 15%, hsla(265,22%,10%,1) 32%, hsla(38,16%,9%,1) 50%, hsla(265,18%,9%,1) 70%, hsla(230,16%,4%,1) 100%)"
     }}>
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.06]"
@@ -3230,7 +3237,7 @@ const LandingPage = () => {
            IL PROBLEMA — Pain Points
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(345,14%,6%,1) 20%, hsla(350,10%,8%,1) 40%, hsla(265,12%,7%,1) 60%, hsla(345,8%,5%,1) 80%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(345,20%,8%,1) 20%, hsla(350,16%,10%,1) 40%, hsla(265,18%,9%,1) 60%, hsla(345,14%,7%,1) 80%, hsla(230,16%,4%,1) 100%)"
       }}>
         {/* Premium ambient glows — layered danger luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -3532,7 +3539,7 @@ const LandingPage = () => {
            VIDEO HERO — Business Transformation
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(260,20%,8%,1) 18%, hsla(265,22%,10%,1) 35%, hsla(155,12%,7%,1) 55%, hsla(265,16%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(260,24%,10%,1) 18%, hsla(265,26%,12%,1) 35%, hsla(155,16%,9%,1) 55%, hsla(265,20%,10%,1) 75%, hsla(230,16%,4%,1) 100%)"
       }}>
         {/* Premium ambient glows — discovery/innovation luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -3617,7 +3624,7 @@ const LandingPage = () => {
            SETTORI
           ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,18%,8%,1) 15%, hsla(220,16%,9%,1) 30%, hsla(155,12%,7%,1) 50%, hsla(265,14%,8%,1) 70%, hsla(220,12%,6%,1) 85%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,10%,1) 15%, hsla(220,20%,11%,1) 30%, hsla(155,18%,9%,1) 50%, hsla(265,20%,10%,1) 70%, hsla(220,16%,8%,1) 85%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -3977,7 +3984,7 @@ const LandingPage = () => {
            PERCHÉ EMPIRE — Unified Section
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,20%,8%,1) 15%, hsla(220,14%,9%,1) 30%, hsla(155,12%,7%,1) 50%, hsla(265,16%,8%,1) 70%, hsla(220,12%,6%,1) 85%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(220,18%,11%,1) 30%, hsla(155,18%,9%,1) 50%, hsla(265,20%,10%,1) 70%, hsla(220,16%,8%,1) 85%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -4192,7 +4199,7 @@ const LandingPage = () => {
            COMPARISON TABLE — Empire vs Others
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,20%,8%,1) 15%, hsla(38,10%,7%,1) 35%, hsla(265,14%,8%,1) 55%, hsla(38,8%,6%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(38,16%,9%,1) 35%, hsla(265,20%,10%,1) 55%, hsla(38,14%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -4262,7 +4269,7 @@ const LandingPage = () => {
            TECH DNA — Neural Network Visualization
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,8%,1) 15%, hsla(230,16%,9%,1) 35%, hsla(265,18%,7%,1) 55%, hsla(230,14%,6%,1) 78%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,26%,10%,1) 15%, hsla(230,20%,11%,1) 35%, hsla(265,22%,9%,1) 55%, hsla(230,18%,8%,1) 78%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -4432,7 +4439,7 @@ const LandingPage = () => {
            3 INTERFACCE — Mockup Showcase
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,12%,7%,1) 18%, hsla(265,16%,8%,1) 35%, hsla(38,10%,6%,1) 55%, hsla(265,14%,7%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,18%,9%,1) 18%, hsla(265,20%,10%,1) 35%, hsla(38,14%,8%,1) 55%, hsla(265,18%,9%,1) 75%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -4602,7 +4609,7 @@ const LandingPage = () => {
            BUILD ANYTHING — Streamlined Conversion Section
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,20%,8%,1) 15%, hsla(38,12%,7%,1) 35%, hsla(265,16%,8%,1) 55%, hsla(38,8%,6%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(38,18%,9%,1) 35%, hsla(265,20%,10%,1) 55%, hsla(38,14%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -4926,7 +4933,7 @@ const LandingPage = () => {
            SERVIZI
           ═══════════════════════════════════════════ */}
       <Section id="services" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(230,18%,8%,1) 15%, hsla(265,16%,9%,1) 32%, hsla(38,10%,7%,1) 52%, hsla(265,14%,7%,1) 72%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(230,22%,10%,1) 15%, hsla(265,22%,11%,1) 32%, hsla(38,16%,9%,1) 52%, hsla(265,18%,9%,1) 72%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -5079,7 +5086,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           ═══════════════════════════════════════════ */}
       <Section id="process" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,14%,8%,1) 35%, hsla(230,12%,7%,1) 65%, hsla(230,16%,5%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,20%,10%,1) 35%, hsla(230,18%,9%,1) 65%, hsla(230,16%,5%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.07]" style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.4), transparent 70%)", filter: "blur(130px)" }} />
@@ -5548,7 +5555,7 @@ const LandingPage = () => {
            ROI CALCULATOR
           ═══════════════════════════════════════════ */}
       <Section id="calculator" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,14%,7%,1) 15%, hsla(265,18%,8%,1) 35%, hsla(38,10%,6%,1) 55%, hsla(265,14%,7%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,20%,9%,1) 15%, hsla(265,22%,10%,1) 35%, hsla(38,16%,8%,1) 55%, hsla(265,18%,9%,1) 75%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -5644,7 +5651,7 @@ const LandingPage = () => {
            TESTIMONIALS — Auto-scroll carousel
           ═══════════════════════════════════════════ */}
       <Section id="testimonials" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,20%,8%,1) 15%, hsla(38,12%,7%,1) 35%, hsla(265,16%,8%,1) 55%, hsla(38,8%,6%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(38,18%,9%,1) 35%, hsla(265,20%,10%,1) 55%, hsla(38,14%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -5779,7 +5786,7 @@ const LandingPage = () => {
            PARTNER PROGRAM
           ═══════════════════════════════════════════ */}
       <Section id="partner" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,16%,7%,1) 15%, hsla(265,18%,8%,1) 32%, hsla(38,12%,7%,1) 50%, hsla(265,14%,7%,1) 72%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,22%,9%,1) 15%, hsla(265,22%,10%,1) 32%, hsla(38,18%,9%,1) 50%, hsla(265,18%,9%,1) 72%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[6%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -5936,7 +5943,7 @@ const LandingPage = () => {
            FAQ
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,20%,8%,1) 15%, hsla(38,12%,7%,1) 35%, hsla(265,16%,8%,1) 55%, hsla(38,8%,6%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(38,18%,9%,1) 35%, hsla(265,20%,10%,1) 55%, hsla(38,14%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
