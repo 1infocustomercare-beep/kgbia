@@ -166,7 +166,8 @@ const TICKER_ITEMS: Record<string, string[]> = {
 
 export default function BusinessPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [showSplash, setShowSplash] = useState(true);
+  const isInIframe = typeof window !== "undefined" && window.self !== window.top;
+  const [showSplash, setShowSplash] = useState(!isInIframe);
   const handleSplashDone = useCallback(() => setShowSplash(false), []);
 
   const { data: company, isLoading } = useQuery({
