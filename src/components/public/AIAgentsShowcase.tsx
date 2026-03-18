@@ -539,30 +539,26 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
     <section ref={sectionRef} className="relative py-8 sm:py-24 px-3 sm:px-6 overflow-hidden isolate z-10"
       style={{
         background: `linear-gradient(180deg, 
-          hsl(220 25% 5%) 0%, 
-          hsl(225 30% 7%) 25%, 
-          hsl(230 28% 9%) 50%, 
-          hsl(225 30% 7%) 75%, 
-          hsl(220 25% 5%) 100%)`,
+          hsla(230,16%,5%,1) 0%, 
+          hsla(265,16%,9%,1) 20%, 
+          hsla(155,10%,7%,1) 45%, 
+          hsla(265,14%,8%,1) 70%, 
+          hsla(230,16%,5%,1) 100%)`,
       }}
     >
-      {/* Professional dark background overlays */}
+      {/* Premium luxury ambient glows */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Subtle radial glow — center focal point */}
-        <div className="absolute inset-0" style={{
-          background: `radial-gradient(ellipse 80% 60% at 50% 40%, hsla(215,50%,30%,0.12), transparent 70%)`
-        }} />
-        {/* Top edge fade */}
-        <div className="absolute top-0 left-0 right-0 h-24" style={{
-          background: `linear-gradient(180deg, hsla(220,25%,4%,0.8), transparent)`
-        }} />
-        {/* Bottom edge fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-24" style={{
-          background: `linear-gradient(0deg, hsla(220,25%,4%,0.8), transparent)`
-        }} />
+        <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] rounded-full opacity-[0.07]"
+             style={{ background: "radial-gradient(circle, hsla(265,65%,55%,0.5), transparent 70%)", filter: "blur(130px)" }} />
+        <div className="absolute top-[35%] right-[15%] w-[420px] h-[420px] rounded-full opacity-[0.05]"
+             style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.4), transparent 70%)", filter: "blur(110px)" }} />
+        <div className="absolute bottom-[20%] left-[40%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
+             style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[55%] h-[1px]"
+             style={{ background: "linear-gradient(90deg, transparent, hsla(265,50%,60%,0.18), hsla(155,45%,50%,0.1), transparent)" }} />
         {/* Side vignettes */}
         <div className="absolute inset-0" style={{
-          background: `radial-gradient(ellipse at center, transparent 50%, hsla(220,25%,4%,0.5) 100%)`
+          background: `radial-gradient(ellipse at center, transparent 50%, hsla(230,16%,5%,0.6) 100%)`
         }} />
       </div>
       <CircuitBackground />
