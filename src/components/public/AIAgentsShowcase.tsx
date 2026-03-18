@@ -9,7 +9,11 @@ import {
   Calendar, FileText, Star, Umbrella, QrCode, MonitorSmartphone,
   CreditCard, Package, MapPin, ClipboardCheck, Headphones,
   Lock, Wifi, Database, Network, CircuitBoard, Activity,
-  Settings, Receipt, ScanLine, Camera, X, ChevronDown
+  Settings, Receipt, ScanLine, Camera, X, ChevronDown, ChevronUp,
+  Wrench, Briefcase, Truck, Leaf, Dog, Baby, GraduationCap,
+  PartyPopper, Warehouse, Scale, Calculator, Hammer, Droplets,
+  Palette as PaletteIcon, Lightbulb, Stethoscope, Bed, Utensils,
+  BookOpen, Megaphone, HandCoins, ShieldCheck, Gauge
 } from "lucide-react";
 
 /* ═══ COUNTER ═══ */
