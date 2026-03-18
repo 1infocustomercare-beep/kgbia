@@ -166,6 +166,8 @@ const TICKER_ITEMS: Record<string, string[]> = {
 
 export default function BusinessPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [showSplash, setShowSplash] = useState(true);
+  const handleSplashDone = useCallback(() => setShowSplash(false), []);
 
   const { data: company, isLoading } = useQuery({
     queryKey: ["business-page", slug],
@@ -213,9 +215,6 @@ export default function BusinessPage() {
   const theme = getSectorTheme(industry);
   const accentHex = theme.palette.accentHex;
   const tickerItems = TICKER_ITEMS[industry] || TICKER_ITEMS.default;
-
-  const [showSplash, setShowSplash] = useState(true);
-  const handleSplashDone = useCallback(() => setShowSplash(false), []);
 
   if (showSplash) {
     return <BusinessSplash name={company.name} logoUrl={company.logo_url} accentColor={accentHex} emoji={config.emoji} onComplete={handleSplashDone} />;
