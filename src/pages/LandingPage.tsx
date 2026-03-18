@@ -3410,7 +3410,7 @@ const LandingPage = () => {
                     whileHover={{ y: -6, scale: 1.04 }}>
                     
                     <div className="relative rounded-xl border overflow-hidden h-full" style={{
-                      background: "linear-gradient(160deg, hsla(260,18%,13%,0.95), hsla(260,16%,9%,0.92))",
+                      background: "linear-gradient(160deg, hsla(260,18%,13%,0.98), hsla(260,16%,9%,0.97))",
                       borderColor: "hsla(265,50%,55%,0.1)",
                       boxShadow: "0 4px 24px hsla(260,40%,5%,0.5), inset 0 1px 0 hsla(265,60%,65%,0.06)"
                     }}>
