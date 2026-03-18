@@ -590,12 +590,12 @@ export default function MultiSectorShowcase() {
       </div>
 
       {/* Category filter tabs */}
-      <div className="flex gap-1 justify-center flex-wrap mb-3 px-3">
+      <div className="flex gap-0.5 sm:gap-1 justify-center flex-wrap mb-2 sm:mb-3 px-2">
         {SECTOR_CATEGORIES.map((cat) => (
           <button
             key={cat.id}
             onClick={() => { setActiveCat(cat.id); setIsAutoPlaying(false); }}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-[0.6rem] font-heading font-semibold tracking-wide uppercase transition-all duration-300 border ${
+            className={`flex items-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-[0.5rem] sm:text-[0.6rem] font-heading font-semibold tracking-wide uppercase transition-all duration-300 border ${
               activeCat === cat.id
                 ? "text-foreground border-primary/30 bg-primary/8"
                 : "text-foreground/30 border-transparent hover:text-foreground/50 hover:bg-muted/5"
