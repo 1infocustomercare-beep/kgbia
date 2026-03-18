@@ -810,7 +810,7 @@ export default function MultiSectorShowcase() {
               {industryCfg && demoData && (
                 <motion.button
                   onClick={() => { setShowAllScreens(p => !p); setIsAutoPlaying(false); }}
-                  className="px-4 py-3 rounded-full text-[0.6rem] font-heading font-semibold tracking-wider uppercase border inline-flex items-center gap-2 transition-all duration-300 hover:scale-105"
+                  className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-full text-[0.5rem] sm:text-[0.6rem] font-heading font-semibold tracking-wider uppercase border inline-flex items-center gap-1.5 sm:gap-2 transition-all duration-300 hover:scale-105"
                   style={{
                     borderColor: `${sector.color.replace("1)", "0.2)")}`,
                     color: sector.color,
