@@ -372,7 +372,7 @@ const EmpireDNABackground = () => {
         } else {
           // Square node
           const s = 1.5 + breathe;
-          ctx.fillStyle = hsla(isActive ? pAccent : pNode, na + 0.15);
+          ctx.fillStyle = hsla(isActive ? pAccent : pNode, na + 0.08);
           ctx.fillRect(pos[i].x - s / 2, pos[i].y - s / 2, s, s);
         }
 
