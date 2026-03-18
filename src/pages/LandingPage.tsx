@@ -4045,52 +4045,9 @@ const LandingPage = () => {
             <h2 className="text-[clamp(1.6rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
               I Più Completi. <span className="text-shimmer">I Più Avanzati.</span>
             </h2>
-            <p className="text-foreground/40 text-sm leading-[1.7] mb-6 max-w-md mx-auto lg:mx-0">
+            <p className="text-foreground/40 text-sm leading-[1.7] max-w-md mx-auto lg:mx-0">
               Non siamo un gestionale generico. Siamo un ecosistema AI che modernizza, digitalizza e automatizza qualsiasi tipo di attività. Sempre in evoluzione, sempre un passo avanti.
             </p>
-            <div className="space-y-2.5 max-w-md mx-auto lg:mx-0">
-              {[
-              { title: "25+ Settori Supportati", desc: "Ogni industria ha moduli dedicati che si attivano automaticamente" },
-              { title: "Aggiornamenti Settimanali", desc: "Nuove funzionalità ogni settimana senza costi aggiuntivi" },
-              { title: "IA Integrata Ovunque", desc: "Generazione catalogo, analytics predittivi, automazioni intelligenti" },
-              { title: "100% White Label", desc: "Il tuo brand, i tuoi colori, il tuo dominio. Zero marchi terzi" }].
-              map((f, i) =>
-              <motion.div key={i}
-              className="relative group rounded-xl overflow-hidden"
-              initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                  {/* Premium animated gradient background */}
-                  <div className="absolute inset-0 opacity-90" style={{
-                  background: `linear-gradient(135deg, hsla(265,25%,12%,0.95) 0%, hsla(230,20%,10%,0.92) 50%, hsla(265,30%,14%,0.95) 100%)`
-                }} />
-                  {/* Subtle shimmer sweep */}
-                  <motion.div className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: `linear-gradient(105deg, transparent 40%, hsla(265,60%,55%,0.06) 50%, transparent 60%)`,
-                  backgroundSize: "200% 100%"
-                }}
-                animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear", delay: i * 0.8 }} />
-                
-                  {/* Top accent line */}
-                  <div className="absolute top-0 left-0 right-0 h-px" style={{
-                  background: `linear-gradient(90deg, transparent, hsla(265,60%,55%,0.25), transparent)`
-                }} />
-                  {/* Content */}
-                  <div className="relative z-10 flex gap-3 items-start px-4 py-3" style={{
-                  border: "1px solid hsla(265,40%,40%,0.12)",
-                  borderRadius: "0.75rem"
-                }}>
-                    <div className="w-5 h-5 min-w-[20px] rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
-                      <Check className="w-3 h-3 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-xs sm:text-sm font-semibold text-foreground">{f.title}</p>
-                      <p className="text-[0.65rem] text-foreground/50 mt-0.5">{f.desc}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </div>
           </motion.div>
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
           transition={{ duration: 0.6 }} className="order-1 lg:order-2">
