@@ -70,6 +70,44 @@ const NAMES: Record<string, string> = {
   custom: "Admin Custom",
 };
 
+const COMPANY_NAMES: Record<string, string> = {
+  food: "Impero Roma",
+  ncc: "Royal Transfer Roma",
+  beauty: "Glow Beauty Milano",
+  healthcare: "Studio Salus Torino",
+  retail: "Bottega Artigiana Firenze",
+  fitness: "Iron Gym Milano",
+  hospitality: "Villa Belvedere",
+  beach: "Lido Azzurro Rimini",
+  plumber: "Idraulica Rapida Bologna",
+  electrician: "Elettrica Moderna Verona",
+  agriturismo: "Podere del Sole",
+  cleaning: "PulitoPro Modena",
+  legal: "Studio Martini Napoli",
+  accounting: "Studio Rossi Padova",
+  garage: "Autofficina Rossi Brescia",
+  photography: "Luce Studio Firenze",
+  construction: "Edil Costruzioni Bergamo",
+  gardening: "Verde Vivo Lucca",
+  veterinary: "Clinica Amica Genova",
+  tattoo: "Ink Factory Bologna",
+  childcare: "Piccoli Passi Parma",
+  education: "Accademia Sapere Bologna",
+  events: "Dream Events Milano",
+  logistics: "Flash Logistica Piacenza",
+  custom: "Demo Custom",
+};
+
+const COMPANY_COLORS: Record<string, string> = {
+  food: "#C8963E", ncc: "#C9A84C", beauty: "#EC4899", healthcare: "#10B981",
+  retail: "#F59E0B", fitness: "#EF4444", hospitality: "#3B82F6", beach: "#0EA5E9",
+  plumber: "#374151", electrician: "#F59E0B", agriturismo: "#4D7C0F",
+  cleaning: "#0891B2", legal: "#1E3A5F", accounting: "#2563EB", garage: "#78350F",
+  photography: "#BE185D", construction: "#92400E", gardening: "#16A34A",
+  veterinary: "#0891B2", tattoo: "#7C3AED", childcare: "#F59E0B",
+  education: "#2563EB", events: "#C8963E", logistics: "#374151", custom: "#6B7280",
+};
+
 const CUSTOMER_ACCOUNTS = [
   { email: "cliente-food@empire-test.com", name: "Marco Rossi", industry: "food" },
   { email: "cliente-beauty@empire-test.com", name: "Giulia Bianchi", industry: "beauty" },
@@ -147,39 +185,96 @@ Deno.serve(async (req) => {
           role: "restaurant_admin",
         }, { onConflict: "user_id,role" });
 
-        // Link to company if exists
-        const { data: company } = await supabase
-          .from("companies")
-          .select("id")
-          .eq("slug", slug)
-          .maybeSingle();
-
-        if (company) {
-          // Set owner_id on company
-          await supabase
+        // ── Create or link company ──
+        if (industry !== "food") {
+          const { data: existingCompany } = await supabase
             .from("companies")
-            .update({ owner_id: userId })
-            .eq("id", company.id);
+            .select("id")
+            .eq("slug", slug)
+            .maybeSingle();
+
+          let companyId: string;
+          if (existingCompany) {
+            companyId = existingCompany.id;
+            // Ensure owner_id is set
+            await supabase.from("companies").update({ owner_id: userId, is_active: true }).eq("id", companyId);
+          } else {
+            // Create company
+            const { data: newCompany, error: companyError } = await supabase
+              .from("companies")
+              .insert({
+                name: COMPANY_NAMES[industry] || `Demo ${industry}`,
+                slug,
+                industry,
+                owner_id: userId,
+                primary_color: COMPANY_COLORS[industry] || "#6B7280",
+                tagline: `Demo ${COMPANY_NAMES[industry] || industry}`,
+                is_active: true,
+                subscription_plan: "premium",
+                email: email,
+                phone: "+39 06 0000000",
+                city: "Roma",
+              })
+              .select("id")
+              .single();
+
+            if (companyError) {
+              errors.push({ industry, error: `Company create: ${companyError.message}` });
+              continue;
+            }
+            companyId = newCompany.id;
+          }
 
           // Create membership
           const { data: existingMembership } = await supabase
             .from("company_memberships")
             .select("id")
-            .eq("company_id", company.id)
+            .eq("company_id", companyId)
             .eq("user_id", userId)
             .maybeSingle();
 
           if (!existingMembership) {
             await supabase.from("company_memberships").insert({
-              company_id: company.id,
+              company_id: companyId,
               user_id: userId,
               role: "admin",
             });
           }
-        }
 
-        // For food industry, also link to restaurant if exists
-        if (industry === "food") {
+          // Seed demo CRM clients
+          const { data: existingClients } = await supabase
+            .from("crm_clients")
+            .select("id")
+            .eq("company_id", companyId)
+            .limit(1);
+
+          if (!existingClients?.length) {
+            await supabase.from("crm_clients").insert([
+              { company_id: companyId, first_name: "Marco", last_name: "Rossi", phone: "+39 333 1111111", email: "marco@demo.it", total_spent: 450 },
+              { company_id: companyId, first_name: "Giulia", last_name: "Bianchi", phone: "+39 334 2222222", email: "giulia@demo.it", total_spent: 320 },
+              { company_id: companyId, first_name: "Luca", last_name: "Verdi", phone: "+39 335 3333333", email: "luca@demo.it", total_spent: 180 },
+              { company_id: companyId, first_name: "Sara", last_name: "Ferrari", phone: "+39 336 4444444", email: "sara@demo.it", total_spent: 650 },
+              { company_id: companyId, first_name: "Paolo", last_name: "Moretti", phone: "+39 337 5555555", email: "paolo@demo.it", total_spent: 90 },
+            ]);
+          }
+
+          // Seed demo staff
+          const { data: existingStaff } = await supabase
+            .from("staff")
+            .select("id")
+            .eq("company_id", companyId)
+            .limit(1);
+
+          if (!existingStaff?.length) {
+            await supabase.from("staff").insert([
+              { company_id: companyId, name: "Mario Rossi", role: "manager", phone: "+39 333 0001111", is_active: true },
+              { company_id: companyId, name: "Laura Bianchi", role: "staff", phone: "+39 334 0002222", is_active: true },
+              { company_id: companyId, name: "Andrea Verdi", role: "staff", phone: "+39 335 0003333", is_active: true },
+            ]);
+          }
+
+        } else {
+          // For food industry, link to restaurant
           const { data: restaurant } = await supabase
             .from("restaurants")
             .select("id")
@@ -338,7 +433,7 @@ Deno.serve(async (req) => {
       JSON.stringify({
         success: true,
         total_created: results.filter(r => r.status === "created").length,
-        total_existing: results.filter(r => r.status === "already_exists").length,
+        total_existing: results.filter(r => r.status === "already_exists" || r.status === "password_reset").length,
         total_errors: errors.length,
         password: PASSWORD,
         results,

@@ -6,7 +6,7 @@ import {
   Wrench, Package, Settings, Umbrella, Camera, ClipboardCheck,
   Zap, Heart, Star, Scale, Leaf, MoreHorizontal, X, Route, CreditCard,
   Target, Briefcase, Sparkles, Receipt, BarChart3, PenTool, Lightbulb,
-  Store, MapPin, UserCog, FileText, Shield, Clock
+  Store, MapPin, UserCog, FileText, Shield, Clock, Truck, MessageSquare
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -17,6 +17,7 @@ const ICON_MAP: Record<string, any> = {
   Zap, Heart, Star, Scale, Leaf, Route, CreditCard, Target,
   Briefcase, Sparkles, Receipt, BarChart3, PenTool, Lightbulb,
   Store, MapPin, UserCog, FileText, Shield, Clock, MoreHorizontal,
+  Truck, MessageSquare,
 };
 
 type NavItem = { label: string; icon: string; path: string };
@@ -31,14 +32,38 @@ const BOTTOM_NAV: Record<string, NavItem[]> = {
   beauty: [
     { label: "Home", icon: "Home", path: "/app" },
     { label: "Agenda", icon: "Calendar", path: "/app/appointments" },
-    { label: "Servizi", icon: "Heart", path: "/app/services" },
     { label: "Clienti", icon: "Users", path: "/app/clients" },
+    { label: "Fedeltà", icon: "Star", path: "/app/loyalty" },
+  ],
+  healthcare: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Agenda", icon: "Calendar", path: "/app/appointments" },
+    { label: "Pazienti", icon: "Users", path: "/app/clients" },
+    { label: "Visite", icon: "Heart", path: "/app/telemedicine" },
+  ],
+  retail: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Ordini", icon: "ShoppingBag", path: "/app/orders" },
+    { label: "Inventario", icon: "Package", path: "/app/inventory" },
+    { label: "Clienti", icon: "Users", path: "/app/clients" },
+  ],
+  fitness: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Corsi", icon: "Calendar", path: "/app/appointments" },
+    { label: "Membri", icon: "Users", path: "/app/clients" },
+    { label: "Trainer", icon: "UserCog", path: "/app/staff" },
+  ],
+  hospitality: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Camere", icon: "Calendar", path: "/app/reservations" },
+    { label: "Ospiti", icon: "Users", path: "/app/clients" },
+    { label: "Staff", icon: "UserCog", path: "/app/staff" },
   ],
   beach: [
     { label: "Spiaggia", icon: "Umbrella", path: "/app/beach-map" },
     { label: "Prenota", icon: "Calendar", path: "/app/beach-bookings" },
-    { label: "Abbonamenti", icon: "Users", path: "/app/beach-passes" },
-    { label: "Impostazioni", icon: "Settings", path: "/app/settings" },
+    { label: "Abbonamenti", icon: "CreditCard", path: "/app/beach-passes" },
+    { label: "Ospiti", icon: "Users", path: "/app/clients" },
   ],
   plumber: [
     { label: "Home", icon: "Home", path: "/app" },
@@ -52,9 +77,27 @@ const BOTTOM_NAV: Record<string, NavItem[]> = {
     { label: "Clienti", icon: "Users", path: "/app/clients" },
     { label: "Materiali", icon: "Package", path: "/app/inventory" },
   ],
+  agriturismo: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Prenota", icon: "Calendar", path: "/app/reservations" },
+    { label: "Ospiti", icon: "Users", path: "/app/clients" },
+    { label: "Inventario", icon: "Package", path: "/app/inventory" },
+  ],
+  cleaning: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Servizi", icon: "ClipboardCheck", path: "/app/interventions" },
+    { label: "Clienti", icon: "Users", path: "/app/clients" },
+    { label: "Staff", icon: "UserCog", path: "/app/staff" },
+  ],
   legal: [
     { label: "Home", icon: "Home", path: "/app" },
     { label: "Pratiche", icon: "Scale", path: "/app/interventions" },
+    { label: "Agenda", icon: "Calendar", path: "/app/appointments" },
+    { label: "Clienti", icon: "Users", path: "/app/clients" },
+  ],
+  accounting: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Scadenze", icon: "Clock", path: "/app/interventions" },
     { label: "Agenda", icon: "Calendar", path: "/app/appointments" },
     { label: "Clienti", icon: "Users", path: "/app/clients" },
   ],
@@ -64,11 +107,65 @@ const BOTTOM_NAV: Record<string, NavItem[]> = {
     { label: "Clienti", icon: "Users", path: "/app/clients" },
     { label: "Ricambi", icon: "Package", path: "/app/inventory" },
   ],
+  photography: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Shooting", icon: "Camera", path: "/app/appointments" },
+    { label: "Clienti", icon: "Users", path: "/app/clients" },
+    { label: "Inventario", icon: "Package", path: "/app/inventory" },
+  ],
+  construction: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Cantieri", icon: "Wrench", path: "/app/interventions" },
+    { label: "Clienti", icon: "Users", path: "/app/clients" },
+    { label: "Materiali", icon: "Package", path: "/app/inventory" },
+  ],
   gardening: [
     { label: "Home", icon: "Home", path: "/app" },
     { label: "Lavori", icon: "Leaf", path: "/app/interventions" },
     { label: "Clienti", icon: "Users", path: "/app/clients" },
     { label: "Materiali", icon: "Package", path: "/app/inventory" },
+  ],
+  veterinary: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Visite", icon: "Calendar", path: "/app/appointments" },
+    { label: "Clienti", icon: "Users", path: "/app/clients" },
+    { label: "Farmaci", icon: "Package", path: "/app/inventory" },
+  ],
+  tattoo: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Agenda", icon: "Calendar", path: "/app/appointments" },
+    { label: "Clienti", icon: "Users", path: "/app/clients" },
+    { label: "Inventario", icon: "Package", path: "/app/inventory" },
+  ],
+  childcare: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Prenota", icon: "Calendar", path: "/app/appointments" },
+    { label: "Famiglie", icon: "Users", path: "/app/clients" },
+    { label: "Staff", icon: "UserCog", path: "/app/staff" },
+  ],
+  education: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Corsi", icon: "BookOpen", path: "/app/appointments" },
+    { label: "Studenti", icon: "Users", path: "/app/clients" },
+    { label: "Docenti", icon: "UserCog", path: "/app/staff" },
+  ],
+  events: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Eventi", icon: "Calendar", path: "/app/interventions" },
+    { label: "Clienti", icon: "Users", path: "/app/clients" },
+    { label: "Staff", icon: "UserCog", path: "/app/staff" },
+  ],
+  logistics: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Spedizioni", icon: "Truck", path: "/app/interventions" },
+    { label: "Flotta", icon: "Car", path: "/app/fleet" },
+    { label: "Clienti", icon: "Users", path: "/app/clients" },
+  ],
+  custom: [
+    { label: "Home", icon: "Home", path: "/app" },
+    { label: "Ordini", icon: "ClipboardCheck", path: "/app/interventions" },
+    { label: "Clienti", icon: "Users", path: "/app/clients" },
+    { label: "Inventario", icon: "Package", path: "/app/inventory" },
   ],
 };
 
@@ -90,6 +187,8 @@ const MORE_MENU: Record<string, NavItem[]> = {
     { label: "Sito Web", icon: "Store", path: "/app/webhub" },
     { label: "Team", icon: "Briefcase", path: "/app/team" },
     { label: "Scadenzario", icon: "Shield", path: "/app/ncc-expiry" },
+    { label: "AI Agents", icon: "Sparkles", path: "/app/agents" },
+    { label: "WhatsApp", icon: "MessageSquare", path: "/app/whatsapp" },
     { label: "Automazioni", icon: "Sparkles", path: "/app/automations" },
     { label: "Payroll", icon: "Receipt", path: "/app/payroll" },
     { label: "Finanza", icon: "BarChart3", path: "/app/finance" },
@@ -102,12 +201,18 @@ const MORE_MENU: Record<string, NavItem[]> = {
 };
 
 const DEFAULT_MORE: NavItem[] = [
+  { label: "AI Agents", icon: "Sparkles", path: "/app/agents" },
+  { label: "WhatsApp", icon: "MessageSquare", path: "/app/whatsapp" },
+  { label: "Recensioni", icon: "Star", path: "/app/reviews" },
+  { label: "Sito Web", icon: "Store", path: "/app/webhub" },
   { label: "Team", icon: "Briefcase", path: "/app/team" },
   { label: "Automazioni", icon: "Sparkles", path: "/app/automations" },
   { label: "Finanza", icon: "BarChart3", path: "/app/finance" },
   { label: "Payroll", icon: "Receipt", path: "/app/payroll" },
   { label: "Leads", icon: "Target", path: "/app/leads" },
+  { label: "Social", icon: "PenTool", path: "/app/social" },
   { label: "Abbonamento", icon: "CreditCard", path: "/app/subscription" },
+  { label: "Richieste", icon: "Lightbulb", path: "/app/feature-requests" },
   { label: "Impostazioni", icon: "Settings", path: "/app/settings" },
 ];
 
