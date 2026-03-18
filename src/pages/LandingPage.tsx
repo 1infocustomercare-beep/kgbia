@@ -3250,11 +3250,17 @@ const LandingPage = () => {
           VIDEO HERO — Business Transformation
          ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(265,18%,6%,1) 0%, hsla(265,15%,9%,1) 35%, hsla(230,12%,8%,1) 65%, hsla(265,18%,6%,1) 100%)",
+        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,18%,9%,1) 25%, hsla(155,10%,7%,1) 50%, hsla(265,14%,8%,1) 75%, hsla(230,16%,5%,1) 100%)",
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/4 right-1/3 w-[500px] h-[500px] rounded-full opacity-[0.07]" style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.4), transparent 70%)", filter: "blur(130px)" }} />
-          <div className="absolute bottom-1/3 left-1/4 w-[350px] h-[350px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.3), transparent 70%)", filter: "blur(100px)" }} />
+          <div className="absolute top-[12%] right-[25%] w-[480px] h-[480px] rounded-full opacity-[0.07]"
+               style={{ background: "radial-gradient(circle, hsla(265,65%,55%,0.5), transparent 70%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-[25%] left-[15%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
+               style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.4), transparent 70%)", filter: "blur(110px)" }} />
+          <div className="absolute top-[45%] right-[10%] w-[300px] h-[300px] rounded-full opacity-[0.04]"
+               style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 70%)", filter: "blur(100px)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[55%] h-[1px]"
+               style={{ background: "linear-gradient(90deg, transparent, hsla(265,50%,60%,0.18), hsla(155,45%,50%,0.1), transparent)" }} />
         </div>
         <div className="text-center mb-8">
           <SectionLabel text="Scopri Empire" icon={<Play className="w-3 h-3 text-primary" />} />
