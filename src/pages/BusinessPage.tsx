@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,8 +8,101 @@ import BackButton from "@/components/BackButton";
 import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
 import EmpireTeamStory from "@/components/public/EmpireTeamStory";
 import { LuxuryTicker } from "@/components/public/LuxuryTicker";
+import { motion, AnimatePresence } from "framer-motion";
 
 const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
+
+/* ── Branded splash screen for business sites ── */
+function BusinessSplash({ name, logoUrl, accentColor, emoji, onComplete }: {
+  name: string; logoUrl?: string | null; accentColor: string; emoji: string; onComplete: () => void;
+}) {
+  const [phase, setPhase] = useState<"brand" | "reveal" | "done">("brand");
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase("reveal"), 1600);
+    const t2 = setTimeout(() => setPhase("done"), 2800);
+    const t3 = setTimeout(onComplete, 3400);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [onComplete]);
+
+  return (
+    <AnimatePresence>
+      {phase !== "done" && (
+        <motion.div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
+          style={{ background: "#0a0a0a" }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          onClick={onComplete}
+        >
+          {/* Ambient glow */}
+          <motion.div
+            className="absolute w-72 h-72 rounded-full blur-[100px]"
+            style={{ background: accentColor, opacity: 0.12 }}
+            animate={{ scale: [1, 1.3, 1], opacity: [0.08, 0.18, 0.08] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          />
+
+          {/* Logo or emoji */}
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          >
+            {logoUrl ? (
+              <img src={logoUrl} alt={name} className="w-20 h-20 object-contain rounded-2xl mb-4" />
+            ) : (
+              <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-4 text-4xl"
+                style={{ background: `${accentColor}18`, border: `2px solid ${accentColor}30` }}>
+                {emoji}
+              </div>
+            )}
+          </motion.div>
+
+          {/* Name */}
+          <motion.h1
+            className="text-2xl font-bold text-white font-heading tracking-wide text-center px-6"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            {name}
+          </motion.h1>
+
+          {/* Accent line */}
+          <motion.div
+            className="h-[2px] rounded-full mt-4"
+            style={{ background: accentColor }}
+            initial={{ width: 0 }}
+            animate={{ width: 80 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+          />
+
+          {/* Loading dots */}
+          {phase === "reveal" && (
+            <motion.div className="flex gap-1.5 mt-6"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              {[0, 1, 2].map(i => (
+                <motion.div key={i} className="w-1.5 h-1.5 rounded-full"
+                  style={{ background: accentColor }}
+                  animate={{ opacity: [0.3, 1, 0.3] }}
+                  transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15 }}
+                />
+              ))}
+            </motion.div>
+          )}
+
+          {/* Tap to skip */}
+          <motion.p className="absolute bottom-8 text-[10px] text-white/20 tracking-widest uppercase"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
+            Tap per continuare
+          </motion.p>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 const NCCPublicSite = lazy(() => import("@/pages/public/NCCPublicSite"));
 const FoodPublicSite = lazy(() => import("@/pages/public/FoodPublicSite"));
 const BakeryPublicSite = lazy(() => import("@/pages/public/BakeryPublicSite"));
@@ -73,6 +166,8 @@ const TICKER_ITEMS: Record<string, string[]> = {
 
 export default function BusinessPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [showSplash, setShowSplash] = useState(true);
+  const handleSplashDone = useCallback(() => setShowSplash(false), []);
 
   const { data: company, isLoading } = useQuery({
     queryKey: ["business-page", slug],
@@ -120,6 +215,10 @@ export default function BusinessPage() {
   const theme = getSectorTheme(industry);
   const accentHex = theme.palette.accentHex;
   const tickerItems = TICKER_ITEMS[industry] || TICKER_ITEMS.default;
+
+  if (showSplash) {
+    return <BusinessSplash name={company.name} logoUrl={company.logo_url} accentColor={accentHex} emoji={config.emoji} onComplete={handleSplashDone} />;
+  }
 
   return (
     <Suspense fallback={<SiteLoader />}>
