@@ -5137,8 +5137,8 @@ const LandingPage = () => {
           <div
             className="absolute inset-0 z-0 pointer-events-none"
             style={{
-              background: "linear-gradient(160deg, hsla(230,16%,8%,0.97), hsla(265,16%,10%,0.96))",
-              border: "1px solid hsla(265,40%,45%,0.09)"
+              background: "linear-gradient(160deg, hsla(230,16%,6%,0.99), hsla(265,16%,8%,0.98))",
+              border: "1px solid hsla(265,40%,45%,0.06)"
             }}
           />
 
@@ -5225,52 +5225,93 @@ const LandingPage = () => {
             </svg>
           </div>
 
-          {/* AI Tech Network Schema — Mobile (optimized 2x2 icon communication grid) */}
+          {/* AI Tech Network Schema — Mobile (hyper-tech hub-spoke circuit) */}
           <div className="absolute inset-0 pointer-events-none z-[1] overflow-hidden sm:hidden">
-            <svg className="w-full h-full" viewBox="0 0 300 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-full h-full" viewBox="0 0 300 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <filter id="proc-mobile-glow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="0.7" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
+                <radialGradient id="pm-hub-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                </radialGradient>
+                <linearGradient id="pm-circuit-v" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.15" />
+                </linearGradient>
+                <linearGradient id="pm-circuit-h" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.2" />
+                </linearGradient>
               </defs>
 
-              {/* Main communication links */}
-              <line x1="85" y1="62" x2="215" y2="62" stroke="hsl(var(--primary) / 0.28)" strokeWidth="0.85" strokeDasharray="3,4" strokeLinecap="round" />
-              <line x1="85" y1="158" x2="215" y2="158" stroke="hsl(var(--primary) / 0.28)" strokeWidth="0.85" strokeDasharray="3,4" strokeLinecap="round" />
-              <line x1="80" y1="68" x2="80" y2="152" stroke="hsl(var(--accent) / 0.24)" strokeWidth="0.75" strokeDasharray="3,4" strokeLinecap="round" />
-              <line x1="220" y1="68" x2="220" y2="152" stroke="hsl(var(--accent) / 0.24)" strokeWidth="0.75" strokeDasharray="3,4" strokeLinecap="round" />
+              {/* Central hub — concentric rings */}
+              <circle cx="150" cy="120" r="18" fill="url(#pm-hub-glow)" />
+              <circle cx="150" cy="120" r="10" fill="none" stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.5" strokeDasharray="2,3" />
+              <circle cx="150" cy="120" r="5" fill="none" stroke="hsl(var(--primary) / 0.35)" strokeWidth="0.6" />
+              <circle cx="150" cy="120" r="2.5" fill="hsl(var(--primary) / 0.6)">
+                <animate attributeName="r" values="2;3.5;2" dur="3s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" />
+              </circle>
 
-              {/* Diagonal links */}
-              <line x1="85" y1="68" x2="215" y2="152" stroke="hsl(var(--primary) / 0.18)" strokeWidth="0.55" strokeLinecap="round" />
-              <line x1="215" y1="68" x2="85" y2="152" stroke="hsl(var(--accent) / 0.18)" strokeWidth="0.55" strokeLinecap="round" />
+              {/* Curved Bézier spokes from hub to 4 corners (icon positions) */}
+              {/* Top-left (step 01) */}
+              <path d="M150,120 Q110,95 75,60" fill="none" stroke="url(#pm-circuit-v)" strokeWidth="0.7" strokeDasharray="3,4" />
+              <path d="M140,115 Q100,80 68,55" fill="none" stroke="hsl(var(--primary) / 0.12)" strokeWidth="0.4" />
+              {/* Top-right (step 02) */}
+              <path d="M150,120 Q190,95 225,60" fill="none" stroke="url(#pm-circuit-v)" strokeWidth="0.7" strokeDasharray="3,4" />
+              <path d="M160,115 Q200,80 232,55" fill="none" stroke="hsl(var(--primary) / 0.12)" strokeWidth="0.4" />
+              {/* Bottom-left (step 03) */}
+              <path d="M150,120 Q110,145 75,180" fill="none" stroke="url(#pm-circuit-v)" strokeWidth="0.7" strokeDasharray="3,4" />
+              <path d="M140,125 Q100,160 68,185" fill="none" stroke="hsl(var(--accent) / 0.12)" strokeWidth="0.4" />
+              {/* Bottom-right (step 04) */}
+              <path d="M150,120 Q190,145 225,180" fill="none" stroke="url(#pm-circuit-v)" strokeWidth="0.7" strokeDasharray="3,4" />
+              <path d="M160,125 Q200,160 232,185" fill="none" stroke="hsl(var(--accent) / 0.12)" strokeWidth="0.4" />
 
-              {/* Junction nodes */}
-              {[[80, 62], [220, 62], [80, 158], [220, 158], [150, 110]].map(([cx, cy], i) => (
-                <circle key={`proc-m-node-${i}`} cx={cx} cy={cy} r={i === 4 ? "2.2" : "1.8"} fill="hsl(var(--primary) / 0.5)">
-                  <animate attributeName="opacity" values="0.35;0.85;0.35" dur={`${2.1 + i * 0.35}s`} repeatCount="indefinite" />
+              {/* Cross-connections between adjacent icons (horizontal) */}
+              <path d="M75,60 Q150,40 225,60" fill="none" stroke="url(#pm-circuit-h)" strokeWidth="0.5" strokeDasharray="2,5" />
+              <path d="M75,180 Q150,200 225,180" fill="none" stroke="url(#pm-circuit-h)" strokeWidth="0.5" strokeDasharray="2,5" />
+              {/* Vertical side connections */}
+              <path d="M75,60 Q55,120 75,180" fill="none" stroke="hsl(var(--accent) / 0.18)" strokeWidth="0.45" strokeDasharray="2,4" />
+              <path d="M225,60 Q245,120 225,180" fill="none" stroke="hsl(var(--accent) / 0.18)" strokeWidth="0.45" strokeDasharray="2,4" />
+
+              {/* Corner junction nodes with glow */}
+              {[[75,60],[225,60],[75,180],[225,180]].map(([cx,cy],i) => (
+                <g key={`pm-corner-${i}`}>
+                  <circle cx={cx} cy={cy} r="6" fill="url(#pm-hub-glow)" opacity="0.5" />
+                  <circle cx={cx} cy={cy} r="2" fill="hsl(var(--primary) / 0.55)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="0.5">
+                    <animate attributeName="opacity" values="0.4;0.9;0.4" dur={`${2.2 + i * 0.3}s`} repeatCount="indefinite" />
+                  </circle>
+                </g>
+              ))}
+
+              {/* Mid-spoke relay nodes */}
+              {[[112,90],[188,90],[112,150],[188,150]].map(([cx,cy],i) => (
+                <circle key={`pm-relay-${i}`} cx={cx} cy={cy} r="1.2" fill="hsl(var(--primary) / 0.4)">
+                  <animate attributeName="opacity" values="0.2;0.7;0.2" dur={`${1.8 + i * 0.25}s`} repeatCount="indefinite" />
                 </circle>
               ))}
 
-              {/* Data pulses */}
-              <circle r="2.1" fill="hsl(var(--primary) / 0.9)" filter="url(#proc-mobile-glow)">
-                <animateMotion dur="4.8s" repeatCount="indefinite" path="M85,62 L215,62 L215,158 L85,158 Z" />
+              {/* Data pulses along curved spokes */}
+              <circle r="1.8" fill="hsl(var(--primary) / 0.9)">
+                <animateMotion dur="3.5s" repeatCount="indefinite" path="M75,60 Q110,95 150,120 Q190,145 225,180" />
+                <animate attributeName="opacity" values="0;0.9;0" dur="3.5s" repeatCount="indefinite" />
               </circle>
-              <circle r="1.7" fill="hsl(var(--accent) / 0.86)" filter="url(#proc-mobile-glow)">
-                <animateMotion dur="6.2s" repeatCount="indefinite" path="M80,68 L220,152 L220,68 L80,152" />
+              <circle r="1.5" fill="hsl(var(--accent) / 0.85)">
+                <animateMotion dur="4.2s" begin="0.8s" repeatCount="indefinite" path="M225,60 Q190,95 150,120 Q110,145 75,180" />
+                <animate attributeName="opacity" values="0;0.8;0" dur="4.2s" begin="0.8s" repeatCount="indefinite" />
+              </circle>
+              <circle r="1.3" fill="hsl(var(--primary) / 0.7)">
+                <animateMotion dur="5s" begin="1.5s" repeatCount="indefinite" path="M75,60 Q150,40 225,60 Q245,120 225,180 Q150,200 75,180 Q55,120 75,60" />
+                <animate attributeName="opacity" values="0;0.6;0" dur="5s" begin="1.5s" repeatCount="indefinite" />
               </circle>
             </svg>
           </div>
 
           <div className="relative z-[2] grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 p-2 sm:p-0">
             {[
-            { step: "01", title: "Scegli il Settore", desc: "Empire configura moduli e flussi dedicati automaticamente.", icon: <Globe className="w-3 h-3 sm:w-4 sm:h-4" /> },
-            { step: "02", title: "Personalizza Brand", desc: "Logo, colori, dominio. L'IA genera il catalogo in 60 secondi.", icon: <Palette className="w-3 h-3 sm:w-4 sm:h-4" /> },
-            { step: "03", title: "Lancia il Sistema", desc: "App attiva, team formato, QR code installati. Operativo in 24h.", icon: <Rocket className="w-3 h-3 sm:w-4 sm:h-4" /> },
-            { step: "04", title: "Cresci con i Dati", desc: "Analytics real-time, suggerimenti IA, campagne automatizzate.", icon: <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" /> }].
+            { step: "01", title: "Scegli il Settore", desc: "Empire configura moduli e flussi dedicati automaticamente.", icon: <Globe className="w-2.5 h-2.5 sm:w-4 sm:h-4" /> },
+            { step: "02", title: "Personalizza Brand", desc: "Logo, colori, dominio. L'IA genera il catalogo in 60 secondi.", icon: <Palette className="w-2.5 h-2.5 sm:w-4 sm:h-4" /> },
+            { step: "03", title: "Lancia il Sistema", desc: "App attiva, team formato, QR code installati. Operativo in 24h.", icon: <Rocket className="w-2.5 h-2.5 sm:w-4 sm:h-4" /> },
+            { step: "04", title: "Cresci con i Dati", desc: "Analytics real-time, suggerimenti IA, campagne automatizzate.", icon: <TrendingUp className="w-2.5 h-2.5 sm:w-4 sm:h-4" /> }].
             map((s, i) => {
               const dnaWave = i % 2 === 0;
               return (
@@ -5292,7 +5333,7 @@ const LandingPage = () => {
 
                   <div className="relative rounded-xl border border-foreground/[0.07] bg-card/95 sm:bg-card/90 backdrop-blur-sm p-2 sm:p-3 overflow-hidden">
                     <motion.div
-                      className="relative w-[46px] h-[46px] sm:w-[62px] sm:h-[62px] rounded-xl mx-auto mb-2 sm:mb-2.5 overflow-hidden"
+                      className="relative w-[36px] h-[36px] sm:w-[62px] sm:h-[62px] rounded-lg mx-auto mb-1.5 sm:mb-2.5 overflow-hidden"
                       style={{ background: "hsla(265,20%,8%,0.7)", border: "1px solid hsla(265,70%,60%,0.14)", backdropFilter: "blur(8px)" }}
                       whileHover={{ rotate: 4, scale: 1.06, borderColor: "hsla(265,70%,60%,0.28)" }}>
 
