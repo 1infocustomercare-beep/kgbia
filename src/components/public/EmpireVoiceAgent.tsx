@@ -856,7 +856,7 @@ const EmpireVoiceAgent: React.FC = () => {
     narrationAttemptsRef.current = {};
 
     // Stop browser TTS
-n    if (window.speechSynthesis) {
+    if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
 
