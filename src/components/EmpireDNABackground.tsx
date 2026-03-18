@@ -359,7 +359,7 @@ const EmpireDNABackground = () => {
           const dx = pos[i].x - ptr.x, dy = pos[i].y - ptr.y, d = Math.sqrt(dx * dx + dy * dy);
           if (d < repR * 1.5) na += (1 - d / (repR * 1.5)) * 0.15;
         }
-        if (isActive) na = Math.min(na + 0.12, 0.3);
+        if (isActive) na = Math.min(na + 0.2, 0.5);
 
         if (i % 3 === 0) {
           const arm = 2 + breathe * 1.5;
