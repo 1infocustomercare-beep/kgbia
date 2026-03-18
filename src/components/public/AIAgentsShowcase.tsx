@@ -909,7 +909,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {["Nuovi Agenti Settimanali", "Auto-Discovery Connessioni", "Zero Costi Extra", "Evoluzione Perpetua"].map((label) => (
-              <div key={label} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/20 bg-card/80">
+              <div key={label} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/15 bg-card/40 backdrop-blur-sm">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-[0.5rem] text-foreground/80 font-medium">{label}</span>
               </div>
