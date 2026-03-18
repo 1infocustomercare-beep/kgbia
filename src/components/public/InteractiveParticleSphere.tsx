@@ -674,6 +674,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         ctx.fillText(dn.label, dn.x, dn.y + nodeR * pA + 2 * sc);
         ctx.letterSpacing = "0px";
       }
+      }
 
       // ═══ L7: RADAR SWEEP — always present ═══
       const radarAngle = el * 0.8;
