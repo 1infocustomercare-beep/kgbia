@@ -155,7 +155,7 @@ const EmpireDNABackground = () => {
   }, []);
 
   useEffect(() => {
-    if (IS_MOBILE) return;
+    if (IS_MOBILE) return; // No pointer tracking on mobile
     const move = (e: PointerEvent) => { ptrRef.current = { x: e.clientX, y: e.clientY, active: true }; };
     const leave = () => { ptrRef.current.active = false; };
     window.addEventListener("pointermove", move, { passive: true });
