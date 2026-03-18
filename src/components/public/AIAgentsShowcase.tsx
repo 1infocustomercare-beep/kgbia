@@ -660,24 +660,30 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ NETWORK LABEL ══════ */}
         <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}
-          className="mb-3 flex items-center gap-2 px-1">
-          <div className="relative">
-            <div className="w-6 h-6 rounded bg-primary/15 flex items-center justify-center">
-              <Brain className="w-3.5 h-3.5 text-primary" />
+          className="mb-3 flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2 px-1">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="relative flex-shrink-0">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded bg-primary/15 flex items-center justify-center">
+                <Brain className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />
+              </div>
             </div>
-            <motion.div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-primary/60"
-              animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity }} />
+            <div className="flex-1 relative h-px sm:hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-transparent" />
+            </div>
+            <span className="text-[0.45rem] sm:text-[0.5rem] font-bold text-primary/90 tracking-[1.5px] sm:tracking-[3px] uppercase whitespace-nowrap">
+              {filteredAgents.length} Nodi Attivi
+            </span>
+            <div className="flex-1 relative h-px sm:hidden">
+              <div className="absolute inset-0 bg-gradient-to-l from-primary/30 to-transparent" />
+            </div>
           </div>
-          <div className="flex-1 relative h-px">
+          <div className="hidden sm:block flex-1 relative h-px">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-transparent" />
-            <motion.div className="absolute w-6 h-full bg-primary/40 rounded-full"
-              animate={{ left: ["0%", "100%"] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
           </div>
-          <span className="text-[0.5rem] font-bold text-primary/90 tracking-[3px] uppercase whitespace-nowrap">
-            {filteredAgents.length} Nodi Attivi · Clicca per esplorare connessioni
+          <span className="hidden sm:inline text-[0.5rem] font-bold text-primary/90 tracking-[3px] uppercase whitespace-nowrap">
+            Clicca per esplorare connessioni
           </span>
-          <div className="flex-1 relative h-px">
+          <div className="hidden sm:block flex-1 relative h-px">
             <div className="absolute inset-0 bg-gradient-to-l from-primary/30 to-transparent" />
           </div>
         </motion.div>
