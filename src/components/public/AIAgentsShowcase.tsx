@@ -5,7 +5,8 @@ import {
   ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
   Clock, Target, Wallet, Users, BarChart3, Bell, Cpu,
   Workflow, ArrowRight, Crown, Rocket, Eye, Radio,
-  MessageSquare, Layers, Fingerprint, Globe, Timer
+  MessageSquare, Layers, Fingerprint, Globe, Timer,
+  Calendar, FileText, Star, Umbrella
 } from "lucide-react";
 
 /* ── Animated counter ── */
