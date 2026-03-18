@@ -174,11 +174,14 @@ const FunnelDNAVisual = memo(() => {
   const step = FUNNEL_STEPS[activeStep];
 
   return (
-    <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-background/50">
-      {/* Ambient glow */}
+    <div className="relative w-full aspect-video rounded-2xl overflow-hidden" style={{
+      background: `linear-gradient(145deg, hsla(150,30%,8%,1) 0%, hsla(160,25%,10%,1) 40%, hsla(140,20%,12%,1) 70%, hsla(150,30%,8%,1) 100%)`
+    }}>
+      {/* Green tech ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-1/4 left-1/3 w-48 h-48 bg-accent/10 rounded-full blur-[80px]" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-[100px]" style={{ background: "hsla(150,60%,40%,0.12)" }} />
+        <div className="absolute bottom-1/4 left-1/3 w-48 h-48 rounded-full blur-[80px]" style={{ background: "hsla(160,50%,35%,0.1)" }} />
+        <div className="absolute top-1/2 right-1/4 w-32 h-32 rounded-full blur-[60px]" style={{ background: "hsla(140,70%,45%,0.08)" }} />
       </div>
 
       {/* Canvas */}
