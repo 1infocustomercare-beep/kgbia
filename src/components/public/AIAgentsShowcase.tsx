@@ -483,15 +483,13 @@ const NetworkNode = ({
       <div className="relative z-10 mb-1">
         <RobotAvatar agent={agent} size={38} isActive={isActive} isConnected={isConnected} />
 
-        {/* Status pulse */}
-        <motion.div
+        {/* Status dot — static, no animation */}
+        <div
           className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full z-20"
           style={{
-            background: `radial-gradient(circle, hsla(160,80%,55%,1), hsla(160,80%,40%,1))`,
-            boxShadow: "0 0 6px hsla(160,80%,55%,0.6)",
+            background: `radial-gradient(circle, hsla(160,80%,55%,0.9), hsla(160,80%,40%,0.7))`,
+            boxShadow: "0 0 4px hsla(160,80%,55%,0.4)",
           }}
-          animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 2, repeat: Infinity, delay: index * 0.12 }}
         />
 
         {/* Stat badge */}
@@ -500,35 +498,6 @@ const NetworkNode = ({
           <Counter value={agent.stat.value} suffix={agent.stat.suffix} />{" "}
           <span className="text-foreground/60 text-[0.3rem]">{agent.stat.label}</span>
         </div>
-
-        {/* Cardinal connection dots — green tech */}
-        {(["top", "bottom", "left", "right"] as const).map((pos) => (
-          <motion.div key={pos}
-            className="absolute w-1 h-1 rounded-full z-20"
-            style={{
-              background: isActive || isConnected ? "hsla(150,80%,55%,0.9)" : "hsla(150,60%,50%,0.2)",
-              boxShadow: isActive ? "0 0 6px hsla(150,80%,55%,0.7)" : "none",
-              ...(pos === "top" ? { top: -1, left: "50%", marginLeft: -2 } : {}),
-              ...(pos === "bottom" ? { bottom: -1, left: "50%", marginLeft: -2 } : {}),
-              ...(pos === "left" ? { left: -1, top: "50%", marginTop: -2 } : {}),
-              ...(pos === "right" ? { right: -1, top: "50%", marginTop: -2 } : {}),
-            }}
-            animate={isActive ? { scale: [1, 1.8, 1], opacity: [0.4, 1, 0.4] } : {}}
-            transition={{ duration: 2, repeat: Infinity, delay: ["top", "right", "bottom", "left"].indexOf(pos) * 0.25 }}
-          />
-        ))}
-
-        {/* Rotating orbit ring */}
-        {isActive && (
-          <motion.svg className="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] pointer-events-none" viewBox="0 0 100 100">
-            <motion.rect x="2" y="2" width="96" height="96" rx="20" fill="none"
-              stroke={agent.glow} strokeWidth="0.5"
-              strokeDasharray="8 6" strokeLinecap="round"
-              animate={{ strokeDashoffset: [0, -100] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-            />
-          </motion.svg>
-        )}
       </div>
 
       {/* Name + role */}
