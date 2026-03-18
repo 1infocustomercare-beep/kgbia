@@ -1,5 +1,5 @@
 import { useEffect, useRef, memo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 
 const FUNNEL_STEPS = [
   { icon: "📲", label: "QR Scan", metric: "1.240", sub: "scansioni/mese", color: "primary" },
