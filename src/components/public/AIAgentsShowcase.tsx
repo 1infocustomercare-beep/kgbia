@@ -9,7 +9,11 @@ import {
   Calendar, FileText, Star, Umbrella, QrCode, MonitorSmartphone,
   CreditCard, Package, MapPin, ClipboardCheck, Headphones,
   Lock, Wifi, Database, Network, CircuitBoard, Activity,
-  Settings, Receipt, ScanLine, Camera, X, ChevronDown
+  Settings, Receipt, ScanLine, Camera, X, ChevronDown, ChevronUp,
+  Wrench, Briefcase, Truck, Leaf, Dog, Baby, GraduationCap,
+  PartyPopper, Warehouse, Scale, Calculator, Hammer, Droplets,
+  Palette as PaletteIcon, Lightbulb, Stethoscope, Bed, Utensils,
+  BookOpen, Megaphone, HandCoins, ShieldCheck, Gauge
 } from "lucide-react";
 
 /* ═══ COUNTER ═══ */
@@ -33,34 +37,276 @@ const Counter = ({ value, suffix = "" }: { value: number; suffix?: string }) => 
 };
 
 /* ═══ AGENT DATA ═══ */
+interface FeatureNode {
+  id: string; name: string; desc: string; icon: React.ReactNode;
+}
+
 interface AgentNode {
   id: string; name: string; role: string; desc: string; whyNeed: string;
   icon: React.ReactNode; gradient: string; glow: string;
   stat: { value: number; suffix: string; label: string };
   capabilities: string[]; category: string; sectors: string[];
   connections: string[];
+  features?: FeatureNode[];
 }
 
 const ALL_AGENTS: AgentNode[] = [
-  { id: "ghost-manager", name: "GhostManager™", role: "Direttore Operativo IA", desc: "Manager virtuale che monitora ordini, ottimizza turni, rileva anomalie e prende decisioni operative in tempo reale — 24/7.", whyNeed: "Senza un manager IA, perdi ore in micro-decisioni. Con GhostManager™ tutto funziona da solo.", icon: <Bot className="w-5 h-5" />, gradient: "from-violet-500 to-purple-600", glow: "hsla(265,80%,60%,1)", stat: { value: 24, suffix: "/7", label: "Operativo" }, capabilities: ["Gestione ordini autonoma", "Ottimizzazione turni", "Alert anomalie", "Decisioni predittive"], category: "operations", sectors: ["all"], connections: ["kitchen-commander", "predictive-engine", "concierge-ai"] },
-  { id: "concierge-ai", name: "Concierge AI", role: "Assistente Clienti 24/7", desc: "Risponde ai clienti via chat in 12+ lingue, gestisce prenotazioni, suggerisce prodotti e risolve problemi istantaneamente.", whyNeed: "Ogni cliente senza risposta è un cliente perso. Concierge AI risponde in 3 secondi, 24/7.", icon: <MessageSquare className="w-5 h-5" />, gradient: "from-sky-500 to-blue-600", glow: "hsla(210,80%,55%,1)", stat: { value: 12, suffix: "+", label: "Lingue" }, capabilities: ["Chat multilingue", "Prenotazioni auto", "Upselling IA", "Risoluzione problemi"], category: "concierge", sectors: ["all"], connections: ["ghost-manager", "loyalty-angel", "autopilot-marketing"] },
-  { id: "predictive-engine", name: "Predictive Engine", role: "Analista Predittivo", desc: "Analizza pattern di vendita, previsione domanda, trend stagionali e comportamento clienti. Ti dice PRIMA cosa succederà.", whyNeed: "Senza dati predittivi navighi alla cieca. Predictive Engine ti dice cosa succederà PRIMA.", icon: <BarChart3 className="w-5 h-5" />, gradient: "from-emerald-500 to-teal-600", glow: "hsla(160,70%,45%,1)", stat: { value: 45, suffix: "%", label: "↑ Revenue" }, capabilities: ["Previsione domanda", "Analisi trend", "Segmentazione clienti", "Report IA"], category: "analytics", sectors: ["all"], connections: ["ghost-manager", "autopilot-marketing", "dynamic-pricing"] },
-  { id: "autopilot-marketing", name: "AutoPilot Marketing", role: "Growth Hacker Autonomo", desc: "Campagne email, WhatsApp e push basate su comportamenti reali. Recupera clienti persi, premia i fedeli — tutto in automatico.", whyNeed: "Il 68% dei clienti non torna senza follow-up. AutoPilot li riattiva a costo zero.", icon: <Rocket className="w-5 h-5" />, gradient: "from-amber-400 to-orange-500", glow: "hsla(35,90%,55%,1)", stat: { value: 3, suffix: "×", label: "ROI Marketing" }, capabilities: ["Campagne comportamentali", "Recupero clienti", "Push & WhatsApp auto", "A/B testing"], category: "content", sectors: ["all"], connections: ["predictive-engine", "loyalty-angel", "social-creator", "concierge-ai"] },
-  { id: "chef-intelligence", name: "Chef Intelligence", role: "Assistente Culinario IA", desc: "Menu completi con foto, allergeni, traduzioni e prezzi ottimizzati. Food cost automatico per ogni piatto.", whyNeed: "Ogni errore nel menu costa clienti. Chef Intelligence crea menu perfetti in 60 secondi.", icon: <ChefHat className="w-5 h-5" />, gradient: "from-orange-500 to-amber-500", glow: "hsla(30,90%,55%,1)", stat: { value: 60, suffix: "s", label: "Menu pronto" }, capabilities: ["Menu IA in 60s", "Food cost auto", "Allergeni & traduzioni", "Foto piatti pro"], category: "operations", sectors: ["food", "bakery"], connections: ["kitchen-commander", "sommelier-ia"] },
-  { id: "kitchen-commander", name: "Kitchen Commander", role: "Gestione Cucina Live", desc: "Dashboard cucina in tempo reale con priorità ordini, timer intelligenti e coordinamento automatico delle comande.", whyNeed: "Una cucina caotica brucia margini. Kitchen Commander elimina errori e coordina tutto.", icon: <Clock className="w-5 h-5" />, gradient: "from-red-500 to-rose-600", glow: "hsla(0,80%,55%,1)", stat: { value: 40, suffix: "%", label: "↓ Tempi attesa" }, capabilities: ["Ordini prioritizzati", "Timer intelligenti", "Comande coordinate", "Alert ritardi"], category: "operations", sectors: ["food"], connections: ["ghost-manager", "chef-intelligence"] },
-  { id: "sommelier-ia", name: "Sommelier IA", role: "Esperto Abbinamenti", desc: "Suggerisce abbinamenti vino-piatto perfetti, aumentando lo scontrino medio con upselling naturale.", whyNeed: "Il 70% dei clienti non ordina vino perché non sa scegliere. Sommelier IA aumenta lo scontrino del 35%.", icon: <Target className="w-5 h-5" />, gradient: "from-purple-500 to-violet-600", glow: "hsla(270,70%,55%,1)", stat: { value: 35, suffix: "%", label: "↑ Scontrino" }, capabilities: ["Abbinamenti vino-piatto", "Upselling naturale", "Carta vini dinamica", "Suggerimenti AI"], category: "sales", sectors: ["food"], connections: ["chef-intelligence", "concierge-ai"] },
-  { id: "review-shield", name: "Review Shield™", role: "Protezione Reputazione", desc: "Intercetta le recensioni negative PRIMA che arrivino su Google. Solo i feedback positivi vengono pubblicati online.", whyNeed: "Una sola recensione negativa costa 30 clienti. Review Shield™ le intercetta prima.", icon: <Shield className="w-5 h-5" />, gradient: "from-emerald-500 to-green-600", glow: "hsla(150,70%,45%,1)", stat: { value: 95, suffix: "%", label: "★ Positive" }, capabilities: ["Intercettazione feedback", "Filtro recensioni", "Alert negativi", "Boost positivi"], category: "compliance", sectors: ["all"], connections: ["concierge-ai", "autopilot-marketing"] },
-  { id: "smart-dispatcher", name: "Smart Dispatcher", role: "Assegnazione Intelligente", desc: "Assegna corse all'autista perfetto per posizione, lingua, veicolo e disponibilità — in 3 secondi.", whyNeed: "Assegnare corse manualmente crea ritardi. Smart Dispatcher trova l'autista perfetto in 3 secondi.", icon: <Car className="w-5 h-5" />, gradient: "from-amber-400 to-yellow-500", glow: "hsla(40,90%,55%,1)", stat: { value: 30, suffix: "%", label: "↑ Efficienza" }, capabilities: ["Assegnazione automatica", "Matching veicolo-cliente", "Percorsi ottimali", "Disponibilità real-time"], category: "operations", sectors: ["ncc"], connections: ["dynamic-pricing", "ghost-manager"] },
-  { id: "dynamic-pricing", name: "Dynamic Pricing", role: "Tariffe Intelligenti", desc: "Tariffe dinamiche basate su distanza, traffico, domanda, stagione ed eventi — massimizzando i ricavi per corsa.", whyNeed: "Tariffe fisse = soldi persi. Dynamic Pricing adatta i prezzi alla domanda reale.", icon: <Wallet className="w-5 h-5" />, gradient: "from-emerald-500 to-teal-500", glow: "hsla(160,70%,50%,1)", stat: { value: 25, suffix: "%", label: "↑ Revenue" }, capabilities: ["Prezzi dinamici", "Surge pricing eventi", "Analisi concorrenza", "Margine ottimizzato"], category: "analytics", sectors: ["ncc", "beach", "hotel"], connections: ["predictive-engine", "smart-dispatcher", "revenue-manager"] },
-  { id: "smart-agenda", name: "Smart Agenda", role: "Ottimizzatore Appuntamenti", desc: "Riempie i buchi in agenda, previene no-show con reminder intelligenti e accetta prenotazioni 24/7 online.", whyNeed: "Ogni buco in agenda è fatturato perso. Smart Agenda riduce i no-show dell'85%.", icon: <Calendar className="w-5 h-5" />, gradient: "from-pink-500 to-rose-500", glow: "hsla(340,80%,55%,1)", stat: { value: 85, suffix: "%", label: "↓ No-show" }, capabilities: ["Anti no-show 85%", "Buchi riempiti", "Reminder multicanale", "Booking 24/7"], category: "operations", sectors: ["beauty", "healthcare"], connections: ["concierge-ai", "autopilot-marketing"] },
-  { id: "loyalty-angel", name: "Loyalty Angel", role: "Fidelizzazione Clienti", desc: "Identifica clienti a rischio abbandono e attiva campagne automatiche di riattivazione con offerte personalizzate.", whyNeed: "Acquisire un nuovo cliente costa 7× di più che mantenerne uno. Loyalty Angel li riattiva prima che vadano via.", icon: <Heart className="w-5 h-5" />, gradient: "from-rose-400 to-pink-500", glow: "hsla(350,75%,60%,1)", stat: { value: 3, suffix: "×", label: "Tasso ritorno" }, capabilities: ["Alert clienti inattivi", "Offerte personalizzate", "Compleanno auto", "WhatsApp marketing"], category: "sales", sectors: ["beauty", "retail", "fitness"], connections: ["concierge-ai", "autopilot-marketing", "predictive-engine"] },
-  { id: "social-creator", name: "Social Creator", role: "Generatore Contenuti", desc: "Crea post Instagram, stories e newsletter automaticamente con descrizioni accattivanti e hashtag ottimizzati.", whyNeed: "Senza social costanti diventi invisibile. Social Creator pubblica per te ogni giorno — 5× engagement.", icon: <Globe className="w-5 h-5" />, gradient: "from-violet-500 to-indigo-500", glow: "hsla(260,70%,55%,1)", stat: { value: 5, suffix: "×", label: "Engagement" }, capabilities: ["Post Instagram auto", "Stories template", "Newsletter", "Hashtag ottimizzati"], category: "content", sectors: ["all"], connections: ["autopilot-marketing", "chef-intelligence"] },
-  { id: "triage-ia", name: "Triage IA", role: "Pre-valutazione Intelligente", desc: "Pre-valuta le richieste dei pazienti, assegna priorità e indirizza allo specialista corretto.", whyNeed: "Pazienti indirizzati male = tempo sprecato. Triage IA assegna lo specialista giusto al primo contatto.", icon: <Heart className="w-5 h-5" />, gradient: "from-teal-500 to-cyan-500", glow: "hsla(180,70%,50%,1)", stat: { value: 70, suffix: "%", label: "↓ Attese" }, capabilities: ["Pre-screening", "Priorità auto", "Routing specialista", "Riduzione attese"], category: "operations", sectors: ["healthcare"], connections: ["smart-agenda", "concierge-ai"] },
-  { id: "revenue-manager", name: "Revenue Manager IA", role: "Tariffe Dinamiche Hotel", desc: "Tariffe ottimali basate su domanda, eventi, meteo, competitor — massimizzando il RevPAR automaticamente.", whyNeed: "Tariffe fisse = soldi persi ogni notte. Revenue Manager ottimizza i prezzi in tempo reale.", icon: <TrendingUp className="w-5 h-5" />, gradient: "from-amber-400 to-yellow-500", glow: "hsla(45,90%,55%,1)", stat: { value: 35, suffix: "%", label: "↑ RevPAR" }, capabilities: ["Yield management", "Competitor analysis", "Evento detection", "RevPAR ottimizzato"], category: "analytics", sectors: ["hotel"], connections: ["dynamic-pricing", "predictive-engine"] },
-  { id: "retention-ai", name: "Retention AI", role: "Anti-Abbandono Soci", desc: "Identifica soci a rischio cancellazione e attiva campagne di retention automatiche — prima che se ne vadano.", whyNeed: "Il 40% dei soci abbandona nei primi 3 mesi. Retention AI li identifica PRIMA.", icon: <Users className="w-5 h-5" />, gradient: "from-lime-500 to-green-500", glow: "hsla(100,70%,50%,1)", stat: { value: 60, suffix: "%", label: "↓ Churn" }, capabilities: ["Previsione churn", "Alert soci inattivi", "Campagne automatiche", "Win-back personalizzato"], category: "sales", sectors: ["fitness"], connections: ["loyalty-angel", "autopilot-marketing"] },
-  { id: "field-dispatcher", name: "Field Dispatcher", role: "Coordinamento Interventi", desc: "Assegna interventi al tecnico più vicino, ottimizza percorsi e invia conferme automatiche ai clienti.", whyNeed: "Senza routing ottimizzato i tecnici perdono ore nel traffico. Field Dispatcher fa 40% interventi in più.", icon: <Workflow className="w-5 h-5" />, gradient: "from-blue-500 to-indigo-500", glow: "hsla(230,70%,55%,1)", stat: { value: 40, suffix: "%", label: "↑ Interventi/giorno" }, capabilities: ["Assegnazione smart", "Ottimizzazione percorsi", "GPS tracking", "Conferme auto"], category: "operations", sectors: ["trades"], connections: ["smart-dispatcher", "ghost-manager"] },
-  { id: "beach-booker", name: "Beach Booker IA", role: "Prenotazioni Spiaggia", desc: "Mappa interattiva con disponibilità real-time. Prenotazione ombrellone, lettino e servizi 24/7 — zero telefonate.", whyNeed: "Ogni telefonata = 3 minuti persi × 50/giorno = 2.5 ore sprecate. Beach Booker elimina l'80%.", icon: <Umbrella className="w-5 h-5" />, gradient: "from-cyan-500 to-blue-500", glow: "hsla(190,80%,55%,1)", stat: { value: 80, suffix: "%", label: "↓ Telefonate" }, capabilities: ["Mappa interattiva", "Booking 24/7", "Pagamento anticipato", "Conferme auto"], category: "operations", sectors: ["beach"], connections: ["concierge-ai", "dynamic-pricing"] },
-  { id: "stock-intelligence", name: "Stock Intelligence", role: "Inventario Predittivo", desc: "Monitora scorte in tempo reale, prevede la domanda e genera ordini di riassortimento automatici.", whyNeed: "Ogni prodotto esaurito = vendita persa. Stock Intelligence prevede e riordina PRIMA.", icon: <Package className="w-5 h-5" />, gradient: "from-cyan-500 to-blue-500", glow: "hsla(200,75%,55%,1)", stat: { value: 0, suffix: "", label: "Rotture stock" }, capabilities: ["Alert scorte minime", "Riordino auto", "Previsione domanda", "Analytics prodotto"], category: "operations", sectors: ["retail"], connections: ["predictive-engine", "ghost-manager"] },
+  /* ═══ UNIVERSALI (all sectors) ═══ */
+  { id: "ghost-manager", name: "GhostManager™", role: "Direttore Operativo IA", desc: "Manager virtuale che monitora ordini, ottimizza turni, rileva anomalie e prende decisioni operative in tempo reale — 24/7.", whyNeed: "Senza un manager IA, perdi ore in micro-decisioni. Con GhostManager™ tutto funziona da solo.", icon: <Bot className="w-5 h-5" />, gradient: "from-violet-500 to-purple-600", glow: "hsla(265,80%,60%,1)", stat: { value: 24, suffix: "/7", label: "Operativo" }, capabilities: ["Gestione ordini autonoma", "Ottimizzazione turni", "Alert anomalie", "Decisioni predittive"], category: "operations", sectors: ["all"], connections: ["kitchen-commander", "predictive-engine", "concierge-ai"],
+    features: [
+      { id: "gm-auto-orders", name: "Gestione Ordini Autonoma", desc: "Processa, prioritizza e assegna ordini senza intervento umano", icon: <ClipboardCheck className="w-3.5 h-3.5" /> },
+      { id: "gm-shift-opt", name: "Ottimizzazione Turni", desc: "Bilancia carichi di lavoro e genera turni ottimali", icon: <Clock className="w-3.5 h-3.5" /> },
+      { id: "gm-anomaly", name: "Rilevamento Anomalie", desc: "Identifica pattern irregolari e previene problemi", icon: <Activity className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "concierge-ai", name: "Concierge AI", role: "Assistente Clienti 24/7", desc: "Risponde ai clienti via chat in 12+ lingue, gestisce prenotazioni, suggerisce prodotti e risolve problemi istantaneamente.", whyNeed: "Ogni cliente senza risposta è un cliente perso. Concierge AI risponde in 3 secondi, 24/7.", icon: <MessageSquare className="w-5 h-5" />, gradient: "from-sky-500 to-blue-600", glow: "hsla(210,80%,55%,1)", stat: { value: 12, suffix: "+", label: "Lingue" }, capabilities: ["Chat multilingue", "Prenotazioni auto", "Upselling IA", "Risoluzione problemi"], category: "concierge", sectors: ["all"], connections: ["ghost-manager", "loyalty-angel", "autopilot-marketing"],
+    features: [
+      { id: "con-multilang", name: "Chat Multilingue", desc: "Risponde fluentemente in 12+ lingue con traduzioni contestuali", icon: <Globe className="w-3.5 h-3.5" /> },
+      { id: "con-upsell", name: "Upselling IA", desc: "Suggerisce prodotti/servizi aggiuntivi in base al contesto", icon: <TrendingUp className="w-3.5 h-3.5" /> },
+      { id: "con-booking", name: "Prenotazioni Automatiche", desc: "Gestisce l'intero flusso di prenotazione senza intervento", icon: <Calendar className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "predictive-engine", name: "Predictive Engine", role: "Analista Predittivo", desc: "Analizza pattern di vendita, previsione domanda, trend stagionali e comportamento clienti. Ti dice PRIMA cosa succederà.", whyNeed: "Senza dati predittivi navighi alla cieca. Predictive Engine ti dice cosa succederà PRIMA.", icon: <BarChart3 className="w-5 h-5" />, gradient: "from-emerald-500 to-teal-600", glow: "hsla(160,70%,45%,1)", stat: { value: 45, suffix: "%", label: "↑ Revenue" }, capabilities: ["Previsione domanda", "Analisi trend", "Segmentazione clienti", "Report IA"], category: "analytics", sectors: ["all"], connections: ["ghost-manager", "autopilot-marketing", "dynamic-pricing"],
+    features: [
+      { id: "pred-demand", name: "Previsione Domanda", desc: "Predice volumi di vendita per giorno, settimana, stagione", icon: <TrendingUp className="w-3.5 h-3.5" /> },
+      { id: "pred-segment", name: "Segmentazione Clienti", desc: "Classifica clienti per valore, frequenza e comportamento", icon: <Users className="w-3.5 h-3.5" /> },
+      { id: "pred-report", name: "Report IA Automatici", desc: "Genera insight e raccomandazioni strategiche", icon: <FileText className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "autopilot-marketing", name: "AutoPilot Marketing", role: "Growth Hacker Autonomo", desc: "Campagne email, WhatsApp e push basate su comportamenti reali. Recupera clienti persi, premia i fedeli — tutto in automatico.", whyNeed: "Il 68% dei clienti non torna senza follow-up. AutoPilot li riattiva a costo zero.", icon: <Rocket className="w-5 h-5" />, gradient: "from-amber-400 to-orange-500", glow: "hsla(35,90%,55%,1)", stat: { value: 3, suffix: "×", label: "ROI Marketing" }, capabilities: ["Campagne comportamentali", "Recupero clienti", "Push & WhatsApp auto", "A/B testing"], category: "content", sectors: ["all"], connections: ["predictive-engine", "loyalty-angel", "social-creator", "concierge-ai"],
+    features: [
+      { id: "mkt-recover", name: "Recupero Clienti Persi", desc: "Identifica e riattiva clienti inattivi con campagne personalizzate", icon: <Heart className="w-3.5 h-3.5" /> },
+      { id: "mkt-whatsapp", name: "WhatsApp Marketing", desc: "Campagne automatiche via WhatsApp con template approvati", icon: <MessageSquare className="w-3.5 h-3.5" /> },
+      { id: "mkt-ab", name: "A/B Testing Autonomo", desc: "Testa varianti e ottimizza conversioni automaticamente", icon: <Target className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "review-shield", name: "Review Shield™", role: "Protezione Reputazione", desc: "Intercetta le recensioni negative PRIMA che arrivino su Google. Solo i feedback positivi vengono pubblicati online.", whyNeed: "Una sola recensione negativa costa 30 clienti. Review Shield™ le intercetta prima.", icon: <Shield className="w-5 h-5" />, gradient: "from-emerald-500 to-green-600", glow: "hsla(150,70%,45%,1)", stat: { value: 95, suffix: "%", label: "★ Positive" }, capabilities: ["Intercettazione feedback", "Filtro recensioni", "Alert negativi", "Boost positivi"], category: "compliance", sectors: ["all"], connections: ["concierge-ai", "autopilot-marketing"],
+    features: [
+      { id: "rev-intercept", name: "Intercettazione Feedback", desc: "Cattura opinioni prima che diventino recensioni pubbliche", icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+      { id: "rev-boost", name: "Boost Recensioni Positive", desc: "Indirizza clienti soddisfatti verso Google e TripAdvisor", icon: <Star className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "social-creator", name: "Social Creator", role: "Generatore Contenuti", desc: "Crea post Instagram, stories e newsletter automaticamente con descrizioni accattivanti e hashtag ottimizzati.", whyNeed: "Senza social costanti diventi invisibile. Social Creator pubblica per te ogni giorno — 5× engagement.", icon: <Globe className="w-5 h-5" />, gradient: "from-violet-500 to-indigo-500", glow: "hsla(260,70%,55%,1)", stat: { value: 5, suffix: "×", label: "Engagement" }, capabilities: ["Post Instagram auto", "Stories template", "Newsletter", "Hashtag ottimizzati"], category: "content", sectors: ["all"], connections: ["autopilot-marketing", "chef-intelligence"],
+    features: [
+      { id: "soc-insta", name: "Post Instagram Automatici", desc: "Genera contenuti visivi con copy e hashtag ottimizzati", icon: <Camera className="w-3.5 h-3.5" /> },
+      { id: "soc-newsletter", name: "Newsletter IA", desc: "Compone newsletter personalizzate per segmento clienti", icon: <Bell className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "loyalty-angel", name: "Loyalty Angel", role: "Fidelizzazione Clienti", desc: "Identifica clienti a rischio abbandono e attiva campagne automatiche di riattivazione con offerte personalizzate.", whyNeed: "Acquisire un nuovo cliente costa 7× di più che mantenerne uno. Loyalty Angel li riattiva prima che vadano via.", icon: <Heart className="w-5 h-5" />, gradient: "from-rose-400 to-pink-500", glow: "hsla(350,75%,60%,1)", stat: { value: 3, suffix: "×", label: "Tasso ritorno" }, capabilities: ["Alert clienti inattivi", "Offerte personalizzate", "Compleanno auto", "WhatsApp marketing"], category: "sales", sectors: ["all"], connections: ["concierge-ai", "autopilot-marketing", "predictive-engine"],
+    features: [
+      { id: "loy-alert", name: "Alert Clienti Inattivi", desc: "Rileva clienti che non tornano da 30/60/90 giorni", icon: <Bell className="w-3.5 h-3.5" /> },
+      { id: "loy-birthday", name: "Compleanno Automatico", desc: "Invia offerte personalizzate per compleanni e anniversari", icon: <PartyPopper className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "invoice-ai", name: "Invoice AI", role: "Fatturazione Automatica", desc: "Genera fatture elettroniche, gestisce IVA, codice univoco e PEC. Conforme alla normativa italiana — tutto automatico.", whyNeed: "Ogni fattura manuale costa 15 minuti. Invoice AI la genera in 2 secondi, senza errori.", icon: <Receipt className="w-5 h-5" />, gradient: "from-blue-500 to-cyan-500", glow: "hsla(200,70%,55%,1)", stat: { value: 2, suffix: "s", label: "Per fattura" }, capabilities: ["Fatturazione elettronica", "Gestione IVA", "SDI automatico", "Report fiscali"], category: "compliance", sectors: ["all"], connections: ["ghost-manager", "predictive-engine"],
+    features: [
+      { id: "inv-sdi", name: "Invio SDI Automatico", desc: "Trasmette fatture al Sistema di Interscambio in tempo reale", icon: <Wifi className="w-3.5 h-3.5" /> },
+      { id: "inv-vat", name: "Calcolo IVA Intelligente", desc: "Applica aliquote corrette per tipo prodotto e destinazione", icon: <Calculator className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ FOOD & BAKERY ═══ */
+  { id: "chef-intelligence", name: "Chef Intelligence", role: "Assistente Culinario IA", desc: "Menu completi con foto, allergeni, traduzioni e prezzi ottimizzati. Food cost automatico per ogni piatto.", whyNeed: "Ogni errore nel menu costa clienti. Chef Intelligence crea menu perfetti in 60 secondi.", icon: <ChefHat className="w-5 h-5" />, gradient: "from-orange-500 to-amber-500", glow: "hsla(30,90%,55%,1)", stat: { value: 60, suffix: "s", label: "Menu pronto" }, capabilities: ["Menu IA in 60s", "Food cost auto", "Allergeni & traduzioni", "Foto piatti pro"], category: "operations", sectors: ["food", "bakery"], connections: ["kitchen-commander", "sommelier-ia"],
+    features: [
+      { id: "chef-menu", name: "Menu IA in 60s", desc: "Genera menu completo con foto, descrizioni e prezzi", icon: <Utensils className="w-3.5 h-3.5" /> },
+      { id: "chef-foodcost", name: "Food Cost Automatico", desc: "Calcola margini per piatto e suggerisce prezzi ottimali", icon: <Calculator className="w-3.5 h-3.5" /> },
+      { id: "chef-allergen", name: "Allergeni & Traduzioni", desc: "Gestisce 14 allergeni e traduce menu in 12+ lingue", icon: <Globe className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "kitchen-commander", name: "Kitchen Commander", role: "Gestione Cucina Live", desc: "Dashboard cucina in tempo reale con priorità ordini, timer intelligenti e coordinamento automatico delle comande.", whyNeed: "Una cucina caotica brucia margini. Kitchen Commander elimina errori e coordina tutto.", icon: <Clock className="w-5 h-5" />, gradient: "from-red-500 to-rose-600", glow: "hsla(0,80%,55%,1)", stat: { value: 40, suffix: "%", label: "↓ Tempi attesa" }, capabilities: ["Ordini prioritizzati", "Timer intelligenti", "Comande coordinate", "Alert ritardi"], category: "operations", sectors: ["food"], connections: ["ghost-manager", "chef-intelligence"],
+    features: [
+      { id: "kit-priority", name: "Ordini Prioritizzati", desc: "Ordina le comande per urgenza, tempo e complessità", icon: <Gauge className="w-3.5 h-3.5" /> },
+      { id: "kit-timer", name: "Timer Intelligenti", desc: "Crono automatici con alert per ritardi e gestione portate", icon: <Timer className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "sommelier-ia", name: "Sommelier IA", role: "Esperto Abbinamenti", desc: "Suggerisce abbinamenti vino-piatto perfetti, aumentando lo scontrino medio con upselling naturale.", whyNeed: "Il 70% dei clienti non ordina vino perché non sa scegliere. Sommelier IA aumenta lo scontrino del 35%.", icon: <Target className="w-5 h-5" />, gradient: "from-purple-500 to-violet-600", glow: "hsla(270,70%,55%,1)", stat: { value: 35, suffix: "%", label: "↑ Scontrino" }, capabilities: ["Abbinamenti vino-piatto", "Upselling naturale", "Carta vini dinamica", "Suggerimenti AI"], category: "sales", sectors: ["food"], connections: ["chef-intelligence", "concierge-ai"],
+    features: [
+      { id: "som-pair", name: "Abbinamento Vino-Piatto", desc: "Suggerisce il vino perfetto per ogni piatto ordinato", icon: <Sparkles className="w-3.5 h-3.5" /> },
+      { id: "som-carta", name: "Carta Vini Dinamica", desc: "Aggiorna disponibilità e prezzi in tempo reale", icon: <BookOpen className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "haccp-guardian", name: "HACCP Guardian", role: "Conformità Igienico-Sanitaria", desc: "Automatizza registrazioni HACCP, monitora temperature e genera report conformi per ispezioni — zero carta.", whyNeed: "Ogni multa HACCP costa migliaia. HACCP Guardian tiene i registri sempre perfetti.", icon: <ClipboardCheck className="w-5 h-5" />, gradient: "from-green-500 to-emerald-600", glow: "hsla(140,70%,45%,1)", stat: { value: 100, suffix: "%", label: "Compliance" }, capabilities: ["Registri digitali", "Monitor temperature", "Report ispezioni", "Alert scadenze"], category: "compliance", sectors: ["food", "bakery"], connections: ["ghost-manager", "kitchen-commander"],
+    features: [
+      { id: "hac-temp", name: "Monitor Temperature", desc: "Rileva anomalie termiche e invia alert immediati", icon: <Activity className="w-3.5 h-3.5" /> },
+      { id: "hac-report", name: "Report Ispezioni Auto", desc: "Genera documentazione conforme pronta per ASL", icon: <FileText className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ NCC & TRASPORTO ═══ */
+  { id: "smart-dispatcher", name: "Smart Dispatcher", role: "Assegnazione Intelligente", desc: "Assegna corse all'autista perfetto per posizione, lingua, veicolo e disponibilità — in 3 secondi.", whyNeed: "Assegnare corse manualmente crea ritardi. Smart Dispatcher trova l'autista perfetto in 3 secondi.", icon: <Car className="w-5 h-5" />, gradient: "from-amber-400 to-yellow-500", glow: "hsla(40,90%,55%,1)", stat: { value: 30, suffix: "%", label: "↑ Efficienza" }, capabilities: ["Assegnazione automatica", "Matching veicolo-cliente", "Percorsi ottimali", "Disponibilità real-time"], category: "operations", sectors: ["ncc"], connections: ["dynamic-pricing", "ghost-manager", "fleet-ai"],
+    features: [
+      { id: "disp-match", name: "Matching Veicolo-Cliente", desc: "Abbina il veicolo giusto per n° passeggeri, bagagli e servizio", icon: <Target className="w-3.5 h-3.5" /> },
+      { id: "disp-route", name: "Percorsi Ottimali", desc: "Calcola il tragitto più veloce considerando traffico reale", icon: <MapPin className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "dynamic-pricing", name: "Dynamic Pricing", role: "Tariffe Intelligenti", desc: "Tariffe dinamiche basate su distanza, traffico, domanda, stagione ed eventi — massimizzando i ricavi per corsa.", whyNeed: "Tariffe fisse = soldi persi. Dynamic Pricing adatta i prezzi alla domanda reale.", icon: <Wallet className="w-5 h-5" />, gradient: "from-emerald-500 to-teal-500", glow: "hsla(160,70%,50%,1)", stat: { value: 25, suffix: "%", label: "↑ Revenue" }, capabilities: ["Prezzi dinamici", "Surge pricing eventi", "Analisi concorrenza", "Margine ottimizzato"], category: "analytics", sectors: ["ncc", "beach", "hotel"], connections: ["predictive-engine", "smart-dispatcher", "revenue-manager"],
+    features: [
+      { id: "dyn-surge", name: "Surge Pricing Eventi", desc: "Aumenta tariffe automaticamente durante eventi e alta domanda", icon: <TrendingUp className="w-3.5 h-3.5" /> },
+      { id: "dyn-competitor", name: "Analisi Competitor", desc: "Monitora prezzi della concorrenza e adatta in tempo reale", icon: <Eye className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "fleet-ai", name: "Fleet AI", role: "Gestione Flotta IA", desc: "Monitora stato veicoli, scadenze assicurative, revisioni e manutenzione. Alert automatici prima delle scadenze.", whyNeed: "Un veicolo fermo = corse perse. Fleet AI previene fermi imprevisti e ottimizza la flotta.", icon: <Truck className="w-5 h-5" />, gradient: "from-slate-500 to-zinc-600", glow: "hsla(220,30%,50%,1)", stat: { value: 0, suffix: "", label: "Fermi imprevisti" }, capabilities: ["Monitor veicoli", "Alert scadenze", "Manutenzione predittiva", "KPI flotta"], category: "operations", sectors: ["ncc"], connections: ["smart-dispatcher", "ghost-manager"],
+    features: [
+      { id: "fleet-maint", name: "Manutenzione Predittiva", desc: "Prevede guasti prima che accadano basandosi sui km percorsi", icon: <Wrench className="w-3.5 h-3.5" /> },
+      { id: "fleet-expiry", name: "Alert Scadenze", desc: "Notifica assicurazioni, revisioni e CQC in scadenza", icon: <Bell className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ BEAUTY & WELLNESS ═══ */
+  { id: "smart-agenda", name: "Smart Agenda", role: "Ottimizzatore Appuntamenti", desc: "Riempie i buchi in agenda, previene no-show con reminder intelligenti e accetta prenotazioni 24/7 online.", whyNeed: "Ogni buco in agenda è fatturato perso. Smart Agenda riduce i no-show dell'85%.", icon: <Calendar className="w-5 h-5" />, gradient: "from-pink-500 to-rose-500", glow: "hsla(340,80%,55%,1)", stat: { value: 85, suffix: "%", label: "↓ No-show" }, capabilities: ["Anti no-show 85%", "Buchi riempiti", "Reminder multicanale", "Booking 24/7"], category: "operations", sectors: ["beauty", "healthcare", "tattoo", "veterinary"], connections: ["concierge-ai", "autopilot-marketing"],
+    features: [
+      { id: "agenda-noshow", name: "Anti No-Show", desc: "Reminder SMS/WhatsApp + riconferma automatica pre-appuntamento", icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+      { id: "agenda-fill", name: "Riempimento Buchi", desc: "Propone slot liberi a clienti in lista d'attesa", icon: <Lightbulb className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "beauty-advisor", name: "Beauty Advisor IA", role: "Consulente Estetica", desc: "Analizza le preferenze del cliente e suggerisce trattamenti personalizzati, prodotti e pacchetti — aumentando lo scontrino.", whyNeed: "Il 60% dei clienti non conosce tutti i tuoi servizi. Beauty Advisor li scopre per loro.", icon: <Scissors className="w-5 h-5" />, gradient: "from-pink-400 to-fuchsia-500", glow: "hsla(320,75%,58%,1)", stat: { value: 40, suffix: "%", label: "↑ Cross-sell" }, capabilities: ["Suggerimenti trattamenti", "Pacchetti personalizzati", "Storico preferenze", "Prodotti suggeriti"], category: "sales", sectors: ["beauty", "tattoo"], connections: ["smart-agenda", "loyalty-angel"],
+    features: [
+      { id: "bea-hist", name: "Storico Preferenze", desc: "Ricorda ogni trattamento passato per suggerimenti mirati", icon: <Database className="w-3.5 h-3.5" /> },
+      { id: "bea-pack", name: "Pacchetti Personalizzati", desc: "Crea combinazioni di trattamenti con sconto automatico", icon: <Sparkles className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ HEALTHCARE ═══ */
+  { id: "triage-ia", name: "Triage IA", role: "Pre-valutazione Intelligente", desc: "Pre-valuta le richieste dei pazienti, assegna priorità e indirizza allo specialista corretto.", whyNeed: "Pazienti indirizzati male = tempo sprecato. Triage IA assegna lo specialista giusto al primo contatto.", icon: <Stethoscope className="w-5 h-5" />, gradient: "from-teal-500 to-cyan-500", glow: "hsla(180,70%,50%,1)", stat: { value: 70, suffix: "%", label: "↓ Attese" }, capabilities: ["Pre-screening", "Priorità auto", "Routing specialista", "Riduzione attese"], category: "operations", sectors: ["healthcare"], connections: ["smart-agenda", "concierge-ai"],
+    features: [
+      { id: "tri-screen", name: "Pre-Screening Sintomi", desc: "Raccoglie informazioni pre-visita per velocizzare la diagnosi", icon: <ClipboardCheck className="w-3.5 h-3.5" /> },
+      { id: "tri-route", name: "Routing Specialista", desc: "Indirizza automaticamente allo specialista più adatto", icon: <Workflow className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ HOTEL & HOSPITALITY ═══ */
+  { id: "revenue-manager", name: "Revenue Manager IA", role: "Tariffe Dinamiche Hotel", desc: "Tariffe ottimali basate su domanda, eventi, meteo, competitor — massimizzando il RevPAR automaticamente.", whyNeed: "Tariffe fisse = soldi persi ogni notte. Revenue Manager ottimizza i prezzi in tempo reale.", icon: <TrendingUp className="w-5 h-5" />, gradient: "from-amber-400 to-yellow-500", glow: "hsla(45,90%,55%,1)", stat: { value: 35, suffix: "%", label: "↑ RevPAR" }, capabilities: ["Yield management", "Competitor analysis", "Evento detection", "RevPAR ottimizzato"], category: "analytics", sectors: ["hotel"], connections: ["dynamic-pricing", "predictive-engine"],
+    features: [
+      { id: "rev-yield", name: "Yield Management", desc: "Ottimizza occupazione e tariffa per massimizzare il ricavo", icon: <BarChart3 className="w-3.5 h-3.5" /> },
+      { id: "rev-event", name: "Event Detection", desc: "Rileva eventi locali e adatta prezzi automaticamente", icon: <Megaphone className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "room-master", name: "Room Master IA", role: "Gestione Camere", desc: "Assegna camere in base a preferenze, stato pulizia, manutenzione e occupazione — ottimizzando il piano camere.", whyNeed: "Assegnare camere manualmente genera errori e insoddisfazione. Room Master perfeziona ogni check-in.", icon: <Bed className="w-5 h-5" />, gradient: "from-indigo-500 to-blue-600", glow: "hsla(230,70%,55%,1)", stat: { value: 98, suffix: "%", label: "Guest satisfaction" }, capabilities: ["Assegnazione smart", "Piano pulizie", "Manutenzione proattiva", "Upgrade automatici"], category: "operations", sectors: ["hotel"], connections: ["revenue-manager", "concierge-ai"],
+    features: [
+      { id: "room-assign", name: "Assegnazione Intelligente", desc: "Sceglie la camera perfetta per ogni ospite", icon: <Target className="w-3.5 h-3.5" /> },
+      { id: "room-clean", name: "Piano Pulizie Ottimizzato", desc: "Coordina housekeeping in base a check-out e priorità", icon: <ClipboardCheck className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ FITNESS ═══ */
+  { id: "retention-ai", name: "Retention AI", role: "Anti-Abbandono Soci", desc: "Identifica soci a rischio cancellazione e attiva campagne di retention automatiche — prima che se ne vadano.", whyNeed: "Il 40% dei soci abbandona nei primi 3 mesi. Retention AI li identifica PRIMA.", icon: <Users className="w-5 h-5" />, gradient: "from-lime-500 to-green-500", glow: "hsla(100,70%,50%,1)", stat: { value: 60, suffix: "%", label: "↓ Churn" }, capabilities: ["Previsione churn", "Alert soci inattivi", "Campagne automatiche", "Win-back personalizzato"], category: "sales", sectors: ["fitness"], connections: ["loyalty-angel", "autopilot-marketing"],
+    features: [
+      { id: "ret-churn", name: "Previsione Churn", desc: "Identifica soci a rischio con 30 giorni di anticipo", icon: <Activity className="w-3.5 h-3.5" /> },
+      { id: "ret-winback", name: "Win-Back Personalizzato", desc: "Campagne su misura per riportare chi ha abbandonato", icon: <HandCoins className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "workout-ai", name: "Workout AI", role: "Trainer Virtuale", desc: "Genera schede allenamento personalizzate, monitora progressi e adatta programmi in base ai risultati ottenuti.", whyNeed: "Schede generiche non funzionano. Workout AI personalizza ogni programma per risultati 3× più veloci.", icon: <Dumbbell className="w-5 h-5" />, gradient: "from-orange-500 to-red-500", glow: "hsla(15,80%,55%,1)", stat: { value: 3, suffix: "×", label: "Risultati" }, capabilities: ["Schede personalizzate", "Monitoraggio progressi", "Adattamento automatico", "Motivazione IA"], category: "operations", sectors: ["fitness"], connections: ["retention-ai", "concierge-ai"],
+    features: [
+      { id: "work-plan", name: "Schede Personalizzate", desc: "Programmi su misura per obiettivi, livello ed esperienza", icon: <ClipboardCheck className="w-3.5 h-3.5" /> },
+      { id: "work-track", name: "Monitoraggio Progressi", desc: "Traccia performance e adatta il piano in tempo reale", icon: <BarChart3 className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ TRADES (Artigiani, Edilizia, Idraulici...) ═══ */
+  { id: "field-dispatcher", name: "Field Dispatcher", role: "Coordinamento Interventi", desc: "Assegna interventi al tecnico più vicino, ottimizza percorsi e invia conferme automatiche ai clienti.", whyNeed: "Senza routing ottimizzato i tecnici perdono ore nel traffico. Field Dispatcher fa 40% interventi in più.", icon: <Workflow className="w-5 h-5" />, gradient: "from-blue-500 to-indigo-500", glow: "hsla(230,70%,55%,1)", stat: { value: 40, suffix: "%", label: "↑ Interventi/giorno" }, capabilities: ["Assegnazione smart", "Ottimizzazione percorsi", "GPS tracking", "Conferme auto"], category: "operations", sectors: ["trades", "construction"], connections: ["smart-dispatcher", "ghost-manager"],
+    features: [
+      { id: "field-gps", name: "GPS Live Tracking", desc: "Posizione tecnici in tempo reale visibile a cliente e ufficio", icon: <MapPin className="w-3.5 h-3.5" /> },
+      { id: "field-photo", name: "Report Foto Intervento", desc: "Documenta lavori con foto prima/dopo e note tecniche", icon: <Camera className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "quote-builder", name: "Quote Builder IA", role: "Preventivi Intelligenti", desc: "Genera preventivi dettagliati con materiali, manodopera e tempi stimati — in 2 minuti invece di 2 ore.", whyNeed: "Preventivi lenti = clienti persi. Quote Builder genera preventivi professionali in 2 minuti.", icon: <Hammer className="w-5 h-5" />, gradient: "from-amber-500 to-orange-600", glow: "hsla(30,85%,55%,1)", stat: { value: 2, suffix: "min", label: "Per preventivo" }, capabilities: ["Calcolo materiali", "Stima manodopera", "Template professionali", "Firma digitale"], category: "sales", sectors: ["trades", "construction"], connections: ["field-dispatcher", "invoice-ai"],
+    features: [
+      { id: "quote-mat", name: "Calcolo Materiali Auto", desc: "Stima quantità e costi materiali basati su superfici/misure", icon: <Calculator className="w-3.5 h-3.5" /> },
+      { id: "quote-sign", name: "Firma Digitale", desc: "Il cliente approva e firma il preventivo dallo smartphone", icon: <Fingerprint className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ BEACH ═══ */
+  { id: "beach-booker", name: "Beach Booker IA", role: "Prenotazioni Spiaggia", desc: "Mappa interattiva con disponibilità real-time. Prenotazione ombrellone, lettino e servizi 24/7 — zero telefonate.", whyNeed: "Ogni telefonata = 3 minuti persi × 50/giorno = 2.5 ore sprecate. Beach Booker elimina l'80%.", icon: <Umbrella className="w-5 h-5" />, gradient: "from-cyan-500 to-blue-500", glow: "hsla(190,80%,55%,1)", stat: { value: 80, suffix: "%", label: "↓ Telefonate" }, capabilities: ["Mappa interattiva", "Booking 24/7", "Pagamento anticipato", "Conferme auto"], category: "operations", sectors: ["beach"], connections: ["concierge-ai", "dynamic-pricing"],
+    features: [
+      { id: "beach-map", name: "Mappa Interattiva", desc: "Visualizzazione real-time degli ombrelloni liberi/occupati", icon: <MapPin className="w-3.5 h-3.5" /> },
+      { id: "beach-season", name: "Abbonamenti Stagionali", desc: "Gestione pass settimanali, mensili e stagionali", icon: <CreditCard className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ RETAIL ═══ */
+  { id: "stock-intelligence", name: "Stock Intelligence", role: "Inventario Predittivo", desc: "Monitora scorte in tempo reale, prevede la domanda e genera ordini di riassortimento automatici.", whyNeed: "Ogni prodotto esaurito = vendita persa. Stock Intelligence prevede e riordina PRIMA.", icon: <Package className="w-5 h-5" />, gradient: "from-cyan-500 to-blue-500", glow: "hsla(200,75%,55%,1)", stat: { value: 0, suffix: "", label: "Rotture stock" }, capabilities: ["Alert scorte minime", "Riordino auto", "Previsione domanda", "Analytics prodotto"], category: "operations", sectors: ["retail"], connections: ["predictive-engine", "ghost-manager"],
+    features: [
+      { id: "stock-alert", name: "Alert Scorte Minime", desc: "Notifica quando un prodotto sta per esaurirsi", icon: <Bell className="w-3.5 h-3.5" /> },
+      { id: "stock-reorder", name: "Riordino Automatico", desc: "Genera ordini fornitori basati su previsione domanda", icon: <Warehouse className="w-3.5 h-3.5" /> },
+    ],
+  },
+  { id: "shelf-optimizer", name: "Shelf Optimizer", role: "Layout Scaffali IA", desc: "Analizza vendite per posizione e suggerisce disposizioni ottimali per massimizzare vendite e margini.", whyNeed: "Il posizionamento dei prodotti influenza il 30% delle vendite. Shelf Optimizer lo ottimizza con i dati.", icon: <Store className="w-5 h-5" />, gradient: "from-indigo-400 to-violet-500", glow: "hsla(250,70%,55%,1)", stat: { value: 22, suffix: "%", label: "↑ Vendite/mq" }, capabilities: ["Analisi per posizione", "Heatmap vendite", "Layout ottimale", "A/B scaffali"], category: "analytics", sectors: ["retail"], connections: ["stock-intelligence", "predictive-engine"],
+    features: [
+      { id: "shelf-heat", name: "Heatmap Vendite", desc: "Mappa visuale delle zone più e meno performanti", icon: <Eye className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ LEGAL & ACCOUNTING ═══ */
+  { id: "doc-analyzer", name: "Doc Analyzer IA", role: "Analisi Documenti", desc: "Legge contratti, fatture e documenti legali, estrae dati chiave e segnala clausole critiche.", whyNeed: "Leggere documenti manualmente richiede ore. Doc Analyzer estrae tutto in 30 secondi.", icon: <Scale className="w-5 h-5" />, gradient: "from-slate-500 to-gray-600", glow: "hsla(220,20%,50%,1)", stat: { value: 30, suffix: "s", label: "Per documento" }, capabilities: ["OCR intelligente", "Estrazione dati", "Alert clausole", "Archiviazione smart"], category: "operations", sectors: ["legal", "accounting"], connections: ["invoice-ai", "ghost-manager"],
+    features: [
+      { id: "doc-ocr", name: "OCR Intelligente", desc: "Legge e digitalizza qualsiasi documento cartaceo o PDF", icon: <ScanLine className="w-3.5 h-3.5" /> },
+      { id: "doc-clause", name: "Alert Clausole Critiche", desc: "Evidenzia termini rischiosi o scadenze importanti", icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ CONSTRUCTION ═══ */
+  { id: "site-monitor", name: "Site Monitor IA", role: "Monitoraggio Cantiere", desc: "Traccia avanzamento lavori, materiali utilizzati, sicurezza e scadenze — tutto da un'unica dashboard.", whyNeed: "Cantieri senza controllo generano ritardi e sprechi. Site Monitor li elimina.", icon: <Hammer className="w-5 h-5" />, gradient: "from-orange-600 to-amber-600", glow: "hsla(25,85%,50%,1)", stat: { value: 35, suffix: "%", label: "↓ Ritardi" }, capabilities: ["Gantt automatico", "Tracking materiali", "Sicurezza cantiere", "Report clienti"], category: "operations", sectors: ["construction"], connections: ["field-dispatcher", "quote-builder"],
+    features: [
+      { id: "site-gantt", name: "Gantt Automatico", desc: "Timeline progetto aggiornata in tempo reale con milestone", icon: <BarChart3 className="w-3.5 h-3.5" /> },
+      { id: "site-safety", name: "Sicurezza Cantiere", desc: "Checklist sicurezza e documentazione obbligatoria", icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ VETERINARY ═══ */
+  { id: "pet-care-ai", name: "Pet Care AI", role: "Assistente Veterinario", desc: "Gestisce cartelle cliniche animali, vaccinazioni, reminder richiami e storico trattamenti per ogni paziente.", whyNeed: "Dimenticare un richiamo vaccinale è pericoloso per l'animale e per la tua reputazione.", icon: <Dog className="w-5 h-5" />, gradient: "from-green-500 to-teal-500", glow: "hsla(155,70%,50%,1)", stat: { value: 0, suffix: "", label: "Richiami persi" }, capabilities: ["Cartelle cliniche", "Vaccinazioni auto", "Reminder richiami", "Storico trattamenti"], category: "operations", sectors: ["veterinary"], connections: ["smart-agenda", "concierge-ai"],
+    features: [
+      { id: "pet-vacc", name: "Vaccinazioni Automatiche", desc: "Calendario vaccinale con reminder proprietario", icon: <Calendar className="w-3.5 h-3.5" /> },
+      { id: "pet-record", name: "Cartella Clinica Digitale", desc: "Storico completo per ogni animale con foto e analisi", icon: <FileText className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ EDUCATION & CHILDCARE ═══ */
+  { id: "class-manager", name: "Class Manager IA", role: "Gestione Corsi", desc: "Organizza classi, turni insegnanti, presenze allievi e comunicazioni ai genitori — tutto automatizzato.", whyNeed: "Gestire classi e comunicazioni manualmente spreca 3h/giorno. Class Manager automatizza tutto.", icon: <GraduationCap className="w-5 h-5" />, gradient: "from-blue-400 to-indigo-500", glow: "hsla(225,70%,55%,1)", stat: { value: 3, suffix: "h/g", label: "Risparmiate" }, capabilities: ["Gestione classi", "Presenze digitali", "Comunicazioni genitori", "Report attività"], category: "operations", sectors: ["education", "childcare"], connections: ["smart-agenda", "concierge-ai"],
+    features: [
+      { id: "class-attend", name: "Presenze Digitali", desc: "Check-in/out con notifica automatica ai genitori", icon: <Users className="w-3.5 h-3.5" /> },
+      { id: "class-comm", name: "Comunicazioni Genitori", desc: "Messaggi, circolari e report inviati automaticamente", icon: <MessageSquare className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ EVENTS ═══ */
+  { id: "event-orchestrator", name: "Event Orchestrator", role: "Gestione Eventi IA", desc: "Coordina logistica eventi: timeline, fornitori, ospiti, budget e checklist — zero stress, zero dimenticanze.", whyNeed: "Un evento mal organizzato distrugge la reputazione. Event Orchestrator gestisce ogni dettaglio.", icon: <PartyPopper className="w-5 h-5" />, gradient: "from-pink-500 to-purple-500", glow: "hsla(300,70%,55%,1)", stat: { value: 100, suffix: "%", label: "On-Time" }, capabilities: ["Timeline automatica", "Gestione fornitori", "Budget tracker", "Checklist smart"], category: "operations", sectors: ["events"], connections: ["ghost-manager", "concierge-ai"],
+    features: [
+      { id: "evt-timeline", name: "Timeline Automatica", desc: "Crea e aggiorna il programma dell'evento in tempo reale", icon: <Clock className="w-3.5 h-3.5" /> },
+      { id: "evt-budget", name: "Budget Tracker", desc: "Monitora spese vs budget con alert per sforamenti", icon: <Wallet className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ LOGISTICS ═══ */
+  { id: "route-optimizer", name: "Route Optimizer IA", role: "Ottimizzazione Consegne", desc: "Calcola percorsi ottimali per flotte di consegna, minimizzando km, carburante e tempi di consegna.", whyNeed: "Percorsi non ottimizzati sprecano il 25% del carburante. Route Optimizer risparmia su ogni consegna.", icon: <Truck className="w-5 h-5" />, gradient: "from-blue-600 to-cyan-600", glow: "hsla(200,75%,50%,1)", stat: { value: 25, suffix: "%", label: "↓ Carburante" }, capabilities: ["Routing multipoint", "Ottimizzazione carburante", "ETA predittiva", "Tracking live"], category: "operations", sectors: ["logistics"], connections: ["fleet-ai", "ghost-manager"],
+    features: [
+      { id: "route-multi", name: "Routing Multipoint", desc: "Ordina le tappe per minimizzare km totali", icon: <MapPin className="w-3.5 h-3.5" /> },
+      { id: "route-eta", name: "ETA Predittiva", desc: "Stima arrivo considerando traffico reale e storico", icon: <Timer className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ CLEANING ═══ */
+  { id: "clean-scheduler", name: "Clean Scheduler IA", role: "Pianificazione Pulizie", desc: "Organizza turni pulizia per edifici, uffici e condomini — ottimizzando percorsi e priorità aree.", whyNeed: "Turni pulizia manuali creano zone dimenticate. Clean Scheduler copre tutto, ogni volta.", icon: <Droplets className="w-5 h-5" />, gradient: "from-cyan-400 to-sky-500", glow: "hsla(195,80%,55%,1)", stat: { value: 100, suffix: "%", label: "Copertura" }, capabilities: ["Turni ottimizzati", "Checklist aree", "Report qualità", "Feedback clienti"], category: "operations", sectors: ["cleaning"], connections: ["ghost-manager", "field-dispatcher"],
+    features: [
+      { id: "clean-check", name: "Checklist per Area", desc: "Ogni zona ha una checklist con conferma fotografica", icon: <ClipboardCheck className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ PHOTOGRAPHY ═══ */
+  { id: "photo-studio-ai", name: "Photo Studio IA", role: "Assistente Fotografo", desc: "Gestisce sessioni, editing automatico, consegna gallerie e upselling stampe/album.", whyNeed: "Post-produzione manuale ruba il 50% del tuo tempo. Photo Studio IA automatizza tutto.", icon: <Camera className="w-5 h-5" />, gradient: "from-pink-500 to-rose-600", glow: "hsla(345,75%,55%,1)", stat: { value: 50, suffix: "%", label: "↓ Post-prod" }, capabilities: ["Editing IA batch", "Gallerie online", "Booking sessioni", "Upselling stampe"], category: "operations", sectors: ["photography"], connections: ["smart-agenda", "social-creator"],
+    features: [
+      { id: "photo-edit", name: "Editing IA Batch", desc: "Ritocco automatico colore, luce e composizione", icon: <PaletteIcon className="w-3.5 h-3.5" /> },
+      { id: "photo-gallery", name: "Gallerie Online", desc: "Consegna foto con selezione e acquisto integrato", icon: <MonitorSmartphone className="w-3.5 h-3.5" /> },
+    ],
+  },
+
+  /* ═══ AGRITURISMO ═══ */
+  { id: "farm-manager", name: "Farm Manager IA", role: "Gestione Agriturismo", desc: "Combina gestione camere, ristorante, attività e produzione agricola in un'unica piattaforma intelligente.", whyNeed: "Un agriturismo ha 4 business in 1. Farm Manager li coordina tutti senza stress.", icon: <Leaf className="w-5 h-5" />, gradient: "from-green-500 to-lime-500", glow: "hsla(120,65%,50%,1)", stat: { value: 4, suffix: " in 1", label: "Business" }, capabilities: ["Camere + ristorante", "Attività esperienziali", "Vendita prodotti", "Booking unificato"], category: "operations", sectors: ["agriturismo"], connections: ["revenue-manager", "chef-intelligence", "concierge-ai"],
+    features: [
+      { id: "farm-exp", name: "Attività Esperienziali", desc: "Gestisce cooking class, degustazioni e tour guidati", icon: <Star className="w-3.5 h-3.5" /> },
+      { id: "farm-shop", name: "Vendita Prodotti Locali", desc: "E-commerce integrato per olio, vino e prodotti tipici", icon: <Store className="w-3.5 h-3.5" /> },
+    ],
+  },
 ];
 
 const SECTOR_TABS = [
@@ -74,9 +320,19 @@ const SECTOR_TABS = [
   { id: "retail", label: "Retail", icon: <Store className="w-3 h-3" /> },
   { id: "beach", label: "Beach", icon: <Umbrella className="w-3 h-3" /> },
   { id: "trades", label: "Artigiani", icon: <Workflow className="w-3 h-3" /> },
+  { id: "construction", label: "Edilizia", icon: <Hammer className="w-3 h-3" /> },
+  { id: "legal", label: "Legale", icon: <Scale className="w-3 h-3" /> },
+  { id: "veterinary", label: "Veterinario", icon: <Dog className="w-3 h-3" /> },
+  { id: "events", label: "Eventi", icon: <PartyPopper className="w-3 h-3" /> },
+  { id: "logistics", label: "Logistica", icon: <Truck className="w-3 h-3" /> },
+  { id: "education", label: "Formazione", icon: <GraduationCap className="w-3 h-3" /> },
+  { id: "photography", label: "Fotografia", icon: <Camera className="w-3 h-3" /> },
+  { id: "agriturismo", label: "Agriturismo", icon: <Leaf className="w-3 h-3" /> },
+  { id: "cleaning", label: "Pulizie", icon: <Droplets className="w-3 h-3" /> },
 ];
 
 const TOTAL_AGENTS_COUNT = 95;
+const INITIAL_VISIBLE = 12;
 
 /* ═══ ALWAYS-ON SVG NETWORK LINES ═══ */
 const AlwaysOnNetwork = ({
@@ -482,10 +738,17 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
   const [activeSector, setActiveSector] = useState(sector || "all");
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const filteredAgents = useMemo(() => {
-    if (activeSector === "all") return ALL_AGENTS;
-    return ALL_AGENTS.filter((a) => a.sectors.includes("all") || a.sectors.includes(activeSector));
+    const base = activeSector === "all" ? ALL_AGENTS : ALL_AGENTS.filter((a) => a.sectors.includes("all") || a.sectors.includes(activeSector));
+    if (showAll || activeSector !== "all") return base;
+    return base.slice(0, INITIAL_VISIBLE);
+  }, [activeSector, showAll]);
+
+  const totalFiltered = useMemo(() => {
+    if (activeSector === "all") return ALL_AGENTS.length;
+    return ALL_AGENTS.filter((a) => a.sectors.includes("all") || a.sectors.includes(activeSector)).length;
   }, [activeSector]);
 
   const activeAgent = useMemo(() => ALL_AGENTS.find((a) => a.id === expandedAgent), [expandedAgent]);
@@ -748,6 +1011,37 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
             </motion.div>
           </LayoutGroup>
         </div>
+
+        {/* ══════ EXPAND / COLLAPSE BUTTON ══════ */}
+        {activeSector === "all" && totalFiltered > INITIAL_VISIBLE && (
+          <motion.div className="flex justify-center my-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <motion.button
+              onClick={() => setShowAll(!showAll)}
+              className="group relative flex items-center gap-2.5 px-6 py-3 rounded-full border border-primary/30 bg-card/90 backdrop-blur-sm hover:border-primary/50 transition-all overflow-hidden"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {/* Scanning beam */}
+              <motion.div className="absolute inset-0 pointer-events-none"
+                style={{ background: "linear-gradient(90deg, transparent 30%, hsla(215,60%,60%,0.08) 50%, transparent 70%)" }}
+                animate={{ x: ["-200%", "300%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <CircuitBoard className="w-4 h-4 text-primary/80" />
+              <span className="text-xs font-bold text-foreground/90 tracking-wider uppercase relative z-10">
+                {showAll ? "Mostra Principali" : `Mostra Tutti i ${totalFiltered} Agenti`}
+              </span>
+              {showAll
+                ? <ChevronUp className="w-4 h-4 text-primary/70" />
+                : <ChevronDown className="w-4 h-4 text-primary/70 group-hover:translate-y-0.5 transition-transform" />
+              }
+              <motion.div className="w-2 h-2 rounded-full bg-primary/60"
+                animate={{ scale: [1, 1.4, 1], opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            </motion.button>
+          </motion.div>
+        )}
 
         {/* ══════ NEURAL BUS ══════ */}
         <motion.div className="relative h-12 sm:h-16 my-4" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
