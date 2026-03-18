@@ -345,24 +345,23 @@ const AlwaysOnNetwork = ({
         const pathD = curveAmt ? `M ${line.x1} ${line.y1} Q ${mx} ${my} ${line.x2} ${line.y2}` : `M ${line.x1} ${line.y1} L ${line.x2} ${line.y2}`;
         const isActive = line.isActive;
 
-        const lineColor = isActive ? line.color : "hsla(210,40%,60%,0.25)";
-        const lineWidth = isActive ? 1.8 : 0.8;
-        const particleColor = isActive ? line.color : "hsla(200,70%,75%,0.6)";
-        /* Longer durations = smoother on slow connections (no frame drops) */
+        const lineColor = isActive ? line.color : "hsla(150,60%,50%,0.35)";
+        const lineWidth = isActive ? 2 : 1.1;
+        const particleColor = isActive ? line.color : "hsla(150,80%,65%,0.75)";
         const particleDur = isActive ? "3s" : "8s";
         const stagger = `${(li * 1.1) % 6}s`;
 
         return (
           <g key={line.id}>
-            {/* Single clean connection line */}
+            {/* Connection line — green tech */}
             <path d={pathD} fill="none" stroke={lineColor}
               strokeWidth={lineWidth}
               strokeLinecap="round"
-              opacity={isActive ? 0.8 : 0.5}
+              opacity={isActive ? 0.85 : 0.6}
             />
 
-            {/* Single flowing particle — CSS-friendly long duration */}
-            <circle r={isActive ? 2.5 : 1.5} fill={particleColor} opacity={isActive ? 0.9 : 0.5}>
+            {/* Flowing particle — green tech glow */}
+            <circle r={isActive ? 2.8 : 1.8} fill={particleColor} opacity={isActive ? 0.95 : 0.65}>
               <animateMotion dur={particleDur} repeatCount="indefinite" path={pathD} begin={stagger} calcMode="linear" />
             </circle>
           </g>
