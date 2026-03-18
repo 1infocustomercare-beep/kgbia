@@ -2289,8 +2289,8 @@ const LandingPage = () => {
     nccHeroBg, nccPremiumCoast, nccPremiumInterior, nccFleetShowcase,
     cartoonFood, cartoonNcc, cartoonBeauty, cartoonHealthcare, cartoonRetail, cartoonFitness, cartoonHotel,
   } = useLandingAssets();
-  const [monthlyOrders, setMonthlyOrders] = useState(500);
-  const [avgOrder, setAvgOrder] = useState(25);
+  const [weeklyHours, setWeeklyHours] = useState(20);
+  const [hourlyCost, setHourlyCost] = useState(20);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
   const [ctaVisible, setCtaVisible] = useState(false);
