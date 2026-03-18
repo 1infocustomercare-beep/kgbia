@@ -4879,8 +4879,18 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           FAQ
          ═══════════════════════════════════════════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsla(260,18%,8%,1) 0%, hsla(265,22%,7%,1) 50%, hsla(260,18%,8%,1) 100%)" }}>
-        <div className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 20%, hsla(265,70%,60%,0.03), transparent 60%)" }} />
+      <Section className="relative overflow-hidden" style={{
+        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(265,14%,8%,1) 30%, hsla(38,8%,7%,1) 60%, hsla(230,16%,5%,1) 100%)",
+      }}>
+        {/* Ambient luxury glows */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-[15%] left-[20%] w-[450px] h-[450px] rounded-full opacity-[0.06]"
+               style={{ background: "radial-gradient(circle, hsla(265,60%,55%,0.5), transparent 70%)", filter: "blur(120px)" }} />
+          <div className="absolute bottom-[20%] right-[15%] w-[380px] h-[380px] rounded-full opacity-[0.05]"
+               style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.4), transparent 70%)", filter: "blur(100px)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-[1px]"
+               style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.15), hsla(265,50%,60%,0.1), transparent)" }} />
+        </div>
         <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-16 items-start">
           <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center lg:text-left">
