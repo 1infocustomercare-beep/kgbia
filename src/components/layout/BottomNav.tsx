@@ -6,7 +6,7 @@ import {
   Wrench, Package, Settings, Umbrella, Camera, ClipboardCheck,
   Zap, Heart, Star, Scale, Leaf, MoreHorizontal, X, Route, CreditCard,
   Target, Briefcase, Sparkles, Receipt, BarChart3, PenTool, Lightbulb,
-  Store, MapPin, UserCog, FileText, Shield, Clock
+  Store, MapPin, UserCog, FileText, Shield, Clock, Truck, MessageSquare
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
