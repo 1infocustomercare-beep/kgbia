@@ -378,9 +378,9 @@ const EmpireDNABackground = () => {
 
         // Subtle halo for active nodes only (no big white balls)
         if (isActive) {
-          const glowR = 10;
+          const glowR = 8;
           const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, glowR);
-          gr.addColorStop(0, hsla(pAccent, na * 0.2));
+          gr.addColorStop(0, hsla(pAccent, na * 0.1));
           gr.addColorStop(1, hsla(pGlow, 0));
           ctx.fillStyle = gr;
           ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, glowR, 0, Math.PI * 2); ctx.fill();
