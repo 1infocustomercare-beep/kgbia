@@ -2626,21 +2626,23 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative noise-overlay">
+    <div className={`min-h-screen bg-background overflow-x-hidden relative ${isMobilePerformanceMode ? "" : "noise-overlay"}`}>
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Subtle violet ambient orbs */}
-        <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.04] bg-primary -top-[200px] left-1/4" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.03] bg-accent top-[50vh] -right-[100px]" />
-        {/* Particles - reduced */}
-        <Particle delay={0} size={2} x="10%" y="30%" />
-        <Particle delay={2} size={2} x="70%" y="60%" />
-        <Particle delay={1.5} size={2} x="50%" y="45%" />
-      </div>
+      {!isMobilePerformanceMode && (
+        <div className="fixed inset-0 pointer-events-none z-0">
+          {/* Subtle violet ambient orbs */}
+          <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.04] bg-primary -top-[200px] left-1/4" />
+          <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.03] bg-accent top-[50vh] -right-[100px]" />
+          {/* Particles - reduced */}
+          <Particle delay={0} size={2} x="10%" y="30%" />
+          <Particle delay={2} size={2} x="70%" y="60%" />
+          <Particle delay={1.5} size={2} x="50%" y="45%" />
+        </div>
+      )}
 
       {/* ═══════ NEURAL CELLS BACKGROUND ═══════ */}
-      <NeuralCellsBackground />
+      {!isMobilePerformanceMode && <NeuralCellsBackground />}
 
       {/* ═══════ NAVIGATION — Ultra Premium Luxury Futuristic ═══════ */}
       <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 pt-[env(safe-area-inset-top)] ${navScrolled ? "pb-0" : "pb-1"}`}>
