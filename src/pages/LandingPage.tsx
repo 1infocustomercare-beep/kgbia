@@ -5840,19 +5840,27 @@ const LandingPage = () => {
 
       {/* ═══════ FOOTER ═══════ */}
       <footer id="contact" className="relative py-20 pb-10 px-5 sm:px-6 overflow-hidden"
-        style={{ background: "linear-gradient(180deg, hsla(260,22%,6%,1) 0%, hsla(265,28%,4%,1) 30%, hsla(155,18%,5%,1) 60%, hsla(265,25%,3%,1) 85%, hsla(260,20%,2%,1) 100%)" }}>
-        {/* Top accent line — viola + verdolino AI */}
-        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.35) 25%, hsla(155,60%,50%,0.3) 50%, hsla(265,70%,60%,0.35) 75%, transparent 95%)" }} />
-        {/* Violet ambient glow */}
-        <div className="absolute top-0 left-[30%] w-[400px] h-[180px] blur-[100px] pointer-events-none" style={{ background: "hsla(265,65%,55%,0.08)" }} />
-        {/* Green AI tech glow */}
-        <div className="absolute top-[30%] right-[20%] w-[350px] h-[350px] rounded-full pointer-events-none opacity-[0.05]"
-             style={{ background: "radial-gradient(circle, hsla(155,55%,45%,0.5), transparent 70%)", filter: "blur(110px)" }} />
-        {/* Secondary violet glow bottom */}
-        <div className="absolute bottom-[15%] left-[15%] w-[300px] h-[300px] rounded-full pointer-events-none opacity-[0.04]"
-             style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 70%)", filter: "blur(100px)" }} />
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 premium-holo-grid opacity-[0.03] pointer-events-none" />
+        style={{ background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,7%,1) 12%, hsla(38,14%,6%,1) 28%, hsla(265,20%,8%,1) 45%, hsla(155,12%,6%,1) 62%, hsla(265,18%,5%,1) 80%, hsla(230,16%,3%,1) 100%)" }}>
+        <div className="absolute inset-0 pointer-events-none z-0">
+          {/* Top accent line — tricolore viola/oro/verde */}
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.4) 20%, hsla(38,65%,55%,0.35) 40%, hsla(155,60%,50%,0.3) 60%, hsla(38,65%,55%,0.35) 80%, transparent 95%)" }} />
+          {/* Violet Imperial glow — top right */}
+          <div className="absolute top-[5%] right-[18%] w-[380px] h-[320px] rounded-full" style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.5), transparent 65%)", filter: "blur(140px)" }} />
+          {/* Gold ambient glow — center left */}
+          <div className="absolute top-[25%] left-[12%] w-[340px] h-[280px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(120px)" }} />
+          {/* Green AI tech glow — center right */}
+          <div className="absolute top-[45%] right-[15%] w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, hsla(155,55%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          {/* Violet deep glow — bottom left */}
+          <div className="absolute bottom-[10%] left-[22%] w-[350px] h-[280px] rounded-full" style={{ background: "radial-gradient(circle, hsla(280,55%,45%,0.35), transparent 65%)", filter: "blur(130px)" }} />
+          {/* Gold warm glow — bottom right */}
+          <div className="absolute bottom-[18%] right-[25%] w-[260px] h-[220px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          {/* Vertical light shaft */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]" style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.4), transparent)" }} />
+          {/* Noise texture overlay */}
+          <div className="absolute inset-0 opacity-[0.012]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")", backgroundSize: "180px 180px" }} />
+          {/* Bottom fade to pure black */}
+          <div className="absolute bottom-0 left-0 right-0 h-24" style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,2%,1))" }} />
+        </div>
 
         <div className="relative z-10 max-w-[1100px] mx-auto">
           {/* Top row: Logo + Newsletter */}
