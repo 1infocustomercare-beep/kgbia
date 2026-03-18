@@ -3539,7 +3539,7 @@ const LandingPage = () => {
            VIDEO HERO — Business Transformation
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(260,20%,8%,1) 18%, hsla(265,22%,10%,1) 35%, hsla(155,12%,7%,1) 55%, hsla(265,16%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(260,24%,10%,1) 18%, hsla(265,26%,12%,1) 35%, hsla(155,16%,9%,1) 55%, hsla(265,20%,10%,1) 75%, hsla(230,16%,4%,1) 100%)"
       }}>
         {/* Premium ambient glows — discovery/innovation luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
