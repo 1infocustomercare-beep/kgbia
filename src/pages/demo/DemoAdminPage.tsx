@@ -329,8 +329,6 @@ export default function DemoAdminPage() {
     </div>
   );
 
-  const [agentsTab, setAgentsTab] = useState<"overview" | "activity" | "detail">("overview");
-  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
 
   const renderAgents = () => {
     const totalHours = allAgents.reduce((s, a) => s + (a.hoursPerWeek || 8), 0);
