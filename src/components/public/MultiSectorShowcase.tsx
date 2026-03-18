@@ -767,14 +767,14 @@ export default function MultiSectorShowcase() {
 
           {/* Left — Text + features */}
           <div className="text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5 text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase"
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full mb-3 sm:mb-5 text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase"
               style={{ background: sector.color.replace("1)", "0.08)"), color: sector.color, border: `1px solid ${sector.color.replace("1)", "0.15)")}` }}>
               {sector.icon} {sector.label}
             </div>
-            <h3 className="text-[clamp(1.5rem,3.5vw,2.4rem)] font-heading font-bold text-foreground leading-[1.08] mb-5">
+            <h3 className="text-[clamp(1.2rem,3.5vw,2.4rem)] font-heading font-bold text-foreground leading-[1.08] mb-3 sm:mb-5">
               {sector.headline}<br /><span className="text-shimmer">{sector.shimmer}</span>
             </h3>
-            <p className="text-foreground/40 leading-[1.7] max-w-lg mx-auto lg:mx-0 mb-7 text-sm">{sector.desc}</p>
+            <p className="text-foreground/40 leading-[1.6] max-w-lg mx-auto lg:mx-0 mb-5 sm:mb-7 text-xs sm:text-sm">{sector.desc}</p>
 
             <div className="space-y-3 mb-8 text-left max-w-md mx-auto lg:mx-0">
               {sector.features.map((f, i) => (
