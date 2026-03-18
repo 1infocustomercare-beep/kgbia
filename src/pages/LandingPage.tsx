@@ -4029,7 +4029,15 @@ const LandingPage = () => {
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }} className="order-1 lg:order-2">
             <div className="relative rounded-2xl overflow-hidden glow-card aspect-video border border-primary/10">
-              <FunnelDNAVisual />
+              {!IS_LANDING_MOBILE ? (
+                <Suspense fallback={<div className="aspect-video bg-card/50 rounded-2xl animate-pulse" />}>
+                  <FunnelDNAVisual />
+                </Suspense>
+              ) : (
+                <div className="aspect-video bg-card/30 rounded-2xl flex items-center justify-center">
+                  <div className="text-2xl">📊</div>
+                </div>
+              )}
               {/* Conversion benefit labels overlaid */}
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none z-10 px-4">
                 {[
