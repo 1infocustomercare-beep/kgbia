@@ -188,7 +188,7 @@ const FunnelDNAVisual = memo(() => {
   const step = FUNNEL_STEPS[activeStep];
 
   return (
-    <div className="relative w-full aspect-video rounded-2xl overflow-hidden" style={{
+    <div ref={containerRef} className="relative w-full aspect-video rounded-2xl overflow-hidden" style={{
       background: `linear-gradient(145deg, hsla(150,30%,8%,1) 0%, hsla(160,25%,10%,1) 40%, hsla(140,20%,12%,1) 70%, hsla(150,30%,8%,1) 100%)`
     }}>
       {/* Green tech ambient glow */}
