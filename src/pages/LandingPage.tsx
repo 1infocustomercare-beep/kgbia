@@ -4600,7 +4600,13 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
           ROI CALCULATOR
          ═══════════════════════════════════════════ */}
-      <Section id="calculator">
+      <Section id="calculator" className="relative overflow-hidden" style={{
+        background: "linear-gradient(180deg, hsla(230,16%,5%,1) 0%, hsla(38,10%,7%,1) 35%, hsla(265,12%,7%,1) 65%, hsla(230,16%,5%,1) 100%)",
+      }}>
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.07]" style={{ background: "radial-gradient(circle, hsla(38,55%,48%,0.4), transparent 70%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.35), transparent 70%)", filter: "blur(110px)" }} />
+        </div>
         <div className="text-center mb-12">
           <SectionLabel text="ROI Calculator" icon={<TrendingUp className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
