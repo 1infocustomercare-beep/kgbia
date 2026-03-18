@@ -4407,24 +4407,49 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Mobile: Auto-scrolling carousel ═══ */}
+        {/* ═══ Mobile: Auto-scrolling carousel or expanded grid ═══ */}
         <div className="sm:hidden">
-          <PremiumCarousel speed="slow" itemWidth={220} showControls={false}>
-            {services.map((s, i) => (
-              <div key={i} className="w-[220px]">
-                <PremiumCard glow scan delay={i} className="p-4 h-full">
-                  <div className="flex items-center gap-2 mb-3">
-                    <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>
-                      {s.icon}
-                    </PremiumIcon>
-                    <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
+          <AnimatePresence mode="wait">
+            {expandServices ? (
+              <motion.div key="services-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-1 gap-2.5 px-1">
+                {services.map((s, i) => (
+                  <div key={i}>
+                    <PremiumCard glow scan delay={i * 0.05} className="p-4 h-full">
+                      <div className="flex items-center gap-2 mb-2">
+                        <PremiumIcon gradient={s.color} size="sm" delay={0}>{s.icon}</PremiumIcon>
+                        <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
+                      </div>
+                      <h3 className="font-heading text-[0.75rem] font-semibold text-foreground mb-1 leading-tight">{s.title}</h3>
+                      <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
+                    </PremiumCard>
                   </div>
-                  <h3 className="font-heading text-[0.75rem] font-semibold text-foreground mb-1.5 leading-tight">{s.title}</h3>
-                  <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
-                </PremiumCard>
-              </div>
-            ))}
-          </PremiumCarousel>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div key="services-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <PremiumCarousel speed="slow" itemWidth={220} showControls={false}>
+                  {services.map((s, i) => (
+                    <div key={i} className="w-[220px]">
+                      <PremiumCard glow scan delay={i} className="p-4 h-full">
+                        <div className="flex items-center gap-2 mb-3">
+                          <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>{s.icon}</PremiumIcon>
+                          <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full border border-primary/15 bg-primary/[0.06] text-primary/70 font-bold tracking-[1.5px] font-heading">{s.tag}</span>
+                        </div>
+                        <h3 className="font-heading text-[0.75rem] font-semibold text-foreground mb-1.5 leading-tight">{s.title}</h3>
+                        <p className="text-[0.6rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
+                      </PremiumCard>
+                    </div>
+                  ))}
+                </PremiumCarousel>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <div className="flex justify-center mt-3">
+            <button onClick={() => setExpandServices(p => !p)}
+              className="text-[0.6rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+              <Layers className="w-3 h-3" /> {expandServices ? "Chiudi" : "Vedi Tutti"}
+            </button>
+          </div>
         </div>
 
         {/* ═══ Desktop: Grid ═══ */}
