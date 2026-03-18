@@ -523,30 +523,23 @@ const RobotAvatar = ({ agent, size = 72, isActive, isConnected }: {
       {/* Gradient background */}
       <div className={`absolute inset-0 bg-gradient-to-br ${agent.gradient} opacity-90`} />
 
-      {/* Hexagonal circuit grid overlay */}
+      {/* Green tech glow background */}
+      <div className="absolute inset-0" style={{
+        background: `radial-gradient(circle at 50% 50%, hsla(150,60%,30%,0.25), transparent 80%)`,
+      }} />
+
+      {/* Clean single-path circuit overlay */}
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 60 60">
-        <defs>
-          <pattern id={`hex-${agent.id}`} x="0" y="0" width="20" height="17.3" patternUnits="userSpaceOnUse">
-            <path d="M10 0 L20 5 L20 12.3 L10 17.3 L0 12.3 L0 5 Z" fill="none" stroke="white" strokeWidth="0.25" opacity="0.18" />
-            <circle cx="10" cy="0" r="0.6" fill="white" opacity="0.3" />
-            <circle cx="20" cy="5" r="0.6" fill="white" opacity="0.25" />
-          </pattern>
-        </defs>
-        <rect width="60" height="60" fill={`url(#hex-${agent.id})`} />
+        {/* Simple orthogonal circuit — one clean path per icon */}
+        <path d="M0,30 L18,30 L18,15 L42,15 L42,30 L60,30" fill="none" stroke="hsla(150,80%,65%,0.35)" strokeWidth="0.6" />
+        <path d="M30,0 L30,20 M30,40 L30,60" fill="none" stroke="hsla(150,80%,65%,0.2)" strokeWidth="0.4" />
         
-        {/* Circuit traces */}
-        <line x1="0" y1="20" x2="25" y2="20" stroke="white" strokeWidth="0.3" opacity="0.15" />
-        <line x1="25" y1="20" x2="25" y2="40" stroke="white" strokeWidth="0.3" opacity="0.15" />
-        <line x1="35" y1="15" x2="60" y2="15" stroke="white" strokeWidth="0.3" opacity="0.12" />
-        <line x1="35" y1="15" x2="35" y2="45" stroke="white" strokeWidth="0.3" opacity="0.12" />
-        <line x1="15" y1="40" x2="45" y2="40" stroke="white" strokeWidth="0.3" opacity="0.1" />
-        
-        {/* Junction nodes */}
-        <circle cx="25" cy="20" r="1.2" fill="white" opacity="0.35" />
-        <circle cx="35" cy="15" r="1.2" fill="white" opacity="0.3" />
-        <circle cx="25" cy="40" r="1" fill="white" opacity="0.25" />
-        <circle cx="35" cy="45" r="1" fill="white" opacity="0.2" />
-        <circle cx="15" cy="40" r="0.8" fill="white" opacity="0.2" />
+        {/* Junction nodes — only at intersections */}
+        <circle cx="18" cy="30" r="1.5" fill="hsla(150,80%,65%,0.5)" />
+        <circle cx="42" cy="30" r="1.5" fill="hsla(150,80%,65%,0.5)" />
+        <circle cx="18" cy="15" r="1.2" fill="hsla(150,80%,65%,0.4)" />
+        <circle cx="42" cy="15" r="1.2" fill="hsla(150,80%,65%,0.4)" />
+        <circle cx="30" cy="20" r="1" fill="hsla(150,80%,65%,0.3)" />
 
         {/* Animated data particle on trace */}
         <circle r="1" fill="white" opacity="0.6">
