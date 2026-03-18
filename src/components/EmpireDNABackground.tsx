@@ -483,9 +483,9 @@ const EmpireDNABackground = () => {
           const sy = streamPhase * (h + streamLen * 2) - streamLen;
           const sGrad = ctx.createLinearGradient(sx, sy, sx, sy + streamLen);
           sGrad.addColorStop(0, hsla(pGlow, 0));
-          sGrad.addColorStop(0.5, hsla(pGlow, 0.02));
+          sGrad.addColorStop(0.5, hsla(pGlow, 0.012));
           sGrad.addColorStop(1, hsla(pGlow, 0));
-          ctx.strokeStyle = sGrad; ctx.lineWidth = 0.5;
+          ctx.strokeStyle = sGrad; ctx.lineWidth = 0.4;
           ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy + streamLen); ctx.stroke();
         }
       }
