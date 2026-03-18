@@ -644,7 +644,7 @@ export default function MultiSectorShowcase() {
       </div>
 
       {/* Carousel controls: Prev / Play-Pause / Next + Show All Previews */}
-      <div className="flex items-center justify-center gap-2 mb-8">
+      <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-5 sm:mb-8 flex-wrap">
         <button
           onClick={() => { setActiveIdx(p => (p - 1 + SHOWCASE_SECTORS.length) % SHOWCASE_SECTORS.length); setIsAutoPlaying(false); setShowAllScreens(false); }}
           className="w-8 h-8 rounded-full border border-border/20 flex items-center justify-center text-foreground/40 hover:text-foreground/70 hover:border-border/40 transition-all bg-background/5"
