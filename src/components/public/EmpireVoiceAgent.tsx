@@ -253,6 +253,41 @@ function speakWithBrowserTTS(
 // ── TTS helper — premium when credits available, browser TTS when not ──
 const PREMIUM_SECTIONS = new Set<string>();
 
+// Background credit check interval (every 60s when in browser-only mode)
+let creditCheckTimer: ReturnType<typeof setInterval> | null = null;
+
+function startCreditCheckLoop(
+  useBrowserFallbackRef: React.MutableRefObject<boolean>,
+) {
+  if (creditCheckTimer) return;
+  creditCheckTimer = setInterval(async () => {
+    if (!isBrowserOnlyTTS()) {
+      // Already restored
+      if (creditCheckTimer) { clearInterval(creditCheckTimer); creditCheckTimer = null; }
+      return;
+    }
+    try {
+      const resp = await fetch(TTS_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ text: "test" }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data?.audioContent && !data?.error && !data?.fallback) {
+          setBrowserOnlyTTS(false);
+          useBrowserFallbackRef.current = false;
+          console.log("[Arianna TTS] 🎤 Premium credits restored (background check)!");
+          if (creditCheckTimer) { clearInterval(creditCheckTimer); creditCheckTimer = null; }
+        }
+      }
+    } catch { /* noop */ }
+  }, 60000);
+}
+
 async function speakText(
   text: string,
   audioRef: React.MutableRefObject<HTMLAudioElement | null>,
@@ -271,44 +306,11 @@ async function speakText(
     useBrowserFallbackRef.current = true;
   }
 
-  // ── STRATEGY A: Quota exhausted → go STRAIGHT to browser TTS (preserve gesture context) ──
+  // ── STRATEGY A: Quota exhausted → go STRAIGHT to browser TTS, no premium attempt ──
   if (quotaKnownExhausted || useBrowserFallbackRef.current) {
-    console.log("[Arianna TTS] 🔊 Free voice (quota exhausted)");
-    const played = await speakWithBrowserTTS(normalizedText, abortRef, options);
-    if (played) return true;
-
-    // If browser TTS also failed (no gesture), still try a quick premium check
-    // in case credits were refilled — but only as a background check
-    if (!abortRef.current) {
-      try {
-        const resp = await fetch(TTS_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ text: normalizedText }),
-        });
-        if (resp.ok) {
-          const data = await resp.json();
-          if (data?.audioContent && !data?.error && !data?.fallback) {
-            // Credits restored! Clear exhausted flag
-            setBrowserOnlyTTS(false);
-            useBrowserFallbackRef.current = false;
-            console.log("[Arianna TTS] 🎤 Premium credits restored!");
-            const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-            if (audioRef.current) audioRef.current.pause();
-            audioRef.current = audio;
-            const ok = await audio.play().then(() => new Promise<boolean>(r => {
-              audio.onended = () => r(true);
-              audio.onerror = () => r(false);
-            })).catch(() => false);
-            if (ok) return true;
-          }
-        }
-      } catch { /* noop — stay on browser TTS */ }
-    }
-    return false;
+    console.log("[Arianna TTS] 🔊 Free voice (quota exhausted — no retry)");
+    startCreditCheckLoop(useBrowserFallbackRef);
+    return await speakWithBrowserTTS(normalizedText, abortRef, options);
   }
 
   // ── STRATEGY B: Quota available → try premium first ──
@@ -343,12 +345,13 @@ async function speakText(
 
         if (played) return true;
       } else {
-        // Premium failed — mark exhausted, fall back to browser
+        // Premium failed — mark exhausted immediately, fall back to browser
         if (data?.error === "quota_exceeded" || data?.fallback) {
           setBrowserOnlyTTS(true);
-          console.log("[Arianna TTS] ⚠️ Quota exhausted — switching to free voice");
+          console.log("[Arianna TTS] ⚠️ Quota exhausted — switching to free voice instantly");
         }
         useBrowserFallbackRef.current = true;
+        startCreditCheckLoop(useBrowserFallbackRef);
       }
     } else {
       useBrowserFallbackRef.current = true;
@@ -357,9 +360,9 @@ async function speakText(
     useBrowserFallbackRef.current = true;
   }
 
-  // ── FALLBACK: Browser TTS after premium failure ──
+  // ── FALLBACK: Browser TTS immediately after premium failure (no delay) ──
   if (abortRef.current) return false;
-  console.log("[Arianna TTS] 🔊 Fallback to free browser voice");
+  console.log("[Arianna TTS] 🔊 Instant fallback to free browser voice");
   return await speakWithBrowserTTS(normalizedText, abortRef, options);
 }
 
