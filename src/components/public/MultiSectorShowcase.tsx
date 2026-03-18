@@ -793,10 +793,10 @@ export default function MultiSectorShowcase() {
             </div>
 
             {/* Action buttons */}
-            <div className="flex items-center gap-3 justify-center lg:justify-start">
+            <div className="flex items-center gap-2 sm:gap-3 justify-center lg:justify-start flex-wrap">
               <motion.button
                 onClick={() => navigate(`/demo/${sector.id}`)}
-                className="group px-6 py-3 rounded-full font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2 text-white"
+                className="group px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm font-heading tracking-wider uppercase inline-flex items-center gap-1.5 sm:gap-2 text-white"
                 style={{
                   background: `linear-gradient(135deg, ${sector.color}, ${sector.color.replace("1)", "0.7)")})`,
                   boxShadow: `0 8px 30px ${sector.color.replace("1)", "0.2)")}`,
