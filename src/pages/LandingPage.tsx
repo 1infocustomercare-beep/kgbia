@@ -301,23 +301,25 @@ const NeuralCellsBackground = () => {
         </>
       )}
 
-      {/* ═══ TECH CIRCUIT GRID — hexagonal + micro-grid overlay ═══ */}
-      <svg className="absolute inset-0 w-full h-full" style={{ opacity: isMobile ? 0.04 : 0.045 }} xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="bg-circuit-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(2.2)">
-            <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(215 45% 55%)" strokeWidth="0.35" />
-            <circle cx="30" cy="0" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-            <circle cx="60" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-            <circle cx="0" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-            <circle cx="30" cy="52" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-          </pattern>
-          <pattern id="bg-micro-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="hsl(215 35% 50%)" strokeWidth="0.12" opacity="0.35" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#bg-circuit-hex)" />
-        <rect width="100%" height="100%" fill="url(#bg-micro-grid)" opacity="0.25" />
-      </svg>
+      {/* ═══ TECH CIRCUIT GRID — desktop only (heavy SVG patterns) ═══ */}
+      {!isMobile && (
+        <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.045 }} xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="bg-circuit-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(2.2)">
+              <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(215 45% 55%)" strokeWidth="0.35" />
+              <circle cx="30" cy="0" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+              <circle cx="60" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+              <circle cx="0" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+              <circle cx="30" cy="52" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+            </pattern>
+            <pattern id="bg-micro-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="hsl(215 35% 50%)" strokeWidth="0.12" opacity="0.35" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#bg-circuit-hex)" />
+          <rect width="100%" height="100%" fill="url(#bg-micro-grid)" opacity="0.25" />
+        </svg>
+      )}
 
       {/* ═══ VERTICAL DATA STREAMS — desktop only (GPU killer on mobile) ═══ */}
       {!isMobile && [8, 25, 42, 58, 75, 92].map((x, i) => (
