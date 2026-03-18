@@ -2424,7 +2424,44 @@ const LandingPage = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
-  /* Removed aggressive mobile reveal fallback: it was scanning too many nodes and causing jank/stuck rendering on mobile. */
+  /* Mobile viewport-animation safety: reveal stuck elements without scroll polling */
+  useEffect(() => {
+    if (window.innerWidth >= 640) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const el = entry.target as HTMLElement;
+          const computedOpacity = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
+          if (computedOpacity > 0.02) {
+            observer.unobserve(el);
+            return;
+          }
+
+          el.style.willChange = "opacity, transform";
+          el.style.transition = "opacity 220ms ease-out, transform 220ms ease-out";
+          el.style.opacity = "1";
+          el.style.transform = "none";
+          observer.unobserve(el);
+        });
+      },
+      { root: null, rootMargin: "120px 0px", threshold: 0.01 }
+    );
+
+    const observeHiddenCandidates = () => {
+      document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]').forEach((el) => observer.observe(el));
+    };
+
+    observeHiddenCandidates();
+    const lateScan = window.setTimeout(observeHiddenCandidates, 1200);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(lateScan);
+    };
+  }, []);
 
   useEffect(() => {
     let ticking = false;

@@ -1,5 +1,5 @@
 import { motion, useInView } from "framer-motion";
-import { forwardRef, useRef } from "react";
+import { useRef } from "react";
 import { Crown, Rocket, Heart, Brain, Target, Users, Sparkles, Linkedin, Dna, Zap, Globe, Network, ShieldCheck } from "lucide-react";
 
 import teamKevin from "@/assets/team-kevin-ceo.jpg";
@@ -58,9 +58,8 @@ const TEAM = [
 ];
 
 /* ── DNA Helix Node ── */
-const DnaNode = forwardRef<HTMLDivElement, { delay?: number }>(({ delay = 0 }, ref) => (
+const DnaNode = ({ delay = 0 }: { delay?: number }) => (
   <motion.div
-    ref={ref}
     className="absolute left-4 sm:left-1/2 -translate-x-1/2 z-10"
     initial={{ scale: 0 }}
     whileInView={{ scale: 1 }}
@@ -93,8 +92,7 @@ const DnaNode = forwardRef<HTMLDivElement, { delay?: number }>(({ delay = 0 }, r
       />
     </div>
   </motion.div>
-));
-DnaNode.displayName = "DnaNode";
+);
 
 const MILESTONES = [
   {
