@@ -143,7 +143,7 @@ const EmpireDNABackground = () => {
   const pulsesRef = useRef<PulseRing[]>([]);
   const ptrRef = useRef<{ x: number; y: number; active: boolean }>({ x: -999, y: -999, active: false });
 
-  useEffect(() => { const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
+  useEffect(() => { if (IS_MOBILE) return; const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
 
   useEffect(() => {
     const fn = () => { scrollRef.current = window.scrollY || document.documentElement.scrollTop || 0; };
@@ -470,6 +470,9 @@ const EmpireDNABackground = () => {
     animRef.current = requestAnimationFrame(animate);
     return () => { cancelAnimationFrame(animRef.current); window.removeEventListener("resize", resize); };
   }, [ready]);
+
+  // On mobile, skip the entire canvas — at 0.045 opacity it's invisible but burns GPU
+  if (IS_MOBILE) return null;
 
   return (
     <canvas

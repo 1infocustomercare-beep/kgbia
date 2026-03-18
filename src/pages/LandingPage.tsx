@@ -269,65 +269,71 @@ const NeuralCellsBackground = () => {
     return conns;
   }, [cells, isMobile]);
 
-  // On mobile, drastically limit animated pulses to prevent GPU thrashing
-  const pulseConns = isMobile ? connections.filter((_, i) => i % 8 === 0) : connections.filter((_, i) => i % 2 === 0);
-  const goldConns = isMobile ? connections.filter((_, i) => i % 12 === 0) : connections.filter((_, i) => i % 4 === 0);
+  // On mobile, skip ALL animated SVG pulses to prevent GPU thrashing
+  const pulseConns = isMobile ? [] : connections.filter((_, i) => i % 2 === 0);
+  const goldConns = isMobile ? [] : connections.filter((_, i) => i % 4 === 0);
 
   return (
     <motion.div
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: isMobile ? 0.8 : 0.7, willChange: "opacity, transform", transform: "translateZ(0)" }}
-      initial={{ opacity: 0, scale: 1.3 }}
-      animate={born ? { opacity: isMobile ? 0.8 : 0.7, scale: 1 } : { opacity: 0, scale: 1.3 }}
-      transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
+      style={{ opacity: isMobile ? 0.5 : 0.7, willChange: "transform", transform: "translateZ(0)" }}
+      initial={{ opacity: 0 }}
+      animate={born ? { opacity: isMobile ? 0.5 : 0.7 } : { opacity: 0 }}
+      transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* DNA Birth Pulse — expanding ring from center when page loads */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-        style={{ border: "2px solid hsla(38,50%,55%,0.35)" }}
-        initial={{ width: 0, height: 0, opacity: 1 }}
-        animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
-        transition={{ duration: 2, ease: "easeOut" }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-        style={{ border: "1px solid hsla(38,50%,55%,0.3)" }}
-        initial={{ width: 0, height: 0, opacity: 1 }}
-        animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
-        transition={{ duration: 2.5, ease: "easeOut", delay: 0.3 }}
-      />
+      {/* DNA Birth Pulse — desktop only */}
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+            style={{ border: "2px solid hsla(38,50%,55%,0.35)" }}
+            initial={{ width: 0, height: 0, opacity: 1 }}
+            animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
+            transition={{ duration: 2, ease: "easeOut" }}
+          />
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+            style={{ border: "1px solid hsla(38,50%,55%,0.3)" }}
+            initial={{ width: 0, height: 0, opacity: 1 }}
+            animate={born ? { width: "200vmax", height: "200vmax", opacity: 0 } : {}}
+            transition={{ duration: 2.5, ease: "easeOut", delay: 0.3 }}
+          />
+        </>
+      )}
 
-      {/* ═══ TECH CIRCUIT GRID — hexagonal + micro-grid overlay ═══ */}
-      <svg className="absolute inset-0 w-full h-full" style={{ opacity: isMobile ? 0.04 : 0.045 }} xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="bg-circuit-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(2.2)">
-            <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(215 45% 55%)" strokeWidth="0.35" />
-            <circle cx="30" cy="0" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-            <circle cx="60" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-            <circle cx="0" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-            <circle cx="30" cy="52" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-          </pattern>
-          <pattern id="bg-micro-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="hsl(215 35% 50%)" strokeWidth="0.12" opacity="0.35" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#bg-circuit-hex)" />
-        <rect width="100%" height="100%" fill="url(#bg-micro-grid)" opacity="0.25" />
-      </svg>
+      {/* ═══ TECH CIRCUIT GRID — desktop only (heavy SVG patterns) ═══ */}
+      {!isMobile && (
+        <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.045 }} xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="bg-circuit-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(2.2)">
+              <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(215 45% 55%)" strokeWidth="0.35" />
+              <circle cx="30" cy="0" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+              <circle cx="60" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+              <circle cx="0" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+              <circle cx="30" cy="52" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+            </pattern>
+            <pattern id="bg-micro-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="hsl(215 35% 50%)" strokeWidth="0.12" opacity="0.35" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#bg-circuit-hex)" />
+          <rect width="100%" height="100%" fill="url(#bg-micro-grid)" opacity="0.25" />
+        </svg>
+      )}
 
-      {/* ═══ VERTICAL DATA STREAMS — tech flow lines ═══ */}
-      {(isMobile ? [15, 50, 85] : [8, 25, 42, 58, 75, 92]).map((x, i) => (
+      {/* ═══ VERTICAL DATA STREAMS — desktop only (GPU killer on mobile) ═══ */}
+      {!isMobile && [8, 25, 42, 58, 75, 92].map((x, i) => (
         <div key={`vstream-${i}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${x}%`, background: `hsla(215,35%,50%,0.03)` }}>
           <motion.div className="absolute w-full left-0 rounded-full"
-            style={{ height: isMobile ? "60px" : "100px", background: `linear-gradient(180deg, transparent, hsla(210,55%,62%,0.25), transparent)` }}
+            style={{ height: "100px", background: `linear-gradient(180deg, transparent, hsla(210,55%,62%,0.25), transparent)` }}
             animate={{ top: ["-10%", "110%"] }}
             transition={{ duration: 10 + i * 2.5, repeat: Infinity, ease: "linear", delay: i * 1.8 }}
           />
         </div>
       ))}
 
-      {/* ═══ HORIZONTAL SCAN LINES ═══ */}
-      {(isMobile ? [0] : [0, 1]).map((i) => (
+      {/* ═══ HORIZONTAL SCAN LINES — desktop only ═══ */}
+      {!isMobile && [0, 1].map((i) => (
         <motion.div key={`hscan-${i}`} className="absolute left-0 right-0 h-px"
           style={{ background: `linear-gradient(90deg, transparent 5%, hsla(210,45%,58%,0.08) 30%, hsla(215,50%,65%,0.14) 50%, hsla(210,45%,58%,0.08) 70%, transparent 95%)` }}
           animate={{ top: ["-3%", "103%"] }}
@@ -335,14 +341,11 @@ const NeuralCellsBackground = () => {
         />
       ))}
 
-      {/* ═══ PULSING TECH NODES — intersection dots ═══ */}
-      {(isMobile
-        ? [{ x: 15, y: 25 }, { x: 50, y: 50 }, { x: 85, y: 75 }]
-        : [
-            { x: 8, y: 18 }, { x: 25, y: 40 }, { x: 42, y: 12 }, { x: 58, y: 60 },
-            { x: 75, y: 30 }, { x: 92, y: 55 }, { x: 35, y: 80 }, { x: 65, y: 90 },
-          ]
-      ).map((pos, i) => (
+      {/* ═══ PULSING TECH NODES — desktop only ═══ */}
+      {!isMobile && [
+        { x: 8, y: 18 }, { x: 25, y: 40 }, { x: 42, y: 12 }, { x: 58, y: 60 },
+        { x: 75, y: 30 }, { x: 92, y: 55 }, { x: 35, y: 80 }, { x: 65, y: 90 },
+      ].map((pos, i) => (
         <motion.div key={`tnode-${i}`} className="absolute w-1 h-1 rounded-full"
           style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(210,55%,62%,0.25)`, boxShadow: `0 0 8px hsla(210,55%,62%,0.15)` }}
           animate={{ opacity: [0.15, 0.5, 0.15], scale: [0.7, 1.4, 0.7] }}
@@ -455,46 +458,13 @@ const NeuralCellsBackground = () => {
 
 const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children: React.ReactNode; gradient: string; size?: "sm" | "md" | "lg"; delay?: number }) => {
   const sizeClasses = size === "sm" ? "w-8 h-8 sm:w-10 sm:h-10 rounded-xl" : size === "lg" ? "w-12 h-12 rounded-2xl" : "w-10 h-10 rounded-xl";
+  const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
+  
   return (
-    <motion.div className="relative group/icon" whileHover={{ scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
-      {/* Ambient glow */}
-      <motion.div
-        className={`absolute -inset-2 ${sizeClasses} opacity-0 group-hover/icon:opacity-100 transition-opacity duration-700 blur-xl`}
-        style={{ background: `linear-gradient(135deg, hsla(38,50%,55%,0.25), hsla(32,40%,50%,0.15))` }}
-      />
-      {/* Outer pulse ring */}
-      <motion.div
-        className={`absolute -inset-1.5 ${sizeClasses} pointer-events-none`}
-        style={{ border: "1px solid hsla(38,50%,55%,0.15)" }}
-        animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 3, repeat: Infinity, delay: delay * 0.5, ease: "easeInOut" }}
-      />
-      {/* Rotating ring */}
-      <motion.div
-        className={`absolute -inset-0.5 ${sizeClasses}`}
-        style={{ border: "1.5px solid transparent", borderTopColor: "hsla(38,50%,55%,0.35)", borderRightColor: "hsla(32,40%,50%,0.2)" }}
-        animate={{ rotate: [0, 360] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear", delay }}
-      />
-      {/* Counter ring */}
-      <motion.div
-        className={`absolute inset-0 ${sizeClasses}`}
-        style={{ border: "1px solid transparent", borderBottomColor: "hsla(32,35%,55%,0.2)" }}
-        animate={{ rotate: [360, 0] }}
-        transition={{ duration: 14, repeat: Infinity, ease: "linear", delay: delay + 1 }}
-      />
-      {/* Main container */}
+    <motion.div className="relative group/icon" whileHover={isMobileDevice ? undefined : { scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+      {/* Main container — no animated rings on mobile */}
       <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
         style={{ boxShadow: "0 4px 20px hsla(38,50%,50%,0.12), inset 0 1px 1px rgba(255,255,255,0.15)" }}>
-        {/* Shimmer sweep */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%)" }}
-          animate={{ x: ["-150%", "250%"] }}
-          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 + delay, ease: "easeInOut" }}
-        />
-        {/* Inner glow */}
-        <div className="absolute inset-px rounded-[inherit] border border-white/10 pointer-events-none" />
         <div className="relative z-10">{children}</div>
       </div>
     </motion.div>
@@ -502,54 +472,37 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: { children:
 };
 
 /* ═══ Premium Animated Card ═══ */
-const PremiumCard = ({ children, className = "", hover = true, glow = false, scan = false, delay = 0 }: { children: React.ReactNode; className?: string; hover?: boolean; glow?: boolean; scan?: boolean; delay?: number }) => (
+const PremiumCard = ({ children, className = "", hover = true, glow = false, scan = false, delay = 0 }: { children: React.ReactNode; className?: string; hover?: boolean; glow?: boolean; scan?: boolean; delay?: number }) => {
+  const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
+  
+  return (
   <motion.div
     className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
     style={{
       background: "linear-gradient(145deg, hsla(230,10%,14%,0.95), hsla(230,8%,10%,0.92))",
-      backdropFilter: "blur(20px) saturate(1.4)",
+      backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.4)",
       borderColor: "hsla(38,40%,55%,0.1)",
     }}
-    whileHover={hover ? {
+    whileHover={hover && !isMobileDevice ? {
       y: -6,
       borderColor: "hsla(38,45%,55%,0.25)",
       boxShadow: "0 20px 60px hsla(38,45%,50%,0.1), 0 0 30px hsla(38,45%,50%,0.05), inset 0 1px 0 hsla(38,50%,70%,0.08)",
       transition: { duration: 0.4, ease: "easeOut" },
     } : undefined}
   >
-    {/* Top accent line — animated gradient */}
-    <motion.div className="absolute top-0 left-0 right-0 h-px z-10"
+    {/* Top accent line — static on mobile */}
+    <div className="absolute top-0 left-0 right-0 h-px z-10"
       style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,55%,0.2), hsla(38,50%,60%,0.2), hsla(35,45%,55%,0.15), transparent)" }}
-      animate={{ backgroundPosition: ["0% 0%", "200% 0%"] }}
-      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
     />
-    {/* Corner accents — gold, always slightly visible */}
-    <div className="absolute top-2 left-2 w-4 h-4 border-t border-l rounded-tl-sm pointer-events-none opacity-20 group-hover/card:opacity-60 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
-    <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r rounded-br-sm pointer-events-none opacity-20 group-hover/card:opacity-60 transition-opacity duration-500" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
-    {/* Scanning beam — more visible */}
-    {scan && (
-      <motion.div
-        className="absolute inset-0 pointer-events-none z-0"
-        style={{ background: "linear-gradient(180deg, transparent 35%, hsla(38,50%,60%,0.05) 50%, transparent 65%)" }}
-        animate={{ y: ["-100%", "200%"] }}
-        transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 1.5 + delay, ease: "easeInOut" }}
-      />
-    )}
-    {/* Ambient glow on hover — stronger */}
-    {glow && (
-      <motion.div className="absolute -top-8 -right-8 w-32 h-32 rounded-full pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"
-        style={{ background: "radial-gradient(circle, hsla(38,50%,55%,0.1), transparent)" }}
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      />
-    )}
-    {/* Bottom glow line */}
-    <div className="absolute bottom-0 left-3 right-3 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+    {/* Corner accents */}
+    <div className="absolute top-2 left-2 w-4 h-4 border-t border-l rounded-tl-sm pointer-events-none opacity-20" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
+    <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r rounded-br-sm pointer-events-none opacity-20" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
     {/* Inner glass reflection */}
     <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(38,30%,70%,0.03) 0%, transparent 40%)" }} />
     <div className="relative z-10">{children}</div>
   </motion.div>
-);
+  );
+};
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 /** Shared viewport config — triggers animations 200px before element enters screen on mobile */
@@ -562,15 +515,20 @@ const slideInLeft = { hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 
 const slideInRight = { hidden: { opacity: 0, x: 30 }, visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: smoothEase } } };
 const popIn = { hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 200, damping: 24 } } };
 
-/* ═══ Floating Particle ═══ */
-const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => (
-  <motion.div
-    className="absolute rounded-full"
-    style={{ width: size, height: size, left: x, top: y, background: delay % 2 === 0 ? "hsl(38, 45%, 52%)" : "hsl(32, 35%, 55%)" }}
-    animate={{ y: [0, -25, 0], opacity: [0.1, 0.35, 0.1], scale: [1, 1.3, 1] }}
-    transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
-  />
-);
+/* ═══ Floating Particle — skipped on mobile ═══ */
+const IS_MOBILE_DEVICE = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
+
+const Particle = ({ delay, size, x, y }: { delay: number; size: number; x: string; y: string }) => {
+  if (IS_MOBILE_DEVICE) return null;
+  return (
+    <motion.div
+      className="absolute rounded-full"
+      style={{ width: size, height: size, left: x, top: y, background: delay % 2 === 0 ? "hsl(38, 45%, 52%)" : "hsl(32, 35%, 55%)" }}
+      animate={{ y: [0, -25, 0], opacity: [0.1, 0.35, 0.1], scale: [1, 1.3, 1] }}
+      transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }}
+    />
+  );
+};
 
 /* ═══ Section Divider ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) => (
