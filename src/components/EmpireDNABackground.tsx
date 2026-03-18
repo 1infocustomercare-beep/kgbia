@@ -322,8 +322,8 @@ const EmpireDNABackground = () => {
             const route = rA.map((a, wi) => ({ x: lerp(a.x, rB[wi].x, t3), y: lerp(a.y, rB[wi].y, t3) }));
 
             // Draw trace
-            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.35 : 0.18) * (0.6 + pulse * 0.4));
-            ctx.lineWidth = activeTrace ? 1.2 : 0.6 + alpha * 0.6;
+            ctx.strokeStyle = hsla(activeTrace ? pAccent : pLine, alpha * (activeTrace ? 0.2 : 0.1) * (0.6 + pulse * 0.4));
+            ctx.lineWidth = activeTrace ? 0.8 : 0.4 + alpha * 0.4;
             ctx.beginPath();
             ctx.moveTo(route[0].x, route[0].y);
             for (let wi = 1; wi < route.length; wi++) ctx.lineTo(route[wi].x, route[wi].y);
