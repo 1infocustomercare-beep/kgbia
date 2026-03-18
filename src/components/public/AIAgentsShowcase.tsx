@@ -738,10 +738,17 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
   const [activeSector, setActiveSector] = useState(sector || "all");
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const filteredAgents = useMemo(() => {
-    if (activeSector === "all") return ALL_AGENTS;
-    return ALL_AGENTS.filter((a) => a.sectors.includes("all") || a.sectors.includes(activeSector));
+    const base = activeSector === "all" ? ALL_AGENTS : ALL_AGENTS.filter((a) => a.sectors.includes("all") || a.sectors.includes(activeSector));
+    if (showAll || activeSector !== "all") return base;
+    return base.slice(0, INITIAL_VISIBLE);
+  }, [activeSector, showAll]);
+
+  const totalFiltered = useMemo(() => {
+    if (activeSector === "all") return ALL_AGENTS.length;
+    return ALL_AGENTS.filter((a) => a.sectors.includes("all") || a.sectors.includes(activeSector)).length;
   }, [activeSector]);
 
   const activeAgent = useMemo(() => ALL_AGENTS.find((a) => a.id === expandedAgent), [expandedAgent]);
