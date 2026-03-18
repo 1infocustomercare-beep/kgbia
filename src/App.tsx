@@ -327,7 +327,7 @@ const CLIENT_SITE_PATTERN = /^\/(b|r|ncc-demo)\//;
 
 function ConditionalDNABackground() {
   const { pathname } = useLocation();
-  if (PUBLIC_ROUTE_PATTERN.test(pathname)) return null;
+  if (CLIENT_SITE_PATTERN.test(pathname)) return null;
   return <EmpireDNABackground />;
 }
 
