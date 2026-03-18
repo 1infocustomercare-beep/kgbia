@@ -567,7 +567,7 @@ export const SECTOR_CONFIGS: Record<string, SectorConfig> = {
       { icon: "Building", label: "Camere", route: "rooms" },
       { icon: "UtensilsCrossed", label: "Ristorante", route: "menu" },
       { icon: "Calendar", label: "Prenotazioni", route: "bookings" },
-      { icon: "Leaf", title: "Fattoria", label: "Fattoria", route: "farm" },
+      { icon: "Leaf", label: "Fattoria", route: "farm" },
       { icon: "Users", label: "Ospiti", route: "clients" },
       { icon: "Bot", label: "Agenti AI", route: "agents" },
       { icon: "Settings", label: "Impostazioni", route: "settings" },
