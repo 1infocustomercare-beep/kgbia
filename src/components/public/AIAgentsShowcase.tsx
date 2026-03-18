@@ -829,7 +829,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ WHY SECTION ══════ */}
         <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="relative rounded-xl border border-primary/25 bg-card/85 backdrop-blur-sm p-4 sm:p-6 mb-8 sm:mb-12 overflow-hidden">
+          className="relative rounded-xl border border-primary/25 bg-card/85 backdrop-blur-sm p-3 sm:p-6 mb-5 sm:mb-12 overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-px">
             <motion.div className="absolute w-full h-full"
               style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.35), transparent)" }}
