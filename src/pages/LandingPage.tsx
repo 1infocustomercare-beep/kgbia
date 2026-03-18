@@ -7,7 +7,6 @@ import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA } from "@/data/demo-industries";
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
-import SectorPhoneCarousel from "@/components/public/SectorPhoneCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
   Crown, Check, Star, Zap, Shield, Smartphone,
@@ -3049,24 +3048,140 @@ const LandingPage = () => {
           </motion.p>
         </div>
 
-        {/* ═══ Unified Auto-Scroll Carousel — 3 iPhones visible ═══ */}
-        {(() => {
-          const INDUSTRY_COLORS: Record<string, string> = {
-            food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
-            retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
-          };
-          const allPhones = [
-            { name: "Impero Roma", color: "#e85d04", emoji: "🍽️", label: "Food Premium", nav: "/r/impero-roma" },
-            { name: "Amalfi Luxury", color: "#C9A84C", emoji: "🚗", label: "NCC Premium", nav: "/b/amalfi-luxury-transfer" },
-            ...industries.map(ind => {
-              const slug = DEMO_SLUGS[ind.id];
-              const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
-              return { name: ind.title, color: INDUSTRY_COLORS[ind.id] || "#8b5cf6", emoji: ind.emoji || "🏢", label: ind.modules, nav: demoPath };
-            }),
-          ];
+        {/* ═══ Mobile: 2-col Grid — lightweight placeholders (no iframes) ═══ */}
+        <div className="grid grid-cols-2 gap-3 px-2 sm:hidden">
+          {(() => {
+            const featured = [
+              { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️", label: "Food Premium", nav: "/r/impero-roma" },
+              { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗", label: "NCC Premium", nav: "/b/amalfi-luxury-transfer" },
+            ];
+            const INDUSTRY_COLORS: Record<string, string> = {
+              food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
+              retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
+            };
+            const allItems = [
+              ...featured,
+              ...industries.map(ind => {
+                const slug = DEMO_SLUGS[ind.id];
+                const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+                const color = INDUSTRY_COLORS[ind.id] || "#8b5cf6";
+                return { name: ind.title, route: "", color, emoji: ind.emoji || "🏢", label: ind.modules, nav: demoPath };
+              }),
+            ];
+            return allItems.map((item, i) => (
+              <div key={i} className="group cursor-pointer" onClick={() => navigate(item.nav)}>
+                <div className="relative w-full aspect-[9/17] rounded-[24px] border-[2px] overflow-hidden"
+                  style={{ borderColor: `${item.color}40`, boxShadow: `0 10px 30px hsla(0,0%,0%,0.4), 0 0 15px ${item.color}10` }}>
+                  <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[42px] h-[12px] bg-black rounded-full z-20" />
+                  {/* Static placeholder instead of iframe */}
+                  <div className="absolute inset-[2px] rounded-[22px] overflow-hidden bg-black flex flex-col items-center justify-center"
+                    style={{ background: `linear-gradient(160deg, ${item.color}15 0%, #0a0a0a 50%, ${item.color}08 100%)` }}>
+                    <span className="text-3xl mb-2 opacity-60 group-hover:opacity-90 transition-opacity">{item.emoji}</span>
+                    <div className="w-8 h-[1px] rounded-full mb-2" style={{ background: `${item.color}40` }} />
+                    <p className="text-[8px] text-white/30 font-medium text-center px-3">Tap per preview</p>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 z-20 p-2 pt-6" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                    <div className="flex items-center gap-1 mb-0.5">
+                      <span className="text-[6px] px-1 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${item.color}25`, color: item.color, border: `1px solid ${item.color}35` }}>★ Live</span>
+                    </div>
+                    <p className="text-[9px] font-bold text-white leading-tight">{item.name}</p>
+                    <p className="text-[6px] text-white/40">{item.label}</p>
+                  </div>
+                  <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[36px] h-[3px] bg-white/20 rounded-full z-20" />
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
 
-          return <SectorPhoneCarousel items={allPhones} onNavigate={navigate} onShowAll={() => setSectorSheetOpen(true)} />;
-        })()}
+        {/* ═══ Desktop: iPhone Grid ═══ */}
+        <motion.div className="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 justify-items-center"
+          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+          {/* ── Featured: Live iframe previews ── */}
+          {[
+            { name: "Impero Roma", route: "/r/impero-roma", color: "#e85d04", label: "Food Premium", emoji: "🍽️" },
+            { name: "Amalfi Luxury", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", label: "NCC Premium", emoji: "🚗" },
+          ].map((feat, i) => {
+            const scale = 174 / 375;
+            const visibleH = 334 / scale;
+            return (
+            <motion.div key={`feat-${i}`} className="group cursor-pointer" variants={fadeScale}
+              onClick={() => navigate(feat.route)} whileHover={{ y: -8, scale: 1.03 }}>
+              <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_20px_60px_hsla(0,0%,0%,0.3)]"
+                style={{ borderColor: `${feat.color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 40px ${feat.color}10` }}>
+                {/* Dynamic Island */}
+                <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
+                {/* Live iframe — clipped */}
+                <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
+                  <iframe src={feat.route} title={feat.name} className="border-0 origin-top-left" style={{ width: 375, height: 812, transform: `scale(${scale})`, pointerEvents: "none" }} loading="lazy" />
+                </div>
+                {/* Bottom overlay */}
+                <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                  <div className="flex items-center gap-1 mb-1">
+                    <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${feat.color}25`, color: feat.color, border: `1px solid ${feat.color}35` }}>★ Live</span>
+                  </div>
+                  <p className="text-[11px] font-bold text-white">{feat.name}</p>
+                  <p className="text-[8px] text-white/40">{feat.label}</p>
+                </div>
+                {/* Home indicator */}
+                <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-white/20 rounded-full z-20" />
+              </div>
+            </motion.div>
+            );
+          })}
+          {/* ── Standard industry cards — static placeholders (no iframes) ── */}
+          {industries.map((ind, i) => {
+            const slug = DEMO_SLUGS[ind.id];
+            const demoPath = ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`;
+            const INDUSTRY_COLORS_DESKTOP: Record<string, string> = {
+              food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
+              retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
+            };
+            const color = INDUSTRY_COLORS_DESKTOP[ind.id] || "#8b5cf6";
+            return (
+              <motion.div key={i}
+                className="group cursor-pointer"
+                variants={fadeScale}
+                onClick={() => navigate(demoPath)}
+                whileHover={{ y: -8, scale: 1.03 }}
+              >
+                <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] overflow-hidden transition-shadow duration-500"
+                  style={{ borderColor: `${color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 25px ${color}10` }}>
+                  <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
+                  <div className="absolute inset-[3px] rounded-[28px] overflow-hidden flex flex-col items-center justify-center"
+                    style={{ background: `linear-gradient(160deg, ${color}12 0%, #0a0a0a 50%, ${color}06 100%)` }}>
+                    <span className="text-4xl mb-3 opacity-50 group-hover:opacity-80 transition-opacity">{ind.emoji || "🏢"}</span>
+                    <div className="w-10 h-[1px] rounded-full mb-2" style={{ background: `${color}35` }} />
+                    <p className="text-[9px] text-white/25 font-medium">Clicca per preview</p>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-10" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92), transparent)" }}>
+                    <div className="flex items-center gap-1 mb-1">
+                      <span className="text-[7px] px-1.5 py-0.5 rounded-full font-bold tracking-wider uppercase" style={{ background: `${color}25`, color, border: `1px solid ${color}35` }}>★ Live</span>
+                    </div>
+                    <h3 className="text-[11px] font-bold text-white leading-tight">{ind.title}</h3>
+                    <p className="text-[7px] text-white/40 mt-0.5">{ind.modules}</p>
+                  </div>
+                  <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[44px] h-[4px] bg-white/20 rounded-full z-20" />
+                </div>
+              </motion.div>
+            );
+          })}
+          <motion.div
+            className="group cursor-pointer"
+            variants={fadeScale}
+            onClick={() => setSectorSheetOpen(true)}
+            whileHover={{ y: -4 }}
+          >
+            <div className="relative w-[180px] h-[340px] rounded-[32px] border-[2.5px] border-dashed border-foreground/10 hover:border-primary/20 transition-all duration-500 flex flex-col items-center justify-center text-center overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <motion.div animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
+                <Sparkles className="w-7 h-7 text-foreground/15 mb-3 group-hover:text-primary/60 transition-colors" />
+              </motion.div>
+              <p className="text-xs font-heading font-semibold text-foreground/35 group-hover:text-foreground/60 transition-colors">+18 altri settori</p>
+              <p className="text-[0.6rem] text-primary/40 mt-1.5">Esplora tutti →</p>
+            </div>
+          </motion.div>
+        </motion.div>
 
         {/* CTA buttons under sectors */}
         <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10 sm:mt-14"
