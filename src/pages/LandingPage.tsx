@@ -5896,51 +5896,69 @@ const LandingPage = () => {
           <div
             className="absolute inset-0 sm:hidden z-0"
             style={{
-              background: "linear-gradient(155deg, hsla(230,16%,9%,0.97), hsla(265,18%,10%,0.96))",
-              border: "1px solid hsla(265,40%,45%,0.1)"
+              background: "linear-gradient(155deg, hsl(var(--background) / 0.995), hsl(var(--card) / 0.985))",
+              border: "1px solid hsl(var(--border) / 0.5)"
             }}
           />
 
-          {/* Mobile circuit communication schema between KPI icons */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1] sm:hidden" viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet">
+          {/* Mobile hyper-tech communication schema between KPI icons */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1] sm:hidden" viewBox="0 0 300 190" preserveAspectRatio="xMidYMid meet">
             <defs>
-              <filter id="partnerKpiCircuitGlow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="0.65" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
+              <radialGradient id="partnerKpiHubGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+              </radialGradient>
+              <linearGradient id="partnerKpiLink" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.2" />
+              </linearGradient>
             </defs>
 
-            <line x1="78" y1="50" x2="222" y2="50" stroke="hsl(var(--primary) / 0.28)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
-            <line x1="78" y1="130" x2="222" y2="130" stroke="hsl(var(--primary) / 0.28)" strokeWidth="0.9" strokeDasharray="3,4" strokeLinecap="round" />
-            <line x1="72" y1="56" x2="72" y2="124" stroke="hsl(var(--accent) / 0.24)" strokeWidth="0.8" strokeDasharray="3,4" strokeLinecap="round" />
-            <line x1="228" y1="56" x2="228" y2="124" stroke="hsl(var(--accent) / 0.24)" strokeWidth="0.8" strokeDasharray="3,4" strokeLinecap="round" />
-            <line x1="78" y1="56" x2="222" y2="124" stroke="hsl(var(--primary) / 0.17)" strokeWidth="0.55" strokeLinecap="round" />
-            <line x1="222" y1="56" x2="78" y2="124" stroke="hsl(var(--accent) / 0.17)" strokeWidth="0.55" strokeLinecap="round" />
+            {/* Central hub */}
+            <circle cx="150" cy="95" r="17" fill="url(#partnerKpiHubGlow)" />
+            <circle cx="150" cy="95" r="8" fill="none" stroke="hsl(var(--primary) / 0.32)" strokeWidth="0.6" strokeDasharray="2,3" />
+            <circle cx="150" cy="95" r="3" fill="hsl(var(--primary) / 0.55)">
+              <animate attributeName="r" values="2.4;3.8;2.4" dur="2.8s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="2.8s" repeatCount="indefinite" />
+            </circle>
 
-            {[[72, 50], [228, 50], [72, 130], [228, 130], [150, 90]].map(([cx, cy], i) => (
-              <circle key={`partner-kpi-node-${i}`} cx={cx} cy={cy} r={i === 4 ? "2.2" : "1.8"} fill="hsl(var(--primary) / 0.52)">
-                <animate attributeName="opacity" values="0.35;0.85;0.35" dur={`${2.1 + i * 0.35}s`} repeatCount="indefinite" />
+            {/* Curved spokes to each KPI */}
+            <path d="M150,95 Q115,74 78,52" fill="none" stroke="url(#partnerKpiLink)" strokeWidth="0.75" strokeDasharray="3,4" />
+            <path d="M150,95 Q185,74 222,52" fill="none" stroke="url(#partnerKpiLink)" strokeWidth="0.75" strokeDasharray="3,4" />
+            <path d="M150,95 Q115,116 78,138" fill="none" stroke="url(#partnerKpiLink)" strokeWidth="0.75" strokeDasharray="3,4" />
+            <path d="M150,95 Q185,116 222,138" fill="none" stroke="url(#partnerKpiLink)" strokeWidth="0.75" strokeDasharray="3,4" />
+
+            {/* Secondary communication loops between KPI nodes */}
+            <path d="M78,52 Q150,30 222,52" fill="none" stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.5" strokeDasharray="2,5" />
+            <path d="M78,138 Q150,160 222,138" fill="none" stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.5" strokeDasharray="2,5" />
+            <path d="M78,52 Q56,95 78,138" fill="none" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.45" strokeDasharray="2,4" />
+            <path d="M222,52 Q244,95 222,138" fill="none" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.45" strokeDasharray="2,4" />
+
+            {/* Corner + relay nodes */}
+            {[[78, 52], [222, 52], [78, 138], [222, 138], [114, 75], [186, 75], [114, 115], [186, 115]].map(([cx, cy], i) => (
+              <circle key={`partner-kpi-node-${i}`} cx={cx} cy={cy} r={i < 4 ? "1.9" : "1.2"} fill="hsl(var(--primary) / 0.5)">
+                <animate attributeName="opacity" values="0.3;0.85;0.3" dur={`${2 + i * 0.28}s`} repeatCount="indefinite" />
               </circle>
             ))}
 
-            <circle r="2.1" fill="hsl(var(--primary) / 0.88)" filter="url(#partnerKpiCircuitGlow)">
-              <animateMotion dur="4.9s" repeatCount="indefinite" path="M78,50 L222,50 L222,130 L78,130 Z" />
+            {/* Data pulses on communication routes */}
+            <circle r="1.7" fill="hsl(var(--primary) / 0.9)">
+              <animateMotion dur="3.8s" repeatCount="indefinite" path="M78,52 Q115,74 150,95 Q185,116 222,138" />
+              <animate attributeName="opacity" values="0;0.85;0" dur="3.8s" repeatCount="indefinite" />
             </circle>
-            <circle r="1.8" fill="hsl(var(--accent) / 0.86)" filter="url(#partnerKpiCircuitGlow)">
-              <animateMotion dur="6.3s" repeatCount="indefinite" path="M72,56 L228,124 L228,56 L72,124" />
+            <circle r="1.5" fill="hsl(var(--accent) / 0.85)">
+              <animateMotion dur="4.6s" begin="0.9s" repeatCount="indefinite" path="M222,52 Q185,74 150,95 Q115,116 78,138" />
+              <animate attributeName="opacity" values="0;0.8;0" dur="4.6s" begin="0.9s" repeatCount="indefinite" />
             </circle>
           </svg>
 
           <motion.div className="relative z-[2] grid grid-cols-2 sm:grid-cols-4 gap-3 p-2 sm:p-0"
           variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
             {[
-            { value: "€997", label: "Per vendita", icon: <Trophy className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> },
-            { value: "€50", label: "Override TL", icon: <Award className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> },
-            { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> },
-            { value: "€1.500", label: "Bonus Elite", icon: <Rocket className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> }].
+            { value: "€997", label: "Per vendita", icon: <Trophy className="w-2.5 h-2.5 sm:w-5 sm:h-5" /> },
+            { value: "€50", label: "Override TL", icon: <Award className="w-2.5 h-2.5 sm:w-5 sm:h-5" /> },
+            { value: "€500", label: "Bonus 3 vendite", icon: <Gift className="w-2.5 h-2.5 sm:w-5 sm:h-5" /> },
+            { value: "€1.500", label: "Bonus Elite", icon: <Rocket className="w-2.5 h-2.5 sm:w-5 sm:h-5" /> }].
             map((s, i) =>
             <motion.div key={i} variants={popIn}>
                 <PremiumCard glow scan delay={i} className="p-3.5 sm:p-6 text-center">
