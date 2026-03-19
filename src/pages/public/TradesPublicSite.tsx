@@ -295,7 +295,11 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           <HeroPhotoCarousel images={heroPhotos} className="absolute inset-0 w-full h-full" style={{ filter: "brightness(0.4) saturate(1.1)" }} overlay={false} />
         )}
         <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${D}CC 0%, ${D}88 50%, transparent 100%)` }} />
+        {/* Sector-specific decorative pattern */}
         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `linear-gradient(${A}20 1px, transparent 1px), linear-gradient(90deg, ${A}20 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
+        {/* Animated accent orbs */}
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full blur-[120px] opacity-[0.08] animate-pulse" style={{ background: A }} />
+        <div className="absolute bottom-1/3 left-1/4 w-48 h-48 rounded-full blur-[100px] opacity-[0.05]" style={{ background: palette.glow }} />
 
         <motion.div initial="hidden" animate="show" variants={stagger} className="relative z-10 max-w-3xl mx-auto w-full text-center">
           <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium mb-8" style={{ background: `${A}15`, border: `1px solid ${A}25`, color: A }}>
@@ -322,10 +326,18 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
             )}
           </motion.div>
 
-          <motion.div variants={fadeUp} custom={4} className="flex flex-wrap justify-center gap-6 mt-12 text-sm text-white/30" style={{ fontFamily: "'Inter', sans-serif" }}>
-            <span className="flex items-center gap-1.5"><Shield className="w-4 h-4" style={{ color: A }} /> Lavoro Garantito</span>
-            <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" style={{ color: A }} /> Pronto Intervento</span>
-            <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4" style={{ color: A }} /> Preventivo Gratuito</span>
+          {/* Animated stats */}
+          <motion.div variants={fadeUp} custom={4} className="grid grid-cols-3 gap-4 max-w-sm mx-auto mt-14">
+            {[
+              { value: "500+", label: "Clienti" },
+              { value: "98%", label: "Soddisfatti" },
+              { value: "24h", label: "Disponibili" },
+            ].map((s, i) => (
+              <div key={i} className="text-center">
+                <p className="text-2xl sm:text-3xl font-bold" style={{ color: A }}>{s.value}</p>
+                <p className="text-[10px] text-white/25 uppercase tracking-widest mt-1">{s.label}</p>
+              </div>
+            ))}
           </motion.div>
         </motion.div>
         <ScrollIndicator />
