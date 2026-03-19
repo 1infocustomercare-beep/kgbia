@@ -3321,19 +3321,20 @@ const LandingPage = () => {
             <motion.div className="mt-14 sm:mt-20 w-full grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, duration: 0.8 }}>
               {metrics.map((m, i) =>
-              <motion.div key={i} className="group relative rounded-2xl p-5 sm:p-6 text-center overflow-hidden backdrop-blur-xl"
+              <motion.div key={i} className={`group relative rounded-2xl p-5 sm:p-6 text-center overflow-hidden ${IS_MOBILE_LP ? "" : "backdrop-blur-xl"}`}
               style={{
                 background: "linear-gradient(145deg, hsla(230,12%,13%,0.93), hsla(230,10%,10%,0.94))",
                 border: "1px solid hsla(35,30%,45%,0.15)",
                 boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.08), 0 8px 30px hsla(230,10%,4%,0.5)"
               }}
-              whileHover={{ y: -4, scale: 1.02, boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.12), 0 12px 40px hsla(230,10%,4%,0.6)" }}
+              whileHover={IS_MOBILE_LP ? undefined : { y: -4, scale: 1.02, boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.12), 0 12px 40px hsla(230,10%,4%,0.6)" }}
               transition={{ duration: 0.3, ease: "easeOut" }}>
-                  {/* Shimmer sweep — subtle */}
-                  <motion.div className="absolute inset-0 pointer-events-none"
+                  {/* Shimmer sweep — desktop only */}
+                  {!IS_MOBILE_LP && <motion.div className="absolute inset-0 pointer-events-none"
                 style={{ background: "linear-gradient(105deg, transparent 30%, hsla(35,30%,55%,0.06) 48%, transparent 70%)" }}
                 animate={{ x: ["-200%", "300%"] }}
                 transition={{ duration: 4, repeat: Infinity, repeatDelay: 3 + i, ease: "easeInOut" }} />
+                }
                 
                   {/* Top highlight line */}
                   <div className="absolute top-0 left-[10%] right-[10%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(35,35%,50%,0.2), transparent)" }} />
