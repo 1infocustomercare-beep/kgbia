@@ -351,7 +351,7 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ LAYER 3: Nodes — ALL as tech "+" crosses ═══
+      // ═══ LAYER 3: Nodes — elegant dots with glow ═══
       for (let i = 0; i < NODE_COUNT; i++) {
         const breathe = 0.4 + Math.sin(time * 1 + i * 0.7) * 0.6;
         let na = 0.15 * breathe * MOBILE_BOOST;
@@ -363,14 +363,12 @@ const EmpireDNABackground = () => {
         }
         if (isActive) na = Math.min(na + 0.2, 0.5);
 
-        // All nodes as "+" crosses — tech aesthetic
-        const arm = isActive ? (3.5 + breathe * 2) : (2 + breathe * 1.5);
-        ctx.strokeStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
-        ctx.lineWidth = isActive ? 1.0 : 0.6;
+        // Elegant dot nodes
+        const dotR = isActive ? (2.2 + breathe * 0.8) : (1.2 + breathe * 0.5);
+        ctx.fillStyle = hsla(isActive ? pAccent : pNode, (na + 0.1) * MOBILE_BOOST);
         ctx.beginPath();
-        ctx.moveTo(pos[i].x - arm, pos[i].y); ctx.lineTo(pos[i].x + arm, pos[i].y);
-        ctx.moveTo(pos[i].x, pos[i].y - arm); ctx.lineTo(pos[i].x, pos[i].y + arm);
-        ctx.stroke();
+        ctx.arc(pos[i].x, pos[i].y, dotR, 0, Math.PI * 2);
+        ctx.fill();
 
         // Halo for active nodes
         if (isActive) {
