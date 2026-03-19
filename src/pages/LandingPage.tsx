@@ -113,12 +113,12 @@ const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android
  *  and boosts lightness slightly so sections have visible premium color character instead of flat black */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !IS_MOBILE_LP || !style.background || typeof style.background !== "string") return style;
-  // 1. Replace opacity 1→0.55 so the DNA circuit shows through strongly in empty areas
-  let tweaked = (style.background as string).replace(/,\s*1\)/g, ", 0.42)");
-  // 2. Boost lightness by ~3% so color tints are visible (not flat black)
+  // 1. Replace opacity 1→0.90 so backgrounds stay rich & colorful, with subtle DNA bleed-through
+  let tweaked = (style.background as string).replace(/,\s*1\)/g, ", 0.90)");
+  // 2. Boost lightness & saturation slightly for premium color depth
   tweaked = tweaked.replace(/hsla\((\d+),\s*(\d+)%,\s*(\d+)%/g, (_, h, s, l) => {
-    const newL = Math.min(parseInt(l) + 3, 18);
-    const newS = Math.min(parseInt(s) + 4, 30);
+    const newL = Math.min(parseInt(l) + 2, 16);
+    const newS = Math.min(parseInt(s) + 3, 35);
     return `hsla(${h}, ${newS}%, ${newL}%`;
   });
   return { ...style, background: tweaked };
