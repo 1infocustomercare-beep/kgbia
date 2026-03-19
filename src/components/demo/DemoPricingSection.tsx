@@ -6,6 +6,11 @@ import { motion, useInView } from "framer-motion";
 import { Check, X, Sparkles, ArrowRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getSectorTheme } from "@/config/sector-themes";
+import PremiumSectionBg from "./PremiumSectionBg";
+import { motion, useInView } from "framer-motion";
+import { Check, X, Sparkles, ArrowRight, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { getSectorTheme } from "@/config/sector-themes";
 
 interface Props {
   sector: string;
