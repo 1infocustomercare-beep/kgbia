@@ -124,16 +124,15 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 const IS_TOUCH_DEVICE = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 
-/** Allow circuit to bleed subtly through section backgrounds for a premium layered look.
- * Caps opacity at 0.92 so the DNA pattern is faintly visible even behind content. */
+/** Section backgrounds — nearly opaque for a solid premium feel with minimal DNA bleed. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !style.background || typeof style.background !== "string") return style;
   const bg = style.background.replace(
     /hsla\(([^,]+,[^,]+,[^,]+),\s*([\d.]+)\)/g,
     (_, inner, alpha) => {
       const a = parseFloat(alpha);
-      // More opaque sections — solid premium feel, minimal transparency
-      const newAlpha = a >= 1 ? 0.97 : Math.min(Math.max(a, 0.94), 0.97);
+      // High-opacity sections — solid, luxurious, minimal transparency
+      const newAlpha = a >= 1 ? 0.99 : Math.min(Math.max(a, 0.97), 0.99);
       return `hsla(${inner},${newAlpha})`;
     }
   );

@@ -854,10 +854,10 @@
 
   /* ═══ PREMIUM LABEL ═══ */
   .premium-label {
-    background: linear-gradient(135deg, hsla(230, 14%, 13%, 0.97), hsla(228, 12%, 9%, 0.98));
-    border: 1px solid hsla(38, 45%, 50%, 0.18);
-    backdrop-filter: blur(16px);
-    box-shadow: 0 2px 12px hsla(0, 0%, 0%, 0.35), 0 0 0 1px hsla(38, 50%, 55%, 0.05), inset 0 1px 0 hsla(38, 40%, 60%, 0.08);
+    background: linear-gradient(145deg, hsla(230, 16%, 11%, 1), hsla(265, 14%, 8%, 1));
+    border: 1px solid hsla(38, 45%, 50%, 0.22);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 16px hsla(0, 0%, 0%, 0.45), 0 0 0 1px hsla(38, 50%, 55%, 0.06), inset 0 1px 0 hsla(38, 40%, 60%, 0.1), inset 0 -1px 0 hsla(265, 40%, 40%, 0.05);
   }
 
   /* ═══ HOLOGRAPHIC SHINE ═══ */
