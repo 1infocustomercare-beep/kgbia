@@ -2677,6 +2677,69 @@ const LandingPage = () => {
           }}
           transition={{ duration: 0.8, ease: "easeInOut" }} />
         
+        {/* ── Circuit board pattern background ── */}
+        {navScrolled && (
+          <motion.div
+            className="absolute inset-0 overflow-hidden pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2 }}
+          >
+            <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="navCircuitGold" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="hsla(38,50%,55%,0)" />
+                  <stop offset="20%" stopColor="hsla(38,50%,55%,0.12)" />
+                  <stop offset="50%" stopColor="hsla(38,50%,55%,0.06)" />
+                  <stop offset="80%" stopColor="hsla(38,50%,55%,0.12)" />
+                  <stop offset="100%" stopColor="hsla(38,50%,55%,0)" />
+                </linearGradient>
+                <linearGradient id="navCircuitViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="hsla(265,70%,60%,0)" />
+                  <stop offset="50%" stopColor="hsla(265,70%,60%,0.08)" />
+                  <stop offset="100%" stopColor="hsla(265,70%,60%,0)" />
+                </linearGradient>
+                <filter id="navGlow">
+                  <feGaussianBlur stdDeviation="1.5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              {/* Horizontal circuit traces */}
+              <line x1="0" y1="30%" x2="18%" y2="30%" stroke="url(#navCircuitGold)" strokeWidth="0.5" />
+              <line x1="22%" y1="30%" x2="35%" y2="30%" stroke="url(#navCircuitGold)" strokeWidth="0.5" />
+              <line x1="65%" y1="70%" x2="78%" y2="70%" stroke="url(#navCircuitGold)" strokeWidth="0.5" />
+              <line x1="82%" y1="70%" x2="100%" y2="70%" stroke="url(#navCircuitGold)" strokeWidth="0.5" />
+              {/* Vertical circuit traces */}
+              <line x1="18%" y1="30%" x2="18%" y2="55%" stroke="hsla(38,50%,55%,0.08)" strokeWidth="0.5" />
+              <line x1="82%" y1="45%" x2="82%" y2="70%" stroke="hsla(38,50%,55%,0.08)" strokeWidth="0.5" />
+              <line x1="35%" y1="0" x2="35%" y2="30%" stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" />
+              <line x1="65%" y1="70%" x2="65%" y2="100%" stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" />
+              {/* Junction nodes */}
+              <circle cx="18%" cy="30%" r="1.5" fill="hsla(38,50%,55%,0.2)" filter="url(#navGlow)" />
+              <circle cx="35%" cy="30%" r="1" fill="hsla(38,50%,55%,0.15)" />
+              <circle cx="82%" cy="70%" r="1.5" fill="hsla(38,50%,55%,0.2)" filter="url(#navGlow)" />
+              <circle cx="65%" cy="70%" r="1" fill="hsla(38,50%,55%,0.15)" />
+              <circle cx="18%" cy="55%" r="1" fill="hsla(265,70%,60%,0.12)" />
+              <circle cx="35%" cy="0" r="1" fill="hsla(265,70%,60%,0.1)" />
+              {/* Diagonal data paths */}
+              <path d="M 18% 55% Q 25% 62% 35% 55%" stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" fill="none" />
+              <path d="M 65% 45% Q 72% 38% 82% 45%" stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" fill="none" />
+              {/* Animated data pulse 1 */}
+              <circle r="2" fill="hsla(38,50%,60%,0.5)" filter="url(#navGlow)">
+                <animateMotion dur="3s" repeatCount="indefinite" path="M 0,20 L 120,20 L 120,35 L 230,35" />
+                <animate attributeName="opacity" values="0;0.6;0.6;0" dur="3s" repeatCount="indefinite" />
+              </circle>
+              {/* Animated data pulse 2 */}
+              <circle r="1.5" fill="hsla(265,70%,65%,0.4)" filter="url(#navGlow)">
+                <animateMotion dur="4s" repeatCount="indefinite" begin="1.5s" path="M 700,45 L 550,45 L 550,20 L 430,20" />
+                <animate attributeName="opacity" values="0;0.5;0.5;0" dur="4s" repeatCount="indefinite" begin="1.5s" />
+              </circle>
+            </svg>
+          </motion.div>
+        )}
 
         {/* ── Top accent line — holographic rainbow shimmer ── */}
         <motion.div
