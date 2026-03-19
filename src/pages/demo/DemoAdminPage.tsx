@@ -784,7 +784,7 @@ export default function DemoAdminPage() {
             {calendarData.days.map((d) => (
               <div key={d.day}
                 className={`relative p-1.5 rounded-lg text-center transition-all cursor-pointer hover:bg-white/[0.04] min-h-[48px] ${d.highlight ? "ring-1" : ""}`}
-                style={d.highlight ? { background: `${accentColor}15`, borderColor: accentColor, ringColor: `${accentColor}40` } : {}}>
+                style={d.highlight ? { background: `${accentColor}15`, borderColor: accentColor, boxShadow: `0 0 0 1px ${accentColor}40` } : {}}>
                 <span className={`text-[0.65rem] font-bold ${d.highlight ? "" : "text-white/50"}`} style={d.highlight ? { color: accentColor } : {}}>
                   {d.day}
                 </span>
