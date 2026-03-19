@@ -6500,8 +6500,8 @@ const LandingPage = () => {
       {/* ═══════ STICKY CTA ═══════ */}
       <AnimatePresence>
         {ctaVisible &&
-        <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] backdrop-blur-2xl border-t border-border/20"
-        style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.98), hsla(38,12%,7%,0.92))" }}
+        <motion.div className={`fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] border-t border-border/20 ${IS_MOBILE_LP ? "" : "backdrop-blur-2xl"}`}
+        style={{ background: IS_MOBILE_LP ? "hsla(0,0%,4%,0.98)" : "linear-gradient(180deg, hsla(0,0%,4%,0.98), hsla(38,12%,7%,0.92))" }}
         initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} transition={{ type: "spring", damping: 25 }}>
             <div className="flex gap-2 max-w-md mx-auto">
               <motion.button onClick={() => scrollTo("pricing")}
