@@ -267,17 +267,21 @@ const EmpireDNABackground = () => {
 
       const routeMode = sIdx;
 
-      // ═══ LAYER 0: Dot Matrix ═══
+      // ═══ LAYER 0: Tech "+" Grid Matrix ═══
       {
         const gridSp = IS_MOBILE ? 72 : 55;
         const gridPulse = 0.5 + Math.sin(time * 0.25) * 0.5;
-        ctx.fillStyle = hsla(pLine, (IS_MOBILE ? 0.016 : 0.012) + gridPulse * (IS_MOBILE ? 0.007 : 0.006));
+        ctx.strokeStyle = hsla(pLine, (IS_MOBILE ? 0.016 : 0.012) + gridPulse * (IS_MOBILE ? 0.007 : 0.006));
         for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
           for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
             const lp = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.2) * 0.5 + 0.5;
-            const s = (IS_MOBILE ? 0.45 : 0.3) + lp * (IS_MOBILE ? 0.45 : 0.3);
+            const arm = (IS_MOBILE ? 1.8 : 1.4) + lp * (IS_MOBILE ? 1.2 : 0.8);
             ctx.globalAlpha = IS_MOBILE ? 0.32 + lp * 0.24 : 0.2 + lp * 0.2;
-            ctx.fillRect(gx - s / 2, gy - s / 2, s, s);
+            ctx.lineWidth = IS_MOBILE ? 0.4 : 0.3;
+            ctx.beginPath();
+            ctx.moveTo(gx - arm, gy); ctx.lineTo(gx + arm, gy);
+            ctx.moveTo(gx, gy - arm); ctx.lineTo(gx, gy + arm);
+            ctx.stroke();
           }
         }
         ctx.globalAlpha = 1;
@@ -349,7 +353,7 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ LAYER 3: Nodes — uniform crosses and squares ═══
+      // ═══ LAYER 3: Nodes — ALL as tech "+" crosses ═══
       for (let i = 0; i < NODE_COUNT; i++) {
         const breathe = 0.4 + Math.sin(time * 1 + i * 0.7) * 0.6;
         let na = 0.15 * breathe * MOBILE_BOOST;
@@ -361,27 +365,22 @@ const EmpireDNABackground = () => {
         }
         if (isActive) na = Math.min(na + 0.2, 0.5);
 
-        if (i % 3 === 0) {
-          const arm = 2 + breathe * 1.5;
-          ctx.strokeStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
-          ctx.lineWidth = isActive ? 0.8 : 0.5;
-          ctx.beginPath();
-          ctx.moveTo(pos[i].x - arm, pos[i].y); ctx.lineTo(pos[i].x + arm, pos[i].y);
-          ctx.moveTo(pos[i].x, pos[i].y - arm); ctx.lineTo(pos[i].x, pos[i].y + arm);
-          ctx.stroke();
-        } else {
-          const s = 1.2 + breathe;
-          ctx.fillStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
-          ctx.fillRect(pos[i].x - s / 2, pos[i].y - s / 2, s, s);
-        }
+        // All nodes as "+" crosses — tech aesthetic
+        const arm = isActive ? (3.5 + breathe * 2) : (2 + breathe * 1.5);
+        ctx.strokeStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
+        ctx.lineWidth = isActive ? 1.0 : 0.6;
+        ctx.beginPath();
+        ctx.moveTo(pos[i].x - arm, pos[i].y); ctx.lineTo(pos[i].x + arm, pos[i].y);
+        ctx.moveTo(pos[i].x, pos[i].y - arm); ctx.lineTo(pos[i].x, pos[i].y + arm);
+        ctx.stroke();
 
-        // Halo for active
+        // Halo for active nodes
         if (isActive) {
-          const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 8);
-          gr.addColorStop(0, hsla(pAccent, na * 0.15 * MOBILE_BOOST));
+          const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 10);
+          gr.addColorStop(0, hsla(pAccent, na * 0.18 * MOBILE_BOOST));
           gr.addColorStop(1, hsla(pGlow, 0));
           ctx.fillStyle = gr;
-          ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, 8, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, 10, 0, Math.PI * 2); ctx.fill();
         }
       }
 
@@ -414,15 +413,23 @@ const EmpireDNABackground = () => {
           for (let ti = 1; ti <= trailSteps; ti++) {
             const trailT = Math.max(0, fl.progress - ti * 0.04);
             const tp = walkPolyline(route, trailT);
-            const trailSize = IS_MOBILE ? 1 : 0.8;
-            ctx.fillStyle = hsla(pGlow, fadeA * (1 - ti * 0.3) * (IS_MOBILE ? 0.09 : 0.12));
-            ctx.fillRect(tp.x - trailSize, tp.y - trailSize, trailSize * 2, trailSize * 2);
+            const trailArm = IS_MOBILE ? 0.8 : 0.6;
+            ctx.strokeStyle = hsla(pGlow, fadeA * (1 - ti * 0.3) * (IS_MOBILE ? 0.09 : 0.12));
+            ctx.lineWidth = 0.3;
+            ctx.beginPath();
+            ctx.moveTo(tp.x - trailArm, tp.y); ctx.lineTo(tp.x + trailArm, tp.y);
+            ctx.moveTo(tp.x, tp.y - trailArm); ctx.lineTo(tp.x, tp.y + trailArm);
+            ctx.stroke();
           }
         }
 
-        ctx.fillStyle = hsla(pAccent, fadeA * 0.15 * MOBILE_BOOST);
-        const pSize = IS_MOBILE ? 1.2 : 0.8;
-        ctx.fillRect(pt.x - pSize, pt.y - pSize, pSize * 2, pSize * 2);
+        const pArm = IS_MOBILE ? 1.2 : 0.9;
+        ctx.strokeStyle = hsla(pAccent, fadeA * 0.15 * MOBILE_BOOST);
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(pt.x - pArm, pt.y); ctx.lineTo(pt.x + pArm, pt.y);
+        ctx.moveTo(pt.x, pt.y - pArm); ctx.lineTo(pt.x, pt.y + pArm);
+        ctx.stroke();
       }
 
       // ═══ LAYER 5: Pulse Rings ═══
