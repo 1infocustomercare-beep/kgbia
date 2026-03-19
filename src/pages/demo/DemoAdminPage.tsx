@@ -430,6 +430,115 @@ const SECTOR_TABLE_DATA: Record<string, { headers: string[]; rows: string[][] }>
       ["OFF-106", "Sara M.", "Toyota Yaris", "Climatizzatore", "€180", "📅 Mercoledì"],
     ],
   },
+  agriturismo: {
+    headers: ["Camera", "Ospite", "Check-in", "Notti", "Importo", "Stato"],
+    rows: [
+      ["Ulivo", "Fam. Bianchi", "Oggi", "3", "€420", "✅ Arrivato"],
+      ["Quercia", "Fam. Rossi", "Ieri", "5", "€750", "✅ Soggiorno"],
+      ["Lavanda", "M. Dupont (FR)", "Oggi", "4", "€560", "⏳ In arrivo"],
+      ["Girasole", "K. Weber (DE)", "Domani", "7", "€980", "📅 Prenotato"],
+      ["Olivo", "L. Smith (UK)", "2gg fa", "3", "€450", "✅ Soggiorno"],
+    ],
+  },
+  cleaning: {
+    headers: ["Ticket", "Cliente", "Servizio", "Squadra", "Importo", "Stato"],
+    rows: [
+      ["CL-101", "Ufficio Tech Srl", "Pulizia ordinaria", "Squadra A", "€120", "✅ Completato"],
+      ["CL-102", "Cond. Via Roma", "Scale + Androni", "Squadra B", "€180", "🔄 In corso"],
+      ["CL-103", "Rest. Da Mario", "Sanificazione", "Squadra A", "€250", "📅 15:00"],
+      ["CL-104", "Uffici Verdi Srl", "Pulizia profonda", "Squadra C", "€320", "📅 Domani"],
+      ["CL-105", "Cantiere Bianchi", "Post-cantiere", "Squadra B", "€480", "📅 Giovedì"],
+      ["CL-106", "Hotel Stella", "Vetri esterni", "Squadra D", "€380", "📅 Venerdì"],
+    ],
+  },
+  photographer: {
+    headers: ["Shooting", "Cliente", "Tipo", "Location", "Importo", "Stato"],
+    rows: [
+      ["PH-201", "Rossi & Bianchi", "Matrimonio", "Villa Aurelia", "€2.800", "✅ Consegnato"],
+      ["PH-202", "Tech Srl", "Corporate", "Ufficio Milano", "€800", "📅 22/03"],
+      ["PH-203", "Sara Conti", "Portrait", "Studio", "€180", "🔄 Editing"],
+      ["PH-204", "Baby Emma", "Newborn", "Studio", "€250", "📅 25/03"],
+      ["PH-205", "Rist. Stellato", "Food & Beverage", "Location", "€450", "📅 28/03"],
+      ["PH-206", "Fam. Verdi", "Family Portrait", "Parco", "€220", "✅ Consegnato"],
+    ],
+  },
+  construction: {
+    headers: ["Cantiere", "Cliente", "Tipo Lavoro", "Importo", "Avanzamento", "Stato"],
+    rows: [
+      ["C-01", "Fam. Rossi", "Ristrutturaz. completa", "€85.000", "72%", "🔄 In corso"],
+      ["C-02", "Cond. Via Dante", "Cappotto termico", "€120.000", "45%", "🔄 In corso"],
+      ["C-03", "Villa Conti", "Ampliamento", "€65.000", "15%", "📅 Avviato"],
+      ["C-04", "Ufficio Bianchi", "Controsoffitto", "€18.000", "100%", "✅ Completato"],
+      ["C-05", "Fam. Esposito", "Impermeabilizz.", "€12.000", "0%", "📅 Sopralluogo"],
+      ["C-06", "Rest. Nuovo", "Ristrutturaz. locale", "€42.000", "60%", "🔄 In corso"],
+    ],
+  },
+  gardener: {
+    headers: ["Ticket", "Cliente", "Servizio", "Zona", "Importo", "Stato"],
+    rows: [
+      ["GR-101", "Villa Rossi", "Manutenzione mensile", "EUR", "€180", "✅ Completato"],
+      ["GR-102", "Cond. Via Roma", "Potatura siepi", "Centro", "€320", "📅 Domani"],
+      ["GR-103", "Fam. Bianchi", "Rifacimento prato", "Trastevere", "€2.400", "🔄 In corso"],
+      ["GR-104", "Villa Conti", "Impianto irrigazione", "Parioli", "€1.800", "📅 Preventivo"],
+      ["GR-105", "Hotel Garden", "Manutenzione sett.", "Centro", "€480/mese", "✅ Attivo"],
+      ["GR-106", "Fam. Verdi", "Trattamento fitosan.", "Monteverde", "€120", "📅 Mercoledì"],
+    ],
+  },
+  tattoo: {
+    headers: ["Sessione", "Cliente", "Tipo", "Artista", "Importo", "Stato"],
+    rows: [
+      ["TT-101", "Marco R.", "Sleeve braccio (sess. 3/5)", "Alex", "€480", "✅ Completato"],
+      ["TT-102", "Sara B.", "Cover-up spalla", "Mika", "€350", "🔄 In corso"],
+      ["TT-103", "Luca N.", "Lettering polso", "Alex", "€120", "📅 16:00"],
+      ["TT-104", "Elena C.", "Geometrico schiena", "Yuki", "€280", "📅 Domani"],
+      ["TT-105", "Davide E.", "Realistico ritratto", "Mika", "€650", "📅 Consulenza"],
+      ["TT-106", "Anna V.", "Mini tattoo x3", "Alex", "€180", "📅 Sabato"],
+    ],
+  },
+  childcare: {
+    headers: ["Bambino", "Età", "Sezione", "Orario", "Retta", "Stato"],
+    rows: [
+      ["Sofia R.", "3 anni", "Farfalle", "08:00-16:00", "€580", "✅ Presente"],
+      ["Luca M.", "4 anni", "Coccinelle", "08:30-13:00", "€380", "❌ Assente"],
+      ["Emma V.", "2 anni", "Pulcini", "08:00-16:00", "€620", "✅ Presente"],
+      ["Marco B.", "3 anni", "Farfalle", "08:00-16:00", "€580", "✅ Presente"],
+      ["Giulia N.", "5 anni", "Api", "08:30-16:30", "€580", "✅ Presente"],
+      ["Leonardo C.", "4 anni", "Coccinelle", "08:00-13:00", "€380", "✅ Presente"],
+    ],
+  },
+  education: {
+    headers: ["Corso", "Studente", "Modulo", "Progress", "Voto", "Stato"],
+    rows: [
+      ["Full Stack", "Marco V.", "React Advanced", "85%", "28/30", "🔄 In corso"],
+      ["Data Science", "Sara B.", "ML Algorithms", "100%", "30/30", "✅ Completato"],
+      ["UX Design", "Luca N.", "Prototyping", "60%", "—", "🔄 In corso"],
+      ["Marketing", "Elena C.", "Google Ads", "45%", "—", "🔄 In corso"],
+      ["Cybersecurity", "Davide E.", "Ethical Hacking", "30%", "—", "📅 Iniziato"],
+      ["AI/ML", "Anna R.", "Neural Networks", "92%", "29/30", "✅ Completato"],
+    ],
+  },
+  events: {
+    headers: ["Evento", "Cliente", "Tipo", "Data", "Budget", "Stato"],
+    rows: [
+      ["EV-201", "Rossi Corp", "Gala Aziendale", "28/03", "€18.000", "🔄 In preparaz."],
+      ["EV-202", "Bianchi & Neri", "Matrimonio", "12/04", "€32.000", "📅 Confermato"],
+      ["EV-203", "Tech Srl", "Team Building", "05/04", "€4.500", "📅 Preventivo"],
+      ["EV-204", "Fam. Conti", "50° Anniversario", "20/03", "€8.000", "✅ Completato"],
+      ["EV-205", "Camera Commercio", "Congresso", "15/04", "€12.000", "🔄 In preparaz."],
+      ["EV-206", "Sara M.", "Compleanno 30", "22/03", "€3.200", "📅 Confermato"],
+    ],
+  },
+  logistics: {
+    headers: ["Spedizione", "Mittente", "Tratta", "Mezzo", "Importo", "Stato"],
+    rows: [
+      ["L-428", "Tech Srl", "Milano → Roma", "Furgone #3", "€180", "✅ Consegnato"],
+      ["L-429", "Fashion SpA", "Torino → Napoli", "Bilico #1", "€420", "🔄 In transito"],
+      ["L-430", "Food Corp", "Bologna → Bari", "Frigo #2", "€350", "🔄 In transito"],
+      ["L-431", "Auto Parts", "Roma → Milano", "Furgone #5", "€220", "📅 Ritiro domani"],
+      ["L-432", "Pharma Srl", "Napoli → Firenze", "Express #4", "€280", "📅 Urgente"],
+      ["L-433", "Wine Export", "Verona → Hamburg", "Container", "€850", "📅 Internazionale"],
+    ],
+  },
 };
 
 // ── Sector-specific activity feeds ──
