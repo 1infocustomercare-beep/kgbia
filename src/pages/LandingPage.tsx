@@ -21,6 +21,7 @@ import {
 "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
+import empireLogoNew from "@/assets/empire-logo-new.png";
 import heroLandingDefault from "@/assets/hero-landing.jpg";
 import videoHeroDefault from "@/assets/video-hero-empire.mp4";
 import heroTechCommandDefault from "@/assets/hero-tech-command.jpg";
@@ -2866,8 +2867,8 @@ const LandingPage = () => {
                 
               </motion.div>
 
-              {/* Crown icon */}
-              <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-[hsla(38,50%,65%,0.9)] drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" />
+              {/* Logo image */}
+              <img src={empireLogoNew} alt="Empire AI" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" />
               
               {/* Breathing pulse ring */}
               <motion.div
@@ -6212,7 +6213,7 @@ const LandingPage = () => {
               initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}>
               
-              <Crown className="w-12 h-12 mx-auto mb-6 text-primary" style={{ filter: "drop-shadow(0 0 40px hsla(265,70%,60%,0.3))" }} />
+              <img src={empireLogoNew} alt="Empire AI" className="w-12 h-12 mx-auto mb-6 object-contain" style={{ filter: "drop-shadow(0 0 40px hsla(265,70%,60%,0.3))" }} />
             </motion.div>
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
@@ -6270,7 +6271,7 @@ const LandingPage = () => {
               <div className="relative">
                 <div className="absolute -inset-1 rounded-xl blur-md" style={{ background: "hsla(265,70%,60%,0.15)" }} />
                 <div className="relative w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsla(265,70%,60%,1), hsla(280,60%,50%,1))", boxShadow: "0 0 25px hsla(265,70%,60%,0.25)" }}>
-                  <Crown className="w-4 h-4 text-white" />
+                  <img src={empireLogoNew} alt="Empire AI" className="w-6 h-6 object-contain" />
                 </div>
               </div>
               <div>

@@ -3,6 +3,7 @@ import BackButton from "@/components/BackButton";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, Crown, ChefHat, ArrowLeft, Users, Mail, KeyRound, Phone, MapPin, Briefcase } from "lucide-react";
+import empireLogoNew from "@/assets/empire-logo-new.png";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -284,7 +285,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
             >
-              <Crown className="w-8 h-8 text-primary-foreground" />
+              <img src={empireLogoNew} alt="Empire AI" className="w-10 h-10 object-contain" />
             </motion.div>
             <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">Area Riservata</h1>
             <p className="text-sm text-muted-foreground mt-1">Seleziona il tuo accesso</p>
@@ -451,7 +452,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
         <div className="flex flex-col items-center">
           <motion.div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 vibrant-glow bg-vibrant-gradient`}
             initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 200, damping: 15 }}>
-            {isPartnerMode ? <Users className="w-8 h-8 text-primary-foreground" /> : <Crown className="w-8 h-8 text-primary-foreground" />}
+            {isPartnerMode ? <Users className="w-8 h-8 text-primary-foreground" /> : <img src={empireLogoNew} alt="Empire AI" className="w-10 h-10 object-contain" />}
           </motion.div>
           <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">
             {isPartnerMode
