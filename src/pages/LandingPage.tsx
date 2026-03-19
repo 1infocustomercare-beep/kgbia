@@ -2682,7 +2682,7 @@ const LandingPage = () => {
           transition={{ duration: 0.8, ease: "easeInOut" }} />
         
         {/* ── PCB Circuit board background ── */}
-        {navScrolled &&
+        {
         <motion.div
           className="absolute inset-0 overflow-hidden pointer-events-none"
           initial={{ opacity: 0 }}
