@@ -3288,9 +3288,9 @@ const LandingPage = () => {
                 animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} />
               
-              <div className="sm:scale-100" style={{ transform: typeof window !== "undefined" && window.innerWidth < 640 ? "scaleX(1.9)" : undefined }}>
+              <div className="flex items-center justify-center w-full" style={{ transform: typeof window !== "undefined" && window.innerWidth < 640 ? "scaleX(1.9)" : undefined }}>
                 {isHeroInView &&
-                <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : 300} />
+                <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : typeof window !== "undefined" && window.innerWidth >= 1024 ? 520 : 380} />
                 }
               </div>
             </motion.div>

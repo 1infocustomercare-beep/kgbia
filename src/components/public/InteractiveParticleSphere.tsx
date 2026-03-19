@@ -114,7 +114,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
     const w = size, h = size;
     canvas.width = w * dpr;
     canvas.height = h * dpr;
