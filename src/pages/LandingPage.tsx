@@ -5566,268 +5566,207 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-                             CENTRO DI COMANDO IA — Live Dashboard Preview
+                             PRIMA vs DOPO — Trasformazione Reale
                             ═══════════════════════════════════════════ */}
       {(() => {
-        const commandMetrics = [
-          { label: "Ordini Oggi", value: 147, suffix: "", icon: <Package className="w-3.5 h-3.5" />, delta: "+23%", deltaColor: "hsla(150,70%,50%,0.94)" },
-          { label: "Clienti Serviti", value: 89, suffix: "", icon: <Users className="w-3.5 h-3.5" />, delta: "+18%", deltaColor: "hsla(150,70%,50%,0.94)" },
-          { label: "Revenue IA", value: 4820, suffix: "€", icon: <Wallet className="w-3.5 h-3.5" />, delta: "+31%", deltaColor: "hsla(150,70%,50%,0.94)" },
-          { label: "Tempo Risparmiato", value: 6, suffix: "h", icon: <Timer className="w-3.5 h-3.5" />, delta: "oggi", deltaColor: "hsla(38,70%,55%,0.7)" },
+        const transformations = [
+          { metric: "Tempo gestione ordini", before: "45 min", after: "3 min", icon: <Timer className="w-4 h-4" />, improvement: "-93%", color: "265" },
+          { metric: "Recensioni negative pubbliche", before: "12/mese", after: "0", icon: <Shield className="w-4 h-4" />, improvement: "-100%", color: "150" },
+          { metric: "Clienti persi per attesa", before: "34%", after: "2%", icon: <Users className="w-4 h-4" />, improvement: "-94%", color: "210" },
+          { metric: "Revenue da upselling AI", before: "0€", after: "+2.400€/mese", icon: <TrendingUp className="w-4 h-4" />, improvement: "+∞", color: "38" },
+          { metric: "Fatturazione elettronica", before: "2h/giorno", after: "Automatica", icon: <Receipt className="w-4 h-4" />, improvement: "-100%", color: "200" },
+          { metric: "Campagne marketing", before: "Manuale", after: "AI 24/7", icon: <Rocket className="w-4 h-4" />, improvement: "Auto", color: "35" },
         ];
 
-        const agentStatuses = [
-          { name: "GhostManager™", status: "Attivo", tasks: 34, color: "hsla(265,70%,60%,1)", icon: <Bot className="w-3 h-3" /> },
-          { name: "Concierge AI", status: "In chat", tasks: 12, color: "hsla(210,70%,55%,1)", icon: <MessageSquare className="w-3 h-3" /> },
-          { name: "Review Shield™", status: "Monitoring", tasks: 8, color: "hsla(150,70%,50%,1)", icon: <Shield className="w-3 h-3" /> },
-          { name: "AutoPilot Mktg", status: "Campagna", tasks: 847, color: "hsla(35,90%,55%,1)", icon: <Rocket className="w-3 h-3" /> },
-          { name: "Predictive Engine", status: "Analisi", tasks: 5, color: "hsla(160,65%,45%,1)", icon: <BarChart3 className="w-3 h-3" /> },
-          { name: "Invoice AI", status: "Fatturazione", tasks: 23, color: "hsla(200,60%,55%,1)", icon: <Receipt className="w-3 h-3" /> },
-        ];
-
-        const recentActions = [
-          { text: "Prenotazione confermata — Tavolo 7, ore 20:30", time: "2s", agent: "Concierge AI" },
-          { text: "Recensione negativa intercettata e gestita", time: "8s", agent: "Review Shield™" },
-          { text: "Campagna WhatsApp: 847 clienti raggiunti", time: "15s", agent: "AutoPilot" },
-          { text: "Fattura elettronica #2847 inviata a SDI", time: "22s", agent: "Invoice AI" },
-          { text: "Cliente VIP riconosciuto — menu personalizzato", time: "30s", agent: "Loyalty Angel" },
+        const impactNumbers = [
+          { value: "847", label: "Business trasformati", suffix: "+" },
+          { value: "3.2M", label: "Ordini gestiti dall'IA", suffix: "" },
+          { value: "94", label: "Ore risparmiate al mese", suffix: "h" },
+          { value: "40", label: "Aumento revenue medio", suffix: "%" },
         ];
 
         return (
         <section className="relative py-16 sm:py-28 px-4 sm:px-6 overflow-hidden"
         style={mobilifyBg({
-          background: "linear-gradient(180deg, hsla(230,16%,4%,0.94) 0%, hsla(265,20%,7%,0.92) 30%, hsla(230,18%,5%,0.94) 70%, hsla(230,16%,4%,0.94) 100%)"
+          background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(230,20%,6%,0.97) 30%, hsla(265,18%,7%,0.97) 60%, hsla(230,16%,4%,0.96) 100%)"
         })}>
-          {/* Ambient glows */}
+          {/* Ambient */}
           <div className="absolute inset-0 pointer-events-none z-0">
-            <div className="absolute top-[5%] right-[20%] w-[500px] h-[500px] rounded-full opacity-[0.04]"
-            style={{ background: "radial-gradient(circle, hsla(265,60%,55%,0.5), transparent 65%)", filter: "blur(130px)" }} />
-            <div className="absolute bottom-[20%] left-[10%] w-[400px] h-[400px] rounded-full opacity-[0.03]"
-            style={{ background: "radial-gradient(circle, hsla(150,50%,45%,0.4), transparent 65%)", filter: "blur(110px)" }} />
-            <div className="absolute top-[40%] left-[60%] w-[350px] h-[350px] rounded-full opacity-[0.025]"
-            style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.35), transparent 65%)", filter: "blur(100px)" }} />
+            <div className="absolute top-[10%] right-[15%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
+            style={{ background: "radial-gradient(circle, hsla(150,60%,50%,0.5), transparent 65%)", filter: "blur(120px)" }} />
+            <div className="absolute bottom-[20%] left-[10%] w-[400px] h-[400px] rounded-full opacity-[0.035]"
+            style={{ background: "radial-gradient(circle, hsla(38,60%,50%,0.4), transparent 65%)", filter: "blur(110px)" }} />
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
-            style={{ background: "linear-gradient(90deg, transparent, hsla(150,55%,50%,0.15), hsla(265,50%,55%,0.12), transparent)" }} />
+            style={{ background: "linear-gradient(90deg, transparent, hsla(150,55%,50%,0.18), hsla(265,50%,55%,0.12), transparent)" }} />
           </div>
 
           <div className="max-w-[1100px] mx-auto relative z-10">
             {/* Header */}
-            <div className="text-center mb-10 sm:mb-16">
-              <SectionLabel text="Live Command Center" icon={<Activity className="w-3 h-3 text-primary" />} />
+            <div className="text-center mb-10 sm:mb-14">
+              <SectionLabel text="Risultati Reali" icon={<TrendingUp className="w-3 h-3 text-primary" />} />
               <motion.h2 className="text-[clamp(1.4rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
-                I Tuoi Agenti <span className="text-shimmer">Stanno Lavorando</span>
+                Prima vs Dopo <span className="text-shimmer">Empire</span>
               </motion.h2>
               <motion.p className="text-foreground/40 text-xs sm:text-sm max-w-md mx-auto leading-relaxed"
               initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.15 }}>
-                Ecco cosa succede nel tuo business mentre tu ti rilassi. In tempo reale.
+                Dati reali dai nostri clienti. La trasformazione inizia dal primo giorno.
               </motion.p>
             </div>
 
-            {/* ═══ LIVE METRICS BAR ═══ */}
-            <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-5"
+            {/* ═══ IMPACT NUMBERS BAR ═══ */}
+            <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mb-8 sm:mb-12"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
-              {commandMetrics.map((m, i) => (
-                <div key={i} className="relative rounded-xl overflow-hidden p-3 sm:p-4 group"
+              {impactNumbers.map((n, i) => (
+                <div key={i} className="relative rounded-xl overflow-hidden p-4 text-center group"
                 style={{
-                  background: "linear-gradient(160deg, hsla(230,18%,10%,0.98), hsla(230,22%,6%,0.98))",
-                  border: "1px solid hsla(265,40%,40%,0.08)"
+                  background: "linear-gradient(160deg, hsla(230,18%,11%,0.98), hsla(230,22%,7%,0.98))",
+                  border: "1px solid hsla(265,40%,40%,0.1)"
                 }}>
-                  {/* Top accent */}
                   <div className="absolute top-0 left-0 right-0 h-[1.5px]"
-                  style={{ background: `linear-gradient(90deg, transparent, hsla(${i === 0 ? "265,60%,55%" : i === 1 ? "210,60%,55%" : i === 2 ? "38,60%,55%" : "150,60%,50%"},0.35), transparent)` }} />
-                  
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <div className="w-6 h-6 rounded-lg flex items-center justify-center"
-                    style={{ background: `hsla(${i === 0 ? "265,60%,55%" : i === 1 ? "210,60%,55%" : i === 2 ? "38,60%,55%" : "150,60%,50%"},0.1)`, color: `hsla(${i === 0 ? "265,60%,55%" : i === 1 ? "210,60%,55%" : i === 2 ? "38,60%,55%" : "150,60%,50%"},0.8)` }}>
-                      {m.icon}
-                    </div>
-                    <span className="text-[0.45rem] sm:text-[0.5rem] text-foreground/35 font-semibold tracking-wider uppercase">{m.label}</span>
+                  style={{ background: `linear-gradient(90deg, transparent, hsla(${[265,150,38,210][i]},60%,55%,0.4), transparent)` }} />
+                  <div className="text-[clamp(1.5rem,4vw,2.2rem)] font-heading font-bold text-foreground leading-none mb-1">
+                    {n.value}<span className="text-primary/70 text-[0.6em]">{n.suffix}</span>
                   </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-lg sm:text-2xl font-heading font-bold text-foreground">
-                      {m.suffix === "€" ? `${m.value.toLocaleString()}€` : `${m.value}${m.suffix}`}
-                    </span>
-                    <span className="text-[0.5rem] font-bold px-1.5 py-0.5 rounded-full"
-                    style={{ background: `${m.deltaColor}15`, color: m.deltaColor }}>
-                      {m.delta}
-                    </span>
-                  </div>
+                  <div className="text-foreground/35 text-[0.6rem] sm:text-xs tracking-wide uppercase">{n.label}</div>
                 </div>
               ))}
             </motion.div>
 
-            {/* ═══ DASHBOARD GRID ═══ */}
-            <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4">
+            {/* ═══ BEFORE/AFTER TRANSFORMATION GRID ═══ */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-8 sm:mb-12">
+              {transformations.map((t, i) => (
+                <motion.div key={i}
+                className="relative rounded-2xl overflow-hidden group"
+                style={{
+                  background: "linear-gradient(160deg, hsla(230,18%,10%,0.98), hsla(230,22%,6%,0.98))",
+                  border: "1px solid hsla(265,30%,35%,0.1)"
+                }}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={vpOnce}
+                transition={{ delay: i * 0.08 }}>
+                  {/* Top accent line */}
+                  <div className="absolute top-0 left-0 right-0 h-[1.5px]"
+                  style={{ background: `linear-gradient(90deg, transparent, hsla(${t.color},60%,55%,0.35), transparent)` }} />
 
-              {/* LEFT: Agent Status Panel */}
-              <motion.div className="sm:col-span-3 rounded-xl overflow-hidden"
-              initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={vpOnce}
-              style={{
-                background: "linear-gradient(160deg, hsla(230,18%,9%,0.99), hsla(265,16%,5%,0.99))",
-                border: "1px solid hsla(265,40%,35%,0.1)"
-              }}>
-                {/* Panel header */}
-                <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/8">
-                  <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                    <span className="text-[0.55rem] font-bold text-foreground/50 tracking-[2px] uppercase">Agenti Attivi</span>
+                  <div className="p-4 sm:p-5">
+                    {/* Metric header */}
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+                      style={{ background: `hsla(${t.color},50%,50%,0.12)`, color: `hsla(${t.color},65%,60%,1)` }}>
+                        {t.icon}
+                      </div>
+                      <span className="text-foreground/60 text-xs font-medium tracking-wide">{t.metric}</span>
+                    </div>
+
+                    {/* Before → After */}
+                    <div className="flex items-center gap-3">
+                      {/* Before */}
+                      <div className="flex-1 rounded-xl p-3 text-center"
+                      style={{ background: "hsla(0,40%,15%,0.25)", border: "1px solid hsla(0,40%,40%,0.12)" }}>
+                        <div className="text-[0.55rem] uppercase tracking-wider text-foreground/25 mb-1">Prima</div>
+                        <div className="text-sm sm:text-base font-bold text-red-400/80">{t.before}</div>
+                      </div>
+
+                      {/* Arrow */}
+                      <div className="flex-shrink-0">
+                        <motion.div
+                        className="w-8 h-8 rounded-full flex items-center justify-center"
+                        style={{ background: `hsla(${t.color},50%,50%,0.15)` }}
+                        animate={{ scale: [1, 1.15, 1] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}>
+                          <ArrowRight className="w-3.5 h-3.5" style={{ color: `hsla(${t.color},65%,60%,1)` }} />
+                        </motion.div>
+                      </div>
+
+                      {/* After */}
+                      <div className="flex-1 rounded-xl p-3 text-center"
+                      style={{ background: `hsla(${t.color},40%,15%,0.2)`, border: `1px solid hsla(${t.color},40%,40%,0.15)` }}>
+                        <div className="text-[0.55rem] uppercase tracking-wider text-foreground/25 mb-1">Dopo</div>
+                        <div className="text-sm sm:text-base font-bold" style={{ color: `hsla(${t.color},65%,65%,0.95)` }}>{t.after}</div>
+                      </div>
+                    </div>
+
+                    {/* Improvement badge */}
+                    <div className="mt-3 flex justify-end">
+                      <span className="text-[0.6rem] font-bold tracking-wider px-2.5 py-1 rounded-full"
+                      style={{
+                        background: `hsla(${t.color},50%,50%,0.1)`,
+                        color: `hsla(${t.color},65%,60%,0.9)`,
+                        border: `1px solid hsla(${t.color},40%,45%,0.15)`
+                      }}>
+                        {t.improvement}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[0.45rem] text-foreground/25 font-mono">{agentStatuses.length}/16 online</span>
-                </div>
-
-                {/* Agent rows */}
-                <div className="divide-y divide-border/5">
-                  {agentStatuses.map((agent, i) => (
-                    <motion.div key={i} className="flex items-center gap-3 px-4 py-2.5 hover:bg-primary/[0.02] transition-colors"
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 + i * 0.06 }}>
-                      {/* Agent icon */}
-                      <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ background: `${agent.color}15`, color: agent.color }}>
-                        {agent.icon}
-                      </div>
-                      {/* Name & status */}
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[0.6rem] sm:text-xs font-semibold text-foreground truncate">{agent.name}</div>
-                        <div className="text-[0.45rem] text-foreground/30">{agent.status}</div>
-                      </div>
-                      {/* Tasks count */}
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[0.5rem] font-bold text-foreground/50">{agent.tasks}</span>
-                        <span className="text-[0.4rem] text-foreground/25">tasks</span>
-                      </div>
-                      {/* Status dot */}
-                      <motion.div className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ background: agent.color }}
-                      animate={{ opacity: [0.4, 1, 0.4] }}
-                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }} />
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Panel footer */}
-                <div className="px-4 py-2 border-t border-border/5 flex items-center justify-between">
-                  <span className="text-[0.45rem] text-foreground/20 font-mono">Ultimo aggiornamento: ora</span>
-                  <div className="flex items-center gap-1">
-                    <Cpu className="w-2.5 h-2.5 text-primary/40" />
-                    <span className="text-[0.45rem] text-primary/50 font-bold">Sistema ottimale</span>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* RIGHT: Live Activity Feed */}
-              <motion.div className="sm:col-span-2 rounded-xl overflow-hidden"
-              initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={vpOnce}
-              style={{
-                background: "linear-gradient(160deg, hsla(230,18%,9%,0.99), hsla(230,22%,5%,0.99))",
-                border: "1px solid hsla(150,40%,35%,0.08)"
-              }}>
-                {/* Feed header */}
-                <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/8">
-                  <div className="flex items-center gap-2">
-                    <motion.div className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: "hsla(150,70%,50%,1)" }}
-                    animate={{ scale: [1, 1.4, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }} />
-                    <span className="text-[0.55rem] font-bold text-foreground/50 tracking-[2px] uppercase">Feed Live</span>
-                  </div>
-                  <span className="text-[0.45rem] text-foreground/20">tempo reale</span>
-                </div>
-
-                {/* Activity items */}
-                <div className="p-2 space-y-1.5">
-                  {recentActions.map((action, i) => (
-                    <motion.div key={i}
-                    className="flex items-start gap-2.5 p-2.5 rounded-lg transition-colors"
-                    style={{ background: i === 0 ? "hsla(150,40%,40%,0.04)" : "transparent" }}
-                    initial={{ opacity: 0, y: 8 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.3 + i * 0.08 }}>
-                      {/* Timeline dot */}
-                      <div className="flex flex-col items-center mt-1 flex-shrink-0">
-                        <div className="w-1.5 h-1.5 rounded-full"
-                        style={{ background: i === 0 ? "hsla(150,70%,50%,0.8)" : "hsla(265,50%,55%,0.3)" }} />
-                        {i < recentActions.length - 1 && (
-                          <div className="w-px h-6 mt-1" style={{ background: "hsla(265,30%,40%,0.1)" }} />
-                        )}
-                      </div>
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/60 leading-[1.5]">{action.text}</p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[0.4rem] text-primary/40 font-bold">{action.agent}</span>
-                          <span className="text-[0.4rem] text-foreground/15">{action.time} fa</span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Pulse footer */}
-                <div className="px-4 py-2.5 border-t border-border/5">
-                  <div className="flex items-center justify-center gap-2">
-                    <motion.div className="flex gap-0.5"
-                    animate={{ opacity: [0.3, 1, 0.3] }}
-                    transition={{ duration: 1.2, repeat: Infinity }}>
-                      {[0,1,2].map(d => (
-                        <div key={d} className="w-1 h-1 rounded-full bg-primary/40" />
-                      ))}
-                    </motion.div>
-                    <span className="text-[0.45rem] text-foreground/20">Monitoraggio continuo 24/7</span>
-                  </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              ))}
             </div>
 
-            {/* ═══ BOTTOM: Capabilities Ticker ═══ */}
-            <motion.div className="mt-5 sm:mt-6 rounded-xl overflow-hidden py-3 relative"
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce}
+            {/* ═══ TRUST GUARANTEE BAR ═══ */}
+            <motion.div className="relative rounded-2xl overflow-hidden p-5 sm:p-8"
             style={{
-              background: "linear-gradient(160deg, hsla(230,18%,8%,0.98), hsla(265,14%,5%,0.98))",
-              border: "1px solid hsla(265,30%,30%,0.08)"
-            }}>
-              <div className="absolute left-0 top-0 bottom-0 w-12 z-10" style={{ background: "linear-gradient(90deg, hsla(230,18%,8%,1), transparent)" }} />
-              <div className="absolute right-0 top-0 bottom-0 w-12 z-10" style={{ background: "linear-gradient(-90deg, hsla(230,18%,8%,1), transparent)" }} />
-              <motion.div className="flex gap-4 whitespace-nowrap"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}>
-                {[...Array(2)].map((_, rep) => (
-                  <div key={rep} className="flex gap-4">
-                    {["Ordini Automatici", "Chat Multilingue", "Fatturazione IA", "Review Protection", "Marketing Autonomo",
-                      "Prenotazioni 24/7", "Analytics Predittive", "GDPR Compliance", "Pagamenti Unificati", "Turni Ottimizzati",
-                      "QR Dinamici", "Voice Assistant", "Social Content", "Loyalty Program", "Push Intelligenti"
-                    ].map((cap, ci) => (
-                      <span key={ci} className="inline-flex items-center gap-1.5 text-[0.5rem] text-foreground/25 font-semibold tracking-wider uppercase">
-                        <span className="w-1 h-1 rounded-full bg-primary/30" />
-                        {cap}
-                      </span>
-                    ))}
-                  </div>
-                ))}
-              </motion.div>
+              background: "linear-gradient(160deg, hsla(230,18%,10%,0.98), hsla(265,18%,8%,0.98))",
+              border: "1px solid hsla(38,40%,40%,0.12)"
+            }}
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
+              <div className="absolute top-0 left-0 right-0 h-[1.5px]"
+              style={{ background: "linear-gradient(90deg, transparent, hsla(38,60%,55%,0.3), hsla(265,50%,55%,0.2), transparent)" }} />
+              
+              <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-8">
+                {/* Shield icon */}
+                <div className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, hsla(150,50%,45%,0.15), hsla(265,40%,50%,0.1))", border: "1px solid hsla(150,40%,45%,0.15)" }}>
+                  <Shield className="w-7 h-7" style={{ color: "hsla(150,65%,55%,0.9)" }} />
+                </div>
+
+                <div className="flex-1 text-center sm:text-left">
+                  <h3 className="text-base sm:text-lg font-heading font-bold text-foreground mb-1.5">
+                    Garanzia Risultati 90 Giorni
+                  </h3>
+                  <p className="text-foreground/40 text-xs sm:text-sm leading-relaxed max-w-lg">
+                    Se non vedi miglioramenti misurabili nei primi 90 giorni, ti rimborsiamo. 
+                    Zero rischi, solo risultati concreti. Supporto dedicato incluso.
+                  </p>
+                </div>
+
+                {/* Trust badges */}
+                <div className="flex gap-3 flex-shrink-0">
+                  {[
+                    { icon: <Lock className="w-3.5 h-3.5" />, label: "GDPR" },
+                    { icon: <Fingerprint className="w-3.5 h-3.5" />, label: "Sicuro" },
+                    { icon: <CircleCheck className="w-3.5 h-3.5" />, label: "Certificato" },
+                  ].map((b, i) => (
+                    <div key={i} className="flex flex-col items-center gap-1.5">
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+                      style={{ background: "hsla(230,18%,14%,0.9)", border: "1px solid hsla(265,30%,35%,0.12)", color: "hsla(38,60%,60%,0.7)" }}>
+                        {b.icon}
+                      </div>
+                      <span className="text-[0.5rem] text-foreground/30 tracking-wider uppercase">{b.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </motion.div>
 
             {/* CTA */}
-            <motion.div className="text-center mt-8 sm:mt-12"
-            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce} transition={{ delay: 0.5 }}>
+            <motion.div className="text-center mt-8 sm:mt-10"
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.3 }}>
               <button
-                onClick={() => navigate("/demo")}
-                className="inline-flex items-center gap-2.5 px-7 py-3 rounded-xl font-heading font-bold text-sm tracking-wide transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+                onClick={() => { const el = document.getElementById("pricing"); if (el) el.scrollIntoView({ behavior: "smooth" }); }}
+                className="inline-flex items-center gap-2.5 px-7 py-3 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--primary)), hsla(265,55%,45%,1))",
                   color: "#fff",
                   boxShadow: "0 4px 20px hsla(265,60%,45%,0.2), 0 1px 3px hsla(0,0%,0%,0.2)"
                 }}>
-                <Eye className="w-4 h-4" />
-                Vedi la Demo Live
+                <Rocket className="w-4 h-4" />
+                Inizia la Trasformazione
                 <ArrowRight className="w-4 h-4" />
               </button>
               <p className="text-foreground/20 text-[0.5rem] mt-2.5 tracking-wider">
-                Esplora il centro di comando del tuo settore
+                Setup in 48h · Nessun rischio · Supporto dedicato
               </p>
             </motion.div>
           </div>
