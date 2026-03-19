@@ -119,9 +119,9 @@ const topologies: Array<(n: number, w: number, h: number, t: number) => Pt[]> = 
 ];
 const SECTIONS = topologies.length;
 
-// Uniform palette — consistent intensity per section
-const BASE_ALPHA = 0.12;
-const MOBILE_BOOST = IS_MOBILE ? 2.2 : 1.8; // Visible but non-invasive
+// Uniform palette — boosted for visibility through semi-transparent sections
+const BASE_ALPHA = 0.18;
+const MOBILE_BOOST = IS_MOBILE ? 3.0 : 2.2; // High visibility — circuit must show through sections
 const PALETTES = [
   { node: [215, 15, 40], line: [215, 12, 32], glow: [215, 20, 45], accent: [38, 30, 45] },
   { node: [265, 18, 40], line: [265, 14, 32], glow: [265, 22, 45], accent: [38, 28, 43] },
@@ -484,7 +484,7 @@ const EmpireDNABackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: IS_MOBILE ? 0.5 : 0.45, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: IS_MOBILE ? 0.75 : 0.7, willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 };

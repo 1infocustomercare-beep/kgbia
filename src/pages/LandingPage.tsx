@@ -122,13 +122,18 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-/** Keep section backdrops premium-dark and fully solid so the DNA pattern
- * is visible only in connectors/empty spaces, never behind section copy. */
+/** Allow circuit to bleed subtly through section backgrounds for a premium layered look.
+ * Caps opacity at 0.92 so the DNA pattern is faintly visible even behind content. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !style.background || typeof style.background !== "string") return style;
   const bg = style.background.replace(
-    /hsla\(([^,]+,[^,]+,[^,]+),\s*0\.[1-9]\d*\)/g,
-    (_, inner) => `hsla(${inner},1)`
+    /hsla\(([^,]+,[^,]+,[^,]+),\s*([\d.]+)\)/g,
+    (_, inner, alpha) => {
+      const a = parseFloat(alpha);
+      // Cap at 0.92 to let circuit show through, boost low values to at least 0.85
+      const newAlpha = a >= 1 ? 0.92 : Math.min(Math.max(a, 0.85), 0.92);
+      return `hsla(${inner},${newAlpha})`;
+    }
   );
   return { ...style, background: bg };
 };
@@ -589,18 +594,10 @@ const Particle = ({ delay, size, x, y }: {delay: number;size: number;x: string;y
 
 };
 
-/* ═══ Section Divider ═══ */
+/* ═══ Section Divider — taller to reveal circuit background ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) =>
-<div ref={ref} className="section-connector" style={{ height: "2.5rem" }}>
-    <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(35,45%,50%,0.08) 15%, hsla(38,45%,52%,0.15) 35%, hsla(35,45%,50%,0.2) 50%, hsla(38,45%,52%,0.15) 65%, hsla(35,45%,50%,0.08) 85%, transparent 100%)" }} />
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-      <motion.div
-      className="w-2 h-2 rounded-full"
-      style={{ background: "linear-gradient(135deg, hsl(35,45%,50%), hsl(38,45%,52%))", boxShadow: "0 0 10px hsla(35,45%,50%,0.4), 0 0 24px hsla(38,45%,52%,0.3)" }}
-      animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-      transition={{ duration: 2, repeat: Infinity }} />
-    
-    </div>
+<div ref={ref} className="section-connector" style={{ height: "4rem" }}>
+    <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(35,45%,50%,0.10) 15%, hsla(38,45%,52%,0.18) 35%, hsla(35,45%,50%,0.25) 50%, hsla(38,45%,52%,0.18) 65%, hsla(35,45%,50%,0.10) 85%, transparent 100%)" }} />
   </div>
 );
 SectionDivider.displayName = "SectionDivider";
