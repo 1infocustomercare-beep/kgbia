@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import partnerRecruitVideo from "@/assets/video-partner-recruit.mp4";
+import empireLogoNew from "@/assets/empire-logo-new.png";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
