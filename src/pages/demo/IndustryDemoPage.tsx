@@ -285,7 +285,7 @@ export default function IndustryDemoPage() {
     enabled: !!slug,
   });
 
-  const resolvedIndustry: IndustryId = useMemo(() => {
+  const resolvedIndustry: IndustryId | null = useMemo(() => {
     if (company?.industry) return company.industry as IndustryId;
     // Match by demo slug value (e.g. "amalfi-luxury-transfer" → ncc)
     for (const [ind, s] of Object.entries(DEMO_SLUGS)) {
@@ -293,8 +293,24 @@ export default function IndustryDemoPage() {
     }
     // Also accept industry ID directly as slug (e.g. /demo/ncc, /demo/food)
     if (slug && slug in INDUSTRY_CONFIGS) return slug as IndustryId;
-    return "custom";
+    return null;
   }, [company, slug]);
+
+  // 404 fallback for unknown slugs
+  if (!resolvedIndustry) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
+        <span className="text-4xl">🔍</span>
+        <p className="text-xl font-bold text-foreground">Demo non trovata</p>
+        <p className="text-sm text-muted-foreground max-w-md text-center">
+          Lo slug <strong>"{slug}"</strong> non corrisponde a nessuna demo disponibile.
+        </p>
+        <Link to="/demo" className="text-sm font-medium text-primary underline hover:no-underline">
+          ← Sfoglia tutte le 25 demo
+        </Link>
+      </div>
+    );
+  }
 
   const industryConfig = INDUSTRY_CONFIGS[resolvedIndustry];
   const demoData = DEMO_INDUSTRY_DATA[resolvedIndustry];
