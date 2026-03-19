@@ -4,6 +4,9 @@ const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
 import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
 import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
 import DemoAdminCTA from "@/components/demo/DemoAdminCTA";
+import DemoTestimonialsSection from "@/components/demo/DemoTestimonialsSection";
+import DemoPricingSection from "@/components/demo/DemoPricingSection";
+import DemoFooterSection from "@/components/demo/DemoFooterSection";
 import { useParams, useNavigate, useSearchParams, Link } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -466,9 +469,12 @@ export default function IndustryDemoPage() {
         </div>
         {/* Full Features + Agents + Admin CTA sections */}
         <DemoFeaturesSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
+        <DemoTestimonialsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
         <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="section" />
         <DemoAgentsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
+        <DemoPricingSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
         <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="sticky" />
+        <DemoFooterSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
         <Suspense fallback={null}>
           <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={accentColor} />
         </Suspense>
@@ -958,20 +964,13 @@ export default function IndustryDemoPage() {
 
       {/* ═══════ FULL FEATURES & AGENTS ═══════ */}
       <DemoFeaturesSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
+      <DemoTestimonialsSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
       <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="section" />
       <DemoAgentsSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
+      <DemoPricingSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} />
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer className="border-t border-white/5 py-8 px-4 text-center">
-        <div className="max-w-5xl mx-auto">
-          <p className="text-xs text-white/20 mb-2">
-            {theme.heroEmoji} {companyName} — {tagline}
-          </p>
-          <p className="text-[10px] text-white/10">
-            Powered by <button onClick={() => navigate("/home")} className="text-white/20 hover:text-white/40 transition underline">Empire Platform</button> · Sito Demo
-          </p>
-        </div>
-      </footer>
+      <DemoFooterSection sector={resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
 
       {/* Sticky mobile admin CTA */}
       <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={theme.accent} sectorName={industryConfig.label} variant="sticky" />

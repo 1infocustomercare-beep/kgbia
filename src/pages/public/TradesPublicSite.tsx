@@ -295,7 +295,11 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           <HeroPhotoCarousel images={heroPhotos} className="absolute inset-0 w-full h-full" style={{ filter: "brightness(0.4) saturate(1.1)" }} overlay={false} />
         )}
         <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${D}CC 0%, ${D}88 50%, transparent 100%)` }} />
+        {/* Sector-specific decorative pattern */}
         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `linear-gradient(${A}20 1px, transparent 1px), linear-gradient(90deg, ${A}20 1px, transparent 1px)`, backgroundSize: "50px 50px" }} />
+        {/* Animated accent orbs */}
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full blur-[120px] opacity-[0.08] animate-pulse" style={{ background: A }} />
+        <div className="absolute bottom-1/3 left-1/4 w-48 h-48 rounded-full blur-[100px] opacity-[0.05]" style={{ background: palette.glow }} />
 
         <motion.div initial="hidden" animate="show" variants={stagger} className="relative z-10 max-w-3xl mx-auto w-full text-center">
           <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium mb-8" style={{ background: `${A}15`, border: `1px solid ${A}25`, color: A }}>
@@ -322,10 +326,18 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
             )}
           </motion.div>
 
-          <motion.div variants={fadeUp} custom={4} className="flex flex-wrap justify-center gap-6 mt-12 text-sm text-white/30" style={{ fontFamily: "'Inter', sans-serif" }}>
-            <span className="flex items-center gap-1.5"><Shield className="w-4 h-4" style={{ color: A }} /> Lavoro Garantito</span>
-            <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" style={{ color: A }} /> Pronto Intervento</span>
-            <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4" style={{ color: A }} /> Preventivo Gratuito</span>
+          {/* Animated stats */}
+          <motion.div variants={fadeUp} custom={4} className="grid grid-cols-3 gap-4 max-w-sm mx-auto mt-14">
+            {[
+              { value: "500+", label: "Clienti" },
+              { value: "98%", label: "Soddisfatti" },
+              { value: "24h", label: "Disponibili" },
+            ].map((s, i) => (
+              <div key={i} className="text-center">
+                <p className="text-2xl sm:text-3xl font-bold" style={{ color: A }}>{s.value}</p>
+                <p className="text-[10px] text-white/25 uppercase tracking-widest mt-1">{s.label}</p>
+              </div>
+            ))}
           </motion.div>
         </motion.div>
         <ScrollIndicator />
@@ -346,21 +358,33 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
 
       <NeonDivider color={A} />
 
-      {/* SERVICES */}
+      {/* SERVICES — Sector-specific layout variant */}
       <section id="servizi" className="py-20 px-4" style={{ background: `${A}04` }}>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-[0.2em] mb-4"
+              style={{ background: `${A}15`, color: A, border: `1px solid ${A}25` }}>
+              {config.emoji} {config.label}
+            </div>
             <h2 className="text-3xl sm:text-4xl font-bold mb-3">I Nostri Servizi</h2>
             <p className="text-white/30 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>Soluzioni professionali per ogni esigenza</p>
           </div>
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {services.map((s, i) => (
               <motion.div key={i} variants={fadeUp} custom={i}>
-                <Card className="border-0 h-full hover:scale-[1.02] transition-all group rounded-xl overflow-hidden" style={{ background: `${A}08`, border: `1px solid ${A}12` }}>
-                  <CardContent className="p-6 text-center">
-                    <div className="text-4xl mb-4">{s.emoji}</div>
-                    <h3 className="font-bold text-white mb-1">{s.name}</h3>
-                    <p className="text-sm text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
+                <Card className="border-0 h-full group rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1" style={{ background: `${A}08`, border: `1px solid ${A}12` }}>
+                  <CardContent className="p-6 relative">
+                    {/* Hover glow */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{ background: `radial-gradient(ellipse at center, ${A}15, transparent 70%)` }} />
+                    <div className="relative text-center">
+                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110 group-hover:rotate-3"
+                        style={{ background: `${A}15`, border: `1px solid ${A}20` }}>
+                        <span className="text-3xl">{s.emoji}</span>
+                      </div>
+                      <h3 className="font-bold text-white mb-1.5">{s.name}</h3>
+                      <p className="text-sm text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -369,22 +393,61 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         </div>
       </section>
 
+      {/* HOW IT WORKS */}
+      <section className="py-16 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 50%, ${A}06, transparent 60%)` }} />
+        <div className="max-w-4xl mx-auto relative">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-3">Come Funziona</h2>
+            <p className="text-white/30 text-sm">3 semplici passaggi per risolvere il tuo problema</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {[
+              { step: "01", title: "Descrivi il Problema", desc: "Compila il form o chiamaci — rispondiamo in meno di 1 ora", emoji: "📝" },
+              { step: "02", title: "Preventivo Gratuito", desc: "Sopralluogo, analisi e preventivo dettagliato senza impegno", emoji: "📋" },
+              { step: "03", title: "Interveniamo", desc: "Risolviamo il problema con garanzia su materiali e manodopera", emoji: "✅" },
+            ].map((s, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12 }}
+                className="text-center relative">
+                {/* Connector line */}
+                {i < 2 && <div className="hidden sm:block absolute top-8 left-[60%] w-[80%] h-px" style={{ background: `linear-gradient(90deg, ${A}20, transparent)` }} />}
+                <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center text-2xl relative"
+                  style={{ background: `${A}15`, border: `1px solid ${A}20` }}>
+                  {s.emoji}
+                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full text-[0.6rem] font-bold flex items-center justify-center" style={{ background: A, color: D }}>{s.step}</span>
+                </div>
+                <h3 className="font-bold text-white mb-1.5 text-sm">{s.title}</h3>
+                <p className="text-xs text-white/35">{s.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* WHY US */}
       <section id="perche" className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-3">Le Nostre Garanzie</h2>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-[0.2em] mb-4"
+              style={{ background: `${A}15`, color: A, border: `1px solid ${A}25` }}>
+              🛡️ Garanzie
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-3">Perché Scegliere Noi</h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {whyUs.map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                <Card className="border-0 h-full hover:scale-[1.02] transition-all rounded-xl" style={{ background: `${A}06`, border: `1px solid ${A}10` }}>
-                  <CardContent className="p-5">
-                    <div className="w-11 h-11 rounded-lg flex items-center justify-center mb-3" style={{ background: `${A}12` }}>
-                      <item.icon className="w-5 h-5" style={{ color: A }} />
+                <Card className="border-0 h-full group rounded-xl transition-all duration-300 hover:-translate-y-1" style={{ background: `${A}06`, border: `1px solid ${A}10` }}>
+                  <CardContent className="p-5 relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{ background: `radial-gradient(ellipse at top left, ${A}12, transparent 60%)` }} />
+                    <div className="relative">
+                      <div className="w-11 h-11 rounded-lg flex items-center justify-center mb-3 transition-transform group-hover:scale-110" style={{ background: `${A}12` }}>
+                        <item.icon className="w-5 h-5" style={{ color: A }} />
+                      </div>
+                      <h3 className="font-bold text-white mb-1">{item.title}</h3>
+                      <p className="text-sm text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>{item.desc}</p>
                     </div>
-                    <h3 className="font-bold text-white mb-1">{item.title}</h3>
-                    <p className="text-sm text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>{item.desc}</p>
                   </CardContent>
                 </Card>
               </motion.div>
