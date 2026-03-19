@@ -184,8 +184,8 @@ const PartnerRegister = () => {
       <nav className="relative z-10 px-4 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <a href="/home" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Crown className="w-4 h-4 text-primary" />
+            <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center">
+              <img src={empireLogoNew} alt="Empire AI" className="w-8 h-8 object-contain" />
             </div>
             <span className="font-display font-bold text-sm text-foreground tracking-[0.12em] uppercase">Empire</span>
           </a>

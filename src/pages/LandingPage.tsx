@@ -6271,7 +6271,7 @@ const LandingPage = () => {
               <div className="relative">
                 <div className="absolute -inset-1 rounded-xl blur-md" style={{ background: "hsla(265,70%,60%,0.15)" }} />
                 <div className="relative w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsla(265,70%,60%,1), hsla(280,60%,50%,1))", boxShadow: "0 0 25px hsla(265,70%,60%,0.25)" }}>
-                  <Crown className="w-4 h-4 text-white" />
+                  <img src={empireLogoNew} alt="Empire AI" className="w-6 h-6 object-contain" />
                 </div>
               </div>
               <div>
