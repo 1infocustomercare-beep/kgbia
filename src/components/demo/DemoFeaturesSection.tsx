@@ -7,6 +7,7 @@ import { motion, useInView } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { getAllFeaturesForSector, type FeatureItem } from "@/config/sectorFeatures";
+import PremiumSectionBg from "./PremiumSectionBg";
 import {
   Users, Calendar, BarChart3, Bot, MessageCircle, Settings, ShoppingBag, Star,
   Package, Bell, TrendingUp, Globe, CreditCard, Shield, Phone, Mail, Send,
@@ -60,8 +61,9 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
   }, {});
 
   return (
-    <section ref={ref} className="py-16 px-4" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.95), rgba(10,10,20,0.98))" }}>
-      <div className="max-w-5xl mx-auto">
+    <section ref={ref} className="py-16 px-4 relative overflow-hidden" style={{ background: "linear-gradient(180deg, #060608 0%, #0a0a12 50%, #080810 100%)" }}>
+      <PremiumSectionBg accentColor={accentColor} variant="default" />
+      <div className="max-w-5xl mx-auto relative z-10">
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 30 }}
@@ -105,7 +107,8 @@ export default function DemoFeaturesSection({ sector, accentColor, sectorName }:
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ delay: catIdx * 0.1 + i * 0.03 }}
                   >
-                    <Card className="bg-white/[0.03] border-white/[0.06] hover:border-white/[0.12] transition-all group h-full">
+                    <Card className="border-white/[0.06] hover:border-white/[0.12] transition-all group h-full"
+                      style={{ background: `linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))` }}>
                       <CardContent className="p-4">
                         <div className="flex items-start gap-3">
                           <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110" style={{ background: `${accentColor}15` }}>
