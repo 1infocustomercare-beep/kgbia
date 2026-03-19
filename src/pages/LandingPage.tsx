@@ -5036,7 +5036,7 @@ const LandingPage = () => {
         <div className="sm:hidden relative">
           {/* Opaque backdrop for circuit visibility */}
           <div className="absolute inset-0 rounded-2xl z-0"
-            style={{ background: "linear-gradient(160deg, hsla(230,16%,9%,0.97), hsla(265,14%,7%,0.96))", border: "1px solid hsla(265,35%,40%,0.06)" }} />
+            style={{ background: "linear-gradient(160deg, hsla(230,16%,9%,0.75), hsla(265,14%,7%,0.75))", border: "1px solid hsla(265,35%,40%,0.06)" }} />
 
           {/* Circuit SVG connections between service cards */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" viewBox="0 0 320 600" preserveAspectRatio="xMidYMid meet">
