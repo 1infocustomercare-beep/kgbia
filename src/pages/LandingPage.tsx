@@ -341,9 +341,9 @@ const NeuralCellsBackground = () => {
   return (
     <motion.div
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: isMobile ? 0.5 : 0.7, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: 0.7, willChange: "transform", transform: "translateZ(0)" }}
       initial={{ opacity: 0 }}
-      animate={born ? { opacity: isMobile ? 0.5 : 0.7 } : { opacity: 0 }}
+      animate={born ? { opacity: 0.7 } : { opacity: 0 }}
       transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}>
       
       {/* DNA Birth Pulse — desktop only */}
