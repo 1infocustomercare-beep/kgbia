@@ -1,12 +1,15 @@
 /**
+/**
  * DemoAdminPage — Public admin demo dashboard for ANY sector
  * Accessible at /demo/:slug/admin WITHOUT authentication
  */
 import { useState, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { getSectorConfig } from "@/config/sectorConfig";
+import { getSectorConfig, SECTOR_CONFIGS } from "@/config/sectorConfig";
 import { getAllFeaturesForSector, getAllAgentsForSector } from "@/config/sectorFeatures";
+import { DEMO_SLUGS } from "@/data/demo-industries";
+import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -36,6 +39,23 @@ const ICON_MAP: Record<string, any> = {
 
 const resolveIcon = (name: string) => ICON_MAP[name] || Star;
 
+/**
+ * Resolve slug → sector ID using the same logic as IndustryDemoPage
+ * Supports: industry ID directly (e.g. "beauty"), demo slug (e.g. "glow-beauty-milano"),
+ * or sectorConfig slug key (e.g. "beauty")
+ */
+function resolveIndustryFromSlug(slug: string): string | null {
+  // 1. Direct match in SECTOR_CONFIGS
+  if (SECTOR_CONFIGS[slug]) return slug;
+  // 2. Match via DEMO_SLUGS (reverse lookup: "glow-beauty-milano" → "beauty")
+  for (const [industryId, demoSlug] of Object.entries(DEMO_SLUGS)) {
+    if (demoSlug === slug) return industryId;
+  }
+  // 3. Match in INDUSTRY_CONFIGS
+  if (slug in INDUSTRY_CONFIGS) return slug;
+  return null;
+}
+
 // ── Mock analytics data ──
 const MONTHS = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
 const generateRevenueData = () => MONTHS.map((m, i) => ({
@@ -55,13 +75,20 @@ export default function DemoAdminPage() {
   const [agentsTab, setAgentsTab] = useState<"overview" | "activity" | "detail">("overview");
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
 
-  const config = getSectorConfig(slug || "food");
-  const allAgents = useMemo(() => getAllAgentsForSector(slug || "food"), [slug]);
+  // Resolve slug → industry sector ID (same logic as IndustryDemoPage)
+  const resolvedSector = useMemo(() => resolveIndustryFromSlug(slug || "food"), [slug]);
 
-  if (!config) {
+  const config = getSectorConfig(resolvedSector || "food");
+  const allAgents = useMemo(() => getAllAgentsForSector(resolvedSector || "food"), [resolvedSector]);
+
+  if (!resolvedSector || !config) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">Settore non trovato</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
+        <p className="text-xl font-bold text-foreground">Demo non trovata</p>
+        <p className="text-sm text-muted-foreground">Lo slug "{slug}" non corrisponde a nessun settore disponibile.</p>
+        <Link to="/demo" className="text-sm font-medium text-primary underline hover:no-underline">
+          ← Torna alla Directory Demo
+        </Link>
       </div>
     );
   }
