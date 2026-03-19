@@ -4095,8 +4095,8 @@ const LandingPage = () => {
                     {/* ── Featured: Showcase Premium ── */}
                     <p className="text-[0.55rem] font-heading font-bold tracking-[3px] uppercase px-2 mb-2" style={{ color: "hsla(38,50%,55%,0.7)" }}>★ Showcase Premium</p>
                     {[
-                  { name: "Food & Ristorazione", desc: "Menu Digitale · Ordini · QR · Cucina Live", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️" },
-                  { name: "NCC & Trasporto Premium", desc: "Flotta · Tratte · Booking · Autisti", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗" }].
+                  { name: "Food & Ristorazione", desc: "Menu Digitale · Ordini · QR · Cucina Live", route: "/r/impero-roma", color: "#e85d04", icon: <ChefHat className="w-4 h-4" /> },
+                  { name: "NCC & Trasporto Premium", desc: "Flotta · Tratte · Booking · Autisti", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", icon: <Car className="w-4 h-4" /> }].
                   map((feat, i) =>
                   <motion.div key={`featured-${i}`}
                   className="flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all"
@@ -4106,9 +4106,9 @@ const LandingPage = () => {
                   onClick={() => {setSectorSheetOpen(false);navigate(feat.route);}}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
                     
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg flex-shrink-0"
-                    style={{ background: `${feat.color}18`, border: `1px solid ${feat.color}25` }}>
-                          {feat.emoji}
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
+                    style={{ background: `${feat.color}18`, border: `1px solid ${feat.color}25`, color: feat.color }}>
+                          {feat.icon}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
