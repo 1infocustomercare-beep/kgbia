@@ -2632,7 +2632,7 @@ const LandingPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative noise-overlay">
+    <div className="min-h-screen bg-background overflow-x-hidden relative">
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
