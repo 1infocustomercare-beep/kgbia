@@ -331,6 +331,105 @@ const SECTOR_TABLE_DATA: Record<string, { headers: string[]; rows: string[][] }>
       ["#4508", "Sara M.", "Cappotto Cashmere", "€450", "Carta", "13:45"],
     ],
   },
+  beach: {
+    headers: ["Postazione", "Cliente", "Tipo", "Periodo", "Importo", "Stato"],
+    rows: [
+      ["A-12", "Fam. Rossi", "Ombrellone + 2 lettini", "Giornaliero", "€45", "✅ Occupato"],
+      ["B-05", "Sig.ra Bianchi", "Ombrellone Premium", "Settimanale", "€280", "✅ Occupato"],
+      ["C-08", "Fam. Esposito", "Gazebo VIP", "Giornaliero", "€120", "✅ Occupato"],
+      ["A-18", "Marco Neri", "Lettino singolo", "Giornaliero", "€15", "✅ Occupato"],
+      ["D-02", "Hotel Belvedere", "10 Ombrelloni", "Stagionale", "€4.500", "✅ Abbonamento"],
+      ["B-14", "Prenotazione Web", "Ombrellone + 2 lettini", "Domani", "€45", "📅 Prenotato"],
+      ["A-22", "Walk-in", "2 Lettini", "Pomeriggio", "€20", "⏳ In arrivo"],
+    ],
+  },
+  bakery: {
+    headers: ["Ordine", "Cliente", "Prodotti", "Totale", "Tipo", "Stato"],
+    rows: [
+      ["#B-401", "Pasticceria Roma", "Cornetti x50, Bombe x30", "€95", "B2B", "✅ Consegnato"],
+      ["#B-402", "Anna Verdi", "Torta Compleanno + Dolcetti", "€85", "Su misura", "🔥 In preparazione"],
+      ["#B-403", "Walk-in", "Pane Integrale x3, Focaccia", "€12", "Banco", "✅ Venduto"],
+      ["#B-404", "Bar Centrale", "Croissant x40, Danish x20", "€72", "B2B", "📅 Domani 05:00"],
+      ["#B-405", "Maria Rossi", "Colomba Artigianale", "€28", "Preordine", "📅 Pasqua"],
+      ["#B-406", "Evento Aziendale", "Buffet dolce 50 pax", "€320", "Catering", "🔥 In preparazione"],
+    ],
+  },
+  plumber: {
+    headers: ["Ticket", "Cliente", "Intervento", "Zona", "Importo", "Stato"],
+    rows: [
+      ["INT-201", "Marco Rossi", "Perdita tubo bagno", "Roma Nord", "€180", "✅ Completato"],
+      ["INT-202", "Cond. Via Roma 15", "Sostituzione caldaia", "Centro", "€2.400", "🔄 In corso"],
+      ["INT-203", "Laura Bianchi", "Scarico intasato", "Trastevere", "€95", "📅 15:00"],
+      ["INT-204", "Ufficio Verdi Srl", "Impianto idraulico", "EUR", "€4.800", "📅 Domani"],
+      ["INT-205", "Anna Conti", "Riparazione rubinetto", "Prati", "€65", "📅 16:30"],
+      ["INT-206", "Rest. Da Mario", "Lavastoviglie industr.", "Testaccio", "€350", "🔄 In corso"],
+    ],
+  },
+  electrician: {
+    headers: ["Ticket", "Cliente", "Intervento", "Zona", "Importo", "Stato"],
+    rows: [
+      ["EL-301", "Fam. Bianchi", "Quadro elettrico", "Milano Nord", "€450", "✅ Completato"],
+      ["EL-302", "Ufficio Tech Srl", "Cablaggio strutturato", "Centro", "€3.200", "🔄 In corso"],
+      ["EL-303", "Marco Verdi", "Impianto fotovoltaico", "Monza", "€8.500", "📅 Sopralluogo"],
+      ["EL-304", "Cond. Via Dante", "Messa a norma", "Brera", "€5.600", "📅 Preventivo"],
+      ["EL-305", "Rest. Stellato", "Illuminazione design", "Navigli", "€1.800", "🔄 In corso"],
+      ["EL-306", "Villa Rossi", "Domotica completa", "Brianza", "€12.000", "📅 Progetto"],
+    ],
+  },
+  veterinary: {
+    headers: ["Visita", "Proprietario", "Paziente", "Tipo", "Importo", "Stato"],
+    rows: [
+      ["VET-101", "Maria Rossi", "Luna (Golden)", "Vaccino annuale", "€45", "✅ Completato"],
+      ["VET-102", "Paolo Neri", "Micio (Persiano)", "Sterilizzazione", "€180", "🔄 In corso"],
+      ["VET-103", "Laura Verdi", "Rex (Pastore)", "Ortopedia", "€320", "📅 15:00"],
+      ["VET-104", "Anna Conti", "Nemo (Pesce rosso)", "Consulenza", "€25", "📅 15:30"],
+      ["VET-105", "Fam. Esposito", "Birba (Meticcio)", "Check-up completo", "€90", "📅 16:00"],
+      ["VET-106", "Giulia Ferretti", "Oscar (Labrador)", "Ecografia", "€120", "📅 Domani"],
+    ],
+  },
+  tattoo: {
+    headers: ["ID", "Cliente", "Progetto", "Artista", "Importo", "Stato"],
+    rows: [
+      ["TAT-101", "Marco R.", "Sleeve braccio dx", "Alex Art", "€800", "🔄 Sessione 3/5"],
+      ["TAT-102", "Sara B.", "Minimal polso", "Luna Ink", "€120", "📅 14:30"],
+      ["TAT-103", "Davide N.", "Cover-up schiena", "Alex Art", "€600", "📅 16:00"],
+      ["TAT-104", "Elena C.", "Watercolor coscia", "Jade", "€450", "📅 Domani"],
+      ["TAT-105", "Walk-in", "Scritta piccola", "Luna Ink", "€80", "⏳ In attesa"],
+      ["TAT-106", "Online", "Consulenza design", "Alex Art", "€0", "📅 Sabato"],
+    ],
+  },
+  legal: {
+    headers: ["Pratica", "Cliente", "Tipo", "Avvocato", "Valore", "Stato"],
+    rows: [
+      ["LEG-501", "Rossi Srl", "Contenzioso civile", "Avv. Bianchi", "€8.500", "🔄 In corso"],
+      ["LEG-502", "Mario Verdi", "Divorzio consensuale", "Avv. Neri", "€3.200", "✅ Concluso"],
+      ["LEG-503", "Tech Corp", "Contrattualistica", "Avv. Bianchi", "€4.800", "📅 Revisione"],
+      ["LEG-504", "Anna Conti", "Successione", "Avv. Romano", "€2.400", "🔄 In corso"],
+      ["LEG-505", "Cond. Via Roma", "Recupero crediti", "Avv. Neri", "€1.800", "📅 Udienza 28/3"],
+    ],
+  },
+  accountant: {
+    headers: ["Pratica", "Cliente", "Tipo", "Scadenza", "Importo", "Stato"],
+    rows: [
+      ["FIS-201", "Rossi & C. Sas", "Bilancio 2025", "30/04", "€2.800", "🔄 In lavorazione"],
+      ["FIS-202", "Dr. Bianchi", "730 Precompilato", "30/09", "€180", "📅 Da iniziare"],
+      ["FIS-203", "Tech Srl", "IVA Trimestrale", "16/03", "€450", "✅ Inviato"],
+      ["FIS-204", "Fam. Verdi", "ISEE 2026", "Urgente", "€60", "⏳ In attesa doc."],
+      ["FIS-205", "Bar Centrale", "F24 + Libro giornale", "16/03", "€320", "✅ Completato"],
+      ["FIS-206", "Startup AI Srl", "Apertura P.IVA + SCIA", "ASAP", "€800", "🔄 In lavorazione"],
+    ],
+  },
+  garage: {
+    headers: ["Ticket", "Cliente", "Veicolo", "Intervento", "Importo", "Stato"],
+    rows: [
+      ["OFF-101", "Marco R.", "Audi A4 2022", "Tagliando + Freni", "€480", "🔄 In officina"],
+      ["OFF-102", "Laura B.", "Fiat 500 2020", "Revisione + Gomme", "€320", "✅ Pronta"],
+      ["OFF-103", "Paolo N.", "BMW X3 2023", "Cambio olio + Filtri", "€280", "📅 Domani"],
+      ["OFF-104", "Anna V.", "Mercedes GLA", "Diagnosi elettronica", "€90", "🔄 In diagnosi"],
+      ["OFF-105", "Davide E.", "VW Golf 8", "Carrozzeria laterale", "€1.200", "📅 Preventivo"],
+      ["OFF-106", "Sara M.", "Toyota Yaris", "Climatizzatore", "€180", "📅 Mercoledì"],
+    ],
+  },
 };
 
 // ── Sector-specific activity feeds ──
