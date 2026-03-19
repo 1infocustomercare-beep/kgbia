@@ -413,15 +413,23 @@ const EmpireDNABackground = () => {
           for (let ti = 1; ti <= trailSteps; ti++) {
             const trailT = Math.max(0, fl.progress - ti * 0.04);
             const tp = walkPolyline(route, trailT);
-            const trailSize = IS_MOBILE ? 1 : 0.8;
-            ctx.fillStyle = hsla(pGlow, fadeA * (1 - ti * 0.3) * (IS_MOBILE ? 0.09 : 0.12));
-            ctx.fillRect(tp.x - trailSize, tp.y - trailSize, trailSize * 2, trailSize * 2);
+            const trailArm = IS_MOBILE ? 0.8 : 0.6;
+            ctx.strokeStyle = hsla(pGlow, fadeA * (1 - ti * 0.3) * (IS_MOBILE ? 0.09 : 0.12));
+            ctx.lineWidth = 0.3;
+            ctx.beginPath();
+            ctx.moveTo(tp.x - trailArm, tp.y); ctx.lineTo(tp.x + trailArm, tp.y);
+            ctx.moveTo(tp.x, tp.y - trailArm); ctx.lineTo(tp.x, tp.y + trailArm);
+            ctx.stroke();
           }
         }
 
-        ctx.fillStyle = hsla(pAccent, fadeA * 0.15 * MOBILE_BOOST);
-        const pSize = IS_MOBILE ? 1.2 : 0.8;
-        ctx.fillRect(pt.x - pSize, pt.y - pSize, pSize * 2, pSize * 2);
+        const pArm = IS_MOBILE ? 1.2 : 0.9;
+        ctx.strokeStyle = hsla(pAccent, fadeA * 0.15 * MOBILE_BOOST);
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(pt.x - pArm, pt.y); ctx.lineTo(pt.x + pArm, pt.y);
+        ctx.moveTo(pt.x, pt.y - pArm); ctx.lineTo(pt.x, pt.y + pArm);
+        ctx.stroke();
       }
 
       // ═══ LAYER 5: Pulse Rings ═══
