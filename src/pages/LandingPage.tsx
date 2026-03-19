@@ -2158,7 +2158,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                 isSelected ?
                 "border-2 border-primary/40 shadow-[0_0_40px_hsla(38,50%,55%,0.1)]" :
-                "border border-border/30 hover:border-primary/20"}`
+                "border border-border/30 hover:border-primary/20"}`}
                 style={{
                   background: isSelected
                     ? "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.92) 40%, hsla(0,0%,4%,0.99) 100%)"
