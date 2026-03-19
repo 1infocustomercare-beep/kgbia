@@ -492,7 +492,7 @@
 
   /* ═══ GLOW CARD ═══ */
   .glow-card {
-    background: linear-gradient(145deg, hsla(230, 12%, 10%, 0.75), hsla(230, 10%, 7%, 0.78));
+    background: linear-gradient(145deg, hsla(230, 12%, 10%, 0.94), hsla(230, 10%, 7%, 0.95));
     backdrop-filter: blur(24px) saturate(1.4);
     border: 1px solid hsla(38, 45%, 50%, 0.12);
     position: relative;

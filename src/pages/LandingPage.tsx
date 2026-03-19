@@ -122,11 +122,16 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-/** Reduce section background alpha so the DNA circuit canvas shows THROUGH sections */
+/** Reduce section background alpha slightly so the DNA circuit canvas peeks through
+ *  at edges and gaps BETWEEN sections — not under text/content.
+ *  Also normalizes previously over-transparent values (0.75-0.82) back up. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !style.background || typeof style.background !== "string") return style;
-  // Already handled by lowered alpha values in section styles
-  return style;
+  // Replace alpha=1 → 0.93, and normalize any 0.7x/0.8x → 0.93
+  let bg = style.background.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*1\)/g, (_, inner) => `hsla(${inner},0.93)`);
+  bg = bg.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*0\.7\d\)/g, (_, inner) => `hsla(${inner},0.93)`);
+  bg = bg.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*0\.8\d\)/g, (_, inner) => `hsla(${inner},0.93)`);
+  return { ...style, background: bg };
 };
 
 const Section = forwardRef<HTMLElement, {id?: string;children: React.ReactNode;className?: string;style?: React.CSSProperties;}>(
@@ -534,7 +539,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     <motion.div
       className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
       style={{
-        background: "linear-gradient(145deg, hsla(230,12%,9%,0.78), hsla(230,10%,6%,0.80))",
+        background: "linear-gradient(145deg, hsla(230,12%,9%,0.94), hsla(230,10%,6%,0.95))",
         backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.4)",
         borderColor: "hsla(38,40%,55%,0.12)"
       }}
@@ -1061,8 +1066,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 }
                 style={{
                   background: isEmpire ?
-                   "linear-gradient(165deg, hsla(35,25%,14%,0.80), hsla(230,12%,8%,0.82))" :
-                   "linear-gradient(165deg, hsla(230,12%,13%,0.78), hsla(230,10%,9%,0.80))"
+                   "linear-gradient(165deg, hsla(35,25%,14%,0.94), hsla(230,12%,8%,0.95))" :
+                   "linear-gradient(165deg, hsla(230,12%,13%,0.93), hsla(230,10%,9%,0.95))"
                 }}
                 whileTap={{ scale: 0.985 }}>
 
@@ -1238,9 +1243,9 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 style={{
                   background: isSelected ?
                   p.id === "empire" ?
-                   "linear-gradient(165deg, hsla(35,22%,14%,0.80), hsla(230,12%,9%,0.82))" :
-                   "linear-gradient(165deg, hsla(265,15%,14%,0.78), hsla(230,10%,9%,0.80))" :
-                   "linear-gradient(165deg, hsla(230,12%,13%,0.75), hsla(230,10%,10%,0.78))"
+                   "linear-gradient(165deg, hsla(35,22%,14%,0.94), hsla(230,12%,9%,0.95))" :
+                   "linear-gradient(165deg, hsla(265,15%,14%,0.93), hsla(230,10%,9%,0.95))" :
+                   "linear-gradient(165deg, hsla(230,12%,13%,0.92), hsla(230,10%,10%,0.94))"
                 }}>
                     {p.badge &&
                   <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
@@ -1760,7 +1765,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
             {/* Comparison Table — Professional */}
             <motion.div className="max-w-4xl mx-auto mt-8 p-5 sm:p-8 rounded-2xl border border-accent/15 relative overflow-hidden shadow-[0_8px_50px_hsla(265,50%,30%,0.12),0_0_60px_hsla(38,50%,50%,0.05)]"
-          style={{ background: "linear-gradient(165deg, hsla(265,16%,12%,0.78), hsla(230,14%,9%,0.80))" }}
+          style={{ background: "linear-gradient(165deg, hsla(265,16%,12%,0.94), hsla(230,14%,9%,0.95))" }}
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsla(38,55%,55%,0.3), transparent)" }} />
               <div className="text-center mb-5">
@@ -3018,7 +3023,7 @@ const LandingPage = () => {
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="lg:hidden overflow-hidden relative"
-          style={{ backgroundColor: "hsla(230,12%,5%,0.78)", backdropFilter: "blur(40px) saturate(1.8)" }}>
+          style={{ backgroundColor: "hsla(230,12%,5%,0.94)", backdropFilter: "blur(40px) saturate(1.8)" }}>
               {/* Top holographic line */}
               <motion.div className="h-[1.5px] w-full"
             style={{
@@ -3193,7 +3198,7 @@ const LandingPage = () => {
               {metrics.map((m, i) =>
               <motion.div key={i} className="group relative rounded-2xl p-5 sm:p-6 text-center overflow-hidden backdrop-blur-xl"
               style={{
-                background: "linear-gradient(145deg, hsla(230,12%,13%,0.75), hsla(230,10%,10%,0.78))",
+                background: "linear-gradient(145deg, hsla(230,12%,13%,0.93), hsla(230,10%,10%,0.94))",
                 border: "1px solid hsla(35,30%,45%,0.15)",
                 boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.08), 0 8px 30px hsla(230,10%,4%,0.5)"
               }}
@@ -3231,7 +3236,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden" style={{ background: "hsla(230,14%,5%,0.75)" }}>
+      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden" style={{ background: "hsla(230,14%,5%,0.93)" }}>
         <div className="flex animate-marquee-scroll whitespace-nowrap">
           {[...Array(2)].map((_, repeat) =>
           <div key={repeat} className="flex items-center gap-12 px-6">
@@ -3523,7 +3528,7 @@ const LandingPage = () => {
                     whileHover={{ y: -6, scale: 1.04 }}>
                     
                     <div className="relative rounded-lg sm:rounded-xl border overflow-hidden h-full" style={{
-                      background: "linear-gradient(160deg, hsla(260,18%,10%,0.82), hsla(260,16%,7%,0.78))",
+                      background: "linear-gradient(160deg, hsla(260,18%,10%,0.94), hsla(260,16%,7%,0.94))",
                       borderColor: "hsla(265,50%,55%,0.1)",
                       boxShadow: "0 2px 12px hsla(260,40%,5%,0.35), inset 0 1px 0 hsla(265,60%,65%,0.04)"
                     }}>
@@ -4854,7 +4859,7 @@ const LandingPage = () => {
 
             {/* Opaque layer to block DNA background bleed */}
             <div className="absolute inset-0 rounded-2xl" style={{
-              background: "linear-gradient(145deg, hsla(265,22%,8%,0.78) 0%, hsla(230,18%,6%,0.80) 50%, hsla(265,20%,9%,0.78) 100%)"
+              background: "linear-gradient(145deg, hsla(265,22%,8%,0.94) 0%, hsla(230,18%,6%,0.95) 50%, hsla(265,20%,9%,0.94) 100%)"
             }} />
 
             {/* Circuit connection SVG between the 3 cards */}
@@ -4952,7 +4957,7 @@ const LandingPage = () => {
 
         {/* ═══ Bottom Promise ═══ */}
         <motion.div className="max-w-2xl mx-auto text-center p-8 sm:p-10 rounded-2xl border border-accent/20 overflow-hidden relative shadow-[0_8px_50px_hsla(265,50%,30%,0.15),0_0_80px_hsla(38,50%,50%,0.06)]"
-        style={{ background: "linear-gradient(165deg, hsla(265,18%,12%,0.78), hsla(230,14%,9%,0.80))" }}
+        style={{ background: "linear-gradient(165deg, hsla(265,18%,12%,0.94), hsla(230,14%,9%,0.95))" }}
         initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="absolute inset-0 premium-holo-grid opacity-[0.04] pointer-events-none" />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsla(38,55%,55%,0.4), hsla(265,70%,60%,0.3), transparent)" }} />
@@ -5036,7 +5041,7 @@ const LandingPage = () => {
         <div className="sm:hidden relative">
           {/* Opaque backdrop for circuit visibility */}
           <div className="absolute inset-0 rounded-2xl z-0"
-            style={{ background: "linear-gradient(160deg, hsla(230,16%,9%,0.75), hsla(265,14%,7%,0.75))", border: "1px solid hsla(265,35%,40%,0.06)" }} />
+            style={{ background: "linear-gradient(160deg, hsla(230,16%,9%,0.93), hsla(265,14%,7%,0.93))", border: "1px solid hsla(265,35%,40%,0.06)" }} />
 
           {/* Circuit SVG connections between service cards */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" viewBox="0 0 320 600" preserveAspectRatio="xMidYMid meet">
@@ -6215,7 +6220,7 @@ const LandingPage = () => {
 
       {/* ═══════ FOOTER ═══════ */}
       <footer id="contact" className="relative py-20 pb-10 px-5 sm:px-6 overflow-hidden"
-      style={{ background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,7%,1) 12%, hsla(38,14%,6%,1) 28%, hsla(265,20%,8%,1) 45%, hsla(155,12%,6%,1) 62%, hsla(265,18%,5%,1) 80%, hsla(230,16%,3%,1) 100%)" }}>
+      style={mobilifyBg({ background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,7%,1) 12%, hsla(38,14%,6%,1) 28%, hsla(265,20%,8%,1) 45%, hsla(155,12%,6%,1) 62%, hsla(265,18%,5%,1) 80%, hsla(230,16%,3%,1) 100%)" })}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Top accent line — tricolore viola/oro/verde */}
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.4) 20%, hsla(38,65%,55%,0.35) 40%, hsla(155,60%,50%,0.3) 60%, hsla(38,65%,55%,0.35) 80%, transparent 95%)" }} />
