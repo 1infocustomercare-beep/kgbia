@@ -1760,7 +1760,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
             {/* Comparison Table — Professional */}
             <motion.div className="max-w-4xl mx-auto mt-8 p-5 sm:p-8 rounded-2xl border border-accent/15 relative overflow-hidden shadow-[0_8px_50px_hsla(265,50%,30%,0.12),0_0_60px_hsla(38,50%,50%,0.05)]"
-          style={{ background: "linear-gradient(165deg, hsla(265,16%,12%,0.97), hsla(230,14%,9%,0.98))" }}
+          style={{ background: "linear-gradient(165deg, hsla(265,16%,12%,0.78), hsla(230,14%,9%,0.80))" }}
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[1px]" style={{ background: "linear-gradient(90deg, transparent, hsla(38,55%,55%,0.3), transparent)" }} />
               <div className="text-center mb-5">
