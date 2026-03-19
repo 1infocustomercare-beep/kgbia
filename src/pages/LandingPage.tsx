@@ -2655,8 +2655,8 @@ const LandingPage = () => {
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Subtle violet ambient orbs */}
-        <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.04] bg-primary -top-[200px] left-1/4" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.03] bg-accent top-[50vh] -right-[100px]" />
+        <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.02] bg-primary -top-[200px] left-1/4" />
+        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.015] bg-accent top-[50vh] -right-[100px]" />
         {/* Particles - reduced */}
         <Particle delay={0} size={2} x="10%" y="30%" />
         <Particle delay={2} size={2} x="70%" y="60%" />
