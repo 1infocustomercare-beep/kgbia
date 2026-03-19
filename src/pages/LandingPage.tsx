@@ -341,9 +341,9 @@ const NeuralCellsBackground = () => {
   return (
     <motion.div
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: isMobile ? 0.5 : 0.7, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: 0.7, willChange: "transform", transform: "translateZ(0)" }}
       initial={{ opacity: 0 }}
-      animate={born ? { opacity: isMobile ? 0.5 : 0.7 } : { opacity: 0 }}
+      animate={born ? { opacity: 0.7 } : { opacity: 0 }}
       transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}>
       
       {/* DNA Birth Pulse — desktop only */}
@@ -366,8 +366,8 @@ const NeuralCellsBackground = () => {
         </>
       }
 
-      {/* ═══ TECH CIRCUIT GRID — desktop only (heavy SVG patterns) ═══ */}
-      {!isMobile &&
+      {/* ═══ TECH CIRCUIT GRID ═══ */}
+      {
       <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.045 }} xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="bg-circuit-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(2.2)">
@@ -386,27 +386,25 @@ const NeuralCellsBackground = () => {
         </svg>
       }
 
-      {/* ═══ VERTICAL DATA STREAMS — desktop only (GPU killer on mobile) ═══ */}
+      {/* ═══ VERTICAL DATA STREAMS ═══ */}
       {!isMobile && [8, 25, 42, 58, 75, 92].map((x, i) =>
       <div key={`vstream-${i}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${x}%`, background: `hsla(215,35%,50%,0.03)` }}>
           <motion.div className="absolute w-full left-0 rounded-full"
         style={{ height: "100px", background: `linear-gradient(180deg, transparent, hsla(210,55%,62%,0.25), transparent)` }}
         animate={{ top: ["-10%", "110%"] }}
         transition={{ duration: 10 + i * 2.5, repeat: Infinity, ease: "linear", delay: i * 1.8 }} />
-        
         </div>
       )}
 
-      {/* ═══ HORIZONTAL SCAN LINES — desktop only ═══ */}
+      {/* ═══ HORIZONTAL SCAN LINES ═══ */}
       {!isMobile && [0, 1].map((i) =>
       <motion.div key={`hscan-${i}`} className="absolute left-0 right-0 h-px"
       style={{ background: `linear-gradient(90deg, transparent 5%, hsla(210,45%,58%,0.08) 30%, hsla(215,50%,65%,0.14) 50%, hsla(210,45%,58%,0.08) 70%, transparent 95%)` }}
       animate={{ top: ["-3%", "103%"] }}
       transition={{ duration: 18 + i * 7, repeat: Infinity, ease: "linear", delay: i * 5 }} />
-
       )}
 
-      {/* ═══ PULSING TECH NODES — desktop only ═══ */}
+      {/* ═══ PULSING TECH NODES ═══ */}
       {!isMobile && [
       { x: 8, y: 18 }, { x: 25, y: 40 }, { x: 42, y: 12 }, { x: 58, y: 60 },
       { x: 75, y: 30 }, { x: 92, y: 55 }, { x: 35, y: 80 }, { x: 65, y: 90 }].
@@ -415,7 +413,6 @@ const NeuralCellsBackground = () => {
       style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(210,55%,62%,0.25)`, boxShadow: `0 0 8px hsla(210,55%,62%,0.15)` }}
       animate={{ opacity: [0.15, 0.5, 0.15], scale: [0.7, 1.4, 0.7] }}
       transition={{ duration: 4 + i * 0.6, repeat: Infinity, delay: i * 0.5 }} />
-
       )}
 
       {/* ═══ ORIGINAL NEURAL CELLS SVG ═══ */}
