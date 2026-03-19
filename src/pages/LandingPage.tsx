@@ -2467,21 +2467,29 @@ const LandingPage = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
-  /* Mobile viewport-animation safety: reveal stuck elements without scroll polling */
-  /* Viewport-animation safety: reveal stuck framer-motion elements on ALL viewports */
+  /* Viewport-animation safety: reveal stuck framer-motion elements */
   useEffect(() => {
+    // On mobile, use a simpler/cheaper approach
+    if (IS_MOBILE_LP) {
+      // Single delayed scan — force all hidden sections visible after 3s
+      const timer = window.setTimeout(() => {
+        document.querySelectorAll<HTMLElement>('section [style*="opacity: 0"]').forEach((el) => {
+          el.style.transition = "opacity 300ms ease-out";
+          el.style.opacity = "1";
+          el.style.transform = "none";
+        });
+      }, 3000);
+      return () => window.clearTimeout(timer);
+    }
+
+    // Desktop: full IntersectionObserver approach
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-
           const el = entry.target as HTMLElement;
           const computedOpacity = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
-          if (computedOpacity > 0.02) {
-            observer.unobserve(el);
-            return;
-          }
-
+          if (computedOpacity > 0.02) { observer.unobserve(el); return; }
           el.style.willChange = "opacity, transform";
           el.style.transition = "opacity 400ms ease-out, transform 400ms ease-out";
           el.style.opacity = "1";
@@ -2493,7 +2501,6 @@ const LandingPage = () => {
     );
 
     const observeHiddenCandidates = () => {
-      // Catch framer-motion elements with opacity: 0 (various formats)
       document.querySelectorAll<HTMLElement>('[style*="opacity"]').forEach((el) => {
         const computed = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
         if (computed < 0.02) observer.observe(el);
@@ -2502,12 +2509,11 @@ const LandingPage = () => {
 
     observeHiddenCandidates();
     const scans = [
-    window.setTimeout(observeHiddenCandidates, 800),
-    window.setTimeout(observeHiddenCandidates, 2000),
-    window.setTimeout(observeHiddenCandidates, 4000)];
+      window.setTimeout(observeHiddenCandidates, 800),
+      window.setTimeout(observeHiddenCandidates, 2000),
+      window.setTimeout(observeHiddenCandidates, 4000)
+    ];
 
-
-    // Nuclear fallback: after 5s force all hidden sections visible
     const nuclear = window.setTimeout(() => {
       document.querySelectorAll<HTMLElement>('section [style*="opacity"]').forEach((el) => {
         const computed = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
