@@ -925,7 +925,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
   return (
     <Section id="pricing" className="relative overflow-hidden" style={{
-      background: "linear-gradient(180deg, hsla(0,0%,4%,1) 0%, hsla(0,0%,5%,1) 30%, hsla(38,22%,10%,1) 55%, hsla(0,0%,5%,1) 80%, hsla(0,0%,4%,1) 100%)"
+      background: "linear-gradient(180deg, hsla(0,0%,4%,0.88) 0%, hsla(0,0%,5%,0.85) 30%, hsla(38,22%,10%,0.85) 55%, hsla(0,0%,5%,0.85) 80%, hsla(0,0%,4%,0.88) 100%)"
     }}>
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.06]"
@@ -4282,7 +4282,7 @@ const LandingPage = () => {
            COMPARISON TABLE — Empire vs Others
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(38,16%,9%,1) 35%, hsla(265,20%,10%,1) 55%, hsla(38,14%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.85) 15%, hsla(38,16%,9%,0.85) 35%, hsla(265,20%,10%,0.85) 55%, hsla(38,14%,8%,0.85) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -4352,7 +4352,7 @@ const LandingPage = () => {
            TECH DNA — Neural Network Visualization
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,26%,10%,1) 15%, hsla(230,20%,11%,1) 35%, hsla(265,22%,9%,1) 55%, hsla(230,18%,8%,1) 78%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,26%,10%,0.85) 15%, hsla(230,20%,11%,0.85) 35%, hsla(265,22%,9%,0.85) 55%, hsla(230,18%,8%,0.85) 78%, hsla(230,16%,4%,0.88) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
