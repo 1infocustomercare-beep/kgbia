@@ -404,7 +404,7 @@ const NeuralCellsBackground = () => {
       transition={{ duration: 18 + i * 7, repeat: Infinity, ease: "linear", delay: i * 5 }} />
       )}
 
-      {/* ═══ PULSING TECH NODES — desktop only ═══ */}
+      {/* ═══ PULSING TECH NODES ═══ */}
       {!isMobile && [
       { x: 8, y: 18 }, { x: 25, y: 40 }, { x: 42, y: 12 }, { x: 58, y: 60 },
       { x: 75, y: 30 }, { x: 92, y: 55 }, { x: 35, y: 80 }, { x: 65, y: 90 }].
@@ -413,7 +413,6 @@ const NeuralCellsBackground = () => {
       style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(210,55%,62%,0.25)`, boxShadow: `0 0 8px hsla(210,55%,62%,0.15)` }}
       animate={{ opacity: [0.15, 0.5, 0.15], scale: [0.7, 1.4, 0.7] }}
       transition={{ duration: 4 + i * 0.6, repeat: Infinity, delay: i * 0.5 }} />
-
       )}
 
       {/* ═══ ORIGINAL NEURAL CELLS SVG ═══ */}
