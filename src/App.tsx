@@ -343,7 +343,7 @@ class IntroErrorBoundary extends React.Component<{ children: ReactNode; onFail: 
 }
 
 /** Hide Empire DNA background only on client public sites (their branded pages) */
-const CLIENT_SITE_PATTERN = /^\/(b|r|ncc-demo|demo)\//;
+const CLIENT_SITE_PATTERN = /^\/(b|r|ncc-demo)\//;
 
 function ConditionalDNABackground() {
   const { pathname } = useLocation();
