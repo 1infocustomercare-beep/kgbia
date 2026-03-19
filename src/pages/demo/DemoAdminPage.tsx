@@ -753,6 +753,96 @@ const SECTOR_BAR_DATA: Record<string, { name: string; valore: number }[]> = {
     { name: "Scarpe", valore: 72 }, { name: "Borse", valore: 58 },
     { name: "Gioielli", valore: 42 }, { name: "Cosmetici", valore: 35 },
   ],
+  beach: [
+    { name: "Ombrellone+2", valore: 128 }, { name: "Gazebo VIP", valore: 42 },
+    { name: "Lettino Sing.", valore: 95 }, { name: "Abb. Settimanale", valore: 38 },
+    { name: "Bar Spiaggia", valore: 210 }, { name: "Abb. Stagionale", valore: 12 },
+  ],
+  bakery: [
+    { name: "Cornetti", valore: 280 }, { name: "Pane Artigianale", valore: 145 },
+    { name: "Torte Su Misura", valore: 42 }, { name: "Focaccia", valore: 120 },
+    { name: "Biscotti", valore: 95 }, { name: "Colomba/Panettone", valore: 35 },
+  ],
+  plumber: [
+    { name: "Ripar. Perdite", valore: 48 }, { name: "Sost. Caldaia", valore: 18 },
+    { name: "Scarico Intasato", valore: 42 }, { name: "Imp. Idraulico", valore: 12 },
+    { name: "Rubinetteria", valore: 35 }, { name: "Pronto Interv.", valore: 28 },
+  ],
+  electrician: [
+    { name: "Quadro Elettrico", valore: 32 }, { name: "Cablaggio", valore: 18 },
+    { name: "Fotovoltaico", valore: 14 }, { name: "Messa a Norma", valore: 22 },
+    { name: "Domotica", valore: 8 }, { name: "Illuminazione", valore: 28 },
+  ],
+  agriturismo: [
+    { name: "Soggiorno B&B", valore: 65 }, { name: "Degustazione", valore: 48 },
+    { name: "Cena Agriturist.", valore: 82 }, { name: "Olio EVO", valore: 120 },
+    { name: "Vino Locale", valore: 95 }, { name: "Esperienza Farm", valore: 28 },
+  ],
+  cleaning: [
+    { name: "Uffici", valore: 85 }, { name: "Condomini", valore: 62 },
+    { name: "Ristoranti", valore: 42 }, { name: "Post-Cantiere", valore: 18 },
+    { name: "Sanificazione", valore: 35 }, { name: "Vetri/Esterni", valore: 28 },
+  ],
+  legal: [
+    { name: "Civile", valore: 42 }, { name: "Contrattualistica", valore: 38 },
+    { name: "Famiglia", valore: 28 }, { name: "Recupero Crediti", valore: 22 },
+    { name: "Successioni", valore: 18 }, { name: "Penale", valore: 12 },
+  ],
+  accountant: [
+    { name: "Bilanci", valore: 45 }, { name: "730/Redditi", valore: 86 },
+    { name: "IVA Trimest.", valore: 65 }, { name: "ISEE", valore: 42 },
+    { name: "Apertura P.IVA", valore: 18 }, { name: "Consulenza", valore: 55 },
+  ],
+  garage: [
+    { name: "Tagliando", valore: 85 }, { name: "Revisione", valore: 72 },
+    { name: "Gomme Stag.", valore: 58 }, { name: "Carrozzeria", valore: 28 },
+    { name: "Diagnosi Elett.", valore: 42 }, { name: "Climatizzatore", valore: 22 },
+  ],
+  photographer: [
+    { name: "Matrimoni", valore: 18 }, { name: "Portrait", valore: 42 },
+    { name: "Corporate", valore: 28 }, { name: "Prodotto", valore: 35 },
+    { name: "Newborn", valore: 22 }, { name: "Eventi", valore: 15 },
+  ],
+  construction: [
+    { name: "Ristrutturaz.", valore: 28 }, { name: "Nuova Costruz.", valore: 8 },
+    { name: "Impermeabilizz.", valore: 18 }, { name: "Cappotto Term.", valore: 14 },
+    { name: "Cartongesso", valore: 35 }, { name: "Pavimentazione", valore: 22 },
+  ],
+  gardener: [
+    { name: "Manutenzione", valore: 92 }, { name: "Potatura", valore: 65 },
+    { name: "Prato Nuovo", valore: 18 }, { name: "Irrigazione", valore: 28 },
+    { name: "Fitosanitario", valore: 35 }, { name: "Progettazione", valore: 12 },
+  ],
+  veterinary: [
+    { name: "Vaccini", valore: 85 }, { name: "Visita Generale", valore: 72 },
+    { name: "Chirurgia", valore: 28 }, { name: "Dentale", valore: 35 },
+    { name: "Ecografia", valore: 22 }, { name: "Dermatologia", valore: 18 },
+  ],
+  tattoo: [
+    { name: "Sleeve", valore: 15 }, { name: "Piccoli", valore: 68 },
+    { name: "Cover-up", valore: 22 }, { name: "Lettering", valore: 45 },
+    { name: "Realistico", valore: 18 }, { name: "Geometrico", valore: 32 },
+  ],
+  childcare: [
+    { name: "Tempo Pieno", valore: 28 }, { name: "Part-time Matt.", valore: 8 },
+    { name: "Part-time Pom.", valore: 4 }, { name: "Extra Orario", valore: 12 },
+    { name: "Centro Estivo", valore: 35 }, { name: "Lab Creativi", valore: 22 },
+  ],
+  education: [
+    { name: "Full Stack", valore: 85 }, { name: "Data Science", valore: 62 },
+    { name: "UX Design", valore: 48 }, { name: "Marketing Dig.", valore: 42 },
+    { name: "Cybersecurity", valore: 28 }, { name: "AI/ML", valore: 55 },
+  ],
+  events: [
+    { name: "Matrimoni", valore: 18 }, { name: "Corporate", valore: 32 },
+    { name: "Compleanni", valore: 45 }, { name: "Congressi", valore: 12 },
+    { name: "Feste Private", valore: 28 }, { name: "Team Building", valore: 22 },
+  ],
+  logistics: [
+    { name: "Espresso", valore: 85 }, { name: "Standard", valore: 128 },
+    { name: "Groupage", valore: 45 }, { name: "Dedicato", valore: 22 },
+    { name: "Internazionale", valore: 18 }, { name: "Ultimo Miglio", valore: 65 },
+  ],
 };
 
 // ── Pie data (client sources) ──
