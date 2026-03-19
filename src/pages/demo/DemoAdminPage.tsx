@@ -2264,16 +2264,22 @@ export default function DemoAdminPage() {
   };
 
   return (
-    <div className="min-h-screen flex relative" style={{ background: "#0a0a12" }}>
-      {/* Premium sector-themed ambient background */}
+    <div className="min-h-screen flex relative" style={{ background: "linear-gradient(145deg, #0c0a14 0%, #0a0a12 40%, #0d0b10 100%)" }}>
+      {/* Premium sector-themed ambient background with enhanced glows */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full opacity-[0.04]"
-          style={{ background: `radial-gradient(circle, ${accentColor}, transparent 70%)`, filter: "blur(120px)", transform: "translate(-30%, -30%)" }} />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.03]"
-          style={{ background: `radial-gradient(circle, ${accentColor}, transparent 70%)`, filter: "blur(140px)", transform: "translate(30%, 30%)" }} />
-        <div className="absolute top-1/2 left-1/2 w-[400px] h-[400px] rounded-full opacity-[0.02]"
-          style={{ background: `radial-gradient(circle, ${accentColor}, transparent 65%)`, filter: "blur(100px)", transform: "translate(-50%, -50%)" }} />
-        <div className="absolute inset-0" style={{ opacity: 0.015, backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+        {/* Primary sector glow — top-left */}
+        <div className="absolute rounded-full opacity-[0.06]"
+          style={{ top: "-8%", left: "-5%", width: "600px", height: "600px", background: `radial-gradient(circle, ${accentColor}, transparent 65%)`, filter: "blur(100px)" }} />
+        {/* Secondary glow — bottom-right */}
+        <div className="absolute rounded-full opacity-[0.04]"
+          style={{ bottom: "-8%", right: "-5%", width: "550px", height: "550px", background: `radial-gradient(circle, ${accentColor}, transparent 70%)`, filter: "blur(130px)" }} />
+        {/* Center ambient */}
+        <div className="absolute rounded-full opacity-[0.025]"
+          style={{ top: "40%", left: "50%", width: "500px", height: "500px", background: `radial-gradient(circle, ${accentColor}, transparent 60%)`, filter: "blur(110px)", transform: "translate(-50%, -50%)" }} />
+        {/* Subtle grid */}
+        <div className="absolute inset-0" style={{ opacity: 0.015, backgroundImage: "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+        {/* Top accent line */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-px" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}25, transparent)` }} />
       </div>
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (

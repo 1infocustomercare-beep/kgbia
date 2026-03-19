@@ -313,8 +313,18 @@ const AdminDashboard = () => {
     );
   }
 
+  const sectorAccent = settingsPrimaryColor || "#C8963E";
+
   return (
-    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
+    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "linear-gradient(145deg, #0c0a14 0%, #0a0a12 40%, #0d0b10 100%)" }}>
+      {/* Premium sector-themed admin background */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.06]"
+          style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 65%)`, filter: "blur(100px)" }} />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
+          style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 70%)`, filter: "blur(120px)" }} />
+        <div className="absolute inset-0" style={{ opacity: 0.012, backgroundImage: "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+      </div>
       
       {/* Back button integrated in header */}
       {/* Header */}
