@@ -1737,6 +1737,233 @@ export default function DemoAdminPage() {
     );
   };
 
+  // ══════════════════════════════════════
+  //  MARKETING VIEW
+  // ══════════════════════════════════════
+  const renderMarketing = () => {
+    const campaigns = [
+      { name: "Newsletter Settimanale", type: "Email", sent: 1240, opened: 42, clicked: 18, status: "Attiva" },
+      { name: "Promo Weekend", type: "WhatsApp", sent: 580, opened: 78, clicked: 34, status: "Attiva" },
+      { name: "Lancio Nuovo Servizio", type: "SMS", sent: 890, opened: 65, clicked: 22, status: "Completata" },
+      { name: "Flash Sale Estate", type: "Email", sent: 2100, opened: 38, clicked: 15, status: "Pianificata" },
+      { name: "Win-back Inattivi", type: "WhatsApp", sent: 340, opened: 85, clicked: 42, status: "Attiva" },
+    ];
+    const socialMetrics = [
+      { platform: "Instagram", followers: "2.4K", growth: "+12%", posts: 28, engagement: "4.8%" },
+      { platform: "Facebook", followers: "1.8K", growth: "+6%", posts: 14, engagement: "2.1%" },
+      { platform: "Google Business", reviews: "4.7★", total: 186, growth: "+8 questo mese" },
+    ];
+    return (
+      <div className="space-y-5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-bold text-white">Marketing & Social</h2>
+          <Button size="sm" style={{ background: accentColor }} className="text-xs h-8 gap-1"><Plus className="w-3 h-3" /> Nuova Campagna</Button>
+        </div>
+        {/* Campaign overview KPIs */}
+        <div className="grid grid-cols-3 gap-3">
+          {[{ l: "Messaggi Inviati", v: "4.750", i: Send }, { l: "Tasso Apertura", v: "52%", i: Eye }, { l: "Click-Through", v: "26%", i: Target }].map((k, i) => (
+            <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
+              <CardContent className="p-3 text-center">
+                <k.i className="w-4 h-4 mx-auto mb-1" style={{ color: accentColor }} />
+                <p className="text-sm font-bold text-white">{k.v}</p>
+                <p className="text-[0.5rem] text-white/30">{k.l}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        {/* Campaigns table */}
+        <Card className="bg-white/[0.03] border-white/[0.06] overflow-hidden">
+          <CardHeader className="pb-2"><CardTitle className="text-sm text-white/80">Campagne Recenti</CardTitle></CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead><tr className="border-b border-white/[0.06]">
+                  {["Campagna", "Tipo", "Inviati", "Aperture %", "Click %", "Stato"].map(h => (
+                    <th key={h} className="text-left text-[0.55rem] text-white/35 font-medium p-3 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                  ))}
+                </tr></thead>
+                <tbody>
+                  {campaigns.map((c, i) => (
+                    <tr key={i} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                      <td className="p-3 text-xs text-white/70 font-medium">{c.name}</td>
+                      <td className="p-3"><Badge className="text-[0.5rem]" style={{ background: c.type === "WhatsApp" ? "#22c55e18" : c.type === "SMS" ? "#8b5cf618" : `${accentColor}18`, color: c.type === "WhatsApp" ? "#22c55e" : c.type === "SMS" ? "#8b5cf6" : accentColor }}>{c.type}</Badge></td>
+                      <td className="p-3 text-xs text-white/50">{c.sent.toLocaleString("it-IT")}</td>
+                      <td className="p-3 text-xs text-white/70 font-bold">{c.opened}%</td>
+                      <td className="p-3 text-xs text-white/70 font-bold">{c.clicked}%</td>
+                      <td className="p-3"><Badge className="text-[0.5rem]" style={{ background: c.status === "Attiva" ? "#22c55e18" : c.status === "Completata" ? `${accentColor}18` : "#f59e0b18", color: c.status === "Attiva" ? "#22c55e" : c.status === "Completata" ? accentColor : "#f59e0b" }}>{c.status}</Badge></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+        {/* Social metrics */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {socialMetrics.map((s, i) => (
+            <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
+              <CardContent className="p-4">
+                <p className="text-xs font-bold text-white/80 mb-2">{s.platform}</p>
+                <div className="space-y-1">
+                  {"followers" in s && <div className="flex justify-between text-[0.6rem]"><span className="text-white/40">Follower</span><span className="text-white/70 font-bold">{s.followers}</span></div>}
+                  {"reviews" in s && <div className="flex justify-between text-[0.6rem]"><span className="text-white/40">Rating</span><span className="text-white/70 font-bold">{s.reviews}</span></div>}
+                  <div className="flex justify-between text-[0.6rem]"><span className="text-white/40">Crescita</span><span className="text-emerald-400 font-bold">{s.growth}</span></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // ══════════════════════════════════════
+  //  INVOICING VIEW
+  // ══════════════════════════════════════
+  const renderInvoicing = () => {
+    const invoices = [
+      { num: "FT-2026/001", client: config.mockClients[0]?.name || "Marco Rossi", date: "18/03/2026", amount: 850, status: "Pagata", method: "Bonifico" },
+      { num: "FT-2026/002", client: config.mockClients[1]?.name || "Laura Bianchi", date: "16/03/2026", amount: 420, status: "Inviata", method: "Carta" },
+      { num: "FT-2026/003", client: config.mockClients[2]?.name || "Anna Verdi", date: "14/03/2026", amount: 1250, status: "Pagata", method: "Bonifico" },
+      { num: "FT-2026/004", client: config.mockClients[3]?.name || "Paolo Neri", date: "12/03/2026", amount: 680, status: "Scaduta", method: "—" },
+      { num: "FT-2026/005", client: config.mockClients[4]?.name || "Sara Conti", date: "10/03/2026", amount: 340, status: "Pagata", method: "Carta" },
+      { num: "FT-2026/006", client: "Azienda Bianchi Srl", date: "08/03/2026", amount: 2800, status: "Inviata", method: "Bonifico" },
+      { num: "FT-2026/007", client: "Rossi & Figli", date: "05/03/2026", amount: 1560, status: "Pagata", method: "Bonifico" },
+    ];
+    return (
+      <div className="space-y-5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-bold text-white">Fatturazione & Pagamenti</h2>
+          <Button size="sm" style={{ background: accentColor }} className="text-xs h-8 gap-1"><Plus className="w-3 h-3" /> Nuova Fattura</Button>
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          {[{ l: "Fatturato Mese", v: "€7.900", c: "#22c55e" }, { l: "Da Incassare", v: "€1.100", c: "#f59e0b" }, { l: "Scadute", v: "€680", c: "#ef4444" }].map((k, i) => (
+            <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
+              <CardContent className="p-3 text-center">
+                <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
+                <p className="text-[0.5rem] text-white/30 mt-0.5">{k.l}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Card className="bg-white/[0.03] border-white/[0.06] overflow-hidden">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead><tr className="border-b border-white/[0.06]">
+                  {["N° Fattura", "Cliente", "Data", "Importo", "Stato", "Metodo"].map(h => (
+                    <th key={h} className="text-left text-[0.55rem] text-white/35 font-medium p-3 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                  ))}
+                </tr></thead>
+                <tbody>
+                  {invoices.map((inv, i) => (
+                    <tr key={i} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                      <td className="p-3 text-xs font-mono text-white/40">{inv.num}</td>
+                      <td className="p-3 text-xs text-white/70">{inv.client}</td>
+                      <td className="p-3 text-xs text-white/50">{inv.date}</td>
+                      <td className="p-3 text-xs text-white/80 font-bold">€{inv.amount.toLocaleString("it-IT")}</td>
+                      <td className="p-3"><Badge className="text-[0.5rem]" style={{ background: inv.status === "Pagata" ? "#22c55e18" : inv.status === "Inviata" ? "#3b82f618" : "#ef444418", color: inv.status === "Pagata" ? "#22c55e" : inv.status === "Inviata" ? "#3b82f6" : "#ef4444" }}>{inv.status}</Badge></td>
+                      <td className="p-3 text-xs text-white/50">{inv.method}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex items-center justify-between px-4 py-3 border-t border-white/[0.04]">
+              <span className="text-[0.6rem] text-white/30">{invoices.length} fatture</span>
+              <div className="flex gap-1">
+                {[1, 2].map(p => (
+                  <button key={p} className={`w-7 h-7 rounded-lg text-[0.6rem] font-bold ${p === 1 ? "text-white" : "text-white/30"}`}
+                    style={p === 1 ? { background: `${accentColor}20`, color: accentColor } : { background: "rgba(255,255,255,0.03)" }}>{p}</button>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
+  // ══════════════════════════════════════
+  //  SETTINGS VIEW
+  // ══════════════════════════════════════
+  const renderSettings = () => {
+    const [tutorialsOn, setTutorialsOn] = useState(true);
+    return (
+      <div className="space-y-5">
+        <h2 className="text-base font-bold text-white">Impostazioni</h2>
+        <div className="grid grid-cols-1 gap-4">
+          {/* General */}
+          <Card className="bg-white/[0.03] border-white/[0.06]">
+            <CardHeader className="pb-2"><CardTitle className="text-sm text-white/80">Generale</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              {[{ l: "Nome Attività", v: config.name }, { l: "Email", v: `info@${config.slug}.empire.ai` }, { l: "Telefono", v: "+39 06 1234 5678" }, { l: "Indirizzo", v: "Via Roma 42, Italia" }].map((f, i) => (
+                <div key={i}>
+                  <label className="text-[0.6rem] text-white/40 mb-1 block">{f.l}</label>
+                  <input className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white/70 outline-none focus:border-white/20 transition-colors" defaultValue={f.v} />
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          {/* Tutorials toggle */}
+          <Card className="bg-white/[0.03] border-white/[0.06]">
+            <CardHeader className="pb-2"><CardTitle className="text-sm text-white/80">Tutorial & Guide</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-white/70">Mostra Tutorial</p>
+                  <p className="text-[0.55rem] text-white/30">Popup di aiuto contestuali nelle sezioni</p>
+                </div>
+                <button onClick={() => setTutorialsOn(o => !o)}
+                  className={`w-10 h-6 rounded-full transition-all relative ${tutorialsOn ? "" : "bg-white/10"}`}
+                  style={tutorialsOn ? { background: accentColor } : {}}>
+                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${tutorialsOn ? "left-5" : "left-1"}`} />
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-white/70">Notifiche Push</p>
+                  <p className="text-[0.55rem] text-white/30">Ricevi aggiornamenti in tempo reale</p>
+                </div>
+                <button className="w-10 h-6 rounded-full transition-all relative" style={{ background: accentColor }}>
+                  <div className="absolute top-1 left-5 w-4 h-4 rounded-full bg-white" />
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-white/70">Tema Scuro</p>
+                  <p className="text-[0.55rem] text-white/30">Sempre attivo su Empire</p>
+                </div>
+                <button className="w-10 h-6 rounded-full transition-all relative" style={{ background: accentColor }}>
+                  <div className="absolute top-1 left-5 w-4 h-4 rounded-full bg-white" />
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+          {/* Branding */}
+          <Card className="bg-white/[0.03] border-white/[0.06]">
+            <CardHeader className="pb-2"><CardTitle className="text-sm text-white/80">Branding</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              <div>
+                <label className="text-[0.6rem] text-white/40 mb-1 block">Colore Primario</label>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg border border-white/10" style={{ background: accentColor }} />
+                  <input className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white/70 outline-none" defaultValue={accentColor} />
+                </div>
+              </div>
+              <div>
+                <label className="text-[0.6rem] text-white/40 mb-1 block">Logo</label>
+                <div className="w-full h-20 rounded-xl border border-dashed border-white/10 flex items-center justify-center">
+                  <p className="text-[0.6rem] text-white/25">Trascina qui il tuo logo</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  };
+
   // ── Generic module placeholder ──
   const renderGenericModule = () => {
     const mod = config.adminModules.find(m => m.route === activeModule);
@@ -1767,6 +1994,9 @@ export default function DemoAdminPage() {
       case "appointments": case "reservations": case "calendar": return renderCalendar();
       case "agents": return renderAgents();
       case "analytics": return renderDashboard();
+      case "marketing": case "whatsapp": case "social": return renderMarketing();
+      case "invoicing": case "billing": case "finance": return renderInvoicing();
+      case "settings": return renderSettings();
       default: return renderGenericModule();
     }
   };
