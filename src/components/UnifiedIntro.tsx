@@ -5,6 +5,7 @@ import {
   BrainCircuit, Network, Atom, Radar, CircuitBoard, Waypoints, Sparkles, Binary
 } from "lucide-react";
 import { startSplashNarration, unlockAndStartSplashNarration } from "@/lib/splash-narration";
+import empireLogoNew from "@/assets/empire-logo-new.png";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
