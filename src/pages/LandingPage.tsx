@@ -2677,7 +2677,7 @@ const LandingPage = () => {
           }}
           transition={{ duration: 0.8, ease: "easeInOut" }} />
         
-        {/* ── Circuit board pattern background ── */}
+        {/* ── PCB Circuit board background ── */}
         {navScrolled && (
           <motion.div
             className="absolute inset-0 overflow-hidden pointer-events-none"
@@ -2685,57 +2685,103 @@ const LandingPage = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2 }}
           >
-            <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
               <defs>
-                <linearGradient id="navCircuitGold" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="hsla(38,50%,55%,0)" />
-                  <stop offset="20%" stopColor="hsla(38,50%,55%,0.12)" />
-                  <stop offset="50%" stopColor="hsla(38,50%,55%,0.06)" />
-                  <stop offset="80%" stopColor="hsla(38,50%,55%,0.12)" />
-                  <stop offset="100%" stopColor="hsla(38,50%,55%,0)" />
-                </linearGradient>
-                <linearGradient id="navCircuitViolet" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="hsla(265,70%,60%,0)" />
-                  <stop offset="50%" stopColor="hsla(265,70%,60%,0.08)" />
-                  <stop offset="100%" stopColor="hsla(265,70%,60%,0)" />
-                </linearGradient>
-                <filter id="navGlow">
-                  <feGaussianBlur stdDeviation="1.5" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
+                <filter id="pcbGlow">
+                  <feGaussianBlur stdDeviation="2" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+                <filter id="pcbGlowStrong">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
               </defs>
-              {/* Horizontal circuit traces */}
-              <line x1="0" y1="30%" x2="18%" y2="30%" stroke="url(#navCircuitGold)" strokeWidth="0.5" />
-              <line x1="22%" y1="30%" x2="35%" y2="30%" stroke="url(#navCircuitGold)" strokeWidth="0.5" />
-              <line x1="65%" y1="70%" x2="78%" y2="70%" stroke="url(#navCircuitGold)" strokeWidth="0.5" />
-              <line x1="82%" y1="70%" x2="100%" y2="70%" stroke="url(#navCircuitGold)" strokeWidth="0.5" />
-              {/* Vertical circuit traces */}
-              <line x1="18%" y1="30%" x2="18%" y2="55%" stroke="hsla(38,50%,55%,0.08)" strokeWidth="0.5" />
-              <line x1="82%" y1="45%" x2="82%" y2="70%" stroke="hsla(38,50%,55%,0.08)" strokeWidth="0.5" />
-              <line x1="35%" y1="0" x2="35%" y2="30%" stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" />
-              <line x1="65%" y1="70%" x2="65%" y2="100%" stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" />
-              {/* Junction nodes */}
-              <circle cx="18%" cy="30%" r="1.5" fill="hsla(38,50%,55%,0.2)" filter="url(#navGlow)" />
-              <circle cx="35%" cy="30%" r="1" fill="hsla(38,50%,55%,0.15)" />
-              <circle cx="82%" cy="70%" r="1.5" fill="hsla(38,50%,55%,0.2)" filter="url(#navGlow)" />
-              <circle cx="65%" cy="70%" r="1" fill="hsla(38,50%,55%,0.15)" />
-              <circle cx="18%" cy="55%" r="1" fill="hsla(265,70%,60%,0.12)" />
-              <circle cx="35%" cy="0" r="1" fill="hsla(265,70%,60%,0.1)" />
-              {/* Diagonal data paths */}
-              <path d="M 18% 55% Q 25% 62% 35% 55%" stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" fill="none" />
-              <path d="M 65% 45% Q 72% 38% 82% 45%" stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" fill="none" />
-              {/* Animated data pulse 1 */}
-              <circle r="2" fill="hsla(38,50%,60%,0.5)" filter="url(#navGlow)">
-                <animateMotion dur="3s" repeatCount="indefinite" path="M 0,20 L 120,20 L 120,35 L 230,35" />
-                <animate attributeName="opacity" values="0;0.6;0.6;0" dur="3s" repeatCount="indefinite" />
+              
+              {/* === LEFT SIDE PCB TRACES === */}
+              {/* Main horizontal trace with 90° bends */}
+              <path d="M 0,18 L 60,18 L 60,32 L 120,32 L 120,18 L 180,18 L 180,44 L 220,44" 
+                stroke="hsla(38,50%,55%,0.12)" strokeWidth="0.8" fill="none" strokeLinecap="round" />
+              {/* Branch trace going up */}
+              <path d="M 90,32 L 90,8 L 140,8" 
+                stroke="hsla(38,50%,55%,0.08)" strokeWidth="0.6" fill="none" strokeLinecap="round" />
+              {/* Via pad at junction */}
+              <circle cx="90" cy="32" r="3" fill="none" stroke="hsla(38,50%,55%,0.15)" strokeWidth="0.6" />
+              <circle cx="90" cy="32" r="1.2" fill="hsla(38,50%,55%,0.2)" />
+              {/* IC pad left */}
+              <rect x="135" y="4" width="12" height="8" rx="1" fill="none" stroke="hsla(38,50%,55%,0.1)" strokeWidth="0.5" />
+              <circle cx="139" cy="8" r="0.8" fill="hsla(38,50%,55%,0.15)" />
+              <circle cx="144" cy="8" r="0.8" fill="hsla(38,50%,55%,0.15)" />
+              
+              {/* === CENTER-LEFT TRACES === */}
+              <path d="M 280,52 L 280,36 L 340,36 L 340,20 L 400,20" 
+                stroke="hsla(265,70%,60%,0.08)" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+              <path d="M 320,36 L 320,12 L 370,12" 
+                stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" fill="none" strokeLinecap="round" />
+              {/* Via */}
+              <circle cx="340" cy="36" r="2.5" fill="none" stroke="hsla(265,70%,60%,0.12)" strokeWidth="0.5" />
+              <circle cx="340" cy="36" r="1" fill="hsla(265,70%,60%,0.15)" />
+              <circle cx="320" cy="36" r="2" fill="none" stroke="hsla(265,70%,60%,0.08)" strokeWidth="0.5" />
+              <circle cx="320" cy="36" r="0.8" fill="hsla(265,70%,60%,0.12)" />
+              
+              {/* === CENTER CHIP (under logo area) === */}
+              <rect x="560" y="22" width="80" height="20" rx="2" fill="none" stroke="hsla(38,50%,55%,0.06)" strokeWidth="0.6" />
+              {/* Pin traces from chip */}
+              <line x1="565" y1="22" x2="565" y2="14" stroke="hsla(38,50%,55%,0.05)" strokeWidth="0.4" />
+              <line x1="575" y1="22" x2="575" y2="10" stroke="hsla(38,50%,55%,0.05)" strokeWidth="0.4" />
+              <line x1="585" y1="42" x2="585" y2="52" stroke="hsla(38,50%,55%,0.05)" strokeWidth="0.4" />
+              <line x1="625" y1="22" x2="625" y2="12" stroke="hsla(38,50%,55%,0.05)" strokeWidth="0.4" />
+              <line x1="635" y1="42" x2="635" y2="54" stroke="hsla(38,50%,55%,0.05)" strokeWidth="0.4" />
+              
+              {/* === RIGHT SIDE PCB TRACES === */}
+              <path d="M 780,20 L 840,20 L 840,40 L 900,40 L 900,16 L 960,16" 
+                stroke="hsla(38,50%,55%,0.12)" strokeWidth="0.8" fill="none" strokeLinecap="round" />
+              <path d="M 870,40 L 870,54 L 940,54" 
+                stroke="hsla(38,50%,55%,0.07)" strokeWidth="0.5" fill="none" strokeLinecap="round" />
+              {/* Via pads */}
+              <circle cx="840" cy="20" r="3" fill="none" stroke="hsla(38,50%,55%,0.15)" strokeWidth="0.6" />
+              <circle cx="840" cy="20" r="1.2" fill="hsla(38,50%,55%,0.2)" />
+              <circle cx="900" cy="40" r="2.5" fill="none" stroke="hsla(38,50%,55%,0.12)" strokeWidth="0.5" />
+              <circle cx="900" cy="40" r="1" fill="hsla(38,50%,55%,0.18)" />
+              
+              {/* === FAR RIGHT TRACES === */}
+              <path d="M 1020,44 L 1060,44 L 1060,28 L 1120,28 L 1120,44 L 1200,44" 
+                stroke="hsla(265,70%,60%,0.08)" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+              <path d="M 1080,28 L 1080,8 L 1140,8" 
+                stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" fill="none" strokeLinecap="round" />
+              {/* Via */}
+              <circle cx="1060" cy="44" r="2.5" fill="none" stroke="hsla(265,70%,60%,0.1)" strokeWidth="0.5" />
+              <circle cx="1060" cy="44" r="1" fill="hsla(265,70%,60%,0.14)" />
+              {/* SMD component */}
+              <rect x="1130" y="5" width="16" height="6" rx="1" fill="none" stroke="hsla(265,70%,60%,0.08)" strokeWidth="0.5" />
+              
+              {/* === ANIMATED DATA PULSES === */}
+              {/* Pulse 1: left to center — gold */}
+              <circle r="2.5" fill="hsla(38,50%,60%,0.6)" filter="url(#pcbGlow)">
+                <animateMotion dur="3.5s" repeatCount="indefinite" 
+                  path="M 0,18 L 60,18 L 60,32 L 120,32 L 120,18 L 180,18 L 180,44 L 220,44" />
+                <animate attributeName="opacity" values="0;0.7;0.7;0.3;0" dur="3.5s" repeatCount="indefinite" />
+                <animate attributeName="r" values="1.5;2.5;2;2.5;1.5" dur="3.5s" repeatCount="indefinite" />
               </circle>
-              {/* Animated data pulse 2 */}
-              <circle r="1.5" fill="hsla(265,70%,65%,0.4)" filter="url(#navGlow)">
-                <animateMotion dur="4s" repeatCount="indefinite" begin="1.5s" path="M 700,45 L 550,45 L 550,20 L 430,20" />
-                <animate attributeName="opacity" values="0;0.5;0.5;0" dur="4s" repeatCount="indefinite" begin="1.5s" />
+              
+              {/* Pulse 2: right to center — gold */}
+              <circle r="2" fill="hsla(38,50%,58%,0.5)" filter="url(#pcbGlow)">
+                <animateMotion dur="3s" repeatCount="indefinite" begin="1s"
+                  path="M 960,16 L 900,16 L 900,40 L 840,40 L 840,20 L 780,20" />
+                <animate attributeName="opacity" values="0;0.6;0.6;0.3;0" dur="3s" repeatCount="indefinite" begin="1s" />
+              </circle>
+              
+              {/* Pulse 3: violet trace */}
+              <circle r="2" fill="hsla(265,70%,65%,0.5)" filter="url(#pcbGlow)">
+                <animateMotion dur="4s" repeatCount="indefinite" begin="2s"
+                  path="M 280,52 L 280,36 L 340,36 L 340,20 L 400,20" />
+                <animate attributeName="opacity" values="0;0.5;0.5;0" dur="4s" repeatCount="indefinite" begin="2s" />
+              </circle>
+              
+              {/* Pulse 4: far right violet */}
+              <circle r="1.8" fill="hsla(265,60%,62%,0.4)" filter="url(#pcbGlow)">
+                <animateMotion dur="3.8s" repeatCount="indefinite" begin="0.5s"
+                  path="M 1200,44 L 1120,44 L 1120,28 L 1060,28 L 1060,44 L 1020,44" />
+                <animate attributeName="opacity" values="0;0.4;0.4;0" dur="3.8s" repeatCount="indefinite" begin="0.5s" />
               </circle>
             </svg>
           </motion.div>
