@@ -5533,265 +5533,183 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-                             EMPIRE AI LIVE — Real-time Automation Feed
+                             COME FUNZIONA — 3 Step Onboarding
                             ═══════════════════════════════════════════ */}
-      <section className="relative py-16 sm:py-28 px-5 sm:px-6 overflow-hidden"
+      <section className="relative py-20 sm:py-32 px-5 sm:px-6 overflow-hidden"
       style={mobilifyBg({
-        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,22%,7%,0.88) 15%, hsla(230,20%,5%,0.88) 40%, hsla(265,18%,6%,0.88) 65%, hsla(230,16%,4%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.92) 0%, hsla(265,18%,7%,0.90) 50%, hsla(230,16%,4%,0.92) 100%)"
       })}>
-        {/* AI Neural Network Schema Background */}
+        {/* Ambient glows */}
         <div className="absolute inset-0 pointer-events-none z-0">
-          <svg className="absolute inset-0 w-full h-full opacity-[0.08]" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
-            <defs>
-              <radialGradient id="live-node-g" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="hsl(265,70%,60%)" stopOpacity="0.6" />
-                <stop offset="100%" stopColor="hsl(265,70%,60%)" stopOpacity="0" />
-              </radialGradient>
-              <linearGradient id="live-line-g" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="hsl(265,50%,55%)" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="hsl(38,45%,52%)" stopOpacity="0.3" />
-              </linearGradient>
-            </defs>
-            {/* Dense network */}
-            {[
-            [80, 60, 200, 60], [200, 60, 320, 40], [320, 40, 450, 70], [450, 70, 530, 50],
-            [80, 60, 150, 150], [80, 60, 280, 130], [200, 60, 150, 150], [200, 60, 280, 130], [200, 60, 400, 160],
-            [320, 40, 280, 130], [320, 40, 400, 160], [450, 70, 400, 160], [450, 70, 520, 150], [530, 50, 520, 150],
-            [150, 150, 280, 130], [280, 130, 400, 160], [400, 160, 520, 150],
-            [150, 150, 100, 250], [150, 150, 250, 260], [280, 130, 250, 260], [280, 130, 380, 240],
-            [400, 160, 380, 240], [400, 160, 500, 270], [520, 150, 500, 270],
-            [100, 250, 250, 260], [250, 260, 380, 240], [380, 240, 500, 270],
-            [100, 250, 180, 340], [250, 260, 180, 340], [250, 260, 330, 350], [380, 240, 330, 350],
-            [380, 240, 470, 340], [500, 270, 470, 340], [180, 340, 330, 350], [330, 350, 470, 340],
-            /* Cross connections */
-            [80, 60, 400, 160], [530, 50, 150, 150], [100, 250, 500, 270], [150, 150, 470, 340]].
-            map(([x1, y1, x2, y2], i) =>
-            <line key={`ll${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke="url(#live-line-g)" strokeWidth="0.8">
-                <animate attributeName="opacity" values="0.3;0.7;0.3" dur={`${3 + i % 5 * 0.5}s`} begin={`${i * 0.15}s`} repeatCount="indefinite" />
-              </line>
-            )}
-            {/* Nodes */}
-            {[
-            [80, 60], [200, 60], [320, 40], [450, 70], [530, 50],
-            [150, 150], [280, 130], [400, 160], [520, 150],
-            [100, 250], [250, 260], [380, 240], [500, 270],
-            [180, 340], [330, 350], [470, 340]].
-            map(([cx, cy], i) =>
-            <g key={`ln${i}`}>
-                <circle cx={cx} cy={cy} r="16" fill="url(#live-node-g)" />
-                <circle cx={cx} cy={cy} r="4" fill="hsla(265,55%,55%,0.4)" stroke="hsla(265,60%,60%,0.5)" strokeWidth="0.8">
-                  <animate attributeName="r" values="3;5;3" dur={`${2.5 + i * 0.2}s`} repeatCount="indefinite" />
-                </circle>
-                <circle cx={cx} cy={cy} r="2" fill="hsla(38,50%,55%,0.6)">
-                  <animate attributeName="opacity" values="0.3;0.9;0.3" dur={`${2 + i * 0.15}s`} repeatCount="indefinite" />
-                </circle>
-              </g>
-            )}
-            {/* Data pulses */}
-            {[
-            "M80,60 L280,130 L380,240 L470,340",
-            "M530,50 L400,160 L250,260 L180,340",
-            "M200,60 L150,150 L250,260 L330,350",
-            "M450,70 L520,150 L500,270 L470,340",
-            "M320,40 L280,130 L100,250"].
-            map((d, pi) =>
-            <circle key={`lp${pi}`} r="2" fill="hsla(38,60%,58%,0.7)">
-                <animateMotion dur={`${3 + pi * 0.5}s`} begin={`${pi * 0.8}s`} repeatCount="indefinite" path={d} />
-                <animate attributeName="opacity" values="0;1;0.8;0" dur={`${3 + pi * 0.5}s`} begin={`${pi * 0.8}s`} repeatCount="indefinite" />
-                <animate attributeName="r" values="1.5;3;1.5" dur={`${3 + pi * 0.5}s`} begin={`${pi * 0.8}s`} repeatCount="indefinite" />
-              </circle>
-            )}
-          </svg>
+          <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
+          style={{ background: "radial-gradient(circle, hsla(265,60%,55%,0.5), transparent 65%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-[15%] right-[15%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
+          style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.4), transparent 65%)", filter: "blur(120px)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
+          style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.18), hsla(38,50%,50%,0.1), transparent)" }} />
+          <div className="absolute bottom-0 left-0 right-0 h-[70px]"
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
         </div>
-        {/* Premium ambient glows */}
-        <div className="absolute top-[6%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
-        style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
-        <div className="absolute top-[35%] right-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-        style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(130px)" }} />
-        <div className="absolute bottom-[12%] left-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-        style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(110px)" }} />
-        <div className="absolute bottom-[30%] right-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-        style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
-        <div className="absolute top-[10%] right-[28%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
-        {/* Top accent border */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
-        style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.22), hsla(155,45%,50%,0.1), transparent)" }} />
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-        style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
-        {/* Noise texture */}
-        <div className="absolute inset-0 opacity-[0.012] pointer-events-none" style={{
-          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-          backgroundRepeat: "repeat", backgroundSize: "128px 128px"
-        }} />
 
         <div className="max-w-[1100px] mx-auto relative z-10">
-          {/* Header — more dramatic */}
-          <div className="text-center mb-10 sm:mb-16">
-            <SectionLabel text="Command Center" icon={<Activity className="w-3 h-3 text-accent" />} />
-            <motion.h2 className="text-[clamp(1.6rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.05] mb-3"
+          {/* Header */}
+          <div className="text-center mb-14 sm:mb-20">
+            <SectionLabel text="Come Funziona" icon={<Rocket className="w-3 h-3 text-primary" />} />
+            <motion.h2 className="text-[clamp(1.6rem,5vw,3.5rem)] font-heading font-bold text-foreground leading-[1.05] mb-4"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
-              I Tuoi Agenti Lavorano <br className="sm:hidden" /><span className="text-shimmer">Mentre Tu Dormi</span>
+              Attivo in <span className="text-shimmer">3 Passi</span>
             </motion.h2>
             <motion.p className="text-foreground/40 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.15 }}>
-              La rete neurale esegue <strong className="text-foreground/70">12.847 azioni/giorno</strong> in totale autonomia.
+              Dalla registrazione al primo cliente servito dall'IA. Nessun codice, nessuna attesa.
             </motion.p>
           </div>
 
-          {/* ── KPI Strip on top ── */}
-          <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6 sm:mb-8"
-          variants={staggerFast} initial="hidden" whileInView="visible" viewport={vpOnce}>
+          {/* 3 Steps */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 mb-12 sm:mb-16">
             {[
-            { label: "Azioni Oggi", value: 12847, suffix: "", icon: <Zap className="w-4 h-4" />, color: "hsla(265,70%,60%,1)", delta: "+23%", bar: 78 },
-            { label: "Clienti Serviti", value: 3429, suffix: "", icon: <Users className="w-4 h-4" />, color: "hsla(150,70%,50%,1)", delta: "+18%", bar: 65 },
-            { label: "Revenue", value: 47, suffix: "K", icon: <TrendingUp className="w-4 h-4" />, color: "hsla(38,80%,55%,1)", delta: "+31%", bar: 85 },
-            { label: "Ore Risparmiate", value: 156, suffix: "h", icon: <Timer className="w-4 h-4" />, color: "hsla(200,70%,55%,1)", delta: "/sett", bar: 72 }].
-            map((stat, i) =>
-            <motion.div key={i} variants={fadeScale}
-            className="relative rounded-xl overflow-hidden group"
-            style={{
-              background: "linear-gradient(145deg, hsla(230,20%,7%,0.99), hsla(235,25%,4%,0.99))",
-              border: "1px solid hsla(215,40%,30%,0.15)"
-            }}>
-                {/* Top accent */}
-                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${stat.color}40, transparent)` }} />
-                {/* Shimmer sweep */}
-                <motion.div className="absolute inset-0 pointer-events-none"
-              style={{ background: `linear-gradient(105deg, transparent 40%, ${stat.color}10 50%, transparent 60%)`, backgroundSize: "200% 100%" }}
-              animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear", delay: i * 1 }} />
-                <div className="relative z-10 p-3 sm:p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ background: `${stat.color}12`, color: stat.color }}>
-                      {stat.icon}
+              {
+                step: "01",
+                title: "Scegli il Settore",
+                desc: "Seleziona la tua industry e rispondi a 3 domande. L'IA configura dashboard, menu, agenti e sito web in automatico.",
+                icon: <Target className="w-6 h-6" />,
+                color: "hsla(265,70%,60%,1)",
+                colorMuted: "hsla(265,70%,60%,0.12)",
+                features: ["Setup guidato 2 min", "25+ settori pronti", "Dati pre-configurati"]
+              },
+              {
+                step: "02",
+                title: "Personalizza & Connetti",
+                desc: "Carica logo, colori, menu. Collega WhatsApp, pagamenti e calendario. Tutto drag & drop, zero codice.",
+                icon: <Palette className="w-6 h-6" />,
+                color: "hsla(38,70%,55%,1)",
+                colorMuted: "hsla(38,70%,55%,0.12)",
+                features: ["Branding automatico", "Integrazioni 1-click", "Sito web incluso"]
+              },
+              {
+                step: "03",
+                title: "Lancia & Cresci",
+                desc: "Pubblica il sito, attiva gli agenti IA e inizia a ricevere ordini, prenotazioni e clienti in automatico 24/7.",
+                icon: <Rocket className="w-6 h-6" />,
+                color: "hsla(150,65%,50%,1)",
+                colorMuted: "hsla(150,65%,50%,0.12)",
+                features: ["Live in 24h", "Agenti IA attivi", "Supporto dedicato"]
+              }
+            ].map((item, i) => (
+              <motion.div key={i}
+                className="relative group"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={vpOnce}
+                transition={{ delay: i * 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+                
+                {/* Connecting line (desktop only) */}
+                {i < 2 && (
+                  <div className="hidden sm:block absolute top-12 -right-3 w-6 h-px z-20"
+                  style={{ background: `linear-gradient(90deg, ${item.color}40, transparent)` }} />
+                )}
+
+                <div className="relative rounded-2xl overflow-hidden h-full"
+                style={{
+                  background: "linear-gradient(165deg, hsla(230,20%,8%,0.99), hsla(235,25%,5%,0.99))",
+                  border: `1px solid ${item.color}18`,
+                  boxShadow: `0 8px 40px ${item.color}08`
+                }}>
+                  {/* Top accent */}
+                  <div className="absolute top-0 left-0 right-0 h-[2px]"
+                  style={{ background: `linear-gradient(90deg, transparent, ${item.color}60, transparent)` }} />
+                  
+                  {/* Hover glow */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: `radial-gradient(circle at 50% 0%, ${item.color}08, transparent 70%)` }} />
+
+                  <div className="relative z-10 p-6 sm:p-7">
+                    {/* Step number + icon row */}
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                      style={{ background: item.colorMuted, color: item.color }}>
+                        {item.icon}
+                      </div>
+                      <span className="text-[0.6rem] font-bold tracking-[3px] uppercase"
+                      style={{ color: `${item.color}80` }}>
+                        STEP {item.step}
+                      </span>
                     </div>
-                    <span className="text-[0.5rem] font-bold px-1.5 py-0.5 rounded-full"
-                  style={{ background: `${stat.color}12`, color: stat.color }}>
-                      {stat.delta}
-                    </span>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-bold text-foreground font-heading leading-none mb-0.5">
-                    <AnimatedNumber value={stat.value} suffix={stat.suffix} prefix={stat.label === "Revenue" ? "€" : ""} />
-                  </div>
-                  <p className="text-[0.5rem] text-foreground/35 tracking-wider uppercase font-semibold mb-2">{stat.label}</p>
-                  {/* Progress bar */}
-                  <div className="h-1 rounded-full overflow-hidden" style={{ background: `${stat.color}10` }}>
-                    <motion.div className="h-full rounded-full" style={{ background: stat.color }}
-                  initial={{ width: "0%" }}
-                  whileInView={{ width: `${stat.bar}%` }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5 + i * 0.15, duration: 1.2, ease: [0.22, 1, 0.36, 1] }} />
+
+                    {/* Title */}
+                    <h3 className="text-lg sm:text-xl font-heading font-bold text-foreground mb-2.5 leading-tight">
+                      {item.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-foreground/40 text-xs sm:text-[0.8rem] leading-relaxed mb-5">
+                      {item.desc}
+                    </p>
+
+                    {/* Feature pills */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {item.features.map((feat, fi) => (
+                        <span key={fi} className="inline-flex items-center gap-1 text-[0.55rem] font-semibold px-2.5 py-1 rounded-full"
+                        style={{ background: `${item.color}10`, color: `${item.color}cc` }}>
+                          <Check className="w-2.5 h-2.5" />
+                          {feat}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </motion.div>
-            )}
+            ))}
+          </div>
+
+          {/* Bottom: Results bar — social proof */}
+          <motion.div className="relative rounded-2xl overflow-hidden"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}
+          style={{
+            background: "linear-gradient(135deg, hsla(230,20%,7%,0.99), hsla(265,18%,6%,0.99))",
+            border: "1px solid hsla(265,40%,35%,0.12)"
+          }}>
+            <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-border/10">
+              {[
+                { value: "2 min", label: "Setup medio", icon: <Timer className="w-4 h-4" /> },
+                { value: "24h", label: "Tempo al go-live", icon: <Zap className="w-4 h-4" /> },
+                { value: "€0", label: "Per iniziare", icon: <CreditCard className="w-4 h-4" /> },
+                { value: "25+", label: "Settori pronti", icon: <Layers className="w-4 h-4" /> }
+              ].map((stat, i) => (
+                <motion.div key={i} className="relative p-5 sm:p-6 text-center group"
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={vpOnce}
+                transition={{ delay: 0.3 + i * 0.1 }}>
+                  <div className="w-9 h-9 rounded-xl mx-auto mb-3 flex items-center justify-center"
+                  style={{ background: "hsla(38,50%,50%,0.08)", color: "hsla(38,60%,58%,0.8)" }}>
+                    {stat.icon}
+                  </div>
+                  <div className="text-xl sm:text-2xl font-heading font-bold text-foreground mb-0.5">{stat.value}</div>
+                  <p className="text-[0.55rem] sm:text-[0.6rem] text-foreground/35 tracking-wider uppercase font-semibold">{stat.label}</p>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
 
-          {/* ── Live Feed — full width, command center style ── */}
-          <motion.div className="relative rounded-2xl overflow-hidden"
-          initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}
-          style={{
-            background: "linear-gradient(145deg, hsla(230,22%,5%,0.99), hsla(235,28%,3%,0.99))",
-            border: "1px solid hsla(265,50%,40%,0.15)",
-            boxShadow: "0 20px 80px hsla(265,50%,30%,0.1), inset 0 1px 0 hsla(265,70%,60%,0.06)"
-          }}>
-            {/* Top bar — terminal style */}
-            <div className="flex items-center gap-2.5 px-4 sm:px-5 py-3 border-b" style={{ borderColor: "hsla(265,40%,30%,0.12)" }}>
-              <motion.div className="w-2.5 h-2.5 rounded-full bg-emerald-400"
-              animate={{ scale: [1, 1.3, 1], boxShadow: ["0 0 4px hsla(150,80%,50%,0.3)", "0 0 12px hsla(150,80%,50%,0.6)", "0 0 4px hsla(150,80%,50%,0.3)"] }}
-              transition={{ duration: 1.5, repeat: Infinity }} />
-              <span className="text-[0.6rem] font-bold text-emerald-400 tracking-[2.5px] uppercase">Empire Neural Network — Live</span>
-              <div className="flex-1" />
-              <motion.div className="flex items-center gap-1.5"
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 2, repeat: Infinity }}>
-                <div className="w-1 h-1 rounded-full bg-emerald-400/60" />
-                <span className="text-[0.45rem] text-emerald-400/60 font-mono tracking-wider">12 agenti attivi</span>
-              </motion.div>
-            </div>
-
-            {/* Feed grid */}
-            <div className="p-3 sm:p-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
-                {/* Left: Live feed */}
-                <div className="space-y-2">
-                  <LiveFeedSimulator />
-                </div>
-                {/* Right: Mini neural network + agent wheel */}
-                <div className="hidden sm:flex items-center justify-center relative">
-                  <svg className="w-full h-full max-h-[200px]" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <radialGradient id="center-brain" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stopColor="hsl(265,70%,60%)" stopOpacity="0.3" />
-                        <stop offset="60%" stopColor="hsl(265,60%,50%)" stopOpacity="0.08" />
-                        <stop offset="100%" stopColor="hsl(265,60%,50%)" stopOpacity="0" />
-                      </radialGradient>
-                    </defs>
-                    {/* Central brain */}
-                    <circle cx="100" cy="100" r="40" fill="url(#center-brain)" />
-                    <circle cx="100" cy="100" r="18" fill="hsla(265,50%,15%,0.8)" stroke="hsla(265,60%,55%,0.3)" strokeWidth="1">
-                      <animate attributeName="r" values="17;19;17" dur="3s" repeatCount="indefinite" />
-                    </circle>
-                    <circle cx="100" cy="100" r="8" fill="hsla(265,60%,55%,0.4)">
-                      <animate attributeName="opacity" values="0.3;0.7;0.3" dur="2s" repeatCount="indefinite" />
-                    </circle>
-                    {/* Orbiting agent nodes */}
-                    {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, ai) => {
-                      const rad = angle * Math.PI / 180;
-                      const r = 72;
-                      const cx = 100 + Math.cos(rad) * r;
-                      const cy = 100 + Math.sin(rad) * r;
-                      return (
-                        <g key={`orb${ai}`}>
-                          <line x1="100" y1="100" x2={cx} y2={cy} stroke="hsla(265,50%,55%,0.15)" strokeWidth="0.5" strokeDasharray="2 3">
-                            <animate attributeName="opacity" values="0.2;0.5;0.2" dur={`${2 + ai * 0.3}s`} repeatCount="indefinite" />
-                          </line>
-                          <circle cx={cx} cy={cy} r="7" fill="hsla(265,30%,12%,0.8)" stroke="hsla(265,60%,55%,0.25)" strokeWidth="0.6">
-                            <animate attributeName="r" values="6;8;6" dur={`${2.5 + ai * 0.2}s`} repeatCount="indefinite" />
-                          </circle>
-                          <circle cx={cx} cy={cy} r="3" fill={ai % 3 === 0 ? "hsla(38,50%,55%,0.5)" : ai % 3 === 1 ? "hsla(150,50%,50%,0.5)" : "hsla(265,60%,60%,0.5)"}>
-                            <animate attributeName="opacity" values="0.3;0.8;0.3" dur={`${1.8 + ai * 0.15}s`} repeatCount="indefinite" />
-                          </circle>
-                          {/* Data pulse from node to center */}
-                          <circle r="1.5" fill="hsla(38,60%,58%,0.6)">
-                            <animateMotion dur={`${2 + ai * 0.3}s`} begin={`${ai * 0.4}s`} repeatCount="indefinite" path={`M${cx},${cy} L100,100`} />
-                            <animate attributeName="opacity" values="0;0.8;0" dur={`${2 + ai * 0.3}s`} begin={`${ai * 0.4}s`} repeatCount="indefinite" />
-                          </circle>
-                        </g>);
-
-                    })}
-                    {/* Rotating ring */}
-                    <circle cx="100" cy="100" r="55" fill="none" stroke="hsla(265,50%,55%,0.08)" strokeWidth="0.5" strokeDasharray="4 8">
-                      <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="30s" repeatCount="indefinite" />
-                    </circle>
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom bar */}
-            <div className="flex items-center justify-between px-4 sm:px-5 py-2 border-t" style={{ borderColor: "hsla(265,40%,30%,0.08)" }}>
-              <div className="flex items-center gap-3">
-                {[
-                { text: "Zero downtime", icon: <Shield className="w-2.5 h-2.5" /> },
-                { text: "GDPR", icon: <Lock className="w-2.5 h-2.5" /> },
-                { text: "99.9% SLA", icon: <Gauge className="w-2.5 h-2.5" /> }].
-                map((t, i) =>
-                <div key={i} className="flex items-center gap-1 text-foreground/30">
-                    <span className="text-primary/50">{t.icon}</span>
-                    <span className="text-[0.42rem] font-semibold tracking-wider uppercase hidden sm:inline">{t.text}</span>
-                  </div>
-                )}
-              </div>
-              <motion.span className="text-[0.42rem] font-mono text-foreground/20"
-              animate={{ opacity: [0.2, 0.5, 0.2] }}
-              transition={{ duration: 3, repeat: Infinity }}>
-                empire-neural-v3.2.1
-              </motion.span>
-            </div>
+          {/* CTA */}
+          <motion.div className="text-center mt-10 sm:mt-14"
+          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce} transition={{ delay: 0.5 }}>
+            <button
+              onClick={() => navigate("/demo")}
+              className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-heading font-bold text-sm tracking-wide transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+              style={{
+                background: "linear-gradient(135deg, hsl(38,50%,50%), hsl(38,55%,45%))",
+                color: "#fff",
+                boxShadow: "0 4px 20px hsla(38,60%,45%,0.25), 0 1px 3px hsla(0,0%,0%,0.2)"
+              }}>
+              <Sparkles className="w-4 h-4" />
+              Prova Gratis — Scegli il Tuo Settore
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <p className="text-foreground/25 text-[0.55rem] mt-3 tracking-wider">
+              Nessuna carta richiesta • Setup in 2 minuti • Cancella quando vuoi
+            </p>
           </motion.div>
         </div>
       </section>
