@@ -122,13 +122,18 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-/** Keep section backdrops premium-dark and fully solid so the DNA pattern
- * is visible only in connectors/empty spaces, never behind section copy. */
+/** Allow circuit to bleed subtly through section backgrounds for a premium layered look.
+ * Caps opacity at 0.92 so the DNA pattern is faintly visible even behind content. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !style.background || typeof style.background !== "string") return style;
   const bg = style.background.replace(
-    /hsla\(([^,]+,[^,]+,[^,]+),\s*0\.[1-9]\d*\)/g,
-    (_, inner) => `hsla(${inner},1)`
+    /hsla\(([^,]+,[^,]+,[^,]+),\s*([\d.]+)\)/g,
+    (_, inner, alpha) => {
+      const a = parseFloat(alpha);
+      // Cap at 0.92 to let circuit show through, boost low values to at least 0.85
+      const newAlpha = a >= 1 ? 0.92 : Math.min(Math.max(a, 0.85), 0.92);
+      return `hsla(${inner},${newAlpha})`;
+    }
   );
   return { ...style, background: bg };
 };
