@@ -5511,8 +5511,8 @@ const LandingPage = () => {
             <motion.div key={i} variants={fadeScale}
             className="relative rounded-xl overflow-hidden group"
             style={{
-              background: "linear-gradient(145deg, hsla(230,20%,10%,0.95), hsla(235,25%,7%,0.98))",
-              border: "1px solid hsla(215,40%,30%,0.12)"
+              background: "linear-gradient(145deg, hsla(230,20%,7%,0.99), hsla(235,25%,4%,0.99))",
+              border: "1px solid hsla(215,40%,30%,0.15)"
             }}>
                 {/* Top accent */}
                 <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${stat.color}40, transparent)` }} />
