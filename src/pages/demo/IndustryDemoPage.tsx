@@ -4,7 +4,7 @@ const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
 import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
 import DemoAgentsSection from "@/components/demo/DemoAgentsSection";
 import DemoAdminCTA from "@/components/demo/DemoAdminCTA";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams, Link } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -285,7 +285,7 @@ export default function IndustryDemoPage() {
     enabled: !!slug,
   });
 
-  const resolvedIndustry: IndustryId = useMemo(() => {
+  const resolvedIndustry: IndustryId | null = useMemo(() => {
     if (company?.industry) return company.industry as IndustryId;
     // Match by demo slug value (e.g. "amalfi-luxury-transfer" → ncc)
     for (const [ind, s] of Object.entries(DEMO_SLUGS)) {
@@ -293,12 +293,14 @@ export default function IndustryDemoPage() {
     }
     // Also accept industry ID directly as slug (e.g. /demo/ncc, /demo/food)
     if (slug && slug in INDUSTRY_CONFIGS) return slug as IndustryId;
-    return "custom";
+    return null;
   }, [company, slug]);
 
-  const industryConfig = INDUSTRY_CONFIGS[resolvedIndustry];
-  const demoData = DEMO_INDUSTRY_DATA[resolvedIndustry];
-  const theme = getTheme(resolvedIndustry);
+  // Use fallback for hooks (hooks must run unconditionally)
+  const safeIndustry: IndustryId = resolvedIndustry || "custom";
+  const industryConfig = INDUSTRY_CONFIGS[safeIndustry];
+  const demoData = DEMO_INDUSTRY_DATA[safeIndustry];
+  const theme = getTheme(safeIndustry);
   const companyName = brandOverride || company?.name || demoData.companyName;
   const tagline = taglineOverride || company?.tagline || demoData.tagline;
 
@@ -319,6 +321,22 @@ export default function IndustryDemoPage() {
     () => demoData.services.filter(s => s.popular),
     [demoData]
   );
+
+  // 404 fallback for unknown slugs (after all hooks)
+  if (!resolvedIndustry) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
+        <span className="text-4xl">🔍</span>
+        <p className="text-xl font-bold text-foreground">Demo non trovata</p>
+        <p className="text-sm text-muted-foreground max-w-md text-center">
+          Lo slug <strong>"{slug}"</strong> non corrisponde a nessuna demo disponibile.
+        </p>
+        <Link to="/demo" className="text-sm font-medium text-primary underline hover:no-underline">
+          ← Sfoglia tutte le 25 demo
+        </Link>
+      </div>
+    );
+  }
 
   const scrollTo = (id: string) => {
     setMobileMenuOpen(false);

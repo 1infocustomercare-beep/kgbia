@@ -2825,24 +2825,48 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
             ))}
           </motion.div>
         ) : (
-          <div ref={scrollRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide px-4"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            onTouchStart={() => setIsPlaying(false)}>
-            {SCREENS.map((screen, i) => (
-              <div key={screen.type} className="snap-center flex-shrink-0" style={{ width: "32vw", maxWidth: 120 }}>
-                <IPhoneFrame
-                  screen={screen}
-                  color={color}
-                  emoji={cfg.emoji}
-                  companyName={demo.companyName}
-                  services={demo.services}
-                  index={i}
-                  sectorStyle={sectorStyle}
-                  industryId={industryId}
-                  totalCount={SCREENS.length}
-                />
-              </div>
-            ))}
+          <div ref={scrollRef} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide px-4 items-center"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none", perspective: "1200px" }}
+            onTouchStart={() => setIsPlaying(false)}
+            onMouseEnter={() => setIsPlaying(false)}
+            onMouseLeave={() => setIsPlaying(true)}>
+            {SCREENS.map((screen, i) => {
+              const isActive = i === activeIdx;
+              const isLeft = i === (activeIdx - 1 + SCREENS.length) % SCREENS.length;
+              const isRight = i === (activeIdx + 1) % SCREENS.length;
+              return (
+                <div
+                  key={screen.type}
+                  className="snap-center flex-shrink-0 transition-all duration-500 ease-out"
+                  style={{
+                    width: "32vw",
+                    maxWidth: 120,
+                    transform: isActive
+                      ? "scale(1.1) rotateY(0deg)"
+                      : isLeft
+                      ? "scale(0.9) rotateY(5deg)"
+                      : isRight
+                      ? "scale(0.9) rotateY(-5deg)"
+                      : "scale(0.85)",
+                    filter: isActive ? "none" : "blur(1px)",
+                    opacity: isActive ? 1 : 0.8,
+                    zIndex: isActive ? 10 : 1,
+                  }}
+                >
+                  <IPhoneFrame
+                    screen={screen}
+                    color={color}
+                    emoji={cfg.emoji}
+                    companyName={demo.companyName}
+                    services={demo.services}
+                    index={i}
+                    sectorStyle={sectorStyle}
+                    industryId={industryId}
+                    totalCount={SCREENS.length}
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
 
