@@ -654,18 +654,105 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           </div>
         </motion.div>
 
-        {/* ══════ SECTOR FILTER ══════ */}
-        <div className="flex gap-0.5 justify-center flex-wrap mb-4 sm:mb-8 px-1">
-          {SECTOR_TABS.map((tab) => (
-            <button key={tab.id} onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
-              className={`flex items-center gap-0.5 px-1.5 py-1 rounded-md text-[0.42rem] sm:text-[0.55rem] font-semibold tracking-wider uppercase transition-all border ${
-                activeSector === tab.id
-                  ? "text-foreground border-primary/40 bg-primary/15"
-                  : "text-foreground/70 border-border hover:text-foreground"
+        {/* ══════ SECTOR FILTER — Grouped ══════ */}
+        <div className="mb-4 sm:mb-8 px-1">
+          {/* Primary group — always visible */}
+          <div className="flex gap-1 justify-center flex-wrap mb-2">
+            {SECTOR_GROUPS[0].tabs.map((tab) => (
+              <button key={tab.id} onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[0.5rem] sm:text-[0.6rem] font-semibold tracking-wider uppercase transition-all border ${
+                  activeSector === tab.id
+                    ? "text-foreground border-primary/50 bg-primary/15 shadow-[0_0_8px_hsla(var(--primary)/0.15)]"
+                    : "text-foreground/60 border-border/60 hover:text-foreground hover:border-primary/25"
+                }`}>
+                <span className="opacity-80">{tab.icon}</span> {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Category chips — toggle groups */}
+          <div className="flex gap-1 justify-center flex-wrap mb-1.5">
+            {SECTOR_GROUPS.slice(1, 5).map((group) => {
+              const isGroupActive = group.tabs.some(t => t.id === activeSector);
+              return (
+                <div key={group.group} className="relative group/cat">
+                  <button
+                    onClick={() => {
+                      // If a tab in this group is active, clicking the group header does nothing
+                      // Otherwise select first tab in group
+                      if (!isGroupActive) {
+                        setActiveSector(group.tabs[0].id);
+                        setExpandedAgent(null);
+                      }
+                    }}
+                    className={`flex items-center gap-1 px-2 py-1 rounded-full text-[0.45rem] sm:text-[0.55rem] font-semibold tracking-wide transition-all border ${
+                      isGroupActive
+                        ? "text-foreground border-primary/40 bg-primary/10"
+                        : "text-foreground/50 border-border/40 hover:border-primary/20"
+                    }`}>
+                    <span className="text-[0.55rem]">{group.emoji}</span> {group.group}
+                    <ChevronDown className="w-2 h-2 opacity-40" />
+                  </button>
+
+                  {/* Dropdown */}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 hidden group-hover/cat:flex flex-col gap-0.5 p-1.5 rounded-lg border border-border/60 z-50 min-w-[110px]"
+                    style={{ background: "linear-gradient(160deg, hsl(var(--card)), hsl(var(--background)))" }}>
+                    {group.tabs.map(tab => (
+                      <button key={tab.id}
+                        onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
+                        className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md text-[0.5rem] font-semibold transition-all ${
+                          activeSector === tab.id
+                            ? "text-foreground bg-primary/15"
+                            : "text-foreground/60 hover:text-foreground hover:bg-primary/5"
+                        }`}>
+                        {tab.icon} {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* +Altro toggle */}
+            <button
+              onClick={() => setShowMoreSectors(!showMoreSectors)}
+              className={`flex items-center gap-1 px-2 py-1 rounded-full text-[0.45rem] sm:text-[0.55rem] font-semibold tracking-wide transition-all border ${
+                showMoreSectors || SECTOR_GROUPS[5].tabs.some(t => t.id === activeSector)
+                  ? "text-foreground border-primary/40 bg-primary/10"
+                  : "text-foreground/50 border-border/40 hover:border-primary/20"
               }`}>
-              {tab.icon} {tab.label}
+              <span className="text-[0.55rem]">🏢</span> +{SECTOR_GROUPS[5].tabs.length} settori
+              {showMoreSectors ? <ChevronUp className="w-2 h-2" /> : <ChevronDown className="w-2 h-2" />}
             </button>
-          ))}
+          </div>
+
+          {/* Expanded "Altro" sectors */}
+          <AnimatePresence>
+            {showMoreSectors && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden">
+                <div className="flex gap-1 justify-center flex-wrap pt-1 pb-1">
+                  {SECTOR_GROUPS[5].tabs.map(tab => (
+                    <button key={tab.id}
+                      onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
+                      className={`flex items-center gap-0.5 px-2 py-1 rounded-full text-[0.45rem] sm:text-[0.5rem] font-semibold tracking-wide transition-all border ${
+                        activeSector === tab.id
+                          ? "text-foreground border-primary/40 bg-primary/15"
+                          : "text-foreground/50 border-border/40 hover:text-foreground hover:border-primary/20"
+                      }`}>
+                      {tab.icon} {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Active sector indicator line */}
+          <div className="mt-2 h-px w-full" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent)" }} />
         </div>
 
         {/* ══════ NETWORK LABEL ══════ */}
