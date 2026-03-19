@@ -452,7 +452,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
         <div className="flex flex-col items-center">
           <motion.div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 vibrant-glow bg-vibrant-gradient`}
             initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 200, damping: 15 }}>
-            {isPartnerMode ? <Users className="w-8 h-8 text-primary-foreground" /> : <Crown className="w-8 h-8 text-primary-foreground" />}
+            {isPartnerMode ? <Users className="w-8 h-8 text-primary-foreground" /> : <img src={empireLogoNew} alt="Empire AI" className="w-10 h-10 object-contain" />}
           </motion.div>
           <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">
             {isPartnerMode
