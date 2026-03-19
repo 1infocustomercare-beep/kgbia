@@ -2081,6 +2081,21 @@ export default function DemoAdminPage() {
           );
         })}
       </div>
+
+      {/* Tutorial Popup */}
+      {tutorialsOn && (
+        <TutorialPopup
+          id={`demo-admin-${sectorKey}`}
+          title={`Benvenuto in ${config.name}!`}
+          accentColor={accentColor}
+          steps={[
+            { emoji: "👋", title: "Benvenuto nella Dashboard!", description: "Questa è la tua dashboard demo. Esplora tutte le sezioni dal menu laterale." },
+            { emoji: "📊", title: "KPI in Tempo Reale", description: "I numeri si aggiornano automaticamente. Ogni card mostra il trend rispetto al periodo precedente." },
+            { emoji: "🤖", title: "Agenti AI Attivi", description: `${allAgents.length} agenti intelligenti lavorano 24/7 per il tuo business. Scoprili nella sezione dedicata.` },
+            { emoji: "🚀", title: "Pronto per iniziare?", description: "Ogni funzionalità è completamente personalizzabile. Attiva Empire per il tuo business!" },
+          ]}
+        />
+      )}
     </div>
   );
 }
