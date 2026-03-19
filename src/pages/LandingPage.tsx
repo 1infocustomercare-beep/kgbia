@@ -308,7 +308,7 @@ const NeuralCellsBackground = () => {
   }, []);
 
   // Mobile: fewer cells to reduce DOM node count
-  const CELL_COUNT = isMobile ? 20 : 40;
+  const CELL_COUNT = isMobile ? 12 : 40;
   const VB_W = isMobile ? 60 : 100;
   const VB_H = isMobile ? 130 : 100;
 
