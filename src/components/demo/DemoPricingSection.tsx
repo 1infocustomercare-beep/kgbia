@@ -81,14 +81,11 @@ export default function DemoPricingSection({ sector, accentColor, sectorName }: 
     <section
       ref={ref}
       className="py-20 px-4 relative overflow-hidden"
-      style={{ background: isDark ? "linear-gradient(180deg, rgba(10,10,20,0.98), rgba(0,0,0,0.95))" : theme.palette.bg }}
+      style={{ background: isDark ? "linear-gradient(180deg, #0a0a14 0%, #060610 50%, #08080e 100%)" : theme.palette.bg }}
     >
-      {/* Subtle grid pattern */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{ backgroundImage: `linear-gradient(${accentColor}30 1px, transparent 1px), linear-gradient(90deg, ${accentColor}30 1px, transparent 1px)`, backgroundSize: "60px 60px" }}
-      />
+      <PremiumSectionBg accentColor={accentColor} variant="warm" />
 
-      <div className="max-w-5xl mx-auto relative">
+      <div className="max-w-5xl mx-auto relative z-10">
         <motion.div
           className="text-center mb-14"
           initial={{ opacity: 0, y: 30 }}

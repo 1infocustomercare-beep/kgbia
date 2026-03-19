@@ -7,6 +7,7 @@ import { Mail, Phone, MapPin, ArrowRight, Globe, Instagram, Facebook } from "luc
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
+import PremiumSectionBg from "./PremiumSectionBg";
 
 interface Props {
   sector: string;
