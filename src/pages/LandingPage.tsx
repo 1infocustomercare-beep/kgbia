@@ -998,7 +998,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             <select
               value={selectedSector}
               onChange={(e) => {setSelectedSector(e.target.value as PricingSector);setSelectedAddons(new Set());}}
-              className="w-full appearance-none px-4 py-3 rounded-xl border border-border/30 bg-background/60 backdrop-blur-sm text-foreground text-sm font-heading font-semibold text-center cursor-pointer focus:outline-none focus:border-primary/40 transition-colors">
+              className="w-full appearance-none px-4 py-3 rounded-xl border border-border/30 backdrop-blur-sm text-foreground text-sm font-heading font-semibold text-center cursor-pointer focus:outline-none focus:border-primary/40 transition-colors"
+              style={{ background: "linear-gradient(145deg, hsla(0,0%,4%,0.98), hsla(38,16%,8%,0.92))" }}>
               
               {PRICING_SECTORS.map((s) =>
               <option key={s.id} value={s.id}>{s.emoji} {s.label}</option>
