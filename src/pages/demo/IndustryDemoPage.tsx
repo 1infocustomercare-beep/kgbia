@@ -449,7 +449,7 @@ export default function IndustryDemoPage() {
     );
 
     return (
-      <>
+      <div className="pb-16">
         <BackButton to="/demo" label="Tutte le Demo" variant="floating" theme="glass" />
         {/* Partner branding banner */}
         {isPartnerBranded && (
