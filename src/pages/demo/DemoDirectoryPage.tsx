@@ -9,43 +9,43 @@ import {
   ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
   Umbrella, Wrench, Zap, Wheat, SprayCan, Scale, Calculator,
   Settings, Camera, HardHat, Flower2, Stethoscope, Pen,
-  Baby, GraduationCap, PartyPopper, Truck, Puzzle
+  Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles
 } from "lucide-react";
 import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 
-/* ═══ Lucide icon mapping by industry ═══ */
+/* ═══ Lucide icon mapping — w-4 h-4 for compact premium nodes ═══ */
 const INDUSTRY_ICONS: Record<string, React.ReactNode> = {
-  ChefHat: <ChefHat className="w-5 h-5" />,
-  Car: <Car className="w-5 h-5" />,
-  Scissors: <Scissors className="w-5 h-5" />,
-  Heart: <Heart className="w-5 h-5" />,
-  Store: <Store className="w-5 h-5" />,
-  Dumbbell: <Dumbbell className="w-5 h-5" />,
-  Building: <Building className="w-5 h-5" />,
-  Umbrella: <Umbrella className="w-5 h-5" />,
-  Wrench: <Wrench className="w-5 h-5" />,
-  Zap: <Zap className="w-5 h-5" />,
-  Wheat: <Wheat className="w-5 h-5" />,
-  SprayCan: <SprayCan className="w-5 h-5" />,
-  Scale: <Scale className="w-5 h-5" />,
-  Calculator: <Calculator className="w-5 h-5" />,
-  Settings: <Settings className="w-5 h-5" />,
-  Camera: <Camera className="w-5 h-5" />,
-  HardHat: <HardHat className="w-5 h-5" />,
-  Flower2: <Flower2 className="w-5 h-5" />,
-  Stethoscope: <Stethoscope className="w-5 h-5" />,
-  Pen: <Pen className="w-5 h-5" />,
-  Baby: <Baby className="w-5 h-5" />,
-  GraduationCap: <GraduationCap className="w-5 h-5" />,
-  PartyPopper: <PartyPopper className="w-5 h-5" />,
-  Truck: <Truck className="w-5 h-5" />,
-  Puzzle: <Puzzle className="w-5 h-5" />,
+  ChefHat: <ChefHat className="w-4 h-4" />,
+  Car: <Car className="w-4 h-4" />,
+  Scissors: <Scissors className="w-4 h-4" />,
+  Heart: <Heart className="w-4 h-4" />,
+  Store: <Store className="w-4 h-4" />,
+  Dumbbell: <Dumbbell className="w-4 h-4" />,
+  Building: <Building className="w-4 h-4" />,
+  Umbrella: <Umbrella className="w-4 h-4" />,
+  Wrench: <Wrench className="w-4 h-4" />,
+  Zap: <Zap className="w-4 h-4" />,
+  Wheat: <Wheat className="w-4 h-4" />,
+  SprayCan: <SprayCan className="w-4 h-4" />,
+  Scale: <Scale className="w-4 h-4" />,
+  Calculator: <Calculator className="w-4 h-4" />,
+  Settings: <Settings className="w-4 h-4" />,
+  Camera: <Camera className="w-4 h-4" />,
+  HardHat: <HardHat className="w-4 h-4" />,
+  Flower2: <Flower2 className="w-4 h-4" />,
+  Stethoscope: <Stethoscope className="w-4 h-4" />,
+  Pen: <Pen className="w-4 h-4" />,
+  Baby: <Baby className="w-4 h-4" />,
+  GraduationCap: <GraduationCap className="w-4 h-4" />,
+  PartyPopper: <PartyPopper className="w-4 h-4" />,
+  Truck: <Truck className="w-4 h-4" />,
+  Puzzle: <Puzzle className="w-4 h-4" />,
 };
 
 function getIcon(iconName: string) {
-  return INDUSTRY_ICONS[iconName] || <Puzzle className="w-5 h-5" />;
+  return INDUSTRY_ICONS[iconName] || <Puzzle className="w-4 h-4" />;
 }
 
 /* ═══ FEATURED DEMOS ═══ */
@@ -98,6 +98,18 @@ function LivePhonePreview({ route, color, name }: { route: string; color: string
   );
 }
 
+/* ═══ SECTOR CATEGORIES for grouping ═══ */
+const SECTOR_CATEGORIES = [
+  { label: "In Evidenza", ids: ["food", "ncc"] as IndustryId[] },
+  { label: "Benessere & Salute", ids: ["beauty", "healthcare", "fitness", "veterinary"] as IndustryId[] },
+  { label: "Ospitalità", ids: ["hospitality", "beach", "agriturismo"] as IndustryId[] },
+  { label: "Commercio", ids: ["retail"] as IndustryId[] },
+  { label: "Servizi Professionali", ids: ["legal", "accounting", "photography", "education", "childcare"] as IndustryId[] },
+  { label: "Artigianato & Tecnici", ids: ["plumber", "electrician", "construction", "gardening", "cleaning", "garage", "tattoo"] as IndustryId[] },
+  { label: "Trasporti & Logistica", ids: ["logistics"] as IndustryId[] },
+  { label: "Eventi & Altro", ids: ["events", "custom"] as IndustryId[] },
+];
+
 export default function DemoDirectoryPage() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -119,205 +131,256 @@ export default function DemoDirectoryPage() {
     else navigate(`/demo/${slug}`);
   };
 
+  const isFeatured = (id: IndustryId) => FEATURED_DEMOS.some(f => f.id === id);
+  const getFeatured = (id: IndustryId) => FEATURED_DEMOS.find(f => f.id === id);
+
   return (
-    <div className="min-h-screen relative" style={{ background: "linear-gradient(180deg, #06060a 0%, #0c0c14 30%, #0a0a10 60%, #080810 100%)" }}>
-      {/* Premium subtle mesh background */}
+    <div className="min-h-screen relative overflow-hidden" style={{ background: "#050508" }}>
+      {/* ═══ PREMIUM BACKGROUND — fully opaque, no DNA bleed ═══ */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[5%] right-[10%] w-[600px] h-[600px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.5), transparent 65%)", filter: "blur(150px)" }} />
-        <div className="absolute bottom-[20%] left-[5%] w-[500px] h-[500px] rounded-full opacity-[0.03]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.4), transparent 65%)", filter: "blur(130px)" }} />
-        <div className="absolute top-[50%] left-[40%] w-[400px] h-[400px] rounded-full opacity-[0.02]"
-          style={{ background: "radial-gradient(circle, hsla(150,50%,45%,0.3), transparent 65%)", filter: "blur(120px)" }} />
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]"
+        {/* Rich gradient base */}
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(165deg, #08070e 0%, #0d0b18 20%, #0a0912 40%, #0e0c15 60%, #080710 80%, #050508 100%)"
+        }} />
+
+        {/* Ambient orbs — deep, rich, luxurious */}
+        <div className="absolute top-[-10%] right-[-5%] w-[700px] h-[700px] rounded-full"
+          style={{ background: "radial-gradient(circle, hsla(265,45%,25%,0.12), transparent 60%)", filter: "blur(180px)" }} />
+        <div className="absolute bottom-[-5%] left-[-10%] w-[600px] h-[600px] rounded-full"
+          style={{ background: "radial-gradient(circle, hsla(38,40%,22%,0.1), transparent 60%)", filter: "blur(160px)" }} />
+        <div className="absolute top-[40%] left-[50%] w-[500px] h-[500px] rounded-full"
+          style={{ background: "radial-gradient(circle, hsla(200,35%,20%,0.06), transparent 60%)", filter: "blur(140px)" }} />
+
+        {/* Subtle geometric grid */}
+        <div className="absolute inset-0 opacity-[0.018]"
           style={{
-            backgroundImage: `linear-gradient(hsla(0,0%,100%,0.04) 1px, transparent 1px), linear-gradient(90deg, hsla(0,0%,100%,0.04) 1px, transparent 1px)`,
-            backgroundSize: "60px 60px"
+            backgroundImage: `linear-gradient(hsla(265,40%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265,40%,60%,0.08) 1px, transparent 1px)`,
+            backgroundSize: "80px 80px"
           }} />
+
+        {/* Top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265,50%,50%,0.15) 30%, hsla(38,45%,50%,0.12) 50%, hsla(265,50%,50%,0.1) 70%, transparent 90%)" }} />
       </div>
 
-      {/* Header */}
-      <div className="sticky top-0 z-40 backdrop-blur-2xl border-b"
-        style={{ background: "hsla(230,20%,5%,0.88)", borderColor: "hsla(0,0%,100%,0.06)" }}>
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center gap-3">
+      {/* ═══ HEADER ═══ */}
+      <div className="sticky top-0 z-40 border-b"
+        style={{
+          background: "linear-gradient(180deg, hsla(240,20%,5%,0.97), hsla(240,18%,4%,0.95))",
+          backdropFilter: "blur(30px) saturate(1.6)",
+          borderColor: "hsla(265,30%,30%,0.12)"
+        }}>
+        <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center gap-3">
           <button onClick={() => navigate("/home")}
-            className="p-2.5 rounded-xl transition-all duration-200 hover:scale-105"
-            style={{ background: "hsla(0,0%,100%,0.05)", border: "1px solid hsla(0,0%,100%,0.08)" }}>
-            <ArrowLeft className="w-4 h-4 text-white/70" />
+            className="p-2 rounded-xl transition-all duration-200 hover:scale-105"
+            style={{ background: "hsla(265,30%,30%,0.12)", border: "1px solid hsla(265,30%,40%,0.1)" }}>
+            <ArrowLeft className="w-4 h-4 text-foreground/60" />
           </button>
-          <div className="flex-1">
-            <h1 className="text-lg font-bold text-white font-heading tracking-tight">Demo Live per Settore</h1>
-            <p className="text-[0.65rem] text-white/40 tracking-wide">{ALL_INDUSTRIES.length} settori · Preview interattive</p>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-base font-bold text-foreground font-heading tracking-tight">Esplora i Settori</h1>
+            <p className="text-[0.6rem] text-foreground/30 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+            style={{ background: "hsla(150,40%,40%,0.08)", border: "1px solid hsla(150,40%,40%,0.1)" }}>
+            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "hsla(150,60%,50%,0.8)" }} />
+            <span className="text-[0.5rem] font-semibold tracking-wider" style={{ color: "hsla(150,50%,55%,0.7)" }}>LIVE</span>
           </div>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-8 relative z-10">
-        {/* Search */}
-        <div className="relative mb-8">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25" />
+      <div className="max-w-5xl mx-auto px-4 py-6 relative z-10">
+        {/* ═══ SEARCH ═══ */}
+        <div className="relative mb-6">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/20" />
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cerca settore..."
-            className="pl-11 h-12 min-h-[48px] text-white placeholder:text-white/25"
+            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/20 text-sm"
             style={{
-              background: "hsla(230,20%,8%,0.9)",
-              border: "1px solid hsla(0,0%,100%,0.08)",
-              borderRadius: "1rem"
+              background: "hsla(240,18%,8%,0.95)",
+              border: "1px solid hsla(265,25%,25%,0.15)",
+              borderRadius: "0.875rem"
             }}
           />
         </div>
 
-        {/* ═══ Grid ═══ */}
-        <div className="space-y-2.5">
-          {/* Featured demos at top */}
-          {!search.trim() && FEATURED_DEMOS.map((feat, i) => {
-            const cfg = INDUSTRY_CONFIGS[feat.id];
-            const isExpanded = expandedSector === feat.id;
-            return (
-              <motion.div key={`feat-${feat.id}`}
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}>
-                <div className="relative rounded-2xl overflow-hidden group transition-all duration-300"
-                  style={{
-                    background: "linear-gradient(145deg, hsla(230,18%,9%,0.98), hsla(235,22%,6%,0.98))",
-                    border: `1px solid ${feat.color}25`,
-                    boxShadow: `0 4px 30px ${feat.color}08`
-                  }}>
-                  {/* Top accent line */}
-                  <div className="absolute top-0 left-0 right-0 h-[2px]"
-                    style={{ background: `linear-gradient(90deg, transparent, ${feat.color}60, ${feat.color}30, transparent)` }} />
-
-                  <div className="flex items-center gap-4 p-4 sm:p-5 cursor-pointer"
-                    onClick={() => setExpandedSector(isExpanded ? null : feat.id)}>
-                    {/* Icon */}
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-                      style={{ background: `${feat.color}15`, color: feat.color, boxShadow: `0 0 20px ${feat.color}10` }}>
-                      {getIcon(cfg.icon)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <h3 className="font-bold text-sm text-white font-heading">{feat.name}</h3>
-                        <span className="text-[0.5rem] px-2 py-0.5 rounded-full font-bold tracking-[1.5px] uppercase flex items-center gap-1"
-                          style={{ background: `${feat.color}15`, color: feat.color, border: `1px solid ${feat.color}25` }}>
-                          <Crown className="w-2.5 h-2.5" /> PREMIUM
-                        </span>
-                      </div>
-                      <p className="text-[0.65rem] text-white/40">{feat.tagline}</p>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <motion.button
-                        onClick={(e) => { e.stopPropagation(); navigate(feat.route); }}
-                        className="px-4 py-2 rounded-xl text-[0.65rem] font-bold text-white hidden sm:flex items-center gap-1.5 transition-all duration-200 hover:scale-105"
-                        style={{ backgroundColor: feat.color, boxShadow: `0 4px 16px ${feat.color}30` }}
-                        whileTap={{ scale: 0.95 }}>
-                        Demo Live <ArrowRight className="w-3 h-3" />
-                      </motion.button>
-                      {isExpanded ? <ChevronUp className="w-4 h-4 text-white/25" /> : <ChevronDown className="w-4 h-4 text-white/25" />}
-                    </div>
+        {/* ═══ CONTENT ═══ */}
+        {search.trim() ? (
+          /* Flat filtered list */
+          <div className="space-y-2">
+            {filtered.map((id, i) => (
+              <SectorCard key={id} id={id} index={i} isExpanded={expandedSector === id}
+                onToggle={() => setExpandedSector(expandedSector === id ? null : id)}
+                onNavigate={navigateToDemo} isFeatured={isFeatured(id)} featured={getFeatured(id)} />
+            ))}
+            {filtered.length === 0 && (
+              <div className="text-center py-16">
+                <p className="text-foreground/30 text-sm">Nessun settore trovato per "{search}"</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Categorized view */
+          <div className="space-y-8">
+            {SECTOR_CATEGORIES.map((cat, ci) => {
+              const categoryIndustries = cat.ids.filter(id => ALL_INDUSTRIES.includes(id));
+              if (categoryIndustries.length === 0) return null;
+              return (
+                <motion.div key={cat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: ci * 0.06 }}>
+                  {/* Category header */}
+                  <div className="flex items-center gap-2.5 mb-3 px-1">
+                    <div className="h-px flex-1 max-w-[20px]"
+                      style={{ background: "linear-gradient(90deg, hsla(265,40%,50%,0.25), transparent)" }} />
+                    <span className="text-[0.55rem] font-bold tracking-[2.5px] uppercase text-foreground/25">{cat.label}</span>
+                    <div className="h-px flex-1"
+                      style={{ background: "linear-gradient(90deg, transparent, hsla(265,30%,40%,0.08))" }} />
                   </div>
 
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
-                        <div className="px-5 pb-6 pt-1">
-                          <div className="flex justify-center mb-4">
-                            <LivePhonePreview route={feat.route} color={feat.color} name={feat.name} />
-                          </div>
-                          <IndustryPhoneShowcase industryId={feat.id} />
-                          <div className="flex justify-center mt-4">
-                            <motion.button onClick={() => navigate(feat.route)}
-                              className="px-6 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-2 min-h-[40px] transition-all hover:scale-105"
-                              style={{ backgroundColor: feat.color, boxShadow: `0 4px 20px ${feat.color}30` }} whileTap={{ scale: 0.95 }}>
-                              Apri Demo Live <ArrowRight className="w-3.5 h-3.5" />
-                            </motion.button>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            );
-          })}
-
-          {/* All other sectors */}
-          {filtered.filter(id => !FEATURED_DEMOS.some(f => f.id === id) || search.trim()).map((id, i) => {
-            const cfg = INDUSTRY_CONFIGS[id];
-            const demo = DEMO_INDUSTRY_DATA[id];
-            const isExpanded = expandedSector === id;
-            const color = cfg.defaultPrimaryColor;
-
-            return (
-              <motion.div key={id}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.02 }}>
-                <div className="relative rounded-2xl overflow-hidden group transition-all duration-300 hover:border-white/15"
-                  style={{
-                    background: "linear-gradient(145deg, hsla(230,16%,9%,0.95), hsla(235,20%,6%,0.95))",
-                    border: "1px solid hsla(0,0%,100%,0.07)"
-                  }}>
-                  <div className="flex items-center gap-3.5 p-4 cursor-pointer"
-                    onClick={() => setExpandedSector(isExpanded ? null : id)}>
-                    {/* Icon container */}
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110"
-                      style={{ background: `${color}12`, color: color }}>
-                      {getIcon(cfg.icon)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-sm text-white font-heading">{cfg.label}</h3>
-                      <p className="text-[0.6rem] text-white/35 truncate">{demo.companyName} · {cfg.description}</p>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <motion.button
-                        onClick={(e) => { e.stopPropagation(); navigateToDemo(id); }}
-                        className="px-3.5 py-1.5 rounded-xl text-[0.6rem] font-semibold transition-all hidden sm:block hover:scale-105"
-                        style={{ background: "hsla(0,0%,100%,0.06)", border: "1px solid hsla(0,0%,100%,0.1)", color: "hsla(0,0%,100%,0.7)" }}
-                        whileTap={{ scale: 0.95 }}>
-                        Apri Demo
-                      </motion.button>
-                      {isExpanded ? <ChevronUp className="w-4 h-4 text-white/25" /> : <ChevronDown className="w-4 h-4 text-white/25" />}
-                    </div>
+                  <div className="space-y-2">
+                    {categoryIndustries.map((id, i) => (
+                      <SectorCard key={id} id={id} index={i} isExpanded={expandedSector === id}
+                        onToggle={() => setExpandedSector(expandedSector === id ? null : id)}
+                        onNavigate={navigateToDemo} isFeatured={isFeatured(id)} featured={getFeatured(id)} />
+                    ))}
                   </div>
-
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
-                        <div className="px-4 pb-5 pt-1">
-                          <div className="flex justify-center mb-4">
-                            <LivePhonePreview
-                              route={id === "food" ? `/r/${DEMO_SLUGS[id]}` : `/b/${DEMO_SLUGS[id]}`}
-                              color={color} name={cfg.label} />
-                          </div>
-                          <IndustryPhoneShowcase industryId={id} />
-                          <div className="flex justify-center mt-4">
-                            <motion.button onClick={() => navigateToDemo(id)}
-                              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-2 min-h-[40px] transition-all hover:scale-105"
-                              style={{ backgroundColor: color, boxShadow: `0 4px 16px ${color}25` }} whileTap={{ scale: 0.95 }}>
-                              Apri Demo Live <ArrowRight className="w-3.5 h-3.5" />
-                            </motion.button>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {filtered.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-white/40 text-sm">Nessun settore trovato per "{search}"</p>
+                </motion.div>
+              );
+            })}
           </div>
         )}
       </div>
     </div>
+  );
+}
+
+/* ═══ SECTOR CARD COMPONENT ═══ */
+function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, featured }: {
+  id: IndustryId;
+  index: number;
+  isExpanded: boolean;
+  onToggle: () => void;
+  onNavigate: (id: IndustryId) => void;
+  isFeatured: boolean;
+  featured?: { name: string; tagline: string; route: string; color: string };
+}) {
+  const navigate = useNavigate();
+  const cfg = INDUSTRY_CONFIGS[id];
+  const demo = DEMO_INDUSTRY_DATA[id];
+  const color = featured?.color || cfg.defaultPrimaryColor;
+  const label = featured?.name || cfg.label;
+  const subtitle = featured?.tagline || `${demo.companyName} · ${cfg.description}`;
+  const route = featured?.route || (id === "food" ? `/r/${DEMO_SLUGS[id]}` : `/b/${DEMO_SLUGS[id]}`);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.025 }}>
+      <div
+        className={`relative rounded-2xl overflow-hidden group transition-all duration-300 ${isExpanded ? "ring-1" : ""}`}
+        style={{
+          background: isFeatured
+            ? `linear-gradient(155deg, hsla(240,16%,10%,1), hsla(240,20%,7%,1))`
+            : `linear-gradient(155deg, hsla(240,14%,9%,1), hsla(240,18%,6%,1))`,
+          border: `1px solid ${isFeatured ? `${color}20` : "hsla(265,20%,22%,0.12)"}`,
+          ringColor: isExpanded ? `${color}30` : undefined,
+        }}>
+
+        {/* Top accent — featured only */}
+        {isFeatured && (
+          <div className="absolute top-0 left-0 right-0 h-[2px]"
+            style={{ background: `linear-gradient(90deg, transparent, ${color}50, ${color}20, transparent)` }} />
+        )}
+
+        {/* Main row */}
+        <div className="flex items-center gap-3 p-3.5 sm:p-4 cursor-pointer" onClick={onToggle}>
+          {/* Icon node — premium circle with gradient ring */}
+          <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
+            style={{
+              background: `linear-gradient(145deg, ${color}18, ${color}08)`,
+              boxShadow: `0 0 0 1px ${color}20, 0 2px 8px ${color}06`,
+              color: color
+            }}>
+            {getIcon(cfg.icon)}
+            {/* Subtle pulse for featured */}
+            {isFeatured && (
+              <motion.div className="absolute inset-0 rounded-full pointer-events-none"
+                style={{ border: `1px solid ${color}15` }}
+                animate={{ scale: [1, 1.3], opacity: [0.4, 0] }}
+                transition={{ duration: 2.5, repeat: Infinity }} />
+            )}
+          </div>
+
+          {/* Text */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-0.5">
+              <h3 className="font-bold text-[0.8rem] sm:text-sm text-foreground font-heading truncate">{label}</h3>
+              {isFeatured && (
+                <span className="text-[0.45rem] px-1.5 py-0.5 rounded-full font-bold tracking-[1.5px] uppercase flex items-center gap-0.5 flex-shrink-0"
+                  style={{ background: `${color}12`, color: color, border: `1px solid ${color}18` }}>
+                  <Crown className="w-2 h-2" /> PREMIUM
+                </span>
+              )}
+            </div>
+            <p className="text-[0.58rem] sm:text-[0.65rem] text-foreground/30 truncate">{subtitle}</p>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <motion.button
+              onClick={(e) => { e.stopPropagation(); isFeatured ? navigate(route) : onNavigate(id); }}
+              className="px-3 py-1.5 rounded-xl text-[0.55rem] sm:text-[0.6rem] font-semibold transition-all hidden sm:flex items-center gap-1 hover:scale-105"
+              style={isFeatured ? {
+                backgroundColor: color,
+                color: "#fff",
+                boxShadow: `0 3px 12px ${color}25`
+              } : {
+                background: "hsla(265,20%,20%,0.2)",
+                border: "1px solid hsla(265,20%,25%,0.15)",
+                color: "hsla(0,0%,100%,0.6)"
+              }}
+              whileTap={{ scale: 0.95 }}>
+              {isFeatured ? "Demo Live" : "Apri Demo"} <ArrowRight className="w-2.5 h-2.5" />
+            </motion.button>
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center"
+              style={{ background: "hsla(265,20%,20%,0.1)" }}>
+              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/25" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/25" />}
+            </div>
+          </div>
+        </div>
+
+        {/* Expanded content */}
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
+              <div className="px-4 pb-5 pt-1">
+                {/* Separator */}
+                <div className="h-px mb-4" style={{ background: `linear-gradient(90deg, transparent, ${color}15, transparent)` }} />
+
+                <div className="flex justify-center mb-4">
+                  <LivePhonePreview route={route} color={color} name={label} />
+                </div>
+                <IndustryPhoneShowcase industryId={id} />
+
+                {/* CTA */}
+                <div className="flex justify-center mt-4">
+                  <motion.button onClick={() => isFeatured ? navigate(route) : onNavigate(id)}
+                    className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-2 min-h-[40px] transition-all hover:scale-105"
+                    style={{ backgroundColor: color, boxShadow: `0 4px 16px ${color}20` }} whileTap={{ scale: 0.95 }}>
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Apri Demo Live <ArrowRight className="w-3.5 h-3.5" />
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
   );
 }
