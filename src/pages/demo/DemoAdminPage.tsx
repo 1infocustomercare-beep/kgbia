@@ -1503,7 +1503,13 @@ export default function DemoAdminPage() {
   // ══════════════════════════════════════
   //  ORDERS VIEW
   // ══════════════════════════════════════
-  const renderOrders = () => (
+  const [ordersPage, setOrdersPage] = useState(1);
+  const ORDERS_PER_PAGE = 6;
+
+  const renderOrders = () => {
+    const totalPages = Math.ceil(tableData.rows.length / ORDERS_PER_PAGE);
+    const pagedRows = tableData.rows.slice((ordersPage - 1) * ORDERS_PER_PAGE, ordersPage * ORDERS_PER_PAGE);
+    return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="text-base font-bold text-white">{sectorKey === "food" ? "Ordini & Delivery" : sectorKey === "ncc" ? "Corse & Transfer" : "Ordini & Prenotazioni"}</h2>
@@ -1525,7 +1531,7 @@ export default function DemoAdminPage() {
                 </tr>
               </thead>
               <tbody>
-                {tableData.rows.map((row, i) => (
+                {pagedRows.map((row, i) => (
                   <tr key={i} className={`border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors ${i % 2 === 0 ? "" : "bg-white/[0.01]"}`}>
                     {row.map((cell, j) => (
                       <td key={j} className="p-3 text-[0.65rem] text-white/60 whitespace-nowrap">
@@ -1544,10 +1550,22 @@ export default function DemoAdminPage() {
               </tbody>
             </table>
           </div>
+          {/* Pagination */}
+          <div className="flex items-center justify-between px-4 py-3 border-t border-white/[0.04]">
+            <span className="text-[0.6rem] text-white/30">{tableData.rows.length} righe · Pagina {ordersPage}/{totalPages}</span>
+            <div className="flex gap-1">
+              {Array.from({ length: totalPages }).map((_, p) => (
+                <button key={p} onClick={() => setOrdersPage(p + 1)}
+                  className={`w-7 h-7 rounded-lg text-[0.6rem] font-bold transition-all ${ordersPage === p + 1 ? "text-white" : "text-white/30 hover:text-white/50"}`}
+                  style={ordersPage === p + 1 ? { background: `${accentColor}20`, color: accentColor } : { background: "rgba(255,255,255,0.03)" }}>{p + 1}</button>
+              ))}
+            </div>
+          </div>
         </Card>
       )}
     </div>
-  );
+    );
+  };
 
   // ══════════════════════════════════════
   //  AGENTS VIEW (kept from original, enhanced)
