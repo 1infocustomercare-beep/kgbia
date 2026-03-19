@@ -122,15 +122,14 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-/** Reduce section background alpha slightly so the DNA circuit canvas peeks through
- *  at edges and gaps BETWEEN sections — not under text/content.
- *  Also normalizes previously over-transparent values (0.75-0.82) back up. */
+/** Keep section backdrops premium-dark and fully solid so the DNA pattern
+ * is visible only in connectors/empty spaces, never behind section copy. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !style.background || typeof style.background !== "string") return style;
-  // Replace alpha=1 → 0.93, and normalize any 0.7x/0.8x → 0.93
-  let bg = style.background.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*1\)/g, (_, inner) => `hsla(${inner},0.93)`);
-  bg = bg.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*0\.7\d\)/g, (_, inner) => `hsla(${inner},0.93)`);
-  bg = bg.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*0\.8\d\)/g, (_, inner) => `hsla(${inner},0.93)`);
+  const bg = style.background.replace(
+    /hsla\(([^,]+,[^,]+,[^,]+),\s*0\.[1-9]\d*\)/g,
+    (_, inner) => `hsla(${inner},1)`
+  );
   return { ...style, background: bg };
 };
 
@@ -592,8 +591,8 @@ const Particle = ({ delay, size, x, y }: {delay: number;size: number;x: string;y
 
 /* ═══ Section Divider ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) =>
-<div ref={ref} className="section-connector">
-    <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(35,45%,50%,0.08) 15%, hsla(38,45%,52%,0.15) 35%, hsla(35,45%,50%,0.2) 50%, hsla(38,45%,52%,0.15) 65%, hsla(35,45%,50%,0.08) 85%, transparent 100%)" }} />
+<div ref={ref} className="section-connector" style={{ height: "2.5rem" }}>
+    <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(35,45%,50%,0.08) 15%, hsla(38,45%,52%,0.15) 35%, hsla(35,45%,50%,0.2) 50%, hsla(38,45%,52%,0.15) 65%, hsla(35,45%,50%,0.08) 85%, transparent 100%)" }} />
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <motion.div
       className="w-2 h-2 rounded-full"
@@ -929,7 +928,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
   return (
     <Section id="pricing" className="relative overflow-hidden" style={{
-      background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(38,20%,9%,0.78) 15%, hsla(265,22%,10%,0.78) 32%, hsla(38,16%,9%,0.78) 50%, hsla(265,18%,9%,0.78) 70%, hsla(230,16%,4%,0.82) 100%)"
+      background: "linear-gradient(180deg, hsla(0,0%,4%,1) 0%, hsla(0,0%,5%,1) 30%, hsla(38,22%,10%,1) 55%, hsla(0,0%,5%,1) 80%, hsla(0,0%,4%,1) 100%)"
     }}>
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.06]"
@@ -2633,7 +2632,7 @@ const LandingPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative noise-overlay">
+    <div className="min-h-screen bg-background overflow-x-hidden relative">
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -3236,7 +3235,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden" style={{ background: "hsla(230,14%,5%,0.93)" }}>
+      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden" style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,16%,8%,0.99) 50%, hsla(0,0%,4%,0.99) 100%)" }}>
         <div className="flex animate-marquee-scroll whitespace-nowrap">
           {[...Array(2)].map((_, repeat) =>
           <div key={repeat} className="flex items-center gap-12 px-6">
@@ -3679,7 +3678,7 @@ const LandingPage = () => {
            SETTORI
           ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(265,22%,10%,0.78) 15%, hsla(220,20%,11%,0.78) 30%, hsla(155,18%,9%,0.78) 50%, hsla(265,20%,10%,0.78) 70%, hsla(220,16%,8%,0.78) 85%, hsla(230,16%,4%,0.82) 100%)"
+        background: "linear-gradient(180deg, hsla(0,0%,4%,1) 0%, hsla(0,0%,5%,1) 28%, hsla(38,18%,9%,1) 52%, hsla(0,0%,5%,1) 78%, hsla(0,0%,4%,1) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
