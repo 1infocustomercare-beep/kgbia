@@ -2888,7 +2888,7 @@ const LandingPage = () => {
           </>
         }
 
-        <div className="relative max-w-[1200px] mx-auto px-3 sm:px-6 flex items-center justify-between h-12 sm:h-16 pt-2 sm:pt-3">
+        <div className="relative max-w-[1200px] mx-auto px-3 sm:px-6 flex items-center justify-between h-14 sm:h-[4.5rem] pt-2 sm:pt-3">
           
           {/* ═══ Left Nav Links (desktop) ═══ */}
           <div className="hidden lg:flex items-center gap-1 flex-1">
