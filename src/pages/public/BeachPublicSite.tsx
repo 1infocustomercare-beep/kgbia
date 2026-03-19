@@ -21,6 +21,8 @@ import {
   Users, CreditCard, Coffee, MessageCircle, Quote, Menu, X, ChevronLeft, ChevronRight, Sparkles, Award
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import { DemoPricingSection } from "@/components/public/DemoPricingSection";
+import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 
 /* ─── SUNSET CORAL + OCEAN DEEP AESTHETIC ─── */
