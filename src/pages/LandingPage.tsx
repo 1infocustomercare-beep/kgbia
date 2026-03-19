@@ -2872,7 +2872,7 @@ const LandingPage = () => {
               
               {/* Breathing pulse ring */}
               <motion.div
-                className="absolute inset-0 rounded-[16px] pointer-events-none"
+                className="absolute inset-0 rounded-full pointer-events-none"
                 style={{ border: "1px solid hsla(38,50%,55%,0.15)" }}
                 animate={{ scale: [1, 1.35], opacity: [0.4, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }} />
