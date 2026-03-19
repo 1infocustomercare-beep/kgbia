@@ -2937,7 +2937,7 @@ const LandingPage = () => {
 
             {/* Logo container — hexagonal feel with premium depth */}
             <motion.div
-              className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center overflow-hidden"
+              className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center overflow-hidden"
               style={{
                 background: "linear-gradient(145deg, hsla(38,45%,20%,1), hsla(35,40%,14%,1), hsla(30,35%,10%,1))",
                 boxShadow: "0 0 0 2px hsla(38,50%,50%,0.3), 0 0 40px hsla(38,50%,50%,0.15), 0 8px 32px hsla(0,0%,0%,0.4), inset 0 1px 0 hsla(38,50%,60%,0.15)"
