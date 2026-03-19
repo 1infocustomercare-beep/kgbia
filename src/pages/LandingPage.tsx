@@ -47,6 +47,19 @@ import sectorHeroHealthcare from "@/assets/sector-hero-healthcare.jpg";
 import sectorHeroRetail from "@/assets/sector-hero-retail.jpg";
 import sectorHeroFitness from "@/assets/sector-hero-fitness.jpg";
 import sectorHeroHotel from "@/assets/sector-hero-hotel.jpg";
+import sectorHeroBeach from "@/assets/sector-hero-beach.jpg";
+import sectorHeroPlumber from "@/assets/sector-hero-plumber.jpg";
+import sectorHeroConstruction from "@/assets/sector-hero-construction.jpg";
+import sectorHeroEvents from "@/assets/sector-hero-events.jpg";
+import sectorHeroGarage from "@/assets/sector-hero-garage.jpg";
+import sectorHeroLogistics from "@/assets/sector-hero-logistics.jpg";
+import sectorHeroGardening from "@/assets/sector-hero-gardening.jpg";
+import sectorHeroVeterinary from "@/assets/sector-hero-veterinary.jpg";
+import sectorHeroPhotography from "@/assets/sector-hero-photography.jpg";
+import sectorHeroEducation from "@/assets/sector-hero-education.jpg";
+import sectorHeroChildcare from "@/assets/sector-hero-childcare.jpg";
+import sectorHeroTattoo from "@/assets/sector-hero-tattoo.jpg";
+import sectorHeroCleaning from "@/assets/sector-hero-cleaning.jpg";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 const EmpireTeamStory = lazy(() => import("@/components/public/EmpireTeamStory"));
@@ -3722,7 +3735,15 @@ const LandingPage = () => {
           const SECTOR_HERO_IMAGES: Record<string, string> = {
             food: sectorHeroFood, ncc: sectorHeroNcc, beauty: sectorHeroBeauty,
             healthcare: sectorHeroHealthcare, retail: sectorHeroRetail,
-            fitness: sectorHeroFitness, hospitality: sectorHeroHotel
+            fitness: sectorHeroFitness, hospitality: sectorHeroHotel,
+            beach: sectorHeroBeach, plumber: sectorHeroPlumber, electrician: sectorHeroPlumber,
+            construction: sectorHeroConstruction, events: sectorHeroEvents,
+            garage: sectorHeroGarage, logistics: sectorHeroLogistics,
+            gardening: sectorHeroGardening, veterinary: sectorHeroVeterinary,
+            photography: sectorHeroPhotography, education: sectorHeroEducation,
+            childcare: sectorHeroChildcare, tattoo: sectorHeroTattoo,
+            cleaning: sectorHeroCleaning, agriturismo: sectorHeroGardening,
+            legal: sectorHeroEducation, accounting: sectorHeroEducation
           };
           const allItems: CarouselItem[] = industries.map((ind) => {
             const slug = DEMO_SLUGS[ind.id];
@@ -3753,7 +3774,7 @@ const LandingPage = () => {
               if (slug) {
                 allItems.push({
                   name: es.title, route: `/demo/${slug}`, color: INDUSTRY_COLORS[mapped.id] || "#8b5cf6",
-                  label: mapped.modules, nav: `/demo/${slug}`, image: sectorHeroFood
+                  label: mapped.modules, nav: `/demo/${slug}`, image: SECTOR_HERO_IMAGES[mapped.id] || sectorHeroFood
                 });
               }
             }
