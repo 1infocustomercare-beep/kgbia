@@ -535,9 +535,9 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     <motion.div
       className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
       style={{
-        background: "linear-gradient(145deg, hsla(230,10%,14%,0.95), hsla(230,8%,10%,0.92))",
+        background: "linear-gradient(145deg, hsla(230,12%,9%,0.99), hsla(230,10%,6%,0.99))",
         backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.4)",
-        borderColor: "hsla(38,40%,55%,0.1)"
+        borderColor: "hsla(38,40%,55%,0.12)"
       }}
       whileHover={hover && !isMobileDevice ? {
         y: -6,
@@ -3232,7 +3232,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden bg-card/90 backdrop-blur-sm">
+      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden" style={{ background: "hsla(230,14%,5%,0.98)" }}>
         <div className="flex animate-marquee-scroll whitespace-nowrap">
           {[...Array(2)].map((_, repeat) =>
           <div key={repeat} className="flex items-center gap-12 px-6">
@@ -5511,8 +5511,8 @@ const LandingPage = () => {
             <motion.div key={i} variants={fadeScale}
             className="relative rounded-xl overflow-hidden group"
             style={{
-              background: "linear-gradient(145deg, hsla(230,20%,10%,0.95), hsla(235,25%,7%,0.98))",
-              border: "1px solid hsla(215,40%,30%,0.12)"
+              background: "linear-gradient(145deg, hsla(230,20%,7%,0.99), hsla(235,25%,4%,0.99))",
+              border: "1px solid hsla(215,40%,30%,0.15)"
             }}>
                 {/* Top accent */}
                 <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${stat.color}40, transparent)` }} />
@@ -5553,8 +5553,8 @@ const LandingPage = () => {
           <motion.div className="relative rounded-2xl overflow-hidden"
           initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}
           style={{
-            background: "linear-gradient(145deg, hsla(230,22%,8%,0.98), hsla(235,28%,5%,0.99))",
-            border: "1px solid hsla(265,50%,40%,0.12)",
+            background: "linear-gradient(145deg, hsla(230,22%,5%,0.99), hsla(235,28%,3%,0.99))",
+            border: "1px solid hsla(265,50%,40%,0.15)",
             boxShadow: "0 20px 80px hsla(265,50%,30%,0.1), inset 0 1px 0 hsla(265,70%,60%,0.06)"
           }}>
             {/* Top bar — terminal style */}
@@ -5799,7 +5799,7 @@ const LandingPage = () => {
               {testimonials.map((t, i) =>
             <div key={i} className="relative p-4 rounded-xl overflow-hidden"
             style={{
-              background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
+              background: "linear-gradient(165deg, hsla(265,25%,8%,0.98), hsla(265,20%,5%,0.99))",
               border: "1px solid hsla(265,40%,50%,0.12)",
               backdropFilter: "blur(24px)"
             }}>
@@ -5829,7 +5829,7 @@ const LandingPage = () => {
               <div key={i} className="group relative h-full">
                     <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
                 style={{
-                  background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
+                  background: "linear-gradient(165deg, hsla(265,25%,8%,0.98), hsla(265,20%,5%,0.99))",
                   border: "1px solid hsla(265,40%,50%,0.12)",
                   boxShadow: "0 16px 48px -12px hsla(265,50%,8%,0.5), inset 0 1px 0 hsla(265,60%,70%,0.06)",
                   backdropFilter: "blur(24px)"
@@ -5927,8 +5927,8 @@ const LandingPage = () => {
           <div
             className="absolute inset-0 sm:hidden z-0"
             style={{
-              background: "linear-gradient(155deg, hsl(var(--background) / 0.995), hsl(var(--card) / 0.985))",
-              border: "1px solid hsl(var(--border) / 0.5)"
+              background: "linear-gradient(155deg, hsla(230,14%,5%,0.99), hsla(230,12%,4%,0.99))",
+              border: "1px solid hsla(38,40%,45%,0.08)"
             }}
           />
 
