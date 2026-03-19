@@ -539,7 +539,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     <motion.div
       className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
       style={{
-        background: "linear-gradient(145deg, hsla(230,12%,9%,0.78), hsla(230,10%,6%,0.80))",
+        background: "linear-gradient(145deg, hsla(230,12%,9%,0.94), hsla(230,10%,6%,0.95))",
         backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.4)",
         borderColor: "hsla(38,40%,55%,0.12)"
       }}
