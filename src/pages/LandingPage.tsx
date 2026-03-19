@@ -2868,7 +2868,7 @@ const LandingPage = () => {
               </motion.div>
 
               {/* Logo image */}
-              <img src={empireLogoNew} alt="Empire AI" className="w-full h-full object-cover rounded-full drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" />
+              <img src={empireLogoNew} alt="Empire AI" className="w-[130%] h-[130%] object-cover rounded-full drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" style={{ objectPosition: "center 38%" }} />
               
               {/* Breathing pulse ring */}
               <motion.div
