@@ -267,21 +267,19 @@ const EmpireDNABackground = () => {
 
       const routeMode = sIdx;
 
-      // ═══ LAYER 0: Tech "+" Grid Matrix ═══
+      // ═══ LAYER 0: Subtle dot grid (no + crosses) ═══
       {
         const gridSp = IS_MOBILE ? 72 : 55;
         const gridPulse = 0.5 + Math.sin(time * 0.25) * 0.5;
-        ctx.strokeStyle = hsla(pLine, (IS_MOBILE ? 0.016 : 0.012) + gridPulse * (IS_MOBILE ? 0.007 : 0.006));
+        ctx.fillStyle = hsla(pLine, (IS_MOBILE ? 0.025 : 0.018) + gridPulse * (IS_MOBILE ? 0.012 : 0.008));
         for (let gx = gridSp * 0.5; gx < w; gx += gridSp) {
           for (let gy = gridSp * 0.5; gy < h; gy += gridSp) {
             const lp = Math.sin(gx * 0.01 + gy * 0.01 + time * 0.2) * 0.5 + 0.5;
-            const arm = (IS_MOBILE ? 1.8 : 1.4) + lp * (IS_MOBILE ? 1.2 : 0.8);
-            ctx.globalAlpha = IS_MOBILE ? 0.32 + lp * 0.24 : 0.2 + lp * 0.2;
-            ctx.lineWidth = IS_MOBILE ? 0.4 : 0.3;
+            ctx.globalAlpha = IS_MOBILE ? 0.18 + lp * 0.14 : 0.12 + lp * 0.12;
+            const dotR = IS_MOBILE ? 0.6 : 0.5;
             ctx.beginPath();
-            ctx.moveTo(gx - arm, gy); ctx.lineTo(gx + arm, gy);
-            ctx.moveTo(gx, gy - arm); ctx.lineTo(gx, gy + arm);
-            ctx.stroke();
+            ctx.arc(gx, gy, dotR, 0, Math.PI * 2);
+            ctx.fill();
           }
         }
         ctx.globalAlpha = 1;
