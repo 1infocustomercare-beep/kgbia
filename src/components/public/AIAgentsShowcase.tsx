@@ -534,6 +534,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const [activeSector, setActiveSector] = useState(sector || "all");
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const [showMoreSectors, setShowMoreSectors] = useState(false);
 
   const filteredAgents = useMemo(() => {
     const base = activeSector === "all" ? ALL_AGENTS : ALL_AGENTS.filter((a) => a.sectors.includes("all") || a.sectors.includes(activeSector));
