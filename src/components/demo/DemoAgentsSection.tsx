@@ -8,11 +8,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getAllAgentsForSector, type AIAgent } from "@/config/sectorFeatures";
 import { Bot, CheckCircle, ChevronDown, ChevronRight, Sparkles, Zap, ArrowRight } from "lucide-react";
 import PremiumSectionBg from "./PremiumSectionBg";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { getAllAgentsForSector, type AIAgent } from "@/config/sectorFeatures";
-import { Bot, CheckCircle, ChevronDown, ChevronRight, Sparkles, Zap, ArrowRight } from "lucide-react";
 
 interface Props {
   sector: string;
