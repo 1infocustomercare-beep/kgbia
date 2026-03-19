@@ -362,6 +362,9 @@ export default function DemoAdminPage() {
   const resolvedSector = useMemo(() => resolveIndustryFromSlug(slug || "food"), [slug]);
   const config = getSectorConfig(resolvedSector || "food");
   const allAgents = useMemo(() => getAllAgentsForSector(resolvedSector || "food"), [resolvedSector]);
+  const sectorKey = resolvedSector || "food";
+  const revenueData = useMemo(() => generateRevenueData(sectorKey), [sectorKey]);
+  const calendarData = useMemo(generateCalendarDays, []);
 
   if (!resolvedSector || !config) {
     return (
@@ -374,8 +377,6 @@ export default function DemoAdminPage() {
   }
 
   const accentColor = config.colors.accent;
-  const sectorKey = resolvedSector || "food";
-  const revenueData = useMemo(() => generateRevenueData(sectorKey), [sectorKey]);
   const kpis = SECTOR_KPIS[sectorKey] || SECTOR_KPIS.food!;
   const barData = SECTOR_BAR_DATA[sectorKey] || SECTOR_BAR_DATA.food!;
   const tableData = SECTOR_TABLE_DATA[sectorKey] || SECTOR_TABLE_DATA.food!;
@@ -386,7 +387,6 @@ export default function DemoAdminPage() {
     { text: `Agente AI ha qualificato 3 nuovi lead`, time: "3 ore fa", type: "ai" as const },
   ];
   const quickActions = SECTOR_QUICK_ACTIONS[sectorKey] || [{ label: "Nuova Azione", icon: "Plus" }, { label: "Messaggio", icon: "Send" }, { label: "Report", icon: "BarChart3" }];
-  const calendarData = useMemo(generateCalendarDays, []);
 
   // ── Sidebar ──
   const SidebarInner = () => (
