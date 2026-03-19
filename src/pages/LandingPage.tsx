@@ -4166,7 +4166,7 @@ const LandingPage = () => {
                   whileHover={{ background: "hsla(0,0%,100%,0.03)", scale: 1.01 }}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.02 }}>
                     
-                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${sec.gradient} flex items-center justify-center text-lg shadow-lg flex-shrink-0 opacity-70`}>
+                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${sec.gradient} flex items-center justify-center text-white shadow-lg flex-shrink-0 opacity-70`}>
                           {sec.icon}
                         </div>
                         <div className="flex-1 min-w-0">
