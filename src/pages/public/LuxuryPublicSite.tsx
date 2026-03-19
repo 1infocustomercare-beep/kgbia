@@ -713,38 +713,13 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
-      {/* ═══ AI AGENTS + SECTOR VALUE + AUTOMATION ═══ */}
+      {/* ═══ PRICING + AI AGENTS + SECTOR VALUE + AUTOMATION ═══ */}
+      <DemoPricingSection sector={industry} accentColor={accentHex} darkMode={isDark} bgColor={isDark ? p.bg : "#fff"} textColor={p.text} />
       <AIAgentsShowcase sector={industry} />
       <SectorValueProposition sectorKey={industry} accentColor={accentHex} darkMode={isDark} sectorLabel={config.label} />
       <AutomationShowcase accentColor={p.accent} accentBg="bg-primary" sectorName={config.label.toLowerCase()} darkMode={isDark} />
 
-      {/* ═══ FOOTER ═══ */}
-      <footer className="py-10 px-5 border-t" style={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)" }}>
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            {company.logo_url && <img src={company.logo_url} alt="" className="w-8 h-8 rounded-lg object-cover" />}
-            <span className="font-semibold text-sm" style={{ fontFamily: "'DM Serif Display', serif" }}>{company.name}</span>
-          </div>
-          <div className="flex items-center gap-4">
-            {socialLinks?.instagram && (
-              <a href={socialLinks.instagram} target="_blank" rel="noopener" className="opacity-50 hover:opacity-100 transition-opacity">
-                <Instagram className="w-5 h-5" />
-              </a>
-            )}
-            {socialLinks?.facebook && (
-              <a href={socialLinks.facebook} target="_blank" rel="noopener" className="opacity-50 hover:opacity-100 transition-opacity">
-                <Globe className="w-5 h-5" />
-              </a>
-            )}
-          </div>
-          <p className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }}>
-            © {new Date().getFullYear()} {company.name}. Tutti i diritti riservati.
-          </p>
-        </div>
-        <p className="text-center mt-4 text-[10px]" style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}>
-          Powered by Empire.AI
-        </p>
-      </footer>
+      <DemoRichFooter company={company} accentColor={accentHex} darkMode={isDark} sectorLabel={config.label.toUpperCase()} />
 
       {/* ═══ FLOATING WHATSAPP ═══ */}
       {(company.phone || socialLinks?.whatsapp) && (

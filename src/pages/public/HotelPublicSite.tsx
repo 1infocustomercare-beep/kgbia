@@ -449,30 +449,12 @@ export default function HotelPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoPricingSection sector="hotel" accentColor={H.emerald} darkMode={true} bgColor={H.bgDeep} />
       <AIAgentsShowcase sector="hotel" />
       <SectorValueProposition sectorKey="hotel" accentColor={H.emerald} darkMode={true} sectorLabel="Hotel" />
       <AutomationShowcase accentColor={H.emerald} accentBg="bg-emerald-700" sectorName="hotel e hospitality" darkMode={true} />
 
-      {/* ═══ FOOTER ═══ */}
-      <footer className="py-10 border-t" style={{ borderColor: `${H.emerald}15`, background: H.footer }}>
-        <div className="max-w-6xl mx-auto px-5">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-            <div className="flex items-center gap-3">
-              {company.logo_url && <img src={company.logo_url} alt="" className="h-8 w-8 rounded-full object-cover" />}
-              <div>
-                <p className="font-bold text-white/80 text-sm">{name}</p>
-                <p className="text-[8px] tracking-[0.2em] uppercase" style={{ color: H.gold, fontFamily: "'Raleway', sans-serif" }}>LUXURY HOSPITALITY</p>
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center gap-4 text-xs text-white/30" style={{ fontFamily: "'Raleway', sans-serif" }}>
-              {company.address && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{company.address}</span>}
-              {phone && <a href={`tel:${phone}`} className="flex items-center gap-1 hover:text-white/60"><Phone className="w-3 h-3" />{phone}</a>}
-              {company.email && <a href={`mailto:${company.email}`} className="flex items-center gap-1 hover:text-white/60"><Mail className="w-3 h-3" />{company.email}</a>}
-            </div>
-            <p className="text-[10px] text-white/10" style={{ fontFamily: "'Raleway', sans-serif" }}>© {new Date().getFullYear()} {name} · Powered by Empire.AI</p>
-          </div>
-        </div>
-      </footer>
+      <DemoRichFooter company={company} accentColor={H.gold} darkMode={true} bgColor={H.footer} sectorLabel="LUXURY HOSPITALITY" fontFamily="'Raleway', sans-serif" />
 
       {/* WhatsApp */}
       {phone && (

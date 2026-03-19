@@ -343,19 +343,12 @@ export default function BeachPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoPricingSection sector="beach" accentColor={CORAL} darkMode={false} bgColor={SAND} textColor={OCEAN} />
       <AIAgentsShowcase sector="beach" />
       <SectorValueProposition sectorKey="beach" accentColor={CORAL} darkMode={false} sectorLabel="Stabilimento Balneare" />
       <AutomationShowcase accentColor={CORAL} accentBg="bg-orange-500" sectorName="stabilimenti balneari" darkMode={false} />
 
-      <footer className="py-8 px-4" style={{ background: OCEAN }}>
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4" style={{ fontFamily: "'Source Sans 3', sans-serif" }}>
-          <span className="font-semibold text-white/70 text-sm">{company.name}</span>
-          <div className="flex gap-4 text-xs text-white/25">
-            {phone && <a href={`tel:${phone}`}><Phone className="w-3 h-3 inline mr-1" />{phone}</a>}
-          </div>
-          <p className="text-[10px] text-white/10">Powered by Empire.AI</p>
-        </div>
-      </footer>
+      <DemoRichFooter company={company} accentColor={CORAL} darkMode={true} bgColor={OCEAN} sectorLabel="BEACH CLUB" fontFamily="'Source Sans 3', sans-serif" />
 
       {phone && (
         <motion.a href={`https://wa.me/${phone.replace(/\D/g, "")}`} target="_blank" rel="noopener"

@@ -20,6 +20,8 @@ import {
   Eye, Droplets, Gem, Crown, Flower2, Palette
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import { DemoPricingSection } from "@/components/public/DemoPricingSection";
+import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 
 /* ── BEAUTY DESIGN SYSTEM — Rose Gold + Noir ── */

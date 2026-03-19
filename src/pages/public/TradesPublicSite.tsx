@@ -749,24 +749,12 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         </div>
       </section>
 
+      <DemoPricingSection sector="trades" accentColor={A} darkMode={true} bgColor={D} />
       <AIAgentsShowcase sector="trades" />
       <SectorValueProposition sectorKey={industry === "electrician" || industry === "plumber" ? "trades" : (industry as string)} accentColor={A} darkMode={true} sectorLabel={config.label} />
       <AutomationShowcase accentColor={A} accentBg={`bg-[${A}]`} sectorName={config.label.toLowerCase()} darkMode={true} />
 
-      <footer className="py-10 px-4 border-t" style={{ borderColor: `${A}08` }}>
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4" style={{ fontFamily: "'Inter', sans-serif" }}>
-          <div className="flex items-center gap-2">
-            {company.logo_url ? <img src={company.logo_url} alt="" className="h-7 w-7 rounded-lg object-cover" /> : <HeroIcon className="w-5 h-5" style={{ color: A }} />}
-            <span className="font-semibold text-white/70 text-sm">{company.name}</span>
-          </div>
-          <div className="flex gap-4 text-xs text-white/25">
-            {company.phone && <a href={`tel:${company.phone}`}><Phone className="w-3 h-3 inline mr-1" />{company.phone}</a>}
-            {company.email && <a href={`mailto:${company.email}`}><Mail className="w-3 h-3 inline mr-1" />{company.email}</a>}
-            {company.address && <span><MapPin className="w-3 h-3 inline mr-1" />{company.address}</span>}
-          </div>
-          <p className="text-[10px] text-white/10">Powered by Empire Platform</p>
-        </div>
-      </footer>
+      <DemoRichFooter company={company} accentColor={A} darkMode={true} bgColor={D} sectorLabel={config.label.toUpperCase()} fontFamily="'Inter', sans-serif" />
       <DemoAdminAccessButton sector="trades" accentColor="#2563eb" />
     </div>
   );

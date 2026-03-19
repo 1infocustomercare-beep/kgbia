@@ -417,21 +417,12 @@ export default function FitnessPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoPricingSection sector="fitness" accentColor={VOLT} darkMode={true} bgColor={STEEL} />
       <AIAgentsShowcase sector="fitness" />
       <SectorValueProposition sectorKey="fitness" accentColor={VOLT} darkMode={true} sectorLabel="Palestra" />
       <AutomationShowcase accentColor={VOLT} accentBg="bg-lime-400" sectorName="palestre e fitness" darkMode={true} />
 
-      {/* FOOTER */}
-      <footer className="py-8 border-t" style={{ borderColor: `${VOLT}10` }}>
-        <div className="max-w-6xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-4" style={{ fontFamily: "'Barlow', sans-serif" }}>
-          <p className="text-xs text-white/20">© {new Date().getFullYear()} {name}.</p>
-          <div className="flex gap-6 text-xs text-white/20">
-            {company.address && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{company.address}</span>}
-            {phone && <a href={`tel:${phone}`} className="flex items-center gap-1"><Phone className="w-3 h-3" />{phone}</a>}
-          </div>
-          <div className="flex gap-4 text-xs text-white/20"><a href="/privacy">Privacy</a><span>Powered by Empire.AI</span></div>
-        </div>
-      </footer>
+      <DemoRichFooter company={company} accentColor={VOLT} darkMode={true} bgColor={CARBON} sectorLabel="PERFORMANCE CLUB" fontFamily="'Barlow', sans-serif" />
 
       {phone && (
         <motion.a href={`https://wa.me/${phone.replace(/\D/g, "")}`} target="_blank" rel="noopener"
