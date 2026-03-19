@@ -3775,15 +3775,37 @@ const LandingPage = () => {
           <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
           <FunnelDNAVisual />
           <div className="absolute inset-0 pointer-events-none rounded-2xl"
-          style={{ background: "linear-gradient(180deg, transparent 45%, hsla(0,0%,4%,0.94) 100%)" }} />
-          <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex flex-wrap items-center gap-1.5 sm:gap-2">
-            {["Dashboard IA", "CRM", "Automazioni", "Fatturazione"].map((label) =>
-            <div key={label} className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full backdrop-blur-sm border border-primary/10"
-            style={{ background: "linear-gradient(135deg, hsla(0,0%,4%,0.97), hsla(38,14%,8%,0.9))" }}>
-                <span className="text-[0.5rem] sm:text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase whitespace-nowrap">{label}</span>
-              </div>
-            )}
-          </div>
+          style={{ background: "linear-gradient(180deg, transparent 60%, hsla(0,0%,4%,0.85) 100%)" }} />
+        </motion.div>
+
+        {/* Premium feature badges — below video */}
+        <motion.div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mt-6 max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.25 }}>
+          {[
+            { label: "Dashboard IA", icon: "✦" },
+            { label: "CRM Intelligente", icon: "◈" },
+            { label: "Automazioni", icon: "⚡" },
+            { label: "Fatturazione", icon: "◆" },
+          ].map((item, i) =>
+            <motion.div key={item.label}
+              className="group relative px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl border border-primary/15 cursor-default"
+              style={{
+                background: "linear-gradient(135deg, hsla(265,30%,12%,0.6), hsla(38,20%,8%,0.5))",
+                boxShadow: "0 2px 16px hsla(265,50%,40%,0.06), inset 0 1px 0 hsla(0,0%,100%,0.03)",
+              }}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 + i * 0.08 }}
+              whileHover={{ scale: 1.04, borderColor: "hsla(265,60%,55%,0.3)" }}>
+              <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: "radial-gradient(circle at center, hsla(265,50%,50%,0.08), transparent 70%)" }} />
+              <span className="text-[0.55rem] sm:text-[0.65rem] font-heading font-bold tracking-[0.15em] uppercase text-foreground/80 group-hover:text-primary transition-colors flex items-center gap-1.5">
+                <span className="text-primary/50 text-[0.5rem]">{item.icon}</span>
+                {item.label}
+              </span>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* CTA buttons under video */}
