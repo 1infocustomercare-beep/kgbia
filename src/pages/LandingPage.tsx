@@ -3658,9 +3658,11 @@ const LandingPage = () => {
         transition={{ duration: 0.6 }}>
           <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
           <FunnelDNAVisual />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
+          <div className="absolute inset-0 pointer-events-none rounded-2xl"
+            style={{ background: "linear-gradient(180deg, transparent 45%, hsla(0,0%,4%,0.94) 100%)" }} />
           <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
-            <div className="px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-sm border border-primary/10">
+            <div className="px-3 py-1.5 rounded-full backdrop-blur-sm border border-primary/10"
+              style={{ background: "linear-gradient(135deg, hsla(0,0%,4%,0.97), hsla(38,14%,8%,0.9))" }}>
               <span className="text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase">Dashboard IA • CRM • Automazioni • Fatturazione</span>
             </div>
           </div>
