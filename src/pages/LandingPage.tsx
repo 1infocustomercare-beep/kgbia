@@ -3212,7 +3212,7 @@ const LandingPage = () => {
                              HERO
                             ═══════════════════════════════════════════ */}
        <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-28 sm:pt-28 pb-20 sm:pb-16"
-      style={{ opacity: heroOpacity }}>
+      style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Cinematic video background ═══ */}
         <div className="absolute inset-0" style={{ zIndex: 2 }}>
