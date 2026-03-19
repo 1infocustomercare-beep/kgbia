@@ -3287,7 +3287,7 @@ const LandingPage = () => {
            IL PROBLEMA — Pain Points
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(345,20%,8%,1) 20%, hsla(350,16%,10%,1) 40%, hsla(265,18%,9%,1) 60%, hsla(345,14%,7%,1) 80%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(345,20%,8%,0.88) 20%, hsla(350,16%,10%,0.88) 40%, hsla(265,18%,9%,0.88) 60%, hsla(345,14%,7%,0.88) 80%, hsla(230,16%,4%,0.88) 100%)"
       }}>
         {/* Premium ambient glows — layered danger luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -3608,7 +3608,7 @@ const LandingPage = () => {
            VIDEO HERO — Business Transformation
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(260,24%,10%,1) 18%, hsla(265,26%,12%,1) 35%, hsla(155,16%,9%,1) 55%, hsla(265,20%,10%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(260,24%,10%,0.88) 18%, hsla(265,26%,12%,0.88) 35%, hsla(155,16%,9%,0.88) 55%, hsla(265,20%,10%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
         {/* Premium ambient glows — discovery/innovation luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -3695,7 +3695,7 @@ const LandingPage = () => {
            SETTORI
           ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(0,0%,4%,1) 0%, hsla(0,0%,5%,1) 28%, hsla(38,18%,9%,1) 52%, hsla(0,0%,5%,1) 78%, hsla(0,0%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(0,0%,4%,0.88) 0%, hsla(0,0%,5%,0.88) 28%, hsla(38,18%,9%,0.88) 52%, hsla(0,0%,5%,0.88) 78%, hsla(0,0%,4%,0.88) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -4075,7 +4075,7 @@ const LandingPage = () => {
            PERCHÉ EMPIRE — Unified Section
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(220,18%,11%,1) 30%, hsla(155,18%,9%,1) 50%, hsla(265,20%,10%,1) 70%, hsla(220,16%,8%,1) 85%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.88) 15%, hsla(220,18%,11%,0.88) 30%, hsla(155,18%,9%,0.88) 50%, hsla(265,20%,10%,0.88) 70%, hsla(220,16%,8%,0.88) 85%, hsla(230,16%,4%,0.88) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -4522,7 +4522,7 @@ const LandingPage = () => {
            3 INTERFACCE — Mockup Showcase
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,18%,9%,1) 18%, hsla(265,20%,10%,1) 35%, hsla(38,14%,8%,1) 55%, hsla(265,18%,9%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(38,18%,9%,0.88) 18%, hsla(265,20%,10%,0.88) 35%, hsla(38,14%,8%,0.88) 55%, hsla(265,18%,9%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -4692,7 +4692,7 @@ const LandingPage = () => {
            BUILD ANYTHING — Streamlined Conversion Section
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(38,18%,9%,1) 35%, hsla(265,20%,10%,1) 55%, hsla(38,14%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.88) 15%, hsla(38,18%,9%,0.88) 35%, hsla(265,20%,10%,0.88) 55%, hsla(38,14%,8%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -5416,7 +5416,7 @@ const LandingPage = () => {
           ═══════════════════════════════════════════ */}
       <section className="relative py-16 sm:py-28 px-5 sm:px-6 overflow-hidden"
       style={mobilifyBg({
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,7%,1) 15%, hsla(230,20%,5%,1) 40%, hsla(265,18%,6%,1) 65%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,22%,7%,0.88) 15%, hsla(230,20%,5%,0.88) 40%, hsla(265,18%,6%,0.88) 65%, hsla(230,16%,4%,0.88) 100%)"
       })}>
         {/* AI Neural Network Schema Background */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -6085,7 +6085,7 @@ const LandingPage = () => {
            FAQ
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(38,18%,9%,1) 35%, hsla(265,20%,10%,1) 55%, hsla(38,14%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.88) 15%, hsla(38,18%,9%,0.88) 35%, hsla(265,20%,10%,0.88) 55%, hsla(38,14%,8%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -6236,7 +6236,7 @@ const LandingPage = () => {
 
       {/* ═══════ FOOTER ═══════ */}
       <footer id="contact" className="relative py-20 pb-10 px-5 sm:px-6 overflow-hidden"
-      style={mobilifyBg({ background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,22%,7%,1) 12%, hsla(38,14%,6%,1) 28%, hsla(265,20%,8%,1) 45%, hsla(155,12%,6%,1) 62%, hsla(265,18%,5%,1) 80%, hsla(230,16%,3%,1) 100%)" })}>
+      style={mobilifyBg({ background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,22%,7%,0.88) 12%, hsla(38,14%,6%,0.88) 28%, hsla(265,20%,8%,0.88) 45%, hsla(155,12%,6%,0.88) 62%, hsla(265,18%,5%,0.88) 80%, hsla(230,16%,3%,0.88) 100%)" })}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Top accent line — tricolore viola/oro/verde */}
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.4) 20%, hsla(38,65%,55%,0.35) 40%, hsla(155,60%,50%,0.3) 60%, hsla(38,65%,55%,0.35) 80%, transparent 95%)" }} />
