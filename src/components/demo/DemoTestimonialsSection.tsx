@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { getSectorTheme } from "@/config/sector-themes";
+import PremiumSectionBg from "./PremiumSectionBg";
 
 interface Props {
   sector: string;
@@ -43,16 +44,13 @@ export default function DemoTestimonialsSection({ sector, accentColor, sectorNam
     <section
       ref={ref}
       className="py-20 px-4 relative overflow-hidden"
-      style={{ background: isDark ? "linear-gradient(180deg, rgba(0,0,0,0.95), rgba(10,10,20,0.98))" : theme.palette.bgAlt }}
+      style={{ background: isDark ? "linear-gradient(180deg, #0a0a12 0%, #060610 50%, #080812 100%)" : theme.palette.bgAlt }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Ambient glow */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: `radial-gradient(ellipse at 50% 0%, ${accentColor}08, transparent 60%)`
-      }} />
+      <PremiumSectionBg accentColor={accentColor} variant="alt" />
 
-      <div className="max-w-5xl mx-auto relative">
+      <div className="max-w-5xl mx-auto relative z-10">
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 30 }}
