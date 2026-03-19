@@ -1031,6 +1031,7 @@ export default function DemoAdminPage() {
   const [agentsTab, setAgentsTab] = useState<"overview" | "activity" | "detail">("overview");
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [tutorialsOn, setTutorialsOn] = useState(true);
+  const [ordersPage, setOrdersPage] = useState(1);
 
   const resolvedSector = useMemo(() => resolveIndustryFromSlug(slug || "food"), [slug]);
   const config = getSectorConfig(resolvedSector || "food");
