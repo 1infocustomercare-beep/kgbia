@@ -20,6 +20,8 @@ let safetyTimer: ReturnType<typeof setTimeout> | null = null;
 let autoUnlockListenerAdded = false;
 let premiumAudioCached: string | null = null;
 let premiumFetchInProgress = false;
+/** True while any narration source is actively producing sound */
+let isCurrentlyPlaying = false;
 
 // Safety: force-complete after 15s max
 function armSafetyTimeout() {
@@ -28,6 +30,7 @@ function armSafetyTimeout() {
     if (!splashNarrationCompleted) {
       console.log("[SplashNarration] Safety timeout — completing");
       splashNarrationCompleted = true;
+      isCurrentlyPlaying = false;
       audioElement = null;
       currentUtterance = null;
     }
@@ -91,27 +94,43 @@ async function fetchPremiumAudio(): Promise<string | null> {
   }
 }
 
+/** Stop any currently playing audio before starting a new one */
+function stopAllCurrent() {
+  if (audioElement) {
+    try { audioElement.pause(); audioElement.currentTime = 0; } catch { /* noop */ }
+    audioElement = null;
+  }
+  if (typeof window !== "undefined" && window.speechSynthesis) {
+    try { window.speechSynthesis.cancel(); } catch { /* noop */ }
+  }
+  currentUtterance = null;
+  isCurrentlyPlaying = false;
+}
+
 function playPremiumAudio(base64Audio: string): boolean {
   try {
-    if (audioElement) {
-      audioElement.pause();
-      audioElement = null;
-    }
+    // Stop anything currently playing first
+    stopAllCurrent();
+
+    if (splashNarrationCompleted) return false;
 
     const audioUrl = `data:audio/mpeg;base64,${base64Audio}`;
     const audio = new Audio(audioUrl);
     audio.volume = 1;
     audioElement = audio;
+    isCurrentlyPlaying = true;
 
     audio.onended = () => {
       console.log("[SplashNarration] ✅ Premium speech ended");
       splashNarrationCompleted = true;
+      isCurrentlyPlaying = false;
       audioElement = null;
     };
 
     audio.onerror = (e) => {
       console.warn("[SplashNarration] Premium playback error, falling back:", e);
       audioElement = null;
+      isCurrentlyPlaying = false;
       doSpeakBrowserTTS();
     };
 
@@ -119,12 +138,14 @@ function playPremiumAudio(base64Audio: string): boolean {
       console.log("[SplashNarration] ✅ Premium audio playing!");
     }).catch((playErr) => {
       console.warn("[SplashNarration] Premium play() blocked:", playErr);
+      isCurrentlyPlaying = false;
       // Will retry on user gesture
     });
 
     return true;
   } catch (err) {
     console.warn("[SplashNarration] Premium play setup failed:", err);
+    isCurrentlyPlaying = false;
     return false;
   }
 }
@@ -151,7 +172,7 @@ function getBestItalianVoice(): SpeechSynthesisVoice | null {
 }
 
 function doSpeakBrowserTTS() {
-  if (splashNarrationCompleted) return;
+  if (splashNarrationCompleted || isCurrentlyPlaying) return;
   if (!window.speechSynthesis) {
     console.warn("[SplashNarration] No speechSynthesis available");
     return;
@@ -168,20 +189,27 @@ function doSpeakBrowserTTS() {
   utterance.pitch = 1.05;
   utterance.volume = 1;
 
-  utterance.onstart = () => console.log("[SplashNarration] Browser TTS started");
+  utterance.onstart = () => {
+    console.log("[SplashNarration] Browser TTS started");
+    isCurrentlyPlaying = true;
+  };
   utterance.onend = () => {
     splashNarrationCompleted = true;
+    isCurrentlyPlaying = false;
     currentUtterance = null;
   };
   utterance.onerror = (e) => {
     console.warn("[SplashNarration] Browser TTS error:", e.error);
+    isCurrentlyPlaying = false;
     currentUtterance = null;
   };
 
   currentUtterance = utterance;
+  isCurrentlyPlaying = true;
   try {
     window.speechSynthesis.speak(utterance);
   } catch {
+    isCurrentlyPlaying = false;
     currentUtterance = null;
   }
 }
@@ -189,20 +217,20 @@ function doSpeakBrowserTTS() {
 // ─── Main orchestrator ───
 
 async function doSpeak() {
-  if (splashNarrationCompleted) return;
+  if (splashNarrationCompleted || isCurrentlyPlaying) return;
 
   armSafetyTimeout();
 
   // Try premium ElevenLabs first
   const premiumAudio = await fetchPremiumAudio();
 
-  if (premiumAudio && !splashNarrationCompleted) {
+  if (premiumAudio && !splashNarrationCompleted && !isCurrentlyPlaying) {
     const played = playPremiumAudio(premiumAudio);
     if (played) return;
   }
 
   // Fallback to browser TTS
-  if (!splashNarrationCompleted) {
+  if (!splashNarrationCompleted && !isCurrentlyPlaying) {
     doSpeakBrowserTTS();
   }
 }
@@ -264,39 +292,42 @@ export function startSplashNarration(): void {
 /**
  * Called from a user gesture handler (tap on splash screen).
  * Unlocks audio context and plays premium voice.
+ * IDEMPOTENT: if audio is already playing, does nothing.
  */
 export function unlockAndStartSplashNarration(): void {
   if (audioUnlocked) return;
   audioUnlocked = true;
 
   if (typeof window === "undefined") return;
+  if (splashNarrationCompleted) return;
 
   console.log("[SplashNarration] Unlocking audio from user gesture");
 
-  // If premium audio is already cached and not yet playing, play it now
-  if (premiumAudioCached && !splashNarrationCompleted) {
-    if (audioElement) {
-      // Re-attempt play in gesture context
-      audioElement.play().catch(() => {
-        doSpeakBrowserTTS();
-      });
-    } else {
-      playPremiumAudio(premiumAudioCached);
+  // If already playing successfully, just resume if paused — never restart
+  if (isCurrentlyPlaying) {
+    if (audioElement && audioElement.paused) {
+      audioElement.play().catch(() => {});
     }
     return;
   }
 
-  // If still fetching, wait and retry
-  if (premiumFetchInProgress && !splashNarrationCompleted) {
+  // If premium audio is cached and nothing is playing, play it
+  if (premiumAudioCached) {
+    playPremiumAudio(premiumAudioCached);
+    return;
+  }
+
+  // If still fetching, wait and retry once
+  if (premiumFetchInProgress) {
     const checkInterval = setInterval(() => {
       if (premiumAudioCached) {
         clearInterval(checkInterval);
-        if (!splashNarrationCompleted) {
+        if (!splashNarrationCompleted && !isCurrentlyPlaying) {
           playPremiumAudio(premiumAudioCached);
         }
       } else if (!premiumFetchInProgress) {
         clearInterval(checkInterval);
-        if (!splashNarrationCompleted) {
+        if (!splashNarrationCompleted && !isCurrentlyPlaying) {
           doSpeakBrowserTTS();
         }
       }
@@ -305,10 +336,7 @@ export function unlockAndStartSplashNarration(): void {
     return;
   }
 
-  // If narration already playing via browser TTS, don't interrupt
-  if (currentUtterance && window.speechSynthesis?.speaking) return;
-
-  // Start fresh
+  // Nothing cached, nothing fetching — start fresh
   doSpeak();
 }
 
@@ -321,8 +349,7 @@ export function wasSplashNarrationStarted(): boolean {
 }
 
 export function isSplashNarrationSpeaking(): boolean {
-  return splashNarrationStarted && !splashNarrationCompleted &&
-    (!!audioElement || !!currentUtterance);
+  return splashNarrationStarted && !splashNarrationCompleted && isCurrentlyPlaying;
 }
 
 export function isSplashNarrationDone(): boolean {
@@ -335,15 +362,6 @@ export function stopSplashNarration(): void {
     safetyTimer = null;
   }
 
-  if (audioElement) {
-    try { audioElement.pause(); } catch { /* noop */ }
-    audioElement = null;
-  }
-
-  if (typeof window !== "undefined" && window.speechSynthesis) {
-    try { window.speechSynthesis.cancel(); } catch { /* noop */ }
-  }
-
-  currentUtterance = null;
+  stopAllCurrent();
   splashNarrationCompleted = true;
 }
