@@ -16,6 +16,8 @@ import {
   Target, Timer, ArrowRight, MessageCircle, Trophy, ChevronDown, Star, MapPin, Mail, Menu, X, ChevronLeft, ChevronRight, Sparkles, Shield, Quote, Award, CheckCircle
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import { DemoPricingSection } from "@/components/public/DemoPricingSection";
+import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import fallbackHeroVideo from "@/assets/video-features.mp4";
 
 /* ─── NEON VOLT + CARBON BLACK AESTHETIC ─── */
