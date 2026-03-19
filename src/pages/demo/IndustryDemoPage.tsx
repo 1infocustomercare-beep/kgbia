@@ -469,9 +469,12 @@ export default function IndustryDemoPage() {
         </div>
         {/* Full Features + Agents + Admin CTA sections */}
         <DemoFeaturesSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
+        <DemoTestimonialsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
         <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="section" />
         <DemoAgentsSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
+        <DemoPricingSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} />
         <DemoAdminCTA slug={slug || resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} variant="sticky" />
+        <DemoFooterSection sector={resolvedIndustry} accentColor={accentColor} sectorName={industryConfig.label} companyName={companyName} tagline={tagline} />
         <Suspense fallback={null}>
           <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={accentColor} />
         </Suspense>
