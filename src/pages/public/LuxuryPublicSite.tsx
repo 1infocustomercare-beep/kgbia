@@ -24,6 +24,7 @@ import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { HeroPhotoCarousel } from "@/components/public/HeroPhotoCarousel";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
+import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 
 /* ── VERIFIED MATCHING VIDEOS — only sectors with confirmed correct content ── */
