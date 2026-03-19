@@ -527,7 +527,7 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: {children: 
     <motion.div className="relative group/icon" whileHover={isMobileDevice ? undefined : { scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
       {/* Main container — no animated rings on mobile */}
       <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
-      style={{ boxShadow: "0 4px 20px hsla(38,50%,50%,0.12), inset 0 1px 1px rgba(255,255,255,0.15)" }}>
+      style={{ boxShadow: "0 6px 24px hsla(38,50%,50%,0.2), 0 0 0 1px hsla(38,45%,55%,0.1), inset 0 1px 1px rgba(255,255,255,0.2)" }}>
         <div className="relative z-10">{children}</div>
       </div>
     </motion.div>);
