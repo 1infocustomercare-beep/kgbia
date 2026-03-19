@@ -1065,8 +1065,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 }
                 style={{
                   background: isEmpire ?
-                   "linear-gradient(165deg, hsla(35,25%,14%,0.94), hsla(230,12%,8%,0.95))" :
-                   "linear-gradient(165deg, hsla(230,12%,13%,0.93), hsla(230,10%,9%,0.95))"
+                  "linear-gradient(165deg, hsla(35,25%,14%,0.94), hsla(230,12%,8%,0.95))" :
+                  "linear-gradient(165deg, hsla(230,12%,13%,0.93), hsla(230,10%,9%,0.95))"
                 }}
                 whileTap={{ scale: 0.985 }}>
 
@@ -1242,9 +1242,9 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 style={{
                   background: isSelected ?
                   p.id === "empire" ?
-                   "linear-gradient(165deg, hsla(35,22%,14%,0.94), hsla(230,12%,9%,0.95))" :
-                   "linear-gradient(165deg, hsla(265,15%,14%,0.93), hsla(230,10%,9%,0.95))" :
-                   "linear-gradient(165deg, hsla(230,12%,13%,0.92), hsla(230,10%,10%,0.94))"
+                  "linear-gradient(165deg, hsla(35,22%,14%,0.94), hsla(230,12%,9%,0.95))" :
+                  "linear-gradient(165deg, hsla(265,15%,14%,0.93), hsla(230,10%,9%,0.95))" :
+                  "linear-gradient(165deg, hsla(230,12%,13%,0.92), hsla(230,10%,10%,0.94))"
                 }}>
                     {p.badge &&
                   <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
@@ -1427,16 +1427,16 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             {/* Package Summary & CTA — Dynamic Pricing */}
             <motion.div className="max-w-4xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <div
-                className={`relative p-5 sm:p-7 rounded-2xl overflow-hidden border ${
-                  pkg.id === "empire" ? "border-accent/25" : "border-primary/20"
-                }`}
-                style={{
-                  background:
-                    pkg.id === "empire"
-                      ? "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.95) 45%, hsla(0,0%,4%,0.99) 100%)"
-                      : "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,14%,8%,0.9) 35%, hsla(0,0%,4%,0.99) 100%)"
-                }}
-              >
+              className={`relative p-5 sm:p-7 rounded-2xl overflow-hidden border ${
+              pkg.id === "empire" ? "border-accent/25" : "border-primary/20"}`
+              }
+              style={{
+                background:
+                pkg.id === "empire" ?
+                "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.95) 45%, hsla(0,0%,4%,0.99) 100%)" :
+                "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,14%,8%,0.9) 35%, hsla(0,0%,4%,0.99) 100%)"
+              }}>
+              
                 <div className={`absolute top-0 left-0 right-0 h-[2px] ${pkg.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />
                 {/* Shimmer */}
                 <motion.div className="absolute inset-0 pointer-events-none"
@@ -2100,44 +2100,48 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       setFeatureRequestSent(true);
                     } catch {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                       // silent fail
-                    } finally {setFeatureRequestSending(false);
-                    }
-                  }}
-                  disabled={featureRequestSending || !featureRequestText.trim() || !featureRequestEmail.trim()}
-                  className="w-full px-5 py-3 rounded-xl bg-vibrant-gradient text-primary-foreground text-sm font-heading font-bold tracking-wider uppercase disabled:opacity-40 disabled:cursor-not-allowed"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}>
+                    } finally {setFeatureRequestSending(false);}}} disabled={featureRequestSending || !featureRequestText.trim() || !featureRequestEmail.trim()} className="w-full px-5 py-3 rounded-xl bg-vibrant-gradient text-primary-foreground text-sm font-heading font-bold tracking-wider uppercase disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                         {featureRequestSending ? "Invio in corso..." : "Invia Richiesta →"}
                       </motion.button>
                       <p className="text-[0.45rem] text-foreground/15 text-center">I tuoi dati sono protetti e utilizzati solo per rispondere alla tua richiesta.</p>
-                    </div>
-              }
+                    </div>}
                 </motion.div>
-              </motion.div>
-          }
+              </motion.div>}
           </AnimatePresence>
-        {pricingMode === "monthly" &&
-        <motion.div key="monthly" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+        {pricingMode === "monthly" && <motion.div key="monthly" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
 
             {/* Billing toggle */}
-            <motion.div className="flex items-center justify-center gap-3 mb-6"
-          initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <button onClick={() => setBillingCycle("monthly")}
-            className={`px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${billingCycle === "monthly" ? "bg-primary/15 text-primary" : "text-foreground/30 hover:text-foreground/50"}`}>
+            <motion.div className="flex items-center justify-center gap-3 mb-6" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <button onClick={() => setBillingCycle("monthly")} className={`px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${billingCycle === "monthly" ? "bg-primary/15 text-primary" : "text-foreground/30 hover:text-foreground/50"}`}>
                 Mensile
               </button>
-              <button onClick={() => setBillingCycle("annual")}
-            className={`px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all flex items-center gap-1.5 ${billingCycle === "annual" ? "bg-primary/15 text-primary" : "text-foreground/30 hover:text-foreground/50"}`}>
+              <button onClick={() => setBillingCycle("annual")} className={`px-4 py-2 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all flex items-center gap-1.5 ${billingCycle === "annual" ? "bg-primary/15 text-primary" : "text-foreground/30 hover:text-foreground/50"}`}>
                 Annuale
                 <span className="px-1.5 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">−20%</span>
               </button>
             </motion.div>
 
             {/* Upsell nudge toward packages */}
-            <motion.div className="max-w-3xl mx-auto mb-5 p-3 rounded-xl border border-accent/15 bg-accent/[0.03] text-center cursor-pointer hover:bg-accent/[0.06] transition-colors"
-          onClick={() => setPricingMode("package")}
-          whileHover={{ scale: 1.01 }}>
+            <motion.div className="max-w-3xl mx-auto mb-5 p-3 rounded-xl border border-accent/15 bg-accent/[0.03] text-center cursor-pointer hover:bg-accent/[0.06] transition-colors" onClick={() => setPricingMode("package")} whileHover={{ scale: 1.01 }}>
               <p className="text-[0.6rem] text-accent/70 font-medium flex items-center justify-center gap-2">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>💡 Con un <strong>pacchetto completo</strong> risparmi fino a €6.403 e azzeri le commissioni → <u>Scopri i pacchetti</u></span>
@@ -2145,28 +2149,24 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             </motion.div>
 
             {/* Plan Cards */}
-            <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto mb-6"
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
-              {PLAN_TIERS.map((p) => {
-              const isSelected = selectedPlan === p.id;
-              const displayPrice = Math.round(p.price * planDiscount);
-              return (
-                <motion.div key={p.id} variants={fadeScale}
-                onClick={() => {setSelectedPlan(p.id);if (p.includedAgents > 0) setShowAddons(true);}}
-                className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
-                isSelected ?
-                "border-2 border-primary/40 shadow-[0_0_40px_hsla(38,50%,55%,0.1)]" :
-                "border border-border/30 hover:border-primary/20"}`}
-                style={{
-                  background: isSelected
-                    ? "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.92) 40%, hsla(0,0%,4%,0.99) 100%)"
-                    : "linear-gradient(180deg, hsla(0,0%,4%,0.97) 0%, hsla(0,0%,5%,0.95) 100%)"
-                }}>
+            <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto mb-6" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}>
+              {PLAN_TIERS.map((p) => {const isSelected = selectedPlan === p.id;const displayPrice = Math.round(p.price * planDiscount);return (
+                  <motion.div key={p.id} variants={fadeScale}
+                  onClick={() => {setSelectedPlan(p.id);if (p.includedAgents > 0) setShowAddons(true);}}
+                  className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
+                  isSelected ?
+                  "border-2 border-primary/40 shadow-[0_0_40px_hsla(38,50%,55%,0.1)]" :
+                  "border border-border/30 hover:border-primary/20"}`}
+                  style={{
+                    background: isSelected ?
+                    "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.92) 40%, hsla(0,0%,4%,0.99) 100%)" :
+                    "linear-gradient(180deg, hsla(0,0%,4%,0.97) 0%, hsla(0,0%,5%,0.95) 100%)"
+                  }}>
                     {p.badge &&
-                  <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
-                  p.badge === "Max Revenue" ? "bg-gradient-to-r from-accent to-primary text-primary-foreground" : "bg-vibrant-gradient text-primary-foreground"}`
-                  }>{p.badge}</div>
-                  }
+                    <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
+                    p.badge === "Max Revenue" ? "bg-gradient-to-r from-accent to-primary text-primary-foreground" : "bg-vibrant-gradient text-primary-foreground"}`
+                    }>{p.badge}</div>
+                    }
                     {isSelected && <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />}
 
                     <p className="text-[0.6rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
@@ -2175,28 +2175,28 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       <span className="text-xs text-foreground/30">/mese</span>
                     </div>
                     {billingCycle === "annual" &&
-                  <p className="text-[0.55rem] text-accent font-semibold mt-0.5">Risparmi €{Math.round(p.price * 12 * 0.2)}/anno</p>
-                  }
+                    <p className="text-[0.55rem] text-accent font-semibold mt-0.5">Risparmi €{Math.round(p.price * 12 * 0.2)}/anno</p>
+                    }
                     <p className="text-[0.6rem] text-foreground/35 mt-1.5 leading-relaxed">{p.desc}</p>
 
                     <ul className="mt-4 space-y-2">
                       {p.features.map((f, fi) =>
-                    <li key={fi} className="flex items-start gap-2 text-[0.65rem] sm:text-xs text-foreground/50">
+                      <li key={fi} className="flex items-start gap-2 text-[0.65rem] sm:text-xs text-foreground/50">
                           <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${isSelected ? "bg-primary/15" : "bg-foreground/[0.05]"}`}>
                             <Check className={`w-2.5 h-2.5 ${isSelected ? "text-primary" : "text-foreground/30"}`} />
                           </div>
                           <span className={f.startsWith("Tutto") ? "font-semibold text-foreground/60" : ""}>{f}</span>
                         </li>
-                    )}
+                      )}
                     </ul>
 
                     {isSelected &&
-                  <motion.div className="absolute bottom-0 left-0 right-0 h-1 bg-vibrant-gradient"
-                  layoutId="planIndicator" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
-                  }
+                    <motion.div className="absolute bottom-0 left-0 right-0 h-1 bg-vibrant-gradient"
+                    layoutId="planIndicator" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                    }
                   </motion.div>);
 
-            })}
+              })}
             </motion.div>
 
             {/* AI Agents Upsell */}
@@ -2267,7 +2267,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             {/* Monthly Summary & CTA */}
             <motion.div className="max-w-3xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <div className="relative p-5 sm:p-7 rounded-2xl overflow-hidden border border-primary/20"
-                style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,16%,8%,0.9) 42%, hsla(0,0%,4%,0.99) 100%)" }}>
+            style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,16%,8%,0.9) 42%, hsla(0,0%,4%,0.99) 100%)" }}>
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative z-10">
                   <div>
@@ -2366,11 +2366,11 @@ const MobileIPhoneCarousel = ({ items, navigate }: {items: CarouselItem[];naviga
         <div className="absolute top-[4px] left-1/2 -translate-x-1/2 w-[36px] h-[10px] bg-black rounded-full z-20" />
         <div className="absolute inset-[2px] rounded-[18px] overflow-hidden bg-black">
           <img
-            src={item.image}
-            alt={item.name}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
+          src={item.image}
+          alt={item.name}
+          className="w-full h-full object-cover"
+          loading="lazy" />
+        
           <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${item.color}15 0%, ${item.color}08 40%, transparent 100%)` }} />
         </div>
         <div className="absolute bottom-0 left-0 right-0 z-20 p-1.5 pt-6" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.92) 20%, transparent)" }}>
@@ -2504,10 +2504,10 @@ const LandingPage = () => {
 
     observeHiddenCandidates();
     const scans = [
-      window.setTimeout(observeHiddenCandidates, 800),
-      window.setTimeout(observeHiddenCandidates, 2000),
-      window.setTimeout(observeHiddenCandidates, 4000),
-    ];
+    window.setTimeout(observeHiddenCandidates, 800),
+    window.setTimeout(observeHiddenCandidates, 2000),
+    window.setTimeout(observeHiddenCandidates, 4000)];
+
 
     // Nuclear fallback: after 5s force all hidden sections visible
     const nuclear = window.setTimeout(() => {
@@ -2647,8 +2647,8 @@ const LandingPage = () => {
   return (
     <div
       className="min-h-screen overflow-x-hidden relative landing-noise-off"
-      style={{ background: "linear-gradient(180deg, hsl(var(--deep-black)) 0%, hsl(var(--deep-black)) 100%)" }}
-    >
+      style={{ background: "linear-gradient(180deg, hsl(var(--deep-black)) 0%, hsl(var(--deep-black)) 100%)" }}>
+      
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -2678,13 +2678,13 @@ const LandingPage = () => {
           transition={{ duration: 0.8, ease: "easeInOut" }} />
         
         {/* ── PCB Circuit board background ── */}
-        {navScrolled && (
-          <motion.div
-            className="absolute inset-0 overflow-hidden pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.2 }}
-          >
+        {navScrolled &&
+        <motion.div
+          className="absolute inset-0 overflow-hidden pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2 }}>
+          
             <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
               <defs>
                 <filter id="pcbGlow">
@@ -2699,11 +2699,11 @@ const LandingPage = () => {
               
               {/* === LEFT SIDE PCB TRACES === */}
               {/* Main horizontal trace with 90° bends */}
-              <path d="M 0,18 L 60,18 L 60,32 L 120,32 L 120,18 L 180,18 L 180,44 L 220,44" 
-                stroke="hsla(38,50%,55%,0.12)" strokeWidth="0.8" fill="none" strokeLinecap="round" />
+              <path d="M 0,18 L 60,18 L 60,32 L 120,32 L 120,18 L 180,18 L 180,44 L 220,44"
+            stroke="hsla(38,50%,55%,0.12)" strokeWidth="0.8" fill="none" strokeLinecap="round" />
               {/* Branch trace going up */}
-              <path d="M 90,32 L 90,8 L 140,8" 
-                stroke="hsla(38,50%,55%,0.08)" strokeWidth="0.6" fill="none" strokeLinecap="round" />
+              <path d="M 90,32 L 90,8 L 140,8"
+            stroke="hsla(38,50%,55%,0.08)" strokeWidth="0.6" fill="none" strokeLinecap="round" />
               {/* Via pad at junction */}
               <circle cx="90" cy="32" r="3" fill="none" stroke="hsla(38,50%,55%,0.15)" strokeWidth="0.6" />
               <circle cx="90" cy="32" r="1.2" fill="hsla(38,50%,55%,0.2)" />
@@ -2713,10 +2713,10 @@ const LandingPage = () => {
               <circle cx="144" cy="8" r="0.8" fill="hsla(38,50%,55%,0.15)" />
               
               {/* === CENTER-LEFT TRACES === */}
-              <path d="M 280,52 L 280,36 L 340,36 L 340,20 L 400,20" 
-                stroke="hsla(265,70%,60%,0.08)" strokeWidth="0.7" fill="none" strokeLinecap="round" />
-              <path d="M 320,36 L 320,12 L 370,12" 
-                stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" fill="none" strokeLinecap="round" />
+              <path d="M 280,52 L 280,36 L 340,36 L 340,20 L 400,20"
+            stroke="hsla(265,70%,60%,0.08)" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+              <path d="M 320,36 L 320,12 L 370,12"
+            stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" fill="none" strokeLinecap="round" />
               {/* Via */}
               <circle cx="340" cy="36" r="2.5" fill="none" stroke="hsla(265,70%,60%,0.12)" strokeWidth="0.5" />
               <circle cx="340" cy="36" r="1" fill="hsla(265,70%,60%,0.15)" />
@@ -2733,10 +2733,10 @@ const LandingPage = () => {
               <line x1="635" y1="42" x2="635" y2="54" stroke="hsla(38,50%,55%,0.05)" strokeWidth="0.4" />
               
               {/* === RIGHT SIDE PCB TRACES === */}
-              <path d="M 780,20 L 840,20 L 840,40 L 900,40 L 900,16 L 960,16" 
-                stroke="hsla(38,50%,55%,0.12)" strokeWidth="0.8" fill="none" strokeLinecap="round" />
-              <path d="M 870,40 L 870,54 L 940,54" 
-                stroke="hsla(38,50%,55%,0.07)" strokeWidth="0.5" fill="none" strokeLinecap="round" />
+              <path d="M 780,20 L 840,20 L 840,40 L 900,40 L 900,16 L 960,16"
+            stroke="hsla(38,50%,55%,0.12)" strokeWidth="0.8" fill="none" strokeLinecap="round" />
+              <path d="M 870,40 L 870,54 L 940,54"
+            stroke="hsla(38,50%,55%,0.07)" strokeWidth="0.5" fill="none" strokeLinecap="round" />
               {/* Via pads */}
               <circle cx="840" cy="20" r="3" fill="none" stroke="hsla(38,50%,55%,0.15)" strokeWidth="0.6" />
               <circle cx="840" cy="20" r="1.2" fill="hsla(38,50%,55%,0.2)" />
@@ -2744,10 +2744,10 @@ const LandingPage = () => {
               <circle cx="900" cy="40" r="1" fill="hsla(38,50%,55%,0.18)" />
               
               {/* === FAR RIGHT TRACES === */}
-              <path d="M 1020,44 L 1060,44 L 1060,28 L 1120,28 L 1120,44 L 1200,44" 
-                stroke="hsla(265,70%,60%,0.08)" strokeWidth="0.7" fill="none" strokeLinecap="round" />
-              <path d="M 1080,28 L 1080,8 L 1140,8" 
-                stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" fill="none" strokeLinecap="round" />
+              <path d="M 1020,44 L 1060,44 L 1060,28 L 1120,28 L 1120,44 L 1200,44"
+            stroke="hsla(265,70%,60%,0.08)" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+              <path d="M 1080,28 L 1080,8 L 1140,8"
+            stroke="hsla(265,70%,60%,0.06)" strokeWidth="0.5" fill="none" strokeLinecap="round" />
               {/* Via */}
               <circle cx="1060" cy="44" r="2.5" fill="none" stroke="hsla(265,70%,60%,0.1)" strokeWidth="0.5" />
               <circle cx="1060" cy="44" r="1" fill="hsla(265,70%,60%,0.14)" />
@@ -2757,8 +2757,8 @@ const LandingPage = () => {
               {/* === ANIMATED DATA PULSES === */}
               {/* Pulse 1: left to center — gold */}
               <circle r="2.5" fill="hsla(38,50%,60%,0.6)" filter="url(#pcbGlow)">
-                <animateMotion dur="3.5s" repeatCount="indefinite" 
-                  path="M 0,18 L 60,18 L 60,32 L 120,32 L 120,18 L 180,18 L 180,44 L 220,44" />
+                <animateMotion dur="3.5s" repeatCount="indefinite"
+              path="M 0,18 L 60,18 L 60,32 L 120,32 L 120,18 L 180,18 L 180,44 L 220,44" />
                 <animate attributeName="opacity" values="0;0.7;0.7;0.3;0" dur="3.5s" repeatCount="indefinite" />
                 <animate attributeName="r" values="1.5;2.5;2;2.5;1.5" dur="3.5s" repeatCount="indefinite" />
               </circle>
@@ -2766,26 +2766,26 @@ const LandingPage = () => {
               {/* Pulse 2: right to center — gold */}
               <circle r="2" fill="hsla(38,50%,58%,0.5)" filter="url(#pcbGlow)">
                 <animateMotion dur="3s" repeatCount="indefinite" begin="1s"
-                  path="M 960,16 L 900,16 L 900,40 L 840,40 L 840,20 L 780,20" />
+              path="M 960,16 L 900,16 L 900,40 L 840,40 L 840,20 L 780,20" />
                 <animate attributeName="opacity" values="0;0.6;0.6;0.3;0" dur="3s" repeatCount="indefinite" begin="1s" />
               </circle>
               
               {/* Pulse 3: violet trace */}
               <circle r="2" fill="hsla(265,70%,65%,0.5)" filter="url(#pcbGlow)">
                 <animateMotion dur="4s" repeatCount="indefinite" begin="2s"
-                  path="M 280,52 L 280,36 L 340,36 L 340,20 L 400,20" />
+              path="M 280,52 L 280,36 L 340,36 L 340,20 L 400,20" />
                 <animate attributeName="opacity" values="0;0.5;0.5;0" dur="4s" repeatCount="indefinite" begin="2s" />
               </circle>
               
               {/* Pulse 4: far right violet */}
               <circle r="1.8" fill="hsla(265,60%,62%,0.4)" filter="url(#pcbGlow)">
                 <animateMotion dur="3.8s" repeatCount="indefinite" begin="0.5s"
-                  path="M 1200,44 L 1120,44 L 1120,28 L 1060,28 L 1060,44 L 1020,44" />
+              path="M 1200,44 L 1120,44 L 1120,28 L 1060,28 L 1060,44 L 1020,44" />
                 <animate attributeName="opacity" values="0;0.4;0.4;0" dur="3.8s" repeatCount="indefinite" begin="0.5s" />
               </circle>
             </svg>
           </motion.div>
-        )}
+        }
 
         {/* ── Top accent line — holographic rainbow shimmer ── */}
         <motion.div
@@ -2888,7 +2888,7 @@ const LandingPage = () => {
           </>
         }
 
-        <div className="relative max-w-[1200px] mx-auto px-3 sm:px-6 flex items-center justify-between h-14 sm:h-[4.5rem] pt-2 sm:pt-3">
+        <div className="relative max-w-[1200px] mx-auto px-3 sm:px-6 flex items-center justify-between h-14 sm:h-[4.5rem] pt-2 sm:pt-3 py-[14px]">
           
           {/* ═══ Left Nav Links (desktop) ═══ */}
           <div className="hidden lg:flex items-center gap-1 flex-1">
@@ -2919,7 +2919,7 @@ const LandingPage = () => {
           </div>
 
           {/* ═══ Centered Logo — Ultra Premium Luxury ═══ */}
-          <a href="#hero" className="flex items-center gap-4 group relative lg:absolute lg:left-1/2 lg:-translate-x-1/2 z-10">
+          <a href="#hero" className="flex items-center gap-4 group relative lg:absolute lg:left-1/2 lg:-translate-x-1/2 z-10 text-center rounded-full shadow-sm border-solid py-0">
             {/* Outer breathing halo — soft gold */}
             <motion.div
               className="absolute -inset-14 rounded-full pointer-events-none"
@@ -2977,7 +2977,7 @@ const LandingPage = () => {
               </motion.div>
 
               {/* Logo image */}
-              <img src={empireLogoNew} alt="Empire AI" className="w-[85%] h-[85%] object-contain rounded-full drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" />
+              <img src={empireLogoNew} alt="Empire AI" className="w-[85%] h-[85%] rounded-full drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)] object-cover my-0 py-0 text-center text-sm" />
               
               {/* Breathing pulse ring */}
               <motion.div
@@ -3211,8 +3211,8 @@ const LandingPage = () => {
       </nav>
 
       {/* ═══════════════════════════════════════════
-           HERO
-          ═══════════════════════════════════════════ */}
+                             HERO
+                            ═══════════════════════════════════════════ */}
        <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-28 sm:pt-28 pb-20 sm:pb-16"
       style={{ opacity: heroOpacity }}>
 
@@ -3397,8 +3397,8 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════════════════════════════════════════
-           IL PROBLEMA — Pain Points
-          ═══════════════════════════════════════════ */}
+                             IL PROBLEMA — Pain Points
+                            ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(345,20%,8%,0.88) 20%, hsla(350,16%,10%,0.88) 40%, hsla(265,18%,9%,0.88) 60%, hsla(345,14%,7%,0.88) 80%, hsla(230,16%,4%,0.88) 100%)"
       }}>
@@ -3523,8 +3523,8 @@ const LandingPage = () => {
                   style={{
                     background: "linear-gradient(160deg, hsla(260,18%,6%,0.99), hsla(260,14%,5%,0.995))",
                     border: "1px solid hsl(var(--border) / 0.18)"
-                  }}
-                />
+                  }} />
+                
 
                 {/* ── Mobile Hyper-Tech Circuit Schema ── hub-spoke topology */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1] sm:hidden" viewBox="0 0 300 360" preserveAspectRatio="xMidYMid meet">
@@ -3580,15 +3580,15 @@ const LandingPage = () => {
                   <path d="M228,180 Q150,240 72,300" fill="none" stroke="hsl(var(--accent) / 0.1)" strokeWidth="0.5" />
 
                   {/* Junction nodes at each card position */}
-                  {[[72,65],[228,65],[65,180],[235,180],[72,300],[228,300]].map(([cx,cy], ni) => (
-                    <g key={`pn-m-${ni}`}>
+                  {[[72, 65], [228, 65], [65, 180], [235, 180], [72, 300], [228, 300]].map(([cx, cy], ni) =>
+                  <g key={`pn-m-${ni}`}>
                       <circle cx={cx} cy={cy} r="10" fill="url(#painNodeGlowM)" />
                       <circle cx={cx} cy={cy} r="2.5" fill="hsl(var(--primary) / 0.6)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="0.5">
                         <animate attributeName="r" values="2;3.5;2" dur={`${2.5 + ni * 0.3}s`} repeatCount="indefinite" />
                         <animate attributeName="opacity" values="0.5;1;0.5" dur={`${2.5 + ni * 0.3}s`} repeatCount="indefinite" />
                       </circle>
                     </g>
-                  ))}
+                  )}
 
                   {/* 3 animated data pulses on circuit paths */}
                   <circle r="2" fill="hsl(var(--primary) / 0.95)" filter="url(#painMobileGlow)">
@@ -3718,8 +3718,8 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-           VIDEO HERO — Business Transformation
-          ═══════════════════════════════════════════ */}
+                             VIDEO HERO — Business Transformation
+                            ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(260,24%,10%,0.88) 18%, hsla(265,26%,12%,0.88) 35%, hsla(155,16%,9%,0.88) 55%, hsla(265,20%,10%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
@@ -3772,14 +3772,14 @@ const LandingPage = () => {
           <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
           <FunnelDNAVisual />
           <div className="absolute inset-0 pointer-events-none rounded-2xl"
-            style={{ background: "linear-gradient(180deg, transparent 45%, hsla(0,0%,4%,0.94) 100%)" }} />
+          style={{ background: "linear-gradient(180deg, transparent 45%, hsla(0,0%,4%,0.94) 100%)" }} />
           <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex flex-wrap items-center gap-1.5 sm:gap-2">
-            {["Dashboard IA", "CRM", "Automazioni", "Fatturazione"].map((label) => (
-              <div key={label} className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full backdrop-blur-sm border border-primary/10"
-                style={{ background: "linear-gradient(135deg, hsla(0,0%,4%,0.97), hsla(38,14%,8%,0.9))" }}>
+            {["Dashboard IA", "CRM", "Automazioni", "Fatturazione"].map((label) =>
+            <div key={label} className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-full backdrop-blur-sm border border-primary/10"
+            style={{ background: "linear-gradient(135deg, hsla(0,0%,4%,0.97), hsla(38,14%,8%,0.9))" }}>
                 <span className="text-[0.5rem] sm:text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase whitespace-nowrap">{label}</span>
               </div>
-            ))}
+            )}
           </div>
         </motion.div>
 
@@ -3807,8 +3807,8 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-           SETTORI
-          ═══════════════════════════════════════════ */}
+                             SETTORI
+                            ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(0,0%,4%,0.88) 0%, hsla(0,0%,5%,0.88) 28%, hsla(38,18%,9%,0.88) 52%, hsla(0,0%,5%,0.88) 78%, hsla(0,0%,4%,0.88) 100%)"
       }}>
@@ -3932,11 +3932,11 @@ const LandingPage = () => {
                 <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
                 <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
                   <img
-                    src={feat.image}
-                    alt={feat.name}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                  src={feat.image}
+                  alt={feat.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy" />
+                
                   <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${feat.color}15 0%, ${feat.color}08 40%, transparent 100%)` }} />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.9) 15%, transparent)" }}>
@@ -3977,8 +3977,8 @@ const LandingPage = () => {
                         src={heroImg}
                         alt={ind.title}
                         className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
+                        loading="lazy" />
+                      
                       <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${color}15 0%, ${color}08 40%, transparent 100%)` }} />
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.9) 15%, transparent)" }}>
@@ -4180,15 +4180,15 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-           AI AGENTS SHOWCASE
-          ═══════════════════════════════════════════ */}
+                             AI AGENTS SHOWCASE
+                            ═══════════════════════════════════════════ */}
       <AIAgentsShowcase />
 
       <SectionDivider />
 
       {/*
-           PERCHÉ EMPIRE — Unified Section
-          ═══════════════════════════════════════════ */}
+                             PERCHÉ EMPIRE — Unified Section
+                            ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.88) 15%, hsla(220,18%,11%,0.88) 30%, hsla(155,18%,9%,0.88) 50%, hsla(265,20%,10%,0.88) 70%, hsla(220,16%,8%,0.88) 85%, hsla(230,16%,4%,0.88) 100%)"
       }}>
@@ -4271,7 +4271,7 @@ const LandingPage = () => {
         <div className="sm:hidden relative py-4 px-1">
           {/* Opaque backdrop */}
           <div className="absolute inset-0 rounded-2xl z-0"
-            style={{ background: "linear-gradient(180deg, hsl(var(--deep-black) / 0.98), hsla(38,14%,8%,0.9))", border: "1px solid hsla(38,45%,50%,0.14)" }} />
+          style={{ background: "linear-gradient(180deg, hsl(var(--deep-black) / 0.98), hsla(38,14%,8%,0.9))", border: "1px solid hsla(38,45%,50%,0.14)" }} />
 
           {/* Central vertical pipeline spine */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" preserveAspectRatio="none">
@@ -4290,23 +4290,23 @@ const LandingPage = () => {
             {/* Central spine */}
             <line x1="50%" y1="8%" x2="50%" y2="92%" stroke="url(#whyFunnelSpine)" strokeWidth="1.5" strokeDasharray="4,6" />
             {/* Horizontal branch lines from center to cards — left side */}
-            {[17, 50, 83].map((y, i) => (
-              <line key={`wl${i}`} x1="20%" y1={`${y}%`} x2="48%" y2={`${y}%`} stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.8" strokeDasharray="3,5" />
-            ))}
+            {[17, 50, 83].map((y, i) =>
+            <line key={`wl${i}`} x1="20%" y1={`${y}%`} x2="48%" y2={`${y}%`} stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.8" strokeDasharray="3,5" />
+            )}
             {/* Horizontal branch lines from center to cards — right side */}
-            {[17, 50, 83].map((y, i) => (
-              <line key={`wr${i}`} x1="52%" y1={`${y}%`} x2="80%" y2={`${y}%`} stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.8" strokeDasharray="3,5" />
-            ))}
+            {[17, 50, 83].map((y, i) =>
+            <line key={`wr${i}`} x1="52%" y1={`${y}%`} x2="80%" y2={`${y}%`} stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.8" strokeDasharray="3,5" />
+            )}
             {/* Junction nodes on spine */}
-            {[17, 50, 83].map((y, i) => (
-              <g key={`wn${i}`}>
+            {[17, 50, 83].map((y, i) =>
+            <g key={`wn${i}`}>
                 <circle cx="50%" cy={`${y}%`} r="4" fill="hsl(var(--primary) / 0.15)" />
                 <circle cx="50%" cy={`${y}%`} r="2" fill="hsl(var(--primary) / 0.55)">
                   <animate attributeName="r" values="1.5;3;1.5" dur={`${2.5 + i * 0.4}s`} repeatCount="indefinite" />
                   <animate attributeName="opacity" values="0.4;1;0.4" dur={`${2.5 + i * 0.4}s`} repeatCount="indefinite" />
                 </circle>
               </g>
-            ))}
+            )}
             {/* Animated data pulse flowing down the spine */}
             <circle r="3" fill="hsl(var(--primary) / 0.9)" filter="url(#whyPulseGlow)">
               <animate attributeName="cy" values="8%;92%;8%" dur="5s" repeatCount="indefinite" />
@@ -4325,20 +4325,20 @@ const LandingPage = () => {
               const isLeft = i % 2 === 0;
               return (
                 <motion.div key={i}
-                  className={`flex flex-col ${isLeft ? "items-end text-right" : "items-start text-left"}`}
-                  initial={{ opacity: 0, x: isLeft ? -20 : 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.4 }}>
+                className={`flex flex-col ${isLeft ? "items-end text-right" : "items-start text-left"}`}
+                initial={{ opacity: 0, x: isLeft ? -20 : 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.4 }}>
                   
                   {/* Step number badge */}
                   <div className="flex items-center gap-1.5 mb-1.5" style={{ flexDirection: isLeft ? "row-reverse" : "row" }}>
                     <div className="w-5 h-5 rounded-md flex items-center justify-center relative"
-                      style={{
-                        background: "linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--primary) / 0.08))",
-                        border: "1px solid hsl(var(--primary) / 0.2)",
-                        boxShadow: "0 0 12px hsl(var(--primary) / 0.1)"
-                      }}>
+                    style={{
+                      background: "linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--primary) / 0.08))",
+                      border: "1px solid hsl(var(--primary) / 0.2)",
+                      boxShadow: "0 0 12px hsl(var(--primary) / 0.1)"
+                    }}>
                       <div className="text-primary/80 [&>svg]:w-2.5 [&>svg]:h-2.5">{item.icon}</div>
                       {/* HUD corners */}
                       <div className="absolute -top-[1.5px] -left-[1.5px] w-[3px] h-[3px] border-t border-l border-primary/30" />
@@ -4351,8 +4351,8 @@ const LandingPage = () => {
 
                   <h4 className="text-[0.55rem] font-heading font-bold text-foreground/80 leading-tight mb-0.5">{item.title}</h4>
                   <p className="text-[0.42rem] text-foreground/35 leading-[1.5]">{item.desc}</p>
-                </motion.div>
-              );
+                </motion.div>);
+
             })}
           </div>
 
@@ -4394,8 +4394,8 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-           COMPARISON TABLE — Empire vs Others
-          ═══════════════════════════════════════════ */}
+                             COMPARISON TABLE — Empire vs Others
+                            ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.85) 15%, hsla(38,16%,9%,0.85) 35%, hsla(265,20%,10%,0.85) 55%, hsla(38,14%,8%,0.85) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
@@ -4464,8 +4464,8 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-           TECH DNA — Neural Network Visualization
-          ═══════════════════════════════════════════ */}
+                             TECH DNA — Neural Network Visualization
+                            ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,26%,10%,0.85) 15%, hsla(230,20%,11%,0.85) 35%, hsla(265,22%,9%,0.85) 55%, hsla(230,18%,8%,0.85) 78%, hsla(230,16%,4%,0.88) 100%)"
       }}>
@@ -4634,8 +4634,8 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-           3 INTERFACCE — Mockup Showcase
-          ═══════════════════════════════════════════ */}
+                             3 INTERFACCE — Mockup Showcase
+                            ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(38,18%,9%,0.88) 18%, hsla(265,20%,10%,0.88) 35%, hsla(38,14%,8%,0.88) 55%, hsla(265,18%,9%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
@@ -4804,8 +4804,8 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-           BUILD ANYTHING — Streamlined Conversion Section
-          ═══════════════════════════════════════════ */}
+                             BUILD ANYTHING — Streamlined Conversion Section
+                            ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.88) 15%, hsla(38,18%,9%,0.88) 35%, hsla(265,20%,10%,0.88) 55%, hsla(38,14%,8%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
@@ -5128,8 +5128,8 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-           SERVIZI
-          ═══════════════════════════════════════════ */}
+                             SERVIZI
+                            ═══════════════════════════════════════════ */}
       <Section id="services" className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(230,22%,10%,0.78) 15%, hsla(265,22%,11%,0.78) 32%, hsla(38,16%,9%,0.78) 52%, hsla(265,18%,9%,0.78) 72%, hsla(230,16%,4%,0.82) 100%)"
       }}>
@@ -5172,7 +5172,7 @@ const LandingPage = () => {
         <div className="sm:hidden relative">
           {/* Opaque backdrop for circuit visibility */}
           <div className="absolute inset-0 rounded-2xl z-0"
-            style={{ background: "linear-gradient(160deg, hsla(230,16%,9%,0.93), hsla(265,14%,7%,0.93))", border: "1px solid hsla(265,35%,40%,0.06)" }} />
+          style={{ background: "linear-gradient(160deg, hsla(230,16%,9%,0.93), hsla(265,14%,7%,0.93))", border: "1px solid hsla(265,35%,40%,0.06)" }} />
 
           {/* Circuit SVG connections between service cards */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" viewBox="0 0 320 600" preserveAspectRatio="xMidYMid meet">
@@ -5185,8 +5185,8 @@ const LandingPage = () => {
             {/* Vertical spine */}
             <line x1="160" y1="30" x2="160" y2="570" stroke="hsl(var(--primary) / 0.18)" strokeWidth="0.7" strokeDasharray="4,5" strokeLinecap="round" />
             {/* Horizontal connections at each card level */}
-            {[80, 160, 240, 320, 400, 480].map((y, i) => (
-              <g key={`svc-h-${i}`}>
+            {[80, 160, 240, 320, 400, 480].map((y, i) =>
+            <g key={`svc-h-${i}`}>
                 <line x1="40" y1={y} x2="280" y2={y} stroke="hsl(var(--accent) / 0.14)" strokeWidth="0.6" strokeDasharray="3,5" strokeLinecap="round" />
                 <circle cx="40" cy={y} r="1.5" fill="hsl(var(--primary) / 0.4)" />
                 <circle cx="160" cy={y} r="2" fill="hsl(var(--primary) / 0.5)">
@@ -5196,7 +5196,7 @@ const LandingPage = () => {
                 {/* Diagonal links */}
                 {i < 5 && <line x1="60" y1={y + 10} x2="260" y2={y + 70} stroke="hsl(var(--primary) / 0.1)" strokeWidth="0.4" strokeLinecap="round" />}
               </g>
-            ))}
+            )}
             {/* Animated data pulse */}
             <circle r="2.2" fill="hsl(var(--primary) / 0.85)" filter="url(#svcCircuitGlow)">
               <animateMotion dur="5s" repeatCount="indefinite" path="M160,30 L160,570" />
@@ -5209,9 +5209,9 @@ const LandingPage = () => {
           <div className="relative z-[2] px-2 py-3">
           <AnimatePresence mode="wait">
             {expandServices ?
-            <motion.div key="services-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-1 gap-2.5">
+              <motion.div key="services-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-1 gap-2.5">
                 {services.map((s, i) =>
-              <div key={i}>
+                <div key={i}>
                     <PremiumCard glow scan delay={i * 0.05} className="p-3 h-full">
                       <div className="flex items-center gap-2 mb-1.5">
                         <PremiumIcon gradient={s.color} size="sm" delay={0}>{s.icon}</PremiumIcon>
@@ -5221,13 +5221,13 @@ const LandingPage = () => {
                       <p className="text-[0.55rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
                     </PremiumCard>
                   </div>
-              )}
+                )}
               </motion.div> :
 
-            <motion.div key="services-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <motion.div key="services-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <PremiumCarousel speed="slow" itemWidth={200} showControls={false}>
                   {services.map((s, i) =>
-                <div key={i} className="w-[200px]">
+                  <div key={i} className="w-[200px]">
                       <PremiumCard glow scan delay={i} className="p-3 h-full">
                         <div className="flex items-center gap-2 mb-2">
                           <PremiumIcon gradient={s.color} size="sm" delay={i * 0.2}>{s.icon}</PremiumIcon>
@@ -5237,14 +5237,14 @@ const LandingPage = () => {
                         <p className="text-[0.55rem] text-foreground/35 leading-[1.6]">{s.desc}</p>
                       </PremiumCard>
                     </div>
-                )}
+                  )}
                 </PremiumCarousel>
               </motion.div>
-            }
+              }
           </AnimatePresence>
           <div className="flex justify-center mt-3">
             <button onClick={() => setExpandServices((p) => !p)}
-            className="text-[0.55rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
+              className="text-[0.55rem] font-semibold text-primary/70 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] hover:bg-primary/[0.08] transition-colors">
               <Layers className="w-3 h-3" /> {expandServices ? "Chiudi" : "Vedi Tutti"}
             </button>
           </div>
@@ -5282,7 +5282,7 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-          ═══════════════════════════════════════════ */}
+                            ═══════════════════════════════════════════ */}
       <Section id="process" className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,5%,0.82) 0%, hsla(265,20%,10%,0.78) 35%, hsla(230,18%,9%,0.78) 65%, hsla(230,16%,5%,0.82) 100%)"
       }}>
@@ -5305,8 +5305,8 @@ const LandingPage = () => {
             style={{
               background: "linear-gradient(160deg, hsla(230,16%,6%,0.99), hsla(265,16%,8%,0.98))",
               border: "1px solid hsla(265,40%,45%,0.06)"
-            }}
-          />
+            }} />
+          
 
           {/* AI Tech Network Schema — Desktop */}
           <div className="absolute inset-0 pointer-events-none z-[1] overflow-hidden hidden sm:block">
@@ -5440,21 +5440,21 @@ const LandingPage = () => {
               <path d="M225,60 Q245,120 225,180" fill="none" stroke="hsl(var(--accent) / 0.18)" strokeWidth="0.45" strokeDasharray="2,4" />
 
               {/* Corner junction nodes with glow */}
-              {[[75,60],[225,60],[75,180],[225,180]].map(([cx,cy],i) => (
-                <g key={`pm-corner-${i}`}>
+              {[[75, 60], [225, 60], [75, 180], [225, 180]].map(([cx, cy], i) =>
+              <g key={`pm-corner-${i}`}>
                   <circle cx={cx} cy={cy} r="6" fill="url(#pm-hub-glow)" opacity="0.5" />
                   <circle cx={cx} cy={cy} r="2" fill="hsl(var(--primary) / 0.55)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="0.5">
                     <animate attributeName="opacity" values="0.4;0.9;0.4" dur={`${2.2 + i * 0.3}s`} repeatCount="indefinite" />
                   </circle>
                 </g>
-              ))}
+              )}
 
               {/* Mid-spoke relay nodes */}
-              {[[112,90],[188,90],[112,150],[188,150]].map(([cx,cy],i) => (
-                <circle key={`pm-relay-${i}`} cx={cx} cy={cy} r="1.2" fill="hsl(var(--primary) / 0.4)">
+              {[[112, 90], [188, 90], [112, 150], [188, 150]].map(([cx, cy], i) =>
+              <circle key={`pm-relay-${i}`} cx={cx} cy={cy} r="1.2" fill="hsl(var(--primary) / 0.4)">
                   <animate attributeName="opacity" values="0.2;0.7;0.2" dur={`${1.8 + i * 0.25}s`} repeatCount="indefinite" />
                 </circle>
-              ))}
+              )}
 
               {/* Data pulses along curved spokes */}
               <circle r="1.8" fill="hsl(var(--primary) / 0.9)">
@@ -5527,8 +5527,8 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-           EMPIRE AI LIVE — Real-time Automation Feed
-          ═══════════════════════════════════════════ */}
+                             EMPIRE AI LIVE — Real-time Automation Feed
+                            ═══════════════════════════════════════════ */}
       <section className="relative py-16 sm:py-28 px-5 sm:px-6 overflow-hidden"
       style={mobilifyBg({
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,22%,7%,0.88) 15%, hsla(230,20%,5%,0.88) 40%, hsla(265,18%,6%,0.88) 65%, hsla(230,16%,4%,0.88) 100%)"
@@ -5791,8 +5791,8 @@ const LandingPage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════
-           ROI CALCULATOR
-          ═══════════════════════════════════════════ */}
+                             ROI CALCULATOR
+                            ═══════════════════════════════════════════ */}
       <Section id="calculator" className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(38,20%,9%,0.78) 15%, hsla(265,22%,10%,0.78) 35%, hsla(38,16%,8%,0.78) 55%, hsla(265,18%,9%,0.78) 75%, hsla(230,16%,4%,0.82) 100%)"
       }}>
@@ -5887,8 +5887,8 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-           TESTIMONIALS — Auto-scroll carousel
-          ═══════════════════════════════════════════ */}
+                             TESTIMONIALS — Auto-scroll carousel
+                            ═══════════════════════════════════════════ */}
       <Section id="testimonials" className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(265,24%,10%,0.78) 15%, hsla(38,18%,9%,0.78) 35%, hsla(265,20%,10%,0.78) 55%, hsla(38,14%,8%,0.78) 75%, hsla(230,16%,4%,0.82) 100%)"
       }}>
@@ -6015,15 +6015,15 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-           PRICING — Interactive Configurator
-          ═══════════════════════════════════════════ */}
+                             PRICING — Interactive Configurator
+                            ═══════════════════════════════════════════ */}
       <PricingConfigurator navigate={navigate} />
 
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-           PARTNER PROGRAM
-          ═══════════════════════════════════════════ */}
+                             PARTNER PROGRAM
+                            ═══════════════════════════════════════════ */}
       <Section id="partner" className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(38,22%,9%,0.78) 15%, hsla(265,22%,10%,0.78) 32%, hsla(38,18%,9%,0.78) 50%, hsla(265,18%,9%,0.78) 72%, hsla(230,16%,4%,0.82) 100%)"
       }}>
@@ -6064,8 +6064,8 @@ const LandingPage = () => {
             style={{
               background: "linear-gradient(155deg, hsla(230,14%,5%,0.99), hsla(230,12%,4%,0.99))",
               border: "1px solid hsla(38,40%,45%,0.08)"
-            }}
-          />
+            }} />
+          
 
           {/* Mobile hyper-tech communication schema between KPI icons */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1] sm:hidden" viewBox="0 0 300 190" preserveAspectRatio="xMidYMid meet">
@@ -6101,11 +6101,11 @@ const LandingPage = () => {
             <path d="M222,52 Q244,95 222,138" fill="none" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.45" strokeDasharray="2,4" />
 
             {/* Corner + relay nodes */}
-            {[[78, 52], [222, 52], [78, 138], [222, 138], [114, 75], [186, 75], [114, 115], [186, 115]].map(([cx, cy], i) => (
-              <circle key={`partner-kpi-node-${i}`} cx={cx} cy={cy} r={i < 4 ? "1.9" : "1.2"} fill="hsl(var(--primary) / 0.5)">
+            {[[78, 52], [222, 52], [78, 138], [222, 138], [114, 75], [186, 75], [114, 115], [186, 115]].map(([cx, cy], i) =>
+            <circle key={`partner-kpi-node-${i}`} cx={cx} cy={cy} r={i < 4 ? "1.9" : "1.2"} fill="hsl(var(--primary) / 0.5)">
                 <animate attributeName="opacity" values="0.3;0.85;0.3" dur={`${2 + i * 0.28}s`} repeatCount="indefinite" />
               </circle>
-            ))}
+            )}
 
             {/* Data pulses on communication routes */}
             <circle r="1.7" fill="hsl(var(--primary) / 0.9)">
@@ -6197,8 +6197,8 @@ const LandingPage = () => {
       </Section>
 
       {/* ═══════════════════════════════════════════
-           FAQ
-          ═══════════════════════════════════════════ */}
+                             FAQ
+                            ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.88) 15%, hsla(38,18%,9%,0.88) 35%, hsla(265,20%,10%,0.88) 55%, hsla(38,14%,8%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
@@ -6266,8 +6266,8 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* ═══════════════════════════════════════════
-           GARANZIA TOTALE — Risk Reversal
-          ═══════════════════════════════════════════ */}
+                             GARANZIA TOTALE — Risk Reversal
+                            ═══════════════════════════════════════════ */}
       <Section>
         <motion.div className="relative max-w-2xl mx-auto p-8 sm:p-12 rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background to-accent/[0.03] text-center overflow-hidden"
         initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
