@@ -478,7 +478,7 @@ export default function IndustryDemoPage() {
         <Suspense fallback={null}>
           <DemoSalesAgent industry={resolvedIndustry} companyName={companyName} accentColor={accentColor} />
         </Suspense>
-      </>
+      </div>
     );
   }
 
