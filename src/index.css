@@ -93,11 +93,11 @@
 }
 
 /* ═══ GLOBAL OPACITY BOOST — UI surfaces more opaque over background ═══ */
-.bg-background\/80 { background-color: hsl(230 10% 12% / 0.96) !important; }
-.bg-background\/60 { background-color: hsl(230 10% 12% / 0.93) !important; }
-.bg-card\/90 { background-color: hsl(230 8% 16% / 0.97) !important; }
-.bg-card\/80 { background-color: hsl(230 8% 16% / 0.96) !important; }
-.bg-background\/95 { background-color: hsl(230 10% 12% / 0.98) !important; }
+.bg-background\/80 { background-color: hsl(230 10% 12% / 0.98) !important; }
+.bg-background\/60 { background-color: hsl(230 10% 12% / 0.96) !important; }
+.bg-card\/90 { background-color: hsl(230 8% 16% / 0.98) !important; }
+.bg-card\/80 { background-color: hsl(230 8% 16% / 0.97) !important; }
+.bg-background\/95 { background-color: hsl(230 10% 12% / 0.99) !important; }
 
 @layer utilities {
   .font-heading {
@@ -829,9 +829,10 @@
 
   /* ═══ PREMIUM LABEL ═══ */
   .premium-label {
-    background: linear-gradient(135deg, hsla(230, 12%, 10%, 0.9), hsla(230, 10%, 6%, 0.95));
-    border: 1px solid hsla(38, 45%, 50%, 0.12);
-    backdrop-filter: blur(12px);
+    background: linear-gradient(135deg, hsla(230, 14%, 13%, 0.97), hsla(228, 12%, 9%, 0.98));
+    border: 1px solid hsla(38, 45%, 50%, 0.18);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 2px 12px hsla(0, 0%, 0%, 0.35), 0 0 0 1px hsla(38, 50%, 55%, 0.05), inset 0 1px 0 hsla(38, 40%, 60%, 0.08);
   }
 
   /* ═══ HOLOGRAPHIC SHINE ═══ */

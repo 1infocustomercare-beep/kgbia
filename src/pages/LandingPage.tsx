@@ -132,8 +132,8 @@ const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefine
     /hsla\(([^,]+,[^,]+,[^,]+),\s*([\d.]+)\)/g,
     (_, inner, alpha) => {
       const a = parseFloat(alpha);
-      // Cap at 0.92 to let circuit show through, boost low values to at least 0.85
-      const newAlpha = a >= 1 ? 0.92 : Math.min(Math.max(a, 0.85), 0.92);
+      // More opaque sections — solid premium feel, minimal transparency
+      const newAlpha = a >= 1 ? 0.97 : Math.min(Math.max(a, 0.94), 0.97);
       return `hsla(${inner},${newAlpha})`;
     }
   );
@@ -527,7 +527,7 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: {children: 
     <motion.div className="relative group/icon" whileHover={isMobileDevice ? undefined : { scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
       {/* Main container — no animated rings on mobile */}
       <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
-      style={{ boxShadow: "0 4px 20px hsla(38,50%,50%,0.12), inset 0 1px 1px rgba(255,255,255,0.15)" }}>
+      style={{ boxShadow: "0 6px 24px hsla(38,50%,50%,0.2), 0 0 0 1px hsla(38,45%,55%,0.1), inset 0 1px 1px rgba(255,255,255,0.2)" }}>
         <div className="relative z-10">{children}</div>
       </div>
     </motion.div>);
@@ -542,9 +542,10 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     <motion.div
       className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
       style={{
-        background: "linear-gradient(145deg, hsla(230,12%,9%,0.94), hsla(230,10%,6%,0.95))",
+        background: "linear-gradient(145deg, hsla(230,12%,11%,0.98), hsla(230,10%,7%,0.99))",
         backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.4)",
-        borderColor: "hsla(38,40%,55%,0.12)"
+        borderColor: "hsla(38,40%,55%,0.18)",
+        boxShadow: "0 2px 24px hsla(0,0%,0%,0.4), 0 0 0 1px hsla(38,45%,50%,0.06)"
       }}
       whileHover={hover && !isMobileDevice ? {
         y: -6,
