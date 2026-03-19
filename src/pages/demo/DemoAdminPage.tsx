@@ -1,15 +1,15 @@
 /**
-/**
  * DemoAdminPage — Public admin demo dashboard for ANY sector
  * Accessible at /demo/:slug/admin WITHOUT authentication
+ * Rich, sector-specific, with realistic mock data
  */
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { getSectorConfig, SECTOR_CONFIGS } from "@/config/sectorConfig";
-import { getAllFeaturesForSector, getAllAgentsForSector } from "@/config/sectorFeatures";
+import { getAllAgentsForSector } from "@/config/sectorFeatures";
 import { DEMO_SLUGS } from "@/data/demo-industries";
-import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
+import { INDUSTRY_CONFIGS } from "@/config/industry-config";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,11 +20,13 @@ import {
   CheckCircle, AlertTriangle, ArrowUp, ArrowDown, Filter, MoreHorizontal,
   CreditCard, Shield, Wrench, Car, Camera, FileText, Building, Heart,
   Sparkles, Smartphone, Globe, UserCog, QrCode, Truck, HardHat, Baby,
-  BookOpen, GraduationCap, Scissors, ChefHat, Coffee
+  BookOpen, GraduationCap, Scissors, ChefHat, Coffee, Plus, Send,
+  Zap, Target, Wallet, PieChart as PieChartIcon, ChevronLeft, Dumbbell,
+  Bed, UtensilsCrossed, MapPin, Navigation, Route, ClipboardList
 } from "lucide-react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  BarChart, Bar, PieChart, Pie, Cell
+  BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, Legend
 } from "recharts";
 
 const ICON_MAP: Record<string, any> = {
@@ -33,51 +35,331 @@ const ICON_MAP: Record<string, any> = {
   Eye, Clock, CheckCircle, AlertTriangle, CreditCard, Shield, Wrench, Car,
   Camera, FileText, Building, Heart, Sparkles, Smartphone, Globe, UserCog,
   QrCode, Truck, HardHat, Baby, BookOpen, GraduationCap, Scissors, ChefHat,
-  Coffee, UtensilsCrossed: ChefHat, UserCheck: Users, Stethoscope: Heart,
-  MapPin: Globe, Navigation: Globe, Route: Globe,
+  Coffee, Plus, Send, Zap, Target, Wallet, Dumbbell, Bed, MapPin, Navigation, Route, ClipboardList,
+  UtensilsCrossed: ChefHat, UserCheck: Users, Stethoscope: Heart,
 };
 
 const resolveIcon = (name: string) => ICON_MAP[name] || Star;
 
-/**
- * Resolve slug → sector ID using the same logic as IndustryDemoPage
- * Supports: industry ID directly (e.g. "beauty"), demo slug (e.g. "glow-beauty-milano"),
- * or sectorConfig slug key (e.g. "beauty")
- */
 function resolveIndustryFromSlug(slug: string): string | null {
-  // 1. Direct match in SECTOR_CONFIGS
   if (SECTOR_CONFIGS[slug]) return slug;
-  // 2. Match via DEMO_SLUGS (reverse lookup: "glow-beauty-milano" → "beauty")
   for (const [industryId, demoSlug] of Object.entries(DEMO_SLUGS)) {
     if (demoSlug === slug) return industryId;
   }
-  // 3. Match in INDUSTRY_CONFIGS
   if (slug in INDUSTRY_CONFIGS) return slug;
   return null;
 }
 
-// ── Mock analytics data ──
-const MONTHS = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
-const generateRevenueData = () => MONTHS.map((m, i) => ({
-  month: m,
-  revenue: 8000 + Math.round(Math.random() * 12000) + i * 800,
-  clients: 40 + Math.round(Math.random() * 60) + i * 5,
-}));
+// ── Animated counter ──
+const AnimCounter = ({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) => {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    let start = 0;
+    const dur = 1500;
+    const step = (ts: number) => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      setDisplay(Math.floor((1 - Math.pow(1 - p, 3)) * value));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [value]);
+  return <span ref={ref}>{prefix}{display.toLocaleString("it-IT")}{suffix}</span>;
+};
 
+// ── Sector-specific KPIs ──
+const SECTOR_KPIS: Record<string, { label: string; value: number; prefix?: string; suffix?: string; change: string; up: boolean; icon: string }[]> = {
+  food: [
+    { label: "Ordini Oggi", value: 47, change: "+22%", up: true, icon: "ShoppingBag" },
+    { label: "Coperti", value: 128, change: "+15%", up: true, icon: "Users" },
+    { label: "Revenue Giornata", value: 3420, prefix: "€", change: "+18%", up: true, icon: "DollarSign" },
+    { label: "Piatto Top", value: 34, suffix: " venduti", change: "+8%", up: true, icon: "ChefHat" },
+    { label: "Rating Medio", value: 47, suffix: "", change: "+0.2", up: true, icon: "Star" },
+  ],
+  beauty: [
+    { label: "Appuntamenti Oggi", value: 18, change: "+12%", up: true, icon: "Calendar" },
+    { label: "Revenue Giornata", value: 1850, prefix: "€", change: "+24%", up: true, icon: "DollarSign" },
+    { label: "Clienti Attive", value: 342, change: "+8%", up: true, icon: "Users" },
+    { label: "Rating", value: 49, suffix: "/5", change: "+0.1", up: true, icon: "Star" },
+    { label: "Prodotti Venduti", value: 12, change: "+32%", up: true, icon: "ShoppingBag" },
+  ],
+  healthcare: [
+    { label: "Visite Oggi", value: 24, change: "+10%", up: true, icon: "Calendar" },
+    { label: "Pazienti Totali", value: 3580, change: "+6%", up: true, icon: "Users" },
+    { label: "Prescrizioni", value: 156, change: "+14%", up: true, icon: "FileText" },
+    { label: "Revenue Mensile", value: 42800, prefix: "€", change: "+18%", up: true, icon: "DollarSign" },
+  ],
+  fitness: [
+    { label: "Membri Attivi", value: 487, change: "+15%", up: true, icon: "Users" },
+    { label: "Lezioni Oggi", value: 12, change: "+3", up: true, icon: "Calendar" },
+    { label: "Nuovi Abbonamenti", value: 28, change: "+22%", up: true, icon: "CreditCard" },
+    { label: "Tasso Rinnovo", value: 87, suffix: "%", change: "+4%", up: true, icon: "TrendingUp" },
+  ],
+  hospitality: [
+    { label: "Occupazione", value: 82, suffix: "%", change: "+8%", up: true, icon: "Building" },
+    { label: "Check-in Oggi", value: 14, change: "+3", up: true, icon: "Users" },
+    { label: "Revenue Camera", value: 185, prefix: "€", suffix: " avg", change: "+12%", up: true, icon: "DollarSign" },
+    { label: "Rating Booking", value: 46, suffix: "/5", change: "+0.3", up: true, icon: "Star" },
+  ],
+  ncc: [
+    { label: "Corse Oggi", value: 18, change: "+24%", up: true, icon: "Car" },
+    { label: "Revenue Giornata", value: 4250, prefix: "€", change: "+31%", up: true, icon: "DollarSign" },
+    { label: "Flotta Attiva", value: 8, suffix: "/10", change: "80%", up: true, icon: "Truck" },
+    { label: "Rating Clienti", value: 49, suffix: "/5", change: "+0.1", up: true, icon: "Star" },
+  ],
+  retail: [
+    { label: "Vendite Oggi", value: 64, change: "+18%", up: true, icon: "ShoppingBag" },
+    { label: "Revenue", value: 4870, prefix: "€", change: "+22%", up: true, icon: "DollarSign" },
+    { label: "Scontrino Medio", value: 76, prefix: "€", change: "+8%", up: true, icon: "CreditCard" },
+    { label: "Clienti Fidelity", value: 234, change: "+14%", up: true, icon: "Heart" },
+  ],
+};
+
+// ── Sector-specific recent data ──
+const SECTOR_TABLE_DATA: Record<string, { headers: string[]; rows: string[][] }> = {
+  food: {
+    headers: ["Ordine", "Cliente", "Piatti", "Totale", "Stato", "Ora"],
+    rows: [
+      ["#1247", "Marco Rossi", "Carbonara x2, Tiramisù", "€38", "✅ Servito", "13:45"],
+      ["#1248", "Laura Bianchi", "Pizza Margherita x2, Birra", "€28", "🔥 In preparazione", "13:52"],
+      ["#1249", "Giovanni Paoli", "Risotto Funghi, Tagliata", "€42", "📦 Delivery", "14:00"],
+      ["#1250", "Anna Verdi", "Bruschetta, Lasagna, Caffè", "€24", "✅ Servito", "14:08"],
+      ["#1251", "Roberto Esposito", "Spaghetti Vongole, Branzino", "€48", "🔥 In preparazione", "14:15"],
+      ["#1252", "Francesca Villa", "Antipasto Misto, Gnocchi", "€32", "⏳ In attesa", "14:22"],
+      ["#1253", "Luca Marchetti", "Pizza Diavola x3, Fritti", "€35", "✅ Servito", "14:28"],
+      ["#1254", "Sara Conti", "Insalata Caesar, Panna Cotta", "€22", "🔥 In preparazione", "14:35"],
+      ["#1255", "Davide Romano", "Tagliatelle Ragù, Vino", "€28", "⏳ In attesa", "14:40"],
+      ["#1256", "Elena Martini", "Cacio e Pepe, Supplì x2", "€26", "✅ Servito", "14:48"],
+    ],
+  },
+  beauty: {
+    headers: ["ID", "Cliente", "Trattamento", "Operatrice", "Importo", "Stato"],
+    rows: [
+      ["APP-201", "Giulia Ferretti", "Taglio + Colore", "Maria", "€85", "✅ Completato"],
+      ["APP-202", "Alessia Romano", "Manicure Spa", "Laura", "€35", "🔄 In corso"],
+      ["APP-203", "Chiara Moretti", "Trattamento Viso", "Sara", "€120", "📅 14:30"],
+      ["APP-204", "Valentina Costa", "Piega + Trattamento", "Maria", "€55", "📅 15:00"],
+      ["APP-205", "Martina Russo", "Pedicure + Smalto Gel", "Laura", "€45", "📅 15:30"],
+      ["APP-206", "Sofia Ricci", "Extension Ciglia", "Giulia", "€90", "📅 16:00"],
+      ["APP-207", "Aurora Galli", "Ceretta Totale", "Sara", "€65", "📅 16:30"],
+      ["APP-208", "Giorgia Greco", "Hair Spa + Maschera", "Maria", "€48", "📅 17:00"],
+      ["APP-209", "Federica Neri", "Sopracciglia + Tinta", "Laura", "€25", "✅ Completato"],
+      ["APP-210", "Eleonora Bruno", "Pacchetto Sposa", "Team", "€280", "📅 Domani"],
+    ],
+  },
+  healthcare: {
+    headers: ["ID", "Paziente", "Tipo Visita", "Dottore", "Importo", "Esito"],
+    rows: [
+      ["VIS-301", "Antonio Verdi", "Cardiologica + ECG", "Dr. Bianchi", "€150", "✅ Refertato"],
+      ["VIS-302", "Maria Conti", "Ecografia", "Dr. Rossi", "€120", "🔄 In corso"],
+      ["VIS-303", "Roberto Esposito", "Ortopedica + RX", "Dr. Neri", "€180", "📅 15:00"],
+      ["VIS-304", "Teresa Russo", "Dermatologica", "Dr.ssa Verdi", "€90", "📅 15:30"],
+      ["VIS-305", "Paolo Ferraro", "Oculistica", "Dr. Costa", "€100", "📅 16:00"],
+      ["VIS-306", "Lucia Marino", "Ginecologica", "Dr.ssa Galli", "€130", "✅ Refertato"],
+      ["VIS-307", "Franco Romano", "Pneumologica", "Dr. Bianchi", "€120", "📅 16:30"],
+      ["VIS-308", "Carla Colombo", "Endocrinologica", "Dr.ssa Verdi", "€140", "📅 Domani"],
+      ["VIS-309", "Stefano Ricci", "Controllo Annuale", "Dr. Rossi", "€80", "✅ Refertato"],
+      ["VIS-310", "Angela Greco", "Fisioterapia", "Dr. Neri", "€60", "🔄 In corso"],
+    ],
+  },
+  hospitality: {
+    headers: ["Camera", "Ospite", "Check-in", "Notti", "Importo", "Stato"],
+    rows: [
+      ["Suite 201", "J. Smith (USA)", "Oggi", "5", "€1.250", "✅ Arrivato"],
+      ["Junior 105", "Fam. Müller (DE)", "Oggi", "3", "€540", "⏳ In arrivo"],
+      ["Classic 302", "M. Dupont (FR)", "Ieri", "7", "€980", "✅ Soggiorno"],
+      ["Suite 401", "K. Tanaka (JP)", "Oggi", "4", "€1.100", "⏳ In arrivo"],
+      ["Classic 108", "A. García (ES)", "2gg fa", "5", "€750", "✅ Soggiorno"],
+      ["Deluxe 203", "L. Rossi (IT)", "Oggi", "2", "€440", "✅ Arrivato"],
+      ["Junior 110", "P. Johnson (UK)", "Domani", "6", "€1.080", "📅 Prenotato"],
+      ["Suite 501", "R. Chen (CN)", "Domani", "3", "€990", "📅 Prenotato"],
+    ],
+  },
+  ncc: {
+    headers: ["Corsa", "Cliente", "Tratta", "Veicolo", "Importo", "Stato"],
+    rows: [
+      ["NCC-401", "Hotel Belvedere", "Aeroporto → Positano", "Mercedes S", "€180", "✅ Completata"],
+      ["NCC-402", "Fam. De Luca", "Tour Costiera 8h", "Sprinter", "€450", "🔄 In corso"],
+      ["NCC-403", "Tour Op. Amalfi", "Ravello → Napoli", "E-Class", "€120", "📅 15:00"],
+      ["NCC-404", "Hotel Caruso", "Napoli → Ravello", "Mercedes S", "€160", "📅 16:30"],
+      ["NCC-405", "Sig. Weber", "Positano → Capri (boat)", "SUV + Barca", "€380", "📅 Domani"],
+      ["NCC-406", "Agenzia Roma", "Roma → Amalfi", "Sprinter 8pax", "€520", "📅 Domani"],
+      ["NCC-407", "Hotel Palazzo", "Transfer Aeroporto", "E-Class", "€90", "✅ Completata"],
+      ["NCC-408", "Sig.ra Johnson", "Pompei + Sorrento", "Mercedes S", "€280", "📅 22 Mar"],
+    ],
+  },
+  fitness: {
+    headers: ["ID", "Membro", "Attività", "Trainer", "Orario", "Stato"],
+    rows: [
+      ["FIT-101", "Marco Rossi", "CrossFit", "Luca T.", "09:00", "✅ Completato"],
+      ["FIT-102", "Sara Bianchi", "Yoga Flow", "Anna M.", "10:00", "🔄 In corso"],
+      ["FIT-103", "Davide Neri", "Personal Training", "Luca T.", "11:00", "📅 Prossimo"],
+      ["FIT-104", "Elena Costa", "Spinning", "Marco P.", "12:00", "📅 Prossimo"],
+      ["FIT-105", "Paolo Verdi", "Functional", "Anna M.", "14:00", "📅 Prossimo"],
+      ["FIT-106", "Lucia Romano", "Pilates", "Sara L.", "15:00", "📅 Prossimo"],
+      ["FIT-107", "Andrea Ricci", "Boxe", "Marco P.", "16:00", "📅 Prossimo"],
+      ["FIT-108", "Martina Greco", "TRX", "Luca T.", "17:00", "📅 Prossimo"],
+    ],
+  },
+  retail: {
+    headers: ["Scontrino", "Cliente", "Articoli", "Totale", "Pagamento", "Ora"],
+    rows: [
+      ["#4501", "Walk-in", "Giacca Lino, Camicia", "€189", "Carta", "10:15"],
+      ["#4502", "Giulia F.", "Borsa Premium", "€245", "Contanti", "10:42"],
+      ["#4503", "Online", "Scarpe x2, Accessori", "€178", "PayPal", "11:08"],
+      ["#4504", "Marco R.", "Completo Uomo", "€320", "Carta", "11:35"],
+      ["#4505", "Walk-in", "T-Shirt x3", "€87", "Carta", "12:00"],
+      ["#4506", "Anna V.", "Vestito Sera", "€195", "Carta", "12:28"],
+      ["#4507", "Online", "Accessori Set", "€65", "Bonifico", "13:10"],
+      ["#4508", "Sara M.", "Cappotto Cashmere", "€450", "Carta", "13:45"],
+    ],
+  },
+};
+
+// ── Sector-specific activity feeds ──
+const SECTOR_ACTIVITIES: Record<string, { text: string; time: string; type: "success" | "info" | "ai" | "warning" }[]> = {
+  food: [
+    { text: "Nuovo ordine Tavolo 7: Carbonara x2, Tiramisù — €38", time: "2 min fa", type: "success" },
+    { text: "Chef AI: piatto esaurito 'Branzino' rimosso automaticamente", time: "8 min fa", type: "ai" },
+    { text: "Pagamento €128 ricevuto da Marco Rossi", time: "15 min fa", type: "success" },
+    { text: "Delivery: ordine #1245 consegnato in 28 min", time: "22 min fa", type: "info" },
+    { text: "Review Shield: intercettata recensione 2★, risposta suggerita", time: "35 min fa", type: "ai" },
+    { text: "Magazzino: scorta mozzarella sotto soglia, ordine suggerito", time: "1 ora fa", type: "warning" },
+    { text: "Prenotazione confermata: 6 persone ore 20:30", time: "1 ora fa", type: "info" },
+    { text: "Social AI: post Instagram pranzo pubblicato — 340 impression", time: "2 ore fa", type: "ai" },
+  ],
+  beauty: [
+    { text: "Nuovo appuntamento: Giulia F. — Taglio + Colore ore 15:00", time: "3 min fa", type: "success" },
+    { text: "Beauty Advisor AI: suggerito trattamento keratina a Chiara M.", time: "10 min fa", type: "ai" },
+    { text: "Pagamento €85 ricevuto da Alessia Romano", time: "18 min fa", type: "success" },
+    { text: "Reminder inviato a 8 clienti per appuntamenti domani", time: "30 min fa", type: "info" },
+    { text: "No-show evitato: Valentina C. confermata via WhatsApp", time: "45 min fa", type: "ai" },
+    { text: "Prodotto venduto: Shampoo Premium — €24", time: "1 ora fa", type: "info" },
+    { text: "Portfolio: 3 nuove foto Before/After caricate", time: "2 ore fa", type: "info" },
+    { text: "Social Beauty AI: Reel Instagram generato con 520 views", time: "3 ore fa", type: "ai" },
+  ],
+  healthcare: [
+    { text: "Check-in paziente: Antonio Verdi — Cardiologia", time: "5 min fa", type: "success" },
+    { text: "Referto completato: ECG Maria Conti — da firmare", time: "12 min fa", type: "info" },
+    { text: "Patient AI: follow-up suggerito per Roberto E. (3 mesi)", time: "20 min fa", type: "ai" },
+    { text: "Fattura SDI #2847 inviata — €150", time: "30 min fa", type: "success" },
+    { text: "Reminder SMS inviato a 12 pazienti per domani", time: "1 ora fa", type: "info" },
+    { text: "Compliance Guard: consenso privacy aggiornato per 3 pazienti", time: "2 ore fa", type: "ai" },
+    { text: "Telemedicina: videoconsulto Dr. Bianchi completato", time: "2 ore fa", type: "info" },
+    { text: "Prescrizione digitale inviata a farmacia — Teresa R.", time: "3 ore fa", type: "success" },
+  ],
+};
+
+// ── Revenue data generator (sector-aware) ──
+const MONTHS = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+const generateRevenueData = (sector: string) => {
+  const bases: Record<string, number[]> = {
+    food: [18, 16, 20, 22, 24, 28, 32, 35, 30, 26, 22, 24],
+    beauty: [12, 11, 14, 16, 18, 20, 22, 19, 17, 15, 14, 16],
+    healthcare: [28, 30, 32, 34, 36, 34, 30, 28, 35, 38, 40, 42],
+    fitness: [22, 24, 28, 26, 24, 20, 16, 14, 26, 30, 28, 24],
+    hospitality: [8, 6, 10, 18, 28, 38, 42, 44, 34, 22, 12, 10],
+    ncc: [10, 8, 14, 22, 32, 42, 48, 50, 38, 24, 14, 12],
+    retail: [20, 18, 22, 24, 26, 24, 28, 22, 20, 24, 30, 38],
+  };
+  const base = bases[sector] || bases.food!;
+  return MONTHS.map((m, i) => ({
+    month: m,
+    revenue: (base[i] || 20) * 1000 + Math.round(Math.random() * 3000),
+    prenotazioni: 40 + Math.round((base[i] || 20) * 2.5) + Math.round(Math.random() * 15),
+  }));
+};
+
+// ── Top services bar chart data ──
+const SECTOR_BAR_DATA: Record<string, { name: string; valore: number }[]> = {
+  food: [
+    { name: "Carbonara", valore: 142 }, { name: "Margherita", valore: 128 },
+    { name: "Tiramisù", valore: 96 }, { name: "Risotto", valore: 84 },
+    { name: "Bruschetta", valore: 72 }, { name: "Tagliata", valore: 58 },
+  ],
+  beauty: [
+    { name: "Taglio+Piega", valore: 89 }, { name: "Colore", valore: 72 },
+    { name: "Manicure", valore: 65 }, { name: "Tratt. Viso", valore: 48 },
+    { name: "Extension", valore: 34 }, { name: "Ceretta", valore: 28 },
+  ],
+  healthcare: [
+    { name: "Cardiologia", valore: 68 }, { name: "Ortopedia", valore: 54 },
+    { name: "Ecografia", valore: 48 }, { name: "Dermatologia", valore: 42 },
+    { name: "Oculistica", valore: 36 }, { name: "Fisioterapia", valore: 32 },
+  ],
+  fitness: [
+    { name: "CrossFit", valore: 95 }, { name: "Yoga", valore: 78 },
+    { name: "Personal", valore: 62 }, { name: "Spinning", valore: 55 },
+    { name: "Pilates", valore: 48 }, { name: "Boxe", valore: 35 },
+  ],
+  hospitality: [
+    { name: "Suite", valore: 42 }, { name: "Deluxe", valore: 68 },
+    { name: "Junior Suite", valore: 54 }, { name: "Classic", valore: 85 },
+    { name: "Family", valore: 32 }, { name: "Single", valore: 28 },
+  ],
+  ncc: [
+    { name: "Aeroporto", valore: 78 }, { name: "Tour Costiera", valore: 45 },
+    { name: "Transfer Hotel", valore: 62 }, { name: "Capri Boat", valore: 34 },
+    { name: "Pompei Tour", valore: 28 }, { name: "Roma Transfer", valore: 22 },
+  ],
+  retail: [
+    { name: "Abbigliamento", valore: 145 }, { name: "Accessori", valore: 98 },
+    { name: "Scarpe", valore: 72 }, { name: "Borse", valore: 58 },
+    { name: "Gioielli", valore: 42 }, { name: "Cosmetici", valore: 35 },
+  ],
+};
+
+// ── Pie data (client sources) ──
+const PIE_DATA = [
+  { name: "Organico", value: 38 }, { name: "Social", value: 25 },
+  { name: "Referral", value: 18 }, { name: "Google Ads", value: 12 },
+  { name: "WhatsApp", value: 7 },
+];
 const PIE_COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6"];
+
+// ── Quick actions per sector ──
+const SECTOR_QUICK_ACTIONS: Record<string, { label: string; icon: string }[]> = {
+  food: [{ label: "Nuovo Ordine", icon: "Plus" }, { label: "Prenotazione", icon: "Calendar" }, { label: "Genera Report", icon: "BarChart3" }],
+  beauty: [{ label: "Nuovo Appuntamento", icon: "Plus" }, { label: "Invia Reminder", icon: "Bell" }, { label: "Genera Report", icon: "BarChart3" }],
+  healthcare: [{ label: "Nuova Visita", icon: "Plus" }, { label: "Prescrizione", icon: "FileText" }, { label: "Genera Report", icon: "BarChart3" }],
+  fitness: [{ label: "Nuovo Membro", icon: "Plus" }, { label: "Nuova Classe", icon: "Calendar" }, { label: "Genera Report", icon: "BarChart3" }],
+  hospitality: [{ label: "Nuovo Check-in", icon: "Plus" }, { label: "Housekeeping", icon: "CheckCircle" }, { label: "Genera Report", icon: "BarChart3" }],
+  ncc: [{ label: "Nuova Corsa", icon: "Plus" }, { label: "Assegna Autista", icon: "Users" }, { label: "Genera Report", icon: "BarChart3" }],
+  retail: [{ label: "Nuova Vendita", icon: "Plus" }, { label: "Inventario", icon: "Package" }, { label: "Genera Report", icon: "BarChart3" }],
+};
+
+// ── Calendar mock data ──
+const generateCalendarDays = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+  const names = ["Marco R.", "Laura B.", "Anna V.", "Giovanni P.", "Sara M.", "Davide N.", "Elena C.", "Roberto E."];
+  const days: { day: number; events: number; highlight?: boolean; names: string[] }[] = [];
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d === today.getDate();
+    const events = d === today.getDate() ? 6 : Math.floor(Math.random() * 5);
+    days.push({
+      day: d,
+      events,
+      highlight: isToday,
+      names: events > 0 ? names.slice(0, Math.min(events, 3)) : [],
+    });
+  }
+  return { days, firstDay: firstDay === 0 ? 6 : firstDay - 1, monthName: today.toLocaleDateString("it-IT", { month: "long", year: "numeric" }) };
+};
 
 export default function DemoAdminPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [activeModule, setActiveModule] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
   const [agentsTab, setAgentsTab] = useState<"overview" | "activity" | "detail">("overview");
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
 
-  // Resolve slug → industry sector ID (same logic as IndustryDemoPage)
   const resolvedSector = useMemo(() => resolveIndustryFromSlug(slug || "food"), [slug]);
-
   const config = getSectorConfig(resolvedSector || "food");
   const allAgents = useMemo(() => getAllAgentsForSector(resolvedSector || "food"), [resolvedSector]);
 
@@ -86,47 +368,37 @@ export default function DemoAdminPage() {
       <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
         <p className="text-xl font-bold text-foreground">Demo non trovata</p>
         <p className="text-sm text-muted-foreground">Lo slug "{slug}" non corrisponde a nessun settore disponibile.</p>
-        <Link to="/demo" className="text-sm font-medium text-primary underline hover:no-underline">
-          ← Torna alla Directory Demo
-        </Link>
+        <Link to="/demo" className="text-sm font-medium text-primary underline hover:no-underline">← Torna alla Directory Demo</Link>
       </div>
     );
   }
 
-  const revenueData = useMemo(generateRevenueData, []);
   const accentColor = config.colors.accent;
-
-  const kpis = [
-    { label: "Fatturato Mese", value: "€24.850", change: "+18%", up: true, icon: DollarSign },
-    { label: "Clienti Attivi", value: "342", change: "+12%", up: true, icon: Users },
-    { label: "Prenotazioni", value: "156", change: "+24%", up: true, icon: Calendar },
-    { label: "Tasso Crescita", value: "+18%", change: "+3%", up: true, icon: TrendingUp },
+  const sectorKey = resolvedSector || "food";
+  const revenueData = useMemo(() => generateRevenueData(sectorKey), [sectorKey]);
+  const kpis = SECTOR_KPIS[sectorKey] || SECTOR_KPIS.food!;
+  const barData = SECTOR_BAR_DATA[sectorKey] || SECTOR_BAR_DATA.food!;
+  const tableData = SECTOR_TABLE_DATA[sectorKey] || SECTOR_TABLE_DATA.food!;
+  const activities = SECTOR_ACTIVITIES[sectorKey] || SECTOR_ACTIVITIES.food || [
+    { text: `Nuovo cliente: ${config.mockClients[0]?.name || "Mario Rossi"}`, time: "2 min fa", type: "success" as const },
+    { text: `${config.mockOrders[0]?.service || "Ordine #1234"} — €${config.mockOrders[0]?.amount || 85}`, time: "15 min fa", type: "info" as const },
+    { text: `Pagamento ricevuto da ${config.mockClients[1]?.name || "Laura B."}`, time: "1 ora fa", type: "success" as const },
+    { text: `Agente AI ha qualificato 3 nuovi lead`, time: "3 ore fa", type: "ai" as const },
   ];
+  const quickActions = SECTOR_QUICK_ACTIONS[sectorKey] || [{ label: "Nuova Azione", icon: "Plus" }, { label: "Messaggio", icon: "Send" }, { label: "Report", icon: "BarChart3" }];
+  const calendarData = useMemo(generateCalendarDays, []);
 
-  const recentActivity = [
-    { text: `Nuovo cliente: ${config.mockClients[0]?.name || "Mario Rossi"}`, time: "2 min fa", type: "success" },
-    { text: `${config.mockOrders[0]?.service || "Ordine #1234"} — €${config.mockOrders[0]?.amount || 85}`, time: "15 min fa", type: "info" },
-    { text: `Pagamento ricevuto da ${config.mockClients[1]?.name || "Laura B."}`, time: "1 ora fa", type: "success" },
-    { text: `Reminder inviato a ${config.mockClients[2]?.name || "Marco V."}`, time: "2 ore fa", type: "info" },
-    { text: "Agente AI ha qualificato 3 nuovi lead", time: "3 ore fa", type: "ai" },
-    { text: "Report settimanale generato automaticamente", time: "Ieri", type: "info" },
-  ];
-
-  const topServices = config.mockOrders.map((o, i) => ({
-    name: o.service.slice(0, 30),
-    value: o.amount * (3 - i),
-  }));
-
-  const SidebarContent = () => (
+  // ── Sidebar ──
+  const SidebarInner = () => (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: accentColor }}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ background: accentColor }}>
             {config.heroEmoji}
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <h2 className="text-sm font-bold text-white truncate">{config.name}</h2>
-            <p className="text-[0.6rem] text-white/40">Empire AI Platform</p>
+            <p className="text-[0.55rem] text-white/35">Empire AI Platform</p>
           </div>
         </div>
       </div>
@@ -135,76 +407,102 @@ export default function DemoAdminPage() {
         {config.adminModules.map((mod) => {
           const Icon = resolveIcon(mod.icon);
           const isActive = activeModule === mod.route;
+          const badgeCount = mod.route === "agents" ? allAgents.length : mod.route === "whatsapp" ? 5 : mod.route === "orders" || mod.route === "bookings" ? 12 : 0;
           return (
-            <button
-              key={mod.route}
-              onClick={() => { setActiveModule(mod.route); setSidebarOpen(false); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                isActive
-                  ? "text-white"
-                  : "text-white/50 hover:text-white/80 hover:bg-white/5"
-              }`}
-              style={isActive ? { background: `${accentColor}20`, color: accentColor } : {}}
-            >
+            <button key={mod.route} onClick={() => { setActiveModule(mod.route); setSidebarOpen(false); }}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group ${isActive ? "text-white" : "text-white/45 hover:text-white/75 hover:bg-white/[0.04]"}`}
+              style={isActive ? { background: `${accentColor}18`, color: accentColor } : {}}>
               <Icon className="w-4 h-4 shrink-0" />
-              <span>{mod.label}</span>
-              {mod.route === "agents" && (
-                <Badge className="ml-auto text-[0.5rem] px-1.5 py-0" style={{ background: `${accentColor}30`, color: accentColor }}>
-                  {allAgents.length}
-                </Badge>
+              <span className="flex-1 text-left">{mod.label}</span>
+              {badgeCount > 0 && (
+                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full font-bold" style={{ background: `${accentColor}25`, color: accentColor }}>{badgeCount}</span>
               )}
             </button>
           );
         })}
       </nav>
 
-      <div className="p-3 border-t border-white/10">
-        <Button
-          onClick={() => navigate(`/demo/${slug}`)}
-          variant="outline"
-          size="sm"
-          className="w-full text-[0.65rem] border-white/10 text-white/60 hover:text-white hover:bg-white/5"
-        >
+      {/* Admin avatar */}
+      <div className="p-3 border-t border-white/10 space-y-2">
+        <div className="flex items-center gap-2 px-2">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: `${accentColor}50` }}>AD</div>
+          <div className="min-w-0">
+            <p className="text-[0.65rem] font-bold text-white/80 truncate">Admin Demo</p>
+            <p className="text-[0.5rem] text-white/30">admin@demo.empire.ai</p>
+          </div>
+        </div>
+        <Button onClick={() => navigate(`/demo/${slug}`)} variant="outline" size="sm"
+          className="w-full text-[0.6rem] border-white/10 text-white/50 hover:text-white hover:bg-white/5">
           ← Torna al Sito Demo
         </Button>
       </div>
     </div>
   );
 
-  // ── Module Content Renderers ──
+  // ══════════════════════════════════════
+  //  DASHBOARD VIEW
+  // ══════════════════════════════════════
   const renderDashboard = () => (
-    <div className="space-y-6">
+    <div className="space-y-5">
+      {/* Quick Actions Bar */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {quickActions.map((qa, i) => {
+          const Icon = resolveIcon(qa.icon);
+          return (
+            <Button key={i} size="sm" className="text-xs h-9 gap-1.5" style={i === 0 ? { background: accentColor } : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)" }}>
+              <Icon className="w-3.5 h-3.5" /> {qa.label}
+            </Button>
+          );
+        })}
+        <Button size="sm" variant="outline" className="text-xs h-9 gap-1.5 border-white/10 text-white/40 ml-auto">
+          <Send className="w-3.5 h-3.5" /> Invia Messaggio
+        </Button>
+      </div>
+
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {kpis.map((kpi, i) => (
-          <motion.div
-            key={kpi.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-          >
-            <Card className="bg-white/[0.03] border-white/[0.06] backdrop-blur-sm">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <kpi.icon className="w-4 h-4 text-white/30" />
-                  <span className={`text-[0.6rem] font-bold flex items-center gap-0.5 ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>
-                    {kpi.up ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
-                    {kpi.change}
-                  </span>
-                </div>
-                <p className="text-lg font-bold text-white">{kpi.value}</p>
-                <p className="text-[0.6rem] text-white/40 mt-0.5">{kpi.label}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+      <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+        {kpis.map((kpi, i) => {
+          const Icon = resolveIcon(kpi.icon);
+          const displayValue = kpi.label.includes("Rating") ? (kpi.value / 10).toFixed(1) : undefined;
+          return (
+            <motion.div key={kpi.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
+              <Card className="bg-white/[0.03] border-white/[0.06] hover:border-white/[0.12] transition-all group">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${accentColor}15` }}>
+                      <Icon className="w-4 h-4" style={{ color: accentColor }} />
+                    </div>
+                    <span className={`text-[0.6rem] font-bold flex items-center gap-0.5 ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>
+                      {kpi.up ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
+                      {kpi.change}
+                    </span>
+                  </div>
+                  <p className="text-xl font-bold text-white leading-none">
+                    {displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}
+                  </p>
+                  <p className="text-[0.6rem] text-white/35 mt-1">{kpi.label}</p>
+                  {/* Mini sparkline mock */}
+                  <div className="flex items-end gap-px mt-2 h-4">
+                    {[3, 5, 4, 7, 6, 8, 7, 9, 8, 10, 9, 11].map((h, j) => (
+                      <div key={j} className="flex-1 rounded-sm transition-all" style={{ height: `${h * 10}%`, background: j >= 10 ? accentColor : `${accentColor}30` }} />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Revenue Area Chart */}
         <Card className="lg:col-span-2 bg-white/[0.03] border-white/[0.06]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-white/80">Fatturato 12 Mesi</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm text-white/80">Fatturato 12 Mesi</CardTitle>
+              <Badge className="text-[0.5rem] bg-emerald-500/15 text-emerald-400">+18% YoY</Badge>
+            </div>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={220}>
@@ -215,29 +513,143 @@ export default function DemoAdminPage() {
                     <stop offset="95%" stopColor={accentColor} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="month" tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }} />
-                <YAxis tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }} />
-                <Tooltip contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 11 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                <XAxis dataKey="month" tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }} />
+                <YAxis tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }} tickFormatter={(v) => `€${(v / 1000).toFixed(0)}k`} />
+                <Tooltip contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 11, color: "#fff" }} formatter={(v: number) => [`€${v.toLocaleString("it-IT")}`, "Revenue"]} />
                 <Area type="monotone" dataKey="revenue" stroke={accentColor} fill="url(#colorRev)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
+        {/* Client Source Pie */}
         <Card className="bg-white/[0.03] border-white/[0.06]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-white/80">Top Servizi</CardTitle>
+            <CardTitle className="text-sm text-white/80">Fonte Clienti</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={160}>
               <PieChart>
-                <Pie data={topServices} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" paddingAngle={3}>
-                  {topServices.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                <Pie data={PIE_DATA} cx="50%" cy="50%" innerRadius={42} outerRadius={68} dataKey="value" paddingAngle={3}>
+                  {PIE_DATA.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                 </Pie>
-                <Tooltip contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 10 }} />
+                <Tooltip contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 10, color: "#fff" }} />
               </PieChart>
             </ResponsiveContainer>
+            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1">
+              {PIE_DATA.map((d, i) => (
+                <div key={d.name} className="flex items-center gap-1">
+                  <div className="w-2 h-2 rounded-full" style={{ background: PIE_COLORS[i] }} />
+                  <span className="text-[0.5rem] text-white/40">{d.name} {d.value}%</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Bar Chart — Top services */}
+      <Card className="bg-white/[0.03] border-white/[0.06]">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm text-white/80">
+            {sectorKey === "food" ? "Piatti Più Venduti" : sectorKey === "beauty" ? "Servizi Top" : sectorKey === "ncc" ? "Tratte Più Richieste" : "Servizi Più Richiesti"}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={180}>
+            <BarChart data={barData} layout="vertical" margin={{ left: 80 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+              <XAxis type="number" tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }} />
+              <YAxis dataKey="name" type="category" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 10 }} width={75} />
+              <Tooltip contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 11, color: "#fff" }} />
+              <Bar dataKey="valore" fill={accentColor} radius={[0, 6, 6, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      {/* Recent Data Table + AI Agents Panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Table */}
+        <Card className="lg:col-span-2 bg-white/[0.03] border-white/[0.06] overflow-hidden">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm text-white/80">
+                {sectorKey === "food" ? "Ordini Recenti" : sectorKey === "beauty" ? "Appuntamenti Oggi" : sectorKey === "healthcare" ? "Visite Recenti" : sectorKey === "ncc" ? "Corse Recenti" : "Attività Recenti"}
+              </CardTitle>
+              <Button size="sm" variant="outline" className="text-[0.55rem] border-white/10 text-white/40 h-7">Vedi tutti</Button>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-white/[0.06]">
+                    {tableData.headers.map((h) => (
+                      <th key={h} className="text-left text-[0.55rem] text-white/35 font-medium p-3 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {tableData.rows.map((row, i) => (
+                    <tr key={i} className={`border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors ${i % 2 === 0 ? "" : "bg-white/[0.01]"}`}>
+                      {row.map((cell, j) => (
+                        <td key={j} className="p-3 text-[0.65rem] text-white/60 whitespace-nowrap">
+                          {cell.startsWith("✅") || cell.startsWith("🔥") || cell.startsWith("📦") || cell.startsWith("⏳") || cell.startsWith("🔄") || cell.startsWith("📅") ? (
+                            <Badge className="text-[0.5rem] px-1.5" style={{
+                              background: cell.startsWith("✅") ? "#22c55e18" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f618" : cell.startsWith("📦") ? "#8b5cf618" : "#f59e0b18",
+                              color: cell.startsWith("✅") ? "#22c55e" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f6" : cell.startsWith("📦") ? "#8b5cf6" : "#f59e0b",
+                            }}>{cell}</Badge>
+                          ) : j === 0 ? (
+                            <span className="font-mono text-white/40">{cell}</span>
+                          ) : cell.startsWith("€") ? (
+                            <span className="font-bold text-white/80">{cell}</span>
+                          ) : (
+                            cell
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* AI Agents Panel */}
+        <Card className="bg-white/[0.03] border-white/[0.06]">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm text-white/80">Agenti AI Attivi</CardTitle>
+              <span className="text-[0.5rem] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-bold">{allAgents.length} Online</span>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-1.5">
+            {allAgents.slice(0, 8).map((agent, i) => (
+              <motion.div key={agent.name} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}
+                className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white/[0.03] transition-all cursor-pointer group"
+                onClick={() => { setActiveModule("agents"); setSelectedAgent(agent.name); setAgentsTab("detail"); }}>
+                <div className="relative">
+                  <span className="text-base">{agent.emoji}</span>
+                  <span className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full border border-[#0a0a12] ${i < 6 ? "bg-emerald-400 animate-pulse" : "bg-yellow-400"}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[0.6rem] font-bold text-white/75 truncate group-hover:text-white transition-colors">{agent.name.split(" — ")[0]}</p>
+                  <p className="text-[0.45rem] text-white/25 truncate">{agent.capabilities[0]}</p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="text-[0.55rem] font-bold text-white/50">{120 + i * 18}</p>
+                  <p className="text-[0.4rem] text-white/20">task oggi</p>
+                </div>
+              </motion.div>
+            ))}
+            {allAgents.length > 8 && (
+              <button onClick={() => setActiveModule("agents")} className="w-full text-center text-[0.55rem] text-white/30 hover:text-white/50 py-1.5 transition-colors">
+                +{allAgents.length - 8} altri agenti →
+              </button>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -247,14 +659,167 @@ export default function DemoAdminPage() {
         <CardHeader className="pb-2">
           <CardTitle className="text-sm text-white/80">Attività Recenti</CardTitle>
         </CardHeader>
+        <CardContent className="space-y-1">
+          {activities.map((a, i) => (
+            <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
+              className="flex items-center gap-3 py-2.5 border-b border-white/[0.03] last:border-0">
+              <div className={`w-2.5 h-2.5 rounded-full shrink-0 ${a.type === "success" ? "bg-emerald-400" : a.type === "ai" ? "bg-purple-400" : a.type === "warning" ? "bg-amber-400" : "bg-blue-400"}`} />
+              <p className="text-[0.65rem] text-white/65 flex-1 leading-relaxed">{a.text}</p>
+              <span className="text-[0.55rem] text-white/25 shrink-0 whitespace-nowrap">{a.time}</span>
+            </motion.div>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // ══════════════════════════════════════
+  //  CRM CLIENTS VIEW
+  // ══════════════════════════════════════
+  const renderClients = () => {
+    const extraClients = [
+      { name: "Francesca Villa", phone: "+39 336 7778899", email: "f.villa@email.it" },
+      { name: "Alessandro Conti", phone: "+39 337 2223344", email: "a.conti@email.it" },
+      { name: "Sara Marchetti", phone: "+39 338 5556677", email: "s.marchetti@email.it" },
+      { name: "Davide Lombardi", phone: "+39 339 8889900", email: "d.lombardi@email.it" },
+      { name: "Elena Colombo", phone: "+39 340 1112233", email: "e.colombo@email.it" },
+      { name: "Matteo Ferrari", phone: "+39 341 4445566", email: "m.ferrari@email.it" },
+      { name: "Valentina Russo", phone: "+39 342 7778899", email: "v.russo@email.it" },
+      { name: "Simone Galli", phone: "+39 343 0001122", email: "s.galli@email.it" },
+    ];
+    const allClients = [...config.mockClients, ...extraClients];
+    const statuses = ["Attivo", "Attivo", "Attivo", "Premium", "Premium", "Da ricontattare", "Nuovo", "Attivo", "Premium", "Da ricontattare", "Nuovo"];
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <h2 className="text-base font-bold text-white">{sectorKey === "healthcare" ? "Pazienti" : "Clienti CRM"}</h2>
+          <div className="flex gap-2">
+            <Button size="sm" style={{ background: accentColor }} className="text-white text-xs h-8 gap-1"><Plus className="w-3 h-3" /> Nuovo</Button>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25" />
+            <input className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl pl-9 pr-3 py-2.5 text-xs text-white placeholder:text-white/20 outline-none focus:border-white/15 transition-colors" placeholder="Cerca clienti..." />
+          </div>
+          <Button variant="outline" size="sm" className="border-white/10 text-white/40 h-10"><Filter className="w-3.5 h-3.5" /></Button>
+        </div>
+        <Card className="bg-white/[0.03] border-white/[0.06] overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/[0.06]">
+                  {["Cliente", "Telefono", "Email", "Spesa Tot.", "Visite", "Stato"].map(h => (
+                    <th key={h} className="text-left text-[0.55rem] text-white/35 font-medium p-3 uppercase tracking-wider cursor-pointer hover:text-white/50 transition-colors">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {allClients.map((c, i) => (
+                  <tr key={i} className={`border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors cursor-pointer ${i % 2 === 0 ? "" : "bg-white/[0.01]"}`}>
+                    <td className="p-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-[0.5rem] font-bold text-white" style={{ background: `${accentColor}30` }}>
+                          {c.name.split(" ").map(n => n[0]).join("")}
+                        </div>
+                        <span className="text-xs text-white/80 font-medium">{c.name}</span>
+                      </div>
+                    </td>
+                    <td className="p-3 text-xs text-white/45">{c.phone}</td>
+                    <td className="p-3 text-xs text-white/45">{c.email}</td>
+                    <td className="p-3 text-xs text-white/70 font-bold">€{(180 + i * 120 + Math.round(Math.random() * 400)).toLocaleString("it-IT")}</td>
+                    <td className="p-3 text-xs text-white/50">{3 + Math.floor(Math.random() * 20)}</td>
+                    <td className="p-3">
+                      <Badge className="text-[0.5rem]" style={{
+                        background: statuses[i % statuses.length] === "Attivo" ? "#22c55e18" : statuses[i % statuses.length] === "Premium" ? `${accentColor}18` : statuses[i % statuses.length] === "Nuovo" ? "#3b82f618" : "#f59e0b18",
+                        color: statuses[i % statuses.length] === "Attivo" ? "#22c55e" : statuses[i % statuses.length] === "Premium" ? accentColor : statuses[i % statuses.length] === "Nuovo" ? "#3b82f6" : "#f59e0b",
+                      }}>{statuses[i % statuses.length]}</Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {/* Pagination */}
+          <div className="flex items-center justify-between px-4 py-3 border-t border-white/[0.04]">
+            <span className="text-[0.6rem] text-white/30">{allClients.length} clienti totali</span>
+            <div className="flex gap-1">
+              {[1, 2, 3].map(p => (
+                <button key={p} className={`w-7 h-7 rounded-lg text-[0.6rem] font-bold transition-all ${p === 1 ? "text-white" : "text-white/30 hover:text-white/50"}`}
+                  style={p === 1 ? { background: `${accentColor}20`, color: accentColor } : { background: "rgba(255,255,255,0.03)" }}>{p}</button>
+              ))}
+            </div>
+          </div>
+        </Card>
+      </div>
+    );
+  };
+
+  // ══════════════════════════════════════
+  //  CALENDAR VIEW
+  // ══════════════════════════════════════
+  const renderCalendar = () => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-base font-bold text-white capitalize">{sectorKey === "food" ? "Prenotazioni" : sectorKey === "healthcare" ? "Agenda Medica" : "Calendario"}</h2>
+        <Button size="sm" style={{ background: accentColor }} className="text-white text-xs h-8 gap-1"><Plus className="w-3 h-3" /> Nuova</Button>
+      </div>
+      <Card className="bg-white/[0.03] border-white/[0.06]">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <button className="text-white/40 hover:text-white/60 transition-colors"><ChevronLeft className="w-4 h-4" /></button>
+            <CardTitle className="text-sm text-white/80 capitalize">{calendarData.monthName}</CardTitle>
+            <button className="text-white/40 hover:text-white/60 transition-colors"><ChevronRight className="w-4 h-4" /></button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-7 gap-1 mb-2">
+            {["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"].map(d => (
+              <div key={d} className="text-center text-[0.5rem] text-white/25 font-bold uppercase py-1">{d}</div>
+            ))}
+          </div>
+          <div className="grid grid-cols-7 gap-1">
+            {/* Empty cells for first day offset */}
+            {Array.from({ length: calendarData.firstDay }).map((_, i) => <div key={`e${i}`} />)}
+            {calendarData.days.map((d) => (
+              <div key={d.day}
+                className={`relative p-1.5 rounded-lg text-center transition-all cursor-pointer hover:bg-white/[0.04] min-h-[48px] ${d.highlight ? "ring-1" : ""}`}
+                style={d.highlight ? { background: `${accentColor}15`, borderColor: accentColor, ringColor: `${accentColor}40` } : {}}>
+                <span className={`text-[0.65rem] font-bold ${d.highlight ? "" : "text-white/50"}`} style={d.highlight ? { color: accentColor } : {}}>
+                  {d.day}
+                </span>
+                {d.events > 0 && (
+                  <div className="flex justify-center gap-0.5 mt-0.5">
+                    {Array.from({ length: Math.min(d.events, 3) }).map((_, j) => (
+                      <div key={j} className="w-1 h-1 rounded-full" style={{ background: j === 0 ? accentColor : `${accentColor}50` }} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+      {/* Today's appointments list */}
+      <Card className="bg-white/[0.03] border-white/[0.06]">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm text-white/80">Oggi — {new Date().toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" })}</CardTitle>
+        </CardHeader>
         <CardContent className="space-y-2">
-          {recentActivity.map((a, i) => (
-            <div key={i} className="flex items-center gap-3 py-2 border-b border-white/[0.04] last:border-0">
-              <div className={`w-2 h-2 rounded-full shrink-0 ${
-                a.type === "success" ? "bg-emerald-400" : a.type === "ai" ? "bg-purple-400" : "bg-blue-400"
-              }`} />
-              <p className="text-xs text-white/70 flex-1">{a.text}</p>
-              <span className="text-[0.6rem] text-white/30 shrink-0">{a.time}</span>
+          {config.mockOrders.map((o, i) => (
+            <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.03] transition-all border border-white/[0.04]">
+              <div className="w-1 h-10 rounded-full" style={{ background: i === 0 ? "#22c55e" : i === 1 ? accentColor : "#3b82f6" }} />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold text-white/80">{o.service}</p>
+                <p className="text-[0.55rem] text-white/35">{o.client} · {o.date}</p>
+              </div>
+              <div className="text-right shrink-0">
+                <p className="text-xs font-bold text-white/70">€{o.amount}</p>
+                <Badge className="text-[0.45rem]" style={{
+                  background: o.status.includes("complet") || o.status.includes("conferm") ? "#22c55e18" : "#3b82f618",
+                  color: o.status.includes("complet") || o.status.includes("conferm") ? "#22c55e" : "#3b82f6",
+                }}>{o.status.replace(/_/g, " ")}</Badge>
+              </div>
             </div>
           ))}
         </CardContent>
@@ -262,101 +827,58 @@ export default function DemoAdminPage() {
     </div>
   );
 
-  const renderClients = () => (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-base font-bold text-white">Clienti CRM</h2>
-        <Button size="sm" style={{ background: accentColor }} className="text-white text-xs">+ Nuovo Cliente</Button>
-      </div>
-      <div className="flex gap-2">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-          <input className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-9 pr-3 py-2.5 text-xs text-white placeholder:text-white/25 outline-none" placeholder="Cerca clienti..." />
-        </div>
-        <Button variant="outline" size="sm" className="border-white/10 text-white/50"><Filter className="w-3.5 h-3.5" /></Button>
-      </div>
-      <Card className="bg-white/[0.03] border-white/[0.06] overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-white/[0.06]">
-              <th className="text-left text-[0.6rem] text-white/40 font-medium p-3 uppercase tracking-wider">Cliente</th>
-              <th className="text-left text-[0.6rem] text-white/40 font-medium p-3 uppercase tracking-wider">Telefono</th>
-              <th className="text-left text-[0.6rem] text-white/40 font-medium p-3 uppercase tracking-wider">Email</th>
-              <th className="text-left text-[0.6rem] text-white/40 font-medium p-3 uppercase tracking-wider">Spesa Tot.</th>
-              <th className="text-left text-[0.6rem] text-white/40 font-medium p-3 uppercase tracking-wider">Stato</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...config.mockClients, 
-              { name: "Francesca Villa", phone: "+39 336 7778899", email: "f.villa@email.it" },
-              { name: "Alessandro Conti", phone: "+39 337 2223344", email: "a.conti@email.it" },
-              { name: "Sara Marchetti", phone: "+39 338 5556677", email: "s.marchetti@email.it" },
-            ].map((c, i) => (
-              <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
-                <td className="p-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-[0.5rem] font-bold text-white" style={{ background: `${accentColor}30` }}>
-                      {c.name.split(' ').map(n => n[0]).join('')}
-                    </div>
-                    <span className="text-xs text-white/80 font-medium">{c.name}</span>
-                  </div>
-                </td>
-                <td className="p-3 text-xs text-white/50">{c.phone}</td>
-                <td className="p-3 text-xs text-white/50">{c.email}</td>
-                <td className="p-3 text-xs text-white/70 font-medium">€{(200 + i * 150).toLocaleString("it-IT")}</td>
-                <td className="p-3">
-                  <Badge className="text-[0.5rem]" style={{ background: i < 3 ? "#22c55e20" : "#f59e0b20", color: i < 3 ? "#22c55e" : "#f59e0b" }}>
-                    {i < 3 ? "Attivo" : "Da ricontattare"}
-                  </Badge>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
-    </div>
-  );
-
+  // ══════════════════════════════════════
+  //  ORDERS VIEW
+  // ══════════════════════════════════════
   const renderOrders = () => (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-base font-bold text-white">Ordini & Prenotazioni</h2>
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <h2 className="text-base font-bold text-white">{sectorKey === "food" ? "Ordini & Delivery" : sectorKey === "ncc" ? "Corse & Transfer" : "Ordini & Prenotazioni"}</h2>
         <div className="flex gap-2">
           {["Tutti", "In corso", "Completati"].map(f => (
-            <Button key={f} variant="outline" size="sm" className="text-[0.6rem] border-white/10 text-white/50">{f}</Button>
+            <Button key={f} variant="outline" size="sm" className="text-[0.6rem] border-white/10 text-white/40 h-7">{f}</Button>
           ))}
         </div>
       </div>
-      <div className="space-y-2">
-        {config.mockOrders.map((o, i) => (
-          <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
-            <CardContent className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ background: `${accentColor}15` }}>
-                  {config.heroEmoji}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-bold text-white truncate">{o.service}</p>
-                  <p className="text-[0.6rem] text-white/40">{o.client} · {o.date}</p>
-                </div>
-              </div>
-              <div className="text-right shrink-0 ml-3">
-                <p className="text-sm font-bold text-white">€{o.amount}</p>
-                <Badge className="text-[0.5rem]" style={{
-                  background: o.status.includes("complet") || o.status.includes("consegn") ? "#22c55e20" : o.status.includes("corso") || o.status.includes("preparaz") ? "#3b82f620" : "#f59e0b20",
-                  color: o.status.includes("complet") || o.status.includes("consegn") ? "#22c55e" : o.status.includes("corso") || o.status.includes("preparaz") ? "#3b82f6" : "#f59e0b",
-                }}>
-                  {o.status.replace(/_/g, " ")}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {tableData.rows.length > 0 && (
+        <Card className="bg-white/[0.03] border-white/[0.06] overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/[0.06]">
+                  {tableData.headers.map(h => (
+                    <th key={h} className="text-left text-[0.55rem] text-white/35 font-medium p-3 uppercase tracking-wider">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.rows.map((row, i) => (
+                  <tr key={i} className={`border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors ${i % 2 === 0 ? "" : "bg-white/[0.01]"}`}>
+                    {row.map((cell, j) => (
+                      <td key={j} className="p-3 text-[0.65rem] text-white/60 whitespace-nowrap">
+                        {cell.startsWith("✅") || cell.startsWith("🔥") || cell.startsWith("📦") || cell.startsWith("⏳") || cell.startsWith("🔄") || cell.startsWith("📅") ? (
+                          <Badge className="text-[0.5rem] px-1.5" style={{
+                            background: cell.startsWith("✅") ? "#22c55e18" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f618" : "#f59e0b18",
+                            color: cell.startsWith("✅") ? "#22c55e" : cell.startsWith("🔥") || cell.startsWith("🔄") ? "#3b82f6" : "#f59e0b",
+                          }}>{cell}</Badge>
+                        ) : j === 0 ? <span className="font-mono text-white/40">{cell}</span>
+                          : cell.startsWith("€") ? <span className="font-bold text-white/80">{cell}</span>
+                            : cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      )}
     </div>
   );
 
-
+  // ══════════════════════════════════════
+  //  AGENTS VIEW (kept from original, enhanced)
+  // ══════════════════════════════════════
   const renderAgents = () => {
     const totalHours = allAgents.reduce((s, a) => s + (a.hoursPerWeek || 8), 0);
     const avgAccuracy = Math.round(allAgents.reduce((s, a) => s + (a.accuracy || 90), 0) / allAgents.length);
@@ -370,7 +892,7 @@ export default function DemoAdminPage() {
       { agent: allAgents[4]?.name || "Operations", action: "Turno assegnato automaticamente", time: "2 ore fa", emoji: allAgents[4]?.emoji || "⚙️" },
       { agent: allAgents[5]?.name || "Compliance", action: "GDPR audit completato", time: "3 ore fa", emoji: allAgents[5]?.emoji || "🛡️" },
       { agent: allAgents[6]?.name || "Customer", action: "Win-back inviato a cliente inattivo", time: "4 ore fa", emoji: allAgents[6]?.emoji || "❤️" },
-      ...allAgents.slice(7).map((a, i) => ({ agent: a.name, action: `${a.capabilities[0] || 'Azione'} eseguita`, time: `${5 + i} ore fa`, emoji: a.emoji })),
+      ...allAgents.slice(7).map((a, i) => ({ agent: a.name, action: `${a.capabilities[0] || "Azione"} eseguita`, time: `${5 + i} ore fa`, emoji: a.emoji })),
     ];
 
     const detailAgent = allAgents.find(a => a.name === selectedAgent) || allAgents[0];
@@ -382,21 +904,16 @@ export default function DemoAdminPage() {
           <p className="text-xs text-white/40">{allAgents.length} agenti operativi per {config.name}</p>
         </div>
 
-        {/* Tabs */}
         <div className="flex gap-1 p-1 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-          {([["overview", "Panoramica"], ["activity", "Attività Recente"], ["detail", "Dettaglio Agente"]] as const).map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => setAgentsTab(key)}
-              className={`flex-1 py-2 rounded-lg text-[0.6rem] font-bold transition-all ${agentsTab === key ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
-              style={agentsTab === key ? { background: `${accentColor}20`, color: accentColor } : {}}
-            >
+          {([["overview", "Panoramica"], ["activity", "Attività"], ["detail", "Dettaglio"]] as const).map(([key, label]) => (
+            <button key={key} onClick={() => setAgentsTab(key)}
+              className={`flex-1 py-2 rounded-lg text-[0.6rem] font-bold transition-all ${agentsTab === key ? "text-white" : "text-white/40 hover:text-white/60"}`}
+              style={agentsTab === key ? { background: `${accentColor}20`, color: accentColor } : {}}>
               {label}
             </button>
           ))}
         </div>
 
-        {/* Aggregate KPIs */}
         {agentsTab === "overview" && (
           <>
             <div className="grid grid-cols-3 gap-3">
@@ -417,18 +934,16 @@ export default function DemoAdminPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {allAgents.map((agent, i) => (
                 <motion.div key={agent.name} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-                  <Card
-                    className="bg-white/[0.03] border-white/[0.06] hover:border-white/[0.12] transition-all cursor-pointer"
-                    onClick={() => { setSelectedAgent(agent.name); setAgentsTab("detail"); }}
-                  >
+                  <Card className="bg-white/[0.03] border-white/[0.06] hover:border-white/[0.12] transition-all cursor-pointer"
+                    onClick={() => { setSelectedAgent(agent.name); setAgentsTab("detail"); }}>
                     <CardContent className="p-3">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-lg">{agent.emoji}</span>
                         <div className="min-w-0 flex-1">
                           <p className="text-[0.65rem] font-bold text-white truncate">{agent.name}</p>
                           <div className="flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                            <span className="text-[0.45rem] text-emerald-400">ATTIVO</span>
+                            <span className={`w-1.5 h-1.5 rounded-full ${i < allAgents.length - 2 ? "bg-emerald-400 animate-pulse" : "bg-yellow-400"}`} />
+                            <span className={`text-[0.45rem] ${i < allAgents.length - 2 ? "text-emerald-400" : "text-yellow-400"}`}>{i < allAgents.length - 2 ? "ATTIVO" : "STANDBY"}</span>
                             {agent.isUniversal && <Badge className="text-[0.4rem] px-1 py-0 bg-purple-500/20 text-purple-300 ml-1">Universal</Badge>}
                           </div>
                         </div>
@@ -447,18 +962,12 @@ export default function DemoAdminPage() {
           </>
         )}
 
-        {/* Activity Feed */}
         {agentsTab === "activity" && (
           <Card className="bg-white/[0.03] border-white/[0.06]">
             <CardContent className="p-4 space-y-1">
               {mockActivityFeed.map((a, i) => (
-                <motion.div
-                  key={i}
-                  className="flex items-center gap-3 py-2.5 border-b border-white/[0.04] last:border-0"
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
+                <motion.div key={i} className="flex items-center gap-3 py-2.5 border-b border-white/[0.04] last:border-0"
+                  initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
                   <span className="text-base shrink-0">{a.emoji}</span>
                   <div className="min-w-0 flex-1">
                     <p className="text-xs text-white/80"><strong className="text-white">{a.agent}</strong> — {a.action}</p>
@@ -470,19 +979,14 @@ export default function DemoAdminPage() {
           </Card>
         )}
 
-        {/* Detail view */}
         {agentsTab === "detail" && detailAgent && (
           <div className="space-y-4">
-            {/* Agent selector */}
-            <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
+            <div className="flex gap-1.5 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
               {allAgents.map(a => (
-                <button
-                  key={a.name}
-                  onClick={() => setSelectedAgent(a.name)}
-                  className={`shrink-0 px-2.5 py-1.5 rounded-lg text-[0.55rem] font-medium transition-all whitespace-nowrap ${selectedAgent === a.name || (!selectedAgent && a === allAgents[0]) ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
-                  style={(selectedAgent === a.name || (!selectedAgent && a === allAgents[0])) ? { background: `${accentColor}20`, color: accentColor } : { background: 'rgba(255,255,255,0.03)' }}
-                >
-                  {a.emoji} {a.name.split(' — ')[0].split(' ').slice(0, 2).join(' ')}
+                <button key={a.name} onClick={() => setSelectedAgent(a.name)}
+                  className={`shrink-0 px-2.5 py-1.5 rounded-lg text-[0.55rem] font-medium transition-all whitespace-nowrap ${selectedAgent === a.name || (!selectedAgent && a === allAgents[0]) ? "text-white" : "text-white/40 hover:text-white/60"}`}
+                  style={(selectedAgent === a.name || (!selectedAgent && a === allAgents[0])) ? { background: `${accentColor}20`, color: accentColor } : { background: "rgba(255,255,255,0.03)" }}>
+                  {a.emoji} {a.name.split(" — ")[0].split(" ").slice(0, 2).join(" ")}
                 </button>
               ))}
             </div>
@@ -501,30 +1005,25 @@ export default function DemoAdminPage() {
                 </div>
                 <p className="text-xs text-white/60 mb-4">{detailAgent.desc}</p>
 
-                {/* Metrics */}
                 <div className="grid grid-cols-3 gap-3 mb-4">
-                  <div className="text-center p-2.5 rounded-lg bg-white/[0.03]">
-                    <p className="text-base font-bold text-white">{detailAgent.accuracy || 95}%</p>
-                    <p className="text-[0.5rem] text-white/30">Accuratezza</p>
-                  </div>
-                  <div className="text-center p-2.5 rounded-lg bg-white/[0.03]">
-                    <p className="text-base font-bold text-white">{detailAgent.hoursPerWeek || 10}h</p>
-                    <p className="text-[0.5rem] text-white/30">Risparmio/Sett</p>
-                  </div>
-                  <div className="text-center p-2.5 rounded-lg bg-white/[0.03]">
-                    <p className="text-base font-bold" style={{ color: accentColor }}>142</p>
-                    <p className="text-[0.5rem] text-white/30">Azioni eseguite</p>
-                  </div>
+                  {[
+                    { v: `${detailAgent.accuracy || 95}%`, l: "Accuratezza" },
+                    { v: `${detailAgent.hoursPerWeek || 10}h`, l: "Risparmio/Sett" },
+                    { v: "142", l: "Azioni eseguite" },
+                  ].map((m, i) => (
+                    <div key={i} className="text-center p-2.5 rounded-lg bg-white/[0.03]">
+                      <p className="text-base font-bold text-white">{m.v}</p>
+                      <p className="text-[0.5rem] text-white/30">{m.l}</p>
+                    </div>
+                  ))}
                 </div>
 
-                {/* Capabilities */}
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {detailAgent.capabilities.map(c => (
                     <Badge key={c} variant="outline" className="text-[0.55rem] border-white/10 text-white/50 px-2">{c}</Badge>
                   ))}
                 </div>
 
-                {/* Workflow */}
                 {detailAgent.workflow && detailAgent.workflow.length > 0 && (
                   <div className="pt-4 border-t border-white/[0.06]">
                     <p className="text-[0.6rem] font-bold text-white/50 uppercase tracking-wider mb-3">⚡ Come Lavora</p>
@@ -547,7 +1046,6 @@ export default function DemoAdminPage() {
                   </div>
                 )}
 
-                {/* Example */}
                 {detailAgent.example && (
                   <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
                     <p className="text-[0.55rem] font-bold text-white/50 mb-1">💡 Esempio Concreto</p>
@@ -568,6 +1066,7 @@ export default function DemoAdminPage() {
     );
   };
 
+  // ── Generic module placeholder ──
   const renderGenericModule = () => {
     const mod = config.adminModules.find(m => m.route === activeModule);
     return (
@@ -593,7 +1092,8 @@ export default function DemoAdminPage() {
     switch (activeModule) {
       case "": return renderDashboard();
       case "clients": case "patients": return renderClients();
-      case "orders": case "bookings": case "appointments": case "reservations": return renderOrders();
+      case "orders": case "bookings": case "fleet": case "cross-selling": return renderOrders();
+      case "appointments": case "reservations": case "calendar": return renderCalendar();
       case "agents": return renderAgents();
       case "analytics": return renderDashboard();
       default: return renderGenericModule();
@@ -609,7 +1109,7 @@ export default function DemoAdminPage() {
 
       {/* Sidebar */}
       <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-[#0d0d1a] border-r border-white/[0.06] transform transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-        <SidebarContent />
+        <SidebarInner />
       </aside>
 
       {/* Main content */}
@@ -636,11 +1136,11 @@ export default function DemoAdminPage() {
           <div className="flex items-center gap-2">
             <div className="relative hidden sm:block">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20" />
-              <input className="bg-white/[0.04] border border-white/[0.06] rounded-lg pl-8 pr-3 py-1.5 text-[0.65rem] text-white placeholder:text-white/20 outline-none w-48" placeholder="Cerca..." />
+              <input className="bg-white/[0.04] border border-white/[0.06] rounded-lg pl-8 pr-3 py-1.5 text-[0.65rem] text-white placeholder:text-white/20 outline-none w-48 focus:border-white/15 transition-colors" placeholder="Cerca..." />
             </div>
-            <button className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center text-white/30 relative">
+            <button className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center text-white/30 relative hover:bg-white/[0.06] transition-colors">
               <Bell className="w-4 h-4" />
-              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-red-500 text-[6px] text-white font-bold flex items-center justify-center">3</span>
+              <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-red-500 text-[6px] text-white font-bold flex items-center justify-center">3</span>
             </button>
             <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: `${accentColor}40` }}>
               AD
@@ -649,23 +1149,20 @@ export default function DemoAdminPage() {
         </header>
 
         {/* Page content */}
-        <div className="p-4 lg:p-6">
+        <div className="p-4 lg:p-6 pb-20 lg:pb-6">
           {renderModuleContent()}
         </div>
       </main>
 
-      {/* Mobile sticky bottom bar */}
+      {/* Mobile bottom nav */}
       <div className="fixed bottom-0 left-0 right-0 z-30 lg:hidden bg-[#0d0d1a]/95 backdrop-blur-xl border-t border-white/[0.06] px-2 py-1.5 flex items-center justify-around safe-area-pb">
         {config.adminModules.slice(0, 5).map(mod => {
           const Icon = resolveIcon(mod.icon);
           const isActive = activeModule === mod.route;
           return (
-            <button
-              key={mod.route}
-              onClick={() => setActiveModule(mod.route)}
+            <button key={mod.route} onClick={() => setActiveModule(mod.route)}
               className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all ${isActive ? "" : "text-white/30"}`}
-              style={isActive ? { color: accentColor } : {}}
-            >
+              style={isActive ? { color: accentColor } : {}}>
               <Icon className="w-4 h-4" />
               <span className="text-[0.5rem]">{mod.label}</span>
             </button>
