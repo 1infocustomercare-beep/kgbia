@@ -122,15 +122,14 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-/** Reduce section background alpha slightly so the DNA circuit canvas peeks through
- *  at edges and gaps BETWEEN sections — not under text/content.
- *  Also normalizes previously over-transparent values (0.75-0.82) back up. */
+/** Keep section backdrops premium-dark and fully solid so the DNA pattern
+ * is visible only in connectors/empty spaces, never behind section copy. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !style.background || typeof style.background !== "string") return style;
-  // Replace alpha=1 → 0.93, and normalize any 0.7x/0.8x → 0.93
-  let bg = style.background.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*1\)/g, (_, inner) => `hsla(${inner},0.93)`);
-  bg = bg.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*0\.7\d\)/g, (_, inner) => `hsla(${inner},0.93)`);
-  bg = bg.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*0\.8\d\)/g, (_, inner) => `hsla(${inner},0.93)`);
+  const bg = style.background.replace(
+    /hsla\(([^,]+,[^,]+,[^,]+),\s*0\.[1-9]\d*\)/g,
+    (_, inner) => `hsla(${inner},1)`
+  );
   return { ...style, background: bg };
 };
 
