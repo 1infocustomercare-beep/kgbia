@@ -484,17 +484,6 @@ const SECTOR_TABLE_DATA: Record<string, { headers: string[]; rows: string[][] }>
       ["GR-106", "Fam. Verdi", "Trattamento fitosan.", "Monteverde", "€120", "📅 Mercoledì"],
     ],
   },
-  tattoo: {
-    headers: ["Sessione", "Cliente", "Tipo", "Artista", "Importo", "Stato"],
-    rows: [
-      ["TT-101", "Marco R.", "Sleeve braccio (sess. 3/5)", "Alex", "€480", "✅ Completato"],
-      ["TT-102", "Sara B.", "Cover-up spalla", "Mika", "€350", "🔄 In corso"],
-      ["TT-103", "Luca N.", "Lettering polso", "Alex", "€120", "📅 16:00"],
-      ["TT-104", "Elena C.", "Geometrico schiena", "Yuki", "€280", "📅 Domani"],
-      ["TT-105", "Davide E.", "Realistico ritratto", "Mika", "€650", "📅 Consulenza"],
-      ["TT-106", "Anna V.", "Mini tattoo x3", "Alex", "€180", "📅 Sabato"],
-    ],
-  },
   childcare: {
     headers: ["Bambino", "Età", "Sezione", "Orario", "Retta", "Stato"],
     rows: [
