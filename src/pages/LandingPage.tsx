@@ -15,7 +15,7 @@ import {
   Palette, Mail, Car, Scissors, Heart, Store, Dumbbell, Building,
   Calendar, Package, CreditCard, Route, ClipboardCheck, Headphones,
   Layers, Globe, Radio, MonitorSmartphone, Cpu, Fingerprint,
-  ChevronRight, ChevronLeft, Pause, CircleCheck, Minus, Activity, ServerCog, Gauge,
+  ChevronRight, ChevronLeft, Pause, CircleCheck, Minus, Activity, ServerCog, Gauge, MessageSquare, Receipt,
   Workflow, ScanLine, Database, Wifi, Timer, LineChart,
   Network, Atom, Radar, BrainCircuit, CircuitBoard, Waypoints, Binary } from
 "lucide-react";
