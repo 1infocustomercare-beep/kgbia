@@ -16,6 +16,8 @@ import {
   CreditCard, Award, RefreshCw, Package, ChevronDown, Quote, Instagram, Menu, X, ChevronLeft, ChevronRight, Sparkles, Users, CheckCircle
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import { DemoPricingSection } from "@/components/public/DemoPricingSection";
+import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 /* ─── ONYX + CHAMPAGNE HIGH-FASHION EDITORIAL ─── */
