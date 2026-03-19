@@ -21,6 +21,7 @@ import {
 "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
+import empireLogoNew from "@/assets/empire-logo-new.png";
 import heroLandingDefault from "@/assets/hero-landing.jpg";
 import videoHeroDefault from "@/assets/video-hero-empire.mp4";
 import heroTechCommandDefault from "@/assets/hero-tech-command.jpg";
