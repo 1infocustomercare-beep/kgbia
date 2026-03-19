@@ -37,22 +37,23 @@ export default function BackButton({
   };
 
   const themeStyles = {
-    dark: "bg-black/80 text-white border-white/10 hover:bg-black/90",
-    light: "bg-white/90 text-gray-900 border-gray-200 hover:bg-white shadow-lg",
-    glass: "bg-white/10 backdrop-blur-md text-white border-white/20 hover:bg-white/20",
+    dark: "bg-black/70 text-white/80 border-white/10 hover:bg-black/90 hover:text-white",
+    light: "bg-white/80 text-gray-600 border-gray-200/50 hover:bg-white hover:text-gray-900 shadow-sm",
+    glass: "bg-white/8 backdrop-blur-md text-white/60 border-white/10 hover:bg-white/15 hover:text-white",
   };
 
   if (variant === "floating") {
     return (
       <motion.button
         onClick={handleClick}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3, duration: 0.3 }}
-        className={`fixed top-3 left-3 z-[60] w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-300 shadow-lg ${themeStyles[theme]} ${className}`}
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5, duration: 0.3 }}
+        className={`fixed top-[env(safe-area-inset-top,12px)] left-3 z-[60] w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-300 ${themeStyles[theme]} ${className}`}
+        style={{ marginTop: "calc(env(safe-area-inset-top, 0px) + 8px)" }}
         title={label}
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-3.5 h-3.5" />
       </motion.button>
     );
   }
