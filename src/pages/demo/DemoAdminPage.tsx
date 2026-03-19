@@ -1983,6 +1983,245 @@ export default function DemoAdminPage() {
     );
   };
 
+  // ══════════════════════════════════════
+  //  CATALOG / SERVICES VIEW
+  // ══════════════════════════════════════
+  const renderCatalog = () => {
+    const catalogLabel = sectorKey === "food" ? "Menu" : sectorKey === "beauty" ? "Servizi" : sectorKey === "retail" ? "Prodotti" : sectorKey === "fitness" ? "Corsi & Classi" : "Catalogo";
+    const items = (barData || []).map((b, i) => ({
+      name: b.name, count: b.valore,
+      price: `€${(15 + i * 12 + Math.round(Math.random() * 30))}`,
+      active: i < 5,
+      popular: i < 2,
+    }));
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-bold text-white">{catalogLabel}</h2>
+          <Button size="sm" style={{ background: accentColor }} className="text-white text-xs h-8 gap-1"><Plus className="w-3 h-3" /> Aggiungi</Button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {items.map((item, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+              <Card className="bg-white/[0.03] border-white/[0.06] hover:border-white/[0.12] transition-all">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm" style={{ background: `${accentColor}15` }}>
+                        {config.heroEmoji}
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white/80">{item.name}</p>
+                        <p className="text-[0.55rem] text-white/35">{item.count} vendite</p>
+                      </div>
+                    </div>
+                    <span className="text-sm font-bold text-white/80">{item.price}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="text-[0.5rem]" style={{ background: item.active ? "#22c55e18" : "#ef444418", color: item.active ? "#22c55e" : "#ef4444" }}>
+                      {item.active ? "Attivo" : "Disattivato"}
+                    </Badge>
+                    {item.popular && <Badge className="text-[0.5rem]" style={{ background: `${accentColor}18`, color: accentColor }}>⭐ Popolare</Badge>}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // ══════════════════════════════════════
+  //  TEAM / STAFF VIEW
+  // ══════════════════════════════════════
+  const renderTeam = () => {
+    const staffLabel = sectorKey === "healthcare" ? "Personale Medico" : sectorKey === "beauty" ? "Operatrici" : sectorKey === "fitness" ? "Trainer" : "Team";
+    const staffMembers = [
+      { name: "Maria Rossi", role: "Manager", hours: "40h/sett", status: "Presente", since: "Gen 2023" },
+      { name: "Luca Bianchi", role: "Senior", hours: "38h/sett", status: "Presente", since: "Mar 2023" },
+      { name: "Sara Conti", role: "Junior", hours: "36h/sett", status: "Presente", since: "Set 2024" },
+      { name: "Marco Verdi", role: "Part-time", hours: "20h/sett", status: "In pausa", since: "Giu 2024" },
+      { name: "Anna Ferretti", role: "Stagista", hours: "24h/sett", status: "Presente", since: "Gen 2026" },
+      { name: "Giovanni Neri", role: "Collaboratore", hours: "32h/sett", status: "Ferie", since: "Nov 2023" },
+    ];
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-bold text-white">{staffLabel}</h2>
+          <Button size="sm" style={{ background: accentColor }} className="text-white text-xs h-8 gap-1"><Plus className="w-3 h-3" /> Aggiungi</Button>
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          {[{ l: "In Servizio", v: "4", c: "#22c55e" }, { l: "Totale Staff", v: "6", c: accentColor }, { l: "Ore Sett.", v: "190h", c: "#3b82f6" }].map((k, i) => (
+            <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
+              <CardContent className="p-3 text-center">
+                <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
+                <p className="text-[0.5rem] text-white/30">{k.l}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Card className="bg-white/[0.03] border-white/[0.06] overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead><tr className="border-b border-white/[0.06]">
+                {["Membro", "Ruolo", "Ore", "Stato", "Dal"].map(h => (
+                  <th key={h} className="text-left text-[0.55rem] text-white/35 font-medium p-3 uppercase tracking-wider">{h}</th>
+                ))}
+              </tr></thead>
+              <tbody>
+                {staffMembers.map((s, i) => (
+                  <tr key={i} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                    <td className="p-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full flex items-center justify-center text-[0.45rem] font-bold text-white" style={{ background: `${accentColor}30` }}>
+                          {s.name.split(" ").map(n => n[0]).join("")}
+                        </div>
+                        <span className="text-xs text-white/80 font-medium">{s.name}</span>
+                      </div>
+                    </td>
+                    <td className="p-3 text-xs text-white/50">{s.role}</td>
+                    <td className="p-3 text-xs text-white/50">{s.hours}</td>
+                    <td className="p-3"><Badge className="text-[0.5rem]" style={{
+                      background: s.status === "Presente" ? "#22c55e18" : s.status === "Ferie" ? "#3b82f618" : "#f59e0b18",
+                      color: s.status === "Presente" ? "#22c55e" : s.status === "Ferie" ? "#3b82f6" : "#f59e0b",
+                    }}>{s.status}</Badge></td>
+                    <td className="p-3 text-[0.6rem] text-white/35">{s.since}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </div>
+    );
+  };
+
+  // ══════════════════════════════════════
+  //  REVIEWS VIEW
+  // ══════════════════════════════════════
+  const renderReviews = () => {
+    const reviews = [
+      { name: "Marco R.", rating: 5, text: "Servizio eccezionale, tornerò sicuramente!", date: "2 giorni fa", platform: "Google" },
+      { name: "Laura B.", rating: 4, text: "Ottimo rapporto qualità-prezzo. Consiglio vivamente.", date: "4 giorni fa", platform: "TripAdvisor" },
+      { name: "Giovanni P.", rating: 5, text: "Personale gentilissimo e professionale.", date: "1 settimana fa", platform: "Google" },
+      { name: "Anna V.", rating: 3, text: "Buono ma tempi di attesa un po' lunghi.", date: "1 settimana fa", platform: "Facebook" },
+      { name: "Sara M.", rating: 5, text: "Un'esperienza top! Niente da ridire.", date: "2 settimane fa", platform: "Google" },
+      { name: "Davide N.", rating: 4, text: "Ambiente curato e servizio attento ai dettagli.", date: "2 settimane fa", platform: "TripAdvisor" },
+      { name: "Elena C.", rating: 2, text: "Non è stato all'altezza delle aspettative questa volta.", date: "3 settimane fa", platform: "Google" },
+      { name: "Roberto E.", rating: 5, text: "Il migliore della zona, senza dubbio.", date: "3 settimane fa", platform: "Google" },
+    ];
+    const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-bold text-white">Recensioni</h2>
+          <Badge className="text-xs px-3 py-1" style={{ background: `${accentColor}18`, color: accentColor }}>⭐ {avg} media</Badge>
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          {[{ l: "Rating Medio", v: `${avg}/5`, c: "#f59e0b" }, { l: "Totale Recensioni", v: `${reviews.length + 178}`, c: accentColor }, { l: "Risposta IA", v: "96%", c: "#22c55e" }].map((k, i) => (
+            <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
+              <CardContent className="p-3 text-center">
+                <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
+                <p className="text-[0.5rem] text-white/30">{k.l}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="space-y-3">
+          {reviews.map((r, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
+              <Card className="bg-white/[0.03] border-white/[0.06]">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-[0.5rem] font-bold text-white" style={{ background: `${accentColor}30` }}>
+                        {r.name.split(" ").map(n => n[0]).join("")}
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white/80">{r.name}</p>
+                        <p className="text-[0.5rem] text-white/30">{r.date} · {r.platform}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-0.5">
+                      {Array.from({ length: 5 }).map((_, j) => (
+                        <Star key={j} className="w-3 h-3" style={{ color: j < r.rating ? "#f59e0b" : "rgba(255,255,255,0.1)" }} fill={j < r.rating ? "#f59e0b" : "none"} />
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-[0.65rem] text-white/60 leading-relaxed">{r.text}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // ══════════════════════════════════════
+  //  INVENTORY VIEW
+  // ══════════════════════════════════════
+  const renderInventory = () => {
+    const inventoryItems = [
+      { name: "Farina 00", qty: 24, unit: "kg", min: 10, status: "ok" },
+      { name: "Mozzarella DOP", qty: 8, unit: "kg", min: 12, status: "low" },
+      { name: "Olio EVO", qty: 15, unit: "L", min: 5, status: "ok" },
+      { name: "Pomodoro San Marzano", qty: 3, unit: "kg", min: 8, status: "critical" },
+      { name: "Parmigiano 24 mesi", qty: 6, unit: "kg", min: 4, status: "ok" },
+      { name: "Basilico fresco", qty: 2, unit: "mazzi", min: 5, status: "low" },
+      { name: "Guanciale stagionato", qty: 4, unit: "kg", min: 3, status: "ok" },
+      { name: "Uova fresche", qty: 48, unit: "pz", min: 30, status: "ok" },
+      { name: "Pecorino Romano", qty: 3, unit: "kg", min: 2, status: "ok" },
+      { name: "Vino Rosso della Casa", qty: 5, unit: "bottiglie", min: 10, status: "low" },
+    ];
+    const critical = inventoryItems.filter(i => i.status === "critical").length;
+    const low = inventoryItems.filter(i => i.status === "low").length;
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-bold text-white">Inventario & Magazzino</h2>
+          <Button size="sm" style={{ background: accentColor }} className="text-white text-xs h-8 gap-1"><Plus className="w-3 h-3" /> Aggiungi</Button>
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          {[{ l: "Articoli", v: `${inventoryItems.length}`, c: accentColor }, { l: "Scorte Basse", v: `${low}`, c: "#f59e0b" }, { l: "Critici", v: `${critical}`, c: "#ef4444" }].map((k, i) => (
+            <Card key={i} className="bg-white/[0.03] border-white/[0.06]">
+              <CardContent className="p-3 text-center">
+                <p className="text-sm font-bold" style={{ color: k.c }}>{k.v}</p>
+                <p className="text-[0.5rem] text-white/30">{k.l}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Card className="bg-white/[0.03] border-white/[0.06] overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead><tr className="border-b border-white/[0.06]">
+                {["Prodotto", "Quantità", "Unità", "Minimo", "Stato"].map(h => (
+                  <th key={h} className="text-left text-[0.55rem] text-white/35 font-medium p-3 uppercase tracking-wider">{h}</th>
+                ))}
+              </tr></thead>
+              <tbody>
+                {inventoryItems.map((item, i) => (
+                  <tr key={i} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                    <td className="p-3 text-xs text-white/80 font-medium">{item.name}</td>
+                    <td className="p-3 text-xs text-white/70 font-bold">{item.qty}</td>
+                    <td className="p-3 text-xs text-white/50">{item.unit}</td>
+                    <td className="p-3 text-xs text-white/40">{item.min}</td>
+                    <td className="p-3"><Badge className="text-[0.5rem]" style={{
+                      background: item.status === "ok" ? "#22c55e18" : item.status === "low" ? "#f59e0b18" : "#ef444418",
+                      color: item.status === "ok" ? "#22c55e" : item.status === "low" ? "#f59e0b" : "#ef4444",
+                    }}>{item.status === "ok" ? "✅ OK" : item.status === "low" ? "⚠️ Basso" : "🔴 Critico"}</Badge></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </div>
+    );
+  };
+
   // ── Generic module placeholder ──
   const renderGenericModule = () => {
     const mod = config.adminModules.find(m => m.route === activeModule);
@@ -2016,6 +2255,10 @@ export default function DemoAdminPage() {
       case "marketing": case "whatsapp": case "social": return renderMarketing();
       case "invoicing": case "billing": case "finance": return renderInvoicing();
       case "settings": return renderSettings();
+      case "menu": case "services": case "products": case "catalog": case "courses": case "treatments": return renderCatalog();
+      case "team": case "staff": case "drivers": case "technicians": return renderTeam();
+      case "reviews": case "feedback": return renderReviews();
+      case "inventory": case "warehouse": case "stock": return renderInventory();
       default: return renderGenericModule();
     }
   };
