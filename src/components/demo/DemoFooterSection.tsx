@@ -40,9 +40,10 @@ export default function DemoFooterSection({ sector, accentColor, sectorName, com
   ];
 
   return (
-    <footer className="relative overflow-hidden" style={{ background: footerBg, color: "white" }}>
+    <footer className="relative overflow-hidden" style={{ background: "linear-gradient(180deg, #050508, #08080c)", color: "white" }}>
+      <PremiumSectionBg accentColor={accentColor} variant="alt" />
       {/* Top accent line */}
-      <div className="h-px w-full" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}40, transparent)` }} />
+      <div className="h-px w-full relative z-10" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}40, transparent)` }} />
 
       {/* Newsletter CTA strip */}
       <div className="border-b border-white/[0.06]">
