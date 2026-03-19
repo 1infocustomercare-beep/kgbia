@@ -3166,20 +3166,23 @@ const LandingPage = () => {
             {/* ═══ Interactive AI Particle Sphere ═══ */}
             <motion.div
               className="relative mt-6 sm:mt-8 w-screen sm:w-auto -ml-[calc((100vw-100%)/2)] sm:ml-0 sm:mx-auto overflow-visible flex items-center justify-center"
+              style={{ transformOrigin: "center center" }}
               initial={{ opacity: 0, scale: 0.5, y: 40 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
               
-              {/* Ambient glow behind sphere — full width */}
+              {/* Ambient glow — full width */}
               <motion.div
                 className="absolute inset-[-30%] sm:inset-[-40%] rounded-full blur-[120px] pointer-events-none"
                 style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsla(265,65%,55%,0.22), hsla(38,50%,50%,0.12), transparent 70%)" }}
                 animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} />
               
-              {isHeroInView &&
-              <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? Math.min(window.innerWidth - 16, 380) : 300} />
-              }
+              <div className="sm:scale-100" style={{ transform: typeof window !== "undefined" && window.innerWidth < 640 ? "scaleX(1.9)" : undefined }}>
+                {isHeroInView &&
+                <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : 300} />
+                }
+              </div>
             </motion.div>
 
             {/* CTA */}
