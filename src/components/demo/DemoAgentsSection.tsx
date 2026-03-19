@@ -33,8 +33,9 @@ export default function DemoAgentsSection({ sector, accentColor, sectorName }: P
   const avgAccuracy = Math.round(agents.reduce((s, a) => s + (a.accuracy || 90), 0) / agents.length);
 
   return (
-    <section ref={ref} className="py-16 px-4" style={{ background: "linear-gradient(180deg, rgba(10,10,20,0.98), rgba(0,0,0,0.95))" }}>
-      <div className="max-w-5xl mx-auto">
+    <section ref={ref} className="py-16 px-4 relative overflow-hidden" style={{ background: "linear-gradient(180deg, #080810 0%, #0c0c18 50%, #0a0a14 100%)" }}>
+      <PremiumSectionBg accentColor={accentColor} variant="deep" />
+      <div className="max-w-5xl mx-auto relative z-10">
         {/* Header */}
         <motion.div
           className="text-center mb-8"
