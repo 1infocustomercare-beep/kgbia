@@ -77,9 +77,16 @@ export default {
         },
       },
       borderRadius: {
+        "2xl": "calc(var(--radius) + 6px)",
+        xl: "calc(var(--radius) + 2px)",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        "soft": "0 2px 12px -2px hsl(0 0% 0% / 0.12), 0 1px 4px -1px hsl(0 0% 0% / 0.08)",
+        "soft-lg": "0 8px 30px -6px hsl(0 0% 0% / 0.16), 0 2px 8px -2px hsl(0 0% 0% / 0.1)",
+        "premium": "0 4px 20px -4px hsl(38 45% 52% / 0.15), 0 1px 6px -1px hsl(0 0% 0% / 0.1)",
       },
       keyframes: {
         "accordion-down": {

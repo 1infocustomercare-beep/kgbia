@@ -90,6 +90,31 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', 'Playfair Display', serif;
   }
+
+  /* ═══ MODERN ROUNDED DESIGN SYSTEM ═══ */
+  button, [role="button"] {
+    border-radius: var(--radius) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  input, textarea, select, [role="combobox"] {
+    border-radius: var(--radius) !important;
+  }
+
+  [role="dialog"], [role="alertdialog"],
+  [data-radix-popper-content-wrapper] > div,
+  .rounded-lg {
+    border-radius: calc(var(--radius) + 4px) !important;
+  }
+
+  img {
+    border-radius: calc(var(--radius) - 2px);
+  }
+
+  /* Smooth card & surface elevation */
+  [class*="shadow"] {
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+  }
 }
 
 /* ═══ GLOBAL OPACITY BOOST — UI surfaces more opaque over background ═══ */
