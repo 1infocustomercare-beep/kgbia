@@ -1890,7 +1890,6 @@ export default function DemoAdminPage() {
   //  SETTINGS VIEW
   // ══════════════════════════════════════
   const renderSettings = () => {
-    const [tutorialsOn, setTutorialsOn] = useState(true);
     return (
       <div className="space-y-5">
         <h2 className="text-base font-bold text-white">Impostazioni</h2>
