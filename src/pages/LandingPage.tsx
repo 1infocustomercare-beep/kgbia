@@ -132,8 +132,8 @@ const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefine
     /hsla\(([^,]+,[^,]+,[^,]+),\s*([\d.]+)\)/g,
     (_, inner, alpha) => {
       const a = parseFloat(alpha);
-      // Cap at 0.92 to let circuit show through, boost low values to at least 0.85
-      const newAlpha = a >= 1 ? 0.92 : Math.min(Math.max(a, 0.85), 0.92);
+      // More opaque sections — solid premium feel, minimal transparency
+      const newAlpha = a >= 1 ? 0.97 : Math.min(Math.max(a, 0.94), 0.97);
       return `hsla(${inner},${newAlpha})`;
     }
   );
