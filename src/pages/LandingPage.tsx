@@ -5658,7 +5658,7 @@ const LandingPage = () => {
            ROI CALCULATOR
           ═══════════════════════════════════════════ */}
       <Section id="calculator" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(38,20%,9%,1) 15%, hsla(265,22%,10%,1) 35%, hsla(38,16%,8%,1) 55%, hsla(265,18%,9%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(38,20%,9%,0.78) 15%, hsla(265,22%,10%,0.78) 35%, hsla(38,16%,8%,0.78) 55%, hsla(265,18%,9%,0.78) 75%, hsla(230,16%,4%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
