@@ -458,7 +458,7 @@ const NeuralCellsBackground = () => {
         <motion.circle
           key={`vp${i}`}
           r={isMobile ? "0.35" : "0.25"}
-          fill="hsla(32,55%,60%,0.85)"
+          fill="hsla(32,55%,60%,0.94)"
           filter={isMobile ? undefined : "url(#pulseGlow)"}
           initial={{ cx: cells[a].x, cy: cells[a].y, opacity: 0 }}
           animate={{
@@ -924,7 +924,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
   return (
     <Section id="pricing" className="relative overflow-hidden" style={{
-      background: "linear-gradient(180deg, hsla(0,0%,4%,0.88) 0%, hsla(0,0%,5%,0.85) 30%, hsla(38,22%,10%,0.85) 55%, hsla(0,0%,5%,0.85) 80%, hsla(0,0%,4%,0.88) 100%)"
+      background: "linear-gradient(180deg, hsla(0,0%,4%,0.96) 0%, hsla(0,0%,5%,0.94) 30%, hsla(38,22%,10%,0.94) 55%, hsla(0,0%,5%,0.94) 80%, hsla(0,0%,4%,0.96) 100%)"
     }}>
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.06]"
@@ -3259,7 +3259,7 @@ const LandingPage = () => {
             style={{ borderColor: "hsla(35,45%,50%,0.2)" }}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} />
-              <span className="text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase" style={{ color: "hsla(35,45%,55%,0.85)" }}>Il Sistema Operativo per il Tuo Business</span>
+              <span className="text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase" style={{ color: "hsla(35,45%,55%,0.94)" }}>Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
             {/* Headline — gold shimmer */}
@@ -3405,7 +3405,7 @@ const LandingPage = () => {
                              IL PROBLEMA — Pain Points
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(345,20%,8%,0.88) 20%, hsla(350,16%,10%,0.88) 40%, hsla(265,18%,9%,0.88) 60%, hsla(345,14%,7%,0.88) 80%, hsla(230,16%,4%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(345,20%,8%,0.96) 20%, hsla(350,16%,10%,0.96) 40%, hsla(265,18%,9%,0.96) 60%, hsla(345,14%,7%,0.96) 80%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         {/* Premium ambient glows — layered danger luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -3724,7 +3724,7 @@ const LandingPage = () => {
                              VIDEO HERO — Business Transformation
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(260,24%,10%,0.88) 18%, hsla(265,26%,12%,0.88) 35%, hsla(155,16%,9%,0.88) 55%, hsla(265,20%,10%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(260,24%,10%,0.96) 18%, hsla(265,26%,12%,0.96) 35%, hsla(155,16%,9%,0.96) 55%, hsla(265,20%,10%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         {/* Premium ambient glows — discovery/innovation luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -3775,7 +3775,7 @@ const LandingPage = () => {
           <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
           <FunnelDNAVisual />
           <div className="absolute inset-0 pointer-events-none rounded-2xl"
-          style={{ background: "linear-gradient(180deg, transparent 60%, hsla(0,0%,4%,0.85) 100%)" }} />
+          style={{ background: "linear-gradient(180deg, transparent 60%, hsla(0,0%,4%,0.94) 100%)" }} />
         </motion.div>
 
         {/* Premium feature badges — below video */}
@@ -3835,7 +3835,7 @@ const LandingPage = () => {
                              SETTORI
                             ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(0,0%,4%,0.88) 0%, hsla(0,0%,5%,0.88) 28%, hsla(38,18%,9%,0.88) 52%, hsla(0,0%,5%,0.88) 78%, hsla(0,0%,4%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(0,0%,4%,0.96) 0%, hsla(0,0%,5%,0.96) 28%, hsla(38,18%,9%,0.96) 52%, hsla(0,0%,5%,0.96) 78%, hsla(0,0%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -4215,7 +4215,7 @@ const LandingPage = () => {
                              PERCHÉ EMPIRE — Unified Section
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.88) 15%, hsla(220,18%,11%,0.88) 30%, hsla(155,18%,9%,0.88) 50%, hsla(265,20%,10%,0.88) 70%, hsla(220,16%,8%,0.88) 85%, hsla(230,16%,4%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(220,18%,11%,0.96) 30%, hsla(155,18%,9%,0.96) 50%, hsla(265,20%,10%,0.96) 70%, hsla(220,16%,8%,0.96) 85%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -4274,7 +4274,7 @@ const LandingPage = () => {
                 <motion.div key={i}
                 className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md"
                 style={{
-                  background: "linear-gradient(135deg, hsla(265,30%,12%,0.92), hsla(265,20%,8%,0.88))",
+                  background: "linear-gradient(135deg, hsla(265,30%,12%,0.92), hsla(265,20%,8%,0.96))",
                   border: "1px solid hsla(265,50%,50%,0.12)",
                   boxShadow: "0 4px 20px hsla(265,50%,10%,0.3)"
                 }}
@@ -4422,7 +4422,7 @@ const LandingPage = () => {
                              COMPARISON TABLE — Empire vs Others
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.85) 15%, hsla(38,16%,9%,0.85) 35%, hsla(265,20%,10%,0.85) 55%, hsla(38,14%,8%,0.85) 75%, hsla(230,16%,4%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.94) 15%, hsla(38,16%,9%,0.94) 35%, hsla(265,20%,10%,0.94) 55%, hsla(38,14%,8%,0.94) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -4492,7 +4492,7 @@ const LandingPage = () => {
                              TECH DNA — Neural Network Visualization
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,26%,10%,0.85) 15%, hsla(230,20%,11%,0.85) 35%, hsla(265,22%,9%,0.85) 55%, hsla(230,18%,8%,0.85) 78%, hsla(230,16%,4%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,26%,10%,0.94) 15%, hsla(230,20%,11%,0.94) 35%, hsla(265,22%,9%,0.94) 55%, hsla(230,18%,8%,0.94) 78%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -4662,7 +4662,7 @@ const LandingPage = () => {
                              3 INTERFACCE — Mockup Showcase
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(38,18%,9%,0.88) 18%, hsla(265,20%,10%,0.88) 35%, hsla(38,14%,8%,0.88) 55%, hsla(265,18%,9%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(38,18%,9%,0.96) 18%, hsla(265,20%,10%,0.96) 35%, hsla(38,14%,8%,0.96) 55%, hsla(265,18%,9%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -4740,7 +4740,7 @@ const LandingPage = () => {
                             <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[50px] h-[14px] bg-foreground/80 rounded-full z-20" />
                             <div className="absolute inset-[2px] rounded-[25px] overflow-hidden" style={{ background: "hsl(var(--background))" }}>
                               <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top" loading="lazy" />
-                              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.85) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
+                              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.94) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
                               <div className="absolute bottom-4 left-2 right-2 z-10">
                                 <span className="px-1.5 py-[2px] rounded-md text-[0.38rem] font-bold tracking-[1px] uppercase" style={{ background: `${tagColor}22`, color: tagColor, border: `1px solid ${tagColor}30` }}>{mock.tag}</span>
                                 <h3 className="font-heading text-[0.7rem] font-bold text-white mt-1">{mock.title}</h3>
@@ -4790,7 +4790,7 @@ const LandingPage = () => {
                               <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[60px] h-[18px] bg-foreground/80 rounded-full z-20" />
                               <div className="absolute inset-[2px] rounded-[31px] overflow-hidden" style={{ background: "hsl(var(--background))" }}>
                                 <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top group-hover:scale-[1.04] transition-transform duration-700" loading="lazy" />
-                                <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.85) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.94) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
                                 <div className="absolute top-[30px] left-3 right-3 z-20 flex items-center gap-1.5">
                                   <span className="px-2 py-[2px] rounded-md text-[0.42rem] font-bold tracking-[1.5px] uppercase" style={{ background: `${tagColor}22`, color: tagColor, border: `1px solid ${tagColor}30` }}>{mock.tag}</span>
                                   <span className="text-[0.4rem] text-white/50 tracking-wider">{mock.sector}</span>
@@ -4832,7 +4832,7 @@ const LandingPage = () => {
                              BUILD ANYTHING — Streamlined Conversion Section
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.88) 15%, hsla(38,18%,9%,0.88) 35%, hsla(265,20%,10%,0.88) 55%, hsla(38,14%,8%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(38,18%,9%,0.96) 35%, hsla(265,20%,10%,0.96) 55%, hsla(38,14%,8%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -5223,7 +5223,7 @@ const LandingPage = () => {
               </g>
             )}
             {/* Animated data pulse */}
-            <circle r="2.2" fill="hsl(var(--primary) / 0.85)" filter="url(#svcCircuitGlow)">
+            <circle r="2.2" fill="hsl(var(--primary) / 0.94)" filter="url(#svcCircuitGlow)">
               <animateMotion dur="5s" repeatCount="indefinite" path="M160,30 L160,570" />
             </circle>
             <circle r="1.8" fill="hsl(var(--accent) / 0.8)" filter="url(#svcCircuitGlow)">
@@ -5486,7 +5486,7 @@ const LandingPage = () => {
                 <animateMotion dur="3.5s" repeatCount="indefinite" path="M75,60 Q110,95 150,120 Q190,145 225,180" />
                 <animate attributeName="opacity" values="0;0.9;0" dur="3.5s" repeatCount="indefinite" />
               </circle>
-              <circle r="1.5" fill="hsl(var(--accent) / 0.85)">
+              <circle r="1.5" fill="hsl(var(--accent) / 0.94)">
                 <animateMotion dur="4.2s" begin="0.8s" repeatCount="indefinite" path="M225,60 Q190,95 150,120 Q110,145 75,180" />
                 <animate attributeName="opacity" values="0;0.8;0" dur="4.2s" begin="0.8s" repeatCount="indefinite" />
               </circle>
@@ -5556,9 +5556,9 @@ const LandingPage = () => {
                             ═══════════════════════════════════════════ */}
       {(() => {
         const commandMetrics = [
-          { label: "Ordini Oggi", value: 147, suffix: "", icon: <Package className="w-3.5 h-3.5" />, delta: "+23%", deltaColor: "hsla(150,70%,50%,0.85)" },
-          { label: "Clienti Serviti", value: 89, suffix: "", icon: <Users className="w-3.5 h-3.5" />, delta: "+18%", deltaColor: "hsla(150,70%,50%,0.85)" },
-          { label: "Revenue IA", value: 4820, suffix: "€", icon: <Wallet className="w-3.5 h-3.5" />, delta: "+31%", deltaColor: "hsla(150,70%,50%,0.85)" },
+          { label: "Ordini Oggi", value: 147, suffix: "", icon: <Package className="w-3.5 h-3.5" />, delta: "+23%", deltaColor: "hsla(150,70%,50%,0.94)" },
+          { label: "Clienti Serviti", value: 89, suffix: "", icon: <Users className="w-3.5 h-3.5" />, delta: "+18%", deltaColor: "hsla(150,70%,50%,0.94)" },
+          { label: "Revenue IA", value: 4820, suffix: "€", icon: <Wallet className="w-3.5 h-3.5" />, delta: "+31%", deltaColor: "hsla(150,70%,50%,0.94)" },
           { label: "Tempo Risparmiato", value: 6, suffix: "h", icon: <Timer className="w-3.5 h-3.5" />, delta: "oggi", deltaColor: "hsla(38,70%,55%,0.7)" },
         ];
 
@@ -5975,7 +5975,7 @@ const LandingPage = () => {
                       {t.name.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="font-heading text-[0.7rem] font-semibold" style={{ color: "hsla(0,0%,100%,0.85)" }}>{t.name}</h4>
+                      <h4 className="font-heading text-[0.7rem] font-semibold" style={{ color: "hsla(0,0%,100%,0.94)" }}>{t.name}</h4>
                       <p className="text-[0.5rem]" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
                     </div>
                     <span className="ml-auto text-base">{t.emoji}</span>
@@ -6018,7 +6018,7 @@ const LandingPage = () => {
                     style={{ border: "1px dashed hsla(265,50%,55%,0.12)" }}
                     animate={{ rotate: [0, 360] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
                       </div>
-                      <h4 className="font-heading text-xs font-semibold mb-0.5" style={{ color: "hsla(0,0%,100%,0.85)" }}>{t.name}</h4>
+                      <h4 className="font-heading text-xs font-semibold mb-0.5" style={{ color: "hsla(0,0%,100%,0.94)" }}>{t.name}</h4>
                       <p className="text-[0.58rem] mb-4" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
                       <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1" style={{ color: "hsla(0,0%,100%,0.5)" }}>
                         <Quote className="w-3.5 h-3.5 mx-auto mb-2" style={{ color: "hsla(38,50%,55%,0.3)" }} />
@@ -6143,7 +6143,7 @@ const LandingPage = () => {
               <animateMotion dur="3.8s" repeatCount="indefinite" path="M78,52 Q115,74 150,95 Q185,116 222,138" />
               <animate attributeName="opacity" values="0;0.85;0" dur="3.8s" repeatCount="indefinite" />
             </circle>
-            <circle r="1.5" fill="hsl(var(--accent) / 0.85)">
+            <circle r="1.5" fill="hsl(var(--accent) / 0.94)">
               <animateMotion dur="4.6s" begin="0.9s" repeatCount="indefinite" path="M222,52 Q185,74 150,95 Q115,116 78,138" />
               <animate attributeName="opacity" values="0;0.8;0" dur="4.6s" begin="0.9s" repeatCount="indefinite" />
             </circle>
@@ -6231,7 +6231,7 @@ const LandingPage = () => {
                              FAQ
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.88) 15%, hsla(38,18%,9%,0.88) 35%, hsla(265,20%,10%,0.88) 55%, hsla(38,14%,8%,0.88) 75%, hsla(230,16%,4%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(38,18%,9%,0.96) 35%, hsla(265,20%,10%,0.96) 55%, hsla(38,14%,8%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
@@ -6382,7 +6382,7 @@ const LandingPage = () => {
 
       {/* ═══════ FOOTER ═══════ */}
       <footer id="contact" className="relative py-20 pb-10 px-5 sm:px-6 overflow-hidden"
-      style={mobilifyBg({ background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,22%,7%,0.88) 12%, hsla(38,14%,6%,0.88) 28%, hsla(265,20%,8%,0.88) 45%, hsla(155,12%,6%,0.88) 62%, hsla(265,18%,5%,0.88) 80%, hsla(230,16%,3%,0.88) 100%)" })}>
+      style={mobilifyBg({ background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,22%,7%,0.96) 12%, hsla(38,14%,6%,0.96) 28%, hsla(265,20%,8%,0.96) 45%, hsla(155,12%,6%,0.96) 62%, hsla(265,18%,5%,0.96) 80%, hsla(230,16%,3%,0.96) 100%)" })}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Top accent line — tricolore viola/oro/verde */}
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.4) 20%, hsla(38,65%,55%,0.35) 40%, hsla(155,60%,50%,0.3) 60%, hsla(38,65%,55%,0.35) 80%, transparent 95%)" }} />
