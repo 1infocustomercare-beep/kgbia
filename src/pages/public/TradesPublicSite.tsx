@@ -27,6 +27,7 @@ import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { HeroPhotoCarousel } from "@/components/public/HeroPhotoCarousel";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
+import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 /* ─── DYNAMIC PALETTE PER TRADE TYPE ─── */
@@ -749,6 +750,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         </div>
       </section>
 
+      <DemoTestimonialsCarousel sector="trades" accentColor={A} darkMode={true} bgColor={D} fontBody="'Inter', sans-serif" />
       <DemoPricingSection sector="trades" accentColor={A} darkMode={true} bgColor={D} />
       <AIAgentsShowcase sector="trades" />
       <SectorValueProposition sectorKey={industry === "electrician" || industry === "plumber" ? "trades" : (industry as string)} accentColor={A} darkMode={true} sectorLabel={config.label} />

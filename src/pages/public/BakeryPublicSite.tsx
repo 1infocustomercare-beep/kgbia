@@ -22,6 +22,7 @@ import {
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
+import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import bakeryHeroPoster from "@/assets/bakery-croissant.jpg";
 
@@ -371,6 +372,7 @@ export default function BakeryPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="bakery" accentColor={TERRA} darkMode={false} bgColor={VANILLA} textColor={ESPRESSO} fontDisplay="'Libre Baskerville', serif" fontBody="'Lato', sans-serif" />
       <DemoPricingSection sector="bakery" accentColor={TERRA} darkMode={false} bgColor={`${TERRA}06`} textColor={ESPRESSO} />
       <AIAgentsShowcase sector="bakery" />
       <SectorValueProposition sectorKey="bakery" accentColor={TERRA} darkMode={false} sectorLabel="Panificio" />

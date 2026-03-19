@@ -21,6 +21,7 @@ import {
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
+import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 
 /* ── HOTEL DESIGN SYSTEM — Emerald + Gold Classico ── */
@@ -449,6 +450,7 @@ export default function HotelPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="hotel" accentColor={H.gold} darkMode={true} bgColor={H.bgDark} fontDisplay="'Playfair Display', serif" fontBody="'Raleway', sans-serif" />
       <DemoPricingSection sector="hotel" accentColor={H.emerald} darkMode={true} bgColor={H.bgDeep} />
       <AIAgentsShowcase sector="hotel" />
       <SectorValueProposition sectorKey="hotel" accentColor={H.emerald} darkMode={true} sectorLabel="Hotel" />

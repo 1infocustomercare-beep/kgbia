@@ -18,6 +18,7 @@ import {
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
+import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-features.mp4";
 
 /* ─── NEON VOLT + CARBON BLACK AESTHETIC ─── */
@@ -417,6 +418,7 @@ export default function FitnessPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="fitness" accentColor={VOLT} darkMode={true} bgColor={CARBON} fontDisplay="'Bebas Neue', sans-serif" fontBody="'Barlow', sans-serif" />
       <DemoPricingSection sector="fitness" accentColor={VOLT} darkMode={true} bgColor={STEEL} />
       <AIAgentsShowcase sector="fitness" />
       <SectorValueProposition sectorKey="fitness" accentColor={VOLT} darkMode={true} sectorLabel="Palestra" />

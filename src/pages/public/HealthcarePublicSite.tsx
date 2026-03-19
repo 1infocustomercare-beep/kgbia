@@ -21,6 +21,7 @@ import {
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
+import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 
 /* ─── ARCTIC SAGE + WARM IVORY AESTHETIC ─── */
@@ -411,6 +412,7 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="healthcare" accentColor={SAGE} darkMode={false} bgColor="#fff" textColor={NAVY} fontDisplay="'DM Serif Display', serif" fontBody="'Work Sans', sans-serif" />
       <DemoPricingSection sector="healthcare" accentColor={SAGE} darkMode={false} bgColor={`${SAGE}06`} textColor={NAVY} />
       <AIAgentsShowcase sector="healthcare" />
       <SectorValueProposition sectorKey="healthcare" accentColor={SAGE} darkMode={false} sectorLabel="Studio Medico" />

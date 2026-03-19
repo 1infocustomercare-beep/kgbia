@@ -18,6 +18,7 @@ import {
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
+import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 /* ─── ONYX + CHAMPAGNE HIGH-FASHION EDITORIAL ─── */
@@ -319,6 +320,7 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="retail" accentColor={CHAMPAGNE} darkMode={true} bgColor={ONYX} fontDisplay="'Cormorant Garamond', serif" fontBody="'Montserrat', sans-serif" />
       <DemoPricingSection sector="retail" accentColor={CHAMPAGNE} darkMode={true} bgColor={ONYX} />
       <AIAgentsShowcase sector="retail" />
       <SectorValueProposition sectorKey="retail" accentColor={CHAMPAGNE} darkMode={true} sectorLabel="Negozio" />

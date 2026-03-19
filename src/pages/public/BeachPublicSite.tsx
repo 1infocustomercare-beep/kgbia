@@ -23,6 +23,7 @@ import {
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
+import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 
 /* ─── SUNSET CORAL + OCEAN DEEP AESTHETIC ─── */
@@ -343,6 +344,7 @@ export default function BeachPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="beach" accentColor={CORAL} darkMode={false} bgColor="#fff" textColor={OCEAN} fontDisplay="'Abril Fatface', serif" fontBody="'Source Sans 3', sans-serif" />
       <DemoPricingSection sector="beach" accentColor={CORAL} darkMode={false} bgColor={SAND} textColor={OCEAN} />
       <AIAgentsShowcase sector="beach" />
       <SectorValueProposition sectorKey="beach" accentColor={CORAL} darkMode={false} sectorLabel="Stabilimento Balneare" />
