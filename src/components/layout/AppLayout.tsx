@@ -33,9 +33,9 @@ export default function AppLayout() {
 
   // Sector accent color for premium background
   const sectorAccent = industry === "beauty" ? "#D4A0A0" : industry === "healthcare" ? "#4AAED9" : industry === "fitness" ? "#F97316"
-    : industry === "hotel" || industry === "hospitality" ? "#B8860B" : industry === "retail" ? "#8B7355" : industry === "beach" ? "#38BDF8"
-    : industry === "ncc" ? "#A0A0A0" : industry === "legal" ? "#6366F1" : industry === "accountant" ? "#059669"
-    : industry === "construction" ? "#D97706" : industry === "photographer" ? "#EC4899" : industry === "events" ? "#A855F7"
+    : industry === "hospitality" ? "#B8860B" : industry === "retail" ? "#8B7355" : industry === "beach" ? "#38BDF8"
+    : industry === "ncc" ? "#A0A0A0" : industry === "legal" ? "#6366F1" : industry === "accounting" ? "#059669"
+    : industry === "construction" ? "#D97706" : industry === "photography" ? "#EC4899" : industry === "events" ? "#A855F7"
     : "#C8963E";
 
   return (
