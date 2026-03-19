@@ -1243,9 +1243,9 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 style={{
                   background: isSelected ?
                   p.id === "empire" ?
-                   "linear-gradient(165deg, hsla(35,22%,14%,0.80), hsla(230,12%,9%,0.82))" :
-                   "linear-gradient(165deg, hsla(265,15%,14%,0.78), hsla(230,10%,9%,0.80))" :
-                   "linear-gradient(165deg, hsla(230,12%,13%,0.75), hsla(230,10%,10%,0.78))"
+                   "linear-gradient(165deg, hsla(35,22%,14%,0.94), hsla(230,12%,9%,0.95))" :
+                   "linear-gradient(165deg, hsla(265,15%,14%,0.93), hsla(230,10%,9%,0.95))" :
+                   "linear-gradient(165deg, hsla(230,12%,13%,0.92), hsla(230,10%,10%,0.94))"
                 }}>
                     {p.badge &&
                   <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
