@@ -3275,7 +3275,7 @@ const LandingPage = () => {
 
             {/* ═══ Interactive AI Particle Sphere ═══ */}
             <motion.div
-              className="relative mt-6 sm:mt-8 w-screen sm:w-auto -ml-[calc((100vw-100%)/2)] sm:ml-0 sm:mx-auto overflow-visible flex items-center justify-center"
+              className="relative mt-6 sm:mt-8 w-full overflow-visible flex items-center justify-center mx-auto"
               style={{ transformOrigin: "center center" }}
               initial={{ opacity: 0, scale: 0.5, y: 40 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
