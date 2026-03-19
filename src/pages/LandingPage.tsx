@@ -2923,7 +2923,7 @@ const LandingPage = () => {
           </div>
 
           {/* ═══ Centered Logo — Ultra Premium Luxury ═══ */}
-          <a href="#hero" className="flex items-center gap-4 group relative absolute left-1/2 -translate-x-1/2 z-10 text-center rounded-full shadow-sm border-solid py-0">
+          <a href="#hero" className="flex items-center gap-4 group absolute left-1/2 -translate-x-1/2 z-10 text-center rounded-full shadow-sm border-solid py-0">
             {/* Outer breathing halo — soft gold */}
             <motion.div
               className="absolute -inset-14 rounded-full pointer-events-none"
