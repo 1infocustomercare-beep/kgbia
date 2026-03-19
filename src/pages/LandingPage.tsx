@@ -3018,7 +3018,7 @@ const LandingPage = () => {
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="lg:hidden overflow-hidden relative"
-          style={{ backgroundColor: "hsla(230,12%,5%,0.96)", backdropFilter: "blur(40px) saturate(1.8)" }}>
+          style={{ backgroundColor: "hsla(230,12%,5%,0.78)", backdropFilter: "blur(40px) saturate(1.8)" }}>
               {/* Top holographic line */}
               <motion.div className="h-[1.5px] w-full"
             style={{
