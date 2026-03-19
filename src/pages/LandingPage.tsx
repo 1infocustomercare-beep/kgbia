@@ -2647,13 +2647,16 @@ const LandingPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative">
+    <div
+      className="min-h-screen overflow-x-hidden relative"
+      style={{ background: "linear-gradient(180deg, hsl(var(--deep-black)) 0%, hsl(var(--deep-black)) 100%)" }}
+    >
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Subtle violet ambient orbs */}
-        <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.04] bg-primary -top-[200px] left-1/4" />
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.03] bg-accent top-[50vh] -right-[100px]" />
+        <div className="absolute w-[600px] h-[600px] rounded-full blur-[250px] opacity-[0.02] bg-primary -top-[200px] left-1/4" />
+        <div className="absolute w-[400px] h-[400px] rounded-full blur-[200px] opacity-[0.015] bg-accent top-[50vh] -right-[100px]" />
         {/* Particles - reduced */}
         <Particle delay={0} size={2} x="10%" y="30%" />
         <Particle delay={2} size={2} x="70%" y="60%" />
