@@ -2760,14 +2760,14 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
     const absDist = Math.abs(dist);
 
     if (absDist > 3) {
-      return { scale: 0.85, opacity: 0, rotateY: 0, zIndex: 0 };
+      return { scale: 0.85, opacity: 1, rotateY: 0, zIndex: 0 };
     }
 
     const configs: Record<number, { scale: number; opacity: number; rotateY: number; zIndex: number }> = {
       0: { scale: 1.1, opacity: 1, rotateY: 0, zIndex: 10 },
       1: { scale: 1.0, opacity: 1, rotateY: dist > 0 ? -2 : 2, zIndex: 5 },
-      2: { scale: 0.95, opacity: 0.85, rotateY: dist > 0 ? -4 : 4, zIndex: 3 },
-      3: { scale: 0.9, opacity: 0.7, rotateY: dist > 0 ? -6 : 6, zIndex: 1 },
+      2: { scale: 0.95, opacity: 1, rotateY: dist > 0 ? -4 : 4, zIndex: 3 },
+      3: { scale: 0.9, opacity: 1, rotateY: dist > 0 ? -6 : 6, zIndex: 1 },
     };
 
     return configs[absDist] || configs[3];
