@@ -6213,7 +6213,7 @@ const LandingPage = () => {
               initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}>
               
-              <Crown className="w-12 h-12 mx-auto mb-6 text-primary" style={{ filter: "drop-shadow(0 0 40px hsla(265,70%,60%,0.3))" }} />
+              <img src={empireLogoNew} alt="Empire AI" className="w-12 h-12 mx-auto mb-6 object-contain" style={{ filter: "drop-shadow(0 0 40px hsla(265,70%,60%,0.3))" }} />
             </motion.div>
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
