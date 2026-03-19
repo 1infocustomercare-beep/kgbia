@@ -4739,32 +4739,108 @@ const LandingPage = () => {
             <AnimatePresence mode="wait">
               {expandMockups ?
                 <motion.div key="mockups-grid" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-                className="grid grid-cols-2 gap-4 px-1">
-                  {mockups.map((mock, i) => {
-                    const tagColors: Record<string, string> = {
-                      "FRONT-END": "hsl(var(--primary))",
-                      "BACK-OFFICE": "hsl(var(--accent))",
-                      "OPERATIONS": "hsl(160, 60%, 45%)"
+                className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4 px-0.5">
+                  {(() => {
+                    const ALL_SECTOR_IMAGES: Record<string, string> = {
+                      food: sectorHeroFood, ncc: sectorHeroNcc, beauty: sectorHeroBeauty,
+                      healthcare: sectorHeroHealthcare, retail: sectorHeroRetail,
+                      fitness: sectorHeroFitness, hospitality: sectorHeroHotel,
+                      beach: sectorHeroBeach, plumber: sectorHeroPlumber, electrician: sectorHeroElectrician,
+                      construction: sectorHeroConstruction, events: sectorHeroEvents,
+                      garage: sectorHeroGarage, logistics: sectorHeroLogistics,
+                      gardening: sectorHeroGardening, veterinary: sectorHeroVeterinary,
+                      photography: sectorHeroPhotography, education: sectorHeroEducation,
+                      childcare: sectorHeroChildcare, tattoo: sectorHeroTattoo,
+                      cleaning: sectorHeroCleaning, agriturismo: sectorHeroAgriturismo,
+                      legal: sectorHeroLegal, accounting: sectorHeroAccounting,
+                      custom: sectorHeroCustom
                     };
-                    const tagColor = tagColors[mock.tag] || "hsl(var(--primary))";
-                    return (
-                      <div key={i} className="group flex flex-col items-center">
-                        <div className="relative mb-3">
-                          <div className="relative w-full max-w-[160px] aspect-[9/18] rounded-[28px] border-[2px] border-foreground/12 shadow-lg overflow-hidden" style={{ background: "hsl(var(--card))" }}>
-                            <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[50px] h-[14px] bg-foreground/80 rounded-full z-20" />
-                            <div className="absolute inset-[2px] rounded-[25px] overflow-hidden" style={{ background: "hsl(var(--background))" }}>
-                              <img src={mock.img} alt={mock.title} className="w-full h-full object-cover object-top" loading="lazy" />
-                              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(0,0%,0%,0.15) 0%, transparent 25%, transparent 40%, hsla(0,0%,0%,0.94) 70%, hsla(0,0%,0%,0.95) 100%)" }} />
-                              <div className="absolute bottom-4 left-2 right-2 z-10">
-                                <span className="px-1.5 py-[2px] rounded-md text-[0.38rem] font-bold tracking-[1px] uppercase" style={{ background: `${tagColor}22`, color: tagColor, border: `1px solid ${tagColor}30` }}>{mock.tag}</span>
-                                <h3 className="font-heading text-[0.7rem] font-bold text-white mt-1">{mock.title}</h3>
+                    const ALL_SECTOR_COLORS: Record<string, string> = {
+                      food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
+                      retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
+                      beach: "#06b6d4", plumber: "#3b82f6", electrician: "#eab308",
+                      construction: "#f59e0b", events: "#d946ef", garage: "#ef4444",
+                      logistics: "#0ea5e9", gardening: "#22c55e", veterinary: "#ec4899",
+                      photography: "#a855f7", education: "#0891b2", childcare: "#f472b6",
+                      tattoo: "#6d28d9", cleaning: "#14b8a6", agriturismo: "#65a30d",
+                      legal: "#64748b", accounting: "#6366f1", custom: "#8b5cf6"
+                    };
+                    const EXTRA_ID_MAP: Record<string, string> = {
+                      "Formazione & Coaching": "education", "Stabilimenti Balneari": "beach",
+                      "Veterinari & Pet Care": "veterinary", "Artigiani & Impiantisti": "plumber",
+                      "Studi Creativi": "photography", "Studi Legali": "legal",
+                      "Edilizia & Costruzioni": "construction", "Eventi & Catering": "events",
+                      "Autofficine & Carrozzerie": "garage", "Logistica & Spedizioni": "logistics",
+                      "Giardinaggio & Vivaisti": "gardening", "Asili & Doposcuola": "childcare"
+                    };
+                    /* Build full list: main industries + extra sectors */
+                    const allSectors: { id: string; title: string; image: string; color: string; route: string }[] = [];
+                    const seenIds = new Set<string>();
+                    industries.forEach((ind) => {
+                      seenIds.add(ind.id);
+                      const slug = DEMO_SLUGS[ind.id];
+                      allSectors.push({
+                        id: ind.id, title: ind.title,
+                        image: ALL_SECTOR_IMAGES[ind.id] || sectorHeroFood,
+                        color: ALL_SECTOR_COLORS[ind.id] || "#8b5cf6",
+                        route: ind.id === "food" ? `/r/${slug}` : `/demo/${slug}`
+                      });
+                    });
+                    extraSectors.forEach((es) => {
+                      const mappedId = EXTRA_ID_MAP[es.title];
+                      if (mappedId && !seenIds.has(mappedId)) {
+                        seenIds.add(mappedId);
+                        const slug = DEMO_SLUGS[mappedId as keyof typeof DEMO_SLUGS];
+                        if (slug) {
+                          allSectors.push({
+                            id: mappedId, title: es.title,
+                            image: ALL_SECTOR_IMAGES[mappedId] || sectorHeroFood,
+                            color: ALL_SECTOR_COLORS[mappedId] || "#8b5cf6",
+                            route: `/demo/${slug}`
+                          });
+                        }
+                      }
+                    });
+                    /* Add remaining sectors not yet added */
+                    Object.keys(ALL_SECTOR_IMAGES).forEach((sId) => {
+                      if (!seenIds.has(sId)) {
+                        seenIds.add(sId);
+                        const slug = DEMO_SLUGS[sId as keyof typeof DEMO_SLUGS];
+                        const label = sId.charAt(0).toUpperCase() + sId.slice(1);
+                        allSectors.push({
+                          id: sId, title: label,
+                          image: ALL_SECTOR_IMAGES[sId],
+                          color: ALL_SECTOR_COLORS[sId] || "#8b5cf6",
+                          route: slug ? `/demo/${slug}` : "#"
+                        });
+                      }
+                    });
+
+                    return allSectors.map((s, i) => (
+                      <motion.div key={s.id} className="group cursor-pointer"
+                      initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.02 }}
+                      onClick={() => navigate(s.route)}>
+                        <div className="relative mb-1.5">
+                          <div className="relative w-full aspect-[9/17] rounded-[20px] sm:rounded-[26px] border-[2px] overflow-hidden transition-all duration-300 group-hover:shadow-lg"
+                          style={{ borderColor: `${s.color}30`, boxShadow: `0 8px 25px hsla(0,0%,0%,0.4), 0 0 15px ${s.color}08` }}>
+                            {/* Dynamic Island */}
+                            <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[36px] sm:w-[46px] h-[10px] sm:h-[14px] bg-black rounded-full z-20" />
+                            <div className="absolute inset-[2px] rounded-[18px] sm:rounded-[23px] overflow-hidden bg-black">
+                              <img src={s.image} alt={s.title} className="w-full h-full object-cover object-top" loading="lazy" />
+                              {/* Bottom gradient */}
+                              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, transparent 50%, hsla(0,0%,0%,0.85) 80%, hsla(0,0%,0%,0.95) 100%)" }} />
+                              {/* Title overlay */}
+                              <div className="absolute bottom-2 sm:bottom-3 left-1.5 right-1.5 z-10">
+                                <h4 className="font-heading text-[0.5rem] sm:text-[0.65rem] font-bold text-white leading-tight truncate">{s.title}</h4>
                               </div>
                             </div>
+                            {/* Home indicator */}
+                            <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[40px] sm:w-[55px] h-[2.5px] bg-foreground/15 rounded-full z-20" />
                           </div>
                         </div>
-                      </div>);
-
-                  })}
+                      </motion.div>
+                    ));
+                  })()}
                 </motion.div> :
 
                 <motion.div key="mockups-carousel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
