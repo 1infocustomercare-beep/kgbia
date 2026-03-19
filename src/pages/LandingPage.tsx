@@ -366,8 +366,8 @@ const NeuralCellsBackground = () => {
         </>
       }
 
-      {/* ═══ TECH CIRCUIT GRID — desktop only (heavy SVG patterns) ═══ */}
-      {!isMobile &&
+      {/* ═══ TECH CIRCUIT GRID ═══ */}
+      {
       <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.045 }} xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="bg-circuit-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(2.2)">
