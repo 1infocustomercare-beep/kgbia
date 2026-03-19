@@ -20,6 +20,8 @@ import {
   ChevronDown, Menu, X, Quote, Users, CheckCircle, ChevronRight, ChevronLeft
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import { DemoPricingSection } from "@/components/public/DemoPricingSection";
+import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import bakeryHeroPoster from "@/assets/bakery-croissant.jpg";
 
