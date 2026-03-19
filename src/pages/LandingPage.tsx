@@ -2659,7 +2659,7 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════ NEURAL CELLS BACKGROUND ═══════ */}
-      <div className="hidden sm:block">
+      <div>
         <NeuralCellsBackground />
       </div>
 
