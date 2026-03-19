@@ -122,11 +122,15 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-/** Reduce section background alpha so the DNA circuit canvas shows THROUGH sections */
+/** Reduce section background alpha so the DNA circuit canvas shows through edges/gaps.
+ *  Replaces alpha=1 with 0.88 so circuit bleeds through subtly without hurting readability. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !style.background || typeof style.background !== "string") return style;
-  // Already handled by lowered alpha values in section styles
-  return style;
+  // Replace all alpha=1 in hsla() with 0.88 for circuit visibility
+  const bg = style.background.replace(/hsla\(([^)]+),\s*1\)/g, (match, inner) => {
+    return `hsla(${inner},0.88)`;
+  });
+  return { ...style, background: bg };
 };
 
 const Section = forwardRef<HTMLElement, {id?: string;children: React.ReactNode;className?: string;style?: React.CSSProperties;}>(
