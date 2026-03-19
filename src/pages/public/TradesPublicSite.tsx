@@ -18,31 +18,291 @@ import {
   Wrench, Zap, Star, Phone, Mail, MapPin, Clock, Calendar,
   Shield, CheckCircle, Send, Award, Users, FileText,
   Hammer, Lightbulb, Droplets, Settings, AlertTriangle,
-  Sparkles, ChevronDown, Menu, X
+  Sparkles, ChevronDown, Menu, X, Camera, Baby, BookOpen,
+  GraduationCap, HardHat, Truck, Car, Heart, Package, Scissors,
+  Palette, Music, Building, TreePine, Stethoscope, Scale
 } from "lucide-react";
 import { type IndustryId, getIndustryConfig } from "@/config/industry-config";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { HeroPhotoCarousel } from "@/components/public/HeroPhotoCarousel";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
+
 /* ─── DYNAMIC PALETTE PER TRADE TYPE ─── */
-const PALETTES: Record<string, { accent: string; dark: string; glow: string }> = {
-  electrician: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4" },
-  plumber: { accent: "#3B82F6", dark: "#060A10", glow: "#DBEAFE" },
-  construction: { accent: "#EF6C00", dark: "#0A0704", glow: "#FFE0B2" },
-  gardening: { accent: "#4CAF50", dark: "#040A04", glow: "#C8E6C9" },
-  cleaning: { accent: "#00BCD4", dark: "#040A0A", glow: "#B2EBF2" },
-  garage: { accent: "#E53935", dark: "#0A0404", glow: "#FFCDD2" },
-  photography: { accent: "#AB47BC", dark: "#0A040A", glow: "#E1BEE7" },
-  veterinary: { accent: "#66BB6A", dark: "#040A04", glow: "#C8E6C9" },
-  tattoo: { accent: "#F44336", dark: "#0A0404", glow: "#FFCDD2" },
-  childcare: { accent: "#FF9800", dark: "#0A0804", glow: "#FFE0B2" },
-  education: { accent: "#2196F3", dark: "#04080A", glow: "#BBDEFB" },
-  events: { accent: "#E91E63", dark: "#0A0408", glow: "#F8BBD0" },
-  logistics: { accent: "#607D8B", dark: "#060808", glow: "#CFD8DC" },
-  agriturismo: { accent: "#8BC34A", dark: "#060A04", glow: "#DCEDC8" },
-  legal: { accent: "#795548", dark: "#080604", glow: "#D7CCC8" },
-  accounting: { accent: "#009688", dark: "#040A08", glow: "#B2DFDB" },
-  default: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4" },
+const PALETTES: Record<string, { accent: string; dark: string; glow: string; heroLayout: "standard" | "split" | "centered" | "bold" | "elegant" }> = {
+  electrician: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4", heroLayout: "bold" },
+  plumber: { accent: "#3B82F6", dark: "#060A10", glow: "#DBEAFE", heroLayout: "standard" },
+  construction: { accent: "#EF6C00", dark: "#0A0704", glow: "#FFE0B2", heroLayout: "bold" },
+  gardening: { accent: "#4CAF50", dark: "#040A04", glow: "#C8E6C9", heroLayout: "elegant" },
+  cleaning: { accent: "#00BCD4", dark: "#040A0A", glow: "#B2EBF2", heroLayout: "centered" },
+  garage: { accent: "#E53935", dark: "#0A0404", glow: "#FFCDD2", heroLayout: "bold" },
+  photography: { accent: "#AB47BC", dark: "#0A040A", glow: "#E1BEE7", heroLayout: "elegant" },
+  veterinary: { accent: "#66BB6A", dark: "#040A04", glow: "#C8E6C9", heroLayout: "split" },
+  tattoo: { accent: "#F44336", dark: "#0A0404", glow: "#FFCDD2", heroLayout: "bold" },
+  childcare: { accent: "#FF9800", dark: "#0A0804", glow: "#FFE0B2", heroLayout: "centered" },
+  education: { accent: "#2196F3", dark: "#04080A", glow: "#BBDEFB", heroLayout: "split" },
+  events: { accent: "#E91E63", dark: "#0A0408", glow: "#F8BBD0", heroLayout: "elegant" },
+  logistics: { accent: "#607D8B", dark: "#060808", glow: "#CFD8DC", heroLayout: "standard" },
+  agriturismo: { accent: "#8BC34A", dark: "#060A04", glow: "#DCEDC8", heroLayout: "elegant" },
+  legal: { accent: "#795548", dark: "#080604", glow: "#D7CCC8", heroLayout: "split" },
+  accounting: { accent: "#009688", dark: "#040A08", glow: "#B2DFDB", heroLayout: "centered" },
+  default: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4", heroLayout: "standard" },
+};
+
+/* ─── SECTOR-SPECIFIC SERVICES ─── */
+const SECTOR_SERVICES: Record<string, { emoji: string; name: string; desc: string }[]> = {
+  electrician: [
+    { emoji: "⚡", name: "Impianti Elettrici", desc: "Installazione e messa a norma" },
+    { emoji: "💡", name: "Illuminazione", desc: "LED, faretti, lampadari design" },
+    { emoji: "🔌", name: "Quadri Elettrici", desc: "Progettazione e installazione" },
+    { emoji: "🏠", name: "Domotica", desc: "Casa intelligente e automazioni" },
+    { emoji: "📋", name: "Certificazioni", desc: "Dichiarazioni di conformità" },
+    { emoji: "🚨", name: "Pronto Intervento", desc: "Emergenze elettriche 24h" },
+  ],
+  plumber: [
+    { emoji: "🔧", name: "Riparazioni", desc: "Perdite, guasti e emergenze" },
+    { emoji: "🚿", name: "Impianti Idrici", desc: "Bagni, cucine e lavanderie" },
+    { emoji: "🔥", name: "Caldaie", desc: "Installazione e manutenzione" },
+    { emoji: "❄️", name: "Riscaldamento", desc: "Termosifoni e pavimento radiante" },
+    { emoji: "🏗️", name: "Ristrutturazioni", desc: "Rifacimento bagni e impianti" },
+    { emoji: "🚨", name: "Pronto Intervento", desc: "Emergenze allagamenti 24h" },
+  ],
+  construction: [
+    { emoji: "🏗️", name: "Costruzioni", desc: "Nuove edificazioni residenziali e commerciali" },
+    { emoji: "🔨", name: "Ristrutturazioni", desc: "Rinnovo completo di interni ed esterni" },
+    { emoji: "📐", name: "Progettazione", desc: "Rendering 3D e computi metrici" },
+    { emoji: "🏢", name: "Edilizia Commerciale", desc: "Uffici, negozi e spazi pubblici" },
+    { emoji: "🛡️", name: "Sicurezza Cantiere", desc: "Certificazioni e piani di sicurezza" },
+    { emoji: "📋", name: "Pratiche Edilizie", desc: "SCIA, permessi e collaudi" },
+  ],
+  gardening: [
+    { emoji: "🌿", name: "Manutenzione Giardini", desc: "Potatura, taglio erba e concimazione" },
+    { emoji: "🌺", name: "Progettazione Verde", desc: "Design giardini e terrazze" },
+    { emoji: "🌳", name: "Potatura Alberi", desc: "Abbattimento e potatura in quota" },
+    { emoji: "💧", name: "Irrigazione", desc: "Impianti automatici smart" },
+    { emoji: "🪴", name: "Vivaio", desc: "Vendita piante e fioriere" },
+    { emoji: "🏡", name: "Piscine & Esterni", desc: "Allestimento aree esterne" },
+  ],
+  cleaning: [
+    { emoji: "✨", name: "Pulizie Uffici", desc: "Sanificazione e pulizia professionale" },
+    { emoji: "🏠", name: "Pulizie Domestiche", desc: "Servizio regolare o straordinario" },
+    { emoji: "🏗️", name: "Post Cantiere", desc: "Pulizia fine lavori specializzata" },
+    { emoji: "🏥", name: "Sanificazione", desc: "Trattamenti certificati anti-batteri" },
+    { emoji: "🪟", name: "Vetri & Facciate", desc: "Pulizia vetrate e superfici esterne" },
+    { emoji: "📋", name: "Contratti Fissi", desc: "Abbonamenti settimanali e mensili" },
+  ],
+  garage: [
+    { emoji: "🔧", name: "Tagliandi", desc: "Manutenzione ordinaria completa" },
+    { emoji: "🛞", name: "Pneumatici", desc: "Cambio gomme e convergenza" },
+    { emoji: "🔩", name: "Riparazioni", desc: "Meccanica, elettronica e carrozzeria" },
+    { emoji: "📋", name: "Revisioni", desc: "Revisione ministeriale e pre-revisione" },
+    { emoji: "🎨", name: "Carrozzeria", desc: "Verniciatura e riparazione danni" },
+    { emoji: "🚗", name: "Diagnostica", desc: "Analisi computerizzata motore" },
+  ],
+  photography: [
+    { emoji: "📸", name: "Shooting Professionali", desc: "Ritratti, still life e corporate" },
+    { emoji: "💒", name: "Matrimoni", desc: "Servizio completo cerimonia e ricevimento" },
+    { emoji: "🎬", name: "Video & Reel", desc: "Video professionali e contenuti social" },
+    { emoji: "🏢", name: "Corporate", desc: "Foto aziendali, team e prodotti" },
+    { emoji: "🖼️", name: "Post-Produzione", desc: "Ritocco professionale e consegna digitale" },
+    { emoji: "📱", name: "Social Content", desc: "Pacchetti foto per Instagram e TikTok" },
+  ],
+  veterinary: [
+    { emoji: "🐕", name: "Visite Generali", desc: "Check-up completo e vaccinazioni" },
+    { emoji: "🔬", name: "Diagnostica", desc: "Esami sangue, ecografie e radiografie" },
+    { emoji: "💊", name: "Farmacia", desc: "Medicinali veterinari e integratori" },
+    { emoji: "🦷", name: "Odontoiatria", desc: "Pulizia e cure dentali" },
+    { emoji: "✂️", name: "Chirurgia", desc: "Interventi programmati e d'urgenza" },
+    { emoji: "🚨", name: "Emergenze H24", desc: "Pronto soccorso veterinario" },
+  ],
+  tattoo: [
+    { emoji: "🎨", name: "Tattoo Custom", desc: "Design personalizzato su misura" },
+    { emoji: "⚡", name: "Flash Tattoo", desc: "Disegni pronti a prezzo fisso" },
+    { emoji: "🔄", name: "Cover-Up", desc: "Copertura tatuaggi esistenti" },
+    { emoji: "✨", name: "Ritocchi", desc: "Rinfreschi e correzioni colore" },
+    { emoji: "💎", name: "Piercing", desc: "Piercing professionali con gioielli" },
+    { emoji: "🖋️", name: "Lettering", desc: "Scritte calligrafiche e tipografiche" },
+  ],
+  childcare: [
+    { emoji: "👶", name: "Nido (0-3 anni)", desc: "Accoglienza e sviluppo prima infanzia" },
+    { emoji: "🎨", name: "Laboratori Creativi", desc: "Arte, musica e attività manuali" },
+    { emoji: "📚", name: "Pre-Scuola", desc: "Preparazione alla scuola dell'infanzia" },
+    { emoji: "🌿", name: "Attività all'Aperto", desc: "Giardino sensoriale e gioco libero" },
+    { emoji: "🍎", name: "Mensa Bio", desc: "Pasti freschi e biologici quotidiani" },
+    { emoji: "⏰", name: "Orario Flessibile", desc: "Part-time, full-time e prolungato" },
+  ],
+  education: [
+    { emoji: "📖", name: "Corsi in Aula", desc: "Formazione frontale con esperti" },
+    { emoji: "💻", name: "E-Learning", desc: "Piattaforma online con video e quiz" },
+    { emoji: "🎓", name: "Certificazioni", desc: "Attestati riconosciuti e accreditati" },
+    { emoji: "👥", name: "Workshop", desc: "Laboratori pratici in piccoli gruppi" },
+    { emoji: "🏢", name: "Corsi Aziendali", desc: "Formazione su misura per imprese" },
+    { emoji: "📱", name: "Tutoring 1:1", desc: "Lezioni individuali online e in sede" },
+  ],
+  events: [
+    { emoji: "💒", name: "Matrimoni", desc: "Organizzazione completa dalla A alla Z" },
+    { emoji: "🎉", name: "Feste Private", desc: "Compleanni, anniversari e celebrazioni" },
+    { emoji: "🏢", name: "Corporate", desc: "Convention, team building e gala dinner" },
+    { emoji: "🎵", name: "Concerti & Festival", desc: "Produzione eventi musicali e live" },
+    { emoji: "🍽️", name: "Catering", desc: "Servizio banqueting e chef a domicilio" },
+    { emoji: "📸", name: "Allestimenti", desc: "Scenografie, luci e decorazioni" },
+  ],
+  logistics: [
+    { emoji: "📦", name: "Spedizioni", desc: "Nazionali e internazionali" },
+    { emoji: "🚛", name: "Trasporto Merci", desc: "Carichi completi e groupage" },
+    { emoji: "🏭", name: "Magazzino", desc: "Stoccaggio e logistica integrata" },
+    { emoji: "📋", name: "Documenti", desc: "Pratiche doganali e bolle" },
+    { emoji: "🔍", name: "Tracking", desc: "Monitoraggio spedizioni in tempo reale" },
+    { emoji: "⏰", name: "Same-Day", desc: "Consegne espresse entro giornata" },
+  ],
+  agriturismo: [
+    { emoji: "🏡", name: "Soggiorni", desc: "Camere e appartamenti immersi nel verde" },
+    { emoji: "🍷", name: "Degustazioni", desc: "Vini, oli e prodotti della terra" },
+    { emoji: "🌾", name: "Fattoria Didattica", desc: "Esperienze educative per famiglie" },
+    { emoji: "🍝", name: "Ristorante km0", desc: "Cucina tipica con ingredienti locali" },
+    { emoji: "🚲", name: "Attività Outdoor", desc: "Trekking, bike e passeggiate a cavallo" },
+    { emoji: "🛒", name: "Shop Prodotti", desc: "Vendita diretta e spedizione" },
+  ],
+  legal: [
+    { emoji: "⚖️", name: "Diritto Civile", desc: "Contratti, successioni e proprietà" },
+    { emoji: "🏢", name: "Diritto Societario", desc: "Costituzioni, fusioni e acquisizioni" },
+    { emoji: "👷", name: "Diritto del Lavoro", desc: "Assunzioni, licenziamenti e vertenze" },
+    { emoji: "🏠", name: "Diritto Immobiliare", desc: "Compravendite, locazioni e condominio" },
+    { emoji: "💰", name: "Recupero Crediti", desc: "Ingiunzioni e procedure esecutive" },
+    { emoji: "🛡️", name: "Tutela Consumatore", desc: "Reclami, garanzie e risarcimenti" },
+  ],
+  accounting: [
+    { emoji: "📊", name: "Contabilità", desc: "Tenuta libri e registri obbligatori" },
+    { emoji: "📄", name: "Dichiarazioni", desc: "730, Unico, IVA e tutte le scadenze" },
+    { emoji: "💼", name: "Consulenza Fiscale", desc: "Pianificazione e ottimizzazione fiscale" },
+    { emoji: "🏢", name: "Bilanci", desc: "Redazione e deposito bilanci societari" },
+    { emoji: "📋", name: "Buste Paga", desc: "Elaborazione cedolini e contributi" },
+    { emoji: "🚀", name: "Start-up", desc: "Apertura P.IVA e avvio attività" },
+  ],
+};
+
+/* ─── SECTOR-SPECIFIC INTERVENTION TYPES ─── */
+const SECTOR_INTERVENTION_TYPES: Record<string, string[]> = {
+  electrician: ["Impianto elettrico", "Messa a norma", "Corto circuito", "Installazione luci", "Quadro elettrico", "Domotica", "Certificazione", "Altro"],
+  plumber: ["Perdita acqua", "Scarico intasato", "Sanitari", "Caldaia", "Riscaldamento", "Impianto idrico", "Emergenza allagamento", "Altro"],
+  construction: ["Nuova costruzione", "Ristrutturazione", "Pratica edilizia", "Sopralluogo", "Preventivo", "Altro"],
+  gardening: ["Manutenzione giardino", "Potatura alberi", "Progettazione verde", "Irrigazione", "Emergenza", "Altro"],
+  cleaning: ["Pulizia uffici", "Pulizia domestica", "Post cantiere", "Sanificazione", "Preventivo", "Altro"],
+  garage: ["Tagliando", "Riparazione", "Revisione", "Cambio gomme", "Carrozzeria", "Diagnostica", "Altro"],
+  photography: ["Shooting ritratto", "Matrimonio", "Corporate", "Prodotto", "Video", "Social content", "Altro"],
+  veterinary: ["Visita generica", "Vaccinazione", "Emergenza", "Chirurgia", "Esami diagnostici", "Altro"],
+  tattoo: ["Tattoo custom", "Flash tattoo", "Cover-up", "Ritocco", "Piercing", "Consultazione", "Altro"],
+  childcare: ["Iscrizione nido", "Info orari", "Visita struttura", "Richiesta info", "Altro"],
+  education: ["Iscrizione corso", "Info programma", "Certificazione", "Tutoring", "Info aziendali", "Altro"],
+  events: ["Matrimonio", "Festa privata", "Evento corporate", "Catering", "Preventivo", "Altro"],
+  logistics: ["Spedizione nazionale", "Spedizione internazionale", "Trasporto merci", "Magazzino", "Preventivo", "Altro"],
+  agriturismo: ["Prenotazione camera", "Degustazione", "Fattoria didattica", "Info ristorante", "Altro"],
+  legal: ["Consulenza civile", "Consulenza lavoro", "Consulenza societaria", "Recupero crediti", "Appuntamento", "Altro"],
+  accounting: ["Dichiarazione redditi", "Apertura P.IVA", "Consulenza fiscale", "Buste paga", "Bilancio", "Altro"],
+};
+
+/* ─── SECTOR-SPECIFIC WHY US ─── */
+const SECTOR_WHY_US: Record<string, { icon: typeof Shield; title: string; desc: string }[]> = {
+  photography: [
+    { icon: Camera, title: "Portfolio Premiato", desc: "Oltre 500 servizi fotografici realizzati" },
+    { icon: Clock, title: "Consegna Rapida", desc: "Gallery pronta in 48-72 ore" },
+    { icon: Award, title: "Stile Unico", desc: "Storytelling visivo personalizzato" },
+    { icon: Shield, title: "Backup Garantito", desc: "Doppia copia di ogni scatto" },
+    { icon: CheckCircle, title: "Prezzi Chiari", desc: "Pacchetti completi senza sorprese" },
+    { icon: Heart, title: "Passione", desc: "Ogni progetto è unico per noi" },
+  ],
+  veterinary: [
+    { icon: Stethoscope, title: "Staff Specializzato", desc: "Veterinari con 15+ anni di esperienza" },
+    { icon: Clock, title: "Emergenze H24", desc: "Pronto soccorso sempre disponibile" },
+    { icon: Heart, title: "Amore per gli Animali", desc: "Ambiente confortevole e accogliente" },
+    { icon: Shield, title: "Attrezzatura Moderna", desc: "Ecografo, radiologia e laboratorio interno" },
+    { icon: CheckCircle, title: "Prezzi Trasparenti", desc: "Preventivo prima di ogni intervento" },
+    { icon: Award, title: "Certificati", desc: "Struttura autorizzata ASL" },
+  ],
+  events: [
+    { icon: Sparkles, title: "Creatività", desc: "Ogni evento è un'esperienza unica" },
+    { icon: Users, title: "Team Esperto", desc: "Coordinamento perfetto di ogni dettaglio" },
+    { icon: Shield, title: "Assicurazione", desc: "Copertura completa per ogni evento" },
+    { icon: Clock, title: "Puntualità", desc: "Rispetto rigoroso delle tempistiche" },
+    { icon: Award, title: "500+ Eventi", desc: "Esperienza in ogni tipo di occasione" },
+    { icon: CheckCircle, title: "Budget su Misura", desc: "Soluzioni per ogni fascia di prezzo" },
+  ],
+  childcare: [
+    { icon: Heart, title: "Ambiente Sicuro", desc: "Spazi a norma con videosorveglianza" },
+    { icon: Users, title: "Educatrici Certificate", desc: "Personale qualificato e formato" },
+    { icon: Shield, title: "Norme HACCP", desc: "Cucina interna con pasti biologici" },
+    { icon: Clock, title: "Orari Flessibili", desc: "Part-time, full-time e prolungato" },
+    { icon: Award, title: "Metodo Montessori", desc: "Approccio educativo comprovato" },
+    { icon: Sparkles, title: "Spazi Verdi", desc: "Giardino sensoriale e area gioco" },
+  ],
+  tattoo: [
+    { icon: Award, title: "Artisti Premiati", desc: "Portfolio con migliaia di lavori" },
+    { icon: Shield, title: "Igiene Certificata", desc: "Sterilizzazione e materiali monouso" },
+    { icon: Palette, title: "Stili Unici", desc: "Realistico, old school, Japanese, minimal" },
+    { icon: CheckCircle, title: "Consulenza Gratuita", desc: "Incontro per definire il progetto" },
+    { icon: Heart, title: "Cura Post-Tattoo", desc: "Follow-up e istruzioni dettagliate" },
+    { icon: Clock, title: "Su Appuntamento", desc: "Sessioni dedicate e rilassate" },
+  ],
+};
+
+/* ─── SECTOR-SPECIFIC STATS ─── */
+const SECTOR_STATS: Record<string, { value: string; label: string }[]> = {
+  photography: [{ value: "500+", label: "Servizi" }, { value: "50k+", label: "Foto Consegnate" }, { value: "100%", label: "Soddisfatti" }],
+  veterinary: [{ value: "3.000+", label: "Pazienti" }, { value: "15+", label: "Anni Esperienza" }, { value: "H24", label: "Emergenze" }],
+  events: [{ value: "500+", label: "Eventi" }, { value: "98%", label: "Soddisfatti" }, { value: "50+", label: "Fornitori" }],
+  childcare: [{ value: "120+", label: "Bambini" }, { value: "15+", label: "Educatrici" }, { value: "Bio", label: "Cucina Interna" }],
+  tattoo: [{ value: "5.000+", label: "Tatuaggi" }, { value: "4.9★", label: "Rating" }, { value: "15+", label: "Anni Esperienza" }],
+  education: [{ value: "2.000+", label: "Studenti" }, { value: "50+", label: "Corsi" }, { value: "95%", label: "Completamento" }],
+  construction: [{ value: "200+", label: "Cantieri" }, { value: "€50M+", label: "Valore Lavori" }, { value: "30+", label: "Anni" }],
+  gardening: [{ value: "800+", label: "Giardini" }, { value: "98%", label: "Soddisfatti" }, { value: "Bio", label: "Prodotti" }],
+  cleaning: [{ value: "300+", label: "Clienti" }, { value: "99%", label: "Soddisfatti" }, { value: "H24", label: "Disponibili" }],
+  garage: [{ value: "10.000+", label: "Veicoli" }, { value: "4.8★", label: "Rating" }, { value: "Autorizzato", label: "Revisioni" }],
+  logistics: [{ value: "50.000+", label: "Spedizioni" }, { value: "99.2%", label: "On-Time" }, { value: "24h", label: "Same-Day" }],
+  legal: [{ value: "2.000+", label: "Pratiche" }, { value: "30+", label: "Anni Esperienza" }, { value: "98%", label: "Casi Vinti" }],
+  accounting: [{ value: "500+", label: "Clienti" }, { value: "100%", label: "Puntualità" }, { value: "€0", label: "Sanzioni" }],
+  agriturismo: [{ value: "1.500+", label: "Ospiti/Anno" }, { value: "4.9★", label: "Rating" }, { value: "km0", label: "Cucina" }],
+};
+
+/* ─── SECTOR-SPECIFIC TICKER ITEMS ─── */
+const SECTOR_TICKERS: Record<string, string[]> = {
+  electrician: ["IMPIANTI ELETTRICI", "DOMOTICA", "MESSA A NORMA", "QUADRI ELETTRICI", "LED", "CERTIFICAZIONI", "H24"],
+  plumber: ["RIPARAZIONI", "CALDAIE", "IMPIANTI IDRICI", "SCARICHI", "RISCALDAMENTO", "RISTRUTTURAZIONI", "H24"],
+  construction: ["COSTRUZIONI", "RISTRUTTURAZIONI", "CANTIERI", "PROGETTAZIONE 3D", "PRATICHE EDILIZIE", "SICUREZZA"],
+  gardening: ["GIARDINI", "POTATURA", "IRRIGAZIONE", "PROGETTAZIONE VERDE", "VIVAIO", "MANUTENZIONE"],
+  cleaning: ["PULIZIE PROFESSIONALI", "SANIFICAZIONE", "UFFICI", "CONDOMINI", "POST CANTIERE", "CERTIFICATA"],
+  garage: ["TAGLIANDI", "REVISIONI", "CARROZZERIA", "DIAGNOSTICA", "GOMME", "AUTORIZZATO"],
+  photography: ["SHOOTING", "MATRIMONI", "CORPORATE", "VIDEO", "POST-PRODUZIONE", "SOCIAL CONTENT"],
+  veterinary: ["VISITE", "VACCINAZIONI", "CHIRURGIA", "DIAGNOSTICA", "EMERGENZE H24", "FARMACIA"],
+  tattoo: ["TATTOO CUSTOM", "FLASH", "COVER-UP", "PIERCING", "LETTERING", "REALISTICO"],
+  childcare: ["NIDO", "LABORATORI", "PRE-SCUOLA", "MENSA BIO", "MONTESSORI", "SICURO"],
+  education: ["CORSI", "E-LEARNING", "CERTIFICAZIONI", "WORKSHOP", "TUTORING", "AZIENDALI"],
+  events: ["MATRIMONI", "FESTE", "CORPORATE", "CATERING", "ALLESTIMENTI", "CONCERTI"],
+  logistics: ["SPEDIZIONI", "TRACKING", "MAGAZZINO", "SAME-DAY", "INTERNAZIONALI", "GROUPAGE"],
+  agriturismo: ["SOGGIORNI", "DEGUSTAZIONI", "FATTORIA", "KM ZERO", "OUTDOOR", "PRODOTTI LOCALI"],
+  legal: ["DIRITTO CIVILE", "LAVORO", "SOCIETARIO", "IMMOBILIARE", "CREDITI", "CONSULENZA"],
+  accounting: ["CONTABILITÀ", "DICHIARAZIONI", "FISCALE", "BILANCI", "BUSTE PAGA", "START-UP"],
+};
+
+/* ─── SECTOR CTA LABELS ─── */
+const SECTOR_CTA: Record<string, { primary: string; secondary: string; formTitle: string; formSubtitle: string }> = {
+  photography: { primary: "Prenota Shooting", secondary: "Vedi Portfolio", formTitle: "Richiedi Preventivo", formSubtitle: "Descrivi il servizio che cerchi" },
+  veterinary: { primary: "Prenota Visita", secondary: "Emergenza? Chiama", formTitle: "Prenota Appuntamento", formSubtitle: "Il tuo animale in buone mani" },
+  events: { primary: "Organizza Evento", secondary: "Vedi Portfolio", formTitle: "Richiedi Preventivo", formSubtitle: "Raccontaci il tuo evento dei sogni" },
+  childcare: { primary: "Prenota Visita", secondary: "Info Iscrizioni", formTitle: "Richiedi Informazioni", formSubtitle: "Prenota una visita alla struttura" },
+  tattoo: { primary: "Prenota Sessione", secondary: "Vedi Portfolio", formTitle: "Prenota Appuntamento", formSubtitle: "Descrivi il tatuaggio che desideri" },
+  education: { primary: "Iscriviti Ora", secondary: "Catalogo Corsi", formTitle: "Richiedi Informazioni", formSubtitle: "Scegli il percorso formativo ideale" },
+  construction: { primary: "Richiedi Preventivo", secondary: "Vedi Cantieri", formTitle: "Preventivo Gratuito", formSubtitle: "Descrivi il tuo progetto edilizio" },
+  legal: { primary: "Prenota Consulenza", secondary: "Info Studio", formTitle: "Prenota Consulenza", formSubtitle: "Primo incontro conoscitivo gratuito" },
+  accounting: { primary: "Prenota Consulenza", secondary: "Info Servizi", formTitle: "Richiedi Preventivo", formSubtitle: "Gestione fiscale senza pensieri" },
+  logistics: { primary: "Richiedi Preventivo", secondary: "Tracking", formTitle: "Preventivo Spedizione", formSubtitle: "Calcola il costo della tua spedizione" },
+  default: { primary: "Preventivo Gratuito", secondary: "Emergenza? Chiama", formTitle: "Preventivo Gratuito", formSubtitle: "Descrivi il problema e ti rispondiamo in meno di 1 ora" },
+};
+
+/* ─── SECTOR HERO ICONS ─── */
+const SECTOR_HERO_ICONS: Record<string, typeof Wrench> = {
+  electrician: Zap, plumber: Droplets, construction: HardHat, gardening: TreePine,
+  cleaning: Sparkles, garage: Car, photography: Camera, veterinary: Heart,
+  tattoo: Palette, childcare: Baby, education: GraduationCap, events: Music,
+  logistics: Truck, agriturismo: TreePine, legal: Scale, accounting: FileText,
 };
 
 const fadeUp = {
@@ -66,13 +326,12 @@ Section.displayName = "Section";
 
 interface Props { company: any; afterHero?: React.ReactNode; }
 
-
 const HERO_VIDEOS: Record<string, string> = {
   construction: "https://videos.pexels.com/video-files/5698648/5698648-uhd_2560_1440_25fps.mp4",
   education: "https://videos.pexels.com/video-files/5198164/5198164-uhd_2560_1440_25fps.mp4",
 };
 
-/* ─── PROFESSIONAL HERO PHOTOS per sector (used when no matching video exists) ─── */
+/* ─── PROFESSIONAL HERO PHOTOS per sector ─── */
 const HERO_PHOTOS: Record<string, string[]> = {
   electrician: [
     "https://images.pexels.com/photos/8005397/pexels-photo-8005397.jpeg?auto=compress&cs=tinysrgb&w=1600",
@@ -173,10 +432,8 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
   const palette = PALETTES[industry] || PALETTES.default;
   const A = palette.accent;
   const D = palette.dark;
-  const isElectrician = industry === "electrician";
-  const isPlumber = industry === "plumber";
-  const HeroIcon = isElectrician ? Zap : isPlumber ? Droplets : Wrench;
-  const heroVideo = HERO_VIDEOS[industry]; // only set for verified matching videos
+  const HeroIcon = SECTOR_HERO_ICONS[industry] || Wrench;
+  const heroVideo = HERO_VIDEOS[industry];
   const heroPhotos = HERO_PHOTOS[industry] || HERO_PHOTOS.default;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
@@ -204,36 +461,9 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
     setForm({ name: "", phone: "", email: "", type: "", urgency: "normal", address: "", notes: "" });
   };
 
-  const interventionTypes = isElectrician
-    ? ["Impianto elettrico", "Messa a norma", "Corto circuito", "Installazione luci", "Quadro elettrico", "Domotica", "Certificazione", "Altro"]
-    : isPlumber
-    ? ["Perdita acqua", "Scarico intasato", "Sanitari", "Caldaia", "Riscaldamento", "Impianto idrico", "Emergenza allagamento", "Altro"]
-    : ["Riparazione", "Installazione", "Manutenzione", "Emergenza", "Preventivo", "Altro"];
-
-  const services = isElectrician ? [
-    { emoji: "⚡", name: "Impianti Elettrici", desc: "Installazione e messa a norma" },
-    { emoji: "💡", name: "Illuminazione", desc: "LED, faretti, lampadari" },
-    { emoji: "🔌", name: "Quadri Elettrici", desc: "Progettazione e installazione" },
-    { emoji: "🏠", name: "Domotica", desc: "Casa intelligente e automazioni" },
-    { emoji: "📋", name: "Certificazioni", desc: "Dichiarazioni di conformità" },
-    { emoji: "🚨", name: "Pronto Intervento", desc: "Emergenze 24h" },
-  ] : isPlumber ? [
-    { emoji: "🔧", name: "Riparazioni", desc: "Perdite, guasti e emergenze" },
-    { emoji: "🚿", name: "Impianti Idrici", desc: "Bagni, cucine e lavanderie" },
-    { emoji: "🔥", name: "Caldaie", desc: "Installazione e manutenzione" },
-    { emoji: "❄️", name: "Riscaldamento", desc: "Termosifoni e pavimento radiante" },
-    { emoji: "🏗️", name: "Ristrutturazioni", desc: "Rifacimento bagni e impianti" },
-    { emoji: "🚨", name: "Pronto Intervento", desc: "Emergenze allagamenti 24h" },
-  ] : [
-    { emoji: "🔧", name: "Riparazioni", desc: "Interventi rapidi e risolutivi" },
-    { emoji: "🏗️", name: "Installazioni", desc: "Nuovi impianti e strutture" },
-    { emoji: "🔍", name: "Manutenzione", desc: "Controlli programmati" },
-    { emoji: "📋", name: "Preventivi", desc: "Sopralluogo e preventivo gratuito" },
-    { emoji: "🛡️", name: "Garanzia", desc: "Lavori garantiti" },
-    { emoji: "🚨", name: "Emergenze", desc: "Disponibilità 24h" },
-  ];
-
-  const whyUs = [
+  const services = SECTOR_SERVICES[industry] || SECTOR_SERVICES.plumber || [];
+  const interventionTypes = SECTOR_INTERVENTION_TYPES[industry] || ["Riparazione", "Installazione", "Manutenzione", "Emergenza", "Preventivo", "Altro"];
+  const whyUs = SECTOR_WHY_US[industry] || [
     { icon: Shield, title: "Lavoro Garantito", desc: "Garanzia con copertura assicurativa completa" },
     { icon: Clock, title: "Intervento Rapido", desc: "Rispondiamo in meno di 1 ora" },
     { icon: FileText, title: "Preventivo Gratuito", desc: "Sopralluogo senza impegno" },
@@ -241,14 +471,11 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
     { icon: CheckCircle, title: "Prezzi Trasparenti", desc: "Nessuna sorpresa sul prezzo finale" },
     { icon: AlertTriangle, title: "Emergenze H24", desc: "Disponibili tutti i giorni, festivi inclusi" },
   ];
+  const stats = SECTOR_STATS[industry] || [{ value: "500+", label: "Clienti" }, { value: "98%", label: "Soddisfatti" }, { value: "24h", label: "Disponibili" }];
+  const tickerItems = SECTOR_TICKERS[industry] || ["PROFESSIONALITÀ", "GARANZIA", "QUALITÀ", "ESPERIENZA", "H24"];
+  const cta = SECTOR_CTA[industry] || SECTOR_CTA.default;
 
-  const tickerItems = isElectrician
-    ? ["IMPIANTI ELETTRICI", "DOMOTICA", "MESSA A NORMA", "QUADRI ELETTRICI", "LED", "CERTIFICAZIONI", "H24"]
-    : isPlumber
-    ? ["RIPARAZIONI", "CALDAIE", "IMPIANTI IDRICI", "SCARICHI", "RISCALDAMENTO", "RISTRUTTURAZIONI", "H24"]
-    : ["RIPARAZIONI", "INSTALLAZIONI", "MANUTENZIONE", "EMERGENZE", "PREVENTIVI", "GARANZIA", "H24"];
-
-  const navLinks = [{ href: "#servizi", label: "Servizi" }, { href: "#perche", label: "Garanzie" }, { href: "#prenota", label: "Preventivo" }];
+  const navLinks = [{ href: "#servizi", label: "Servizi" }, { href: "#perche", label: "Garanzie" }, { href: "#prenota", label: cta.formTitle.split(" ").slice(0, 2).join(" ") }];
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: "'Space Grotesk', sans-serif", background: D, color: "#fff" }}>
@@ -269,7 +496,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           </div>
           <div className="flex items-center gap-3">
             <Button size="sm" className="text-white rounded-lg font-semibold hidden sm:flex" style={{ background: A, color: D }} asChild>
-              <a href="#prenota">Preventivo</a>
+              <a href="#prenota">{cta.primary.split(" ").slice(0, 2).join(" ")}</a>
             </Button>
             <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -311,28 +538,36 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           </motion.h1>
 
           <motion.p variants={fadeUp} custom={2} className="text-base text-white/40 mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Inter', sans-serif" }}>
-            <strong className="text-white/70">{company.name}</strong> — Interventi professionali, preventivi gratuiti e garanzia su ogni lavoro.
+            <strong className="text-white/70">{company.name}</strong> — {
+              industry === "photography" ? "Fotografia professionale che racconta la tua storia." :
+              industry === "veterinary" ? "Il benessere del tuo animale è la nostra priorità." :
+              industry === "events" ? "Organizziamo il tuo evento perfetto, dal concept alla realizzazione." :
+              industry === "childcare" ? "Un ambiente sicuro e stimolante per i tuoi bambini." :
+              industry === "tattoo" ? "Arte sulla pelle. Design unici, igiene certificata." :
+              industry === "education" ? "Formazione d'eccellenza per professionisti e aziende." :
+              industry === "legal" ? "Assistenza legale specializzata e consulenza personalizzata." :
+              industry === "accounting" ? "Gestione fiscale precisa, puntuale e senza stress." :
+              industry === "logistics" ? "Spedizioni sicure, veloci e tracciate in tempo reale." :
+              industry === "agriturismo" ? "Un'esperienza autentica immersa nella natura italiana." :
+              "Interventi professionali, preventivi gratuiti e garanzia su ogni lavoro."
+            }
             {company.city && ` Operiamo a ${company.city} e dintorni.`}
           </motion.p>
 
           <motion.div variants={fadeUp} custom={3} className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" className="font-bold rounded-lg px-10 h-14 text-base shadow-2xl" style={{ background: A, color: D, boxShadow: `0 20px 60px -15px ${A}44` }} asChild>
-              <a href="#prenota"><FileText className="w-5 h-5 mr-2" /> Preventivo Gratuito</a>
+              <a href="#prenota"><FileText className="w-5 h-5 mr-2" /> {cta.primary}</a>
             </Button>
             {company.phone && (
               <Button size="lg" variant="outline" className="rounded-lg px-8 h-14 border-white/10 text-white hover:bg-white/5" asChild>
-                <a href={`tel:${company.phone}`}><Phone className="w-4 h-4 mr-2" /> Emergenza? Chiama</a>
+                <a href={`tel:${company.phone}`}><Phone className="w-4 h-4 mr-2" /> {cta.secondary}</a>
               </Button>
             )}
           </motion.div>
 
           {/* Animated stats */}
           <motion.div variants={fadeUp} custom={4} className="grid grid-cols-3 gap-4 max-w-sm mx-auto mt-14">
-            {[
-              { value: "500+", label: "Clienti" },
-              { value: "98%", label: "Soddisfatti" },
-              { value: "24h", label: "Disponibili" },
-            ].map((s, i) => (
+            {stats.map((s, i) => (
               <div key={i} className="text-center">
                 <p className="text-2xl sm:text-3xl font-bold" style={{ color: A }}>{s.value}</p>
                 <p className="text-[10px] text-white/25 uppercase tracking-widest mt-1">{s.label}</p>
@@ -358,7 +593,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
 
       <NeonDivider color={A} />
 
-      {/* SERVICES — Sector-specific layout variant */}
+      {/* SERVICES */}
       <section id="servizi" className="py-20 px-4" style={{ background: `${A}04` }}>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
@@ -374,7 +609,6 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
               <motion.div key={i} variants={fadeUp} custom={i}>
                 <Card className="border-0 h-full group rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1" style={{ background: `${A}08`, border: `1px solid ${A}12` }}>
                   <CardContent className="p-6 relative">
-                    {/* Hover glow */}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                       style={{ background: `radial-gradient(ellipse at center, ${A}15, transparent 70%)` }} />
                     <div className="relative text-center">
@@ -399,17 +633,16 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         <div className="max-w-4xl mx-auto relative">
           <div className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold mb-3">Come Funziona</h2>
-            <p className="text-white/30 text-sm">3 semplici passaggi per risolvere il tuo problema</p>
+            <p className="text-white/30 text-sm">3 semplici passaggi</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
-              { step: "01", title: "Descrivi il Problema", desc: "Compila il form o chiamaci — rispondiamo in meno di 1 ora", emoji: "📝" },
-              { step: "02", title: "Preventivo Gratuito", desc: "Sopralluogo, analisi e preventivo dettagliato senza impegno", emoji: "📋" },
-              { step: "03", title: "Interveniamo", desc: "Risolviamo il problema con garanzia su materiali e manodopera", emoji: "✅" },
+              { step: "01", title: industry === "education" ? "Scegli il Corso" : industry === "events" ? "Raccontaci l'Evento" : industry === "childcare" ? "Visita la Struttura" : "Descrivi il Problema", desc: industry === "education" ? "Sfoglia il catalogo e trova il percorso ideale" : industry === "events" ? "Briefing iniziale per capire ogni tuo desiderio" : industry === "childcare" ? "Prenota una visita per conoscerci" : "Compila il form o chiamaci — rispondiamo in meno di 1 ora", emoji: "📝" },
+              { step: "02", title: industry === "education" ? "Iscriviti Online" : industry === "events" ? "Preventivo Dettagliato" : industry === "childcare" ? "Iscrizione" : "Preventivo Gratuito", desc: industry === "education" ? "Completa l'iscrizione e accedi ai materiali" : industry === "events" ? "Proposta creativa con budget trasparente" : industry === "childcare" ? "Documenti e inserimento graduale" : "Sopralluogo, analisi e preventivo dettagliato senza impegno", emoji: "📋" },
+              { step: "03", title: industry === "education" ? "Impara e Cresci" : industry === "events" ? "Il Giorno Perfetto" : industry === "childcare" ? "Il Tuo Bimbo è Felice" : "Interveniamo", desc: industry === "education" ? "Lezioni, esami e certificazione finale" : industry === "events" ? "Coordinamento perfetto dal setup al teardown" : industry === "childcare" ? "Aggiornamenti giornalieri e report sviluppo" : "Risolviamo il problema con garanzia su materiali e manodopera", emoji: "✅" },
             ].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12 }}
                 className="text-center relative">
-                {/* Connector line */}
                 {i < 2 && <div className="hidden sm:block absolute top-8 left-[60%] w-[80%] h-px" style={{ background: `linear-gradient(90deg, ${A}20, transparent)` }} />}
                 <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center text-2xl relative"
                   style={{ background: `${A}15`, border: `1px solid ${A}20` }}>
@@ -471,8 +704,8 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(${A}20 1px, transparent 1px), linear-gradient(90deg, ${A}20 1px, transparent 1px)`, backgroundSize: "40px 40px" }} />
         <div className="max-w-lg mx-auto relative z-10">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-2">Preventivo Gratuito</h2>
-            <p className="text-white/30 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>Descrivi il problema e ti rispondiamo in meno di 1 ora</p>
+            <h2 className="text-3xl font-bold mb-2">{cta.formTitle}</h2>
+            <p className="text-white/30 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>{cta.formSubtitle}</p>
           </div>
           <Card className="border-0 rounded-xl backdrop-blur-xl" style={{ background: `${A}06`, border: `1px solid ${A}15` }}>
             <CardContent className="p-6 space-y-4" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -480,29 +713,35 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                 <div><Label className="text-white/40 text-xs">Nome *</Label><Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="Nome" /></div>
                 <div><Label className="text-white/40 text-xs">Telefono *</Label><Input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="+39..." /></div>
               </div>
-              <div><Label className="text-white/40 text-xs">Tipo Intervento *</Label>
+              <div><Label className="text-white/40 text-xs">{industry === "education" ? "Corso" : industry === "events" ? "Tipo Evento" : "Tipo Servizio"} *</Label>
                 <Select value={form.type} onValueChange={v => setForm(p => ({ ...p, type: v }))}>
                   <SelectTrigger className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg"><SelectValue placeholder="Seleziona tipo" /></SelectTrigger>
                   <SelectContent>{interventionTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
-              <div><Label className="text-white/40 text-xs">Urgenza</Label>
-                <Select value={form.urgency} onValueChange={v => setForm(p => ({ ...p, urgency: v }))}>
-                  <SelectTrigger className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">🟢 Bassa</SelectItem>
-                    <SelectItem value="normal">🟡 Normale</SelectItem>
-                    <SelectItem value="high">🔴 Urgente</SelectItem>
-                    <SelectItem value="emergency">🚨 Emergenza</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div><Label className="text-white/40 text-xs">Indirizzo</Label><Input value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="Via, civico, città..." /></div>
-              <div><Label className="text-white/40 text-xs">Descrivi il problema</Label><Textarea value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 min-h-[100px] rounded-lg" placeholder="Dettagli..." /></div>
+              {["plumber", "electrician", "construction", "garage", "gardening"].includes(industry) && (
+                <div><Label className="text-white/40 text-xs">Urgenza</Label>
+                  <Select value={form.urgency} onValueChange={v => setForm(p => ({ ...p, urgency: v }))}>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">🟢 Bassa</SelectItem>
+                      <SelectItem value="normal">🟡 Normale</SelectItem>
+                      <SelectItem value="high">🔴 Urgente</SelectItem>
+                      <SelectItem value="emergency">🚨 Emergenza</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              <div><Label className="text-white/40 text-xs">{industry === "logistics" ? "Indirizzo Ritiro" : "Indirizzo"}</Label><Input value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="Via, civico, città..." /></div>
+              <div><Label className="text-white/40 text-xs">{industry === "tattoo" ? "Descrivi il tatuaggio" : industry === "events" ? "Descrivi l'evento" : "Note aggiuntive"}</Label><Textarea value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 min-h-[100px] rounded-lg" placeholder="Dettagli..." /></div>
               <Button onClick={handleSubmit} disabled={submitting} className="w-full h-13 text-base font-bold rounded-lg shadow-2xl" style={{ background: A, color: D, boxShadow: `0 15px 40px -10px ${A}44` }}>
                 {submitting ? "Invio..." : "Invia Richiesta"} <Send className="w-4 h-4 ml-2" />
               </Button>
-              <p className="text-[11px] text-white/20 text-center">Preventivo gratuito. Rispondiamo in meno di 1 ora.</p>
+              <p className="text-[11px] text-white/20 text-center">
+                {industry === "legal" || industry === "accounting" ? "Prima consulenza gratuita." :
+                 industry === "childcare" ? "Ti ricontattiamo entro 24 ore." :
+                 "Rispondiamo in meno di 1 ora."}
+              </p>
             </CardContent>
           </Card>
         </div>
