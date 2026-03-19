@@ -964,7 +964,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
         </motion.p>
 
         {/* Mode Toggle: Package vs Monthly */}
-        <motion.div className="flex items-center justify-center gap-1 mt-6 p-1 rounded-full border border-border/30 bg-background/40 max-w-sm mx-auto"
+        <motion.div className="flex items-center justify-center gap-1 mt-6 p-1 rounded-full border border-border/30 max-w-sm mx-auto"
+        style={{ background: "linear-gradient(145deg, hsla(0,0%,4%,0.98), hsla(38,18%,8%,0.94))" }}
         initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <button onClick={() => setPricingMode("package")}
           className={`relative flex-1 px-4 py-2.5 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${
@@ -997,7 +998,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             <select
               value={selectedSector}
               onChange={(e) => {setSelectedSector(e.target.value as PricingSector);setSelectedAddons(new Set());}}
-              className="w-full appearance-none px-4 py-3 rounded-xl border border-border/30 bg-background/60 backdrop-blur-sm text-foreground text-sm font-heading font-semibold text-center cursor-pointer focus:outline-none focus:border-primary/40 transition-colors">
+              className="w-full appearance-none px-4 py-3 rounded-xl border border-border/30 backdrop-blur-sm text-foreground text-sm font-heading font-semibold text-center cursor-pointer focus:outline-none focus:border-primary/40 transition-colors"
+              style={{ background: "linear-gradient(145deg, hsla(0,0%,4%,0.98), hsla(38,16%,8%,0.92))" }}>
               
               {PRICING_SECTORS.map((s) =>
               <option key={s.id} value={s.id}>{s.emoji} {s.label}</option>
@@ -1426,9 +1428,17 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
             {/* Package Summary & CTA — Dynamic Pricing */}
             <motion.div className="max-w-4xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <div className={`relative p-5 sm:p-7 rounded-2xl overflow-hidden border ${
-            pkg.id === "empire" ? "border-accent/25 bg-gradient-to-b from-accent/[0.06] via-background/60 to-background" : "border-primary/20 bg-gradient-to-b from-primary/[0.06] via-background/60 to-background"}`
-            }>
+              <div
+                className={`relative p-5 sm:p-7 rounded-2xl overflow-hidden border ${
+                  pkg.id === "empire" ? "border-accent/25" : "border-primary/20"
+                }`}
+                style={{
+                  background:
+                    pkg.id === "empire"
+                      ? "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.95) 45%, hsla(0,0%,4%,0.99) 100%)"
+                      : "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,14%,8%,0.9) 35%, hsla(0,0%,4%,0.99) 100%)"
+                }}
+              >
                 <div className={`absolute top-0 left-0 right-0 h-[2px] ${pkg.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />
                 {/* Shimmer */}
                 <motion.div className="absolute inset-0 pointer-events-none"
@@ -2147,9 +2157,13 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 onClick={() => {setSelectedPlan(p.id);if (p.includedAgents > 0) setShowAddons(true);}}
                 className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                 isSelected ?
-                "border-2 border-primary/40 bg-gradient-to-b from-primary/[0.08] via-background/60 to-background shadow-[0_0_40px_hsla(38,50%,55%,0.1)]" :
-                "border border-border/30 hover:border-primary/20 bg-background/40"}`
-                }>
+                "border-2 border-primary/40 shadow-[0_0_40px_hsla(38,50%,55%,0.1)]" :
+                "border border-border/30 hover:border-primary/20"}`}
+                style={{
+                  background: isSelected
+                    ? "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.92) 40%, hsla(0,0%,4%,0.99) 100%)"
+                    : "linear-gradient(180deg, hsla(0,0%,4%,0.97) 0%, hsla(0,0%,5%,0.95) 100%)"
+                }}>
                     {p.badge &&
                   <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
                   p.badge === "Max Revenue" ? "bg-gradient-to-r from-accent to-primary text-primary-foreground" : "bg-vibrant-gradient text-primary-foreground"}`
@@ -2254,7 +2268,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
             {/* Monthly Summary & CTA */}
             <motion.div className="max-w-3xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <div className="relative p-5 sm:p-7 rounded-2xl overflow-hidden border border-primary/20 bg-gradient-to-b from-primary/[0.06] via-background/60 to-background">
+              <div className="relative p-5 sm:p-7 rounded-2xl overflow-hidden border border-primary/20"
+                style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,16%,8%,0.9) 42%, hsla(0,0%,4%,0.99) 100%)" }}>
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative z-10">
                   <div>
@@ -3643,9 +3658,11 @@ const LandingPage = () => {
         transition={{ duration: 0.6 }}>
           <div className="absolute -inset-8 bg-primary/[0.05] rounded-[60px] blur-[80px] pointer-events-none" />
           <FunnelDNAVisual />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none rounded-2xl" />
+          <div className="absolute inset-0 pointer-events-none rounded-2xl"
+            style={{ background: "linear-gradient(180deg, transparent 45%, hsla(0,0%,4%,0.94) 100%)" }} />
           <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
-            <div className="px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-sm border border-primary/10">
+            <div className="px-3 py-1.5 rounded-full backdrop-blur-sm border border-primary/10"
+              style={{ background: "linear-gradient(135deg, hsla(0,0%,4%,0.97), hsla(38,14%,8%,0.9))" }}>
               <span className="text-[0.6rem] font-heading font-bold text-primary tracking-wider uppercase">Dashboard IA • CRM • Automazioni • Fatturazione</span>
             </div>
           </div>
@@ -4139,7 +4156,7 @@ const LandingPage = () => {
         <div className="sm:hidden relative py-4 px-1">
           {/* Opaque backdrop */}
           <div className="absolute inset-0 rounded-2xl z-0"
-            style={{ background: "linear-gradient(180deg, hsl(var(--background) / 0.98), hsl(var(--card) / 0.97))", border: "1px solid hsl(var(--border) / 0.15)" }} />
+            style={{ background: "linear-gradient(180deg, hsl(var(--deep-black) / 0.98), hsla(38,14%,8%,0.9))", border: "1px solid hsla(38,45%,50%,0.14)" }} />
 
           {/* Central vertical pipeline spine */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" preserveAspectRatio="none">
@@ -6369,7 +6386,8 @@ const LandingPage = () => {
       {/* ═══════ STICKY CTA ═══════ */}
       <AnimatePresence>
         {ctaVisible &&
-        <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] bg-background/80 backdrop-blur-2xl border-t border-border/20"
+        <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] backdrop-blur-2xl border-t border-border/20"
+        style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.98), hsla(38,12%,7%,0.92))" }}
         initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} transition={{ type: "spring", damping: 25 }}>
             <div className="flex gap-2 max-w-md mx-auto">
               <motion.button onClick={() => scrollTo("pricing")}
