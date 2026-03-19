@@ -122,11 +122,10 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-/** On mobile, keep section backgrounds richly colored (nearly opaque) so they don't look gray.
- *  DNA circuit canvas is visible in the gaps BETWEEN sections, not through them. */
+/** Reduce section background alpha so the DNA circuit canvas shows THROUGH sections */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
-  if (!style || !IS_MOBILE_LP || !style.background || typeof style.background !== "string") return style;
-  // Keep full opacity — no wash-out. DNA shows between sections, not through them.
+  if (!style || !style.background || typeof style.background !== "string") return style;
+  // Already handled by lowered alpha values in section styles
   return style;
 };
 
