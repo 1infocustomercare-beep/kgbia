@@ -94,11 +94,20 @@
   /* ═══ MODERN ROUNDED DESIGN SYSTEM ═══ */
   button, [role="button"] {
     border-radius: var(--radius) !important;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  button:hover, [role="button"]:hover {
+    transform: scale(1.02);
+  }
+
+  button:active, [role="button"]:active {
+    transform: scale(0.97);
   }
 
   input, textarea, select, [role="combobox"] {
     border-radius: var(--radius) !important;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
   }
 
   [role="dialog"], [role="alertdialog"],
@@ -113,7 +122,7 @@
 
   /* Smooth card & surface elevation */
   [class*="shadow"] {
-    transition: box-shadow 0.25s ease, transform 0.25s ease;
+    transition: box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
@@ -1132,6 +1141,55 @@
     .premium-rounded {
       border-radius: 2rem;
     }
+  }
+  /* ═══ SCROLL REVEAL SYSTEM ═══ */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger children */
+  .scroll-reveal-stagger > .scroll-reveal:nth-child(1) { transition-delay: 0s; }
+  .scroll-reveal-stagger > .scroll-reveal:nth-child(2) { transition-delay: 0.1s; }
+  .scroll-reveal-stagger > .scroll-reveal:nth-child(3) { transition-delay: 0.2s; }
+  .scroll-reveal-stagger > .scroll-reveal:nth-child(4) { transition-delay: 0.3s; }
+  .scroll-reveal-stagger > .scroll-reveal:nth-child(5) { transition-delay: 0.4s; }
+  .scroll-reveal-stagger > .scroll-reveal:nth-child(6) { transition-delay: 0.5s; }
+  .scroll-reveal-stagger > .scroll-reveal:nth-child(7) { transition-delay: 0.6s; }
+  .scroll-reveal-stagger > .scroll-reveal:nth-child(8) { transition-delay: 0.7s; }
+
+  /* ═══ UNIVERSAL HOVER EFFECTS ═══ */
+  .hover-lift {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px -8px hsl(0 0% 0% / 0.2);
+  }
+
+  /* Focus glow for inputs */
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.15),
+                0 0 20px hsl(var(--ring) / 0.08) !important;
+  }
+
+  /* ═══ PROGRESS BAR ANIMATION ═══ */
+  @keyframes progress-fill {
+    from { width: 0%; }
+    to { width: var(--progress-target, 100%); }
+  }
+
+  .animate-progress-fill {
+    animation: progress-fill 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 }
 
