@@ -5553,8 +5553,8 @@ const LandingPage = () => {
           <motion.div className="relative rounded-2xl overflow-hidden"
           initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}
           style={{
-            background: "linear-gradient(145deg, hsla(230,22%,8%,0.98), hsla(235,28%,5%,0.99))",
-            border: "1px solid hsla(265,50%,40%,0.12)",
+            background: "linear-gradient(145deg, hsla(230,22%,5%,0.99), hsla(235,28%,3%,0.99))",
+            border: "1px solid hsla(265,50%,40%,0.15)",
             boxShadow: "0 20px 80px hsla(265,50%,30%,0.1), inset 0 1px 0 hsla(265,70%,60%,0.06)"
           }}>
             {/* Top bar — terminal style */}
