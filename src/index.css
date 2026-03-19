@@ -822,6 +822,11 @@
     mix-blend-mode: overlay;
   }
 
+  /* Home fix: disable grain overlays that read as gray under sections */
+  .landing-noise-off [style*="fractalNoise"] {
+    opacity: 0 !important;
+  }
+
   /* ═══ PREMIUM LABEL ═══ */
   .premium-label {
     background: linear-gradient(135deg, hsla(230, 12%, 10%, 0.9), hsla(230, 10%, 6%, 0.95));
