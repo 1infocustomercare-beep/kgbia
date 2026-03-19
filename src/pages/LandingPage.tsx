@@ -2268,7 +2268,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
             {/* Monthly Summary & CTA */}
             <motion.div className="max-w-3xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <div className="relative p-5 sm:p-7 rounded-2xl overflow-hidden border border-primary/20 bg-gradient-to-b from-primary/[0.06] via-background/60 to-background">
+              <div className="relative p-5 sm:p-7 rounded-2xl overflow-hidden border border-primary/20"
+                style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,16%,8%,0.9) 42%, hsla(0,0%,4%,0.99) 100%)" }}>
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative z-10">
                   <div>
