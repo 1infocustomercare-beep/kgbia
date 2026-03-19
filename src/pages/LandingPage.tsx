@@ -396,13 +396,12 @@ const NeuralCellsBackground = () => {
         </div>
       )}
 
-      {/* ═══ HORIZONTAL SCAN LINES — desktop only ═══ */}
+      {/* ═══ HORIZONTAL SCAN LINES ═══ */}
       {!isMobile && [0, 1].map((i) =>
       <motion.div key={`hscan-${i}`} className="absolute left-0 right-0 h-px"
       style={{ background: `linear-gradient(90deg, transparent 5%, hsla(210,45%,58%,0.08) 30%, hsla(215,50%,65%,0.14) 50%, hsla(210,45%,58%,0.08) 70%, transparent 95%)` }}
       animate={{ top: ["-3%", "103%"] }}
       transition={{ duration: 18 + i * 7, repeat: Infinity, ease: "linear", delay: i * 5 }} />
-
       )}
 
       {/* ═══ PULSING TECH NODES — desktop only ═══ */}
