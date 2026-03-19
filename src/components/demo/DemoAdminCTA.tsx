@@ -36,7 +36,7 @@ export default function DemoAdminCTA({ slug, accentColor, sectorName, variant }:
   if (variant === "sticky") {
     return (
       <motion.div
-        className="fixed bottom-0 left-0 right-0 z-[100] lg:hidden safe-area-pb"
+        className="fixed bottom-0 left-0 right-0 z-[80] lg:hidden safe-area-pb"
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         transition={{ delay: 2 }}

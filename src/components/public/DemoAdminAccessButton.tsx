@@ -309,7 +309,7 @@ export default function DemoAdminAccessButton({ sector, accentColor = "#8b5cf6" 
       <motion.button
         onClick={handleDemoLogin}
         disabled={loading}
-        className="fixed bottom-20 right-4 z-[9999] flex items-center gap-2 px-4 py-3 rounded-full shadow-2xl min-h-[48px] sm:hidden"
+        className="fixed bottom-[4.5rem] right-4 z-[90] flex items-center gap-2 px-4 py-3 rounded-full shadow-2xl min-h-[48px] sm:hidden"
         style={{
           background: `linear-gradient(135deg, ${accentColor}, ${accentColor}dd)`,
           boxShadow: `0 8px 30px ${accentColor}40, 0 0 0 1px ${accentColor}20`,
