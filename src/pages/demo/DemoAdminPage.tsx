@@ -1504,7 +1504,6 @@ export default function DemoAdminPage() {
   // ══════════════════════════════════════
   //  ORDERS VIEW
   // ══════════════════════════════════════
-  const [ordersPage, setOrdersPage] = useState(1);
   const ORDERS_PER_PAGE = 6;
 
   const renderOrders = () => {
