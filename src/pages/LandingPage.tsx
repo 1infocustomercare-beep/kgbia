@@ -3227,7 +3227,7 @@ const LandingPage = () => {
             muted
             loop
             playsInline
-            preload="auto"
+            preload={IS_MOBILE_LP ? "none" : "auto"}
             controls={false}
             disablePictureInPicture
             disableRemotePlayback
