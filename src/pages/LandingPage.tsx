@@ -3681,15 +3681,13 @@ const LandingPage = () => {
                           {pain.stat}
                         </motion.div>
 
-                        {/* Icon — compact */}
+                        {/* Icon — circuit node style */}
                         <motion.div
-                          className={`w-3 h-3 sm:w-7 sm:h-7 rounded bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-1 sm:mb-2.5 relative [&>svg]:w-1.5 [&>svg]:h-1.5 sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5`}
-                          style={{ boxShadow: `0 0 8px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.15)" : "hsla(38,70%,50%,0.15)"}` }}>
+                          className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-1.5 sm:mb-2.5 relative [&>svg]:w-2.5 [&>svg]:h-2.5 sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5`}
+                          style={{ boxShadow: `0 0 10px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.2)" : "hsla(38,70%,50%,0.2)"}, inset 0 1px 0 hsla(0,0%,100%,0.12)` }}
+                          animate={{ boxShadow: [`0 0 6px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.15)" : "hsla(38,70%,50%,0.15)"}`, `0 0 14px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.3)" : "hsla(38,70%,50%,0.3)"}`, `0 0 6px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.15)" : "hsla(38,70%,50%,0.15)"}`] }}
+                          transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}>
                           {pain.icon}
-                          <div className="absolute -top-[1px] -left-[1px] w-[2px] h-[2px] border-t border-l border-primary/30" />
-                          <div className="absolute -top-[1px] -right-[1px] w-[2px] h-[2px] border-t border-r border-primary/30" />
-                          <div className="absolute -bottom-[1px] -left-[1px] w-[2px] h-[2px] border-b border-l border-primary/30" />
-                          <div className="absolute -bottom-[1px] -right-[1px] w-[2px] h-[2px] border-b border-r border-primary/30" />
                         </motion.div>
 
                         <h3 className="font-heading text-[0.52rem] sm:text-xs font-semibold text-foreground mb-0.5 leading-tight">{pain.title}</h3>
