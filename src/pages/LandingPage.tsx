@@ -3735,7 +3735,15 @@ const LandingPage = () => {
           const SECTOR_HERO_IMAGES: Record<string, string> = {
             food: sectorHeroFood, ncc: sectorHeroNcc, beauty: sectorHeroBeauty,
             healthcare: sectorHeroHealthcare, retail: sectorHeroRetail,
-            fitness: sectorHeroFitness, hospitality: sectorHeroHotel
+            fitness: sectorHeroFitness, hospitality: sectorHeroHotel,
+            beach: sectorHeroBeach, plumber: sectorHeroPlumber, electrician: sectorHeroPlumber,
+            construction: sectorHeroConstruction, events: sectorHeroEvents,
+            garage: sectorHeroGarage, logistics: sectorHeroLogistics,
+            gardening: sectorHeroGardening, veterinary: sectorHeroVeterinary,
+            photography: sectorHeroPhotography, education: sectorHeroEducation,
+            childcare: sectorHeroChildcare, tattoo: sectorHeroTattoo,
+            cleaning: sectorHeroCleaning, agriturismo: sectorHeroGardening,
+            legal: sectorHeroEducation, accounting: sectorHeroEducation
           };
           const allItems: CarouselItem[] = industries.map((ind) => {
             const slug = DEMO_SLUGS[ind.id];
