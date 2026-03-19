@@ -532,23 +532,12 @@ export default function BeautyPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoPricingSection sector="beauty" accentColor={B.rose} darkMode={true} bgColor={B.bgWarm} />
       <AIAgentsShowcase sector="beauty" />
       <SectorValueProposition sectorKey="beauty" accentColor={B.rose} darkMode={true} sectorLabel="Salone" />
       <AutomationShowcase accentColor={B.rose} accentBg="bg-pink-500" sectorName="saloni e centri estetici" darkMode={true} />
 
-      {/* ═══ FOOTER ═══ */}
-      <footer className="py-10 px-4 border-t" style={{ borderColor: `${B.rose}10`, background: B.footer }}>
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            {company.logo_url ? <img src={company.logo_url} alt="" className="h-7 w-7 rounded-lg object-cover" /> : <Flower2 className="w-5 h-5" style={{ color: B.roseGold }} />}
-            <span className="font-medium text-sm" style={{ color: B.blush, fontFamily: "'Cormorant Garamond', serif" }}>{company.name}</span>
-          </div>
-          <div className="flex items-center gap-4">
-            {socialLinks?.instagram && <a href={socialLinks.instagram} target="_blank" rel="noopener" className="text-white/25 hover:text-white/60 transition-colors"><Instagram className="w-5 h-5" /></a>}
-          </div>
-          <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.1)", fontFamily: "'Jost', sans-serif" }}>© {new Date().getFullYear()} {company.name} · Powered by Empire.AI</p>
-        </div>
-      </footer>
+      <DemoRichFooter company={company} accentColor={B.roseGold} darkMode={true} bgColor={B.footer} sectorLabel="BEAUTY & WELLNESS" fontFamily="'Jost', sans-serif" />
 
       {/* WhatsApp */}
       {phone && (
