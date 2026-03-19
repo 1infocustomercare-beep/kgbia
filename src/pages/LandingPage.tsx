@@ -122,6 +122,7 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 };
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
+const IS_TOUCH_DEVICE = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 
 /** Allow circuit to bleed subtly through section backgrounds for a premium layered look.
  * Caps opacity at 0.92 so the DNA pattern is faintly visible even behind content. */
