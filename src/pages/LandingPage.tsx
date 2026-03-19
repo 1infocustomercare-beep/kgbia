@@ -3804,14 +3804,13 @@ const LandingPage = () => {
                   style={{ borderColor: `${color}40`, boxShadow: `0 16px 50px hsla(0,0%,0%,0.45), 0 0 25px ${color}10` }}>
                     <div className="absolute top-[7px] left-1/2 -translate-x-1/2 w-[54px] h-[16px] bg-black rounded-full z-20" />
                     <div className="absolute inset-[3px] rounded-[28px] overflow-hidden bg-black">
-                      <iframe
-                        src={demoPath}
-                        title={ind.title}
-                        className="border-0 pointer-events-none"
-                        style={{ transform: "scale(0.465)", transformOrigin: "top left", width: "375px", height: "720px" }}
+                      <img
+                        src={heroImg}
+                        alt={ind.title}
+                        className="w-full h-full object-cover"
                         loading="lazy"
-                        tabIndex={-1}
                       />
+                      <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${color}15 0%, ${color}08 40%, transparent 100%)` }} />
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 z-20 p-3 pt-8" style={{ background: "linear-gradient(to top, hsla(0,0%,0%,0.9) 15%, transparent)" }}>
                       <div className="flex items-center gap-1 mb-1">
