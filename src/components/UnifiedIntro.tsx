@@ -779,17 +779,17 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
             transition={{ duration: 0.6, delay: 0.1, ease: smoothEase }}
           >
             <div
-              className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-[22px] sm:rounded-[26px] md:rounded-[30px] flex items-center justify-center border border-white/[0.08]"
+              className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center border border-white/[0.08]"
               style={{
                 background: "linear-gradient(135deg, hsla(265,75%,62%,0.08), hsla(38,50%,55%,0.04))",
                 boxShadow: "0 0 60px hsla(265,75%,62%,0.15), 0 0 120px hsla(38,50%,55%,0.06)",
               }}
             >
               <div
-                className="w-[52px] h-[52px] sm:w-[62px] sm:h-[62px] md:w-[72px] md:h-[72px] rounded-[16px] sm:rounded-[20px] flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg, hsl(265,75%,62%), hsl(38,50%,55%), hsl(160,55%,48%))" }}
+                className="w-[72px] h-[72px] sm:w-[82px] sm:h-[82px] md:w-[96px] md:h-[96px] rounded-full overflow-hidden flex items-center justify-center"
+                style={{ boxShadow: "0 0 0 3px hsla(38,50%,55%,0.3), 0 0 30px hsla(265,75%,62%,0.2)" }}
               >
-                <img src={empireLogoNew} alt="Empire AI" className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]" />
+                <img src={empireLogoNew} alt="Empire AI" className="w-full h-full object-cover drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]" />
               </div>
             </div>
           </motion.div>

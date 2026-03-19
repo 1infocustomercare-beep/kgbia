@@ -2828,20 +2828,20 @@ const LandingPage = () => {
 
             {/* Logo container — hexagonal feel with premium depth */}
             <motion.div
-              className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-[16px] flex items-center justify-center"
+              className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center overflow-hidden"
               style={{
                 background: "linear-gradient(145deg, hsla(38,45%,20%,1), hsla(35,40%,14%,1), hsla(30,35%,10%,1))",
-                boxShadow: "0 0 0 1px hsla(38,50%,50%,0.2), 0 0 40px hsla(38,50%,50%,0.15), 0 8px 32px hsla(0,0%,0%,0.4), inset 0 1px 0 hsla(38,50%,60%,0.15)"
+                boxShadow: "0 0 0 2px hsla(38,50%,50%,0.3), 0 0 40px hsla(38,50%,50%,0.15), 0 8px 32px hsla(0,0%,0%,0.4), inset 0 1px 0 hsla(38,50%,60%,0.15)"
               }}
               whileHover={{ scale: 1.12, rotate: -5 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}>
               
               {/* Inner gold border — subtle luxury */}
-              <div className="absolute inset-[2px] rounded-[14px] border border-[hsla(38,50%,50%,0.12)] pointer-events-none" />
+              <div className="absolute inset-[2px] rounded-full border border-[hsla(38,50%,50%,0.12)] pointer-events-none" />
               
               {/* Orbital ring — slow elegant rotation */}
               <motion.div
-                className="absolute -inset-1 rounded-[20px] pointer-events-none"
+                className="absolute -inset-1 rounded-full pointer-events-none"
                 style={{ border: "1px solid transparent", borderTopColor: "hsla(38,45%,55%,0.35)", borderRightColor: "hsla(38,45%,55%,0.1)" }}
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 12, repeat: Infinity, ease: "linear" }} />
@@ -2849,7 +2849,7 @@ const LandingPage = () => {
               
               {/* Counter-rotating inner ring */}
               <motion.div
-                className="absolute inset-0.5 rounded-[14px] pointer-events-none"
+                className="absolute inset-0.5 rounded-full pointer-events-none"
                 style={{ border: "0.5px solid transparent", borderBottomColor: "hsla(38,40%,55%,0.2)" }}
                 animate={{ rotate: [360, 0] }}
                 transition={{ duration: 18, repeat: Infinity, ease: "linear" }} />
@@ -2857,7 +2857,7 @@ const LandingPage = () => {
 
               {/* Single elegant shimmer */}
               <motion.div
-                className="absolute inset-0 rounded-[14px] pointer-events-none overflow-hidden">
+                className="absolute inset-0 rounded-full pointer-events-none overflow-hidden">
                 
                 <motion.div
                   className="absolute inset-0"
@@ -2868,11 +2868,11 @@ const LandingPage = () => {
               </motion.div>
 
               {/* Logo image */}
-              <img src={empireLogoNew} alt="Empire AI" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" />
+              <img src={empireLogoNew} alt="Empire AI" className="w-full h-full object-cover rounded-full drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" />
               
               {/* Breathing pulse ring */}
               <motion.div
-                className="absolute inset-0 rounded-[16px] pointer-events-none"
+                className="absolute inset-0 rounded-full pointer-events-none"
                 style={{ border: "1px solid hsla(38,50%,55%,0.15)" }}
                 animate={{ scale: [1, 1.35], opacity: [0.4, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }} />
@@ -6213,7 +6213,7 @@ const LandingPage = () => {
               initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}>
               
-              <img src={empireLogoNew} alt="Empire AI" className="w-12 h-12 mx-auto mb-6 object-contain" style={{ filter: "drop-shadow(0 0 40px hsla(265,70%,60%,0.3))" }} />
+              <img src={empireLogoNew} alt="Empire AI" className="w-16 h-16 mx-auto mb-6 rounded-full object-cover border-2 border-[hsla(38,50%,55%,0.3)]" style={{ filter: "drop-shadow(0 0 40px hsla(265,70%,60%,0.3))", boxShadow: "0 0 30px hsla(38,50%,55%,0.2), 0 0 60px hsla(265,70%,60%,0.15)" }} />
             </motion.div>
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
@@ -6269,9 +6269,9 @@ const LandingPage = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 mb-16">
             <motion.div className="flex items-center gap-3" initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <div className="relative">
-                <div className="absolute -inset-1 rounded-xl blur-md" style={{ background: "hsla(265,70%,60%,0.15)" }} />
-                <div className="relative w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsla(265,70%,60%,1), hsla(280,60%,50%,1))", boxShadow: "0 0 25px hsla(265,70%,60%,0.25)" }}>
-                  <img src={empireLogoNew} alt="Empire AI" className="w-6 h-6 object-contain" />
+                <div className="absolute -inset-1 rounded-full blur-md" style={{ background: "hsla(265,70%,60%,0.15)" }} />
+                <div className="relative w-10 h-10 rounded-full overflow-hidden flex items-center justify-center" style={{ boxShadow: "0 0 25px hsla(265,70%,60%,0.25), 0 0 0 2px hsla(38,50%,55%,0.3)" }}>
+                  <img src={empireLogoNew} alt="Empire AI" className="w-full h-full object-cover" />
                 </div>
               </div>
               <div>
