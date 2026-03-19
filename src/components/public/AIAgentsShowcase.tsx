@@ -217,43 +217,57 @@ const ALL_AGENTS: AgentNode[] = [
   { id: "energy-monitor", name: "Energy Monitor IA", role: "Monitoraggio Energetico", desc: "Monitora consumi, suggerisce risparmi e gestisce pannelli solari.", whyNeed: "L'energia è il 20% dei costi operativi.", icon: <Plug className="w-5 h-5" />, gradient: "from-yellow-500 to-amber-600", glow: "hsla(40,85%,55%,1)", stat: { value: 20, suffix: "%", label: "↓ Consumi" }, capabilities: ["Monitor real-time", "Suggerimenti risparmio", "Gestione solare", "Report CO2"], category: "analytics", sectors: ["energy"], connections: ["predictive-engine", "ghost-manager"], features: [] },
 ];
 
-const SECTOR_TABS = [
-  { id: "all", label: "Tutti", icon: <Layers className="w-3 h-3" /> },
-  { id: "food", label: "Food", icon: <ChefHat className="w-3 h-3" /> },
-  { id: "ncc", label: "NCC", icon: <Car className="w-3 h-3" /> },
-  { id: "beauty", label: "Beauty", icon: <Scissors className="w-3 h-3" /> },
-  { id: "healthcare", label: "Salute", icon: <Heart className="w-3 h-3" /> },
-  { id: "hotel", label: "Hotel", icon: <Building className="w-3 h-3" /> },
-  { id: "fitness", label: "Fitness", icon: <Dumbbell className="w-3 h-3" /> },
-  { id: "retail", label: "Retail", icon: <Store className="w-3 h-3" /> },
-  { id: "beach", label: "Beach", icon: <Umbrella className="w-3 h-3" /> },
-  { id: "trades", label: "Artigiani", icon: <Workflow className="w-3 h-3" /> },
-  { id: "construction", label: "Edilizia", icon: <Hammer className="w-3 h-3" /> },
-  { id: "legal", label: "Legale", icon: <Scale className="w-3 h-3" /> },
-  { id: "accounting", label: "Contabilità", icon: <Calculator className="w-3 h-3" /> },
-  { id: "veterinary", label: "Veterinario", icon: <Dog className="w-3 h-3" /> },
-  { id: "events", label: "Eventi", icon: <PartyPopper className="w-3 h-3" /> },
-  { id: "logistics", label: "Logistica", icon: <Truck className="w-3 h-3" /> },
-  { id: "education", label: "Formazione", icon: <GraduationCap className="w-3 h-3" /> },
-  { id: "childcare", label: "Infanzia", icon: <Baby className="w-3 h-3" /> },
-  { id: "photography", label: "Fotografia", icon: <Camera className="w-3 h-3" /> },
-  { id: "agriturismo", label: "Agriturismo", icon: <Leaf className="w-3 h-3" /> },
-  { id: "cleaning", label: "Pulizie", icon: <Droplets className="w-3 h-3" /> },
-  { id: "tattoo", label: "Tattoo", icon: <PenTool className="w-3 h-3" /> },
-  { id: "coworking", label: "Coworking", icon: <Building className="w-3 h-3" /> },
-  { id: "pharmacy", label: "Farmacia", icon: <Pill className="w-3 h-3" /> },
-  { id: "tourism", label: "Turismo", icon: <Plane className="w-3 h-3" /> },
-  { id: "fashion", label: "Fashion", icon: <Shirt className="w-3 h-3" /> },
-  { id: "jewelry", label: "Gioielleria", icon: <Gem className="w-3 h-3" /> },
-  { id: "pet-grooming", label: "Toelettatura", icon: <Dog className="w-3 h-3" /> },
-  { id: "spa", label: "Spa", icon: <Sparkles className="w-3 h-3" /> },
-  { id: "real-estate", label: "Immobiliare", icon: <Building className="w-3 h-3" /> },
-  { id: "mobility", label: "Mobilità", icon: <Bike className="w-3 h-3" /> },
-  { id: "entertainment", label: "Spettacolo", icon: <Music className="w-3 h-3" /> },
-  { id: "printing", label: "Stampa", icon: <Printer className="w-3 h-3" /> },
-  { id: "energy", label: "Energia", icon: <Plug className="w-3 h-3" /> },
-  { id: "bakery", label: "Bakery", icon: <ChefHat className="w-3 h-3" /> },
+const SECTOR_GROUPS: { group: string; emoji: string; tabs: { id: string; label: string; icon: React.ReactNode }[] }[] = [
+  { group: "Principali", emoji: "⭐", tabs: [
+    { id: "all", label: "Tutti", icon: <Layers className="w-2.5 h-2.5" /> },
+    { id: "food", label: "Food", icon: <ChefHat className="w-2.5 h-2.5" /> },
+    { id: "bakery", label: "Bakery", icon: <ChefHat className="w-2.5 h-2.5" /> },
+    { id: "hotel", label: "Hotel", icon: <Building className="w-2.5 h-2.5" /> },
+    { id: "beauty", label: "Beauty", icon: <Scissors className="w-2.5 h-2.5" /> },
+    { id: "retail", label: "Retail", icon: <Store className="w-2.5 h-2.5" /> },
+  ]},
+  { group: "Benessere", emoji: "💆", tabs: [
+    { id: "spa", label: "Spa", icon: <Sparkles className="w-2.5 h-2.5" /> },
+    { id: "fitness", label: "Fitness", icon: <Dumbbell className="w-2.5 h-2.5" /> },
+    { id: "healthcare", label: "Salute", icon: <Heart className="w-2.5 h-2.5" /> },
+    { id: "pharmacy", label: "Farmacia", icon: <Pill className="w-2.5 h-2.5" /> },
+    { id: "veterinary", label: "Veterinario", icon: <Dog className="w-2.5 h-2.5" /> },
+  ]},
+  { group: "Trasporti", emoji: "🚗", tabs: [
+    { id: "ncc", label: "NCC", icon: <Car className="w-2.5 h-2.5" /> },
+    { id: "logistics", label: "Logistica", icon: <Truck className="w-2.5 h-2.5" /> },
+    { id: "mobility", label: "Mobilità", icon: <Bike className="w-2.5 h-2.5" /> },
+    { id: "tourism", label: "Turismo", icon: <Plane className="w-2.5 h-2.5" /> },
+  ]},
+  { group: "Servizi", emoji: "🔧", tabs: [
+    { id: "trades", label: "Artigiani", icon: <Workflow className="w-2.5 h-2.5" /> },
+    { id: "construction", label: "Edilizia", icon: <Hammer className="w-2.5 h-2.5" /> },
+    { id: "cleaning", label: "Pulizie", icon: <Droplets className="w-2.5 h-2.5" /> },
+    { id: "energy", label: "Energia", icon: <Plug className="w-2.5 h-2.5" /> },
+    { id: "printing", label: "Stampa", icon: <Printer className="w-2.5 h-2.5" /> },
+  ]},
+  { group: "Lifestyle", emoji: "✨", tabs: [
+    { id: "fashion", label: "Fashion", icon: <Shirt className="w-2.5 h-2.5" /> },
+    { id: "jewelry", label: "Gioielleria", icon: <Gem className="w-2.5 h-2.5" /> },
+    { id: "tattoo", label: "Tattoo", icon: <PenTool className="w-2.5 h-2.5" /> },
+    { id: "photography", label: "Foto", icon: <Camera className="w-2.5 h-2.5" /> },
+    { id: "entertainment", label: "Show", icon: <Music className="w-2.5 h-2.5" /> },
+  ]},
+  { group: "Altro", emoji: "🏢", tabs: [
+    { id: "beach", label: "Beach", icon: <Umbrella className="w-2.5 h-2.5" /> },
+    { id: "agriturismo", label: "Agriturismo", icon: <Leaf className="w-2.5 h-2.5" /> },
+    { id: "legal", label: "Legale", icon: <Scale className="w-2.5 h-2.5" /> },
+    { id: "accounting", label: "Contabilità", icon: <Calculator className="w-2.5 h-2.5" /> },
+    { id: "events", label: "Eventi", icon: <PartyPopper className="w-2.5 h-2.5" /> },
+    { id: "education", label: "Formazione", icon: <GraduationCap className="w-2.5 h-2.5" /> },
+    { id: "childcare", label: "Infanzia", icon: <Baby className="w-2.5 h-2.5" /> },
+    { id: "coworking", label: "Coworking", icon: <Building className="w-2.5 h-2.5" /> },
+    { id: "real-estate", label: "Immobiliare", icon: <Building className="w-2.5 h-2.5" /> },
+    { id: "pet-grooming", label: "Toelettatura", icon: <Dog className="w-2.5 h-2.5" /> },
+  ]},
 ];
+
+const SECTOR_TABS = SECTOR_GROUPS.flatMap(g => g.tabs);
 
 const TOTAL_AGENTS_COUNT = ALL_AGENTS.length;
 const INITIAL_VISIBLE = 16;
@@ -520,6 +534,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const [activeSector, setActiveSector] = useState(sector || "all");
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const [showMoreSectors, setShowMoreSectors] = useState(false);
 
   const filteredAgents = useMemo(() => {
     const base = activeSector === "all" ? ALL_AGENTS : ALL_AGENTS.filter((a) => a.sectors.includes("all") || a.sectors.includes(activeSector));
@@ -639,18 +654,105 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           </div>
         </motion.div>
 
-        {/* ══════ SECTOR FILTER ══════ */}
-        <div className="flex gap-0.5 justify-center flex-wrap mb-4 sm:mb-8 px-1">
-          {SECTOR_TABS.map((tab) => (
-            <button key={tab.id} onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
-              className={`flex items-center gap-0.5 px-1.5 py-1 rounded-md text-[0.42rem] sm:text-[0.55rem] font-semibold tracking-wider uppercase transition-all border ${
-                activeSector === tab.id
-                  ? "text-foreground border-primary/40 bg-primary/15"
-                  : "text-foreground/70 border-border hover:text-foreground"
+        {/* ══════ SECTOR FILTER — Grouped ══════ */}
+        <div className="mb-4 sm:mb-8 px-1">
+          {/* Primary group — always visible */}
+          <div className="flex gap-1 justify-center flex-wrap mb-2">
+            {SECTOR_GROUPS[0].tabs.map((tab) => (
+              <button key={tab.id} onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[0.5rem] sm:text-[0.6rem] font-semibold tracking-wider uppercase transition-all border ${
+                  activeSector === tab.id
+                    ? "text-foreground border-primary/50 bg-primary/15 shadow-[0_0_8px_hsla(var(--primary)/0.15)]"
+                    : "text-foreground/60 border-border/60 hover:text-foreground hover:border-primary/25"
+                }`}>
+                <span className="opacity-80">{tab.icon}</span> {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Category chips — toggle groups */}
+          <div className="flex gap-1 justify-center flex-wrap mb-1.5">
+            {SECTOR_GROUPS.slice(1, 5).map((group) => {
+              const isGroupActive = group.tabs.some(t => t.id === activeSector);
+              return (
+                <div key={group.group} className="relative group/cat">
+                  <button
+                    onClick={() => {
+                      // If a tab in this group is active, clicking the group header does nothing
+                      // Otherwise select first tab in group
+                      if (!isGroupActive) {
+                        setActiveSector(group.tabs[0].id);
+                        setExpandedAgent(null);
+                      }
+                    }}
+                    className={`flex items-center gap-1 px-2 py-1 rounded-full text-[0.45rem] sm:text-[0.55rem] font-semibold tracking-wide transition-all border ${
+                      isGroupActive
+                        ? "text-foreground border-primary/40 bg-primary/10"
+                        : "text-foreground/50 border-border/40 hover:border-primary/20"
+                    }`}>
+                    <span className="text-[0.55rem]">{group.emoji}</span> {group.group}
+                    <ChevronDown className="w-2 h-2 opacity-40" />
+                  </button>
+
+                  {/* Dropdown */}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 hidden group-hover/cat:flex flex-col gap-0.5 p-1.5 rounded-lg border border-border/60 z-50 min-w-[110px]"
+                    style={{ background: "linear-gradient(160deg, hsl(var(--card)), hsl(var(--background)))" }}>
+                    {group.tabs.map(tab => (
+                      <button key={tab.id}
+                        onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
+                        className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md text-[0.5rem] font-semibold transition-all ${
+                          activeSector === tab.id
+                            ? "text-foreground bg-primary/15"
+                            : "text-foreground/60 hover:text-foreground hover:bg-primary/5"
+                        }`}>
+                        {tab.icon} {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* +Altro toggle */}
+            <button
+              onClick={() => setShowMoreSectors(!showMoreSectors)}
+              className={`flex items-center gap-1 px-2 py-1 rounded-full text-[0.45rem] sm:text-[0.55rem] font-semibold tracking-wide transition-all border ${
+                showMoreSectors || SECTOR_GROUPS[5].tabs.some(t => t.id === activeSector)
+                  ? "text-foreground border-primary/40 bg-primary/10"
+                  : "text-foreground/50 border-border/40 hover:border-primary/20"
               }`}>
-              {tab.icon} {tab.label}
+              <span className="text-[0.55rem]">🏢</span> +{SECTOR_GROUPS[5].tabs.length} settori
+              {showMoreSectors ? <ChevronUp className="w-2 h-2" /> : <ChevronDown className="w-2 h-2" />}
             </button>
-          ))}
+          </div>
+
+          {/* Expanded "Altro" sectors */}
+          <AnimatePresence>
+            {showMoreSectors && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden">
+                <div className="flex gap-1 justify-center flex-wrap pt-1 pb-1">
+                  {SECTOR_GROUPS[5].tabs.map(tab => (
+                    <button key={tab.id}
+                      onClick={() => { setActiveSector(tab.id); setExpandedAgent(null); }}
+                      className={`flex items-center gap-0.5 px-2 py-1 rounded-full text-[0.45rem] sm:text-[0.5rem] font-semibold tracking-wide transition-all border ${
+                        activeSector === tab.id
+                          ? "text-foreground border-primary/40 bg-primary/15"
+                          : "text-foreground/50 border-border/40 hover:text-foreground hover:border-primary/20"
+                      }`}>
+                      {tab.icon} {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Active sector indicator line */}
+          <div className="mt-2 h-px w-full" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent)" }} />
         </div>
 
         {/* ══════ NETWORK LABEL ══════ */}
