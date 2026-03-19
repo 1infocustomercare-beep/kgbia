@@ -353,7 +353,7 @@ const EmpireDNABackground = () => {
         }
       }
 
-      // ═══ LAYER 3: Nodes — uniform crosses and squares ═══
+      // ═══ LAYER 3: Nodes — ALL as tech "+" crosses ═══
       for (let i = 0; i < NODE_COUNT; i++) {
         const breathe = 0.4 + Math.sin(time * 1 + i * 0.7) * 0.6;
         let na = 0.15 * breathe * MOBILE_BOOST;
@@ -365,27 +365,22 @@ const EmpireDNABackground = () => {
         }
         if (isActive) na = Math.min(na + 0.2, 0.5);
 
-        if (i % 3 === 0) {
-          const arm = 2 + breathe * 1.5;
-          ctx.strokeStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
-          ctx.lineWidth = isActive ? 0.8 : 0.5;
-          ctx.beginPath();
-          ctx.moveTo(pos[i].x - arm, pos[i].y); ctx.lineTo(pos[i].x + arm, pos[i].y);
-          ctx.moveTo(pos[i].x, pos[i].y - arm); ctx.lineTo(pos[i].x, pos[i].y + arm);
-          ctx.stroke();
-        } else {
-          const s = 1.2 + breathe;
-          ctx.fillStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
-          ctx.fillRect(pos[i].x - s / 2, pos[i].y - s / 2, s, s);
-        }
+        // All nodes as "+" crosses — tech aesthetic
+        const arm = isActive ? (3.5 + breathe * 2) : (2 + breathe * 1.5);
+        ctx.strokeStyle = hsla(isActive ? pAccent : pNode, (na + 0.08) * MOBILE_BOOST);
+        ctx.lineWidth = isActive ? 1.0 : 0.6;
+        ctx.beginPath();
+        ctx.moveTo(pos[i].x - arm, pos[i].y); ctx.lineTo(pos[i].x + arm, pos[i].y);
+        ctx.moveTo(pos[i].x, pos[i].y - arm); ctx.lineTo(pos[i].x, pos[i].y + arm);
+        ctx.stroke();
 
-        // Halo for active
+        // Halo for active nodes
         if (isActive) {
-          const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 8);
-          gr.addColorStop(0, hsla(pAccent, na * 0.15 * MOBILE_BOOST));
+          const gr = ctx.createRadialGradient(pos[i].x, pos[i].y, 0, pos[i].x, pos[i].y, 10);
+          gr.addColorStop(0, hsla(pAccent, na * 0.18 * MOBILE_BOOST));
           gr.addColorStop(1, hsla(pGlow, 0));
           ctx.fillStyle = gr;
-          ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, 8, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, 10, 0, Math.PI * 2); ctx.fill();
         }
       }
 
