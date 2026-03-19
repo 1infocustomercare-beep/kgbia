@@ -122,6 +122,7 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 };
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
+const IS_TOUCH_DEVICE = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 
 /** Allow circuit to bleed subtly through section backgrounds for a premium layered look.
  * Caps opacity at 0.92 so the DNA pattern is faintly visible even behind content. */
@@ -307,7 +308,7 @@ const NeuralCellsBackground = () => {
   }, []);
 
   // Mobile: fewer cells to reduce DOM node count
-  const CELL_COUNT = isMobile ? 20 : 40;
+  const CELL_COUNT = isMobile ? 12 : 40;
   const VB_W = isMobile ? 60 : 100;
   const VB_H = isMobile ? 130 : 100;
 
@@ -568,7 +569,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 /** Shared viewport config — triggers animations 200px before element enters screen on mobile */
-const vpOnce = { once: true, margin: "0px 0px -150px 0px" as any } as const;
+const vpOnce = { once: true, margin: (IS_MOBILE_LP ? "0px 0px -80px 0px" : "0px 0px -150px 0px") as any } as const;
 const fadeUp = { hidden: { opacity: 0, y: 25 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: smoothEase } } };
 const fadeScale = { hidden: { opacity: 0, y: 10, scale: 0.98 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: smoothEase } } };
 const staggerContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } } };
@@ -2466,21 +2467,29 @@ const LandingPage = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
-  /* Mobile viewport-animation safety: reveal stuck elements without scroll polling */
-  /* Viewport-animation safety: reveal stuck framer-motion elements on ALL viewports */
+  /* Viewport-animation safety: reveal stuck framer-motion elements */
   useEffect(() => {
+    // On mobile, use a simpler/cheaper approach
+    if (IS_MOBILE_LP) {
+      // Single delayed scan — force all hidden sections visible after 3s
+      const timer = window.setTimeout(() => {
+        document.querySelectorAll<HTMLElement>('section [style*="opacity: 0"]').forEach((el) => {
+          el.style.transition = "opacity 300ms ease-out";
+          el.style.opacity = "1";
+          el.style.transform = "none";
+        });
+      }, 3000);
+      return () => window.clearTimeout(timer);
+    }
+
+    // Desktop: full IntersectionObserver approach
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-
           const el = entry.target as HTMLElement;
           const computedOpacity = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
-          if (computedOpacity > 0.02) {
-            observer.unobserve(el);
-            return;
-          }
-
+          if (computedOpacity > 0.02) { observer.unobserve(el); return; }
           el.style.willChange = "opacity, transform";
           el.style.transition = "opacity 400ms ease-out, transform 400ms ease-out";
           el.style.opacity = "1";
@@ -2492,7 +2501,6 @@ const LandingPage = () => {
     );
 
     const observeHiddenCandidates = () => {
-      // Catch framer-motion elements with opacity: 0 (various formats)
       document.querySelectorAll<HTMLElement>('[style*="opacity"]').forEach((el) => {
         const computed = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
         if (computed < 0.02) observer.observe(el);
@@ -2501,12 +2509,11 @@ const LandingPage = () => {
 
     observeHiddenCandidates();
     const scans = [
-    window.setTimeout(observeHiddenCandidates, 800),
-    window.setTimeout(observeHiddenCandidates, 2000),
-    window.setTimeout(observeHiddenCandidates, 4000)];
+      window.setTimeout(observeHiddenCandidates, 800),
+      window.setTimeout(observeHiddenCandidates, 2000),
+      window.setTimeout(observeHiddenCandidates, 4000)
+    ];
 
-
-    // Nuclear fallback: after 5s force all hidden sections visible
     const nuclear = window.setTimeout(() => {
       document.querySelectorAll<HTMLElement>('section [style*="opacity"]').forEach((el) => {
         const computed = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
@@ -3211,7 +3218,7 @@ const LandingPage = () => {
                              HERO
                             ═══════════════════════════════════════════ */}
        <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-28 sm:pt-28 pb-20 sm:pb-16"
-      style={{ opacity: heroOpacity }}>
+      style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Cinematic video background ═══ */}
         <div className="absolute inset-0" style={{ zIndex: 2 }}>
@@ -3220,7 +3227,7 @@ const LandingPage = () => {
             muted
             loop
             playsInline
-            preload="auto"
+            preload={IS_MOBILE_LP ? "none" : "auto"}
             controls={false}
             disablePictureInPicture
             disableRemotePlayback
@@ -3235,20 +3242,20 @@ const LandingPage = () => {
           <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
         </div>
 
-        {/* ═══ LAYER 1: Central glow orb ═══ */}
-        <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
+        {/* ═══ LAYER 1: Central glow orb — skip on mobile for GPU savings ═══ */}
+        {!IS_MOBILE_LP && <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
           <motion.div className="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] rounded-full blur-[180px]"
           style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.06), hsla(35,45%,50%,0.03), transparent 70%)" }}
           animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />
           
-        </div>
+        </div>}
 
-        <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
+        <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Clean badge — gold accent */}
-            <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border bg-primary/[0.04] backdrop-blur-sm mb-5 sm:mb-7"
+            <motion.div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border bg-primary/[0.04] mb-5 sm:mb-7 ${IS_MOBILE_LP ? "" : "backdrop-blur-sm"}`}
             style={{ borderColor: "hsla(35,45%,50%,0.2)" }}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} />
@@ -3320,19 +3327,20 @@ const LandingPage = () => {
             <motion.div className="mt-14 sm:mt-20 w-full grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, duration: 0.8 }}>
               {metrics.map((m, i) =>
-              <motion.div key={i} className="group relative rounded-2xl p-5 sm:p-6 text-center overflow-hidden backdrop-blur-xl"
+              <motion.div key={i} className={`group relative rounded-2xl p-5 sm:p-6 text-center overflow-hidden ${IS_MOBILE_LP ? "" : "backdrop-blur-xl"}`}
               style={{
                 background: "linear-gradient(145deg, hsla(230,12%,13%,0.93), hsla(230,10%,10%,0.94))",
                 border: "1px solid hsla(35,30%,45%,0.15)",
                 boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.08), 0 8px 30px hsla(230,10%,4%,0.5)"
               }}
-              whileHover={{ y: -4, scale: 1.02, boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.12), 0 12px 40px hsla(230,10%,4%,0.6)" }}
+              whileHover={IS_MOBILE_LP ? undefined : { y: -4, scale: 1.02, boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.12), 0 12px 40px hsla(230,10%,4%,0.6)" }}
               transition={{ duration: 0.3, ease: "easeOut" }}>
-                  {/* Shimmer sweep — subtle */}
-                  <motion.div className="absolute inset-0 pointer-events-none"
+                  {/* Shimmer sweep — desktop only */}
+                  {!IS_MOBILE_LP && <motion.div className="absolute inset-0 pointer-events-none"
                 style={{ background: "linear-gradient(105deg, transparent 30%, hsla(35,30%,55%,0.06) 48%, transparent 70%)" }}
                 animate={{ x: ["-200%", "300%"] }}
                 transition={{ duration: 4, repeat: Infinity, repeatDelay: 3 + i, ease: "easeInOut" }} />
+                }
                 
                   {/* Top highlight line */}
                   <div className="absolute top-0 left-[10%] right-[10%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(35,35%,50%,0.2), transparent)" }} />
@@ -6498,8 +6506,8 @@ const LandingPage = () => {
       {/* ═══════ STICKY CTA ═══════ */}
       <AnimatePresence>
         {ctaVisible &&
-        <motion.div className="fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] backdrop-blur-2xl border-t border-border/20"
-        style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.98), hsla(38,12%,7%,0.92))" }}
+        <motion.div className={`fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] border-t border-border/20 ${IS_MOBILE_LP ? "" : "backdrop-blur-2xl"}`}
+        style={{ background: IS_MOBILE_LP ? "hsla(0,0%,4%,0.98)" : "linear-gradient(180deg, hsla(0,0%,4%,0.98), hsla(38,12%,7%,0.92))" }}
         initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} transition={{ type: "spring", damping: 25 }}>
             <div className="flex gap-2 max-w-md mx-auto">
               <motion.button onClick={() => scrollTo("pricing")}
