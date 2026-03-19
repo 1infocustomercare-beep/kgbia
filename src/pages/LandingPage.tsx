@@ -3774,7 +3774,7 @@ const LandingPage = () => {
               if (slug) {
                 allItems.push({
                   name: es.title, route: `/demo/${slug}`, color: INDUSTRY_COLORS[mapped.id] || "#8b5cf6",
-                  label: mapped.modules, nav: `/demo/${slug}`, image: sectorHeroFood
+                  label: mapped.modules, nav: `/demo/${slug}`, image: SECTOR_HERO_IMAGES[mapped.id] || sectorHeroFood
                 });
               }
             }
