@@ -62,6 +62,11 @@ import sectorHeroEducation from "@/assets/sector-hero-education.jpg";
 import sectorHeroChildcare from "@/assets/sector-hero-childcare.jpg";
 import sectorHeroTattoo from "@/assets/sector-hero-tattoo.jpg";
 import sectorHeroCleaning from "@/assets/sector-hero-cleaning.jpg";
+import sectorHeroAgriturismo from "@/assets/sector-hero-agriturismo.jpg";
+import sectorHeroLegal from "@/assets/sector-hero-legal.jpg";
+import sectorHeroAccounting from "@/assets/sector-hero-accounting.jpg";
+import sectorHeroElectrician from "@/assets/sector-hero-electrician.jpg";
+import sectorHeroCustom from "@/assets/sector-hero-custom.jpg";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 const EmpireTeamStory = lazy(() => import("@/components/public/EmpireTeamStory"));
@@ -3889,14 +3894,15 @@ const LandingPage = () => {
             food: sectorHeroFood, ncc: sectorHeroNcc, beauty: sectorHeroBeauty,
             healthcare: sectorHeroHealthcare, retail: sectorHeroRetail,
             fitness: sectorHeroFitness, hospitality: sectorHeroHotel,
-            beach: sectorHeroBeach, plumber: sectorHeroPlumber, electrician: sectorHeroPlumber,
+            beach: sectorHeroBeach, plumber: sectorHeroPlumber, electrician: sectorHeroElectrician,
             construction: sectorHeroConstruction, events: sectorHeroEvents,
             garage: sectorHeroGarage, logistics: sectorHeroLogistics,
             gardening: sectorHeroGardening, veterinary: sectorHeroVeterinary,
             photography: sectorHeroPhotography, education: sectorHeroEducation,
             childcare: sectorHeroChildcare, tattoo: sectorHeroTattoo,
-            cleaning: sectorHeroCleaning, agriturismo: sectorHeroGardening,
-            legal: sectorHeroEducation, accounting: sectorHeroEducation
+            cleaning: sectorHeroCleaning, agriturismo: sectorHeroAgriturismo,
+            legal: sectorHeroLegal, accounting: sectorHeroAccounting,
+            custom: sectorHeroCustom
           };
           const allItems: CarouselItem[] = industries.map((ind) => {
             const slug = DEMO_SLUGS[ind.id];
@@ -3973,11 +3979,26 @@ const LandingPage = () => {
             const SECTOR_IMAGES_D: Record<string, string> = {
               food: sectorHeroFood, ncc: sectorHeroNcc, beauty: sectorHeroBeauty,
               healthcare: sectorHeroHealthcare, retail: sectorHeroRetail,
-              fitness: sectorHeroFitness, hospitality: sectorHeroHotel
+              fitness: sectorHeroFitness, hospitality: sectorHeroHotel,
+              beach: sectorHeroBeach, plumber: sectorHeroPlumber, electrician: sectorHeroElectrician,
+              construction: sectorHeroConstruction, events: sectorHeroEvents,
+              garage: sectorHeroGarage, logistics: sectorHeroLogistics,
+              gardening: sectorHeroGardening, veterinary: sectorHeroVeterinary,
+              photography: sectorHeroPhotography, education: sectorHeroEducation,
+              childcare: sectorHeroChildcare, tattoo: sectorHeroTattoo,
+              cleaning: sectorHeroCleaning, agriturismo: sectorHeroAgriturismo,
+              legal: sectorHeroLegal, accounting: sectorHeroAccounting,
+              custom: sectorHeroCustom
             };
             const INDUSTRY_COLORS_D: Record<string, string> = {
               food: "#e85d04", ncc: "#C9A84C", beauty: "#e91e8c", healthcare: "#0ea5e9",
-              retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981"
+              retail: "#8b5cf6", fitness: "#f97316", hospitality: "#10b981",
+              beach: "#06b6d4", plumber: "#3b82f6", electrician: "#eab308",
+              construction: "#f59e0b", events: "#d946ef", garage: "#ef4444",
+              logistics: "#0ea5e9", gardening: "#22c55e", veterinary: "#ec4899",
+              photography: "#a855f7", education: "#0891b2", childcare: "#f472b6",
+              tattoo: "#6d28d9", cleaning: "#14b8a6", agriturismo: "#65a30d",
+              legal: "#64748b", accounting: "#6366f1", custom: "#8b5cf6"
             };
             return industries.map((ind, i) => {
               const slug = DEMO_SLUGS[ind.id];
