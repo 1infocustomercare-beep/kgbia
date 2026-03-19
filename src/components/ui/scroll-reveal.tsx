@@ -4,21 +4,12 @@ import { cn } from "@/lib/utils";
 interface ScrollRevealProps {
   children: React.ReactNode;
   className?: string;
-  /** Enable stagger delay on direct children */
   stagger?: boolean;
-  /** Custom threshold (0-1) */
   threshold?: number;
-  /** Delay in ms before starting */
   delay?: number;
-  /** Animation direction */
   direction?: "up" | "down" | "left" | "right" | "scale";
-  as?: keyof JSX.IntrinsicElements;
 }
 
-/**
- * Wraps children with scroll-triggered reveal animation.
- * Uses IntersectionObserver for performance.
- */
 export function ScrollReveal({
   children,
   className,
@@ -26,7 +17,6 @@ export function ScrollReveal({
   threshold = 0.1,
   delay = 0,
   direction = "up",
-  as: Component = "div",
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -62,8 +52,8 @@ export function ScrollReveal({
   };
 
   return (
-    <Component
-      ref={ref as any}
+    <div
+      ref={ref}
       className={cn(
         "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
         revealed ? "opacity-100 translate-y-0 translate-x-0 scale-100" : `opacity-0 ${directionStyles[direction]}`,
@@ -72,7 +62,7 @@ export function ScrollReveal({
       )}
     >
       {children}
-    </Component>
+    </div>
   );
 }
 
