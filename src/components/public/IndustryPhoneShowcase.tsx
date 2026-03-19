@@ -907,7 +907,6 @@ export function IPhoneFrame({
   // 3D perspective: lateral phones rotate toward center
   const rotateY = index < centerIdx ? 4 - distFromCenter * 0.5 : index > centerIdx ? -4 + distFromCenter * 0.5 : 0;
   const phoneScale = isCenter ? 1.08 : isNear ? 1.0 : 0.92;
-  const blurAmount = isCenter ? 0 : isNear ? 0 : 1.5;
 
   return (
     <motion.div
@@ -918,7 +917,7 @@ export function IPhoneFrame({
       transition={{ duration: 0.7, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
       style={{
         transform: `perspective(1200px) rotateY(${rotateY}deg)`,
-        filter: blurAmount > 0 ? `blur(${blurAmount}px)` : undefined,
+        filter: "none",
         zIndex: isCenter ? 10 : isNear ? 5 : 1,
       }}
     >
