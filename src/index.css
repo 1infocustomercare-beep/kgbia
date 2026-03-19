@@ -94,11 +94,20 @@
   /* ═══ MODERN ROUNDED DESIGN SYSTEM ═══ */
   button, [role="button"] {
     border-radius: var(--radius) !important;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  button:hover, [role="button"]:hover {
+    transform: scale(1.02);
+  }
+
+  button:active, [role="button"]:active {
+    transform: scale(0.97);
   }
 
   input, textarea, select, [role="combobox"] {
     border-radius: var(--radius) !important;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
   }
 
   [role="dialog"], [role="alertdialog"],
@@ -113,7 +122,7 @@
 
   /* Smooth card & surface elevation */
   [class*="shadow"] {
-    transition: box-shadow 0.25s ease, transform 0.25s ease;
+    transition: box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
