@@ -2748,16 +2748,38 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
   const sectorStyle = getSectorStyle(industryId);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [activeIdx, setActiveIdx] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(Math.floor(SCREENS.length / 2));
   const [showAll, setShowAll] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
 
-  // Auto-scroll on mobile
+  // Helper: compute visual props based on distance from active
+  const getPhoneStyle = (i: number, total: number, active: number) => {
+    // Calculate shortest circular distance
+    let dist = i - active;
+    if (dist > total / 2) dist -= total;
+    if (dist < -total / 2) dist += total;
+    const absDist = Math.abs(dist);
+
+    if (absDist > 3) {
+      return { scale: 0.85, opacity: 0, rotateY: 0, zIndex: 0 };
+    }
+
+    const configs: Record<number, { scale: number; opacity: number; rotateY: number; zIndex: number }> = {
+      0: { scale: 1.1, opacity: 1, rotateY: 0, zIndex: 10 },
+      1: { scale: 1.0, opacity: 1, rotateY: dist > 0 ? -2 : 2, zIndex: 5 },
+      2: { scale: 0.95, opacity: 0.85, rotateY: dist > 0 ? -4 : 4, zIndex: 3 },
+      3: { scale: 0.9, opacity: 0.7, rotateY: dist > 0 ? -6 : 6, zIndex: 1 },
+    };
+
+    return configs[absDist] || configs[3];
+  };
+
+  // Auto-scroll
   useEffect(() => {
     if (!isPlaying || showAll) { clearInterval(intervalRef.current); return; }
     intervalRef.current = setInterval(() => {
       setActiveIdx(prev => (prev + 1) % SCREENS.length);
-    }, 3000);
+    }, 4000);
     return () => clearInterval(intervalRef.current);
   }, [isPlaying, showAll]);
 
@@ -2773,24 +2795,51 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
   return (
     <div className={`${className}`}>
       {/* Desktop: horizontal scroll with 3D perspective showcase */}
-      <div className={`hidden sm:block relative ${compact ? "scale-[0.85] origin-center" : ""}`}>
+      <div
+        className={`hidden sm:block relative ${compact ? "scale-[0.85] origin-center" : ""}`}
+        onMouseEnter={() => setIsPlaying(false)}
+        onMouseLeave={() => setIsPlaying(true)}
+      >
         <div className="overflow-x-auto pb-3 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
           <div className="flex items-end gap-3 min-w-max justify-center px-2" style={{ perspective: "1200px" }}>
-            {SCREENS.map((screen, i) => (
-              <IPhoneFrame
-                key={screen.type}
-                screen={screen}
-                color={color}
-                emoji={cfg.emoji}
-                companyName={demo.companyName}
-                services={demo.services}
-                index={i}
-                sectorStyle={sectorStyle}
-                industryId={industryId}
-                totalCount={SCREENS.length}
-              />
-            ))}
+            {SCREENS.map((screen, i) => {
+              const style = getPhoneStyle(i, SCREENS.length, activeIdx);
+              return (
+                <div
+                  key={screen.type}
+                  className="transition-all duration-500 ease-in-out cursor-pointer"
+                  style={{
+                    transform: `scale(${style.scale}) rotateY(${style.rotateY}deg)`,
+                    opacity: style.opacity,
+                    zIndex: style.zIndex,
+                    filter: "none",
+                  }}
+                  onClick={() => { setActiveIdx(i); setIsPlaying(false); }}
+                >
+                  <IPhoneFrame
+                    key={screen.type}
+                    screen={screen}
+                    color={color}
+                    emoji={cfg.emoji}
+                    companyName={demo.companyName}
+                    services={demo.services}
+                    index={i}
+                    sectorStyle={sectorStyle}
+                    industryId={industryId}
+                    totalCount={SCREENS.length}
+                  />
+                </div>
+              );
+            })}
           </div>
+        </div>
+        {/* Desktop dots */}
+        <div className="flex justify-center gap-1.5 mt-2">
+          {SCREENS.map((_, i) => (
+            <button key={i} onClick={() => { setActiveIdx(i); setIsPlaying(false); }}
+              className="w-2 h-2 rounded-full transition-all duration-300"
+              style={{ backgroundColor: i === activeIdx ? color : `${color}30`, transform: i === activeIdx ? "scale(1.3)" : "scale(1)" }} />
+          ))}
         </div>
       </div>
 
@@ -2831,27 +2880,20 @@ export default function IndustryPhoneShowcase({ industryId, className = "", comp
             onMouseEnter={() => setIsPlaying(false)}
             onMouseLeave={() => setIsPlaying(true)}>
             {SCREENS.map((screen, i) => {
-              const isActive = i === activeIdx;
-              const isLeft = i === (activeIdx - 1 + SCREENS.length) % SCREENS.length;
-              const isRight = i === (activeIdx + 1) % SCREENS.length;
+              const style = getPhoneStyle(i, SCREENS.length, activeIdx);
               return (
                 <div
                   key={screen.type}
-                  className="snap-center flex-shrink-0 transition-all duration-500 ease-out"
+                  className="snap-center flex-shrink-0 transition-all duration-500 ease-in-out"
                   style={{
                     width: "32vw",
                     maxWidth: 120,
-                    transform: isActive
-                      ? "scale(1.1) rotateY(0deg)"
-                      : isLeft
-                      ? "scale(0.9) rotateY(5deg)"
-                      : isRight
-                      ? "scale(0.9) rotateY(-5deg)"
-                      : "scale(0.85)",
-                    filter: isActive ? "none" : "blur(1px)",
-                    opacity: isActive ? 1 : 0.8,
-                    zIndex: isActive ? 10 : 1,
+                    transform: `scale(${style.scale}) rotateY(${style.rotateY}deg)`,
+                    filter: "none",
+                    opacity: style.opacity,
+                    zIndex: style.zIndex,
                   }}
+                  onClick={() => { setActiveIdx(i); setIsPlaying(false); }}
                 >
                   <IPhoneFrame
                     screen={screen}
