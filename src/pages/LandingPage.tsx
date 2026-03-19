@@ -122,14 +122,15 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-/** Reduce section background alpha so the DNA circuit canvas shows through edges/gaps.
- *  Replaces alpha=1 with 0.88 so circuit bleeds through subtly without hurting readability. */
+/** Reduce section background alpha slightly so the DNA circuit canvas peeks through
+ *  at edges and gaps BETWEEN sections — not under text/content.
+ *  Also normalizes previously over-transparent values (0.75-0.82) back up. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !style.background || typeof style.background !== "string") return style;
-  // Replace all alpha=1 in hsla() with 0.88 for circuit visibility
-  const bg = style.background.replace(/hsla\(([^)]+),\s*1\)/g, (match, inner) => {
-    return `hsla(${inner},0.88)`;
-  });
+  // Replace alpha=1 → 0.93, and normalize any 0.7x/0.8x → 0.93
+  let bg = style.background.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*1\)/g, (_, inner) => `hsla(${inner},0.93)`);
+  bg = bg.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*0\.7\d\)/g, (_, inner) => `hsla(${inner},0.93)`);
+  bg = bg.replace(/hsla\(([^,]+,[^,]+,[^,]+),\s*0\.8\d\)/g, (_, inner) => `hsla(${inner},0.93)`);
   return { ...style, background: bg };
 };
 
