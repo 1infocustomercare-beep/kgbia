@@ -5799,7 +5799,7 @@ const LandingPage = () => {
               {testimonials.map((t, i) =>
             <div key={i} className="relative p-4 rounded-xl overflow-hidden"
             style={{
-              background: "linear-gradient(165deg, hsla(265,25%,16%,0.7), hsla(265,20%,10%,0.6))",
+              background: "linear-gradient(165deg, hsla(265,25%,8%,0.98), hsla(265,20%,5%,0.99))",
               border: "1px solid hsla(265,40%,50%,0.12)",
               backdropFilter: "blur(24px)"
             }}>
