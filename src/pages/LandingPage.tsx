@@ -4282,7 +4282,7 @@ const LandingPage = () => {
            COMPARISON TABLE — Empire vs Others
           ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(230,16%,4%,1) 0%, hsla(265,24%,10%,1) 15%, hsla(38,16%,9%,1) 35%, hsla(265,20%,10%,1) 55%, hsla(38,14%,8%,1) 75%, hsla(230,16%,4%,1) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.88) 0%, hsla(265,24%,10%,0.85) 15%, hsla(38,16%,9%,0.85) 35%, hsla(265,20%,10%,0.85) 55%, hsla(38,14%,8%,0.85) 75%, hsla(230,16%,4%,0.88) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
