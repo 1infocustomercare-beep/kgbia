@@ -19,6 +19,8 @@ import {
   Gem, Crown, Sun, Mountain, Wine, Bath, Flower2, Plane, Luggage, Globe
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import { DemoPricingSection } from "@/components/public/DemoPricingSection";
+import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import fallbackHeroVideo from "@/assets/video-ncc-hero.mp4";
 
 /* ── HOTEL DESIGN SYSTEM — Emerald + Gold Classico ── */
