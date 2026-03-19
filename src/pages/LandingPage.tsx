@@ -6269,9 +6269,9 @@ const LandingPage = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 mb-16">
             <motion.div className="flex items-center gap-3" initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <div className="relative">
-                <div className="absolute -inset-1 rounded-xl blur-md" style={{ background: "hsla(265,70%,60%,0.15)" }} />
-                <div className="relative w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsla(265,70%,60%,1), hsla(280,60%,50%,1))", boxShadow: "0 0 25px hsla(265,70%,60%,0.25)" }}>
-                  <img src={empireLogoNew} alt="Empire AI" className="w-6 h-6 object-contain" />
+                <div className="absolute -inset-1 rounded-full blur-md" style={{ background: "hsla(265,70%,60%,0.15)" }} />
+                <div className="relative w-10 h-10 rounded-full overflow-hidden flex items-center justify-center" style={{ boxShadow: "0 0 25px hsla(265,70%,60%,0.25), 0 0 0 2px hsla(38,50%,55%,0.3)" }}>
+                  <img src={empireLogoNew} alt="Empire AI" className="w-full h-full object-cover" />
                 </div>
               </div>
               <div>
