@@ -789,7 +789,7 @@ const UnifiedIntro = ({ onComplete }: { onComplete: () => void }) => {
                 className="w-[52px] h-[52px] sm:w-[62px] sm:h-[62px] md:w-[72px] md:h-[72px] rounded-[16px] sm:rounded-[20px] flex items-center justify-center"
                 style={{ background: "linear-gradient(135deg, hsl(265,75%,62%), hsl(38,50%,55%), hsl(160,55%,48%))" }}
               >
-                <Crown className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]" />
+                <img src={empireLogoNew} alt="Empire AI" className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]" />
               </div>
             </div>
           </motion.div>
