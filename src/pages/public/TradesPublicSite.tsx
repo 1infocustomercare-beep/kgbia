@@ -346,21 +346,33 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
 
       <NeonDivider color={A} />
 
-      {/* SERVICES */}
+      {/* SERVICES — Sector-specific layout variant */}
       <section id="servizi" className="py-20 px-4" style={{ background: `${A}04` }}>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-[0.2em] mb-4"
+              style={{ background: `${A}15`, color: A, border: `1px solid ${A}25` }}>
+              {config.emoji} {config.label}
+            </div>
             <h2 className="text-3xl sm:text-4xl font-bold mb-3">I Nostri Servizi</h2>
             <p className="text-white/30 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>Soluzioni professionali per ogni esigenza</p>
           </div>
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {services.map((s, i) => (
               <motion.div key={i} variants={fadeUp} custom={i}>
-                <Card className="border-0 h-full hover:scale-[1.02] transition-all group rounded-xl overflow-hidden" style={{ background: `${A}08`, border: `1px solid ${A}12` }}>
-                  <CardContent className="p-6 text-center">
-                    <div className="text-4xl mb-4">{s.emoji}</div>
-                    <h3 className="font-bold text-white mb-1">{s.name}</h3>
-                    <p className="text-sm text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
+                <Card className="border-0 h-full group rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1" style={{ background: `${A}08`, border: `1px solid ${A}12` }}>
+                  <CardContent className="p-6 relative">
+                    {/* Hover glow */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{ background: `radial-gradient(ellipse at center, ${A}15, transparent 70%)` }} />
+                    <div className="relative text-center">
+                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110 group-hover:rotate-3"
+                        style={{ background: `${A}15`, border: `1px solid ${A}20` }}>
+                        <span className="text-3xl">{s.emoji}</span>
+                      </div>
+                      <h3 className="font-bold text-white mb-1.5">{s.name}</h3>
+                      <p className="text-sm text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
