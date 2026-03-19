@@ -285,7 +285,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
             >
-              <img src={empireLogoNew} alt="Empire AI" className="w-10 h-10 object-contain" />
+              <img src={empireLogoNew} alt="Empire AI" className="w-12 h-12 rounded-full object-cover" style={{ boxShadow: "0 0 0 2px hsla(38,50%,55%,0.3)" }} />
             </motion.div>
             <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">Area Riservata</h1>
             <p className="text-sm text-muted-foreground mt-1">Seleziona il tuo accesso</p>
