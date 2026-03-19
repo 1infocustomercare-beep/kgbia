@@ -287,7 +287,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             ? `linear-gradient(155deg, hsla(240,16%,10%,1), hsla(240,20%,7%,1))`
             : `linear-gradient(155deg, hsla(240,14%,9%,1), hsla(240,18%,6%,1))`,
           border: `1px solid ${isFeatured ? `${color}20` : "hsla(265,20%,22%,0.12)"}`,
-          ringColor: isExpanded ? `${color}30` : undefined,
+          ...(isExpanded ? { boxShadow: `0 0 0 1px ${color}30` } : {}),
         }}>
 
         {/* Top accent — featured only */}
