@@ -20,6 +20,8 @@ import {
   ChevronDown, Menu, X, Quote, Users, CheckCircle, ChevronRight, ChevronLeft
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import { DemoPricingSection } from "@/components/public/DemoPricingSection";
+import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 import bakeryHeroPoster from "@/assets/bakery-croissant.jpg";
 
@@ -369,17 +371,12 @@ export default function BakeryPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoPricingSection sector="bakery" accentColor={TERRA} darkMode={false} bgColor={`${TERRA}06`} textColor={ESPRESSO} />
       <AIAgentsShowcase sector="bakery" />
       <SectorValueProposition sectorKey="bakery" accentColor={TERRA} darkMode={false} sectorLabel="Panificio" />
       <AutomationShowcase accentColor={TERRA} accentBg="bg-amber-700" sectorName="panifici e pasticcerie" darkMode={false} />
 
-      {/* FOOTER */}
-      <footer className="py-8 border-t" style={{ borderColor: `${TERRA}10`, background: ESPRESSO }}>
-        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ fontFamily: "'Lato', sans-serif" }}>
-          <p className="text-xs" style={{ color: `${VANILLA}30` }}>© {new Date().getFullYear()} {name}.</p>
-          <div className="flex gap-4 text-xs" style={{ color: `${VANILLA}30` }}><a href="/privacy">Privacy</a><span>Powered by Empire.AI</span></div>
-        </div>
-      </footer>
+      <DemoRichFooter company={company} accentColor={TERRA} darkMode={true} bgColor={ESPRESSO} sectorLabel="PANIFICIO ARTIGIANALE" fontFamily="'Lato', sans-serif" />
 
       {phone && (
         <motion.a href={whatsapp} target="_blank" rel="noopener"

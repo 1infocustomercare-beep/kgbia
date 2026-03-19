@@ -19,6 +19,8 @@ import {
   Award, Video, FileText, MessageCircle, Activity, ChevronDown, Quote, Menu, X, ChevronLeft, ChevronRight, Sparkles
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import { DemoPricingSection } from "@/components/public/DemoPricingSection";
+import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import fallbackHeroVideo from "@/assets/video-hero-empire.mp4";
 
 /* ─── ARCTIC SAGE + WARM IVORY AESTHETIC ─── */
@@ -409,13 +411,12 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoPricingSection sector="healthcare" accentColor={SAGE} darkMode={false} bgColor={`${SAGE}06`} textColor={NAVY} />
       <AIAgentsShowcase sector="healthcare" />
       <SectorValueProposition sectorKey="healthcare" accentColor={SAGE} darkMode={false} sectorLabel="Studio Medico" />
       <AutomationShowcase accentColor={SAGE} accentBg="bg-emerald-600" sectorName="studi medici e cliniche" darkMode={false} />
 
-      <footer className="py-8 border-t text-center text-xs" style={{ borderColor: `${SAGE}10`, color: `${NAVY}30`, fontFamily: "'Work Sans', sans-serif" }}>
-        <p>© {new Date().getFullYear()} {name}. Tutti i diritti riservati. | Powered by Empire.AI</p>
-      </footer>
+      <DemoRichFooter company={company} accentColor={SAGE} darkMode={false} bgColor="#fff" sectorLabel="HEALTHCARE PREMIUM" fontFamily="'Work Sans', sans-serif" />
 
       {phone && (
         <motion.a href={`https://wa.me/${phone.replace(/\D/g, "")}`} target="_blank" rel="noopener"

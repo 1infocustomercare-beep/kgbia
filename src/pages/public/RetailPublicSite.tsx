@@ -16,6 +16,8 @@ import {
   CreditCard, Award, RefreshCw, Package, ChevronDown, Quote, Instagram, Menu, X, ChevronLeft, ChevronRight, Sparkles, Users, CheckCircle
 } from "lucide-react";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
+import { DemoPricingSection } from "@/components/public/DemoPricingSection";
+import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 /* ─── ONYX + CHAMPAGNE HIGH-FASHION EDITORIAL ─── */
@@ -317,16 +319,12 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoPricingSection sector="retail" accentColor={CHAMPAGNE} darkMode={true} bgColor={ONYX} />
       <AIAgentsShowcase sector="retail" />
       <SectorValueProposition sectorKey="retail" accentColor={CHAMPAGNE} darkMode={true} sectorLabel="Negozio" />
       <AutomationShowcase accentColor={CHAMPAGNE} accentBg="bg-amber-600" sectorName="negozi e retail" darkMode={true} />
 
-      <footer className="py-8" style={{ background: ONYX, borderTop: `1px solid rgba(255,255,255,0.04)` }}>
-        <div className="max-w-6xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-[10px] tracking-[0.15em]" style={{ color: "rgba(255,255,255,0.15)", fontFamily: "'Montserrat', sans-serif" }}>© {new Date().getFullYear()} {name.toUpperCase()}</p>
-          <div className="flex gap-4 text-[10px]" style={{ color: "rgba(255,255,255,0.15)", fontFamily: "'Montserrat', sans-serif" }}><a href="/privacy">Privacy</a><span>Powered by Empire.AI</span></div>
-        </div>
-      </footer>
+      <DemoRichFooter company={company} accentColor={CHAMPAGNE} darkMode={true} bgColor={ONYX} sectorLabel="PREMIUM RETAIL" fontFamily="'Montserrat', sans-serif" />
 
       {phone && (
         <motion.a href={`https://wa.me/${phone.replace(/\D/g, "")}`} target="_blank" rel="noopener"
