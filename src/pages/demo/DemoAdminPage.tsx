@@ -4,6 +4,7 @@
  * Rich, sector-specific, with realistic mock data
  */
 import { useState, useMemo, useEffect, useRef } from "react";
+import { TutorialPopup } from "@/components/ui/tutorial-popup";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSectorConfig, SECTOR_CONFIGS } from "@/config/sectorConfig";
