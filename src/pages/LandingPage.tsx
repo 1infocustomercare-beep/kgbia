@@ -109,19 +109,12 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
-/** Makes section backgrounds semi-transparent on mobile so the circuit canvas bleeds through,
- *  and boosts lightness slightly so sections have visible premium color character instead of flat black */
+/** On mobile, keep section backgrounds richly colored (nearly opaque) so they don't look gray.
+ *  DNA circuit canvas is visible in the gaps BETWEEN sections, not through them. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !IS_MOBILE_LP || !style.background || typeof style.background !== "string") return style;
-  // 1. Replace opacity 1→0.90 so backgrounds stay rich & colorful, with subtle DNA bleed-through
-  let tweaked = (style.background as string).replace(/,\s*1\)/g, ", 0.90)");
-  // 2. Boost lightness & saturation slightly for premium color depth
-  tweaked = tweaked.replace(/hsla\((\d+),\s*(\d+)%,\s*(\d+)%/g, (_, h, s, l) => {
-    const newL = Math.min(parseInt(l) + 2, 16);
-    const newS = Math.min(parseInt(s) + 3, 35);
-    return `hsla(${h}, ${newS}%, ${newL}%`;
-  });
-  return { ...style, background: tweaked };
+  // Keep full opacity — no wash-out. DNA shows between sections, not through them.
+  return style;
 };
 
 const Section = forwardRef<HTMLElement, {id?: string;children: React.ReactNode;className?: string;style?: React.CSSProperties;}>(
