@@ -278,12 +278,13 @@ const PageLoader = () => {
 
 type RouteErrorBoundaryState = {
   hasError: boolean;
+  retryCount: number;
 };
 
 class RouteErrorBoundary extends React.Component<{ children: ReactNode }, RouteErrorBoundaryState> {
-  state: RouteErrorBoundaryState = { hasError: false };
+  state: RouteErrorBoundaryState = { hasError: false, retryCount: 0 };
 
-  static getDerivedStateFromError(): RouteErrorBoundaryState {
+  static getDerivedStateFromError(): Partial<RouteErrorBoundaryState> {
     return { hasError: true };
   }
 
@@ -294,6 +295,13 @@ class RouteErrorBoundary extends React.Component<{ children: ReactNode }, RouteE
     console.error("Route loading error:", error, errorInfo);
   }
 
+  handleRetry = () => {
+    // Clear chunk recovery flag so retry can attempt cache-busting again
+    clearChunkRecoveryFlag();
+    // Reset error state to re-render children (triggers lazy re-import)
+    this.setState((prev) => ({ hasError: false, retryCount: prev.retryCount + 1 }));
+  };
+
   render() {
     if (this.state.hasError) {
       return (
@@ -303,11 +311,20 @@ class RouteErrorBoundary extends React.Component<{ children: ReactNode }, RouteE
             <p className="text-sm text-muted-foreground">Il modulo non si è caricato al primo tentativo. Riprova ora.</p>
             <button
               type="button"
-              onClick={() => window.location.reload()}
+              onClick={this.handleRetry}
               className="w-full rounded-xl bg-primary text-primary-foreground py-2 text-sm font-medium"
             >
               Riprova
             </button>
+            {this.state.retryCount >= 2 && (
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="w-full rounded-xl border border-border py-2 text-sm text-muted-foreground"
+              >
+                Ricarica pagina
+              </button>
+            )}
           </div>
         </div>
       );
