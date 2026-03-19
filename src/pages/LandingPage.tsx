@@ -925,7 +925,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
   return (
     <Section id="pricing" className="relative overflow-hidden" style={{
-      background: "linear-gradient(180deg, hsla(0,0%,4%,1) 0%, hsla(0,0%,5%,1) 30%, hsla(38,22%,10%,1) 55%, hsla(0,0%,5%,1) 80%, hsla(0,0%,4%,1) 100%)"
+      background: "linear-gradient(180deg, hsla(0,0%,4%,0.88) 0%, hsla(0,0%,5%,0.85) 30%, hsla(38,22%,10%,0.85) 55%, hsla(0,0%,5%,0.85) 80%, hsla(0,0%,4%,0.88) 100%)"
     }}>
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.06]"
