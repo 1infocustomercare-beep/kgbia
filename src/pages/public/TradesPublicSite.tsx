@@ -750,6 +750,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         </div>
       </section>
 
+      <DemoTestimonialsCarousel sector="trades" accentColor={A} darkMode={true} bgColor={D} fontBody="'Inter', sans-serif" />
       <DemoPricingSection sector="trades" accentColor={A} darkMode={true} bgColor={D} />
       <AIAgentsShowcase sector="trades" />
       <SectorValueProposition sectorKey={industry === "electrician" || industry === "plumber" ? "trades" : (industry as string)} accentColor={A} darkMode={true} sectorLabel={config.label} />

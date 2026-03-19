@@ -715,6 +715,7 @@ export default function LuxuryPublicSite({ company, afterHero }: Props) {
       </Section>
 
       {/* ═══ PRICING + AI AGENTS + SECTOR VALUE + AUTOMATION ═══ */}
+      <DemoTestimonialsCarousel sector={industry} accentColor={accentHex} darkMode={isDark} bgColor={isDark ? p.bg : "#f9f9f7"} textColor={p.text} />
       <DemoPricingSection sector={industry} accentColor={accentHex} darkMode={isDark} bgColor={isDark ? p.bg : "#fff"} textColor={p.text} />
       <AIAgentsShowcase sector={industry} />
       <SectorValueProposition sectorKey={industry} accentColor={accentHex} darkMode={isDark} sectorLabel={config.label} />

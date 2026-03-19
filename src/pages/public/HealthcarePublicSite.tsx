@@ -412,6 +412,7 @@ export default function HealthcarePublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="healthcare" accentColor={SAGE} darkMode={false} bgColor="#fff" textColor={NAVY} fontDisplay="'DM Serif Display', serif" fontBody="'Work Sans', sans-serif" />
       <DemoPricingSection sector="healthcare" accentColor={SAGE} darkMode={false} bgColor={`${SAGE}06`} textColor={NAVY} />
       <AIAgentsShowcase sector="healthcare" />
       <SectorValueProposition sectorKey="healthcare" accentColor={SAGE} darkMode={false} sectorLabel="Studio Medico" />

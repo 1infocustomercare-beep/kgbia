@@ -344,6 +344,7 @@ export default function BeachPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="beach" accentColor={CORAL} darkMode={false} bgColor="#fff" textColor={OCEAN} fontDisplay="'Abril Fatface', serif" fontBody="'Source Sans 3', sans-serif" />
       <DemoPricingSection sector="beach" accentColor={CORAL} darkMode={false} bgColor={SAND} textColor={OCEAN} />
       <AIAgentsShowcase sector="beach" />
       <SectorValueProposition sectorKey="beach" accentColor={CORAL} darkMode={false} sectorLabel="Stabilimento Balneare" />

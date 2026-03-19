@@ -418,6 +418,7 @@ export default function FitnessPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="fitness" accentColor={VOLT} darkMode={true} bgColor={CARBON} fontDisplay="'Bebas Neue', sans-serif" fontBody="'Barlow', sans-serif" />
       <DemoPricingSection sector="fitness" accentColor={VOLT} darkMode={true} bgColor={STEEL} />
       <AIAgentsShowcase sector="fitness" />
       <SectorValueProposition sectorKey="fitness" accentColor={VOLT} darkMode={true} sectorLabel="Palestra" />

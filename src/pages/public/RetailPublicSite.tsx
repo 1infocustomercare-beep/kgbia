@@ -320,6 +320,7 @@ export default function RetailPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="retail" accentColor={CHAMPAGNE} darkMode={true} bgColor={ONYX} fontDisplay="'Cormorant Garamond', serif" fontBody="'Montserrat', sans-serif" />
       <DemoPricingSection sector="retail" accentColor={CHAMPAGNE} darkMode={true} bgColor={ONYX} />
       <AIAgentsShowcase sector="retail" />
       <SectorValueProposition sectorKey="retail" accentColor={CHAMPAGNE} darkMode={true} sectorLabel="Negozio" />

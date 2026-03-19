@@ -535,6 +535,7 @@ export default function BeautyPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="beauty" accentColor={B.rose} darkMode={true} bgColor={B.bg} fontDisplay="'Cormorant Garamond', serif" fontBody="'Jost', sans-serif" />
       <DemoPricingSection sector="beauty" accentColor={B.rose} darkMode={true} bgColor={B.bgWarm} />
       <AIAgentsShowcase sector="beauty" />
       <SectorValueProposition sectorKey="beauty" accentColor={B.rose} darkMode={true} sectorLabel="Salone" />

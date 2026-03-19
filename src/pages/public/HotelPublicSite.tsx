@@ -450,6 +450,7 @@ export default function HotelPublicSite({ company, afterHero }: Props) {
         </div>
       </Section>
 
+      <DemoTestimonialsCarousel sector="hotel" accentColor={H.gold} darkMode={true} bgColor={H.bgDark} fontDisplay="'Playfair Display', serif" fontBody="'Raleway', sans-serif" />
       <DemoPricingSection sector="hotel" accentColor={H.emerald} darkMode={true} bgColor={H.bgDeep} />
       <AIAgentsShowcase sector="hotel" />
       <SectorValueProposition sectorKey="hotel" accentColor={H.emerald} darkMode={true} sectorLabel="Hotel" />
