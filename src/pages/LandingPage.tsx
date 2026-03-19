@@ -2448,9 +2448,8 @@ const LandingPage = () => {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
 
   /* Mobile viewport-animation safety: reveal stuck elements without scroll polling */
+  /* Viewport-animation safety: reveal stuck framer-motion elements on ALL viewports */
   useEffect(() => {
-    if (window.innerWidth >= 640) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -2464,25 +2463,46 @@ const LandingPage = () => {
           }
 
           el.style.willChange = "opacity, transform";
-          el.style.transition = "opacity 220ms ease-out, transform 220ms ease-out";
+          el.style.transition = "opacity 400ms ease-out, transform 400ms ease-out";
           el.style.opacity = "1";
           el.style.transform = "none";
           observer.unobserve(el);
         });
       },
-      { root: null, rootMargin: "120px 0px", threshold: 0.01 }
+      { root: null, rootMargin: "200px 0px", threshold: 0.01 }
     );
 
     const observeHiddenCandidates = () => {
-      document.querySelectorAll<HTMLElement>('[style*="opacity: 0"]').forEach((el) => observer.observe(el));
+      // Catch framer-motion elements with opacity: 0 (various formats)
+      document.querySelectorAll<HTMLElement>('[style*="opacity"]').forEach((el) => {
+        const computed = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
+        if (computed < 0.02) observer.observe(el);
+      });
     };
 
     observeHiddenCandidates();
-    const lateScan = window.setTimeout(observeHiddenCandidates, 1200);
+    const scans = [
+      window.setTimeout(observeHiddenCandidates, 800),
+      window.setTimeout(observeHiddenCandidates, 2000),
+      window.setTimeout(observeHiddenCandidates, 4000),
+    ];
+
+    // Nuclear fallback: after 5s force all hidden sections visible
+    const nuclear = window.setTimeout(() => {
+      document.querySelectorAll<HTMLElement>('section [style*="opacity"]').forEach((el) => {
+        const computed = Number.parseFloat(window.getComputedStyle(el).opacity || "1");
+        if (computed < 0.02) {
+          el.style.transition = "opacity 300ms ease-out";
+          el.style.opacity = "1";
+          el.style.transform = "none";
+        }
+      });
+    }, 5000);
 
     return () => {
       observer.disconnect();
-      window.clearTimeout(lateScan);
+      scans.forEach(clearTimeout);
+      window.clearTimeout(nuclear);
     };
   }, []);
 
