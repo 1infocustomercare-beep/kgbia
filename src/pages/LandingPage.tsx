@@ -2867,8 +2867,8 @@ const LandingPage = () => {
                 
               </motion.div>
 
-              {/* Crown icon */}
-              <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-[hsla(38,50%,65%,0.9)] drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" />
+              {/* Logo image */}
+              <img src={empireLogoNew} alt="Empire AI" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" />
               
               {/* Breathing pulse ring */}
               <motion.div
