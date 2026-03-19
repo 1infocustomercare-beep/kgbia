@@ -17,7 +17,8 @@ import {
   Layers, Globe, Radio, MonitorSmartphone, Cpu, Fingerprint,
   ChevronRight, ChevronLeft, Pause, CircleCheck, Minus, Activity, ServerCog, Gauge, MessageSquare, Receipt,
   Workflow, ScanLine, Database, Wifi, Timer, LineChart,
-  Network, Atom, Radar, BrainCircuit, CircuitBoard, Waypoints, Binary } from
+  Network, Atom, Radar, BrainCircuit, CircuitBoard, Waypoints, Binary,
+  GraduationCap, Waves, Wrench, Leaf } from
 "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DEMO_SLUGS } from "@/data/demo-industries";
@@ -2573,24 +2574,24 @@ const LandingPage = () => {
 
 
   const extraSectors = [
-  { icon: "🎓", title: "Formazione & Coaching", desc: "Corsi, tutoring, certificazioni", gradient: "from-violet-500 to-purple-400" },
-  { icon: "🏖️", title: "Stabilimenti Balneari", desc: "Ombrelloni, lettini, bar spiaggia", gradient: "from-indigo-400 to-violet-400" },
-  { icon: "🐾", title: "Veterinari & Pet Care", desc: "Cliniche, toelettature, pensioni", gradient: "from-purple-400 to-fuchsia-400/80" },
-  { icon: "🔧", title: "Artigiani & Impiantisti", desc: "Idraulici, elettricisti, caldaisti", gradient: "from-indigo-500 to-purple-400" },
-  { icon: "🎨", title: "Studi Creativi", desc: "Fotografi, designer, architetti", gradient: "from-fuchsia-500/80 to-violet-400" },
-  { icon: "🏋️", title: "CrossFit & Functional", desc: "Box, classi, WOD, membership", gradient: "from-purple-500 to-indigo-400" },
-  { icon: "🧘", title: "Yoga & Pilates", desc: "Studi, ritiri, classi online", gradient: "from-violet-400 to-purple-300" },
-  { icon: "🚿", title: "Lavanderie & Stirerie", desc: "Ritiro, consegna, abbonamenti", gradient: "from-indigo-400 to-violet-300" },
-  { icon: "🎵", title: "Scuole di Musica", desc: "Lezioni, sale prove, eventi", gradient: "from-purple-500 to-violet-400" },
-  { icon: "🏠", title: "Agenzie Immobiliari", desc: "Annunci, visite, CRM clienti", gradient: "from-indigo-500 to-violet-500" },
-  { icon: "⚖️", title: "Studi Legali", desc: "Pratiche, clienti, parcelle", gradient: "from-slate-500 to-violet-400/60" },
-  { icon: "🏗️", title: "Edilizia & Costruzioni", desc: "Cantieri, preventivi, SAL", gradient: "from-purple-500/80 to-indigo-400" },
-  { icon: "🎭", title: "Eventi & Catering", desc: "Booking, menu, staff, logistica", gradient: "from-violet-500 to-purple-400" },
-  { icon: "🚗", title: "Autofficine & Carrozzerie", desc: "Interventi, ricambi, preventivi", gradient: "from-indigo-400/80 to-violet-400/60" },
-  { icon: "📦", title: "Logistica & Spedizioni", desc: "Tracking, magazzino, consegne", gradient: "from-purple-400 to-indigo-400" },
-  { icon: "🌿", title: "Giardinaggio & Vivaisti", desc: "Interventi, manutenzione, vendita", gradient: "from-violet-400 to-purple-400" },
-  { icon: "🎪", title: "Intrattenimento", desc: "Parchi, escape room, bowling", gradient: "from-fuchsia-400/80 to-violet-400" },
-  { icon: "🏫", title: "Asili & Doposcuola", desc: "Iscrizioni, presenze, comunicazioni", gradient: "from-indigo-400 to-purple-300" }];
+  { icon: <GraduationCap className="w-4 h-4" />, title: "Formazione & Coaching", desc: "Corsi, tutoring, certificazioni", gradient: "from-violet-500 to-purple-400" },
+  { icon: <Waves className="w-4 h-4" />, title: "Stabilimenti Balneari", desc: "Ombrelloni, lettini, bar spiaggia", gradient: "from-indigo-400 to-violet-400" },
+  { icon: <Heart className="w-4 h-4" />, title: "Veterinari & Pet Care", desc: "Cliniche, toelettature, pensioni", gradient: "from-purple-400 to-fuchsia-400/80" },
+  { icon: <Wrench className="w-4 h-4" />, title: "Artigiani & Impiantisti", desc: "Idraulici, elettricisti, caldaisti", gradient: "from-indigo-500 to-purple-400" },
+  { icon: <Palette className="w-4 h-4" />, title: "Studi Creativi", desc: "Fotografi, designer, architetti", gradient: "from-fuchsia-500/80 to-violet-400" },
+  { icon: <Dumbbell className="w-4 h-4" />, title: "CrossFit & Functional", desc: "Box, classi, WOD, membership", gradient: "from-purple-500 to-indigo-400" },
+  { icon: <Activity className="w-4 h-4" />, title: "Yoga & Pilates", desc: "Studi, ritiri, classi online", gradient: "from-violet-400 to-purple-300" },
+  { icon: <Layers className="w-4 h-4" />, title: "Lavanderie & Stirerie", desc: "Ritiro, consegna, abbonamenti", gradient: "from-indigo-400 to-violet-300" },
+  { icon: <Radio className="w-4 h-4" />, title: "Scuole di Musica", desc: "Lezioni, sale prove, eventi", gradient: "from-purple-500 to-violet-400" },
+  { icon: <Building className="w-4 h-4" />, title: "Agenzie Immobiliari", desc: "Annunci, visite, CRM clienti", gradient: "from-indigo-500 to-violet-500" },
+  { icon: <Shield className="w-4 h-4" />, title: "Studi Legali", desc: "Pratiche, clienti, parcelle", gradient: "from-slate-500 to-violet-400/60" },
+  { icon: <Target className="w-4 h-4" />, title: "Edilizia & Costruzioni", desc: "Cantieri, preventivi, SAL", gradient: "from-purple-500/80 to-indigo-400" },
+  { icon: <Calendar className="w-4 h-4" />, title: "Eventi & Catering", desc: "Booking, menu, staff, logistica", gradient: "from-violet-500 to-purple-400" },
+  { icon: <Car className="w-4 h-4" />, title: "Autofficine & Carrozzerie", desc: "Interventi, ricambi, preventivi", gradient: "from-indigo-400/80 to-violet-400/60" },
+  { icon: <Package className="w-4 h-4" />, title: "Logistica & Spedizioni", desc: "Tracking, magazzino, consegne", gradient: "from-purple-400 to-indigo-400" },
+  { icon: <Leaf className="w-4 h-4" />, title: "Giardinaggio & Vivaisti", desc: "Interventi, manutenzione, vendita", gradient: "from-violet-400 to-purple-400" },
+  { icon: <Sparkles className="w-4 h-4" />, title: "Intrattenimento", desc: "Parchi, escape room, bowling", gradient: "from-fuchsia-400/80 to-violet-400" },
+  { icon: <Users className="w-4 h-4" />, title: "Asili & Doposcuola", desc: "Iscrizioni, presenze, comunicazioni", gradient: "from-indigo-400 to-purple-300" }];
 
 
   const services = [
@@ -3835,38 +3836,30 @@ const LandingPage = () => {
                              SETTORI
                             ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(0,0%,4%,0.96) 0%, hsla(0,0%,5%,0.96) 28%, hsla(38,18%,9%,0.96) 52%, hsla(0,0%,5%,0.96) 78%, hsla(0,0%,4%,0.96) 100%)"
+        background: "linear-gradient(180deg, #08070e 0%, #0c0b14 18%, #110e1a 35%, #0f0d16 55%, #0a0912 78%, #08070e 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          {/* Primary violet — top-left */}
-          <div className="absolute top-[6%] left-[12%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
-          {/* Emerald tech — center-right */}
-          <div className="absolute top-[35%] right-[8%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          {/* Premium violet mesh glow — top-left */}
+          <div className="absolute top-[4%] left-[8%] w-[500px] h-[500px] rounded-full opacity-[0.07]"
+          style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.6), transparent 65%)", filter: "blur(150px)" }} />
+          {/* Deep emerald — center-right */}
+          <div className="absolute top-[30%] right-[5%] w-[450px] h-[450px] rounded-full opacity-[0.06]"
+          style={{ background: "radial-gradient(circle, hsla(155,55%,42%,0.5), transparent 65%)", filter: "blur(140px)" }} />
           {/* Gold accent — bottom-center */}
-          <div className="absolute bottom-[12%] left-[35%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(110px)" }} />
-          {/* Secondary violet — bottom-right */}
-          <div className="absolute bottom-[28%] right-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
-          {/* Soft emerald spark — top-right */}
-          <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
-          style={{ background: "radial-gradient(circle, hsla(155,55%,48%,0.3), transparent 60%)", filter: "blur(85px)" }} />
+          <div className="absolute bottom-[10%] left-[30%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
+          style={{ background: "radial-gradient(circle, hsla(38,65%,50%,0.45), transparent 65%)", filter: "blur(120px)" }} />
+          {/* Violet secondary — bottom-right */}
+          <div className="absolute bottom-[25%] right-[18%] w-[320px] h-[320px] rounded-full opacity-[0.04]"
+          style={{ background: "radial-gradient(circle, hsla(265,55%,58%,0.35), transparent 65%)", filter: "blur(100px)" }} />
           {/* Top accent border */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
-          style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(155,45%,50%,0.12), hsla(38,50%,50%,0.06), transparent)" }} />
-          {/* Vertical light shaft */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]"
-          style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
+          style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.25), hsla(155,45%,50%,0.15), hsla(38,50%,50%,0.08), transparent)" }} />
+          {/* Subtle grid pattern */}
+          <div className="absolute inset-0 opacity-[0.015]"
+          style={{ backgroundImage: "linear-gradient(hsla(265,30%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265,30%,60%,0.08) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
-          {/* Noise texture */}
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
-          }} />
+          style={{ background: "linear-gradient(180deg, transparent, #08070e)" }} />
         </div>
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
@@ -4103,8 +4096,8 @@ const LandingPage = () => {
                     {/* ── Featured: Showcase Premium ── */}
                     <p className="text-[0.55rem] font-heading font-bold tracking-[3px] uppercase px-2 mb-2" style={{ color: "hsla(38,50%,55%,0.7)" }}>★ Showcase Premium</p>
                     {[
-                  { name: "Food & Ristorazione", desc: "Menu Digitale · Ordini · QR · Cucina Live", route: "/r/impero-roma", color: "#e85d04", emoji: "🍽️" },
-                  { name: "NCC & Trasporto Premium", desc: "Flotta · Tratte · Booking · Autisti", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", emoji: "🚗" }].
+                  { name: "Food & Ristorazione", desc: "Menu Digitale · Ordini · QR · Cucina Live", route: "/r/impero-roma", color: "#e85d04", icon: <ChefHat className="w-4 h-4" /> },
+                  { name: "NCC & Trasporto Premium", desc: "Flotta · Tratte · Booking · Autisti", route: "/b/amalfi-luxury-transfer", color: "#C9A84C", icon: <Car className="w-4 h-4" /> }].
                   map((feat, i) =>
                   <motion.div key={`featured-${i}`}
                   className="flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all"
@@ -4114,9 +4107,9 @@ const LandingPage = () => {
                   onClick={() => {setSectorSheetOpen(false);navigate(feat.route);}}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
                     
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg flex-shrink-0"
-                    style={{ background: `${feat.color}18`, border: `1px solid ${feat.color}25` }}>
-                          {feat.emoji}
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
+                    style={{ background: `${feat.color}18`, border: `1px solid ${feat.color}25`, color: feat.color }}>
+                          {feat.icon}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
@@ -4173,7 +4166,7 @@ const LandingPage = () => {
                   whileHover={{ background: "hsla(0,0%,100%,0.03)", scale: 1.01 }}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.02 }}>
                     
-                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${sec.gradient} flex items-center justify-center text-lg shadow-lg flex-shrink-0 opacity-70`}>
+                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${sec.gradient} flex items-center justify-center text-white shadow-lg flex-shrink-0 opacity-70`}>
                           {sec.icon}
                         </div>
                         <div className="flex-1 min-w-0">
