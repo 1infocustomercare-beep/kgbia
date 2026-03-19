@@ -386,14 +386,13 @@ const NeuralCellsBackground = () => {
         </svg>
       }
 
-      {/* ═══ VERTICAL DATA STREAMS — desktop only (GPU killer on mobile) ═══ */}
+      {/* ═══ VERTICAL DATA STREAMS ═══ */}
       {!isMobile && [8, 25, 42, 58, 75, 92].map((x, i) =>
       <div key={`vstream-${i}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${x}%`, background: `hsla(215,35%,50%,0.03)` }}>
           <motion.div className="absolute w-full left-0 rounded-full"
         style={{ height: "100px", background: `linear-gradient(180deg, transparent, hsla(210,55%,62%,0.25), transparent)` }}
         animate={{ top: ["-10%", "110%"] }}
         transition={{ duration: 10 + i * 2.5, repeat: Infinity, ease: "linear", delay: i * 1.8 }} />
-        
         </div>
       )}
 
