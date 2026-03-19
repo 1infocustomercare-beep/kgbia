@@ -18,6 +18,7 @@ import {
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { DemoPricingSection } from "@/components/public/DemoPricingSection";
 import { DemoRichFooter } from "@/components/public/DemoRichFooter";
+import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCarousel";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 /* ─── ONYX + CHAMPAGNE HIGH-FASHION EDITORIAL ─── */
