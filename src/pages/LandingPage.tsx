@@ -3894,14 +3894,15 @@ const LandingPage = () => {
             food: sectorHeroFood, ncc: sectorHeroNcc, beauty: sectorHeroBeauty,
             healthcare: sectorHeroHealthcare, retail: sectorHeroRetail,
             fitness: sectorHeroFitness, hospitality: sectorHeroHotel,
-            beach: sectorHeroBeach, plumber: sectorHeroPlumber, electrician: sectorHeroPlumber,
+            beach: sectorHeroBeach, plumber: sectorHeroPlumber, electrician: sectorHeroElectrician,
             construction: sectorHeroConstruction, events: sectorHeroEvents,
             garage: sectorHeroGarage, logistics: sectorHeroLogistics,
             gardening: sectorHeroGardening, veterinary: sectorHeroVeterinary,
             photography: sectorHeroPhotography, education: sectorHeroEducation,
             childcare: sectorHeroChildcare, tattoo: sectorHeroTattoo,
-            cleaning: sectorHeroCleaning, agriturismo: sectorHeroGardening,
-            legal: sectorHeroEducation, accounting: sectorHeroEducation
+            cleaning: sectorHeroCleaning, agriturismo: sectorHeroAgriturismo,
+            legal: sectorHeroLegal, accounting: sectorHeroAccounting,
+            custom: sectorHeroCustom
           };
           const allItems: CarouselItem[] = industries.map((ind) => {
             const slug = DEMO_SLUGS[ind.id];
