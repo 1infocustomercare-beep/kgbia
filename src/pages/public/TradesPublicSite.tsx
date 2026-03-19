@@ -25,6 +25,8 @@ import {
 import { type IndustryId, getIndustryConfig } from "@/config/industry-config";
 import { HeroVideoBackground } from "@/components/public/HeroVideoBackground";
 import { HeroPhotoCarousel } from "@/components/public/HeroPhotoCarousel";
+import { DemoPricingSection } from "@/components/public/DemoPricingSection";
+import { DemoRichFooter } from "@/components/public/DemoRichFooter";
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 /* ─── DYNAMIC PALETTE PER TRADE TYPE ─── */
