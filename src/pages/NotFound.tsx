@@ -1,7 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Crown, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import empireLogoNew from "@/assets/empire-logo-new.png";
 
 const NotFound = () => {
   const location = useLocation();
