@@ -2888,7 +2888,7 @@ const LandingPage = () => {
           </>
         }
 
-        <div className="relative max-w-[1200px] mx-auto px-3 sm:px-6 flex items-center justify-between h-12 sm:h-16 pt-2 sm:pt-3">
+        <div className="relative max-w-[1200px] mx-auto px-3 sm:px-6 flex items-center justify-between h-14 sm:h-[4.5rem] pt-2 sm:pt-3">
           
           {/* ═══ Left Nav Links (desktop) ═══ */}
           <div className="hidden lg:flex items-center gap-1 flex-1">
@@ -2937,7 +2937,7 @@ const LandingPage = () => {
 
             {/* Logo container — hexagonal feel with premium depth */}
             <motion.div
-              className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center overflow-hidden"
+              className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center overflow-hidden"
               style={{
                 background: "linear-gradient(145deg, hsla(38,45%,20%,1), hsla(35,40%,14%,1), hsla(30,35%,10%,1))",
                 boxShadow: "0 0 0 2px hsla(38,50%,50%,0.3), 0 0 40px hsla(38,50%,50%,0.15), 0 8px 32px hsla(0,0%,0%,0.4), inset 0 1px 0 hsla(38,50%,60%,0.15)"
@@ -2977,7 +2977,7 @@ const LandingPage = () => {
               </motion.div>
 
               {/* Logo image */}
-              <img src={empireLogoNew} alt="Empire AI" className="w-[130%] h-[130%] object-cover rounded-full drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" style={{ objectPosition: "center 38%" }} />
+              <img src={empireLogoNew} alt="Empire AI" className="w-[85%] h-[85%] object-contain rounded-full drop-shadow-[0_0_8px_hsla(38,50%,55%,0.4)]" />
               
               {/* Breathing pulse ring */}
               <motion.div
