@@ -2647,7 +2647,10 @@ const LandingPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative">
+    <div
+      className="min-h-screen overflow-x-hidden relative"
+      style={{ background: "linear-gradient(180deg, hsl(var(--deep-black)) 0%, hsl(var(--deep-black)) 100%)" }}
+    >
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
