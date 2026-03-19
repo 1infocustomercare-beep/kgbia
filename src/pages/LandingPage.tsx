@@ -3236,14 +3236,14 @@ const LandingPage = () => {
           <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
         </div>
 
-        {/* ═══ LAYER 1: Central glow orb ═══ */}
-        <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
+        {/* ═══ LAYER 1: Central glow orb — skip on mobile for GPU savings ═══ */}
+        {!IS_MOBILE_LP && <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
           <motion.div className="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] rounded-full blur-[180px]"
           style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.06), hsla(35,45%,50%,0.03), transparent 70%)" }}
           animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />
           
-        </div>
+        </div>}
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={{ y: heroY, scale: heroScale }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
