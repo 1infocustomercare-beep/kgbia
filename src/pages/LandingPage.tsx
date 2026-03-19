@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, forwardRef, useMemo, lazy, Suspense } from "react";
+import React, { useState, useEffect, useRef, forwardRef, useMemo, lazy, Suspense } from "react";
 import InteractiveParticleSphere from "@/components/public/InteractiveParticleSphere";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
