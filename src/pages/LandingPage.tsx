@@ -5927,8 +5927,8 @@ const LandingPage = () => {
           <div
             className="absolute inset-0 sm:hidden z-0"
             style={{
-              background: "linear-gradient(155deg, hsl(var(--background) / 0.995), hsl(var(--card) / 0.985))",
-              border: "1px solid hsl(var(--border) / 0.5)"
+              background: "linear-gradient(155deg, hsla(230,14%,5%,0.99), hsla(230,12%,4%,0.99))",
+              border: "1px solid hsla(38,40%,45%,0.08)"
             }}
           />
 
