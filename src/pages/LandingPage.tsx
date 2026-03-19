@@ -3255,7 +3255,7 @@ const LandingPage = () => {
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Clean badge — gold accent */}
-            <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border bg-primary/[0.04] backdrop-blur-sm mb-5 sm:mb-7"
+            <motion.div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border bg-primary/[0.04] mb-5 sm:mb-7 ${IS_MOBILE_LP ? "" : "backdrop-blur-sm"}`}
             style={{ borderColor: "hsla(35,45%,50%,0.2)" }}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} />
