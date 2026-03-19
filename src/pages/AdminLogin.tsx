@@ -3,6 +3,7 @@ import BackButton from "@/components/BackButton";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, Crown, ChefHat, ArrowLeft, Users, Mail, KeyRound, Phone, MapPin, Briefcase } from "lucide-react";
+import empireLogoNew from "@/assets/empire-logo-new.png";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
