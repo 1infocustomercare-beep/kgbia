@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { getSectorTheme } from "@/config/sector-themes";
+import PremiumSectionBg from "./PremiumSectionBg";
 
 interface Props {
   sector: string;
