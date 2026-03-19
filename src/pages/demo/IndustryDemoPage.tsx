@@ -296,25 +296,11 @@ export default function IndustryDemoPage() {
     return null;
   }, [company, slug]);
 
-  // 404 fallback for unknown slugs
-  if (!resolvedIndustry) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
-        <span className="text-4xl">🔍</span>
-        <p className="text-xl font-bold text-foreground">Demo non trovata</p>
-        <p className="text-sm text-muted-foreground max-w-md text-center">
-          Lo slug <strong>"{slug}"</strong> non corrisponde a nessuna demo disponibile.
-        </p>
-        <Link to="/demo" className="text-sm font-medium text-primary underline hover:no-underline">
-          ← Sfoglia tutte le 25 demo
-        </Link>
-      </div>
-    );
-  }
-
-  const industryConfig = INDUSTRY_CONFIGS[resolvedIndustry];
-  const demoData = DEMO_INDUSTRY_DATA[resolvedIndustry];
-  const theme = getTheme(resolvedIndustry);
+  // Use fallback for hooks (hooks must run unconditionally)
+  const safeIndustry: IndustryId = resolvedIndustry || "custom";
+  const industryConfig = INDUSTRY_CONFIGS[safeIndustry];
+  const demoData = DEMO_INDUSTRY_DATA[safeIndustry];
+  const theme = getTheme(safeIndustry);
   const companyName = brandOverride || company?.name || demoData.companyName;
   const tagline = taglineOverride || company?.tagline || demoData.tagline;
 
@@ -335,6 +321,22 @@ export default function IndustryDemoPage() {
     () => demoData.services.filter(s => s.popular),
     [demoData]
   );
+
+  // 404 fallback for unknown slugs (after all hooks)
+  if (!resolvedIndustry) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
+        <span className="text-4xl">🔍</span>
+        <p className="text-xl font-bold text-foreground">Demo non trovata</p>
+        <p className="text-sm text-muted-foreground max-w-md text-center">
+          Lo slug <strong>"{slug}"</strong> non corrisponde a nessuna demo disponibile.
+        </p>
+        <Link to="/demo" className="text-sm font-medium text-primary underline hover:no-underline">
+          ← Sfoglia tutte le 25 demo
+        </Link>
+      </div>
+    );
+  }
 
   const scrollTo = (id: string) => {
     setMobileMenuOpen(false);
