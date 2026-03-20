@@ -6418,12 +6418,12 @@ const LandingPage = () => {
         </div>
 
         <div className="relative mb-10 rounded-2xl overflow-hidden isolate">
-          {/* Opaque mobile panel to prevent homepage background bleeding under circuit schema */}
+          {/* Opaque mobile panel */}
           <div
             className="absolute inset-0 sm:hidden z-0"
             style={{
-              background: "linear-gradient(155deg, hsla(230,14%,5%,0.99), hsla(230,12%,4%,0.99))",
-              border: "1px solid hsla(38,40%,45%,0.08)"
+              background: "linear-gradient(155deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
+              border: "1px solid hsl(var(--border) / 0.3)"
             }} />
           
 
