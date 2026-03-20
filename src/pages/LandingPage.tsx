@@ -411,14 +411,14 @@ const NeuralCellsBackground = () => {
       <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.045 }} xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="bg-circuit-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(2.2)">
-              <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(215 45% 55%)" strokeWidth="0.35" />
-              <circle cx="30" cy="0" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-              <circle cx="60" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-              <circle cx="0" cy="15" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
-              <circle cx="30" cy="52" r="1" fill="hsl(215 45% 55%)" opacity="0.5" />
+              <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="hsl(210 100% 62%)" strokeWidth="0.35" />
+              <circle cx="30" cy="0" r="1" fill="hsl(210 100% 62%)" opacity="0.5" />
+              <circle cx="60" cy="15" r="1" fill="hsl(210 100% 62%)" opacity="0.5" />
+              <circle cx="0" cy="15" r="1" fill="hsl(210 100% 62%)" opacity="0.5" />
+              <circle cx="30" cy="52" r="1" fill="hsl(210 100% 62%)" opacity="0.5" />
             </pattern>
             <pattern id="bg-micro-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="hsl(215 35% 50%)" strokeWidth="0.12" opacity="0.35" />
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="hsl(210 60% 50%)" strokeWidth="0.12" opacity="0.35" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#bg-circuit-hex)" />
@@ -428,9 +428,9 @@ const NeuralCellsBackground = () => {
 
       {/* ═══ VERTICAL DATA STREAMS ═══ */}
       {!isMobile && [8, 25, 42, 58, 75, 92].map((x, i) =>
-      <div key={`vstream-${i}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${x}%`, background: `hsla(215,35%,50%,0.03)` }}>
+      <div key={`vstream-${i}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${x}%`, background: `hsla(210,60%,50%,0.03)` }}>
           <motion.div className="absolute w-full left-0 rounded-full"
-        style={{ height: "100px", background: `linear-gradient(180deg, transparent, hsla(210,55%,62%,0.25), transparent)` }}
+        style={{ height: "100px", background: `linear-gradient(180deg, transparent, hsla(195,100%,55%,0.25), transparent)` }}
         animate={{ top: ["-10%", "110%"] }}
         transition={{ duration: 10 + i * 2.5, repeat: Infinity, ease: "linear", delay: i * 1.8 }} />
         </div>
@@ -439,7 +439,7 @@ const NeuralCellsBackground = () => {
       {/* ═══ HORIZONTAL SCAN LINES ═══ */}
       {!isMobile && [0, 1].map((i) =>
       <motion.div key={`hscan-${i}`} className="absolute left-0 right-0 h-px"
-      style={{ background: `linear-gradient(90deg, transparent 5%, hsla(210,45%,58%,0.08) 30%, hsla(215,50%,65%,0.14) 50%, hsla(210,45%,58%,0.08) 70%, transparent 95%)` }}
+      style={{ background: `linear-gradient(90deg, transparent 5%, hsla(195,100%,55%,0.08) 30%, hsla(210,100%,62%,0.14) 50%, hsla(195,100%,55%,0.08) 70%, transparent 95%)` }}
       animate={{ top: ["-3%", "103%"] }}
       transition={{ duration: 18 + i * 7, repeat: Infinity, ease: "linear", delay: i * 5 }} />
       )}
@@ -450,7 +450,7 @@ const NeuralCellsBackground = () => {
       { x: 75, y: 30 }, { x: 92, y: 55 }, { x: 35, y: 80 }, { x: 65, y: 90 }].
       map((pos, i) =>
       <motion.div key={`tnode-${i}`} className="absolute w-1 h-1 rounded-full"
-      style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(210,55%,62%,0.25)`, boxShadow: `0 0 8px hsla(210,55%,62%,0.15)` }}
+      style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(195,100%,55%,0.25)`, boxShadow: `0 0 8px hsla(210,100%,62%,0.15)` }}
       animate={{ opacity: [0.15, 0.5, 0.15], scale: [0.7, 1.4, 0.7] }}
       transition={{ duration: 4 + i * 0.6, repeat: Infinity, delay: i * 0.5 }} />
       )}
@@ -474,7 +474,7 @@ const NeuralCellsBackground = () => {
           key={`ln${i}`}
           x1={cells[a].x} y1={cells[a].y}
           x2={cells[b].x} y2={cells[b].y}
-          stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.25)" : "hsla(220,15%,55%,0.12)"}
+          stroke={i % 6 === 0 ? "hsla(172,80%,48%,0.25)" : "hsla(210,60%,55%,0.12)"}
           strokeWidth="0.2" />
 
         ) :
@@ -484,7 +484,7 @@ const NeuralCellsBackground = () => {
           key={`ln${i}`}
           x1={cells[a].x} y1={cells[a].y}
           x2={cells[b].x} y2={cells[b].y}
-          stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.35)" : "hsla(220,15%,55%,0.18)"}
+          stroke={i % 6 === 0 ? "hsla(172,80%,48%,0.35)" : "hsla(210,60%,55%,0.18)"}
           strokeWidth="0.15"
           initial={{ opacity: 0 }}
           animate={{ opacity: [0.1, 0.4, 0.1] }}
@@ -534,7 +534,7 @@ const NeuralCellsBackground = () => {
           key={`node${cell.id}`}
           cx={cell.x} cy={cell.y}
           r="0.3"
-          fill="hsla(38,45%,55%,0.3)" />
+          fill="hsla(210,100%,62%,0.3)" />
 
         ) :
 
@@ -543,7 +543,7 @@ const NeuralCellsBackground = () => {
           key={`node${cell.id}`}
           cx={cell.x} cy={cell.y}
           r="0.25"
-          fill="hsla(38,45%,55%,0.35)"
+          fill="hsla(210,100%,62%,0.35)"
           animate={{
             r: [0.15, 0.4, 0.15],
             opacity: [0.25, 0.6, 0.25]
