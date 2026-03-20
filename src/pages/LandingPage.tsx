@@ -4324,8 +4324,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              AI AGENTS SHOWCASE
                             ═══════════════════════════════════════════ */}
-      {/* [REDESIGN] Removed: AI Agents Showcase, Perché Empire, Comparison Table, Tech DNA, 3 Interfacce, Build Anything, Servizi — streamlined for conversion */}
-      {false as any && <AIAgentsShowcase />}
+      <AIAgentsShowcase />
 
       <Section className="hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(220,18%,11%,0.96) 30%, hsla(155,18%,9%,0.96) 50%, hsla(265,20%,10%,0.96) 70%, hsla(220,16%,8%,0.96) 85%, hsla(230,16%,4%,0.96) 100%)"
