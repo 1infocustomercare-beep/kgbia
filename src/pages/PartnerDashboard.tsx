@@ -37,6 +37,7 @@ import { GuidesToggle } from "@/components/ui/info-guide";
 import InfoGuide from "@/components/ui/info-guide";
 import { RefreshCw, Palette, Pencil, Upload, Save, X as XIcon } from "lucide-react";
 import { AllIndustriesShowcase } from "@/components/public/IndustryPhoneShowcase";
+import PartnerPortfolio from "@/components/partner/PartnerPortfolio";
 
 type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault" | "showcase" | "projects";
 
@@ -599,15 +600,21 @@ const PartnerDashboard = () => {
           {activeTab === "projects" && !demoMode && <PartnerDemoProjects key="projects" />}
 
           {activeTab === "showcase" && (
-            <motion.div key="showcase" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-              <div className="text-center">
-                <h2 className="text-lg font-display font-bold text-foreground">Showcase Settori</h2>
-                <p className="text-xs text-muted-foreground">Preview complete di tutti i settori con link demo per le presentazioni</p>
+            <motion.div key="showcase" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+              {/* Portfolio — organized by brand & style */}
+              <PartnerPortfolio />
+
+              {/* Separator */}
+              <div className="border-t border-border/40 pt-4">
+                <div className="text-center mb-3">
+                  <h2 className="text-lg font-display font-bold text-foreground">Demo Interattive</h2>
+                  <p className="text-xs text-muted-foreground">Preview live di tutti i settori con link demo per le presentazioni</p>
+                </div>
+                <AllIndustriesShowcase onViewDemo={(id, slug) => {
+                  if (id === "food") navigate(`/r/${slug}`);
+                  else navigate(`/demo/${slug}`);
+                }} />
               </div>
-              <AllIndustriesShowcase onViewDemo={(id, slug) => {
-                if (id === "food") navigate(`/r/${slug}`);
-                else navigate(`/demo/${slug}`);
-              }} />
             </motion.div>
           )}
 
