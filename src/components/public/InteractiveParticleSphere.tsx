@@ -242,13 +242,13 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         f.x += f.vx; f.y += f.vy; f.pulse += 0.03;
         if (f.x < -10) f.x = w + 10; if (f.x > w + 10) f.x = -10;
         if (f.y < -10) f.y = h + 10; if (f.y > h + 10) f.y = -10;
-        const pa = (0.15 + Math.sin(f.pulse) * 0.1) * anyA;
+        const pa = (0.3 + Math.sin(f.pulse) * 0.15) * anyA;
         const c = colorPalette[f.ci];
-        const gr = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 5);
-        gr.addColorStop(0, hsl(c, pa * 0.5));
+        const gr = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 6);
+        gr.addColorStop(0, hsl(c, pa * 0.8));
         gr.addColorStop(1, hsl(c, 0));
-        ctx.beginPath(); ctx.arc(f.x, f.y, f.r * 5, 0, Math.PI * 2); ctx.fillStyle = gr; ctx.fill();
-        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fillStyle = hsl(c, pa); ctx.fill();
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r * 6, 0, Math.PI * 2); ctx.fillStyle = gr; ctx.fill();
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fillStyle = hsl(c, pa * 1.2); ctx.fill();
       }
 
       // ═══ L1: CIRCUIT DATA PATHWAYS ═══
