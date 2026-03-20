@@ -5369,8 +5369,8 @@ const LandingPage = () => {
 
         {/* ═══ Scrolling Capabilities Ticker ═══ */}
         <div className="relative mb-14 -mx-5 sm:-mx-6 overflow-hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsla(260,18%,8%,1), transparent)" }} />
-          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsla(260,18%,8%,1), transparent)" }} />
+          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(220 20% 97%), transparent)" }} />
+          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(220 20% 97%), transparent)" }} />
           {[0, 1].map((row) =>
           <div key={row} className="flex whitespace-nowrap mb-2" style={{ animation: `carousel-scroll ${row === 0 ? "40s" : "45s"} linear infinite ${row === 1 ? "reverse" : ""}` }}>
               {[...Array(2)].map((_, rep) =>
