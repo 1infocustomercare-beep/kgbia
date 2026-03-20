@@ -3827,12 +3827,12 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
-      <SectionDivider />
+      {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════════════════════════════════════════
                              VIDEO HERO — Business Transformation
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(260,24%,10%,0.96) 18%, hsla(265,26%,12%,0.96) 35%, hsla(155,16%,9%,0.96) 55%, hsla(265,20%,10%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         {/* Premium ambient glows — discovery/innovation luxury */}
@@ -3938,7 +3938,7 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
-      <SectionDivider />
+      {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════════════════════════════════════════
                              SETTORI
@@ -4319,7 +4319,7 @@ const LandingPage = () => {
         </AnimatePresence>
       </Section>
 
-      <SectionDivider />
+      {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════════════════════════════════════════
                              AI AGENTS SHOWCASE
@@ -4534,7 +4534,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              COMPARISON TABLE — Empire vs Others
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.94) 15%, hsla(38,16%,9%,0.94) 35%, hsla(265,20%,10%,0.94) 55%, hsla(38,14%,8%,0.94) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4599,12 +4599,12 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
-      <SectionDivider />
+      {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════════════════════════════════════════
                              TECH DNA — Neural Network Visualization
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,26%,10%,0.94) 15%, hsla(230,20%,11%,0.94) 35%, hsla(265,22%,9%,0.94) 55%, hsla(230,18%,8%,0.94) 78%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4769,12 +4769,12 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
-      <SectionDivider />
+      {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════════════════════════════════════════
                              3 INTERFACCE — Mockup Showcase
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(38,18%,9%,0.96) 18%, hsla(265,20%,10%,0.96) 35%, hsla(38,14%,8%,0.96) 55%, hsla(265,18%,9%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -5015,12 +5015,12 @@ const LandingPage = () => {
         })()}
       </Section>
 
-      <SectionDivider />
+      {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════════════════════════════════════════
                              BUILD ANYTHING — Streamlined Conversion Section
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(38,18%,9%,0.96) 35%, hsla(265,20%,10%,0.96) 55%, hsla(38,14%,8%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -5339,12 +5339,12 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
-      <SectionDivider />
+      {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════════════════════════════════════════
                              SERVIZI
                             ═══════════════════════════════════════════ */}
-      <Section id="services" className="relative overflow-hidden" style={{
+      <Section id="services" className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(230,22%,10%,0.78) 15%, hsla(265,22%,11%,0.78) 32%, hsla(38,16%,9%,0.78) 52%, hsla(265,18%,9%,0.78) 72%, hsla(230,16%,4%,0.82) 100%)"
       }}>
         <CircuitPattern />
@@ -5494,7 +5494,7 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
-      <SectionDivider />
+      {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════════════════════════════════════════
                             ═══════════════════════════════════════════ */}
@@ -6066,7 +6066,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              ROI CALCULATOR
                             ═══════════════════════════════════════════ */}
-      <Section id="calculator" className="relative overflow-hidden" style={{
+      <Section id="calculator" className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(38,20%,9%,0.78) 15%, hsla(265,22%,10%,0.78) 35%, hsla(38,16%,8%,0.78) 55%, hsla(265,18%,9%,0.78) 75%, hsla(230,16%,4%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -6292,12 +6292,12 @@ const LandingPage = () => {
                             ═══════════════════════════════════════════ */}
       <PricingConfigurator navigate={navigate} />
 
-      <SectionDivider />
+      {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════════════════════════════════════════
                              PARTNER PROGRAM
                             ═══════════════════════════════════════════ */}
-      <Section id="partner" className="relative overflow-hidden" style={{
+      <Section id="partner" className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(38,22%,9%,0.78) 15%, hsla(265,22%,10%,0.78) 32%, hsla(38,18%,9%,0.78) 50%, hsla(265,18%,9%,0.78) 72%, hsla(230,16%,4%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -6574,14 +6574,14 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
-      <SectionDivider />
+      {/* <SectionDivider /> — hidden redesign */}
 
-      {/* ═══════ EMPIRE STORY & TEAM ═══════ */}
-      <Suspense fallback={null}>
-        <EmpireTeamStory />
-      </Suspense>
-
-      <SectionDivider />
+      {/* {/* ═══════ EMPIRE STORY & TEAM ═══════ */} — hidden redesign */}
+      {/* <Suspense fallback={null}> — hidden redesign */}
+      {/* <EmpireTeamStory /> — hidden redesign */}
+      {/* </Suspense> — hidden redesign */}
+      {/*  — hidden redesign */}
+      {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
