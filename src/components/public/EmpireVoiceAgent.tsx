@@ -1035,6 +1035,15 @@ const EmpireVoiceAgent: React.FC = () => {
         return;
       }
 
+      // CRITICAL: If intro narration already started, just mark unlocked and return
+      // This prevents touching the screen from restarting Arianna's speech
+      if (introStartedRef.current) {
+        audioUnlockedRef.current = true;
+        userInteractedRef.current = true;
+        setUserInteracted(true);
+        return;
+      }
+
       // CRITICAL: If Arianna is already speaking/processing, never restart or re-enqueue
       if (queueProcessingRef.current) {
         // Still mark as unlocked + interacted, but don't re-enqueue anything
