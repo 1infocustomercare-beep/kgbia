@@ -632,6 +632,17 @@ type PricingMode = "monthly" | "package";
 /* ── Sector config for pricing ── */
 type PricingSector = "food" | "ncc" | "beauty" | "healthcare" | "retail" | "fitness" | "hospitality" | "trades" | "other";
 
+const PRICING_SECTOR_ICONS: Record<PricingSector, React.ReactNode> = {
+  food: <ChefHat className="w-3.5 h-3.5 inline-block" />,
+  beauty: <Scissors className="w-3.5 h-3.5 inline-block" />,
+  ncc: <Car className="w-3.5 h-3.5 inline-block" />,
+  healthcare: <Heart className="w-3.5 h-3.5 inline-block" />,
+  retail: <Store className="w-3.5 h-3.5 inline-block" />,
+  fitness: <Dumbbell className="w-3.5 h-3.5 inline-block" />,
+  hospitality: <Building className="w-3.5 h-3.5 inline-block" />,
+  trades: <Wrench className="w-3.5 h-3.5 inline-block" />,
+  other: <Layers className="w-3.5 h-3.5 inline-block" />,
+};
 const PRICING_SECTORS: {id: PricingSector;label: string;emoji: string;}[] = [
 { id: "food", label: "Food & Ristorazione", emoji: "🍽️" },
 { id: "beauty", label: "Beauty & Wellness", emoji: "💇" },
