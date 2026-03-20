@@ -551,7 +551,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const connectedIds = useMemo(() => new Set(activeAgent?.connections || []), [activeAgent]);
 
   return (
-    <section ref={sectionRef} className="relative py-8 sm:py-24 px-3 sm:px-6 overflow-hidden isolate z-10"
+    <section ref={sectionRef} className="relative py-8 sm:py-24 px-3 sm:px-6 overflow-hidden isolate z-10 dark"
       style={{
         background: `linear-gradient(180deg, 
           hsla(230,16%,5%,1) 0%, 
