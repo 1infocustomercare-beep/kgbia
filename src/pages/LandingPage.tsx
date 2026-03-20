@@ -5,6 +5,7 @@ import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import { MockupLightbox } from "@/components/ui/mockup-lightbox";
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
+import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
   Crown, Check, Star, Zap, Shield, Smartphone,
