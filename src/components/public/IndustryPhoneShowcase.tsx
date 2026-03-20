@@ -2736,6 +2736,7 @@ export function IPhoneFrame({
           </div>
         </div>
       </div>
+      </MockupLightbox>
 
       {/* Label + description */}
       <div className="text-center mt-2.5">
