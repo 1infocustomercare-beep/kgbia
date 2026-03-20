@@ -6326,35 +6326,35 @@ const LandingPage = () => {
               <div key={i} className="group relative h-full">
                     <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
                 style={{
-                  background: "linear-gradient(165deg, hsla(265,25%,8%,0.98), hsla(265,20%,5%,0.99))",
-                  border: "1px solid hsla(265,40%,50%,0.12)",
-                  boxShadow: "0 16px 48px -12px hsla(265,50%,8%,0.5), inset 0 1px 0 hsla(265,60%,70%,0.06)",
+                  background: "linear-gradient(165deg, hsl(0 0% 100% / 0.96), hsl(248 15% 97% / 0.93))",
+                  border: "1px solid hsl(var(--primary) / 0.1)",
+                  boxShadow: "0 4px 24px hsl(var(--primary) / 0.06)",
                   backdropFilter: "blur(24px)"
                 }}>
                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: "linear-gradient(105deg, transparent 40%, hsla(38,50%,55%,0.06) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
-                      <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsla(38,50%,55%,0.2)" }} />
-                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
-                      <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
+                  style={{ background: "linear-gradient(105deg, transparent 40%, hsl(var(--primary) / 0.04) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
+                      <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsl(var(--primary) / 0.15)" }} />
+                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsl(var(--primary) / 0.1)" }} />
+                      <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent)" }} />
                       <div className="relative mb-4 mt-1">
                         <img src={t.photo} alt={t.name} className="w-14 h-14 rounded-full object-cover mx-auto"
-                    style={{ border: "2px solid hsla(265,50%,55%,0.25)", boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)" }} />
+                    style={{ border: "2px solid hsl(var(--primary) / 0.2)", boxShadow: "0 4px 16px hsl(var(--primary) / 0.1)" }} />
                         <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
-                    style={{ background: "hsla(265,30%,15%,0.9)", border: "1px solid hsla(265,40%,50%,0.2)", boxShadow: "0 4px 12px hsla(0,0%,0%,0.3)" }}>
+                    style={{ background: "hsl(0 0% 100% / 0.9)", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 8px hsl(var(--primary) / 0.08)" }}>
                           {t.emoji}
                         </div>
                         <motion.div className="absolute -inset-2 rounded-full pointer-events-none"
-                    style={{ border: "1px dashed hsla(265,50%,55%,0.12)" }}
+                    style={{ border: "1px dashed hsl(var(--primary) / 0.1)" }}
                     animate={{ rotate: [0, 360] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
                       </div>
-                      <h4 className="font-heading text-xs font-semibold mb-0.5" style={{ color: "hsla(0,0%,100%,0.94)" }}>{t.name}</h4>
-                      <p className="text-[0.58rem] mb-4" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
-                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1" style={{ color: "hsla(0,0%,100%,0.5)" }}>
-                        <Quote className="w-3.5 h-3.5 mx-auto mb-2" style={{ color: "hsla(38,50%,55%,0.3)" }} />
+                      <h4 className="font-heading text-xs font-semibold mb-0.5 text-foreground">{t.name}</h4>
+                      <p className="text-[0.58rem] mb-4 text-foreground/50">{t.role}</p>
+                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1 text-foreground/65">
+                        <Quote className="w-3.5 h-3.5 mx-auto mb-2 text-primary/30" />
                         "{t.quote}"
                       </blockquote>
                       <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.62rem] font-semibold font-heading tracking-wider"
-                  style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.5), hsla(265,30%,18%,0.4))", border: "1px solid hsla(265,60%,55%,0.2)", color: "hsl(var(--primary))" }}>
+                  style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.12)", color: "hsl(var(--primary))" }}>
                         <TrendingUp className="w-3 h-3" /> {t.metric}
                       </div>
                       <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-16 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
