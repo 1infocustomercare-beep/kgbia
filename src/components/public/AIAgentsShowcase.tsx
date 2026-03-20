@@ -797,28 +797,28 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           className="mb-3 flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2 px-1">
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="relative flex-shrink-0">
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded bg-primary/15 flex items-center justify-center">
-                <Brain className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded flex items-center justify-center" style={{ background: "hsla(215,70%,55%,0.15)" }}>
+                <Brain className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ color: "hsl(215,85%,65%)" }} />
               </div>
             </div>
             <div className="flex-1 relative h-px sm:hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-transparent" />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, hsla(215,70%,55%,0.3), transparent)" }} />
             </div>
-            <span className="text-[0.45rem] sm:text-[0.5rem] font-bold text-primary/90 tracking-[1.5px] sm:tracking-[3px] uppercase whitespace-nowrap">
+            <span className="text-[0.45rem] sm:text-[0.5rem] font-bold tracking-[1.5px] sm:tracking-[3px] uppercase whitespace-nowrap" style={{ color: "hsl(215,80%,70%)" }}>
               {filteredAgents.length} Nodi Attivi
             </span>
             <div className="flex-1 relative h-px sm:hidden">
-              <div className="absolute inset-0 bg-gradient-to-l from-primary/30 to-transparent" />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to left, hsla(215,70%,55%,0.3), transparent)" }} />
             </div>
           </div>
           <div className="hidden sm:block flex-1 relative h-px">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-transparent" />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to right, hsla(215,70%,55%,0.3), transparent)" }} />
           </div>
-          <span className="hidden sm:inline text-[0.5rem] font-bold text-primary/90 tracking-[3px] uppercase whitespace-nowrap">
+          <span className="hidden sm:inline text-[0.5rem] font-bold tracking-[3px] uppercase whitespace-nowrap" style={{ color: "hsl(215,80%,70%)" }}>
             Clicca per esplorare connessioni
           </span>
           <div className="hidden sm:block flex-1 relative h-px">
-            <div className="absolute inset-0 bg-gradient-to-l from-primary/30 to-transparent" />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to left, hsla(215,70%,55%,0.3), transparent)" }} />
           </div>
         </motion.div>
 
