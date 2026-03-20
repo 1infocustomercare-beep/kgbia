@@ -3460,7 +3460,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden" style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,16%,8%,0.99) 50%, hsla(0,0%,4%,0.99) 100%)" }}>
+      <div className="relative py-5 border-y overflow-hidden" style={{ background: "linear-gradient(180deg, hsl(220 20% 95%) 0%, hsl(215 18% 93%) 50%, hsl(220 20% 95%) 100%)", borderColor: "hsl(var(--primary) / 0.08)" }}>
         <div className="flex animate-marquee-scroll whitespace-nowrap">
         {[...Array(2)].map((_, repeat) =>
           <div key={repeat} className="flex items-center gap-10 px-5">
@@ -3477,8 +3477,8 @@ const LandingPage = () => {
             { icon: <Timer className="w-3 h-3" />, text: "Attivo in 24h", color: "var(--neon-emerald)" },
             { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali", color: "var(--empire-violet)" }].
             map((t, i) =>
-            <span key={i} className="text-[0.6rem] text-foreground/25 font-heading tracking-[2.5px] uppercase flex items-center gap-2 group/trust">
-                  <span className="transition-colors" style={{ color: `hsl(${t.color} / 0.5)` }}>
+            <span key={i} className="text-[0.6rem] text-foreground/60 font-heading font-medium tracking-[2.5px] uppercase flex items-center gap-2.5">
+                  <span className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `hsl(${t.color} / 0.12)`, color: `hsl(${t.color})` }}>
                     {t.icon}
                   </span>
                   {t.text}
