@@ -988,6 +988,16 @@ const EmpireVoiceAgent: React.FC = () => {
       const now = Date.now();
       if (now - lastGestureEnqueueRef.current < 3000 && audioUnlockedRef.current) return;
 
+      // CRITICAL: If Arianna is already speaking/processing, never restart or re-enqueue
+      if (queueProcessingRef.current) {
+        // Still mark as unlocked + interacted, but don't re-enqueue anything
+        audioUnlockedRef.current = true;
+        userInteractedRef.current = true;
+        setUserInteracted(true);
+        unlockInFlightRef.current = false;
+        return;
+      }
+
       // Allow re-fire if there are un-narrated sections visible
       const currentSec = currentSection;
       const currentPending = currentSec ? !narratedRef.current.has(currentSec) : false;
@@ -1020,24 +1030,33 @@ const EmpireVoiceAgent: React.FC = () => {
       // Force next narration attempt to run immediately in this gesture context
       preferImmediateNarrationRef.current = true;
 
+      // Stop splash narration and wait for it to fully clear before starting Arianna
       stopSplashNarration();
       abortRef.current = false;
 
-      if (isFirstUnlock || heroStillPending) {
-        narrationAttemptsRef.current.hero = 0;
-        startIntroNarration();
-        if (heroStillPending) {
-          sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== "hero");
-          enqueueSectionNarration("hero", true);
-        }
-      }
+      // Delay Arianna start to let splash narration fully stop (prevent overlap)
+      const startDelay = isFirstUnlock ? 400 : 0;
 
-      // Also enqueue the currently visible section if it hasn't been narrated
-      if (currentSec && currentSec !== "hero" && currentPending && !queueProcessingRef.current) {
-        narrationAttemptsRef.current[currentSec] = 0;
-        sectionQueueRef.current = sectionQueueRef.current.filter(s => s !== currentSec);
-        enqueueSectionNarration(currentSec, true);
-      }
+      setTimeout(() => {
+        if (!isMounted || abortRef.current || queueProcessingRef.current) return;
+
+        if (isFirstUnlock || heroStillPending) {
+          narrationAttemptsRef.current.hero = 0;
+          startIntroNarration();
+          // Don't force-replay hero if it's already queued — prevents restart
+          if (heroStillPending && !sectionQueueRef.current.includes("hero")) {
+            enqueueSectionNarration("hero", false);
+          }
+        }
+
+        // Also enqueue the currently visible section if it hasn't been narrated
+        if (currentSec && currentSec !== "hero" && currentPending && !queueProcessingRef.current) {
+          narrationAttemptsRef.current[currentSec] = 0;
+          if (!sectionQueueRef.current.includes(currentSec)) {
+            enqueueSectionNarration(currentSec, false);
+          }
+        }
+      }, startDelay);
 
       unlockInFlightRef.current = false;
     };
