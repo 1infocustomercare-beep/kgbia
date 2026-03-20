@@ -6685,7 +6685,7 @@ const LandingPage = () => {
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
             </h2>
-            <p className="text-sm text-foreground/35 max-w-md mx-auto mb-8">
+            <p className="text-sm text-foreground/55 max-w-md mx-auto mb-8">
               25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando. Non restare indietro.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
