@@ -1,5 +1,4 @@
 import { useState, useMemo, useRef, useEffect, FormEvent, lazy, Suspense } from "react";
-import PortfolioShowcaseSite from "@/pages/public/PortfolioShowcaseSite";
 import BackButton from "@/components/BackButton";
 const DemoSalesAgent = lazy(() => import("@/components/public/DemoSalesAgent"));
 import DemoFeaturesSection from "@/components/demo/DemoFeaturesSection";
@@ -373,21 +372,7 @@ export default function IndustryDemoPage() {
     address: "Indirizzo", passengers: "Passeggeri", notes: "Note aggiuntive",
   };
 
-  // ═══ PORTFOLIO SHOWCASE MODE ═══
-  // All sectors now render as Lowengeld-style portfolio pages
-  const hasPortfolioData = !!(SECTOR_MOCKUP_IMAGES[resolvedIndustry]?.length);
-  if (hasPortfolioData && !isPartnerBranded) {
-    const accentColor = theme.accent;
-    return (
-      <PortfolioShowcaseSite
-        industry={resolvedIndustry}
-        slug={slug || resolvedIndustry}
-        accentColor={accentColor}
-      />
-    );
-  }
-
-  // ═══ PREMIUM TEMPLATE ROUTING (fallback for partner-branded or sectors without portfolio data) ═══
+  // ═══ PREMIUM TEMPLATE ROUTING ═══
   const PREMIUM_TEMPLATES: Record<string, React.ComponentType<{ company: any; afterHero?: React.ReactNode }>> = {
     ncc: NCCPublicSite,
     beauty: BeautyPublicSite,
