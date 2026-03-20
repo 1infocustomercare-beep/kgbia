@@ -31,24 +31,39 @@ import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCa
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 /* ─── DYNAMIC PALETTE PER TRADE TYPE ─── */
-const PALETTES: Record<string, { accent: string; dark: string; glow: string; heroLayout: "standard" | "split" | "centered" | "bold" | "elegant" }> = {
-  electrician: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4", heroLayout: "bold" },
-  plumber: { accent: "#3B82F6", dark: "#060A10", glow: "#DBEAFE", heroLayout: "standard" },
-  construction: { accent: "#EF6C00", dark: "#0A0704", glow: "#FFE0B2", heroLayout: "bold" },
-  gardening: { accent: "#4CAF50", dark: "#040A04", glow: "#C8E6C9", heroLayout: "elegant" },
-  cleaning: { accent: "#00BCD4", dark: "#040A0A", glow: "#B2EBF2", heroLayout: "centered" },
-  garage: { accent: "#E53935", dark: "#0A0404", glow: "#FFCDD2", heroLayout: "bold" },
-  photography: { accent: "#AB47BC", dark: "#0A040A", glow: "#E1BEE7", heroLayout: "elegant" },
-  veterinary: { accent: "#66BB6A", dark: "#040A04", glow: "#C8E6C9", heroLayout: "split" },
-  tattoo: { accent: "#F44336", dark: "#0A0404", glow: "#FFCDD2", heroLayout: "bold" },
-  childcare: { accent: "#FF9800", dark: "#0A0804", glow: "#FFE0B2", heroLayout: "centered" },
-  education: { accent: "#2196F3", dark: "#04080A", glow: "#BBDEFB", heroLayout: "split" },
-  events: { accent: "#E91E63", dark: "#0A0408", glow: "#F8BBD0", heroLayout: "elegant" },
-  logistics: { accent: "#607D8B", dark: "#060808", glow: "#CFD8DC", heroLayout: "standard" },
-  agriturismo: { accent: "#8BC34A", dark: "#060A04", glow: "#DCEDC8", heroLayout: "elegant" },
-  legal: { accent: "#795548", dark: "#080604", glow: "#D7CCC8", heroLayout: "split" },
-  accounting: { accent: "#009688", dark: "#040A08", glow: "#B2DFDB", heroLayout: "centered" },
-  default: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4", heroLayout: "standard" },
+type VisualStyle = "glass" | "solid" | "neon" | "warm" | "minimal" | "bold" | "organic";
+interface SectorPalette {
+  accent: string;
+  dark: string;
+  glow: string;
+  heroLayout: "standard" | "split" | "centered" | "bold" | "elegant";
+  visualStyle: VisualStyle;
+  fontDisplay: string;
+  fontBody: string;
+  cardRadius: string;
+  heroGradient?: string;
+  bgPattern?: "grid" | "dots" | "diagonal" | "none";
+  sectionBg?: string;
+}
+
+const PALETTES: Record<string, SectorPalette> = {
+  electrician: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4", heroLayout: "bold", visualStyle: "neon", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", heroGradient: "linear-gradient(135deg, #F5B80020, #FF880010)", bgPattern: "grid" },
+  plumber: { accent: "#3B82F6", dark: "#060A10", glow: "#DBEAFE", heroLayout: "standard", visualStyle: "solid", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", bgPattern: "dots" },
+  construction: { accent: "#EF6C00", dark: "#0A0704", glow: "#FFE0B2", heroLayout: "bold", visualStyle: "bold", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", heroGradient: "linear-gradient(160deg, #EF6C0015, #FF980010)", bgPattern: "diagonal" },
+  gardening: { accent: "#4CAF50", dark: "#040A04", glow: "#C8E6C9", heroLayout: "elegant", visualStyle: "organic", fontDisplay: "'Playfair Display', serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-3xl", bgPattern: "none" },
+  cleaning: { accent: "#00BCD4", dark: "#040A0A", glow: "#B2EBF2", heroLayout: "centered", visualStyle: "minimal", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", heroGradient: "linear-gradient(180deg, #00BCD410, transparent)", bgPattern: "grid" },
+  garage: { accent: "#E53935", dark: "#0A0404", glow: "#FFCDD2", heroLayout: "bold", visualStyle: "bold", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", heroGradient: "linear-gradient(135deg, #E5393520, #B7171710)", bgPattern: "diagonal" },
+  photography: { accent: "#AB47BC", dark: "#0A040A", glow: "#E1BEE7", heroLayout: "elegant", visualStyle: "glass", fontDisplay: "'Playfair Display', serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", bgPattern: "none" },
+  veterinary: { accent: "#66BB6A", dark: "#040A04", glow: "#C8E6C9", heroLayout: "split", visualStyle: "warm", fontDisplay: "'Nunito', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-3xl", heroGradient: "linear-gradient(135deg, #66BB6A15, #4CAF5010)", bgPattern: "none" },
+  tattoo: { accent: "#F44336", dark: "#0A0404", glow: "#FFCDD2", heroLayout: "bold", visualStyle: "neon", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", heroGradient: "linear-gradient(135deg, #F4433620, #E91E6310)", bgPattern: "diagonal" },
+  childcare: { accent: "#FF9800", dark: "#0A0804", glow: "#FFE0B2", heroLayout: "centered", visualStyle: "warm", fontDisplay: "'Nunito', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-3xl", bgPattern: "none", sectionBg: "#FFFBF5" },
+  education: { accent: "#2196F3", dark: "#04080A", glow: "#BBDEFB", heroLayout: "split", visualStyle: "minimal", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", bgPattern: "dots" },
+  events: { accent: "#E91E63", dark: "#0A0408", glow: "#F8BBD0", heroLayout: "elegant", visualStyle: "glass", fontDisplay: "'Playfair Display', serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", heroGradient: "linear-gradient(135deg, #E91E6318, #9C27B010)", bgPattern: "none" },
+  logistics: { accent: "#607D8B", dark: "#060808", glow: "#CFD8DC", heroLayout: "standard", visualStyle: "solid", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", bgPattern: "grid" },
+  agriturismo: { accent: "#8BC34A", dark: "#060A04", glow: "#DCEDC8", heroLayout: "elegant", visualStyle: "organic", fontDisplay: "'Playfair Display', serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-3xl", bgPattern: "none" },
+  legal: { accent: "#795548", dark: "#080604", glow: "#D7CCC8", heroLayout: "split", visualStyle: "minimal", fontDisplay: "'Playfair Display', serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", bgPattern: "none" },
+  accounting: { accent: "#009688", dark: "#040A08", glow: "#B2DFDB", heroLayout: "centered", visualStyle: "solid", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", bgPattern: "dots" },
+  default: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4", heroLayout: "standard", visualStyle: "solid", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", bgPattern: "grid" },
 };
 
 /* ─── SECTOR-SPECIFIC SERVICES ─── */
@@ -481,8 +496,8 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
   const navLinks = [{ href: "#servizi", label: "Servizi" }, { href: "#perche", label: "Garanzie" }, { href: "#prenota", label: cta.formTitle.split(" ").slice(0, 2).join(" ") }];
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: "'Space Grotesk', sans-serif", background: D, color: "#fff" }}>
-      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: palette.fontDisplay, background: D, color: "#fff" }}>
+      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
       {/* NAVBAR */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-500`} style={{ background: `${D}F0`, backdropFilter: "blur(20px)", borderBottom: `1px solid ${A}15` }}>
@@ -490,11 +505,11 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           <div className="flex items-center gap-3">
             {company.logo_url ? <img src={company.logo_url} alt="" className="h-9 w-9 rounded-xl object-cover" /> : <HeroIcon className="w-6 h-6" style={{ color: A }} />}
             <div className="min-w-0">
-              <span className="font-bold truncate block text-sm">{company.name}</span>
-              <span className="text-[8px] tracking-[0.25em] uppercase block font-medium text-white/30" style={{ fontFamily: "'Inter', sans-serif" }}>{config.label.toUpperCase()}</span>
+              <span className="font-bold truncate block text-sm" style={{ fontFamily: palette.fontDisplay }}>{company.name}</span>
+              <span className="text-[8px] tracking-[0.25em] uppercase block font-medium text-white/30" style={{ fontFamily: palette.fontBody }}>{config.label.toUpperCase()}</span>
             </div>
           </div>
-          <div className="hidden md:flex gap-6 text-[11px] tracking-[0.15em] uppercase text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <div className="hidden md:flex gap-6 text-[11px] tracking-[0.15em] uppercase text-white/35" style={{ fontFamily: palette.fontBody }}>
             {navLinks.map(l => <a key={l.href} href={l.href} className="hover:text-white transition-colors">{l.label}</a>)}
           </div>
           <div className="flex items-center gap-3">
@@ -510,7 +525,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           {mobileMenuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-hidden" style={{ background: D, borderTop: `1px solid ${A}10` }}>
               <div className="px-5 py-4 space-y-1">
-                {navLinks.map(l => <a key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm text-white/40 border-b border-white/5" style={{ fontFamily: "'Inter', sans-serif" }}>{l.label}</a>)}
+                {navLinks.map(l => <a key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm text-white/40 border-b border-white/5" style={{ fontFamily: palette.fontBody }}>{l.label}</a>)}
               </div>
             </motion.div>
           )}
@@ -536,11 +551,11 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
             <HeroIcon className="w-4 h-4" /> {config.label}
           </motion.div>
 
-          <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.05]">
+          <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.05]" style={{ fontFamily: palette.fontDisplay }}>
             {company.tagline || `${config.label}: Qualità e Affidabilità`}
           </motion.h1>
 
-          <motion.p variants={fadeUp} custom={2} className="text-base text-white/40 mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <motion.p variants={fadeUp} custom={2} className="text-base text-white/40 mb-10 max-w-2xl mx-auto" style={{ fontFamily: palette.fontBody }}>
             <strong className="text-white/70">{company.name}</strong> — {
               industry === "photography" ? "Fotografia professionale che racconta la tua storia." :
               industry === "veterinary" ? "Il benessere del tuo animale è la nostra priorità." :
@@ -605,25 +620,131 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
               {config.emoji} {config.label}
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold mb-3">I Nostri Servizi</h2>
-            <p className="text-white/30 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>Soluzioni professionali per ogni esigenza</p>
+            <p className="text-white/30 text-sm" style={{ fontFamily: palette.fontBody }}>Soluzioni professionali per ogni esigenza</p>
           </div>
-          <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}
+            className={`grid gap-4 ${
+              palette.visualStyle === "warm" || palette.visualStyle === "organic" 
+                ? "grid-cols-2 sm:grid-cols-3" 
+                : palette.visualStyle === "glass" 
+                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" 
+                  : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}>
             {services.map((s, i) => (
               <motion.div key={i} variants={fadeUp} custom={i}>
-                <Card className="border-0 h-full group rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1" style={{ background: `${A}08`, border: `1px solid ${A}12` }}>
-                  <CardContent className="p-6 relative">
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                      style={{ background: `radial-gradient(ellipse at center, ${A}15, transparent 70%)` }} />
-                    <div className="relative text-center">
-                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110 group-hover:rotate-3"
-                        style={{ background: `${A}15`, border: `1px solid ${A}20` }}>
-                        <span className="text-3xl">{s.emoji}</span>
+                {palette.visualStyle === "glass" ? (
+                  /* Glass style: frosted glass cards with blur */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-1 backdrop-blur-xl`}
+                    style={{ background: `${A}0A`, border: `1px solid ${A}18`, boxShadow: `0 8px 32px ${A}08` }}>
+                    <CardContent className="p-5 relative">
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-inherit"
+                        style={{ background: `linear-gradient(135deg, ${A}15, transparent)` }} />
+                      <div className="relative flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center transition-transform group-hover:scale-110 backdrop-blur-sm"
+                          style={{ background: `${A}18`, border: `1px solid ${A}25` }}>
+                          <span className="text-2xl">{s.emoji}</span>
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-white text-sm mb-1">{s.name}</h3>
+                          <p className="text-xs text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                        </div>
                       </div>
-                      <h3 className="font-bold text-white mb-1.5">{s.name}</h3>
-                      <p className="text-sm text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                ) : palette.visualStyle === "warm" ? (
+                  /* Warm style: rounded colorful cards */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl`}
+                    style={{ background: `linear-gradient(145deg, ${A}12, ${A}06)`, border: `1px solid ${A}15` }}>
+                    <CardContent className="p-5 text-center relative">
+                      <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3 transition-all group-hover:scale-110 group-hover:shadow-lg"
+                        style={{ background: `${A}20`, boxShadow: `0 4px 20px ${A}15` }}>
+                        <span className="text-2xl">{s.emoji}</span>
+                      </div>
+                      <h3 className="font-bold text-white text-sm mb-1" style={{ fontFamily: palette.fontDisplay }}>{s.name}</h3>
+                      <p className="text-[11px] text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                    </CardContent>
+                  </Card>
+                ) : palette.visualStyle === "neon" ? (
+                  /* Neon style: glowing borders with neon accents */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-1`}
+                    style={{ background: `${A}06`, border: `1px solid ${A}20`, boxShadow: `inset 0 1px 0 ${A}15` }}>
+                    <CardContent className="p-5 relative">
+                      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${A}40, transparent)` }} />
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style={{ background: `radial-gradient(ellipse at top, ${A}12, transparent 60%)` }} />
+                      <div className="relative text-center">
+                        <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-3 transition-all group-hover:scale-110 group-hover:shadow-neon"
+                          style={{ background: `${A}12`, border: `1px solid ${A}30`, boxShadow: `0 0 20px ${A}10` }}>
+                          <span className="text-2xl">{s.emoji}</span>
+                        </div>
+                        <h3 className="font-bold text-white text-sm mb-1">{s.name}</h3>
+                        <p className="text-xs text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : palette.visualStyle === "bold" ? (
+                  /* Bold style: large cards with strong presence */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-2`}
+                    style={{ background: `linear-gradient(180deg, ${A}10, ${A}04)`, border: `2px solid ${A}15` }}>
+                    <CardContent className="p-6 relative">
+                      <div className="absolute top-0 left-0 w-1 h-full" style={{ background: `linear-gradient(180deg, ${A}, ${A}20)` }} />
+                      <div className="relative pl-3">
+                        <span className="text-3xl mb-3 block">{s.emoji}</span>
+                        <h3 className="font-extrabold text-white text-base mb-1.5">{s.name}</h3>
+                        <p className="text-xs text-white/40" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : palette.visualStyle === "organic" ? (
+                  /* Organic style: natural flowing shapes */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-1`}
+                    style={{ background: `linear-gradient(160deg, ${A}0A, ${A}04)`, border: `1px solid ${A}10` }}>
+                    <CardContent className="p-5 text-center relative">
+                      <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full blur-2xl opacity-10" style={{ background: A }} />
+                      <div className="relative">
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 transition-transform group-hover:scale-105"
+                          style={{ background: `${A}10`, border: `1px solid ${A}12` }}>
+                          <span className="text-3xl">{s.emoji}</span>
+                        </div>
+                        <h3 className="font-bold text-white text-sm mb-1" style={{ fontFamily: palette.fontDisplay }}>{s.name}</h3>
+                        <p className="text-[11px] text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : palette.visualStyle === "minimal" ? (
+                  /* Minimal style: clean lines, no decoration */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-200 hover:bg-opacity-80`}
+                    style={{ background: `${A}05`, border: `1px solid ${A}08` }}>
+                    <CardContent className="p-5 relative">
+                      <div className="flex items-center gap-4">
+                        <div className="w-11 h-11 rounded-lg flex-shrink-0 flex items-center justify-center"
+                          style={{ background: `${A}10` }}>
+                          <span className="text-xl">{s.emoji}</span>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white text-sm mb-0.5">{s.name}</h3>
+                          <p className="text-[11px] text-white/30" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  /* Solid style: default */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-1`} style={{ background: `${A}08`, border: `1px solid ${A}12` }}>
+                    <CardContent className="p-6 relative">
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style={{ background: `radial-gradient(ellipse at center, ${A}15, transparent 70%)` }} />
+                      <div className="relative text-center">
+                        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110 group-hover:rotate-3"
+                          style={{ background: `${A}15`, border: `1px solid ${A}20` }}>
+                          <span className="text-3xl">{s.emoji}</span>
+                        </div>
+                        <h3 className="font-bold text-white mb-1.5">{s.name}</h3>
+                        <p className="text-sm text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </motion.div>
             ))}
           </motion.div>
@@ -673,16 +794,16 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {whyUs.map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                <Card className="border-0 h-full group rounded-xl transition-all duration-300 hover:-translate-y-1" style={{ background: `${A}06`, border: `1px solid ${A}10` }}>
+                <Card className={`border-0 h-full group ${palette.cardRadius} transition-all duration-300 hover:-translate-y-1`} style={{ background: `${A}06`, border: `1px solid ${A}10` }}>
                   <CardContent className="p-5 relative overflow-hidden">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                       style={{ background: `radial-gradient(ellipse at top left, ${A}12, transparent 60%)` }} />
                     <div className="relative">
-                      <div className="w-11 h-11 rounded-lg flex items-center justify-center mb-3 transition-transform group-hover:scale-110" style={{ background: `${A}12` }}>
+                      <div className={`w-11 h-11 ${palette.visualStyle === "warm" || palette.visualStyle === "organic" ? "rounded-full" : "rounded-lg"} flex items-center justify-center mb-3 transition-transform group-hover:scale-110`} style={{ background: `${A}12` }}>
                         <item.icon className="w-5 h-5" style={{ color: A }} />
                       </div>
-                      <h3 className="font-bold text-white mb-1">{item.title}</h3>
-                      <p className="text-sm text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>{item.desc}</p>
+                      <h3 className="font-bold text-white mb-1" style={{ fontFamily: palette.fontDisplay }}>{item.title}</h3>
+                      <p className="text-sm text-white/35" style={{ fontFamily: palette.fontBody }}>{item.desc}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -708,10 +829,10 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         <div className="max-w-lg mx-auto relative z-10">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-2">{cta.formTitle}</h2>
-            <p className="text-white/30 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>{cta.formSubtitle}</p>
+            <p className="text-white/30 text-sm" style={{ fontFamily: palette.fontBody }}>{cta.formSubtitle}</p>
           </div>
           <Card className="border-0 rounded-xl backdrop-blur-xl" style={{ background: `${A}06`, border: `1px solid ${A}15` }}>
-            <CardContent className="p-6 space-y-4" style={{ fontFamily: "'Inter', sans-serif" }}>
+            <CardContent className="p-6 space-y-4" style={{ fontFamily: palette.fontBody }}>
               <div className="grid grid-cols-2 gap-3">
                 <div><Label className="text-white/40 text-xs">Nome *</Label><Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="Nome" /></div>
                 <div><Label className="text-white/40 text-xs">Telefono *</Label><Input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="+39..." /></div>
