@@ -3850,27 +3850,10 @@ const LandingPage = () => {
         background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(168 18% 96%) 35%, hsl(180 15% 97%) 65%, hsl(0 0% 100%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          {/* Premium violet mesh glow — top-left */}
-          <div className="absolute top-[4%] left-[8%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.6), transparent 65%)", filter: "blur(150px)" }} />
-          {/* Deep emerald — center-right */}
-          <div className="absolute top-[30%] right-[5%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,55%,42%,0.5), transparent 65%)", filter: "blur(140px)" }} />
-          {/* Gold accent — bottom-center */}
-          <div className="absolute bottom-[10%] left-[30%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,65%,50%,0.45), transparent 65%)", filter: "blur(120px)" }} />
-          {/* Violet secondary — bottom-right */}
-          <div className="absolute bottom-[25%] right-[18%] w-[320px] h-[320px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,55%,58%,0.35), transparent 65%)", filter: "blur(100px)" }} />
-          {/* Top accent border */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
-          style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.25), hsla(155,45%,50%,0.15), hsla(38,50%,50%,0.08), transparent)" }} />
-          {/* Subtle grid pattern */}
-          <div className="absolute inset-0 opacity-[0.015]"
-          style={{ backgroundImage: "linear-gradient(hsla(265,30%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265,30%,60%,0.08) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
-          {/* Bottom fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsl(0 0% 100% / 0.8))" }} />
+          <div className="absolute top-[8%] left-[10%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
+          style={{ background: "radial-gradient(circle, hsla(265,65%,55%,0.5), transparent 65%)", filter: "blur(80px)" }} />
+          <div className="absolute bottom-[12%] right-[10%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
+          style={{ background: "radial-gradient(circle, hsla(155,55%,42%,0.4), transparent 65%)", filter: "blur(80px)" }} />
         </div>
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
