@@ -747,8 +747,6 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
                 )}
               </motion.div>
             ))}
-              </motion.div>
-            ))}
           </motion.div>
         </div>
       </section>
