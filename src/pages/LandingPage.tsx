@@ -3551,8 +3551,8 @@ const LandingPage = () => {
                 {pillar.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-[0.85rem] font-heading font-bold text-foreground/95 leading-tight mb-1.5">{pillar.title}</h3>
-                <p className="text-[0.65rem] text-foreground/40 leading-[1.65] mb-3">{pillar.desc}</p>
+                <h3 className="text-[0.9rem] font-heading font-bold text-foreground leading-tight mb-1.5">{pillar.title}</h3>
+                <p className="text-[0.7rem] text-foreground/60 leading-[1.7] mb-3">{pillar.desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {pillar.features.map((f, fi) =>
                   <span key={fi} className="px-2 py-0.5 rounded-md text-[0.5rem] font-medium tracking-wide"
