@@ -1335,8 +1335,8 @@ video::-webkit-media-controls-enclosure {
   transition: box-shadow 0.3s ease-out, border-color 0.3s ease-out;
 }
 .premium-card-hover:hover {
-  box-shadow: 0 0 20px hsla(38, 50%, 50%, 0.15), 0 8px 32px hsla(0, 0%, 0%, 0.3);
-  border-color: hsla(38, 45%, 55%, 0.25);
+  box-shadow: 0 0 20px hsla(210, 100%, 62%, 0.15), 0 8px 32px hsla(0, 0%, 0%, 0.3);
+  border-color: hsla(210, 100%, 62%, 0.25);
 }
 
 /* ═══ Circuit pattern stroke animation ═══ */
