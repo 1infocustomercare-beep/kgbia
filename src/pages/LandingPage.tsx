@@ -109,22 +109,49 @@ const SafeEmpireVoiceAgent = () => <EmpireVoiceAgent />;
    ═══════════════════════════════════════════ */
 
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;prefix?: string;suffix?: string;}) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState(0);
+  const hasAnimated = useRef(false);
+
   useEffect(() => {
-    if (!isInView) return;
-    let start = 0;
-    const dur = 2000;
-    const step = (ts: number) => {
-      if (!start) start = ts;
-      const p = Math.min((ts - start) / dur, 1);
-      setDisplay(Math.floor((1 - Math.pow(1 - p, 3)) * value));
-      if (p < 1) requestAnimationFrame(step);
+    const el = ref.current;
+    if (!el) return;
+
+    // Also trigger on mount if already visible
+    const runAnimation = () => {
+      if (hasAnimated.current) return;
+      hasAnimated.current = true;
+      let start = 0;
+      const dur = 2000;
+      const isFloat = value % 1 !== 0;
+      const step = (ts: number) => {
+        if (!start) start = ts;
+        const p = Math.min((ts - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        const current = eased * value;
+        setDisplay(isFloat ? parseFloat(current.toFixed(1)) : Math.floor(current));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
     };
-    requestAnimationFrame(step);
-  }, [isInView, value]);
-  return <span ref={ref}>{prefix}{display.toLocaleString("it-IT")}{suffix}</span>;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { runAnimation(); observer.unobserve(el); } },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+
+    // Fallback: if element is already in viewport on mount
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      setTimeout(runAnimation, 300);
+    }
+
+    return () => observer.disconnect();
+  }, [value]);
+
+  const formatted = value % 1 !== 0 ? display.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : display.toLocaleString("it-IT");
+  return <span ref={ref}>{prefix}{formatted}{suffix}</span>;
 };
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
