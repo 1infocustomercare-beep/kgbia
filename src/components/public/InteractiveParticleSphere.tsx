@@ -57,11 +57,11 @@ const TECH_ICON_SET: { Icon: LucideIcon; color: string; glow: string }[] = [
 const TECH_ICON_COUNT = IS_MOBILE ? 8 : TECH_ICON_SET.length;
 
 const COLORS = {
-  gold: { h: 38, s: 58, l: 58 },
-  violet: { h: 265, s: 80, l: 65 },
-  green: { h: 155, s: 72, l: 52 },
-  cyan: { h: 185, s: 78, l: 58 },
-  white: { h: 0, s: 0, l: 92 },
+  gold: { h: 38, s: 50, l: 55 },
+  violet: { h: 265, s: 75, l: 62 },
+  green: { h: 160, s: 55, l: 48 },
+  cyan: { h: 195, s: 70, l: 55 },
+  white: { h: 0, s: 0, l: 90 },
 };
 
 const colorPalette = [COLORS.violet, COLORS.gold, COLORS.green, COLORS.cyan];
@@ -242,13 +242,13 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         f.x += f.vx; f.y += f.vy; f.pulse += 0.03;
         if (f.x < -10) f.x = w + 10; if (f.x > w + 10) f.x = -10;
         if (f.y < -10) f.y = h + 10; if (f.y > h + 10) f.y = -10;
-        const pa = (0.3 + Math.sin(f.pulse) * 0.15) * anyA;
+        const pa = (0.15 + Math.sin(f.pulse) * 0.1) * anyA;
         const c = colorPalette[f.ci];
-        const gr = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 6);
-        gr.addColorStop(0, hsl(c, pa * 0.8));
+        const gr = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 5);
+        gr.addColorStop(0, hsl(c, pa * 0.5));
         gr.addColorStop(1, hsl(c, 0));
-        ctx.beginPath(); ctx.arc(f.x, f.y, f.r * 6, 0, Math.PI * 2); ctx.fillStyle = gr; ctx.fill();
-        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fillStyle = hsl(c, pa * 1.2); ctx.fill();
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r * 5, 0, Math.PI * 2); ctx.fillStyle = gr; ctx.fill();
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fillStyle = hsl(c, pa); ctx.fill();
       }
 
       // ═══ L1: CIRCUIT DATA PATHWAYS ═══
@@ -258,32 +258,31 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         const c = colorPalette[cl.ci];
         const lx = cl.x1 + (cl.x2 - cl.x1) * p, ly = cl.y1 + (cl.y2 - cl.y1) * p;
         ctx.beginPath(); ctx.moveTo(cl.x1 * w, cl.y1 * h); ctx.lineTo(lx * w, ly * h);
-        ctx.strokeStyle = hsl(c, 0.12 * anyA); ctx.lineWidth = 0.7; ctx.stroke();
+        ctx.strokeStyle = hsl(c, 0.05 * anyA); ctx.lineWidth = 0.5; ctx.stroke();
         if (p > 0.3) {
-          ctx.beginPath(); ctx.arc(lx * w, ly * h, 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = hsl(c, 0.35 * anyA); ctx.fill();
+          ctx.beginPath(); ctx.arc(lx * w, ly * h, 2, 0, Math.PI * 2);
+          ctx.fillStyle = hsl(c, 0.18 * anyA); ctx.fill();
         }
       }
 
       // ═══ L2: CENTRAL INTELLIGENCE CORE ═══
       const cP = 1 + Math.sin(el * 1.8) * 0.1;
-      const cAl = anyA * 0.45;
-      const cGr = ctx.createRadialGradient(cx, cy, 0, cx, cy, cR * cP * 2);
-      cGr.addColorStop(0, hsl(COLORS.violet, cAl * 1.8));
-      cGr.addColorStop(0.15, hsl(COLORS.gold, cAl * 1.2));
-      cGr.addColorStop(0.35, hsl(COLORS.cyan, cAl * 0.8));
-      cGr.addColorStop(0.55, hsl(COLORS.green, cAl * 0.6));
-      cGr.addColorStop(0.75, hsl(COLORS.green, cAl * 0.2));
-      cGr.addColorStop(1, "hsla(265,80%,65%,0)");
-      ctx.beginPath(); ctx.arc(cx, cy, cR * cP * 2, 0, Math.PI * 2); ctx.fillStyle = cGr; ctx.fill();
+      const cAl = anyA * 0.25;
+      const cGr = ctx.createRadialGradient(cx, cy, 0, cx, cy, cR * cP * 1.8);
+      cGr.addColorStop(0, hsl(COLORS.violet, cAl * 1.5));
+      cGr.addColorStop(0.2, hsl(COLORS.gold, cAl));
+      cGr.addColorStop(0.5, hsl(COLORS.cyan, cAl * 0.5));
+      cGr.addColorStop(0.7, hsl(COLORS.green, cAl * 0.3));
+      cGr.addColorStop(1, "hsla(265,75%,62%,0)");
+      ctx.beginPath(); ctx.arc(cx, cy, cR * cP * 1.8, 0, Math.PI * 2); ctx.fillStyle = cGr; ctx.fill();
 
       // Concentric rings — more rings for tech density
-      const rCols = [COLORS.violet, COLORS.green, COLORS.gold, COLORS.cyan, COLORS.green];
+      const rCols = [COLORS.violet, COLORS.gold, COLORS.green, COLORS.cyan, COLORS.violet];
       const rRad = [0.35, 0.5, 0.65, 0.8, 0.95];
       for (let i = 0; i < 5; i++) {
         ctx.beginPath(); ctx.arc(cx, cy, cR * rRad[i] * cP, 0, Math.PI * 2);
-        ctx.strokeStyle = hsl(rCols[i], 0.35 * (1 - i * 0.1) * anyA);
-        ctx.lineWidth = i % 2 === 0 ? 1.2 : 0.6; ctx.stroke();
+        ctx.strokeStyle = hsl(rCols[i], 0.2 * (1 - i * 0.12) * anyA);
+        ctx.lineWidth = i % 2 === 0 ? 0.8 : 0.4; ctx.stroke();
       }
 
       // ═══ L3: DATA STREAMS — orbiting trails ═══
@@ -297,8 +296,8 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           const wobble = Math.sin(ta * 3 + el * 2) * 5 * sc;
           const r = baseR + wobble;
           const px = cx + Math.cos(ta) * r, py = cy + Math.sin(ta) * r;
-          const fa = (1 - ti / trailLen) * 0.55 * anyA;
-          ctx.beginPath(); ctx.arc(px, py, (2 - ti * 0.1) * sc, 0, Math.PI * 2);
+          const fa = (1 - ti / trailLen) * 0.3 * anyA;
+          ctx.beginPath(); ctx.arc(px, py, (1.5 - ti * 0.1) * sc, 0, Math.PI * 2);
           ctx.fillStyle = hsl(c, fa); ctx.fill();
         }
       }
@@ -309,8 +308,8 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         n.x += n.vx; n.y += n.vy;
         if (n.x < 0 || n.x > 1) n.vx *= -1; if (n.y < 0 || n.y > 1) n.vy *= -1;
         const c = colorPalette[n.ci];
-        ctx.beginPath(); ctx.arc(n.x * w, n.y * h, n.r * 1.3, 0, Math.PI * 2);
-        ctx.fillStyle = hsl(c, 0.28 * anyA); ctx.fill();
+        ctx.beginPath(); ctx.arc(n.x * w, n.y * h, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = hsl(c, 0.12 * anyA); ctx.fill();
       }
       for (let i = 0; i < mesh.length; i++) {
         for (let j = i + 1; j < Math.min(i + ckR, mesh.length); j++) {
@@ -318,8 +317,8 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           const d = Math.sqrt(dx * dx + dy * dy);
           if (d < 0.18) {
             ctx.beginPath(); ctx.moveTo(mesh[i].x * w, mesh[i].y * h); ctx.lineTo(mesh[j].x * w, mesh[j].y * h);
-            ctx.strokeStyle = hsl(colorPalette[mesh[i].ci], (1 - d / 0.18) * 0.15 * anyA);
-            ctx.lineWidth = 0.6; ctx.stroke();
+            ctx.strokeStyle = hsl(colorPalette[mesh[i].ci], (1 - d / 0.18) * 0.06 * anyA);
+            ctx.lineWidth = 0.4; ctx.stroke();
           }
         }
       }
@@ -346,7 +345,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           const dx = ax - bx, dy = ay - by, dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < w * 0.14) {
             ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by);
-            ctx.strokeStyle = hsl(colorPalette[a.ci], (1 - dist / (w * 0.14)) * 0.65 * hA); ctx.lineWidth = 1.2; ctx.stroke();
+            ctx.strokeStyle = hsl(colorPalette[a.ci], (1 - dist / (w * 0.14)) * 0.4 * hA); ctx.lineWidth = 1; ctx.stroke();
           }
         }
 
@@ -367,11 +366,11 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           if (n.glow) {
             const gR = n.r * 5;
             const gg = ctx.createRadialGradient(px, py, 0, px, py, gR);
-            gg.addColorStop(0, hsl(c, 0.45 * hA)); gg.addColorStop(1, hsl(c, 0));
+            gg.addColorStop(0, hsl(c, 0.25 * hA)); gg.addColorStop(1, hsl(c, 0));
             ctx.beginPath(); ctx.arc(px, py, gR, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
           }
-          ctx.beginPath(); ctx.arc(px, py, n.r * sc * 0.9, 0, Math.PI * 2);
-          ctx.fillStyle = hsl(c, 0.95 * hA); ctx.fill();
+          ctx.beginPath(); ctx.arc(px, py, n.r * sc * 0.8, 0, Math.PI * 2);
+          ctx.fillStyle = hsl(c, 0.9 * hA); ctx.fill();
         }
 
         // ── Synaptic pulses between helix nodes ──
@@ -431,7 +430,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
             const r = oR + wo, px = cx + Math.cos(bA) * r, py = cy + Math.sin(bA) * r;
             if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
           }
-          ctx.strokeStyle = hsl(sC, 0.65 * oA); ctx.lineWidth = 1.8 * sc; ctx.stroke();
+          ctx.strokeStyle = hsl(sC, 0.45 * oA); ctx.lineWidth = 1.5 * sc; ctx.stroke();
           // Glow
           ctx.beginPath();
           for (let i = 0; i <= hSeg; i++) {
@@ -440,7 +439,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
             const r = oR + wo, px = cx + Math.cos(bA) * r, py = cy + Math.sin(bA) * r;
             if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
           }
-          ctx.strokeStyle = hsl(sC, 0.2 * oA); ctx.lineWidth = 8 * sc; ctx.stroke();
+          ctx.strokeStyle = hsl(sC, 0.1 * oA); ctx.lineWidth = 7 * sc; ctx.stroke();
         }
 
         // Cross-links
@@ -464,9 +463,9 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           const c = colorPalette[dot.ci], p = 0.7 + 0.3 * Math.sin(el * 3 + dot.a * 3);
           const gR = dot.sz * 4 * p * sc;
           const gg = ctx.createRadialGradient(px, py, 0, px, py, gR);
-          gg.addColorStop(0, hsl(c, 0.6 * oA * p)); gg.addColorStop(0.5, hsl(c, 0.2 * oA)); gg.addColorStop(1, hsl(c, 0));
+          gg.addColorStop(0, hsl(c, 0.4 * oA * p)); gg.addColorStop(0.5, hsl(c, 0.1 * oA)); gg.addColorStop(1, hsl(c, 0));
           ctx.beginPath(); ctx.arc(px, py, gR, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
-          ctx.beginPath(); ctx.arc(px, py, dot.sz * p * sc * 0.8, 0, Math.PI * 2); ctx.fillStyle = hsl(c, 0.95 * oA); ctx.fill();
+          ctx.beginPath(); ctx.arc(px, py, dot.sz * p * sc * 0.7, 0, Math.PI * 2); ctx.fillStyle = hsl(c, 0.9 * oA); ctx.fill();
         }
 
         // Rotating scan arcs (more arcs)

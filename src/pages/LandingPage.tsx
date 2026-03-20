@@ -5,7 +5,6 @@ import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
 import { MockupLightbox } from "@/components/ui/mockup-lightbox";
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
-import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
   Crown, Check, Star, Zap, Shield, Smartphone,
@@ -112,91 +111,6 @@ function useLandingAssets() {
 
 const SafeEmpireVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
-/* ═══ Hero Phone Carousel — each sector shows 3 real mockup screens ═══ */
-const HeroPhoneCarousel = ({ sectors }: { sectors: { screens: [string, string, string]; label: string }[] }) => {
-  const [idx, setIdx] = useState(0);
-  const total = sectors.length;
-
-  useEffect(() => {
-    const timer = setInterval(() => setIdx((p) => (p + 1) % total), 4000);
-    return () => clearInterval(timer);
-  }, [total]);
-
-  const current = sectors[idx];
-
-  const PhoneFrame = ({ src, alt, size, rounding, extraClass, style: extraStyle }: {
-    src: string; alt: string; size: string; rounding: string; extraClass?: string; style?: React.CSSProperties;
-  }) => (
-    <div className={`relative ${size} aspect-[9/19.5] ${rounding} overflow-hidden ${extraClass || ""}`}
-      style={{ border: "2.5px solid hsl(220 12% 82%)", background: "#0a0a12",
-        boxShadow: "0 30px 60px hsla(0,0%,0%,0.22), 0 8px 24px hsla(265,30%,30%,0.1), inset 0 1px 0 hsla(0,0%,100%,0.06)",
-        ...extraStyle }}>
-      <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[36px] sm:w-[48px] h-[11px] sm:h-[14px] bg-black rounded-full z-30"
-        style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
-      <div className={`absolute inset-[2px] ${rounding === "rounded-[26px] sm:rounded-[36px]" ? "rounded-[24px] sm:rounded-[34px]" : "rounded-[22px] sm:rounded-[30px]"} overflow-hidden`}>
-        <img src={src} alt={alt} className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} loading="lazy" />
-        <div className="absolute inset-x-0 top-0 h-10" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.35), transparent)" }} />
-      </div>
-      <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[32%] h-[3px] bg-white/20 rounded-full z-20" />
-      <div className={`absolute inset-0 ${rounding} pointer-events-none`} style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.08) 0%, transparent 40%)" }} />
-    </div>
-  );
-
-  return (
-    <motion.div className="relative mt-10 flex flex-col items-center"
-      initial={{ opacity: 0, y: 40, scale: 0.92 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
-
-      {/* Ambient glow */}
-      <div className="absolute inset-[-25%] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsla(265,50%,50%,0.12), hsla(168,45%,45%,0.08), transparent 70%)" }} />
-
-      {/* Three phone container with crossfade */}
-      <div className="relative flex items-end justify-center">
-        <AnimatePresence mode="wait">
-          <motion.div key={idx} className="flex items-end" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-
-            {/* LEFT phone — second screen */}
-            <motion.div className="relative z-[5]" style={{ marginBottom: "32px", marginRight: "-18px" }}
-              animate={{ y: [0, -6, 0] }} transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}>
-              <PhoneFrame src={current.screens[1]} alt={`${current.label} - Servizi`} size="w-[110px] sm:w-[145px] lg:w-[175px]" rounding="rounded-[24px] sm:rounded-[32px]" />
-            </motion.div>
-
-            {/* CENTER phone — home screen, larger */}
-            <motion.div className="relative z-20"
-              animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-              <PhoneFrame src={current.screens[0]} alt={`${current.label} - Home`} size="w-[140px] sm:w-[185px] lg:w-[225px]" rounding="rounded-[26px] sm:rounded-[36px]"
-                style={{ border: "3px solid hsl(220 10% 78%)", boxShadow: "0 40px 80px hsla(0,0%,0%,0.25), 0 12px 32px hsla(265,40%,35%,0.12), inset 0 1px 0 hsla(0,0%,100%,0.08)" }} />
-            </motion.div>
-
-            {/* RIGHT phone — third screen */}
-            <motion.div className="relative z-[8]" style={{ marginBottom: "20px", marginLeft: "-18px" }}
-              animate={{ y: [0, -7, 0] }} transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}>
-              <PhoneFrame src={current.screens[2]} alt={`${current.label} - Dettaglio`} size="w-[115px] sm:w-[150px] lg:w-[180px]" rounding="rounded-[24px] sm:rounded-[32px]" />
-            </motion.div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Sector label */}
-      <AnimatePresence mode="wait">
-        <motion.div key={idx} className="mt-4 flex items-center gap-2"
-          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4 }}>
-          <span className="text-[0.65rem] sm:text-[0.75rem] font-heading font-bold tracking-[2px] uppercase text-primary">{current.label}</span>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Dot indicators */}
-      <div className="mt-3 flex items-center gap-1.5 flex-wrap justify-center max-w-[260px]">
-        {sectors.map((_, i) => (
-          <button key={i} onClick={() => setIdx(i)} className={`rounded-full transition-all duration-300 ${i === idx ? "w-5 h-1.5 bg-primary" : "w-1.5 h-1.5 bg-foreground/15 hover:bg-foreground/25"}`} />
-        ))}
-      </div>
-    </motion.div>
-  );
-};
-
 /* ═══════════════════════════════════════════
    HELPERS
    ═══════════════════════════════════════════ */
@@ -250,17 +164,24 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 const IS_TOUCH_DEVICE = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 
-/** Section backgrounds — light, semi-transparent with premium tinting, DNA visible underneath. */
+/** Section backgrounds — nearly opaque for a solid premium feel with minimal DNA bleed. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !style.background || typeof style.background !== "string") return style;
-  // On light theme, keep sections semi-transparent so DNA background bleeds through subtly
-  return style;
+  const bg = style.background.replace(
+    /hsla\(([^,]+,[^,]+,[^,]+),\s*([\d.]+)\)/g,
+    (_, inner, alpha) => {
+      const a = parseFloat(alpha);
+      // High-opacity sections — solid, luxurious, minimal transparency
+      const newAlpha = a >= 1 ? 0.99 : Math.min(Math.max(a, 0.97), 0.99);
+      return `hsla(${inner},${newAlpha})`;
+    }
+  );
+  return { ...style, background: bg };
 };
 
 const Section = forwardRef<HTMLElement, {id?: string;children: React.ReactNode;className?: string;style?: React.CSSProperties;}>(
   ({ id, children, className = "", style }, ref) =>
-  <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden landing-premium-section ${className}`} style={mobilifyBg(style)}>
-      <div className="absolute inset-x-3 sm:inset-x-6 inset-y-6 sm:inset-y-8 rounded-[1.65rem] pointer-events-none landing-premium-shell" />
+  <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden ${className}`} style={mobilifyBg(style)}>
       <div className="max-w-[1100px] mx-auto relative z-10">{children}</div>
     </section>
 
@@ -274,20 +195,16 @@ const SectionLabel = forwardRef<HTMLDivElement, {text: string;icon?: React.React
     className="inline-flex items-center gap-2.5 mb-5"
     initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
     
-      <div className="relative flex items-center gap-2.5 px-5 py-2.5 rounded-2xl overflow-hidden"
-        style={{
-          background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))",
-          border: "1px solid hsl(var(--primary) / 0.15)",
-          boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)"
-        }}>
-        <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
-          style={{
-            background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--empire-violet)))",
-            boxShadow: "0 2px 8px hsl(var(--primary) / 0.3)"
-          }}>
-          <span className="text-white [&>svg]:w-3 [&>svg]:h-3">{icon || <Sparkles className="w-3 h-3" />}</span>
-        </div>
-        <span className="text-[0.65rem] font-heading font-bold tracking-[2.5px] uppercase text-foreground/80 relative z-10">{text}</span>
+      <div className="relative flex items-center gap-2 px-4 py-2 rounded-full premium-label overflow-hidden" style={{ borderLeft: "1px solid hsla(35,45%,50%,0.15)" }}>
+        {/* Scanning beam — gold tint */}
+        <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent 30%, hsla(35,45%,55%,0.12) 50%, transparent 70%)" }}
+        animate={{ x: ["-150%", "250%"] }}
+        transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
+      
+        {icon || <motion.span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />}
+        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90 relative z-10">{text}</span>
       </div>
     </motion.div>
 
@@ -464,9 +381,9 @@ const NeuralCellsBackground = () => {
   return (
     <motion.div
       className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ opacity: 0.15, willChange: "transform", transform: "translateZ(0)" }}
+      style={{ opacity: 0.7, willChange: "transform", transform: "translateZ(0)" }}
       initial={{ opacity: 0 }}
-      animate={born ? { opacity: 0.15 } : { opacity: 0 }}
+      animate={born ? { opacity: 0.7 } : { opacity: 0 }}
       transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}>
       
       {/* DNA Birth Pulse — desktop only */}
@@ -646,12 +563,11 @@ const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: {children: 
   const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
   return (
-    <motion.div className="relative group/icon" whileHover={isMobileDevice ? undefined : { scale: 1.1, rotate: -3 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
-      <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white overflow-hidden`}
-      style={{ boxShadow: "0 4px 16px hsl(var(--primary) / 0.18), 0 0 0 1px hsl(var(--primary) / 0.1), inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.15)" }}>
-        {/* Inner glass highlight */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%, rgba(0,0,0,0.08) 100%)" }} />
-        <div className="relative z-10 [&>svg]:drop-shadow-sm">{children}</div>
+    <motion.div className="relative group/icon" whileHover={isMobileDevice ? undefined : { scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+      {/* Main container — no animated rings on mobile */}
+      <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
+      style={{ boxShadow: "0 6px 24px hsla(38,50%,50%,0.2), 0 0 0 1px hsla(38,45%,55%,0.1), inset 0 1px 1px rgba(255,255,255,0.2)" }}>
+        <div className="relative z-10">{children}</div>
       </div>
     </motion.div>);
 
@@ -663,32 +579,29 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
 
   return (
     <motion.div
-      className={`relative rounded-2xl border overflow-hidden group/card ${className}`}
+      className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass premium-card-hover ${className}`}
       style={{
-        background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(220 20% 98% / 0.88), hsl(248 18% 97% / 0.85))",
-        backdropFilter: isMobileDevice ? undefined : "blur(24px) saturate(1.4)",
-        WebkitBackdropFilter: isMobileDevice ? undefined : "blur(24px) saturate(1.4)",
-        borderColor: "hsl(var(--border) / 0.35)",
-        boxShadow: "0 2px 24px hsl(var(--primary) / 0.06), 0 0 0 1px hsl(var(--primary) / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
+        background: "linear-gradient(145deg, hsla(230,12%,11%,0.98), hsla(230,10%,7%,0.99))",
+        backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.4)",
+        borderColor: "hsla(38,40%,55%,0.18)",
+        boxShadow: "0 2px 24px hsla(0,0%,0%,0.4), 0 0 0 1px hsla(38,45%,50%,0.06)"
       }}
       whileHover={hover && !isMobileDevice ? {
         y: -6,
-        borderColor: "hsl(var(--primary) / 0.18)",
-        boxShadow: "0 20px 60px hsl(var(--primary) / 0.1), 0 0 30px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.6)",
+        borderColor: "hsla(38,45%,55%,0.25)",
+        boxShadow: "0 20px 60px hsla(38,45%,50%,0.1), 0 0 30px hsla(38,45%,50%,0.05), inset 0 1px 0 hsla(38,50%,70%,0.08)",
         transition: { duration: 0.4, ease: "easeOut" }
       } : undefined}>
       
-    {/* Top accent shimmer line */}
+    {/* Top accent line — static on mobile */}
     <div className="absolute top-0 left-0 right-0 h-px z-10"
-      style={{ background: "linear-gradient(90deg, transparent 10%, hsl(var(--primary) / 0.12) 30%, hsl(38 50% 55% / 0.15) 50%, hsl(var(--accent) / 0.1) 70%, transparent 90%)" }} />
+      style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,55%,0.2), hsla(38,50%,60%,0.2), hsla(35,45%,55%,0.15), transparent)" }} />
       
+    {/* Corner accents */}
+    <div className="absolute top-2 left-2 w-4 h-4 border-t border-l rounded-tl-sm pointer-events-none opacity-20" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
+    <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r rounded-br-sm pointer-events-none opacity-20" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
     {/* Inner glass reflection */}
-    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.45) 0%, transparent 30%)" }} />
-    
-    {/* Subtle hover gradient overlay */}
-    <div className="absolute inset-0 pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
-      style={{ background: "radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.04), transparent 70%)" }} />
-    
+    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(38,30%,70%,0.03) 0%, transparent 40%)" }} />
     <div className="relative z-10">{children}</div>
   </motion.div>);
 
@@ -723,7 +636,7 @@ const Particle = ({ delay, size, x, y }: {delay: number;size: number;x: string;y
 /* ═══ Section Divider — taller to reveal circuit background ═══ */
 const SectionDivider = forwardRef<HTMLDivElement>((_, ref) =>
 <div ref={ref} className="section-connector" style={{ height: "4rem" }}>
-    <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsl(var(--primary) / 0.08) 15%, hsl(var(--primary) / 0.14) 50%, hsl(var(--primary) / 0.08) 85%, transparent 100%)" }} />
+    <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, hsla(35,45%,50%,0.10) 15%, hsla(38,45%,52%,0.18) 35%, hsla(35,45%,50%,0.25) 50%, hsla(38,45%,52%,0.18) 65%, hsla(35,45%,50%,0.10) 85%, transparent 100%)" }} />
   </div>
 );
 SectionDivider.displayName = "SectionDivider";
@@ -1093,10 +1006,10 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
   return (
     <Section id="pricing" className="relative overflow-hidden" style={{
-      background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(215 22% 94%) 35%, hsl(235 18% 96%) 65%, hsl(220 20% 97%) 100%)"
+      background: "linear-gradient(180deg, hsla(0,0%,4%,0.96) 0%, hsla(0,0%,5%,0.94) 30%, hsla(38,22%,10%,0.94) 55%, hsla(0,0%,5%,0.94) 80%, hsla(0,0%,4%,0.96) 100%)"
     }}>
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.04]"
+        <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.06]"
         style={{ background: "radial-gradient(ellipse, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(150px)" }} />
         <div className="absolute top-[30%] left-[12%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
         style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
@@ -1108,10 +1021,10 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
         style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
         style={{ background: "linear-gradient(90deg, transparent, hsla(38,55%,50%,0.22), hsla(265,50%,55%,0.12), transparent)" }} />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.04]"
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.06]"
         style={{ background: "linear-gradient(180deg, hsla(38,55%,50%,0.4), transparent)" }} />
         <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-        style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+        style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
         <div className="absolute inset-0 opacity-[0.012]" style={{
           backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
           backgroundRepeat: "repeat", backgroundSize: "128px 128px"
@@ -1130,7 +1043,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
         {/* Mode Toggle: Package vs Monthly */}
         <motion.div className="flex items-center justify-center gap-1 mt-6 p-1 rounded-full border border-border/30 max-w-sm mx-auto"
-        style={{ background: "linear-gradient(145deg, hsl(0 0% 100% / 0.95), hsl(220 20% 97% / 0.9))", boxShadow: "0 2px 12px hsl(var(--primary) / 0.06)" }}
+        style={{ background: "linear-gradient(145deg, hsla(0,0%,4%,0.98), hsla(38,18%,8%,0.94))" }}
         initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <button onClick={() => setPricingMode("package")}
           className={`relative flex-1 px-4 py-2.5 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${
@@ -1231,15 +1144,15 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 transition={{ delay: idx * 0.1 }}
                 className={`relative w-full rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                 isEmpire ?
-                "border-2 border-accent/40 shadow-[0_4px_30px_hsla(35,45%,50%,0.12)] scale-[1.01]" :
+                "border-2 border-accent/50 shadow-[0_0_50px_hsla(35,45%,50%,0.25),0_8px_32px_hsla(0,0%,0%,0.5)] scale-[1.02]" :
                 isSelected ?
-                "border-2 border-primary/35 shadow-[0_4px_24px_hsla(265,50%,55%,0.08)]" :
-                "border border-border/30 shadow-[0_2px_16px_hsla(0,0%,0%,0.06)]"}`
+                "border-2 border-primary/50 shadow-[0_0_30px_hsla(265,50%,55%,0.12)]" :
+                "border border-border/30 shadow-[0_4px_20px_hsla(0,0%,0%,0.25)]"}`
                 }
                 style={{
                   background: isEmpire ?
-                  "linear-gradient(165deg, hsl(0 0% 100% / 0.98), hsl(35 20% 97% / 0.95))" :
-                  "linear-gradient(165deg, hsl(0 0% 100% / 0.97), hsl(220 18% 97% / 0.94))"
+                  "linear-gradient(165deg, hsla(35,25%,14%,0.94), hsla(230,12%,8%,0.95))" :
+                  "linear-gradient(165deg, hsla(230,12%,13%,0.93), hsla(230,10%,9%,0.95))"
                 }}
                 whileTap={{ scale: 0.985 }}>
 
@@ -1262,7 +1175,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                         <div>
                           <p className="text-[0.55rem] font-heading font-semibold text-foreground/35 tracking-[3px] uppercase">{p.name}</p>
                           <div className="flex items-baseline gap-2 mt-1">
-                            <span className="text-[1.6rem] font-heading font-extrabold text-foreground leading-none">€{p.price.toLocaleString("it-IT")}</span>
+                            <span className="text-[2rem] font-heading font-extrabold text-foreground leading-none">€{p.price.toLocaleString("it-IT")}</span>
                             <div className="flex flex-col">
                               <span className="text-[0.65rem] text-foreground/20 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
                               <span className="text-[0.5rem] text-foreground/25">una tantum</span>
@@ -1278,8 +1191,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       </div>
 
                       {/* Installment info */}
-                      <p className="text-[0.55rem] text-foreground/40 leading-snug">
-                        oppure <strong className="text-foreground/60">€{Math.round(p.price / 3)}/mese ×3</strong> (TAN 0%)
+                      <p className="text-[0.6rem] text-foreground/30">
+                        oppure <strong className="text-foreground/50">€{Math.round(p.price / 3)}/mese ×3</strong> (TAN 0%) · oppure €{Math.round(p.price / 6)}/mese ×6
                       </p>
 
                       {/* Monthly + Commission pills — KEY conversion element */}
@@ -1319,15 +1232,15 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* Features with expand */}
                       <ul className="mt-3 space-y-1.5">
                         {p.features.slice(0, isSelected ? p.features.length : 4).map((f, fi) =>
-                      <li key={fi} className="flex items-start gap-1.5 text-[0.62rem] text-foreground/55">
-                            <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                        f.includes("ZERO") || f.includes("0%") ? "bg-accent/15" : "bg-primary/10"}`
+                      <li key={fi} className="flex items-start gap-2 text-[0.7rem] text-foreground/50">
+                            <div className={`w-4.5 h-4.5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                        f.includes("ZERO") || f.includes("0%") ? "bg-accent/20" : "bg-primary/12"}`
                         }>
-                              <Check className={`w-2 h-2 ${
+                              <Check className={`w-2.5 h-2.5 ${
                           f.includes("ZERO") || f.includes("0%") ? "text-accent" : "text-primary"}`
                           } />
                             </div>
-                            <span className={`leading-snug break-words ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/70" : ""}`}>{f}</span>
+                            <span className={`leading-snug ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/60" : ""}`}>{f}</span>
                           </li>
                       )}
                         {!isSelected && p.features.length > 4 &&
@@ -1354,8 +1267,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     }
 
                       {/* Savings bar */}
-                      <div className={`mt-3 p-2 rounded-xl text-[0.55rem] font-bold text-center leading-snug ${
-                    isEmpire ? "bg-accent/10 text-accent border border-accent/15" : "bg-primary/[0.05] text-primary/70 border border-primary/10"}`
+                      <div className={`mt-3 p-2.5 rounded-xl text-[0.65rem] font-bold text-center ${
+                    isEmpire ? "bg-accent/12 text-accent border border-accent/20" : "bg-primary/[0.06] text-primary/70 border border-primary/10"}`
                     }>
                         💸 {p.savings}
                       </div>
@@ -1363,7 +1276,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* CTA button per card */}
                       <motion.button
                       onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/admin");}}
-                      className={`w-full mt-3 py-3 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
+                      className={`w-full mt-3 py-3 rounded-xl text-[0.7rem] font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
                       isEmpire ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20" :
                       isGrowth ?
@@ -1379,15 +1292,15 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                       }
                         <span className="relative z-10">
-                          {isEmpire ? "👑 Scelgo Empire" : isGrowth ? "🚀 Scelgo Growth AI" : "Inizia con Digital Start"}
+                          {isEmpire ? "👑 Scelgo Empire — Domina Ora" : isGrowth ? "🚀 Scelgo Growth AI" : "Inizia con Digital Start"}
                         </span>
                       </motion.button>
 
                       {/* Empire upsell on non-empire cards */}
                       {!isEmpire &&
                     <div className="mt-2 p-2 rounded-lg bg-accent/[0.04] border border-accent/10 cursor-pointer" onClick={(e) => {e.stopPropagation();setSelectedPackage("empire");}}>
-                          <p className="text-[0.45rem] text-accent/70 text-center leading-snug">
-                            ⚡ Con Empire risparmi <strong>€{p.commission === "2%" ? "6.403" : "4.200"}</strong> e 0% commissioni →
+                          <p className="text-[0.5rem] text-accent/70 text-center">
+                            ⚡ Con Empire risparmi <strong>€{p.commission === "2%" ? "6.403" : "4.200"}</strong> in più e hai <strong>0% commissioni per sempre</strong> →
                           </p>
                         </div>
                     }
@@ -1408,16 +1321,16 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                 isSelected ?
                 p.id === "empire" ?
-                "border-2 border-accent/35 shadow-[0_4px_30px_hsla(35,45%,50%,0.12)]" :
-                "border-2 border-primary/35 shadow-[0_4px_24px_hsla(265,50%,55%,0.08)]" :
-                "border border-border/30 hover:border-primary/20 shadow-[0_2px_16px_hsla(0,0%,0%,0.05)]"}`
+                "border-2 border-accent/50 shadow-[0_0_60px_hsla(35,45%,50%,0.18),0_8px_40px_hsla(0,0%,0%,0.5)]" :
+                "border-2 border-primary/50 shadow-[0_0_50px_hsla(265,50%,55%,0.14),0_8px_40px_hsla(0,0%,0%,0.4)]" :
+                "border border-border/40 hover:border-primary/25 shadow-[0_4px_24px_hsla(0,0%,0%,0.3)]"}`
                 }
                 style={{
                   background: isSelected ?
                   p.id === "empire" ?
-                  "linear-gradient(165deg, hsl(0 0% 100% / 0.98), hsl(35 20% 97% / 0.95))" :
-                  "linear-gradient(165deg, hsl(0 0% 100% / 0.97), hsl(248 15% 97% / 0.94))" :
-                  "linear-gradient(165deg, hsl(0 0% 100% / 0.96), hsl(220 18% 97% / 0.93))"
+                  "linear-gradient(165deg, hsla(35,22%,14%,0.94), hsla(230,12%,9%,0.95))" :
+                  "linear-gradient(165deg, hsla(265,15%,14%,0.93), hsla(230,10%,9%,0.95))" :
+                  "linear-gradient(165deg, hsla(230,12%,13%,0.92), hsla(230,10%,10%,0.94))"
                 }}>
                     {p.badge &&
                   <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
@@ -1601,14 +1514,13 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             <motion.div className="max-w-4xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <div
               className={`relative p-5 sm:p-7 rounded-2xl overflow-hidden border ${
-              pkg.id === "empire" ? "border-accent/20" : "border-primary/15"}`
+              pkg.id === "empire" ? "border-accent/25" : "border-primary/20"}`
               }
               style={{
                 background:
                 pkg.id === "empire" ?
-                "linear-gradient(180deg, hsl(0 0% 100% / 0.98) 0%, hsl(35 18% 97% / 0.95) 45%, hsl(0 0% 100% / 0.98) 100%)" :
-                "linear-gradient(180deg, hsl(0 0% 100% / 0.98) 0%, hsl(248 15% 97% / 0.94) 35%, hsl(0 0% 100% / 0.98) 100%)",
-                boxShadow: "0 4px 24px hsl(var(--primary) / 0.06)"
+                "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.95) 45%, hsla(0,0%,4%,0.99) 100%)" :
+                "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,14%,8%,0.9) 35%, hsla(0,0%,4%,0.99) 100%)"
               }}>
               
                 <div className={`absolute top-0 left-0 right-0 h-[2px] ${pkg.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />
@@ -2655,33 +2567,6 @@ const LandingPage = () => {
   const [expandMockups, setExpandMockups] = useState(false);
   const [expandTestimonials, setExpandTestimonials] = useState(false);
 
-  /* Build hero carousel sectors from real mockup data — 3 screens per sector */
-  const heroCarouselSectors = useMemo(() => {
-    const sectorEntries: { screens: [string, string, string]; label: string }[] = [];
-    const sectorLabels: Record<string, string> = {
-      food: "Food", ncc: "NCC", beauty: "Beauty", healthcare: "Healthcare",
-      retail: "Retail", fitness: "Fitness", hospitality: "Hotel", beach: "Beach",
-      plumber: "Artigiani", electrician: "Elettricisti", construction: "Edilizia",
-      events: "Eventi", garage: "Autofficine", logistics: "Logistica",
-      gardening: "Giardinaggio", veterinary: "Veterinari", photography: "Fotografia",
-      education: "Formazione", childcare: "Asili", tattoo: "Tattoo",
-      cleaning: "Pulizie", agriturismo: "Agriturismo", legal: "Legale",
-      accounting: "Contabilità",
-    };
-    for (const [key, imgs] of Object.entries(SECTOR_MOCKUP_IMAGES)) {
-      if (!imgs || imgs.length < 2) continue;
-      const label = sectorLabels[key] || key;
-      // Use first 3 images (or duplicate last if only 2)
-      const s: [string, string, string] = [
-        imgs[0],
-        imgs[1],
-        imgs[2] || imgs[1],
-      ];
-      sectorEntries.push({ screens: s, label });
-    }
-    return sectorEntries;
-  }, []);
-
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const isHeroInView = useInView(heroRef, { margin: "300px 0px -35% 0px" });
@@ -2785,13 +2670,13 @@ const LandingPage = () => {
   const [sectorSheetOpen, setSectorSheetOpen] = useState(false);
 
   const industries = [
-  { id: "food" as const, icon: <ChefHat className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie", gradient: "from-violet-500 to-purple-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live", image: cartoonFood },
-  { id: "ncc" as const, icon: <Car className="w-4 h-4 sm:w-5 sm:h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer", gradient: "from-purple-500 to-indigo-400", emoji: "🚘", modules: "Flotta · Tratte · Booking · Autisti", image: cartoonNcc },
-  { id: "beauty" as const, icon: <Scissors className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA", gradient: "from-fuchsia-500/80 to-violet-400", emoji: "💅", modules: "Agenda · Clienti · Reminder · Trattamenti", image: cartoonBeauty },
-  { id: "healthcare" as const, icon: <Heart className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-indigo-400 to-violet-500", emoji: "🏥", modules: "Schede Paziente · Agenda · Fatturazione", image: cartoonHealthcare },
-  { id: "retail" as const, icon: <Store className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-purple-400 to-fuchsia-400/80", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni", image: cartoonRetail },
-  { id: "fitness" as const, icon: <Dumbbell className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, PT", gradient: "from-violet-400 to-indigo-500", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti", image: cartoonFitness },
-  { id: "hospitality" as const, icon: <Building className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-purple-500/80 to-violet-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge", image: cartoonHotel }];
+  { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-violet-500 to-purple-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live", image: cartoonFood },
+  { id: "ncc" as const, icon: <Car className="w-5 h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer, limousine", gradient: "from-purple-500 to-indigo-400", emoji: "🚘", modules: "Flotta · Tratte · Booking · Autisti", image: cartoonNcc },
+  { id: "beauty" as const, icon: <Scissors className="w-5 h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA, barbieri", gradient: "from-fuchsia-500/80 to-violet-400", emoji: "💅", modules: "Agenda · Clienti · Reminder · Trattamenti", image: cartoonBeauty },
+  { id: "healthcare" as const, icon: <Heart className="w-5 h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-indigo-400 to-violet-500", emoji: "🏥", modules: "Schede Paziente · Agenda · Fatturazione", image: cartoonHealthcare },
+  { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-purple-400 to-fuchsia-400/80", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni", image: cartoonRetail },
+  { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-violet-400 to-indigo-500", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti", image: cartoonFitness },
+  { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-purple-500/80 to-violet-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge", image: cartoonHotel }];
 
 
   const extraSectors = [
@@ -2816,15 +2701,15 @@ const LandingPage = () => {
 
 
   const services = [
-  { icon: <Brain className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni.", tag: "IA", color: "from-primary to-accent" },
-  { icon: <Smartphone className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "App White Label", desc: "App professionale con il TUO brand, colori e dominio. Nessun logo di terzi.", tag: "APP", color: "from-violet-500 to-primary" },
-  { icon: <Calendar className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini e prenotazioni da un unico pannello.", tag: "OPS", color: "from-indigo-400 to-violet-500" },
-  { icon: <Shield className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano private. Solo le migliori vanno online.", tag: "BRAND", color: "from-purple-400 to-violet-500" },
-  { icon: <Users className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà. Clienti ricorrenti.", tag: "GROWTH", color: "from-fuchsia-500/80 to-purple-500" },
-  { icon: <BarChart3 className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, trend e fatturazione elettronica.", tag: "FINANCE", color: "from-indigo-500 to-violet-400" },
-  { icon: <Package className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, alert automatici, controlli igienico-sanitari.", tag: "OPS", color: "from-purple-500 to-primary" },
-  { icon: <Bell className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Marketing Automation", desc: "Push, email, WhatsApp, promozioni mirate e segmentazione.", tag: "MARKETING", color: "from-accent to-violet-500" },
-  { icon: <Lock className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR, backup automatici, audit trail.", tag: "SECURITY", color: "from-violet-400/60 to-indigo-400/60" }];
+  { icon: <Brain className="w-4 h-4 sm:w-5 sm:h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni quotidiane.", tag: "IA", color: "from-primary to-accent" },
+  { icon: <Smartphone className="w-4 h-4 sm:w-5 sm:h-5" />, title: "App White Label", desc: "App professionale installabile con il TUO brand, colori e dominio. Nessun logo di terzi, mai.", tag: "APP", color: "from-violet-500 to-primary" },
+  { icon: <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini, prenotazioni corse o camere da un unico pannello centralizzato.", tag: "OPS", color: "from-indigo-400 to-violet-500" },
+  { icon: <Shield className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano nel tuo archivio privato. Solo le migliori costruiscono la tua reputazione online.", tag: "BRAND", color: "from-purple-400 to-violet-500" },
+  { icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà digitale. Trasforma i visitatori in clienti ricorrenti.", tag: "GROWTH", color: "from-fuchsia-500/80 to-purple-500" },
+  { icon: <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, performance staff, trend e fatturazione elettronica integrata.", tag: "FINANCE", color: "from-indigo-500 to-violet-400" },
+  { icon: <Package className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, ricevi alert automatici, registra controlli igienico-sanitari e conformità.", tag: "OPS", color: "from-purple-500 to-primary" },
+  { icon: <Bell className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Marketing Automation", desc: "Push notification, campagne email/WhatsApp, promozioni mirate e segmentazione clienti avanzata.", tag: "MARKETING", color: "from-accent to-violet-500" },
+  { icon: <Lock className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR compliant, backup automatici, accessi multi-ruolo e audit trail.", tag: "SECURITY", color: "from-violet-400/60 to-indigo-400/60" }];
 
 
   const metrics = [
@@ -2862,18 +2747,18 @@ const LandingPage = () => {
 
 
   const whyUs = [
-  { icon: <Cpu className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Tecnologia Proprietaria", desc: "Stack tecnologico sviluppato internamente. Non rivendiamo software altrui." },
-  { icon: <Workflow className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Automazione Totale", desc: "Ogni processo ripetitivo viene eliminato. Dal contatto alla fatturazione." },
-  { icon: <Gauge className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Performance Garantite", desc: "99.9% uptime, <200ms latenza, scaling automatico." },
-  { icon: <ServerCog className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Aggiornamenti Continui", desc: "Nuove funzionalità ogni settimana. Mai obsoleto." },
-  { icon: <Database className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "I Tuoi Dati, Per Sempre", desc: "Proprietà totale dei dati. Esporta tutto. Zero lock-in." },
-  { icon: <Headphones className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Supporto Dedicato", desc: "Team italiano 7/7. Persone vere che risolvono." }];
+  { icon: <Cpu className="w-5 h-5" />, title: "Tecnologia Proprietaria", desc: "Stack tecnologico sviluppato internamente. Non rivendiamo software altrui." },
+  { icon: <Workflow className="w-5 h-5" />, title: "Automazione Totale", desc: "Ogni processo ripetitivo viene eliminato. Dal primo contatto alla fatturazione." },
+  { icon: <Gauge className="w-5 h-5" />, title: "Performance Garantite", desc: "99.9% uptime, <200ms latenza, scaling automatico fino a milioni di utenti." },
+  { icon: <ServerCog className="w-5 h-5" />, title: "Aggiornamenti Continui", desc: "Nuove funzionalità ogni settimana. Il tuo sistema non invecchia mai." },
+  { icon: <Database className="w-5 h-5" />, title: "I Tuoi Dati, Per Sempre", desc: "Proprietà totale dei dati. Esporta tutto in qualsiasi momento. Zero lock-in." },
+  { icon: <Headphones className="w-5 h-5" />, title: "Supporto Dedicato", desc: "Team italiano disponibile 7/7. Non un chatbot, persone vere che risolvono." }];
 
 
   return (
     <div
-      className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury"
-      style={{ background: "radial-gradient(120% 80% at 50% 35%, hsl(214 28% 96%) 0%, hsl(220 26% 94%) 40%, hsl(224 20% 90%) 64%, hsl(228 26% 86%) 100%)" }}>
+      className="min-h-screen overflow-x-hidden relative landing-noise-off"
+      style={{ background: "linear-gradient(180deg, hsl(var(--deep-black)) 0%, hsl(var(--deep-black)) 100%)" }}>
       
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
@@ -3163,7 +3048,7 @@ const LandingPage = () => {
 
             {/* Logo container — hexagonal feel with premium depth */}
             <motion.div
-              className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center overflow-hidden"
+              className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center overflow-hidden"
               style={{
                 background: "linear-gradient(145deg, hsla(38,45%,20%,1), hsla(35,40%,14%,1), hsla(30,35%,10%,1))",
                 boxShadow: "0 0 0 2px hsla(38,50%,50%,0.3), 0 0 40px hsla(38,50%,50%,0.15), 0 8px 32px hsla(0,0%,0%,0.4), inset 0 1px 0 hsla(38,50%,60%,0.15)"
@@ -3439,150 +3324,174 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              HERO
                             ═══════════════════════════════════════════ */}
-       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-24 sm:pt-28 pb-8 sm:pb-16"
+       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-28 sm:pt-28 pb-20 sm:pb-16"
       style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Clean premium gradient with green-tech tint ═══ */}
-        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(220 25% 96%) 0%, hsl(170 18% 94%) 25%, hsl(165 14% 95%) 50%, hsl(180 20% 94%) 75%, hsl(200 20% 96%) 100%)" }} />
-
-        {/* ═══ LAYER 1: Green-tech AI ambient blobs ═══ */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
-          <div className="aurora-blob-1 absolute w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(160 65% 42% / 0.16), hsl(155 55% 50% / 0.06) 50%, transparent 70%)", filter: "blur(80px)", top: "0%", left: "5%" }} />
-          <div className="aurora-blob-2 absolute w-[450px] h-[450px] sm:w-[650px] sm:h-[650px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(168 72% 38% / 0.18), hsl(175 50% 45% / 0.06) 50%, transparent 70%)", filter: "blur(80px)", top: "10%", right: "0%" }} />
-          <div className="aurora-blob-3 absolute w-[400px] h-[400px] sm:w-[550px] sm:h-[550px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(150 60% 36% / 0.15), hsl(145 50% 45% / 0.05) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
-          {/* Central emerald glow behind sphere */}
-          <div className="absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ background: "radial-gradient(circle, hsl(160 70% 40% / 0.12), hsl(168 60% 45% / 0.04) 55%, transparent 75%)", filter: "blur(100px)" }} />
+        {/* ═══ LAYER 0: Cinematic video background ═══ */}
+        <div className="absolute inset-0" style={{ zIndex: 2 }}>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload={IS_MOBILE_LP ? "none" : "auto"}
+            controls={false}
+            disablePictureInPicture
+            disableRemotePlayback
+            className="absolute inset-0 w-full h-full object-cover [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-enclosure]:hidden [&::-webkit-media-controls-panel]:hidden [&::-webkit-media-controls-start-playback-button]:hidden"
+            style={{ filter: "brightness(0.3) saturate(1.15)", WebkitAppearance: "none" } as any}>
+            
+            <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4" />
+          </video>
+          {/* Cinematic vignette overlays */}
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsl(var(--background)) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 15%, transparent 85%, hsl(var(--background)) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
         </div>
 
-        <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
+        {/* ═══ LAYER 1: Aurora boreale CSS ═══ */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
+          <div className="aurora-blob-1 absolute w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] rounded-full opacity-[0.07]"
+            style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.8), transparent 65%)", filter: "blur(80px)", top: "10%", left: "15%" }} />
+          <div className="aurora-blob-2 absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full opacity-[0.05]"
+            style={{ background: "radial-gradient(circle, hsla(265,60%,55%,0.7), transparent 65%)", filter: "blur(80px)", top: "20%", right: "10%" }} />
+          <div className="aurora-blob-3 absolute w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] rounded-full opacity-[0.04]"
+            style={{ background: "radial-gradient(circle, hsla(210,55%,55%,0.6), transparent 65%)", filter: "blur(80px)", bottom: "15%", left: "40%" }} />
+        </div>
+
+        {/* ═══ LAYER 1b: Central glow orb — skip on mobile for GPU savings ═══ */}
+        {!IS_MOBILE_LP && <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
+          <motion.div className="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] rounded-full blur-[180px]"
+          style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.06), hsla(35,45%,50%,0.03), transparent 70%)" }}
+          animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />
           
-          {/* ═══ CENTERED LAYOUT: Text → Metrics → Phones ═══ */}
-          <div className="flex flex-col items-center">
-            
-            {/* CENTER: Text content */}
-            <div className="text-center max-w-[680px] mx-auto px-4 sm:px-0">
+        </div>}
 
-              {/* Badge */}
-              <motion.div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl mb-4 sm:mb-5"
-              style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald) / 0.12), hsl(168 60% 40% / 0.08))", border: "1px solid hsl(var(--neon-emerald) / 0.2)", boxShadow: "0 2px 12px hsl(var(--neon-emerald) / 0.1)" }}
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-                <div className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)))", boxShadow: "0 2px 8px hsl(var(--neon-emerald) / 0.3)" }}>
-                  <Bot className="w-2.5 h-2.5 text-white" />
-                </div>
-                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase" style={{ color: "hsl(160 50% 30%)" }}>Studio di App & AI</span>
-              </motion.div>
+        <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
+          <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
-              {/* Headline */}
-              <motion.h1 className="text-[1.6rem] leading-[1.12] sm:text-[2.6rem] lg:text-[3.4rem] font-heading font-bold tracking-[-0.03em] relative px-1"
-              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}
-              style={{ textWrap: "balance" as any }}>
-                <span className="text-foreground">Progettiamo app che le persone amano</span>
-              </motion.h1>
+            {/* Clean badge — neon accent */}
+            <motion.div className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-full border bg-primary/[0.04] mb-5 sm:mb-7 ${IS_MOBILE_LP ? "" : "backdrop-blur-sm"}`}
+            style={{ borderColor: "hsl(var(--neon-emerald) / 0.25)", boxShadow: "0 0 20px hsl(var(--neon-emerald) / 0.06)" }}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+              <motion.span className="w-2 h-2 rounded-full" style={{ background: "hsl(var(--neon-emerald))" }}
+              animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />
+              <span className="text-[0.6rem] sm:text-[0.65rem] font-heading font-bold tracking-[2px] uppercase text-neon-emerald">🤖 Piattaforma AI All-in-One per PMI</span>
+            </motion.div>
 
-              {/* ═══ PARTICLE SPHERE — Neural Core Effect ═══ */}
-              <motion.div className="relative mt-5 sm:mt-8 mx-auto flex items-center justify-center"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.8, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
-                {/* Green tech glow behind sphere */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="rounded-full" style={{
-                    width: IS_MOBILE_LP ? 240 : 440,
-                    height: IS_MOBILE_LP ? 240 : 440,
-                    background: "radial-gradient(circle, hsl(160 65% 42% / 0.18), hsl(168 55% 40% / 0.06) 55%, transparent 80%)",
-                    filter: "blur(40px)",
-                  }} />
-                </div>
-                <InteractiveParticleSphere size={IS_MOBILE_LP ? 180 : 340} />
-              </motion.div>
+            {/* Gradient glow behind title */}
+            <div className="absolute -inset-8 pointer-events-none hero-gradient-glow -z-10"
+              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsla(265,70%,55%,0.15), hsla(160,60%,45%,0.06), transparent 70%)" }} />
 
-              {/* Subtitle */}
-              <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0"
-              style={{ color: "hsl(200 15% 32%)" }}
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}>
-                Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business.
-                <span className="font-medium" style={{ color: "hsl(200 18% 28%)" }}> 98+ agenti IA · <span className="font-semibold" style={{ color: "hsl(160 55% 30%)" }}>25+ settori</span> · Zero canone.</span>
-              </motion.p>
+            {/* Headline — larger, clearer, vivid */}
+            <motion.h1 className="text-[1.85rem] leading-[1.05] sm:text-[3.4rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em] px-2 sm:px-0 relative"
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
+              <span className="text-foreground">Gestione, IA e</span>
+              <br />
+              <span className="text-foreground">Automazione per il</span>
+              <br />
+              <span className="text-vivid-gradient clip-reveal-text">Tuo Business</span>
+            </motion.h1>
 
-              {/* CTA */}
-              <motion.div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}>
-                <motion.button
-                  onClick={() => scrollTo("pricing")}
-                  className="group relative w-full sm:w-auto px-6 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-white font-bold text-[0.72rem] sm:text-[0.75rem] font-heading tracking-wider uppercase overflow-hidden"
-                  style={{
-                    background: "linear-gradient(135deg, hsl(160 60% 36%), hsl(168 65% 32%), hsl(180 55% 30%))",
-                    boxShadow: "0 4px 20px hsl(160 60% 36% / 0.3), 0 0 0 1px hsl(160 55% 40% / 0.2)"
-                  }}
-                  whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(160 60% 36% / 0.45)" }}
-                  whileTap={{ scale: 0.97 }}>
-                  <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
-                  <span className="relative flex items-center justify-center gap-2">
-                    Avvia il tuo progetto <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </motion.button>
-                <motion.button
-                  onClick={() => navigate("/demo")}
-                  className="w-full sm:w-auto px-5 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-[0.72rem] sm:text-[0.75rem] font-semibold font-heading tracking-wide transition-all flex items-center justify-center gap-2"
-                  style={{
-                    color: "hsl(170 30% 30%)",
-                    border: "1px solid hsl(168 40% 70% / 0.5)",
-                    background: "hsl(0 0% 100% / 0.5)",
-                    backdropFilter: "blur(8px)"
-                  }}
-                  whileHover={{ scale: 1.01, borderColor: "hsl(160 55% 40% / 0.4)" }}>
-                  <Eye className="w-3.5 h-3.5" style={{ color: "hsl(160 55% 38%)" }} /> Guarda i nostri lavori
-                </motion.button>
-              </motion.div>
+            {/* Subtitle — clearer value prop */}
+            <motion.p className="mt-4 sm:mt-6 text-[0.85rem] sm:text-lg text-foreground/50 max-w-[540px] leading-[1.75] sm:leading-[1.8] font-light px-2 sm:px-0"
+            initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
+              App dedicata, 98+ agenti IA, CRM, prenotazioni, pagamenti e marketing —
+              <span className="text-foreground/70 font-medium"> tutto integrato per <span className="text-neon-emerald font-semibold">25+ settori</span>. Zero canone mensile, solo risultati.</span>
+            </motion.p>
 
-              {/* Metrics — centered */}
-              <motion.div className="mt-6 sm:mt-8 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-lg sm:max-w-xl mx-auto"
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.8 }}>
-                {metrics.map((m, i) =>
-                <motion.div
-                  key={i}
-                  className="relative group text-center px-3 py-3 sm:px-4 sm:py-4 rounded-2xl overflow-hidden"
-                  style={{
-                    background: "hsl(0 0% 100% / 0.6)",
-                    backdropFilter: "blur(16px)",
-                    WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid hsl(168 45% 65% / 0.35)",
-                    boxShadow: "0 2px 12px hsl(160 55% 40% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
-                  }}
-                  whileHover={{ y: -2, boxShadow: "0 8px 32px hsl(160 55% 40% / 0.12), inset 0 1px 0 hsl(0 0% 100% / 0.3)" }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <span className="absolute inset-0 bg-gradient-to-br from-accent/[0.04] via-transparent to-accent/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <p className="relative text-lg sm:text-2xl font-heading font-bold text-foreground">
+            {/* ═══ Interactive AI Particle Sphere ═══ */}
+            <motion.div
+              className="relative mt-6 sm:mt-8 w-full overflow-visible flex items-center justify-center mx-auto"
+              style={{ transformOrigin: "center center" }}
+              initial={{ opacity: 0, scale: 0.5, y: 40 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+              
+              {/* Ambient glow — full width */}
+              <motion.div
+                className="absolute inset-[-30%] sm:inset-[-40%] rounded-full blur-[120px] pointer-events-none"
+                style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsla(265,65%,55%,0.22), hsla(38,50%,50%,0.12), transparent 70%)" }}
+                animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} />
+              
+              <div className="flex items-center justify-center w-full" style={{ transform: typeof window !== "undefined" && window.innerWidth < 640 ? "scaleX(1.9)" : undefined }}>
+                {isHeroInView &&
+                <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : typeof window !== "undefined" && window.innerWidth >= 1024 ? 520 : 380} />
+                }
+              </div>
+            </motion.div>
+
+            {/* CTA */}
+            <motion.div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-2 sm:px-0"
+            initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
+              <motion.button
+                onClick={() => scrollTo("pricing")}
+                className="group relative w-full sm:w-auto px-7 sm:px-8 py-4 sm:py-4 rounded-full text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--empire-violet)), hsl(var(--neon-magenta) / 0.85), hsl(38,55%,50%))",
+                  boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.3), 0 0 0 1px hsl(var(--empire-violet) / 0.2)"
+                }}
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(var(--empire-violet) / 0.4), 0 0 60px hsl(var(--neon-magenta) / 0.15)" }}
+                whileTap={{ scale: 0.97 }}>
+                
+                <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/10 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                <span className="relative flex items-center justify-center gap-2">
+                  🚀 Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </motion.button>
+              <motion.button
+                onClick={() => navigate("/demo")}
+                className="w-full sm:w-auto px-7 sm:px-8 py-4 sm:py-4 rounded-full text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all flex items-center justify-center gap-2"
+                style={{ border: "1px solid hsl(var(--neon-emerald) / 0.15)" }}
+                whileHover={{ scale: 1.01, borderColor: "hsl(var(--neon-emerald) / 0.3)", boxShadow: "0 0 20px hsl(var(--neon-emerald) / 0.08)" }}>
+                
+                <Play className="w-4 h-4 text-neon-emerald" /> Vedi Demo Live
+              </motion.button>
+            </motion.div>
+
+            {/* Metrics — premium glassmorphism cards */}
+            <motion.div className="mt-14 sm:mt-20 w-full grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, duration: 0.8 }}>
+              {metrics.map((m, i) =>
+              <motion.div key={i} className={`group relative rounded-2xl p-4 sm:p-6 text-center overflow-hidden neon-card`}
+              whileHover={IS_MOBILE_LP ? undefined : { y: -4, scale: 1.02 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}>
+                  {/* Shimmer sweep — desktop only */}
+                  {!IS_MOBILE_LP && <motion.div className="absolute inset-0 pointer-events-none"
+                style={{ background: "linear-gradient(105deg, transparent 30%, hsl(var(--neon-emerald) / 0.06) 48%, transparent 70%)" }}
+                animate={{ x: ["-200%", "300%"] }}
+                transition={{ duration: 4, repeat: Infinity, repeatDelay: 3 + i, ease: "easeInOut" }} />
+                }
+                
+                  {/* Top highlight line */}
+                  <div className="absolute top-0 left-[10%] right-[10%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--empire-violet) / 0.25), transparent)" }} />
+                  {/* Number */}
+                  <p className="text-2xl sm:text-4xl font-heading font-bold relative z-10 text-neon-gradient">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="relative text-[0.48rem] sm:text-[0.55rem] tracking-[1.2px] sm:tracking-[1.5px] uppercase font-heading font-semibold text-muted-foreground mt-0.5 sm:mt-1">{m.label}</p>
+                  {/* Label */}
+                  <p className="text-[0.55rem] sm:text-[0.65rem] mt-2 tracking-[2.5px] uppercase font-heading font-semibold relative z-10 text-foreground/40">{m.label}</p>
                 </motion.div>
-                )}
-              </motion.div>
-            </div>
-
-            {/* PHONES: Each sector shows 3 real mockup screens (home, services, detail) */}
-            <HeroPhoneCarousel sectors={heroCarouselSectors} />
+              )}
+            </motion.div>
           </div>
         </motion.div>
 
         {/* Scroll indicator */}
-        <motion.div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-20"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
-          <span className="text-[7px] text-foreground/40 tracking-[4px] uppercase font-heading">Scopri</span>
-          <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
-            <ChevronDown className="w-3.5 h-3.5 text-primary/50" />
+        <motion.div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-20"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
+        style={{ filter: "drop-shadow(0 0 8px hsla(260,20%,4%,0.8))" }}>
+          <span className="text-[8px] text-foreground/30 tracking-[4px] uppercase font-heading">Scopri</span>
+          <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
+            <ChevronDown className="w-4 h-4 text-primary/40" />
           </motion.div>
         </motion.div>
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y overflow-hidden" style={{ background: "linear-gradient(180deg, hsl(220 20% 95%) 0%, hsl(215 18% 93%) 50%, hsl(220 20% 95%) 100%)", borderColor: "hsl(var(--primary) / 0.08)" }}>
+      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden" style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,16%,8%,0.99) 50%, hsla(0,0%,4%,0.99) 100%)" }}>
         <div className="flex animate-marquee-scroll whitespace-nowrap">
         {[...Array(2)].map((_, repeat) =>
           <div key={repeat} className="flex items-center gap-10 px-5">
@@ -3599,8 +3508,8 @@ const LandingPage = () => {
             { icon: <Timer className="w-3 h-3" />, text: "Attivo in 24h", color: "var(--neon-emerald)" },
             { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali", color: "var(--empire-violet)" }].
             map((t, i) =>
-            <span key={i} className="text-[0.6rem] text-foreground/60 font-heading font-medium tracking-[2.5px] uppercase flex items-center gap-2.5">
-                  <span className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `hsl(${t.color} / 0.12)`, color: `hsl(${t.color})` }}>
+            <span key={i} className="text-[0.6rem] text-foreground/25 font-heading tracking-[2.5px] uppercase flex items-center gap-2 group/trust">
+                  <span className="transition-colors" style={{ color: `hsl(${t.color} / 0.5)` }}>
                     {t.icon}
                   </span>
                   {t.text}
@@ -3615,7 +3524,7 @@ const LandingPage = () => {
                              COSA FA EMPIRE — Quick Feature Grid
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 30% 97%) 50%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.97) 0%, hsla(265,18%,8%,0.97) 50%, hsla(230,16%,4%,0.97) 100%)"
       }}>
         <div className="text-center mb-10">
           <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
@@ -3625,7 +3534,7 @@ const LandingPage = () => {
             <br />
             <span className="text-foreground/80">Potenziati dall'IA</span>
           </motion.h2>
-          <motion.p className="text-[0.82rem] text-foreground/60 max-w-lg mx-auto leading-[1.75]"
+          <motion.p className="text-[0.82rem] text-foreground/45 max-w-lg mx-auto leading-[1.75]"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.2 }}>
             Progettiamo e sviluppiamo applicazioni dedicate, web app professionali e sistemi gestionali completi
             per qualsiasi settore — personalizzati al 100% sulle tue esigenze, con intelligenza artificiale integrata
@@ -3663,34 +3572,25 @@ const LandingPage = () => {
             },
           ].map((pillar, i) =>
           <motion.div key={i} variants={fadeUp}
-          className="relative p-5 rounded-2xl overflow-hidden border transition-all duration-300 group"
+          className="relative p-5 rounded-2xl overflow-hidden border transition-all duration-300"
           style={{
-            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(230 20% 97% / 0.88))",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            borderColor: `hsl(${pillar.color} / 0.1)`,
-            boxShadow: `0 4px 28px hsl(${pillar.color} / 0.06), 0 1px 3px hsl(220 20% 80% / 0.12), inset 0 1px 0 hsl(0 0% 100% / 0.5)`,
+            background: `linear-gradient(160deg, ${pillar.gradient.split(" ")[0].replace("from-[", "").replace("]", "")}, hsla(230,12%,7%,0.98))`,
+            borderColor: `hsl(${pillar.color} / 0.15)`,
           }}>
-            {/* Top accent shimmer line */}
-            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${pillar.color} / 0.4) 30%, hsl(${pillar.color} / 0.6) 50%, hsl(${pillar.color} / 0.4) 70%, transparent 95%)` }} />
-            {/* Inner glass reflection */}
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.4) 0%, transparent 25%)" }} />
-            {/* Subtle corner glow */}
-            <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-30 pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${pillar.color} / 0.12), transparent 70%)` }} />
-            {/* Hover gradient overlay */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, hsl(${pillar.color} / 0.05), transparent 60%)` }} />
-            <div className="relative z-10 flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-              style={{ background: `linear-gradient(135deg, hsl(${pillar.color}), hsl(${pillar.color} / 0.7))`, color: "white", boxShadow: `0 6px 20px hsl(${pillar.color} / 0.3), inset 0 1px 0 rgba(255,255,255,0.15)` }}>
+            {/* Top accent */}
+            <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent, hsl(${pillar.color} / 0.4), transparent)` }} />
+            <div className="flex items-start gap-4">
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: `hsl(${pillar.color} / 0.15)`, color: `hsl(${pillar.color})`, boxShadow: `0 0 20px hsl(${pillar.color} / 0.1)` }}>
                 {pillar.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-[0.9rem] font-heading font-bold text-foreground leading-tight mb-1.5">{pillar.title}</h3>
-                <p className="text-[0.7rem] text-foreground/55 leading-[1.7] mb-3">{pillar.desc}</p>
+                <h3 className="text-[0.85rem] font-heading font-bold text-foreground/95 leading-tight mb-1.5">{pillar.title}</h3>
+                <p className="text-[0.65rem] text-foreground/40 leading-[1.65] mb-3">{pillar.desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {pillar.features.map((f, fi) =>
-                  <span key={fi} className="px-2.5 py-1 rounded-lg text-[0.5rem] font-semibold tracking-wide"
-                  style={{ background: `hsl(${pillar.color} / 0.08)`, color: `hsl(${pillar.color})`, border: `1px solid hsl(${pillar.color} / 0.12)` }}>
+                  <span key={fi} className="px-2 py-0.5 rounded-md text-[0.5rem] font-medium tracking-wide"
+                  style={{ background: `hsl(${pillar.color} / 0.1)`, color: `hsl(${pillar.color} / 0.7)`, border: `1px solid hsl(${pillar.color} / 0.1)` }}>
                     {f}
                   </span>
                   )}
@@ -3702,40 +3602,29 @@ const LandingPage = () => {
         </motion.div>
 
         {/* Quick features grid */}
-        <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+        <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-2"
         variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
           {[
-            { icon: <Globe className="w-4 h-4" />, title: "Siti Web Premium", color: "var(--empire-violet)" },
-            { icon: <QrCode className="w-4 h-4" />, title: "Menu & Cataloghi QR", color: "var(--neon-emerald)" },
-            { icon: <Wallet className="w-4 h-4" />, title: "Loyalty & Fidelity", color: "var(--neon-cyan)" },
-            { icon: <Headphones className="w-4 h-4" />, title: "Voice Agent IA", color: "var(--neon-magenta)" },
-            { icon: <MapPin className="w-4 h-4" />, title: "Multi-Sede", color: "var(--empire-violet)" },
-            { icon: <Lock className="w-4 h-4" />, title: "GDPR & Sicurezza", color: "var(--neon-emerald)" },
-            { icon: <Receipt className="w-4 h-4" />, title: "Fatturazione Elettronica", color: "var(--neon-cyan)" },
-            { icon: <Sparkles className="w-4 h-4" />, title: "Personalizzazione Totale", color: "var(--neon-magenta)" },
+            { icon: <Globe className="w-3.5 h-3.5" />, title: "Siti Web Premium", color: "var(--empire-violet)" },
+            { icon: <QrCode className="w-3.5 h-3.5" />, title: "Menu & Cataloghi QR", color: "var(--neon-emerald)" },
+            { icon: <Wallet className="w-3.5 h-3.5" />, title: "Loyalty & Fidelity", color: "var(--neon-cyan)" },
+            { icon: <Headphones className="w-3.5 h-3.5" />, title: "Voice Agent IA", color: "var(--neon-magenta)" },
+            { icon: <MapPin className="w-3.5 h-3.5" />, title: "Multi-Sede", color: "var(--empire-violet)" },
+            { icon: <Lock className="w-3.5 h-3.5" />, title: "GDPR & Sicurezza", color: "var(--neon-emerald)" },
+            { icon: <Receipt className="w-3.5 h-3.5" />, title: "Fatturazione Elettronica", color: "var(--neon-cyan)" },
+            { icon: <Sparkles className="w-3.5 h-3.5" />, title: "Personalizzazione Totale", color: "var(--neon-magenta)" },
           ].map((f, i) =>
           <motion.div key={i} variants={popIn}
-          className="relative p-3.5 rounded-2xl overflow-hidden text-center group"
+          className="relative p-2.5 rounded-lg overflow-hidden text-center"
           style={{
-            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(220 20% 98% / 0.85))",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
+            background: "linear-gradient(145deg, hsl(var(--deep-black) / 0.95), hsl(265,15%,8% / 0.95))",
             border: `1px solid hsl(${f.color} / 0.1)`,
-            boxShadow: `0 2px 16px hsl(${f.color} / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)`
           }}>
-            {/* Top accent line */}
-            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, hsl(${f.color} / 0.25), transparent)` }} />
-            {/* Inner reflection */}
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.35) 0%, transparent 30%)" }} />
-            {/* Hover glow */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 30%, hsl(${f.color} / 0.06), transparent 60%)` }} />
-            <div className="relative z-10">
-              <div className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-2"
-              style={{ background: `linear-gradient(135deg, hsl(${f.color}), hsl(${f.color} / 0.8))`, color: "white", boxShadow: `0 3px 12px hsl(${f.color} / 0.25)` }}>
-                {f.icon}
-              </div>
-              <h4 className="text-[0.65rem] font-heading font-bold text-foreground/85 leading-tight">{f.title}</h4>
+            <div className="w-7 h-7 mx-auto rounded-lg flex items-center justify-center mb-1.5"
+            style={{ background: `hsl(${f.color} / 0.12)`, color: `hsl(${f.color})` }}>
+              {f.icon}
             </div>
+            <h4 className="text-[0.58rem] font-heading font-bold text-foreground/80 leading-tight">{f.title}</h4>
           </motion.div>
           )}
         </motion.div>
@@ -3753,12 +3642,12 @@ const LandingPage = () => {
                              IL PROBLEMA — Pain Points
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(248,18%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(345,20%,8%,0.96) 20%, hsla(350,16%,10%,0.96) 40%, hsla(265,18%,9%,0.96) 60%, hsla(345,14%,7%,0.96) 80%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         {/* Premium ambient glows — layered danger luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary crimson vignette — top-left */}
-          <div className="absolute top-[5%] left-[10%] w-[600px] h-[600px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[5%] left-[10%] w-[600px] h-[600px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(350,65%,40%,0.6), transparent 65%)", filter: "blur(140px)" }} />
           {/* Deep violet anchor — center-right */}
           <div className="absolute top-[30%] right-[10%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
@@ -3780,7 +3669,7 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(350,50%,50%,0.4), transparent)" }} />
           {/* Bottom fade-out gradient */}
           <div className="absolute bottom-0 left-0 right-0 h-[80px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           {/* Noise texture overlay */}
           <div className="absolute inset-0 opacity-[0.015]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
@@ -3874,7 +3763,7 @@ const LandingPage = () => {
                 <div
                   className="absolute inset-0 sm:hidden z-0 rounded-2xl"
                   style={{
-                    background: "linear-gradient(160deg, hsla(220,20%,98%,0.97), hsla(220,18%,97%,0.98))",
+                    background: "linear-gradient(160deg, hsla(260,18%,6%,0.99), hsla(260,14%,5%,0.995))",
                     border: "1px solid hsl(var(--border) / 0.18)"
                   }} />
                 
@@ -4008,9 +3897,9 @@ const LandingPage = () => {
                     whileHover={{ y: -6, scale: 1.04 }}>
                     
                     <div className="relative rounded-lg sm:rounded-xl border overflow-hidden h-full" style={{
-                      background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(248 15% 97% / 0.93))",
-                      borderColor: "hsl(var(--primary) / 0.1)",
-                      boxShadow: "0 2px 12px hsl(var(--primary) / 0.05)"
+                      background: "linear-gradient(160deg, hsla(260,18%,10%,0.94), hsla(260,16%,7%,0.94))",
+                      borderColor: "hsla(265,50%,55%,0.1)",
+                      boxShadow: "0 2px 12px hsla(260,40%,5%,0.35), inset 0 1px 0 hsla(265,60%,65%,0.04)"
                     }}>
                       {/* Top accent line */}
                       <div className="h-[1.5px] w-full" style={{ background: `linear-gradient(90deg, transparent, ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,55%,0.5)" : pain.color.includes("amber") || pain.color.includes("yellow") ? "hsla(38,70%,55%,0.5)" : "hsla(25,70%,55%,0.5)"}, transparent)` }} />
@@ -4072,7 +3961,7 @@ const LandingPage = () => {
                              VIDEO HERO — Business Transformation
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(235 22% 95%) 50%, hsl(220 20% 97%) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(260,24%,10%,0.96) 18%, hsla(265,26%,12%,0.96) 35%, hsla(155,16%,9%,0.96) 55%, hsla(265,20%,10%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         {/* Premium ambient glows — discovery/innovation luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4099,7 +3988,7 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,55%,55%,0.25), transparent)" }} />
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.8))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(0,0%,4%,1))" }} />
           {/* Noise texture */}
           <div className="absolute inset-0 opacity-[0]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
@@ -4136,24 +4025,19 @@ const LandingPage = () => {
             { label: "Fatturazione", icon: "◆" },
           ].map((item, i) =>
             <motion.div key={item.label}
-              className="group relative px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl border cursor-default overflow-hidden"
+              className="group relative px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl border border-primary/15 cursor-default"
               style={{
-                background: "linear-gradient(160deg, hsl(0 0% 100% / 0.88), hsl(248 20% 97% / 0.82))",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
-                borderColor: "hsl(var(--primary) / 0.1)",
-                boxShadow: "0 2px 16px hsl(var(--primary) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)",
+                background: "linear-gradient(135deg, hsla(265,30%,12%,0.6), hsla(38,20%,8%,0.5))",
+                boxShadow: "0 2px 16px hsla(265,50%,40%,0.06), inset 0 1px 0 hsla(0,0%,100%,0.03)",
               }}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 + i * 0.08 }}
-              whileHover={{ scale: 1.04, borderColor: "hsl(var(--primary) / 0.2)", boxShadow: "0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.5)" }}>
-              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.12), transparent)" }} />
-              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.3) 0%, transparent 25%)" }} />
-              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: "radial-gradient(circle at center, hsl(var(--primary) / 0.05), transparent 70%)" }} />
-              <span className="relative z-10 text-[0.55rem] sm:text-[0.65rem] font-heading font-bold tracking-[0.15em] uppercase text-foreground/80 group-hover:text-primary transition-colors flex items-center gap-1.5">
+              whileHover={{ scale: 1.04, borderColor: "hsla(265,60%,55%,0.3)" }}>
+              <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: "radial-gradient(circle at center, hsla(265,50%,50%,0.08), transparent 70%)" }} />
+              <span className="text-[0.55rem] sm:text-[0.65rem] font-heading font-bold tracking-[0.15em] uppercase text-foreground/80 group-hover:text-primary transition-colors flex items-center gap-1.5">
                 <span className="text-primary/50 text-[0.5rem]">{item.icon}</span>
                 {item.label}
               </span>
@@ -4166,23 +4050,16 @@ const LandingPage = () => {
         initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
           <motion.button
             onClick={() => scrollTo("pricing")}
-            className="group px-7 py-3.5 rounded-2xl bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-            style={{ boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.25), inset 0 1px 0 hsl(0 0% 100% / 0.15)" }}
-            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.3)" }}
+            className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
+            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
             whileTap={{ scale: 0.97 }}>
             
             Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </motion.button>
           <motion.button
             onClick={() => navigate("/demo")}
-            className="px-7 py-3.5 rounded-2xl text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all inline-flex items-center gap-2"
-            style={{
-              border: "1px solid hsl(var(--border) / 0.4)",
-              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))",
-              backdropFilter: "blur(12px)",
-              boxShadow: "0 2px 12px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
-            }}
-            whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.2)" }}>
+            className="px-7 py-3.5 rounded-full border border-foreground/8 text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:border-primary/20 hover:text-foreground hover:bg-primary/[0.03] transition-all inline-flex items-center gap-2"
+            whileHover={{ scale: 1.01 }}>
             
             <Play className="w-4 h-4 text-primary/60" /> Esplora le Demo
           </motion.button>
@@ -4195,14 +4072,14 @@ const LandingPage = () => {
                              SETTORI
                             ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(168 18% 96%) 35%, hsl(180 15% 97%) 65%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, #08070e 0%, #0c0b14 18%, #110e1a 35%, #0f0d16 55%, #0a0912 78%, #08070e 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Premium violet mesh glow — top-left */}
-          <div className="absolute top-[4%] left-[8%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
+          <div className="absolute top-[4%] left-[8%] w-[500px] h-[500px] rounded-full opacity-[0.07]"
           style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.6), transparent 65%)", filter: "blur(150px)" }} />
           {/* Deep emerald — center-right */}
-          <div className="absolute top-[30%] right-[5%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[30%] right-[5%] w-[450px] h-[450px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(155,55%,42%,0.5), transparent 65%)", filter: "blur(140px)" }} />
           {/* Gold accent — bottom-center */}
           <div className="absolute bottom-[10%] left-[30%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
@@ -4218,7 +4095,7 @@ const LandingPage = () => {
           style={{ backgroundImage: "linear-gradient(hsla(265,30%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265,30%,60%,0.08) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsl(0 0% 100% / 0.8))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, #08070e)" }} />
         </div>
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
@@ -4409,23 +4286,16 @@ const LandingPage = () => {
         initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
           <motion.button
             onClick={() => scrollTo("pricing")}
-            className="group w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center justify-center gap-2"
-            style={{ boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.25), inset 0 1px 0 hsl(0 0% 100% / 0.15)" }}
-            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.3)" }}
+            className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
+            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
             whileTap={{ scale: 0.97 }}>
             
             Inizia Ora <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </motion.button>
           <motion.button
             onClick={() => navigate("/demo")}
-            className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all inline-flex items-center justify-center gap-2"
-            style={{
-              border: "1px solid hsl(var(--border) / 0.4)",
-              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))",
-              backdropFilter: "blur(12px)",
-              boxShadow: "0 2px 12px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
-            }}
-            whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.2)" }}>
+            className="px-7 py-3.5 rounded-full border border-foreground/8 text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:border-primary/20 hover:text-foreground hover:bg-primary/[0.03] transition-all inline-flex items-center gap-2"
+            whileHover={{ scale: 1.01 }}>
             
             <Play className="w-4 h-4 text-primary/60" /> Prova Tutte le Demo
           </motion.button>
@@ -4585,11 +4455,11 @@ const LandingPage = () => {
       <AIAgentsShowcase />
 
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,20%,97%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(220,18%,11%,0.96) 30%, hsla(155,18%,9%,0.96) 50%, hsla(265,20%,10%,0.96) 70%, hsla(220,16%,8%,0.96) 85%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
-          <div className="absolute top-[6%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[6%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
           {/* Emerald tech — center-right */}
           <div className="absolute top-[35%] right-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
@@ -4607,11 +4477,11 @@ const LandingPage = () => {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
           style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(155,45%,50%,0.12), hsla(38,50%,50%,0.06), transparent)" }} />
           {/* Vertical light shaft */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.04]"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.06]"
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           {/* Noise texture */}
           <div className="absolute inset-0 opacity-[0.012]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
@@ -4666,7 +4536,7 @@ const LandingPage = () => {
         <div className="sm:hidden relative py-4 px-1">
           {/* Opaque backdrop */}
           <div className="absolute inset-0 rounded-2xl z-0"
-          style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.95), hsl(248 15% 97% / 0.93))", border: "1px solid hsl(var(--border) / 0.3)" }} />
+          style={{ background: "linear-gradient(180deg, hsl(var(--deep-black) / 0.98), hsla(38,14%,8%,0.9))", border: "1px solid hsla(38,45%,50%,0.14)" }} />
 
           {/* Central vertical pipeline spine */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" preserveAspectRatio="none">
@@ -4792,11 +4662,11 @@ const LandingPage = () => {
                              COMPARISON TABLE — Empire vs Others
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(168,15%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.94) 15%, hsla(38,16%,9%,0.94) 35%, hsla(265,20%,10%,0.94) 55%, hsla(38,14%,8%,0.94) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
-          <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
           {/* Gold accent — center-right */}
           <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
@@ -4814,11 +4684,11 @@ const LandingPage = () => {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
           style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(38,50%,50%,0.12), transparent)" }} />
           {/* Vertical light shaft */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]"
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           {/* Noise texture */}
           <div className="absolute inset-0 opacity-[0.012]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
@@ -4862,10 +4732,10 @@ const LandingPage = () => {
                              TECH DNA — Neural Network Visualization
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(248,18%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,26%,10%,0.94) 15%, hsla(230,20%,11%,0.94) 35%, hsla(265,22%,9%,0.94) 55%, hsla(230,18%,8%,0.94) 78%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
           <div className="absolute top-[35%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
           style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(130px)" }} />
@@ -4877,10 +4747,10 @@ const LandingPage = () => {
           style={{ background: "radial-gradient(circle, hsla(155,55%,48%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
           style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.22), hsla(155,45%,50%,0.1), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.04]"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.06]"
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           <div className="absolute inset-0 opacity-[0.012]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
             backgroundRepeat: "repeat", backgroundSize: "128px 128px"
@@ -5032,10 +4902,10 @@ const LandingPage = () => {
                              3 INTERFACCE — Mockup Showcase
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,25%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(38,18%,9%,0.96) 18%, hsla(265,20%,10%,0.96) 35%, hsla(38,14%,8%,0.96) 55%, hsla(265,18%,9%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.55), transparent 65%)", filter: "blur(140px)" }} />
           <div className="absolute top-[32%] left-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
           style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
@@ -5047,10 +4917,10 @@ const LandingPage = () => {
           style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
           style={{ background: "linear-gradient(90deg, transparent, hsla(38,55%,50%,0.2), hsla(265,50%,55%,0.12), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]"
           style={{ background: "linear-gradient(180deg, hsla(38,50%,50%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           <div className="absolute inset-0 opacity-[0.012]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
             backgroundRepeat: "repeat", backgroundSize: "128px 128px"
@@ -5278,10 +5148,10 @@ const LandingPage = () => {
                              BUILD ANYTHING — Streamlined Conversion Section
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(248 20% 95%) 50%, hsl(220 20% 97%) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(38,18%,9%,0.96) 35%, hsla(265,20%,10%,0.96) 55%, hsla(38,14%,8%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
           <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
           style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
@@ -5293,10 +5163,10 @@ const LandingPage = () => {
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
           style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(38,50%,50%,0.12), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]"
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           <div className="absolute inset-0 opacity-[0.012]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
             backgroundRepeat: "repeat", backgroundSize: "128px 128px"
@@ -5309,7 +5179,7 @@ const LandingPage = () => {
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Costruiamo <span className="text-shimmer">Qualsiasi Cosa</span>
           </motion.h2>
-          <motion.p className="text-foreground/55 max-w-[500px] mx-auto text-sm leading-[1.8]"
+          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.8]"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Nessun pacchetto standard. Analizziamo il tuo business, progettiamo la soluzione perfetta e la costruiamo su misura.
           </motion.p>
@@ -5461,8 +5331,7 @@ const LandingPage = () => {
 
             {/* Opaque layer to block DNA background bleed */}
             <div className="absolute inset-0 rounded-2xl" style={{
-              background: "linear-gradient(145deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
-              border: "1px solid hsl(var(--border) / 0.3)"
+              background: "linear-gradient(145deg, hsla(265,22%,8%,0.94) 0%, hsla(230,18%,6%,0.95) 50%, hsla(265,20%,9%,0.94) 100%)"
             }} />
 
             {/* Circuit connection SVG between the 3 cards */}
@@ -5504,32 +5373,25 @@ const LandingPage = () => {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: i * 0.1, duration: 0.4 }}
-                className="relative flex flex-col items-center text-center p-3 rounded-2xl overflow-hidden group"
-                style={{
-                  background: "linear-gradient(160deg, hsl(0 0% 100% / 0.9), hsl(248 18% 97% / 0.85))",
-                  backdropFilter: "blur(16px)",
-                  border: "1px solid hsl(var(--border) / 0.3)",
-                  boxShadow: "0 2px 16px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
-                }}>
-                  {/* Top accent line */}
-                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent)" }} />
-                  {/* Glass reflection */}
-                  <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.35) 0%, transparent 25%)" }} />
-                  {/* Hover glow */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 30%, hsl(var(--primary) / 0.05), transparent 60%)" }} />
+                className="relative flex flex-col items-center text-center">
                 
                   {/* Compact tech icon */}
-                  <div className="relative z-10 w-8 h-8 rounded-xl flex items-center justify-center mb-1.5"
+                  <div className="w-7 h-7 rounded-md flex items-center justify-center mb-1.5 relative"
                 style={{
-                  background: "linear-gradient(135deg, hsl(var(--primary) / 0.12), hsl(var(--primary) / 0.06))",
-                  border: "1px solid hsl(var(--primary) / 0.15)",
-                  boxShadow: "0 2px 8px hsl(var(--primary) / 0.06)"
+                  background: "linear-gradient(135deg, hsla(265,28%,16%,0.95), hsla(230,22%,12%,0.95))",
+                  border: "1px solid hsla(265,40%,45%,0.18)",
+                  boxShadow: "0 0 10px hsla(265,50%,50%,0.06), inset 0 1px 0 hsla(265,40%,60%,0.08)"
                 }}>
-                    <div className="text-primary">{card.icon}</div>
+                    <div className="text-primary/70">{card.icon}</div>
+                    {/* Tech corner brackets */}
+                    <div className="absolute -top-[1.5px] -left-[1.5px] w-[4px] h-[4px] border-t border-l border-primary/25" />
+                    <div className="absolute -top-[1.5px] -right-[1.5px] w-[4px] h-[4px] border-t border-r border-primary/25" />
+                    <div className="absolute -bottom-[1.5px] -left-[1.5px] w-[4px] h-[4px] border-b border-l border-primary/25" />
+                    <div className="absolute -bottom-[1.5px] -right-[1.5px] w-[4px] h-[4px] border-b border-r border-primary/25" />
                   </div>
-                  <h3 className="relative z-10 font-heading text-[0.55rem] font-bold text-foreground/80 leading-tight mb-0.5">{card.title}</h3>
-                  <p className="relative z-10 text-[0.45rem] text-foreground/55 leading-[1.4] mb-1">{card.desc}</p>
-                  <motion.span className="relative z-10 text-[0.45rem] font-heading font-semibold text-primary/50 tracking-wider inline-flex items-center gap-1"
+                  <h3 className="font-heading text-[0.55rem] font-bold text-foreground/80 leading-tight mb-0.5">{card.title}</h3>
+                  <p className="text-[0.45rem] text-foreground/30 leading-[1.4] mb-1">{card.desc}</p>
+                  <motion.span className="text-[0.45rem] font-heading font-semibold text-primary/50 tracking-wider inline-flex items-center gap-1"
                 animate={{ opacity: [0.4, 0.9, 0.4] }}
                 transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.6 }}>
                     <span className="w-1 h-1 rounded-full bg-primary/40" />
@@ -5543,8 +5405,8 @@ const LandingPage = () => {
 
         {/* ═══ Scrolling Capabilities Ticker ═══ */}
         <div className="relative mb-14 -mx-5 sm:-mx-6 overflow-hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(220 20% 97%), transparent)" }} />
-          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(220 20% 97%), transparent)" }} />
+          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsla(260,18%,8%,1), transparent)" }} />
+          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsla(260,18%,8%,1), transparent)" }} />
           {[0, 1].map((row) =>
           <div key={row} className="flex whitespace-nowrap mb-2" style={{ animation: `carousel-scroll ${row === 0 ? "40s" : "45s"} linear infinite ${row === 1 ? "reverse" : ""}` }}>
               {[...Array(2)].map((_, rep) =>
@@ -5553,8 +5415,8 @@ const LandingPage = () => {
               ["App White-Label", "Dashboard IA", "Menu QR", "Booking Online", "CRM Avanzato", "Push Notification", "Fatturazione", "Analytics", "Chat Clienti", "GPS Tracking", "Mappa Tavoli", "Gestione Staff"] :
               ["Pagamenti", "Email Marketing", "WhatsApp Auto", "Inventario", "HACCP", "Review Shield™", "Agenda Smart", "Pricing Dinamico", "Landing SEO", "Cross-selling IA", "Programma Fedeltà", "Schede Paziente"]).
               map((cap, ci) =>
-              <span key={ci} className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-[0.6rem] font-heading font-medium tracking-wider"
-              style={{ background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))", border: "1px solid hsl(var(--primary) / 0.08)", color: "hsl(var(--primary) / 0.6)", boxShadow: "0 1px 8px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)" }}>
+              <span key={ci} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.6rem] font-heading tracking-wider"
+              style={{ background: "hsla(265,70%,60%,0.06)", border: "1px solid hsla(265,70%,60%,0.08)", color: "hsla(265,70%,65%,0.5)" }}>
                       <CircleCheck className="w-2.5 h-2.5" />
                       {cap}
                     </span>
@@ -5589,7 +5451,7 @@ const LandingPage = () => {
             <h3 className="text-base sm:text-lg font-heading font-bold text-foreground mb-2">
               "Se puoi immaginarlo, <span className="text-shimmer">noi lo costruiamo.</span>"
             </h3>
-            <p className="text-[0.7rem] text-foreground/50 mb-6 max-w-md mx-auto">
+            <p className="text-[0.7rem] text-foreground/30 mb-6 max-w-md mx-auto">
               Il tuo business merita una soluzione costruita su misura. Non un compromesso.
             </p>
             <motion.button
@@ -5610,11 +5472,11 @@ const LandingPage = () => {
                              SERVIZI
                             ═══════════════════════════════════════════ */}
       <Section id="services" className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(168,15%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(230,22%,10%,0.78) 15%, hsla(265,22%,11%,0.78) 32%, hsla(38,16%,9%,0.78) 52%, hsla(265,18%,9%,0.78) 72%, hsla(230,16%,4%,0.82) 100%)"
       }}>
         <CircuitPattern />
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
           <div className="absolute top-[35%] left-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
           style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
@@ -5626,10 +5488,10 @@ const LandingPage = () => {
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
           style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(38,50%,50%,0.1), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]"
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           <div className="absolute inset-0 opacity-[0.012]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
             backgroundRepeat: "repeat", backgroundSize: "128px 128px"
@@ -5767,7 +5629,7 @@ const LandingPage = () => {
         background: "linear-gradient(180deg, hsla(230,16%,5%,0.82) 0%, hsla(265,20%,10%,0.78) 35%, hsla(230,18%,9%,0.78) 65%, hsla(230,16%,5%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.4), transparent 70%)", filter: "blur(130px)" }} />
+          <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.07]" style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.4), transparent 70%)", filter: "blur(130px)" }} />
           <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 70%)", filter: "blur(110px)" }} />
         </div>
         <div className="text-center mb-12">
@@ -5781,10 +5643,10 @@ const LandingPage = () => {
         <div className="relative mb-1 rounded-2xl overflow-hidden isolate">
           {/* Opaque panel so global homepage background doesn't bleed under circuit schema */}
           <div
-            className="absolute inset-0 z-0 pointer-events-none rounded-2xl"
+            className="absolute inset-0 z-0 pointer-events-none"
             style={{
-              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.97), hsl(248 15% 97% / 0.95))",
-              border: "1px solid hsl(var(--border) / 0.25)"
+              background: "linear-gradient(160deg, hsla(230,16%,6%,0.99), hsla(265,16%,8%,0.98))",
+              border: "1px solid hsla(265,40%,45%,0.06)"
             }} />
           
 
@@ -5977,11 +5839,11 @@ const LandingPage = () => {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.12 + 0.3, duration: 0.35 }} />
 
-                  <div className="relative rounded-xl border border-border/20 bg-card/98 backdrop-blur-sm p-2 sm:p-3 overflow-hidden">
+                  <div className="relative rounded-xl border border-foreground/[0.07] bg-card/95 sm:bg-card/90 backdrop-blur-sm p-2 sm:p-3 overflow-hidden">
                     <motion.div
                       className="relative w-[36px] h-[36px] sm:w-[62px] sm:h-[62px] rounded-lg mx-auto mb-1.5 sm:mb-2.5 overflow-hidden"
-                      style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.12)" }}
-                      whileHover={{ rotate: 4, scale: 1.06, borderColor: "hsl(var(--primary) / 0.25)" }}>
+                      style={{ background: "hsla(265,20%,8%,0.7)", border: "1px solid hsla(265,70%,60%,0.14)", backdropFilter: "blur(8px)" }}
+                      whileHover={{ rotate: 4, scale: 1.06, borderColor: "hsla(265,70%,60%,0.28)" }}>
 
                       <motion.div className="absolute inset-0 pointer-events-none"
                       style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.08) 50%, transparent 60%)" }}
@@ -6041,7 +5903,7 @@ const LandingPage = () => {
         return (
         <section className="relative py-14 sm:py-28 px-4 sm:px-6 overflow-hidden"
         style={mobilifyBg({
-          background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(248,18%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+          background: "linear-gradient(180deg, hsla(230,16%,4%,0.985) 0%, hsla(230,20%,6%,0.99) 30%, hsla(265,18%,7%,0.99) 60%, hsla(230,16%,4%,0.985) 100%)"
         })}>
           {/* Ambient */}
           <div className="absolute inset-0 pointer-events-none z-0">
@@ -6073,8 +5935,8 @@ const LandingPage = () => {
               {impactNumbers.map((n, i) => (
                 <div key={i} className="relative rounded-lg sm:rounded-xl overflow-hidden py-3 px-1.5 sm:p-4 text-center"
                 style={{
-                  background: "linear-gradient(160deg, hsl(0 0% 100% / 0.95), hsl(220 20% 97% / 0.92))",
-                  border: `1px solid hsla(${[265,150,38,210][i]},40%,50%,0.15)`
+                  background: "linear-gradient(160deg, hsla(230,18%,11%,0.98), hsla(230,22%,7%,0.98))",
+                  border: "1px solid hsla(265,40%,40%,0.1)"
                 }}>
                   <div className="absolute top-0 left-0 right-0 h-[1px]"
                   style={{ background: `linear-gradient(90deg, transparent, hsla(${[265,150,38,210][i]},60%,55%,0.4), transparent)` }} />
@@ -6133,9 +5995,9 @@ const LandingPage = () => {
                     <motion.div key={i}
                     className="relative rounded-xl overflow-hidden"
                     style={{
-                      background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
-                      border: `1px solid hsla(${t.color},35%,50%,0.18)`,
-                      boxShadow: `0 2px 16px hsla(${t.color},40%,50%,0.06)`
+                      background: "linear-gradient(160deg, hsla(230,18%,10%,0.97), hsla(230,22%,6%,0.97))",
+                      border: `1px solid hsla(${t.color},35%,40%,0.15)`,
+                      boxShadow: `0 0 20px hsla(${t.color},50%,40%,0.04)`
                     }}
                     initial={{ opacity: 0, scale: 0.92 }}
                     whileInView={{ opacity: 1, scale: 1 }}
@@ -6164,15 +6026,15 @@ const LandingPage = () => {
                         {/* Before → After */}
                         <div className="flex items-center gap-1">
                           <div className="flex-1 rounded-lg py-1.5 px-1.5 text-center"
-                          style={{ background: "hsla(0,40%,50%,0.06)", border: "1px solid hsla(0,40%,50%,0.1)" }}>
-                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/45 mb-0.5">Prima</div>
-                            <div className="text-[0.65rem] font-bold text-red-500/75 leading-tight">{t.before}</div>
+                          style={{ background: "hsla(0,35%,15%,0.3)", border: "1px solid hsla(0,35%,35%,0.08)" }}>
+                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/20 mb-0.5">Prima</div>
+                            <div className="text-[0.65rem] font-bold text-red-400/75 leading-tight">{t.before}</div>
                           </div>
-                          <ArrowRight className="w-2.5 h-2.5 flex-shrink-0" style={{ color: `hsla(${t.color},55%,50%,0.6)` }} />
+                          <ArrowRight className="w-2.5 h-2.5 flex-shrink-0" style={{ color: `hsla(${t.color},55%,55%,0.45)` }} />
                           <div className="flex-1 rounded-lg py-1.5 px-1.5 text-center"
-                          style={{ background: `hsla(${t.color},40%,50%,0.06)`, border: `1px solid hsla(${t.color},40%,50%,0.12)` }}>
-                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/45 mb-0.5">Dopo</div>
-                            <div className="text-[0.65rem] font-bold leading-tight" style={{ color: `hsla(${t.color},65%,42%,0.95)` }}>{t.after}</div>
+                          style={{ background: `hsla(${t.color},35%,15%,0.2)`, border: `1px solid hsla(${t.color},35%,35%,0.1)` }}>
+                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/20 mb-0.5">Dopo</div>
+                            <div className="text-[0.65rem] font-bold leading-tight" style={{ color: `hsla(${t.color},65%,65%,0.9)` }}>{t.after}</div>
                           </div>
                         </div>
                       </div>
@@ -6211,9 +6073,9 @@ const LandingPage = () => {
                     <motion.div key={i}
                     className="relative rounded-2xl overflow-hidden"
                     style={{
-                      background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
-                      border: `1px solid hsla(${t.color},30%,50%,0.15)`,
-                      boxShadow: `0 2px 20px hsla(${t.color},50%,50%,0.06)`
+                      background: "linear-gradient(160deg, hsla(230,18%,10%,0.98), hsla(230,22%,6%,0.98))",
+                      border: `1px solid hsla(${t.color},30%,35%,0.12)`,
+                      boxShadow: `0 0 30px hsla(${t.color},50%,40%,0.04)`
                     }}
                     initial={{ opacity: 0, y: 25 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -6238,9 +6100,9 @@ const LandingPage = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="flex-1 rounded-xl p-3 text-center"
-                          style={{ background: "hsla(0,40%,50%,0.06)", border: "1px solid hsla(0,40%,50%,0.12)" }}>
-                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/45 mb-1">Prima</div>
-                            <div className="text-sm font-bold text-red-500/80">{t.before}</div>
+                          style={{ background: "hsla(0,40%,15%,0.25)", border: "1px solid hsla(0,40%,40%,0.1)" }}>
+                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/25 mb-1">Prima</div>
+                            <div className="text-sm font-bold text-red-400/80">{t.before}</div>
                           </div>
                           <motion.div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
                           style={{ background: `hsla(${t.color},50%,50%,0.15)` }}
@@ -6249,9 +6111,9 @@ const LandingPage = () => {
                             <ArrowRight className="w-3.5 h-3.5" style={{ color: `hsla(${t.color},65%,60%,1)` }} />
                           </motion.div>
                           <div className="flex-1 rounded-xl p-3 text-center"
-                          style={{ background: `hsla(${t.color},40%,50%,0.06)`, border: `1px solid hsla(${t.color},40%,50%,0.15)` }}>
-                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/45 mb-1">Dopo</div>
-                            <div className="text-sm font-bold" style={{ color: `hsla(${t.color},65%,45%,0.95)` }}>{t.after}</div>
+                          style={{ background: `hsla(${t.color},40%,15%,0.2)`, border: `1px solid hsla(${t.color},40%,40%,0.15)` }}>
+                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/25 mb-1">Dopo</div>
+                            <div className="text-sm font-bold" style={{ color: `hsla(${t.color},65%,65%,0.95)` }}>{t.after}</div>
                           </div>
                         </div>
                       </div>
@@ -6264,8 +6126,8 @@ const LandingPage = () => {
             {/* ═══ TRUST GUARANTEE ═══ */}
             <motion.div className="relative rounded-xl sm:rounded-2xl overflow-hidden p-4 sm:p-8"
             style={{
-              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(248 15% 97% / 0.94))",
-              border: "1px solid hsl(var(--primary) / 0.12)"
+              background: "linear-gradient(160deg, hsla(230,18%,10%,0.98), hsla(265,18%,8%,0.98))",
+              border: "1px solid hsla(38,40%,40%,0.12)"
             }}
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
               <div className="absolute top-0 left-0 right-0 h-[1px]"
@@ -6294,7 +6156,7 @@ const LandingPage = () => {
                   ].map((b, i) => (
                     <div key={i} className="flex flex-col items-center gap-0.5 sm:gap-1.5">
                       <div className="w-6 h-6 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl flex items-center justify-center"
-                      style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.1)", color: "hsl(var(--primary) / 0.7)" }}>
+                      style={{ background: "hsla(230,18%,14%,0.9)", border: "1px solid hsla(265,30%,35%,0.12)", color: "hsla(38,60%,60%,0.7)" }}>
                         {b.icon}
                       </div>
                       <span className="text-[0.35rem] sm:text-[0.5rem] text-foreground/30 tracking-wider uppercase">{b.label}</span>
@@ -6332,10 +6194,10 @@ const LandingPage = () => {
                              ROI CALCULATOR
                             ═══════════════════════════════════════════ */}
       <Section id="calculator" className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,25%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(38,20%,9%,0.78) 15%, hsla(265,22%,10%,0.78) 35%, hsla(38,16%,8%,0.78) 55%, hsla(265,18%,9%,0.78) 75%, hsla(230,16%,4%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(140px)" }} />
           <div className="absolute top-[32%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
           style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
@@ -6347,10 +6209,10 @@ const LandingPage = () => {
           style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
           style={{ background: "linear-gradient(90deg, transparent, hsla(38,55%,50%,0.2), hsla(265,50%,55%,0.12), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]"
           style={{ background: "linear-gradient(180deg, hsla(38,50%,50%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           <div className="absolute inset-0 opacity-[0.012]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
             backgroundRepeat: "repeat", backgroundSize: "128px 128px"
@@ -6428,10 +6290,10 @@ const LandingPage = () => {
                              TESTIMONIALS — Auto-scroll carousel
                             ═══════════════════════════════════════════ */}
       <Section id="testimonials" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 25% 96%) 50%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(265,24%,10%,0.78) 15%, hsla(38,18%,9%,0.78) 35%, hsla(265,20%,10%,0.78) 55%, hsla(38,14%,8%,0.78) 75%, hsla(230,16%,4%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
           <div className="absolute top-[32%] left-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
           style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
@@ -6443,10 +6305,10 @@ const LandingPage = () => {
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
           style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(38,50%,50%,0.12), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]"
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           <div className="absolute inset-0 opacity-[0.012]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
             backgroundRepeat: "repeat", backgroundSize: "128px 128px"
@@ -6472,22 +6334,22 @@ const LandingPage = () => {
               {testimonials.map((t, i) =>
             <div key={i} className="relative p-4 rounded-xl overflow-hidden"
             style={{
-              background: "linear-gradient(165deg, hsl(0 0% 100% / 0.95), hsl(248 15% 97% / 0.92))",
-              border: "1px solid hsl(var(--primary) / 0.12)",
+              background: "linear-gradient(165deg, hsla(265,25%,8%,0.98), hsla(265,20%,5%,0.99))",
+              border: "1px solid hsla(265,40%,50%,0.12)",
               backdropFilter: "blur(24px)"
             }}>
                   <div className="flex items-center gap-3 mb-3">
                     <img src={t.photo} alt={t.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                style={{ border: "2px solid hsl(var(--primary) / 0.2)" }} />
+                style={{ border: "2px solid hsla(265,50%,55%,0.25)" }} />
                     <div>
-                      <h4 className="font-heading text-[0.7rem] font-semibold text-foreground">{t.name}</h4>
-                      <p className="text-[0.5rem] text-foreground/50">{t.role}</p>
+                      <h4 className="font-heading text-[0.7rem] font-semibold" style={{ color: "hsla(0,0%,100%,0.94)" }}>{t.name}</h4>
+                      <p className="text-[0.5rem]" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
                     </div>
                     <span className="ml-auto text-base">{t.emoji}</span>
                   </div>
-                  <p className="text-[0.65rem] leading-[1.7] mb-2 text-foreground/65">"{t.quote}"</p>
+                  <p className="text-[0.65rem] leading-[1.7] mb-2" style={{ color: "hsla(0,0%,100%,0.5)" }}>"{t.quote}"</p>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[0.55rem] font-semibold font-heading"
-              style={{ background: "hsl(var(--primary) / 0.08)", border: "1px solid hsl(var(--primary) / 0.12)", color: "hsl(var(--primary))" }}>
+              style={{ background: "hsla(265,40%,25%,0.5)", border: "1px solid hsla(265,60%,55%,0.2)", color: "hsl(var(--primary))" }}>
                     <TrendingUp className="w-2.5 h-2.5" /> {t.metric}
                   </div>
                 </div>
@@ -6500,35 +6362,35 @@ const LandingPage = () => {
               <div key={i} className="group relative h-full">
                     <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
                 style={{
-                  background: "linear-gradient(165deg, hsl(0 0% 100% / 0.96), hsl(248 15% 97% / 0.93))",
-                  border: "1px solid hsl(var(--primary) / 0.1)",
-                  boxShadow: "0 4px 24px hsl(var(--primary) / 0.06)",
+                  background: "linear-gradient(165deg, hsla(265,25%,8%,0.98), hsla(265,20%,5%,0.99))",
+                  border: "1px solid hsla(265,40%,50%,0.12)",
+                  boxShadow: "0 16px 48px -12px hsla(265,50%,8%,0.5), inset 0 1px 0 hsla(265,60%,70%,0.06)",
                   backdropFilter: "blur(24px)"
                 }}>
                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: "linear-gradient(105deg, transparent 40%, hsl(var(--primary) / 0.04) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
-                      <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsl(var(--primary) / 0.15)" }} />
-                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsl(var(--primary) / 0.1)" }} />
-                      <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent)" }} />
+                  style={{ background: "linear-gradient(105deg, transparent 40%, hsla(38,50%,55%,0.06) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
+                      <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsla(38,50%,55%,0.2)" }} />
+                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
+                      <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
                       <div className="relative mb-4 mt-1">
                         <img src={t.photo} alt={t.name} className="w-14 h-14 rounded-full object-cover mx-auto"
-                    style={{ border: "2px solid hsl(var(--primary) / 0.2)", boxShadow: "0 4px 16px hsl(var(--primary) / 0.1)" }} />
+                    style={{ border: "2px solid hsla(265,50%,55%,0.25)", boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)" }} />
                         <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
-                    style={{ background: "hsl(0 0% 100% / 0.9)", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 8px hsl(var(--primary) / 0.08)" }}>
+                    style={{ background: "hsla(265,30%,15%,0.9)", border: "1px solid hsla(265,40%,50%,0.2)", boxShadow: "0 4px 12px hsla(0,0%,0%,0.3)" }}>
                           {t.emoji}
                         </div>
                         <motion.div className="absolute -inset-2 rounded-full pointer-events-none"
-                    style={{ border: "1px dashed hsl(var(--primary) / 0.1)" }}
+                    style={{ border: "1px dashed hsla(265,50%,55%,0.12)" }}
                     animate={{ rotate: [0, 360] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
                       </div>
-                      <h4 className="font-heading text-xs font-semibold mb-0.5 text-foreground">{t.name}</h4>
-                      <p className="text-[0.58rem] mb-4 text-foreground/50">{t.role}</p>
-                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1 text-foreground/65">
-                        <Quote className="w-3.5 h-3.5 mx-auto mb-2 text-primary/30" />
+                      <h4 className="font-heading text-xs font-semibold mb-0.5" style={{ color: "hsla(0,0%,100%,0.94)" }}>{t.name}</h4>
+                      <p className="text-[0.58rem] mb-4" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
+                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1" style={{ color: "hsla(0,0%,100%,0.5)" }}>
+                        <Quote className="w-3.5 h-3.5 mx-auto mb-2" style={{ color: "hsla(38,50%,55%,0.3)" }} />
                         "{t.quote}"
                       </blockquote>
                       <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.62rem] font-semibold font-heading tracking-wider"
-                  style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.12)", color: "hsl(var(--primary))" }}>
+                  style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.5), hsla(265,30%,18%,0.4))", border: "1px solid hsla(265,60%,55%,0.2)", color: "hsl(var(--primary))" }}>
                         <TrendingUp className="w-3 h-3" /> {t.metric}
                       </div>
                       <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-16 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
@@ -6559,10 +6421,10 @@ const LandingPage = () => {
                              PARTNER PROGRAM
                             ═══════════════════════════════════════════ */}
       <Section id="partner" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(168 20% 95%) 50%, hsl(220 20% 97%) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(38,22%,9%,0.78) 15%, hsla(265,22%,10%,0.78) 32%, hsla(38,18%,9%,0.78) 50%, hsla(265,18%,9%,0.78) 72%, hsla(230,16%,4%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[6%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[6%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(140px)" }} />
           <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
           style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
@@ -6574,10 +6436,10 @@ const LandingPage = () => {
           style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
           style={{ background: "linear-gradient(90deg, transparent, hsla(38,55%,50%,0.22), hsla(265,50%,55%,0.12), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.04]"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[95px] opacity-[0.06]"
           style={{ background: "linear-gradient(180deg, hsla(38,55%,50%,0.4), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           <div className="absolute inset-0 opacity-[0.012]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
             backgroundRepeat: "repeat", backgroundSize: "128px 128px"
@@ -6592,12 +6454,12 @@ const LandingPage = () => {
         </div>
 
         <div className="relative mb-10 rounded-2xl overflow-hidden isolate">
-          {/* Opaque mobile panel */}
+          {/* Opaque mobile panel to prevent homepage background bleeding under circuit schema */}
           <div
             className="absolute inset-0 sm:hidden z-0"
             style={{
-              background: "linear-gradient(155deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
-              border: "1px solid hsl(var(--border) / 0.3)"
+              background: "linear-gradient(155deg, hsla(230,14%,5%,0.99), hsla(230,12%,4%,0.99))",
+              border: "1px solid hsla(38,40%,45%,0.08)"
             }} />
           
 
@@ -6670,7 +6532,7 @@ const LandingPage = () => {
                   <motion.p className="text-lg sm:text-2xl font-heading font-bold text-vibrant-gradient"
                 animate={{ textShadow: ["0 0 10px hsla(265,70%,60%,0)", "0 0 20px hsla(265,70%,60%,0.3)", "0 0 10px hsla(265,70%,60%,0)"] }}
                 transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>{s.value}</motion.p>
-                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/55 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
+                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/40 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
                 </PremiumCard>
               </motion.div>
             )}
@@ -6696,7 +6558,7 @@ const LandingPage = () => {
                 </motion.div>
                 <div className="text-left sm:text-center">
                   <p className="text-sm font-bold text-foreground font-heading">{s.title}</p>
-                  <p className="text-[0.6rem] text-foreground/50">{s.desc}</p>
+                  <p className="text-[0.6rem] text-foreground/35">{s.desc}</p>
                 </div>
                 {i < 2 && <ArrowRight className="hidden sm:block w-5 h-5 text-primary/15 mx-6 flex-shrink-0" />}
               </div>
@@ -6734,10 +6596,10 @@ const LandingPage = () => {
                              FAQ
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(248 18% 96%) 50%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(38,18%,9%,0.96) 35%, hsla(265,20%,10%,0.96) 55%, hsla(38,14%,8%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-[8%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
+          <div className="absolute top-[8%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
           <div className="absolute top-[32%] right-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
           style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
@@ -6749,10 +6611,10 @@ const LandingPage = () => {
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
           style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.2), hsla(38,50%,50%,0.12), transparent)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]"
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,4%,0.8))" }} />
           <div className="absolute inset-0 opacity-[0.012]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
             backgroundRepeat: "repeat", backgroundSize: "128px 128px"
@@ -6802,7 +6664,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              GARANZIA TOTALE — Risk Reversal
                             ═══════════════════════════════════════════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(215 25% 95%) 50%, hsl(220 20% 97%) 100%)" }}>
+      <Section>
         <motion.div className="relative max-w-2xl mx-auto p-8 sm:p-12 rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background to-accent/[0.03] text-center overflow-hidden"
         initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
           <div className="absolute inset-0 premium-holo-grid opacity-20 pointer-events-none" />
@@ -6843,7 +6705,7 @@ const LandingPage = () => {
       </Suspense>
 
       {/* ═══════ FINAL CTA ═══════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(248 15% 96%) 50%, hsl(0 0% 100%) 100%)" }}>
+      <Section>
         <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.08] via-deep-black/80 to-accent/[0.04] border border-primary/15 overflow-hidden animated-border">
           <div className="absolute inset-0 aurora-mesh opacity-30" />
           {/* Violet ambient glow */}
@@ -6859,7 +6721,7 @@ const LandingPage = () => {
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
             </h2>
-            <p className="text-sm text-foreground/55 max-w-md mx-auto mb-8">
+            <p className="text-sm text-foreground/35 max-w-md mx-auto mb-8">
               25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando. Non restare indietro.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -6883,7 +6745,7 @@ const LandingPage = () => {
 
       {/* ═══════ FOOTER ═══════ */}
       <footer id="contact" className="relative py-20 pb-10 px-5 sm:px-6 overflow-hidden"
-      style={{ background: "linear-gradient(180deg, hsl(222 18% 12%) 0%, hsl(222 20% 10%) 50%, hsl(222 18% 8%) 100%)" }}>
+      style={mobilifyBg({ background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,22%,7%,0.96) 12%, hsla(38,14%,6%,0.96) 28%, hsla(265,20%,8%,0.96) 45%, hsla(155,12%,6%,0.96) 62%, hsla(265,18%,5%,0.96) 80%, hsla(230,16%,3%,0.96) 100%)" })}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Top accent line — tricolore viola/oro/verde */}
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.4) 20%, hsla(38,65%,55%,0.35) 40%, hsla(155,60%,50%,0.3) 60%, hsla(38,65%,55%,0.35) 80%, transparent 95%)" }} />
@@ -6898,7 +6760,7 @@ const LandingPage = () => {
           {/* Gold warm glow — bottom right */}
           <div className="absolute bottom-[18%] right-[25%] w-[260px] h-[220px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 65%)", filter: "blur(100px)" }} />
           {/* Vertical light shaft */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]" style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.4), transparent)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.06]" style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.4), transparent)" }} />
           {/* Noise texture overlay */}
           <div className="absolute inset-0 opacity-[0.012]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")", backgroundSize: "180px 180px" }} />
           {/* Bottom fade to pure black */}
@@ -7034,7 +6896,7 @@ const LandingPage = () => {
       <AnimatePresence>
         {ctaVisible &&
         <motion.div className={`fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] border-t border-border/20 ${IS_MOBILE_LP ? "" : "backdrop-blur-2xl"}`}
-        style={{ background: IS_MOBILE_LP ? "hsla(0,0%,100%,0.96)" : "linear-gradient(180deg, hsla(0,0%,100%,0.96), hsla(220,20%,98%,0.94))" }}
+        style={{ background: IS_MOBILE_LP ? "hsla(0,0%,4%,0.98)" : "linear-gradient(180deg, hsla(0,0%,4%,0.98), hsla(38,12%,7%,0.92))" }}
         initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} transition={{ type: "spring", damping: 25 }}>
             <div className="flex gap-2 max-w-md mx-auto">
               <motion.button onClick={() => scrollTo("pricing")}
