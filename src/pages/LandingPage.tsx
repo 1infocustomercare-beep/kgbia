@@ -3661,14 +3661,8 @@ const LandingPage = () => {
             borderColor: `hsl(${pillar.color} / 0.1)`,
             boxShadow: `0 4px 28px hsl(${pillar.color} / 0.06), 0 1px 3px hsl(220 20% 80% / 0.12)`,
           }}>
-            {/* Top accent shimmer line */}
+            {/* Top accent line */}
             <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${pillar.color} / 0.4) 30%, hsl(${pillar.color} / 0.6) 50%, hsl(${pillar.color} / 0.4) 70%, transparent 95%)` }} />
-            {/* Inner glass reflection */}
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.4) 0%, transparent 25%)" }} />
-            {/* Subtle corner glow */}
-            <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-30 pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${pillar.color} / 0.12), transparent 70%)` }} />
-            {/* Hover gradient overlay */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, hsl(${pillar.color} / 0.05), transparent 60%)` }} />
             <div className="relative z-10 flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
               style={{ background: `linear-gradient(135deg, hsl(${pillar.color}), hsl(${pillar.color} / 0.7))`, color: "white", boxShadow: `0 6px 20px hsl(${pillar.color} / 0.3), inset 0 1px 0 rgba(255,255,255,0.15)` }}>
