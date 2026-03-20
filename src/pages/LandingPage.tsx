@@ -3513,28 +3513,29 @@ const LandingPage = () => {
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}>
                 <motion.button
                   onClick={() => scrollTo("pricing")}
-                  className="group relative w-full sm:w-auto px-6 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-primary-foreground font-bold text-[0.72rem] sm:text-[0.75rem] font-heading tracking-wider uppercase overflow-hidden"
+                  className="group relative w-full sm:w-auto px-6 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-white font-bold text-[0.72rem] sm:text-[0.75rem] font-heading tracking-wider uppercase overflow-hidden"
                   style={{
-                    background: "linear-gradient(135deg, hsl(var(--empire-violet)), hsl(var(--neon-magenta) / 0.85), hsl(38,55%,50%))",
-                    boxShadow: "0 4px 20px hsl(var(--empire-violet) / 0.25), 0 0 0 1px hsl(var(--empire-violet) / 0.15)"
+                    background: "linear-gradient(135deg, hsl(160 60% 36%), hsl(168 65% 32%), hsl(180 55% 30%))",
+                    boxShadow: "0 4px 20px hsl(160 60% 36% / 0.3), 0 0 0 1px hsl(160 55% 40% / 0.2)"
                   }}
-                  whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(var(--empire-violet) / 0.4)" }}
+                  whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(160 60% 36% / 0.45)" }}
                   whileTap={{ scale: 0.97 }}>
-                  <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/10 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                  <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
                   <span className="relative flex items-center justify-center gap-2">
                     Avvia il tuo progetto <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </motion.button>
                 <motion.button
                   onClick={() => navigate("/demo")}
-                  className="w-full sm:w-auto px-5 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-foreground/60 text-[0.72rem] sm:text-[0.75rem] font-semibold font-heading tracking-wide hover:text-foreground transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-5 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-[0.72rem] sm:text-[0.75rem] font-semibold font-heading tracking-wide transition-all flex items-center justify-center gap-2"
                   style={{
-                    border: "1px solid hsl(var(--border) / 0.5)",
-                    background: "hsl(var(--card) / 0.4)",
+                    color: "hsl(170 30% 30%)",
+                    border: "1px solid hsl(168 40% 70% / 0.5)",
+                    background: "hsl(0 0% 100% / 0.5)",
                     backdropFilter: "blur(8px)"
                   }}
-                  whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.3)" }}>
-                  <Eye className="w-3.5 h-3.5 text-primary/60" /> Guarda i nostri lavori
+                  whileHover={{ scale: 1.01, borderColor: "hsl(160 55% 40% / 0.4)" }}>
+                  <Eye className="w-3.5 h-3.5" style={{ color: "hsl(160 55% 38%)" }} /> Guarda i nostri lavori
                 </motion.button>
               </motion.div>
 
