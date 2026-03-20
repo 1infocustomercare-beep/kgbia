@@ -391,18 +391,18 @@
   }
 
   .text-vibrant-gradient {
-    background: linear-gradient(135deg, hsl(38, 50%, 58%), hsl(35, 45%, 55%), hsl(32, 42%, 50%));
+    background: linear-gradient(135deg, hsl(210, 100%, 65%), hsl(250, 85%, 68%), hsl(172, 80%, 52%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .bg-vibrant-gradient {
-    background: linear-gradient(135deg, hsl(38, 55%, 48%), hsl(34, 50%, 42%), hsl(30, 45%, 38%));
+    background: linear-gradient(135deg, hsl(210, 100%, 58%), hsl(250, 80%, 55%), hsl(172, 80%, 45%));
   }
 
   .vibrant-glow {
-    box-shadow: 0 0 60px hsla(38, 55%, 50%, 0.25), 0 0 120px hsla(35, 45%, 55%, 0.1);
+    box-shadow: 0 0 60px hsla(210, 100%, 62%, 0.25), 0 0 120px hsla(172, 80%, 48%, 0.1);
   }
 
   /* ═══ FUTURISTIC GRID ═══ */
