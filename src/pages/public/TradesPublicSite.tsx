@@ -622,23 +622,131 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
             <h2 className="text-3xl sm:text-4xl font-bold mb-3">I Nostri Servizi</h2>
             <p className="text-white/30 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>Soluzioni professionali per ogni esigenza</p>
           </div>
-          <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}
+            className={`grid gap-4 ${
+              palette.visualStyle === "warm" || palette.visualStyle === "organic" 
+                ? "grid-cols-2 sm:grid-cols-3" 
+                : palette.visualStyle === "glass" 
+                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" 
+                  : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}>
             {services.map((s, i) => (
               <motion.div key={i} variants={fadeUp} custom={i}>
-                <Card className="border-0 h-full group rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1" style={{ background: `${A}08`, border: `1px solid ${A}12` }}>
-                  <CardContent className="p-6 relative">
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                      style={{ background: `radial-gradient(ellipse at center, ${A}15, transparent 70%)` }} />
-                    <div className="relative text-center">
-                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110 group-hover:rotate-3"
-                        style={{ background: `${A}15`, border: `1px solid ${A}20` }}>
-                        <span className="text-3xl">{s.emoji}</span>
+                {palette.visualStyle === "glass" ? (
+                  /* Glass style: frosted glass cards with blur */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-1 backdrop-blur-xl`}
+                    style={{ background: `${A}0A`, border: `1px solid ${A}18`, boxShadow: `0 8px 32px ${A}08` }}>
+                    <CardContent className="p-5 relative">
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-inherit"
+                        style={{ background: `linear-gradient(135deg, ${A}15, transparent)` }} />
+                      <div className="relative flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center transition-transform group-hover:scale-110 backdrop-blur-sm"
+                          style={{ background: `${A}18`, border: `1px solid ${A}25` }}>
+                          <span className="text-2xl">{s.emoji}</span>
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-white text-sm mb-1">{s.name}</h3>
+                          <p className="text-xs text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                        </div>
                       </div>
-                      <h3 className="font-bold text-white mb-1.5">{s.name}</h3>
-                      <p className="text-sm text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                ) : palette.visualStyle === "warm" ? (
+                  /* Warm style: rounded colorful cards */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl`}
+                    style={{ background: `linear-gradient(145deg, ${A}12, ${A}06)`, border: `1px solid ${A}15` }}>
+                    <CardContent className="p-5 text-center relative">
+                      <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3 transition-all group-hover:scale-110 group-hover:shadow-lg"
+                        style={{ background: `${A}20`, boxShadow: `0 4px 20px ${A}15` }}>
+                        <span className="text-2xl">{s.emoji}</span>
+                      </div>
+                      <h3 className="font-bold text-white text-sm mb-1" style={{ fontFamily: palette.fontDisplay }}>{s.name}</h3>
+                      <p className="text-[11px] text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                    </CardContent>
+                  </Card>
+                ) : palette.visualStyle === "neon" ? (
+                  /* Neon style: glowing borders with neon accents */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-1`}
+                    style={{ background: `${A}06`, border: `1px solid ${A}20`, boxShadow: `inset 0 1px 0 ${A}15` }}>
+                    <CardContent className="p-5 relative">
+                      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${A}40, transparent)` }} />
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style={{ background: `radial-gradient(ellipse at top, ${A}12, transparent 60%)` }} />
+                      <div className="relative text-center">
+                        <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-3 transition-all group-hover:scale-110 group-hover:shadow-neon"
+                          style={{ background: `${A}12`, border: `1px solid ${A}30`, boxShadow: `0 0 20px ${A}10` }}>
+                          <span className="text-2xl">{s.emoji}</span>
+                        </div>
+                        <h3 className="font-bold text-white text-sm mb-1">{s.name}</h3>
+                        <p className="text-xs text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : palette.visualStyle === "bold" ? (
+                  /* Bold style: large cards with strong presence */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-2`}
+                    style={{ background: `linear-gradient(180deg, ${A}10, ${A}04)`, border: `2px solid ${A}15` }}>
+                    <CardContent className="p-6 relative">
+                      <div className="absolute top-0 left-0 w-1 h-full" style={{ background: `linear-gradient(180deg, ${A}, ${A}20)` }} />
+                      <div className="relative pl-3">
+                        <span className="text-3xl mb-3 block">{s.emoji}</span>
+                        <h3 className="font-extrabold text-white text-base mb-1.5">{s.name}</h3>
+                        <p className="text-xs text-white/40" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : palette.visualStyle === "organic" ? (
+                  /* Organic style: natural flowing shapes */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-1`}
+                    style={{ background: `linear-gradient(160deg, ${A}0A, ${A}04)`, border: `1px solid ${A}10` }}>
+                    <CardContent className="p-5 text-center relative">
+                      <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full blur-2xl opacity-10" style={{ background: A }} />
+                      <div className="relative">
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 transition-transform group-hover:scale-105"
+                          style={{ background: `${A}10`, border: `1px solid ${A}12` }}>
+                          <span className="text-3xl">{s.emoji}</span>
+                        </div>
+                        <h3 className="font-bold text-white text-sm mb-1" style={{ fontFamily: palette.fontDisplay }}>{s.name}</h3>
+                        <p className="text-[11px] text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : palette.visualStyle === "minimal" ? (
+                  /* Minimal style: clean lines, no decoration */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-200 hover:bg-opacity-80`}
+                    style={{ background: `${A}05`, border: `1px solid ${A}08` }}>
+                    <CardContent className="p-5 relative">
+                      <div className="flex items-center gap-4">
+                        <div className="w-11 h-11 rounded-lg flex-shrink-0 flex items-center justify-center"
+                          style={{ background: `${A}10` }}>
+                          <span className="text-xl">{s.emoji}</span>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white text-sm mb-0.5">{s.name}</h3>
+                          <p className="text-[11px] text-white/30" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  /* Solid style: default */
+                  <Card className={`border-0 h-full group ${palette.cardRadius} overflow-hidden transition-all duration-300 hover:-translate-y-1`} style={{ background: `${A}08`, border: `1px solid ${A}12` }}>
+                    <CardContent className="p-6 relative">
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style={{ background: `radial-gradient(ellipse at center, ${A}15, transparent 70%)` }} />
+                      <div className="relative text-center">
+                        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110 group-hover:rotate-3"
+                          style={{ background: `${A}15`, border: `1px solid ${A}20` }}>
+                          <span className="text-3xl">{s.emoji}</span>
+                        </div>
+                        <h3 className="font-bold text-white mb-1.5">{s.name}</h3>
+                        <p className="text-sm text-white/35" style={{ fontFamily: palette.fontBody }}>{s.desc}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </motion.div>
+            ))}
               </motion.div>
             ))}
           </motion.div>
