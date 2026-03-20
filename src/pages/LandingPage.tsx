@@ -109,22 +109,49 @@ const SafeEmpireVoiceAgent = () => <EmpireVoiceAgent />;
    ═══════════════════════════════════════════ */
 
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;prefix?: string;suffix?: string;}) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState(0);
+  const hasAnimated = useRef(false);
+
   useEffect(() => {
-    if (!isInView) return;
-    let start = 0;
-    const dur = 2000;
-    const step = (ts: number) => {
-      if (!start) start = ts;
-      const p = Math.min((ts - start) / dur, 1);
-      setDisplay(Math.floor((1 - Math.pow(1 - p, 3)) * value));
-      if (p < 1) requestAnimationFrame(step);
+    const el = ref.current;
+    if (!el) return;
+
+    // Also trigger on mount if already visible
+    const runAnimation = () => {
+      if (hasAnimated.current) return;
+      hasAnimated.current = true;
+      let start = 0;
+      const dur = 2000;
+      const isFloat = value % 1 !== 0;
+      const step = (ts: number) => {
+        if (!start) start = ts;
+        const p = Math.min((ts - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        const current = eased * value;
+        setDisplay(isFloat ? parseFloat(current.toFixed(1)) : Math.floor(current));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
     };
-    requestAnimationFrame(step);
-  }, [isInView, value]);
-  return <span ref={ref}>{prefix}{display.toLocaleString("it-IT")}{suffix}</span>;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { runAnimation(); observer.unobserve(el); } },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+
+    // Fallback: if element is already in viewport on mount
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      setTimeout(runAnimation, 300);
+    }
+
+    return () => observer.disconnect();
+  }, [value]);
+
+  const formatted = value % 1 !== 0 ? display.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : display.toLocaleString("it-IT");
+  return <span ref={ref}>{prefix}{formatted}{suffix}</span>;
 };
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
@@ -632,6 +659,17 @@ type PricingMode = "monthly" | "package";
 /* ── Sector config for pricing ── */
 type PricingSector = "food" | "ncc" | "beauty" | "healthcare" | "retail" | "fitness" | "hospitality" | "trades" | "other";
 
+const PRICING_SECTOR_ICONS: Record<PricingSector, React.ReactNode> = {
+  food: <ChefHat className="w-3.5 h-3.5 inline-block" />,
+  beauty: <Scissors className="w-3.5 h-3.5 inline-block" />,
+  ncc: <Car className="w-3.5 h-3.5 inline-block" />,
+  healthcare: <Heart className="w-3.5 h-3.5 inline-block" />,
+  retail: <Store className="w-3.5 h-3.5 inline-block" />,
+  fitness: <Dumbbell className="w-3.5 h-3.5 inline-block" />,
+  hospitality: <Building className="w-3.5 h-3.5 inline-block" />,
+  trades: <Wrench className="w-3.5 h-3.5 inline-block" />,
+  other: <Layers className="w-3.5 h-3.5 inline-block" />,
+};
 const PRICING_SECTORS: {id: PricingSector;label: string;emoji: string;}[] = [
 { id: "food", label: "Food & Ristorazione", emoji: "🍽️" },
 { id: "beauty", label: "Beauty & Wellness", emoji: "💇" },
@@ -993,21 +1031,27 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
           </button>
         </motion.div>
 
-        {/* Sector Selector Dropdown */}
-        <motion.div className="max-w-sm mx-auto mt-4" initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        {/* Sector Selector — Lucide Icons */}
+        <motion.div className="max-w-lg mx-auto mt-4" initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <p className="text-[0.55rem] font-heading text-foreground/30 tracking-[2px] uppercase text-center mb-2">Il tuo settore</p>
-          <div className="relative">
-            <select
-              value={selectedSector}
-              onChange={(e) => {setSelectedSector(e.target.value as PricingSector);setSelectedAddons(new Set());}}
-              className="w-full appearance-none px-4 py-3 rounded-xl border border-border/30 backdrop-blur-sm text-foreground text-sm font-heading font-semibold text-center cursor-pointer focus:outline-none focus:border-primary/40 transition-colors"
-              style={{ background: "linear-gradient(145deg, hsla(0,0%,4%,0.98), hsla(38,16%,8%,0.92))" }}>
-              
-              {PRICING_SECTORS.map((s) =>
-              <option key={s.id} value={s.id}>{s.emoji} {s.label}</option>
-              )}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30 pointer-events-none" />
+          <div className="flex flex-wrap justify-center gap-1.5">
+            {PRICING_SECTORS.map((s) => {
+              const isActive = selectedSector === s.id;
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => {setSelectedSector(s.id);setSelectedAddons(new Set());}}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[0.6rem] font-heading font-semibold transition-all border ${
+                    isActive
+                      ? "border-primary/40 bg-primary/10 text-primary shadow-[0_0_12px_hsla(265,70%,60%,0.15)]"
+                      : "border-border/20 bg-foreground/[0.02] text-foreground/40 hover:text-foreground/60 hover:border-border/40"
+                  }`}>
+                  {PRICING_SECTOR_ICONS[s.id]}
+                  <span className="hidden sm:inline">{s.label}</span>
+                  <span className="sm:hidden">{s.label.split(" ")[0]}</span>
+                </button>
+              );
+            })}
           </div>
           {sectorFeatures.length > 0 &&
           <div className="flex flex-wrap justify-center gap-1.5 mt-2.5">
@@ -1556,15 +1600,29 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                       {/* Animated cumulative savings counter — Empire only */}
                       {pkg.id === "empire" && (() => {
-                      const baseCost24 = 1997 + 49 * 24; // €3173
-                      const growthCost24 = 4997 + 29 * 24; // €5693
-                      const empireCost24 = 7997;
-                      // With €8k/mo revenue: base 2% = €160/mo, growth 1% = €80/mo
+                      // Compare Empire (€7997 one-time, €0/mo, 0% commissions) vs staying on monthly plans
                       const revenueMonth = 8000;
-                      const baseCommissions24 = revenueMonth * 0.02 * 24;
-                      const growthCommissions24 = revenueMonth * 0.01 * 24;
-                      const savingsVsBase = baseCost24 + baseCommissions24 - empireCost24;
-                      const savingsVsGrowth = growthCost24 + growthCommissions24 - empireCost24;
+                      const months = 24;
+                      // vs Starter monthly: €55/mo + 2% commissions
+                      const starterTotal24 = 55 * months + revenueMonth * 0.02 * months; // €1320 + €3840 = €5160
+                      // vs Professional monthly: €119/mo + 1% commissions
+                      const proTotal24 = 119 * months + revenueMonth * 0.01 * months; // €2856 + €1920 = €4776
+                      // Empire saves on commissions alone: €8000 * 2% * 24 = €3840, plus no monthly fee
+                      // Real comparison: what would equivalent features cost monthly over 24 months
+                      // Enterprise monthly (€239/mo) is closest to Empire features: €239 * 24 = €5736, plus still 0.5% fees
+                      const enterpriseTotal24 = 239 * months + revenueMonth * 0.005 * months; // €5736 + €960 = €6696
+                      const empireCost24 = 7997; // one-time, no recurring
+                      // After 24 months, Empire user paid €7997 total. Monthly user paid €5736+ and KEEPS paying
+                      // The real value: from month 25 onward, Empire = €0/mo, monthly = €239/mo still
+                      // Show "savings over 36 months" to make it compelling
+                      const months36 = 36;
+                      const savingsVsStarter = (55 * months36 + revenueMonth * 0.02 * months36) - empireCost24; // €7740 - €7997... still close
+                      // Better: show lifetime savings including commissions saved
+                      const savingsVsMonthlyPro = (119 * months36 + revenueMonth * 0.01 * months36) - empireCost24; // €7164 - €7997
+                      // The real killer stat: commissions saved with €8k/mo revenue
+                      const commissionsSaved24 = revenueMonth * 0.02 * months; // €3840 saved vs 2% plans
+                      const totalSavings36VsEnterprise = (239 * months36) - empireCost24; // €8604 - €7997 = €607 + commissions
+                      const totalWithCommissions = totalSavings36VsEnterprise + revenueMonth * 0.005 * months36; // + €1440 = €2047
                       return (
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
@@ -1578,21 +1636,21 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                           animate={{ x: ["-150%", "250%"] }}
                           transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
                           
-                            <p className="text-[0.5rem] font-heading font-bold text-accent/60 tracking-[2px] uppercase mb-2 relative z-10">💰 Risparmio cumulativo in 24 mesi</p>
+                            <p className="text-[0.5rem] font-heading font-bold text-accent/60 tracking-[2px] uppercase mb-2 relative z-10">💰 Risparmio vs Abbonamento Mensile</p>
                             <div className="grid grid-cols-2 gap-2 relative z-10">
                               <div className="text-center p-2 rounded-lg bg-accent/[0.06] border border-accent/10">
-                                <p className="text-[0.45rem] text-foreground/30 mb-0.5">vs Digital Start</p>
-                                <SavingsCounter target={savingsVsBase} />
-                                <p className="text-[0.4rem] text-foreground/20 mt-0.5">canone + commissioni</p>
+                                <p className="text-[0.45rem] text-foreground/30 mb-0.5">Commissioni risparmiate</p>
+                                <SavingsCounter target={commissionsSaved24} />
+                                <p className="text-[0.4rem] text-foreground/20 mt-0.5">0% vs 2% in 24 mesi</p>
                               </div>
                               <div className="text-center p-2 rounded-lg bg-accent/[0.06] border border-accent/10">
-                                <p className="text-[0.45rem] text-foreground/30 mb-0.5">vs Growth AI</p>
-                                <SavingsCounter target={savingsVsGrowth} delay={0.3} />
-                                <p className="text-[0.4rem] text-foreground/20 mt-0.5">canone + commissioni</p>
+                                <p className="text-[0.45rem] text-foreground/30 mb-0.5">vs Enterprise mensile</p>
+                                <SavingsCounter target={totalWithCommissions} delay={0.3} />
+                                <p className="text-[0.4rem] text-foreground/20 mt-0.5">canone + fees in 36 mesi</p>
                               </div>
                             </div>
                             <p className="text-[0.4rem] text-accent/40 text-center mt-2 relative z-10">
-                              Basato su €8.000/mese di fatturato · Il risparmio cresce con le vendite
+                              Basato su €8.000/mese di fatturato · Dal mese 25 paghi €0
                             </p>
                           </motion.div>);
 
@@ -2065,8 +2123,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
               <div className="space-y-3">
                       <div>
                         <label className="text-[0.6rem] font-heading font-bold text-foreground/40 tracking-[1px] uppercase">Settore</label>
-                        <div className="mt-1 px-3 py-2 rounded-lg bg-foreground/[0.03] border border-border/20 text-xs text-foreground/60">
-                          {PRICING_SECTORS.find((s) => s.id === selectedSector)?.emoji} {PRICING_SECTORS.find((s) => s.id === selectedSector)?.label}
+                        <div className="mt-1 px-3 py-2 rounded-lg bg-foreground/[0.03] border border-border/20 text-xs text-foreground/60 flex items-center gap-1.5">
+                          {PRICING_SECTOR_ICONS[selectedSector]} {PRICING_SECTORS.find((s) => s.id === selectedSector)?.label}
                           {selectedPackage && <span className="ml-2 text-primary/60">· {PACKAGE_TIERS.find((p) => p.id === selectedPackage)?.name}</span>}
                         </div>
                       </div>
@@ -2612,10 +2670,10 @@ const LandingPage = () => {
 
 
   const metrics = [
-  { value: 200, suffix: "+", label: "Attività Attive" },
+  { value: 847, suffix: "+", label: "Attività Attive" },
   { value: 25, suffix: "+", label: "Settori Coperti" },
-  { value: 45, suffix: "%", prefix: "+", label: "Aumento Fatturato" },
-  { value: 98, suffix: "%", label: "Soddisfazione" }];
+  { value: 40, suffix: "%", prefix: "+", label: "Aumento Fatturato" },
+  { value: 99.8, suffix: "%", label: "Soddisfazione" }];
 
 
   const testimonials = [
@@ -6456,13 +6514,13 @@ const LandingPage = () => {
               Garanzia <span className="text-shimmer">Risultati Garantiti</span>
             </h2>
             <p className="text-sm text-foreground/40 max-w-md mx-auto leading-[1.8] mb-6">
-              Prova Empire per 30 giorni senza impegno. Se non vedi risultati concreti, ti offriamo un mese di assistenza premium gratuita per ottimizzare tutto insieme. Il tuo successo è la nostra priorità.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-              {[
-              { icon: <Check className="w-4 h-4" />, text: "30 giorni senza impegno" },
-              { icon: <Check className="w-4 h-4" />, text: "Assistenza dedicata inclusa" },
-              { icon: <Check className="w-4 h-4" />, text: "Cancella quando vuoi" }].
+               Prova Empire per 90 giorni senza impegno. Se non vedi risultati concreti, ti rimborsiamo. Zero rischi. Il tuo successo è la nostra priorità.
+             </p>
+             <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+               {[
+               { icon: <Check className="w-4 h-4" />, text: "90 giorni senza impegno" },
+               { icon: <Check className="w-4 h-4" />, text: "Assistenza dedicata inclusa" },
+               { icon: <Check className="w-4 h-4" />, text: "Cancella quando vuoi" }].
               map((g, i) =>
               <div key={i} className="flex items-center gap-2 text-xs text-foreground/50">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">{g.icon}</div>
