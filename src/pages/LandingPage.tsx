@@ -3520,54 +3520,122 @@ const LandingPage = () => {
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.97) 0%, hsla(265,18%,8%,0.97) 50%, hsla(230,16%,4%,0.97) 100%)"
       }}>
-        <div className="text-center mb-8">
+        <div className="text-center mb-10">
           <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
-          <motion.h2 className="text-[clamp(1.4rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+          <motion.h2 className="text-[clamp(1.5rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
-            Cosa Fa <span className="text-vivid-gradient">Empire</span> per Te
+            Creiamo <span className="text-vivid-gradient">App, Siti e Gestionali</span>
+            <br />
+            <span className="text-foreground/80">Potenziati dall'IA</span>
           </motion.h2>
-          <motion.p className="text-[0.8rem] text-foreground/40 max-w-md mx-auto leading-[1.7]"
+          <motion.p className="text-[0.82rem] text-foreground/45 max-w-lg mx-auto leading-[1.75]"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.2 }}>
-            Un ecosistema completo che sostituisce 10+ strumenti separati
+            Progettiamo e sviluppiamo applicazioni dedicate, web app professionali e sistemi gestionali completi
+            per qualsiasi settore — personalizzati al 100% sulle tue esigenze, con intelligenza artificiale integrata
+            e automazioni che lavorano per te 24/7.
           </motion.p>
         </div>
-        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5"
+
+        {/* Core Capabilities — 3 pillar cards */}
+        <motion.div className="grid grid-cols-1 gap-3 mb-8"
         variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
           {[
-            { icon: <Smartphone className="w-4 h-4" />, title: "App White Label", desc: "Il TUO brand, zero loghi terzi", color: "var(--empire-violet)" },
-            { icon: <Bot className="w-4 h-4" />, title: "98+ Agenti IA", desc: "Lavorano 24/7 in autonomia", color: "var(--neon-emerald)" },
-            { icon: <Calendar className="w-4 h-4" />, title: "Prenotazioni", desc: "Agenda, ordini, booking", color: "var(--neon-cyan)" },
-            { icon: <CreditCard className="w-4 h-4" />, title: "Pagamenti", desc: "Stripe Connect integrato", color: "var(--neon-magenta)" },
-            { icon: <Users className="w-4 h-4" />, title: "CRM Clienti", desc: "Storico, preferenze, fidelity", color: "var(--empire-violet)" },
-            { icon: <Bell className="w-4 h-4" />, title: "Marketing Auto", desc: "Push, WhatsApp, email, SMS", color: "var(--neon-emerald)" },
-            { icon: <BarChart3 className="w-4 h-4" />, title: "Analytics & Finance", desc: "Fatture, margini, KPI", color: "var(--neon-cyan)" },
-            { icon: <Shield className="w-4 h-4" />, title: "Review Shield™", desc: "Proteggi la reputazione", color: "var(--neon-magenta)" },
-          ].map((f, i) =>
-          <motion.div key={i} variants={popIn}
-          className="relative p-3.5 rounded-xl overflow-hidden group transition-all duration-300"
+            {
+              icon: <Smartphone className="w-5 h-5" />,
+              title: "App & Web App Dedicate",
+              desc: "Applicazioni installabili con il TUO brand, il tuo dominio, i tuoi colori. Nessun logo di terzi. Design premium, funzionalità infinite — dall'e-commerce alle prenotazioni, dal catalogo digitale al sistema di ordini. Tutto come lo vuoi tu.",
+              features: ["White Label 100%", "PWA Installabile", "Design su misura", "Qualsiasi funzionalità"],
+              color: "var(--empire-violet)",
+              gradient: "from-[hsl(var(--empire-violet)/0.15)] to-[hsl(var(--empire-violet)/0.03)]"
+            },
+            {
+              icon: <Brain className="w-5 h-5" />,
+              title: "Intelligenza Artificiale Integrata",
+              desc: "98+ agenti IA specializzati che automatizzano marketing, gestione clienti, analisi dati, fatturazione, risposte automatiche, generazione contenuti e molto altro. L'IA lavora in autonomia, senza intervento umano.",
+              features: ["98+ Agenti IA", "Automazioni 24/7", "Analisi predittive", "Marketing automatico"],
+              color: "var(--neon-emerald)",
+              gradient: "from-[hsl(var(--neon-emerald)/0.12)] to-[hsl(var(--neon-emerald)/0.02)]"
+            },
+            {
+              icon: <ServerCog className="w-5 h-5" />,
+              title: "Gestionale Aziendale Completo",
+              desc: "CRM clienti, prenotazioni, ordini, inventario, staff, fatturazione elettronica, analytics, pagamenti Stripe integrati, fidelity card digitali, notifiche push, campagne marketing — tutto centralizzato in un unico pannello.",
+              features: ["CRM & Fidelizzazione", "Fatturazione & Finance", "Staff & Operazioni", "Pagamenti integrati"],
+              color: "var(--neon-cyan)",
+              gradient: "from-[hsl(var(--neon-cyan)/0.12)] to-[hsl(var(--neon-cyan)/0.02)]"
+            },
+          ].map((pillar, i) =>
+          <motion.div key={i} variants={fadeUp}
+          className="relative p-5 rounded-2xl overflow-hidden border transition-all duration-300"
           style={{
-            background: "linear-gradient(145deg, hsl(var(--deep-black) / 0.95), hsl(265,15%,8% / 0.95))",
-            border: `1px solid hsl(${f.color} / 0.12)`,
+            background: `linear-gradient(160deg, ${pillar.gradient.split(" ")[0].replace("from-[", "").replace("]", "")}, hsla(230,12%,7%,0.98))`,
+            borderColor: `hsl(${pillar.color} / 0.15)`,
           }}>
-            <div className="flex items-start gap-2.5">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-              style={{ background: `hsl(${f.color} / 0.12)`, color: `hsl(${f.color})` }}>
-                {f.icon}
+            {/* Top accent */}
+            <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent, hsl(${pillar.color} / 0.4), transparent)` }} />
+            <div className="flex items-start gap-4">
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: `hsl(${pillar.color} / 0.15)`, color: `hsl(${pillar.color})`, boxShadow: `0 0 20px hsl(${pillar.color} / 0.1)` }}>
+                {pillar.icon}
               </div>
-              <div className="min-w-0">
-                <h4 className="text-[0.68rem] font-heading font-bold text-foreground/90 leading-tight">{f.title}</h4>
-                <p className="text-[0.52rem] text-foreground/35 leading-[1.5] mt-0.5">{f.desc}</p>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-[0.85rem] font-heading font-bold text-foreground/95 leading-tight mb-1.5">{pillar.title}</h3>
+                <p className="text-[0.65rem] text-foreground/40 leading-[1.65] mb-3">{pillar.desc}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {pillar.features.map((f, fi) =>
+                  <span key={fi} className="px-2 py-0.5 rounded-md text-[0.5rem] font-medium tracking-wide"
+                  style={{ background: `hsl(${pillar.color} / 0.1)`, color: `hsl(${pillar.color} / 0.7)`, border: `1px solid hsl(${pillar.color} / 0.1)` }}>
+                    {f}
+                  </span>
+                  )}
+                </div>
               </div>
             </div>
           </motion.div>
           )}
+        </motion.div>
+
+        {/* Quick features grid */}
+        <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-2"
+        variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
+          {[
+            { icon: <Globe className="w-3.5 h-3.5" />, title: "Siti Web Premium", color: "var(--empire-violet)" },
+            { icon: <QrCode className="w-3.5 h-3.5" />, title: "Menu & Cataloghi QR", color: "var(--neon-emerald)" },
+            { icon: <Wallet className="w-3.5 h-3.5" />, title: "Loyalty & Fidelity", color: "var(--neon-cyan)" },
+            { icon: <Headphones className="w-3.5 h-3.5" />, title: "Voice Agent IA", color: "var(--neon-magenta)" },
+            { icon: <MapPin className="w-3.5 h-3.5" />, title: "Multi-Sede", color: "var(--empire-violet)" },
+            { icon: <Lock className="w-3.5 h-3.5" />, title: "GDPR & Sicurezza", color: "var(--neon-emerald)" },
+            { icon: <Receipt className="w-3.5 h-3.5" />, title: "Fatturazione Elettronica", color: "var(--neon-cyan)" },
+            { icon: <Sparkles className="w-3.5 h-3.5" />, title: "Personalizzazione Totale", color: "var(--neon-magenta)" },
+          ].map((f, i) =>
+          <motion.div key={i} variants={popIn}
+          className="relative p-2.5 rounded-lg overflow-hidden text-center"
+          style={{
+            background: "linear-gradient(145deg, hsl(var(--deep-black) / 0.95), hsl(265,15%,8% / 0.95))",
+            border: `1px solid hsl(${f.color} / 0.1)`,
+          }}>
+            <div className="w-7 h-7 mx-auto rounded-lg flex items-center justify-center mb-1.5"
+            style={{ background: `hsl(${f.color} / 0.12)`, color: `hsl(${f.color})` }}>
+              {f.icon}
+            </div>
+            <h4 className="text-[0.58rem] font-heading font-bold text-foreground/80 leading-tight">{f.title}</h4>
+          </motion.div>
+          )}
+        </motion.div>
+
+        {/* Bottom promise */}
+        <motion.div className="mt-8 text-center"
+        initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce} transition={{ delay: 0.3 }}>
+          <p className="text-[0.7rem] text-foreground/35 font-medium">
+            ✦ Qualsiasi funzionalità ti serva, la costruiamo. <span className="text-foreground/50 font-semibold">Dimmi cosa vuoi, noi lo realizziamo.</span>
+          </p>
         </motion.div>
       </Section>
 
       {/* ═══════════════════════════════════════════
                              IL PROBLEMA — Pain Points
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(345,20%,8%,0.96) 20%, hsla(350,16%,10%,0.96) 40%, hsla(265,18%,9%,0.96) 60%, hsla(345,14%,7%,0.96) 80%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         {/* Premium ambient glows — layered danger luxury */}
@@ -4380,7 +4448,7 @@ const LandingPage = () => {
                             ═══════════════════════════════════════════ */}
       <AIAgentsShowcase />
 
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(220,18%,11%,0.96) 30%, hsla(155,18%,9%,0.96) 50%, hsla(265,20%,10%,0.96) 70%, hsla(220,16%,8%,0.96) 85%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4587,7 +4655,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              COMPARISON TABLE — Empire vs Others
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.94) 15%, hsla(38,16%,9%,0.94) 35%, hsla(265,20%,10%,0.94) 55%, hsla(38,14%,8%,0.94) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4657,7 +4725,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              TECH DNA — Neural Network Visualization
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,26%,10%,0.94) 15%, hsla(230,20%,11%,0.94) 35%, hsla(265,22%,9%,0.94) 55%, hsla(230,18%,8%,0.94) 78%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4827,7 +4895,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              3 INTERFACCE — Mockup Showcase
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(38,18%,9%,0.96) 18%, hsla(265,20%,10%,0.96) 35%, hsla(38,14%,8%,0.96) 55%, hsla(265,18%,9%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -5551,7 +5619,7 @@ const LandingPage = () => {
 
       {/* ═══════════════════════════════════════════
                             ═══════════════════════════════════════════ */}
-      <Section id="process" className="relative overflow-hidden" style={{
+      <Section id="process" className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,5%,0.82) 0%, hsla(265,20%,10%,0.78) 35%, hsla(230,18%,9%,0.78) 65%, hsla(230,16%,5%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -6625,8 +6693,10 @@ const LandingPage = () => {
 
       {/* <SectionDivider /> — hidden redesign */}
 
-      {/* EMPIRE STORY & TEAM — hidden redesign */}
-      {/* <SectionDivider /> — hidden redesign */}
+      {/* EMPIRE STORY & TEAM */}
+      <Suspense fallback={null}>
+        <EmpireTeamStory />
+      </Suspense>
 
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
