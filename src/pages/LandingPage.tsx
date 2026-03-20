@@ -633,6 +633,37 @@ const SectionDivider = forwardRef<HTMLDivElement>((_, ref) =>
 );
 SectionDivider.displayName = "SectionDivider";
 
+/* ═══ Circuit SVG Pattern — for AI/DNA/Funzionalità sections ═══ */
+const CircuitPattern = () => (
+  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.08 }} xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="circuit-grid" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+        {/* Horizontal lines */}
+        <line x1="0" y1="30" x2="50" y2="30" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        <line x1="70" y1="30" x2="120" y2="30" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        {/* Vertical lines */}
+        <line x1="50" y1="0" x2="50" y2="30" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        <line x1="70" y1="30" x2="70" y2="90" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        <line x1="50" y1="90" x2="50" y2="120" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        {/* Right-angle connectors */}
+        <line x1="50" y1="90" x2="70" y2="90" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        {/* Nodes — luminous dots */}
+        <circle cx="50" cy="30" r="2.5" fill="rgba(201,168,76,0.3)" />
+        <circle cx="70" cy="30" r="1.5" fill="rgba(201,168,76,0.2)" />
+        <circle cx="70" cy="90" r="2.5" fill="rgba(201,168,76,0.3)" />
+        <circle cx="50" cy="90" r="1.5" fill="rgba(201,168,76,0.2)" />
+        {/* Bright pips at intersections */}
+        <circle cx="50" cy="30" r="1" fill="#C9A84C" opacity="0.4" />
+        <circle cx="70" cy="90" r="1" fill="#C9A84C" opacity="0.4" />
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#circuit-grid)" />
+    {/* Animated dash flow lines */}
+    <line x1="10%" y1="40%" x2="90%" y2="40%" stroke="rgba(201,168,76,0.08)" strokeWidth="0.5" className="circuit-line-animated" />
+    <line x1="50%" y1="10%" x2="50%" y2="90%" stroke="rgba(201,168,76,0.06)" strokeWidth="0.5" className="circuit-line-animated" style={{ animationDelay: "1s" }} />
+  </svg>
+);
+
 /* ═══ Comparison Row ═══ */
 const CompRow = ({ label, empire, others, icon }: {label: string;empire: string;others: string;icon?: string;}) =>
 <motion.div className="grid grid-cols-3 py-1.5 sm:py-2.5 border-b border-border/20 items-center text-[0.55rem] sm:text-sm"
