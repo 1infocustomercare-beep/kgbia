@@ -2109,8 +2109,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
               <div className="space-y-3">
                       <div>
                         <label className="text-[0.6rem] font-heading font-bold text-foreground/40 tracking-[1px] uppercase">Settore</label>
-                        <div className="mt-1 px-3 py-2 rounded-lg bg-foreground/[0.03] border border-border/20 text-xs text-foreground/60">
-                          {PRICING_SECTORS.find((s) => s.id === selectedSector)?.emoji} {PRICING_SECTORS.find((s) => s.id === selectedSector)?.label}
+                        <div className="mt-1 px-3 py-2 rounded-lg bg-foreground/[0.03] border border-border/20 text-xs text-foreground/60 flex items-center gap-1.5">
+                          {PRICING_SECTOR_ICONS[selectedSector]} {PRICING_SECTORS.find((s) => s.id === selectedSector)?.label}
                           {selectedPackage && <span className="ml-2 text-primary/60">· {PACKAGE_TIERS.find((p) => p.id === selectedPackage)?.name}</span>}
                         </div>
                       </div>
