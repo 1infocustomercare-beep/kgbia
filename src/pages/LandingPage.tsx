@@ -3477,16 +3477,24 @@ const LandingPage = () => {
                 <span className="text-vivid-gradient clip-reveal-text">amano</span>
               </motion.h1>
 
+              {/* ═══ PARTICLE SPHERE — Neural Core Effect ═══ */}
+              <motion.div className="relative mt-6 sm:mt-8 mx-auto flex items-center justify-center"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
+                <InteractiveParticleSphere size={IS_MOBILE_LP ? 220 : 340} />
+              </motion.div>
+
               {/* Subtitle */}
               <motion.p className="mt-4 sm:mt-5 text-[0.8rem] sm:text-[0.95rem] text-foreground/60 max-w-[520px] mx-auto leading-[1.75] font-normal"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}>
                 Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business.
                 <span className="text-foreground/75 font-medium"> 98+ agenti IA · <span className="text-primary font-semibold">25+ settori</span> · Zero canone.</span>
               </motion.p>
 
               {/* CTA */}
               <motion.div className="mt-6 flex flex-row items-center justify-center gap-3"
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}>
                 <motion.button
                   onClick={() => scrollTo("pricing")}
                   className="group relative px-6 py-3.5 rounded-full text-primary-foreground font-bold text-[0.75rem] font-heading tracking-wider uppercase overflow-hidden"
@@ -3512,7 +3520,7 @@ const LandingPage = () => {
 
               {/* Metrics — centered */}
               <motion.div className="mt-8 flex items-center justify-center gap-5 sm:gap-8 flex-wrap"
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, duration: 0.8 }}>
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.8 }}>
                 {metrics.map((m, i) =>
                 <div key={i} className="text-center">
                   <p className="text-lg sm:text-2xl font-heading font-bold text-foreground">
@@ -3523,14 +3531,6 @@ const LandingPage = () => {
                 )}
               </motion.div>
             </div>
-
-            {/* ═══ PARTICLE SPHERE — Neural Core Effect ═══ */}
-            <motion.div className="relative mt-8 sm:mt-10 mx-auto flex items-center justify-center"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.2, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
-              <InteractiveParticleSphere size={IS_MOBILE_LP ? 260 : 380} />
-            </motion.div>
 
             {/* PHONES: Each sector shows 3 real mockup screens (home, services, detail) */}
             <HeroPhoneCarousel sectors={heroCarouselSectors} />
