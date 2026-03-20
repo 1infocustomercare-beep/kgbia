@@ -2649,6 +2649,33 @@ const LandingPage = () => {
   const [expandMockups, setExpandMockups] = useState(false);
   const [expandTestimonials, setExpandTestimonials] = useState(false);
 
+  /* Build hero carousel sectors from real mockup data — 3 screens per sector */
+  const heroCarouselSectors = useMemo(() => {
+    const sectorEntries: { screens: [string, string, string]; label: string }[] = [];
+    const sectorLabels: Record<string, string> = {
+      food: "Food", ncc: "NCC", beauty: "Beauty", healthcare: "Healthcare",
+      retail: "Retail", fitness: "Fitness", hospitality: "Hotel", beach: "Beach",
+      plumber: "Artigiani", electrician: "Elettricisti", construction: "Edilizia",
+      events: "Eventi", garage: "Autofficine", logistics: "Logistica",
+      gardening: "Giardinaggio", veterinary: "Veterinari", photography: "Fotografia",
+      education: "Formazione", childcare: "Asili", tattoo: "Tattoo",
+      cleaning: "Pulizie", agriturismo: "Agriturismo", legal: "Legale",
+      accounting: "Contabilità",
+    };
+    for (const [key, imgs] of Object.entries(SECTOR_MOCKUP_IMAGES)) {
+      if (!imgs || imgs.length < 2) continue;
+      const label = sectorLabels[key] || key;
+      // Use first 3 images (or duplicate last if only 2)
+      const s: [string, string, string] = [
+        imgs[0],
+        imgs[1],
+        imgs[2] || imgs[1],
+      ];
+      sectorEntries.push({ screens: s, label });
+    }
+    return sectorEntries;
+  }, []);
+
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const isHeroInView = useInView(heroRef, { margin: "300px 0px -35% 0px" });
