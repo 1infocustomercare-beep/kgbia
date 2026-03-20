@@ -279,49 +279,60 @@ const PartnerDashboard = () => {
       
       {/* Back integrated in header */}
       {/* Header — Vibrant FLAVR style */}
-      <div className="relative flex items-center justify-between px-4 pt-3 pb-2 border-b border-empire-violet-deep/20 safe-top overflow-hidden" style={{ background: 'var(--gradient-dna-subtle)' }}>
+      <div className="relative flex flex-col items-center px-3 pt-3 pb-2 border-b border-empire-violet-deep/20 safe-top overflow-hidden" style={{ background: 'var(--gradient-dna-subtle)' }}>
         {/* DNA scan line */}
         <motion.div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: 'var(--gradient-dna)' }} animate={{ opacity: [0.2, 0.6, 0.2] }} transition={{ duration: 3, repeat: Infinity }} />
-        <div className="flex items-center gap-2.5 relative z-10">
-          <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-empire-violet to-empire-violet-deep flex items-center justify-center shadow-[var(--shadow-dna)] overflow-hidden">
-            <img src={empireMonkeyMascot} alt="Empire Monkey" className="w-9 h-9 object-contain drop-shadow-[0_0_6px_hsl(265_85%_65%/0.4)]" />
-          </div>
-          <div>
-            <h1 className="text-sm font-display font-bold text-foreground">
-              {demoMode ? "Empire Solutions" : isTeamLeader ? "Empire Team Leader" : "Empire Partner"}
-            </h1>
-            <p className="text-[10px] text-empire-violet-glow">
-              {demoMode ? "Enterprise Preview" : isTeamLeader ? `👑 Team Leader · ${teamMembers.length} membri` : bottomTabs.find(t => t.id === activeTab)?.label}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <GuidesToggle />
-          <motion.button
-            onClick={() => {
-              setDemoMode(!demoMode);
-              if (activeTab === "earnings" || activeTab === "investment" || activeTab === "vault" || activeTab === "team") setActiveTab("dashboard");
-            }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all ${
-              demoMode
-                ? "bg-vibrant-gradient text-primary-foreground shadow-lg shadow-primary/30"
-                : "bg-secondary text-muted-foreground hover:text-foreground"
-            }`}
-            whileTap={{ scale: 0.95 }}
-          >
-            {demoMode ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-            {demoMode ? "LIVE" : "DEMO"}
-          </motion.button>
-          {!demoMode && (
-            <>
-              <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center" title="Home">
+        
+        {/* Top row: back/home + actions */}
+        <div className="flex items-center justify-between w-full relative z-10 mb-1">
+          <div className="flex items-center gap-1">
+            {!demoMode && (
+              <button onClick={() => navigate("/home")} className="p-1.5 rounded-full hover:bg-secondary/60 min-w-[36px] min-h-[36px] flex items-center justify-center" title="Home">
                 <ArrowLeft className="w-4 h-4 text-muted-foreground" />
               </button>
-              <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center" title="Esci">
+            )}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <GuidesToggle />
+            <motion.button
+              onClick={() => {
+                setDemoMode(!demoMode);
+                if (activeTab === "earnings" || activeTab === "investment" || activeTab === "vault" || activeTab === "team") setActiveTab("dashboard");
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all ${
+                demoMode
+                  ? "bg-vibrant-gradient text-primary-foreground shadow-lg shadow-primary/30"
+                  : "bg-secondary text-muted-foreground hover:text-foreground"
+              }`}
+              whileTap={{ scale: 0.95 }}
+            >
+              {demoMode ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              {demoMode ? "LIVE" : "DEMO"}
+            </motion.button>
+            {!demoMode && (
+              <button onClick={handleLogout} className="p-1.5 rounded-full hover:bg-secondary/60 min-w-[36px] min-h-[36px] flex items-center justify-center" title="Esci">
                 <LogOut className="w-4 h-4 text-muted-foreground" />
               </button>
-            </>
-          )}
+            )}
+          </div>
+        </div>
+
+        {/* Center: big monkey logo + title */}
+        <div className="flex flex-col items-center gap-1 relative z-10 pb-1">
+          <motion.div 
+            className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-empire-violet to-empire-violet-deep flex items-center justify-center shadow-[var(--shadow-dna)] overflow-hidden"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          >
+            <img src={empireMonkeyMascot} alt="Empire Monkey" className="w-14 h-14 object-contain drop-shadow-[0_0_8px_hsl(265_85%_65%/0.5)]" />
+          </motion.div>
+          <h1 className="text-sm font-display font-bold text-foreground text-center">
+            {demoMode ? "Empire Solutions" : isTeamLeader ? "Empire Team Leader" : "Empire Partner"}
+          </h1>
+          <p className="text-[10px] text-empire-violet-glow text-center">
+            {demoMode ? "Enterprise Preview" : isTeamLeader ? `👑 Team Leader · ${teamMembers.length} membri` : bottomTabs.find(t => t.id === activeTab)?.label}
+          </p>
         </div>
       </div>
 
