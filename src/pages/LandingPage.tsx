@@ -3422,22 +3422,26 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
               <motion.button
                 onClick={() => scrollTo("pricing")}
-                className="group relative w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
-                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsla(265,70%,60%,0.25)" }}
+                className="group relative w-full sm:w-auto px-7 sm:px-8 py-4 sm:py-4 rounded-full text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--empire-violet)), hsl(var(--neon-magenta) / 0.85), hsl(38,55%,50%))",
+                  boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.3), 0 0 0 1px hsl(var(--empire-violet) / 0.2)"
+                }}
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(var(--empire-violet) / 0.4), 0 0 60px hsl(var(--neon-magenta) / 0.15)" }}
                 whileTap={{ scale: 0.97 }}>
                 
                 <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/10 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
                 <span className="relative flex items-center justify-center gap-2">
-                  Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  🚀 Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </motion.button>
               <motion.button
                 onClick={() => navigate("/demo")}
-                className="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground hover:bg-primary/[0.03] transition-all flex items-center justify-center gap-2"
-                style={{ border: "1px solid hsla(35,45%,50%,0.12)" }}
-                whileHover={{ scale: 1.01, borderColor: "hsla(35,45%,50%,0.25)" }}>
+                className="w-full sm:w-auto px-7 sm:px-8 py-4 sm:py-4 rounded-full text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all flex items-center justify-center gap-2"
+                style={{ border: "1px solid hsl(var(--neon-emerald) / 0.15)" }}
+                whileHover={{ scale: 1.01, borderColor: "hsl(var(--neon-emerald) / 0.3)", boxShadow: "0 0 20px hsl(var(--neon-emerald) / 0.08)" }}>
                 
-                <Play className="w-4 h-4" style={{ color: "hsla(35,45%,55%,0.6)" }} /> Vedi Demo Live
+                <Play className="w-4 h-4 text-neon-emerald" /> Vedi Demo Live
               </motion.button>
             </motion.div>
 
