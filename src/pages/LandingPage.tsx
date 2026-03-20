@@ -102,7 +102,7 @@ function useLandingAssets() {
   };
 }
 
-const SafeEmpireVoiceAgent = () => <EmpireVoiceAgent />;
+const SafeEmpireVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
 /* ═══════════════════════════════════════════
    HELPERS

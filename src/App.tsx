@@ -262,14 +262,21 @@ const PageLoader = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-3 px-6 text-center">
-      <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      <p className="text-xs text-muted-foreground tracking-wide">Caricamento…</p>
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center"
+      style={{ background: "linear-gradient(180deg, hsl(230,16%,4%) 0%, hsl(230,14%,6%) 100%)" }}>
+      <div className="relative">
+        <div className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
+          style={{ borderTopColor: "hsla(38,50%,55%,0.8)", borderRightColor: "hsla(38,50%,55%,0.3)" }} />
+        <div className="absolute inset-0 w-10 h-10 rounded-full animate-pulse"
+          style={{ boxShadow: "0 0 20px hsla(38,50%,55%,0.15)" }} />
+      </div>
+      <p className="text-xs font-heading tracking-[3px] uppercase" style={{ color: "hsla(38,50%,55%,0.5)" }}>Caricamento…</p>
       {stalled && (
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="rounded-xl bg-primary text-primary-foreground px-4 py-2 text-xs font-medium"
+          className="rounded-xl px-5 py-2.5 text-xs font-bold font-heading tracking-wider uppercase"
+          style={{ background: "linear-gradient(135deg, hsla(38,55%,48%,1), hsla(34,50%,42%,1))", color: "#fff" }}
         >
           Riprova ora
         </button>
