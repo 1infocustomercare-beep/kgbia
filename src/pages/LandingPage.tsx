@@ -3324,18 +3324,15 @@ const LandingPage = () => {
         {/* ═══ LAYER 0: Clean premium gradient background ═══ */}
         <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(220 25% 96%) 0%, hsl(215 30% 94%) 25%, hsl(240 20% 96%) 50%, hsl(200 25% 95%) 75%, hsl(220 20% 97%) 100%)" }} />
 
-        {/* ═══ LAYER 1: Soft ambient blobs ═══ */}
+        {/* ═══ LAYER 1: Vivid ambient blobs ═══ */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
           <div className="aurora-blob-1 absolute w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(215 90% 52% / 0.08), transparent 65%)", filter: "blur(100px)", top: "5%", left: "10%" }} />
-          <div className="aurora-blob-2 absolute w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(248 60% 56% / 0.06), transparent 65%)", filter: "blur(100px)", top: "15%", right: "5%" }} />
-          <div className="aurora-blob-3 absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(168 72% 38% / 0.06), transparent 65%)", filter: "blur(100px)", bottom: "10%", left: "35%" }} />
+            style={{ background: "radial-gradient(circle, hsl(215 90% 52% / 0.18), hsl(215 80% 60% / 0.06) 50%, transparent 70%)", filter: "blur(80px)", top: "0%", left: "5%" }} />
+          <div className="aurora-blob-2 absolute w-[450px] h-[450px] sm:w-[650px] sm:h-[650px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(248 65% 58% / 0.16), hsl(248 50% 65% / 0.05) 50%, transparent 70%)", filter: "blur(80px)", top: "10%", right: "0%" }} />
+          <div className="aurora-blob-3 absolute w-[400px] h-[400px] sm:w-[550px] sm:h-[550px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(168 72% 40% / 0.14), hsl(168 60% 50% / 0.04) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
         </div>
-
-        {/* ═══ LAYER 1b: Subtle geometric grid ═══ */}
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 3, opacity: 0.04, backgroundImage: "linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
