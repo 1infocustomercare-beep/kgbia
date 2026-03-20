@@ -3487,29 +3487,25 @@ const LandingPage = () => {
       {/* ═══════ TRUST MARQUEE ═══════ */}
       <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden" style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,16%,8%,0.99) 50%, hsla(0,0%,4%,0.99) 100%)" }}>
         <div className="flex animate-marquee-scroll whitespace-nowrap">
-          {[...Array(2)].map((_, repeat) =>
-          <div key={repeat} className="flex items-center gap-12 px-6">
+        {[...Array(2)].map((_, repeat) =>
+          <div key={repeat} className="flex items-center gap-10 px-5">
               {[
-            { icon: <CreditCard className="w-3 h-3" />, text: "Stripe Connect" },
-            { icon: <Lock className="w-3 h-3" />, text: "AES-256" },
-            { icon: <Smartphone className="w-3 h-3" />, text: "PWA Certified" },
-            { icon: <Shield className="w-3 h-3" />, text: "GDPR Compliant" },
-            { icon: <Zap className="w-3 h-3" />, text: "99.9% Uptime" },
-            { icon: <Cpu className="w-3 h-3" />, text: "AI-Powered" },
-            { icon: <MapPin className="w-3 h-3" />, text: "Made in Italy" },
-            { icon: <Fingerprint className="w-3 h-3" />, text: "White Label" },
-            { icon: <Globe className="w-3 h-3" />, text: "25+ Settori" },
-            { icon: <Timer className="w-3 h-3" />, text: "Attivo in 24h" },
-            { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali" }].
+            { icon: <CreditCard className="w-3 h-3" />, text: "Stripe Connect", color: "var(--neon-emerald)" },
+            { icon: <Lock className="w-3 h-3" />, text: "AES-256", color: "var(--empire-violet)" },
+            { icon: <Smartphone className="w-3 h-3" />, text: "PWA Certified", color: "var(--neon-cyan)" },
+            { icon: <Shield className="w-3 h-3" />, text: "GDPR Compliant", color: "var(--neon-emerald)" },
+            { icon: <Zap className="w-3 h-3" />, text: "99.9% Uptime", color: "var(--neon-magenta)" },
+            { icon: <Cpu className="w-3 h-3" />, text: "20+ Agenti IA", color: "var(--empire-violet)" },
+            { icon: <MapPin className="w-3 h-3" />, text: "Made in Italy", color: "var(--neon-emerald)" },
+            { icon: <Fingerprint className="w-3 h-3" />, text: "White Label", color: "var(--neon-cyan)" },
+            { icon: <Globe className="w-3 h-3" />, text: "25+ Settori", color: "var(--neon-magenta)" },
+            { icon: <Timer className="w-3 h-3" />, text: "Attivo in 24h", color: "var(--neon-emerald)" },
+            { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali", color: "var(--empire-violet)" }].
             map((t, i) =>
-            <span key={i} className="text-[0.6rem] text-foreground/20 font-heading tracking-[3px] uppercase flex items-center gap-2 group/trust">
-                  <motion.span
-                className="text-primary/40 group-hover/trust:text-primary/70 transition-colors"
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 12, repeat: Infinity, ease: "linear", delay: i * 0.5 }}>
-                
+            <span key={i} className="text-[0.6rem] text-foreground/25 font-heading tracking-[2.5px] uppercase flex items-center gap-2 group/trust">
+                  <span className="transition-colors" style={{ color: `hsl(${t.color} / 0.5)` }}>
                     {t.icon}
-                  </motion.span>
+                  </span>
                   {t.text}
                 </span>
             )}
