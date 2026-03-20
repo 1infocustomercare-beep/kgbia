@@ -853,11 +853,39 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    // Hard handoff: prevent splash TTS from blocking/canceling Arianna.
-    stopSplashNarration();
-    abortRef.current = false;
+    // Wait for splash narration ("Benvenuto in Empire AI Group") to finish
+    // before starting Arianna's hero narration — prevents voice overlap
+    const waitForSplashThenStart = () => {
+      if (isSplashNarrationDone() || !isSplashNarrationSpeaking()) {
+        // Splash is done, now stop any remnants and start Arianna
+        stopSplashNarration();
+        abortRef.current = false;
+        // Small delay to ensure clean audio handoff
+        setTimeout(() => {
+          if (!abortRef.current) {
+            enqueueSectionNarration("hero", true);
+          }
+        }, 300);
+      } else {
+        // Splash still speaking — poll until done (check every 200ms, max 12s)
+        let checks = 0;
+        const pollTimer = setInterval(() => {
+          checks++;
+          if (isSplashNarrationDone() || !isSplashNarrationSpeaking() || checks > 60) {
+            clearInterval(pollTimer);
+            stopSplashNarration();
+            abortRef.current = false;
+            setTimeout(() => {
+              if (!abortRef.current) {
+                enqueueSectionNarration("hero", true);
+              }
+            }, 300);
+          }
+        }, 200);
+      }
+    };
 
-    enqueueSectionNarration("hero", true);
+    waitForSplashThenStart();
   }, [enqueueSectionNarration]);
 
   const stopAll = useCallback(() => {
