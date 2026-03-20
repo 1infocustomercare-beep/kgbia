@@ -4,6 +4,7 @@
  * Rich, sector-specific, with realistic mock data
  */
 import { useState, useMemo, useEffect, useRef } from "react";
+import { getAdminLayout, type AdminLayoutConfig } from "@/config/admin-layout-config";
 import { TutorialPopup } from "@/components/ui/tutorial-popup";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -1037,6 +1038,7 @@ export default function DemoAdminPage() {
   const config = getSectorConfig(resolvedSector || "food");
   const allAgents = useMemo(() => getAllAgentsForSector(resolvedSector || "food"), [resolvedSector]);
   const sectorKey = resolvedSector || "food";
+  const layoutConfig = useMemo(() => getAdminLayout(sectorKey), [sectorKey]);
   const revenueData = useMemo(() => generateRevenueData(sectorKey), [sectorKey]);
   const calendarData = useMemo(generateCalendarDays, []);
 
@@ -1065,14 +1067,14 @@ export default function DemoAdminPage() {
   // ── Sidebar ──
   const SidebarInner = () => (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4" style={{ borderBottom: layoutConfig.sidebarStyle === "accent-bar" ? `1px solid ${accentColor}20` : "1px solid rgba(255,255,255,0.1)" }}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ background: accentColor }}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ background: layoutConfig.sidebarStyle === "accent-bar" ? `${accentColor}25` : accentColor, boxShadow: layoutConfig.accentGlow ? `0 0 20px ${accentColor}30` : undefined }}>
             {config.heroEmoji}
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-sm font-bold text-white truncate">{config.name}</h2>
-            <p className="text-[0.55rem] text-white/35">Empire AI Platform</p>
+            <p className="text-[0.55rem] text-white/35">{layoutConfig.type === "operations" ? "Operations Hub" : layoutConfig.type === "services" ? "Service Studio" : layoutConfig.type === "professional" ? "Professional Suite" : layoutConfig.type === "creative" ? "Creative Studio" : layoutConfig.type === "care" ? "Care Platform" : layoutConfig.type === "mobility" ? "Mobility Center" : layoutConfig.type === "commerce" ? "Commerce Hub" : "Empire AI Platform"}</p>
           </div>
         </div>
       </div>
@@ -1085,7 +1087,12 @@ export default function DemoAdminPage() {
           return (
             <button key={mod.route} onClick={() => { setActiveModule(mod.route); setSidebarOpen(false); }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group ${isActive ? "text-white" : "text-white/45 hover:text-white/75 hover:bg-white/[0.04]"}`}
-              style={isActive ? { background: `${accentColor}18`, color: accentColor } : {}}>
+              style={isActive ? {
+                background: layoutConfig.sidebarStyle === "accent-bar" ? `${accentColor}20` : layoutConfig.sidebarStyle === "glass" ? `${accentColor}12` : `${accentColor}18`,
+                color: accentColor,
+                borderLeft: layoutConfig.sidebarStyle === "accent-bar" ? `3px solid ${accentColor}` : undefined,
+                boxShadow: layoutConfig.sidebarStyle === "glass" ? `inset 0 0 20px ${accentColor}08` : undefined,
+              } : {}}>
               <Icon className="w-4 h-4 shrink-0" />
               <span className="flex-1 text-left">{mod.label}</span>
               {badgeCount > 0 && (
@@ -1133,34 +1140,66 @@ export default function DemoAdminPage() {
         </Button>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      {/* KPI Cards — styled per layoutConfig */}
+      <div className={`grid gap-3 ${layoutConfig.kpiStyle === "inline" ? "grid-cols-2 sm:grid-cols-5" : layoutConfig.kpiStyle === "pill" ? "grid-cols-2 lg:grid-cols-5" : "grid-cols-2 lg:grid-cols-4 xl:grid-cols-5"}`}>
         {kpis.map((kpi, i) => {
           const Icon = resolveIcon(kpi.icon);
           const displayValue = kpi.label.includes("Rating") ? (kpi.value / 10).toFixed(1) : undefined;
+          const cardBg = layoutConfig.cardStyle === "glass" ? `rgba(255,255,255,0.025)` : layoutConfig.cardStyle === "gradient" ? `linear-gradient(135deg, rgba(255,255,255,0.03), ${accentColor}08)` : layoutConfig.cardStyle === "elevated" ? "rgba(255,255,255,0.04)" : layoutConfig.cardStyle === "outlined" ? "transparent" : "rgba(255,255,255,0.03)";
+          const cardBorder = layoutConfig.cardStyle === "glass" ? `1px solid rgba(255,255,255,0.06)` : layoutConfig.cardStyle === "gradient" ? `1px solid ${accentColor}15` : layoutConfig.cardStyle === "elevated" ? `1px solid rgba(255,255,255,0.08)` : layoutConfig.cardStyle === "outlined" ? `1px solid rgba(255,255,255,0.1)` : "1px solid rgba(255,255,255,0.06)";
           return (
             <motion.div key={kpi.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
-              <Card className="bg-white/[0.03] border-white/[0.06] hover:border-white/[0.12] transition-all group">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${accentColor}15` }}>
-                      <Icon className="w-4 h-4" style={{ color: accentColor }} />
+              <Card className="transition-all group hover:scale-[1.02]" style={{ background: cardBg, border: cardBorder, boxShadow: layoutConfig.cardStyle === "elevated" ? `0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px ${accentColor}08` : layoutConfig.cardStyle === "glass" ? `inset 0 1px 0 rgba(255,255,255,0.04), 0 4px 24px rgba(0,0,0,0.2)` : undefined, backdropFilter: layoutConfig.cardStyle === "glass" ? "blur(12px)" : undefined }}>
+                <CardContent className={layoutConfig.kpiStyle === "inline" ? "p-3" : layoutConfig.kpiStyle === "pill" ? "p-3 flex items-center gap-3" : "p-4"}>
+                  {layoutConfig.kpiStyle === "pill" ? (
+                    <>
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: `${accentColor}15` }}>
+                        <Icon className="w-4 h-4" style={{ color: accentColor }} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-lg font-bold text-white leading-none">{displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}</p>
+                        <p className="text-[0.55rem] text-white/35 mt-0.5">{kpi.label}</p>
+                      </div>
+                      <span className={`text-[0.55rem] font-bold ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>{kpi.change}</span>
+                    </>
+                  ) : layoutConfig.kpiStyle === "ring" ? (
+                    <div className="text-center">
+                      <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-2" style={{ border: `3px solid ${accentColor}30`, background: `${accentColor}08` }}>
+                        <Icon className="w-5 h-5" style={{ color: accentColor }} />
+                      </div>
+                      <p className="text-lg font-bold text-white leading-none">{displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}</p>
+                      <p className="text-[0.55rem] text-white/35 mt-1">{kpi.label}</p>
+                      <span className={`text-[0.5rem] font-bold ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>{kpi.up ? "↑" : "↓"} {kpi.change}</span>
                     </div>
-                    <span className={`text-[0.6rem] font-bold flex items-center gap-0.5 ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>
-                      {kpi.up ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
-                      {kpi.change}
-                    </span>
-                  </div>
-                  <p className="text-xl font-bold text-white leading-none">
-                    {displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}
-                  </p>
-                  <p className="text-[0.6rem] text-white/35 mt-1">{kpi.label}</p>
-                  {/* Mini sparkline mock */}
-                  <div className="flex items-end gap-px mt-2 h-4">
-                    {[3, 5, 4, 7, 6, 8, 7, 9, 8, 10, 9, 11].map((h, j) => (
-                      <div key={j} className="flex-1 rounded-sm transition-all" style={{ height: `${h * 10}%`, background: j >= 10 ? accentColor : `${accentColor}30` }} />
-                    ))}
-                  </div>
+                  ) : layoutConfig.kpiStyle === "inline" ? (
+                    <div className="flex items-center gap-2">
+                      <Icon className="w-4 h-4 shrink-0" style={{ color: accentColor }} />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[0.55rem] text-white/35">{kpi.label}</p>
+                        <p className="text-base font-bold text-white leading-none">{displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}</p>
+                      </div>
+                      <span className={`text-[0.5rem] font-bold ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>{kpi.change}</span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${accentColor}15` }}>
+                          <Icon className="w-4 h-4" style={{ color: accentColor }} />
+                        </div>
+                        <span className={`text-[0.6rem] font-bold flex items-center gap-0.5 ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>
+                          {kpi.up ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
+                          {kpi.change}
+                        </span>
+                      </div>
+                      <p className="text-xl font-bold text-white leading-none">{displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}</p>
+                      <p className="text-[0.6rem] text-white/35 mt-1">{kpi.label}</p>
+                      <div className="flex items-end gap-px mt-2 h-4">
+                        {[3, 5, 4, 7, 6, 8, 7, 9, 8, 10, 9, 11].map((h, j) => (
+                          <div key={j} className="flex-1 rounded-sm transition-all" style={{ height: `${h * 10}%`, background: j >= 10 ? accentColor : `${accentColor}30` }} />
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
@@ -2264,20 +2303,30 @@ export default function DemoAdminPage() {
   };
 
   return (
-    <div className="min-h-screen flex relative" style={{ background: "linear-gradient(145deg, #0c0a14 0%, #0a0a12 40%, #0d0b10 100%)" }}>
-      {/* Premium sector-themed ambient background with enhanced glows */}
+    <div className="min-h-screen flex relative" style={{ background: layoutConfig.bgGradient }}>
+      {/* Premium sector-themed ambient background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Primary sector glow — top-left */}
-        <div className="absolute rounded-full opacity-[0.06]"
-          style={{ top: "-8%", left: "-5%", width: "600px", height: "600px", background: `radial-gradient(circle, ${accentColor}, transparent 65%)`, filter: "blur(100px)" }} />
-        {/* Secondary glow — bottom-right */}
-        <div className="absolute rounded-full opacity-[0.04]"
-          style={{ bottom: "-8%", right: "-5%", width: "550px", height: "550px", background: `radial-gradient(circle, ${accentColor}, transparent 70%)`, filter: "blur(130px)" }} />
+        {/* Primary sector glow */}
+        <div className="absolute rounded-full" style={{ top: "-8%", left: "-5%", width: "600px", height: "600px", opacity: layoutConfig.accentGlow ? 0.08 : 0.04, background: `radial-gradient(circle, ${accentColor}, transparent 65%)`, filter: "blur(100px)" }} />
+        {/* Secondary glow */}
+        <div className="absolute rounded-full" style={{ bottom: "-8%", right: "-5%", width: "550px", height: "550px", opacity: layoutConfig.accentGlow ? 0.06 : 0.03, background: `radial-gradient(circle, ${accentColor}, transparent 70%)`, filter: "blur(130px)" }} />
         {/* Center ambient */}
-        <div className="absolute rounded-full opacity-[0.025]"
-          style={{ top: "40%", left: "50%", width: "500px", height: "500px", background: `radial-gradient(circle, ${accentColor}, transparent 60%)`, filter: "blur(110px)", transform: "translate(-50%, -50%)" }} />
-        {/* Subtle grid */}
-        <div className="absolute inset-0" style={{ opacity: 0.015, backgroundImage: "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+        {layoutConfig.accentGlow && (
+          <div className="absolute rounded-full opacity-[0.03]" style={{ top: "40%", left: "50%", width: "500px", height: "500px", background: `radial-gradient(circle, ${accentColor}, transparent 60%)`, filter: "blur(110px)", transform: "translate(-50%, -50%)" }} />
+        )}
+        {/* Background pattern */}
+        {layoutConfig.bgPattern === "grid" && (
+          <div className="absolute inset-0" style={{ opacity: 0.02, backgroundImage: "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
+        )}
+        {layoutConfig.bgPattern === "dots" && (
+          <div className="absolute inset-0" style={{ opacity: 0.03, backgroundImage: `radial-gradient(circle, ${accentColor}30 1px, transparent 1px)`, backgroundSize: "32px 32px" }} />
+        )}
+        {layoutConfig.bgPattern === "diagonal" && (
+          <div className="absolute inset-0" style={{ opacity: 0.015, backgroundImage: `repeating-linear-gradient(45deg, ${accentColor}10, ${accentColor}10 1px, transparent 1px, transparent 40px)` }} />
+        )}
+        {layoutConfig.bgPattern === "mesh" && (
+          <div className="absolute inset-0" style={{ opacity: 0.02, backgroundImage: `radial-gradient(ellipse at 20% 50%, ${accentColor}15 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, ${accentColor}10 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, ${accentColor}08 0%, transparent 50%)` }} />
+        )}
         {/* Top accent line */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-px" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}25, transparent)` }} />
       </div>
@@ -2286,8 +2335,16 @@ export default function DemoAdminPage() {
         <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-[#0d0d1a] border-r border-white/[0.06] transform transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      {/* Sidebar — styled per layout config */}
+      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 transform transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        style={{
+          background: layoutConfig.sidebarStyle === "glass" ? "rgba(13,13,26,0.7)" : layoutConfig.sidebarStyle === "accent-bar" ? `linear-gradient(180deg, ${accentColor}08, rgba(13,13,26,0.95))` : layoutConfig.sidebarStyle === "floating" ? "rgba(20,20,35,0.85)" : "#0d0d1a",
+          backdropFilter: layoutConfig.sidebarStyle === "glass" || layoutConfig.sidebarStyle === "floating" ? "blur(20px) saturate(1.5)" : undefined,
+          borderRight: layoutConfig.sidebarStyle === "accent-bar" ? `2px solid ${accentColor}30` : layoutConfig.sidebarStyle === "minimal" ? "none" : "1px solid rgba(255,255,255,0.06)",
+          borderRadius: layoutConfig.sidebarStyle === "floating" ? "0 24px 24px 0" : undefined,
+          margin: layoutConfig.sidebarStyle === "floating" ? "12px 0 12px 0" : undefined,
+          boxShadow: layoutConfig.sidebarStyle === "floating" ? `0 0 40px rgba(0,0,0,0.5), inset 0 0 30px ${accentColor}05` : layoutConfig.sidebarStyle === "glass" ? `inset -1px 0 0 ${accentColor}08` : undefined,
+        }}>
         <SidebarInner />
       </aside>
 
