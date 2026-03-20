@@ -4,6 +4,23 @@ import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { MockupLightbox } from "@/components/ui/mockup-lightbox";
+import {
+  ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
+  Calendar, Wrench, Zap, Grape, SprayCan, Scale, Calculator,
+  Hammer, Camera, TreePine, PawPrint, Brush, Baby, GraduationCap,
+  PartyPopper, Truck, Settings, Umbrella, type LucideIcon,
+} from "lucide-react";
+
+const SECTOR_ICONS: Record<string, LucideIcon> = {
+  food: ChefHat, ncc: Car, beauty: Scissors, healthcare: Heart,
+  retail: Store, fitness: Dumbbell, hospitality: Building,
+  beach: Umbrella, plumber: Wrench, electrician: Zap,
+  agriturismo: Grape, cleaning: SprayCan, legal: Scale,
+  accounting: Calculator, garage: Wrench, photography: Camera,
+  construction: Hammer, gardening: TreePine, veterinary: PawPrint,
+  tattoo: Brush, childcare: Baby, education: GraduationCap,
+  events: PartyPopper, logistics: Truck, custom: Settings,
+};
 
 /* ═══════════════════════════════════════════
    PER-SECTOR SCREEN STYLES
