@@ -1086,12 +1086,12 @@ const EmpireVoiceAgent: React.FC = () => {
       // Force next narration attempt to run immediately in this gesture context
       preferImmediateNarrationRef.current = true;
 
-      // Stop splash narration and wait for it to fully clear before starting Arianna
-      stopSplashNarration();
+      // Don't stop splash narration here — let startIntroNarration handle
+      // the handoff by waiting for "Benvenuto" to finish naturally
       abortRef.current = false;
 
-      // Delay Arianna start to let splash narration fully stop (prevent overlap)
-      const startDelay = isFirstUnlock ? 400 : 0;
+      // Small delay to let the gesture propagate
+      const startDelay = isFirstUnlock ? 200 : 0;
 
       setTimeout(() => {
         if (!isMounted || abortRef.current || queueProcessingRef.current) return;
