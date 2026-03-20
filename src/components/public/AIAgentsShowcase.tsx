@@ -822,14 +822,15 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           </div>
         </motion.div>
 
-        {/* ══════ EXPANDED AGENT DETAIL ══════ */}
+        {/* ══════ EXPANDED AGENT DETAIL — Luxury Card ══════ */}
         <AnimatePresence>
           {activeAgent && (
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
               className="mb-6 overflow-hidden">
-              <div className="rounded-xl border overflow-hidden" style={{
-                borderColor: `${activeAgent.glow}45`,
-                background: "linear-gradient(145deg, hsla(265,18%,13%,0.99), hsla(265,25%,9%,1))"
+              <div className="rounded-2xl border overflow-hidden" style={{
+                borderColor: `${activeAgent.glow}35`,
+                background: "linear-gradient(160deg, hsla(230,20%,13%,0.98), hsla(255,22%,9%,0.99))",
+                boxShadow: `0 12px 48px hsla(0,0%,0%,0.3), 0 0 24px ${activeAgent.glow}10`,
               }}>
                 <div className="relative h-[3px] overflow-hidden">
                   <motion.div className="absolute inset-0" style={{ background: `linear-gradient(90deg, transparent, ${activeAgent.glow}, transparent)` }}
@@ -843,37 +844,39 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                     <div className="flex items-center gap-3">
                       <RobotAvatar agent={activeAgent} size={56} isActive={true} isConnected={false} />
                       <div>
-                        <h3 className="font-bold text-sm sm:text-base text-foreground">{activeAgent.name}</h3>
-                        <p className="text-[0.5rem] text-primary/85 uppercase tracking-widest">{activeAgent.role}</p>
+                        <h3 className="font-bold text-sm sm:text-base" style={{ color: "hsla(0,0%,100%,0.95)" }}>{activeAgent.name}</h3>
+                        <p className="text-[0.5rem] uppercase tracking-widest" style={{ color: "hsl(215,80%,70%)" }}>{activeAgent.role}</p>
                       </div>
                     </div>
-                    <button onClick={() => setExpandedAgent(null)} className="w-7 h-7 rounded-full border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
-                      <X className="w-3.5 h-3.5 text-foreground/80" />
+                    <button onClick={() => setExpandedAgent(null)} className="w-7 h-7 rounded-full border flex items-center justify-center transition-colors"
+                      style={{ borderColor: "hsla(220,15%,35%,0.5)" }}>
+                      <X className="w-3.5 h-3.5" style={{ color: "hsla(0,0%,100%,0.7)" }} />
                     </button>
                   </div>
 
-                  <p className="text-xs text-foreground/80 leading-relaxed mb-3">{activeAgent.desc}</p>
+                  <p className="text-xs leading-relaxed mb-3" style={{ color: "hsla(220,15%,80%,0.85)" }}>{activeAgent.desc}</p>
 
-                  <div className="rounded-lg border p-3 mb-4" style={{ borderColor: `${activeAgent.glow}55`, background: `${activeAgent.glow}1A` }}>
+                  <div className="rounded-xl border p-3 mb-4" style={{ borderColor: `${activeAgent.glow}40`, background: `${activeAgent.glow}12` }}>
                     <p className="text-xs leading-[1.6]">
-                      <strong className="text-foreground">⚡ Perché ti serve:</strong>{" "}
-                      <span className="text-foreground/90">{activeAgent.whyNeed}</span>
+                      <strong style={{ color: "hsla(0,0%,100%,0.95)" }}>⚡ Perché ti serve:</strong>{" "}
+                      <span style={{ color: "hsla(220,15%,82%,0.9)" }}>{activeAgent.whyNeed}</span>
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-1.5 mb-4">
                     {activeAgent.capabilities.map((cap, ci) => (
-                      <div key={ci} className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-border bg-background/60">
+                      <div key={ci} className="flex items-center gap-1.5 px-2 py-1.5 rounded-xl border"
+                        style={{ borderColor: "hsla(220,15%,30%,0.45)", background: "hsla(230,18%,14%,0.7)" }}>
                         <motion.div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: activeAgent.glow }}
                           animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity, delay: ci * 0.2 }} />
-                        <span className="text-[0.55rem] text-foreground/85">{cap}</span>
+                        <span className="text-[0.55rem]" style={{ color: "hsla(220,15%,80%,0.85)" }}>{cap}</span>
                       </div>
                     ))}
                   </div>
 
                   <div className="flex items-center gap-1.5 mb-2">
-                    <Network className="w-3 h-3 text-primary/80" />
-                    <span className="text-[0.5rem] font-bold text-primary/80 tracking-widest uppercase">
+                    <Network className="w-3 h-3" style={{ color: "hsl(215,80%,65%)" }} />
+                    <span className="text-[0.5rem] font-bold tracking-widest uppercase" style={{ color: "hsl(215,80%,70%)" }}>
                       Connesso a {activeAgent.connections.length} agenti
                     </span>
                   </div>
@@ -883,12 +886,13 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
                       if (!conn) return null;
                       return (
                         <button key={connId} onClick={(e) => { e.stopPropagation(); setExpandedAgent(connId); }}
-                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-primary/25 bg-primary/[0.09] hover:bg-primary/[0.14] transition-colors">
+                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition-colors"
+                          style={{ borderColor: "hsla(215,60%,50%,0.25)", background: "hsla(215,50%,45%,0.1)" }}>
                           <div className={`w-5 h-5 rounded-md overflow-hidden bg-gradient-to-br ${conn.gradient} flex items-center justify-center`}>
                             <div className="text-white scale-[0.5]">{conn.icon}</div>
                           </div>
-                          <span className="text-[0.5rem] font-semibold text-foreground/90">{conn.name}</span>
-                          <motion.div className="w-1.5 h-1.5 rounded-full bg-emerald-400"
+                          <span className="text-[0.5rem] font-semibold" style={{ color: "hsla(0,0%,100%,0.88)" }}>{conn.name}</span>
+                          <motion.div className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(150,70%,55%)" }}
                             animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.5, repeat: Infinity }} />
                         </button>
                       );
