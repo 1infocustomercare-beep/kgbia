@@ -3340,20 +3340,17 @@ const LandingPage = () => {
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
-            {/* Clean badge — neon accent */}
-            <motion.div className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-full border bg-primary/[0.04] mb-5 sm:mb-7 ${IS_MOBILE_LP ? "" : "backdrop-blur-sm"}`}
-            style={{ borderColor: "hsl(var(--neon-emerald) / 0.25)", boxShadow: "0 0 20px hsl(var(--neon-emerald) / 0.06)" }}
+            {/* Clean badge */}
+            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-2xl mb-5 sm:mb-7"
+            style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <motion.span className="w-2 h-2 rounded-full" style={{ background: "hsl(var(--neon-emerald))" }}
-              animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />
-              <span className="text-[0.6rem] sm:text-[0.65rem] font-heading font-bold tracking-[2px] uppercase text-neon-emerald">🤖 Piattaforma AI All-in-One per PMI</span>
+              <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)))", boxShadow: "0 2px 8px hsl(var(--neon-emerald) / 0.3)" }}>
+                <Bot className="w-3 h-3 text-white" />
+              </div>
+              <span className="text-[0.6rem] sm:text-[0.65rem] font-heading font-bold tracking-[2px] uppercase text-foreground/70">Piattaforma AI All-in-One per PMI</span>
             </motion.div>
 
-            {/* Gradient glow behind title */}
-            <div className="absolute -inset-8 pointer-events-none hero-gradient-glow -z-10"
-              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsla(265,70%,55%,0.15), hsla(160,60%,45%,0.06), transparent 70%)" }} />
-
-            {/* Headline — larger, clearer, vivid */}
+            {/* Headline */}
             <motion.h1 className="text-[1.85rem] leading-[1.05] sm:text-[3.4rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em] px-2 sm:px-0 relative"
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
               <span className="text-foreground">Gestione, IA e</span>
@@ -3363,11 +3360,11 @@ const LandingPage = () => {
               <span className="text-vivid-gradient clip-reveal-text">Tuo Business</span>
             </motion.h1>
 
-            {/* Subtitle — clearer value prop */}
-            <motion.p className="mt-4 sm:mt-6 text-[0.85rem] sm:text-lg text-foreground/50 max-w-[540px] leading-[1.75] sm:leading-[1.8] font-light px-2 sm:px-0"
+            {/* Subtitle */}
+            <motion.p className="mt-4 sm:mt-6 text-[0.85rem] sm:text-lg text-foreground/70 max-w-[540px] leading-[1.75] sm:leading-[1.8] font-normal px-2 sm:px-0"
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
               App dedicata, 98+ agenti IA, CRM, prenotazioni, pagamenti e marketing —
-              <span className="text-foreground/70 font-medium"> tutto integrato per <span className="text-neon-emerald font-semibold">25+ settori</span>. Zero canone mensile, solo risultati.</span>
+              <span className="text-foreground/85 font-medium"> tutto integrato per <span className="text-primary font-semibold">25+ settori</span>. Zero canone mensile, solo risultati.</span>
             </motion.p>
 
             {/* ═══ Interactive AI Particle Sphere ═══ */}
