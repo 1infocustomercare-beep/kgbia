@@ -572,11 +572,11 @@
   .aurora-mesh {
     background: linear-gradient(
       -45deg,
-      hsla(230, 12%, 14%, 0.3),
-      hsla(225, 10%, 12%, 0.2),
-      hsla(235, 8%, 10%, 0.35),
-      hsla(220, 10%, 14%, 0.12),
-      hsla(230, 12%, 12%, 0.3)
+      hsla(220, 20%, 97%, 0.3),
+      hsla(215, 15%, 95%, 0.2),
+      hsla(248, 12%, 96%, 0.35),
+      hsla(220, 15%, 98%, 0.12),
+      hsla(220, 20%, 97%, 0.3)
     );
     background-size: 400% 400%;
     animation: aurora 15s ease infinite;
