@@ -22,6 +22,61 @@ const SECTOR_ICONS: Record<string, LucideIcon> = {
   events: PartyPopper, logistics: Truck, custom: Settings,
 };
 
+/* Premium app-icon style per settore — gradient + icona */
+const SECTOR_APP_ICON: Record<string, { gradient: string; shadow: string }> = {
+  food:         { gradient: "linear-gradient(135deg, #FF6B35, #E85D04)", shadow: "0 4px 14px rgba(232,93,4,0.35)" },
+  ncc:          { gradient: "linear-gradient(135deg, #C9A84C, #8B6F2E)", shadow: "0 4px 14px rgba(201,168,76,0.35)" },
+  beauty:       { gradient: "linear-gradient(135deg, #E091C9, #C44FA0)", shadow: "0 4px 14px rgba(224,145,201,0.35)" },
+  healthcare:   { gradient: "linear-gradient(135deg, #4ECDC4, #2AB5AC)", shadow: "0 4px 14px rgba(78,205,196,0.35)" },
+  retail:       { gradient: "linear-gradient(135deg, #667EEA, #764BA2)", shadow: "0 4px 14px rgba(102,126,234,0.35)" },
+  fitness:      { gradient: "linear-gradient(135deg, #F7971E, #FFD200)", shadow: "0 4px 14px rgba(247,151,30,0.35)" },
+  hospitality:  { gradient: "linear-gradient(135deg, #1A2980, #26D0CE)", shadow: "0 4px 14px rgba(26,41,128,0.35)" },
+  beach:        { gradient: "linear-gradient(135deg, #00B4DB, #0083B0)", shadow: "0 4px 14px rgba(0,180,219,0.35)" },
+  plumber:      { gradient: "linear-gradient(135deg, #2980B9, #3498DB)", shadow: "0 4px 14px rgba(41,128,185,0.35)" },
+  electrician:  { gradient: "linear-gradient(135deg, #F39C12, #E67E22)", shadow: "0 4px 14px rgba(243,156,18,0.35)" },
+  agriturismo:  { gradient: "linear-gradient(135deg, #6B8E23, #9ACD32)", shadow: "0 4px 14px rgba(107,142,35,0.35)" },
+  cleaning:     { gradient: "linear-gradient(135deg, #00CED1, #20B2AA)", shadow: "0 4px 14px rgba(0,206,209,0.35)" },
+  legal:        { gradient: "linear-gradient(135deg, #34495E, #5D6D7E)", shadow: "0 4px 14px rgba(52,73,94,0.35)" },
+  accounting:   { gradient: "linear-gradient(135deg, #2C3E50, #4CA1AF)", shadow: "0 4px 14px rgba(44,62,80,0.35)" },
+  garage:       { gradient: "linear-gradient(135deg, #D35400, #E74C3C)", shadow: "0 4px 14px rgba(211,84,0,0.35)" },
+  photography:  { gradient: "linear-gradient(135deg, #302B63, #24243E)", shadow: "0 4px 14px rgba(48,43,99,0.35)" },
+  construction: { gradient: "linear-gradient(135deg, #F2994A, #F2C94C)", shadow: "0 4px 14px rgba(242,153,74,0.35)" },
+  gardening:    { gradient: "linear-gradient(135deg, #11998E, #38EF7D)", shadow: "0 4px 14px rgba(17,153,142,0.35)" },
+  veterinary:   { gradient: "linear-gradient(135deg, #7B68EE, #9B59B6)", shadow: "0 4px 14px rgba(123,104,238,0.35)" },
+  tattoo:       { gradient: "linear-gradient(135deg, #1C1C1C, #434343)", shadow: "0 4px 14px rgba(28,28,28,0.35)" },
+  childcare:    { gradient: "linear-gradient(135deg, #FF9A9E, #FECFEF)", shadow: "0 4px 14px rgba(255,154,158,0.35)" },
+  education:    { gradient: "linear-gradient(135deg, #667DB6, #0082C8)", shadow: "0 4px 14px rgba(102,125,182,0.35)" },
+  events:       { gradient: "linear-gradient(135deg, #ED4264, #FFEDBC)", shadow: "0 4px 14px rgba(237,66,100,0.35)" },
+  logistics:    { gradient: "linear-gradient(135deg, #0F2027, #2C5364)", shadow: "0 4px 14px rgba(15,32,39,0.35)" },
+  custom:       { gradient: "linear-gradient(135deg, #8E2DE2, #4A00E0)", shadow: "0 4px 14px rgba(142,45,226,0.35)" },
+};
+
+function SectorAppIcon({ id, size = 40 }: { id: string; size?: number }) {
+  const Icon = SECTOR_ICONS[id];
+  const style = SECTOR_APP_ICON[id] || { gradient: "linear-gradient(135deg, #666, #999)", shadow: "none" };
+  const iconSize = Math.round(size * 0.48);
+  const radius = Math.round(size * 0.26);
+
+  return (
+    <div
+      className="flex items-center justify-center flex-shrink-0"
+      style={{
+        width: size,
+        height: size,
+        borderRadius: radius,
+        background: style.gradient,
+        boxShadow: style.shadow,
+      }}
+    >
+      {Icon ? (
+        <Icon style={{ width: iconSize, height: iconSize }} className="text-white drop-shadow-sm" />
+      ) : (
+        <span style={{ fontSize: iconSize }} className="drop-shadow-sm">{INDUSTRY_CONFIGS[id as IndustryId]?.emoji || "⚙️"}</span>
+      )}
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════
    PER-SECTOR SCREEN STYLES
    Each sector gets unique gradients, layouts, KPIs and visual identity
@@ -3024,10 +3079,7 @@ export function IndustryShowcaseSection({
     <div className="py-6">
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}>
-            {(() => { const Icon = SECTOR_ICONS[industryId]; return Icon ? <Icon className="w-5 h-5" style={{ color: cfg.defaultPrimaryColor }} /> : <span className="text-xl">{cfg.emoji}</span>; })()}
-          </div>
+          <SectorAppIcon id={industryId} size={40} />
           <div>
             <h3 className="text-sm font-bold text-white">{cfg.label}</h3>
             <p className="text-[10px] text-white/35">{demo.companyName} · {cfg.description}</p>
@@ -3161,12 +3213,7 @@ export function AllIndustriesShowcase({ onViewDemo }: { onViewDemo?: (id: Indust
                   onClick={() => setOpenSector(isOpen ? null : id)}
                   className="w-full flex items-center gap-3 p-3.5 active:scale-[0.98] transition-transform"
                 >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}
-                  >
-                    {(() => { const Icon = SECTOR_ICONS[id]; return Icon ? <Icon className="w-5 h-5" style={{ color: cfg.defaultPrimaryColor }} /> : <span className="text-lg">{cfg.emoji}</span>; })()}
-                  </div>
+                  <SectorAppIcon id={id} size={40} />
                   <div className="flex-1 text-left min-w-0">
                     <p className="text-sm font-bold text-white truncate">{cfg.label}</p>
                     <p className="text-[10px] text-white/35 truncate">{demo?.companyName || cfg.description}</p>
