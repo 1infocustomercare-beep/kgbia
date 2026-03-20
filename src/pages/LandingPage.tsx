@@ -3335,12 +3335,16 @@ const LandingPage = () => {
               <span className="text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase" style={{ color: "hsla(35,45%,55%,0.94)" }}>Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
-            {/* Headline — gold shimmer */}
-            <motion.h1 className="text-[1.7rem] leading-[1.08] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] font-heading font-bold tracking-[-0.03em] px-4 sm:px-0"
+            {/* Gradient glow behind title */}
+            <div className="absolute -inset-8 pointer-events-none hero-gradient-glow -z-10"
+              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsla(38,55%,50%,0.12), hsla(265,50%,50%,0.06), transparent 70%)" }} />
+
+            {/* Headline — gold shimmer + clip reveal */}
+            <motion.h1 className="text-[1.7rem] leading-[1.08] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] font-heading font-bold tracking-[-0.03em] px-4 sm:px-0 relative"
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
               <span className="text-foreground">Modernizziamo</span>
               <br />
-              <span className="text-gold-shimmer">Qualsiasi Business</span>
+              <span className="text-gold-shimmer clip-reveal-text">Qualsiasi Business</span>
             </motion.h1>
 
             {/* Subtitle */}
