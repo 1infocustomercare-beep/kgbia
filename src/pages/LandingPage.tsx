@@ -3438,7 +3438,7 @@ const LandingPage = () => {
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
                   {/* Label */}
-                  <p className="text-[0.55rem] sm:text-[0.65rem] mt-2 tracking-[2.5px] uppercase font-heading font-semibold relative z-10 text-foreground/40">{m.label}</p>
+                  <p className="text-[0.55rem] sm:text-[0.65rem] mt-2 tracking-[2.5px] uppercase font-heading font-semibold relative z-10 text-foreground/65">{m.label}</p>
                 </motion.div>
               )}
             </motion.div>
