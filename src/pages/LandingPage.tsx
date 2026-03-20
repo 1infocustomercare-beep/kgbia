@@ -3413,65 +3413,91 @@ const LandingPage = () => {
               </motion.div>
             </div>
 
-            {/* RIGHT: iPhone mockups — prominent and beautiful */}
-            <motion.div className="relative mt-8 lg:mt-0 flex-shrink-0 flex items-end justify-center lg:justify-end"
+            {/* RIGHT: 3 iPhone mockups — like reference images */}
+            <motion.div className="relative mt-10 lg:mt-0 flex-shrink-0 flex items-end justify-center lg:justify-end"
             initial={{ opacity: 0, x: 40, scale: 0.92 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
 
               {/* Ambient glow behind phones */}
-              <div className="absolute inset-[-20%] rounded-full blur-[100px] pointer-events-none"
-                style={{ background: "radial-gradient(ellipse 80% 70% at 50% 50%, hsla(265,55%,55%,0.15), hsla(168,50%,45%,0.08), transparent 70%)" }} />
+              <div className="absolute inset-[-25%] rounded-full blur-[120px] pointer-events-none"
+                style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsla(265,50%,50%,0.12), hsla(168,45%,45%,0.08), transparent 70%)" }} />
 
-              {/* Phone pair container */}
-              <div className="relative flex items-end gap-3 sm:gap-4">
+              {/* Three phone container */}
+              <div className="relative flex items-end gap-[-8px]">
                 
-                {/* Phone 1 — taller, front */}
-                <motion.div className="relative z-10"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-                  <div className="relative w-[145px] sm:w-[180px] lg:w-[220px] aspect-[9/19.5] rounded-[22px] sm:rounded-[28px] border-[2.5px] overflow-hidden"
-                  style={{ borderColor: "hsl(220 15% 80%)", background: "#0d0d14", boxShadow: "0 25px 60px hsla(0,0%,0%,0.2), 0 8px 24px hsla(265,40%,40%,0.1), inset 0 1px 0 hsla(0,0%,100%,0.05)" }}>
-                    {/* Dynamic Island */}
-                    <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[40px] sm:w-[50px] h-[12px] sm:h-[14px] bg-black rounded-full z-30" style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
-                    {/* Screen content */}
-                    <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden">
-                      <img src={sectorHeroFood} alt="Food App Demo" className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
-                      {/* Subtle gradient overlay at top for status bar */}
-                      <div className="absolute inset-x-0 top-0 h-8" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.3), transparent)" }} />
+                {/* Phone 1 — LEFT, slightly behind */}
+                <motion.div className="relative z-[5]"
+                style={{ marginBottom: "32px", marginRight: "-18px" }}
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}>
+                  <div className="relative w-[120px] sm:w-[155px] lg:w-[185px] aspect-[9/19.5] rounded-[24px] sm:rounded-[32px] overflow-hidden"
+                  style={{ 
+                    border: "2.5px solid hsl(220 12% 82%)", 
+                    background: "#0a0a12", 
+                    boxShadow: "0 30px 60px hsla(0,0%,0%,0.2), 0 8px 24px hsla(265,30%,30%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.06)" 
+                  }}>
+                    <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[36px] sm:w-[46px] h-[11px] sm:h-[13px] bg-black rounded-full z-30" style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
+                    <div className="absolute inset-[2px] rounded-[22px] sm:rounded-[30px] overflow-hidden">
+                      <img src={sectorHeroNcc} alt="NCC App Demo" className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
+                      <div className="absolute inset-x-0 top-0 h-10" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.35), transparent)" }} />
                     </div>
-                    {/* Home indicator */}
                     <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[32%] h-[3px] bg-white/20 rounded-full z-20" />
+                    {/* Reflection */}
+                    <div className="absolute inset-0 rounded-[24px] sm:rounded-[32px] pointer-events-none" style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.08) 0%, transparent 40%)" }} />
                   </div>
                 </motion.div>
 
-                {/* Phone 2 — slightly behind and offset */}
-                <motion.div className="relative -ml-6 sm:-ml-4 lg:-ml-2 z-[5]"
-                style={{ marginBottom: "24px" }}
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}>
-                  <div className="relative w-[135px] sm:w-[170px] lg:w-[200px] aspect-[9/19.5] rounded-[22px] sm:rounded-[28px] border-[2.5px] overflow-hidden"
-                  style={{ borderColor: "hsl(220 15% 80%)", background: "#0d0d14", boxShadow: "0 20px 50px hsla(0,0%,0%,0.15), 0 6px 20px hsla(168,40%,40%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.05)" }}>
-                    {/* Dynamic Island */}
-                    <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[38px] sm:w-[46px] h-[11px] sm:h-[13px] bg-black rounded-full z-30" style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
-                    {/* Screen content */}
-                    <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden">
-                      <img src={sectorHeroBeauty} alt="Beauty App Demo" className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
-                      <div className="absolute inset-x-0 top-0 h-8" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.3), transparent)" }} />
+                {/* Phone 2 — CENTER, tallest and front */}
+                <motion.div className="relative z-20"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
+                  <div className="relative w-[150px] sm:w-[195px] lg:w-[235px] aspect-[9/19.5] rounded-[26px] sm:rounded-[36px] overflow-hidden"
+                  style={{ 
+                    border: "3px solid hsl(220 10% 78%)", 
+                    background: "#0a0a12", 
+                    boxShadow: "0 40px 80px hsla(0,0%,0%,0.25), 0 12px 32px hsla(265,40%,35%,0.12), inset 0 1px 0 hsla(0,0%,100%,0.08)" 
+                  }}>
+                    <div className="absolute top-[7px] sm:top-[9px] left-1/2 -translate-x-1/2 w-[42px] sm:w-[54px] h-[12px] sm:h-[15px] bg-black rounded-full z-30" style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
+                    <div className="absolute inset-[2px] rounded-[24px] sm:rounded-[34px] overflow-hidden">
+                      <img src={sectorHeroFood} alt="Food App Demo" className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
+                      <div className="absolute inset-x-0 top-0 h-10" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.3), transparent)" }} />
                     </div>
-                    {/* Home indicator */}
+                    <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[32%] h-[4px] bg-white/25 rounded-full z-20" />
+                    {/* Reflection shine */}
+                    <div className="absolute inset-0 rounded-[26px] sm:rounded-[36px] pointer-events-none" style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.1) 0%, transparent 35%)" }} />
+                  </div>
+                </motion.div>
+
+                {/* Phone 3 — RIGHT, slightly behind */}
+                <motion.div className="relative z-[8]"
+                style={{ marginBottom: "20px", marginLeft: "-18px" }}
+                animate={{ y: [0, -7, 0] }}
+                transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}>
+                  <div className="relative w-[125px] sm:w-[160px] lg:w-[190px] aspect-[9/19.5] rounded-[24px] sm:rounded-[32px] overflow-hidden"
+                  style={{ 
+                    border: "2.5px solid hsl(220 12% 82%)", 
+                    background: "#0a0a12", 
+                    boxShadow: "0 25px 55px hsla(0,0%,0%,0.18), 0 6px 20px hsla(168,35%,35%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.06)" 
+                  }}>
+                    <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[37px] sm:w-[47px] h-[11px] sm:h-[13px] bg-black rounded-full z-30" style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
+                    <div className="absolute inset-[2px] rounded-[22px] sm:rounded-[30px] overflow-hidden">
+                      <img src={sectorHeroBeauty} alt="Beauty App Demo" className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
+                      <div className="absolute inset-x-0 top-0 h-10" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.35), transparent)" }} />
+                    </div>
                     <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[32%] h-[3px] bg-white/20 rounded-full z-20" />
+                    <div className="absolute inset-0 rounded-[24px] sm:rounded-[32px] pointer-events-none" style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.08) 0%, transparent 40%)" }} />
                   </div>
                 </motion.div>
               </div>
 
               {/* Floating live feed card — overlapping phones bottom */}
-              <motion.div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-[85%] max-w-[280px] z-20"
+              <motion.div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[88%] max-w-[300px] z-30"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.5, duration: 0.6 }}>
                 <div className="rounded-2xl overflow-hidden backdrop-blur-xl border"
-                style={{ background: "hsla(0,0%,100%,0.85)", borderColor: "hsl(var(--border) / 0.4)", boxShadow: "0 8px 32px hsla(0,0%,0%,0.08), 0 2px 8px hsla(265,40%,40%,0.06)" }}>
+                style={{ background: "hsla(0,0%,100%,0.88)", borderColor: "hsl(var(--border) / 0.4)", boxShadow: "0 10px 40px hsla(0,0%,0%,0.1), 0 2px 8px hsla(265,40%,40%,0.06)" }}>
                   <LiveFeedSimulator />
                 </div>
               </motion.div>
