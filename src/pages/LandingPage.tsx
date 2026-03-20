@@ -3495,7 +3495,7 @@ const LandingPage = () => {
             { icon: <Smartphone className="w-3 h-3" />, text: "PWA Certified", color: "var(--neon-cyan)" },
             { icon: <Shield className="w-3 h-3" />, text: "GDPR Compliant", color: "var(--neon-emerald)" },
             { icon: <Zap className="w-3 h-3" />, text: "99.9% Uptime", color: "var(--neon-magenta)" },
-            { icon: <Cpu className="w-3 h-3" />, text: "20+ Agenti IA", color: "var(--empire-violet)" },
+            { icon: <Cpu className="w-3 h-3" />, text: "98+ Agenti IA", color: "var(--empire-violet)" },
             { icon: <MapPin className="w-3 h-3" />, text: "Made in Italy", color: "var(--neon-emerald)" },
             { icon: <Fingerprint className="w-3 h-3" />, text: "White Label", color: "var(--neon-cyan)" },
             { icon: <Globe className="w-3 h-3" />, text: "25+ Settori", color: "var(--neon-magenta)" },
