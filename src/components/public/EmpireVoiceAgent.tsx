@@ -6,7 +6,7 @@ import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
 import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
-import { stopSplashNarration } from "@/lib/splash-narration";
+import { stopSplashNarration, isSplashNarrationDone, isSplashNarrationSpeaking } from "@/lib/splash-narration";
 import { ARIANNA_SYSTEM_PROMPT } from "@/config/ariannaPrompt";
 import { claimVoiceAgent, releaseVoiceAgent, isVoiceAgentActive, getActiveVoiceAgent } from "@/lib/voice-agent-mutex";
 
@@ -853,11 +853,39 @@ const EmpireVoiceAgent: React.FC = () => {
     autoNarratingRef.current = true;
     setAutoNarrating(true);
 
-    // Hard handoff: prevent splash TTS from blocking/canceling Arianna.
-    stopSplashNarration();
-    abortRef.current = false;
+    // Wait for splash narration ("Benvenuto in Empire AI Group") to finish
+    // before starting Arianna's hero narration — prevents voice overlap
+    const waitForSplashThenStart = () => {
+      if (isSplashNarrationDone() || !isSplashNarrationSpeaking()) {
+        // Splash is done, now stop any remnants and start Arianna
+        stopSplashNarration();
+        abortRef.current = false;
+        // Small delay to ensure clean audio handoff
+        setTimeout(() => {
+          if (!abortRef.current) {
+            enqueueSectionNarration("hero", true);
+          }
+        }, 300);
+      } else {
+        // Splash still speaking — poll until done (check every 200ms, max 12s)
+        let checks = 0;
+        const pollTimer = setInterval(() => {
+          checks++;
+          if (isSplashNarrationDone() || !isSplashNarrationSpeaking() || checks > 60) {
+            clearInterval(pollTimer);
+            stopSplashNarration();
+            abortRef.current = false;
+            setTimeout(() => {
+              if (!abortRef.current) {
+                enqueueSectionNarration("hero", true);
+              }
+            }, 300);
+          }
+        }, 200);
+      }
+    };
 
-    enqueueSectionNarration("hero", true);
+    waitForSplashThenStart();
   }, [enqueueSectionNarration]);
 
   const stopAll = useCallback(() => {
@@ -1007,6 +1035,15 @@ const EmpireVoiceAgent: React.FC = () => {
         return;
       }
 
+      // CRITICAL: If intro narration already started, just mark unlocked and return
+      // This prevents touching the screen from restarting Arianna's speech
+      if (introStartedRef.current) {
+        audioUnlockedRef.current = true;
+        userInteractedRef.current = true;
+        setUserInteracted(true);
+        return;
+      }
+
       // CRITICAL: If Arianna is already speaking/processing, never restart or re-enqueue
       if (queueProcessingRef.current) {
         // Still mark as unlocked + interacted, but don't re-enqueue anything
@@ -1049,12 +1086,12 @@ const EmpireVoiceAgent: React.FC = () => {
       // Force next narration attempt to run immediately in this gesture context
       preferImmediateNarrationRef.current = true;
 
-      // Stop splash narration and wait for it to fully clear before starting Arianna
-      stopSplashNarration();
+      // Don't stop splash narration here — let startIntroNarration handle
+      // the handoff by waiting for "Benvenuto" to finish naturally
       abortRef.current = false;
 
-      // Delay Arianna start to let splash narration fully stop (prevent overlap)
-      const startDelay = isFirstUnlock ? 400 : 0;
+      // Small delay to let the gesture propagate
+      const startDelay = isFirstUnlock ? 200 : 0;
 
       setTimeout(() => {
         if (!isMounted || abortRef.current || queueProcessingRef.current) return;
