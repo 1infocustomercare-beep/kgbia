@@ -2753,8 +2753,8 @@ const LandingPage = () => {
 
   return (
     <div
-      className="min-h-screen overflow-x-hidden relative landing-noise-off"
-      style={{ background: "linear-gradient(180deg, hsl(var(--deep-black)) 0%, hsl(var(--deep-black)) 100%)" }}>
+      className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury"
+      style={{ background: "radial-gradient(120% 80% at 50% 35%, hsl(214 28% 96%) 0%, hsl(220 26% 94%) 40%, hsl(224 20% 90%) 64%, hsl(228 26% 86%) 100%)" }}>
       
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
