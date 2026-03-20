@@ -3455,88 +3455,92 @@ const LandingPage = () => {
           <div className="flex flex-col items-center">
             
             {/* CENTER: Text content */}
-            <div className="text-center max-w-[680px] mx-auto">
+            <div className="text-center max-w-[680px] mx-auto px-4 sm:px-0">
 
               {/* Badge */}
-              <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl mb-5"
+              <motion.div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl mb-4 sm:mb-5"
               style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-                <div className="w-5 h-5 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)))", boxShadow: "0 2px 8px hsl(var(--neon-emerald) / 0.3)" }}>
+                <div className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)))", boxShadow: "0 2px 8px hsl(var(--neon-emerald) / 0.3)" }}>
                   <Bot className="w-2.5 h-2.5 text-white" />
                 </div>
                 <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/70">Studio di App & AI</span>
               </motion.div>
 
               {/* Headline */}
-              <motion.h1 className="text-[1.75rem] leading-[1.08] sm:text-[2.8rem] lg:text-[3.6rem] font-heading font-bold tracking-[-0.03em] relative"
+              <motion.h1 className="text-[1.6rem] leading-[1.12] sm:text-[2.6rem] lg:text-[3.4rem] font-heading font-bold tracking-[-0.03em] relative px-1"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}
               style={{ textWrap: "balance" as any }}>
                 <span className="text-foreground">Progettiamo app che le persone amano</span>
               </motion.h1>
 
               {/* ═══ PARTICLE SPHERE — Neural Core Effect ═══ */}
-              <motion.div className="relative mt-6 sm:mt-8 mx-auto flex items-center justify-center"
+              <motion.div className="relative mt-5 sm:mt-8 mx-auto flex items-center justify-center"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.8, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
-                <InteractiveParticleSphere size={IS_MOBILE_LP ? 220 : 340} />
+                <InteractiveParticleSphere size={IS_MOBILE_LP ? 180 : 340} />
               </motion.div>
 
               {/* Subtitle */}
-              <motion.p className="mt-4 sm:mt-5 text-[0.8rem] sm:text-[0.95rem] text-foreground/60 max-w-[520px] mx-auto leading-[1.75] font-normal"
+              <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] text-foreground/60 max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}>
                 Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business.
                 <span className="text-foreground/75 font-medium"> 98+ agenti IA · <span className="text-primary font-semibold">25+ settori</span> · Zero canone.</span>
               </motion.p>
 
               {/* CTA */}
-              <motion.div className="mt-6 flex flex-row items-center justify-center gap-3"
+              <motion.div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}>
                 <motion.button
                   onClick={() => scrollTo("pricing")}
-                  className="group relative px-6 py-3.5 rounded-full text-primary-foreground font-bold text-[0.75rem] font-heading tracking-wider uppercase overflow-hidden"
+                  className="group relative w-full sm:w-auto px-6 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-primary-foreground font-bold text-[0.72rem] sm:text-[0.75rem] font-heading tracking-wider uppercase overflow-hidden"
                   style={{
                     background: "linear-gradient(135deg, hsl(var(--empire-violet)), hsl(var(--neon-magenta) / 0.85), hsl(38,55%,50%))",
-                    boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.3), 0 0 0 1px hsl(var(--empire-violet) / 0.2)"
+                    boxShadow: "0 4px 20px hsl(var(--empire-violet) / 0.25), 0 0 0 1px hsl(var(--empire-violet) / 0.15)"
                   }}
                   whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(var(--empire-violet) / 0.4)" }}
                   whileTap={{ scale: 0.97 }}>
                   <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/10 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
-                  <span className="relative flex items-center gap-2">
+                  <span className="relative flex items-center justify-center gap-2">
                     Avvia il tuo progetto <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </motion.button>
                 <motion.button
                   onClick={() => navigate("/demo")}
-                  className="px-5 py-3.5 rounded-full text-foreground/55 text-[0.75rem] font-semibold font-heading tracking-wide hover:text-foreground transition-all flex items-center gap-2"
-                  style={{ border: "1px solid hsl(var(--border) / 0.6)" }}
+                  className="w-full sm:w-auto px-5 py-3 sm:py-3.5 rounded-2xl sm:rounded-full text-foreground/60 text-[0.72rem] sm:text-[0.75rem] font-semibold font-heading tracking-wide hover:text-foreground transition-all flex items-center justify-center gap-2"
+                  style={{
+                    border: "1px solid hsl(var(--border) / 0.5)",
+                    background: "hsl(var(--card) / 0.4)",
+                    backdropFilter: "blur(8px)"
+                  }}
                   whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.3)" }}>
                   <Eye className="w-3.5 h-3.5 text-primary/60" /> Guarda i nostri lavori
                 </motion.button>
               </motion.div>
 
               {/* Metrics — centered */}
-              <motion.div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full max-w-xl mx-auto"
+              <motion.div className="mt-6 sm:mt-8 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-lg sm:max-w-xl mx-auto"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.8 }}>
                 {metrics.map((m, i) =>
                 <motion.div
                   key={i}
-                  className="relative group text-center px-4 py-4 rounded-2xl overflow-hidden"
+                  className="relative group text-center px-3 py-3 sm:px-4 sm:py-4 rounded-2xl overflow-hidden"
                   style={{
-                    background: "hsl(var(--card) / 0.6)",
+                    background: "hsl(var(--card) / 0.55)",
                     backdropFilter: "blur(16px)",
                     WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid hsl(var(--border) / 0.5)",
-                    boxShadow: "0 2px 16px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.08)"
+                    border: "1px solid hsl(var(--border) / 0.4)",
+                    boxShadow: "0 2px 12px hsl(var(--primary) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.06)"
                   }}
                   whileHover={{ y: -2, boxShadow: "0 8px 32px hsl(var(--primary) / 0.12), inset 0 1px 0 hsl(0 0% 100% / 0.12)" }}
                   transition={{ duration: 0.25 }}
                 >
                   <span className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <p className="relative text-xl sm:text-2xl font-heading font-bold text-foreground">
+                  <p className="relative text-lg sm:text-2xl font-heading font-bold text-foreground">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="relative text-[0.5rem] sm:text-[0.55rem] tracking-[1.5px] uppercase font-heading font-semibold text-muted-foreground mt-1">{m.label}</p>
+                  <p className="relative text-[0.48rem] sm:text-[0.55rem] tracking-[1.2px] sm:tracking-[1.5px] uppercase font-heading font-semibold text-muted-foreground mt-0.5 sm:mt-1">{m.label}</p>
                 </motion.div>
                 )}
               </motion.div>
