@@ -1132,8 +1132,8 @@
     transform: translate(-50%, -50%);
     width: 4px; height: 4px;
     border-radius: 50%;
-    background: hsl(38, 50%, 55%);
-    box-shadow: 0 0 12px hsla(38, 50%, 55%, 0.4), 0 0 24px hsla(35, 45%, 55%, 0.2);
+    background: hsl(210, 100%, 62%);
+    box-shadow: 0 0 12px hsla(210, 100%, 62%, 0.4), 0 0 24px hsla(172, 80%, 48%, 0.2);
   }
 
   .animated-grid-bg {
