@@ -1089,13 +1089,13 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
     }}>
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.04]"
-        style={{ background: "radial-gradient(ellipse, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(150px)" }} />
+        style={{ background: "radial-gradient(ellipse, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(60px)" }} />
         <div className="absolute top-[30%] left-[12%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
-        style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+        style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(60px)" }} />
         <div className="absolute bottom-[18%] right-[15%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-        style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+        style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
         <div className="absolute bottom-[30%] left-[28%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-        style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+        style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(60px)" }} />
         <div className="absolute top-[15%] right-[25%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
         style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -3447,7 +3447,7 @@ const LandingPage = () => {
             style={{ background: "radial-gradient(circle, hsl(150 60% 36% / 0.15), hsl(145 50% 45% / 0.05) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
           {/* Central emerald glow behind sphere */}
           <div className="absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ background: "radial-gradient(circle, hsl(160 70% 40% / 0.12), hsl(168 60% 45% / 0.04) 55%, transparent 75%)", filter: "blur(100px)" }} />
+            style={{ background: "radial-gradient(circle, hsl(160 70% 40% / 0.12), hsl(168 60% 45% / 0.04) 55%, transparent 75%)", filter: "blur(60px)" }} />
         </div>
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
@@ -4211,16 +4211,16 @@ const LandingPage = () => {
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
           <div className="absolute top-[6%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           {/* Emerald tech — center-right */}
           <div className="absolute top-[35%] right-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           {/* Gold accent — bottom-center */}
           <div className="absolute bottom-[12%] left-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(60px)" }} />
           {/* Secondary violet — bottom-right */}
           <div className="absolute bottom-[30%] right-[20%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           {/* Soft emerald spark — top-right */}
           <div className="absolute top-[10%] right-[28%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(155,55%,48%,0.3), transparent 60%)", filter: "blur(85px)" }} />
@@ -4418,16 +4418,16 @@ const LandingPage = () => {
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           {/* Gold accent — center-right */}
           <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           {/* Wide violet wash — center */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(ellipse, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(150px)" }} />
+          style={{ background: "radial-gradient(ellipse, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           {/* Secondary gold — bottom-left */}
           <div className="absolute bottom-[15%] left-[15%] w-[400px] h-[400px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           {/* Emerald spark — top-right */}
           <div className="absolute top-[12%] right-[28%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(155,50%,48%,0.25), transparent 60%)", filter: "blur(85px)" }} />
@@ -4487,13 +4487,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[35%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] left-[35%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[30%] right-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(155,55%,48%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -4657,13 +4657,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[32%] left-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] right-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[28%] left-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[14%] left-[35%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -4903,13 +4903,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] left-[32%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[30%] right-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[14%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -5236,13 +5236,13 @@ const LandingPage = () => {
         <CircuitPattern />
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[35%] left-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] right-[28%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[28%] left-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] left-[32%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -5388,8 +5388,8 @@ const LandingPage = () => {
         background: "linear-gradient(180deg, hsla(230,16%,5%,0.82) 0%, hsla(265,20%,10%,0.78) 35%, hsla(230,18%,9%,0.78) 65%, hsla(230,16%,5%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.4), transparent 70%)", filter: "blur(130px)" }} />
-          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 70%)", filter: "blur(110px)" }} />
+          <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.4), transparent 70%)", filter: "blur(60px)" }} />
+          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 70%)", filter: "blur(60px)" }} />
         </div>
         <div className="text-center mb-12">
           <SectionLabel text="Processo" icon={<Zap className="w-3 h-3 text-primary" />} />
@@ -5667,9 +5667,9 @@ const LandingPage = () => {
           {/* Ambient */}
           <div className="absolute inset-0 pointer-events-none z-0">
             <div className="absolute top-[10%] right-[15%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
-            style={{ background: "radial-gradient(circle, hsla(150,60%,50%,0.5), transparent 65%)", filter: "blur(120px)" }} />
+            style={{ background: "radial-gradient(circle, hsla(150,60%,50%,0.5), transparent 65%)", filter: "blur(60px)" }} />
             <div className="absolute bottom-[20%] left-[10%] w-[400px] h-[400px] rounded-full opacity-[0.035]"
-            style={{ background: "radial-gradient(circle, hsla(38,60%,50%,0.4), transparent 65%)", filter: "blur(110px)" }} />
+            style={{ background: "radial-gradient(circle, hsla(38,60%,50%,0.4), transparent 65%)", filter: "blur(60px)" }} />
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
             style={{ background: "linear-gradient(90deg, transparent, hsla(150,55%,50%,0.18), hsla(265,50%,55%,0.12), transparent)" }} />
           </div>
@@ -5957,13 +5957,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[32%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] right-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[28%] left-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -6053,13 +6053,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[32%] left-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] right-[28%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[30%] left-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] left-[32%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -6184,13 +6184,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[6%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] left-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[28%] right-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -6359,13 +6359,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[32%] right-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] left-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[28%] right-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -6509,15 +6509,15 @@ const LandingPage = () => {
           {/* Top accent line — tricolore viola/oro/verde */}
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.4) 20%, hsla(38,65%,55%,0.35) 40%, hsla(155,60%,50%,0.3) 60%, hsla(38,65%,55%,0.35) 80%, transparent 95%)" }} />
           {/* Violet Imperial glow — top right */}
-          <div className="absolute top-[5%] right-[18%] w-[380px] h-[320px] rounded-full" style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.5), transparent 65%)", filter: "blur(140px)" }} />
+          <div className="absolute top-[5%] right-[18%] w-[380px] h-[320px] rounded-full" style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.5), transparent 65%)", filter: "blur(60px)" }} />
           {/* Gold ambient glow — center left */}
-          <div className="absolute top-[25%] left-[12%] w-[340px] h-[280px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(120px)" }} />
+          <div className="absolute top-[25%] left-[12%] w-[340px] h-[280px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(60px)" }} />
           {/* Green AI tech glow — center right */}
-          <div className="absolute top-[45%] right-[15%] w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, hsla(155,55%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          <div className="absolute top-[45%] right-[15%] w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, hsla(155,55%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           {/* Violet deep glow — bottom left */}
-          <div className="absolute bottom-[10%] left-[22%] w-[350px] h-[280px] rounded-full" style={{ background: "radial-gradient(circle, hsla(280,55%,45%,0.35), transparent 65%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-[10%] left-[22%] w-[350px] h-[280px] rounded-full" style={{ background: "radial-gradient(circle, hsla(280,55%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           {/* Gold warm glow — bottom right */}
-          <div className="absolute bottom-[18%] right-[25%] w-[260px] h-[220px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          <div className="absolute bottom-[18%] right-[25%] w-[260px] h-[220px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           {/* Vertical light shaft */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]" style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.4), transparent)" }} />
           {/* Noise texture overlay */}
