@@ -3546,8 +3546,8 @@ const LandingPage = () => {
             {/* Top accent */}
             <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent, hsl(${pillar.color} / 0.4), transparent)` }} />
             <div className="flex items-start gap-4">
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: `hsl(${pillar.color} / 0.15)`, color: `hsl(${pillar.color})`, boxShadow: `0 0 20px hsl(${pillar.color} / 0.1)` }}>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ background: `linear-gradient(135deg, hsl(${pillar.color}), hsl(${pillar.color} / 0.75))`, color: "white", boxShadow: `0 4px 16px hsl(${pillar.color} / 0.25)` }}>
                 {pillar.icon}
               </div>
               <div className="flex-1 min-w-0">
