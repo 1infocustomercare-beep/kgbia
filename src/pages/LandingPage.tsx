@@ -3319,7 +3319,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              HERO
                             ═══════════════════════════════════════════ */}
-       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-28 sm:pt-28 pb-20 sm:pb-16"
+       <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-24 sm:pt-28 pb-8 sm:pb-16"
       style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
         {/* ═══ LAYER 0: Clean premium gradient background ═══ */}
@@ -3336,119 +3336,154 @@ const LandingPage = () => {
         </div>
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
-          <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
+          
+          {/* ═══ MOBILE LAYOUT: Text → Phones → CTAs ═══ */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12">
+            
+            {/* LEFT: Text content */}
+            <div className="flex-1 text-left lg:max-w-[520px]">
 
-            {/* Clean badge */}
-            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-2xl mb-5 sm:mb-7"
-            style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)))", boxShadow: "0 2px 8px hsl(var(--neon-emerald) / 0.3)" }}>
-                <Bot className="w-3 h-3 text-white" />
-              </div>
-              <span className="text-[0.6rem] sm:text-[0.65rem] font-heading font-bold tracking-[2px] uppercase text-foreground/70">Piattaforma AI All-in-One per PMI</span>
-            </motion.div>
+              {/* Badge */}
+              <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl mb-4"
+              style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                <div className="w-5 h-5 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)))", boxShadow: "0 2px 8px hsl(var(--neon-emerald) / 0.3)" }}>
+                  <Bot className="w-2.5 h-2.5 text-white" />
+                </div>
+                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/70">Studio di App & AI</span>
+              </motion.div>
 
-            {/* Headline */}
-            <motion.h1 className="text-[1.85rem] leading-[1.05] sm:text-[3.4rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em] px-2 sm:px-0 relative"
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
-              <span className="text-foreground">Gestione, IA e</span>
-              <br />
-              <span className="text-foreground">Automazione per il</span>
-              <br />
-              <span className="text-vivid-gradient clip-reveal-text">Tuo Business</span>
-            </motion.h1>
+              {/* Headline */}
+              <motion.h1 className="text-[1.75rem] leading-[1.08] sm:text-[2.8rem] lg:text-[3.6rem] font-heading font-bold tracking-[-0.03em] relative"
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}
+              style={{ textWrap: "balance" as any }}>
+                <span className="text-foreground">Progettiamo app</span>
+                <br />
+                <span className="text-foreground">che le persone </span>
+                <span className="text-vivid-gradient clip-reveal-text">amano</span>
+              </motion.h1>
 
-            {/* Subtitle */}
-            <motion.p className="mt-4 sm:mt-6 text-[0.85rem] sm:text-lg text-foreground/70 max-w-[540px] leading-[1.75] sm:leading-[1.8] font-normal px-2 sm:px-0"
-            initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-              App dedicata, 98+ agenti IA, CRM, prenotazioni, pagamenti e marketing —
-              <span className="text-foreground/85 font-medium"> tutto integrato per <span className="text-primary font-semibold">25+ settori</span>. Zero canone mensile, solo risultati.</span>
-            </motion.p>
+              {/* Subtitle */}
+              <motion.p className="mt-3 sm:mt-5 text-[0.8rem] sm:text-[0.95rem] text-foreground/60 max-w-[460px] leading-[1.75] font-normal"
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
+                Creiamo esperienze digitali per brand ambiziosi.
+                <br className="hidden sm:block" />{" "}
+                Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business.
+                <span className="text-foreground/75 font-medium"> 98+ agenti IA · <span className="text-primary font-semibold">25+ settori</span> · Zero canone.</span>
+              </motion.p>
 
-            {/* ═══ Interactive AI Particle Sphere ═══ */}
-            <motion.div
-              className="relative mt-6 sm:mt-8 w-full overflow-visible flex items-center justify-center mx-auto"
-              style={{ transformOrigin: "center center" }}
-              initial={{ opacity: 0, scale: 0.5, y: 40 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
-              
-              {/* Ambient glow — full width */}
-              <motion.div
-                className="absolute inset-[-30%] sm:inset-[-40%] rounded-full blur-[120px] pointer-events-none"
-                style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsla(265,65%,55%,0.22), hsla(38,50%,50%,0.12), transparent 70%)" }}
-                animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} />
-              
-              <div className="flex items-center justify-center w-full" style={{ transform: typeof window !== "undefined" && window.innerWidth < 640 ? "scaleX(1.9)" : undefined }}>
-                {isHeroInView &&
-                <InteractiveParticleSphere size={typeof window !== "undefined" && window.innerWidth < 640 ? 200 : typeof window !== "undefined" && window.innerWidth >= 1024 ? 520 : 380} />
-                }
-              </div>
-            </motion.div>
+              {/* CTA */}
+              <motion.div className="mt-6 flex flex-row items-center gap-3"
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
+                <motion.button
+                  onClick={() => scrollTo("pricing")}
+                  className="group relative px-6 py-3.5 rounded-full text-primary-foreground font-bold text-[0.75rem] font-heading tracking-wider uppercase overflow-hidden"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(var(--empire-violet)), hsl(var(--neon-magenta) / 0.85), hsl(38,55%,50%))",
+                    boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.3), 0 0 0 1px hsl(var(--empire-violet) / 0.2)"
+                  }}
+                  whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(var(--empire-violet) / 0.4)" }}
+                  whileTap={{ scale: 0.97 }}>
+                  <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/10 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                  <span className="relative flex items-center gap-2">
+                    Avvia il tuo progetto <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </motion.button>
+                <motion.button
+                  onClick={() => navigate("/demo")}
+                  className="px-5 py-3.5 rounded-full text-foreground/55 text-[0.75rem] font-semibold font-heading tracking-wide hover:text-foreground transition-all flex items-center gap-2"
+                  style={{ border: "1px solid hsl(var(--border) / 0.6)" }}
+                  whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.3)" }}>
+                  <Eye className="w-3.5 h-3.5 text-primary/60" /> Guarda i nostri lavori
+                </motion.button>
+              </motion.div>
 
-            {/* CTA */}
-            <motion.div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-2 sm:px-0"
-            initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
-              <motion.button
-                onClick={() => scrollTo("pricing")}
-                className="group relative w-full sm:w-auto px-7 sm:px-8 py-4 sm:py-4 rounded-full text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
-                style={{
-                  background: "linear-gradient(135deg, hsl(var(--empire-violet)), hsl(var(--neon-magenta) / 0.85), hsl(38,55%,50%))",
-                  boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.3), 0 0 0 1px hsl(var(--empire-violet) / 0.2)"
-                }}
-                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(var(--empire-violet) / 0.4), 0 0 60px hsl(var(--neon-magenta) / 0.15)" }}
-                whileTap={{ scale: 0.97 }}>
-                
-                <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/10 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
-                <span className="relative flex items-center justify-center gap-2">
-                  🚀 Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </motion.button>
-              <motion.button
-                onClick={() => navigate("/demo")}
-                className="w-full sm:w-auto px-7 sm:px-8 py-4 sm:py-4 rounded-full text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all flex items-center justify-center gap-2"
-                style={{ border: "1px solid hsl(var(--neon-emerald) / 0.15)" }}
-                whileHover={{ scale: 1.01, borderColor: "hsl(var(--neon-emerald) / 0.3)", boxShadow: "0 0 20px hsl(var(--neon-emerald) / 0.08)" }}>
-                
-                <Play className="w-4 h-4 text-neon-emerald" /> Vedi Demo Live
-              </motion.button>
-            </motion.div>
-
-            {/* Metrics — premium glassmorphism cards */}
-            <motion.div className="mt-14 sm:mt-20 w-full grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, duration: 0.8 }}>
-              {metrics.map((m, i) =>
-              <motion.div key={i} className={`group relative rounded-2xl p-4 sm:p-6 text-center overflow-hidden neon-card`}
-              whileHover={IS_MOBILE_LP ? undefined : { y: -4, scale: 1.02 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}>
-                  {/* Shimmer sweep — desktop only */}
-                  {!IS_MOBILE_LP && <motion.div className="absolute inset-0 pointer-events-none"
-                style={{ background: "linear-gradient(105deg, transparent 30%, hsl(var(--neon-emerald) / 0.06) 48%, transparent 70%)" }}
-                animate={{ x: ["-200%", "300%"] }}
-                transition={{ duration: 4, repeat: Infinity, repeatDelay: 3 + i, ease: "easeInOut" }} />
-                }
-                
-                  {/* Top highlight line */}
-                  <div className="absolute top-0 left-[10%] right-[10%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--empire-violet) / 0.25), transparent)" }} />
-                  {/* Number */}
-                  <p className="text-2xl sm:text-4xl font-heading font-bold relative z-10 text-neon-gradient">
+              {/* Metrics — compact inline */}
+              <motion.div className="mt-8 flex items-center gap-4 sm:gap-6 flex-wrap"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, duration: 0.8 }}>
+                {metrics.map((m, i) =>
+                <div key={i} className="text-left">
+                  <p className="text-lg sm:text-2xl font-heading font-bold text-foreground">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  {/* Label */}
-                  <p className="text-[0.55rem] sm:text-[0.65rem] mt-2 tracking-[2.5px] uppercase font-heading font-semibold relative z-10 text-foreground/65">{m.label}</p>
+                  <p className="text-[0.5rem] sm:text-[0.55rem] tracking-[1.5px] uppercase font-heading font-semibold text-foreground/45">{m.label}</p>
+                </div>
+                )}
+              </motion.div>
+            </div>
+
+            {/* RIGHT: iPhone mockups — prominent and beautiful */}
+            <motion.div className="relative mt-8 lg:mt-0 flex-shrink-0 flex items-end justify-center lg:justify-end"
+            initial={{ opacity: 0, x: 40, scale: 0.92 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
+
+              {/* Ambient glow behind phones */}
+              <div className="absolute inset-[-20%] rounded-full blur-[100px] pointer-events-none"
+                style={{ background: "radial-gradient(ellipse 80% 70% at 50% 50%, hsla(265,55%,55%,0.15), hsla(168,50%,45%,0.08), transparent 70%)" }} />
+
+              {/* Phone pair container */}
+              <div className="relative flex items-end gap-3 sm:gap-4">
+                
+                {/* Phone 1 — taller, front */}
+                <motion.div className="relative z-10"
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
+                  <div className="relative w-[145px] sm:w-[180px] lg:w-[220px] aspect-[9/19.5] rounded-[22px] sm:rounded-[28px] border-[2.5px] overflow-hidden"
+                  style={{ borderColor: "hsl(220 15% 80%)", background: "#0d0d14", boxShadow: "0 25px 60px hsla(0,0%,0%,0.2), 0 8px 24px hsla(265,40%,40%,0.1), inset 0 1px 0 hsla(0,0%,100%,0.05)" }}>
+                    {/* Dynamic Island */}
+                    <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[40px] sm:w-[50px] h-[12px] sm:h-[14px] bg-black rounded-full z-30" style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
+                    {/* Screen content */}
+                    <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden">
+                      <img src={sectorHeroFood} alt="Food App Demo" className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
+                      {/* Subtle gradient overlay at top for status bar */}
+                      <div className="absolute inset-x-0 top-0 h-8" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.3), transparent)" }} />
+                    </div>
+                    {/* Home indicator */}
+                    <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[32%] h-[3px] bg-white/20 rounded-full z-20" />
+                  </div>
                 </motion.div>
-              )}
+
+                {/* Phone 2 — slightly behind and offset */}
+                <motion.div className="relative -ml-6 sm:-ml-4 lg:-ml-2 z-[5]"
+                style={{ marginBottom: "24px" }}
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}>
+                  <div className="relative w-[135px] sm:w-[170px] lg:w-[200px] aspect-[9/19.5] rounded-[22px] sm:rounded-[28px] border-[2.5px] overflow-hidden"
+                  style={{ borderColor: "hsl(220 15% 80%)", background: "#0d0d14", boxShadow: "0 20px 50px hsla(0,0%,0%,0.15), 0 6px 20px hsla(168,40%,40%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.05)" }}>
+                    {/* Dynamic Island */}
+                    <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[38px] sm:w-[46px] h-[11px] sm:h-[13px] bg-black rounded-full z-30" style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
+                    {/* Screen content */}
+                    <div className="absolute inset-[2px] rounded-[20px] sm:rounded-[26px] overflow-hidden">
+                      <img src={sectorHeroBeauty} alt="Beauty App Demo" className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
+                      <div className="absolute inset-x-0 top-0 h-8" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.3), transparent)" }} />
+                    </div>
+                    {/* Home indicator */}
+                    <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[32%] h-[3px] bg-white/20 rounded-full z-20" />
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Floating live feed card — overlapping phones bottom */}
+              <motion.div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-[85%] max-w-[280px] z-20"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.5, duration: 0.6 }}>
+                <div className="rounded-2xl overflow-hidden backdrop-blur-xl border"
+                style={{ background: "hsla(0,0%,100%,0.85)", borderColor: "hsl(var(--border) / 0.4)", boxShadow: "0 8px 32px hsla(0,0%,0%,0.08), 0 2px 8px hsla(265,40%,40%,0.06)" }}>
+                  <LiveFeedSimulator />
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </motion.div>
 
         {/* Scroll indicator */}
-        <motion.div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-20"
+        <motion.div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-20"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
-          <span className="text-[8px] text-foreground/50 tracking-[4px] uppercase font-heading">Scopri</span>
-          <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
-            <ChevronDown className="w-4 h-4 text-primary/60" />
+          <span className="text-[7px] text-foreground/40 tracking-[4px] uppercase font-heading">Scopri</span>
+          <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
+            <ChevronDown className="w-3.5 h-3.5 text-primary/50" />
           </motion.div>
         </motion.div>
       </motion.section>
