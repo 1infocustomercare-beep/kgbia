@@ -6576,11 +6576,7 @@ const LandingPage = () => {
 
       {/* <SectionDivider /> — hidden redesign */}
 
-      {/* {/* ═══════ EMPIRE STORY & TEAM ═══════ */} — hidden redesign */}
-      {/* <Suspense fallback={null}> — hidden redesign */}
-      {/* <EmpireTeamStory /> — hidden redesign */}
-      {/* </Suspense> — hidden redesign */}
-      {/*  — hidden redesign */}
+      {/* EMPIRE STORY & TEAM — hidden redesign */}
       {/* <SectionDivider /> — hidden redesign */}
 
       {/* ═══════ FINAL CTA ═══════ */}
