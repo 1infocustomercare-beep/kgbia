@@ -697,7 +697,7 @@
   }
 
   input[type="range"]::-webkit-slider-thumb:hover {
-    box-shadow: 0 0 25px hsla(38, 55%, 50%, 0.6);
+    box-shadow: 0 0 25px hsl(var(--primary) / 0.4);
   }
 
   @keyframes blob-float {
