@@ -1135,34 +1135,66 @@ export default function DemoAdminPage() {
         </Button>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      {/* KPI Cards — styled per layoutConfig */}
+      <div className={`grid gap-3 ${layoutConfig.kpiStyle === "inline" ? "grid-cols-2 sm:grid-cols-5" : layoutConfig.kpiStyle === "pill" ? "grid-cols-2 lg:grid-cols-5" : "grid-cols-2 lg:grid-cols-4 xl:grid-cols-5"}`}>
         {kpis.map((kpi, i) => {
           const Icon = resolveIcon(kpi.icon);
           const displayValue = kpi.label.includes("Rating") ? (kpi.value / 10).toFixed(1) : undefined;
+          const cardBg = layoutConfig.cardStyle === "glass" ? `rgba(255,255,255,0.025)` : layoutConfig.cardStyle === "gradient" ? `linear-gradient(135deg, rgba(255,255,255,0.03), ${accentColor}08)` : layoutConfig.cardStyle === "elevated" ? "rgba(255,255,255,0.04)" : layoutConfig.cardStyle === "outlined" ? "transparent" : "rgba(255,255,255,0.03)";
+          const cardBorder = layoutConfig.cardStyle === "glass" ? `1px solid rgba(255,255,255,0.06)` : layoutConfig.cardStyle === "gradient" ? `1px solid ${accentColor}15` : layoutConfig.cardStyle === "elevated" ? `1px solid rgba(255,255,255,0.08)` : layoutConfig.cardStyle === "outlined" ? `1px solid rgba(255,255,255,0.1)` : "1px solid rgba(255,255,255,0.06)";
           return (
             <motion.div key={kpi.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
-              <Card className="bg-white/[0.03] border-white/[0.06] hover:border-white/[0.12] transition-all group">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${accentColor}15` }}>
-                      <Icon className="w-4 h-4" style={{ color: accentColor }} />
+              <Card className="transition-all group hover:scale-[1.02]" style={{ background: cardBg, border: cardBorder, boxShadow: layoutConfig.cardStyle === "elevated" ? `0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px ${accentColor}08` : layoutConfig.cardStyle === "glass" ? `inset 0 1px 0 rgba(255,255,255,0.04), 0 4px 24px rgba(0,0,0,0.2)` : undefined, backdropFilter: layoutConfig.cardStyle === "glass" ? "blur(12px)" : undefined }}>
+                <CardContent className={layoutConfig.kpiStyle === "inline" ? "p-3" : layoutConfig.kpiStyle === "pill" ? "p-3 flex items-center gap-3" : "p-4"}>
+                  {layoutConfig.kpiStyle === "pill" ? (
+                    <>
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: `${accentColor}15` }}>
+                        <Icon className="w-4 h-4" style={{ color: accentColor }} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-lg font-bold text-white leading-none">{displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}</p>
+                        <p className="text-[0.55rem] text-white/35 mt-0.5">{kpi.label}</p>
+                      </div>
+                      <span className={`text-[0.55rem] font-bold ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>{kpi.change}</span>
+                    </>
+                  ) : layoutConfig.kpiStyle === "ring" ? (
+                    <div className="text-center">
+                      <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-2" style={{ border: `3px solid ${accentColor}30`, background: `${accentColor}08` }}>
+                        <Icon className="w-5 h-5" style={{ color: accentColor }} />
+                      </div>
+                      <p className="text-lg font-bold text-white leading-none">{displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}</p>
+                      <p className="text-[0.55rem] text-white/35 mt-1">{kpi.label}</p>
+                      <span className={`text-[0.5rem] font-bold ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>{kpi.up ? "↑" : "↓"} {kpi.change}</span>
                     </div>
-                    <span className={`text-[0.6rem] font-bold flex items-center gap-0.5 ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>
-                      {kpi.up ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
-                      {kpi.change}
-                    </span>
-                  </div>
-                  <p className="text-xl font-bold text-white leading-none">
-                    {displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}
-                  </p>
-                  <p className="text-[0.6rem] text-white/35 mt-1">{kpi.label}</p>
-                  {/* Mini sparkline mock */}
-                  <div className="flex items-end gap-px mt-2 h-4">
-                    {[3, 5, 4, 7, 6, 8, 7, 9, 8, 10, 9, 11].map((h, j) => (
-                      <div key={j} className="flex-1 rounded-sm transition-all" style={{ height: `${h * 10}%`, background: j >= 10 ? accentColor : `${accentColor}30` }} />
-                    ))}
-                  </div>
+                  ) : layoutConfig.kpiStyle === "inline" ? (
+                    <div className="flex items-center gap-2">
+                      <Icon className="w-4 h-4 shrink-0" style={{ color: accentColor }} />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[0.55rem] text-white/35">{kpi.label}</p>
+                        <p className="text-base font-bold text-white leading-none">{displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}</p>
+                      </div>
+                      <span className={`text-[0.5rem] font-bold ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>{kpi.change}</span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${accentColor}15` }}>
+                          <Icon className="w-4 h-4" style={{ color: accentColor }} />
+                        </div>
+                        <span className={`text-[0.6rem] font-bold flex items-center gap-0.5 ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>
+                          {kpi.up ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
+                          {kpi.change}
+                        </span>
+                      </div>
+                      <p className="text-xl font-bold text-white leading-none">{displayValue || <AnimCounter value={kpi.value} prefix={kpi.prefix} suffix={kpi.suffix} />}</p>
+                      <p className="text-[0.6rem] text-white/35 mt-1">{kpi.label}</p>
+                      <div className="flex items-end gap-px mt-2 h-4">
+                        {[3, 5, 4, 7, 6, 8, 7, 9, 8, 10, 9, 11].map((h, j) => (
+                          <div key={j} className="flex-1 rounded-sm transition-all" style={{ height: `${h * 10}%`, background: j >= 10 ? accentColor : `${accentColor}30` }} />
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
