@@ -50,7 +50,7 @@ const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
 
-const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 12000 : 10000;
+const IMPORT_ATTEMPT_TIMEOUT_MS = IS_MOBILE ? 25000 : 25000;
 
 const isRetryableImportError = (error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
