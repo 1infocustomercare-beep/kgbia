@@ -3447,11 +3447,10 @@ const LandingPage = () => {
 
         {/* Scroll indicator */}
         <motion.div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-20"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
-        style={{ filter: "drop-shadow(0 0 8px hsla(260,20%,4%,0.8))" }}>
-          <span className="text-[8px] text-foreground/30 tracking-[4px] uppercase font-heading">Scopri</span>
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
+          <span className="text-[8px] text-foreground/50 tracking-[4px] uppercase font-heading">Scopri</span>
           <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
-            <ChevronDown className="w-4 h-4 text-primary/40" />
+            <ChevronDown className="w-4 h-4 text-primary/60" />
           </motion.div>
         </motion.div>
       </motion.section>
