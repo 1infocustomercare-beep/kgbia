@@ -551,11 +551,11 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
             <HeroIcon className="w-4 h-4" /> {config.label}
           </motion.div>
 
-          <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.05]">
+          <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.05]" style={{ fontFamily: palette.fontDisplay }}>
             {company.tagline || `${config.label}: Qualità e Affidabilità`}
           </motion.h1>
 
-          <motion.p variants={fadeUp} custom={2} className="text-base text-white/40 mb-10 max-w-2xl mx-auto" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <motion.p variants={fadeUp} custom={2} className="text-base text-white/40 mb-10 max-w-2xl mx-auto" style={{ fontFamily: palette.fontBody }}>
             <strong className="text-white/70">{company.name}</strong> — {
               industry === "photography" ? "Fotografia professionale che racconta la tua storia." :
               industry === "veterinary" ? "Il benessere del tuo animale è la nostra priorità." :
