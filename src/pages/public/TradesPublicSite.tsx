@@ -794,16 +794,16 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {whyUs.map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                <Card className="border-0 h-full group rounded-xl transition-all duration-300 hover:-translate-y-1" style={{ background: `${A}06`, border: `1px solid ${A}10` }}>
+                <Card className={`border-0 h-full group ${palette.cardRadius} transition-all duration-300 hover:-translate-y-1`} style={{ background: `${A}06`, border: `1px solid ${A}10` }}>
                   <CardContent className="p-5 relative overflow-hidden">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                       style={{ background: `radial-gradient(ellipse at top left, ${A}12, transparent 60%)` }} />
                     <div className="relative">
-                      <div className="w-11 h-11 rounded-lg flex items-center justify-center mb-3 transition-transform group-hover:scale-110" style={{ background: `${A}12` }}>
+                      <div className={`w-11 h-11 ${palette.visualStyle === "warm" || palette.visualStyle === "organic" ? "rounded-full" : "rounded-lg"} flex items-center justify-center mb-3 transition-transform group-hover:scale-110`} style={{ background: `${A}12` }}>
                         <item.icon className="w-5 h-5" style={{ color: A }} />
                       </div>
-                      <h3 className="font-bold text-white mb-1">{item.title}</h3>
-                      <p className="text-sm text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>{item.desc}</p>
+                      <h3 className="font-bold text-white mb-1" style={{ fontFamily: palette.fontDisplay }}>{item.title}</h3>
+                      <p className="text-sm text-white/35" style={{ fontFamily: palette.fontBody }}>{item.desc}</p>
                     </div>
                   </CardContent>
                 </Card>
