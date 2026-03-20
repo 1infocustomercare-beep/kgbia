@@ -3471,10 +3471,7 @@ const LandingPage = () => {
               <motion.h1 className="text-[1.75rem] leading-[1.08] sm:text-[2.8rem] lg:text-[3.6rem] font-heading font-bold tracking-[-0.03em] relative"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}
               style={{ textWrap: "balance" as any }}>
-                <span className="text-foreground">Progettiamo app</span>
-                <br />
-                <span className="text-foreground">che le persone </span>
-                <span className="text-vivid-gradient clip-reveal-text">amano</span>
+                <span className="text-foreground">Progettiamo app che le persone amano</span>
               </motion.h1>
 
               {/* ═══ PARTICLE SPHERE — Neural Core Effect ═══ */}
