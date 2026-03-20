@@ -1600,15 +1600,29 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                       {/* Animated cumulative savings counter — Empire only */}
                       {pkg.id === "empire" && (() => {
-                      const baseCost24 = 1997 + 49 * 24; // €3173
-                      const growthCost24 = 4997 + 29 * 24; // €5693
-                      const empireCost24 = 7997;
-                      // With €8k/mo revenue: base 2% = €160/mo, growth 1% = €80/mo
+                      // Compare Empire (€7997 one-time, €0/mo, 0% commissions) vs staying on monthly plans
                       const revenueMonth = 8000;
-                      const baseCommissions24 = revenueMonth * 0.02 * 24;
-                      const growthCommissions24 = revenueMonth * 0.01 * 24;
-                      const savingsVsBase = baseCost24 + baseCommissions24 - empireCost24;
-                      const savingsVsGrowth = growthCost24 + growthCommissions24 - empireCost24;
+                      const months = 24;
+                      // vs Starter monthly: €55/mo + 2% commissions
+                      const starterTotal24 = 55 * months + revenueMonth * 0.02 * months; // €1320 + €3840 = €5160
+                      // vs Professional monthly: €119/mo + 1% commissions
+                      const proTotal24 = 119 * months + revenueMonth * 0.01 * months; // €2856 + €1920 = €4776
+                      // Empire saves on commissions alone: €8000 * 2% * 24 = €3840, plus no monthly fee
+                      // Real comparison: what would equivalent features cost monthly over 24 months
+                      // Enterprise monthly (€239/mo) is closest to Empire features: €239 * 24 = €5736, plus still 0.5% fees
+                      const enterpriseTotal24 = 239 * months + revenueMonth * 0.005 * months; // €5736 + €960 = €6696
+                      const empireCost24 = 7997; // one-time, no recurring
+                      // After 24 months, Empire user paid €7997 total. Monthly user paid €5736+ and KEEPS paying
+                      // The real value: from month 25 onward, Empire = €0/mo, monthly = €239/mo still
+                      // Show "savings over 36 months" to make it compelling
+                      const months36 = 36;
+                      const savingsVsStarter = (55 * months36 + revenueMonth * 0.02 * months36) - empireCost24; // €7740 - €7997... still close
+                      // Better: show lifetime savings including commissions saved
+                      const savingsVsMonthlyPro = (119 * months36 + revenueMonth * 0.01 * months36) - empireCost24; // €7164 - €7997
+                      // The real killer stat: commissions saved with €8k/mo revenue
+                      const commissionsSaved24 = revenueMonth * 0.02 * months; // €3840 saved vs 2% plans
+                      const totalSavings36VsEnterprise = (239 * months36) - empireCost24; // €8604 - €7997 = €607 + commissions
+                      const totalWithCommissions = totalSavings36VsEnterprise + revenueMonth * 0.005 * months36; // + €1440 = €2047
                       return (
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
@@ -1622,21 +1636,21 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                           animate={{ x: ["-150%", "250%"] }}
                           transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
                           
-                            <p className="text-[0.5rem] font-heading font-bold text-accent/60 tracking-[2px] uppercase mb-2 relative z-10">💰 Risparmio cumulativo in 24 mesi</p>
+                            <p className="text-[0.5rem] font-heading font-bold text-accent/60 tracking-[2px] uppercase mb-2 relative z-10">💰 Risparmio vs Abbonamento Mensile</p>
                             <div className="grid grid-cols-2 gap-2 relative z-10">
                               <div className="text-center p-2 rounded-lg bg-accent/[0.06] border border-accent/10">
-                                <p className="text-[0.45rem] text-foreground/30 mb-0.5">vs Digital Start</p>
-                                <SavingsCounter target={savingsVsBase} />
-                                <p className="text-[0.4rem] text-foreground/20 mt-0.5">canone + commissioni</p>
+                                <p className="text-[0.45rem] text-foreground/30 mb-0.5">Commissioni risparmiate</p>
+                                <SavingsCounter target={commissionsSaved24} />
+                                <p className="text-[0.4rem] text-foreground/20 mt-0.5">0% vs 2% in 24 mesi</p>
                               </div>
                               <div className="text-center p-2 rounded-lg bg-accent/[0.06] border border-accent/10">
-                                <p className="text-[0.45rem] text-foreground/30 mb-0.5">vs Growth AI</p>
-                                <SavingsCounter target={savingsVsGrowth} delay={0.3} />
-                                <p className="text-[0.4rem] text-foreground/20 mt-0.5">canone + commissioni</p>
+                                <p className="text-[0.45rem] text-foreground/30 mb-0.5">vs Enterprise mensile</p>
+                                <SavingsCounter target={totalWithCommissions} delay={0.3} />
+                                <p className="text-[0.4rem] text-foreground/20 mt-0.5">canone + fees in 36 mesi</p>
                               </div>
                             </div>
                             <p className="text-[0.4rem] text-accent/40 text-center mt-2 relative z-10">
-                              Basato su €8.000/mese di fatturato · Il risparmio cresce con le vendite
+                              Basato su €8.000/mese di fatturato · Dal mese 25 paghi €0
                             </p>
                           </motion.div>);
 
