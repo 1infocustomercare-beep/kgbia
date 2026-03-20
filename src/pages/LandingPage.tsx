@@ -6064,9 +6064,9 @@ const LandingPage = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="flex-1 rounded-xl p-3 text-center"
-                          style={{ background: "hsla(0,40%,15%,0.25)", border: "1px solid hsla(0,40%,40%,0.1)" }}>
-                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/25 mb-1">Prima</div>
-                            <div className="text-sm font-bold text-red-400/80">{t.before}</div>
+                          style={{ background: "hsla(0,40%,50%,0.06)", border: "1px solid hsla(0,40%,50%,0.12)" }}>
+                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/45 mb-1">Prima</div>
+                            <div className="text-sm font-bold text-red-500/80">{t.before}</div>
                           </div>
                           <motion.div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
                           style={{ background: `hsla(${t.color},50%,50%,0.15)` }}
