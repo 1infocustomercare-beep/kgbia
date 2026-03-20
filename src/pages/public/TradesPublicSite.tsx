@@ -509,7 +509,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
               <span className="text-[8px] tracking-[0.25em] uppercase block font-medium text-white/30" style={{ fontFamily: palette.fontBody }}>{config.label.toUpperCase()}</span>
             </div>
           </div>
-          <div className="hidden md:flex gap-6 text-[11px] tracking-[0.15em] uppercase text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <div className="hidden md:flex gap-6 text-[11px] tracking-[0.15em] uppercase text-white/35" style={{ fontFamily: palette.fontBody }}>
             {navLinks.map(l => <a key={l.href} href={l.href} className="hover:text-white transition-colors">{l.label}</a>)}
           </div>
           <div className="flex items-center gap-3">
