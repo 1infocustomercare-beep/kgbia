@@ -537,9 +537,9 @@
 
   /* ═══ FUTURISTIC CARD ═══ */
   .future-card {
-    background: linear-gradient(145deg, hsl(224 14% 16% / 0.7), hsl(224 12% 11% / 0.6));
+    background: linear-gradient(145deg, hsl(0 0% 100% / 0.85), hsl(220 16% 98% / 0.75));
     backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid hsl(var(--border) / 0.35);
+    border: 1px solid hsl(var(--border) / 0.45);
     position: relative;
     overflow: hidden;
   }
@@ -551,16 +551,16 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent);
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent);
   }
 
   .future-card:hover {
-    border-color: hsl(var(--primary) / 0.18);
-    box-shadow: 0 25px 80px hsl(0 0% 0% / 0.35), 0 0 30px hsl(var(--primary) / 0.06);
+    border-color: hsl(var(--primary) / 0.22);
+    box-shadow: 0 16px 48px hsl(215 90% 52% / 0.1), 0 0 20px hsl(var(--primary) / 0.04);
   }
 
   .future-card:hover::after {
-    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.35), transparent);
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent);
   }
 
   /* ═══ AURORA MESH ═══ */
