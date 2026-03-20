@@ -1315,16 +1315,16 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                 isSelected ?
                 p.id === "empire" ?
-                "border-2 border-accent/50 shadow-[0_0_60px_hsla(35,45%,50%,0.18),0_8px_40px_hsla(0,0%,0%,0.5)]" :
-                "border-2 border-primary/50 shadow-[0_0_50px_hsla(265,50%,55%,0.14),0_8px_40px_hsla(0,0%,0%,0.4)]" :
-                "border border-border/40 hover:border-primary/25 shadow-[0_4px_24px_hsla(0,0%,0%,0.3)]"}`
+                "border-2 border-accent/35 shadow-[0_4px_30px_hsla(35,45%,50%,0.12)]" :
+                "border-2 border-primary/35 shadow-[0_4px_24px_hsla(265,50%,55%,0.08)]" :
+                "border border-border/30 hover:border-primary/20 shadow-[0_2px_16px_hsla(0,0%,0%,0.05)]"}`
                 }
                 style={{
                   background: isSelected ?
                   p.id === "empire" ?
-                  "linear-gradient(165deg, hsla(35,22%,14%,0.94), hsla(230,12%,9%,0.95))" :
-                  "linear-gradient(165deg, hsla(265,15%,14%,0.93), hsla(230,10%,9%,0.95))" :
-                  "linear-gradient(165deg, hsla(230,12%,13%,0.92), hsla(230,10%,10%,0.94))"
+                  "linear-gradient(165deg, hsl(0 0% 100% / 0.98), hsl(35 20% 97% / 0.95))" :
+                  "linear-gradient(165deg, hsl(0 0% 100% / 0.97), hsl(248 15% 97% / 0.94))" :
+                  "linear-gradient(165deg, hsl(0 0% 100% / 0.96), hsl(220 18% 97% / 0.93))"
                 }}>
                     {p.badge &&
                   <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
