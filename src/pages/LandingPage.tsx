@@ -5619,7 +5619,7 @@ const LandingPage = () => {
 
       {/* ═══════════════════════════════════════════
                             ═══════════════════════════════════════════ */}
-      <Section id="process" className="relative overflow-hidden" style={{
+      <Section id="process" className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,5%,0.82) 0%, hsla(265,20%,10%,0.78) 35%, hsla(230,18%,9%,0.78) 65%, hsla(230,16%,5%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
