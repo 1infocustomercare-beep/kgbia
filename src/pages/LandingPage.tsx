@@ -111,20 +111,17 @@ function useLandingAssets() {
 
 const SafeEmpireVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
-/* ═══ Hero Phone Carousel — groups of 3 cycling through all sectors ═══ */
-const HeroPhoneCarousel = ({ sectors }: { sectors: { img: string; label: string }[] }) => {
+/* ═══ Hero Phone Carousel — each sector shows 3 real mockup screens ═══ */
+const HeroPhoneCarousel = ({ sectors }: { sectors: { screens: [string, string, string]; label: string }[] }) => {
   const [idx, setIdx] = useState(0);
   const total = sectors.length;
 
   useEffect(() => {
-    const timer = setInterval(() => setIdx((p) => (p + 1) % total), 3500);
+    const timer = setInterval(() => setIdx((p) => (p + 1) % total), 4000);
     return () => clearInterval(timer);
   }, [total]);
 
-  const getItem = (offset: number) => sectors[(idx + offset) % total];
-  const left = getItem(0);
-  const center = getItem(1);
-  const right = getItem(2);
+  const current = sectors[idx];
 
   const PhoneFrame = ({ src, alt, size, rounding, extraClass, style: extraStyle }: {
     src: string; alt: string; size: string; rounding: string; extraClass?: string; style?: React.CSSProperties;
@@ -136,7 +133,7 @@ const HeroPhoneCarousel = ({ sectors }: { sectors: { img: string; label: string 
       <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[36px] sm:w-[48px] h-[11px] sm:h-[14px] bg-black rounded-full z-30"
         style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
       <div className={`absolute inset-[2px] ${rounding === "rounded-[26px] sm:rounded-[36px]" ? "rounded-[24px] sm:rounded-[34px]" : "rounded-[22px] sm:rounded-[30px]"} overflow-hidden`}>
-        <img src={src} alt={alt} className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
+        <img src={src} alt={alt} className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} loading="lazy" />
         <div className="absolute inset-x-0 top-0 h-10" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.35), transparent)" }} />
       </div>
       <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[32%] h-[3px] bg-white/20 rounded-full z-20" />
@@ -159,23 +156,23 @@ const HeroPhoneCarousel = ({ sectors }: { sectors: { img: string; label: string 
         <AnimatePresence mode="wait">
           <motion.div key={idx} className="flex items-end" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
 
-            {/* LEFT phone */}
+            {/* LEFT phone — second screen */}
             <motion.div className="relative z-[5]" style={{ marginBottom: "32px", marginRight: "-18px" }}
               animate={{ y: [0, -6, 0] }} transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}>
-              <PhoneFrame src={left.img} alt={left.label} size="w-[110px] sm:w-[145px] lg:w-[175px]" rounding="rounded-[24px] sm:rounded-[32px]" />
+              <PhoneFrame src={current.screens[1]} alt={`${current.label} - Servizi`} size="w-[110px] sm:w-[145px] lg:w-[175px]" rounding="rounded-[24px] sm:rounded-[32px]" />
             </motion.div>
 
-            {/* CENTER phone — larger */}
+            {/* CENTER phone — home screen, larger */}
             <motion.div className="relative z-20"
               animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-              <PhoneFrame src={center.img} alt={center.label} size="w-[140px] sm:w-[185px] lg:w-[225px]" rounding="rounded-[26px] sm:rounded-[36px]"
+              <PhoneFrame src={current.screens[0]} alt={`${current.label} - Home`} size="w-[140px] sm:w-[185px] lg:w-[225px]" rounding="rounded-[26px] sm:rounded-[36px]"
                 style={{ border: "3px solid hsl(220 10% 78%)", boxShadow: "0 40px 80px hsla(0,0%,0%,0.25), 0 12px 32px hsla(265,40%,35%,0.12), inset 0 1px 0 hsla(0,0%,100%,0.08)" }} />
             </motion.div>
 
-            {/* RIGHT phone */}
+            {/* RIGHT phone — third screen */}
             <motion.div className="relative z-[8]" style={{ marginBottom: "20px", marginLeft: "-18px" }}
               animate={{ y: [0, -7, 0] }} transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}>
-              <PhoneFrame src={right.img} alt={right.label} size="w-[115px] sm:w-[150px] lg:w-[180px]" rounding="rounded-[24px] sm:rounded-[32px]" />
+              <PhoneFrame src={current.screens[2]} alt={`${current.label} - Dettaglio`} size="w-[115px] sm:w-[150px] lg:w-[180px]" rounding="rounded-[24px] sm:rounded-[32px]" />
             </motion.div>
           </motion.div>
         </AnimatePresence>
@@ -183,18 +180,16 @@ const HeroPhoneCarousel = ({ sectors }: { sectors: { img: string; label: string 
 
       {/* Sector label */}
       <AnimatePresence mode="wait">
-        <motion.div key={idx} className="mt-4 flex items-center gap-3"
+        <motion.div key={idx} className="mt-4 flex items-center gap-2"
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4 }}>
-          {[left, center, right].map((s, i) => (
-            <span key={i} className={`text-[0.55rem] sm:text-[0.65rem] font-heading font-semibold tracking-[1.5px] uppercase ${i === 1 ? "text-primary" : "text-foreground/40"}`}>{s.label}</span>
-          ))}
+          <span className="text-[0.65rem] sm:text-[0.75rem] font-heading font-bold tracking-[2px] uppercase text-primary">{current.label}</span>
         </motion.div>
       </AnimatePresence>
 
       {/* Dot indicators */}
-      <div className="mt-3 flex items-center gap-1.5">
-        {Array.from({ length: Math.min(total, 12) }).map((_, i) => (
-          <button key={i} onClick={() => setIdx(i)} className={`rounded-full transition-all duration-300 ${i === idx % Math.min(total, 12) ? "w-5 h-1.5 bg-primary" : "w-1.5 h-1.5 bg-foreground/15 hover:bg-foreground/25"}`} />
+      <div className="mt-3 flex items-center gap-1.5 flex-wrap justify-center max-w-[260px]">
+        {sectors.map((_, i) => (
+          <button key={i} onClick={() => setIdx(i)} className={`rounded-full transition-all duration-300 ${i === idx ? "w-5 h-1.5 bg-primary" : "w-1.5 h-1.5 bg-foreground/15 hover:bg-foreground/25"}`} />
         ))}
       </div>
     </motion.div>
