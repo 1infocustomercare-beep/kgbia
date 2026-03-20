@@ -6298,22 +6298,22 @@ const LandingPage = () => {
               {testimonials.map((t, i) =>
             <div key={i} className="relative p-4 rounded-xl overflow-hidden"
             style={{
-              background: "linear-gradient(165deg, hsla(265,25%,8%,0.98), hsla(265,20%,5%,0.99))",
-              border: "1px solid hsla(265,40%,50%,0.12)",
+              background: "linear-gradient(165deg, hsl(0 0% 100% / 0.95), hsl(248 15% 97% / 0.92))",
+              border: "1px solid hsl(var(--primary) / 0.12)",
               backdropFilter: "blur(24px)"
             }}>
                   <div className="flex items-center gap-3 mb-3">
                     <img src={t.photo} alt={t.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                style={{ border: "2px solid hsla(265,50%,55%,0.25)" }} />
+                style={{ border: "2px solid hsl(var(--primary) / 0.2)" }} />
                     <div>
-                      <h4 className="font-heading text-[0.7rem] font-semibold" style={{ color: "hsla(0,0%,100%,0.94)" }}>{t.name}</h4>
-                      <p className="text-[0.5rem]" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
+                      <h4 className="font-heading text-[0.7rem] font-semibold text-foreground">{t.name}</h4>
+                      <p className="text-[0.5rem] text-foreground/50">{t.role}</p>
                     </div>
                     <span className="ml-auto text-base">{t.emoji}</span>
                   </div>
-                  <p className="text-[0.65rem] leading-[1.7] mb-2" style={{ color: "hsla(0,0%,100%,0.5)" }}>"{t.quote}"</p>
+                  <p className="text-[0.65rem] leading-[1.7] mb-2 text-foreground/65">"{t.quote}"</p>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[0.55rem] font-semibold font-heading"
-              style={{ background: "hsla(265,40%,25%,0.5)", border: "1px solid hsla(265,60%,55%,0.2)", color: "hsl(var(--primary))" }}>
+              style={{ background: "hsl(var(--primary) / 0.08)", border: "1px solid hsl(var(--primary) / 0.12)", color: "hsl(var(--primary))" }}>
                     <TrendingUp className="w-2.5 h-2.5" /> {t.metric}
                   </div>
                 </div>
