@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, forwardRef, useMemo, useCallback, l
 import InteractiveParticleSphere from "@/components/public/InteractiveParticleSphere";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
+import { MockupLightbox } from "@/components/ui/mockup-lightbox";
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
