@@ -67,6 +67,12 @@ import sectorHeroLegal from "@/assets/sector-hero-legal.jpg";
 import sectorHeroAccounting from "@/assets/sector-hero-accounting.jpg";
 import sectorHeroElectrician from "@/assets/sector-hero-electrician.jpg";
 import sectorHeroCustom from "@/assets/sector-hero-custom.jpg";
+import testimonialMarco from "@/assets/testimonial-marco.png";
+import testimonialAlessandra from "@/assets/testimonial-alessandra.png";
+import testimonialValentina from "@/assets/testimonial-valentina.png";
+import testimonialLuca from "@/assets/testimonial-luca.png";
+import testimonialSimone from "@/assets/testimonial-simone.png";
+import testimonialGiulia from "@/assets/testimonial-giulia.png";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 const EmpireTeamStory = lazy(() => import("@/components/public/EmpireTeamStory"));
@@ -2708,12 +2714,12 @@ const LandingPage = () => {
 
 
   const testimonials = [
-  { name: "Marco Pellegrini", role: "Trattoria da Marco · Roma", quote: "In 3 mesi ho spostato il 60% degli ordini dalla piattaforma alla mia app. Risparmio €3.200 al mese netti.", metric: "−€3.200/mese", industry: "Food", emoji: "🍽️" },
-  { name: "Alessandra Conti", role: "NCC Premium Transfer · Milano", quote: "Prima gestivo le prenotazioni via WhatsApp. Ora ho un sistema automatizzato con flotta, tratte e pagamenti integrati.", metric: "+40% fatturato", industry: "NCC", emoji: "🚘" },
-  { name: "Valentina Rossi", role: "Beauty Lab · Firenze", quote: "I clienti prenotano dall'app, ricevono promemoria automatici e il no-show è crollato del 70%.", metric: "−70% no-show", industry: "Beauty", emoji: "💅" },
-  { name: "Dr. Luca Bianchi", role: "Studio Dentistico · Torino", quote: "Agenda digitale, schede paziente, fatturazione elettronica. Ho eliminato 2 ore di burocrazia al giorno.", metric: "−2h/giorno", industry: "Healthcare", emoji: "🏥" },
-  { name: "Simone Moretti", role: "CrossFit Arena · Bologna", quote: "Gestione corsi, abbonamenti e pagamenti in un'unica piattaforma. Il tasso di rinnovo è salito all'87%.", metric: "87% rinnovi", industry: "Fitness", emoji: "💪" },
-  { name: "Giulia De Luca", role: "Boutique Eleganza · Napoli", quote: "Il catalogo digitale ha trasformato il mio negozio. Le vendite online sono il 35% del totale.", metric: "+35% vendite", industry: "Retail", emoji: "🛍️" }];
+  { name: "Marco Pellegrini", role: "Trattoria da Marco · Roma", quote: "In 3 mesi ho spostato il 60% degli ordini dalla piattaforma alla mia app. Risparmio €3.200 al mese netti.", metric: "−€3.200/mese", industry: "Food", emoji: "🍽️", photo: testimonialMarco },
+  { name: "Alessandra Conti", role: "NCC Premium Transfer · Milano", quote: "Prima gestivo le prenotazioni via WhatsApp. Ora ho un sistema automatizzato con flotta, tratte e pagamenti integrati.", metric: "+40% fatturato", industry: "NCC", emoji: "🚘", photo: testimonialAlessandra },
+  { name: "Valentina Rossi", role: "Beauty Lab · Firenze", quote: "I clienti prenotano dall'app, ricevono promemoria automatici e il no-show è crollato del 70%.", metric: "−70% no-show", industry: "Beauty", emoji: "💅", photo: testimonialValentina },
+  { name: "Dr. Luca Bianchi", role: "Studio Dentistico · Torino", quote: "Agenda digitale, schede paziente, fatturazione elettronica. Ho eliminato 2 ore di burocrazia al giorno.", metric: "−2h/giorno", industry: "Healthcare", emoji: "🏥", photo: testimonialLuca },
+  { name: "Simone Moretti", role: "CrossFit Arena · Bologna", quote: "Gestione corsi, abbonamenti e pagamenti in un'unica piattaforma. Il tasso di rinnovo è salito all'87%.", metric: "87% rinnovi", industry: "Fitness", emoji: "💪", photo: testimonialSimone },
+  { name: "Giulia De Luca", role: "Boutique Eleganza · Napoli", quote: "Il catalogo digitale ha trasformato il mio negozio. Le vendite online sono il 35% del totale.", metric: "+35% vendite", industry: "Retail", emoji: "🛍️", photo: testimonialGiulia }];
 
 
   const faqs = [
@@ -6211,10 +6217,8 @@ const LandingPage = () => {
               backdropFilter: "blur(24px)"
             }}>
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold font-heading flex-shrink-0"
-                style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))", border: "2px solid hsla(265,50%,55%,0.25)", color: "hsl(var(--primary))" }}>
-                      {t.name.charAt(0)}
-                    </div>
+                    <img src={t.photo} alt={t.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                style={{ border: "2px solid hsla(265,50%,55%,0.25)" }} />
                     <div>
                       <h4 className="font-heading text-[0.7rem] font-semibold" style={{ color: "hsla(0,0%,100%,0.94)" }}>{t.name}</h4>
                       <p className="text-[0.5rem]" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
@@ -6247,10 +6251,8 @@ const LandingPage = () => {
                       <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
                       <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
                       <div className="relative mb-4 mt-1">
-                        <div className="w-14 h-14 rounded-full flex items-center justify-center text-base font-bold font-heading mx-auto"
-                    style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))", border: "2px solid hsla(265,50%,55%,0.25)", color: "hsl(var(--primary))", boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)" }}>
-                          {t.name.charAt(0)}
-                        </div>
+                        <img src={t.photo} alt={t.name} className="w-14 h-14 rounded-full object-cover mx-auto"
+                    style={{ border: "2px solid hsla(265,50%,55%,0.25)", boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)" }} />
                         <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
                     style={{ background: "hsla(265,30%,15%,0.9)", border: "1px solid hsla(265,40%,50%,0.2)", boxShadow: "0 4px 12px hsla(0,0%,0%,0.3)" }}>
                           {t.emoji}
