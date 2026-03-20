@@ -6693,8 +6693,10 @@ const LandingPage = () => {
 
       {/* <SectionDivider /> — hidden redesign */}
 
-      {/* EMPIRE STORY & TEAM — hidden redesign */}
-      {/* <SectionDivider /> — hidden redesign */}
+      {/* EMPIRE STORY & TEAM */}
+      <Suspense fallback={null}>
+        <EmpireTeamStory />
+      </Suspense>
 
       {/* ═══════ FINAL CTA ═══════ */}
       <Section>
