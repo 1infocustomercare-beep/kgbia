@@ -102,7 +102,7 @@ function useLandingAssets() {
   };
 }
 
-const SafeEmpireVoiceAgent = () => <EmpireVoiceAgent />;
+const SafeEmpireVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 
 /* ═══════════════════════════════════════════
    HELPERS
@@ -571,7 +571,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
 
   return (
     <motion.div
-      className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass ${className}`}
+      className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass premium-card-hover ${className}`}
       style={{
         background: "linear-gradient(145deg, hsla(230,12%,11%,0.98), hsla(230,10%,7%,0.99))",
         backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.4)",
@@ -632,6 +632,37 @@ const SectionDivider = forwardRef<HTMLDivElement>((_, ref) =>
   </div>
 );
 SectionDivider.displayName = "SectionDivider";
+
+/* ═══ Circuit SVG Pattern — for AI/DNA/Funzionalità sections ═══ */
+const CircuitPattern = () => (
+  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.08 }} xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="circuit-grid" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+        {/* Horizontal lines */}
+        <line x1="0" y1="30" x2="50" y2="30" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        <line x1="70" y1="30" x2="120" y2="30" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        {/* Vertical lines */}
+        <line x1="50" y1="0" x2="50" y2="30" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        <line x1="70" y1="30" x2="70" y2="90" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        <line x1="50" y1="90" x2="50" y2="120" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        {/* Right-angle connectors */}
+        <line x1="50" y1="90" x2="70" y2="90" stroke="rgba(201,168,76,0.15)" strokeWidth="0.5" />
+        {/* Nodes — luminous dots */}
+        <circle cx="50" cy="30" r="2.5" fill="rgba(201,168,76,0.3)" />
+        <circle cx="70" cy="30" r="1.5" fill="rgba(201,168,76,0.2)" />
+        <circle cx="70" cy="90" r="2.5" fill="rgba(201,168,76,0.3)" />
+        <circle cx="50" cy="90" r="1.5" fill="rgba(201,168,76,0.2)" />
+        {/* Bright pips at intersections */}
+        <circle cx="50" cy="30" r="1" fill="#C9A84C" opacity="0.4" />
+        <circle cx="70" cy="90" r="1" fill="#C9A84C" opacity="0.4" />
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#circuit-grid)" />
+    {/* Animated dash flow lines */}
+    <line x1="10%" y1="40%" x2="90%" y2="40%" stroke="rgba(201,168,76,0.08)" strokeWidth="0.5" className="circuit-line-animated" />
+    <line x1="50%" y1="10%" x2="50%" y2="90%" stroke="rgba(201,168,76,0.06)" strokeWidth="0.5" className="circuit-line-animated" style={{ animationDelay: "1s" }} />
+  </svg>
+);
 
 /* ═══ Comparison Row ═══ */
 const CompRow = ({ label, empire, others, icon }: {label: string;empire: string;others: string;icon?: string;}) =>
@@ -3305,7 +3336,17 @@ const LandingPage = () => {
           <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
         </div>
 
-        {/* ═══ LAYER 1: Central glow orb — skip on mobile for GPU savings ═══ */}
+        {/* ═══ LAYER 1: Aurora boreale CSS ═══ */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
+          <div className="aurora-blob-1 absolute w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] rounded-full opacity-[0.07]"
+            style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.8), transparent 65%)", filter: "blur(80px)", top: "10%", left: "15%" }} />
+          <div className="aurora-blob-2 absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full opacity-[0.05]"
+            style={{ background: "radial-gradient(circle, hsla(265,60%,55%,0.7), transparent 65%)", filter: "blur(80px)", top: "20%", right: "10%" }} />
+          <div className="aurora-blob-3 absolute w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] rounded-full opacity-[0.04]"
+            style={{ background: "radial-gradient(circle, hsla(210,55%,55%,0.6), transparent 65%)", filter: "blur(80px)", bottom: "15%", left: "40%" }} />
+        </div>
+
+        {/* ═══ LAYER 1b: Central glow orb — skip on mobile for GPU savings ═══ */}
         {!IS_MOBILE_LP && <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
           <motion.div className="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] rounded-full blur-[180px]"
           style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.06), hsla(35,45%,50%,0.03), transparent 70%)" }}
@@ -3314,7 +3355,7 @@ const LandingPage = () => {
           
         </div>}
 
-        <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale }}>
+        <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
             {/* Clean badge — gold accent */}
@@ -3325,12 +3366,16 @@ const LandingPage = () => {
               <span className="text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase" style={{ color: "hsla(35,45%,55%,0.94)" }}>Il Sistema Operativo per il Tuo Business</span>
             </motion.div>
 
-            {/* Headline — gold shimmer */}
-            <motion.h1 className="text-[1.7rem] leading-[1.08] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] font-heading font-bold tracking-[-0.03em] px-4 sm:px-0"
+            {/* Gradient glow behind title */}
+            <div className="absolute -inset-8 pointer-events-none hero-gradient-glow -z-10"
+              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsla(38,55%,50%,0.12), hsla(265,50%,50%,0.06), transparent 70%)" }} />
+
+            {/* Headline — gold shimmer + clip reveal */}
+            <motion.h1 className="text-[1.7rem] leading-[1.08] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] font-heading font-bold tracking-[-0.03em] px-4 sm:px-0 relative"
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
               <span className="text-foreground">Modernizziamo</span>
               <br />
-              <span className="text-gold-shimmer">Qualsiasi Business</span>
+              <span className="text-gold-shimmer clip-reveal-text">Qualsiasi Business</span>
             </motion.h1>
 
             {/* Subtitle */}
@@ -5305,6 +5350,7 @@ const LandingPage = () => {
       <Section id="services" className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.82) 0%, hsla(230,22%,10%,0.78) 15%, hsla(265,22%,11%,0.78) 32%, hsla(38,16%,9%,0.78) 52%, hsla(265,18%,9%,0.78) 72%, hsla(230,16%,4%,0.82) 100%)"
       }}>
+        <CircuitPattern />
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />

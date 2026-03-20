@@ -1211,3 +1211,81 @@ video::-webkit-media-controls-enclosure {
 .text-foreground\/25:not(.line-through):not([class*="line-through"]) { color: hsl(var(--foreground) / 0.42) !important; }
 .text-foreground\/30 { color: hsl(var(--foreground) / 0.48) !important; }
 .text-foreground\/35 { color: hsl(var(--foreground) / 0.52) !important; }
+
+/* ═══ Hero Aurora Effect ═══ */
+@keyframes aurora-drift-1 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  33% { transform: translate(15%, -10%) scale(1.1); }
+  66% { transform: translate(-10%, 8%) scale(0.95); }
+}
+@keyframes aurora-drift-2 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  33% { transform: translate(-12%, 15%) scale(1.05); }
+  66% { transform: translate(10%, -5%) scale(1.12); }
+}
+@keyframes aurora-drift-3 {
+  0%, 100% { transform: translate(0%, 0%) scale(1.05); }
+  33% { transform: translate(8%, 12%) scale(0.98); }
+  66% { transform: translate(-15%, -8%) scale(1.08); }
+}
+.aurora-blob-1 {
+  animation: aurora-drift-1 12s ease-in-out infinite;
+}
+.aurora-blob-2 {
+  animation: aurora-drift-2 15s ease-in-out infinite;
+}
+.aurora-blob-3 {
+  animation: aurora-drift-3 18s ease-in-out infinite;
+}
+
+/* ═══ Hero Gradient Glow — hue rotation ═══ */
+@keyframes hero-glow-hue {
+  0% { filter: hue-rotate(0deg) blur(80px); }
+  50% { filter: hue-rotate(30deg) blur(90px); }
+  100% { filter: hue-rotate(0deg) blur(80px); }
+}
+.hero-gradient-glow {
+  animation: hero-glow-hue 8s ease-in-out infinite;
+}
+
+/* ═══ Clip-path text reveal ═══ */
+@keyframes clip-reveal-ltr {
+  0% { clip-path: inset(0 100% 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+.clip-reveal-text {
+  animation: clip-reveal-ltr 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.4s;
+  clip-path: inset(0 100% 0 0);
+}
+
+/* ═══ Section scroll reveal (CSS-based performance) ═══ */
+.section-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity;
+}
+.section-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══ Premium card glow hover ═══ */
+.premium-card-hover {
+  transition: box-shadow 0.3s ease-out, border-color 0.3s ease-out;
+}
+.premium-card-hover:hover {
+  box-shadow: 0 0 20px hsla(38, 50%, 50%, 0.15), 0 8px 32px hsla(0, 0%, 0%, 0.3);
+  border-color: hsla(38, 45%, 55%, 0.25);
+}
+
+/* ═══ Circuit pattern stroke animation ═══ */
+@keyframes circuit-dash-flow {
+  0% { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
+}
+.circuit-line-animated {
+  stroke-dasharray: 6 6;
+  animation: circuit-dash-flow 2s linear infinite;
+}
