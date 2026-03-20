@@ -1087,7 +1087,12 @@ export default function DemoAdminPage() {
           return (
             <button key={mod.route} onClick={() => { setActiveModule(mod.route); setSidebarOpen(false); }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group ${isActive ? "text-white" : "text-white/45 hover:text-white/75 hover:bg-white/[0.04]"}`}
-              style={isActive ? { background: `${accentColor}18`, color: accentColor } : {}}>
+              style={isActive ? {
+                background: layoutConfig.sidebarStyle === "accent-bar" ? `${accentColor}20` : layoutConfig.sidebarStyle === "glass" ? `${accentColor}12` : `${accentColor}18`,
+                color: accentColor,
+                borderLeft: layoutConfig.sidebarStyle === "accent-bar" ? `3px solid ${accentColor}` : undefined,
+                boxShadow: layoutConfig.sidebarStyle === "glass" ? `inset 0 0 20px ${accentColor}08` : undefined,
+              } : {}}>
               <Icon className="w-4 h-4 shrink-0" />
               <span className="flex-1 text-left">{mod.label}</span>
               {badgeCount > 0 && (
