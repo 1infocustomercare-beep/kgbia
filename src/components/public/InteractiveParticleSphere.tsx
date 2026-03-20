@@ -258,10 +258,10 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         const c = colorPalette[cl.ci];
         const lx = cl.x1 + (cl.x2 - cl.x1) * p, ly = cl.y1 + (cl.y2 - cl.y1) * p;
         ctx.beginPath(); ctx.moveTo(cl.x1 * w, cl.y1 * h); ctx.lineTo(lx * w, ly * h);
-        ctx.strokeStyle = hsl(c, 0.05 * anyA); ctx.lineWidth = 0.5; ctx.stroke();
+        ctx.strokeStyle = hsl(c, 0.12 * anyA); ctx.lineWidth = 0.7; ctx.stroke();
         if (p > 0.3) {
-          ctx.beginPath(); ctx.arc(lx * w, ly * h, 2, 0, Math.PI * 2);
-          ctx.fillStyle = hsl(c, 0.18 * anyA); ctx.fill();
+          ctx.beginPath(); ctx.arc(lx * w, ly * h, 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = hsl(c, 0.35 * anyA); ctx.fill();
         }
       }
 
