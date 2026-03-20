@@ -3365,31 +3365,34 @@ const LandingPage = () => {
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
-            {/* Clean badge — gold accent */}
-            <motion.div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border bg-primary/[0.04] mb-5 sm:mb-7 ${IS_MOBILE_LP ? "" : "backdrop-blur-sm"}`}
-            style={{ borderColor: "hsla(35,45%,50%,0.2)" }}
+            {/* Clean badge — neon accent */}
+            <motion.div className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-full border bg-primary/[0.04] mb-5 sm:mb-7 ${IS_MOBILE_LP ? "" : "backdrop-blur-sm"}`}
+            style={{ borderColor: "hsl(var(--neon-emerald) / 0.25)", boxShadow: "0 0 20px hsl(var(--neon-emerald) / 0.06)" }}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} />
-              <span className="text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase" style={{ color: "hsla(35,45%,55%,0.94)" }}>Il Sistema Operativo per il Tuo Business</span>
+              <motion.span className="w-2 h-2 rounded-full" style={{ background: "hsl(var(--neon-emerald))" }}
+              animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />
+              <span className="text-[0.6rem] sm:text-[0.65rem] font-heading font-bold tracking-[2px] uppercase text-neon-emerald">🤖 Piattaforma AI All-in-One per PMI</span>
             </motion.div>
 
             {/* Gradient glow behind title */}
             <div className="absolute -inset-8 pointer-events-none hero-gradient-glow -z-10"
-              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsla(38,55%,50%,0.12), hsla(265,50%,50%,0.06), transparent 70%)" }} />
+              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsla(265,70%,55%,0.15), hsla(160,60%,45%,0.06), transparent 70%)" }} />
 
-            {/* Headline — gold shimmer + clip reveal */}
-            <motion.h1 className="text-[1.7rem] leading-[1.08] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] font-heading font-bold tracking-[-0.03em] px-4 sm:px-0 relative"
+            {/* Headline — larger, clearer, vivid */}
+            <motion.h1 className="text-[1.85rem] leading-[1.05] sm:text-[3.4rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em] px-2 sm:px-0 relative"
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
-              <span className="text-foreground">Modernizziamo</span>
+              <span className="text-foreground">Gestione, IA e</span>
               <br />
-              <span className="text-gold-shimmer clip-reveal-text">Qualsiasi Business</span>
+              <span className="text-foreground">Automazione per il</span>
+              <br />
+              <span className="text-vivid-gradient clip-reveal-text">Tuo Business</span>
             </motion.h1>
 
-            {/* Subtitle */}
-            <motion.p className="mt-5 sm:mt-6 text-sm sm:text-lg text-foreground/45 max-w-[560px] leading-[1.7] sm:leading-[1.8] font-light px-2 sm:px-0"
+            {/* Subtitle — clearer value prop */}
+            <motion.p className="mt-4 sm:mt-6 text-[0.85rem] sm:text-lg text-foreground/50 max-w-[540px] leading-[1.75] sm:leading-[1.8] font-light px-2 sm:px-0"
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-              Un unico ecosistema AI che gestisce, automatizza e scala il tuo business —
-              <span className="text-foreground/60 font-normal"> dal primo cliente all'impero multi-sede. Nessun codice, nessuna commissione nascosta, solo risultati misurabili.</span>
+              App dedicata, 20+ agenti IA, CRM, prenotazioni, pagamenti e marketing —
+              <span className="text-foreground/70 font-medium"> tutto integrato per <span className="text-neon-emerald font-semibold">25+ settori</span>. Zero canone mensile, solo risultati.</span>
             </motion.p>
 
             {/* ═══ Interactive AI Particle Sphere ═══ */}
