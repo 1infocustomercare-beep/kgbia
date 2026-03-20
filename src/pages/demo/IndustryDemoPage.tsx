@@ -374,7 +374,7 @@ export default function IndustryDemoPage() {
 
   // ═══ PORTFOLIO SHOWCASE MODE ═══
   // All sectors now render as Lowengeld-style portfolio pages
-  const hasPortfolioData = !!SECTOR_MOCKUP_IMAGES_CHECK[resolvedIndustry];
+  const hasPortfolioData = !!(SECTOR_MOCKUP_IMAGES[resolvedIndustry]?.length);
   if (hasPortfolioData && !isPartnerBranded) {
     const accentColor = theme.accent;
     return (
