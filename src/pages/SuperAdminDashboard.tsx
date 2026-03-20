@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lazy, Suspense, useRef, useCallback } from "react";
-import empireAgentMascot from "@/assets/empire-agent-mascot.png";
+import empireMonkeyMascot from "@/assets/empire-monkey.png";
 const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRequestsAdminPage"));
 import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
 import { INDUSTRY_CONFIGS } from "@/config/industry-config";
@@ -533,7 +533,7 @@ const SuperAdminDashboard = () => {
 
               {/* Mascot image */}
               <motion.img
-                src={empireAgentMascot}
+                src={empireMonkeyMascot}
                 alt="Empire Agent"
                className="absolute inset-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] object-contain drop-shadow-[0_0_12px_hsl(265_85%_65%/0.5)] z-10"
                 animate={{ scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] }}
