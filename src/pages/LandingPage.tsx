@@ -5294,7 +5294,8 @@ const LandingPage = () => {
 
             {/* Opaque layer to block DNA background bleed */}
             <div className="absolute inset-0 rounded-2xl" style={{
-              background: "linear-gradient(145deg, hsla(265,22%,8%,0.94) 0%, hsla(230,18%,6%,0.95) 50%, hsla(265,20%,9%,0.94) 100%)"
+              background: "linear-gradient(145deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
+              border: "1px solid hsl(var(--border) / 0.3)"
             }} />
 
             {/* Circuit connection SVG between the 3 cards */}
