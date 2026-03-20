@@ -108,10 +108,5 @@ export const SECTOR_MOCKUP_IMAGES: Partial<Record<IndustryId, string[]>> = {
     `${S}/MMI%20Resident%20Hub/01-ocean-azure-desktop-dashboard.png`,
   ],
 
-  // Otomaki Sushi images reusable for education (Japanese aesthetic)
-  education: [
-    `${S}/migrated-1773167901906-9e1e562a9a71c0a8aed3ac62c7a611a0-1772904882643.png`,
-    `${S}/migrated-1773167902215-cc78c59f3e7ac20af97500c2150ee325-1772904886788.png`,
-    `${S}/migrated-1773167902581-874b87d01f2114131311e5cee0b273ae-1772904891706.png`,
-  ],
+  // Education sector doesn't have matching portfolio images — uses CSS fallback
 };
