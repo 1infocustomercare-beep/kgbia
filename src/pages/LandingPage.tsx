@@ -580,29 +580,26 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
 
   return (
     <motion.div
-      className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass premium-card-hover ${className}`}
+      className={`relative rounded-2xl border overflow-hidden group/card premium-card-hover ${className}`}
       style={{
-        background: "linear-gradient(145deg, hsla(230,12%,11%,0.98), hsla(230,10%,7%,0.99))",
-        backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.4)",
-        borderColor: "hsla(38,40%,55%,0.18)",
-        boxShadow: "0 2px 24px hsla(0,0%,0%,0.4), 0 0 0 1px hsla(38,45%,50%,0.06)"
+        background: "linear-gradient(145deg, hsl(224 14% 14% / 0.98), hsl(225 16% 10% / 0.99))",
+        backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.3)",
+        borderColor: "hsl(var(--border) / 0.6)",
+        boxShadow: "0 2px 20px hsl(0 0% 0% / 0.3), 0 0 0 1px hsl(var(--primary) / 0.04)"
       }}
       whileHover={hover && !isMobileDevice ? {
-        y: -6,
-        borderColor: "hsla(38,45%,55%,0.25)",
-        boxShadow: "0 20px 60px hsla(38,45%,50%,0.1), 0 0 30px hsla(38,45%,50%,0.05), inset 0 1px 0 hsla(38,50%,70%,0.08)",
+        y: -5,
+        borderColor: "hsl(var(--primary) / 0.2)",
+        boxShadow: "0 16px 48px hsl(0 0% 0% / 0.35), 0 0 24px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
         transition: { duration: 0.4, ease: "easeOut" }
       } : undefined}>
       
-    {/* Top accent line — static on mobile */}
+    {/* Top accent line */}
     <div className="absolute top-0 left-0 right-0 h-px z-10"
-      style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,55%,0.2), hsla(38,50%,60%,0.2), hsla(35,45%,55%,0.15), transparent)" }} />
+      style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), hsl(var(--accent) / 0.12), transparent)" }} />
       
-    {/* Corner accents */}
-    <div className="absolute top-2 left-2 w-4 h-4 border-t border-l rounded-tl-sm pointer-events-none opacity-20" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
-    <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r rounded-br-sm pointer-events-none opacity-20" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
     {/* Inner glass reflection */}
-    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(38,30%,70%,0.03) 0%, transparent 40%)" }} />
+    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 35%)" }} />
     <div className="relative z-10">{children}</div>
   </motion.div>);
 
