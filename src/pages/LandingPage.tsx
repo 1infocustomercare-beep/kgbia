@@ -5142,7 +5142,7 @@ const LandingPage = () => {
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Costruiamo <span className="text-shimmer">Qualsiasi Cosa</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.8]"
+          <motion.p className="text-foreground/55 max-w-[500px] mx-auto text-sm leading-[1.8]"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Nessun pacchetto standard. Analizziamo il tuo business, progettiamo la soluzione perfetta e la costruiamo su misura.
           </motion.p>
