@@ -5990,15 +5990,15 @@ const LandingPage = () => {
                         {/* Before → After */}
                         <div className="flex items-center gap-1">
                           <div className="flex-1 rounded-lg py-1.5 px-1.5 text-center"
-                          style={{ background: "hsla(0,35%,15%,0.3)", border: "1px solid hsla(0,35%,35%,0.08)" }}>
-                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/20 mb-0.5">Prima</div>
-                            <div className="text-[0.65rem] font-bold text-red-400/75 leading-tight">{t.before}</div>
+                          style={{ background: "hsla(0,40%,50%,0.06)", border: "1px solid hsla(0,40%,50%,0.1)" }}>
+                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/45 mb-0.5">Prima</div>
+                            <div className="text-[0.65rem] font-bold text-red-500/75 leading-tight">{t.before}</div>
                           </div>
-                          <ArrowRight className="w-2.5 h-2.5 flex-shrink-0" style={{ color: `hsla(${t.color},55%,55%,0.45)` }} />
+                          <ArrowRight className="w-2.5 h-2.5 flex-shrink-0" style={{ color: `hsla(${t.color},55%,50%,0.6)` }} />
                           <div className="flex-1 rounded-lg py-1.5 px-1.5 text-center"
-                          style={{ background: `hsla(${t.color},35%,15%,0.2)`, border: `1px solid hsla(${t.color},35%,35%,0.1)` }}>
-                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/20 mb-0.5">Dopo</div>
-                            <div className="text-[0.65rem] font-bold leading-tight" style={{ color: `hsla(${t.color},65%,65%,0.9)` }}>{t.after}</div>
+                          style={{ background: `hsla(${t.color},40%,50%,0.06)`, border: `1px solid hsla(${t.color},40%,50%,0.12)` }}>
+                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/45 mb-0.5">Dopo</div>
+                            <div className="text-[0.65rem] font-bold leading-tight" style={{ color: `hsla(${t.color},65%,42%,0.95)` }}>{t.after}</div>
                           </div>
                         </div>
                       </div>
