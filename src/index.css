@@ -652,9 +652,10 @@
   .text-shimmer {
     background: linear-gradient(
       135deg,
-      hsl(38, 50%, 58%) 0%,
-      hsl(35, 45%, 62%) 50%,
-      hsl(38, 48%, 55%) 100%
+      hsl(172, 80%, 52%) 0%,
+      hsl(195, 100%, 58%) 35%,
+      hsl(210, 100%, 65%) 65%,
+      hsl(250, 85%, 70%) 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
