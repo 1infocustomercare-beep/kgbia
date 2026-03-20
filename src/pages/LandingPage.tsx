@@ -1508,13 +1508,14 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             <motion.div className="max-w-4xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <div
               className={`relative p-5 sm:p-7 rounded-2xl overflow-hidden border ${
-              pkg.id === "empire" ? "border-accent/25" : "border-primary/20"}`
+              pkg.id === "empire" ? "border-accent/20" : "border-primary/15"}`
               }
               style={{
                 background:
                 pkg.id === "empire" ?
-                "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.95) 45%, hsla(0,0%,4%,0.99) 100%)" :
-                "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,14%,8%,0.9) 35%, hsla(0,0%,4%,0.99) 100%)"
+                "linear-gradient(180deg, hsl(0 0% 100% / 0.98) 0%, hsl(35 18% 97% / 0.95) 45%, hsl(0 0% 100% / 0.98) 100%)" :
+                "linear-gradient(180deg, hsl(0 0% 100% / 0.98) 0%, hsl(248 15% 97% / 0.94) 35%, hsl(0 0% 100% / 0.98) 100%)",
+                boxShadow: "0 4px 24px hsl(var(--primary) / 0.06)"
               }}>
               
                 <div className={`absolute top-0 left-0 right-0 h-[2px] ${pkg.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />
