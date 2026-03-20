@@ -3496,40 +3496,8 @@ const LandingPage = () => {
               </motion.div>
             </div>
 
-            {/* PHONES: Centered below text */}
-            {/* PHONES: Auto-rotating carousel of ALL sectors in groups of 3 */}
-            {(() => {
-              const heroSectors = [
-                { img: sectorHeroFood, label: "Food" },
-                { img: sectorHeroNcc, label: "NCC" },
-                { img: sectorHeroBeauty, label: "Beauty" },
-                { img: sectorHeroHealthcare, label: "Healthcare" },
-                { img: sectorHeroRetail, label: "Retail" },
-                { img: sectorHeroFitness, label: "Fitness" },
-                { img: sectorHeroHotel, label: "Hospitality" },
-                { img: sectorHeroBeach, label: "Beach" },
-                { img: sectorHeroPlumber, label: "Artigiani" },
-                { img: sectorHeroElectrician, label: "Elettricisti" },
-                { img: sectorHeroConstruction, label: "Edilizia" },
-                { img: sectorHeroEvents, label: "Eventi" },
-                { img: sectorHeroGarage, label: "Autofficine" },
-                { img: sectorHeroLogistics, label: "Logistica" },
-                { img: sectorHeroGardening, label: "Giardinaggio" },
-                { img: sectorHeroVeterinary, label: "Veterinari" },
-                { img: sectorHeroPhotography, label: "Fotografia" },
-                { img: sectorHeroEducation, label: "Formazione" },
-                { img: sectorHeroChildcare, label: "Asili" },
-                { img: sectorHeroTattoo, label: "Tattoo" },
-                { img: sectorHeroCleaning, label: "Pulizie" },
-                { img: sectorHeroAgriturismo, label: "Agriturismo" },
-                { img: sectorHeroLegal, label: "Legale" },
-                { img: sectorHeroAccounting, label: "Contabilità" },
-                { img: sectorHeroCustom, label: "Custom" },
-              ];
-              return (
-                <HeroPhoneCarousel sectors={heroSectors} />
-              );
-            })()}
+            {/* PHONES: Each sector shows 3 real mockup screens (home, services, detail) */}
+            <HeroPhoneCarousel sectors={heroCarouselSectors} />
           </div>
         </motion.div>
 
