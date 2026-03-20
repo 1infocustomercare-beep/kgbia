@@ -578,15 +578,15 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     <motion.div
       className={`relative rounded-2xl border overflow-hidden group/card premium-card-hover ${className}`}
       style={{
-        background: "linear-gradient(145deg, hsl(224 14% 14% / 0.98), hsl(225 16% 10% / 0.99))",
+        background: "linear-gradient(145deg, hsl(0 0% 100% / 0.95), hsl(220 20% 98% / 0.92))",
         backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.3)",
-        borderColor: "hsl(var(--border) / 0.6)",
-        boxShadow: "0 2px 20px hsl(0 0% 0% / 0.3), 0 0 0 1px hsl(var(--primary) / 0.04)"
+        borderColor: "hsl(var(--border) / 0.5)",
+        boxShadow: "0 2px 20px hsl(var(--primary) / 0.06), 0 0 0 1px hsl(var(--primary) / 0.04)"
       }}
       whileHover={hover && !isMobileDevice ? {
         y: -5,
         borderColor: "hsl(var(--primary) / 0.2)",
-        boxShadow: "0 16px 48px hsl(0 0% 0% / 0.35), 0 0 24px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
+        boxShadow: "0 16px 48px hsl(var(--primary) / 0.1), 0 0 24px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
         transition: { duration: 0.4, ease: "easeOut" }
       } : undefined}>
       
@@ -595,7 +595,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
       style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), hsl(var(--accent) / 0.12), transparent)" }} />
       
     {/* Inner glass reflection */}
-    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 35%)" }} />
+    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.4) 0%, transparent 35%)" }} />
     <div className="relative z-10">{children}</div>
   </motion.div>);
 
