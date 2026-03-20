@@ -2717,6 +2717,7 @@ export function IPhoneFrame({
                 </div>
               </div>
             )}
+            </>)}
           </div>
 
           {/* Home indicator */}
