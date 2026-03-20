@@ -2723,7 +2723,7 @@ const LandingPage = () => {
 
 
   const faqs = [
-  { q: "Per quali settori funziona Empire?", a: "Empire copre oltre 25 settori: ristoranti, NCC, saloni di bellezza, studi medici, negozi, palestre, hotel, idraulici, elettricisti, agriturismi, lidi, e molti altri. Ogni settore ha moduli, terminologia e flussi dedicati che si attivano automaticamente." },
+  { q: "Per quali settori funziona Empire?", a: "Empire copre oltre 25 settori: ristoranti, NCC, saloni di bellezza, studi medici, negozi, palestre, hotel, idraulici, elettricisti, agriturismi, lidi, e molti altri. Ogni settore ha moduli, terminologia e flussi dedicati che si attivano automaticamente. Con 98+ agenti IA autonomi." },
   { q: "È difficile da usare?", a: "No. Se sai usare Instagram, sai usare Empire. L'interfaccia si adatta al tuo settore. L'IA fa il lavoro pesante: carica una foto e in 60 secondi hai il tuo catalogo digitale completo." },
   { q: "Come funzionano i pagamenti?", a: "I pagamenti arrivano direttamente sul TUO conto via Stripe Connect. Non tocchiamo mai i tuoi soldi. L'unica trattenuta è il 2% automatico — 15× meno delle piattaforme tradizionali." },
   { q: "Quanto costa davvero?", a: "€2.997 una tantum (o 3 rate da €1.099). Dopodiché €0/mese per sempre. Solo il 2% sulle transazioni. Nessun vincolo, nessun costo nascosto." },
@@ -3391,7 +3391,7 @@ const LandingPage = () => {
             {/* Subtitle — clearer value prop */}
             <motion.p className="mt-4 sm:mt-6 text-[0.85rem] sm:text-lg text-foreground/50 max-w-[540px] leading-[1.75] sm:leading-[1.8] font-light px-2 sm:px-0"
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-              App dedicata, 20+ agenti IA, CRM, prenotazioni, pagamenti e marketing —
+              App dedicata, 98+ agenti IA, CRM, prenotazioni, pagamenti e marketing —
               <span className="text-foreground/70 font-medium"> tutto integrato per <span className="text-neon-emerald font-semibold">25+ settori</span>. Zero canone mensile, solo risultati.</span>
             </motion.p>
 
@@ -3495,7 +3495,7 @@ const LandingPage = () => {
             { icon: <Smartphone className="w-3 h-3" />, text: "PWA Certified", color: "var(--neon-cyan)" },
             { icon: <Shield className="w-3 h-3" />, text: "GDPR Compliant", color: "var(--neon-emerald)" },
             { icon: <Zap className="w-3 h-3" />, text: "99.9% Uptime", color: "var(--neon-magenta)" },
-            { icon: <Cpu className="w-3 h-3" />, text: "20+ Agenti IA", color: "var(--empire-violet)" },
+            { icon: <Cpu className="w-3 h-3" />, text: "98+ Agenti IA", color: "var(--empire-violet)" },
             { icon: <MapPin className="w-3 h-3" />, text: "Made in Italy", color: "var(--neon-emerald)" },
             { icon: <Fingerprint className="w-3 h-3" />, text: "White Label", color: "var(--neon-cyan)" },
             { icon: <Globe className="w-3 h-3" />, text: "25+ Settori", color: "var(--neon-magenta)" },
@@ -3535,7 +3535,7 @@ const LandingPage = () => {
         variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
           {[
             { icon: <Smartphone className="w-4 h-4" />, title: "App White Label", desc: "Il TUO brand, zero loghi terzi", color: "var(--empire-violet)" },
-            { icon: <Bot className="w-4 h-4" />, title: "20+ Agenti IA", desc: "Lavorano 24/7 in autonomia", color: "var(--neon-emerald)" },
+            { icon: <Bot className="w-4 h-4" />, title: "98+ Agenti IA", desc: "Lavorano 24/7 in autonomia", color: "var(--neon-emerald)" },
             { icon: <Calendar className="w-4 h-4" />, title: "Prenotazioni", desc: "Agenda, ordini, booking", color: "var(--neon-cyan)" },
             { icon: <CreditCard className="w-4 h-4" />, title: "Pagamenti", desc: "Stripe Connect integrato", color: "var(--neon-magenta)" },
             { icon: <Users className="w-4 h-4" />, title: "CRM Clienti", desc: "Storico, preferenze, fidelity", color: "var(--empire-violet)" },
@@ -3929,7 +3929,7 @@ const LandingPage = () => {
           </motion.h2>
           <motion.p className="text-foreground/70 max-w-[560px] mx-auto text-[0.9rem] leading-[1.85] tracking-wide font-light"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Oltre 95 Agenti IA autonomi, dashboard predittive, CRM intelligente, gestione flotta e prenotazioni, cataloghi digitali con OCR, automazioni multi-canale, fatturazione elettronica, analytics in tempo reale, voice agent, generazione foto e contenuti AI — un ecosistema white-label completo che lavora 24/7 per ogni settore, senza intervento umano.
+            Oltre 98 Agenti IA autonomi, dashboard predittive, CRM intelligente, gestione flotta e prenotazioni, cataloghi digitali con OCR, automazioni multi-canale, fatturazione elettronica, analytics in tempo reale, voice agent, generazione foto e contenuti AI — un ecosistema white-label completo che lavora 24/7 per ogni settore, senza intervento umano.
           </motion.p>
         </div>
         <motion.div className="relative max-w-3xl mx-auto rounded-2xl overflow-hidden glow-card"
@@ -4641,7 +4641,7 @@ const LandingPage = () => {
           <CompRow icon="🚀" label="Setup" empire="Gratis" others="€1.500-5.000" />
           <CompRow icon="🏢" label="Settori" empire="25+" others="1-3" />
           <CompRow icon="📱" label="App dedicata" empire="Inclusa" others="€149/mese extra" />
-          <CompRow icon="🤖" label="Agenti IA" empire="20+ inclusi" others="Assenti" />
+          <CompRow icon="🤖" label="Agenti IA" empire="98+ inclusi" others="Assenti" />
           <CompRow icon="🎙️" label="Voice Agent" empire="Incluso" others="Non disponibile" />
           <CompRow icon="🔗" label="Integrazioni" empire="Stripe · AI · Push" others="Limitate" />
           <CompRow icon="⚡" label="Automazioni" empire="Multi-canale" others="Solo email" />
