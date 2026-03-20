@@ -144,37 +144,30 @@ const HeroPhoneCarousel = ({ sectors }: { sectors: { screens: [string, string, s
 
   return (
     <motion.div className="relative mt-10 flex flex-col items-center"
-      initial={{ opacity: 0, y: 40, scale: 0.92 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
-
-      {/* Ambient glow */}
-      <div className="absolute inset-[-25%] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsla(265,50%,50%,0.12), hsla(168,45%,45%,0.08), transparent 70%)" }} />
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
 
       {/* Three phone container with crossfade */}
       <div className="relative flex items-end justify-center">
         <AnimatePresence mode="wait">
-          <motion.div key={idx} className="flex items-end" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+          <motion.div key={idx} className="flex items-end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
 
-            {/* LEFT phone — second screen */}
-            <motion.div className="relative z-[5]" style={{ marginBottom: "32px", marginRight: "-18px" }}
-              animate={{ y: [0, -6, 0] }} transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}>
+            {/* LEFT phone */}
+            <div className="relative z-[5]" style={{ marginBottom: "32px", marginRight: "-18px" }}>
               <PhoneFrame src={current.screens[1]} alt={`${current.label} - Servizi`} size="w-[110px] sm:w-[145px] lg:w-[175px]" rounding="rounded-[24px] sm:rounded-[32px]" />
-            </motion.div>
+            </div>
 
-            {/* CENTER phone — home screen, larger */}
-            <motion.div className="relative z-20"
-              animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
+            {/* CENTER phone */}
+            <div className="relative z-20">
               <PhoneFrame src={current.screens[0]} alt={`${current.label} - Home`} size="w-[140px] sm:w-[185px] lg:w-[225px]" rounding="rounded-[26px] sm:rounded-[36px]"
                 style={{ border: "3px solid hsl(220 10% 78%)", boxShadow: "0 40px 80px hsla(0,0%,0%,0.25), 0 12px 32px hsla(265,40%,35%,0.12), inset 0 1px 0 hsla(0,0%,100%,0.08)" }} />
-            </motion.div>
+            </div>
 
-            {/* RIGHT phone — third screen */}
-            <motion.div className="relative z-[8]" style={{ marginBottom: "20px", marginLeft: "-18px" }}
-              animate={{ y: [0, -7, 0] }} transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}>
+            {/* RIGHT phone */}
+            <div className="relative z-[8]" style={{ marginBottom: "20px", marginLeft: "-18px" }}>
               <PhoneFrame src={current.screens[2]} alt={`${current.label} - Dettaglio`} size="w-[115px] sm:w-[150px] lg:w-[180px]" rounding="rounded-[24px] sm:rounded-[32px]" />
-            </motion.div>
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -259,8 +252,7 @@ const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefine
 
 const Section = forwardRef<HTMLElement, {id?: string;children: React.ReactNode;className?: string;style?: React.CSSProperties;}>(
   ({ id, children, className = "", style }, ref) =>
-  <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden landing-premium-section ${className}`} style={mobilifyBg(style)}>
-      <div className="absolute inset-x-3 sm:inset-x-6 inset-y-6 sm:inset-y-8 rounded-[1.65rem] pointer-events-none landing-premium-shell" />
+  <section ref={ref} id={id} className={`relative py-10 sm:py-16 px-5 sm:px-6 overflow-hidden landing-premium-section ${className}`} style={mobilifyBg(style)}>
       <div className="max-w-[1100px] mx-auto relative z-10">{children}</div>
     </section>
 
@@ -308,7 +300,6 @@ const LIVE_ACTIONS = [
 { agent: "Social Creator", action: "Post Instagram generato e schedulato", icon: <Sparkles className="w-3.5 h-3.5" />, color: "hsla(280,60%,55%,1)", time: "31s fa" },
 { agent: "Analytics Brain", action: "Report settimanale pronto", icon: <Brain className="w-3.5 h-3.5" />, color: "hsla(270,65%,55%,1)", time: "35s fa" },
 { agent: "Data Guardian", action: "Audit GDPR completato — 100% OK", icon: <Lock className="w-3.5 h-3.5" />, color: "hsla(220,30%,50%,1)", time: "40s fa" }];
-
 
 const LiveFeedSimulator = () => {
   const [offset, setOffset] = useState(0);
@@ -640,7 +631,6 @@ const NeuralCellsBackground = () => {
 
 };
 
-
 const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: {children: React.ReactNode;gradient: string;size?: "sm" | "md" | "lg";delay?: number;}) => {
   const sizeClasses = size === "sm" ? "w-6 h-6 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl" : size === "lg" ? "w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl" : "w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl";
   const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
@@ -717,7 +707,6 @@ const Particle = ({ delay, size, x, y }: {delay: number;size: number;x: string;y
       animate={{ y: [0, -25, 0], opacity: [0.1, 0.35, 0.1], scale: [1, 1.3, 1] }}
       transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }} />);
 
-
 };
 
 /* ═══ Section Divider — taller to reveal circuit background ═══ */
@@ -773,7 +762,6 @@ initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={vp
     <span className="text-center text-foreground/25 leading-tight text-[0.5rem] sm:text-sm line-through decoration-destructive/40">{others}</span>
   </motion.div>;
 
-
 /* ═══════════════════════════════════════════
    PRICING CONFIGURATOR
    ═══════════════════════════════════════════ */
@@ -806,7 +794,6 @@ const PRICING_SECTORS: {id: PricingSector;label: string;emoji: string;}[] = [
 { id: "trades", label: "Artigiani & Servizi", emoji: "🔧" },
 { id: "other", label: "Altro settore", emoji: "🏢" }];
 
-
 interface AiAddon {
   id: string;
   name: string;
@@ -834,7 +821,6 @@ const AI_ADDONS: AiAddon[] = [
 { id: "ops-fitness", name: "Operations — Fitness", desc: "Classi, abbonamenti, check-in", price: 119, icon: <Dumbbell className="w-4 h-4" />, sectors: ["fitness"] },
 { id: "ops-hotel", name: "Operations — Hotel", desc: "Rooms, check-in/out, housekeeping", price: 189, icon: <Building className="w-4 h-4" />, sectors: ["hospitality"] },
 { id: "ops-trades", name: "Operations — Artigiani", desc: "Interventi, preventivi, dispatch", price: 109, icon: <ClipboardCheck className="w-4 h-4" />, sectors: ["trades"] }];
-
 
 /** Get sector-specific included agent IDs per package tier */
 const SECTOR_INCLUDED_AGENTS: Record<PricingSector, {growth: string[];empire: string[];}> = {
@@ -889,7 +875,6 @@ const PLAN_TIERS: {id: PlanTier;name: string;price: number;desc: string;badge?: 
   features: ["Tutto di Professional +", "Multi-lingua illimitato", "Loyalty Wallet avanzato", "GhostManager™ clienti persi", "Analytics predittivi", "Supporto prioritario 7/7", "3 Agenti IA inclusi a scelta"],
   includedAgents: 3
 }];
-
 
 /* ─── One-Time Packages ─── */
 interface PackageTier {
@@ -981,7 +966,6 @@ const PACKAGE_TIERS: PackageTier[] = [
   extras: ["Account Manager dedicato", "6 sessioni strategia trimestrale", "Priorità su nuove funzionalità", "Setup multi-sede incluso", "Funzionalità custom su richiesta"],
   savings: "Risparmi €6.403 vs abbonamento — e le commissioni sono tue per sempre"
 }];
-
 
 /** Animated count-up component for savings */
 const SavingsCounter = ({ target, delay = 0 }: {target: number;delay?: number;}) => {
@@ -1097,13 +1081,13 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
     }}>
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.04]"
-        style={{ background: "radial-gradient(ellipse, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(150px)" }} />
+        style={{ background: "radial-gradient(ellipse, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(60px)" }} />
         <div className="absolute top-[30%] left-[12%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
-        style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+        style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(60px)" }} />
         <div className="absolute bottom-[18%] right-[15%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-        style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+        style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
         <div className="absolute bottom-[30%] left-[28%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-        style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+        style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(60px)" }} />
         <div className="absolute top-[15%] right-[25%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
         style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -1112,9 +1096,6 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
         style={{ background: "linear-gradient(180deg, hsla(38,55%,50%,0.4), transparent)" }} />
         <div className="absolute bottom-0 left-0 right-0 h-[70px]"
         style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-        <div className="absolute inset-0 opacity-[0.012]" style={{
-          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-          backgroundRepeat: "repeat", backgroundSize: "128px 128px"
         }} />
       </div>
       <div className="text-center mb-8 sm:mb-12">
@@ -1618,7 +1599,6 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
               animate={{ x: ["-100%", "250%"] }}
               transition={{ duration: 4, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }} />
               
-
                 <div className="flex flex-col gap-5 relative z-10">
                   {/* Header: Package name + price */}
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
@@ -2288,24 +2268,6 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       setFeatureRequestSent(true);
                     } catch {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       // silent fail
                     } finally {setFeatureRequestSending(false);}}} disabled={featureRequestSending || !featureRequestText.trim() || !featureRequestEmail.trim()} className="w-full px-5 py-3 rounded-xl bg-vibrant-gradient text-primary-foreground text-sm font-heading font-bold tracking-wider uppercase disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                         {featureRequestSending ? "Invio in corso..." : "Invia Richiesta →"}
@@ -2577,7 +2539,6 @@ const MobileIPhoneCarousel = ({ items, navigate }: {items: CarouselItem[];naviga
       </div>
     </div>;
 
-
   if (expanded) {
     return (
       <div className="sm:hidden px-2">
@@ -2770,7 +2731,6 @@ const LandingPage = () => {
     return () => window.removeEventListener("scroll", h);
   }, []);
 
-
   const manualMonthlyCost = weeklyHours * hourlyCost * 4.3;
   const automatedCost = manualMonthlyCost * 0.2; // 80% automated
   const monthlySaving = manualMonthlyCost - automatedCost;
@@ -2793,7 +2753,6 @@ const LandingPage = () => {
   { id: "fitness" as const, icon: <Dumbbell className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, PT", gradient: "from-violet-400 to-indigo-500", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti", image: cartoonFitness },
   { id: "hospitality" as const, icon: <Building className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-purple-500/80 to-violet-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge", image: cartoonHotel }];
 
-
   const extraSectors = [
   { icon: <GraduationCap className="w-4 h-4" />, title: "Formazione & Coaching", desc: "Corsi, tutoring, certificazioni", gradient: "from-violet-500 to-purple-400" },
   { icon: <Waves className="w-4 h-4" />, title: "Stabilimenti Balneari", desc: "Ombrelloni, lettini, bar spiaggia", gradient: "from-indigo-400 to-violet-400" },
@@ -2814,7 +2773,6 @@ const LandingPage = () => {
   { icon: <Sparkles className="w-4 h-4" />, title: "Intrattenimento", desc: "Parchi, escape room, bowling", gradient: "from-fuchsia-400/80 to-violet-400" },
   { icon: <Users className="w-4 h-4" />, title: "Asili & Doposcuola", desc: "Iscrizioni, presenze, comunicazioni", gradient: "from-indigo-400 to-purple-300" }];
 
-
   const services = [
   { icon: <Brain className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni.", tag: "IA", color: "from-primary to-accent" },
   { icon: <Smartphone className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "App White Label", desc: "App professionale con il TUO brand, colori e dominio. Nessun logo di terzi.", tag: "APP", color: "from-violet-500 to-primary" },
@@ -2826,13 +2784,11 @@ const LandingPage = () => {
   { icon: <Bell className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Marketing Automation", desc: "Push, email, WhatsApp, promozioni mirate e segmentazione.", tag: "MARKETING", color: "from-accent to-violet-500" },
   { icon: <Lock className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR, backup automatici, audit trail.", tag: "SECURITY", color: "from-violet-400/60 to-indigo-400/60" }];
 
-
   const metrics = [
   { value: 847, suffix: "+", label: "Attività Attive" },
   { value: 25, suffix: "+", label: "Settori Coperti" },
   { value: 40, suffix: "%", prefix: "+", label: "Aumento Fatturato" },
   { value: 99.8, suffix: "%", label: "Soddisfazione" }];
-
 
   const testimonials = [
   { name: "Marco Pellegrini", role: "Trattoria da Marco · Roma", quote: "In 3 mesi ho spostato il 60% degli ordini dalla piattaforma alla mia app. Risparmio €3.200 al mese netti.", metric: "−€3.200/mese", industry: "Food", emoji: "🍽️", photo: testimonialMarco },
@@ -2841,7 +2797,6 @@ const LandingPage = () => {
   { name: "Dr. Luca Bianchi", role: "Studio Dentistico · Torino", quote: "Agenda digitale, schede paziente, fatturazione elettronica. Ho eliminato 2 ore di burocrazia al giorno.", metric: "−2h/giorno", industry: "Healthcare", emoji: "🏥", photo: testimonialLuca },
   { name: "Simone Moretti", role: "CrossFit Arena · Bologna", quote: "Gestione corsi, abbonamenti e pagamenti in un'unica piattaforma. Il tasso di rinnovo è salito all'87%.", metric: "87% rinnovi", industry: "Fitness", emoji: "💪", photo: testimonialSimone },
   { name: "Giulia De Luca", role: "Boutique Eleganza · Napoli", quote: "Il catalogo digitale ha trasformato il mio negozio. Le vendite online sono il 35% del totale.", metric: "+35% vendite", industry: "Retail", emoji: "🛍️", photo: testimonialGiulia }];
-
 
   const faqs = [
   { q: "Per quali settori funziona Empire?", a: "Empire copre oltre 25 settori: ristoranti, NCC, saloni di bellezza, studi medici, negozi, palestre, hotel, idraulici, elettricisti, agriturismi, lidi, e molti altri. Ogni settore ha moduli, terminologia e flussi dedicati che si attivano automaticamente. Con 98+ agenti IA autonomi." },
@@ -2853,13 +2808,11 @@ const LandingPage = () => {
   { q: "Quanto tempo serve per essere operativi?", a: "24 ore. Il nostro team configura tutto: branding, menu/catalogo, integrazioni. Formazione inclusa. Sei operativo dal giorno 1." },
   { q: "Posso personalizzare tutto?", a: "Assolutamente. Logo, colori, dominio, moduli attivi, flussi operativi, notifiche, template email — tutto è personalizzabile senza toccare codice." }];
 
-
   const navLinks = [
   { href: "#industries", label: "Settori" },
   { href: "#services", label: "Funzionalità" },
   { href: "#pricing", label: "Prezzi" },
   { href: "#partner", label: "Partner" }];
-
 
   const whyUs = [
   { icon: <Cpu className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Tecnologia Proprietaria", desc: "Stack tecnologico sviluppato internamente. Non rivendiamo software altrui." },
@@ -2869,13 +2822,11 @@ const LandingPage = () => {
   { icon: <Database className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "I Tuoi Dati, Per Sempre", desc: "Proprietà totale dei dati. Esporta tutto. Zero lock-in." },
   { icon: <Headphones className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Supporto Dedicato", desc: "Team italiano 7/7. Persone vere che risolvono." }];
 
-
   return (
     <div
       className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury"
       style={{ background: "radial-gradient(120% 80% at 50% 35%, hsl(214 28% 96%) 0%, hsl(220 26% 94%) 40%, hsl(224 20% 90%) 64%, hsl(228 26% 86%) 100%)" }}>
       
-
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Subtle violet ambient orbs */}
@@ -3029,7 +2980,6 @@ const LandingPage = () => {
             opacity: { duration: 0.6 }
           }} />
         
-
         {/* ── Bottom edge — premium double-line with glow ── */}
         <motion.div
           className="absolute bottom-0 left-0 right-0 h-px"
@@ -3049,7 +2999,6 @@ const LandingPage = () => {
             filter: "blur(2px)"
           }} />
         
-
         {/* ── Scanning beam — luxury gold/violet sweep ── */}
         {navScrolled &&
         <motion.div
@@ -3160,7 +3109,6 @@ const LandingPage = () => {
               animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0, 0.2] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeOut" }} />
             
-
             {/* Logo container — hexagonal feel with premium depth */}
             <motion.div
               className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center overflow-hidden"
@@ -3181,7 +3129,6 @@ const LandingPage = () => {
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 12, repeat: Infinity, ease: "linear" }} />
               
-              
               {/* Counter-rotating inner ring */}
               <motion.div
                 className="absolute inset-0.5 rounded-full pointer-events-none"
@@ -3189,7 +3136,6 @@ const LandingPage = () => {
                 animate={{ rotate: [360, 0] }}
                 transition={{ duration: 18, repeat: Infinity, ease: "linear" }} />
               
-
               {/* Single elegant shimmer */}
               <motion.div
                 className="absolute inset-0 rounded-full pointer-events-none overflow-hidden">
@@ -3212,7 +3158,6 @@ const LandingPage = () => {
                 animate={{ scale: [1, 1.35], opacity: [0.4, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }} />
               
-
               {/* Status indicator */}
               <motion.div
                 className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full z-10"
@@ -3455,7 +3400,7 @@ const LandingPage = () => {
             style={{ background: "radial-gradient(circle, hsl(150 60% 36% / 0.15), hsl(145 50% 45% / 0.05) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
           {/* Central emerald glow behind sphere */}
           <div className="absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ background: "radial-gradient(circle, hsl(160 70% 40% / 0.12), hsl(168 60% 45% / 0.04) 55%, transparent 75%)", filter: "blur(100px)" }} />
+            style={{ background: "radial-gradient(circle, hsl(160 70% 40% / 0.12), hsl(168 60% 45% / 0.04) 55%, transparent 75%)", filter: "blur(60px)" }} />
         </div>
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
@@ -3617,7 +3562,7 @@ const LandingPage = () => {
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 30% 97%) 50%, hsl(0 0% 100%) 100%)"
       }}>
-        <div className="text-center mb-10">
+        <div className="text-center mb-6">
           <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
           <motion.h2 className="text-[clamp(1.5rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
@@ -3665,20 +3610,12 @@ const LandingPage = () => {
           <motion.div key={i} variants={fadeUp}
           className="relative p-5 rounded-2xl overflow-hidden border transition-all duration-300 group"
           style={{
-            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(230 20% 97% / 0.88))",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
+            background: "hsl(0 0% 100% / 0.92)",
             borderColor: `hsl(${pillar.color} / 0.1)`,
-            boxShadow: `0 4px 28px hsl(${pillar.color} / 0.06), 0 1px 3px hsl(220 20% 80% / 0.12), inset 0 1px 0 hsl(0 0% 100% / 0.5)`,
+            boxShadow: `0 4px 28px hsl(${pillar.color} / 0.06), 0 1px 3px hsl(220 20% 80% / 0.12)`,
           }}>
-            {/* Top accent shimmer line */}
+            {/* Top accent line */}
             <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${pillar.color} / 0.4) 30%, hsl(${pillar.color} / 0.6) 50%, hsl(${pillar.color} / 0.4) 70%, transparent 95%)` }} />
-            {/* Inner glass reflection */}
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.4) 0%, transparent 25%)" }} />
-            {/* Subtle corner glow */}
-            <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-30 pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${pillar.color} / 0.12), transparent 70%)` }} />
-            {/* Hover gradient overlay */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, hsl(${pillar.color} / 0.05), transparent 60%)` }} />
             <div className="relative z-10 flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
               style={{ background: `linear-gradient(135deg, hsl(${pillar.color}), hsl(${pillar.color} / 0.7))`, color: "white", boxShadow: `0 6px 20px hsl(${pillar.color} / 0.3), inset 0 1px 0 rgba(255,255,255,0.15)` }}>
@@ -3717,18 +3654,12 @@ const LandingPage = () => {
           <motion.div key={i} variants={popIn}
           className="relative p-3.5 rounded-2xl overflow-hidden text-center group"
           style={{
-            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(220 20% 98% / 0.85))",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
+            background: "hsl(0 0% 100% / 0.9)",
             border: `1px solid hsl(${f.color} / 0.1)`,
-            boxShadow: `0 2px 16px hsl(${f.color} / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)`
+            boxShadow: `0 2px 16px hsl(${f.color} / 0.05)`
           }}>
             {/* Top accent line */}
             <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, hsl(${f.color} / 0.25), transparent)` }} />
-            {/* Inner reflection */}
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.35) 0%, transparent 30%)" }} />
-            {/* Hover glow */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 30%, hsl(${f.color} / 0.06), transparent 60%)` }} />
             <div className="relative z-10">
               <div className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-2"
               style={{ background: `linear-gradient(135deg, hsl(${f.color}), hsl(${f.color} / 0.8))`, color: "white", boxShadow: `0 3px 12px hsl(${f.color} / 0.25)` }}>
@@ -3749,322 +3680,7 @@ const LandingPage = () => {
         </motion.div>
       </Section>
 
-      {/* ═══════════════════════════════════════════
-                             IL PROBLEMA — Pain Points
-                            ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(248,18%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
-      }}>
-        {/* Premium ambient glows — layered danger luxury */}
-        <div className="absolute inset-0 pointer-events-none z-0">
-          {/* Primary crimson vignette — top-left */}
-          <div className="absolute top-[5%] left-[10%] w-[600px] h-[600px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(350,65%,40%,0.6), transparent 65%)", filter: "blur(140px)" }} />
-          {/* Deep violet anchor — center-right */}
-          <div className="absolute top-[30%] right-[10%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(265,55%,45%,0.5), transparent 65%)", filter: "blur(130px)" }} />
-          {/* Warm amber warning — bottom center */}
-          <div className="absolute bottom-[10%] left-[40%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(30,55%,45%,0.4), transparent 65%)", filter: "blur(120px)" }} />
-          {/* Secondary crimson — bottom-left */}
-          <div className="absolute bottom-[25%] left-[5%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(0,50%,40%,0.35), transparent 65%)", filter: "blur(100px)" }} />
-          {/* Subtle gold highlight — top-right */}
-          <div className="absolute top-[8%] right-[20%] w-[300px] h-[300px] rounded-full opacity-[0.03]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,50%,0.3), transparent 60%)", filter: "blur(90px)" }} />
-          {/* Top accent border */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[70%] h-[1px]"
-          style={{ background: "linear-gradient(90deg, transparent, hsla(350,50%,45%,0.25), hsla(0,60%,50%,0.15), hsla(265,50%,55%,0.1), transparent)" }} />
-          {/* Subtle vertical light shaft */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[120px] opacity-[0.08]"
-          style={{ background: "linear-gradient(180deg, hsla(350,50%,50%,0.4), transparent)" }} />
-          {/* Bottom fade-out gradient */}
-          <div className="absolute bottom-0 left-0 right-0 h-[80px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          {/* Noise texture overlay */}
-          <div className="absolute inset-0 opacity-[0.015]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
-          }} />
-        </div>
-        <div className="text-center mb-10 sm:mb-14">
-          <SectionLabel text="Il Problema" icon={<AlertTriangle className="w-3 h-3 text-accent" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
-          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Il Tuo Business Sta <span className="text-shimmer">Perdendo Soldi</span>
-          </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[550px] mx-auto text-sm leading-[1.7]"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Ogni giorno senza un sistema moderno è un giorno di clienti persi, processi lenti e margini erosi.
-          </motion.p>
-        </div>
-
-        {/* ═══ Pain Points — DNA helix staggered list ═══ */}
-        {(() => {
-          const painData = [
-          { icon: <Banknote className="w-4 h-4" />, title: "Commissioni", desc: "Piattaforme terze che divorano i margini. Su €10K/mese, €3K vanno in fee.", stat: "-30%", color: "from-red-500/80 to-orange-500/80" },
-          { icon: <Users className="w-4 h-4" />, title: "Clienti Persi", desc: "Senza CRM e loyalty il 70% non torna. Li acquisisci e li perdi.", stat: "70%", color: "from-amber-500/80 to-yellow-500/80" },
-          { icon: <Smartphone className="w-4 h-4" />, title: "Zero Digitale", desc: "Competitor con app e booking online. Tu ancora con carta e WhatsApp.", stat: "0", color: "from-orange-500/80 to-red-500/80" },
-          { icon: <ClipboardCheck className="w-4 h-4" />, title: "Processi Manuali", desc: "Ordini a voce, agenda cartacea, Excel. Ogni errore costa tempo e denaro.", stat: "4h/g", color: "from-rose-500/80 to-pink-500/80" },
-          { icon: <Eye className="w-4 h-4" />, title: "Reputazione", desc: "Una recensione negativa costa migliaia in clienti persi.", stat: "-€5K", color: "from-red-600/80 to-rose-500/80" },
-          { icon: <Target className="w-4 h-4" />, title: "Marketing Cieco", desc: "Pubblicità senza tracking. Zero segmentazione, zero automazione.", stat: "0%", color: "from-amber-600/80 to-orange-500/80" }];
-
-          return (
-            <div className="relative">
-              {/* AI Neural Network background */}
-              <div className="absolute inset-0 pointer-events-none -z-[1] overflow-hidden">
-                <div className="absolute inset-0 opacity-[0.10]">
-                  <svg className="w-full h-full" viewBox="0 0 1200 350" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <radialGradient id="pain-node-glow" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stopColor="hsl(350,60%,55%)" stopOpacity="0.5" />
-                        <stop offset="100%" stopColor="hsl(350,60%,55%)" stopOpacity="0" />
-                      </radialGradient>
-                    </defs>
-                    {/* Connections */}
-                    {[
-                    [120, 70, 280, 160], [120, 70, 400, 90], [120, 70, 250, 270],
-                    [280, 160, 400, 90], [280, 160, 520, 250], [280, 160, 600, 170],
-                    [400, 90, 600, 170], [400, 90, 720, 80], [400, 90, 520, 250],
-                    [600, 170, 720, 80], [600, 170, 830, 200], [600, 170, 680, 300],
-                    [720, 80, 830, 200], [720, 80, 950, 120], [720, 80, 1080, 170],
-                    [830, 200, 1080, 170], [830, 200, 680, 300], [830, 200, 980, 290],
-                    [1080, 170, 950, 120], [1080, 170, 980, 290],
-                    [250, 270, 520, 250], [520, 250, 680, 300], [680, 300, 980, 290]].
-                    map(([x1, y1, x2, y2], i) =>
-                    <motion.line key={`pl${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
-                    stroke="hsl(350,45%,50%)" strokeWidth="1" strokeOpacity="0.35"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    whileInView={{ pathLength: 1, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.025, duration: 0.5 }} />
-
-                    )}
-                    {/* Nodes */}
-                    {[
-                    [120, 70], [280, 160], [400, 90], [600, 170], [720, 80],
-                    [830, 200], [1080, 170], [250, 270], [520, 250], [680, 300],
-                    [950, 120], [980, 290]].
-                    map(([cx, cy], i) =>
-                    <g key={`pn${i}`}>
-                        <circle cx={cx} cy={cy} r="16" fill="url(#pain-node-glow)" />
-                        <motion.circle cx={cx} cy={cy} r="5"
-                      fill="hsl(350,55%,50%)" fillOpacity="0.45"
-                      stroke="hsl(350,55%,55%)" strokeWidth="1.2" strokeOpacity="0.5"
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3 + i * 0.04, type: "spring", stiffness: 200 }} />
-                      
-                        <motion.circle cx={cx} cy={cy} r="2.5"
-                      fill="hsl(38,50%,55%)" fillOpacity="0.6"
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: [0, 1.3, 1] }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.5 + i * 0.04, duration: 0.35 }} />
-                      
-                      </g>
-                    )}
-                  </svg>
-                </div>
-              </div>
-
-              <div className="relative rounded-2xl overflow-hidden isolate">
-                {/* Opaque mobile backdrop — fully isolates from homepage DNA background */}
-                <div
-                  className="absolute inset-0 sm:hidden z-0 rounded-2xl"
-                  style={{
-                    background: "linear-gradient(160deg, hsla(220,20%,98%,0.97), hsla(220,18%,97%,0.98))",
-                    border: "1px solid hsl(var(--border) / 0.18)"
-                  }} />
-                
-
-                {/* ── Mobile Hyper-Tech Circuit Schema ── hub-spoke topology */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1] sm:hidden" viewBox="0 0 300 360" preserveAspectRatio="xMidYMid meet">
-                  <defs>
-                    <filter id="painMobileGlow" x="-40%" y="-40%" width="180%" height="180%">
-                      <feGaussianBlur stdDeviation="1.2" result="blur" />
-                      <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                    </filter>
-                    <radialGradient id="painNodeGlowM" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="hsl(var(--primary) / 0.25)" />
-                      <stop offset="100%" stopColor="hsl(var(--primary) / 0)" />
-                    </radialGradient>
-                    <linearGradient id="painSpineH" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="hsl(var(--primary) / 0)" />
-                      <stop offset="30%" stopColor="hsl(var(--primary) / 0.4)" />
-                      <stop offset="70%" stopColor="hsl(var(--primary) / 0.4)" />
-                      <stop offset="100%" stopColor="hsl(var(--primary) / 0)" />
-                    </linearGradient>
-                    <linearGradient id="painSpineV" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="hsl(var(--accent) / 0)" />
-                      <stop offset="20%" stopColor="hsl(var(--accent) / 0.35)" />
-                      <stop offset="80%" stopColor="hsl(var(--accent) / 0.35)" />
-                      <stop offset="100%" stopColor="hsl(var(--accent) / 0)" />
-                    </linearGradient>
-                  </defs>
-
-                  {/* Central hub ring */}
-                  <circle cx="150" cy="180" r="28" fill="none" stroke="hsl(var(--primary) / 0.15)" strokeWidth="0.8" strokeDasharray="4,3" />
-                  <circle cx="150" cy="180" r="14" fill="none" stroke="hsl(var(--primary) / 0.25)" strokeWidth="0.6" />
-                  <circle cx="150" cy="180" r="4" fill="hsl(var(--primary) / 0.5)">
-                    <animate attributeName="r" values="3;5;3" dur="3s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3s" repeatCount="indefinite" />
-                  </circle>
-
-                  {/* Curved paths from center hub to each node position */}
-                  <path d="M150,166 Q120,110 72,65" fill="none" stroke="url(#painSpineV)" strokeWidth="0.9" strokeDasharray="3,4" />
-                  <path d="M150,166 Q180,110 228,65" fill="none" stroke="url(#painSpineV)" strokeWidth="0.9" strokeDasharray="3,4" />
-                  <path d="M136,180 Q100,180 65,180" fill="none" stroke="url(#painSpineH)" strokeWidth="0.9" strokeDasharray="3,4" />
-                  <path d="M164,180 Q200,180 235,180" fill="none" stroke="url(#painSpineH)" strokeWidth="0.9" strokeDasharray="3,4" />
-                  <path d="M150,194 Q120,250 72,300" fill="none" stroke="url(#painSpineV)" strokeWidth="0.9" strokeDasharray="3,4" />
-                  <path d="M150,194 Q180,250 228,300" fill="none" stroke="url(#painSpineV)" strokeWidth="0.9" strokeDasharray="3,4" />
-
-                  {/* Cross-links between adjacent nodes */}
-                  <line x1="72" y1="68" x2="228" y2="68" stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.6" strokeDasharray="2,5" />
-                  <line x1="72" y1="300" x2="228" y2="300" stroke="hsl(var(--primary) / 0.2)" strokeWidth="0.6" strokeDasharray="2,5" />
-                  <line x1="72" y1="74" x2="72" y2="296" stroke="hsl(var(--accent) / 0.12)" strokeWidth="0.5" strokeDasharray="2,5" />
-                  <line x1="228" y1="74" x2="228" y2="296" stroke="hsl(var(--accent) / 0.12)" strokeWidth="0.5" strokeDasharray="2,5" />
-
-                  {/* Diagonal accent curves */}
-                  <path d="M72,68 Q150,130 228,180" fill="none" stroke="hsl(var(--primary) / 0.1)" strokeWidth="0.5" />
-                  <path d="M228,68 Q150,130 72,180" fill="none" stroke="hsl(var(--accent) / 0.1)" strokeWidth="0.5" />
-                  <path d="M72,180 Q150,240 228,300" fill="none" stroke="hsl(var(--primary) / 0.1)" strokeWidth="0.5" />
-                  <path d="M228,180 Q150,240 72,300" fill="none" stroke="hsl(var(--accent) / 0.1)" strokeWidth="0.5" />
-
-                  {/* Junction nodes at each card position */}
-                  {[[72, 65], [228, 65], [65, 180], [235, 180], [72, 300], [228, 300]].map(([cx, cy], ni) =>
-                  <g key={`pn-m-${ni}`}>
-                      <circle cx={cx} cy={cy} r="10" fill="url(#painNodeGlowM)" />
-                      <circle cx={cx} cy={cy} r="2.5" fill="hsl(var(--primary) / 0.6)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="0.5">
-                        <animate attributeName="r" values="2;3.5;2" dur={`${2.5 + ni * 0.3}s`} repeatCount="indefinite" />
-                        <animate attributeName="opacity" values="0.5;1;0.5" dur={`${2.5 + ni * 0.3}s`} repeatCount="indefinite" />
-                      </circle>
-                    </g>
-                  )}
-
-                  {/* 3 animated data pulses on circuit paths */}
-                  <circle r="2" fill="hsl(var(--primary) / 0.95)" filter="url(#painMobileGlow)">
-                    <animateMotion dur="4.5s" repeatCount="indefinite" path="M150,180 Q120,110 72,65 L228,65 Q180,110 150,180 Q180,250 228,300 L72,300 Q120,250 150,180" />
-                  </circle>
-                  <circle r="1.5" fill="hsl(var(--accent) / 0.9)" filter="url(#painMobileGlow)">
-                    <animateMotion dur="5.5s" repeatCount="indefinite" path="M150,180 L65,180 Q70,120 72,65 Q150,50 228,65 L235,180 Q230,240 228,300 Q150,310 72,300 L65,180 L150,180" />
-                  </circle>
-                  <circle r="1.2" fill="hsl(38,55%,55% / 0.8)" filter="url(#painMobileGlow)">
-                    <animateMotion dur="6s" repeatCount="indefinite" path="M72,65 Q150,130 228,180 Q150,240 72,300 Q90,180 72,65" />
-                  </circle>
-                </svg>
-
-                {/* Desktop AI Network Schema */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden sm:block" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="pain-line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="hsla(265,60%,55%,0)" />
-                      <stop offset="50%" stopColor="hsla(265,60%,55%,0.18)" />
-                      <stop offset="100%" stopColor="hsla(265,60%,55%,0)" />
-                    </linearGradient>
-                    <linearGradient id="pain-line-grad-v" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="hsla(265,60%,55%,0)" />
-                      <stop offset="50%" stopColor="hsla(265,60%,55%,0.18)" />
-                      <stop offset="100%" stopColor="hsla(265,60%,55%,0)" />
-                    </linearGradient>
-                    <linearGradient id="pain-line-diag" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="hsla(0,50%,50%,0)" />
-                      <stop offset="50%" stopColor="hsla(0,50%,50%,0.12)" />
-                      <stop offset="100%" stopColor="hsla(0,50%,50%,0)" />
-                    </linearGradient>
-                    <filter id="pain-glow">
-                      <feGaussianBlur stdDeviation="2" result="blur" />
-                      <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                    </filter>
-                  </defs>
-                  <line x1="25%" y1="33%" x2="75%" y2="33%" stroke="url(#pain-line-grad)" strokeWidth="1" filter="url(#pain-glow)" />
-                  <line x1="25%" y1="66%" x2="75%" y2="66%" stroke="url(#pain-line-grad)" strokeWidth="1" filter="url(#pain-glow)" />
-                  <line x1="25%" y1="20%" x2="25%" y2="80%" stroke="url(#pain-line-grad-v)" strokeWidth="1" filter="url(#pain-glow)" />
-                  <line x1="75%" y1="20%" x2="75%" y2="80%" stroke="url(#pain-line-grad-v)" strokeWidth="1" filter="url(#pain-glow)" />
-                  <line x1="25%" y1="33%" x2="75%" y2="66%" stroke="url(#pain-line-diag)" strokeWidth="0.8" strokeDasharray="4 6" filter="url(#pain-glow)" />
-                  <line x1="75%" y1="33%" x2="25%" y2="66%" stroke="url(#pain-line-diag)" strokeWidth="0.8" strokeDasharray="4 6" filter="url(#pain-glow)" />
-                  {["25%", "75%"].map((x) => ["33%", "66%"].map((y) =>
-                  <circle key={`${x}-${y}`} cx={x} cy={y} r="2.5" fill="hsla(265,60%,55%,0.25)" filter="url(#pain-glow)">
-                      <animate attributeName="r" values="2;3.5;2" dur="3s" repeatCount="indefinite" />
-                      <animate attributeName="opacity" values="0.4;0.8;0.4" dur="3s" repeatCount="indefinite" />
-                    </circle>
-                  ))}
-                  <circle r="2" fill="hsla(0,60%,55%,0.5)" filter="url(#pain-glow)">
-                    <animateMotion dur="4s" repeatCount="indefinite" path="M 80,0 L 280,0" />
-                    <animate attributeName="opacity" values="0;0.8;0" dur="4s" repeatCount="indefinite" />
-                  </circle>
-                </svg>
-
-              <div className="relative z-[2] grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 sm:gap-3 p-1.5 sm:p-0">
-                {painData.map((pain, i) =>
-                  <motion.div
-                    key={i}
-                    className="relative group"
-                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true, margin: "-30px" }}
-                    transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                    whileHover={{ y: -6, scale: 1.04 }}>
-                    
-                    <div className="relative rounded-lg sm:rounded-xl border overflow-hidden h-full" style={{
-                      background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(248 15% 97% / 0.93))",
-                      borderColor: "hsl(var(--primary) / 0.1)",
-                      boxShadow: "0 2px 12px hsl(var(--primary) / 0.05)"
-                    }}>
-                      {/* Top accent line */}
-                      <div className="h-[1.5px] w-full" style={{ background: `linear-gradient(90deg, transparent, ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,55%,0.5)" : pain.color.includes("amber") || pain.color.includes("yellow") ? "hsla(38,70%,55%,0.5)" : "hsla(25,70%,55%,0.5)"}, transparent)` }} />
-
-                      <div className="p-2 sm:p-4 flex flex-col items-center text-center">
-                        {/* Stat badge */}
-                        <motion.div className="mb-1 sm:mb-2.5 px-1.5 py-0.5 rounded-full text-[0.4rem] sm:text-[0.5rem] font-heading font-bold tracking-widest border"
-                        style={{
-                          color: "hsla(0,60%,60%,0.7)",
-                          borderColor: "hsla(0,50%,50%,0.15)",
-                          background: "hsla(0,50%,50%,0.06)"
-                        }}
-                        animate={{ borderColor: ["hsla(0,50%,50%,0.1)", "hsla(0,50%,50%,0.25)", "hsla(0,50%,50%,0.1)"] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: i * 0.4 }}>
-                          {pain.stat}
-                        </motion.div>
-
-                        {/* Icon — circuit node style */}
-                        <motion.div
-                          className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br ${pain.color} flex items-center justify-center text-white mb-1.5 sm:mb-2.5 relative [&>svg]:w-2.5 [&>svg]:h-2.5 sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5`}
-                          style={{ boxShadow: `0 0 10px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.2)" : "hsla(38,70%,50%,0.2)"}, inset 0 1px 0 hsla(0,0%,100%,0.12)` }}
-                          animate={{ boxShadow: [`0 0 6px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.15)" : "hsla(38,70%,50%,0.15)"}`, `0 0 14px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.3)" : "hsla(38,70%,50%,0.3)"}`, `0 0 6px ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,50%,0.15)" : "hsla(38,70%,50%,0.15)"}`] }}
-                          transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}>
-                          {pain.icon}
-                        </motion.div>
-
-                        <h3 className="font-heading text-[0.52rem] sm:text-xs font-semibold text-foreground mb-0.5 leading-tight">{pain.title}</h3>
-                        <p className="text-[0.4rem] sm:text-[0.6rem] text-foreground/30 leading-[1.4]">{pain.desc}</p>
-                      </div>
-
-                      <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, hsla(265,50%,55%,0.08), transparent)" }} />
-                    </div>
-
-                    <motion.div className="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-[5px] h-[5px] rounded-full hidden lg:block"
-                    style={{ background: "hsla(265,70%,60%,0.4)", boxShadow: "0 0 6px hsla(265,70%,60%,0.3)" }}
-                    animate={{ boxShadow: ["0 0 4px hsla(265,70%,60%,0.2)", "0 0 10px hsla(265,70%,60%,0.5)", "0 0 4px hsla(265,70%,60%,0.2)"] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }} />
-                    
-                  </motion.div>
-                  )}
-              </div>
-              </div>
-            </div>);
-
-        })()}
-
-        <motion.div className="mt-10 text-center"
-        initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-primary/15 bg-primary/[0.04]">
-            <ArrowDown className="w-4 h-4 text-primary animate-bounce" />
-            <span className="text-xs font-heading font-semibold text-foreground/60">La Soluzione Esiste. <span className="text-primary">Scoprila Ora.</span></span>
-          </div>
-        </motion.div>
-      </Section>
+      {/* Pain Points section removed for performance */}
 
       {/* <SectionDivider /> — hidden redesign */}
 
@@ -4074,37 +3690,12 @@ const LandingPage = () => {
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(235 22% 95%) 50%, hsl(220 20% 97%) 100%)"
       }}>
-        {/* Premium ambient glows — discovery/innovation luxury */}
+        {/* Ambient glow — lightweight */}
         <div className="absolute inset-0 pointer-events-none z-0">
-          {/* Primary violet — top-right hero */}
-          <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.03]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.5), transparent 65%)", filter: "blur(140px)" }} />
-          {/* Tech green — center-left */}
-          <div className="absolute top-[35%] left-[10%] w-[450px] h-[450px] rounded-full opacity-[0.02]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.4), transparent 65%)", filter: "blur(120px)" }} />
-          {/* Gold accent — bottom-right */}
-          <div className="absolute bottom-[15%] right-[15%] w-[400px] h-[400px] rounded-full opacity-[0.02]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.35), transparent 65%)", filter: "blur(110px)" }} />
-          {/* Secondary violet wash — bottom-left */}
-          <div className="absolute bottom-[25%] left-[25%] w-[350px] h-[350px] rounded-full opacity-[0.015]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.25), transparent 65%)", filter: "blur(100px)" }} />
-          {/* Subtle emerald spark — top-left */}
-          <div className="absolute top-[15%] left-[30%] w-[280px] h-[280px] rounded-full opacity-[0.01]"
-          style={{ background: "radial-gradient(circle, hsla(155,55%,50%,0.25), transparent 60%)", filter: "blur(80px)" }} />
-          {/* Top accent border — violet to green */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
-          style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.18), hsla(155,45%,50%,0.08), transparent)" }} />
-          {/* Vertical light shaft */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[100px] opacity-[0.03]"
-          style={{ background: "linear-gradient(180deg, hsla(265,55%,55%,0.25), transparent)" }} />
-          {/* Bottom fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.8))" }} />
-          {/* Noise texture */}
-          <div className="absolute inset-0 opacity-[0]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
-          }} />
+          <div className="absolute top-[10%] right-[15%] w-[400px] h-[400px] rounded-full opacity-[0.04]"
+          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.5), transparent 65%)", filter: "blur(80px)" }} />
+          <div className="absolute bottom-[15%] left-[20%] w-[350px] h-[350px] rounded-full opacity-[0.03]"
+          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.4), transparent 65%)", filter: "blur(80px)" }} />
         </div>
         <div className="text-center mb-8">
           <SectionLabel text="Scopri Empire" icon={<Play className="w-3 h-3 text-primary" />} />
@@ -4162,7 +3753,7 @@ const LandingPage = () => {
         </motion.div>
 
         {/* CTA buttons under video */}
-        <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10"
+        <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6"
         initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
           <motion.button
             onClick={() => scrollTo("pricing")}
@@ -4198,29 +3789,12 @@ const LandingPage = () => {
         background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(168 18% 96%) 35%, hsl(180 15% 97%) 65%, hsl(0 0% 100%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          {/* Premium violet mesh glow — top-left */}
-          <div className="absolute top-[4%] left-[8%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(265,70%,55%,0.6), transparent 65%)", filter: "blur(150px)" }} />
-          {/* Deep emerald — center-right */}
-          <div className="absolute top-[30%] right-[5%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,55%,42%,0.5), transparent 65%)", filter: "blur(140px)" }} />
-          {/* Gold accent — bottom-center */}
-          <div className="absolute bottom-[10%] left-[30%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,65%,50%,0.45), transparent 65%)", filter: "blur(120px)" }} />
-          {/* Violet secondary — bottom-right */}
-          <div className="absolute bottom-[25%] right-[18%] w-[320px] h-[320px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,55%,58%,0.35), transparent 65%)", filter: "blur(100px)" }} />
-          {/* Top accent border */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
-          style={{ background: "linear-gradient(90deg, transparent, hsla(265,55%,58%,0.25), hsla(155,45%,50%,0.15), hsla(38,50%,50%,0.08), transparent)" }} />
-          {/* Subtle grid pattern */}
-          <div className="absolute inset-0 opacity-[0.015]"
-          style={{ backgroundImage: "linear-gradient(hsla(265,30%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265,30%,60%,0.08) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
-          {/* Bottom fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsl(0 0% 100% / 0.8))" }} />
+          <div className="absolute top-[8%] left-[10%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
+          style={{ background: "radial-gradient(circle, hsla(265,65%,55%,0.5), transparent 65%)", filter: "blur(80px)" }} />
+          <div className="absolute bottom-[12%] right-[10%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
+          style={{ background: "radial-gradient(circle, hsla(155,55%,42%,0.4), transparent 65%)", filter: "blur(80px)" }} />
         </div>
-        <div className="text-center mb-10 sm:mb-12">
+        <div className="text-center mb-6 sm:mb-8">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -4590,16 +4164,16 @@ const LandingPage = () => {
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
           <div className="absolute top-[6%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           {/* Emerald tech — center-right */}
           <div className="absolute top-[35%] right-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           {/* Gold accent — bottom-center */}
           <div className="absolute bottom-[12%] left-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(60px)" }} />
           {/* Secondary violet — bottom-right */}
           <div className="absolute bottom-[30%] right-[20%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           {/* Soft emerald spark — top-right */}
           <div className="absolute top-[10%] right-[28%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(155,55%,48%,0.3), transparent 60%)", filter: "blur(85px)" }} />
@@ -4613,9 +4187,6 @@ const LandingPage = () => {
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
           {/* Noise texture */}
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-14">
@@ -4797,16 +4368,16 @@ const LandingPage = () => {
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           {/* Gold accent — center-right */}
           <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           {/* Wide violet wash — center */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(ellipse, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(150px)" }} />
+          style={{ background: "radial-gradient(ellipse, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           {/* Secondary gold — bottom-left */}
           <div className="absolute bottom-[15%] left-[15%] w-[400px] h-[400px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           {/* Emerald spark — top-right */}
           <div className="absolute top-[12%] right-[28%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(155,50%,48%,0.25), transparent 60%)", filter: "blur(85px)" }} />
@@ -4820,9 +4391,6 @@ const LandingPage = () => {
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
           {/* Noise texture */}
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
         <div className="text-center mb-10">
@@ -4866,13 +4434,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[35%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,42%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] left-[35%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[30%] right-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(155,55%,48%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -4881,12 +4449,9 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
-        <div className="relative z-10 text-center mb-10 sm:mb-14">
+        <div className="relative z-10 text-center mb-6 sm:mb-8">
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Il DNA Tecnologico di <span className="text-shimmer">Empire</span>
@@ -5036,13 +4601,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[32%] left-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] right-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[28%] left-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[14%] left-[35%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -5051,12 +4616,9 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(38,50%,50%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
-        <div className="text-center mb-10 sm:mb-14">
+        <div className="text-center mb-6 sm:mb-8">
           <SectionLabel text="Esperienza" icon={<MonitorSmartphone className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -5077,7 +4639,6 @@ const LandingPage = () => {
           { img: mockupCliente, title: "Booking Engine", desc: "Prenotazione ombrelloni, lettini e servizi spiaggia con mappa interattiva.", tag: "FRONT-END", sector: "Beach & Hospitality", features: ["Mappa interattiva", "Pagamento anticipato", "QR Code accesso", "Meteo integrato"] },
           { img: mockupAdmin, title: "Fleet Manager", desc: "Gestione veicoli, autisti, tratte e pricing dinamico con tracking GPS.", tag: "BACK-OFFICE", sector: "NCC Premium", features: ["GPS live tracking", "Pricing dinamico", "Scadenzario docs", "Revenue analytics"] },
           { img: mockupCucina, title: "Agenda Smart", desc: "Calendario appuntamenti, gestione slot e notifiche automatiche per clienti.", tag: "OPERATIONS", sector: "Healthcare & Fitness", features: ["Agenda drag & drop", "Reminder automatici", "Schede paziente", "Report periodici"] }];
-
 
           const carouselRef = mockupCarouselRef;
           const carouselPaused = mockupCarouselPaused;
@@ -5282,13 +4843,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] left-[32%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[30%] right-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[14%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -5297,9 +4858,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
 
@@ -5615,13 +5173,13 @@ const LandingPage = () => {
         <CircuitPattern />
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[35%] left-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] right-[28%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[28%] left-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] left-[32%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -5630,12 +5188,9 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
-        <div className="text-center mb-10 sm:mb-12">
+        <div className="text-center mb-6 sm:mb-8">
           <SectionLabel text="Funzionalità" icon={<Layers className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -5767,8 +5322,8 @@ const LandingPage = () => {
         background: "linear-gradient(180deg, hsla(230,16%,5%,0.82) 0%, hsla(265,20%,10%,0.78) 35%, hsla(230,18%,9%,0.78) 65%, hsla(230,16%,5%,0.82) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.4), transparent 70%)", filter: "blur(130px)" }} />
-          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 70%)", filter: "blur(110px)" }} />
+          <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(265,55%,50%,0.4), transparent 70%)", filter: "blur(60px)" }} />
+          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 70%)", filter: "blur(60px)" }} />
         </div>
         <div className="text-center mb-12">
           <SectionLabel text="Processo" icon={<Zap className="w-3 h-3 text-primary" />} />
@@ -5787,7 +5342,6 @@ const LandingPage = () => {
               border: "1px solid hsl(var(--border) / 0.25)"
             }} />
           
-
           {/* AI Tech Network Schema — Desktop */}
           <div className="absolute inset-0 pointer-events-none z-[1] overflow-hidden hidden sm:block">
             <svg className="w-full h-full" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -6046,9 +5600,9 @@ const LandingPage = () => {
           {/* Ambient */}
           <div className="absolute inset-0 pointer-events-none z-0">
             <div className="absolute top-[10%] right-[15%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
-            style={{ background: "radial-gradient(circle, hsla(150,60%,50%,0.5), transparent 65%)", filter: "blur(120px)" }} />
+            style={{ background: "radial-gradient(circle, hsla(150,60%,50%,0.5), transparent 65%)", filter: "blur(60px)" }} />
             <div className="absolute bottom-[20%] left-[10%] w-[400px] h-[400px] rounded-full opacity-[0.035]"
-            style={{ background: "radial-gradient(circle, hsla(38,60%,50%,0.4), transparent 65%)", filter: "blur(110px)" }} />
+            style={{ background: "radial-gradient(circle, hsla(38,60%,50%,0.4), transparent 65%)", filter: "blur(60px)" }} />
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
             style={{ background: "linear-gradient(90deg, transparent, hsla(150,55%,50%,0.18), hsla(265,50%,55%,0.12), transparent)" }} />
           </div>
@@ -6336,13 +5890,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[32%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] right-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[28%] left-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -6351,9 +5905,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(38,50%,50%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
         <div className="text-center mb-12">
@@ -6432,13 +5983,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[32%] left-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] right-[28%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[30%] left-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] left-[32%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -6447,9 +5998,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
 
@@ -6563,13 +6111,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[6%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,65%,48%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[30%] right-[12%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,60%,50%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] left-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[28%] right-[25%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,55%,45%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(265,55%,55%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -6578,9 +6126,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(38,55%,50%,0.4), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
         <div className="text-center mb-12">
@@ -6600,7 +6145,6 @@ const LandingPage = () => {
               border: "1px solid hsl(var(--border) / 0.3)"
             }} />
           
-
           {/* Mobile hyper-tech communication schema between KPI icons */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1] sm:hidden" viewBox="0 0 300 190" preserveAspectRatio="xMidYMid meet">
             <defs>
@@ -6738,13 +6282,13 @@ const LandingPage = () => {
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(140px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.55), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[32%] right-[10%] w-[480px] h-[480px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(130px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.45), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[15%] left-[30%] w-[420px] h-[420px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(155,50%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute bottom-[28%] right-[22%] w-[350px] h-[350px] rounded-full opacity-[0.035]"
-          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(265,50%,55%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           <div className="absolute top-[12%] right-[30%] w-[280px] h-[280px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.25), transparent 60%)", filter: "blur(85px)" }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] h-[1px]"
@@ -6753,9 +6297,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          <div className="absolute inset-0 opacity-[0.012]" style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat", backgroundSize: "128px 128px"
           }} />
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-16 items-start">
@@ -6888,19 +6429,18 @@ const LandingPage = () => {
           {/* Top accent line — tricolore viola/oro/verde */}
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.4) 20%, hsla(38,65%,55%,0.35) 40%, hsla(155,60%,50%,0.3) 60%, hsla(38,65%,55%,0.35) 80%, transparent 95%)" }} />
           {/* Violet Imperial glow — top right */}
-          <div className="absolute top-[5%] right-[18%] w-[380px] h-[320px] rounded-full" style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.5), transparent 65%)", filter: "blur(140px)" }} />
+          <div className="absolute top-[5%] right-[18%] w-[380px] h-[320px] rounded-full" style={{ background: "radial-gradient(circle, hsla(265,65%,50%,0.5), transparent 65%)", filter: "blur(60px)" }} />
           {/* Gold ambient glow — center left */}
-          <div className="absolute top-[25%] left-[12%] w-[340px] h-[280px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(120px)" }} />
+          <div className="absolute top-[25%] left-[12%] w-[340px] h-[280px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,60%,48%,0.4), transparent 65%)", filter: "blur(60px)" }} />
           {/* Green AI tech glow — center right */}
-          <div className="absolute top-[45%] right-[15%] w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, hsla(155,55%,45%,0.35), transparent 65%)", filter: "blur(110px)" }} />
+          <div className="absolute top-[45%] right-[15%] w-[300px] h-[300px] rounded-full" style={{ background: "radial-gradient(circle, hsla(155,55%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           {/* Violet deep glow — bottom left */}
-          <div className="absolute bottom-[10%] left-[22%] w-[350px] h-[280px] rounded-full" style={{ background: "radial-gradient(circle, hsla(280,55%,45%,0.35), transparent 65%)", filter: "blur(130px)" }} />
+          <div className="absolute bottom-[10%] left-[22%] w-[350px] h-[280px] rounded-full" style={{ background: "radial-gradient(circle, hsla(280,55%,45%,0.35), transparent 65%)", filter: "blur(60px)" }} />
           {/* Gold warm glow — bottom right */}
-          <div className="absolute bottom-[18%] right-[25%] w-[260px] h-[220px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 65%)", filter: "blur(100px)" }} />
+          <div className="absolute bottom-[18%] right-[25%] w-[260px] h-[220px] rounded-full" style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.3), transparent 65%)", filter: "blur(60px)" }} />
           {/* Vertical light shaft */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-[90px] opacity-[0.04]" style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.4), transparent)" }} />
           {/* Noise texture overlay */}
-          <div className="absolute inset-0 opacity-[0.012]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")", backgroundSize: "180px 180px" }} />
           {/* Bottom fade to pure black */}
           <div className="absolute bottom-0 left-0 right-0 h-24" style={{ background: "linear-gradient(180deg, transparent, hsla(230,16%,2%,1))" }} />
         </div>
