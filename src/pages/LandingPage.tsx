@@ -4038,7 +4038,7 @@ const LandingPage = () => {
                              SETTORI
                             ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(248,15%,96%,0.85) 35%, hsla(168,12%,97%,0.85) 65%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(168 18% 96%) 35%, hsl(180 15% 97%) 65%, hsl(0 0% 100%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Premium violet mesh glow — top-left */}
