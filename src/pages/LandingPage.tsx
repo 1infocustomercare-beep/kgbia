@@ -3753,7 +3753,7 @@ const LandingPage = () => {
         </motion.div>
 
         {/* CTA buttons under video */}
-        <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10"
+        <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6"
         initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
           <motion.button
             onClick={() => scrollTo("pricing")}
@@ -3794,7 +3794,7 @@ const LandingPage = () => {
           <div className="absolute bottom-[12%] right-[10%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
           style={{ background: "radial-gradient(circle, hsla(155,55%,42%,0.4), transparent 65%)", filter: "blur(80px)" }} />
         </div>
-        <div className="text-center mb-10 sm:mb-12">
+        <div className="text-center mb-6 sm:mb-8">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -4451,7 +4451,7 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
           }} />
         </div>
-        <div className="relative z-10 text-center mb-10 sm:mb-14">
+        <div className="relative z-10 text-center mb-6 sm:mb-8">
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Il DNA Tecnologico di <span className="text-shimmer">Empire</span>
@@ -4618,7 +4618,7 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
           }} />
         </div>
-        <div className="text-center mb-10 sm:mb-14">
+        <div className="text-center mb-6 sm:mb-8">
           <SectionLabel text="Esperienza" icon={<MonitorSmartphone className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -5190,7 +5190,7 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
           }} />
         </div>
-        <div className="text-center mb-10 sm:mb-12">
+        <div className="text-center mb-6 sm:mb-8">
           <SectionLabel text="Funzionalità" icon={<Layers className="w-3 h-3 text-primary" />} />
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
