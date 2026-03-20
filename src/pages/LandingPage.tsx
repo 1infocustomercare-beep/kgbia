@@ -5807,8 +5807,8 @@ const LandingPage = () => {
                   <div className="relative rounded-xl border border-border/20 bg-card/98 backdrop-blur-sm p-2 sm:p-3 overflow-hidden">
                     <motion.div
                       className="relative w-[36px] h-[36px] sm:w-[62px] sm:h-[62px] rounded-lg mx-auto mb-1.5 sm:mb-2.5 overflow-hidden"
-                      style={{ background: "hsla(265,20%,8%,0.7)", border: "1px solid hsla(265,70%,60%,0.14)", backdropFilter: "blur(8px)" }}
-                      whileHover={{ rotate: 4, scale: 1.06, borderColor: "hsla(265,70%,60%,0.28)" }}>
+                      style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.12)" }}
+                      whileHover={{ rotate: 4, scale: 1.06, borderColor: "hsl(var(--primary) / 0.25)" }}>
 
                       <motion.div className="absolute inset-0 pointer-events-none"
                       style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.08) 50%, transparent 60%)" }}
