@@ -111,33 +111,42 @@ const SafeEmpireVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;prefix?: string;suffix?: string;}) => {
   const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState(0);
-  const hasAnimated = useRef(false);
-
-  const runAnimation = useCallback(() => {
-    if (hasAnimated.current) return;
-    hasAnimated.current = true;
-    const start = Date.now();
-    const dur = 2000;
-    const isFloat = value % 1 !== 0;
-
-    const step = () => {
-      const p = Math.min((Date.now() - start) / dur, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      const current = eased * value;
-      setDisplay(isFloat ? parseFloat(current.toFixed(1)) : Math.floor(current));
-      if (p < 1) requestAnimationFrame(step);
-    };
-
-    requestAnimationFrame(step);
-  }, [value]);
 
   useEffect(() => {
+    let rafId = 0;
+    let finalizeTimer = 0;
+
     const timer = window.setTimeout(() => {
-      runAnimation();
+      const start = Date.now();
+      const duration = 2000;
+      const target = value;
+      const isFloat = target % 1 !== 0;
+
+      const animate = () => {
+        const elapsed = Date.now() - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = target * eased;
+
+        setDisplay(isFloat ? parseFloat(current.toFixed(1)) : Math.floor(current));
+
+        if (progress < 1) {
+          rafId = window.requestAnimationFrame(animate);
+        } else {
+          setDisplay(target);
+        }
+      };
+
+      rafId = window.requestAnimationFrame(animate);
+      finalizeTimer = window.setTimeout(() => setDisplay(target), duration + 100);
     }, 500);
 
-    return () => window.clearTimeout(timer);
-  }, [runAnimation]);
+    return () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(finalizeTimer);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
+  }, [value]);
 
   const formatted = value % 1 !== 0
     ? display.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })
