@@ -5899,8 +5899,8 @@ const LandingPage = () => {
               {impactNumbers.map((n, i) => (
                 <div key={i} className="relative rounded-lg sm:rounded-xl overflow-hidden py-3 px-1.5 sm:p-4 text-center"
                 style={{
-                  background: "linear-gradient(160deg, hsla(230,18%,11%,0.98), hsla(230,22%,7%,0.98))",
-                  border: "1px solid hsla(265,40%,40%,0.1)"
+                  background: "linear-gradient(160deg, hsl(0 0% 100% / 0.95), hsl(220 20% 97% / 0.92))",
+                  border: `1px solid hsla(${[265,150,38,210][i]},40%,50%,0.15)`
                 }}>
                   <div className="absolute top-0 left-0 right-0 h-[1px]"
                   style={{ background: `linear-gradient(90deg, transparent, hsla(${[265,150,38,210][i]},60%,55%,0.4), transparent)` }} />
