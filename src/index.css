@@ -54,10 +54,21 @@
     --empire-violet-glow: 265 90% 72%;
     --empire-violet-muted: 262 40% 35%;
     --empire-violet-surface: 265 30% 16%;
+    
+    /* ═══ NEON ACCENT TOKENS ═══ */
+    --neon-emerald: 160 84% 45%;
+    --neon-cyan: 190 95% 55%;
+    --neon-magenta: 320 85% 58%;
+    --neon-blue: 220 90% 60%;
+    --neon-lime: 85 80% 50%;
+    
     --gradient-dna: linear-gradient(135deg, hsl(265 85% 65%), hsl(290 60% 50%), hsl(38 45% 52%));
     --gradient-dna-subtle: linear-gradient(135deg, hsl(265 85% 65% / 0.15), hsl(290 60% 50% / 0.08), hsl(38 45% 52% / 0.1));
+    --gradient-neon: linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)), hsl(var(--empire-violet)));
+    --gradient-vivid: linear-gradient(135deg, hsl(var(--empire-violet)), hsl(var(--neon-magenta)), hsl(38 55% 52%));
     --shadow-dna: 0 8px 32px -8px hsl(265 85% 65% / 0.25);
     --shadow-dna-lg: 0 16px 48px -12px hsl(265 85% 65% / 0.3);
+    --shadow-neon: 0 0 30px hsl(var(--neon-emerald) / 0.2), 0 0 60px hsl(var(--empire-violet) / 0.1);
 
     --sidebar-background: 230 10% 11%;
     --sidebar-foreground: 40 10% 87%;
