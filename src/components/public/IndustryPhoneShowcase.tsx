@@ -2722,11 +2722,12 @@ export function IPhoneFrame({
               </div>
             )}
             </>)}
-          </div>
+            </div>
 
-          {/* Home indicator */}
-          <div className="flex justify-center py-1.5">
-            <div className="w-9 h-[3px] rounded-full bg-white/20" />
+            {/* Home indicator bar */}
+            <div className="flex justify-center py-1.5">
+              <div className="w-9 h-[3px] rounded-full bg-white/20" />
+            </div>
           </div>
         </div>
       </div>
