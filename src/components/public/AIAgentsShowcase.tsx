@@ -622,35 +622,46 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           </motion.div>
         </div>
 
-        {/* ══════ WHY SECTION ══════ */}
+        {/* ══════ WHY SECTION — Luxury Card ══════ */}
         <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="relative rounded-xl border border-primary/25 bg-card/85 backdrop-blur-sm p-3 sm:p-6 mb-5 sm:mb-12 overflow-hidden">
+          className="relative rounded-2xl border p-3 sm:p-6 mb-5 sm:mb-12 overflow-hidden"
+          style={{
+            borderColor: "hsla(215,60%,55%,0.18)",
+            background: "linear-gradient(160deg, hsla(230,20%,12%,0.95), hsla(255,18%,10%,0.98))",
+            backdropFilter: "blur(24px) saturate(1.3)",
+            boxShadow: "0 8px 40px hsla(215,60%,40%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.04)",
+          }}>
           <div className="absolute top-0 left-0 right-0 h-px">
             <motion.div className="absolute w-full h-full"
-              style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.35), transparent)" }}
+              style={{ background: "linear-gradient(90deg, transparent, hsla(215,80%,60%,0.35), transparent)" }}
               animate={{ opacity: [0.4, 0.8, 0.4] }}
               transition={{ duration: 4, repeat: Infinity }}
             />
           </div>
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-primary" />
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "hsla(215,70%,55%,0.15)" }}>
+                <Sparkles className="w-4 h-4" style={{ color: "hsl(215,85%,65%)" }} />
               </div>
-              <h3 className="font-bold text-sm sm:text-base text-foreground">Perché la Rete IA Cambia Tutto</h3>
+              <h3 className="font-bold text-sm sm:text-base" style={{ color: "hsla(0,0%,100%,0.95)" }}>Perché la Rete IA Cambia Tutto</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {[
-                { title: "Il Problema", desc: "Il tuo business ha 50+ attività quotidiane che rubano tempo. Ordini, clienti, marketing, inventario — tutto manuale, tutto lento.", color: "hsla(0,70%,55%,0.9)", icon: <Clock className="w-4 h-4" /> },
-                { title: "La Soluzione", desc: "Ogni attività diventa un nodo della rete. Gli agenti lavorano in parallelo, si scambiano dati e decidono — come un team di specialisti, a costo zero.", color: "hsl(var(--primary))", icon: <CircuitBoard className="w-4 h-4" /> },
-                { title: "Il Risultato", desc: "80% meno lavoro manuale. 45% più fatturato. 3× clienti che tornano. Tutto misurabile, tutto garantito.", color: "hsla(150,70%,50%,0.9)", icon: <TrendingUp className="w-4 h-4" /> },
+                { title: "Il Problema", desc: "Il tuo business ha 50+ attività quotidiane che rubano tempo. Ordini, clienti, marketing, inventario — tutto manuale, tutto lento.", color: "hsla(0,70%,65%,1)", icon: <Clock className="w-4 h-4" /> },
+                { title: "La Soluzione", desc: "Ogni attività diventa un nodo della rete. Gli agenti lavorano in parallelo, si scambiano dati e decidono — come un team di specialisti, a costo zero.", color: "hsl(215,85%,65%)", icon: <CircuitBoard className="w-4 h-4" /> },
+                { title: "Il Risultato", desc: "80% meno lavoro manuale. 45% più fatturato. 3× clienti che tornano. Tutto misurabile, tutto garantito.", color: "hsla(150,70%,60%,1)", icon: <TrendingUp className="w-4 h-4" /> },
               ].map((block, i) => (
-                <div key={i} className="rounded-lg border border-border bg-background/85 p-3.5 sm:p-4">
+                <div key={i} className="rounded-xl border p-3.5 sm:p-4"
+                  style={{
+                    borderColor: "hsla(220,20%,30%,0.5)",
+                    background: "linear-gradient(160deg, hsla(230,18%,15%,0.8), hsla(230,15%,10%,0.9))",
+                    boxShadow: "inset 0 1px 0 hsla(0,0%,100%,0.03)",
+                  }}>
                   <div className="flex items-center gap-1.5 mb-2">
                     <div style={{ color: block.color }}>{block.icon}</div>
                     <span className="text-[0.6rem] sm:text-xs font-bold tracking-wider uppercase" style={{ color: block.color }}>{block.title}</span>
                   </div>
-                  <p className="text-[0.55rem] sm:text-xs text-foreground/80 leading-[1.5]">{block.desc}</p>
+                  <p className="text-[0.55rem] sm:text-xs leading-[1.5]" style={{ color: "hsla(220,15%,75%,0.85)" }}>{block.desc}</p>
                 </div>
               ))}
             </div>
