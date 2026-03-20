@@ -663,26 +663,32 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
 
   return (
     <motion.div
-      className={`relative rounded-2xl border overflow-hidden group/card premium-card-hover ${className}`}
+      className={`relative rounded-2xl border overflow-hidden group/card ${className}`}
       style={{
-        background: "linear-gradient(145deg, hsl(0 0% 100% / 0.95), hsl(220 20% 98% / 0.92))",
-        backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.3)",
-        borderColor: "hsl(var(--border) / 0.5)",
-        boxShadow: "0 2px 20px hsl(var(--primary) / 0.06), 0 0 0 1px hsl(var(--primary) / 0.04)"
+        background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(220 20% 98% / 0.88), hsl(248 18% 97% / 0.85))",
+        backdropFilter: isMobileDevice ? undefined : "blur(24px) saturate(1.4)",
+        WebkitBackdropFilter: isMobileDevice ? undefined : "blur(24px) saturate(1.4)",
+        borderColor: "hsl(var(--border) / 0.35)",
+        boxShadow: "0 2px 24px hsl(var(--primary) / 0.06), 0 0 0 1px hsl(var(--primary) / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
       }}
       whileHover={hover && !isMobileDevice ? {
-        y: -5,
-        borderColor: "hsl(var(--primary) / 0.2)",
-        boxShadow: "0 16px 48px hsl(var(--primary) / 0.1), 0 0 24px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
+        y: -6,
+        borderColor: "hsl(var(--primary) / 0.18)",
+        boxShadow: "0 20px 60px hsl(var(--primary) / 0.1), 0 0 30px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.6)",
         transition: { duration: 0.4, ease: "easeOut" }
       } : undefined}>
       
-    {/* Top accent line */}
+    {/* Top accent shimmer line */}
     <div className="absolute top-0 left-0 right-0 h-px z-10"
-      style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), hsl(var(--accent) / 0.12), transparent)" }} />
+      style={{ background: "linear-gradient(90deg, transparent 10%, hsl(var(--primary) / 0.12) 30%, hsl(38 50% 55% / 0.15) 50%, hsl(var(--accent) / 0.1) 70%, transparent 90%)" }} />
       
     {/* Inner glass reflection */}
-    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.4) 0%, transparent 35%)" }} />
+    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.45) 0%, transparent 30%)" }} />
+    
+    {/* Subtle hover gradient overlay */}
+    <div className="absolute inset-0 pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
+      style={{ background: "radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.04), transparent 70%)" }} />
+    
     <div className="relative z-10">{children}</div>
   </motion.div>);
 
@@ -3645,15 +3651,21 @@ const LandingPage = () => {
           <motion.div key={i} variants={fadeUp}
           className="relative p-5 rounded-2xl overflow-hidden border transition-all duration-300 group"
           style={{
-            background: "linear-gradient(160deg, hsl(220 15% 99%), hsl(230 20% 97%))",
-            borderColor: `hsl(${pillar.color} / 0.12)`,
-            boxShadow: `0 4px 24px hsl(${pillar.color} / 0.06), 0 1px 3px hsl(220 20% 80% / 0.15)`,
+            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(230 20% 97% / 0.88))",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            borderColor: `hsl(${pillar.color} / 0.1)`,
+            boxShadow: `0 4px 28px hsl(${pillar.color} / 0.06), 0 1px 3px hsl(220 20% 80% / 0.12), inset 0 1px 0 hsl(0 0% 100% / 0.5)`,
           }}>
-            {/* Top accent line */}
-            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pillar.color} / 0.5) 50%, transparent 90%)` }} />
+            {/* Top accent shimmer line */}
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${pillar.color} / 0.4) 30%, hsl(${pillar.color} / 0.6) 50%, hsl(${pillar.color} / 0.4) 70%, transparent 95%)` }} />
+            {/* Inner glass reflection */}
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.4) 0%, transparent 25%)" }} />
             {/* Subtle corner glow */}
-            <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full opacity-40 pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${pillar.color} / 0.15), transparent 70%)` }} />
-            <div className="flex items-start gap-4">
+            <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-30 pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${pillar.color} / 0.12), transparent 70%)` }} />
+            {/* Hover gradient overlay */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, hsl(${pillar.color} / 0.05), transparent 60%)` }} />
+            <div className="relative z-10 flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
               style={{ background: `linear-gradient(135deg, hsl(${pillar.color}), hsl(${pillar.color} / 0.7))`, color: "white", boxShadow: `0 6px 20px hsl(${pillar.color} / 0.3), inset 0 1px 0 rgba(255,255,255,0.15)` }}>
                 {pillar.icon}
@@ -3689,17 +3701,27 @@ const LandingPage = () => {
             { icon: <Sparkles className="w-4 h-4" />, title: "Personalizzazione Totale", color: "var(--neon-magenta)" },
           ].map((f, i) =>
           <motion.div key={i} variants={popIn}
-          className="relative p-3.5 rounded-2xl overflow-hidden text-center"
+          className="relative p-3.5 rounded-2xl overflow-hidden text-center group"
           style={{
-            background: "hsl(0 0% 100% / 0.95)",
-            border: `1px solid hsl(${f.color} / 0.12)`,
-            boxShadow: `0 2px 12px hsl(${f.color} / 0.06)`
+            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(220 20% 98% / 0.85))",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            border: `1px solid hsl(${f.color} / 0.1)`,
+            boxShadow: `0 2px 16px hsl(${f.color} / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)`
           }}>
-            <div className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-2"
-            style={{ background: `linear-gradient(135deg, hsl(${f.color}), hsl(${f.color} / 0.8))`, color: "white", boxShadow: `0 3px 12px hsl(${f.color} / 0.25)` }}>
-              {f.icon}
+            {/* Top accent line */}
+            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, hsl(${f.color} / 0.25), transparent)` }} />
+            {/* Inner reflection */}
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.35) 0%, transparent 30%)" }} />
+            {/* Hover glow */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 30%, hsl(${f.color} / 0.06), transparent 60%)` }} />
+            <div className="relative z-10">
+              <div className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-2"
+              style={{ background: `linear-gradient(135deg, hsl(${f.color}), hsl(${f.color} / 0.8))`, color: "white", boxShadow: `0 3px 12px hsl(${f.color} / 0.25)` }}>
+                {f.icon}
+              </div>
+              <h4 className="text-[0.65rem] font-heading font-bold text-foreground/85 leading-tight">{f.title}</h4>
             </div>
-            <h4 className="text-[0.65rem] font-heading font-bold text-foreground/85 leading-tight">{f.title}</h4>
           </motion.div>
           )}
         </motion.div>
@@ -4100,19 +4122,24 @@ const LandingPage = () => {
             { label: "Fatturazione", icon: "◆" },
           ].map((item, i) =>
             <motion.div key={item.label}
-              className="group relative px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl border border-primary/15 cursor-default"
+              className="group relative px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl border cursor-default overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, hsla(248,20%,97%,0.85), hsla(220,18%,96%,0.8))",
-                boxShadow: "0 2px 16px hsla(265,50%,40%,0.06), inset 0 1px 0 hsla(0,0%,100%,0.03)",
+                background: "linear-gradient(160deg, hsl(0 0% 100% / 0.88), hsl(248 20% 97% / 0.82))",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                borderColor: "hsl(var(--primary) / 0.1)",
+                boxShadow: "0 2px 16px hsl(var(--primary) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)",
               }}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 + i * 0.08 }}
-              whileHover={{ scale: 1.04, borderColor: "hsla(265,60%,55%,0.3)" }}>
-              <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: "radial-gradient(circle at center, hsla(265,50%,50%,0.08), transparent 70%)" }} />
-              <span className="text-[0.55rem] sm:text-[0.65rem] font-heading font-bold tracking-[0.15em] uppercase text-foreground/80 group-hover:text-primary transition-colors flex items-center gap-1.5">
+              whileHover={{ scale: 1.04, borderColor: "hsl(var(--primary) / 0.2)", boxShadow: "0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.5)" }}>
+              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.12), transparent)" }} />
+              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.3) 0%, transparent 25%)" }} />
+              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: "radial-gradient(circle at center, hsl(var(--primary) / 0.05), transparent 70%)" }} />
+              <span className="relative z-10 text-[0.55rem] sm:text-[0.65rem] font-heading font-bold tracking-[0.15em] uppercase text-foreground/80 group-hover:text-primary transition-colors flex items-center gap-1.5">
                 <span className="text-primary/50 text-[0.5rem]">{item.icon}</span>
                 {item.label}
               </span>
@@ -4125,16 +4152,23 @@ const LandingPage = () => {
         initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
           <motion.button
             onClick={() => scrollTo("pricing")}
-            className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
+            className="group px-7 py-3.5 rounded-2xl bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
+            style={{ boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.25), inset 0 1px 0 hsl(0 0% 100% / 0.15)" }}
+            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.3)" }}
             whileTap={{ scale: 0.97 }}>
             
             Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </motion.button>
           <motion.button
             onClick={() => navigate("/demo")}
-            className="px-7 py-3.5 rounded-full border border-foreground/8 text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:border-primary/20 hover:text-foreground hover:bg-primary/[0.03] transition-all inline-flex items-center gap-2"
-            whileHover={{ scale: 1.01 }}>
+            className="px-7 py-3.5 rounded-2xl text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all inline-flex items-center gap-2"
+            style={{
+              border: "1px solid hsl(var(--border) / 0.4)",
+              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))",
+              backdropFilter: "blur(12px)",
+              boxShadow: "0 2px 12px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
+            }}
+            whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.2)" }}>
             
             <Play className="w-4 h-4 text-primary/60" /> Esplora le Demo
           </motion.button>
@@ -4361,16 +4395,23 @@ const LandingPage = () => {
         initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
           <motion.button
             onClick={() => scrollTo("pricing")}
-            className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
+            className="group w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center justify-center gap-2"
+            style={{ boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.25), inset 0 1px 0 hsl(0 0% 100% / 0.15)" }}
+            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.3)" }}
             whileTap={{ scale: 0.97 }}>
             
             Inizia Ora <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </motion.button>
           <motion.button
             onClick={() => navigate("/demo")}
-            className="px-7 py-3.5 rounded-full border border-foreground/8 text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:border-primary/20 hover:text-foreground hover:bg-primary/[0.03] transition-all inline-flex items-center gap-2"
-            whileHover={{ scale: 1.01 }}>
+            className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all inline-flex items-center justify-center gap-2"
+            style={{
+              border: "1px solid hsl(var(--border) / 0.4)",
+              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))",
+              backdropFilter: "blur(12px)",
+              boxShadow: "0 2px 12px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
+            }}
+            whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.2)" }}>
             
             <Play className="w-4 h-4 text-primary/60" /> Prova Tutte le Demo
           </motion.button>
@@ -5449,25 +5490,32 @@ const LandingPage = () => {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: i * 0.1, duration: 0.4 }}
-                className="relative flex flex-col items-center text-center">
+                className="relative flex flex-col items-center text-center p-3 rounded-2xl overflow-hidden group"
+                style={{
+                  background: "linear-gradient(160deg, hsl(0 0% 100% / 0.9), hsl(248 18% 97% / 0.85))",
+                  backdropFilter: "blur(16px)",
+                  border: "1px solid hsl(var(--border) / 0.3)",
+                  boxShadow: "0 2px 16px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
+                }}>
+                  {/* Top accent line */}
+                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent)" }} />
+                  {/* Glass reflection */}
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.35) 0%, transparent 25%)" }} />
+                  {/* Hover glow */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 30%, hsl(var(--primary) / 0.05), transparent 60%)" }} />
                 
                   {/* Compact tech icon */}
-                  <div className="w-7 h-7 rounded-md flex items-center justify-center mb-1.5 relative"
+                  <div className="relative z-10 w-8 h-8 rounded-xl flex items-center justify-center mb-1.5"
                 style={{
-                  background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.05))",
+                  background: "linear-gradient(135deg, hsl(var(--primary) / 0.12), hsl(var(--primary) / 0.06))",
                   border: "1px solid hsl(var(--primary) / 0.15)",
                   boxShadow: "0 2px 8px hsl(var(--primary) / 0.06)"
                 }}>
                     <div className="text-primary">{card.icon}</div>
-                    {/* Tech corner brackets */}
-                    <div className="absolute -top-[1.5px] -left-[1.5px] w-[4px] h-[4px] border-t border-l border-primary/25" />
-                    <div className="absolute -top-[1.5px] -right-[1.5px] w-[4px] h-[4px] border-t border-r border-primary/25" />
-                    <div className="absolute -bottom-[1.5px] -left-[1.5px] w-[4px] h-[4px] border-b border-l border-primary/25" />
-                    <div className="absolute -bottom-[1.5px] -right-[1.5px] w-[4px] h-[4px] border-b border-r border-primary/25" />
                   </div>
-                  <h3 className="font-heading text-[0.55rem] font-bold text-foreground/80 leading-tight mb-0.5">{card.title}</h3>
-                  <p className="text-[0.45rem] text-foreground/55 leading-[1.4] mb-1">{card.desc}</p>
-                  <motion.span className="text-[0.45rem] font-heading font-semibold text-primary/50 tracking-wider inline-flex items-center gap-1"
+                  <h3 className="relative z-10 font-heading text-[0.55rem] font-bold text-foreground/80 leading-tight mb-0.5">{card.title}</h3>
+                  <p className="relative z-10 text-[0.45rem] text-foreground/55 leading-[1.4] mb-1">{card.desc}</p>
+                  <motion.span className="relative z-10 text-[0.45rem] font-heading font-semibold text-primary/50 tracking-wider inline-flex items-center gap-1"
                 animate={{ opacity: [0.4, 0.9, 0.4] }}
                 transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.6 }}>
                     <span className="w-1 h-1 rounded-full bg-primary/40" />
@@ -5491,8 +5539,8 @@ const LandingPage = () => {
               ["App White-Label", "Dashboard IA", "Menu QR", "Booking Online", "CRM Avanzato", "Push Notification", "Fatturazione", "Analytics", "Chat Clienti", "GPS Tracking", "Mappa Tavoli", "Gestione Staff"] :
               ["Pagamenti", "Email Marketing", "WhatsApp Auto", "Inventario", "HACCP", "Review Shield™", "Agenda Smart", "Pricing Dinamico", "Landing SEO", "Cross-selling IA", "Programma Fedeltà", "Schede Paziente"]).
               map((cap, ci) =>
-              <span key={ci} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.6rem] font-heading tracking-wider"
-              style={{ background: "hsla(265,70%,60%,0.06)", border: "1px solid hsla(265,70%,60%,0.08)", color: "hsla(265,70%,65%,0.5)" }}>
+              <span key={ci} className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-[0.6rem] font-heading font-medium tracking-wider"
+              style={{ background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))", border: "1px solid hsl(var(--primary) / 0.08)", color: "hsl(var(--primary) / 0.6)", boxShadow: "0 1px 8px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)" }}>
                       <CircleCheck className="w-2.5 h-2.5" />
                       {cap}
                     </span>
