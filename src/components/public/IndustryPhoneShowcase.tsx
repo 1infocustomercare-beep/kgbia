@@ -3081,7 +3081,7 @@ export function IndustryShowcaseSection({
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}>
-            {(() => { const Icon = SECTOR_ICONS[industryId]; return Icon ? <Icon className="w-5 h-5" style={{ color: cfg.defaultPrimaryColor }} /> : <span className="text-xl">{cfg.emoji}</span>; })()}
+            <SectorAppIcon id={industryId} size={40} />
           </div>
           <div>
             <h3 className="text-sm font-bold text-white">{cfg.label}</h3>
