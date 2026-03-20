@@ -578,15 +578,15 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     <motion.div
       className={`relative rounded-2xl border overflow-hidden group/card premium-card-hover ${className}`}
       style={{
-        background: "linear-gradient(145deg, hsl(224 14% 14% / 0.98), hsl(225 16% 10% / 0.99))",
+        background: "linear-gradient(145deg, hsl(0 0% 100% / 0.95), hsl(220 20% 98% / 0.92))",
         backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.3)",
-        borderColor: "hsl(var(--border) / 0.6)",
-        boxShadow: "0 2px 20px hsl(0 0% 0% / 0.3), 0 0 0 1px hsl(var(--primary) / 0.04)"
+        borderColor: "hsl(var(--border) / 0.5)",
+        boxShadow: "0 2px 20px hsl(var(--primary) / 0.06), 0 0 0 1px hsl(var(--primary) / 0.04)"
       }}
       whileHover={hover && !isMobileDevice ? {
         y: -5,
         borderColor: "hsl(var(--primary) / 0.2)",
-        boxShadow: "0 16px 48px hsl(0 0% 0% / 0.35), 0 0 24px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
+        boxShadow: "0 16px 48px hsl(var(--primary) / 0.1), 0 0 24px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5)",
         transition: { duration: 0.4, ease: "easeOut" }
       } : undefined}>
       
@@ -595,7 +595,7 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
       style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), hsl(var(--accent) / 0.12), transparent)" }} />
       
     {/* Inner glass reflection */}
-    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 35%)" }} />
+    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.4) 0%, transparent 35%)" }} />
     <div className="relative z-10">{children}</div>
   </motion.div>);
 
@@ -3496,7 +3496,7 @@ const LandingPage = () => {
             <br />
             <span className="text-foreground/80">Potenziati dall'IA</span>
           </motion.h2>
-          <motion.p className="text-[0.82rem] text-foreground/45 max-w-lg mx-auto leading-[1.75]"
+          <motion.p className="text-[0.82rem] text-foreground/60 max-w-lg mx-auto leading-[1.75]"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.2 }}>
             Progettiamo e sviluppiamo applicazioni dedicate, web app professionali e sistemi gestionali completi
             per qualsiasi settore — personalizzati al 100% sulle tue esigenze, con intelligenza artificiale integrata
@@ -4058,7 +4058,7 @@ const LandingPage = () => {
           style={{ backgroundImage: "linear-gradient(hsla(265,30%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265,30%,60%,0.08) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, #08070e)" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsl(0 0% 100% / 0.8))" }} />
         </div>
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
@@ -4499,7 +4499,7 @@ const LandingPage = () => {
         <div className="sm:hidden relative py-4 px-1">
           {/* Opaque backdrop */}
           <div className="absolute inset-0 rounded-2xl z-0"
-          style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.92), hsla(38,14%,8%,0.9))", border: "1px solid hsla(38,45%,50%,0.14)" }} />
+          style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.95), hsl(248 15% 97% / 0.93))", border: "1px solid hsl(var(--border) / 0.3)" }} />
 
           {/* Central vertical pipeline spine */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1]" preserveAspectRatio="none">
@@ -5142,7 +5142,7 @@ const LandingPage = () => {
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Costruiamo <span className="text-shimmer">Qualsiasi Cosa</span>
           </motion.h2>
-          <motion.p className="text-foreground/40 max-w-[500px] mx-auto text-sm leading-[1.8]"
+          <motion.p className="text-foreground/55 max-w-[500px] mx-auto text-sm leading-[1.8]"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
             Nessun pacchetto standard. Analizziamo il tuo business, progettiamo la soluzione perfetta e la costruiamo su misura.
           </motion.p>
@@ -5294,7 +5294,8 @@ const LandingPage = () => {
 
             {/* Opaque layer to block DNA background bleed */}
             <div className="absolute inset-0 rounded-2xl" style={{
-              background: "linear-gradient(145deg, hsla(265,22%,8%,0.94) 0%, hsla(230,18%,6%,0.95) 50%, hsla(265,20%,9%,0.94) 100%)"
+              background: "linear-gradient(145deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
+              border: "1px solid hsl(var(--border) / 0.3)"
             }} />
 
             {/* Circuit connection SVG between the 3 cards */}
@@ -5341,11 +5342,11 @@ const LandingPage = () => {
                   {/* Compact tech icon */}
                   <div className="w-7 h-7 rounded-md flex items-center justify-center mb-1.5 relative"
                 style={{
-                  background: "linear-gradient(135deg, hsla(265,28%,16%,0.95), hsla(230,22%,12%,0.95))",
-                  border: "1px solid hsla(265,40%,45%,0.18)",
-                  boxShadow: "0 0 10px hsla(265,50%,50%,0.06), inset 0 1px 0 hsla(265,40%,60%,0.08)"
+                  background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.05))",
+                  border: "1px solid hsl(var(--primary) / 0.15)",
+                  boxShadow: "0 2px 8px hsl(var(--primary) / 0.06)"
                 }}>
-                    <div className="text-primary/70">{card.icon}</div>
+                    <div className="text-primary">{card.icon}</div>
                     {/* Tech corner brackets */}
                     <div className="absolute -top-[1.5px] -left-[1.5px] w-[4px] h-[4px] border-t border-l border-primary/25" />
                     <div className="absolute -top-[1.5px] -right-[1.5px] w-[4px] h-[4px] border-t border-r border-primary/25" />
@@ -5353,7 +5354,7 @@ const LandingPage = () => {
                     <div className="absolute -bottom-[1.5px] -right-[1.5px] w-[4px] h-[4px] border-b border-r border-primary/25" />
                   </div>
                   <h3 className="font-heading text-[0.55rem] font-bold text-foreground/80 leading-tight mb-0.5">{card.title}</h3>
-                  <p className="text-[0.45rem] text-foreground/30 leading-[1.4] mb-1">{card.desc}</p>
+                  <p className="text-[0.45rem] text-foreground/55 leading-[1.4] mb-1">{card.desc}</p>
                   <motion.span className="text-[0.45rem] font-heading font-semibold text-primary/50 tracking-wider inline-flex items-center gap-1"
                 animate={{ opacity: [0.4, 0.9, 0.4] }}
                 transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.6 }}>
@@ -5368,8 +5369,8 @@ const LandingPage = () => {
 
         {/* ═══ Scrolling Capabilities Ticker ═══ */}
         <div className="relative mb-14 -mx-5 sm:-mx-6 overflow-hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsla(260,18%,8%,1), transparent)" }} />
-          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsla(260,18%,8%,1), transparent)" }} />
+          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(220 20% 97%), transparent)" }} />
+          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(220 20% 97%), transparent)" }} />
           {[0, 1].map((row) =>
           <div key={row} className="flex whitespace-nowrap mb-2" style={{ animation: `carousel-scroll ${row === 0 ? "40s" : "45s"} linear infinite ${row === 1 ? "reverse" : ""}` }}>
               {[...Array(2)].map((_, rep) =>
@@ -5414,7 +5415,7 @@ const LandingPage = () => {
             <h3 className="text-base sm:text-lg font-heading font-bold text-foreground mb-2">
               "Se puoi immaginarlo, <span className="text-shimmer">noi lo costruiamo.</span>"
             </h3>
-            <p className="text-[0.7rem] text-foreground/30 mb-6 max-w-md mx-auto">
+            <p className="text-[0.7rem] text-foreground/50 mb-6 max-w-md mx-auto">
               Il tuo business merita una soluzione costruita su misura. Non un compromesso.
             </p>
             <motion.button
@@ -5898,8 +5899,8 @@ const LandingPage = () => {
               {impactNumbers.map((n, i) => (
                 <div key={i} className="relative rounded-lg sm:rounded-xl overflow-hidden py-3 px-1.5 sm:p-4 text-center"
                 style={{
-                  background: "linear-gradient(160deg, hsla(230,18%,11%,0.98), hsla(230,22%,7%,0.98))",
-                  border: "1px solid hsla(265,40%,40%,0.1)"
+                  background: "linear-gradient(160deg, hsl(0 0% 100% / 0.95), hsl(220 20% 97% / 0.92))",
+                  border: `1px solid hsla(${[265,150,38,210][i]},40%,50%,0.15)`
                 }}>
                   <div className="absolute top-0 left-0 right-0 h-[1px]"
                   style={{ background: `linear-gradient(90deg, transparent, hsla(${[265,150,38,210][i]},60%,55%,0.4), transparent)` }} />
@@ -5958,9 +5959,9 @@ const LandingPage = () => {
                     <motion.div key={i}
                     className="relative rounded-xl overflow-hidden"
                     style={{
-                      background: "linear-gradient(160deg, hsla(230,18%,10%,0.97), hsla(230,22%,6%,0.97))",
-                      border: `1px solid hsla(${t.color},35%,40%,0.15)`,
-                      boxShadow: `0 0 20px hsla(${t.color},50%,40%,0.04)`
+                      background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
+                      border: `1px solid hsla(${t.color},35%,50%,0.18)`,
+                      boxShadow: `0 2px 16px hsla(${t.color},40%,50%,0.06)`
                     }}
                     initial={{ opacity: 0, scale: 0.92 }}
                     whileInView={{ opacity: 1, scale: 1 }}
@@ -5989,15 +5990,15 @@ const LandingPage = () => {
                         {/* Before → After */}
                         <div className="flex items-center gap-1">
                           <div className="flex-1 rounded-lg py-1.5 px-1.5 text-center"
-                          style={{ background: "hsla(0,35%,15%,0.3)", border: "1px solid hsla(0,35%,35%,0.08)" }}>
-                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/20 mb-0.5">Prima</div>
-                            <div className="text-[0.65rem] font-bold text-red-400/75 leading-tight">{t.before}</div>
+                          style={{ background: "hsla(0,40%,50%,0.06)", border: "1px solid hsla(0,40%,50%,0.1)" }}>
+                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/45 mb-0.5">Prima</div>
+                            <div className="text-[0.65rem] font-bold text-red-500/75 leading-tight">{t.before}</div>
                           </div>
-                          <ArrowRight className="w-2.5 h-2.5 flex-shrink-0" style={{ color: `hsla(${t.color},55%,55%,0.45)` }} />
+                          <ArrowRight className="w-2.5 h-2.5 flex-shrink-0" style={{ color: `hsla(${t.color},55%,50%,0.6)` }} />
                           <div className="flex-1 rounded-lg py-1.5 px-1.5 text-center"
-                          style={{ background: `hsla(${t.color},35%,15%,0.2)`, border: `1px solid hsla(${t.color},35%,35%,0.1)` }}>
-                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/20 mb-0.5">Dopo</div>
-                            <div className="text-[0.65rem] font-bold leading-tight" style={{ color: `hsla(${t.color},65%,65%,0.9)` }}>{t.after}</div>
+                          style={{ background: `hsla(${t.color},40%,50%,0.06)`, border: `1px solid hsla(${t.color},40%,50%,0.12)` }}>
+                            <div className="text-[0.35rem] uppercase tracking-widest text-foreground/45 mb-0.5">Dopo</div>
+                            <div className="text-[0.65rem] font-bold leading-tight" style={{ color: `hsla(${t.color},65%,42%,0.95)` }}>{t.after}</div>
                           </div>
                         </div>
                       </div>
@@ -6036,9 +6037,9 @@ const LandingPage = () => {
                     <motion.div key={i}
                     className="relative rounded-2xl overflow-hidden"
                     style={{
-                      background: "linear-gradient(160deg, hsla(230,18%,10%,0.98), hsla(230,22%,6%,0.98))",
-                      border: `1px solid hsla(${t.color},30%,35%,0.12)`,
-                      boxShadow: `0 0 30px hsla(${t.color},50%,40%,0.04)`
+                      background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
+                      border: `1px solid hsla(${t.color},30%,50%,0.15)`,
+                      boxShadow: `0 2px 20px hsla(${t.color},50%,50%,0.06)`
                     }}
                     initial={{ opacity: 0, y: 25 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -6063,9 +6064,9 @@ const LandingPage = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="flex-1 rounded-xl p-3 text-center"
-                          style={{ background: "hsla(0,40%,15%,0.25)", border: "1px solid hsla(0,40%,40%,0.1)" }}>
-                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/25 mb-1">Prima</div>
-                            <div className="text-sm font-bold text-red-400/80">{t.before}</div>
+                          style={{ background: "hsla(0,40%,50%,0.06)", border: "1px solid hsla(0,40%,50%,0.12)" }}>
+                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/45 mb-1">Prima</div>
+                            <div className="text-sm font-bold text-red-500/80">{t.before}</div>
                           </div>
                           <motion.div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
                           style={{ background: `hsla(${t.color},50%,50%,0.15)` }}
@@ -6074,9 +6075,9 @@ const LandingPage = () => {
                             <ArrowRight className="w-3.5 h-3.5" style={{ color: `hsla(${t.color},65%,60%,1)` }} />
                           </motion.div>
                           <div className="flex-1 rounded-xl p-3 text-center"
-                          style={{ background: `hsla(${t.color},40%,15%,0.2)`, border: `1px solid hsla(${t.color},40%,40%,0.15)` }}>
-                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/25 mb-1">Dopo</div>
-                            <div className="text-sm font-bold" style={{ color: `hsla(${t.color},65%,65%,0.95)` }}>{t.after}</div>
+                          style={{ background: `hsla(${t.color},40%,50%,0.06)`, border: `1px solid hsla(${t.color},40%,50%,0.15)` }}>
+                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/45 mb-1">Dopo</div>
+                            <div className="text-sm font-bold" style={{ color: `hsla(${t.color},65%,45%,0.95)` }}>{t.after}</div>
                           </div>
                         </div>
                       </div>
@@ -6089,8 +6090,8 @@ const LandingPage = () => {
             {/* ═══ TRUST GUARANTEE ═══ */}
             <motion.div className="relative rounded-xl sm:rounded-2xl overflow-hidden p-4 sm:p-8"
             style={{
-              background: "linear-gradient(160deg, hsla(230,18%,10%,0.98), hsla(265,18%,8%,0.98))",
-              border: "1px solid hsla(38,40%,40%,0.12)"
+              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(248 15% 97% / 0.94))",
+              border: "1px solid hsl(var(--primary) / 0.12)"
             }}
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
               <div className="absolute top-0 left-0 right-0 h-[1px]"
@@ -6119,7 +6120,7 @@ const LandingPage = () => {
                   ].map((b, i) => (
                     <div key={i} className="flex flex-col items-center gap-0.5 sm:gap-1.5">
                       <div className="w-6 h-6 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl flex items-center justify-center"
-                      style={{ background: "hsla(230,18%,14%,0.9)", border: "1px solid hsla(265,30%,35%,0.12)", color: "hsla(38,60%,60%,0.7)" }}>
+                      style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.1)", color: "hsl(var(--primary) / 0.7)" }}>
                         {b.icon}
                       </div>
                       <span className="text-[0.35rem] sm:text-[0.5rem] text-foreground/30 tracking-wider uppercase">{b.label}</span>
@@ -6297,22 +6298,22 @@ const LandingPage = () => {
               {testimonials.map((t, i) =>
             <div key={i} className="relative p-4 rounded-xl overflow-hidden"
             style={{
-              background: "linear-gradient(165deg, hsla(265,25%,8%,0.98), hsla(265,20%,5%,0.99))",
-              border: "1px solid hsla(265,40%,50%,0.12)",
+              background: "linear-gradient(165deg, hsl(0 0% 100% / 0.95), hsl(248 15% 97% / 0.92))",
+              border: "1px solid hsl(var(--primary) / 0.12)",
               backdropFilter: "blur(24px)"
             }}>
                   <div className="flex items-center gap-3 mb-3">
                     <img src={t.photo} alt={t.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                style={{ border: "2px solid hsla(265,50%,55%,0.25)" }} />
+                style={{ border: "2px solid hsl(var(--primary) / 0.2)" }} />
                     <div>
-                      <h4 className="font-heading text-[0.7rem] font-semibold" style={{ color: "hsla(0,0%,100%,0.94)" }}>{t.name}</h4>
-                      <p className="text-[0.5rem]" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
+                      <h4 className="font-heading text-[0.7rem] font-semibold text-foreground">{t.name}</h4>
+                      <p className="text-[0.5rem] text-foreground/50">{t.role}</p>
                     </div>
                     <span className="ml-auto text-base">{t.emoji}</span>
                   </div>
-                  <p className="text-[0.65rem] leading-[1.7] mb-2" style={{ color: "hsla(0,0%,100%,0.5)" }}>"{t.quote}"</p>
+                  <p className="text-[0.65rem] leading-[1.7] mb-2 text-foreground/65">"{t.quote}"</p>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[0.55rem] font-semibold font-heading"
-              style={{ background: "hsla(265,40%,25%,0.5)", border: "1px solid hsla(265,60%,55%,0.2)", color: "hsl(var(--primary))" }}>
+              style={{ background: "hsl(var(--primary) / 0.08)", border: "1px solid hsl(var(--primary) / 0.12)", color: "hsl(var(--primary))" }}>
                     <TrendingUp className="w-2.5 h-2.5" /> {t.metric}
                   </div>
                 </div>
@@ -6325,35 +6326,35 @@ const LandingPage = () => {
               <div key={i} className="group relative h-full">
                     <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
                 style={{
-                  background: "linear-gradient(165deg, hsla(265,25%,8%,0.98), hsla(265,20%,5%,0.99))",
-                  border: "1px solid hsla(265,40%,50%,0.12)",
-                  boxShadow: "0 16px 48px -12px hsla(265,50%,8%,0.5), inset 0 1px 0 hsla(265,60%,70%,0.06)",
+                  background: "linear-gradient(165deg, hsl(0 0% 100% / 0.96), hsl(248 15% 97% / 0.93))",
+                  border: "1px solid hsl(var(--primary) / 0.1)",
+                  boxShadow: "0 4px 24px hsl(var(--primary) / 0.06)",
                   backdropFilter: "blur(24px)"
                 }}>
                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                  style={{ background: "linear-gradient(105deg, transparent 40%, hsla(38,50%,55%,0.06) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
-                      <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsla(38,50%,55%,0.2)" }} />
-                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
-                      <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
+                  style={{ background: "linear-gradient(105deg, transparent 40%, hsl(var(--primary) / 0.04) 50%, transparent 60%)", backgroundSize: "200% 100%", animation: "shimmer 2s ease-in-out infinite" }} />
+                      <div className="absolute top-0 left-0 w-5 h-5 border-t border-l rounded-tl-2xl pointer-events-none" style={{ borderColor: "hsl(var(--primary) / 0.15)" }} />
+                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsl(var(--primary) / 0.1)" }} />
+                      <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent)" }} />
                       <div className="relative mb-4 mt-1">
                         <img src={t.photo} alt={t.name} className="w-14 h-14 rounded-full object-cover mx-auto"
-                    style={{ border: "2px solid hsla(265,50%,55%,0.25)", boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)" }} />
+                    style={{ border: "2px solid hsl(var(--primary) / 0.2)", boxShadow: "0 4px 16px hsl(var(--primary) / 0.1)" }} />
                         <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
-                    style={{ background: "hsla(265,30%,15%,0.9)", border: "1px solid hsla(265,40%,50%,0.2)", boxShadow: "0 4px 12px hsla(0,0%,0%,0.3)" }}>
+                    style={{ background: "hsl(0 0% 100% / 0.9)", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 8px hsl(var(--primary) / 0.08)" }}>
                           {t.emoji}
                         </div>
                         <motion.div className="absolute -inset-2 rounded-full pointer-events-none"
-                    style={{ border: "1px dashed hsla(265,50%,55%,0.12)" }}
+                    style={{ border: "1px dashed hsl(var(--primary) / 0.1)" }}
                     animate={{ rotate: [0, 360] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
                       </div>
-                      <h4 className="font-heading text-xs font-semibold mb-0.5" style={{ color: "hsla(0,0%,100%,0.94)" }}>{t.name}</h4>
-                      <p className="text-[0.58rem] mb-4" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
-                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1" style={{ color: "hsla(0,0%,100%,0.5)" }}>
-                        <Quote className="w-3.5 h-3.5 mx-auto mb-2" style={{ color: "hsla(38,50%,55%,0.3)" }} />
+                      <h4 className="font-heading text-xs font-semibold mb-0.5 text-foreground">{t.name}</h4>
+                      <p className="text-[0.58rem] mb-4 text-foreground/50">{t.role}</p>
+                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1 text-foreground/65">
+                        <Quote className="w-3.5 h-3.5 mx-auto mb-2 text-primary/30" />
                         "{t.quote}"
                       </blockquote>
                       <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[0.62rem] font-semibold font-heading tracking-wider"
-                  style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.5), hsla(265,30%,18%,0.4))", border: "1px solid hsla(265,60%,55%,0.2)", color: "hsl(var(--primary))" }}>
+                  style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.12)", color: "hsl(var(--primary))" }}>
                         <TrendingUp className="w-3 h-3" /> {t.metric}
                       </div>
                       <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-32 h-16 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
@@ -6417,12 +6418,12 @@ const LandingPage = () => {
         </div>
 
         <div className="relative mb-10 rounded-2xl overflow-hidden isolate">
-          {/* Opaque mobile panel to prevent homepage background bleeding under circuit schema */}
+          {/* Opaque mobile panel */}
           <div
             className="absolute inset-0 sm:hidden z-0"
             style={{
-              background: "linear-gradient(155deg, hsla(230,14%,5%,0.99), hsla(230,12%,4%,0.99))",
-              border: "1px solid hsla(38,40%,45%,0.08)"
+              background: "linear-gradient(155deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
+              border: "1px solid hsl(var(--border) / 0.3)"
             }} />
           
 
@@ -6495,7 +6496,7 @@ const LandingPage = () => {
                   <motion.p className="text-lg sm:text-2xl font-heading font-bold text-vibrant-gradient"
                 animate={{ textShadow: ["0 0 10px hsla(265,70%,60%,0)", "0 0 20px hsla(265,70%,60%,0.3)", "0 0 10px hsla(265,70%,60%,0)"] }}
                 transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>{s.value}</motion.p>
-                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/40 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
+                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/55 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
                 </PremiumCard>
               </motion.div>
             )}
@@ -6521,7 +6522,7 @@ const LandingPage = () => {
                 </motion.div>
                 <div className="text-left sm:text-center">
                   <p className="text-sm font-bold text-foreground font-heading">{s.title}</p>
-                  <p className="text-[0.6rem] text-foreground/35">{s.desc}</p>
+                  <p className="text-[0.6rem] text-foreground/50">{s.desc}</p>
                 </div>
                 {i < 2 && <ArrowRight className="hidden sm:block w-5 h-5 text-primary/15 mx-6 flex-shrink-0" />}
               </div>
@@ -6684,7 +6685,7 @@ const LandingPage = () => {
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
             </h2>
-            <p className="text-sm text-foreground/35 max-w-md mx-auto mb-8">
+            <p className="text-sm text-foreground/55 max-w-md mx-auto mb-8">
               25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando. Non restare indietro.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
