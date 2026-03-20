@@ -6496,7 +6496,7 @@ const LandingPage = () => {
                   <motion.p className="text-lg sm:text-2xl font-heading font-bold text-vibrant-gradient"
                 animate={{ textShadow: ["0 0 10px hsla(265,70%,60%,0)", "0 0 20px hsla(265,70%,60%,0.3)", "0 0 10px hsla(265,70%,60%,0)"] }}
                 transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>{s.value}</motion.p>
-                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/40 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
+                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/55 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
                 </PremiumCard>
               </motion.div>
             )}
