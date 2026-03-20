@@ -372,8 +372,21 @@ export default function IndustryDemoPage() {
     address: "Indirizzo", passengers: "Passeggeri", notes: "Note aggiuntive",
   };
 
-  // ═══ PREMIUM TEMPLATE ROUTING ═══
-  // Route sectors with dedicated premium templates to those templates
+  // ═══ PORTFOLIO SHOWCASE MODE ═══
+  // All sectors now render as Lowengeld-style portfolio pages
+  const hasPortfolioData = !!SECTOR_MOCKUP_IMAGES_CHECK[resolvedIndustry];
+  if (hasPortfolioData && !isPartnerBranded) {
+    const accentColor = theme.accent;
+    return (
+      <PortfolioShowcaseSite
+        industry={resolvedIndustry}
+        slug={slug || resolvedIndustry}
+        accentColor={accentColor}
+      />
+    );
+  }
+
+  // ═══ PREMIUM TEMPLATE ROUTING (fallback for partner-branded or sectors without portfolio data) ═══
   const PREMIUM_TEMPLATES: Record<string, React.ComponentType<{ company: any; afterHero?: React.ReactNode }>> = {
     ncc: NCCPublicSite,
     beauty: BeautyPublicSite,
