@@ -3515,6 +3515,56 @@ const LandingPage = () => {
       </div>
 
       {/* ═══════════════════════════════════════════
+                             COSA FA EMPIRE — Quick Feature Grid
+                            ═══════════════════════════════════════════ */}
+      <Section className="relative overflow-hidden" style={{
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.97) 0%, hsla(265,18%,8%,0.97) 50%, hsla(230,16%,4%,0.97) 100%)"
+      }}>
+        <div className="text-center mb-8">
+          <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
+          <motion.h2 className="text-[clamp(1.4rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
+            Cosa Fa <span className="text-vivid-gradient">Empire</span> per Te
+          </motion.h2>
+          <motion.p className="text-[0.8rem] text-foreground/40 max-w-md mx-auto leading-[1.7]"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.2 }}>
+            Un ecosistema completo che sostituisce 10+ strumenti separati
+          </motion.p>
+        </div>
+        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5"
+        variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
+          {[
+            { icon: <Smartphone className="w-4 h-4" />, title: "App White Label", desc: "Il TUO brand, zero loghi terzi", color: "var(--empire-violet)" },
+            { icon: <Bot className="w-4 h-4" />, title: "20+ Agenti IA", desc: "Lavorano 24/7 in autonomia", color: "var(--neon-emerald)" },
+            { icon: <Calendar className="w-4 h-4" />, title: "Prenotazioni", desc: "Agenda, ordini, booking", color: "var(--neon-cyan)" },
+            { icon: <CreditCard className="w-4 h-4" />, title: "Pagamenti", desc: "Stripe Connect integrato", color: "var(--neon-magenta)" },
+            { icon: <Users className="w-4 h-4" />, title: "CRM Clienti", desc: "Storico, preferenze, fidelity", color: "var(--empire-violet)" },
+            { icon: <Bell className="w-4 h-4" />, title: "Marketing Auto", desc: "Push, WhatsApp, email, SMS", color: "var(--neon-emerald)" },
+            { icon: <BarChart3 className="w-4 h-4" />, title: "Analytics & Finance", desc: "Fatture, margini, KPI", color: "var(--neon-cyan)" },
+            { icon: <Shield className="w-4 h-4" />, title: "Review Shield™", desc: "Proteggi la reputazione", color: "var(--neon-magenta)" },
+          ].map((f, i) =>
+          <motion.div key={i} variants={popIn}
+          className="relative p-3.5 rounded-xl overflow-hidden group transition-all duration-300"
+          style={{
+            background: "linear-gradient(145deg, hsl(var(--deep-black) / 0.95), hsl(265,15%,8% / 0.95))",
+            border: `1px solid hsl(${f.color} / 0.12)`,
+          }}>
+            <div className="flex items-start gap-2.5">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ background: `hsl(${f.color} / 0.12)`, color: `hsl(${f.color})` }}>
+                {f.icon}
+              </div>
+              <div className="min-w-0">
+                <h4 className="text-[0.68rem] font-heading font-bold text-foreground/90 leading-tight">{f.title}</h4>
+                <p className="text-[0.52rem] text-foreground/35 leading-[1.5] mt-0.5">{f.desc}</p>
+              </div>
+            </div>
+          </motion.div>
+          )}
+        </motion.div>
+      </Section>
+
+      {/* ═══════════════════════════════════════════
                              IL PROBLEMA — Pain Points
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
