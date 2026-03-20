@@ -1270,7 +1270,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* CTA button per card */}
                       <motion.button
                       onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/admin");}}
-                      className={`w-full mt-3 py-3 rounded-xl text-[0.7rem] font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
+                      className={`w-full mt-3 py-3 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
                       isEmpire ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20" :
                       isGrowth ?
@@ -1286,7 +1286,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                       }
                         <span className="relative z-10">
-                          {isEmpire ? "👑 Scelgo Empire — Domina Ora" : isGrowth ? "🚀 Scelgo Growth AI" : "Inizia con Digital Start"}
+                          {isEmpire ? "👑 Scelgo Empire" : isGrowth ? "🚀 Scelgo Growth AI" : "Inizia con Digital Start"}
                         </span>
                       </motion.button>
 
