@@ -57,11 +57,11 @@ const TECH_ICON_SET: { Icon: LucideIcon; color: string; glow: string }[] = [
 const TECH_ICON_COUNT = IS_MOBILE ? 8 : TECH_ICON_SET.length;
 
 const COLORS = {
-  gold: { h: 38, s: 50, l: 55 },
-  violet: { h: 265, s: 75, l: 62 },
-  green: { h: 160, s: 55, l: 48 },
-  cyan: { h: 195, s: 70, l: 55 },
-  white: { h: 0, s: 0, l: 90 },
+  gold: { h: 38, s: 58, l: 58 },
+  violet: { h: 265, s: 80, l: 65 },
+  green: { h: 155, s: 72, l: 52 },
+  cyan: { h: 185, s: 78, l: 58 },
+  white: { h: 0, s: 0, l: 92 },
 };
 
 const colorPalette = [COLORS.violet, COLORS.gold, COLORS.green, COLORS.cyan];
