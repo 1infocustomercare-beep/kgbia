@@ -559,15 +559,16 @@ const NeuralCellsBackground = () => {
 
 
 const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: {children: React.ReactNode;gradient: string;size?: "sm" | "md" | "lg";delay?: number;}) => {
-  const sizeClasses = size === "sm" ? "w-6 h-6 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl" : size === "lg" ? "w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl" : "w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl";
+  const sizeClasses = size === "sm" ? "w-7 h-7 sm:w-10 sm:h-10 rounded-xl sm:rounded-xl" : size === "lg" ? "w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl" : "w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-xl";
   const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
   return (
-    <motion.div className="relative group/icon" whileHover={isMobileDevice ? undefined : { scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
-      {/* Main container — no animated rings on mobile */}
-      <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
-      style={{ boxShadow: "0 6px 24px hsla(38,50%,50%,0.2), 0 0 0 1px hsla(38,45%,55%,0.1), inset 0 1px 1px rgba(255,255,255,0.2)" }}>
-        <div className="relative z-10">{children}</div>
+    <motion.div className="relative group/icon" whileHover={isMobileDevice ? undefined : { scale: 1.1, rotate: -3 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+      <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white overflow-hidden`}
+      style={{ boxShadow: "0 4px 16px hsl(var(--primary) / 0.18), 0 0 0 1px hsl(var(--primary) / 0.1), inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.15)" }}>
+        {/* Inner glass highlight */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%, rgba(0,0,0,0.08) 100%)" }} />
+        <div className="relative z-10 [&>svg]:drop-shadow-sm">{children}</div>
       </div>
     </motion.div>);
 
