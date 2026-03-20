@@ -4603,7 +4603,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              TECH DNA — Neural Network Visualization
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden hidden" style={{
+      <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,26%,10%,0.94) 15%, hsla(230,20%,11%,0.94) 35%, hsla(265,22%,9%,0.94) 55%, hsla(230,18%,8%,0.94) 78%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
