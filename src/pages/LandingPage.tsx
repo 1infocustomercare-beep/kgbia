@@ -164,19 +164,11 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 const IS_TOUCH_DEVICE = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 
-/** Section backgrounds — nearly opaque for a solid premium feel with minimal DNA bleed. */
+/** Section backgrounds — light, semi-transparent with premium tinting, DNA visible underneath. */
 const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefined => {
   if (!style || !style.background || typeof style.background !== "string") return style;
-  const bg = style.background.replace(
-    /hsla\(([^,]+,[^,]+,[^,]+),\s*([\d.]+)\)/g,
-    (_, inner, alpha) => {
-      const a = parseFloat(alpha);
-      // High-opacity sections — solid, luxurious, minimal transparency
-      const newAlpha = a >= 1 ? 0.99 : Math.min(Math.max(a, 0.97), 0.99);
-      return `hsla(${inner},${newAlpha})`;
-    }
-  );
-  return { ...style, background: bg };
+  // On light theme, keep sections semi-transparent so DNA background bleeds through subtly
+  return style;
 };
 
 const Section = forwardRef<HTMLElement, {id?: string;children: React.ReactNode;className?: string;style?: React.CSSProperties;}>(
