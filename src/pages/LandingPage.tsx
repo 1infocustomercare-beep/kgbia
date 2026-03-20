@@ -6217,10 +6217,8 @@ const LandingPage = () => {
               backdropFilter: "blur(24px)"
             }}>
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold font-heading flex-shrink-0"
-                style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))", border: "2px solid hsla(265,50%,55%,0.25)", color: "hsl(var(--primary))" }}>
-                      {t.name.charAt(0)}
-                    </div>
+                    <img src={t.photo} alt={t.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                style={{ border: "2px solid hsla(265,50%,55%,0.25)" }} />
                     <div>
                       <h4 className="font-heading text-[0.7rem] font-semibold" style={{ color: "hsla(0,0%,100%,0.94)" }}>{t.name}</h4>
                       <p className="text-[0.5rem]" style={{ color: "hsla(38,50%,55%,0.5)" }}>{t.role}</p>
