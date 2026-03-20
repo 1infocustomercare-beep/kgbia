@@ -3535,7 +3535,7 @@ const LandingPage = () => {
         variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
           {[
             { icon: <Smartphone className="w-4 h-4" />, title: "App White Label", desc: "Il TUO brand, zero loghi terzi", color: "var(--empire-violet)" },
-            { icon: <Bot className="w-4 h-4" />, title: "20+ Agenti IA", desc: "Lavorano 24/7 in autonomia", color: "var(--neon-emerald)" },
+            { icon: <Bot className="w-4 h-4" />, title: "98+ Agenti IA", desc: "Lavorano 24/7 in autonomia", color: "var(--neon-emerald)" },
             { icon: <Calendar className="w-4 h-4" />, title: "Prenotazioni", desc: "Agenda, ordini, booking", color: "var(--neon-cyan)" },
             { icon: <CreditCard className="w-4 h-4" />, title: "Pagamenti", desc: "Stripe Connect integrato", color: "var(--neon-magenta)" },
             { icon: <Users className="w-4 h-4" />, title: "CRM Clienti", desc: "Storico, preferenze, fidelity", color: "var(--empire-violet)" },
