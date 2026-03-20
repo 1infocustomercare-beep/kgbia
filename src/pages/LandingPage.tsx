@@ -6735,7 +6735,7 @@ const LandingPage = () => {
 
       {/* ═══════ FOOTER ═══════ */}
       <footer id="contact" className="relative py-20 pb-10 px-5 sm:px-6 overflow-hidden"
-      style={mobilifyBg({ background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,25%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)" })}>
+      style={{ background: "linear-gradient(180deg, hsl(222 18% 12%) 0%, hsl(222 20% 10%) 50%, hsl(222 18% 8%) 100%)" }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Top accent line — tricolore viola/oro/verde */}
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, hsla(265,70%,60%,0.4) 20%, hsla(38,65%,55%,0.35) 40%, hsla(155,60%,50%,0.3) 60%, hsla(38,65%,55%,0.35) 80%, transparent 95%)" }} />
