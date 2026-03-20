@@ -3032,7 +3032,7 @@ export function IndustryShowcaseSection({
 }
 
 const SECTOR_CATEGORIES: { label: string; emoji: string; ids: IndustryId[] }[] = [
-  { label: "Ristorazione", emoji: "🍽️", ids: ["food", "bakery", "agriturismo"] },
+  { label: "Ristorazione", emoji: "🍽️", ids: ["food", "agriturismo"] as IndustryId[] },
   { label: "Trasporti", emoji: "🚗", ids: ["ncc", "logistics"] },
   { label: "Benessere", emoji: "💆", ids: ["beauty", "fitness", "tattoo"] },
   { label: "Salute", emoji: "🏥", ids: ["healthcare", "veterinary"] },
