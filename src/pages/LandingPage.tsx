@@ -3365,31 +3365,34 @@ const LandingPage = () => {
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
-            {/* Clean badge — gold accent */}
-            <motion.div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border bg-primary/[0.04] mb-5 sm:mb-7 ${IS_MOBILE_LP ? "" : "backdrop-blur-sm"}`}
-            style={{ borderColor: "hsla(35,45%,50%,0.2)" }}
+            {/* Clean badge — neon accent */}
+            <motion.div className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-full border bg-primary/[0.04] mb-5 sm:mb-7 ${IS_MOBILE_LP ? "" : "backdrop-blur-sm"}`}
+            style={{ borderColor: "hsl(var(--neon-emerald) / 0.25)", boxShadow: "0 0 20px hsl(var(--neon-emerald) / 0.06)" }}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} />
-              <span className="text-[0.55rem] sm:text-[0.6rem] font-heading font-semibold tracking-[2px] uppercase" style={{ color: "hsla(35,45%,55%,0.94)" }}>Il Sistema Operativo per il Tuo Business</span>
+              <motion.span className="w-2 h-2 rounded-full" style={{ background: "hsl(var(--neon-emerald))" }}
+              animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />
+              <span className="text-[0.6rem] sm:text-[0.65rem] font-heading font-bold tracking-[2px] uppercase text-neon-emerald">🤖 Piattaforma AI All-in-One per PMI</span>
             </motion.div>
 
             {/* Gradient glow behind title */}
             <div className="absolute -inset-8 pointer-events-none hero-gradient-glow -z-10"
-              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsla(38,55%,50%,0.12), hsla(265,50%,50%,0.06), transparent 70%)" }} />
+              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsla(265,70%,55%,0.15), hsla(160,60%,45%,0.06), transparent 70%)" }} />
 
-            {/* Headline — gold shimmer + clip reveal */}
-            <motion.h1 className="text-[1.7rem] leading-[1.08] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] font-heading font-bold tracking-[-0.03em] px-4 sm:px-0 relative"
+            {/* Headline — larger, clearer, vivid */}
+            <motion.h1 className="text-[1.85rem] leading-[1.05] sm:text-[3.4rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em] px-2 sm:px-0 relative"
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
-              <span className="text-foreground">Modernizziamo</span>
+              <span className="text-foreground">Gestione, IA e</span>
               <br />
-              <span className="text-gold-shimmer clip-reveal-text">Qualsiasi Business</span>
+              <span className="text-foreground">Automazione per il</span>
+              <br />
+              <span className="text-vivid-gradient clip-reveal-text">Tuo Business</span>
             </motion.h1>
 
-            {/* Subtitle */}
-            <motion.p className="mt-5 sm:mt-6 text-sm sm:text-lg text-foreground/45 max-w-[560px] leading-[1.7] sm:leading-[1.8] font-light px-2 sm:px-0"
+            {/* Subtitle — clearer value prop */}
+            <motion.p className="mt-4 sm:mt-6 text-[0.85rem] sm:text-lg text-foreground/50 max-w-[540px] leading-[1.75] sm:leading-[1.8] font-light px-2 sm:px-0"
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-              Un unico ecosistema AI che gestisce, automatizza e scala il tuo business —
-              <span className="text-foreground/60 font-normal"> dal primo cliente all'impero multi-sede. Nessun codice, nessuna commissione nascosta, solo risultati misurabili.</span>
+              App dedicata, 20+ agenti IA, CRM, prenotazioni, pagamenti e marketing —
+              <span className="text-foreground/70 font-medium"> tutto integrato per <span className="text-neon-emerald font-semibold">25+ settori</span>. Zero canone mensile, solo risultati.</span>
             </motion.p>
 
             {/* ═══ Interactive AI Particle Sphere ═══ */}
@@ -3419,22 +3422,26 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
               <motion.button
                 onClick={() => scrollTo("pricing")}
-                className="group relative w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
-                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsla(265,70%,60%,0.25)" }}
+                className="group relative w-full sm:w-auto px-7 sm:px-8 py-4 sm:py-4 rounded-full text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase overflow-hidden"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--empire-violet)), hsl(var(--neon-magenta) / 0.85), hsl(38,55%,50%))",
+                  boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.3), 0 0 0 1px hsl(var(--empire-violet) / 0.2)"
+                }}
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px hsl(var(--empire-violet) / 0.4), 0 0 60px hsl(var(--neon-magenta) / 0.15)" }}
                 whileTap={{ scale: 0.97 }}>
                 
                 <span className="absolute inset-0 bg-gradient-to-r from-foreground/0 via-foreground/10 to-foreground/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
                 <span className="relative flex items-center justify-center gap-2">
-                  Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  🚀 Prenota Demo Gratuita <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </motion.button>
               <motion.button
                 onClick={() => navigate("/demo")}
-                className="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground hover:bg-primary/[0.03] transition-all flex items-center justify-center gap-2"
-                style={{ border: "1px solid hsla(35,45%,50%,0.12)" }}
-                whileHover={{ scale: 1.01, borderColor: "hsla(35,45%,50%,0.25)" }}>
+                className="w-full sm:w-auto px-7 sm:px-8 py-4 sm:py-4 rounded-full text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all flex items-center justify-center gap-2"
+                style={{ border: "1px solid hsl(var(--neon-emerald) / 0.15)" }}
+                whileHover={{ scale: 1.01, borderColor: "hsl(var(--neon-emerald) / 0.3)", boxShadow: "0 0 20px hsl(var(--neon-emerald) / 0.08)" }}>
                 
-                <Play className="w-4 h-4" style={{ color: "hsla(35,45%,55%,0.6)" }} /> Vedi Demo Live
+                <Play className="w-4 h-4 text-neon-emerald" /> Vedi Demo Live
               </motion.button>
             </motion.div>
 
@@ -3442,29 +3449,24 @@ const LandingPage = () => {
             <motion.div className="mt-14 sm:mt-20 w-full grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, duration: 0.8 }}>
               {metrics.map((m, i) =>
-              <motion.div key={i} className={`group relative rounded-2xl p-5 sm:p-6 text-center overflow-hidden ${IS_MOBILE_LP ? "" : "backdrop-blur-xl"}`}
-              style={{
-                background: "linear-gradient(145deg, hsla(230,12%,13%,0.93), hsla(230,10%,10%,0.94))",
-                border: "1px solid hsla(35,30%,45%,0.15)",
-                boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.08), 0 8px 30px hsla(230,10%,4%,0.5)"
-              }}
-              whileHover={IS_MOBILE_LP ? undefined : { y: -4, scale: 1.02, boxShadow: "inset 0 1px 0 hsla(35,40%,55%,0.12), 0 12px 40px hsla(230,10%,4%,0.6)" }}
+              <motion.div key={i} className={`group relative rounded-2xl p-4 sm:p-6 text-center overflow-hidden neon-card`}
+              whileHover={IS_MOBILE_LP ? undefined : { y: -4, scale: 1.02 }}
               transition={{ duration: 0.3, ease: "easeOut" }}>
                   {/* Shimmer sweep — desktop only */}
                   {!IS_MOBILE_LP && <motion.div className="absolute inset-0 pointer-events-none"
-                style={{ background: "linear-gradient(105deg, transparent 30%, hsla(35,30%,55%,0.06) 48%, transparent 70%)" }}
+                style={{ background: "linear-gradient(105deg, transparent 30%, hsl(var(--neon-emerald) / 0.06) 48%, transparent 70%)" }}
                 animate={{ x: ["-200%", "300%"] }}
                 transition={{ duration: 4, repeat: Infinity, repeatDelay: 3 + i, ease: "easeInOut" }} />
                 }
                 
                   {/* Top highlight line */}
-                  <div className="absolute top-0 left-[10%] right-[10%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(35,35%,50%,0.2), transparent)" }} />
+                  <div className="absolute top-0 left-[10%] right-[10%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--empire-violet) / 0.25), transparent)" }} />
                   {/* Number */}
-                  <p className="text-3xl sm:text-4xl font-heading font-bold relative z-10" style={{ color: "hsla(35,45%,82%,1)", textShadow: "0 0 20px hsla(35,40%,50%,0.15)" }}>
+                  <p className="text-2xl sm:text-4xl font-heading font-bold relative z-10 text-neon-gradient">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
                   {/* Label */}
-                  <p className="text-[0.6rem] sm:text-[0.65rem] mt-2.5 tracking-[3px] uppercase font-heading font-semibold relative z-10" style={{ color: "hsla(35,20%,65%,0.7)" }}>{m.label}</p>
+                  <p className="text-[0.55rem] sm:text-[0.65rem] mt-2 tracking-[2.5px] uppercase font-heading font-semibold relative z-10 text-foreground/40">{m.label}</p>
                 </motion.div>
               )}
             </motion.div>
@@ -3485,29 +3487,25 @@ const LandingPage = () => {
       {/* ═══════ TRUST MARQUEE ═══════ */}
       <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden" style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,16%,8%,0.99) 50%, hsla(0,0%,4%,0.99) 100%)" }}>
         <div className="flex animate-marquee-scroll whitespace-nowrap">
-          {[...Array(2)].map((_, repeat) =>
-          <div key={repeat} className="flex items-center gap-12 px-6">
+        {[...Array(2)].map((_, repeat) =>
+          <div key={repeat} className="flex items-center gap-10 px-5">
               {[
-            { icon: <CreditCard className="w-3 h-3" />, text: "Stripe Connect" },
-            { icon: <Lock className="w-3 h-3" />, text: "AES-256" },
-            { icon: <Smartphone className="w-3 h-3" />, text: "PWA Certified" },
-            { icon: <Shield className="w-3 h-3" />, text: "GDPR Compliant" },
-            { icon: <Zap className="w-3 h-3" />, text: "99.9% Uptime" },
-            { icon: <Cpu className="w-3 h-3" />, text: "AI-Powered" },
-            { icon: <MapPin className="w-3 h-3" />, text: "Made in Italy" },
-            { icon: <Fingerprint className="w-3 h-3" />, text: "White Label" },
-            { icon: <Globe className="w-3 h-3" />, text: "25+ Settori" },
-            { icon: <Timer className="w-3 h-3" />, text: "Attivo in 24h" },
-            { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali" }].
+            { icon: <CreditCard className="w-3 h-3" />, text: "Stripe Connect", color: "var(--neon-emerald)" },
+            { icon: <Lock className="w-3 h-3" />, text: "AES-256", color: "var(--empire-violet)" },
+            { icon: <Smartphone className="w-3 h-3" />, text: "PWA Certified", color: "var(--neon-cyan)" },
+            { icon: <Shield className="w-3 h-3" />, text: "GDPR Compliant", color: "var(--neon-emerald)" },
+            { icon: <Zap className="w-3 h-3" />, text: "99.9% Uptime", color: "var(--neon-magenta)" },
+            { icon: <Cpu className="w-3 h-3" />, text: "20+ Agenti IA", color: "var(--empire-violet)" },
+            { icon: <MapPin className="w-3 h-3" />, text: "Made in Italy", color: "var(--neon-emerald)" },
+            { icon: <Fingerprint className="w-3 h-3" />, text: "White Label", color: "var(--neon-cyan)" },
+            { icon: <Globe className="w-3 h-3" />, text: "25+ Settori", color: "var(--neon-magenta)" },
+            { icon: <Timer className="w-3 h-3" />, text: "Attivo in 24h", color: "var(--neon-emerald)" },
+            { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali", color: "var(--empire-violet)" }].
             map((t, i) =>
-            <span key={i} className="text-[0.6rem] text-foreground/20 font-heading tracking-[3px] uppercase flex items-center gap-2 group/trust">
-                  <motion.span
-                className="text-primary/40 group-hover/trust:text-primary/70 transition-colors"
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 12, repeat: Infinity, ease: "linear", delay: i * 0.5 }}>
-                
+            <span key={i} className="text-[0.6rem] text-foreground/25 font-heading tracking-[2.5px] uppercase flex items-center gap-2 group/trust">
+                  <span className="transition-colors" style={{ color: `hsl(${t.color} / 0.5)` }}>
                     {t.icon}
-                  </motion.span>
+                  </span>
                   {t.text}
                 </span>
             )}
@@ -3515,6 +3513,56 @@ const LandingPage = () => {
           )}
         </div>
       </div>
+
+      {/* ═══════════════════════════════════════════
+                             COSA FA EMPIRE — Quick Feature Grid
+                            ═══════════════════════════════════════════ */}
+      <Section className="relative overflow-hidden" style={{
+        background: "linear-gradient(180deg, hsla(230,16%,4%,0.97) 0%, hsla(265,18%,8%,0.97) 50%, hsla(230,16%,4%,0.97) 100%)"
+      }}>
+        <div className="text-center mb-8">
+          <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
+          <motion.h2 className="text-[clamp(1.4rem,4vw,2.6rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
+          initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
+            Cosa Fa <span className="text-vivid-gradient">Empire</span> per Te
+          </motion.h2>
+          <motion.p className="text-[0.8rem] text-foreground/40 max-w-md mx-auto leading-[1.7]"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.2 }}>
+            Un ecosistema completo che sostituisce 10+ strumenti separati
+          </motion.p>
+        </div>
+        <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5"
+        variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
+          {[
+            { icon: <Smartphone className="w-4 h-4" />, title: "App White Label", desc: "Il TUO brand, zero loghi terzi", color: "var(--empire-violet)" },
+            { icon: <Bot className="w-4 h-4" />, title: "20+ Agenti IA", desc: "Lavorano 24/7 in autonomia", color: "var(--neon-emerald)" },
+            { icon: <Calendar className="w-4 h-4" />, title: "Prenotazioni", desc: "Agenda, ordini, booking", color: "var(--neon-cyan)" },
+            { icon: <CreditCard className="w-4 h-4" />, title: "Pagamenti", desc: "Stripe Connect integrato", color: "var(--neon-magenta)" },
+            { icon: <Users className="w-4 h-4" />, title: "CRM Clienti", desc: "Storico, preferenze, fidelity", color: "var(--empire-violet)" },
+            { icon: <Bell className="w-4 h-4" />, title: "Marketing Auto", desc: "Push, WhatsApp, email, SMS", color: "var(--neon-emerald)" },
+            { icon: <BarChart3 className="w-4 h-4" />, title: "Analytics & Finance", desc: "Fatture, margini, KPI", color: "var(--neon-cyan)" },
+            { icon: <Shield className="w-4 h-4" />, title: "Review Shield™", desc: "Proteggi la reputazione", color: "var(--neon-magenta)" },
+          ].map((f, i) =>
+          <motion.div key={i} variants={popIn}
+          className="relative p-3.5 rounded-xl overflow-hidden group transition-all duration-300"
+          style={{
+            background: "linear-gradient(145deg, hsl(var(--deep-black) / 0.95), hsl(265,15%,8% / 0.95))",
+            border: `1px solid hsl(${f.color} / 0.12)`,
+          }}>
+            <div className="flex items-start gap-2.5">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ background: `hsl(${f.color} / 0.12)`, color: `hsl(${f.color})` }}>
+                {f.icon}
+              </div>
+              <div className="min-w-0">
+                <h4 className="text-[0.68rem] font-heading font-bold text-foreground/90 leading-tight">{f.title}</h4>
+                <p className="text-[0.52rem] text-foreground/35 leading-[1.5] mt-0.5">{f.desc}</p>
+              </div>
+            </div>
+          </motion.div>
+          )}
+        </motion.div>
+      </Section>
 
       {/* ═══════════════════════════════════════════
                              IL PROBLEMA — Pain Points

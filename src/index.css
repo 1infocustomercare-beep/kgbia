@@ -54,10 +54,21 @@
     --empire-violet-glow: 265 90% 72%;
     --empire-violet-muted: 262 40% 35%;
     --empire-violet-surface: 265 30% 16%;
+    
+    /* ═══ NEON ACCENT TOKENS ═══ */
+    --neon-emerald: 160 84% 45%;
+    --neon-cyan: 190 95% 55%;
+    --neon-magenta: 320 85% 58%;
+    --neon-blue: 220 90% 60%;
+    --neon-lime: 85 80% 50%;
+    
     --gradient-dna: linear-gradient(135deg, hsl(265 85% 65%), hsl(290 60% 50%), hsl(38 45% 52%));
     --gradient-dna-subtle: linear-gradient(135deg, hsl(265 85% 65% / 0.15), hsl(290 60% 50% / 0.08), hsl(38 45% 52% / 0.1));
+    --gradient-neon: linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)), hsl(var(--empire-violet)));
+    --gradient-vivid: linear-gradient(135deg, hsl(var(--empire-violet)), hsl(var(--neon-magenta)), hsl(38 55% 52%));
     --shadow-dna: 0 8px 32px -8px hsl(265 85% 65% / 0.25);
     --shadow-dna-lg: 0 16px 48px -12px hsl(265 85% 65% / 0.3);
+    --shadow-neon: 0 0 30px hsl(var(--neon-emerald) / 0.2), 0 0 60px hsl(var(--empire-violet) / 0.1);
 
     --sidebar-background: 230 10% 11%;
     --sidebar-foreground: 40 10% 87%;
@@ -210,6 +221,53 @@
     border-color: hsl(265 85% 65% / 0.2);
     box-shadow: 0 0 16px hsl(265 85% 65% / 0.08);
   }
+
+  /* ═══ NEON VIVID UTILITIES ═══ */
+  .text-neon-gradient {
+    background: var(--gradient-neon);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-vivid-gradient {
+    background: var(--gradient-vivid);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .neon-glow {
+    box-shadow: var(--shadow-neon);
+  }
+
+  .neon-border {
+    border: 1px solid hsl(var(--neon-emerald) / 0.25);
+    box-shadow: 0 0 20px hsl(var(--neon-emerald) / 0.08), inset 0 0 20px hsl(var(--neon-emerald) / 0.03);
+  }
+
+  .bg-vibrant-gradient {
+    background: linear-gradient(135deg, hsl(var(--empire-violet)), hsl(var(--neon-magenta) / 0.9), hsl(38 55% 50%));
+  }
+
+  .neon-card {
+    background: linear-gradient(145deg, hsl(var(--deep-black) / 0.98), hsl(265 20% 10% / 0.95));
+    border: 1px solid hsl(var(--empire-violet) / 0.15);
+    box-shadow: 0 8px 32px hsl(var(--empire-violet) / 0.08), inset 0 1px 0 hsl(var(--empire-violet) / 0.06);
+  }
+
+  .neon-card:hover {
+    border-color: hsl(var(--neon-emerald) / 0.25);
+    box-shadow: 0 12px 40px hsl(var(--empire-violet) / 0.15), 0 0 30px hsl(var(--neon-emerald) / 0.06);
+  }
+
+  /* Stat highlight colors */
+  .text-neon-emerald { color: hsl(var(--neon-emerald)); }
+  .text-neon-cyan { color: hsl(var(--neon-cyan)); }
+  .text-neon-magenta { color: hsl(var(--neon-magenta)); }
+  .bg-neon-emerald { background-color: hsl(var(--neon-emerald)); }
+  .bg-neon-cyan { background-color: hsl(var(--neon-cyan)); }
+  .bg-neon-magenta { background-color: hsl(var(--neon-magenta)); }
 
   @keyframes marquee-scroll {
     0% { transform: translateX(0); }
