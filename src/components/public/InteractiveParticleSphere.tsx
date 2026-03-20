@@ -431,7 +431,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
             const r = oR + wo, px = cx + Math.cos(bA) * r, py = cy + Math.sin(bA) * r;
             if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
           }
-          ctx.strokeStyle = hsl(sC, 0.45 * oA); ctx.lineWidth = 1.5 * sc; ctx.stroke();
+          ctx.strokeStyle = hsl(sC, 0.65 * oA); ctx.lineWidth = 1.8 * sc; ctx.stroke();
           // Glow
           ctx.beginPath();
           for (let i = 0; i <= hSeg; i++) {
@@ -440,7 +440,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
             const r = oR + wo, px = cx + Math.cos(bA) * r, py = cy + Math.sin(bA) * r;
             if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
           }
-          ctx.strokeStyle = hsl(sC, 0.1 * oA); ctx.lineWidth = 7 * sc; ctx.stroke();
+          ctx.strokeStyle = hsl(sC, 0.2 * oA); ctx.lineWidth = 8 * sc; ctx.stroke();
         }
 
         // Cross-links
