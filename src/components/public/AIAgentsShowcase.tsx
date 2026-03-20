@@ -513,10 +513,10 @@ const NetworkNode = ({
 
       {/* Name + role */}
       <div className="text-center max-w-[60px] sm:max-w-[100px]">
-        <h3 className="font-bold text-[0.42rem] sm:text-[0.6rem] text-foreground leading-tight truncate">
+        <h3 className="font-bold text-[0.42rem] sm:text-[0.6rem] leading-tight truncate" style={{ color: "hsla(0,0%,100%,0.92)" }}>
           {agent.name}
         </h3>
-        <p className="text-[0.32rem] sm:text-[0.44rem] text-primary/85 tracking-wider uppercase truncate leading-tight">
+        <p className="text-[0.32rem] sm:text-[0.44rem] tracking-wider uppercase truncate leading-tight" style={{ color: "hsl(215,80%,70%)" }}>
           {agent.role}
         </p>
       </div>
