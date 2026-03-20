@@ -464,9 +464,9 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           const c = colorPalette[dot.ci], p = 0.7 + 0.3 * Math.sin(el * 3 + dot.a * 3);
           const gR = dot.sz * 4 * p * sc;
           const gg = ctx.createRadialGradient(px, py, 0, px, py, gR);
-          gg.addColorStop(0, hsl(c, 0.4 * oA * p)); gg.addColorStop(0.5, hsl(c, 0.1 * oA)); gg.addColorStop(1, hsl(c, 0));
+          gg.addColorStop(0, hsl(c, 0.6 * oA * p)); gg.addColorStop(0.5, hsl(c, 0.2 * oA)); gg.addColorStop(1, hsl(c, 0));
           ctx.beginPath(); ctx.arc(px, py, gR, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
-          ctx.beginPath(); ctx.arc(px, py, dot.sz * p * sc * 0.7, 0, Math.PI * 2); ctx.fillStyle = hsl(c, 0.9 * oA); ctx.fill();
+          ctx.beginPath(); ctx.arc(px, py, dot.sz * p * sc * 0.8, 0, Math.PI * 2); ctx.fillStyle = hsl(c, 0.95 * oA); ctx.fill();
         }
 
         // Rotating scan arcs (more arcs)
