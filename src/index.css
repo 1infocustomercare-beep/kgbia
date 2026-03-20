@@ -584,9 +584,9 @@
 
   /* ═══ GLOW CARD ═══ */
   .glow-card {
-    background: linear-gradient(145deg, hsl(224 14% 10% / 0.94), hsl(225 16% 7% / 0.96));
+    background: linear-gradient(145deg, hsl(0 0% 100% / 0.88), hsl(220 18% 98% / 0.9));
     backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid hsl(var(--primary) / 0.08);
+    border: 1px solid hsl(var(--primary) / 0.1);
     position: relative;
     overflow: hidden;
     transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -614,23 +614,23 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent 10%, hsl(var(--primary) / 0.12) 50%, transparent 90%);
+    background: linear-gradient(90deg, transparent 10%, hsl(var(--primary) / 0.1) 50%, transparent 90%);
     transition: opacity 0.5s;
     pointer-events: none;
   }
 
   .glow-card:hover::before {
-    background: linear-gradient(135deg, hsl(var(--primary) / 0.25), hsl(var(--accent) / 0.15));
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--accent) / 0.12));
   }
 
   .glow-card:hover::after {
-    background: linear-gradient(90deg, transparent 5%, hsl(var(--primary) / 0.25) 50%, transparent 95%);
+    background: linear-gradient(90deg, transparent 5%, hsl(var(--primary) / 0.2) 50%, transparent 95%);
   }
 
   .glow-card:hover {
-    border-color: hsl(var(--primary) / 0.15);
+    border-color: hsl(var(--primary) / 0.18);
     transform: translateY(-4px);
-    box-shadow: 0 25px 80px hsl(0 0% 0% / 0.4), 0 0 40px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(var(--accent) / 0.04);
+    box-shadow: 0 16px 48px hsl(215 90% 52% / 0.1), 0 0 32px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.5);
   }
 
   /* ═══ SPOTLIGHT ═══ */
