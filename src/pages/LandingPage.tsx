@@ -5525,8 +5525,8 @@ const LandingPage = () => {
               ["App White-Label", "Dashboard IA", "Menu QR", "Booking Online", "CRM Avanzato", "Push Notification", "Fatturazione", "Analytics", "Chat Clienti", "GPS Tracking", "Mappa Tavoli", "Gestione Staff"] :
               ["Pagamenti", "Email Marketing", "WhatsApp Auto", "Inventario", "HACCP", "Review Shield™", "Agenda Smart", "Pricing Dinamico", "Landing SEO", "Cross-selling IA", "Programma Fedeltà", "Schede Paziente"]).
               map((cap, ci) =>
-              <span key={ci} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.6rem] font-heading tracking-wider"
-              style={{ background: "hsla(265,70%,60%,0.06)", border: "1px solid hsla(265,70%,60%,0.08)", color: "hsla(265,70%,65%,0.5)" }}>
+              <span key={ci} className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-[0.6rem] font-heading font-medium tracking-wider"
+              style={{ background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))", border: "1px solid hsl(var(--primary) / 0.08)", color: "hsl(var(--primary) / 0.6)", boxShadow: "0 1px 8px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)" }}>
                       <CircleCheck className="w-2.5 h-2.5" />
                       {cap}
                     </span>
