@@ -4,6 +4,23 @@ import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { MockupLightbox } from "@/components/ui/mockup-lightbox";
+import {
+  ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
+  Calendar, Wrench, Zap, Grape, SprayCan, Scale, Calculator,
+  Hammer, Camera, TreePine, PawPrint, Brush, Baby, GraduationCap,
+  PartyPopper, Truck, Settings, Umbrella, type LucideIcon,
+} from "lucide-react";
+
+const SECTOR_ICONS: Record<string, LucideIcon> = {
+  food: ChefHat, ncc: Car, beauty: Scissors, healthcare: Heart,
+  retail: Store, fitness: Dumbbell, hospitality: Building,
+  beach: Umbrella, plumber: Wrench, electrician: Zap,
+  agriturismo: Grape, cleaning: SprayCan, legal: Scale,
+  accounting: Calculator, garage: Wrench, photography: Camera,
+  construction: Hammer, gardening: TreePine, veterinary: PawPrint,
+  tattoo: Brush, childcare: Baby, education: GraduationCap,
+  events: PartyPopper, logistics: Truck, custom: Settings,
+};
 
 /* ═══════════════════════════════════════════
    PER-SECTOR SCREEN STYLES
@@ -3007,9 +3024,9 @@ export function IndustryShowcaseSection({
     <div className="py-6">
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}>
-            {cfg.emoji}
+            {(() => { const Icon = SECTOR_ICONS[industryId]; return Icon ? <Icon className="w-5 h-5" style={{ color: cfg.defaultPrimaryColor }} /> : <span className="text-xl">{cfg.emoji}</span>; })()}
           </div>
           <div>
             <h3 className="text-sm font-bold text-white">{cfg.label}</h3>
@@ -3145,10 +3162,10 @@ export function AllIndustriesShowcase({ onViewDemo }: { onViewDemo?: (id: Indust
                   className="w-full flex items-center gap-3 p-3.5 active:scale-[0.98] transition-transform"
                 >
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}
                   >
-                    {cfg.emoji}
+                    {(() => { const Icon = SECTOR_ICONS[id]; return Icon ? <Icon className="w-5 h-5" style={{ color: cfg.defaultPrimaryColor }} /> : <span className="text-lg">{cfg.emoji}</span>; })()}
                   </div>
                   <div className="flex-1 text-left min-w-0">
                     <p className="text-sm font-bold text-white truncate">{cfg.label}</p>
