@@ -9,7 +9,7 @@
  */
 
 const HERO_SCRIPT =
-  "Benvenuto in Empire — il sistema operativo che trasforma qualsiasi attività in un business digitale di nuova generazione. Pronto a scoprire come?";
+  "Benvenuto in Empire AI Group — il sistema operativo che trasforma qualsiasi attività in un business digitale di nuova generazione.";
 
 let splashNarrationStarted = false;
 let splashNarrationCompleted = false;
