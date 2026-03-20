@@ -1261,8 +1261,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     }
 
                       {/* Savings bar */}
-                      <div className={`mt-3 p-2.5 rounded-xl text-[0.65rem] font-bold text-center ${
-                    isEmpire ? "bg-accent/12 text-accent border border-accent/20" : "bg-primary/[0.06] text-primary/70 border border-primary/10"}`
+                      <div className={`mt-3 p-2 rounded-xl text-[0.55rem] font-bold text-center leading-snug ${
+                    isEmpire ? "bg-accent/10 text-accent border border-accent/15" : "bg-primary/[0.05] text-primary/70 border border-primary/10"}`
                     }>
                         💸 {p.savings}
                       </div>
