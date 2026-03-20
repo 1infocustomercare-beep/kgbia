@@ -534,7 +534,7 @@ const NeuralCellsBackground = () => {
           key={`node${cell.id}`}
           cx={cell.x} cy={cell.y}
           r="0.3"
-          fill="hsla(38,45%,55%,0.3)" />
+          fill="hsla(210,100%,62%,0.3)" />
 
         ) :
 
@@ -543,7 +543,7 @@ const NeuralCellsBackground = () => {
           key={`node${cell.id}`}
           cx={cell.x} cy={cell.y}
           r="0.25"
-          fill="hsla(38,45%,55%,0.35)"
+          fill="hsla(210,100%,62%,0.35)"
           animate={{
             r: [0.15, 0.4, 0.15],
             opacity: [0.25, 0.6, 0.25]
