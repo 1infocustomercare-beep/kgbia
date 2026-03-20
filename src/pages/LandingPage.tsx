@@ -301,7 +301,6 @@ const LIVE_ACTIONS = [
 { agent: "Analytics Brain", action: "Report settimanale pronto", icon: <Brain className="w-3.5 h-3.5" />, color: "hsla(270,65%,55%,1)", time: "35s fa" },
 { agent: "Data Guardian", action: "Audit GDPR completato — 100% OK", icon: <Lock className="w-3.5 h-3.5" />, color: "hsla(220,30%,50%,1)", time: "40s fa" }];
 
-
 const LiveFeedSimulator = () => {
   const [offset, setOffset] = useState(0);
   const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 640);
@@ -632,7 +631,6 @@ const NeuralCellsBackground = () => {
 
 };
 
-
 const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: {children: React.ReactNode;gradient: string;size?: "sm" | "md" | "lg";delay?: number;}) => {
   const sizeClasses = size === "sm" ? "w-6 h-6 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl" : size === "lg" ? "w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl" : "w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl";
   const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
@@ -709,7 +707,6 @@ const Particle = ({ delay, size, x, y }: {delay: number;size: number;x: string;y
       animate={{ y: [0, -25, 0], opacity: [0.1, 0.35, 0.1], scale: [1, 1.3, 1] }}
       transition={{ duration: 5 + delay, repeat: Infinity, delay, ease: "easeInOut" }} />);
 
-
 };
 
 /* ═══ Section Divider — taller to reveal circuit background ═══ */
@@ -765,7 +762,6 @@ initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={vp
     <span className="text-center text-foreground/25 leading-tight text-[0.5rem] sm:text-sm line-through decoration-destructive/40">{others}</span>
   </motion.div>;
 
-
 /* ═══════════════════════════════════════════
    PRICING CONFIGURATOR
    ═══════════════════════════════════════════ */
@@ -798,7 +794,6 @@ const PRICING_SECTORS: {id: PricingSector;label: string;emoji: string;}[] = [
 { id: "trades", label: "Artigiani & Servizi", emoji: "🔧" },
 { id: "other", label: "Altro settore", emoji: "🏢" }];
 
-
 interface AiAddon {
   id: string;
   name: string;
@@ -826,7 +821,6 @@ const AI_ADDONS: AiAddon[] = [
 { id: "ops-fitness", name: "Operations — Fitness", desc: "Classi, abbonamenti, check-in", price: 119, icon: <Dumbbell className="w-4 h-4" />, sectors: ["fitness"] },
 { id: "ops-hotel", name: "Operations — Hotel", desc: "Rooms, check-in/out, housekeeping", price: 189, icon: <Building className="w-4 h-4" />, sectors: ["hospitality"] },
 { id: "ops-trades", name: "Operations — Artigiani", desc: "Interventi, preventivi, dispatch", price: 109, icon: <ClipboardCheck className="w-4 h-4" />, sectors: ["trades"] }];
-
 
 /** Get sector-specific included agent IDs per package tier */
 const SECTOR_INCLUDED_AGENTS: Record<PricingSector, {growth: string[];empire: string[];}> = {
@@ -881,7 +875,6 @@ const PLAN_TIERS: {id: PlanTier;name: string;price: number;desc: string;badge?: 
   features: ["Tutto di Professional +", "Multi-lingua illimitato", "Loyalty Wallet avanzato", "GhostManager™ clienti persi", "Analytics predittivi", "Supporto prioritario 7/7", "3 Agenti IA inclusi a scelta"],
   includedAgents: 3
 }];
-
 
 /* ─── One-Time Packages ─── */
 interface PackageTier {
@@ -973,7 +966,6 @@ const PACKAGE_TIERS: PackageTier[] = [
   extras: ["Account Manager dedicato", "6 sessioni strategia trimestrale", "Priorità su nuove funzionalità", "Setup multi-sede incluso", "Funzionalità custom su richiesta"],
   savings: "Risparmi €6.403 vs abbonamento — e le commissioni sono tue per sempre"
 }];
-
 
 /** Animated count-up component for savings */
 const SavingsCounter = ({ target, delay = 0 }: {target: number;delay?: number;}) => {
@@ -1607,7 +1599,6 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
               animate={{ x: ["-100%", "250%"] }}
               transition={{ duration: 4, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }} />
               
-
                 <div className="flex flex-col gap-5 relative z-10">
                   {/* Header: Package name + price */}
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
@@ -2277,24 +2268,6 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       setFeatureRequestSent(true);
                     } catch {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       // silent fail
                     } finally {setFeatureRequestSending(false);}}} disabled={featureRequestSending || !featureRequestText.trim() || !featureRequestEmail.trim()} className="w-full px-5 py-3 rounded-xl bg-vibrant-gradient text-primary-foreground text-sm font-heading font-bold tracking-wider uppercase disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                         {featureRequestSending ? "Invio in corso..." : "Invia Richiesta →"}
@@ -2566,7 +2539,6 @@ const MobileIPhoneCarousel = ({ items, navigate }: {items: CarouselItem[];naviga
       </div>
     </div>;
 
-
   if (expanded) {
     return (
       <div className="sm:hidden px-2">
@@ -2759,7 +2731,6 @@ const LandingPage = () => {
     return () => window.removeEventListener("scroll", h);
   }, []);
 
-
   const manualMonthlyCost = weeklyHours * hourlyCost * 4.3;
   const automatedCost = manualMonthlyCost * 0.2; // 80% automated
   const monthlySaving = manualMonthlyCost - automatedCost;
@@ -2782,7 +2753,6 @@ const LandingPage = () => {
   { id: "fitness" as const, icon: <Dumbbell className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, PT", gradient: "from-violet-400 to-indigo-500", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti", image: cartoonFitness },
   { id: "hospitality" as const, icon: <Building className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-purple-500/80 to-violet-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge", image: cartoonHotel }];
 
-
   const extraSectors = [
   { icon: <GraduationCap className="w-4 h-4" />, title: "Formazione & Coaching", desc: "Corsi, tutoring, certificazioni", gradient: "from-violet-500 to-purple-400" },
   { icon: <Waves className="w-4 h-4" />, title: "Stabilimenti Balneari", desc: "Ombrelloni, lettini, bar spiaggia", gradient: "from-indigo-400 to-violet-400" },
@@ -2803,7 +2773,6 @@ const LandingPage = () => {
   { icon: <Sparkles className="w-4 h-4" />, title: "Intrattenimento", desc: "Parchi, escape room, bowling", gradient: "from-fuchsia-400/80 to-violet-400" },
   { icon: <Users className="w-4 h-4" />, title: "Asili & Doposcuola", desc: "Iscrizioni, presenze, comunicazioni", gradient: "from-indigo-400 to-purple-300" }];
 
-
   const services = [
   { icon: <Brain className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni.", tag: "IA", color: "from-primary to-accent" },
   { icon: <Smartphone className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "App White Label", desc: "App professionale con il TUO brand, colori e dominio. Nessun logo di terzi.", tag: "APP", color: "from-violet-500 to-primary" },
@@ -2815,13 +2784,11 @@ const LandingPage = () => {
   { icon: <Bell className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Marketing Automation", desc: "Push, email, WhatsApp, promozioni mirate e segmentazione.", tag: "MARKETING", color: "from-accent to-violet-500" },
   { icon: <Lock className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR, backup automatici, audit trail.", tag: "SECURITY", color: "from-violet-400/60 to-indigo-400/60" }];
 
-
   const metrics = [
   { value: 847, suffix: "+", label: "Attività Attive" },
   { value: 25, suffix: "+", label: "Settori Coperti" },
   { value: 40, suffix: "%", prefix: "+", label: "Aumento Fatturato" },
   { value: 99.8, suffix: "%", label: "Soddisfazione" }];
-
 
   const testimonials = [
   { name: "Marco Pellegrini", role: "Trattoria da Marco · Roma", quote: "In 3 mesi ho spostato il 60% degli ordini dalla piattaforma alla mia app. Risparmio €3.200 al mese netti.", metric: "−€3.200/mese", industry: "Food", emoji: "🍽️", photo: testimonialMarco },
@@ -2830,7 +2797,6 @@ const LandingPage = () => {
   { name: "Dr. Luca Bianchi", role: "Studio Dentistico · Torino", quote: "Agenda digitale, schede paziente, fatturazione elettronica. Ho eliminato 2 ore di burocrazia al giorno.", metric: "−2h/giorno", industry: "Healthcare", emoji: "🏥", photo: testimonialLuca },
   { name: "Simone Moretti", role: "CrossFit Arena · Bologna", quote: "Gestione corsi, abbonamenti e pagamenti in un'unica piattaforma. Il tasso di rinnovo è salito all'87%.", metric: "87% rinnovi", industry: "Fitness", emoji: "💪", photo: testimonialSimone },
   { name: "Giulia De Luca", role: "Boutique Eleganza · Napoli", quote: "Il catalogo digitale ha trasformato il mio negozio. Le vendite online sono il 35% del totale.", metric: "+35% vendite", industry: "Retail", emoji: "🛍️", photo: testimonialGiulia }];
-
 
   const faqs = [
   { q: "Per quali settori funziona Empire?", a: "Empire copre oltre 25 settori: ristoranti, NCC, saloni di bellezza, studi medici, negozi, palestre, hotel, idraulici, elettricisti, agriturismi, lidi, e molti altri. Ogni settore ha moduli, terminologia e flussi dedicati che si attivano automaticamente. Con 98+ agenti IA autonomi." },
@@ -2842,13 +2808,11 @@ const LandingPage = () => {
   { q: "Quanto tempo serve per essere operativi?", a: "24 ore. Il nostro team configura tutto: branding, menu/catalogo, integrazioni. Formazione inclusa. Sei operativo dal giorno 1." },
   { q: "Posso personalizzare tutto?", a: "Assolutamente. Logo, colori, dominio, moduli attivi, flussi operativi, notifiche, template email — tutto è personalizzabile senza toccare codice." }];
 
-
   const navLinks = [
   { href: "#industries", label: "Settori" },
   { href: "#services", label: "Funzionalità" },
   { href: "#pricing", label: "Prezzi" },
   { href: "#partner", label: "Partner" }];
-
 
   const whyUs = [
   { icon: <Cpu className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Tecnologia Proprietaria", desc: "Stack tecnologico sviluppato internamente. Non rivendiamo software altrui." },
@@ -2858,13 +2822,11 @@ const LandingPage = () => {
   { icon: <Database className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "I Tuoi Dati, Per Sempre", desc: "Proprietà totale dei dati. Esporta tutto. Zero lock-in." },
   { icon: <Headphones className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Supporto Dedicato", desc: "Team italiano 7/7. Persone vere che risolvono." }];
 
-
   return (
     <div
       className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury"
       style={{ background: "radial-gradient(120% 80% at 50% 35%, hsl(214 28% 96%) 0%, hsl(220 26% 94%) 40%, hsl(224 20% 90%) 64%, hsl(228 26% 86%) 100%)" }}>
       
-
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Subtle violet ambient orbs */}
@@ -3018,7 +2980,6 @@ const LandingPage = () => {
             opacity: { duration: 0.6 }
           }} />
         
-
         {/* ── Bottom edge — premium double-line with glow ── */}
         <motion.div
           className="absolute bottom-0 left-0 right-0 h-px"
@@ -3038,7 +2999,6 @@ const LandingPage = () => {
             filter: "blur(2px)"
           }} />
         
-
         {/* ── Scanning beam — luxury gold/violet sweep ── */}
         {navScrolled &&
         <motion.div
@@ -3149,7 +3109,6 @@ const LandingPage = () => {
               animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0, 0.2] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeOut" }} />
             
-
             {/* Logo container — hexagonal feel with premium depth */}
             <motion.div
               className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center overflow-hidden"
@@ -3170,7 +3129,6 @@ const LandingPage = () => {
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 12, repeat: Infinity, ease: "linear" }} />
               
-              
               {/* Counter-rotating inner ring */}
               <motion.div
                 className="absolute inset-0.5 rounded-full pointer-events-none"
@@ -3178,7 +3136,6 @@ const LandingPage = () => {
                 animate={{ rotate: [360, 0] }}
                 transition={{ duration: 18, repeat: Infinity, ease: "linear" }} />
               
-
               {/* Single elegant shimmer */}
               <motion.div
                 className="absolute inset-0 rounded-full pointer-events-none overflow-hidden">
@@ -3201,7 +3158,6 @@ const LandingPage = () => {
                 animate={{ scale: [1, 1.35], opacity: [0.4, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }} />
               
-
               {/* Status indicator */}
               <motion.div
                 className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full z-10"
@@ -4684,7 +4640,6 @@ const LandingPage = () => {
           { img: mockupAdmin, title: "Fleet Manager", desc: "Gestione veicoli, autisti, tratte e pricing dinamico con tracking GPS.", tag: "BACK-OFFICE", sector: "NCC Premium", features: ["GPS live tracking", "Pricing dinamico", "Scadenzario docs", "Revenue analytics"] },
           { img: mockupCucina, title: "Agenda Smart", desc: "Calendario appuntamenti, gestione slot e notifiche automatiche per clienti.", tag: "OPERATIONS", sector: "Healthcare & Fitness", features: ["Agenda drag & drop", "Reminder automatici", "Schede paziente", "Report periodici"] }];
 
-
           const carouselRef = mockupCarouselRef;
           const carouselPaused = mockupCarouselPaused;
           const setCarouselPaused = setMockupCarouselPaused;
@@ -5387,7 +5342,6 @@ const LandingPage = () => {
               border: "1px solid hsl(var(--border) / 0.25)"
             }} />
           
-
           {/* AI Tech Network Schema — Desktop */}
           <div className="absolute inset-0 pointer-events-none z-[1] overflow-hidden hidden sm:block">
             <svg className="w-full h-full" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -6191,7 +6145,6 @@ const LandingPage = () => {
               border: "1px solid hsl(var(--border) / 0.3)"
             }} />
           
-
           {/* Mobile hyper-tech communication schema between KPI icons */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-[1] sm:hidden" viewBox="0 0 300 190" preserveAspectRatio="xMidYMid meet">
             <defs>
