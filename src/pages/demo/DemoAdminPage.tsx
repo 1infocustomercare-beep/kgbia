@@ -2266,20 +2266,30 @@ export default function DemoAdminPage() {
   };
 
   return (
-    <div className="min-h-screen flex relative" style={{ background: "linear-gradient(145deg, #0c0a14 0%, #0a0a12 40%, #0d0b10 100%)" }}>
-      {/* Premium sector-themed ambient background with enhanced glows */}
+    <div className="min-h-screen flex relative" style={{ background: layoutConfig.bgGradient }}>
+      {/* Premium sector-themed ambient background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Primary sector glow — top-left */}
-        <div className="absolute rounded-full opacity-[0.06]"
-          style={{ top: "-8%", left: "-5%", width: "600px", height: "600px", background: `radial-gradient(circle, ${accentColor}, transparent 65%)`, filter: "blur(100px)" }} />
-        {/* Secondary glow — bottom-right */}
-        <div className="absolute rounded-full opacity-[0.04]"
-          style={{ bottom: "-8%", right: "-5%", width: "550px", height: "550px", background: `radial-gradient(circle, ${accentColor}, transparent 70%)`, filter: "blur(130px)" }} />
+        {/* Primary sector glow */}
+        <div className="absolute rounded-full" style={{ top: "-8%", left: "-5%", width: "600px", height: "600px", opacity: layoutConfig.accentGlow ? 0.08 : 0.04, background: `radial-gradient(circle, ${accentColor}, transparent 65%)`, filter: "blur(100px)" }} />
+        {/* Secondary glow */}
+        <div className="absolute rounded-full" style={{ bottom: "-8%", right: "-5%", width: "550px", height: "550px", opacity: layoutConfig.accentGlow ? 0.06 : 0.03, background: `radial-gradient(circle, ${accentColor}, transparent 70%)`, filter: "blur(130px)" }} />
         {/* Center ambient */}
-        <div className="absolute rounded-full opacity-[0.025]"
-          style={{ top: "40%", left: "50%", width: "500px", height: "500px", background: `radial-gradient(circle, ${accentColor}, transparent 60%)`, filter: "blur(110px)", transform: "translate(-50%, -50%)" }} />
-        {/* Subtle grid */}
-        <div className="absolute inset-0" style={{ opacity: 0.015, backgroundImage: "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+        {layoutConfig.accentGlow && (
+          <div className="absolute rounded-full opacity-[0.03]" style={{ top: "40%", left: "50%", width: "500px", height: "500px", background: `radial-gradient(circle, ${accentColor}, transparent 60%)`, filter: "blur(110px)", transform: "translate(-50%, -50%)" }} />
+        )}
+        {/* Background pattern */}
+        {layoutConfig.bgPattern === "grid" && (
+          <div className="absolute inset-0" style={{ opacity: 0.02, backgroundImage: "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
+        )}
+        {layoutConfig.bgPattern === "dots" && (
+          <div className="absolute inset-0" style={{ opacity: 0.03, backgroundImage: `radial-gradient(circle, ${accentColor}30 1px, transparent 1px)`, backgroundSize: "32px 32px" }} />
+        )}
+        {layoutConfig.bgPattern === "diagonal" && (
+          <div className="absolute inset-0" style={{ opacity: 0.015, backgroundImage: `repeating-linear-gradient(45deg, ${accentColor}10, ${accentColor}10 1px, transparent 1px, transparent 40px)` }} />
+        )}
+        {layoutConfig.bgPattern === "mesh" && (
+          <div className="absolute inset-0" style={{ opacity: 0.02, backgroundImage: `radial-gradient(ellipse at 20% 50%, ${accentColor}15 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, ${accentColor}10 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, ${accentColor}08 0%, transparent 50%)` }} />
+        )}
         {/* Top accent line */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-px" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}25, transparent)` }} />
       </div>
@@ -2288,8 +2298,16 @@ export default function DemoAdminPage() {
         <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-[#0d0d1a] border-r border-white/[0.06] transform transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      {/* Sidebar — styled per layout config */}
+      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 transform transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        style={{
+          background: layoutConfig.sidebarStyle === "glass" ? "rgba(13,13,26,0.7)" : layoutConfig.sidebarStyle === "accent-bar" ? `linear-gradient(180deg, ${accentColor}08, rgba(13,13,26,0.95))` : layoutConfig.sidebarStyle === "floating" ? "rgba(20,20,35,0.85)" : "#0d0d1a",
+          backdropFilter: layoutConfig.sidebarStyle === "glass" || layoutConfig.sidebarStyle === "floating" ? "blur(20px) saturate(1.5)" : undefined,
+          borderRight: layoutConfig.sidebarStyle === "accent-bar" ? `2px solid ${accentColor}30` : layoutConfig.sidebarStyle === "minimal" ? "none" : "1px solid rgba(255,255,255,0.06)",
+          borderRadius: layoutConfig.sidebarStyle === "floating" ? "0 24px 24px 0" : undefined,
+          margin: layoutConfig.sidebarStyle === "floating" ? "12px 0 12px 0" : undefined,
+          boxShadow: layoutConfig.sidebarStyle === "floating" ? `0 0 40px rgba(0,0,0,0.5), inset 0 0 30px ${accentColor}05` : layoutConfig.sidebarStyle === "glass" ? `inset -1px 0 0 ${accentColor}08` : undefined,
+        }}>
         <SidebarInner />
       </aside>
 
