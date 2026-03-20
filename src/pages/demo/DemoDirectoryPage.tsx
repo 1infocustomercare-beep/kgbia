@@ -263,35 +263,36 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.025 }}>
       <div
-        className={`relative rounded-2xl overflow-hidden group transition-all duration-300 ${isExpanded ? "ring-1" : ""}`}
+        className={`relative rounded-2xl overflow-hidden group transition-all duration-300`}
         style={{
           background: isFeatured
-            ? `linear-gradient(155deg, hsla(240,16%,10%,1), hsla(240,20%,7%,1))`
-            : `linear-gradient(155deg, hsla(240,14%,9%,1), hsla(240,18%,6%,1))`,
-          border: `1px solid ${isFeatured ? `${color}20` : "hsla(265,20%,22%,0.12)"}`,
-          ...(isExpanded ? { boxShadow: `0 0 0 1px ${color}30` } : {}),
+            ? `linear-gradient(155deg, hsla(220,18%,13%,1), hsla(220,22%,9%,1))`
+            : `linear-gradient(155deg, hsla(220,16%,12%,1), hsla(220,20%,8%,1))`,
+          border: `1px solid ${isFeatured ? `${color}30` : "hsla(220,20%,25%,0.18)"}`,
+          boxShadow: isExpanded
+            ? `0 8px 32px hsla(220,30%,10%,0.4), 0 0 0 1px ${color}25`
+            : "0 2px 12px hsla(220,30%,5%,0.3)",
         }}>
 
         {/* Top accent — featured only */}
         {isFeatured && (
           <div className="absolute top-0 left-0 right-0 h-[2px]"
-            style={{ background: `linear-gradient(90deg, transparent, ${color}50, ${color}20, transparent)` }} />
+            style={{ background: `linear-gradient(90deg, transparent, ${color}60, ${color}30, transparent)` }} />
         )}
 
         {/* Main row */}
         <div className="flex items-center gap-3 p-3.5 sm:p-4 cursor-pointer" onClick={onToggle}>
-          {/* Icon node — premium circle with gradient ring */}
+          {/* Icon node */}
           <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
             style={{
-              background: `linear-gradient(145deg, ${color}18, ${color}08)`,
-              boxShadow: `0 0 0 1px ${color}20, 0 2px 8px ${color}06`,
+              background: `linear-gradient(145deg, ${color}25, ${color}10)`,
+              boxShadow: `0 0 0 1px ${color}30, 0 4px 12px ${color}10`,
               color: color
             }}>
             {getIcon(cfg.icon)}
-            {/* Subtle pulse for featured */}
             {isFeatured && (
               <motion.div className="absolute inset-0 rounded-full pointer-events-none"
-                style={{ border: `1px solid ${color}15` }}
+                style={{ border: `1px solid ${color}20` }}
                 animate={{ scale: [1, 1.3], opacity: [0.4, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity }} />
             )}
@@ -300,37 +301,39 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
           {/* Text */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="font-bold text-[0.8rem] sm:text-sm text-foreground font-heading truncate">{label}</h3>
+              <h3 className="font-bold text-[0.8rem] sm:text-sm font-heading truncate" style={{ color: "hsla(0,0%,100%,0.9)" }}>{label}</h3>
               {isFeatured && (
-                <span className="text-[0.45rem] px-1.5 py-0.5 rounded-full font-bold tracking-[1.5px] uppercase flex items-center gap-0.5 flex-shrink-0"
-                  style={{ background: `${color}12`, color: color, border: `1px solid ${color}18` }}>
-                  <Crown className="w-2 h-2" /> PREMIUM
+                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full font-bold tracking-[1.5px] uppercase flex items-center gap-0.5 flex-shrink-0"
+                  style={{ background: `${color}20`, color: color, border: `1px solid ${color}30` }}>
+                  <Crown className="w-2.5 h-2.5" /> PREMIUM
                 </span>
               )}
             </div>
-            <p className="text-[0.58rem] sm:text-[0.65rem] text-foreground/30 truncate">{subtitle}</p>
+            <p className="text-[0.62rem] sm:text-[0.68rem] truncate" style={{ color: "hsla(0,0%,100%,0.45)" }}>{subtitle}</p>
           </div>
 
           {/* Actions */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <motion.button
               onClick={(e) => { e.stopPropagation(); isFeatured ? navigate(route) : onNavigate(id); }}
-              className="px-3 py-1.5 rounded-xl text-[0.55rem] sm:text-[0.6rem] font-semibold transition-all hidden sm:flex items-center gap-1 hover:scale-105"
+              className="px-3.5 py-1.5 rounded-xl text-[0.6rem] sm:text-[0.65rem] font-semibold transition-all hidden sm:flex items-center gap-1 hover:scale-105"
               style={isFeatured ? {
                 backgroundColor: color,
                 color: "#fff",
-                boxShadow: `0 3px 12px ${color}25`
+                boxShadow: `0 4px 16px ${color}30`
               } : {
-                background: "hsla(265,20%,20%,0.2)",
-                border: "1px solid hsla(265,20%,25%,0.15)",
-                color: "hsla(0,0%,100%,0.6)"
+                background: "hsla(220,20%,22%,0.4)",
+                border: "1px solid hsla(220,20%,30%,0.2)",
+                color: "hsla(0,0%,100%,0.75)"
               }}
               whileTap={{ scale: 0.95 }}>
               {isFeatured ? "Demo Live" : "Apri Demo"} <ArrowRight className="w-2.5 h-2.5" />
             </motion.button>
-            <div className="w-6 h-6 rounded-lg flex items-center justify-center"
-              style={{ background: "hsla(265,20%,20%,0.1)" }}>
-              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/25" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/25" />}
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+              style={{ background: "hsla(220,20%,22%,0.25)" }}>
+              {isExpanded
+                ? <ChevronUp className="w-3.5 h-3.5" style={{ color: "hsla(0,0%,100%,0.45)" }} />
+                : <ChevronDown className="w-3.5 h-3.5" style={{ color: "hsla(0,0%,100%,0.35)" }} />}
             </div>
           </div>
         </div>
@@ -341,19 +344,17 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
               <div className="px-4 pb-5 pt-1">
-                {/* Separator */}
-                <div className="h-px mb-4" style={{ background: `linear-gradient(90deg, transparent, ${color}15, transparent)` }} />
+                <div className="h-px mb-4" style={{ background: `linear-gradient(90deg, transparent, ${color}20, transparent)` }} />
 
                 <div className="flex justify-center mb-4">
                   <LivePhonePreview route={route} color={color} name={label} />
                 </div>
                 <IndustryPhoneShowcase industryId={id} />
 
-                {/* CTA */}
                 <div className="flex justify-center mt-4">
                   <motion.button onClick={() => isFeatured ? navigate(route) : onNavigate(id)}
                     className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-2 min-h-[40px] transition-all hover:scale-105"
-                    style={{ backgroundColor: color, boxShadow: `0 4px 16px ${color}20` }} whileTap={{ scale: 0.95 }}>
+                    style={{ backgroundColor: color, boxShadow: `0 4px 16px ${color}25` }} whileTap={{ scale: 0.95 }}>
                     <Sparkles className="w-3.5 h-3.5" />
                     Apri Demo Live <ArrowRight className="w-3.5 h-3.5" />
                   </motion.button>
