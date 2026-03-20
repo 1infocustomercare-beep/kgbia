@@ -3516,15 +3516,28 @@ const LandingPage = () => {
               </motion.div>
 
               {/* Metrics — centered */}
-              <motion.div className="mt-8 flex items-center justify-center gap-5 sm:gap-8 flex-wrap"
+              <motion.div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full max-w-xl mx-auto"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 0.8 }}>
                 {metrics.map((m, i) =>
-                <div key={i} className="text-center">
-                  <p className="text-lg sm:text-2xl font-heading font-bold text-foreground">
+                <motion.div
+                  key={i}
+                  className="relative group text-center px-4 py-4 rounded-2xl overflow-hidden"
+                  style={{
+                    background: "hsl(var(--card) / 0.6)",
+                    backdropFilter: "blur(16px)",
+                    WebkitBackdropFilter: "blur(16px)",
+                    border: "1px solid hsl(var(--border) / 0.5)",
+                    boxShadow: "0 2px 16px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.08)"
+                  }}
+                  whileHover={{ y: -2, boxShadow: "0 8px 32px hsl(var(--primary) / 0.12), inset 0 1px 0 hsl(0 0% 100% / 0.12)" }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <span className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <p className="relative text-xl sm:text-2xl font-heading font-bold text-foreground">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="text-[0.5rem] sm:text-[0.55rem] tracking-[1.5px] uppercase font-heading font-semibold text-foreground/45">{m.label}</p>
-                </div>
+                  <p className="relative text-[0.5rem] sm:text-[0.55rem] tracking-[1.5px] uppercase font-heading font-semibold text-muted-foreground mt-1">{m.label}</p>
+                </motion.div>
                 )}
               </motion.div>
             </div>
