@@ -4773,7 +4773,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              3 INTERFACCE — Mockup Showcase
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden hidden" style={{
+      <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(38,18%,9%,0.96) 18%, hsla(265,20%,10%,0.96) 35%, hsla(38,14%,8%,0.96) 55%, hsla(265,18%,9%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
