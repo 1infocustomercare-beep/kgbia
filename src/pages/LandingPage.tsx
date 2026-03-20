@@ -6251,10 +6251,8 @@ const LandingPage = () => {
                       <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r rounded-br-2xl pointer-events-none" style={{ borderColor: "hsla(265,70%,60%,0.15)" }} />
                       <div className="absolute top-0 left-6 right-6 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(38,50%,55%,0.25), hsla(265,70%,60%,0.2), transparent)" }} />
                       <div className="relative mb-4 mt-1">
-                        <div className="w-14 h-14 rounded-full flex items-center justify-center text-base font-bold font-heading mx-auto"
-                    style={{ background: "linear-gradient(135deg, hsla(265,40%,25%,0.6), hsla(265,30%,18%,0.4))", border: "2px solid hsla(265,50%,55%,0.25)", color: "hsl(var(--primary))", boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)" }}>
-                          {t.name.charAt(0)}
-                        </div>
+                        <img src={t.photo} alt={t.name} className="w-14 h-14 rounded-full object-cover mx-auto"
+                    style={{ border: "2px solid hsla(265,50%,55%,0.25)", boxShadow: "0 0 20px -4px hsla(265,70%,60%,0.25)" }} />
                         <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center text-xs"
                     style={{ background: "hsla(265,30%,15%,0.9)", border: "1px solid hsla(265,40%,50%,0.2)", boxShadow: "0 4px 12px hsla(0,0%,0%,0.3)" }}>
                           {t.emoji}
