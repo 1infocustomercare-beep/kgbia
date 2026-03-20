@@ -3629,25 +3629,28 @@ const LandingPage = () => {
             },
           ].map((pillar, i) =>
           <motion.div key={i} variants={fadeUp}
-          className="relative p-5 rounded-2xl overflow-hidden border transition-all duration-300"
+          className="relative p-5 rounded-2xl overflow-hidden border transition-all duration-300 group"
           style={{
-            background: `linear-gradient(160deg, ${pillar.gradient.split(" ")[0].replace("from-[", "").replace("]", "")}, hsla(220,20%,98%,0.95))`,
-            borderColor: `hsl(${pillar.color} / 0.15)`,
+            background: "linear-gradient(160deg, hsl(220 15% 99%), hsl(230 20% 97%))",
+            borderColor: `hsl(${pillar.color} / 0.12)`,
+            boxShadow: `0 4px 24px hsl(${pillar.color} / 0.06), 0 1px 3px hsl(220 20% 80% / 0.15)`,
           }}>
-            {/* Top accent */}
-            <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent, hsl(${pillar.color} / 0.4), transparent)` }} />
+            {/* Top accent line */}
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pillar.color} / 0.5) 50%, transparent 90%)` }} />
+            {/* Subtle corner glow */}
+            <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full opacity-40 pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${pillar.color} / 0.15), transparent 70%)` }} />
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-              style={{ background: `linear-gradient(135deg, hsl(${pillar.color}), hsl(${pillar.color} / 0.75))`, color: "white", boxShadow: `0 4px 16px hsl(${pillar.color} / 0.25)` }}>
+              style={{ background: `linear-gradient(135deg, hsl(${pillar.color}), hsl(${pillar.color} / 0.7))`, color: "white", boxShadow: `0 6px 20px hsl(${pillar.color} / 0.3), inset 0 1px 0 rgba(255,255,255,0.15)` }}>
                 {pillar.icon}
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-[0.9rem] font-heading font-bold text-foreground leading-tight mb-1.5">{pillar.title}</h3>
-                <p className="text-[0.7rem] text-foreground/60 leading-[1.7] mb-3">{pillar.desc}</p>
+                <p className="text-[0.7rem] text-foreground/55 leading-[1.7] mb-3">{pillar.desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {pillar.features.map((f, fi) =>
-                  <span key={fi} className="px-2 py-0.5 rounded-md text-[0.5rem] font-medium tracking-wide"
-                  style={{ background: `hsl(${pillar.color} / 0.1)`, color: `hsl(${pillar.color} / 0.7)`, border: `1px solid hsl(${pillar.color} / 0.1)` }}>
+                  <span key={fi} className="px-2.5 py-1 rounded-lg text-[0.5rem] font-semibold tracking-wide"
+                  style={{ background: `hsl(${pillar.color} / 0.08)`, color: `hsl(${pillar.color})`, border: `1px solid hsl(${pillar.color} / 0.12)` }}>
                     {f}
                   </span>
                   )}
