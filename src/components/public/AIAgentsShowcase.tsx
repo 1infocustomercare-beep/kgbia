@@ -943,25 +943,29 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           <motion.div className="flex justify-center my-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <motion.button
               onClick={() => setShowAll(!showAll)}
-              className="group relative flex items-center gap-2.5 px-6 py-3 rounded-full border border-primary/30 bg-card/90 backdrop-blur-sm hover:border-primary/50 transition-all overflow-hidden"
+              className="group relative flex items-center gap-2.5 px-6 py-3 rounded-full border transition-all overflow-hidden"
+              style={{
+                borderColor: "hsla(215,60%,55%,0.3)",
+                background: "hsla(215,25%,14%,0.8)",
+                backdropFilter: "blur(12px)",
+              }}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
-              {/* Scanning beam */}
               <motion.div className="absolute inset-0 pointer-events-none"
                 style={{ background: "linear-gradient(90deg, transparent 30%, hsla(215,60%,60%,0.08) 50%, transparent 70%)" }}
                 animate={{ x: ["-200%", "300%"] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
-              <CircuitBoard className="w-4 h-4 text-primary/80" />
-              <span className="text-xs font-bold text-foreground/90 tracking-wider uppercase relative z-10">
+              <CircuitBoard className="w-4 h-4" style={{ color: "hsl(215,80%,65%)" }} />
+              <span className="text-xs font-bold tracking-wider uppercase relative z-10" style={{ color: "hsla(0,0%,100%,0.9)" }}>
                 {showAll ? "Mostra Principali" : `Mostra Tutti i ${totalFiltered} Agenti`}
               </span>
               {showAll
-                ? <ChevronUp className="w-4 h-4 text-primary/70" />
-                : <ChevronDown className="w-4 h-4 text-primary/70 group-hover:translate-y-0.5 transition-transform" />
+                ? <ChevronUp className="w-4 h-4" style={{ color: "hsl(215,75%,65%)" }} />
+                : <ChevronDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" style={{ color: "hsl(215,75%,65%)" }} />
               }
-              <motion.div className="w-2 h-2 rounded-full bg-primary/60"
+              <motion.div className="w-2 h-2 rounded-full" style={{ background: "hsl(215,80%,60%)" }}
                 animate={{ scale: [1, 1.4, 1], opacity: [0.4, 1, 0.4] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
@@ -971,16 +975,16 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
 
         {/* ══════ NEURAL BUS ══════ */}
         <motion.div className="relative h-8 sm:h-16 my-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-px bg-primary/20" />
+          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-px" style={{ background: "hsla(215,70%,55%,0.2)" }} />
 
           {[8, 22, 36, 50, 64, 78, 92].map((x, i) => (
             <motion.div key={i}
-              className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border border-primary/30"
-              style={{ left: `${x}%`, background: "hsl(var(--background))" }}
-              animate={{ borderColor: ["hsl(var(--primary) / 0.2)", "hsl(var(--primary) / 0.5)", "hsl(var(--primary) / 0.2)"] }}
+              className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border"
+              style={{ left: `${x}%`, background: "hsla(230,16%,8%,1)", borderColor: "hsla(215,60%,50%,0.3)" }}
+              animate={{ borderColor: ["hsla(215,60%,50%,0.2)", "hsla(215,70%,55%,0.5)", "hsla(215,60%,50%,0.2)"] }}
               transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
             >
-              <motion.div className="absolute inset-[2px] rounded-full bg-primary/45"
+              <motion.div className="absolute inset-[2px] rounded-full" style={{ background: "hsla(215,70%,55%,0.45)" }}
                 animate={{ scale: [0.5, 1, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
               />
@@ -990,35 +994,42 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           {[0, 1, 2].map((i) => (
             <motion.div key={i}
               className="absolute top-1/2 -translate-y-1/2 w-4 h-[2px] rounded-full"
-              style={{ background: "hsl(var(--primary))", boxShadow: "0 0 8px hsl(var(--primary) / 0.5)" }}
+              style={{ background: "hsl(215,85%,60%)", boxShadow: "0 0 8px hsla(215,80%,55%,0.5)" }}
               animate={{ left: ["-3%", "103%"] }}
               transition={{ duration: 5 + i, repeat: Infinity, ease: "linear", delay: i * 1.5 }}
             />
           ))}
 
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-card/95 backdrop-blur-sm">
-            <motion.div className="w-2 h-2 rounded-full bg-primary/70"
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-3 py-1.5 rounded-full border"
+            style={{ borderColor: "hsla(215,60%,55%,0.3)", background: "hsla(230,18%,10%,0.95)", backdropFilter: "blur(12px)" }}>
+            <motion.div className="w-2 h-2 rounded-full" style={{ background: "hsl(215,80%,60%)" }}
               animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }} />
-            <CircuitBoard className="w-3.5 h-3.5 text-primary/90" />
-            <span className="text-[0.5rem] font-bold text-primary/90 tracking-[2px] uppercase">Neural Bus</span>
-            <motion.div className="w-2 h-2 rounded-full bg-accent/70"
+            <CircuitBoard className="w-3.5 h-3.5" style={{ color: "hsl(215,85%,65%)" }} />
+            <span className="text-[0.5rem] font-bold tracking-[2px] uppercase" style={{ color: "hsl(215,80%,70%)" }}>Neural Bus</span>
+            <motion.div className="w-2 h-2 rounded-full" style={{ background: "hsl(168,65%,50%)" }}
               animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity, delay: 0.7 }} />
           </div>
         </motion.div>
 
-        {/* ══════ IMPACT STATS ══════ */}
+        {/* ══════ IMPACT STATS — Luxury Cards ══════ */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="relative rounded-xl border border-border bg-card/80 backdrop-blur-sm p-3 sm:p-8 overflow-hidden mb-5 mt-2">
+          className="relative rounded-2xl border p-3 sm:p-8 overflow-hidden mb-5 mt-2"
+          style={{
+            borderColor: "hsla(215,50%,45%,0.15)",
+            background: "linear-gradient(160deg, hsla(230,20%,12%,0.95), hsla(255,18%,9%,0.98))",
+            backdropFilter: "blur(24px)",
+            boxShadow: "0 8px 40px hsla(215,60%,40%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.03)",
+          }}>
           <div className="absolute top-0 left-0 right-0 h-px">
-            <motion.div className="absolute w-12 h-full bg-primary/40"
+            <motion.div className="absolute w-12 h-full" style={{ background: "hsla(215,80%,60%,0.4)" }}
               animate={{ left: ["-10%", "110%"] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
           </div>
           <div className="text-center mb-5">
-            <h3 className="font-bold text-sm sm:text-lg text-foreground mb-1">Output della Rete</h3>
-            <p className="text-foreground/75 text-[0.6rem] sm:text-xs">Risultati misurabili — garantiti per contratto</p>
+            <h3 className="font-bold text-sm sm:text-lg mb-1" style={{ color: "hsla(0,0%,100%,0.95)" }}>Output della Rete</h3>
+            <p className="text-[0.6rem] sm:text-xs" style={{ color: "hsla(220,15%,75%,0.75)" }}>Risultati misurabili — garantiti per contratto</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
             {[
@@ -1029,13 +1040,18 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
             ].map((stat, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="text-center p-3 rounded-xl border border-border bg-background/70 hover:border-primary/30 transition-colors">
-                <div className="text-primary/80 flex justify-center mb-1.5">{stat.icon}</div>
-                <div className="text-xl sm:text-3xl font-bold text-foreground mb-0.5">
+                className="text-center p-3 rounded-2xl border transition-all hover:scale-[1.02]"
+                style={{
+                  borderColor: "hsla(220,20%,30%,0.45)",
+                  background: "linear-gradient(160deg, hsla(230,18%,16%,0.8), hsla(230,15%,11%,0.9))",
+                  boxShadow: "inset 0 1px 0 hsla(0,0%,100%,0.03), 0 4px 16px hsla(0,0%,0%,0.15)",
+                }}>
+                <div className="flex justify-center mb-1.5" style={{ color: "hsl(215,80%,65%)" }}>{stat.icon}</div>
+                <div className="text-xl sm:text-3xl font-bold mb-0.5" style={{ color: "hsla(0,0%,100%,0.95)" }}>
                   <Counter value={stat.value} suffix={stat.suffix} />
                 </div>
-                <div className="text-[0.55rem] sm:text-xs font-semibold text-foreground/90">{stat.label}</div>
-                <div className="text-[0.45rem] sm:text-[0.55rem] text-foreground/75 mt-0.5">{stat.desc}</div>
+                <div className="text-[0.55rem] sm:text-xs font-semibold" style={{ color: "hsla(0,0%,100%,0.88)" }}>{stat.label}</div>
+                <div className="text-[0.45rem] sm:text-[0.55rem] mt-0.5" style={{ color: "hsla(220,15%,72%,0.7)" }}>{stat.desc}</div>
               </motion.div>
             ))}
           </div>
@@ -1044,17 +1060,18 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
         {/* ══════ EVOLVING NETWORK FOOTER ══════ */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           className="text-center py-4">
-          <p className="text-foreground/90 text-xs sm:text-sm font-semibold mb-3">
+          <p className="text-xs sm:text-sm font-semibold mb-3" style={{ color: "hsla(0,0%,100%,0.9)" }}>
             Una Rete che Evolve per Sempre.
           </p>
-          <p className="text-foreground/60 text-[0.6rem] sm:text-xs max-w-md mx-auto mb-4">
+          <p className="text-[0.6rem] sm:text-xs max-w-md mx-auto mb-4" style={{ color: "hsla(220,15%,70%,0.65)" }}>
             Ogni settimana nuovi nodi, nuove connessioni, nuove automazioni. Il tuo circuito IA diventa più intelligente ogni giorno.
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {["Nuovi Agenti Settimanali", "Auto-Discovery Connessioni", "Zero Costi Extra", "Evoluzione Perpetua"].map((label) => (
-              <div key={label} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/15 bg-card/40 backdrop-blur-sm">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[0.5rem] text-foreground/80 font-medium">{label}</span>
+              <div key={label} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border"
+                style={{ borderColor: "hsla(215,50%,45%,0.2)", background: "hsla(215,25%,14%,0.5)", backdropFilter: "blur(8px)" }}>
+                <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "hsl(150,70%,55%)" }} />
+                <span className="text-[0.5rem] font-medium" style={{ color: "hsla(220,15%,80%,0.8)" }}>{label}</span>
               </div>
             ))}
           </div>
