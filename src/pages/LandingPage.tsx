@@ -3338,14 +3338,14 @@ const LandingPage = () => {
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           
-          {/* ═══ MOBILE LAYOUT: Text → Phones → CTAs ═══ */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12">
+          {/* ═══ CENTERED LAYOUT: Text → Metrics → Phones ═══ */}
+          <div className="flex flex-col items-center">
             
-            {/* LEFT: Text content */}
-            <div className="flex-1 text-left lg:max-w-[520px]">
+            {/* CENTER: Text content */}
+            <div className="text-center max-w-[680px] mx-auto">
 
               {/* Badge */}
-              <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl mb-4"
+              <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl mb-5"
               style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                 <div className="w-5 h-5 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)))", boxShadow: "0 2px 8px hsl(var(--neon-emerald) / 0.3)" }}>
@@ -3365,16 +3365,14 @@ const LandingPage = () => {
               </motion.h1>
 
               {/* Subtitle */}
-              <motion.p className="mt-3 sm:mt-5 text-[0.8rem] sm:text-[0.95rem] text-foreground/60 max-w-[460px] leading-[1.75] font-normal"
+              <motion.p className="mt-4 sm:mt-5 text-[0.8rem] sm:text-[0.95rem] text-foreground/60 max-w-[520px] mx-auto leading-[1.75] font-normal"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-                Creiamo esperienze digitali per brand ambiziosi.
-                <br className="hidden sm:block" />{" "}
-                Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business.
+                Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business.
                 <span className="text-foreground/75 font-medium"> 98+ agenti IA · <span className="text-primary font-semibold">25+ settori</span> · Zero canone.</span>
               </motion.p>
 
               {/* CTA */}
-              <motion.div className="mt-6 flex flex-row items-center gap-3"
+              <motion.div className="mt-6 flex flex-row items-center justify-center gap-3"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
                 <motion.button
                   onClick={() => scrollTo("pricing")}
@@ -3399,11 +3397,11 @@ const LandingPage = () => {
                 </motion.button>
               </motion.div>
 
-              {/* Metrics — compact inline */}
-              <motion.div className="mt-8 flex items-center gap-4 sm:gap-6 flex-wrap"
+              {/* Metrics — centered */}
+              <motion.div className="mt-8 flex items-center justify-center gap-5 sm:gap-8 flex-wrap"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, duration: 0.8 }}>
                 {metrics.map((m, i) =>
-                <div key={i} className="text-left">
+                <div key={i} className="text-center">
                   <p className="text-lg sm:text-2xl font-heading font-bold text-foreground">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
@@ -3413,10 +3411,10 @@ const LandingPage = () => {
               </motion.div>
             </div>
 
-            {/* RIGHT: 3 iPhone mockups — like reference images */}
-            <motion.div className="relative mt-10 lg:mt-0 flex-shrink-0 flex items-end justify-center lg:justify-end"
-            initial={{ opacity: 0, x: 40, scale: 0.92 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
+            {/* PHONES: Centered below text */}
+            <motion.div className="relative mt-10 flex items-end justify-center"
+            initial={{ opacity: 0, y: 40, scale: 0.92 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
 
               {/* Ambient glow behind phones */}
@@ -3424,62 +3422,48 @@ const LandingPage = () => {
                 style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, hsla(265,50%,50%,0.12), hsla(168,45%,45%,0.08), transparent 70%)" }} />
 
               {/* Three phone container */}
-              <div className="relative flex items-end gap-[-8px]">
+              <div className="relative flex items-end">
                 
-                {/* Phone 1 — LEFT, slightly behind */}
+                {/* Phone 1 — LEFT */}
                 <motion.div className="relative z-[5]"
                 style={{ marginBottom: "32px", marginRight: "-18px" }}
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}>
                   <div className="relative w-[120px] sm:w-[155px] lg:w-[185px] aspect-[9/19.5] rounded-[24px] sm:rounded-[32px] overflow-hidden"
-                  style={{ 
-                    border: "2.5px solid hsl(220 12% 82%)", 
-                    background: "#0a0a12", 
-                    boxShadow: "0 30px 60px hsla(0,0%,0%,0.2), 0 8px 24px hsla(265,30%,30%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.06)" 
-                  }}>
+                  style={{ border: "2.5px solid hsl(220 12% 82%)", background: "#0a0a12", boxShadow: "0 30px 60px hsla(0,0%,0%,0.2), 0 8px 24px hsla(265,30%,30%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.06)" }}>
                     <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[36px] sm:w-[46px] h-[11px] sm:h-[13px] bg-black rounded-full z-30" style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
                     <div className="absolute inset-[2px] rounded-[22px] sm:rounded-[30px] overflow-hidden">
                       <img src={sectorHeroNcc} alt="NCC App Demo" className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
                       <div className="absolute inset-x-0 top-0 h-10" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.35), transparent)" }} />
                     </div>
                     <div className="absolute bottom-[4px] left-1/2 -translate-x-1/2 w-[32%] h-[3px] bg-white/20 rounded-full z-20" />
-                    {/* Reflection */}
                     <div className="absolute inset-0 rounded-[24px] sm:rounded-[32px] pointer-events-none" style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.08) 0%, transparent 40%)" }} />
                   </div>
                 </motion.div>
 
-                {/* Phone 2 — CENTER, tallest and front */}
+                {/* Phone 2 — CENTER */}
                 <motion.div className="relative z-20"
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
                   <div className="relative w-[150px] sm:w-[195px] lg:w-[235px] aspect-[9/19.5] rounded-[26px] sm:rounded-[36px] overflow-hidden"
-                  style={{ 
-                    border: "3px solid hsl(220 10% 78%)", 
-                    background: "#0a0a12", 
-                    boxShadow: "0 40px 80px hsla(0,0%,0%,0.25), 0 12px 32px hsla(265,40%,35%,0.12), inset 0 1px 0 hsla(0,0%,100%,0.08)" 
-                  }}>
+                  style={{ border: "3px solid hsl(220 10% 78%)", background: "#0a0a12", boxShadow: "0 40px 80px hsla(0,0%,0%,0.25), 0 12px 32px hsla(265,40%,35%,0.12), inset 0 1px 0 hsla(0,0%,100%,0.08)" }}>
                     <div className="absolute top-[7px] sm:top-[9px] left-1/2 -translate-x-1/2 w-[42px] sm:w-[54px] h-[12px] sm:h-[15px] bg-black rounded-full z-30" style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
                     <div className="absolute inset-[2px] rounded-[24px] sm:rounded-[34px] overflow-hidden">
                       <img src={sectorHeroFood} alt="Food App Demo" className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
                       <div className="absolute inset-x-0 top-0 h-10" style={{ background: "linear-gradient(to bottom, hsla(0,0%,0%,0.3), transparent)" }} />
                     </div>
                     <div className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-[32%] h-[4px] bg-white/25 rounded-full z-20" />
-                    {/* Reflection shine */}
                     <div className="absolute inset-0 rounded-[26px] sm:rounded-[36px] pointer-events-none" style={{ background: "linear-gradient(135deg, hsla(0,0%,100%,0.1) 0%, transparent 35%)" }} />
                   </div>
                 </motion.div>
 
-                {/* Phone 3 — RIGHT, slightly behind */}
+                {/* Phone 3 — RIGHT */}
                 <motion.div className="relative z-[8]"
                 style={{ marginBottom: "20px", marginLeft: "-18px" }}
                 animate={{ y: [0, -7, 0] }}
                 transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}>
                   <div className="relative w-[125px] sm:w-[160px] lg:w-[190px] aspect-[9/19.5] rounded-[24px] sm:rounded-[32px] overflow-hidden"
-                  style={{ 
-                    border: "2.5px solid hsl(220 12% 82%)", 
-                    background: "#0a0a12", 
-                    boxShadow: "0 25px 55px hsla(0,0%,0%,0.18), 0 6px 20px hsla(168,35%,35%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.06)" 
-                  }}>
+                  style={{ border: "2.5px solid hsl(220 12% 82%)", background: "#0a0a12", boxShadow: "0 25px 55px hsla(0,0%,0%,0.18), 0 6px 20px hsla(168,35%,35%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.06)" }}>
                     <div className="absolute top-[6px] sm:top-[8px] left-1/2 -translate-x-1/2 w-[37px] sm:w-[47px] h-[11px] sm:h-[13px] bg-black rounded-full z-30" style={{ boxShadow: "0 0 0 1px hsla(0,0%,100%,0.06)" }} />
                     <div className="absolute inset-[2px] rounded-[22px] sm:rounded-[30px] overflow-hidden">
                       <img src={sectorHeroBeauty} alt="Beauty App Demo" className="w-full h-full object-cover" style={{ objectPosition: "center 15%" }} />
@@ -3491,7 +3475,7 @@ const LandingPage = () => {
                 </motion.div>
               </div>
 
-              {/* Floating live feed card — overlapping phones bottom */}
+              {/* Floating live feed card */}
               <motion.div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[88%] max-w-[300px] z-30"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
