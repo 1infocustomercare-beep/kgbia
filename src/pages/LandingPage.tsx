@@ -173,7 +173,8 @@ const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefine
 
 const Section = forwardRef<HTMLElement, {id?: string;children: React.ReactNode;className?: string;style?: React.CSSProperties;}>(
   ({ id, children, className = "", style }, ref) =>
-  <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden ${className}`} style={mobilifyBg(style)}>
+  <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden landing-premium-section ${className}`} style={mobilifyBg(style)}>
+      <div className="absolute inset-x-3 sm:inset-x-6 inset-y-6 sm:inset-y-8 rounded-[1.65rem] pointer-events-none landing-premium-shell" />
       <div className="max-w-[1100px] mx-auto relative z-10">{children}</div>
     </section>
 
@@ -2752,8 +2753,8 @@ const LandingPage = () => {
 
   return (
     <div
-      className="min-h-screen overflow-x-hidden relative landing-noise-off"
-      style={{ background: "linear-gradient(180deg, hsl(var(--deep-black)) 0%, hsl(var(--deep-black)) 100%)" }}>
+      className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury"
+      style={{ background: "radial-gradient(120% 80% at 50% 35%, hsl(214 28% 96%) 0%, hsl(220 26% 94%) 40%, hsl(224 20% 90%) 64%, hsl(228 26% 86%) 100%)" }}>
       
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
