@@ -6075,9 +6075,9 @@ const LandingPage = () => {
                             <ArrowRight className="w-3.5 h-3.5" style={{ color: `hsla(${t.color},65%,60%,1)` }} />
                           </motion.div>
                           <div className="flex-1 rounded-xl p-3 text-center"
-                          style={{ background: `hsla(${t.color},40%,15%,0.2)`, border: `1px solid hsla(${t.color},40%,40%,0.15)` }}>
-                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/25 mb-1">Dopo</div>
-                            <div className="text-sm font-bold" style={{ color: `hsla(${t.color},65%,65%,0.95)` }}>{t.after}</div>
+                          style={{ background: `hsla(${t.color},40%,50%,0.06)`, border: `1px solid hsla(${t.color},40%,50%,0.15)` }}>
+                            <div className="text-[0.5rem] uppercase tracking-wider text-foreground/45 mb-1">Dopo</div>
+                            <div className="text-sm font-bold" style={{ color: `hsla(${t.color},65%,45%,0.95)` }}>{t.after}</div>
                           </div>
                         </div>
                       </div>
