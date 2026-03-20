@@ -551,7 +551,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
   const connectedIds = useMemo(() => new Set(activeAgent?.connections || []), [activeAgent]);
 
   return (
-    <section ref={sectionRef} className="relative py-8 sm:py-24 px-3 sm:px-6 overflow-hidden isolate z-10 dark"
+    <section ref={sectionRef} className="relative py-8 sm:py-24 px-3 sm:px-6 overflow-hidden isolate z-10"
       style={{
         background: `linear-gradient(180deg, 
           hsla(230,16%,5%,1) 0%, 
@@ -559,6 +559,7 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
           hsla(155,10%,7%,1) 45%, 
           hsla(265,14%,8%,1) 70%, 
           hsla(230,16%,5%,1) 100%)`,
+        color: "hsla(0,0%,100%,0.92)",
       }}
     >
       {/* Premium luxury ambient glows */}
@@ -582,24 +583,25 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
         {/* ══════ HEADER ══════ */}
         <div className="text-center mb-5 sm:mb-12">
           <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-card/90 backdrop-blur-sm mb-4">
-            <Network className="w-3.5 h-3.5 text-primary animate-pulse" />
-            <span className="text-[0.6rem] font-bold text-primary tracking-[0.15em] uppercase">Rete Neurale Operativa</span>
-            <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full bg-primary/20 text-primary font-bold">Oltre {TOTAL_AGENTS_COUNT} Agenti IA</span>
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border mb-4"
+            style={{ borderColor: "hsla(215,80%,60%,0.3)", background: "hsla(215,30%,15%,0.7)", backdropFilter: "blur(12px)" }}>
+            <Network className="w-3.5 h-3.5 animate-pulse" style={{ color: "hsl(215,90%,65%)" }} />
+            <span className="text-[0.6rem] font-bold tracking-[0.15em] uppercase" style={{ color: "hsl(215,90%,70%)" }}>Rete Neurale Operativa</span>
+            <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full font-bold" style={{ background: "hsla(215,80%,55%,0.2)", color: "hsl(215,90%,70%)" }}>Oltre {TOTAL_AGENTS_COUNT} Agenti IA</span>
           </motion.div>
 
           <motion.h2 initial={{ opacity: 0, y: 15 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 }}
-            className="text-[clamp(1.4rem,4.5vw,3rem)] font-bold text-foreground leading-[1.05] mb-3">
+            className="text-[clamp(1.4rem,4.5vw,3rem)] font-bold leading-[1.05] mb-3" style={{ color: "hsla(0,0%,100%,0.95)" }}>
             Oltre {TOTAL_AGENTS_COUNT} Agenti IA{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary">
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg, hsl(215,90%,65%), hsl(168,72%,55%), hsl(215,90%,65%))" }}>
               Autonomi
             </span>
           </motion.h2>
 
           <motion.p initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.2 }}
-            className="text-foreground/80 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed mb-5">
-            Un ecosistema di <strong className="text-foreground">intelligenza connessa</strong> che gestisce il tuo business.
-            Si parlano, si scambiano dati, prendono decisioni <strong className="text-foreground">in autonomia</strong> —
+            className="text-xs sm:text-sm max-w-xl mx-auto leading-relaxed mb-5" style={{ color: "hsla(220,15%,80%,0.85)" }}>
+            Un ecosistema di <strong style={{ color: "hsla(0,0%,100%,0.95)" }}>intelligenza connessa</strong> che gestisce il tuo business.
+            Si parlano, si scambiano dati, prendono decisioni <strong style={{ color: "hsla(0,0%,100%,0.95)" }}>in autonomia</strong> —
             come un team di specialisti che non dorme mai.
           </motion.p>
 
@@ -611,9 +613,10 @@ export function AIAgentsShowcase({ sector }: { sector?: string } = {}) {
               { icon: <Network className="w-3 h-3" />, text: "Comunicano tra loro" },
               { icon: <Brain className="w-3 h-3" />, text: "Apprendono dal tuo business" },
             ].map((v, i) => (
-              <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/25 bg-card/85 backdrop-blur-sm">
-                <div className="text-primary/90">{v.icon}</div>
-                <span className="text-[0.55rem] text-foreground/85 font-medium">{v.text}</span>
+              <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border"
+                style={{ borderColor: "hsla(215,60%,55%,0.25)", background: "hsla(215,25%,14%,0.65)", backdropFilter: "blur(8px)" }}>
+                <div style={{ color: "hsl(215,85%,65%)" }}>{v.icon}</div>
+                <span className="text-[0.55rem] font-medium" style={{ color: "hsla(220,15%,82%,0.9)" }}>{v.text}</span>
               </div>
             ))}
           </motion.div>
