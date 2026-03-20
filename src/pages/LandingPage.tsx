@@ -3468,12 +3468,12 @@ const LandingPage = () => {
 
               {/* Badge */}
               <motion.div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl mb-4 sm:mb-5"
-              style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
+              style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald) / 0.12), hsl(168 60% 40% / 0.08))", border: "1px solid hsl(var(--neon-emerald) / 0.2)", boxShadow: "0 2px 12px hsl(var(--neon-emerald) / 0.1)" }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                 <div className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)))", boxShadow: "0 2px 8px hsl(var(--neon-emerald) / 0.3)" }}>
                   <Bot className="w-2.5 h-2.5 text-white" />
                 </div>
-                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/70">Studio di App & AI</span>
+                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase" style={{ color: "hsl(160 50% 30%)" }}>Studio di App & AI</span>
               </motion.div>
 
               {/* Headline */}
