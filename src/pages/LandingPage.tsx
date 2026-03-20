@@ -3657,11 +3657,9 @@ const LandingPage = () => {
           <motion.div key={i} variants={fadeUp}
           className="relative p-5 rounded-2xl overflow-hidden border transition-all duration-300 group"
           style={{
-            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(230 20% 97% / 0.88))",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
+            background: "hsl(0 0% 100% / 0.92)",
             borderColor: `hsl(${pillar.color} / 0.1)`,
-            boxShadow: `0 4px 28px hsl(${pillar.color} / 0.06), 0 1px 3px hsl(220 20% 80% / 0.12), inset 0 1px 0 hsl(0 0% 100% / 0.5)`,
+            boxShadow: `0 4px 28px hsl(${pillar.color} / 0.06), 0 1px 3px hsl(220 20% 80% / 0.12)`,
           }}>
             {/* Top accent shimmer line */}
             <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${pillar.color} / 0.4) 30%, hsl(${pillar.color} / 0.6) 50%, hsl(${pillar.color} / 0.4) 70%, transparent 95%)` }} />
