@@ -2612,10 +2612,10 @@ const LandingPage = () => {
 
 
   const metrics = [
-  { value: 200, suffix: "+", label: "Attività Attive" },
+  { value: 847, suffix: "+", label: "Attività Attive" },
   { value: 25, suffix: "+", label: "Settori Coperti" },
-  { value: 45, suffix: "%", prefix: "+", label: "Aumento Fatturato" },
-  { value: 98, suffix: "%", label: "Soddisfazione" }];
+  { value: 40, suffix: "%", prefix: "+", label: "Aumento Fatturato" },
+  { value: 99.8, suffix: "%", label: "Soddisfazione" }];
 
 
   const testimonials = [
