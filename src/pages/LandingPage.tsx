@@ -555,7 +555,7 @@ const NeuralCellsBackground = () => {
 
 
 const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: {children: React.ReactNode;gradient: string;size?: "sm" | "md" | "lg";delay?: number;}) => {
-  const sizeClasses = size === "sm" ? "w-7 h-7 sm:w-10 sm:h-10 rounded-xl sm:rounded-xl" : size === "lg" ? "w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl" : "w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-xl";
+  const sizeClasses = size === "sm" ? "w-6 h-6 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl" : size === "lg" ? "w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl" : "w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl";
   const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
   return (
@@ -1037,7 +1037,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
         {/* Mode Toggle: Package vs Monthly */}
         <motion.div className="flex items-center justify-center gap-1 mt-6 p-1 rounded-full border border-border/30 max-w-sm mx-auto"
-        style={{ background: "linear-gradient(145deg, hsla(220,20%,98%,0.95), hsla(38,18%,8%,0.94))" }}
+        style={{ background: "linear-gradient(145deg, hsl(0 0% 100% / 0.95), hsl(220 20% 97% / 0.9))", boxShadow: "0 2px 12px hsl(var(--primary) / 0.06)" }}
         initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <button onClick={() => setPricingMode("package")}
           className={`relative flex-1 px-4 py-2.5 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${
@@ -1138,15 +1138,15 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 transition={{ delay: idx * 0.1 }}
                 className={`relative w-full rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                 isEmpire ?
-                "border-2 border-accent/50 shadow-[0_0_50px_hsla(35,45%,50%,0.25),0_8px_32px_hsla(0,0%,0%,0.5)] scale-[1.02]" :
+                "border-2 border-accent/40 shadow-[0_4px_30px_hsla(35,45%,50%,0.12)] scale-[1.01]" :
                 isSelected ?
-                "border-2 border-primary/50 shadow-[0_0_30px_hsla(265,50%,55%,0.12)]" :
-                "border border-border/30 shadow-[0_4px_20px_hsla(0,0%,0%,0.25)]"}`
+                "border-2 border-primary/35 shadow-[0_4px_24px_hsla(265,50%,55%,0.08)]" :
+                "border border-border/30 shadow-[0_2px_16px_hsla(0,0%,0%,0.06)]"}`
                 }
                 style={{
                   background: isEmpire ?
-                  "linear-gradient(165deg, hsla(35,25%,14%,0.94), hsla(230,12%,8%,0.95))" :
-                  "linear-gradient(165deg, hsla(230,12%,13%,0.93), hsla(230,10%,9%,0.95))"
+                  "linear-gradient(165deg, hsl(0 0% 100% / 0.98), hsl(35 20% 97% / 0.95))" :
+                  "linear-gradient(165deg, hsl(0 0% 100% / 0.97), hsl(220 18% 97% / 0.94))"
                 }}
                 whileTap={{ scale: 0.985 }}>
 
@@ -1169,7 +1169,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                         <div>
                           <p className="text-[0.55rem] font-heading font-semibold text-foreground/35 tracking-[3px] uppercase">{p.name}</p>
                           <div className="flex items-baseline gap-2 mt-1">
-                            <span className="text-[2rem] font-heading font-extrabold text-foreground leading-none">€{p.price.toLocaleString("it-IT")}</span>
+                            <span className="text-[1.6rem] font-heading font-extrabold text-foreground leading-none">€{p.price.toLocaleString("it-IT")}</span>
                             <div className="flex flex-col">
                               <span className="text-[0.65rem] text-foreground/20 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
                               <span className="text-[0.5rem] text-foreground/25">una tantum</span>
@@ -1185,8 +1185,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       </div>
 
                       {/* Installment info */}
-                      <p className="text-[0.6rem] text-foreground/30">
-                        oppure <strong className="text-foreground/50">€{Math.round(p.price / 3)}/mese ×3</strong> (TAN 0%) · oppure €{Math.round(p.price / 6)}/mese ×6
+                      <p className="text-[0.55rem] text-foreground/40 leading-snug">
+                        oppure <strong className="text-foreground/60">€{Math.round(p.price / 3)}/mese ×3</strong> (TAN 0%)
                       </p>
 
                       {/* Monthly + Commission pills — KEY conversion element */}
@@ -1226,15 +1226,15 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* Features with expand */}
                       <ul className="mt-3 space-y-1.5">
                         {p.features.slice(0, isSelected ? p.features.length : 4).map((f, fi) =>
-                      <li key={fi} className="flex items-start gap-2 text-[0.7rem] text-foreground/50">
-                            <div className={`w-4.5 h-4.5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                        f.includes("ZERO") || f.includes("0%") ? "bg-accent/20" : "bg-primary/12"}`
+                      <li key={fi} className="flex items-start gap-1.5 text-[0.62rem] text-foreground/55">
+                            <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                        f.includes("ZERO") || f.includes("0%") ? "bg-accent/15" : "bg-primary/10"}`
                         }>
-                              <Check className={`w-2.5 h-2.5 ${
+                              <Check className={`w-2 h-2 ${
                           f.includes("ZERO") || f.includes("0%") ? "text-accent" : "text-primary"}`
                           } />
                             </div>
-                            <span className={`leading-snug ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/60" : ""}`}>{f}</span>
+                            <span className={`leading-snug break-words ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/70" : ""}`}>{f}</span>
                           </li>
                       )}
                         {!isSelected && p.features.length > 4 &&
@@ -1261,8 +1261,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     }
 
                       {/* Savings bar */}
-                      <div className={`mt-3 p-2.5 rounded-xl text-[0.65rem] font-bold text-center ${
-                    isEmpire ? "bg-accent/12 text-accent border border-accent/20" : "bg-primary/[0.06] text-primary/70 border border-primary/10"}`
+                      <div className={`mt-3 p-2 rounded-xl text-[0.55rem] font-bold text-center leading-snug ${
+                    isEmpire ? "bg-accent/10 text-accent border border-accent/15" : "bg-primary/[0.05] text-primary/70 border border-primary/10"}`
                     }>
                         💸 {p.savings}
                       </div>
@@ -1270,7 +1270,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* CTA button per card */}
                       <motion.button
                       onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/admin");}}
-                      className={`w-full mt-3 py-3 rounded-xl text-[0.7rem] font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
+                      className={`w-full mt-3 py-3 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
                       isEmpire ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20" :
                       isGrowth ?
@@ -1286,15 +1286,15 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                       }
                         <span className="relative z-10">
-                          {isEmpire ? "👑 Scelgo Empire — Domina Ora" : isGrowth ? "🚀 Scelgo Growth AI" : "Inizia con Digital Start"}
+                          {isEmpire ? "👑 Scelgo Empire" : isGrowth ? "🚀 Scelgo Growth AI" : "Inizia con Digital Start"}
                         </span>
                       </motion.button>
 
                       {/* Empire upsell on non-empire cards */}
                       {!isEmpire &&
                     <div className="mt-2 p-2 rounded-lg bg-accent/[0.04] border border-accent/10 cursor-pointer" onClick={(e) => {e.stopPropagation();setSelectedPackage("empire");}}>
-                          <p className="text-[0.5rem] text-accent/70 text-center">
-                            ⚡ Con Empire risparmi <strong>€{p.commission === "2%" ? "6.403" : "4.200"}</strong> in più e hai <strong>0% commissioni per sempre</strong> →
+                          <p className="text-[0.45rem] text-accent/70 text-center leading-snug">
+                            ⚡ Con Empire risparmi <strong>€{p.commission === "2%" ? "6.403" : "4.200"}</strong> e 0% commissioni →
                           </p>
                         </div>
                     }
@@ -1315,16 +1315,16 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 className={`relative p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                 isSelected ?
                 p.id === "empire" ?
-                "border-2 border-accent/50 shadow-[0_0_60px_hsla(35,45%,50%,0.18),0_8px_40px_hsla(0,0%,0%,0.5)]" :
-                "border-2 border-primary/50 shadow-[0_0_50px_hsla(265,50%,55%,0.14),0_8px_40px_hsla(0,0%,0%,0.4)]" :
-                "border border-border/40 hover:border-primary/25 shadow-[0_4px_24px_hsla(0,0%,0%,0.3)]"}`
+                "border-2 border-accent/35 shadow-[0_4px_30px_hsla(35,45%,50%,0.12)]" :
+                "border-2 border-primary/35 shadow-[0_4px_24px_hsla(265,50%,55%,0.08)]" :
+                "border border-border/30 hover:border-primary/20 shadow-[0_2px_16px_hsla(0,0%,0%,0.05)]"}`
                 }
                 style={{
                   background: isSelected ?
                   p.id === "empire" ?
-                  "linear-gradient(165deg, hsla(35,22%,14%,0.94), hsla(230,12%,9%,0.95))" :
-                  "linear-gradient(165deg, hsla(265,15%,14%,0.93), hsla(230,10%,9%,0.95))" :
-                  "linear-gradient(165deg, hsla(230,12%,13%,0.92), hsla(230,10%,10%,0.94))"
+                  "linear-gradient(165deg, hsl(0 0% 100% / 0.98), hsl(35 20% 97% / 0.95))" :
+                  "linear-gradient(165deg, hsl(0 0% 100% / 0.97), hsl(248 15% 97% / 0.94))" :
+                  "linear-gradient(165deg, hsl(0 0% 100% / 0.96), hsl(220 18% 97% / 0.93))"
                 }}>
                     {p.badge &&
                   <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-[0.5rem] font-bold tracking-[1.5px] font-heading uppercase ${
@@ -1508,13 +1508,14 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
             <motion.div className="max-w-4xl mx-auto mt-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <div
               className={`relative p-5 sm:p-7 rounded-2xl overflow-hidden border ${
-              pkg.id === "empire" ? "border-accent/25" : "border-primary/20"}`
+              pkg.id === "empire" ? "border-accent/20" : "border-primary/15"}`
               }
               style={{
                 background:
                 pkg.id === "empire" ?
-                "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,18%,9%,0.95) 45%, hsla(0,0%,4%,0.99) 100%)" :
-                "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,14%,8%,0.9) 35%, hsla(0,0%,4%,0.99) 100%)"
+                "linear-gradient(180deg, hsl(0 0% 100% / 0.98) 0%, hsl(35 18% 97% / 0.95) 45%, hsl(0 0% 100% / 0.98) 100%)" :
+                "linear-gradient(180deg, hsl(0 0% 100% / 0.98) 0%, hsl(248 15% 97% / 0.94) 35%, hsl(0 0% 100% / 0.98) 100%)",
+                boxShadow: "0 4px 24px hsl(var(--primary) / 0.06)"
               }}>
               
                 <div className={`absolute top-0 left-0 right-0 h-[2px] ${pkg.id === "empire" ? "bg-gradient-to-r from-accent via-yellow-500 to-accent" : "bg-vibrant-gradient"}`} />
@@ -2664,13 +2665,13 @@ const LandingPage = () => {
   const [sectorSheetOpen, setSectorSheetOpen] = useState(false);
 
   const industries = [
-  { id: "food" as const, icon: <ChefHat className="w-5 h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie, sushi bar", gradient: "from-violet-500 to-purple-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live", image: cartoonFood },
-  { id: "ncc" as const, icon: <Car className="w-5 h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer, limousine", gradient: "from-purple-500 to-indigo-400", emoji: "🚘", modules: "Flotta · Tratte · Booking · Autisti", image: cartoonNcc },
-  { id: "beauty" as const, icon: <Scissors className="w-5 h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA, barbieri", gradient: "from-fuchsia-500/80 to-violet-400", emoji: "💅", modules: "Agenda · Clienti · Reminder · Trattamenti", image: cartoonBeauty },
-  { id: "healthcare" as const, icon: <Heart className="w-5 h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-indigo-400 to-violet-500", emoji: "🏥", modules: "Schede Paziente · Agenda · Fatturazione", image: cartoonHealthcare },
-  { id: "retail" as const, icon: <Store className="w-5 h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-purple-400 to-fuchsia-400/80", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni", image: cartoonRetail },
-  { id: "fitness" as const, icon: <Dumbbell className="w-5 h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, personal trainer", gradient: "from-violet-400 to-indigo-500", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti", image: cartoonFitness },
-  { id: "hospitality" as const, icon: <Building className="w-5 h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-purple-500/80 to-violet-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge", image: cartoonHotel }];
+  { id: "food" as const, icon: <ChefHat className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Food & Ristorazione", desc: "Ristoranti, pizzerie, bar, pasticcerie", gradient: "from-violet-500 to-purple-400", emoji: "🍽️", modules: "Menu Digitale · Ordini · QR · Cucina Live", image: cartoonFood },
+  { id: "ncc" as const, icon: <Car className="w-4 h-4 sm:w-5 sm:h-5" />, title: "NCC & Trasporto", desc: "Noleggio con conducente, transfer", gradient: "from-purple-500 to-indigo-400", emoji: "🚘", modules: "Flotta · Tratte · Booking · Autisti", image: cartoonNcc },
+  { id: "beauty" as const, icon: <Scissors className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Beauty & Wellness", desc: "Saloni, centri estetici, SPA", gradient: "from-fuchsia-500/80 to-violet-400", emoji: "💅", modules: "Agenda · Clienti · Reminder · Trattamenti", image: cartoonBeauty },
+  { id: "healthcare" as const, icon: <Heart className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Healthcare", desc: "Studi medici, dentisti, fisioterapisti", gradient: "from-indigo-400 to-violet-500", emoji: "🏥", modules: "Schede Paziente · Agenda · Fatturazione", image: cartoonHealthcare },
+  { id: "retail" as const, icon: <Store className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Retail & Negozi", desc: "Negozi, boutique, e-commerce locale", gradient: "from-purple-400 to-fuchsia-400/80", emoji: "🛍️", modules: "Catalogo · Inventario · POS · Promozioni", image: cartoonRetail },
+  { id: "fitness" as const, icon: <Dumbbell className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Fitness & Sport", desc: "Palestre, centri sportivi, PT", gradient: "from-violet-400 to-indigo-500", emoji: "💪", modules: "Abbonamenti · Corsi · Check-in · Pagamenti", image: cartoonFitness },
+  { id: "hospitality" as const, icon: <Building className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Hospitality", desc: "Hotel, B&B, agriturismi, resort", gradient: "from-purple-500/80 to-violet-400", emoji: "🏨", modules: "Camere · Booking · Ospiti · Concierge", image: cartoonHotel }];
 
 
   const extraSectors = [
@@ -2695,15 +2696,15 @@ const LandingPage = () => {
 
 
   const services = [
-  { icon: <Brain className="w-4 h-4 sm:w-5 sm:h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni quotidiane.", tag: "IA", color: "from-primary to-accent" },
-  { icon: <Smartphone className="w-4 h-4 sm:w-5 sm:h-5" />, title: "App White Label", desc: "App professionale installabile con il TUO brand, colori e dominio. Nessun logo di terzi, mai.", tag: "APP", color: "from-violet-500 to-primary" },
-  { icon: <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini, prenotazioni corse o camere da un unico pannello centralizzato.", tag: "OPS", color: "from-indigo-400 to-violet-500" },
-  { icon: <Shield className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano nel tuo archivio privato. Solo le migliori costruiscono la tua reputazione online.", tag: "BRAND", color: "from-purple-400 to-violet-500" },
-  { icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà digitale. Trasforma i visitatori in clienti ricorrenti.", tag: "GROWTH", color: "from-fuchsia-500/80 to-purple-500" },
-  { icon: <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, performance staff, trend e fatturazione elettronica integrata.", tag: "FINANCE", color: "from-indigo-500 to-violet-400" },
-  { icon: <Package className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, ricevi alert automatici, registra controlli igienico-sanitari e conformità.", tag: "OPS", color: "from-purple-500 to-primary" },
-  { icon: <Bell className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Marketing Automation", desc: "Push notification, campagne email/WhatsApp, promozioni mirate e segmentazione clienti avanzata.", tag: "MARKETING", color: "from-accent to-violet-500" },
-  { icon: <Lock className="w-4 h-4 sm:w-5 sm:h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR compliant, backup automatici, accessi multi-ruolo e audit trail.", tag: "SECURITY", color: "from-violet-400/60 to-indigo-400/60" }];
+  { icon: <Brain className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "AI Business Engine", desc: "L'IA analizza il tuo business, genera cataloghi, ottimizza prezzi e automatizza le operazioni.", tag: "IA", color: "from-primary to-accent" },
+  { icon: <Smartphone className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "App White Label", desc: "App professionale con il TUO brand, colori e dominio. Nessun logo di terzi.", tag: "APP", color: "from-violet-500 to-primary" },
+  { icon: <Calendar className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Prenotazioni & Ordini", desc: "Gestisci appuntamenti, ordini e prenotazioni da un unico pannello.", tag: "OPS", color: "from-indigo-400 to-violet-500" },
+  { icon: <Shield className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Review Shield™", desc: "Le recensioni negative restano private. Solo le migliori vanno online.", tag: "BRAND", color: "from-purple-400 to-violet-500" },
+  { icon: <Users className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "CRM & Fidelizzazione", desc: "Storico acquisti, preferenze, wallet fedeltà. Clienti ricorrenti.", tag: "GROWTH", color: "from-fuchsia-500/80 to-purple-500" },
+  { icon: <BarChart3 className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Analytics & Finance", desc: "Dashboard fatturato, margini, trend e fatturazione elettronica.", tag: "FINANCE", color: "from-indigo-500 to-violet-400" },
+  { icon: <Package className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Inventario & HACCP", desc: "Monitora scorte, alert automatici, controlli igienico-sanitari.", tag: "OPS", color: "from-purple-500 to-primary" },
+  { icon: <Bell className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Marketing Automation", desc: "Push, email, WhatsApp, promozioni mirate e segmentazione.", tag: "MARKETING", color: "from-accent to-violet-500" },
+  { icon: <Lock className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Sicurezza Enterprise", desc: "Crittografia AES-256, GDPR, backup automatici, audit trail.", tag: "SECURITY", color: "from-violet-400/60 to-indigo-400/60" }];
 
 
   const metrics = [
@@ -2741,12 +2742,12 @@ const LandingPage = () => {
 
 
   const whyUs = [
-  { icon: <Cpu className="w-5 h-5" />, title: "Tecnologia Proprietaria", desc: "Stack tecnologico sviluppato internamente. Non rivendiamo software altrui." },
-  { icon: <Workflow className="w-5 h-5" />, title: "Automazione Totale", desc: "Ogni processo ripetitivo viene eliminato. Dal primo contatto alla fatturazione." },
-  { icon: <Gauge className="w-5 h-5" />, title: "Performance Garantite", desc: "99.9% uptime, <200ms latenza, scaling automatico fino a milioni di utenti." },
-  { icon: <ServerCog className="w-5 h-5" />, title: "Aggiornamenti Continui", desc: "Nuove funzionalità ogni settimana. Il tuo sistema non invecchia mai." },
-  { icon: <Database className="w-5 h-5" />, title: "I Tuoi Dati, Per Sempre", desc: "Proprietà totale dei dati. Esporta tutto in qualsiasi momento. Zero lock-in." },
-  { icon: <Headphones className="w-5 h-5" />, title: "Supporto Dedicato", desc: "Team italiano disponibile 7/7. Non un chatbot, persone vere che risolvono." }];
+  { icon: <Cpu className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Tecnologia Proprietaria", desc: "Stack tecnologico sviluppato internamente. Non rivendiamo software altrui." },
+  { icon: <Workflow className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Automazione Totale", desc: "Ogni processo ripetitivo viene eliminato. Dal contatto alla fatturazione." },
+  { icon: <Gauge className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Performance Garantite", desc: "99.9% uptime, <200ms latenza, scaling automatico." },
+  { icon: <ServerCog className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Aggiornamenti Continui", desc: "Nuove funzionalità ogni settimana. Mai obsoleto." },
+  { icon: <Database className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "I Tuoi Dati, Per Sempre", desc: "Proprietà totale dei dati. Esporta tutto. Zero lock-in." },
+  { icon: <Headphones className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Supporto Dedicato", desc: "Team italiano 7/7. Persone vere che risolvono." }];
 
 
   return (
@@ -3860,9 +3861,9 @@ const LandingPage = () => {
                     whileHover={{ y: -6, scale: 1.04 }}>
                     
                     <div className="relative rounded-lg sm:rounded-xl border overflow-hidden h-full" style={{
-                      background: "linear-gradient(160deg, hsla(260,18%,10%,0.94), hsla(260,16%,7%,0.94))",
-                      borderColor: "hsla(265,50%,55%,0.1)",
-                      boxShadow: "0 2px 12px hsla(260,40%,5%,0.35), inset 0 1px 0 hsla(265,60%,65%,0.04)"
+                      background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(248 15% 97% / 0.93))",
+                      borderColor: "hsl(var(--primary) / 0.1)",
+                      boxShadow: "0 2px 12px hsl(var(--primary) / 0.05)"
                     }}>
                       {/* Top accent line */}
                       <div className="h-[1.5px] w-full" style={{ background: `linear-gradient(90deg, transparent, ${pain.color.includes("red") || pain.color.includes("rose") ? "hsla(0,70%,55%,0.5)" : pain.color.includes("amber") || pain.color.includes("yellow") ? "hsla(38,70%,55%,0.5)" : "hsla(25,70%,55%,0.5)"}, transparent)` }} />
@@ -5607,10 +5608,10 @@ const LandingPage = () => {
         <div className="relative mb-1 rounded-2xl overflow-hidden isolate">
           {/* Opaque panel so global homepage background doesn't bleed under circuit schema */}
           <div
-            className="absolute inset-0 z-0 pointer-events-none"
+            className="absolute inset-0 z-0 pointer-events-none rounded-2xl"
             style={{
-              background: "linear-gradient(160deg, hsla(230,16%,6%,0.99), hsla(265,16%,8%,0.98))",
-              border: "1px solid hsla(265,40%,45%,0.06)"
+              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.97), hsl(248 15% 97% / 0.95))",
+              border: "1px solid hsl(var(--border) / 0.25)"
             }} />
           
 
@@ -5803,11 +5804,11 @@ const LandingPage = () => {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.12 + 0.3, duration: 0.35 }} />
 
-                  <div className="relative rounded-xl border border-foreground/[0.07] bg-card/95 sm:bg-card/90 backdrop-blur-sm p-2 sm:p-3 overflow-hidden">
+                  <div className="relative rounded-xl border border-border/20 bg-card/98 backdrop-blur-sm p-2 sm:p-3 overflow-hidden">
                     <motion.div
                       className="relative w-[36px] h-[36px] sm:w-[62px] sm:h-[62px] rounded-lg mx-auto mb-1.5 sm:mb-2.5 overflow-hidden"
-                      style={{ background: "hsla(265,20%,8%,0.7)", border: "1px solid hsla(265,70%,60%,0.14)", backdropFilter: "blur(8px)" }}
-                      whileHover={{ rotate: 4, scale: 1.06, borderColor: "hsla(265,70%,60%,0.28)" }}>
+                      style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.12)" }}
+                      whileHover={{ rotate: 4, scale: 1.06, borderColor: "hsl(var(--primary) / 0.25)" }}>
 
                       <motion.div className="absolute inset-0 pointer-events-none"
                       style={{ background: "linear-gradient(180deg, transparent 40%, hsla(265,80%,70%,0.08) 50%, transparent 60%)" }}
