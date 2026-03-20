@@ -2742,12 +2742,12 @@ const LandingPage = () => {
 
 
   const whyUs = [
-  { icon: <Cpu className="w-5 h-5" />, title: "Tecnologia Proprietaria", desc: "Stack tecnologico sviluppato internamente. Non rivendiamo software altrui." },
-  { icon: <Workflow className="w-5 h-5" />, title: "Automazione Totale", desc: "Ogni processo ripetitivo viene eliminato. Dal primo contatto alla fatturazione." },
-  { icon: <Gauge className="w-5 h-5" />, title: "Performance Garantite", desc: "99.9% uptime, <200ms latenza, scaling automatico fino a milioni di utenti." },
-  { icon: <ServerCog className="w-5 h-5" />, title: "Aggiornamenti Continui", desc: "Nuove funzionalità ogni settimana. Il tuo sistema non invecchia mai." },
-  { icon: <Database className="w-5 h-5" />, title: "I Tuoi Dati, Per Sempre", desc: "Proprietà totale dei dati. Esporta tutto in qualsiasi momento. Zero lock-in." },
-  { icon: <Headphones className="w-5 h-5" />, title: "Supporto Dedicato", desc: "Team italiano disponibile 7/7. Non un chatbot, persone vere che risolvono." }];
+  { icon: <Cpu className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Tecnologia Proprietaria", desc: "Stack tecnologico sviluppato internamente. Non rivendiamo software altrui." },
+  { icon: <Workflow className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Automazione Totale", desc: "Ogni processo ripetitivo viene eliminato. Dal contatto alla fatturazione." },
+  { icon: <Gauge className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Performance Garantite", desc: "99.9% uptime, <200ms latenza, scaling automatico." },
+  { icon: <ServerCog className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Aggiornamenti Continui", desc: "Nuove funzionalità ogni settimana. Mai obsoleto." },
+  { icon: <Database className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "I Tuoi Dati, Per Sempre", desc: "Proprietà totale dei dati. Esporta tutto. Zero lock-in." },
+  { icon: <Headphones className="w-3.5 h-3.5 sm:w-5 sm:h-5" />, title: "Supporto Dedicato", desc: "Team italiano 7/7. Persone vere che risolvono." }];
 
 
   return (
