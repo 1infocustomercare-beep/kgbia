@@ -37,6 +37,7 @@ import { GuidesToggle } from "@/components/ui/info-guide";
 import InfoGuide from "@/components/ui/info-guide";
 import { RefreshCw, Palette, Pencil, Upload, Save, X as XIcon } from "lucide-react";
 import { AllIndustriesShowcase } from "@/components/public/IndustryPhoneShowcase";
+import PartnerPortfolio from "@/components/partner/PartnerPortfolio";
 
 type Tab = "dashboard" | "sandbox" | "toolkit" | "earnings" | "pricing" | "recruitment" | "investment" | "team" | "vault" | "showcase" | "projects";
 
