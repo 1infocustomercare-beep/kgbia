@@ -309,8 +309,8 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
         n.x += n.vx; n.y += n.vy;
         if (n.x < 0 || n.x > 1) n.vx *= -1; if (n.y < 0 || n.y > 1) n.vy *= -1;
         const c = colorPalette[n.ci];
-        ctx.beginPath(); ctx.arc(n.x * w, n.y * h, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = hsl(c, 0.12 * anyA); ctx.fill();
+        ctx.beginPath(); ctx.arc(n.x * w, n.y * h, n.r * 1.3, 0, Math.PI * 2);
+        ctx.fillStyle = hsl(c, 0.28 * anyA); ctx.fill();
       }
       for (let i = 0; i < mesh.length; i++) {
         for (let j = i + 1; j < Math.min(i + ckR, mesh.length); j++) {
@@ -318,8 +318,8 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           const d = Math.sqrt(dx * dx + dy * dy);
           if (d < 0.18) {
             ctx.beginPath(); ctx.moveTo(mesh[i].x * w, mesh[i].y * h); ctx.lineTo(mesh[j].x * w, mesh[j].y * h);
-            ctx.strokeStyle = hsl(colorPalette[mesh[i].ci], (1 - d / 0.18) * 0.06 * anyA);
-            ctx.lineWidth = 0.4; ctx.stroke();
+            ctx.strokeStyle = hsl(colorPalette[mesh[i].ci], (1 - d / 0.18) * 0.15 * anyA);
+            ctx.lineWidth = 0.6; ctx.stroke();
           }
         }
       }
