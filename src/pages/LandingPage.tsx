@@ -6456,13 +6456,13 @@ const LandingPage = () => {
               Garanzia <span className="text-shimmer">Risultati Garantiti</span>
             </h2>
             <p className="text-sm text-foreground/40 max-w-md mx-auto leading-[1.8] mb-6">
-              Prova Empire per 30 giorni senza impegno. Se non vedi risultati concreti, ti offriamo un mese di assistenza premium gratuita per ottimizzare tutto insieme. Il tuo successo è la nostra priorità.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-              {[
-              { icon: <Check className="w-4 h-4" />, text: "30 giorni senza impegno" },
-              { icon: <Check className="w-4 h-4" />, text: "Assistenza dedicata inclusa" },
-              { icon: <Check className="w-4 h-4" />, text: "Cancella quando vuoi" }].
+               Prova Empire per 90 giorni senza impegno. Se non vedi risultati concreti, ti rimborsiamo. Zero rischi. Il tuo successo è la nostra priorità.
+             </p>
+             <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+               {[
+               { icon: <Check className="w-4 h-4" />, text: "90 giorni senza impegno" },
+               { icon: <Check className="w-4 h-4" />, text: "Assistenza dedicata inclusa" },
+               { icon: <Check className="w-4 h-4" />, text: "Cancella quando vuoi" }].
               map((g, i) =>
               <div key={i} className="flex items-center gap-2 text-xs text-foreground/50">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">{g.icon}</div>
