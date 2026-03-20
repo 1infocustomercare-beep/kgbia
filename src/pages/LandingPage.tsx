@@ -3568,29 +3568,30 @@ const LandingPage = () => {
         </motion.div>
 
         {/* Quick features grid */}
-        <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-2"
+        <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-3"
         variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
           {[
-            { icon: <Globe className="w-3.5 h-3.5" />, title: "Siti Web Premium", color: "var(--empire-violet)" },
-            { icon: <QrCode className="w-3.5 h-3.5" />, title: "Menu & Cataloghi QR", color: "var(--neon-emerald)" },
-            { icon: <Wallet className="w-3.5 h-3.5" />, title: "Loyalty & Fidelity", color: "var(--neon-cyan)" },
-            { icon: <Headphones className="w-3.5 h-3.5" />, title: "Voice Agent IA", color: "var(--neon-magenta)" },
-            { icon: <MapPin className="w-3.5 h-3.5" />, title: "Multi-Sede", color: "var(--empire-violet)" },
-            { icon: <Lock className="w-3.5 h-3.5" />, title: "GDPR & Sicurezza", color: "var(--neon-emerald)" },
-            { icon: <Receipt className="w-3.5 h-3.5" />, title: "Fatturazione Elettronica", color: "var(--neon-cyan)" },
-            { icon: <Sparkles className="w-3.5 h-3.5" />, title: "Personalizzazione Totale", color: "var(--neon-magenta)" },
+            { icon: <Globe className="w-4 h-4" />, title: "Siti Web Premium", color: "var(--empire-violet)" },
+            { icon: <QrCode className="w-4 h-4" />, title: "Menu & Cataloghi QR", color: "var(--neon-emerald)" },
+            { icon: <Wallet className="w-4 h-4" />, title: "Loyalty & Fidelity", color: "var(--neon-cyan)" },
+            { icon: <Headphones className="w-4 h-4" />, title: "Voice Agent IA", color: "var(--neon-magenta)" },
+            { icon: <MapPin className="w-4 h-4" />, title: "Multi-Sede", color: "var(--empire-violet)" },
+            { icon: <Lock className="w-4 h-4" />, title: "GDPR & Sicurezza", color: "var(--neon-emerald)" },
+            { icon: <Receipt className="w-4 h-4" />, title: "Fatturazione Elettronica", color: "var(--neon-cyan)" },
+            { icon: <Sparkles className="w-4 h-4" />, title: "Personalizzazione Totale", color: "var(--neon-magenta)" },
           ].map((f, i) =>
           <motion.div key={i} variants={popIn}
-          className="relative p-2.5 rounded-lg overflow-hidden text-center"
+          className="relative p-3.5 rounded-2xl overflow-hidden text-center"
           style={{
-            background: "linear-gradient(145deg, hsl(0 0% 100% / 0.9), hsl(248,12%,97% / 0.9))",
-            border: `1px solid hsl(${f.color} / 0.1)`,
+            background: "hsl(0 0% 100% / 0.95)",
+            border: `1px solid hsl(${f.color} / 0.12)`,
+            boxShadow: `0 2px 12px hsl(${f.color} / 0.06)`
           }}>
-            <div className="w-7 h-7 mx-auto rounded-lg flex items-center justify-center mb-1.5"
-            style={{ background: `hsl(${f.color} / 0.12)`, color: `hsl(${f.color})` }}>
+            <div className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-2"
+            style={{ background: `linear-gradient(135deg, hsl(${f.color}), hsl(${f.color} / 0.8))`, color: "white", boxShadow: `0 3px 12px hsl(${f.color} / 0.25)` }}>
               {f.icon}
             </div>
-            <h4 className="text-[0.58rem] font-heading font-bold text-foreground/80 leading-tight">{f.title}</h4>
+            <h4 className="text-[0.65rem] font-heading font-bold text-foreground/85 leading-tight">{f.title}</h4>
           </motion.div>
           )}
         </motion.div>
