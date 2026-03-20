@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
@@ -3031,28 +3031,181 @@ export function IndustryShowcaseSection({
   );
 }
 
+const SECTOR_CATEGORIES: { label: string; emoji: string; ids: IndustryId[] }[] = [
+  { label: "Ristorazione", emoji: "🍽️", ids: ["food", "agriturismo"] as IndustryId[] },
+  { label: "Trasporti", emoji: "🚗", ids: ["ncc", "logistics"] },
+  { label: "Benessere", emoji: "💆", ids: ["beauty", "fitness", "tattoo"] },
+  { label: "Salute", emoji: "🏥", ids: ["healthcare", "veterinary"] },
+  { label: "Ospitalità", emoji: "🏨", ids: ["hospitality", "beach"] },
+  { label: "Commercio", emoji: "🛍️", ids: ["retail"] },
+  { label: "Servizi Tecnici", emoji: "🔧", ids: ["plumber", "electrician", "construction", "gardening", "cleaning", "garage"] },
+  { label: "Professionisti", emoji: "⚖️", ids: ["legal", "accounting", "photography"] },
+  { label: "Educazione & Famiglia", emoji: "👶", ids: ["childcare", "education"] },
+  { label: "Eventi & Custom", emoji: "🎉", ids: ["events", "custom"] },
+];
+
 export function AllIndustriesShowcase({ onViewDemo }: { onViewDemo?: (id: IndustryId, slug: string) => void }) {
+  const [openSector, setOpenSector] = useState<IndustryId | null>(null);
+  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
   const allIds = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
+
+  const filteredIds = allIds.filter(id => {
+    const cfg = INDUSTRY_CONFIGS[id];
+    const matchesSearch = !search ||
+      cfg.label.toLowerCase().includes(search.toLowerCase()) ||
+      cfg.description.toLowerCase().includes(search.toLowerCase());
+    if (activeCategory) {
+      const cat = SECTOR_CATEGORIES.find(c => c.label === activeCategory);
+      return matchesSearch && cat?.ids.includes(id);
+    }
+    return matchesSearch;
+  });
+
+  const grouped = activeCategory
+    ? [{ label: activeCategory, emoji: SECTOR_CATEGORIES.find(c => c.label === activeCategory)?.emoji || "", ids: filteredIds }]
+    : SECTOR_CATEGORIES.map(cat => ({
+        ...cat,
+        ids: cat.ids.filter(id => filteredIds.includes(id)),
+      })).filter(cat => cat.ids.length > 0);
 
   return (
     <div className="space-y-3">
-      {allIds.map(id => {
-        const slug = DEMO_SLUGS[id];
-        return (
-          <motion.div key={id}
-            className="rounded-2xl border border-white/[0.06] p-4 sm:p-5 hover:border-white/15 transition-all"
-            style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005))" }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-          >
-            <IndustryShowcaseSection
-              industryId={id}
-              onViewDemo={() => onViewDemo?.(id, slug)}
-            />
-          </motion.div>
-        );
-      })}
+      {/* Search */}
+      <div className="relative">
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Cerca settore..."
+          className="w-full px-4 py-2.5 pl-9 rounded-xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/25 transition-colors"
+        />
+        <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+
+      {/* Category pills */}
+      <div className="flex flex-wrap gap-1.5">
+        <button
+          onClick={() => setActiveCategory(null)}
+          className={`px-3 py-1.5 rounded-full text-[10px] font-bold transition-all ${!activeCategory ? "bg-white/15 text-white border border-white/20" : "bg-white/[0.04] text-white/50 border border-white/[0.06]"}`}
+        >
+          Tutti ({allIds.length})
+        </button>
+        {SECTOR_CATEGORIES.map(cat => {
+          const count = cat.ids.filter(id => {
+            const cfg = INDUSTRY_CONFIGS[id];
+            return !search || cfg.label.toLowerCase().includes(search.toLowerCase()) || cfg.description.toLowerCase().includes(search.toLowerCase());
+          }).length;
+          if (count === 0) return null;
+          return (
+            <button
+              key={cat.label}
+              onClick={() => setActiveCategory(activeCategory === cat.label ? null : cat.label)}
+              className={`px-3 py-1.5 rounded-full text-[10px] font-bold transition-all ${activeCategory === cat.label ? "bg-white/15 text-white border border-white/20" : "bg-white/[0.04] text-white/50 border border-white/[0.06]"}`}
+            >
+              {cat.emoji} {cat.label} ({count})
+            </button>
+          );
+        })}
+      </div>
+
+      <p className="text-[10px] text-white/30 px-1">{filteredIds.length} settori{search ? ` per "${search}"` : ""}</p>
+
+      {/* Accordion */}
+      {grouped.map(cat => (
+        <div key={cat.label} className="space-y-1.5">
+          {!activeCategory && (
+            <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest px-1 pt-2">
+              {cat.emoji} {cat.label}
+            </p>
+          )}
+          {cat.ids.map(id => {
+            const cfg = INDUSTRY_CONFIGS[id];
+            const demo = DEMO_INDUSTRY_DATA[id];
+            const slug = DEMO_SLUGS[id];
+            const isOpen = openSector === id;
+
+            return (
+              <motion.div
+                key={id}
+                className="rounded-2xl border overflow-hidden transition-colors"
+                style={{
+                  borderColor: isOpen ? `${cfg.defaultPrimaryColor}30` : "rgba(255,255,255,0.06)",
+                  background: isOpen
+                    ? `linear-gradient(135deg, ${cfg.defaultPrimaryColor}08, rgba(255,255,255,0.02))`
+                    : "rgba(255,255,255,0.015)",
+                }}
+                layout
+              >
+                <button
+                  onClick={() => setOpenSector(isOpen ? null : id)}
+                  className="w-full flex items-center gap-3 p-3.5 active:scale-[0.98] transition-transform"
+                >
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+                    style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}
+                  >
+                    {cfg.emoji}
+                  </div>
+                  <div className="flex-1 text-left min-w-0">
+                    <p className="text-sm font-bold text-white truncate">{cfg.label}</p>
+                    <p className="text-[10px] text-white/35 truncate">{demo?.companyName || cfg.description}</p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {onViewDemo && (
+                      <motion.span
+                        onClick={(e) => { e.stopPropagation(); onViewDemo(id, slug); }}
+                        className="px-3 py-1.5 rounded-lg text-[9px] font-bold border border-white/10 text-white/60 hover:bg-white/5 transition-colors"
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Demo →
+                      </motion.span>
+                    )}
+                    <motion.div
+                      animate={{ rotate: isOpen ? 180 : 0 }}
+                      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                      className="w-6 h-6 rounded-full flex items-center justify-center"
+                      style={{ background: isOpen ? `${cfg.defaultPrimaryColor}20` : "rgba(255,255,255,0.05)" }}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white/60">
+                        <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </motion.div>
+                  </div>
+                </button>
+
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-3 pb-4">
+                        <IndustryPhoneShowcase industryId={id} />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
+        </div>
+      ))}
+
+      {filteredIds.length === 0 && (
+        <div className="py-12 text-center">
+          <p className="text-sm text-white/40">Nessun settore trovato</p>
+          <button onClick={() => { setSearch(""); setActiveCategory(null); }} className="text-xs text-primary mt-2">
+            Resetta filtri
+          </button>
+        </div>
+      )}
     </div>
   );
 }
