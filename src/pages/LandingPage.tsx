@@ -1000,7 +1000,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
   return (
     <Section id="pricing" className="relative overflow-hidden" style={{
-      background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,18%,96%,0.85) 35%, hsla(248,12%,97%,0.85) 65%, hsla(220,20%,98%,0.88) 100%)"
+      background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(215 22% 94%) 35%, hsl(235 18% 96%) 65%, hsl(220 20% 97%) 100%)"
     }}>
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.04]"
@@ -3489,7 +3489,7 @@ const LandingPage = () => {
                              COSA FA EMPIRE — Quick Feature Grid
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(168,15%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 30% 97%) 50%, hsl(0 0% 100%) 100%)"
       }}>
         <div className="text-center mb-10">
           <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
@@ -3927,7 +3927,7 @@ const LandingPage = () => {
                              VIDEO HERO — Business Transformation
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,25%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(235 22% 95%) 50%, hsl(220 20% 97%) 100%)"
       }}>
         {/* Premium ambient glows — discovery/innovation luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4038,7 +4038,7 @@ const LandingPage = () => {
                              SETTORI
                             ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(248,15%,96%,0.85) 35%, hsla(168,12%,97%,0.85) 65%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(168 18% 96%) 35%, hsl(180 15% 97%) 65%, hsl(0 0% 100%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Premium violet mesh glow — top-left */}
@@ -5114,7 +5114,7 @@ const LandingPage = () => {
                              BUILD ANYTHING — Streamlined Conversion Section
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,20%,97%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(248 20% 95%) 50%, hsl(220 20% 97%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6256,7 +6256,7 @@ const LandingPage = () => {
                              TESTIMONIALS — Auto-scroll carousel
                             ═══════════════════════════════════════════ */}
       <Section id="testimonials" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,20%,97%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 25% 96%) 50%, hsl(0 0% 100%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6387,7 +6387,7 @@ const LandingPage = () => {
                              PARTNER PROGRAM
                             ═══════════════════════════════════════════ */}
       <Section id="partner" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(168,15%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(168 20% 95%) 50%, hsl(220 20% 97%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[6%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6562,7 +6562,7 @@ const LandingPage = () => {
                              FAQ
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(248,18%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(248 18% 96%) 50%, hsl(0 0% 100%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6630,7 +6630,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              GARANZIA TOTALE — Risk Reversal
                             ═══════════════════════════════════════════ */}
-      <Section>
+      <Section style={{ background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(215 25% 95%) 50%, hsl(220 20% 97%) 100%)" }}>
         <motion.div className="relative max-w-2xl mx-auto p-8 sm:p-12 rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background to-accent/[0.03] text-center overflow-hidden"
         initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
           <div className="absolute inset-0 premium-holo-grid opacity-20 pointer-events-none" />
@@ -6671,7 +6671,7 @@ const LandingPage = () => {
       </Suspense>
 
       {/* ═══════ FINAL CTA ═══════ */}
-      <Section>
+      <Section style={{ background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(248 15% 96%) 50%, hsl(0 0% 100%) 100%)" }}>
         <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.08] via-deep-black/80 to-accent/[0.04] border border-primary/15 overflow-hidden animated-border">
           <div className="absolute inset-0 aurora-mesh opacity-30" />
           {/* Violet ambient glow */}
