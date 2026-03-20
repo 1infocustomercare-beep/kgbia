@@ -3321,46 +3321,21 @@ const LandingPage = () => {
        <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-28 sm:pt-28 pb-20 sm:pb-16"
       style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Cinematic video background ═══ */}
-        <div className="absolute inset-0" style={{ zIndex: 2 }}>
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload={IS_MOBILE_LP ? "none" : "auto"}
-            controls={false}
-            disablePictureInPicture
-            disableRemotePlayback
-            className="absolute inset-0 w-full h-full object-cover [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-enclosure]:hidden [&::-webkit-media-controls-panel]:hidden [&::-webkit-media-controls-start-playback-button]:hidden"
-            style={{ filter: "brightness(0.85) saturate(1.1)", WebkitAppearance: "none" } as any}>
-            
-            <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4" />
-          </video>
-          {/* Cinematic vignette overlays */}
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsla(220,20%,98%,0.85) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsla(220,20%,98%,0.8) 0%, transparent 15%, transparent 85%, hsla(220,20%,98%,0.8) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
-        </div>
+        {/* ═══ LAYER 0: Clean premium gradient background ═══ */}
+        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(220 25% 96%) 0%, hsl(215 30% 94%) 25%, hsl(240 20% 96%) 50%, hsl(200 25% 95%) 75%, hsl(220 20% 97%) 100%)" }} />
 
-        {/* ═══ LAYER 1: Aurora boreale CSS ═══ */}
+        {/* ═══ LAYER 1: Soft ambient blobs ═══ */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
-          <div className="aurora-blob-1 absolute w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] rounded-full opacity-[0.05]"
-            style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.8), transparent 65%)", filter: "blur(80px)", top: "10%", left: "15%" }} />
-          <div className="aurora-blob-2 absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full opacity-[0.05]"
-            style={{ background: "radial-gradient(circle, hsla(265,60%,55%,0.7), transparent 65%)", filter: "blur(80px)", top: "20%", right: "10%" }} />
-          <div className="aurora-blob-3 absolute w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] rounded-full opacity-[0.04]"
-            style={{ background: "radial-gradient(circle, hsla(210,55%,55%,0.6), transparent 65%)", filter: "blur(80px)", bottom: "15%", left: "40%" }} />
+          <div className="aurora-blob-1 absolute w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(215 90% 52% / 0.08), transparent 65%)", filter: "blur(100px)", top: "5%", left: "10%" }} />
+          <div className="aurora-blob-2 absolute w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(248 60% 56% / 0.06), transparent 65%)", filter: "blur(100px)", top: "15%", right: "5%" }} />
+          <div className="aurora-blob-3 absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(168 72% 38% / 0.06), transparent 65%)", filter: "blur(100px)", bottom: "10%", left: "35%" }} />
         </div>
 
-        {/* ═══ LAYER 1b: Central glow orb — skip on mobile for GPU savings ═══ */}
-        {!IS_MOBILE_LP && <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
-          <motion.div className="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] rounded-full blur-[180px]"
-          style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.06), hsla(35,45%,50%,0.03), transparent 70%)" }}
-          animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />
-          
-        </div>}
+        {/* ═══ LAYER 1b: Subtle geometric grid ═══ */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 3, opacity: 0.04, backgroundImage: "linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
