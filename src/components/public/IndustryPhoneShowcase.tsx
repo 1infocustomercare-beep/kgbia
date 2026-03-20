@@ -927,70 +927,74 @@ export function IPhoneFrame({
         <div className="absolute -inset-4 rounded-[48px] blur-2xl pointer-events-none transition-opacity"
           style={{ background: `radial-gradient(circle, ${color}${isCenter ? '50' : '25'}, transparent 70%)`, opacity: isCenter ? 0.35 : 0.15 }} />
 
-        {/* iPhone 15 Pro shell — titanium bezel */}
-        <div className="relative rounded-[28px] sm:rounded-[40px] overflow-hidden"
+        {/* iPhone 16 Pro shell — titanium bezel */}
+        <div className="relative rounded-[22px] sm:rounded-[36px] overflow-hidden"
           style={{
-            border: "3px solid rgba(180,180,190,0.22)",
-            background: "linear-gradient(180deg, #3a3a3c 0%, #2c2c2e 3%, #1c1c1e 6%, #0a0a0a 100%)",
-            boxShadow: `0 30px 90px rgba(0,0,0,0.7), 0 0 0 0.5px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(255,255,255,0.04)`,
+            border: "2.5px solid rgba(140,140,150,0.3)",
+            background: "linear-gradient(180deg, #48484a 0%, #3a3a3c 2%, #2c2c2e 4%, #1c1c1e 8%, #0a0a0a 100%)",
+            boxShadow: `0 30px 90px rgba(0,0,0,0.7), 0 0 0 0.5px rgba(255,255,255,0.15), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(255,255,255,0.04)`,
           }}>
 
           {/* Glass reflection overlay */}
-          <div className="absolute inset-0 pointer-events-none z-30 rounded-[28px] sm:rounded-[40px]"
-            style={{ background: "linear-gradient(165deg, rgba(255,255,255,0.08) 0%, transparent 35%, transparent 70%, rgba(255,255,255,0.03) 100%)" }} />
+          <div className="absolute inset-0 pointer-events-none z-30 rounded-[22px] sm:rounded-[36px]"
+            style={{ background: "linear-gradient(165deg, rgba(255,255,255,0.1) 0%, transparent 30%, transparent 70%, rgba(255,255,255,0.03) 100%)" }} />
 
-          {/* Side buttons — power + volume */}
-          <div className="absolute -left-[4px] top-[28%] w-[3px] h-[14%] rounded-l-full" style={{ background: "rgba(180,180,190,0.25)" }} />
-          <div className="absolute -left-[4px] top-[44%] w-[3px] h-[10%] rounded-l-full" style={{ background: "rgba(180,180,190,0.25)" }} />
-          <div className="absolute -left-[4px] top-[56%] w-[3px] h-[10%] rounded-l-full" style={{ background: "rgba(180,180,190,0.25)" }} />
-          <div className="absolute -right-[4px] top-[36%] w-[3px] h-[14%] rounded-r-full" style={{ background: "rgba(180,180,190,0.25)" }} />
+          {/* Side buttons — action + volume (left) + power (right) */}
+          <div className="absolute -left-[3.5px] top-[22%] w-[3px] h-[5%] rounded-l-full" style={{ background: "linear-gradient(180deg, rgba(160,160,170,0.35), rgba(120,120,130,0.25))" }} />
+          <div className="absolute -left-[3.5px] top-[30%] w-[3px] h-[12%] rounded-l-full" style={{ background: "linear-gradient(180deg, rgba(160,160,170,0.35), rgba(120,120,130,0.25))" }} />
+          <div className="absolute -left-[3.5px] top-[44%] w-[3px] h-[12%] rounded-l-full" style={{ background: "linear-gradient(180deg, rgba(160,160,170,0.35), rgba(120,120,130,0.25))" }} />
+          <div className="absolute -right-[3.5px] top-[33%] w-[3px] h-[14%] rounded-r-full" style={{ background: "linear-gradient(180deg, rgba(160,160,170,0.35), rgba(120,120,130,0.25))" }} />
 
-          {/* Status bar */}
-          <div className="flex items-center justify-between px-3 pt-1.5 pb-0">
-            <span className="text-[5px] font-semibold text-white/60 tracking-tight" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>9:41</span>
-            <div className="flex items-center gap-[3px]">
-              <svg viewBox="0 0 16 12" className="w-[10px] h-[7px]" fill="none">
-                <rect x="0" y="4" width="3" height="8" rx="0.5" fill="white" opacity="0.5" />
-                <rect x="4" y="2.5" width="3" height="9.5" rx="0.5" fill="white" opacity="0.5" />
-                <rect x="8" y="1" width="3" height="11" rx="0.5" fill="white" opacity="0.5" />
-                <rect x="12" y="0" width="3" height="12" rx="0.5" fill="white" opacity="0.5" />
-              </svg>
-              <span className="text-[5px] text-white/50 font-medium">5G</span>
-              <svg viewBox="0 0 25 12" className="w-[14px] h-[7px]">
-                <rect x="0" y="0.5" width="21" height="11" rx="2" stroke="white" strokeOpacity="0.35" strokeWidth="1" fill="none" />
-                <rect x="22" y="3.5" width="2" height="5" rx="0.5" fill="white" fillOpacity="0.3" />
-                <rect x="1.5" y="2" width="14" height="8" rx="1" fill="white" fillOpacity="0.5" />
-              </svg>
+          {/* Screen area with inner radius */}
+          <div className="m-[3px] sm:m-[4px] rounded-[19px] sm:rounded-[32px] overflow-hidden relative" style={{ background: "#000" }}>
+
+            {/* Status bar */}
+            <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 pt-[5px] pb-0">
+              <span className="text-[5.5px] font-semibold text-white/70 tracking-tight" style={{ fontFamily: "SF Pro Display, system-ui, -apple-system, sans-serif" }}>9:41</span>
+              <div className="flex items-center gap-[3px]">
+                <svg viewBox="0 0 16 12" className="w-[10px] h-[7px]" fill="none">
+                  <rect x="0" y="4" width="3" height="8" rx="0.5" fill="white" opacity="0.6" />
+                  <rect x="4" y="2.5" width="3" height="9.5" rx="0.5" fill="white" opacity="0.6" />
+                  <rect x="8" y="1" width="3" height="11" rx="0.5" fill="white" opacity="0.6" />
+                  <rect x="12" y="0" width="3" height="12" rx="0.5" fill="white" opacity="0.6" />
+                </svg>
+                <span className="text-[5px] text-white/50 font-semibold">5G</span>
+                <svg viewBox="0 0 25 12" className="w-[14px] h-[7px]">
+                  <rect x="0" y="0.5" width="21" height="11" rx="2" stroke="white" strokeOpacity="0.35" strokeWidth="1" fill="none" />
+                  <rect x="22" y="3.5" width="2" height="5" rx="0.5" fill="white" fillOpacity="0.3" />
+                  <rect x="1.5" y="2" width="14" height="8" rx="1" fill="white" fillOpacity="0.55" />
+                </svg>
+              </div>
             </div>
-          </div>
 
-          {/* Dynamic Island */}
-          <div className="flex justify-center pt-0.5 pb-0.5">
-            <div className="w-[42px] h-[12px] bg-black rounded-full relative" style={{ boxShadow: "0 0 0 0.5px rgba(255,255,255,0.06), inset 0 0 4px rgba(0,0,0,0.8)" }}>
-              <div className="absolute right-[7px] top-1/2 -translate-y-1/2 w-[4px] h-[4px] rounded-full" style={{ background: "radial-gradient(circle, #1a1a2e 40%, #0d0d15 100%)", boxShadow: "inset 0 0 1px rgba(255,255,255,0.08)" }} />
+            {/* Dynamic Island */}
+            <div className="absolute top-[2px] left-1/2 -translate-x-1/2 z-20">
+              <div className="w-[38px] h-[11px] bg-black rounded-full relative" style={{ boxShadow: "0 0 0 0.5px rgba(255,255,255,0.06)" }}>
+                <div className="absolute right-[6px] top-1/2 -translate-y-1/2 w-[3.5px] h-[3.5px] rounded-full" style={{ background: "radial-gradient(circle, #1a1a2e 40%, #0d0d15 100%)", boxShadow: "inset 0 0 1px rgba(255,255,255,0.08)" }} />
+              </div>
             </div>
-          </div>
 
-          {/* Screen content */}
-          <div className="aspect-[9/17] overflow-hidden relative" style={{ minHeight: 210, background: "#000" }}>
+            {/* Screen content */}
+            <div className="aspect-[9/19.5] overflow-hidden relative" style={{ background: "#000" }}>
 
-            {/* ═══ MOCKUP IMAGE MODE — Use real screenshots when available ═══ */}
-            {(() => {
-              const mockups = SECTOR_MOCKUP_IMAGES[industryId];
-              if (mockups && mockups.length > 0) {
-                const imgUrl = mockups[index % mockups.length];
-                return (
-                  <img
-                    src={imgUrl}
-                    alt={`${companyName} - ${screen.label}`}
-                    className="w-full h-full object-cover object-top"
-                    loading="lazy"
-                    draggable={false}
-                  />
-                );
-              }
-              return null;
-            })()}
+              {/* ═══ MOCKUP IMAGE MODE — Use real screenshots when available ═══ */}
+              {(() => {
+                const mockups = SECTOR_MOCKUP_IMAGES[industryId];
+                if (mockups && mockups.length > 0) {
+                  const imgUrl = mockups[index % mockups.length];
+                  return (
+                    <img
+                      src={imgUrl}
+                      alt={`${companyName} - ${screen.label}`}
+                      className="w-full h-full object-cover object-center"
+                      loading="lazy"
+                      draggable={false}
+                      style={{ objectPosition: "center 15%" }}
+                    />
+                  );
+                }
+                return null;
+              })()}
 
             {/* ═══ CSS FALLBACK — Only renders when no mockup images are available ═══ */}
             {!SECTOR_MOCKUP_IMAGES[industryId]?.length && (<>
@@ -2718,11 +2722,12 @@ export function IPhoneFrame({
               </div>
             )}
             </>)}
-          </div>
+            </div>
 
-          {/* Home indicator */}
-          <div className="flex justify-center py-1.5">
-            <div className="w-9 h-[3px] rounded-full bg-white/20" />
+            {/* Home indicator bar */}
+            <div className="flex justify-center py-1.5">
+              <div className="w-9 h-[3px] rounded-full bg-white/20" />
+            </div>
           </div>
         </div>
       </div>
