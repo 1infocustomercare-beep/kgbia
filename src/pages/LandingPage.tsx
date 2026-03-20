@@ -1293,8 +1293,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* Empire upsell on non-empire cards */}
                       {!isEmpire &&
                     <div className="mt-2 p-2 rounded-lg bg-accent/[0.04] border border-accent/10 cursor-pointer" onClick={(e) => {e.stopPropagation();setSelectedPackage("empire");}}>
-                          <p className="text-[0.5rem] text-accent/70 text-center">
-                            ⚡ Con Empire risparmi <strong>€{p.commission === "2%" ? "6.403" : "4.200"}</strong> in più e hai <strong>0% commissioni per sempre</strong> →
+                          <p className="text-[0.45rem] text-accent/70 text-center leading-snug">
+                            ⚡ Con Empire risparmi <strong>€{p.commission === "2%" ? "6.403" : "4.200"}</strong> e 0% commissioni →
                           </p>
                         </div>
                     }
