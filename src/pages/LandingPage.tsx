@@ -1031,21 +1031,27 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
           </button>
         </motion.div>
 
-        {/* Sector Selector Dropdown */}
-        <motion.div className="max-w-sm mx-auto mt-4" initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        {/* Sector Selector — Lucide Icons */}
+        <motion.div className="max-w-lg mx-auto mt-4" initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <p className="text-[0.55rem] font-heading text-foreground/30 tracking-[2px] uppercase text-center mb-2">Il tuo settore</p>
-          <div className="relative">
-            <select
-              value={selectedSector}
-              onChange={(e) => {setSelectedSector(e.target.value as PricingSector);setSelectedAddons(new Set());}}
-              className="w-full appearance-none px-4 py-3 rounded-xl border border-border/30 backdrop-blur-sm text-foreground text-sm font-heading font-semibold text-center cursor-pointer focus:outline-none focus:border-primary/40 transition-colors"
-              style={{ background: "linear-gradient(145deg, hsla(0,0%,4%,0.98), hsla(38,16%,8%,0.92))" }}>
-              
-              {PRICING_SECTORS.map((s) =>
-              <option key={s.id} value={s.id}>{s.emoji} {s.label}</option>
-              )}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30 pointer-events-none" />
+          <div className="flex flex-wrap justify-center gap-1.5">
+            {PRICING_SECTORS.map((s) => {
+              const isActive = selectedSector === s.id;
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => {setSelectedSector(s.id);setSelectedAddons(new Set());}}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[0.6rem] font-heading font-semibold transition-all border ${
+                    isActive
+                      ? "border-primary/40 bg-primary/10 text-primary shadow-[0_0_12px_hsla(265,70%,60%,0.15)]"
+                      : "border-border/20 bg-foreground/[0.02] text-foreground/40 hover:text-foreground/60 hover:border-border/40"
+                  }`}>
+                  {PRICING_SECTOR_ICONS[s.id]}
+                  <span className="hidden sm:inline">{s.label}</span>
+                  <span className="sm:hidden">{s.label.split(" ")[0]}</span>
+                </button>
+              );
+            })}
           </div>
           {sectorFeatures.length > 0 &&
           <div className="flex flex-wrap justify-center gap-1.5 mt-2.5">
