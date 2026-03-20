@@ -259,8 +259,7 @@ const mobilifyBg = (style?: React.CSSProperties): React.CSSProperties | undefine
 
 const Section = forwardRef<HTMLElement, {id?: string;children: React.ReactNode;className?: string;style?: React.CSSProperties;}>(
   ({ id, children, className = "", style }, ref) =>
-  <section ref={ref} id={id} className={`relative py-20 sm:py-28 px-5 sm:px-6 overflow-hidden landing-premium-section ${className}`} style={mobilifyBg(style)}>
-      <div className="absolute inset-x-3 sm:inset-x-6 inset-y-6 sm:inset-y-8 rounded-[1.65rem] pointer-events-none landing-premium-shell" />
+  <section ref={ref} id={id} className={`relative py-10 sm:py-16 px-5 sm:px-6 overflow-hidden landing-premium-section ${className}`} style={mobilifyBg(style)}>
       <div className="max-w-[1100px] mx-auto relative z-10">{children}</div>
     </section>
 
