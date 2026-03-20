@@ -187,16 +187,20 @@ const SectionLabel = forwardRef<HTMLDivElement, {text: string;icon?: React.React
     className="inline-flex items-center gap-2.5 mb-5"
     initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
     
-      <div className="relative flex items-center gap-2 px-4 py-2 rounded-full premium-label overflow-hidden" style={{ borderLeft: "1px solid hsla(35,45%,50%,0.15)" }}>
-        {/* Scanning beam — gold tint */}
-        <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: "linear-gradient(90deg, transparent 30%, hsla(35,45%,55%,0.12) 50%, transparent 70%)" }}
-        animate={{ x: ["-150%", "250%"] }}
-        transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }} />
-      
-        {icon || <motion.span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(35,45%,50%)" }} animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />}
-        <span className="text-[0.65rem] font-heading font-semibold tracking-[3px] uppercase text-primary/90 relative z-10">{text}</span>
+      <div className="relative flex items-center gap-2.5 px-5 py-2.5 rounded-2xl overflow-hidden"
+        style={{
+          background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))",
+          border: "1px solid hsl(var(--primary) / 0.15)",
+          boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)"
+        }}>
+        <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+          style={{
+            background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--empire-violet)))",
+            boxShadow: "0 2px 8px hsl(var(--primary) / 0.3)"
+          }}>
+          <span className="text-white [&>svg]:w-3 [&>svg]:h-3">{icon || <Sparkles className="w-3 h-3" />}</span>
+        </div>
+        <span className="text-[0.65rem] font-heading font-bold tracking-[2.5px] uppercase text-foreground/80 relative z-10">{text}</span>
       </div>
     </motion.div>
 
@@ -3317,64 +3321,36 @@ const LandingPage = () => {
        <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-28 sm:pt-28 pb-20 sm:pb-16"
       style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Cinematic video background ═══ */}
-        <div className="absolute inset-0" style={{ zIndex: 2 }}>
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload={IS_MOBILE_LP ? "none" : "auto"}
-            controls={false}
-            disablePictureInPicture
-            disableRemotePlayback
-            className="absolute inset-0 w-full h-full object-cover [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-enclosure]:hidden [&::-webkit-media-controls-panel]:hidden [&::-webkit-media-controls-start-playback-button]:hidden"
-            style={{ filter: "brightness(0.85) saturate(1.1)", WebkitAppearance: "none" } as any}>
-            
-            <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4" />
-          </video>
-          {/* Cinematic vignette overlays */}
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent 30%, hsla(220,20%,98%,0.85) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsla(220,20%,98%,0.8) 0%, transparent 15%, transparent 85%, hsla(220,20%,98%,0.8) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, hsla(230,20%,15%,0.4) 0%, transparent 50%, hsla(35,50%,30%,0.25) 100%)" }} />
-        </div>
+        {/* ═══ LAYER 0: Clean premium gradient background ═══ */}
+        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(220 25% 96%) 0%, hsl(215 30% 94%) 25%, hsl(240 20% 96%) 50%, hsl(200 25% 95%) 75%, hsl(220 20% 97%) 100%)" }} />
 
-        {/* ═══ LAYER 1: Aurora boreale CSS ═══ */}
+        {/* ═══ LAYER 1: Soft ambient blobs ═══ */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
-          <div className="aurora-blob-1 absolute w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] rounded-full opacity-[0.05]"
-            style={{ background: "radial-gradient(circle, hsla(38,55%,50%,0.8), transparent 65%)", filter: "blur(80px)", top: "10%", left: "15%" }} />
-          <div className="aurora-blob-2 absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full opacity-[0.05]"
-            style={{ background: "radial-gradient(circle, hsla(265,60%,55%,0.7), transparent 65%)", filter: "blur(80px)", top: "20%", right: "10%" }} />
-          <div className="aurora-blob-3 absolute w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] rounded-full opacity-[0.04]"
-            style={{ background: "radial-gradient(circle, hsla(210,55%,55%,0.6), transparent 65%)", filter: "blur(80px)", bottom: "15%", left: "40%" }} />
+          <div className="aurora-blob-1 absolute w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(215 90% 52% / 0.08), transparent 65%)", filter: "blur(100px)", top: "5%", left: "10%" }} />
+          <div className="aurora-blob-2 absolute w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(248 60% 56% / 0.06), transparent 65%)", filter: "blur(100px)", top: "15%", right: "5%" }} />
+          <div className="aurora-blob-3 absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full"
+            style={{ background: "radial-gradient(circle, hsl(168 72% 38% / 0.06), transparent 65%)", filter: "blur(100px)", bottom: "10%", left: "35%" }} />
         </div>
 
-        {/* ═══ LAYER 1b: Central glow orb — skip on mobile for GPU savings ═══ */}
-        {!IS_MOBILE_LP && <div className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 3 }}>
-          <motion.div className="w-[500px] h-[500px] sm:w-[800px] sm:h-[800px] rounded-full blur-[180px]"
-          style={{ background: "radial-gradient(circle, hsla(38,50%,50%,0.06), hsla(35,45%,50%,0.03), transparent 70%)" }}
-          animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />
-          
-        </div>}
+        {/* ═══ LAYER 1b: Subtle geometric grid ═══ */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 3, opacity: 0.04, backgroundImage: "linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           <div className="flex flex-col items-center text-center max-w-[900px] mx-auto">
 
-            {/* Clean badge — neon accent */}
-            <motion.div className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-full border bg-primary/[0.04] mb-5 sm:mb-7 ${IS_MOBILE_LP ? "" : "backdrop-blur-sm"}`}
-            style={{ borderColor: "hsl(var(--neon-emerald) / 0.25)", boxShadow: "0 0 20px hsl(var(--neon-emerald) / 0.06)" }}
+            {/* Clean badge */}
+            <motion.div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-2xl mb-5 sm:mb-7"
+            style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <motion.span className="w-2 h-2 rounded-full" style={{ background: "hsl(var(--neon-emerald))" }}
-              animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 2, repeat: Infinity }} />
-              <span className="text-[0.6rem] sm:text-[0.65rem] font-heading font-bold tracking-[2px] uppercase text-neon-emerald">🤖 Piattaforma AI All-in-One per PMI</span>
+              <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)))", boxShadow: "0 2px 8px hsl(var(--neon-emerald) / 0.3)" }}>
+                <Bot className="w-3 h-3 text-white" />
+              </div>
+              <span className="text-[0.6rem] sm:text-[0.65rem] font-heading font-bold tracking-[2px] uppercase text-foreground/70">Piattaforma AI All-in-One per PMI</span>
             </motion.div>
 
-            {/* Gradient glow behind title */}
-            <div className="absolute -inset-8 pointer-events-none hero-gradient-glow -z-10"
-              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsla(265,70%,55%,0.15), hsla(160,60%,45%,0.06), transparent 70%)" }} />
-
-            {/* Headline — larger, clearer, vivid */}
+            {/* Headline */}
             <motion.h1 className="text-[1.85rem] leading-[1.05] sm:text-[3.4rem] md:text-[4.2rem] lg:text-[5rem] font-heading font-bold tracking-[-0.03em] px-2 sm:px-0 relative"
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}>
               <span className="text-foreground">Gestione, IA e</span>
@@ -3384,11 +3360,11 @@ const LandingPage = () => {
               <span className="text-vivid-gradient clip-reveal-text">Tuo Business</span>
             </motion.h1>
 
-            {/* Subtitle — clearer value prop */}
-            <motion.p className="mt-4 sm:mt-6 text-[0.85rem] sm:text-lg text-foreground/50 max-w-[540px] leading-[1.75] sm:leading-[1.8] font-light px-2 sm:px-0"
+            {/* Subtitle */}
+            <motion.p className="mt-4 sm:mt-6 text-[0.85rem] sm:text-lg text-foreground/70 max-w-[540px] leading-[1.75] sm:leading-[1.8] font-normal px-2 sm:px-0"
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
               App dedicata, 98+ agenti IA, CRM, prenotazioni, pagamenti e marketing —
-              <span className="text-foreground/70 font-medium"> tutto integrato per <span className="text-neon-emerald font-semibold">25+ settori</span>. Zero canone mensile, solo risultati.</span>
+              <span className="text-foreground/85 font-medium"> tutto integrato per <span className="text-primary font-semibold">25+ settori</span>. Zero canone mensile, solo risultati.</span>
             </motion.p>
 
             {/* ═══ Interactive AI Particle Sphere ═══ */}
@@ -3462,7 +3438,7 @@ const LandingPage = () => {
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
                   {/* Label */}
-                  <p className="text-[0.55rem] sm:text-[0.65rem] mt-2 tracking-[2.5px] uppercase font-heading font-semibold relative z-10 text-foreground/40">{m.label}</p>
+                  <p className="text-[0.55rem] sm:text-[0.65rem] mt-2 tracking-[2.5px] uppercase font-heading font-semibold relative z-10 text-foreground/65">{m.label}</p>
                 </motion.div>
               )}
             </motion.div>
@@ -3471,17 +3447,16 @@ const LandingPage = () => {
 
         {/* Scroll indicator */}
         <motion.div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-20"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
-        style={{ filter: "drop-shadow(0 0 8px hsla(260,20%,4%,0.8))" }}>
-          <span className="text-[8px] text-foreground/30 tracking-[4px] uppercase font-heading">Scopri</span>
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
+          <span className="text-[8px] text-foreground/50 tracking-[4px] uppercase font-heading">Scopri</span>
           <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2.5, repeat: Infinity }}>
-            <ChevronDown className="w-4 h-4 text-primary/40" />
+            <ChevronDown className="w-4 h-4 text-primary/60" />
           </motion.div>
         </motion.div>
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y border-primary/[0.08] overflow-hidden" style={{ background: "linear-gradient(180deg, hsla(0,0%,4%,0.99) 0%, hsla(38,16%,8%,0.99) 50%, hsla(0,0%,4%,0.99) 100%)" }}>
+      <div className="relative py-5 border-y overflow-hidden" style={{ background: "linear-gradient(180deg, hsl(220 20% 95%) 0%, hsl(215 18% 93%) 50%, hsl(220 20% 95%) 100%)", borderColor: "hsl(var(--primary) / 0.08)" }}>
         <div className="flex animate-marquee-scroll whitespace-nowrap">
         {[...Array(2)].map((_, repeat) =>
           <div key={repeat} className="flex items-center gap-10 px-5">
@@ -3498,8 +3473,8 @@ const LandingPage = () => {
             { icon: <Timer className="w-3 h-3" />, text: "Attivo in 24h", color: "var(--neon-emerald)" },
             { icon: <LineChart className="w-3 h-3" />, text: "Updates Settimanali", color: "var(--empire-violet)" }].
             map((t, i) =>
-            <span key={i} className="text-[0.6rem] text-foreground/25 font-heading tracking-[2.5px] uppercase flex items-center gap-2 group/trust">
-                  <span className="transition-colors" style={{ color: `hsl(${t.color} / 0.5)` }}>
+            <span key={i} className="text-[0.6rem] text-foreground/60 font-heading font-medium tracking-[2.5px] uppercase flex items-center gap-2.5">
+                  <span className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `hsl(${t.color} / 0.12)`, color: `hsl(${t.color})` }}>
                     {t.icon}
                   </span>
                   {t.text}
@@ -3570,13 +3545,13 @@ const LandingPage = () => {
             {/* Top accent */}
             <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent, hsl(${pillar.color} / 0.4), transparent)` }} />
             <div className="flex items-start gap-4">
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: `hsl(${pillar.color} / 0.15)`, color: `hsl(${pillar.color})`, boxShadow: `0 0 20px hsl(${pillar.color} / 0.1)` }}>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ background: `linear-gradient(135deg, hsl(${pillar.color}), hsl(${pillar.color} / 0.75))`, color: "white", boxShadow: `0 4px 16px hsl(${pillar.color} / 0.25)` }}>
                 {pillar.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-[0.85rem] font-heading font-bold text-foreground/95 leading-tight mb-1.5">{pillar.title}</h3>
-                <p className="text-[0.65rem] text-foreground/40 leading-[1.65] mb-3">{pillar.desc}</p>
+                <h3 className="text-[0.9rem] font-heading font-bold text-foreground leading-tight mb-1.5">{pillar.title}</h3>
+                <p className="text-[0.7rem] text-foreground/60 leading-[1.7] mb-3">{pillar.desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {pillar.features.map((f, fi) =>
                   <span key={fi} className="px-2 py-0.5 rounded-md text-[0.5rem] font-medium tracking-wide"
@@ -3592,29 +3567,30 @@ const LandingPage = () => {
         </motion.div>
 
         {/* Quick features grid */}
-        <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-2"
+        <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-3"
         variants={staggerFast} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
           {[
-            { icon: <Globe className="w-3.5 h-3.5" />, title: "Siti Web Premium", color: "var(--empire-violet)" },
-            { icon: <QrCode className="w-3.5 h-3.5" />, title: "Menu & Cataloghi QR", color: "var(--neon-emerald)" },
-            { icon: <Wallet className="w-3.5 h-3.5" />, title: "Loyalty & Fidelity", color: "var(--neon-cyan)" },
-            { icon: <Headphones className="w-3.5 h-3.5" />, title: "Voice Agent IA", color: "var(--neon-magenta)" },
-            { icon: <MapPin className="w-3.5 h-3.5" />, title: "Multi-Sede", color: "var(--empire-violet)" },
-            { icon: <Lock className="w-3.5 h-3.5" />, title: "GDPR & Sicurezza", color: "var(--neon-emerald)" },
-            { icon: <Receipt className="w-3.5 h-3.5" />, title: "Fatturazione Elettronica", color: "var(--neon-cyan)" },
-            { icon: <Sparkles className="w-3.5 h-3.5" />, title: "Personalizzazione Totale", color: "var(--neon-magenta)" },
+            { icon: <Globe className="w-4 h-4" />, title: "Siti Web Premium", color: "var(--empire-violet)" },
+            { icon: <QrCode className="w-4 h-4" />, title: "Menu & Cataloghi QR", color: "var(--neon-emerald)" },
+            { icon: <Wallet className="w-4 h-4" />, title: "Loyalty & Fidelity", color: "var(--neon-cyan)" },
+            { icon: <Headphones className="w-4 h-4" />, title: "Voice Agent IA", color: "var(--neon-magenta)" },
+            { icon: <MapPin className="w-4 h-4" />, title: "Multi-Sede", color: "var(--empire-violet)" },
+            { icon: <Lock className="w-4 h-4" />, title: "GDPR & Sicurezza", color: "var(--neon-emerald)" },
+            { icon: <Receipt className="w-4 h-4" />, title: "Fatturazione Elettronica", color: "var(--neon-cyan)" },
+            { icon: <Sparkles className="w-4 h-4" />, title: "Personalizzazione Totale", color: "var(--neon-magenta)" },
           ].map((f, i) =>
           <motion.div key={i} variants={popIn}
-          className="relative p-2.5 rounded-lg overflow-hidden text-center"
+          className="relative p-3.5 rounded-2xl overflow-hidden text-center"
           style={{
-            background: "linear-gradient(145deg, hsl(0 0% 100% / 0.9), hsl(248,12%,97% / 0.9))",
-            border: `1px solid hsl(${f.color} / 0.1)`,
+            background: "hsl(0 0% 100% / 0.95)",
+            border: `1px solid hsl(${f.color} / 0.12)`,
+            boxShadow: `0 2px 12px hsl(${f.color} / 0.06)`
           }}>
-            <div className="w-7 h-7 mx-auto rounded-lg flex items-center justify-center mb-1.5"
-            style={{ background: `hsl(${f.color} / 0.12)`, color: `hsl(${f.color})` }}>
+            <div className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-2"
+            style={{ background: `linear-gradient(135deg, hsl(${f.color}), hsl(${f.color} / 0.8))`, color: "white", boxShadow: `0 3px 12px hsl(${f.color} / 0.25)` }}>
               {f.icon}
             </div>
-            <h4 className="text-[0.58rem] font-heading font-bold text-foreground/80 leading-tight">{f.title}</h4>
+            <h4 className="text-[0.65rem] font-heading font-bold text-foreground/85 leading-tight">{f.title}</h4>
           </motion.div>
           )}
         </motion.div>

@@ -371,17 +371,18 @@
     opacity: 1;
   }
 
-  /* ═══ READABILITY BOOST — Ensure all text is legible while maintaining style ═══ */
-  .text-foreground\/20 { color: hsl(var(--foreground) / 0.35) !important; }
-  .text-foreground\/25 { color: hsl(var(--foreground) / 0.4) !important; }
-  .text-foreground\/30 { color: hsl(var(--foreground) / 0.48) !important; }
-  .text-foreground\/35 { color: hsl(var(--foreground) / 0.52) !important; }
-  .text-foreground\/40 { color: hsl(var(--foreground) / 0.55) !important; }
-  .text-foreground\/45 { color: hsl(var(--foreground) / 0.6) !important; }
-  .text-white\/15 { color: hsl(var(--foreground) / 0.3) !important; }
-  .text-white\/20 { color: hsl(var(--foreground) / 0.35) !important; }
-  .text-white\/25 { color: hsl(var(--foreground) / 0.4) !important; }
-  .text-white\/50 { color: hsl(var(--foreground) / 0.6) !important; }
+  /* ═══ READABILITY BOOST — Ensure all text is legible on light bg ═══ */
+  .text-foreground\/20 { color: hsl(var(--foreground) / 0.4) !important; }
+  .text-foreground\/25 { color: hsl(var(--foreground) / 0.48) !important; }
+  .text-foreground\/30 { color: hsl(var(--foreground) / 0.55) !important; }
+  .text-foreground\/35 { color: hsl(var(--foreground) / 0.6) !important; }
+  .text-foreground\/40 { color: hsl(var(--foreground) / 0.62) !important; }
+  .text-foreground\/45 { color: hsl(var(--foreground) / 0.66) !important; }
+  .text-foreground\/50 { color: hsl(var(--foreground) / 0.7) !important; }
+  .text-white\/15 { color: hsl(var(--foreground) / 0.35) !important; }
+  .text-white\/20 { color: hsl(var(--foreground) / 0.42) !important; }
+  .text-white\/25 { color: hsl(var(--foreground) / 0.48) !important; }
+  .text-white\/50 { color: hsl(var(--foreground) / 0.65) !important; }
 
   .text-brand-gradient {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
@@ -1264,11 +1265,11 @@ video::-webkit-media-controls-enclosure {
   pointer-events: none !important;
 }
 
-/* ═══ Readability boost — light mode ═══ */
-.text-foreground\/20:not(.line-through):not([class*="line-through"]) { color: hsl(var(--foreground) / 0.32) !important; }
-.text-foreground\/25:not(.line-through):not([class*="line-through"]) { color: hsl(var(--foreground) / 0.38) !important; }
-.text-foreground\/30 { color: hsl(var(--foreground) / 0.44) !important; }
-.text-foreground\/35 { color: hsl(var(--foreground) / 0.5) !important; }
+/* ═══ Readability boost — light mode (final overrides) ═══ */
+.text-foreground\/20:not(.line-through):not([class*="line-through"]) { color: hsl(var(--foreground) / 0.4) !important; }
+.text-foreground\/25:not(.line-through):not([class*="line-through"]) { color: hsl(var(--foreground) / 0.48) !important; }
+.text-foreground\/30 { color: hsl(var(--foreground) / 0.55) !important; }
+.text-foreground\/35 { color: hsl(var(--foreground) / 0.6) !important; }
 
 /* ═══ Hero Aurora Effect ═══ */
 @keyframes aurora-drift-1 {
