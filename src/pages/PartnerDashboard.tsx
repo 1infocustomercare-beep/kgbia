@@ -283,8 +283,9 @@ const PartnerDashboard = () => {
         {/* DNA scan line */}
         <motion.div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: 'var(--gradient-dna)' }} animate={{ opacity: [0.2, 0.6, 0.2] }} transition={{ duration: 3, repeat: Infinity }} />
         <div className="flex items-center gap-2.5 relative z-10">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-empire-violet to-empire-violet-deep flex items-center justify-center shadow-[var(--shadow-dna)]">
-            <Crown className="w-5 h-5 text-white" />
+          <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-empire-violet to-empire-violet-deep flex items-center justify-center shadow-[var(--shadow-dna)] overflow-hidden">
+            <img src={empireMonkeyMascot} alt="Empire Monkey" className="w-9 h-9 object-contain drop-shadow-[0_0_6px_hsl(265_85%_65%/0.4)]" />
+          </div>
           </div>
           <div>
             <h1 className="text-sm font-display font-bold text-foreground">
