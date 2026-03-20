@@ -4641,7 +4641,7 @@ const LandingPage = () => {
           <CompRow icon="🚀" label="Setup" empire="Gratis" others="€1.500-5.000" />
           <CompRow icon="🏢" label="Settori" empire="25+" others="1-3" />
           <CompRow icon="📱" label="App dedicata" empire="Inclusa" others="€149/mese extra" />
-          <CompRow icon="🤖" label="Agenti IA" empire="20+ inclusi" others="Assenti" />
+          <CompRow icon="🤖" label="Agenti IA" empire="98+ inclusi" others="Assenti" />
           <CompRow icon="🎙️" label="Voice Agent" empire="Incluso" others="Non disponibile" />
           <CompRow icon="🔗" label="Integrazioni" empire="Stripe · AI · Push" others="Limitate" />
           <CompRow icon="⚡" label="Automazioni" empire="Multi-canale" others="Solo email" />
