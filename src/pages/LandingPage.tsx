@@ -3525,11 +3525,11 @@ const LandingPage = () => {
             </div>
 
             {/* ═══ PARTICLE SPHERE — Neural Core Effect ═══ */}
-            <motion.div className="relative mt-6 sm:mt-8"
+            <motion.div className="relative mt-8 sm:mt-10 mx-auto flex items-center justify-center"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1.2, duration: 1, ease: [0.22, 1, 0.36, 1] }}>
-              <InteractiveParticleSphere />
+              <InteractiveParticleSphere size={IS_MOBILE_LP ? 260 : 380} />
             </motion.div>
 
             {/* PHONES: Each sector shows 3 real mockup screens (home, services, detail) */}
