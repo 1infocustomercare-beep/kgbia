@@ -6,78 +6,78 @@
 
 @layer base {
   :root {
-    --background: 225 16% 9%;
-    --foreground: 210 20% 96%;
+    --background: 220 20% 97%;
+    --foreground: 222 20% 14%;
 
-    --card: 224 14% 13%;
-    --card-foreground: 210 20% 96%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 20% 14%;
 
-    --popover: 224 14% 13%;
-    --popover-foreground: 210 20% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 20% 14%;
 
-    --primary: 215 90% 58%;
+    --primary: 215 90% 52%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 224 12% 17%;
-    --secondary-foreground: 210 15% 90%;
+    --secondary: 220 14% 92%;
+    --secondary-foreground: 222 18% 22%;
 
-    --muted: 224 10% 15%;
-    --muted-foreground: 215 12% 58%;
+    --muted: 220 12% 92%;
+    --muted-foreground: 220 10% 46%;
 
-    --accent: 168 72% 44%;
+    --accent: 168 72% 38%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 224 12% 20%;
-    --input: 224 12% 20%;
-    --ring: 215 90% 58%;
+    --border: 220 14% 88%;
+    --input: 220 14% 88%;
+    --ring: 215 90% 52%;
 
     --radius: 1.125rem;
 
-    --glass: 224 14% 14% / 0.94;
-    --glass-border: 210 20% 96% / 0.09;
-    --glass-shine: 210 20% 96% / 0.05;
-    --gold-glow: 168 72% 44% / 0.2;
+    --glass: 0 0% 100% / 0.82;
+    --glass-border: 220 14% 88% / 0.6;
+    --glass-shine: 220 20% 98% / 0.5;
+    --gold-glow: 215 90% 52% / 0.12;
 
     /* ═══ PREMIUM ACCENT TOKENS ═══ */
-    --gold: 168 72% 44%;
-    --gold-light: 168 62% 54%;
-    --gold-dark: 168 78% 34%;
-    --gold-muted: 168 40% 38%;
-    --deep-black: 225 20% 6%;
+    --gold: 215 90% 52%;
+    --gold-light: 215 80% 62%;
+    --gold-dark: 215 95% 42%;
+    --gold-muted: 215 40% 58%;
+    --deep-black: 220 20% 97%;
 
     /* ═══ EMPIRE VIOLET TOKENS ═══ */
-    --empire-violet: 248 72% 62%;
-    --empire-violet-deep: 248 65% 48%;
-    --empire-violet-glow: 248 80% 72%;
-    --empire-violet-muted: 248 35% 32%;
-    --empire-violet-surface: 248 22% 15%;
+    --empire-violet: 248 60% 56%;
+    --empire-violet-deep: 248 55% 44%;
+    --empire-violet-glow: 248 70% 66%;
+    --empire-violet-muted: 248 25% 62%;
+    --empire-violet-surface: 248 18% 94%;
     
     /* ═══ NEON ACCENT TOKENS ═══ */
-    --neon-emerald: 168 72% 44%;
-    --neon-cyan: 192 85% 52%;
-    --neon-magenta: 325 75% 55%;
-    --neon-blue: 215 90% 58%;
-    --neon-lime: 158 68% 48%;
+    --neon-emerald: 168 65% 38%;
+    --neon-cyan: 192 75% 42%;
+    --neon-magenta: 325 65% 48%;
+    --neon-blue: 215 90% 52%;
+    --neon-lime: 158 58% 40%;
     
-    --gradient-dna: linear-gradient(135deg, hsl(215 90% 58%), hsl(248 72% 62%), hsl(168 72% 44%));
-    --gradient-dna-subtle: linear-gradient(135deg, hsl(215 90% 58% / 0.12), hsl(248 72% 62% / 0.06), hsl(168 72% 44% / 0.08));
+    --gradient-dna: linear-gradient(135deg, hsl(215 90% 52%), hsl(248 60% 56%), hsl(168 72% 38%));
+    --gradient-dna-subtle: linear-gradient(135deg, hsl(215 90% 52% / 0.08), hsl(248 60% 56% / 0.04), hsl(168 72% 38% / 0.06));
     --gradient-neon: linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)), hsl(var(--empire-violet)));
     --gradient-vivid: linear-gradient(135deg, hsl(var(--neon-blue)), hsl(var(--empire-violet)), hsl(var(--neon-emerald)));
-    --shadow-dna: 0 8px 32px -8px hsl(215 90% 58% / 0.2);
-    --shadow-dna-lg: 0 16px 48px -12px hsl(215 90% 58% / 0.25);
-    --shadow-neon: 0 0 24px hsl(var(--neon-emerald) / 0.15), 0 0 48px hsl(var(--empire-violet) / 0.08);
+    --shadow-dna: 0 8px 32px -8px hsl(215 90% 52% / 0.12);
+    --shadow-dna-lg: 0 16px 48px -12px hsl(215 90% 52% / 0.16);
+    --shadow-neon: 0 0 24px hsl(var(--neon-emerald) / 0.1), 0 0 48px hsl(var(--empire-violet) / 0.05);
 
-    --sidebar-background: 225 16% 8%;
+    --sidebar-background: 222 18% 12%;
     --sidebar-foreground: 210 15% 87%;
-    --sidebar-primary: 215 90% 58%;
+    --sidebar-primary: 215 90% 52%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 224 12% 15%;
     --sidebar-accent-foreground: 210 15% 87%;
     --sidebar-border: 224 12% 18%;
-    --sidebar-ring: 215 90% 58%;
+    --sidebar-ring: 215 90% 52%;
   }
 }
 
