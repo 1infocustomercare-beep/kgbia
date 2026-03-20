@@ -474,7 +474,7 @@ const NeuralCellsBackground = () => {
           key={`ln${i}`}
           x1={cells[a].x} y1={cells[a].y}
           x2={cells[b].x} y2={cells[b].y}
-          stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.25)" : "hsla(220,15%,55%,0.12)"}
+          stroke={i % 6 === 0 ? "hsla(172,80%,48%,0.25)" : "hsla(210,60%,55%,0.12)"}
           strokeWidth="0.2" />
 
         ) :
@@ -484,7 +484,7 @@ const NeuralCellsBackground = () => {
           key={`ln${i}`}
           x1={cells[a].x} y1={cells[a].y}
           x2={cells[b].x} y2={cells[b].y}
-          stroke={i % 6 === 0 ? "hsla(38,50%,55%,0.35)" : "hsla(220,15%,55%,0.18)"}
+          stroke={i % 6 === 0 ? "hsla(172,80%,48%,0.35)" : "hsla(210,60%,55%,0.18)"}
           strokeWidth="0.15"
           initial={{ opacity: 0 }}
           animate={{ opacity: [0.1, 0.4, 0.1] }}
