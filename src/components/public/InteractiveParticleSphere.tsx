@@ -367,11 +367,11 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           if (n.glow) {
             const gR = n.r * 5;
             const gg = ctx.createRadialGradient(px, py, 0, px, py, gR);
-            gg.addColorStop(0, hsl(c, 0.25 * hA)); gg.addColorStop(1, hsl(c, 0));
+            gg.addColorStop(0, hsl(c, 0.45 * hA)); gg.addColorStop(1, hsl(c, 0));
             ctx.beginPath(); ctx.arc(px, py, gR, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
           }
-          ctx.beginPath(); ctx.arc(px, py, n.r * sc * 0.8, 0, Math.PI * 2);
-          ctx.fillStyle = hsl(c, 0.9 * hA); ctx.fill();
+          ctx.beginPath(); ctx.arc(px, py, n.r * sc * 0.9, 0, Math.PI * 2);
+          ctx.fillStyle = hsl(c, 0.95 * hA); ctx.fill();
         }
 
         // ── Synaptic pulses between helix nodes ──
