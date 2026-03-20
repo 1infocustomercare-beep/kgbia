@@ -597,7 +597,7 @@ export default function BeautyPublicSite({ company, afterHero }: Props) {
       </footer>
 
       {/* Admin Access Button */}
-      <DemoAdminAccessButton slug={company.slug} />
+      <DemoAdminAccessButton sector="beauty" accentColor="#8b5cf6" />
     </div>
   );
 }
