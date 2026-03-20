@@ -12,12 +12,12 @@ const IS_MOBILE =
   (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
 // Mobile parity profile: keep desktop-like topology/motion while staying performant
-const NODE_COUNT = IS_MOBILE ? 42 : 55;
+const NODE_COUNT = IS_MOBILE ? 18 : 25;
 const MAX_DIST = IS_MOBILE ? 132 : 145;
-const FLOW_COUNT = IS_MOBILE ? 12 : 18;
+const FLOW_COUNT = IS_MOBILE ? 8 : 12;
 const PULSE_COUNT = 3;
 const HUB_COUNT = 7;
-const TARGET_FPS = IS_MOBILE ? 30 : 60;
+const TARGET_FPS = 30;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 type Pt = { x: number; y: number };

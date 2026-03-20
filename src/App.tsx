@@ -124,9 +124,11 @@ const withImportTimeout = <T,>(promise: Promise<T>, timeoutMs: number) =>
 
 const delay = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
+const RETRY_BACKOFF = [2000, 5000, 10000];
+
 const importWithRetry = async <T,>(
   importer: () => Promise<T>,
-  maxAttempts = IS_MOBILE ? 4 : 3,
+  maxAttempts = 3,
 ): Promise<T> => {
   let lastError: unknown;
 
@@ -146,7 +148,7 @@ const importWithRetry = async <T,>(
         throw error;
       }
 
-      await delay((IS_MOBILE ? 450 : 350) * attempt);
+      await delay(RETRY_BACKOFF[attempt - 1] || 5000);
     }
   }
 
