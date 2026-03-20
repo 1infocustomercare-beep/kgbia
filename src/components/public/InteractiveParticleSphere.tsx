@@ -267,22 +267,23 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
 
       // ═══ L2: CENTRAL INTELLIGENCE CORE ═══
       const cP = 1 + Math.sin(el * 1.8) * 0.1;
-      const cAl = anyA * 0.25;
-      const cGr = ctx.createRadialGradient(cx, cy, 0, cx, cy, cR * cP * 1.8);
-      cGr.addColorStop(0, hsl(COLORS.violet, cAl * 1.5));
-      cGr.addColorStop(0.2, hsl(COLORS.gold, cAl));
-      cGr.addColorStop(0.5, hsl(COLORS.cyan, cAl * 0.5));
-      cGr.addColorStop(0.7, hsl(COLORS.green, cAl * 0.3));
-      cGr.addColorStop(1, "hsla(265,75%,62%,0)");
-      ctx.beginPath(); ctx.arc(cx, cy, cR * cP * 1.8, 0, Math.PI * 2); ctx.fillStyle = cGr; ctx.fill();
+      const cAl = anyA * 0.45;
+      const cGr = ctx.createRadialGradient(cx, cy, 0, cx, cy, cR * cP * 2);
+      cGr.addColorStop(0, hsl(COLORS.violet, cAl * 1.8));
+      cGr.addColorStop(0.15, hsl(COLORS.gold, cAl * 1.2));
+      cGr.addColorStop(0.35, hsl(COLORS.cyan, cAl * 0.8));
+      cGr.addColorStop(0.55, hsl(COLORS.green, cAl * 0.6));
+      cGr.addColorStop(0.75, hsl(COLORS.green, cAl * 0.2));
+      cGr.addColorStop(1, "hsla(265,80%,65%,0)");
+      ctx.beginPath(); ctx.arc(cx, cy, cR * cP * 2, 0, Math.PI * 2); ctx.fillStyle = cGr; ctx.fill();
 
       // Concentric rings — more rings for tech density
-      const rCols = [COLORS.violet, COLORS.gold, COLORS.green, COLORS.cyan, COLORS.violet];
+      const rCols = [COLORS.violet, COLORS.green, COLORS.gold, COLORS.cyan, COLORS.green];
       const rRad = [0.35, 0.5, 0.65, 0.8, 0.95];
       for (let i = 0; i < 5; i++) {
         ctx.beginPath(); ctx.arc(cx, cy, cR * rRad[i] * cP, 0, Math.PI * 2);
-        ctx.strokeStyle = hsl(rCols[i], 0.2 * (1 - i * 0.12) * anyA);
-        ctx.lineWidth = i % 2 === 0 ? 0.8 : 0.4; ctx.stroke();
+        ctx.strokeStyle = hsl(rCols[i], 0.35 * (1 - i * 0.1) * anyA);
+        ctx.lineWidth = i % 2 === 0 ? 1.2 : 0.6; ctx.stroke();
       }
 
       // ═══ L3: DATA STREAMS — orbiting trails ═══
