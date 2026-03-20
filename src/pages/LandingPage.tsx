@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, forwardRef, useMemo, lazy, Suspense } from "react";
+import React, { useState, useEffect, useRef, forwardRef, useMemo, useCallback, lazy, Suspense } from "react";
 import InteractiveParticleSphere from "@/components/public/InteractiveParticleSphere";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
@@ -113,45 +113,44 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: {value: number;pref
   const [display, setDisplay] = useState(0);
   const hasAnimated = useRef(false);
 
+  const runAnimation = useCallback(() => {
+    if (hasAnimated.current) return;
+    hasAnimated.current = true;
+    let start = 0;
+    const dur = 2000;
+    const isFloat = value % 1 !== 0;
+    const step = (ts: number) => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const current = eased * value;
+      setDisplay(isFloat ? parseFloat(current.toFixed(1)) : Math.floor(current));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [value]);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    // Also trigger on mount if already visible
-    const runAnimation = () => {
-      if (hasAnimated.current) return;
-      hasAnimated.current = true;
-      let start = 0;
-      const dur = 2000;
-      const isFloat = value % 1 !== 0;
-      const step = (ts: number) => {
-        if (!start) start = ts;
-        const p = Math.min((ts - start) / dur, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        const current = eased * value;
-        setDisplay(isFloat ? parseFloat(current.toFixed(1)) : Math.floor(current));
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    };
-
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { runAnimation(); observer.unobserve(el); } },
-      { threshold: 0.1 }
+      { threshold: 0, rootMargin: "50px" }
     );
     observer.observe(el);
 
-    // Fallback: if element is already in viewport on mount
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      setTimeout(runAnimation, 300);
-    }
+    // Aggressive fallbacks — hero counters are above the fold
+    const t1 = setTimeout(runAnimation, 800);
+    const t2 = setTimeout(runAnimation, 2000);
 
-    return () => observer.disconnect();
-  }, [value]);
+    return () => { observer.disconnect(); clearTimeout(t1); clearTimeout(t2); };
+  }, [runAnimation]);
 
-  const formatted = value % 1 !== 0 ? display.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : display.toLocaleString("it-IT");
-  return <span ref={ref}>{prefix}{formatted}{suffix}</span>;
+  const formatted = value % 1 !== 0
+    ? display.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+    : display.toLocaleString("it-IT");
+  return <span ref={ref} style={{ display: "inline-block", minWidth: "1em" }}>{prefix}{formatted}{suffix}</span>;
 };
 
 const IS_MOBILE_LP = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
