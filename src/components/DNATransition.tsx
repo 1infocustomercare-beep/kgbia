@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import empireAgentMascot from "@/assets/empire-agent-mascot.png";
+import empireAgentMascot from "@/assets/empire-monkey.png";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
