@@ -3701,18 +3701,12 @@ const LandingPage = () => {
           <motion.div key={i} variants={popIn}
           className="relative p-3.5 rounded-2xl overflow-hidden text-center group"
           style={{
-            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(220 20% 98% / 0.85))",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
+            background: "hsl(0 0% 100% / 0.9)",
             border: `1px solid hsl(${f.color} / 0.1)`,
-            boxShadow: `0 2px 16px hsl(${f.color} / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)`
+            boxShadow: `0 2px 16px hsl(${f.color} / 0.05)`
           }}>
             {/* Top accent line */}
             <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, hsl(${f.color} / 0.25), transparent)` }} />
-            {/* Inner reflection */}
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.35) 0%, transparent 30%)" }} />
-            {/* Hover glow */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 30%, hsl(${f.color} / 0.06), transparent 60%)` }} />
             <div className="relative z-10">
               <div className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-2"
               style={{ background: `linear-gradient(135deg, hsl(${f.color}), hsl(${f.color} / 0.8))`, color: "white", boxShadow: `0 3px 12px hsl(${f.color} / 0.25)` }}>
