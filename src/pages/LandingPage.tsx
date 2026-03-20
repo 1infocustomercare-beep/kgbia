@@ -555,7 +555,7 @@ const NeuralCellsBackground = () => {
 
 
 const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: {children: React.ReactNode;gradient: string;size?: "sm" | "md" | "lg";delay?: number;}) => {
-  const sizeClasses = size === "sm" ? "w-7 h-7 sm:w-10 sm:h-10 rounded-xl sm:rounded-xl" : size === "lg" ? "w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl" : "w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-xl";
+  const sizeClasses = size === "sm" ? "w-6 h-6 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl" : size === "lg" ? "w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl" : "w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl";
   const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
   return (
