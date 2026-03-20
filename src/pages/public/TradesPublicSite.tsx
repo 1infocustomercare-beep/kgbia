@@ -525,7 +525,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           {mobileMenuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-hidden" style={{ background: D, borderTop: `1px solid ${A}10` }}>
               <div className="px-5 py-4 space-y-1">
-                {navLinks.map(l => <a key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm text-white/40 border-b border-white/5" style={{ fontFamily: "'Inter', sans-serif" }}>{l.label}</a>)}
+                {navLinks.map(l => <a key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block py-3 text-sm text-white/40 border-b border-white/5" style={{ fontFamily: palette.fontBody }}>{l.label}</a>)}
               </div>
             </motion.div>
           )}
@@ -620,7 +620,7 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
               {config.emoji} {config.label}
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold mb-3">I Nostri Servizi</h2>
-            <p className="text-white/30 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>Soluzioni professionali per ogni esigenza</p>
+            <p className="text-white/30 text-sm" style={{ fontFamily: palette.fontBody }}>Soluzioni professionali per ogni esigenza</p>
           </div>
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}
             className={`grid gap-4 ${
@@ -829,10 +829,10 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
         <div className="max-w-lg mx-auto relative z-10">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-2">{cta.formTitle}</h2>
-            <p className="text-white/30 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>{cta.formSubtitle}</p>
+            <p className="text-white/30 text-sm" style={{ fontFamily: palette.fontBody }}>{cta.formSubtitle}</p>
           </div>
           <Card className="border-0 rounded-xl backdrop-blur-xl" style={{ background: `${A}06`, border: `1px solid ${A}15` }}>
-            <CardContent className="p-6 space-y-4" style={{ fontFamily: "'Inter', sans-serif" }}>
+            <CardContent className="p-6 space-y-4" style={{ fontFamily: palette.fontBody }}>
               <div className="grid grid-cols-2 gap-3">
                 <div><Label className="text-white/40 text-xs">Nome *</Label><Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="Nome" /></div>
                 <div><Label className="text-white/40 text-xs">Telefono *</Label><Input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} className="bg-white/5 border-white/10 text-white mt-1 h-11 rounded-lg" placeholder="+39..." /></div>
