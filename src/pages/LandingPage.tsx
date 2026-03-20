@@ -1138,15 +1138,15 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 transition={{ delay: idx * 0.1 }}
                 className={`relative w-full rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                 isEmpire ?
-                "border-2 border-accent/50 shadow-[0_0_50px_hsla(35,45%,50%,0.25),0_8px_32px_hsla(0,0%,0%,0.5)] scale-[1.02]" :
+                "border-2 border-accent/40 shadow-[0_4px_30px_hsla(35,45%,50%,0.12)] scale-[1.01]" :
                 isSelected ?
-                "border-2 border-primary/50 shadow-[0_0_30px_hsla(265,50%,55%,0.12)]" :
-                "border border-border/30 shadow-[0_4px_20px_hsla(0,0%,0%,0.25)]"}`
+                "border-2 border-primary/35 shadow-[0_4px_24px_hsla(265,50%,55%,0.08)]" :
+                "border border-border/30 shadow-[0_2px_16px_hsla(0,0%,0%,0.06)]"}`
                 }
                 style={{
                   background: isEmpire ?
-                  "linear-gradient(165deg, hsla(35,25%,14%,0.94), hsla(230,12%,8%,0.95))" :
-                  "linear-gradient(165deg, hsla(230,12%,13%,0.93), hsla(230,10%,9%,0.95))"
+                  "linear-gradient(165deg, hsl(0 0% 100% / 0.98), hsl(35 20% 97% / 0.95))" :
+                  "linear-gradient(165deg, hsl(0 0% 100% / 0.97), hsl(220 18% 97% / 0.94))"
                 }}
                 whileTap={{ scale: 0.985 }}>
 
