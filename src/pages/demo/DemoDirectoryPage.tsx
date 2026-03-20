@@ -135,80 +135,64 @@ export default function DemoDirectoryPage() {
   const getFeatured = (id: IndustryId) => FEATURED_DEMOS.find(f => f.id === id);
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: "#050508" }}>
-      {/* ═══ PREMIUM BACKGROUND — fully opaque, no DNA bleed ═══ */}
+    <div className="min-h-screen relative overflow-hidden" style={{ background: "#06080c" }}>
+      {/* ═══ PREMIUM BACKGROUND ═══ */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Rich gradient base */}
         <div className="absolute inset-0" style={{
-          background: "linear-gradient(165deg, #08070e 0%, #0d0b18 20%, #0a0912 40%, #0e0c15 60%, #080710 80%, #050508 100%)"
+          background: "linear-gradient(165deg, #080a12 0%, #0c0e18 30%, #080a10 60%, #06080c 100%)"
         }} />
-
-        {/* Ambient orbs — deep, rich, luxurious */}
-        <div className="absolute top-[-10%] right-[-5%] w-[700px] h-[700px] rounded-full"
-          style={{ background: "radial-gradient(circle, hsla(265,45%,25%,0.12), transparent 60%)", filter: "blur(180px)" }} />
-        <div className="absolute bottom-[-5%] left-[-10%] w-[600px] h-[600px] rounded-full"
-          style={{ background: "radial-gradient(circle, hsla(38,40%,22%,0.1), transparent 60%)", filter: "blur(160px)" }} />
-        <div className="absolute top-[40%] left-[50%] w-[500px] h-[500px] rounded-full"
-          style={{ background: "radial-gradient(circle, hsla(200,35%,20%,0.06), transparent 60%)", filter: "blur(140px)" }} />
-
-        {/* Subtle geometric grid */}
-        <div className="absolute inset-0 opacity-[0.018]"
-          style={{
-            backgroundImage: `linear-gradient(hsla(265,40%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265,40%,60%,0.08) 1px, transparent 1px)`,
-            backgroundSize: "80px 80px"
-          }} />
-
-        {/* Top accent line */}
-        <div className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265,50%,50%,0.15) 30%, hsla(38,45%,50%,0.12) 50%, hsla(265,50%,50%,0.1) 70%, transparent 90%)" }} />
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full"
+          style={{ background: "radial-gradient(circle, hsla(265,45%,25%,0.1), transparent 60%)", filter: "blur(120px)" }} />
+        <div className="absolute bottom-[-5%] left-[-10%] w-[500px] h-[500px] rounded-full"
+          style={{ background: "radial-gradient(circle, hsla(38,40%,22%,0.08), transparent 60%)", filter: "blur(120px)" }} />
       </div>
 
       {/* ═══ HEADER ═══ */}
       <div className="sticky top-0 z-40 border-b"
         style={{
-          background: "linear-gradient(180deg, hsla(240,20%,5%,0.97), hsla(240,18%,4%,0.95))",
-          backdropFilter: "blur(30px) saturate(1.6)",
-          borderColor: "hsla(265,30%,30%,0.12)"
+          background: "linear-gradient(180deg, hsla(220,25%,7%,0.97), hsla(220,20%,5%,0.95))",
+          backdropFilter: "blur(20px) saturate(1.4)",
+          borderColor: "hsla(220,20%,30%,0.12)"
         }}>
-        <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center gap-3">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate("/home")}
             className="p-2 rounded-xl transition-all duration-200 hover:scale-105"
-            style={{ background: "hsla(265,30%,30%,0.12)", border: "1px solid hsla(265,30%,40%,0.1)" }}>
-            <ArrowLeft className="w-4 h-4 text-foreground/60" />
+            style={{ background: "hsla(220,20%,20%,0.25)", border: "1px solid hsla(220,20%,30%,0.15)" }}>
+            <ArrowLeft className="w-4 h-4" style={{ color: "hsla(0,0%,100%,0.7)" }} />
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold text-foreground font-heading tracking-tight">Esplora i Settori</h1>
-            <p className="text-[0.6rem] text-foreground/30 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
+            <h1 className="text-base font-bold font-heading tracking-tight" style={{ color: "hsla(0,0%,100%,0.92)" }}>Esplora i Settori</h1>
+            <p className="text-[0.6rem] tracking-wide" style={{ color: "hsla(0,0%,100%,0.35)" }}>{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
           </div>
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-            style={{ background: "hsla(150,40%,40%,0.08)", border: "1px solid hsla(150,40%,40%,0.1)" }}>
-            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "hsla(150,60%,50%,0.8)" }} />
-            <span className="text-[0.5rem] font-semibold tracking-wider" style={{ color: "hsla(150,50%,55%,0.7)" }}>LIVE</span>
+            style={{ background: "hsla(150,40%,40%,0.1)", border: "1px solid hsla(150,40%,40%,0.15)" }}>
+            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "hsla(150,60%,50%,0.9)" }} />
+            <span className="text-[0.5rem] font-semibold tracking-wider" style={{ color: "hsla(150,50%,60%,0.85)" }}>LIVE</span>
           </div>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-6 relative z-10">
+      <div className="max-w-5xl mx-auto px-4 py-5 relative z-10">
         {/* ═══ SEARCH ═══ */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/20" />
+        <div className="relative mb-5">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "hsla(0,0%,100%,0.3)" }} />
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cerca settore..."
-            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/20 text-sm"
+            className="pl-10 h-11 min-h-[44px] text-sm"
             style={{
-              background: "hsla(240,18%,8%,0.95)",
-              border: "1px solid hsla(265,25%,25%,0.15)",
-              borderRadius: "0.875rem"
+              background: "hsla(220,18%,10%,0.9)",
+              border: "1px solid hsla(220,20%,25%,0.2)",
+              borderRadius: "0.875rem",
+              color: "hsla(0,0%,100%,0.85)",
             }}
           />
         </div>
 
         {/* ═══ CONTENT ═══ */}
         {search.trim() ? (
-          /* Flat filtered list */
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {filtered.map((id, i) => (
               <SectorCard key={id} id={id} index={i} isExpanded={expandedSector === id}
                 onToggle={() => setExpandedSector(expandedSector === id ? null : id)}
@@ -216,31 +200,29 @@ export default function DemoDirectoryPage() {
             ))}
             {filtered.length === 0 && (
               <div className="text-center py-16">
-                <p className="text-foreground/30 text-sm">Nessun settore trovato per "{search}"</p>
+                <p className="text-sm" style={{ color: "hsla(0,0%,100%,0.35)" }}>Nessun settore trovato per "{search}"</p>
               </div>
             )}
           </div>
         ) : (
-          /* Categorized view */
-          <div className="space-y-8">
+          <div className="space-y-7">
             {SECTOR_CATEGORIES.map((cat, ci) => {
               const categoryIndustries = cat.ids.filter(id => ALL_INDUSTRIES.includes(id));
               if (categoryIndustries.length === 0) return null;
               return (
                 <motion.div key={cat.label}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: ci * 0.06 }}>
-                  {/* Category header */}
+                  transition={{ delay: ci * 0.05 }}>
                   <div className="flex items-center gap-2.5 mb-3 px-1">
                     <div className="h-px flex-1 max-w-[20px]"
-                      style={{ background: "linear-gradient(90deg, hsla(265,40%,50%,0.25), transparent)" }} />
-                    <span className="text-[0.55rem] font-bold tracking-[2.5px] uppercase text-foreground/25">{cat.label}</span>
+                      style={{ background: "linear-gradient(90deg, hsla(220,40%,55%,0.3), transparent)" }} />
+                    <span className="text-[0.6rem] font-bold tracking-[2px] uppercase" style={{ color: "hsla(220,30%,70%,0.5)" }}>{cat.label}</span>
                     <div className="h-px flex-1"
-                      style={{ background: "linear-gradient(90deg, transparent, hsla(265,30%,40%,0.08))" }} />
+                      style={{ background: "linear-gradient(90deg, transparent, hsla(220,30%,40%,0.1))" }} />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     {categoryIndustries.map((id, i) => (
                       <SectorCard key={id} id={id} index={i} isExpanded={expandedSector === id}
                         onToggle={() => setExpandedSector(expandedSector === id ? null : id)}
