@@ -6090,8 +6090,8 @@ const LandingPage = () => {
             {/* ═══ TRUST GUARANTEE ═══ */}
             <motion.div className="relative rounded-xl sm:rounded-2xl overflow-hidden p-4 sm:p-8"
             style={{
-              background: "linear-gradient(160deg, hsla(230,18%,10%,0.98), hsla(265,18%,8%,0.98))",
-              border: "1px solid hsla(38,40%,40%,0.12)"
+              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(248 15% 97% / 0.94))",
+              border: "1px solid hsl(var(--primary) / 0.12)"
             }}
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
               <div className="absolute top-0 left-0 right-0 h-[1px]"
