@@ -1067,14 +1067,14 @@ export default function DemoAdminPage() {
   // ── Sidebar ──
   const SidebarInner = () => (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4" style={{ borderBottom: layoutConfig.sidebarStyle === "accent-bar" ? `1px solid ${accentColor}20` : "1px solid rgba(255,255,255,0.1)" }}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ background: accentColor }}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ background: layoutConfig.sidebarStyle === "accent-bar" ? `${accentColor}25` : accentColor, boxShadow: layoutConfig.accentGlow ? `0 0 20px ${accentColor}30` : undefined }}>
             {config.heroEmoji}
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-sm font-bold text-white truncate">{config.name}</h2>
-            <p className="text-[0.55rem] text-white/35">Empire AI Platform</p>
+            <p className="text-[0.55rem] text-white/35">{layoutConfig.type === "operations" ? "Operations Hub" : layoutConfig.type === "services" ? "Service Studio" : layoutConfig.type === "professional" ? "Professional Suite" : layoutConfig.type === "creative" ? "Creative Studio" : layoutConfig.type === "care" ? "Care Platform" : layoutConfig.type === "mobility" ? "Mobility Center" : layoutConfig.type === "commerce" ? "Commerce Hub" : "Empire AI Platform"}</p>
           </div>
         </div>
       </div>
