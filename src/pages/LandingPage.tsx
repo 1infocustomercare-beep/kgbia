@@ -5342,11 +5342,11 @@ const LandingPage = () => {
                   {/* Compact tech icon */}
                   <div className="w-7 h-7 rounded-md flex items-center justify-center mb-1.5 relative"
                 style={{
-                  background: "linear-gradient(135deg, hsla(265,28%,16%,0.95), hsla(230,22%,12%,0.95))",
-                  border: "1px solid hsla(265,40%,45%,0.18)",
-                  boxShadow: "0 0 10px hsla(265,50%,50%,0.06), inset 0 1px 0 hsla(265,40%,60%,0.08)"
+                  background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.05))",
+                  border: "1px solid hsl(var(--primary) / 0.15)",
+                  boxShadow: "0 2px 8px hsl(var(--primary) / 0.06)"
                 }}>
-                    <div className="text-primary/70">{card.icon}</div>
+                    <div className="text-primary">{card.icon}</div>
                     {/* Tech corner brackets */}
                     <div className="absolute -top-[1.5px] -left-[1.5px] w-[4px] h-[4px] border-t border-l border-primary/25" />
                     <div className="absolute -top-[1.5px] -right-[1.5px] w-[4px] h-[4px] border-t border-r border-primary/25" />
