@@ -974,6 +974,27 @@ export function IPhoneFrame({
           {/* Screen content */}
           <div className="aspect-[9/17] overflow-hidden relative" style={{ minHeight: 210, background: "#000" }}>
 
+            {/* ═══ MOCKUP IMAGE MODE — Use real screenshots when available ═══ */}
+            {(() => {
+              const mockups = SECTOR_MOCKUP_IMAGES[industryId];
+              if (mockups && mockups.length > 0) {
+                const imgUrl = mockups[index % mockups.length];
+                return (
+                  <img
+                    src={imgUrl}
+                    alt={`${companyName} - ${screen.label}`}
+                    className="w-full h-full object-cover object-top"
+                    loading="lazy"
+                    draggable={false}
+                  />
+                );
+              }
+              return null;
+            })()}
+
+            {/* ═══ CSS FALLBACK — Only renders when no mockup images are available ═══ */}
+            {!SECTOR_MOCKUP_IMAGES[industryId]?.length && (<>
+
             {/* ═══ HERO SCREEN — 4 variants ═══ */}
             {screen.type === "hero" && (() => {
               if (v === 0) return (
