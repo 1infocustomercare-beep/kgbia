@@ -496,8 +496,8 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
   const navLinks = [{ href: "#servizi", label: "Servizi" }, { href: "#perche", label: "Garanzie" }, { href: "#prenota", label: cta.formTitle.split(" ").slice(0, 2).join(" ") }];
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: "'Space Grotesk', sans-serif", background: D, color: "#fff" }}>
-      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: palette.fontDisplay, background: D, color: "#fff" }}>
+      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
       {/* NAVBAR */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-500`} style={{ background: `${D}F0`, backdropFilter: "blur(20px)", borderBottom: `1px solid ${A}15` }}>
