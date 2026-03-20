@@ -3338,14 +3338,14 @@ const LandingPage = () => {
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
           
-          {/* ═══ MOBILE LAYOUT: Text → Phones → CTAs ═══ */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12">
+          {/* ═══ CENTERED LAYOUT: Text → Metrics → Phones ═══ */}
+          <div className="flex flex-col items-center">
             
-            {/* LEFT: Text content */}
-            <div className="flex-1 text-left lg:max-w-[520px]">
+            {/* CENTER: Text content */}
+            <div className="text-center max-w-[680px] mx-auto">
 
               {/* Badge */}
-              <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl mb-4"
+              <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl mb-5"
               style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--empire-violet) / 0.08))", border: "1px solid hsl(var(--primary) / 0.15)", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                 <div className="w-5 h-5 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(var(--neon-emerald)), hsl(var(--neon-cyan)))", boxShadow: "0 2px 8px hsl(var(--neon-emerald) / 0.3)" }}>
@@ -3365,16 +3365,14 @@ const LandingPage = () => {
               </motion.h1>
 
               {/* Subtitle */}
-              <motion.p className="mt-3 sm:mt-5 text-[0.8rem] sm:text-[0.95rem] text-foreground/60 max-w-[460px] leading-[1.75] font-normal"
+              <motion.p className="mt-4 sm:mt-5 text-[0.8rem] sm:text-[0.95rem] text-foreground/60 max-w-[520px] mx-auto leading-[1.75] font-normal"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-                Creiamo esperienze digitali per brand ambiziosi.
-                <br className="hidden sm:block" />{" "}
-                Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business.
+                Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business.
                 <span className="text-foreground/75 font-medium"> 98+ agenti IA · <span className="text-primary font-semibold">25+ settori</span> · Zero canone.</span>
               </motion.p>
 
               {/* CTA */}
-              <motion.div className="mt-6 flex flex-row items-center gap-3"
+              <motion.div className="mt-6 flex flex-row items-center justify-center gap-3"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
                 <motion.button
                   onClick={() => scrollTo("pricing")}
@@ -3399,11 +3397,11 @@ const LandingPage = () => {
                 </motion.button>
               </motion.div>
 
-              {/* Metrics — compact inline */}
-              <motion.div className="mt-8 flex items-center gap-4 sm:gap-6 flex-wrap"
+              {/* Metrics — centered */}
+              <motion.div className="mt-8 flex items-center justify-center gap-5 sm:gap-8 flex-wrap"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, duration: 0.8 }}>
                 {metrics.map((m, i) =>
-                <div key={i} className="text-left">
+                <div key={i} className="text-center">
                   <p className="text-lg sm:text-2xl font-heading font-bold text-foreground">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
