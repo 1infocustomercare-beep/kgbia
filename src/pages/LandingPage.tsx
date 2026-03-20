@@ -3635,7 +3635,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              IL PROBLEMA — Pain Points
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden" style={{
+      <Section className="relative overflow-hidden hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(345,20%,8%,0.96) 20%, hsla(350,16%,10%,0.96) 40%, hsla(265,18%,9%,0.96) 60%, hsla(345,14%,7%,0.96) 80%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         {/* Premium ambient glows — layered danger luxury */}
