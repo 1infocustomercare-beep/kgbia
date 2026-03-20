@@ -3220,7 +3220,8 @@ export function AllIndustriesShowcase({ onViewDemo }: { onViewDemo?: (id: Indust
                     className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}
                   >
-                    {(() => { const Icon = SECTOR_ICONS[id]; return Icon ? <Icon className="w-5 h-5" style={{ color: cfg.defaultPrimaryColor }} /> : <span className="text-lg">{cfg.emoji}</span>; })()}
+                    <SectorAppIcon id={id} size={40} />
+                  </div>
                   </div>
                   <div className="flex-1 text-left min-w-0">
                     <p className="text-sm font-bold text-white truncate">{cfg.label}</p>
