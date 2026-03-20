@@ -1096,7 +1096,6 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
         style={{ background: "linear-gradient(180deg, hsla(38,55%,50%,0.4), transparent)" }} />
         <div className="absolute bottom-0 left-0 right-0 h-[70px]"
         style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-        }} />
       </div>
       <div className="text-center mb-8 sm:mb-12">
         <SectionLabel text="Piani & Prezzi" icon={<Gem className="w-3 h-3 text-accent" />} />
@@ -2978,7 +2977,6 @@ const LandingPage = () => {
           transition={{
             backgroundPosition: { duration: 5, repeat: Infinity, ease: "linear" },
             opacity: { duration: 0.6 }
-          }} />
         
         {/* ── Bottom edge — premium double-line with glow ── */}
         <motion.div
@@ -2987,7 +2985,6 @@ const LandingPage = () => {
           transition={{ duration: 0.6 }}
           style={{
             background: "linear-gradient(90deg, transparent 2%, hsla(38,50%,55%,0.35) 25%, hsla(35,45%,55%,0.25) 50%, hsla(38,50%,55%,0.35) 75%, transparent 98%)"
-          }} />
         
         {/* Second faint glow line below */}
         <motion.div
@@ -2997,7 +2994,6 @@ const LandingPage = () => {
           style={{
             background: "linear-gradient(90deg, transparent 5%, hsla(38,45%,55%,0.12) 30%, hsla(35,50%,55%,0.08) 50%, hsla(38,45%,55%,0.12) 70%, transparent 95%)",
             filter: "blur(2px)"
-          }} />
         
         {/* ── Scanning beam — luxury gold/violet sweep ── */}
         {navScrolled &&
@@ -4186,8 +4182,6 @@ const LandingPage = () => {
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          {/* Noise texture */}
-          }} />
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-14">
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
@@ -4390,8 +4384,6 @@ const LandingPage = () => {
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          {/* Noise texture */}
-          }} />
         </div>
         <div className="text-center mb-10">
           <SectionLabel text="Confronto" icon={<Activity className="w-3 h-3 text-primary" />} />
@@ -4449,7 +4441,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          }} />
         </div>
         <div className="relative z-10 text-center mb-6 sm:mb-8">
           <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
@@ -4549,7 +4540,6 @@ const LandingPage = () => {
             repeat: Infinity,
             delay: i * 0.4,
             ease: "easeOut"
-          }} />
 
           )}
 
@@ -4616,7 +4606,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(38,50%,50%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          }} />
         </div>
         <div className="text-center mb-6 sm:mb-8">
           <SectionLabel text="Esperienza" icon={<MonitorSmartphone className="w-3 h-3 text-primary" />} />
@@ -4858,7 +4847,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          }} />
         </div>
 
         <div className="text-center mb-14">
@@ -5188,7 +5176,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          }} />
         </div>
         <div className="text-center mb-6 sm:mb-8">
           <SectionLabel text="Funzionalità" icon={<Layers className="w-3 h-3 text-primary" />} />
@@ -5905,7 +5892,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(38,50%,50%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          }} />
         </div>
         <div className="text-center mb-12">
           <SectionLabel text="ROI Calculator" icon={<TrendingUp className="w-3 h-3 text-primary" />} />
@@ -5998,7 +5984,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          }} />
         </div>
 
         <div className="text-center mb-14 sm:mb-16">
@@ -6126,7 +6111,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(38,55%,50%,0.4), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          }} />
         </div>
         <div className="text-center mb-12">
           <SectionLabel text="Partner Program" icon={<Handshake className="w-3 h-3 text-accent" />} />
@@ -6297,7 +6281,6 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,50%,55%,0.35), transparent)" }} />
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
           style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-          }} />
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-16 items-start">
           <motion.div variants={slideInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}
