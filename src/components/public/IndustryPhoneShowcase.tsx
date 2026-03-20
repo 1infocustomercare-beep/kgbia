@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+import { MockupLightbox } from "@/components/ui/mockup-lightbox";
 
 /* ═══════════════════════════════════════════
    PER-SECTOR SCREEN STYLES
