@@ -1038,6 +1038,7 @@ export default function DemoAdminPage() {
   const config = getSectorConfig(resolvedSector || "food");
   const allAgents = useMemo(() => getAllAgentsForSector(resolvedSector || "food"), [resolvedSector]);
   const sectorKey = resolvedSector || "food";
+  const layoutConfig = useMemo(() => getAdminLayout(sectorKey), [sectorKey]);
   const revenueData = useMemo(() => generateRevenueData(sectorKey), [sectorKey]);
   const calendarData = useMemo(generateCalendarDays, []);
 
