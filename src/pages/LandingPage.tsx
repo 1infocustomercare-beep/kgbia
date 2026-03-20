@@ -5959,9 +5959,9 @@ const LandingPage = () => {
                     <motion.div key={i}
                     className="relative rounded-xl overflow-hidden"
                     style={{
-                      background: "linear-gradient(160deg, hsla(230,18%,10%,0.97), hsla(230,22%,6%,0.97))",
-                      border: `1px solid hsla(${t.color},35%,40%,0.15)`,
-                      boxShadow: `0 0 20px hsla(${t.color},50%,40%,0.04)`
+                      background: "linear-gradient(160deg, hsl(0 0% 100% / 0.96), hsl(220 20% 97% / 0.94))",
+                      border: `1px solid hsla(${t.color},35%,50%,0.18)`,
+                      boxShadow: `0 2px 16px hsla(${t.color},40%,50%,0.06)`
                     }}
                     initial={{ opacity: 0, scale: 0.92 }}
                     whileInView={{ opacity: 1, scale: 1 }}
