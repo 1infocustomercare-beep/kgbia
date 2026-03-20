@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
+import { MockupLightbox } from "@/components/ui/mockup-lightbox";
 
 /* ═══════════════════════════════════════════
    PER-SECTOR SCREEN STYLES
@@ -922,6 +923,10 @@ export function IPhoneFrame({
         zIndex: isCenter ? 10 : isNear ? 5 : 1,
       }}
     >
+      <MockupLightbox
+        imageSrc={SECTOR_MOCKUP_IMAGES[industryId]?.[index % (SECTOR_MOCKUP_IMAGES[industryId]?.length || 1)]}
+        imageAlt={`${companyName} - ${screen.label}`}
+      >
       <div className="relative">
         {/* Ambient glow */}
         <div className="absolute -inset-4 rounded-[48px] blur-2xl pointer-events-none transition-opacity"
@@ -2731,6 +2736,7 @@ export function IPhoneFrame({
           </div>
         </div>
       </div>
+      </MockupLightbox>
 
       {/* Label + description */}
       <div className="text-center mt-2.5">

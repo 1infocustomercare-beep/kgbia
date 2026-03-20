@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, forwardRef, useMemo, useCallback, l
 import InteractiveParticleSphere from "@/components/public/InteractiveParticleSphere";
 import { AIAgentsShowcase } from "@/components/public/AIAgentsShowcase";
 import FunnelDNAVisual from "@/components/public/FunnelDNAVisual";
+import { MockupLightbox } from "@/components/ui/mockup-lightbox";
 
 import { PremiumCarousel } from "@/components/public/PremiumCarousel";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
@@ -2459,7 +2460,8 @@ const MobileIPhoneCarousel = ({ items, navigate }: {items: CarouselItem[];naviga
 
   // Render a single iPhone card with hero image preview (no iframes — instant load)
   const IPhoneCard = ({ item, compact = false }: {item: CarouselItem;compact?: boolean;}) =>
-  <div className={`flex-shrink-0 cursor-pointer ${compact ? "w-[118px]" : "w-[118px]"}`} onClick={() => navigate(item.nav)}>
+  <div className={`flex-shrink-0 ${compact ? "w-[118px]" : "w-[118px]"}`}>
+      <MockupLightbox imageSrc={item.image} imageAlt={item.name}>
       <div className="relative w-full aspect-[9/18] rounded-[20px] border-[2px] overflow-hidden"
     style={{ borderColor: `${item.color}40`, boxShadow: `0 8px 24px hsla(0,0%,0%,0.4), 0 0 12px ${item.color}10` }}>
         <div className="absolute top-[4px] left-1/2 -translate-x-1/2 w-[36px] h-[10px] bg-black rounded-full z-20" />
@@ -2480,6 +2482,10 @@ const MobileIPhoneCarousel = ({ items, navigate }: {items: CarouselItem[];naviga
           <p className="text-[5px] text-white/40 truncate">{item.label}</p>
         </div>
         <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 w-[30px] h-[2.5px] bg-white/20 rounded-full z-20" />
+      </div>
+      </MockupLightbox>
+      <div className="text-center mt-1 cursor-pointer" onClick={() => navigate(item.nav)}>
+        <p className="text-[7px] font-semibold text-white/50 truncate">{item.name}</p>
       </div>
     </div>;
 
