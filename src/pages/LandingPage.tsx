@@ -4122,19 +4122,24 @@ const LandingPage = () => {
             { label: "Fatturazione", icon: "◆" },
           ].map((item, i) =>
             <motion.div key={item.label}
-              className="group relative px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl border border-primary/15 cursor-default"
+              className="group relative px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl border cursor-default overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, hsla(248,20%,97%,0.85), hsla(220,18%,96%,0.8))",
-                boxShadow: "0 2px 16px hsla(265,50%,40%,0.06), inset 0 1px 0 hsla(0,0%,100%,0.03)",
+                background: "linear-gradient(160deg, hsl(0 0% 100% / 0.88), hsl(248 20% 97% / 0.82))",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                borderColor: "hsl(var(--primary) / 0.1)",
+                boxShadow: "0 2px 16px hsl(var(--primary) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)",
               }}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 + i * 0.08 }}
-              whileHover={{ scale: 1.04, borderColor: "hsla(265,60%,55%,0.3)" }}>
-              <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: "radial-gradient(circle at center, hsla(265,50%,50%,0.08), transparent 70%)" }} />
-              <span className="text-[0.55rem] sm:text-[0.65rem] font-heading font-bold tracking-[0.15em] uppercase text-foreground/80 group-hover:text-primary transition-colors flex items-center gap-1.5">
+              whileHover={{ scale: 1.04, borderColor: "hsl(var(--primary) / 0.2)", boxShadow: "0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.5)" }}>
+              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.12), transparent)" }} />
+              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.3) 0%, transparent 25%)" }} />
+              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: "radial-gradient(circle at center, hsl(var(--primary) / 0.05), transparent 70%)" }} />
+              <span className="relative z-10 text-[0.55rem] sm:text-[0.65rem] font-heading font-bold tracking-[0.15em] uppercase text-foreground/80 group-hover:text-primary transition-colors flex items-center gap-1.5">
                 <span className="text-primary/50 text-[0.5rem]">{item.icon}</span>
                 {item.label}
               </span>
