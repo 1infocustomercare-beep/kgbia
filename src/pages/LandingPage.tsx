@@ -450,7 +450,7 @@ const NeuralCellsBackground = () => {
       { x: 75, y: 30 }, { x: 92, y: 55 }, { x: 35, y: 80 }, { x: 65, y: 90 }].
       map((pos, i) =>
       <motion.div key={`tnode-${i}`} className="absolute w-1 h-1 rounded-full"
-      style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(210,55%,62%,0.25)`, boxShadow: `0 0 8px hsla(210,55%,62%,0.15)` }}
+      style={{ left: `${pos.x}%`, top: `${pos.y}%`, background: `hsla(195,100%,55%,0.25)`, boxShadow: `0 0 8px hsla(210,100%,62%,0.15)` }}
       animate={{ opacity: [0.15, 0.5, 0.15], scale: [0.7, 1.4, 0.7] }}
       transition={{ duration: 4 + i * 0.6, repeat: Infinity, delay: i * 0.5 }} />
       )}
