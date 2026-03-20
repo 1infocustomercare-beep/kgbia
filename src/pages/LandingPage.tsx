@@ -5608,10 +5608,10 @@ const LandingPage = () => {
         <div className="relative mb-1 rounded-2xl overflow-hidden isolate">
           {/* Opaque panel so global homepage background doesn't bleed under circuit schema */}
           <div
-            className="absolute inset-0 z-0 pointer-events-none"
+            className="absolute inset-0 z-0 pointer-events-none rounded-2xl"
             style={{
-              background: "linear-gradient(160deg, hsla(230,16%,6%,0.99), hsla(265,16%,8%,0.98))",
-              border: "1px solid hsla(265,40%,45%,0.06)"
+              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.97), hsl(248 15% 97% / 0.95))",
+              border: "1px solid hsl(var(--border) / 0.25)"
             }} />
           
 
