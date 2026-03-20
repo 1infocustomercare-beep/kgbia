@@ -3216,13 +3216,7 @@ export function AllIndustriesShowcase({ onViewDemo }: { onViewDemo?: (id: Indust
                   onClick={() => setOpenSector(isOpen ? null : id)}
                   className="w-full flex items-center gap-3 p-3.5 active:scale-[0.98] transition-transform"
                 >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}
-                  >
-                    <SectorAppIcon id={id} size={40} />
-                  </div>
-                  </div>
+                  <SectorAppIcon id={id} size={40} />
                   <div className="flex-1 text-left min-w-0">
                     <p className="text-sm font-bold text-white truncate">{cfg.label}</p>
                     <p className="text-[10px] text-white/35 truncate">{demo?.companyName || cfg.description}</p>
