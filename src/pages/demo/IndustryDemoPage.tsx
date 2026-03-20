@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS, type DemoService } from "@/data/demo-industries";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
+import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import NCCPublicSite from "@/pages/public/NCCPublicSite";
 import BeautyPublicSite from "@/pages/public/BeautyPublicSite";
 import HealthcarePublicSite from "@/pages/public/HealthcarePublicSite";
