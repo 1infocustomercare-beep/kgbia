@@ -3609,7 +3609,7 @@ const LandingPage = () => {
       <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 30% 97%) 50%, hsl(0 0% 100%) 100%)"
       }}>
-        <div className="text-center mb-10">
+        <div className="text-center mb-6">
           <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
           <motion.h2 className="text-[clamp(1.5rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
