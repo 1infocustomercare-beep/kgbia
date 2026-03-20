@@ -346,7 +346,7 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           const dx = ax - bx, dy = ay - by, dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < w * 0.14) {
             ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by);
-            ctx.strokeStyle = hsl(colorPalette[a.ci], (1 - dist / (w * 0.14)) * 0.4 * hA); ctx.lineWidth = 1; ctx.stroke();
+            ctx.strokeStyle = hsl(colorPalette[a.ci], (1 - dist / (w * 0.14)) * 0.65 * hA); ctx.lineWidth = 1.2; ctx.stroke();
           }
         }
 
