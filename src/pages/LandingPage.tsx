@@ -1096,7 +1096,6 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
         style={{ background: "linear-gradient(180deg, hsla(38,55%,50%,0.4), transparent)" }} />
         <div className="absolute bottom-0 left-0 right-0 h-[70px]"
         style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.6))" }} />
-        }} />
       </div>
       <div className="text-center mb-8 sm:mb-12">
         <SectionLabel text="Piani & Prezzi" icon={<Gem className="w-3 h-3 text-accent" />} />
