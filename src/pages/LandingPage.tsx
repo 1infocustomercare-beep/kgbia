@@ -5354,7 +5354,7 @@ const LandingPage = () => {
                     <div className="absolute -bottom-[1.5px] -right-[1.5px] w-[4px] h-[4px] border-b border-r border-primary/25" />
                   </div>
                   <h3 className="font-heading text-[0.55rem] font-bold text-foreground/80 leading-tight mb-0.5">{card.title}</h3>
-                  <p className="text-[0.45rem] text-foreground/30 leading-[1.4] mb-1">{card.desc}</p>
+                  <p className="text-[0.45rem] text-foreground/55 leading-[1.4] mb-1">{card.desc}</p>
                   <motion.span className="text-[0.45rem] font-heading font-semibold text-primary/50 tracking-wider inline-flex items-center gap-1"
                 animate={{ opacity: [0.4, 0.9, 0.4] }}
                 transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.6 }}>
