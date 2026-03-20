@@ -4395,16 +4395,23 @@ const LandingPage = () => {
         initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
           <motion.button
             onClick={() => scrollTo("pricing")}
-            className="group px-7 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center gap-2"
-            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.25)" }}
+            className="group w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase inline-flex items-center justify-center gap-2"
+            style={{ boxShadow: "0 6px 30px hsl(var(--empire-violet) / 0.25), inset 0 1px 0 hsl(0 0% 100% / 0.15)" }}
+            whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(265,70%,60%,0.3)" }}
             whileTap={{ scale: 0.97 }}>
             
             Inizia Ora <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </motion.button>
           <motion.button
             onClick={() => navigate("/demo")}
-            className="px-7 py-3.5 rounded-full border border-foreground/8 text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:border-primary/20 hover:text-foreground hover:bg-primary/[0.03] transition-all inline-flex items-center gap-2"
-            whileHover={{ scale: 1.01 }}>
+            className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all inline-flex items-center justify-center gap-2"
+            style={{
+              border: "1px solid hsl(var(--border) / 0.4)",
+              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))",
+              backdropFilter: "blur(12px)",
+              boxShadow: "0 2px 12px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
+            }}
+            whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.2)" }}>
             
             <Play className="w-4 h-4 text-primary/60" /> Prova Tutte le Demo
           </motion.button>
