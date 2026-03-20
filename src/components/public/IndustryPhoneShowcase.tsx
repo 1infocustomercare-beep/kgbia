@@ -3079,10 +3079,7 @@ export function IndustryShowcaseSection({
     <div className="py-6">
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: `${cfg.defaultPrimaryColor}15`, border: `1px solid ${cfg.defaultPrimaryColor}20` }}>
-            <SectorAppIcon id={industryId} size={40} />
-          </div>
+          <SectorAppIcon id={industryId} size={40} />
           <div>
             <h3 className="text-sm font-bold text-white">{cfg.label}</h3>
             <p className="text-[10px] text-white/35">{demo.companyName} · {cfg.description}</p>
