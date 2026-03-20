@@ -3547,16 +3547,16 @@ const LandingPage = () => {
                   key={i}
                   className="relative group text-center px-3 py-3 sm:px-4 sm:py-4 rounded-2xl overflow-hidden"
                   style={{
-                    background: "hsl(var(--card) / 0.55)",
+                    background: "hsl(0 0% 100% / 0.6)",
                     backdropFilter: "blur(16px)",
                     WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid hsl(var(--border) / 0.4)",
-                    boxShadow: "0 2px 12px hsl(var(--primary) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.06)"
+                    border: "1px solid hsl(168 45% 65% / 0.35)",
+                    boxShadow: "0 2px 12px hsl(160 55% 40% / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
                   }}
-                  whileHover={{ y: -2, boxShadow: "0 8px 32px hsl(var(--primary) / 0.12), inset 0 1px 0 hsl(0 0% 100% / 0.12)" }}
+                  whileHover={{ y: -2, boxShadow: "0 8px 32px hsl(160 55% 40% / 0.12), inset 0 1px 0 hsl(0 0% 100% / 0.3)" }}
                   transition={{ duration: 0.25 }}
                 >
-                  <span className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <span className="absolute inset-0 bg-gradient-to-br from-accent/[0.04] via-transparent to-accent/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <p className="relative text-lg sm:text-2xl font-heading font-bold text-foreground">
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
