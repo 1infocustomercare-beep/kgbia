@@ -923,6 +923,10 @@ export function IPhoneFrame({
         zIndex: isCenter ? 10 : isNear ? 5 : 1,
       }}
     >
+      <MockupLightbox
+        imageSrc={SECTOR_MOCKUP_IMAGES[industryId]?.[index % (SECTOR_MOCKUP_IMAGES[industryId]?.length || 1)]}
+        imageAlt={`${companyName} - ${screen.label}`}
+      >
       <div className="relative">
         {/* Ambient glow */}
         <div className="absolute -inset-4 rounded-[48px] blur-2xl pointer-events-none transition-opacity"
