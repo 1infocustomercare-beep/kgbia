@@ -124,10 +124,10 @@ const MILESTONES = [
   },
   {
     year: "2025",
-    label: "Coscienza — 95+ Agenti IA",
-    desc: "L'intelligenza collettiva emerge: oltre 95 agenti specializzati che apprendono, collaborano e si evolvono. Ogni business riceve un team di menti artificiali dedicate 24/7.",
+    label: "Coscienza — 98+ Agenti IA",
+    desc: "L'intelligenza collettiva emerge: oltre 98 agenti specializzati che apprendono, collaborano e si evolvono. Ogni business riceve un team di menti artificiali dedicate 24/7.",
     icon: Brain,
-    metric: "95+ AI agents",
+    metric: "98+ AI agents",
     color: "hsla(265,70%,60%,0.2)",
     glowColor: "hsla(265,70%,60%,0.12)",
   },
