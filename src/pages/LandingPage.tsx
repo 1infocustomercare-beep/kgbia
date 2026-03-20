@@ -3832,7 +3832,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              VIDEO HERO — Business Transformation
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden hidden" style={{
+      <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(260,24%,10%,0.96) 18%, hsla(265,26%,12%,0.96) 35%, hsla(155,16%,9%,0.96) 55%, hsla(265,20%,10%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         {/* Premium ambient glows — discovery/innovation luxury */}
@@ -4324,10 +4324,9 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              AI AGENTS SHOWCASE
                             ═══════════════════════════════════════════ */}
-      {/* [REDESIGN] Removed: AI Agents Showcase, Perché Empire, Comparison Table, Tech DNA, 3 Interfacce, Build Anything, Servizi — streamlined for conversion */}
-      {false as any && <AIAgentsShowcase />}
+      <AIAgentsShowcase />
 
-      <Section className="hidden" style={{
+      <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(220,18%,11%,0.96) 30%, hsla(155,18%,9%,0.96) 50%, hsla(265,20%,10%,0.96) 70%, hsla(220,16%,8%,0.96) 85%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4534,7 +4533,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              COMPARISON TABLE — Empire vs Others
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden hidden" style={{
+      <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.94) 15%, hsla(38,16%,9%,0.94) 35%, hsla(265,20%,10%,0.94) 55%, hsla(38,14%,8%,0.94) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4604,7 +4603,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              TECH DNA — Neural Network Visualization
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden hidden" style={{
+      <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,26%,10%,0.94) 15%, hsla(230,20%,11%,0.94) 35%, hsla(265,22%,9%,0.94) 55%, hsla(230,18%,8%,0.94) 78%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4774,7 +4773,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              3 INTERFACCE — Mockup Showcase
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden hidden" style={{
+      <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(38,18%,9%,0.96) 18%, hsla(265,20%,10%,0.96) 35%, hsla(38,14%,8%,0.96) 55%, hsla(265,18%,9%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -5020,7 +5019,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              BUILD ANYTHING — Streamlined Conversion Section
                             ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden hidden" style={{
+      <Section className="relative overflow-hidden" style={{
         background: "linear-gradient(180deg, hsla(230,16%,4%,0.96) 0%, hsla(265,24%,10%,0.96) 15%, hsla(38,18%,9%,0.96) 35%, hsla(265,20%,10%,0.96) 55%, hsla(38,14%,8%,0.96) 75%, hsla(230,16%,4%,0.96) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
