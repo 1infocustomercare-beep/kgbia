@@ -500,6 +500,7 @@ const EmpireVoiceAgent: React.FC = () => {
   const narratedRef = useRef<Set<string>>(new Set());
   const sectionQueueRef = useRef<string[]>([]);
   const queueProcessingRef = useRef(false);
+  const activeNarrationSectionRef = useRef<string | null>(null);
   const narrationAttemptsRef = useRef<Record<string, number>>({});
   const introStartedRef = useRef(false);
   const autoBootedRef = useRef(false);
@@ -776,47 +777,58 @@ const EmpireVoiceAgent: React.FC = () => {
       if (!script || !voiceEnabledRef.current) continue;
       if (narratedRef.current.has(sectionId)) continue;
 
+      activeNarrationSectionRef.current = sectionId;
+
       narrationAttemptsRef.current[sectionId] = (narrationAttemptsRef.current[sectionId] ?? 0) + 1;
       console.log(`[Arianna] Narrating "${sectionId}" attempt #${narrationAttemptsRef.current[sectionId]}`);
 
-      setMessages((prev) => {
-        const last = prev[prev.length - 1];
-        if (last?.role === "assistant" && last.content === script) {
-          return prev;
+      try {
+        setMessages((prev) => {
+          const last = prev[prev.length - 1];
+          if (last?.role === "assistant" && last.content === script) {
+            return prev;
+          }
+          return [...prev, { role: "assistant", content: script }];
+        });
+        setIsSpeaking(true);
+        setIsPaused(false);
+        abortRef.current = false;
+
+        // No aggressive timeout race — let speakText finish naturally
+        const preferImmediate = sectionId === "hero" && preferImmediateNarrationRef.current;
+        const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId, {
+          preferImmediate,
+        });
+        if (preferImmediate) {
+          preferImmediateNarrationRef.current = false;
         }
-        return [...prev, { role: "assistant", content: script }];
-      });
-      setIsSpeaking(true);
-      setIsPaused(false);
-      abortRef.current = false;
 
-      // No aggressive timeout race — let speakText finish naturally
-      const preferImmediate = sectionId === "hero" && preferImmediateNarrationRef.current;
-      const played = await speakText(script, audioRef, abortRef, useBrowserFallbackRef, sectionId, {
-        preferImmediate,
-      });
-      if (preferImmediate) {
-        preferImmediateNarrationRef.current = false;
+        if (played && !abortRef.current) {
+          narrationAttemptsRef.current[sectionId] = 0;
+          narratedRef.current.add(sectionId);
+          setNarratedSections(new Set(narratedRef.current));
+        } else if (!abortRef.current) {
+          // Don't retry aggressively — just skip and let next scroll/gesture re-enqueue
+          console.log(`[Arianna] Narration skipped for "${sectionId}" — will retry on next interaction`);
+          narrationAttemptsRef.current[sectionId] = 0;
+        }
+      } finally {
+        if (activeNarrationSectionRef.current === sectionId) {
+          activeNarrationSectionRef.current = null;
+        }
+        setIsSpeaking(false);
       }
-
-      if (played && !abortRef.current) {
-        narrationAttemptsRef.current[sectionId] = 0;
-        narratedRef.current.add(sectionId);
-        setNarratedSections(new Set(narratedRef.current));
-      } else if (!abortRef.current) {
-        // Don't retry aggressively — just skip and let next scroll/gesture re-enqueue
-        console.log(`[Arianna] Narration skipped for "${sectionId}" — will retry on next interaction`);
-        narrationAttemptsRef.current[sectionId] = 0;
-      }
-
-      setIsSpeaking(false);
     }
 
+    activeNarrationSectionRef.current = null;
     queueProcessingRef.current = false;
   }, []);
 
   const enqueueSectionNarration = useCallback((sectionId: string, forceReplay = false) => {
     if (!SECTION_SCRIPTS[sectionId] || !voiceEnabledRef.current) return;
+
+    // Prevent same-section replay while it is currently being narrated
+    if (activeNarrationSectionRef.current === sectionId) return;
 
     if (forceReplay) {
       narratedRef.current.delete(sectionId);
@@ -988,6 +1000,13 @@ const EmpireVoiceAgent: React.FC = () => {
       const now = Date.now();
       if (now - lastGestureEnqueueRef.current < 3000 && audioUnlockedRef.current) return;
 
+      // Once unlocked on mobile, never retry/re-enqueue on subsequent touches
+      if (audioUnlockedRef.current) {
+        userInteractedRef.current = true;
+        setUserInteracted(true);
+        return;
+      }
+
       // CRITICAL: If Arianna is already speaking/processing, never restart or re-enqueue
       if (queueProcessingRef.current) {
         // Still mark as unlocked + interacted, but don't re-enqueue anything
@@ -1003,8 +1022,8 @@ const EmpireVoiceAgent: React.FC = () => {
       const currentPending = currentSec ? !narratedRef.current.has(currentSec) : false;
       const heroStillPending = !narratedRef.current.has("hero");
 
-      // If fully unlocked and nothing pending, skip
-      if (audioUnlockedRef.current && !heroStillPending && !currentPending) return;
+      // If nothing pending, skip
+      if (!heroStillPending && !currentPending) return;
 
       unlockInFlightRef.current = true;
       lastGestureEnqueueRef.current = now;
