@@ -31,24 +31,39 @@ import { DemoTestimonialsCarousel } from "@/components/public/DemoTestimonialsCa
 import fallbackHeroVideo from "@/assets/video-industries.mp4";
 
 /* ─── DYNAMIC PALETTE PER TRADE TYPE ─── */
-const PALETTES: Record<string, { accent: string; dark: string; glow: string; heroLayout: "standard" | "split" | "centered" | "bold" | "elegant" }> = {
-  electrician: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4", heroLayout: "bold" },
-  plumber: { accent: "#3B82F6", dark: "#060A10", glow: "#DBEAFE", heroLayout: "standard" },
-  construction: { accent: "#EF6C00", dark: "#0A0704", glow: "#FFE0B2", heroLayout: "bold" },
-  gardening: { accent: "#4CAF50", dark: "#040A04", glow: "#C8E6C9", heroLayout: "elegant" },
-  cleaning: { accent: "#00BCD4", dark: "#040A0A", glow: "#B2EBF2", heroLayout: "centered" },
-  garage: { accent: "#E53935", dark: "#0A0404", glow: "#FFCDD2", heroLayout: "bold" },
-  photography: { accent: "#AB47BC", dark: "#0A040A", glow: "#E1BEE7", heroLayout: "elegant" },
-  veterinary: { accent: "#66BB6A", dark: "#040A04", glow: "#C8E6C9", heroLayout: "split" },
-  tattoo: { accent: "#F44336", dark: "#0A0404", glow: "#FFCDD2", heroLayout: "bold" },
-  childcare: { accent: "#FF9800", dark: "#0A0804", glow: "#FFE0B2", heroLayout: "centered" },
-  education: { accent: "#2196F3", dark: "#04080A", glow: "#BBDEFB", heroLayout: "split" },
-  events: { accent: "#E91E63", dark: "#0A0408", glow: "#F8BBD0", heroLayout: "elegant" },
-  logistics: { accent: "#607D8B", dark: "#060808", glow: "#CFD8DC", heroLayout: "standard" },
-  agriturismo: { accent: "#8BC34A", dark: "#060A04", glow: "#DCEDC8", heroLayout: "elegant" },
-  legal: { accent: "#795548", dark: "#080604", glow: "#D7CCC8", heroLayout: "split" },
-  accounting: { accent: "#009688", dark: "#040A08", glow: "#B2DFDB", heroLayout: "centered" },
-  default: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4", heroLayout: "standard" },
+type VisualStyle = "glass" | "solid" | "neon" | "warm" | "minimal" | "bold" | "organic";
+interface SectorPalette {
+  accent: string;
+  dark: string;
+  glow: string;
+  heroLayout: "standard" | "split" | "centered" | "bold" | "elegant";
+  visualStyle: VisualStyle;
+  fontDisplay: string;
+  fontBody: string;
+  cardRadius: string;
+  heroGradient?: string;
+  bgPattern?: "grid" | "dots" | "diagonal" | "none";
+  sectionBg?: string;
+}
+
+const PALETTES: Record<string, SectorPalette> = {
+  electrician: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4", heroLayout: "bold", visualStyle: "neon", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", heroGradient: "linear-gradient(135deg, #F5B80020, #FF880010)", bgPattern: "grid" },
+  plumber: { accent: "#3B82F6", dark: "#060A10", glow: "#DBEAFE", heroLayout: "standard", visualStyle: "solid", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", bgPattern: "dots" },
+  construction: { accent: "#EF6C00", dark: "#0A0704", glow: "#FFE0B2", heroLayout: "bold", visualStyle: "bold", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", heroGradient: "linear-gradient(160deg, #EF6C0015, #FF980010)", bgPattern: "diagonal" },
+  gardening: { accent: "#4CAF50", dark: "#040A04", glow: "#C8E6C9", heroLayout: "elegant", visualStyle: "organic", fontDisplay: "'Playfair Display', serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-3xl", bgPattern: "none" },
+  cleaning: { accent: "#00BCD4", dark: "#040A0A", glow: "#B2EBF2", heroLayout: "centered", visualStyle: "minimal", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", heroGradient: "linear-gradient(180deg, #00BCD410, transparent)", bgPattern: "grid" },
+  garage: { accent: "#E53935", dark: "#0A0404", glow: "#FFCDD2", heroLayout: "bold", visualStyle: "bold", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", heroGradient: "linear-gradient(135deg, #E5393520, #B7171710)", bgPattern: "diagonal" },
+  photography: { accent: "#AB47BC", dark: "#0A040A", glow: "#E1BEE7", heroLayout: "elegant", visualStyle: "glass", fontDisplay: "'Playfair Display', serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", bgPattern: "none" },
+  veterinary: { accent: "#66BB6A", dark: "#040A04", glow: "#C8E6C9", heroLayout: "split", visualStyle: "warm", fontDisplay: "'Nunito', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-3xl", heroGradient: "linear-gradient(135deg, #66BB6A15, #4CAF5010)", bgPattern: "none" },
+  tattoo: { accent: "#F44336", dark: "#0A0404", glow: "#FFCDD2", heroLayout: "bold", visualStyle: "neon", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", heroGradient: "linear-gradient(135deg, #F4433620, #E91E6310)", bgPattern: "diagonal" },
+  childcare: { accent: "#FF9800", dark: "#0A0804", glow: "#FFE0B2", heroLayout: "centered", visualStyle: "warm", fontDisplay: "'Nunito', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-3xl", bgPattern: "none", sectionBg: "#FFFBF5" },
+  education: { accent: "#2196F3", dark: "#04080A", glow: "#BBDEFB", heroLayout: "split", visualStyle: "minimal", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", bgPattern: "dots" },
+  events: { accent: "#E91E63", dark: "#0A0408", glow: "#F8BBD0", heroLayout: "elegant", visualStyle: "glass", fontDisplay: "'Playfair Display', serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", heroGradient: "linear-gradient(135deg, #E91E6318, #9C27B010)", bgPattern: "none" },
+  logistics: { accent: "#607D8B", dark: "#060808", glow: "#CFD8DC", heroLayout: "standard", visualStyle: "solid", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", bgPattern: "grid" },
+  agriturismo: { accent: "#8BC34A", dark: "#060A04", glow: "#DCEDC8", heroLayout: "elegant", visualStyle: "organic", fontDisplay: "'Playfair Display', serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-3xl", bgPattern: "none" },
+  legal: { accent: "#795548", dark: "#080604", glow: "#D7CCC8", heroLayout: "split", visualStyle: "minimal", fontDisplay: "'Playfair Display', serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", bgPattern: "none" },
+  accounting: { accent: "#009688", dark: "#040A08", glow: "#B2DFDB", heroLayout: "centered", visualStyle: "solid", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-2xl", bgPattern: "dots" },
+  default: { accent: "#F5B800", dark: "#0C0A06", glow: "#FFF3C4", heroLayout: "standard", visualStyle: "solid", fontDisplay: "'Space Grotesk', sans-serif", fontBody: "'Inter', sans-serif", cardRadius: "rounded-xl", bgPattern: "grid" },
 };
 
 /* ─── SECTOR-SPECIFIC SERVICES ─── */
