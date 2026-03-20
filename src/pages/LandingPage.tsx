@@ -559,15 +559,16 @@ const NeuralCellsBackground = () => {
 
 
 const PremiumIcon = ({ children, gradient, size = "md", delay = 0 }: {children: React.ReactNode;gradient: string;size?: "sm" | "md" | "lg";delay?: number;}) => {
-  const sizeClasses = size === "sm" ? "w-6 h-6 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl" : size === "lg" ? "w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl" : "w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl";
+  const sizeClasses = size === "sm" ? "w-7 h-7 sm:w-10 sm:h-10 rounded-xl sm:rounded-xl" : size === "lg" ? "w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl" : "w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-xl";
   const isMobileDevice = typeof window !== "undefined" && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768);
 
   return (
-    <motion.div className="relative group/icon" whileHover={isMobileDevice ? undefined : { scale: 1.15, rotate: -4 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
-      {/* Main container — no animated rings on mobile */}
-      <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg overflow-hidden`}
-      style={{ boxShadow: "0 6px 24px hsla(38,50%,50%,0.2), 0 0 0 1px hsla(38,45%,55%,0.1), inset 0 1px 1px rgba(255,255,255,0.2)" }}>
-        <div className="relative z-10">{children}</div>
+    <motion.div className="relative group/icon" whileHover={isMobileDevice ? undefined : { scale: 1.1, rotate: -3 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+      <div className={`relative ${sizeClasses} bg-gradient-to-br ${gradient} flex items-center justify-center text-white overflow-hidden`}
+      style={{ boxShadow: "0 4px 16px hsl(var(--primary) / 0.18), 0 0 0 1px hsl(var(--primary) / 0.1), inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.15)" }}>
+        {/* Inner glass highlight */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%, rgba(0,0,0,0.08) 100%)" }} />
+        <div className="relative z-10 [&>svg]:drop-shadow-sm">{children}</div>
       </div>
     </motion.div>);
 
@@ -579,29 +580,26 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
 
   return (
     <motion.div
-      className={`relative rounded-2xl border overflow-hidden group/card premium-card-glass premium-card-hover ${className}`}
+      className={`relative rounded-2xl border overflow-hidden group/card premium-card-hover ${className}`}
       style={{
-        background: "linear-gradient(145deg, hsla(230,12%,11%,0.98), hsla(230,10%,7%,0.99))",
-        backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.4)",
-        borderColor: "hsla(38,40%,55%,0.18)",
-        boxShadow: "0 2px 24px hsla(0,0%,0%,0.4), 0 0 0 1px hsla(38,45%,50%,0.06)"
+        background: "linear-gradient(145deg, hsl(224 14% 14% / 0.98), hsl(225 16% 10% / 0.99))",
+        backdropFilter: isMobileDevice ? undefined : "blur(20px) saturate(1.3)",
+        borderColor: "hsl(var(--border) / 0.6)",
+        boxShadow: "0 2px 20px hsl(0 0% 0% / 0.3), 0 0 0 1px hsl(var(--primary) / 0.04)"
       }}
       whileHover={hover && !isMobileDevice ? {
-        y: -6,
-        borderColor: "hsla(38,45%,55%,0.25)",
-        boxShadow: "0 20px 60px hsla(38,45%,50%,0.1), 0 0 30px hsla(38,45%,50%,0.05), inset 0 1px 0 hsla(38,50%,70%,0.08)",
+        y: -5,
+        borderColor: "hsl(var(--primary) / 0.2)",
+        boxShadow: "0 16px 48px hsl(0 0% 0% / 0.35), 0 0 24px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
         transition: { duration: 0.4, ease: "easeOut" }
       } : undefined}>
       
-    {/* Top accent line — static on mobile */}
+    {/* Top accent line */}
     <div className="absolute top-0 left-0 right-0 h-px z-10"
-      style={{ background: "linear-gradient(90deg, transparent, hsla(35,45%,55%,0.2), hsla(38,50%,60%,0.2), hsla(35,45%,55%,0.15), transparent)" }} />
+      style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), hsl(var(--accent) / 0.12), transparent)" }} />
       
-    {/* Corner accents */}
-    <div className="absolute top-2 left-2 w-4 h-4 border-t border-l rounded-tl-sm pointer-events-none opacity-20" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
-    <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r rounded-br-sm pointer-events-none opacity-20" style={{ borderColor: "hsla(35,45%,55%,0.35)" }} />
     {/* Inner glass reflection */}
-    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsla(38,30%,70%,0.03) 0%, transparent 40%)" }} />
+    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 35%)" }} />
     <div className="relative z-10">{children}</div>
   </motion.div>);
 
