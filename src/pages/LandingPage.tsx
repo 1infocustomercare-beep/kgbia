@@ -6120,7 +6120,7 @@ const LandingPage = () => {
                   ].map((b, i) => (
                     <div key={i} className="flex flex-col items-center gap-0.5 sm:gap-1.5">
                       <div className="w-6 h-6 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl flex items-center justify-center"
-                      style={{ background: "hsla(230,18%,14%,0.9)", border: "1px solid hsla(265,30%,35%,0.12)", color: "hsla(38,60%,60%,0.7)" }}>
+                      style={{ background: "hsl(var(--primary) / 0.06)", border: "1px solid hsl(var(--primary) / 0.1)", color: "hsl(var(--primary) / 0.7)" }}>
                         {b.icon}
                       </div>
                       <span className="text-[0.35rem] sm:text-[0.5rem] text-foreground/30 tracking-wider uppercase">{b.label}</span>
