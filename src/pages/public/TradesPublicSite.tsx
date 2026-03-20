@@ -505,8 +505,8 @@ export default function TradesPublicSite({ company, afterHero }: Props) {
           <div className="flex items-center gap-3">
             {company.logo_url ? <img src={company.logo_url} alt="" className="h-9 w-9 rounded-xl object-cover" /> : <HeroIcon className="w-6 h-6" style={{ color: A }} />}
             <div className="min-w-0">
-              <span className="font-bold truncate block text-sm">{company.name}</span>
-              <span className="text-[8px] tracking-[0.25em] uppercase block font-medium text-white/30" style={{ fontFamily: "'Inter', sans-serif" }}>{config.label.toUpperCase()}</span>
+              <span className="font-bold truncate block text-sm" style={{ fontFamily: palette.fontDisplay }}>{company.name}</span>
+              <span className="text-[8px] tracking-[0.25em] uppercase block font-medium text-white/30" style={{ fontFamily: palette.fontBody }}>{config.label.toUpperCase()}</span>
             </div>
           </div>
           <div className="hidden md:flex gap-6 text-[11px] tracking-[0.15em] uppercase text-white/35" style={{ fontFamily: "'Inter', sans-serif" }}>
