@@ -45,7 +45,7 @@ const TEAM = [
     name: "Luca Marchetti",
     role: "Chief AI Officer",
     photo: teamLuca,
-    bio: "Ph.D. in Machine Learning (Politecnico di Milano), post-doc a Stanford HAI. 20+ paper pubblicati su NeurIPS, ICML e ACL. Ex Staff Research Scientist presso DeepMind. Architetto del framework proprietario che alimenta i 95 agenti verticali di Empire IA con fine-tuning domain-specific.",
+    bio: "Ph.D. in Machine Learning (Politecnico di Milano), post-doc a Stanford HAI. 20+ paper pubblicati su NeurIPS, ICML e ACL. Ex Staff Research Scientist presso DeepMind. Architetto del framework proprietario che alimenta i 98 agenti verticali di Empire IA con fine-tuning domain-specific.",
     accent: "hsla(220,60%,55%,0.3)",
   },
   {
