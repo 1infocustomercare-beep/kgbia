@@ -3496,7 +3496,7 @@ const LandingPage = () => {
             <br />
             <span className="text-foreground/80">Potenziati dall'IA</span>
           </motion.h2>
-          <motion.p className="text-[0.82rem] text-foreground/45 max-w-lg mx-auto leading-[1.75]"
+          <motion.p className="text-[0.82rem] text-foreground/60 max-w-lg mx-auto leading-[1.75]"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.2 }}>
             Progettiamo e sviluppiamo applicazioni dedicate, web app professionali e sistemi gestionali completi
             per qualsiasi settore — personalizzati al 100% sulle tue esigenze, con intelligenza artificiale integrata
