@@ -3391,7 +3391,7 @@ const LandingPage = () => {
             {/* Subtitle — clearer value prop */}
             <motion.p className="mt-4 sm:mt-6 text-[0.85rem] sm:text-lg text-foreground/50 max-w-[540px] leading-[1.75] sm:leading-[1.8] font-light px-2 sm:px-0"
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-              App dedicata, 20+ agenti IA, CRM, prenotazioni, pagamenti e marketing —
+              App dedicata, 98+ agenti IA, CRM, prenotazioni, pagamenti e marketing —
               <span className="text-foreground/70 font-medium"> tutto integrato per <span className="text-neon-emerald font-semibold">25+ settori</span>. Zero canone mensile, solo risultati.</span>
             </motion.p>
 
