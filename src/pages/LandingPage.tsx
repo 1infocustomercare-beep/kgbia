@@ -1226,15 +1226,15 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* Features with expand */}
                       <ul className="mt-3 space-y-1.5">
                         {p.features.slice(0, isSelected ? p.features.length : 4).map((f, fi) =>
-                      <li key={fi} className="flex items-start gap-2 text-[0.7rem] text-foreground/50">
-                            <div className={`w-4.5 h-4.5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                        f.includes("ZERO") || f.includes("0%") ? "bg-accent/20" : "bg-primary/12"}`
+                      <li key={fi} className="flex items-start gap-1.5 text-[0.62rem] text-foreground/55">
+                            <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                        f.includes("ZERO") || f.includes("0%") ? "bg-accent/15" : "bg-primary/10"}`
                         }>
-                              <Check className={`w-2.5 h-2.5 ${
+                              <Check className={`w-2 h-2 ${
                           f.includes("ZERO") || f.includes("0%") ? "text-accent" : "text-primary"}`
                           } />
                             </div>
-                            <span className={`leading-snug ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/60" : ""}`}>{f}</span>
+                            <span className={`leading-snug break-words ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/70" : ""}`}>{f}</span>
                           </li>
                       )}
                         {!isSelected && p.features.length > 4 &&
