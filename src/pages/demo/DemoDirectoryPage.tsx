@@ -135,64 +135,80 @@ export default function DemoDirectoryPage() {
   const getFeatured = (id: IndustryId) => FEATURED_DEMOS.find(f => f.id === id);
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: "#06080c" }}>
-      {/* ═══ PREMIUM BACKGROUND ═══ */}
+    <div className="min-h-screen relative overflow-hidden" style={{ background: "#050508" }}>
+      {/* ═══ PREMIUM BACKGROUND — fully opaque, no DNA bleed ═══ */}
       <div className="fixed inset-0 pointer-events-none z-0">
+        {/* Rich gradient base */}
         <div className="absolute inset-0" style={{
-          background: "linear-gradient(165deg, #080a12 0%, #0c0e18 30%, #080a10 60%, #06080c 100%)"
+          background: "linear-gradient(165deg, #08070e 0%, #0d0b18 20%, #0a0912 40%, #0e0c15 60%, #080710 80%, #050508 100%)"
         }} />
-        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full"
-          style={{ background: "radial-gradient(circle, hsla(265,45%,25%,0.1), transparent 60%)", filter: "blur(120px)" }} />
-        <div className="absolute bottom-[-5%] left-[-10%] w-[500px] h-[500px] rounded-full"
-          style={{ background: "radial-gradient(circle, hsla(38,40%,22%,0.08), transparent 60%)", filter: "blur(120px)" }} />
+
+        {/* Ambient orbs — deep, rich, luxurious */}
+        <div className="absolute top-[-10%] right-[-5%] w-[700px] h-[700px] rounded-full"
+          style={{ background: "radial-gradient(circle, hsla(265,45%,25%,0.12), transparent 60%)", filter: "blur(180px)" }} />
+        <div className="absolute bottom-[-5%] left-[-10%] w-[600px] h-[600px] rounded-full"
+          style={{ background: "radial-gradient(circle, hsla(38,40%,22%,0.1), transparent 60%)", filter: "blur(160px)" }} />
+        <div className="absolute top-[40%] left-[50%] w-[500px] h-[500px] rounded-full"
+          style={{ background: "radial-gradient(circle, hsla(200,35%,20%,0.06), transparent 60%)", filter: "blur(140px)" }} />
+
+        {/* Subtle geometric grid */}
+        <div className="absolute inset-0 opacity-[0.018]"
+          style={{
+            backgroundImage: `linear-gradient(hsla(265,40%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265,40%,60%,0.08) 1px, transparent 1px)`,
+            backgroundSize: "80px 80px"
+          }} />
+
+        {/* Top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265,50%,50%,0.15) 30%, hsla(38,45%,50%,0.12) 50%, hsla(265,50%,50%,0.1) 70%, transparent 90%)" }} />
       </div>
 
       {/* ═══ HEADER ═══ */}
       <div className="sticky top-0 z-40 border-b"
         style={{
-          background: "linear-gradient(180deg, hsla(220,25%,7%,0.97), hsla(220,20%,5%,0.95))",
-          backdropFilter: "blur(20px) saturate(1.4)",
-          borderColor: "hsla(220,20%,30%,0.12)"
+          background: "linear-gradient(180deg, hsla(240,20%,5%,0.97), hsla(240,18%,4%,0.95))",
+          backdropFilter: "blur(30px) saturate(1.6)",
+          borderColor: "hsla(265,30%,30%,0.12)"
         }}>
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
+        <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center gap-3">
           <button onClick={() => navigate("/home")}
             className="p-2 rounded-xl transition-all duration-200 hover:scale-105"
-            style={{ background: "hsla(220,20%,20%,0.25)", border: "1px solid hsla(220,20%,30%,0.15)" }}>
-            <ArrowLeft className="w-4 h-4" style={{ color: "hsla(0,0%,100%,0.7)" }} />
+            style={{ background: "hsla(265,30%,30%,0.12)", border: "1px solid hsla(265,30%,40%,0.1)" }}>
+            <ArrowLeft className="w-4 h-4 text-foreground/60" />
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold font-heading tracking-tight" style={{ color: "hsla(0,0%,100%,0.92)" }}>Esplora i Settori</h1>
-            <p className="text-[0.6rem] tracking-wide" style={{ color: "hsla(0,0%,100%,0.35)" }}>{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
+            <h1 className="text-base font-bold text-foreground font-heading tracking-tight">Esplora i Settori</h1>
+            <p className="text-[0.6rem] text-foreground/30 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
           </div>
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-            style={{ background: "hsla(150,40%,40%,0.1)", border: "1px solid hsla(150,40%,40%,0.15)" }}>
-            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "hsla(150,60%,50%,0.9)" }} />
-            <span className="text-[0.5rem] font-semibold tracking-wider" style={{ color: "hsla(150,50%,60%,0.85)" }}>LIVE</span>
+            style={{ background: "hsla(150,40%,40%,0.08)", border: "1px solid hsla(150,40%,40%,0.1)" }}>
+            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "hsla(150,60%,50%,0.8)" }} />
+            <span className="text-[0.5rem] font-semibold tracking-wider" style={{ color: "hsla(150,50%,55%,0.7)" }}>LIVE</span>
           </div>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-5 relative z-10">
+      <div className="max-w-5xl mx-auto px-4 py-6 relative z-10">
         {/* ═══ SEARCH ═══ */}
-        <div className="relative mb-5">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "hsla(0,0%,100%,0.3)" }} />
+        <div className="relative mb-6">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/20" />
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cerca settore..."
-            className="pl-10 h-11 min-h-[44px] text-sm"
+            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/20 text-sm"
             style={{
-              background: "hsla(220,18%,10%,0.9)",
-              border: "1px solid hsla(220,20%,25%,0.2)",
-              borderRadius: "0.875rem",
-              color: "hsla(0,0%,100%,0.85)",
+              background: "hsla(240,18%,8%,0.95)",
+              border: "1px solid hsla(265,25%,25%,0.15)",
+              borderRadius: "0.875rem"
             }}
           />
         </div>
 
         {/* ═══ CONTENT ═══ */}
         {search.trim() ? (
-          <div className="space-y-2.5">
+          /* Flat filtered list */
+          <div className="space-y-2">
             {filtered.map((id, i) => (
               <SectorCard key={id} id={id} index={i} isExpanded={expandedSector === id}
                 onToggle={() => setExpandedSector(expandedSector === id ? null : id)}
@@ -200,29 +216,31 @@ export default function DemoDirectoryPage() {
             ))}
             {filtered.length === 0 && (
               <div className="text-center py-16">
-                <p className="text-sm" style={{ color: "hsla(0,0%,100%,0.35)" }}>Nessun settore trovato per "{search}"</p>
+                <p className="text-foreground/30 text-sm">Nessun settore trovato per "{search}"</p>
               </div>
             )}
           </div>
         ) : (
-          <div className="space-y-7">
+          /* Categorized view */
+          <div className="space-y-8">
             {SECTOR_CATEGORIES.map((cat, ci) => {
               const categoryIndustries = cat.ids.filter(id => ALL_INDUSTRIES.includes(id));
               if (categoryIndustries.length === 0) return null;
               return (
                 <motion.div key={cat.label}
-                  initial={{ opacity: 0, y: 16 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: ci * 0.05 }}>
+                  transition={{ delay: ci * 0.06 }}>
+                  {/* Category header */}
                   <div className="flex items-center gap-2.5 mb-3 px-1">
                     <div className="h-px flex-1 max-w-[20px]"
-                      style={{ background: "linear-gradient(90deg, hsla(220,40%,55%,0.3), transparent)" }} />
-                    <span className="text-[0.6rem] font-bold tracking-[2px] uppercase" style={{ color: "hsla(220,30%,70%,0.5)" }}>{cat.label}</span>
+                      style={{ background: "linear-gradient(90deg, hsla(265,40%,50%,0.25), transparent)" }} />
+                    <span className="text-[0.55rem] font-bold tracking-[2.5px] uppercase text-foreground/25">{cat.label}</span>
                     <div className="h-px flex-1"
-                      style={{ background: "linear-gradient(90deg, transparent, hsla(220,30%,40%,0.1))" }} />
+                      style={{ background: "linear-gradient(90deg, transparent, hsla(265,30%,40%,0.08))" }} />
                   </div>
 
-                  <div className="space-y-2.5">
+                  <div className="space-y-2">
                     {categoryIndustries.map((id, i) => (
                       <SectorCard key={id} id={id} index={i} isExpanded={expandedSector === id}
                         onToggle={() => setExpandedSector(expandedSector === id ? null : id)}
@@ -263,36 +281,35 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.025 }}>
       <div
-        className={`relative rounded-2xl overflow-hidden group transition-all duration-300`}
+        className={`relative rounded-2xl overflow-hidden group transition-all duration-300 ${isExpanded ? "ring-1" : ""}`}
         style={{
           background: isFeatured
-            ? `linear-gradient(155deg, hsla(220,18%,13%,1), hsla(220,22%,9%,1))`
-            : `linear-gradient(155deg, hsla(220,16%,12%,1), hsla(220,20%,8%,1))`,
-          border: `1px solid ${isFeatured ? `${color}30` : "hsla(220,20%,25%,0.18)"}`,
-          boxShadow: isExpanded
-            ? `0 8px 32px hsla(220,30%,10%,0.4), 0 0 0 1px ${color}25`
-            : "0 2px 12px hsla(220,30%,5%,0.3)",
+            ? `linear-gradient(155deg, hsla(240,16%,10%,1), hsla(240,20%,7%,1))`
+            : `linear-gradient(155deg, hsla(240,14%,9%,1), hsla(240,18%,6%,1))`,
+          border: `1px solid ${isFeatured ? `${color}20` : "hsla(265,20%,22%,0.12)"}`,
+          ...(isExpanded ? { boxShadow: `0 0 0 1px ${color}30` } : {}),
         }}>
 
         {/* Top accent — featured only */}
         {isFeatured && (
           <div className="absolute top-0 left-0 right-0 h-[2px]"
-            style={{ background: `linear-gradient(90deg, transparent, ${color}60, ${color}30, transparent)` }} />
+            style={{ background: `linear-gradient(90deg, transparent, ${color}50, ${color}20, transparent)` }} />
         )}
 
         {/* Main row */}
         <div className="flex items-center gap-3 p-3.5 sm:p-4 cursor-pointer" onClick={onToggle}>
-          {/* Icon node */}
+          {/* Icon node — premium circle with gradient ring */}
           <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
             style={{
-              background: `linear-gradient(145deg, ${color}25, ${color}10)`,
-              boxShadow: `0 0 0 1px ${color}30, 0 4px 12px ${color}10`,
+              background: `linear-gradient(145deg, ${color}18, ${color}08)`,
+              boxShadow: `0 0 0 1px ${color}20, 0 2px 8px ${color}06`,
               color: color
             }}>
             {getIcon(cfg.icon)}
+            {/* Subtle pulse for featured */}
             {isFeatured && (
               <motion.div className="absolute inset-0 rounded-full pointer-events-none"
-                style={{ border: `1px solid ${color}20` }}
+                style={{ border: `1px solid ${color}15` }}
                 animate={{ scale: [1, 1.3], opacity: [0.4, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity }} />
             )}
@@ -301,39 +318,37 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
           {/* Text */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="font-bold text-[0.8rem] sm:text-sm font-heading truncate" style={{ color: "hsla(0,0%,100%,0.9)" }}>{label}</h3>
+              <h3 className="font-bold text-[0.8rem] sm:text-sm text-foreground font-heading truncate">{label}</h3>
               {isFeatured && (
-                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full font-bold tracking-[1.5px] uppercase flex items-center gap-0.5 flex-shrink-0"
-                  style={{ background: `${color}20`, color: color, border: `1px solid ${color}30` }}>
-                  <Crown className="w-2.5 h-2.5" /> PREMIUM
+                <span className="text-[0.45rem] px-1.5 py-0.5 rounded-full font-bold tracking-[1.5px] uppercase flex items-center gap-0.5 flex-shrink-0"
+                  style={{ background: `${color}12`, color: color, border: `1px solid ${color}18` }}>
+                  <Crown className="w-2 h-2" /> PREMIUM
                 </span>
               )}
             </div>
-            <p className="text-[0.62rem] sm:text-[0.68rem] truncate" style={{ color: "hsla(0,0%,100%,0.45)" }}>{subtitle}</p>
+            <p className="text-[0.58rem] sm:text-[0.65rem] text-foreground/30 truncate">{subtitle}</p>
           </div>
 
           {/* Actions */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <motion.button
               onClick={(e) => { e.stopPropagation(); isFeatured ? navigate(route) : onNavigate(id); }}
-              className="px-3.5 py-1.5 rounded-xl text-[0.6rem] sm:text-[0.65rem] font-semibold transition-all hidden sm:flex items-center gap-1 hover:scale-105"
+              className="px-3 py-1.5 rounded-xl text-[0.55rem] sm:text-[0.6rem] font-semibold transition-all hidden sm:flex items-center gap-1 hover:scale-105"
               style={isFeatured ? {
                 backgroundColor: color,
                 color: "#fff",
-                boxShadow: `0 4px 16px ${color}30`
+                boxShadow: `0 3px 12px ${color}25`
               } : {
-                background: "hsla(220,20%,22%,0.4)",
-                border: "1px solid hsla(220,20%,30%,0.2)",
-                color: "hsla(0,0%,100%,0.75)"
+                background: "hsla(265,20%,20%,0.2)",
+                border: "1px solid hsla(265,20%,25%,0.15)",
+                color: "hsla(0,0%,100%,0.6)"
               }}
               whileTap={{ scale: 0.95 }}>
               {isFeatured ? "Demo Live" : "Apri Demo"} <ArrowRight className="w-2.5 h-2.5" />
             </motion.button>
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-              style={{ background: "hsla(220,20%,22%,0.25)" }}>
-              {isExpanded
-                ? <ChevronUp className="w-3.5 h-3.5" style={{ color: "hsla(0,0%,100%,0.45)" }} />
-                : <ChevronDown className="w-3.5 h-3.5" style={{ color: "hsla(0,0%,100%,0.35)" }} />}
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center"
+              style={{ background: "hsla(265,20%,20%,0.1)" }}>
+              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/25" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/25" />}
             </div>
           </div>
         </div>
@@ -344,17 +359,19 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
               <div className="px-4 pb-5 pt-1">
-                <div className="h-px mb-4" style={{ background: `linear-gradient(90deg, transparent, ${color}20, transparent)` }} />
+                {/* Separator */}
+                <div className="h-px mb-4" style={{ background: `linear-gradient(90deg, transparent, ${color}15, transparent)` }} />
 
                 <div className="flex justify-center mb-4">
                   <LivePhonePreview route={route} color={color} name={label} />
                 </div>
                 <IndustryPhoneShowcase industryId={id} />
 
+                {/* CTA */}
                 <div className="flex justify-center mt-4">
                   <motion.button onClick={() => isFeatured ? navigate(route) : onNavigate(id)}
                     className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-2 min-h-[40px] transition-all hover:scale-105"
-                    style={{ backgroundColor: color, boxShadow: `0 4px 16px ${color}25` }} whileTap={{ scale: 0.95 }}>
+                    style={{ backgroundColor: color, boxShadow: `0 4px 16px ${color}20` }} whileTap={{ scale: 0.95 }}>
                     <Sparkles className="w-3.5 h-3.5" />
                     Apri Demo Live <ArrowRight className="w-3.5 h-3.5" />
                   </motion.button>
