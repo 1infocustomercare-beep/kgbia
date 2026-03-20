@@ -297,8 +297,8 @@ const InteractiveParticleSphere = ({ size = 280 }: { size?: number }) => {
           const wobble = Math.sin(ta * 3 + el * 2) * 5 * sc;
           const r = baseR + wobble;
           const px = cx + Math.cos(ta) * r, py = cy + Math.sin(ta) * r;
-          const fa = (1 - ti / trailLen) * 0.3 * anyA;
-          ctx.beginPath(); ctx.arc(px, py, (1.5 - ti * 0.1) * sc, 0, Math.PI * 2);
+          const fa = (1 - ti / trailLen) * 0.55 * anyA;
+          ctx.beginPath(); ctx.arc(px, py, (2 - ti * 0.1) * sc, 0, Math.PI * 2);
           ctx.fillStyle = hsl(c, fa); ctx.fill();
         }
       }
