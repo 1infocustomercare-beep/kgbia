@@ -97,7 +97,7 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="flex gap-3 p-3 rounded-2xl bg-secondary/40"
+                    className="flex gap-3 p-3 rounded-2xl cote-card"
                   >
                     <img
                       src={item.image}
