@@ -276,7 +276,7 @@ const PartnerDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
+    <div className="min-h-screen flex flex-col relative overflow-hidden landing-dark" style={{ background: "linear-gradient(145deg, hsl(265 20% 6%) 0%, hsl(255 18% 7%) 40%, hsl(260 20% 6%) 100%)" }}>
       {/* Fully opaque base — blocks underlying animations */}
       <div className="fixed inset-0 z-0" style={{ background: "hsl(228 22% 7%)" }} />
       {/* Premium violet luxury ambient */}
