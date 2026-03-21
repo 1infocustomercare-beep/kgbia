@@ -38,14 +38,15 @@ const ItemDetailSheet = ({ item, onClose }: ItemDetailSheetProps) => {
       {item && (
         <>
           <motion.div
-            className="fixed inset-0 z-40 bg-background/80 backdrop-blur-lg"
+            className="fixed inset-0 z-40 bg-black/80 backdrop-blur-lg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
           />
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[90vh] bg-card rounded-t-3xl overflow-hidden flex flex-col"
+            className="fixed inset-x-0 bottom-0 z-50 max-h-[90vh] rounded-t-3xl overflow-hidden flex flex-col"
+            style={{ background: "linear-gradient(180deg, hsl(20 8% 9%), hsl(20 10% 5%))", border: "1px solid hsla(30, 20%, 25%, 0.3)", borderBottom: "none" }}
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
