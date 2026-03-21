@@ -6974,7 +6974,7 @@ const LandingPage = () => {
               </h4>
               <div className="space-y-3 text-[0.65rem]">
                 {["Engine AI Proprietario", "Automazione End-to-End", "PWA White-Label", "Analytics Predittivi", "GDPR & AES-256", "API & Integrazioni"].map((s, i) =>
-                <p key={i} className="text-white/25 hover:text-white/60 transition-colors cursor-default flex items-center gap-2">
+                <p key={i} className="text-white/40 hover:text-white/70 transition-colors cursor-default flex items-center gap-2">
                     <span className="w-1 h-1 rounded-full" style={{ background: "hsla(265,70%,60%,0.4)" }} />
                     {s}
                   </p>
