@@ -534,7 +534,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             <div className="relative">
               <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 pr-11 rounded-xl bg-white/8 border border-white/15 !text-foreground text-base placeholder:text-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full px-4 py-3 pr-11 rounded-xl bg-white/8 border border-white/15 !text-white text-base placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary/30"
                 required minLength={6} />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
