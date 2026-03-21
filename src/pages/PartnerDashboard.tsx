@@ -228,7 +228,7 @@ const PartnerDashboard = () => {
 
   const handleLogout = async () => {
     await signOut();
-    navigate("/admin");
+    navigate("/auth");
   };
 
   const handleCopyInviteLink = () => {
