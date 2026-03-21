@@ -6835,7 +6835,7 @@ const LandingPage = () => {
       </Suspense>
 
       {/* ═══════ FINAL CTA ═══════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(248 15% 96%) 50%, hsl(0 0% 100%) 100%)" }}>
+      <Section style={{ background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(234 20% 10%) 50%, hsl(228 22% 8%) 100%)" }}>
         <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.08] via-deep-black/80 to-accent/[0.04] border border-primary/15 overflow-hidden animated-border">
           <div className="absolute inset-0 aurora-mesh opacity-30" />
           {/* Violet ambient glow */}
