@@ -303,7 +303,7 @@ const RestaurantPage = () => {
 
         <motion.div className="relative z-10 text-center px-5" style={{ opacity: heroOpacity }}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-            <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-bold text-foreground tracking-[0.1em] sm:tracking-[0.15em] uppercase leading-none">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-bold text-white tracking-[0.1em] sm:tracking-[0.15em] uppercase leading-none">
               {restaurantName.split(" ").map((word, i) => (
                 <span key={i} className="block">{word}</span>
               ))}
