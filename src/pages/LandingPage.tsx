@@ -4140,7 +4140,7 @@ const LandingPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 + i * 0.08 }}
-              whileHover={{ scale: 1.04, borderColor: "hsl(var(--primary) / 0.2)", boxShadow: "0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.5)" }}>
+              whileHover={{ scale: 1.04, borderColor: "hsl(var(--primary) / 0.2)", boxShadow: "0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.08)" }}>
               <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.12), transparent)" }} />
               <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 25%)" }} />
               <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -4210,7 +4210,7 @@ const LandingPage = () => {
           style={{ backgroundImage: "linear-gradient(hsla(265,30%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265,30%,60%,0.08) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsl(0 0% 100% / 0.8))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsl(228 22% 8% / 0.8))" }} />
         </div>
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
@@ -4413,9 +4413,9 @@ const LandingPage = () => {
             className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all inline-flex items-center justify-center gap-2"
             style={{
               border: "1px solid hsl(var(--border) / 0.4)",
-              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))",
+              background: "linear-gradient(160deg, hsl(228 20% 14% / 0.85), hsl(248 18% 11% / 0.8))",
               backdropFilter: "blur(12px)",
-              boxShadow: "0 2px 12px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
+              boxShadow: "0 2px 12px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.06)"
             }}
             whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.2)" }}>
             
@@ -5501,12 +5501,12 @@ const LandingPage = () => {
                   background: "linear-gradient(160deg, hsl(228 20% 14% / 0.8), hsl(248 18% 97% / 0.85))",
                   backdropFilter: "blur(16px)",
                   border: "1px solid hsl(var(--border) / 0.3)",
-                  boxShadow: "0 2px 16px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
+                  boxShadow: "0 2px 16px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.06)"
                 }}>
                   {/* Top accent line */}
                   <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent)" }} />
                   {/* Glass reflection */}
-                  <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.35) 0%, transparent 25%)" }} />
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.05) 0%, transparent 25%)" }} />
                   {/* Hover glow */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 30%, hsl(var(--primary) / 0.05), transparent 60%)" }} />
                 
@@ -5546,7 +5546,7 @@ const LandingPage = () => {
               ["Pagamenti", "Email Marketing", "WhatsApp Auto", "Inventario", "HACCP", "Review Shield™", "Agenda Smart", "Pricing Dinamico", "Landing SEO", "Cross-selling IA", "Programma Fedeltà", "Schede Paziente"]).
               map((cap, ci) =>
               <span key={ci} className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-[0.6rem] font-heading font-medium tracking-wider"
-              style={{ background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))", border: "1px solid hsl(var(--primary) / 0.08)", color: "hsl(var(--primary) / 0.6)", boxShadow: "0 1px 8px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)" }}>
+              style={{ background: "linear-gradient(160deg, hsl(228 20% 14% / 0.85), hsl(248 18% 11% / 0.8))", border: "1px solid hsl(var(--primary) / 0.08)", color: "hsl(var(--primary) / 0.6)", boxShadow: "0 1px 8px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.06)" }}>
                       <CircleCheck className="w-2.5 h-2.5" />
                       {cap}
                     </span>
