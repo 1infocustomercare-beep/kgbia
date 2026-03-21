@@ -287,7 +287,7 @@ const SectionLabel = forwardRef<HTMLDivElement, {text: string;icon?: React.React
           }}>
           <span className="text-white [&>svg]:w-3 [&>svg]:h-3">{icon || <Sparkles className="w-3 h-3" />}</span>
         </div>
-        <span className="text-[0.65rem] font-heading font-bold tracking-[2.5px] uppercase text-white/80 relative z-10">{text}</span>
+        <span className="text-[0.65rem] font-heading font-bold tracking-[2.5px] uppercase text-white/90 relative z-10">{text}</span>
       </div>
     </motion.div>
 
@@ -359,9 +359,9 @@ const LiveFeedSimulator = () => {
             <span className="text-[0.6rem] font-bold text-foreground/90 truncate">{item.agent}</span>
             <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-400 font-bold tracking-wider uppercase">LIVE</span>
           </div>
-          <p className="text-[0.52rem] text-foreground/45 truncate">{item.action}</p>
+          <p className="text-[0.52rem] text-foreground/60 truncate">{item.action}</p>
         </div>
-        <span className="text-[0.42rem] text-foreground/25 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
+        <span className="text-[0.42rem] text-foreground/40 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
       </div>);
 
   }
@@ -404,9 +404,9 @@ const LiveFeedSimulator = () => {
               <span className="text-[0.6rem] font-bold text-foreground/90 truncate">{item.agent}</span>
               {i === 0 && <span className="text-[0.4rem] px-1.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-400 font-bold tracking-wider uppercase">LIVE</span>}
             </div>
-            <p className="text-[0.52rem] text-foreground/45 truncate">{item.action}</p>
+            <p className="text-[0.52rem] text-foreground/60 truncate">{item.action}</p>
           </div>
-          <span className="text-[0.42rem] text-foreground/25 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
+          <span className="text-[0.42rem] text-foreground/40 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
         </motion.div>
       )}
     </AnimatePresence>);
@@ -1214,7 +1214,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
               <div key={i} className="w-6 h-6 rounded-full bg-primary/10 border-2 border-background flex items-center justify-center text-[0.55rem]">{e}</div>
               )}
               </div>
-              <p className="text-[0.55rem] text-foreground/40"><strong className="text-foreground/60">127+ attività</strong> hanno già scelto Empire questa settimana</p>
+              <p className="text-[0.55rem] text-foreground/55"><strong className="text-foreground/75">127+ attività</strong> hanno già scelto Empire questa settimana</p>
             </div>
 
             {/* Package Cards — mobile conversion-optimized */}
@@ -1262,12 +1262,12 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* Header row: Name + Discount */}
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <p className="text-[0.55rem] font-heading font-semibold text-foreground/35 tracking-[3px] uppercase">{p.name}</p>
+                          <p className="text-[0.55rem] font-heading font-semibold text-foreground/55 tracking-[3px] uppercase">{p.name}</p>
                           <div className="flex items-baseline gap-2 mt-1">
                             <span className="text-[1.6rem] font-heading font-extrabold text-foreground leading-none">€{p.price.toLocaleString("it-IT")}</span>
                             <div className="flex flex-col">
-                              <span className="text-[0.65rem] text-foreground/20 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
-                              <span className="text-[0.5rem] text-foreground/25">una tantum</span>
+                              <span className="text-[0.65rem] text-foreground/35 line-through">€{p.originalPrice.toLocaleString("it-IT")}</span>
+                              <span className="text-[0.5rem] text-foreground/40">una tantum</span>
                             </div>
                           </div>
                         </div>
@@ -1280,8 +1280,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       </div>
 
                       {/* Installment info */}
-                      <p className="text-[0.55rem] text-foreground/40 leading-snug">
-                        oppure <strong className="text-foreground/60">€{Math.round(p.price / 3)}/mese ×3</strong> (TAN 0%)
+                      <p className="text-[0.55rem] text-foreground/55 leading-snug">
+                        oppure <strong className="text-foreground/75">€{Math.round(p.price / 3)}/mese ×3</strong> (TAN 0%)
                       </p>
 
                       {/* Monthly + Commission pills — KEY conversion element */}
@@ -1316,12 +1316,12 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     }
 
                       {/* Tagline */}
-                      <p className="text-[0.6rem] text-foreground/30 mt-2.5 leading-relaxed italic">{p.tagline}</p>
+                      <p className="text-[0.6rem] text-foreground/45 mt-2.5 leading-relaxed italic">{p.tagline}</p>
 
                       {/* Features with expand */}
                       <ul className="mt-3 space-y-1.5">
                         {p.features.slice(0, isSelected ? p.features.length : 4).map((f, fi) =>
-                      <li key={fi} className="flex items-start gap-1.5 text-[0.62rem] text-foreground/55">
+                      <li key={fi} className="flex items-start gap-1.5 text-[0.62rem] text-foreground/70">
                             <div className={`w-4 h-4 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 ${
                         f.includes("ZERO") || f.includes("0%") ? "bg-accent/15" : "bg-primary/10"}`
                         }>
@@ -1329,7 +1329,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                           f.includes("ZERO") || f.includes("0%") ? "text-accent" : "text-primary"}`
                           } />
                             </div>
-                            <span className={`leading-snug break-words ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/70" : ""}`}>{f}</span>
+                            <span className={`leading-snug break-words ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/85" : ""}`}>{f}</span>
                           </li>
                       )}
                         {!isSelected && p.features.length > 4 &&
@@ -1348,7 +1348,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                             <Gift className="w-3 h-3 inline mr-1" />Bonus inclusi
                           </p>
                           {p.extras.map((e, ei) =>
-                      <p key={ei} className="text-[0.6rem] text-foreground/35 flex items-center gap-1.5 mb-0.5">
+                      <p key={ei} className="text-[0.6rem] text-foreground/50 flex items-center gap-1.5 mb-0.5">
                               <Star className="w-2.5 h-2.5 text-accent/40 flex-shrink-0" /> {e}
                             </p>
                       )}
