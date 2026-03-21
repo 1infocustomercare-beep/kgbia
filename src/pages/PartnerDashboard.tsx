@@ -803,15 +803,22 @@ const PartnerDashboard = () => {
       <ROICalculator open={showROI} onClose={() => setShowROI(false)} />
 
       {/* Bottom Tabs */}
-      <div className="fixed bottom-0 inset-x-0 border-t border-empire-violet-deep/20 safe-bottom z-50" style={{ background: 'hsla(265, 30%, 12%, 0.9)', backdropFilter: 'blur(20px)' }}>
+      <div className="fixed bottom-0 inset-x-0 safe-bottom z-50" style={{
+        background: "linear-gradient(180deg, hsl(228 22% 11% / 0.98) 0%, hsl(228 22% 7%) 100%)",
+        borderTop: "1px solid hsl(265 50% 30% / 0.3)",
+        boxShadow: "0 -4px 20px hsl(228 22% 4% / 0.7)"
+      }}>
         <div className="flex items-center justify-around px-1 py-2">
           {bottomTabs.map((tab) => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all min-h-[44px]
-                ${activeTab === tab.id ? "text-empire-violet-glow" : "text-muted-foreground"}`}>
+              className={`flex flex-col items-center gap-0.5 py-1.5 px-2.5 rounded-xl transition-all min-h-[44px]
+                ${activeTab === tab.id ? "text-empire-violet-glow" : "text-muted-foreground"}`}
+              style={activeTab === tab.id ? {
+                background: "linear-gradient(160deg, hsl(265 50% 20% / 0.6), hsl(265 40% 15% / 0.4))",
+                boxShadow: "0 0 12px hsl(265 70% 55% / 0.2), inset 0 1px 0 hsl(265 50% 40% / 0.15)"
+              } : undefined}>
               {tab.icon}
-              <span className="text-[9px] font-medium">{tab.label}</span>
-              {activeTab === tab.id && <motion.div layoutId="partner-tab" className="w-4 h-0.5 rounded-full" style={{ background: 'var(--gradient-dna)' }} />}
+              {activeTab === tab.id && <motion.div layoutId="partner-tab" className="w-4 h-0.5 rounded-full mt-0.5" style={{ background: 'var(--gradient-dna)' }} />}
             </button>
           ))}
         </div>

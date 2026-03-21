@@ -585,14 +585,21 @@ const SuperAdminDashboard = () => {
       </div>
 
       {/* Tab bar — compact grid for mobile */}
-      <div className="px-3 py-2">
+      <div className="px-3 py-2 relative z-10">
         <div className="grid grid-cols-5 gap-1">
           {tabs.map((tab) => (
             <button key={tab.id}
               onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px] ${
-                activeTab === tab.id ? "bg-empire-violet text-white shadow-[0_0_16px_hsl(265_85%_65%/0.3)]" : "bg-empire-violet-surface/50 text-muted-foreground hover:bg-empire-violet-surface"
-              }`}>
+              className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px]`}
+              style={activeTab === tab.id ? {
+                background: "linear-gradient(160deg, hsl(265 60% 45%), hsl(265 50% 35%))",
+                color: "white",
+                boxShadow: "0 0 16px hsl(265 85% 65% / 0.3), inset 0 1px 0 hsl(265 50% 60% / 0.2)"
+              } : {
+                background: "linear-gradient(160deg, hsl(228 20% 14% / 0.8), hsl(232 22% 12% / 0.7))",
+                color: "hsl(228 15% 60%)",
+                border: "1px solid hsl(228 20% 18% / 0.4)"
+              }}>
               <span className="[&_svg]:w-3 [&_svg]:h-3">{tab.icon}</span>
               <span className="leading-tight truncate w-full text-center">{tab.label}</span>
             </button>
