@@ -4,6 +4,7 @@ import { AppSidebar } from "@/components/layout/AppSidebar";
 import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { useIndustry } from "@/hooks/useIndustry";
+import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { getAdminLayout } from "@/config/admin-layout-config";
 import { SECTOR_THEMES } from "@/config/sector-themes";
@@ -38,8 +39,25 @@ const PatternOverlay = ({ pattern, accent }: { pattern: string; accent: string }
 };
 
 export default function AppLayout() {
+  const { roles } = useAuth();
   const { industry, loading, resolved, company } = useIndustry();
   const location = useLocation();
+
+  if (roles.includes("super_admin")) {
+    return <Navigate to="/superadmin" replace />;
+  }
+
+  if (roles.includes("staff")) {
+    return <Navigate to="/staff" replace />;
+  }
+
+  if ((roles.includes("partner") || roles.includes("team_leader")) && !roles.includes("restaurant_admin")) {
+    return <Navigate to="/partner" replace />;
+  }
+
+  if (roles.includes("customer") && !roles.includes("restaurant_admin")) {
+    return <Navigate to="/onboarding" replace />;
+  }
 
   if (loading || !resolved) {
     return (
