@@ -68,7 +68,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections";
 
 interface SubscriptionRecord {
   id: string;
