@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children, requiredRole, blockRole }: ProtectedRoutePro
   }
 
   if (!user) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/auth" replace />;
   }
 
   // Block specific roles from accessing this route
