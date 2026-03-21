@@ -123,7 +123,7 @@ export default function OnboardingPage() {
           font_body: "Inter",
           whatsapp_number: form.whatsapp || form.phone || null,
           booking_enabled: true,
-        }, { onConflict: "company_id" }).catch(() => {});
+        }, { onConflict: "company_id" }).then(() => {}).catch?.(() => {});
 
         // Create tenant_subscription with starter plan
         const { data: plans } = await supabase.from("subscription_plans" as any).select("id, name").order("price_monthly");
