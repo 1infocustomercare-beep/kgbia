@@ -51,7 +51,7 @@ const SECTOR_APP_ICON: Record<string, { gradient: string; shadow: string }> = {
   custom:       { gradient: "linear-gradient(135deg, #8E2DE2, #4A00E0)", shadow: "0 4px 14px rgba(142,45,226,0.35)" },
 };
 
-function SectorAppIcon({ id, size = 40 }: { id: string; size?: number }) {
+export function SectorAppIcon({ id, size = 40 }: { id: string; size?: number }) {
   const Icon = SECTOR_ICONS[id];
   const style = SECTOR_APP_ICON[id] || { gradient: "linear-gradient(135deg, #666, #999)", shadow: "none" };
   const iconSize = Math.round(size * 0.48);

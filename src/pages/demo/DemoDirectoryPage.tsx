@@ -11,7 +11,7 @@ import {
   Settings, Camera, HardHat, Flower2, Stethoscope, Pen,
   Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles
 } from "lucide-react";
-import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
+import IndustryPhoneShowcase, { SectorAppIcon } from "@/components/public/IndustryPhoneShowcase";
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 
@@ -299,19 +299,13 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
 
         {/* Main row */}
         <div className="flex items-center gap-3 p-3.5 sm:p-4 cursor-pointer" onClick={onToggle}>
-          {/* Icon node — premium circle with gradient ring */}
-          <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
-            style={{
-              background: `linear-gradient(145deg, ${color}30, ${color}15)`,
-              boxShadow: `0 0 0 1px ${color}35, 0 2px 8px ${color}12`,
-              color: color
-            }}>
-            {getIcon(cfg.icon)}
-            {/* Subtle pulse for featured */}
+          {/* Icon node — Premium iOS App Icon */}
+          <div className="relative flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+            <SectorAppIcon id={id} size={44} />
             {isFeatured && (
-              <motion.div className="absolute inset-0 rounded-full pointer-events-none"
-                style={{ border: `1px solid ${color}15` }}
-                animate={{ scale: [1, 1.3], opacity: [0.4, 0] }}
+              <motion.div className="absolute inset-0 rounded-[12px] pointer-events-none"
+                style={{ border: `1px solid ${color}25` }}
+                animate={{ scale: [1, 1.25], opacity: [0.5, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity }} />
             )}
           </div>
