@@ -4577,7 +4577,7 @@ const LandingPage = () => {
       <AIAgentsShowcase />
 
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,20%,97%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(232 24% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -4784,7 +4784,7 @@ const LandingPage = () => {
                              COMPARISON TABLE — Empire vs Others
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(168,15%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -5024,7 +5024,7 @@ const LandingPage = () => {
                              3 INTERFACCE — Mockup Showcase
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,25%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(234 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -5270,7 +5270,7 @@ const LandingPage = () => {
                              BUILD ANYTHING — Streamlined Conversion Section
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(248 20% 95%) 50%, hsl(220 20% 97%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(240 20% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -5602,7 +5602,7 @@ const LandingPage = () => {
                              SERVIZI
                             ═══════════════════════════════════════════ */}
       <Section id="services" className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(168,15%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <CircuitPattern />
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -6324,7 +6324,7 @@ const LandingPage = () => {
                              ROI CALCULATOR
                             ═══════════════════════════════════════════ */}
       <Section id="calculator" className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,25%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(234 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6551,7 +6551,7 @@ const LandingPage = () => {
                              PARTNER PROGRAM
                             ═══════════════════════════════════════════ */}
       <Section id="partner" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(168 20% 95%) 50%, hsl(220 20% 97%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[6%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6794,7 +6794,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              GARANZIA TOTALE — Risk Reversal
                             ═══════════════════════════════════════════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(215 25% 95%) 50%, hsl(220 20% 97%) 100%)" }}>
+      <Section style={{ background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(232 22% 10%) 50%, hsl(228 22% 8%) 100%)" }}>
         <motion.div className="relative max-w-2xl mx-auto p-8 sm:p-12 rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background to-accent/[0.03] text-center overflow-hidden"
         initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
           <div className="absolute inset-0 premium-holo-grid opacity-20 pointer-events-none" />
