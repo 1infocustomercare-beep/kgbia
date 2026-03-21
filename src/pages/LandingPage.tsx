@@ -6707,10 +6707,10 @@ const LandingPage = () => {
         {/* Scenario */}
         <motion.div className="p-6 rounded-2xl glow-card max-w-sm mx-auto"
         variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <h3 className="font-heading font-bold text-[0.6rem] text-foreground/50 text-center mb-4 tracking-[3px] uppercase">Scenario: 5 vendite/mese</h3>
+          <h3 className="font-heading font-bold text-[0.6rem] text-foreground/75 text-center mb-4 tracking-[3px] uppercase">Scenario: 5 vendite/mese</h3>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-foreground/55 text-xs">5× Commissioni</span><span className="font-bold text-foreground text-sm">€4.985</span></div>
-            <div className="flex justify-between"><span className="text-foreground/55 text-xs">Bonus Elite (5+)</span><span className="font-bold text-foreground text-sm">€1.500</span></div>
+            <div className="flex justify-between"><span className="text-foreground/75 text-xs">5× Commissioni</span><span className="font-bold text-foreground text-sm">€4.985</span></div>
+            <div className="flex justify-between"><span className="text-foreground/75 text-xs">Bonus Elite (5+)</span><span className="font-bold text-foreground text-sm">€1.500</span></div>
             <div className="flex justify-between pt-3 border-t border-border/30">
               <span className="font-semibold text-foreground text-sm">Totale mensile</span>
               <span className="text-2xl font-heading font-bold text-vibrant-gradient">€6.485</span>
