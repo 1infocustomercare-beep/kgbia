@@ -166,9 +166,10 @@ export default function DemoDirectoryPage() {
       {/* ═══ HEADER ═══ */}
       <div className="sticky top-0 z-40 border-b"
         style={{
-          background: "linear-gradient(180deg, hsla(240,20%,5%,0.97), hsla(240,18%,4%,0.95))",
+          background: "linear-gradient(180deg, hsla(265,22%,10%,0.98), hsla(255,20%,8%,0.96))",
           backdropFilter: "blur(30px) saturate(1.6)",
-          borderColor: "hsla(265,30%,30%,0.12)"
+          borderColor: "hsla(265,40%,50%,0.15)",
+          boxShadow: "0 4px 20px hsla(265,40%,15%,0.3)"
         }}>
         <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center gap-3">
           <button onClick={() => navigate("/home")}
