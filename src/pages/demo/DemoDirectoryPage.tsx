@@ -9,7 +9,7 @@ import {
   ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
   Umbrella, Wrench, Zap, Wheat, SprayCan, Scale, Calculator,
   Settings, Camera, HardHat, Flower2, Stethoscope, Pen,
-  Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles, Eye
+  Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles
 } from "lucide-react";
 import IndustryPhoneShowcase, { SectorAppIcon } from "@/components/public/IndustryPhoneShowcase";
 import { buildPublicSiteUrl } from "@/lib/public-site-path";
