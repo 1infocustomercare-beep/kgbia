@@ -37,7 +37,7 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-40 bg-background/70 backdrop-blur-md"
+            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -46,7 +46,13 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
 
           {/* Drawer */}
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] bg-card rounded-t-3xl flex flex-col"
+            className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] rounded-t-3xl flex flex-col"
+            style={{ background: "linear-gradient(180deg, hsl(20 8% 8%), hsl(20 10% 5%))", border: "1px solid hsla(30, 20%, 25%, 0.3)", borderBottom: "none" }}
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+          >
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
