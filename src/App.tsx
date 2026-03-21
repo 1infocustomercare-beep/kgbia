@@ -540,6 +540,8 @@ function App() {
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/cookie-policy" element={<CookiePolicy />} />
                       <Route path="/reset-password" element={<ResetPassword />} />
+                      <Route path="/auth" element={<AuthPage />} />
+                      <Route path="/login" element={<AuthPage />} />
 
                       {/* Onboarding */}
                       <Route path="/onboarding" element={
