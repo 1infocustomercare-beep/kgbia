@@ -1238,8 +1238,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 }
                 style={{
                   background: isEmpire ?
-                  "linear-gradient(165deg, hsl(0 0% 100% / 0.98), hsl(35 20% 97% / 0.95))" :
-                  "linear-gradient(165deg, hsl(0 0% 100% / 0.97), hsl(220 18% 97% / 0.94))"
+                  "linear-gradient(165deg, hsl(228 20% 14% / 0.98), hsl(35 12% 12% / 0.95))" :
+                  "linear-gradient(165deg, hsl(228 20% 14% / 0.97), hsl(232 22% 12% / 0.94))"
                 }}
                 whileTap={{ scale: 0.985 }}>
 
