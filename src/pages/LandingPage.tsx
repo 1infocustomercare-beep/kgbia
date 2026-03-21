@@ -3574,7 +3574,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y overflow-hidden" style={{ background: "linear-gradient(180deg, hsl(220 20% 95%) 0%, hsl(215 18% 93%) 50%, hsl(220 20% 95%) 100%)", borderColor: "hsl(var(--primary) / 0.08)" }}>
+      <div className="relative py-5 border-y overflow-hidden" style={{ background: "linear-gradient(180deg, hsl(228 22% 7%) 0%, hsl(230 20% 9%) 50%, hsl(228 22% 7%) 100%)", borderColor: "hsl(var(--primary) / 0.1)" }}>
         <div className="flex animate-marquee-scroll whitespace-nowrap">
         {[...Array(2)].map((_, repeat) =>
           <div key={repeat} className="flex items-center gap-10 px-5">
