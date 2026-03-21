@@ -91,9 +91,9 @@ const KPICard = ({
           <div className="space-y-2"><Skeleton className="h-7 w-16" /><Skeleton className="h-3 w-24" /></div>
         ) : (
           <>
-            <p className="text-2xl font-bold font-heading tracking-tight">{value}</p>
-            <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
-            {subtitle && <p className="text-[10px] text-muted-foreground/60 mt-1">{subtitle}</p>}
+            <p className="text-2xl font-bold font-heading tracking-tight text-foreground">{value}</p>
+            <p className="text-xs text-muted-foreground/90 mt-0.5">{label}</p>
+            {subtitle && <p className="text-[10px] text-muted-foreground/70 mt-1">{subtitle}</p>}
           </>
         )}
       </CardContent>
@@ -114,7 +114,7 @@ const QuickAction = ({ label, icon: Icon, accentHsl, onClick }: {
         <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `hsla(${accentHsl} / 0.1)` }}>
           <Icon className="w-4 h-4" style={{ color: `hsl(${accentHsl})` }} />
         </div>
-        <span className="text-sm font-medium text-foreground/80">{label}</span>
+        <span className="text-sm font-medium text-foreground/90">{label}</span>
       </CardContent>
     </Card>
   </motion.div>
@@ -427,8 +427,8 @@ function DashboardShell({
             <HeroIcon className="w-5 h-5" style={{ color: `hsl(${accent})` }} />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold font-heading tracking-tight">{title}</h1>
-            {subtitle && <p className="text-xs text-muted-foreground mt-0.5 max-w-md">{subtitle}</p>}
+            <h1 className="text-xl sm:text-2xl font-bold font-heading tracking-tight text-foreground">{title}</h1>
+            {subtitle && <p className="text-xs text-muted-foreground/80 mt-0.5 max-w-md">{subtitle}</p>}
           </div>
         </div>
       </motion.div>

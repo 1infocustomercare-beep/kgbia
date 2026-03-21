@@ -1928,7 +1928,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                                 <span className="text-foreground/30">Costo totale finale</span>
                                 <span className="text-foreground/50 font-bold">€{(installments === 3 ? total3 : total6).toLocaleString("it-IT")}</span>
                               </div>
-                              <p className="text-[0.45rem] text-foreground/20 text-center mt-1.5">
+                              <p className="text-[0.45rem] text-foreground/35 text-center mt-1.5">
                                 Addebito automatico · {installments === 3 ? "Tasso Zero garantito" : "TAEG 6,08%"} · Dopo le {installments} rate solo {packageTotalMonthly > 0 ? `€${packageTotalMonthly}/mese` : "€0/mese"}
                               </p>
                               {installments === 6 &&
@@ -2010,7 +2010,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                         <div>
                           <p className={`text-[0.6rem] font-heading font-bold tracking-[2px] uppercase ${isEmpire ? "text-accent" : isActive ? "text-primary" : "text-foreground/40"}`}>{p.name}</p>
                           <p className={`text-2xl font-heading font-bold mt-0.5 ${isActive ? "text-foreground" : "text-foreground/50"}`}>€{p.price.toLocaleString("it-IT")}</p>
-                          <p className="text-[0.5rem] text-foreground/25">oppure da €{Math.round(p.price / 6)}/mese ×6</p>
+                          <p className="text-[0.5rem] text-foreground/40">oppure da €{Math.round(p.price / 6)}/mese ×6</p>
                           {isEmpire && <p className="text-[0.4rem] text-accent/70 font-bold mt-0.5">🏆 Tutto Incluso</p>}
                         </div>
                         <div className="text-right">
@@ -2081,7 +2081,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                         <p className={`text-xl font-heading font-bold mt-1 ${
                     p.id === selectedPackage ? "text-foreground" : "text-foreground/40"}`
                     }>€{p.price.toLocaleString("it-IT")}</p>
-                        <p className="text-[0.45rem] text-foreground/25 mt-0.5">oppure da €{Math.round(p.price / 6)}/mese ×6</p>
+                        <p className="text-[0.45rem] text-foreground/40 mt-0.5">oppure da €{Math.round(p.price / 6)}/mese ×6</p>
                         {p.id === "empire" && <p className="text-[0.4rem] text-accent/70 font-bold mt-0.5">🏆 Tutto Incluso</p>}
                       </div>
                   )}
@@ -2359,7 +2359,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     }
                     {isSelected && <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />}
 
-                    <p className="text-[0.6rem] font-heading font-semibold text-foreground/40 tracking-[3px] uppercase">{p.name}</p>
+                    <p className="text-[0.6rem] font-heading font-semibold text-foreground/70 tracking-[3px] uppercase">{p.name}</p>
                     <div className="flex items-baseline gap-1 mt-2">
                       <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{displayPrice}</span>
                       <span className="text-xs text-foreground/30">/mese</span>
@@ -2399,7 +2399,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                   </div>
                   <div className="text-left">
                     <p className="text-xs sm:text-sm font-heading font-bold text-foreground">Potenzia con Agenti IA</p>
-                    <p className="text-[0.55rem] text-foreground/35">
+                    <p className="text-[0.55rem] text-foreground/55">
                       {plan.includedAgents > 0 ? `${plan.includedAgents} inclus${plan.includedAgents > 1 ? "i" : "o"} nel piano · Aggiungi gli altri a prezzo scontato` : "Aggiungi automazioni intelligenti al tuo piano"}
                     </p>
                   </div>
@@ -2431,7 +2431,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className={`text-xs font-semibold truncate ${isActive ? "text-foreground" : "text-foreground/60"}`}>{addon.name}</p>
-                              <p className="text-[0.55rem] text-foreground/30 truncate">{addon.desc}</p>
+                              <p className="text-[0.55rem] text-foreground/50 truncate">{addon.desc}</p>
                             </div>
                             <div className="text-right flex-shrink-0">
                               {isFree ?
@@ -2461,17 +2461,17 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative z-10">
                   <div>
-                    <p className="text-[0.55rem] font-heading text-foreground/40 tracking-[3px] uppercase mb-1">Il Tuo Piano</p>
+                    <p className="text-[0.55rem] font-heading text-foreground/60 tracking-[3px] uppercase mb-1">Il Tuo Piano</p>
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{Math.round(totalMonthly)}</span>
-                      <span className="text-sm text-foreground/30">/mese</span>
+                      <span className="text-sm text-foreground/50">/mese</span>
                     </div>
                     <div className="flex flex-wrap items-center gap-2 mt-2">
                       <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-primary/10 text-primary font-semibold">{plan.name}</span>
                       {selectedAddons.size > 0 && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/10 text-accent font-semibold">+{selectedAddons.size} Agenti IA</span>}
                       {savedPerYear > 0 && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">Risparmi €{Math.round(savedPerYear)}/anno</span>}
                     </div>
-                    <p className="text-[0.55rem] text-foreground/25 mt-2">+ 2% sulle transazioni · IVA esclusa · Cancella quando vuoi</p>
+                    <p className="text-[0.55rem] text-foreground/45 mt-2">+ 2% sulle transazioni · IVA esclusa · Cancella quando vuoi</p>
                   </div>
                   <div className="flex flex-col gap-2 sm:items-end">
                     <motion.button onClick={() => navigate("/admin")}
@@ -2480,7 +2480,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                   whileTap={{ scale: 0.97 }}>
                       Attiva Ora — Prova Gratis 14gg
                     </motion.button>
-                    <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Nessuna carta richiesta · Setup in 24h · Assistenza 7/7</p>
+                    <p className="text-[0.5rem] text-foreground/40 text-center sm:text-right">Nessuna carta richiesta · Setup in 24h · Assistenza 7/7</p>
                   </div>
                 </div>
               </div>
@@ -2500,8 +2500,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
         { icon: <CreditCard className="w-3.5 h-3.5" />, text: "Rate 0% interessi" }].
         map((b, i) =>
         <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/20 bg-background/30">
-            <span className="text-primary/50">{b.icon}</span>
-            <span className="text-[0.55rem] text-foreground/30 font-medium">{b.text}</span>
+            <span className="text-primary/70">{b.icon}</span>
+            <span className="text-[0.55rem] text-foreground/55 font-medium">{b.text}</span>
           </div>
         )}
       </motion.div>
@@ -5582,14 +5582,14 @@ const LandingPage = () => {
               <motion.div key={i} className="text-center"
               initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.1 }}>
                   <p className="text-xl sm:text-2xl font-heading font-bold text-shimmer">{s.val}</p>
-                  <p className="text-[0.5rem] text-foreground/30 tracking-[2px] uppercase">{s.label}</p>
+                  <p className="text-[0.5rem] text-foreground/50 tracking-[2px] uppercase">{s.label}</p>
                 </motion.div>
               )}
             </div>
             <h3 className="text-base sm:text-lg font-heading font-bold text-foreground mb-2">
               "Se puoi immaginarlo, <span className="text-shimmer">noi lo costruiamo.</span>"
             </h3>
-            <p className="text-[0.7rem] text-foreground/50 mb-6 max-w-md mx-auto">
+            <p className="text-[0.7rem] text-foreground/65 mb-6 max-w-md mx-auto">
               Il tuo business merita una soluzione costruita su misura. Non un compromesso.
             </p>
             <motion.button
@@ -6920,7 +6920,7 @@ const LandingPage = () => {
                 <span className="text-[0.55rem] tracking-[0.3em] uppercase block" style={{ background: "linear-gradient(90deg, hsla(265,70%,65%,1), hsla(280,50%,75%,1))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>AUTONOMOUS AI</span>
               </div>
             </motion.div>
-            <motion.p className="text-[0.7rem] text-white/25 max-w-[340px] leading-[1.8] font-light"
+            <motion.p className="text-[0.7rem] text-white/45 max-w-[340px] leading-[1.8] font-light"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
               La piattaforma AI autonoma più completa al mondo. Tecnologia proprietaria che trasforma qualsiasi business in un impero digitale.
             </motion.p>
@@ -6936,7 +6936,7 @@ const LandingPage = () => {
               </h4>
               <div className="space-y-3 text-[0.65rem]">
                 {["Food & Ristorazione", "NCC & Trasporto", "Beauty & Wellness", "Healthcare & Medical", "Retail & E-commerce", "Fitness & Sport"].map((s, i) =>
-                <p key={i} className="text-white/25 hover:text-white/60 transition-colors cursor-default flex items-center gap-2">
+                <p key={i} className="text-white/40 hover:text-white/70 transition-colors cursor-default flex items-center gap-2">
                     <span className="w-1 h-1 rounded-full" style={{ background: "hsla(265,70%,60%,0.4)" }} />
                     {s}
                   </p>
@@ -6959,7 +6959,7 @@ const LandingPage = () => {
                 { label: "Partner Program", href: "#partner" },
                 { label: "Demo Live", href: "/demo" }].
                 map((link, i) =>
-                <a key={i} href={link.href} className="block text-white/25 hover:text-white/60 transition-colors flex items-center gap-2">
+                <a key={i} href={link.href} className="block text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
                     <span className="w-1 h-1 rounded-full" style={{ background: "hsla(265,70%,60%,0.4)" }} />
                     {link.label}
                   </a>
@@ -6974,7 +6974,7 @@ const LandingPage = () => {
               </h4>
               <div className="space-y-3 text-[0.65rem]">
                 {["Engine AI Proprietario", "Automazione End-to-End", "PWA White-Label", "Analytics Predittivi", "GDPR & AES-256", "API & Integrazioni"].map((s, i) =>
-                <p key={i} className="text-white/25 hover:text-white/60 transition-colors cursor-default flex items-center gap-2">
+                <p key={i} className="text-white/40 hover:text-white/70 transition-colors cursor-default flex items-center gap-2">
                     <span className="w-1 h-1 rounded-full" style={{ background: "hsla(265,70%,60%,0.4)" }} />
                     {s}
                   </p>
@@ -6988,18 +6988,18 @@ const LandingPage = () => {
                 Contatti
               </h4>
               <div className="space-y-3 text-[0.65rem]">
-                <p className="text-white/25 flex items-center gap-2.5"><Mail className="w-3.5 h-3.5" style={{ color: "hsla(265,70%,60%,0.5)" }} /> info@empire-suite.it</p>
-                <p className="text-white/25 flex items-center gap-2.5"><MapPin className="w-3.5 h-3.5" style={{ color: "hsla(265,70%,60%,0.5)" }} /> Roma, Italia</p>
+                <p className="text-white/45 flex items-center gap-2.5"><Mail className="w-3.5 h-3.5" style={{ color: "hsla(265,70%,60%,0.5)" }} /> info@empire-suite.it</p>
+                <p className="text-white/45 flex items-center gap-2.5"><MapPin className="w-3.5 h-3.5" style={{ color: "hsla(265,70%,60%,0.5)" }} /> Roma, Italia</p>
                 <div className="pt-3">
-                  <a href="/privacy" className="block text-white/20 hover:text-white/50 transition-colors mb-2">Privacy Policy</a>
-                  <a href="/cookie-policy" className="block text-white/20 hover:text-white/50 transition-colors">Cookie Policy</a>
+                  <a href="/privacy" className="block text-white/35 hover:text-white/60 transition-colors mb-2">Privacy Policy</a>
+                  <a href="/cookie-policy" className="block text-white/35 hover:text-white/60 transition-colors">Cookie Policy</a>
                 </div>
               </div>
               {/* Social icons */}
               <div className="flex gap-2.5 mt-5">
                 {["In", "𝕏", "IG"].map((s, i) =>
                 <motion.div key={i}
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-[0.6rem] text-white/20 cursor-pointer transition-all duration-300"
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-[0.6rem] text-white/35 cursor-pointer transition-all duration-300"
                 style={{ border: "1px solid hsla(265,70%,60%,0.1)", background: "hsla(265,70%,60%,0.03)" }}
                 whileHover={{ scale: 1.1, borderColor: "hsla(265,70%,60%,0.4)", color: "hsla(265,70%,65%,1)", background: "hsla(265,70%,60%,0.08)" }}>
                   
@@ -7013,10 +7013,10 @@ const LandingPage = () => {
           {/* Bottom bar */}
           <div className="relative pt-8">
             <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.12), transparent)" }} />
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.6rem] text-white/15">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.6rem] text-white/30">
               <p className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsla(130,60%,50%,0.5)", boxShadow: "0 0 6px hsla(130,60%,50%,0.3)" }} />
-                <span className="text-white/25">Tutti i sistemi operativi</span>
+                <span className="text-white/40">Tutti i sistemi operativi</span>
                 <span className="mx-2">·</span>
                 © 2026 Empire AI · Piattaforma Multi-Settore
               </p>
