@@ -328,20 +328,20 @@ const AdminDashboard = () => {
       
       {/* Back button integrated in header */}
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/50 bg-card/50 safe-top">
-        <div className="flex items-center gap-2 min-w-0">
-          <img src={restaurant?.logo_url || restaurantLogo} alt="" className="w-8 h-8 rounded-xl object-contain" />
+      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b safe-top relative z-10" style={{ background: "linear-gradient(180deg, hsl(20 10% 5% / 0.98), hsl(20 8% 4% / 0.95))", borderColor: "hsla(30, 20%, 25%, 0.25)" }}>
+        <div className="flex items-center gap-2.5 min-w-0">
+          <img src={restaurant?.logo_url || restaurantLogo} alt="" className="w-9 h-9 rounded-xl object-contain border border-primary/20" />
           <div className="min-w-0">
-            <h1 className="text-sm font-display font-bold text-foreground truncate">{restaurantName}</h1>
-            <p className="text-[10px] text-primary">{bottomTabs.find(t => t.id === activeTab)?.label}</p>
+            <h1 className="text-sm font-display font-bold text-foreground truncate tracking-wide uppercase">{restaurantName}</h1>
+            <p className="text-[10px] text-primary/70 font-medium">{bottomTabs.find(t => t.id === activeTab)?.label}</p>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
           <GuidesToggle />
-          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center" title="Home">
+          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-primary/10 min-w-[40px] min-h-[40px] flex items-center justify-center" title="Home">
             <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </button>
-          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center" title="Esci">
+          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-primary/10 min-w-[40px] min-h-[40px] flex items-center justify-center" title="Esci">
             <LogOut className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
