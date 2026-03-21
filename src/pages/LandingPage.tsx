@@ -7013,10 +7013,10 @@ const LandingPage = () => {
           {/* Bottom bar */}
           <div className="relative pt-8">
             <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsla(265,70%,60%,0.12), transparent)" }} />
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.6rem] text-white/15">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.6rem] text-white/30">
               <p className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full" style={{ background: "hsla(130,60%,50%,0.5)", boxShadow: "0 0 6px hsla(130,60%,50%,0.3)" }} />
-                <span className="text-white/25">Tutti i sistemi operativi</span>
+                <span className="text-white/40">Tutti i sistemi operativi</span>
                 <span className="mx-2">·</span>
                 © 2026 Empire AI · Piattaforma Multi-Settore
               </p>
