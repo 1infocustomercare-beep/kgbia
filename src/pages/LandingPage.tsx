@@ -1364,7 +1364,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                       {/* CTA button per card */}
                       <motion.button
-                      onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/admin");}}
+                      onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth");}}
                       className={`w-full mt-3 py-3 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
                       isEmpire ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20" :
@@ -1787,7 +1787,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                     {/* CTA */}
                     <div className="flex flex-col gap-2 sm:items-end">
-                      <motion.button onClick={() => navigate("/admin")}
+                      <motion.button onClick={() => navigate("/auth")}
                     className={`px-8 py-3.5 rounded-full font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap relative overflow-hidden ${
                     pkg.id === "empire" ?
                     "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black" :
@@ -2041,7 +2041,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* CTA */}
                       <div className="px-4 pb-4">
                         <motion.button
-                        onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/admin");}}
+                        onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth");}}
                         className={`w-full py-2.5 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase transition-all ${
                         isEmpire ?
                         "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black" :
@@ -2139,7 +2139,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     {PACKAGE_TIERS.map((p) =>
                   <div key={p.id} className="p-3 text-center">
                         <motion.button
-                      onClick={() => {setSelectedPackage(p.id);navigate("/admin");}}
+                      onClick={() => {setSelectedPackage(p.id);navigate("/auth");}}
                       className={`w-full px-3 py-2 rounded-lg text-[0.55rem] font-heading font-bold tracking-wider uppercase transition-all ${
                       p.id === "empire" ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black" :
@@ -2474,7 +2474,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     <p className="text-[0.55rem] text-foreground/45 mt-2">+ 2% sulle transazioni · IVA esclusa · Cancella quando vuoi</p>
                   </div>
                   <div className="flex flex-col gap-2 sm:items-end">
-                    <motion.button onClick={() => navigate("/admin")}
+                    <motion.button onClick={() => navigate("/auth")}
                   className="px-8 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap"
                   whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(38,50%,55%,0.2)" }}
                   whileTap={{ scale: 0.97 }}>
@@ -6863,7 +6863,7 @@ const LandingPage = () => {
               25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando. Non restare indietro.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <motion.button onClick={() => navigate("/admin")}
+              <motion.button onClick={() => navigate("/auth")}
               className="w-full sm:w-auto px-9 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase flex items-center justify-center gap-2"
               whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(265,70%,60%,0.25)" }}
               whileTap={{ scale: 0.97 }}>
