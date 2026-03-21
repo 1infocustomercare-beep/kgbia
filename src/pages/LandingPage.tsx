@@ -3501,11 +3501,10 @@ const LandingPage = () => {
               </motion.div>
 
               {/* Subtitle */}
-              <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0"
-              style={{ color: "hsl(200 15% 32%)" }}
+              <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] text-muted-foreground max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0"
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}>
                 Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business.
-                <span className="font-medium" style={{ color: "hsl(200 18% 28%)" }}> 98+ agenti IA · <span className="font-semibold" style={{ color: "hsl(160 55% 30%)" }}>25+ settori</span> · Zero canone.</span>
+                <span className="font-medium text-foreground/70"> 98+ agenti IA · <span className="font-semibold text-primary">25+ settori</span> · Zero canone.</span>
               </motion.p>
 
               {/* CTA */}
