@@ -1014,7 +1014,7 @@ const SuperAdminDashboard = () => {
                 <>
                   {/* KPI Cards */}
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="p-3 rounded-2xl bg-card border border-primary/20">
+                    <div className="p-3 rounded-2xl admin-card-accent">
                       <Calendar className="w-4 h-4 text-primary mb-1" />
                       <p className="text-2xl font-display font-bold text-primary">{activeSubs.length}</p>
                       <p className="text-[10px] text-muted-foreground">Abbonamenti Attivi</p>
