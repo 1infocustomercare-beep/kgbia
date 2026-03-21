@@ -6568,7 +6568,7 @@ const LandingPage = () => {
               <div key={i} className="group relative h-full">
                     <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
                 style={{
-                  background: "linear-gradient(165deg, hsl(228 20% 14% / 0.86), hsl(248 15% 97% / 0.93))",
+                  background: "linear-gradient(165deg, hsl(228 20% 16% / 0.92), hsl(232 22% 11% / 0.92))",
                   border: "1px solid hsl(var(--primary) / 0.1)",
                   boxShadow: "0 4px 24px hsl(var(--primary) / 0.06)",
                   backdropFilter: "blur(24px)"
@@ -6590,8 +6590,8 @@ const LandingPage = () => {
                     animate={{ rotate: [0, 360] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} />
                       </div>
                       <h4 className="font-heading text-xs font-semibold mb-0.5 text-foreground">{t.name}</h4>
-                      <p className="text-[0.58rem] mb-4 text-foreground/50">{t.role}</p>
-                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1 text-foreground/65">
+                      <p className="text-[0.58rem] mb-4 text-foreground/60">{t.role}</p>
+                      <blockquote className="text-[0.75rem] sm:text-[0.8rem] leading-[1.8] mb-5 flex-1 px-1 text-foreground/75">
                         <Quote className="w-3.5 h-3.5 mx-auto mb-2 text-primary/30" />
                         "{t.quote}"
                       </blockquote>
@@ -6738,7 +6738,7 @@ const LandingPage = () => {
                   <motion.p className="text-lg sm:text-2xl font-heading font-bold text-vibrant-gradient"
                 animate={{ textShadow: ["0 0 10px hsla(265,70%,60%,0)", "0 0 20px hsla(265,70%,60%,0.3)", "0 0 10px hsla(265,70%,60%,0)"] }}
                 transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}>{s.value}</motion.p>
-                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/55 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
+                  <p className="text-[0.52rem] sm:text-[0.6rem] text-foreground/70 mt-1 tracking-wider uppercase font-heading">{s.label}</p>
                 </PremiumCard>
               </motion.div>
             )}
@@ -6764,7 +6764,7 @@ const LandingPage = () => {
                 </motion.div>
                 <div className="text-left sm:text-center">
                   <p className="text-sm font-bold text-foreground font-heading">{s.title}</p>
-                  <p className="text-[0.6rem] text-foreground/50">{s.desc}</p>
+                  <p className="text-[0.6rem] text-foreground/65">{s.desc}</p>
                 </div>
                 {i < 2 && <ArrowRight className="hidden sm:block w-5 h-5 text-primary/15 mx-6 flex-shrink-0" />}
               </div>
@@ -6777,8 +6777,8 @@ const LandingPage = () => {
         variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           <h3 className="font-heading font-bold text-[0.6rem] text-foreground/50 text-center mb-4 tracking-[3px] uppercase">Scenario: 5 vendite/mese</h3>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-foreground/35 text-xs">5× Commissioni</span><span className="font-bold text-foreground text-sm">€4.985</span></div>
-            <div className="flex justify-between"><span className="text-foreground/35 text-xs">Bonus Elite (5+)</span><span className="font-bold text-foreground text-sm">€1.500</span></div>
+            <div className="flex justify-between"><span className="text-foreground/55 text-xs">5× Commissioni</span><span className="font-bold text-foreground text-sm">€4.985</span></div>
+            <div className="flex justify-between"><span className="text-foreground/55 text-xs">Bonus Elite (5+)</span><span className="font-bold text-foreground text-sm">€1.500</span></div>
             <div className="flex justify-between pt-3 border-t border-border/30">
               <span className="font-semibold text-foreground text-sm">Totale mensile</span>
               <span className="text-2xl font-heading font-bold text-vibrant-gradient">€6.485</span>
