@@ -4091,7 +4091,7 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,55%,55%,0.25), transparent)" }} />
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.8))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsl(228 22% 8% / 0.8))" }} />
           {/* Noise texture */}
           <div className="absolute inset-0 opacity-[0]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
