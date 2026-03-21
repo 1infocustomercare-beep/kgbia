@@ -423,7 +423,7 @@ export default function EmpireTeamStory() {
               <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: v.color }}>
                 <v.icon className="w-4 h-4 text-foreground/90" />
               </div>
-              <p className="text-[0.62rem] sm:text-xs tracking-[1.6px] uppercase text-foreground/75 mb-1">{v.label}</p>
+              <p className="text-[0.62rem] sm:text-xs tracking-[1.6px] uppercase text-foreground/85 mb-1">{v.label}</p>
               <p className="text-sm sm:text-lg font-bold text-foreground leading-tight break-words">{v.value}</p>
             </div>
           ))}
