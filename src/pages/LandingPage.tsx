@@ -6844,7 +6844,7 @@ const LandingPage = () => {
             <motion.div key={i} className="rounded-xl glow-card overflow-hidden" variants={fadeUp}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
               className="relative z-10 w-full flex items-center justify-between p-5 text-left hover:bg-foreground/[0.02] transition-colors">
-                  <span className="text-xs sm:text-sm font-semibold text-foreground pr-3 font-heading">{faq.q}</span>
+                  <span className="text-xs sm:text-sm font-semibold text-foreground/90 pr-3 font-heading">{faq.q}</span>
                   <motion.div
                   animate={{ rotate: openFaq === i ? 45 : 0 }}
                   className="w-7 h-7 rounded-full bg-primary/[0.08] flex items-center justify-center flex-shrink-0 text-primary text-sm font-heading font-bold">
