@@ -3555,19 +3555,32 @@ const LandingPage = () => {
                 ))}
                 {/* Center title */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.span className="text-[0.8rem] sm:text-xl lg:text-2xl font-heading font-black tracking-[4px] sm:tracking-[6px] uppercase bg-clip-text text-transparent"
-                    style={{
-                      backgroundImage: "linear-gradient(135deg, hsl(210 100% 62%), hsl(250 90% 68%), hsl(172 80% 48%), hsl(38 80% 55%))",
-                      backgroundSize: "200% 200%",
-                      filter: "drop-shadow(0 0 20px hsl(210 80% 55% / 0.35)) drop-shadow(0 0 40px hsl(250 70% 60% / 0.2))",
-                    }}
-                    animate={{
-                      opacity: [0.7, 1, 0.7],
-                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                    }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
-                    EMPIRE AI GROUP
-                  </motion.span>
+                  <motion.div
+                    className="relative"
+                    initial={{ opacity: 0, scale: 0.85 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {/* Glow behind text */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="w-[120%] h-[200%] rounded-full" style={{
+                        background: "radial-gradient(ellipse, hsla(265,85%,65%,0.12), transparent 65%)",
+                        filter: "blur(20px)",
+                      }} />
+                    </div>
+                    <h2 className="relative text-[0.8rem] sm:text-xl lg:text-2xl font-heading font-black tracking-[4px] sm:tracking-[6px] uppercase">
+                      <span className="text-foreground/80">EMPIRE</span>
+                      <span className="text-shimmer" style={{ animation: "text-shimmer 4s linear infinite" }}> AI GROUP</span>
+                    </h2>
+                    {/* Underline accent sweep */}
+                    <motion.div
+                      className="h-[1.5px] mt-1.5 mx-auto rounded-full"
+                      style={{ background: "linear-gradient(90deg, transparent, hsl(var(--empire-violet)), hsl(var(--accent)), transparent)" }}
+                      initial={{ width: 0, opacity: 0 }}
+                      animate={{ width: "100%", opacity: 0.5 }}
+                      transition={{ duration: 1, delay: 1.5, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                  </motion.div>
                 </div>
                 {/* Ambient glow */}
                 <div className="absolute inset-0 pointer-events-none" style={{
