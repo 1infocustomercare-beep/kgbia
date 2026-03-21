@@ -5574,10 +5574,10 @@ const LandingPage = () => {
                 transition={{ delay: i * 0.1, duration: 0.4 }}
                 className="relative flex flex-col items-center text-center p-3 rounded-2xl overflow-hidden group"
                 style={{
-                  background: "linear-gradient(160deg, hsl(228 20% 14% / 0.8), hsl(248 18% 97% / 0.85))",
+                  background: "linear-gradient(160deg, hsl(228 20% 16% / 0.95), hsl(232 22% 11% / 0.95))",
                   backdropFilter: "blur(16px)",
-                  border: "1px solid hsl(var(--border) / 0.3)",
-                  boxShadow: "0 2px 16px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.06)"
+                  border: "1px solid hsl(var(--border) / 0.35)",
+                  boxShadow: "0 2px 16px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.08)"
                 }}>
                   {/* Top accent line */}
                   <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent)" }} />
@@ -5595,12 +5595,12 @@ const LandingPage = () => {
                 }}>
                     <div className="text-primary">{card.icon}</div>
                   </div>
-                  <h3 className="relative z-10 font-heading text-[0.55rem] font-bold text-foreground/80 leading-tight mb-0.5">{card.title}</h3>
-                  <p className="relative z-10 text-[0.45rem] text-foreground/55 leading-[1.4] mb-1">{card.desc}</p>
-                  <motion.span className="relative z-10 text-[0.45rem] font-heading font-semibold text-primary/50 tracking-wider inline-flex items-center gap-1"
-                animate={{ opacity: [0.4, 0.9, 0.4] }}
+                  <h3 className="relative z-10 font-heading text-[0.55rem] font-bold text-foreground/90 leading-tight mb-0.5">{card.title}</h3>
+                  <p className="relative z-10 text-[0.45rem] text-foreground/65 leading-[1.4] mb-1">{card.desc}</p>
+                  <motion.span className="relative z-10 text-[0.45rem] font-heading font-semibold text-primary/70 tracking-wider inline-flex items-center gap-1"
+                animate={{ opacity: [0.6, 1, 0.6] }}
                 transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.6 }}>
-                    <span className="w-1 h-1 rounded-full bg-primary/40" />
+                    <span className="w-1 h-1 rounded-full bg-primary/60" />
                     {card.accent}
                   </motion.span>
                 </motion.div>
