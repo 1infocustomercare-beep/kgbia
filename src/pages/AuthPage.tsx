@@ -257,8 +257,8 @@ export default function AuthPage() {
                             <button key={s.id} onClick={() => setSector(s.id)}
                               className="flex flex-col items-center gap-1 p-2 rounded-lg text-center transition-all"
                               style={{
-                                background: selected ? `${color}25` : "hsla(0,0%,100%,0.03)",
-                                border: `1px solid ${selected ? `${color}60` : "hsla(0,0%,100%,0.06)"}`,
+                                background: selected ? `${color}25` : "hsla(0,0%,100%,0.05)",
+                                border: `1px solid ${selected ? `${color}60` : "hsla(0,0%,100%,0.12)"}`,
                               }}>
                               <Icon className="w-4 h-4" style={{ color: selected ? color : "hsla(0,0%,100%,0.4)" }} />
                               <span className="text-[10px] font-medium leading-tight" style={{ color: selected ? "#fff" : "hsla(0,0%,100%,0.5)" }}>
