@@ -6999,7 +6999,7 @@ const LandingPage = () => {
               <div className="flex gap-2.5 mt-5">
                 {["In", "𝕏", "IG"].map((s, i) =>
                 <motion.div key={i}
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-[0.6rem] text-white/20 cursor-pointer transition-all duration-300"
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-[0.6rem] text-white/35 cursor-pointer transition-all duration-300"
                 style={{ border: "1px solid hsla(265,70%,60%,0.1)", background: "hsla(265,70%,60%,0.03)" }}
                 whileHover={{ scale: 1.1, borderColor: "hsla(265,70%,60%,0.4)", color: "hsla(265,70%,65%,1)", background: "hsla(265,70%,60%,0.08)" }}>
                   
