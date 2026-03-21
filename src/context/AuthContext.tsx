@@ -4,6 +4,14 @@ import type { User, Session } from "@supabase/supabase-js";
 import { clearIndustryCache } from "@/hooks/useIndustry";
 
 type AppRole = "super_admin" | "staff" | "restaurant_admin" | "customer" | "partner" | "team_leader";
+type SignupRole = "partner" | "customer";
+
+type SignUpOptions = {
+  fullName?: string;
+  role?: SignupRole;
+  sector?: string;
+  companyName?: string;
+};
 
 interface AuthContextType {
   user: User | null;
@@ -17,7 +25,7 @@ interface AuthContextType {
   isPartner: boolean;
   isTeamLeader: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null; session: Session | null }>;
-  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, options?: SignUpOptions) => Promise<{ error: Error | null; userId: string | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -62,7 +70,7 @@ const AUTH_FALLBACK: AuthContextType = {
   isPartner: false,
   isTeamLeader: false,
   signIn: async () => ({ error: new Error("AuthProvider not mounted"), session: null }),
-  signUp: async () => ({ error: new Error("AuthProvider not mounted") }),
+  signUp: async () => ({ error: new Error("AuthProvider not mounted"), userId: null }),
   signOut: async () => {},
 };
 
@@ -212,22 +220,33 @@ export const AuthProvider = forwardRef<unknown, AuthProviderProps>(({ children }
     }
   };
 
-  const signUp = async (email: string, password: string, fullName?: string) => {
+  const signUp = async (email: string, password: string, options?: SignUpOptions) => {
     try {
-      const { error } = await supabase.auth.signUp({
+      const metadata: Record<string, unknown> = {};
+
+      if (options?.fullName) metadata.full_name = options.fullName;
+      if (options?.role) metadata.signup_role = options.role;
+      if (options?.sector) metadata.signup_sector = options.sector;
+      if (options?.companyName) metadata.company_name = options.companyName;
+
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          data: { full_name: fullName },
+          data: metadata,
           emailRedirectTo: window.location.origin,
         },
       });
 
-      return { error: error ? new Error(normalizeAuthErrorMessage(error.message)) : null };
+      return {
+        error: error ? new Error(normalizeAuthErrorMessage(error.message)) : null,
+        userId: data.user?.id ?? null,
+      };
     } catch (error) {
       console.error("Sign up failed", error);
       return {
         error: error instanceof Error ? new Error(normalizeAuthErrorMessage(error.message)) : new Error("Errore durante la registrazione."),
+        userId: null,
       };
     }
   };
