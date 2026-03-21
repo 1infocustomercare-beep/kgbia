@@ -297,8 +297,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             >
               <img src={empireLogoNew} alt="Empire AI" className="w-full h-full object-cover" />
             </motion.div>
-            <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">Area Riservata</h1>
-            <p className="text-sm text-muted-foreground mt-1">Seleziona il tuo accesso</p>
+            <h1 className="text-2xl font-heading font-bold text-white">Area Riservata</h1>
+            <p className="text-sm text-gray-300 mt-1">Seleziona il tuo accesso</p>
           </div>
 
           {[
