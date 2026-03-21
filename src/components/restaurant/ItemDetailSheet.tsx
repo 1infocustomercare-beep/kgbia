@@ -114,7 +114,7 @@ const ItemDetailSheet = ({ item, onClose }: ItemDetailSheetProps) => {
             </div>
 
             {/* Footer with quantity & add */}
-            <div className="p-5 border-t border-border/50 bg-card safe-bottom">
+            <div className="p-5 bg-transparent safe-bottom" style={{ borderTop: "1px solid hsla(30, 20%, 25%, 0.3)" }}>
               <div className="flex items-center justify-between">
                 {/* Quantity selector */}
                 <div className="flex items-center gap-3">

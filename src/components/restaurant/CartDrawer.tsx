@@ -140,7 +140,7 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className="p-5 border-t border-border/50 safe-bottom">
+              <div className="p-5 safe-bottom" style={{ borderTop: "1px solid hsla(30, 20%, 25%, 0.3)" }}>
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-sm text-muted-foreground">Totale</span>
                   <span className="text-2xl font-display font-bold text-primary">

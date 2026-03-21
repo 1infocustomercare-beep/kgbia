@@ -357,7 +357,7 @@ const CheckoutPage = () => {
               description="Controlla gli articoli, le quantità e il totale prima di confermare. Il prezzo include IVA."
             />
           </div>
-          <div className="rounded-2xl bg-secondary/50 p-4 space-y-3">
+          <div className="rounded-2xl cote-card p-4 space-y-3">
             {items.map((item) => (
               <div key={item.id} className="flex justify-between items-center text-sm">
                 <span className="text-foreground">
