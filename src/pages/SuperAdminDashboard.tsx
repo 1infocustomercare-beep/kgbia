@@ -436,7 +436,7 @@ const SuperAdminDashboard = () => {
     { id: "connections" as SuperTab, label: "Connessioni", icon: <Link2 className="w-5 h-5" /> },
   ];
 
-  const handleLogout = async () => { await signOut(); navigate("/admin"); };
+  const handleLogout = async () => { await signOut(); navigate("/auth"); };
 
   // Critical alerts
   const criticalAlerts = useMemo(() => {

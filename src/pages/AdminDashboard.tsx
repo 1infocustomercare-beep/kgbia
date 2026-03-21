@@ -272,7 +272,7 @@ const AdminDashboard = () => {
     setCreatingRest(false);
   };
 
-  const handleLogout = async () => { await signOut(); navigate("/admin"); };
+  const handleLogout = async () => { await signOut(); navigate("/auth"); };
   const activeOrders = orders.filter(o => ["pending", "preparing", "ready"].includes(o.status));
 
   if (restLoading) return (

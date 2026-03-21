@@ -434,7 +434,7 @@ const PartnerRegister = () => {
 
               <p className="text-center text-[10px] text-muted-foreground">
                 Già Partner?{" "}
-                <button type="button" onClick={() => navigate("/admin")} className="text-primary hover:underline font-medium">
+                <button type="button" onClick={() => navigate("/auth")} className="text-primary hover:underline font-medium">
                   Accedi qui
                 </button>
               </p>

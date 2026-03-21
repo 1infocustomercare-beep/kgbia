@@ -244,7 +244,7 @@ const KitchenView = () => {
 
   const handleLogout = () => {
     sessionStorage.removeItem("kitchen_mode");
-    navigate("/admin");
+    navigate("/auth");
   };
 
   if (!session) return null;

@@ -2354,7 +2354,7 @@ export default function DemoAdminPage() {
         <div className="sticky top-0 z-30 px-4 py-2 text-center text-xs font-medium" style={{ background: `linear-gradient(90deg, ${accentColor}20, ${accentColor}10)`, borderBottom: `1px solid ${accentColor}30` }}>
           <span className="text-white/60">🔍 DEMO MODE — Stai esplorando</span>{" "}
           <strong style={{ color: accentColor }}>{config.name}</strong>{" "}
-          <Button size="sm" className="ml-3 text-[0.6rem] h-6 px-3" style={{ background: accentColor }} onClick={() => navigate("/admin")}>
+          <Button size="sm" className="ml-3 text-[0.6rem] h-6 px-3" style={{ background: accentColor }} onClick={() => navigate("/auth")}>
             Inizia Ora →
           </Button>
         </div>
