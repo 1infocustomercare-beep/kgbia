@@ -25,15 +25,36 @@ serve(async (req) => {
       });
     }
 
+    // Wait for auth.users row to be fully committed (email confirmation may not exist yet)
+    let userExists = false;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const { data } = await supabaseAdmin.auth.admin.getUserById(user_id);
+      if (data?.user) { userExists = true; break; }
+      await new Promise(r => setTimeout(r, 800));
+    }
+    if (!userExists) {
+      // User not yet in auth.users — return success silently; reconciliation will handle it on login
+      console.warn("User not yet in auth.users, skipping role assignment for now:", user_id);
+      return new Response(JSON.stringify({ success: true, deferred: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Remove default restaurant_admin role
     await supabaseAdmin.from("user_roles").delete().eq("user_id", user_id).eq("role", "restaurant_admin");
 
-    // Add partner role
-    const { error } = await supabaseAdmin.from("user_roles").upsert(
-      { user_id, role: "partner" },
-      { onConflict: "user_id,role" }
-    );
-    if (error) throw error;
+    // Add partner role with retry for FK timing
+    let roleError = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const { error } = await supabaseAdmin.from("user_roles").upsert(
+        { user_id, role: "partner" },
+        { onConflict: "user_id,role" }
+      );
+      if (!error) { roleError = null; break; }
+      roleError = error;
+      await new Promise(r => setTimeout(r, 1000));
+    }
+    if (roleError) throw roleError;
 
     // Sync profile data from auth user_metadata (phone, city, full_name)
     try {
