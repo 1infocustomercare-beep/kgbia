@@ -3448,14 +3448,14 @@ const LandingPage = () => {
         {/* ═══ LAYER 1: Premium ambient blobs ═══ */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
           <div className="aurora-blob-1 absolute w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(265 55% 55% / 0.1), hsl(248 50% 60% / 0.04) 50%, transparent 70%)", filter: "blur(80px)", top: "0%", left: "5%" }} />
+            style={{ background: "radial-gradient(circle, hsl(265 55% 55% / 0.2), hsl(248 50% 60% / 0.08) 50%, transparent 70%)", filter: "blur(80px)", top: "0%", left: "5%" }} />
           <div className="aurora-blob-2 absolute w-[450px] h-[450px] sm:w-[650px] sm:h-[650px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(210 65% 55% / 0.12), hsl(220 50% 60% / 0.04) 50%, transparent 70%)", filter: "blur(80px)", top: "10%", right: "0%" }} />
+            style={{ background: "radial-gradient(circle, hsl(210 65% 55% / 0.22), hsl(220 50% 60% / 0.08) 50%, transparent 70%)", filter: "blur(80px)", top: "10%", right: "0%" }} />
           <div className="aurora-blob-3 absolute w-[400px] h-[400px] sm:w-[550px] sm:h-[550px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(38 55% 50% / 0.08), hsl(35 50% 55% / 0.03) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
+            style={{ background: "radial-gradient(circle, hsl(38 55% 50% / 0.12), hsl(35 50% 55% / 0.05) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
           {/* Central glow behind sphere */}
           <div className="absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ background: "radial-gradient(circle, hsl(265 50% 55% / 0.08), hsl(248 45% 60% / 0.03) 55%, transparent 75%)", filter: "blur(100px)" }} />
+            style={{ background: "radial-gradient(circle, hsl(265 50% 55% / 0.15), hsl(248 45% 60% / 0.05) 55%, transparent 75%)", filter: "blur(100px)" }} />
         </div>
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
