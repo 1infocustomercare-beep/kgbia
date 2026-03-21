@@ -45,7 +45,7 @@ const INTRO_FAILSAFE_MS = IS_MOBILE ? 8000 : 9000;
 const INTRO_HARD_WATCHDOG_MS = IS_MOBILE ? 10000 : 12000;
 // Skip intro only on client/demo routes where branded business splash should appear immediately
 const SHOULD_SKIP_INTRO_DEFAULT = typeof window !== "undefined" &&
-  /^\/(r|b|demo)\//.test(window.location.pathname);
+  /^\/(r|b|demo\/|admin|auth|login|reset-password|kitchen|partner\/register)/.test(window.location.pathname);
 
 const loadIndex = () => import("./pages/Index");
 const loadLandingPage = () => import("./pages/LandingPage");
