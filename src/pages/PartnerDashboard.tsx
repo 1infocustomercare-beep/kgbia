@@ -232,7 +232,7 @@ const PartnerDashboard = () => {
   };
 
   const handleCopyInviteLink = () => {
-    const link = `${window.location.origin}/admin?ref=${user?.id}`;
+    const link = `${window.location.origin}/auth?ref=${user?.id}`;
     navigator.clipboard.writeText(link);
     setInviteCopied(true);
     toast({ title: "Link copiato!", description: "Condividi il link con i tuoi reclutati." });

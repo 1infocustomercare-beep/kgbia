@@ -18,7 +18,7 @@ export default function ResetPassword() {
     const hash = window.location.hash;
     if (!hash.includes("type=recovery")) {
       // No recovery token — redirect to login
-      navigate("/admin", { replace: true });
+      navigate("/auth", { replace: true });
     }
   }, [navigate]);
 

@@ -297,7 +297,7 @@ const CTASection = () => {
           <p className="text-lg text-muted-foreground mb-10">
             Unisciti a centinaia di imprenditori che hanno scelto Empire. 90 giorni gratis, zero rischi.
           </p>
-          <Button size="lg" className="bg-vibrant-gradient text-white px-10 py-6 text-lg" onClick={() => navigate("/admin")}>
+          <Button size="lg" className="bg-vibrant-gradient text-white px-10 py-6 text-lg" onClick={() => navigate("/auth")}>
             Inizia Ora — È Gratis <Rocket className="ml-2 w-5 h-5" />
           </Button>
         </motion.div>
