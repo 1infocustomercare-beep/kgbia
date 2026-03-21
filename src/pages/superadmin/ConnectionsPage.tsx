@@ -286,19 +286,19 @@ const ConnectionsPage = () => {
         {/* Overview stats */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: "Connessi", value: connected, icon: <CheckCircle2 className="w-4 h-4" />, color: "emerald" },
-            { label: "Mancanti", value: missing, icon: <XCircle className="w-4 h-4" />, color: "red" },
-            { label: "Da verificare", value: verify, icon: <AlertCircle className="w-4 h-4" />, color: "amber" },
+            { label: "Connessi", value: connected, icon: <CheckCircle2 className="w-4 h-4" />, color: "emerald", border: "hsla(160, 60%, 45%, 0.2)", text: "hsl(160 60% 55%)" },
+            { label: "Mancanti", value: missing, icon: <XCircle className="w-4 h-4" />, color: "red", border: "hsla(0, 70%, 55%, 0.2)", text: "hsl(0 70% 55%)" },
+            { label: "Da verificare", value: verify, icon: <AlertCircle className="w-4 h-4" />, color: "amber", border: "hsla(38, 70%, 55%, 0.2)", text: "hsl(38 70% 55%)" },
           ].map(stat => (
             <div
               key={stat.label}
               className="rounded-xl p-4 border"
               style={{
                 background: "linear-gradient(160deg, hsla(230, 18%, 16%, 0.95), hsla(228, 20%, 12%, 0.9))",
-                borderColor: `hsla(var(--${stat.color === "emerald" ? "160 60% 45%" : stat.color === "red" ? "0 70% 55%" : "38 70% 55%"}), 0.2)`,
+                borderColor: stat.border,
               }}
             >
-              <div className={`flex items-center gap-2 text-${stat.color}-400 mb-1`}>
+              <div className="flex items-center gap-2 mb-1" style={{ color: stat.text }}>
                 {stat.icon}
                 <span className="text-xs font-medium uppercase tracking-wider">{stat.label}</span>
               </div>
