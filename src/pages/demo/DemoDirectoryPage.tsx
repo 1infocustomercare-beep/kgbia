@@ -178,12 +178,12 @@ export default function DemoDirectoryPage() {
           </button>
           <div className="flex-1 min-w-0">
             <h1 className="text-base font-bold text-foreground font-heading tracking-tight">Esplora i Settori</h1>
-            <p className="text-[0.6rem] text-foreground/55 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
+            <p className="text-[0.7rem] sm:text-xs text-foreground/75 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
           </div>
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-            style={{ background: "hsla(150,40%,40%,0.08)", border: "1px solid hsla(150,40%,40%,0.1)" }}>
-            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "hsla(150,60%,50%,0.8)" }} />
-            <span className="text-[0.5rem] font-semibold tracking-wider" style={{ color: "hsla(150,50%,55%,0.7)" }}>LIVE</span>
+            style={{ background: "hsla(150,40%,40%,0.16)", border: "1px solid hsla(150,45%,45%,0.28)" }}>
+            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "hsla(150,70%,60%,0.95)" }} />
+            <span className="text-[0.55rem] font-semibold tracking-wider text-foreground/90">LIVE</span>
           </div>
         </div>
       </div>
@@ -191,12 +191,12 @@ export default function DemoDirectoryPage() {
       <div className="max-w-5xl mx-auto px-4 py-6 relative z-10">
         {/* ═══ SEARCH ═══ */}
         <div className="relative mb-6">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/40" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/65" />
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cerca settore..."
-            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/20 text-sm"
+            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/45 text-sm"
             style={{
               background: "hsla(240,18%,8%,0.95)",
               border: "1px solid hsla(265,25%,25%,0.15)",
@@ -216,7 +216,7 @@ export default function DemoDirectoryPage() {
             ))}
             {filtered.length === 0 && (
               <div className="text-center py-16">
-                <p className="text-foreground/30 text-sm">Nessun settore trovato per "{search}"</p>
+                  <p className="text-foreground/70 text-sm">Nessun settore trovato per "{search}"</p>
               </div>
             )}
           </div>
@@ -235,7 +235,7 @@ export default function DemoDirectoryPage() {
                   <div className="flex items-center gap-2.5 mb-3 px-1">
                     <div className="h-px flex-1 max-w-[20px]"
                       style={{ background: "linear-gradient(90deg, hsla(265,40%,50%,0.25), transparent)" }} />
-                    <span className="text-[0.55rem] font-bold tracking-[2.5px] uppercase text-foreground/50">{cat.label}</span>
+                    <span className="text-[0.62rem] font-bold tracking-[2.5px] uppercase text-foreground/75">{cat.label}</span>
                     <div className="h-px flex-1"
                       style={{ background: "linear-gradient(90deg, transparent, hsla(265,30%,40%,0.08))" }} />
                   </div>
@@ -320,13 +320,13 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             <div className="flex items-center gap-2 mb-0.5">
               <h3 className="font-bold text-[0.8rem] sm:text-sm text-foreground font-heading truncate">{label}</h3>
               {isFeatured && (
-                <span className="text-[0.45rem] px-1.5 py-0.5 rounded-full font-bold tracking-[1.5px] uppercase flex items-center gap-0.5 flex-shrink-0"
-                  style={{ background: `${color}12`, color: color, border: `1px solid ${color}18` }}>
+                <span className="text-[0.5rem] px-1.5 py-0.5 rounded-full font-bold tracking-[1.5px] uppercase flex items-center gap-0.5 flex-shrink-0 text-foreground/95"
+                  style={{ background: `${color}26`, border: `1px solid ${color}42` }}>
                   <Crown className="w-2 h-2" /> PREMIUM
                 </span>
               )}
             </div>
-            <p className="text-[0.58rem] sm:text-[0.65rem] text-foreground/60 truncate">{subtitle}</p>
+            <p className="text-[0.68rem] sm:text-xs text-foreground/78 truncate">{subtitle}</p>
           </div>
 
           {/* Actions */}
@@ -348,7 +348,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             </motion.button>
             <div className="w-6 h-6 rounded-lg flex items-center justify-center"
               style={{ background: "hsla(265,20%,20%,0.1)" }}>
-              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/50" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/50" />}
+              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/70" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/70" />}
             </div>
           </div>
         </div>
