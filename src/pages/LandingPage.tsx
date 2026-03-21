@@ -5582,7 +5582,7 @@ const LandingPage = () => {
               <motion.div key={i} className="text-center"
               initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.1 }}>
                   <p className="text-xl sm:text-2xl font-heading font-bold text-shimmer">{s.val}</p>
-                  <p className="text-[0.5rem] text-foreground/30 tracking-[2px] uppercase">{s.label}</p>
+                  <p className="text-[0.5rem] text-foreground/50 tracking-[2px] uppercase">{s.label}</p>
                 </motion.div>
               )}
             </div>
