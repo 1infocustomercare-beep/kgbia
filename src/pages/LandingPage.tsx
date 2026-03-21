@@ -6988,11 +6988,11 @@ const LandingPage = () => {
                 Contatti
               </h4>
               <div className="space-y-3 text-[0.65rem]">
-                <p className="text-white/25 flex items-center gap-2.5"><Mail className="w-3.5 h-3.5" style={{ color: "hsla(265,70%,60%,0.5)" }} /> info@empire-suite.it</p>
-                <p className="text-white/25 flex items-center gap-2.5"><MapPin className="w-3.5 h-3.5" style={{ color: "hsla(265,70%,60%,0.5)" }} /> Roma, Italia</p>
+                <p className="text-white/45 flex items-center gap-2.5"><Mail className="w-3.5 h-3.5" style={{ color: "hsla(265,70%,60%,0.5)" }} /> info@empire-suite.it</p>
+                <p className="text-white/45 flex items-center gap-2.5"><MapPin className="w-3.5 h-3.5" style={{ color: "hsla(265,70%,60%,0.5)" }} /> Roma, Italia</p>
                 <div className="pt-3">
-                  <a href="/privacy" className="block text-white/20 hover:text-white/50 transition-colors mb-2">Privacy Policy</a>
-                  <a href="/cookie-policy" className="block text-white/20 hover:text-white/50 transition-colors">Cookie Policy</a>
+                  <a href="/privacy" className="block text-white/35 hover:text-white/60 transition-colors mb-2">Privacy Policy</a>
+                  <a href="/cookie-policy" className="block text-white/35 hover:text-white/60 transition-colors">Cookie Policy</a>
                 </div>
               </div>
               {/* Social icons */}
