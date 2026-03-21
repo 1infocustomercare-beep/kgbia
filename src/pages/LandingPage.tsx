@@ -287,7 +287,7 @@ const SectionLabel = forwardRef<HTMLDivElement, {text: string;icon?: React.React
           }}>
           <span className="text-white [&>svg]:w-3 [&>svg]:h-3">{icon || <Sparkles className="w-3 h-3" />}</span>
         </div>
-        <span className="text-[0.65rem] font-heading font-bold tracking-[2.5px] uppercase text-foreground/80 relative z-10">{text}</span>
+        <span className="text-[0.65rem] font-heading font-bold tracking-[2.5px] uppercase text-white/80 relative z-10">{text}</span>
       </div>
     </motion.div>
 
@@ -1119,12 +1119,14 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
       </div>
       <div className="text-center mb-8 sm:mb-12">
         <SectionLabel text="Piani & Prezzi" icon={<Gem className="w-3 h-3 text-accent" />} />
-        <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-3"
-        initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.h2 className="text-[clamp(1.6rem,4.5vw,3rem)] font-heading font-bold leading-[1.08] mb-3"
+        initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        style={{ color: "white" }}>
           Scegli Come <span className="text-shimmer">Dominare</span> il Tuo Mercato
         </motion.h2>
-        <motion.p className="text-foreground/40 max-w-[440px] mx-auto leading-[1.7] text-xs sm:text-sm"
-        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+        <motion.p className="max-w-[440px] mx-auto leading-[1.7] text-xs sm:text-sm"
+        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+        style={{ color: "hsl(38 30% 82%)" }}>
           Pacchetto completo o abbonamento flessibile — in entrambi i casi, il tuo business cambia per sempre.
         </motion.p>
 
@@ -3120,7 +3122,7 @@ const LandingPage = () => {
           <div className="hidden lg:flex items-center gap-1 flex-1">
             {navLinks.slice(0, Math.ceil(navLinks.length / 2)).map((link, i) =>
             <motion.a key={link.href} href={link.href}
-            className="relative px-5 py-2.5 text-[0.68rem] font-medium text-foreground/40 hover:text-foreground transition-all duration-500 tracking-[0.18em] uppercase group rounded-xl"
+            className="relative px-5 py-2.5 text-[0.68rem] font-medium text-white/70 hover:text-white transition-all duration-500 tracking-[0.18em] uppercase group rounded-xl"
             whileHover={{ backgroundColor: "hsla(38,45%,55%,0.08)" }}
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -3264,7 +3266,7 @@ const LandingPage = () => {
           <div className="hidden lg:flex items-center gap-1 flex-1 justify-end">
             {navLinks.slice(Math.ceil(navLinks.length / 2)).map((link, i) =>
             <motion.a key={link.href} href={link.href}
-            className="relative px-5 py-2.5 text-[0.68rem] font-medium text-foreground/40 hover:text-foreground transition-all duration-500 tracking-[0.18em] uppercase group rounded-xl"
+            className="relative px-5 py-2.5 text-[0.68rem] font-medium text-white/70 hover:text-white transition-all duration-500 tracking-[0.18em] uppercase group rounded-xl"
             whileHover={{ backgroundColor: "hsla(38,45%,55%,0.08)" }}
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -3398,7 +3400,7 @@ const LandingPage = () => {
               initial={{ opacity: 0, x: -24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.07, type: "spring", damping: 22 }}
-              className="w-full text-center py-3.5 text-xs font-medium text-foreground/45 hover:text-foreground hover:bg-primary/[0.08] rounded-xl transition-all font-heading tracking-[0.2em] uppercase relative group">
+              className="w-full text-center py-3.5 text-xs font-medium text-white/60 hover:text-white hover:bg-primary/[0.08] rounded-xl transition-all font-heading tracking-[0.2em] uppercase relative group">
                     {link.label}
                     {/* Active indicator — glowing dot */}
                     <motion.div
@@ -3474,24 +3476,24 @@ const LandingPage = () => {
                 <div className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--empire-violet)))", boxShadow: "0 2px 8px hsl(var(--primary) / 0.3)" }}>
                   <Crown className="w-2.5 h-2.5 text-white" />
                 </div>
-                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-foreground/80">Piattaforma AI All-in-One per PMI</span>
+                <span className="text-[0.55rem] font-heading font-bold tracking-[2px] uppercase text-white/90">Piattaforma AI All-in-One per PMI</span>
               </motion.div>
 
               {/* Headline */}
               <motion.h1 className="text-[1.6rem] leading-[1.12] sm:text-[2.6rem] lg:text-[3.4rem] font-heading font-bold tracking-[-0.03em] relative px-1"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: smoothEase }}
               style={{ textWrap: "balance" as any }}>
-                <span className="text-foreground">Progettiamo app che</span>
+                <span className="text-white">Progettiamo app che</span>
                 <br />
-                <span className="text-foreground">le persone</span>
+                <span className="text-white">le persone</span>
                 <br />
-                <span className="text-vivid-gradient">amano</span>
+                <span className="text-vivid-gradient" style={{ filter: "brightness(1.3)" }}>amano</span>
               </motion.h1>
 
               {/* Subtitle */}
-              <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] text-muted-foreground max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0"
+              <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0" style={{ color: "hsl(38 30% 82%)" }}
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-                Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business. <span className="font-bold text-foreground/80">98+ agenti IA · <span className="font-semibold text-primary">25+ settori</span></span> · Zero canone.
+                Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business. <span className="font-bold text-white/90">98+ agenti IA · <span className="font-semibold text-primary">25+ settori</span></span> · Zero canone.
               </motion.p>
 
               {/* ═══ EMPIRE INTERACTIVE SPHERE — originale (click to morph text) ═══ */}
@@ -3558,7 +3560,7 @@ const LandingPage = () => {
                   <p className="relative text-xl sm:text-3xl font-heading font-bold" style={{ color: m.color }}>
                     <AnimatedNumber value={m.value} prefix={m.prefix} suffix={m.suffix} />
                   </p>
-                  <p className="relative text-[0.42rem] sm:text-[0.5rem] tracking-[1.8px] uppercase font-heading font-semibold text-muted-foreground mt-1 sm:mt-1.5">{m.label}</p>
+                  <p className="relative text-[0.42rem] sm:text-[0.5rem] tracking-[1.8px] uppercase font-heading font-semibold text-white/60 mt-1 sm:mt-1.5">{m.label}</p>
                 </motion.div>
                 )}
               </motion.div>

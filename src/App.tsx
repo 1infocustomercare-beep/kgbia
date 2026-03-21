@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -522,6 +522,8 @@ function App() {
                       <Route path="/" element={<Index />} />
                       <Route path="/index" element={<Index />} />
                       <Route path="/home" element={<LandingPage />} />
+                      <Route path="/settori" element={<Navigate to="/home#industries" replace />} />
+                      <Route path="/prezzi" element={<Navigate to="/home#pricing" replace />} />
                       <Route path="/marketing" element={<MarketingPage />} />
                       <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />
                       <Route path="/b/:slug" element={<BusinessPage />} />
