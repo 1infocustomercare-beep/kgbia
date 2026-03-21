@@ -297,7 +297,7 @@ const AdminDashboard = () => {
   // Kill-switch: blocked restaurant
   if (restaurant?.is_blocked) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 text-center">
+      <div className="min-h-screen landing-dark flex flex-col items-center justify-center px-6 text-center" style={{ background: "hsl(228 22% 7%)" }}>
         <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center mb-5">
           <Settings className="w-10 h-10 text-destructive" />
         </div>
