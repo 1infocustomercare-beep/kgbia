@@ -6765,7 +6765,7 @@ const LandingPage = () => {
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Domande<br /><span className="text-shimmer">Frequenti</span>
             </h2>
-            <p className="text-sm text-foreground/55 leading-[1.7] max-w-xs mx-auto lg:mx-0">
+            <p className="text-sm text-foreground/75 leading-[1.7] max-w-xs mx-auto lg:mx-0">
               Tutto su Empire: settori, costi, sicurezza, capacità e partnership.
             </p>
           </motion.div>
@@ -6787,7 +6787,7 @@ const LandingPage = () => {
                 <AnimatePresence>
                   {openFaq === i &&
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }}>
-                      <p className="px-5 pb-5 text-xs sm:text-sm text-foreground/65 leading-[1.7]">{faq.a}</p>
+                      <p className="px-5 pb-5 text-xs sm:text-sm text-foreground/80 leading-[1.7]">{faq.a}</p>
                     </motion.div>
                 }
                 </AnimatePresence>
@@ -6816,7 +6816,7 @@ const LandingPage = () => {
             <h2 className="text-[clamp(1.5rem,4vw,2.4rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Garanzia <span className="text-shimmer">Risultati Garantiti</span>
             </h2>
-            <p className="text-sm text-foreground/40 max-w-md mx-auto leading-[1.8] mb-6">
+            <p className="text-sm text-foreground/75 max-w-md mx-auto leading-[1.8] mb-6">
                Prova Empire per 90 giorni senza impegno. Se non vedi risultati concreti, ti rimborsiamo. Zero rischi. Il tuo successo è la nostra priorità.
              </p>
              <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
@@ -6825,7 +6825,7 @@ const LandingPage = () => {
                { icon: <Check className="w-4 h-4" />, text: "Assistenza dedicata inclusa" },
                { icon: <Check className="w-4 h-4" />, text: "Cancella quando vuoi" }].
               map((g, i) =>
-              <div key={i} className="flex items-center gap-2 text-xs text-foreground/50">
+              <div key={i} className="flex items-center gap-2 text-xs text-foreground/80">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">{g.icon}</div>
                   <span className="font-heading font-semibold">{g.text}</span>
                 </div>
@@ -6859,7 +6859,7 @@ const LandingPage = () => {
             <h2 className="text-[clamp(1.8rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4">
               Pronto a Costruire il Tuo <span className="text-shimmer">Impero?</span>
             </h2>
-            <p className="text-sm text-foreground/55 max-w-md mx-auto mb-8">
+            <p className="text-sm text-foreground/75 max-w-md mx-auto mb-8">
               25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando. Non restare indietro.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
