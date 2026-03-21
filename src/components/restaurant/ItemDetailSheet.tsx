@@ -69,7 +69,7 @@ const ItemDetailSheet = ({ item, onClose }: ItemDetailSheetProps) => {
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.6 }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(20_8%_9%)] via-transparent to-transparent" />
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 w-9 h-9 rounded-full glass flex items-center justify-center"
