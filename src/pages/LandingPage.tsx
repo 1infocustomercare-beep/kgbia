@@ -1280,8 +1280,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       </div>
 
                       {/* Installment info */}
-                      <p className="text-[0.55rem] text-foreground/40 leading-snug">
-                        oppure <strong className="text-foreground/60">€{Math.round(p.price / 3)}/mese ×3</strong> (TAN 0%)
+                      <p className="text-[0.55rem] text-foreground/55 leading-snug">
+                        oppure <strong className="text-foreground/75">€{Math.round(p.price / 3)}/mese ×3</strong> (TAN 0%)
                       </p>
 
                       {/* Monthly + Commission pills — KEY conversion element */}
