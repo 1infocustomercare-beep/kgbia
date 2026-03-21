@@ -3666,7 +3666,7 @@ const LandingPage = () => {
             {/* Top accent shimmer line */}
             <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${pillar.color} / 0.4) 30%, hsl(${pillar.color} / 0.6) 50%, hsl(${pillar.color} / 0.4) 70%, transparent 95%)` }} />
             {/* Inner glass reflection */}
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.4) 0%, transparent 25%)" }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 25%)" }} />
             {/* Subtle corner glow */}
             <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-30 pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${pillar.color} / 0.12), transparent 70%)` }} />
             {/* Hover gradient overlay */}
