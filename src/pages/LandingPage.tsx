@@ -166,22 +166,22 @@ const HeroPhoneCarousel = ({ sectors }: { sectors: { screens: [string, string, s
           <motion.div key={idx} className="flex items-end" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
 
             {/* LEFT phone — second screen */}
-            <motion.div className="relative z-[5]" style={{ marginBottom: "32px", marginRight: "-18px" }}
+            <motion.div className="relative z-[5]" style={{ marginBottom: "28px", marginRight: "-16px" }}
               animate={{ y: [0, -6, 0] }} transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}>
-              <PhoneFrame src={current.screens[1]} alt={`${current.label} - Servizi`} size="w-[110px] sm:w-[145px] lg:w-[175px]" rounding="rounded-[24px] sm:rounded-[32px]" />
+              <PhoneFrame src={current.screens[1]} alt={`${current.label} - Servizi`} size="w-[120px] sm:w-[145px] lg:w-[175px]" rounding="rounded-[24px] sm:rounded-[32px]" />
             </motion.div>
 
             {/* CENTER phone — home screen, larger */}
             <motion.div className="relative z-20"
               animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-              <PhoneFrame src={current.screens[0]} alt={`${current.label} - Home`} size="w-[140px] sm:w-[185px] lg:w-[225px]" rounding="rounded-[26px] sm:rounded-[36px]"
+              <PhoneFrame src={current.screens[0]} alt={`${current.label} - Home`} size="w-[155px] sm:w-[185px] lg:w-[225px]" rounding="rounded-[26px] sm:rounded-[36px]"
                 style={{ border: "3px solid hsl(220 10% 78%)", boxShadow: "0 40px 80px hsla(0,0%,0%,0.25), 0 12px 32px hsla(265,40%,35%,0.12), inset 0 1px 0 hsla(0,0%,100%,0.08)" }} />
             </motion.div>
 
             {/* RIGHT phone — third screen */}
-            <motion.div className="relative z-[8]" style={{ marginBottom: "20px", marginLeft: "-18px" }}
+            <motion.div className="relative z-[8]" style={{ marginBottom: "18px", marginLeft: "-16px" }}
               animate={{ y: [0, -7, 0] }} transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}>
-              <PhoneFrame src={current.screens[2]} alt={`${current.label} - Dettaglio`} size="w-[115px] sm:w-[150px] lg:w-[180px]" rounding="rounded-[24px] sm:rounded-[32px]" />
+              <PhoneFrame src={current.screens[2]} alt={`${current.label} - Dettaglio`} size="w-[125px] sm:w-[150px] lg:w-[180px]" rounding="rounded-[24px] sm:rounded-[32px]" />
             </motion.div>
           </motion.div>
         </AnimatePresence>
