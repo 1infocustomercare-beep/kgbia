@@ -9,10 +9,11 @@ import {
   ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
   Umbrella, Wrench, Zap, Wheat, SprayCan, Scale, Calculator,
   Settings, Camera, HardHat, Flower2, Stethoscope, Pen,
-  Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles
+  Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles, Eye
 } from "lucide-react";
 import IndustryPhoneShowcase, { SectorAppIcon } from "@/components/public/IndustryPhoneShowcase";
 import { buildPublicSiteUrl } from "@/lib/public-site-path";
+import demoHeroCta from "@/assets/demo-hero-cta.jpg";
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 
