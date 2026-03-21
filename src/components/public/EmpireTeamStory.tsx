@@ -412,7 +412,13 @@ export default function EmpireTeamStory() {
           ].map((v, i) => (
             <div
               key={i}
-              className="text-center min-w-0 p-4 sm:p-6 rounded-2xl bg-background/70 border border-border/40"
+              className="text-center min-w-0 p-4 sm:p-6 rounded-2xl"
+              style={{
+                background: "linear-gradient(155deg, hsla(228,20%,15%,0.94), hsla(232,22%,11%,0.92))",
+                border: "1px solid hsla(265,50%,50%,0.15)",
+                backdropFilter: "blur(20px)",
+                boxShadow: "0 6px 28px hsla(0,0%,0%,0.3), inset 0 1px 0 hsla(0,0%,100%,0.05)",
+              }}
             >
               <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: v.color }}>
                 <v.icon className="w-4 h-4 text-foreground/90" />
