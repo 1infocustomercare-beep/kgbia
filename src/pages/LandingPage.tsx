@@ -1364,7 +1364,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                       {/* CTA button per card */}
                       <motion.button
-                      onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/admin");}}
+                      onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth");}}
                       className={`w-full mt-3 py-3 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase relative overflow-hidden ${
                       isEmpire ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black shadow-lg shadow-accent/20" :
@@ -1787,7 +1787,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
                     {/* CTA */}
                     <div className="flex flex-col gap-2 sm:items-end">
-                      <motion.button onClick={() => navigate("/admin")}
+                      <motion.button onClick={() => navigate("/auth")}
                     className={`px-8 py-3.5 rounded-full font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap relative overflow-hidden ${
                     pkg.id === "empire" ?
                     "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black" :
@@ -2041,7 +2041,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {/* CTA */}
                       <div className="px-4 pb-4">
                         <motion.button
-                        onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/admin");}}
+                        onClick={(e) => {e.stopPropagation();setSelectedPackage(p.id);navigate("/auth");}}
                         className={`w-full py-2.5 rounded-xl text-[0.6rem] font-heading font-bold tracking-wider uppercase transition-all ${
                         isEmpire ?
                         "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black" :
@@ -2139,7 +2139,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     {PACKAGE_TIERS.map((p) =>
                   <div key={p.id} className="p-3 text-center">
                         <motion.button
-                      onClick={() => {setSelectedPackage(p.id);navigate("/admin");}}
+                      onClick={() => {setSelectedPackage(p.id);navigate("/auth");}}
                       className={`w-full px-3 py-2 rounded-lg text-[0.55rem] font-heading font-bold tracking-wider uppercase transition-all ${
                       p.id === "empire" ?
                       "bg-gradient-to-r from-accent via-yellow-500 to-accent text-black" :
@@ -2474,7 +2474,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                     <p className="text-[0.55rem] text-foreground/45 mt-2">+ 2% sulle transazioni · IVA esclusa · Cancella quando vuoi</p>
                   </div>
                   <div className="flex flex-col gap-2 sm:items-end">
-                    <motion.button onClick={() => navigate("/admin")}
+                    <motion.button onClick={() => navigate("/auth")}
                   className="px-8 py-3.5 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase whitespace-nowrap"
                   whileHover={{ scale: 1.03, boxShadow: "0 15px 50px hsla(38,50%,55%,0.2)" }}
                   whileTap={{ scale: 0.97 }}>
@@ -3619,11 +3619,11 @@ const LandingPage = () => {
       }}>
         <div className="text-center mb-10">
           <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
-          <motion.h2 className="text-[clamp(1.5rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.5rem,4.5vw,3rem)] font-heading font-bold text-white leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
             Creiamo <span className="text-vivid-gradient">App, Siti e Gestionali</span>
             <br />
-            <span className="text-foreground/80">Potenziati dall'IA</span>
+            <span className="text-white/80">Potenziati dall'IA</span>
           </motion.h2>
           <motion.p className="text-[0.82rem] text-foreground/60 max-w-lg mx-auto leading-[1.75]"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.2 }}>
@@ -4222,7 +4222,7 @@ const LandingPage = () => {
         </div>
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-white leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Qualsiasi Settore. <span className="text-shimmer">Un Unico Sistema.</span>
           </motion.h2>
@@ -5305,7 +5305,7 @@ const LandingPage = () => {
 
         <div className="text-center mb-14">
           <SectionLabel text="Su Misura" icon={<Sparkles className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.8rem,5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.05] mb-4"
+          <motion.h2 className="text-[clamp(1.8rem,5vw,3.2rem)] font-heading font-bold text-white leading-[1.05] mb-4"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Costruiamo <span className="text-shimmer">Qualsiasi Cosa</span>
           </motion.h2>
@@ -6863,7 +6863,7 @@ const LandingPage = () => {
               25+ settori, automazione totale, IA integrata, aggiornamenti settimanali. I tuoi competitor si stanno digitalizzando. Non restare indietro.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <motion.button onClick={() => navigate("/admin")}
+              <motion.button onClick={() => navigate("/auth")}
               className="w-full sm:w-auto px-9 py-4 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-sm font-heading tracking-wider uppercase flex items-center justify-center gap-2"
               whileHover={{ scale: 1.03, boxShadow: "0 20px 60px hsla(265,70%,60%,0.25)" }}
               whileTap={{ scale: 0.97 }}>
