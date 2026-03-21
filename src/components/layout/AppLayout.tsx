@@ -32,23 +32,31 @@ export default function AppLayout() {
   }
 
   // Sector accent color for premium background
-  const sectorAccent = industry === "beauty" ? "#D4A0A0" : industry === "healthcare" ? "#4AAED9" : industry === "fitness" ? "#F97316"
-    : industry === "hospitality" ? "#B8860B" : industry === "retail" ? "#8B7355" : industry === "beach" ? "#38BDF8"
-    : industry === "ncc" ? "#A0A0A0" : industry === "legal" ? "#6366F1" : industry === "accounting" ? "#059669"
-    : industry === "construction" ? "#D97706" : industry === "photography" ? "#EC4899" : industry === "events" ? "#A855F7"
-    : "#C8963E";
+  const sectorAccents: Record<string, string> = {
+    beauty: "#D4A0A0", healthcare: "#4AAED9", fitness: "#F97316",
+    hospitality: "#B8860B", retail: "#8B7355", beach: "#38BDF8",
+    ncc: "#A0A0A0", legal: "#6366F1", accounting: "#059669",
+    construction: "#D97706", photography: "#EC4899", events: "#A855F7",
+    plumber: "#3B82F6", electrician: "#FBBF24", agriturismo: "#22C55E",
+    cleaning: "#06B6D4", garage: "#EF4444", gardening: "#16A34A",
+    veterinary: "#F472B6", tattoo: "#A78BFA", childcare: "#FB923C",
+    education: "#818CF8", logistics: "#64748B", custom: "#C8963E",
+  };
+  const sectorAccent = sectorAccents[industry] || "#C8963E";
 
   return (
     <SidebarProvider>
       
-      <div className="min-h-[100dvh] flex w-full relative overflow-hidden" style={{ background: "linear-gradient(145deg, #0c0a14 0%, #0a0a12 40%, #0d0b10 100%)" }}>
+      <div className="min-h-[100dvh] flex w-full relative overflow-hidden" style={{ background: `linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)` }}>
         {/* Premium sector-themed admin background */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-          <div className="absolute top-[-10%] right-[10%] w-[600px] h-[600px] rounded-full opacity-[0.05]"
-            style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 65%)`, filter: "blur(120px)" }} />
-          <div className="absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.035]"
-            style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 70%)`, filter: "blur(140px)" }} />
-          <div className="absolute inset-0" style={{ opacity: 0.012, backgroundImage: "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+          <div className="absolute top-[-10%] right-[10%] w-[600px] h-[600px] rounded-full opacity-[0.06]"
+            style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 65%)`, filter: "blur(140px)" }} />
+          <div className="absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.04]"
+            style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 70%)`, filter: "blur(160px)" }} />
+          <div className="absolute top-[40%] left-[50%] w-[400px] h-[400px] rounded-full opacity-[0.025]"
+            style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 60%)`, filter: "blur(120px)" }} />
+          <div className="absolute inset-0" style={{ opacity: 0.015, backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
         </div>
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0 relative z-10">
