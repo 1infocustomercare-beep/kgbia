@@ -323,8 +323,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
                 <item.icon className={`w-6 h-6 ${item.accent ? "text-primary-foreground" : "text-primary"}`} />
               </div>
               <div>
-                <p className="text-base font-semibold text-foreground">{item.title}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
+                <p className="text-base font-semibold text-white">{item.title}</p>
+                <p className="text-xs text-gray-300 mt-0.5">{item.desc}</p>
               </div>
             </motion.button>
           ))}
