@@ -2500,8 +2500,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
         { icon: <CreditCard className="w-3.5 h-3.5" />, text: "Rate 0% interessi" }].
         map((b, i) =>
         <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/20 bg-background/30">
-            <span className="text-primary/50">{b.icon}</span>
-            <span className="text-[0.55rem] text-foreground/30 font-medium">{b.text}</span>
+            <span className="text-primary/70">{b.icon}</span>
+            <span className="text-[0.55rem] text-foreground/55 font-medium">{b.text}</span>
           </div>
         )}
       </motion.div>
