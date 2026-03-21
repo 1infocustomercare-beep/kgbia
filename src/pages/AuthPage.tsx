@@ -245,7 +245,7 @@ export default function AuthPage() {
 
                     {/* Sector selection */}
                     <div>
-                      <p className="text-xs text-white/50 mb-2">
+                      <p className="text-xs text-white font-medium mb-2">
                         {role === "partner" ? "Settore di competenza" : "Il tuo settore"}
                       </p>
                       <div className="grid grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-1">
