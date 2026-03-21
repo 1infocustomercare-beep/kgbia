@@ -3866,7 +3866,7 @@ const LandingPage = () => {
                 <div
                   className="absolute inset-0 sm:hidden z-0 rounded-2xl"
                   style={{
-                    background: "linear-gradient(160deg, hsla(220,20%,98%,0.97), hsla(220,18%,97%,0.98))",
+                    background: "linear-gradient(160deg, hsl(228 20% 12% / 0.97), hsl(230 20% 10% / 0.98))",
                     border: "1px solid hsl(var(--border) / 0.18)"
                   }} />
                 
@@ -4577,7 +4577,7 @@ const LandingPage = () => {
       <AIAgentsShowcase />
 
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,20%,97%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(232 24% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -4784,7 +4784,7 @@ const LandingPage = () => {
                              COMPARISON TABLE — Empire vs Others
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(168,15%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Primary violet — top-left */}
@@ -5024,7 +5024,7 @@ const LandingPage = () => {
                              3 INTERFACCE — Mockup Showcase
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,25%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(234 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -5270,7 +5270,7 @@ const LandingPage = () => {
                              BUILD ANYTHING — Streamlined Conversion Section
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(248 20% 95%) 50%, hsl(220 20% 97%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(240 20% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -5535,8 +5535,8 @@ const LandingPage = () => {
 
         {/* ═══ Scrolling Capabilities Ticker ═══ */}
         <div className="relative mb-14 -mx-5 sm:-mx-6 overflow-hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(220 20% 97%), transparent)" }} />
-          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(220 20% 97%), transparent)" }} />
+          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg, hsl(228 22% 8%), transparent)" }} />
+          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg, hsl(228 22% 8%), transparent)" }} />
           {[0, 1].map((row) =>
           <div key={row} className="flex whitespace-nowrap mb-2" style={{ animation: `carousel-scroll ${row === 0 ? "40s" : "45s"} linear infinite ${row === 1 ? "reverse" : ""}` }}>
               {[...Array(2)].map((_, rep) =>
@@ -5602,7 +5602,7 @@ const LandingPage = () => {
                              SERVIZI
                             ═══════════════════════════════════════════ */}
       <Section id="services" className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(168,15%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <CircuitPattern />
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -6324,7 +6324,7 @@ const LandingPage = () => {
                              ROI CALCULATOR
                             ═══════════════════════════════════════════ */}
       <Section id="calculator" className="relative overflow-hidden hidden" style={{
-        background: "linear-gradient(180deg, hsla(220,20%,98%,0.88) 0%, hsla(215,25%,96%,0.85) 50%, hsla(220,20%,98%,0.88) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(234 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6420,7 +6420,7 @@ const LandingPage = () => {
                              TESTIMONIALS — Auto-scroll carousel
                             ═══════════════════════════════════════════ */}
       <Section id="testimonials" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 25% 96%) 50%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] right-[18%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6551,7 +6551,7 @@ const LandingPage = () => {
                              PARTNER PROGRAM
                             ═══════════════════════════════════════════ */}
       <Section id="partner" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(168 20% 95%) 50%, hsl(220 20% 97%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[6%] left-[20%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6726,7 +6726,7 @@ const LandingPage = () => {
                              FAQ
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(248 18% 96%) 50%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(240 20% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[8%] left-[15%] w-[550px] h-[550px] rounded-full opacity-[0.04]"
@@ -6794,7 +6794,7 @@ const LandingPage = () => {
       {/* ═══════════════════════════════════════════
                              GARANZIA TOTALE — Risk Reversal
                             ═══════════════════════════════════════════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(215 25% 95%) 50%, hsl(220 20% 97%) 100%)" }}>
+      <Section style={{ background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(232 22% 10%) 50%, hsl(228 22% 8%) 100%)" }}>
         <motion.div className="relative max-w-2xl mx-auto p-8 sm:p-12 rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] via-background to-accent/[0.03] text-center overflow-hidden"
         initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
           <div className="absolute inset-0 premium-holo-grid opacity-20 pointer-events-none" />
@@ -6835,7 +6835,7 @@ const LandingPage = () => {
       </Suspense>
 
       {/* ═══════ FINAL CTA ═══════ */}
-      <Section style={{ background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(248 15% 96%) 50%, hsl(0 0% 100%) 100%)" }}>
+      <Section style={{ background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(234 20% 10%) 50%, hsl(228 22% 8%) 100%)" }}>
         <div className="relative text-center p-10 sm:p-16 rounded-3xl bg-gradient-to-br from-primary/[0.08] via-deep-black/80 to-accent/[0.04] border border-primary/15 overflow-hidden animated-border">
           <div className="absolute inset-0 aurora-mesh opacity-30" />
           {/* Violet ambient glow */}
@@ -7026,7 +7026,7 @@ const LandingPage = () => {
       <AnimatePresence>
         {ctaVisible &&
         <motion.div className={`fixed bottom-0 inset-x-0 z-40 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] border-t border-border/20 ${IS_MOBILE_LP ? "" : "backdrop-blur-2xl"}`}
-        style={{ background: IS_MOBILE_LP ? "hsla(228,20%,14%,0.86)" : "linear-gradient(180deg, hsla(228,20%,14%,0.86), hsla(220,20%,98%,0.94))" }}
+        style={{ background: IS_MOBILE_LP ? "hsla(228,20%,14%,0.86)" : "linear-gradient(180deg, hsla(228,20%,14%,0.92), hsla(228,22%,10%,0.96))" }}
         initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} transition={{ type: "spring", damping: 25 }}>
             <div className="flex gap-2 max-w-md mx-auto">
               <motion.button onClick={() => scrollTo("pricing")}
