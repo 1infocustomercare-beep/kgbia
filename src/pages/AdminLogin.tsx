@@ -309,8 +309,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             <motion.button
               key={item.key}
               onClick={() => { setMode(item.key); if (item.key !== "partner") setIsSignUp(false); }}
-              className={`w-full p-5 rounded-2xl glass border transition-all text-left flex items-center gap-4 hover:-translate-y-0.5 min-h-[72px] ${
-                item.accent ? "border-primary/30 hover:border-primary/60" : "border-border/30 hover:border-primary/40"
+              className={`w-full p-5 rounded-2xl glass transition-all text-left flex items-center gap-4 hover:-translate-y-0.5 min-h-[72px] ${
+                item.accent ? "border border-primary/30 hover:border-primary/60" : "border border-white/[0.12] hover:border-white/25"
               }`}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
