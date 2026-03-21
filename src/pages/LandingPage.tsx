@@ -406,7 +406,7 @@ const LiveFeedSimulator = () => {
             </div>
             <p className="text-[0.52rem] text-foreground/60 truncate">{item.action}</p>
           </div>
-          <span className="text-[0.42rem] text-foreground/25 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
+          <span className="text-[0.42rem] text-foreground/40 whitespace-nowrap flex-shrink-0 font-mono">{item.time}</span>
         </motion.div>
       )}
     </AnimatePresence>);
