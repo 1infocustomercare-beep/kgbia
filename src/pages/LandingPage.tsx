@@ -2461,7 +2461,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-vibrant-gradient" />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative z-10">
                   <div>
-                    <p className="text-[0.55rem] font-heading text-foreground/40 tracking-[3px] uppercase mb-1">Il Tuo Piano</p>
+                    <p className="text-[0.55rem] font-heading text-foreground/60 tracking-[3px] uppercase mb-1">Il Tuo Piano</p>
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl sm:text-4xl font-heading font-bold text-foreground">€{Math.round(totalMonthly)}</span>
                       <span className="text-sm text-foreground/30">/mese</span>
