@@ -3489,9 +3489,9 @@ const LandingPage = () => {
               </motion.h1>
 
               {/* Subtitle */}
-              <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] text-muted-foreground max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0"
+              <motion.p className="mt-3 sm:mt-5 text-[0.78rem] sm:text-[0.95rem] max-w-[520px] mx-auto leading-[1.7] font-normal px-2 sm:px-0" style={{ color: "hsl(38 30% 82%)" }}
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.7 }}>
-                Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business. <span className="font-bold text-foreground/80">98+ agenti IA · <span className="font-semibold text-primary">25+ settori</span></span> · Zero canone.
+                Creiamo esperienze digitali per brand ambiziosi. Dall'ideazione al lancio, realizziamo app che stimolano il coinvolgimento e fanno crescere il tuo business. <span className="font-bold text-white/90">98+ agenti IA · <span className="font-semibold text-primary">25+ settori</span></span> · Zero canone.
               </motion.p>
 
               {/* ═══ EMPIRE INTERACTIVE SPHERE — originale (click to morph text) ═══ */}
