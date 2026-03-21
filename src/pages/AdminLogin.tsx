@@ -255,7 +255,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-transparent flex items-center justify-center relative overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
         <Blob className="w-[500px] h-[500px] top-0 -left-40 animate-blob-float" color="bg-violet-600" />
         <Blob className="w-[400px] h-[400px] bottom-0 right-0 animate-blob-float-reverse" color="bg-orange-500" />
         <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -266,7 +266,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Mode Chooser ───
   if (mode === "choose") {
     return (
-      <div className="min-h-screen bg-transparent flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <BackButton to="/" theme="glass" />
         <Blob className="w-[500px] h-[500px] -top-20 -left-40 animate-blob-float" color="bg-violet-600" />
         <Blob className="w-[400px] h-[400px] bottom-10 -right-20 animate-blob-float-reverse" color="bg-orange-500" />
@@ -326,7 +326,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Forgot Password ───
   if (mode === "forgot") {
     return (
-      <div className="min-h-screen bg-transparent flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <Blob className="w-[400px] h-[400px] -top-20 -right-20 animate-blob-float" color="bg-violet-600" />
         <Blob className="w-[300px] h-[300px] bottom-20 -left-20 animate-blob-float-reverse" color="bg-pink-500" />
         <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
@@ -375,7 +375,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Kitchen PIN (touch-friendly numpad) ───
   if (mode === "kitchen") {
     return (
-      <div className="min-h-screen bg-transparent flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <Blob className="w-[400px] h-[400px] -top-20 -right-20 animate-blob-float" color="bg-violet-600" />
         <Blob className="w-[300px] h-[300px] bottom-20 -left-20 animate-blob-float-reverse" color="bg-pink-500" />
         <motion.div className="w-full max-w-xs space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
@@ -440,7 +440,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
   // ─── Owner / Partner login/signup ───
   const isPartnerMode = mode === "partner";
   return (
-    <div className="min-h-screen bg-transparent flex flex-col items-center justify-center px-6 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
       <Blob className="w-[500px] h-[500px] -top-20 -left-40 animate-blob-float" color="bg-violet-600" />
       <Blob className="w-[400px] h-[400px] bottom-10 -right-20 animate-blob-float-reverse" color="bg-orange-500" />
       <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
