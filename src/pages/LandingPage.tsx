@@ -3619,11 +3619,11 @@ const LandingPage = () => {
       }}>
         <div className="text-center mb-10">
           <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
-          <motion.h2 className="text-[clamp(1.5rem,4.5vw,3rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.5rem,4.5vw,3rem)] font-heading font-bold text-white leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={vpOnce}>
             Creiamo <span className="text-vivid-gradient">App, Siti e Gestionali</span>
             <br />
-            <span className="text-foreground/80">Potenziati dall'IA</span>
+            <span className="text-white/80">Potenziati dall'IA</span>
           </motion.h2>
           <motion.p className="text-[0.82rem] text-foreground/60 max-w-lg mx-auto leading-[1.75]"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vpOnce} transition={{ delay: 0.2 }}>
