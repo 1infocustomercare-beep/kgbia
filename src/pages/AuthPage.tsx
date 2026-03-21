@@ -81,13 +81,14 @@ export default function AuthPage() {
       companyName: role === "partner" ? companyName : undefined,
     });
 
-    if (!error && userId && role === "partner") {
-      const { error: assignRoleError } = await supabase.functions.invoke("assign-partner-role", {
+    if (!error && userId) {
+      const functionName = role === "partner" ? "assign-partner-role" : "assign-customer-role";
+      const { error: assignRoleError } = await supabase.functions.invoke(functionName, {
         body: { user_id: userId },
       });
 
       if (assignRoleError) {
-        console.error("Partner role assignment failed", assignRoleError);
+        console.error("Role assignment failed", assignRoleError);
       }
     }
 
