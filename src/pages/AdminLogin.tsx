@@ -489,7 +489,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
                 <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Nome completo</label>
                 <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                   placeholder={isPartnerMode ? "Marco Bianchi" : "Mario Rossi"}
-                  className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-foreground text-base placeholder:text-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-white text-base placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
               </div>
               {isPartnerMode && (
                 <>
@@ -498,19 +498,19 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
                       <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Telefono</label>
                       <input type="tel" value={partnerPhone} onChange={e => setPartnerPhone(e.target.value)}
                         placeholder="+39 333..."
-                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-foreground text-base placeholder:text-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-white text-base placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                     <div>
                       <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Città</label>
                       <input type="text" value={partnerCity} onChange={e => setPartnerCity(e.target.value)}
                         placeholder="Roma"
-                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-foreground text-base placeholder:text-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-white text-base placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                   </div>
                   <div>
                     <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Settore di interesse</label>
                     <select value={partnerSector} onChange={e => setPartnerSector(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30">
+                      className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-white text-base focus:outline-none focus:ring-2 focus:ring-primary/30">
                       <option value="">Seleziona settore...</option>
                       {INDUSTRY_LIST.map(ind => (
                         <option key={ind.id} value={ind.id}>{ind.emoji} {ind.label}</option>
@@ -526,7 +526,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Email</label>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)}
               placeholder={isPartnerMode ? "partner@email.com" : "titolare@ristorante.it"}
-              className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-foreground text-base placeholder:text-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-white text-base placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary/30"
               required />
           </div>
           <div>
@@ -534,7 +534,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             <div className="relative">
               <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 pr-11 rounded-xl bg-white/8 border border-white/15 !text-foreground text-base placeholder:text-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full px-4 py-3 pr-11 rounded-xl bg-white/8 border border-white/15 !text-white text-base placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary/30"
                 required minLength={6} />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
