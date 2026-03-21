@@ -6825,7 +6825,7 @@ const LandingPage = () => {
                { icon: <Check className="w-4 h-4" />, text: "Assistenza dedicata inclusa" },
                { icon: <Check className="w-4 h-4" />, text: "Cancella quando vuoi" }].
               map((g, i) =>
-              <div key={i} className="flex items-center gap-2 text-xs text-foreground/50">
+              <div key={i} className="flex items-center gap-2 text-xs text-foreground/80">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">{g.icon}</div>
                   <span className="font-heading font-semibold">{g.text}</span>
                 </div>
