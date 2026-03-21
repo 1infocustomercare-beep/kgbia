@@ -6920,7 +6920,7 @@ const LandingPage = () => {
                 <span className="text-[0.55rem] tracking-[0.3em] uppercase block" style={{ background: "linear-gradient(90deg, hsla(265,70%,65%,1), hsla(280,50%,75%,1))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>AUTONOMOUS AI</span>
               </div>
             </motion.div>
-            <motion.p className="text-[0.7rem] text-white/25 max-w-[340px] leading-[1.8] font-light"
+            <motion.p className="text-[0.7rem] text-white/45 max-w-[340px] leading-[1.8] font-light"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
               La piattaforma AI autonoma più completa al mondo. Tecnologia proprietaria che trasforma qualsiasi business in un impero digitale.
             </motion.p>
