@@ -174,12 +174,12 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 landing-dark"
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 landing-dark auth-contrast"
       style={{ background: "linear-gradient(160deg, hsl(228 22% 8%), hsl(250 20% 10%), hsl(228 22% 7%))" }}>
 
       {/* Back button */}
       <button onClick={() => navigate("/home")}
-        className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors">
+        className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-foreground/85 hover:text-foreground transition-colors">
         <ArrowLeft className="w-4 h-4" /> Home
       </button>
 
@@ -207,35 +207,35 @@ export default function AuthPage() {
             /* ═══ LOGIN ═══ */
             <div className="space-y-5">
               <div className="text-center">
-                <h1 className="text-xl font-heading font-bold text-white mb-1">Bentornato</h1>
-                <p className="text-sm text-gray-300">Accedi al tuo account Empire</p>
+                <h1 className="text-xl font-heading font-bold text-foreground mb-1">Bentornato</h1>
+                <p className="text-sm text-foreground/85">Accedi al tuo account Empire</p>
               </div>
               <div className="space-y-3">
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                   <Input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                    className="pl-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
+                    className="pl-10 bg-white/8 border-white/15 text-foreground placeholder:text-foreground/55 focus:border-primary/55" />
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
                   <Input type={showPw ? "text" : "password"} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
-                    className="pl-10 pr-10 bg-white/8 border-white/15 text-white placeholder:text-white/40 focus:border-purple-500/50" />
-                  <button onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/80">
+                    className="pl-10 pr-10 bg-white/8 border-white/15 text-foreground placeholder:text-foreground/55 focus:border-primary/55" />
+                  <button onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground/90">
                     {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
               <Button onClick={handleLogin} disabled={loading} className="w-full py-3 rounded-xl font-bold text-sm"
-                style={{ background: "linear-gradient(135deg, hsl(38 65% 58%), hsl(38 55% 48%))", color: "#000" }}>
+                style={{ background: "linear-gradient(135deg, hsl(38 65% 58%), hsl(38 55% 48%))", color: "hsl(var(--primary-foreground))" }}>
                 {loading ? "Accesso..." : "Accedi"}
               </Button>
               <div className="text-center space-y-2">
-                <button onClick={() => navigate("/reset-password")} className="text-xs text-white/60 hover:text-white/80 transition-colors">
+                <button onClick={() => navigate("/reset-password")} className="text-xs text-foreground/75 hover:text-foreground transition-colors">
                   Password dimenticata?
                 </button>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-foreground/75">
                   Non hai un account?{" "}
-                  <button onClick={() => { setMode("register"); setStep(1); }} className="text-purple-400 hover:text-purple-300 font-semibold">
+                  <button onClick={() => { setMode("register"); setStep(1); }} className="text-primary font-semibold underline underline-offset-4 decoration-primary/50 hover:text-primary/80">
                     Registrati
                   </button>
                 </p>
