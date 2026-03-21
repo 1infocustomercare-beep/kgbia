@@ -40,7 +40,7 @@ const CheckoutPage = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+      <div className="min-h-screen cote-luxury flex flex-col items-center justify-center px-6" style={{ background: "hsl(20 10% 4%)" }}>
         <motion.div
           className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mb-6"
           initial={{ scale: 0 }}
