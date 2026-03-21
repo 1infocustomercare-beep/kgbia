@@ -12,6 +12,7 @@ import {
   Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles
 } from "lucide-react";
 import IndustryPhoneShowcase, { SectorAppIcon } from "@/components/public/IndustryPhoneShowcase";
+import { buildPublicSiteUrl } from "@/lib/public-site-path";
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 
