@@ -316,14 +316,14 @@ const AdminDashboard = () => {
   const sectorAccent = settingsPrimaryColor || "#C8963E";
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden landing-dark" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
-      {/* Premium sector-themed admin background */}
+    <div className="min-h-screen flex flex-col relative overflow-hidden cote-luxury" style={{ background: "linear-gradient(145deg, hsl(20 10% 3%) 0%, hsl(20 8% 5%) 40%, hsl(20 6% 6%) 100%)" }}>
+      {/* COTE-style warm ambient glow */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.06]"
-          style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 65%)`, filter: "blur(100px)" }} />
-        <div className="absolute bottom-[-10%] right-[-5%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
-          style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 70%)`, filter: "blur(120px)" }} />
-        <div className="absolute inset-0" style={{ opacity: 0.012, backgroundImage: "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+        <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
+          style={{ background: `radial-gradient(circle, hsl(30 55% 50%), transparent 65%)`, filter: "blur(100px)" }} />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[450px] h-[450px] rounded-full opacity-[0.03]"
+          style={{ background: `radial-gradient(circle, hsl(30 45% 40%), transparent 70%)`, filter: "blur(120px)" }} />
+        <div className="absolute inset-0" style={{ opacity: 0.008, backgroundImage: "linear-gradient(rgba(200,150,62,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,62,0.03) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
       </div>
       
       {/* Back button integrated in header */}
