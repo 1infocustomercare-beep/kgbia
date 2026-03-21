@@ -484,10 +484,10 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
           {isSignUp && (
             <>
               <div>
-                <label className="text-xs text-muted-foreground/70 uppercase tracking-wider block mb-1.5">Nome completo</label>
+                <label className="text-xs text-gray-400 uppercase tracking-wider block mb-1.5">Nome completo</label>
                 <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                   placeholder={isPartnerMode ? "Marco Bianchi" : "Mario Rossi"}
-                  className="w-full px-4 py-3 rounded-xl bg-secondary text-foreground text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/30" />
               </div>
               {isPartnerMode && (
                 <>
