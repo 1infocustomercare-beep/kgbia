@@ -6680,7 +6680,7 @@ const LandingPage = () => {
         {/* Career path */}
         <motion.div className="p-6 rounded-2xl glow-card mb-10"
         variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <h3 className="font-heading font-bold text-[0.6rem] text-foreground/50 text-center mb-6 tracking-[3px] uppercase">Percorso di Carriera</h3>
+          <h3 className="font-heading font-bold text-[0.6rem] text-foreground/75 text-center mb-6 tracking-[3px] uppercase">Percorso di Carriera</h3>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-0">
             {[
             { title: "Partner", desc: "€997 per ogni vendita chiusa", icon: <Handshake className="w-5 h-5" /> },
