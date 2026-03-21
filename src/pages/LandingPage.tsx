@@ -4222,7 +4222,7 @@ const LandingPage = () => {
         </div>
         <div className="text-center mb-10 sm:mb-12">
           <SectionLabel text="Multi-Settore" icon={<Globe className="w-3 h-3 text-primary" />} />
-          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-foreground leading-[1.08] mb-4"
+          <motion.h2 className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-heading font-bold text-white leading-[1.08] mb-4"
           initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             Qualsiasi Settore. <span className="text-shimmer">Un Unico Sistema.</span>
           </motion.h2>
