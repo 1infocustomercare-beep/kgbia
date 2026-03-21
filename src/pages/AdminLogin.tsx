@@ -387,8 +387,8 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <DarkPremiumBg />
         <motion.div className="w-full max-w-xs space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
-          <button onClick={() => { setMode("choose"); setError(""); setKitchenPin(""); }}
-            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <button onClick={() => { setMode("choose"); setError(""); setKitchenPin(""); }}
+            className="flex items-center gap-1 text-sm text-amber-400/80 hover:text-amber-300 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Indietro
           </button>
 
