@@ -1368,7 +1368,6 @@
   .animate-progress-fill {
     animation: progress-fill 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
-}
 
 /* Hide native video controls globally — prevent play button on mobile */
 video::-webkit-media-controls,
