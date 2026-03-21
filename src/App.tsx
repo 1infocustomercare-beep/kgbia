@@ -586,6 +586,11 @@ function App() {
                           <DemoAccountsPage />
                         </ProtectedRoute>
                       } />
+                      <Route path="/superadmin/connections" element={
+                        <ProtectedRoute requiredRole="super_admin">
+                          <ConnectionsPage />
+                        </ProtectedRoute>
+                      } />
                       <Route path="/staff" element={
                         <ProtectedRoute requiredRole="staff">
                           <StaffPanel />
