@@ -96,6 +96,7 @@ const PartnerRegister = () => {
             full_name: form.fullName,
             phone: form.phone,
             city: form.city,
+            signup_role: "partner",
             partner_referral: referralId || null,
           },
           emailRedirectTo: window.location.origin + "/partner",
