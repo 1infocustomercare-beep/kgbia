@@ -278,7 +278,7 @@ const PartnerDashboard = () => {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden landing-dark" style={{ background: "linear-gradient(145deg, hsl(265 20% 6%) 0%, hsl(255 18% 7%) 40%, hsl(260 20% 6%) 100%)" }}>
       {/* Fully opaque base — blocks underlying animations */}
-      <div className="fixed inset-0 z-0" style={{ background: "hsl(228 22% 7%)" }} />
+      <div className="fixed inset-0 z-0" style={{ background: "hsl(260 20% 6%)" }} />
       {/* Premium violet luxury ambient */}
       <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
         <div className="absolute top-[-10%] right-[15%] w-[500px] h-[500px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, hsl(265 70% 55%), transparent 65%)", filter: "blur(140px)" }} />
