@@ -348,7 +348,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             </motion.button>
             <div className="w-6 h-6 rounded-lg flex items-center justify-center"
               style={{ background: "hsla(265,20%,20%,0.1)" }}>
-              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/25" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/25" />}
+              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/50" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/50" />}
             </div>
           </div>
         </div>
