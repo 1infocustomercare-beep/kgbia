@@ -6568,7 +6568,7 @@ const LandingPage = () => {
               <div key={i} className="group relative h-full">
                     <div className="relative p-5 sm:p-7 rounded-2xl h-full flex flex-col items-center text-center overflow-hidden transition-all duration-700 group-hover:scale-[1.02]"
                 style={{
-                  background: "linear-gradient(165deg, hsl(228 20% 14% / 0.86), hsl(248 15% 97% / 0.93))",
+                  background: "linear-gradient(165deg, hsl(228 20% 16% / 0.92), hsl(232 22% 11% / 0.92))",
                   border: "1px solid hsl(var(--primary) / 0.1)",
                   boxShadow: "0 4px 24px hsl(var(--primary) / 0.06)",
                   backdropFilter: "blur(24px)"
