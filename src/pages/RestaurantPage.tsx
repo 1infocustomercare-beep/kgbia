@@ -219,7 +219,7 @@ const RestaurantPage = () => {
 
       {/* ====== NAVBAR — Website Style ====== */}
       <nav className={`fixed ${tableFromQR ? "top-9" : "top-0"} inset-x-0 z-50 transition-all`}>
-        <div className="glass-strong border-b border-border/20">
+        <div style={{ background: "linear-gradient(180deg, hsl(20 10% 4% / 0.96), hsl(20 8% 4% / 0.92))", borderBottom: "1px solid hsla(30, 20%, 25%, 0.2)" }} className="backdrop-blur-2xl">
           <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
             {/* Back button for demo + Logo + Name */}
             <div className="flex items-center gap-2">
