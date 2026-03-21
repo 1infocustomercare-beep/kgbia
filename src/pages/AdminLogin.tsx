@@ -461,12 +461,12 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
             initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 200, damping: 15 }}>
             {isPartnerMode ? <Users className="w-8 h-8 text-primary-foreground" /> : <img src={empireLogoNew} alt="Empire AI" className="w-12 h-12 rounded-full object-cover" style={{ boxShadow: "0 0 0 2px hsla(38,50%,55%,0.3)" }} />}
           </motion.div>
-          <h1 className="text-2xl font-heading font-bold text-vibrant-gradient">
+          <h1 className="text-2xl font-heading font-bold text-white">
             {isPartnerMode
               ? (isSignUp ? "Registrati come Partner" : "Accesso Partner")
               : (isSignUp ? "Crea Account" : "Accesso Titolare")}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-gray-300 mt-1">
             {isPartnerMode
               ? (isSignUp ? (refCode ? "Sei stato invitato da un Team Leader!" : "Unisciti e guadagna €997/vendita") : "Accedi alla tua dashboard Partner")
               : (isSignUp ? "Un account unico per gestire tutto" : "Accedi al pannello di gestione")}
