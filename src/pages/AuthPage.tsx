@@ -260,8 +260,8 @@ export default function AuthPage() {
                                 background: selected ? `${color}25` : "hsla(0,0%,100%,0.05)",
                                 border: `1px solid ${selected ? `${color}60` : "hsla(0,0%,100%,0.12)"}`,
                               }}>
-                              <Icon className="w-4 h-4" style={{ color: selected ? color : "hsla(0,0%,100%,0.4)" }} />
-                              <span className="text-[10px] font-medium leading-tight" style={{ color: selected ? "#fff" : "hsla(0,0%,100%,0.5)" }}>
+                              <Icon className="w-4 h-4" style={{ color: selected ? color : "hsla(0,0%,100%,0.6)" }} />
+                              <span className="text-[10px] font-medium leading-tight" style={{ color: selected ? "#fff" : "hsla(0,0%,100%,0.7)" }}>
                                 {s.label}
                               </span>
                             </button>
