@@ -196,10 +196,10 @@ export default function DemoDirectoryPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cerca settore..."
-            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/45 text-sm"
+            className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/55 text-sm"
             style={{
-              background: "hsla(240,18%,8%,0.95)",
-              border: "1px solid hsla(265,25%,25%,0.15)",
+              background: "hsla(240,18%,12%,0.95)",
+              border: "1px solid hsla(265,25%,35%,0.28)",
               borderRadius: "0.875rem"
             }}
           />
