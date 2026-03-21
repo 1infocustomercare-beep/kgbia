@@ -498,7 +498,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
                       <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Telefono</label>
                       <input type="tel" value={partnerPhone} onChange={e => setPartnerPhone(e.target.value)}
                         placeholder="+39 333..."
-                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-foreground text-base placeholder:text-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                        className="w-full px-4 py-3 rounded-xl bg-white/8 border border-white/15 !text-white text-base placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                     <div>
                       <label className="text-xs text-foreground/90 uppercase tracking-wider block mb-1.5">Città</label>
