@@ -232,15 +232,25 @@
 }
 
 /* Auth readability lock (login/register forms on dark themes) */
+.auth-contrast label {
+  color: hsl(var(--foreground) / 0.92);
+}
+
 .auth-contrast input,
 .auth-contrast textarea,
 .auth-contrast select {
-  color: hsl(var(--foreground));
+  color: hsl(var(--foreground)) !important;
+  caret-color: hsl(var(--foreground));
 }
 
 .auth-contrast input::placeholder,
 .auth-contrast textarea::placeholder {
-  color: hsl(var(--foreground) / 0.55);
+  color: hsl(var(--foreground) / 0.68);
+}
+
+.auth-contrast select option {
+  background-color: hsl(var(--card));
+  color: hsl(var(--foreground));
 }
 
 .landing-dark.auth-contrast input:-webkit-autofill,
