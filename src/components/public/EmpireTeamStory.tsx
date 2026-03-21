@@ -308,7 +308,7 @@ export default function EmpireTeamStory() {
               Empire AI
             </span>
           </h2>
-          <p className="text-muted-foreground/70 max-w-xl mx-auto text-sm sm:text-base">
+          <p className="max-w-xl mx-auto text-sm sm:text-base" style={{ color: "hsl(0 0% 100% / 0.75)" }}>
             Un team multidisciplinare unito dalla passione per l'innovazione e la tecnologia applicata al business.
           </p>
         </motion.div>
