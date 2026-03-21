@@ -452,7 +452,7 @@ const AdminLogin = forwardRef<HTMLDivElement>((_props, _ref) => {
       <DarkPremiumBg />
       <motion.div className="w-full max-w-sm space-y-6 relative z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
         <button onClick={() => { setMode("choose"); setError(""); setIsSignUp(false); }}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          className="flex items-center gap-1 text-sm text-amber-400/80 hover:text-amber-300 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Indietro
         </button>
 
