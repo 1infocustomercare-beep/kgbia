@@ -1329,7 +1329,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                           f.includes("ZERO") || f.includes("0%") ? "text-accent" : "text-primary"}`
                           } />
                             </div>
-                            <span className={`leading-snug break-words ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/70" : ""}`}>{f}</span>
+                            <span className={`leading-snug break-words ${f.includes("ZERO") || f.includes("0%") ? "font-bold text-accent" : f.startsWith("Tutto") ? "font-semibold text-foreground/85" : ""}`}>{f}</span>
                           </li>
                       )}
                         {!isSelected && p.features.length > 4 &&
