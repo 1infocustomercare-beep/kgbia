@@ -2872,8 +2872,8 @@ const LandingPage = () => {
 
   return (
     <div
-      className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury"
-      style={{ background: "radial-gradient(120% 80% at 50% 35%, hsl(214 28% 96%) 0%, hsl(220 26% 94%) 40%, hsl(224 20% 90%) 64%, hsl(228 26% 86%) 100%)" }}>
+      className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury landing-dark"
+      style={{ background: "radial-gradient(120% 80% at 50% 35%, hsl(228 22% 8%) 0%, hsl(230 24% 7%) 40%, hsl(232 20% 6%) 64%, hsl(234 26% 5%) 100%)" }}>
       
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
