@@ -9,7 +9,7 @@ import {
   ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
   Umbrella, Wrench, Zap, Wheat, SprayCan, Scale, Calculator,
   Settings, Camera, HardHat, Flower2, Stethoscope, Pen,
-  Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles
+  Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles, Eye
 } from "lucide-react";
 import IndustryPhoneShowcase, { SectorAppIcon } from "@/components/public/IndustryPhoneShowcase";
 import { buildPublicSiteUrl } from "@/lib/public-site-path";
@@ -190,19 +190,23 @@ export default function DemoDirectoryPage() {
         </div>
       </div>
 
-      {/* ═══ HERO SEAMLESS SECTION ═══ */}
-      <div className="relative z-10 mt-2 mb-4 overflow-hidden">
-        <img src={demoHeroCta} alt=""
-          className="w-full h-[180px] sm:h-[220px] object-cover opacity-60"
-          style={{ maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 60%, transparent 100%)", WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 60%, transparent 100%)" }}
-          loading="eager" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-          <h2 className="text-xl sm:text-2xl font-heading font-extrabold text-foreground tracking-tight leading-tight">
-            Scegli il Settore
-          </h2>
-          <p className="text-xs sm:text-sm text-foreground/60 mt-1.5 font-medium tracking-wide">
-            Guarda le demo live · Esplora le soluzioni
-          </p>
+      {/* ═══ HERO CTA BANNER ═══ */}
+      <div className="relative z-10 mx-4 mt-5 mb-6 rounded-2xl overflow-hidden"
+        style={{ boxShadow: "0 8px 40px hsla(265,50%,10%,0.5)" }}>
+        <img src={demoHeroCta} alt="Pronti a trasformare la vostra idea di app?"
+          className="w-full h-auto object-cover rounded-2xl" loading="eager" />
+        {/* Overlay buttons for mobile */}
+        <div className="absolute bottom-4 left-4 right-4 flex gap-2">
+          <button onClick={() => navigate("/auth")}
+            className="flex-1 py-2.5 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5"
+            style={{ background: "linear-gradient(135deg, hsl(174 60% 45%), hsl(190 55% 40%))", boxShadow: "0 4px 16px hsla(174,60%,30%,0.4)" }}>
+            Contattaci <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+          <button onClick={() => { const el = document.getElementById("demo-list"); el?.scrollIntoView({ behavior: "smooth" }); }}
+            className="flex-1 py-2.5 rounded-xl text-xs font-bold text-foreground/90 flex items-center justify-center gap-1.5"
+            style={{ background: "hsla(265,20%,15%,0.8)", border: "1px solid hsla(265,30%,50%,0.3)", backdropFilter: "blur(12px)" }}>
+            <Eye className="w-3.5 h-3.5" /> Guarda i lavori
+          </button>
         </div>
       </div>
 
