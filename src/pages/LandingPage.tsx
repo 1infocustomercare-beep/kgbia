@@ -2471,7 +2471,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                       {selectedAddons.size > 0 && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/10 text-accent font-semibold">+{selectedAddons.size} Agenti IA</span>}
                       {savedPerYear > 0 && <span className="px-2 py-0.5 rounded-full text-[0.5rem] bg-accent/20 text-accent font-bold">Risparmi €{Math.round(savedPerYear)}/anno</span>}
                     </div>
-                    <p className="text-[0.55rem] text-foreground/25 mt-2">+ 2% sulle transazioni · IVA esclusa · Cancella quando vuoi</p>
+                    <p className="text-[0.55rem] text-foreground/45 mt-2">+ 2% sulle transazioni · IVA esclusa · Cancella quando vuoi</p>
                   </div>
                   <div className="flex flex-col gap-2 sm:items-end">
                     <motion.button onClick={() => navigate("/admin")}
