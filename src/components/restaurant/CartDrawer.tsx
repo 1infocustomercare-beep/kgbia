@@ -53,11 +53,6 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
           >
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 300 }}
-          >
             {/* Drag handle */}
             <div className="flex justify-center pt-3 pb-1">
               <div className="w-10 h-1 rounded-full" style={{ background: "hsla(30, 20%, 40%, 0.4)" }} />
