@@ -665,29 +665,29 @@ const PremiumCard = ({ children, className = "", hover = true, glow = false, sca
     <motion.div
       className={`relative rounded-2xl border overflow-hidden group/card ${className}`}
       style={{
-        background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(220 20% 98% / 0.88), hsl(248 18% 97% / 0.85))",
+        background: "linear-gradient(160deg, hsl(228 20% 14% / 0.92), hsl(232 22% 12% / 0.88), hsl(248 18% 11% / 0.85))",
         backdropFilter: isMobileDevice ? undefined : "blur(24px) saturate(1.4)",
         WebkitBackdropFilter: isMobileDevice ? undefined : "blur(24px) saturate(1.4)",
         borderColor: "hsl(var(--border) / 0.35)",
-        boxShadow: "0 2px 24px hsl(var(--primary) / 0.06), 0 0 0 1px hsl(var(--primary) / 0.03), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
+        boxShadow: "0 2px 24px hsl(var(--primary) / 0.08), 0 0 0 1px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.05)"
       }}
       whileHover={hover && !isMobileDevice ? {
         y: -6,
-        borderColor: "hsl(var(--primary) / 0.18)",
-        boxShadow: "0 20px 60px hsl(var(--primary) / 0.1), 0 0 30px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.6)",
+        borderColor: "hsl(var(--primary) / 0.25)",
+        boxShadow: "0 20px 60px hsl(var(--primary) / 0.15), 0 0 30px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.08)",
         transition: { duration: 0.4, ease: "easeOut" }
       } : undefined}>
       
     {/* Top accent shimmer line */}
     <div className="absolute top-0 left-0 right-0 h-px z-10"
-      style={{ background: "linear-gradient(90deg, transparent 10%, hsl(var(--primary) / 0.12) 30%, hsl(38 50% 55% / 0.15) 50%, hsl(var(--accent) / 0.1) 70%, transparent 90%)" }} />
+      style={{ background: "linear-gradient(90deg, transparent 10%, hsl(var(--primary) / 0.2) 30%, hsl(38 50% 55% / 0.2) 50%, hsl(var(--accent) / 0.15) 70%, transparent 90%)" }} />
       
     {/* Inner glass reflection */}
-    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.45) 0%, transparent 30%)" }} />
+    <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.04) 0%, transparent 30%)" }} />
     
     {/* Subtle hover gradient overlay */}
     <div className="absolute inset-0 pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
-      style={{ background: "radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.04), transparent 70%)" }} />
+      style={{ background: "radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.06), transparent 70%)" }} />
     
     <div className="relative z-10">{children}</div>
   </motion.div>);
@@ -1093,7 +1093,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
   return (
     <Section id="pricing" className="relative overflow-hidden" style={{
-      background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(215 22% 94%) 35%, hsl(235 18% 96%) 65%, hsl(220 20% 97%) 100%)"
+      background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 22% 10%) 35%, hsl(235 20% 9%) 65%, hsl(228 22% 8%) 100%)"
     }}>
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[650px] h-[450px] rounded-full opacity-[0.04]"
@@ -1130,7 +1130,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
         {/* Mode Toggle: Package vs Monthly */}
         <motion.div className="flex items-center justify-center gap-1 mt-6 p-1 rounded-full border border-border/30 max-w-sm mx-auto"
-        style={{ background: "linear-gradient(145deg, hsl(0 0% 100% / 0.95), hsl(220 20% 97% / 0.9))", boxShadow: "0 2px 12px hsl(var(--primary) / 0.06)" }}
+        style={{ background: "linear-gradient(145deg, hsl(228 20% 14% / 0.95), hsl(232 22% 12% / 0.9))", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
         initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <button onClick={() => setPricingMode("package")}
           className={`relative flex-1 px-4 py-2.5 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${
@@ -1238,8 +1238,8 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                 }
                 style={{
                   background: isEmpire ?
-                  "linear-gradient(165deg, hsl(0 0% 100% / 0.98), hsl(35 20% 97% / 0.95))" :
-                  "linear-gradient(165deg, hsl(0 0% 100% / 0.97), hsl(220 18% 97% / 0.94))"
+                  "linear-gradient(165deg, hsl(228 20% 14% / 0.98), hsl(35 12% 12% / 0.95))" :
+                  "linear-gradient(165deg, hsl(228 20% 14% / 0.97), hsl(232 22% 12% / 0.94))"
                 }}
                 whileTap={{ scale: 0.985 }}>
 
@@ -2872,8 +2872,8 @@ const LandingPage = () => {
 
   return (
     <div
-      className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury"
-      style={{ background: "radial-gradient(120% 80% at 50% 35%, hsl(214 28% 96%) 0%, hsl(220 26% 94%) 40%, hsl(224 20% 90%) 64%, hsl(228 26% 86%) 100%)" }}>
+      className="min-h-screen overflow-x-hidden relative landing-noise-off landing-premium-luxury landing-dark"
+      style={{ background: "radial-gradient(120% 80% at 50% 35%, hsl(228 22% 8%) 0%, hsl(230 24% 7%) 40%, hsl(232 20% 6%) 64%, hsl(234 26% 5%) 100%)" }}>
       
 
       {/* ═══════ AMBIENT BACKGROUND ═══════ */}
@@ -3442,20 +3442,20 @@ const LandingPage = () => {
        <motion.section ref={heroRef} id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden px-5 sm:px-6 pt-24 sm:pt-28 pb-8 sm:pb-16"
       style={IS_MOBILE_LP ? undefined : { opacity: heroOpacity }}>
 
-        {/* ═══ LAYER 0: Clean premium gradient ═══ */}
-        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(220 25% 97%) 0%, hsl(230 18% 96%) 25%, hsl(248 14% 96%) 50%, hsl(220 20% 96%) 75%, hsl(210 20% 97%) 100%)" }} />
+        {/* ═══ LAYER 0: Clean premium dark gradient ═══ */}
+        <div className="absolute inset-0" style={{ zIndex: 2, background: "linear-gradient(160deg, hsl(228 22% 10%) 0%, hsl(235 20% 8%) 25%, hsl(248 18% 9%) 50%, hsl(230 22% 8%) 75%, hsl(225 20% 10%) 100%)" }} />
 
         {/* ═══ LAYER 1: Premium ambient blobs ═══ */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
           <div className="aurora-blob-1 absolute w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(265 55% 55% / 0.1), hsl(248 50% 60% / 0.04) 50%, transparent 70%)", filter: "blur(80px)", top: "0%", left: "5%" }} />
+            style={{ background: "radial-gradient(circle, hsl(265 55% 55% / 0.2), hsl(248 50% 60% / 0.08) 50%, transparent 70%)", filter: "blur(80px)", top: "0%", left: "5%" }} />
           <div className="aurora-blob-2 absolute w-[450px] h-[450px] sm:w-[650px] sm:h-[650px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(210 65% 55% / 0.12), hsl(220 50% 60% / 0.04) 50%, transparent 70%)", filter: "blur(80px)", top: "10%", right: "0%" }} />
+            style={{ background: "radial-gradient(circle, hsl(210 65% 55% / 0.22), hsl(220 50% 60% / 0.08) 50%, transparent 70%)", filter: "blur(80px)", top: "10%", right: "0%" }} />
           <div className="aurora-blob-3 absolute w-[400px] h-[400px] sm:w-[550px] sm:h-[550px] rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(38 55% 50% / 0.08), hsl(35 50% 55% / 0.03) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
+            style={{ background: "radial-gradient(circle, hsl(38 55% 50% / 0.12), hsl(35 50% 55% / 0.05) 50%, transparent 70%)", filter: "blur(80px)", bottom: "5%", left: "30%" }} />
           {/* Central glow behind sphere */}
           <div className="absolute w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ background: "radial-gradient(circle, hsl(265 50% 55% / 0.08), hsl(248 45% 60% / 0.03) 55%, transparent 75%)", filter: "blur(100px)" }} />
+            style={{ background: "radial-gradient(circle, hsl(265 50% 55% / 0.15), hsl(248 45% 60% / 0.05) 55%, transparent 75%)", filter: "blur(100px)" }} />
         </div>
 
         <motion.div className="relative z-10 max-w-[1100px] mx-auto w-full" style={IS_MOBILE_LP ? undefined : { y: heroY, scale: heroScale, willChange: "transform" }}>
@@ -3539,13 +3539,13 @@ const LandingPage = () => {
                   key={i}
                   className="relative group text-center px-3 py-3 sm:px-4 sm:py-4 rounded-2xl overflow-hidden"
                   style={{
-                    background: "hsl(0 0% 100% / 0.6)",
+                    background: "hsl(228 20% 12% / 0.7)",
                     backdropFilter: "blur(16px)",
                     WebkitBackdropFilter: "blur(16px)",
                     border: "1px solid hsl(var(--border) / 0.4)",
-                    boxShadow: "0 2px 12px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.5)"
+                    boxShadow: "0 2px 12px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.05)"
                   }}
-                  whileHover={{ y: -2, boxShadow: "0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.3)" }}
+                  whileHover={{ y: -2, boxShadow: "0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(0 0% 100% / 0.08)" }}
                   transition={{ duration: 0.25 }}
                 >
                   <span className="absolute inset-0 bg-gradient-to-br from-accent/[0.04] via-transparent to-accent/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -3574,7 +3574,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* ═══════ TRUST MARQUEE ═══════ */}
-      <div className="relative py-5 border-y overflow-hidden" style={{ background: "linear-gradient(180deg, hsl(220 20% 95%) 0%, hsl(215 18% 93%) 50%, hsl(220 20% 95%) 100%)", borderColor: "hsl(var(--primary) / 0.08)" }}>
+      <div className="relative py-5 border-y overflow-hidden" style={{ background: "linear-gradient(180deg, hsl(228 22% 7%) 0%, hsl(230 20% 9%) 50%, hsl(228 22% 7%) 100%)", borderColor: "hsl(var(--primary) / 0.1)" }}>
         <div className="flex animate-marquee-scroll whitespace-nowrap">
         {[...Array(2)].map((_, repeat) =>
           <div key={repeat} className="flex items-center gap-10 px-5">
@@ -3607,7 +3607,7 @@ const LandingPage = () => {
                              COSA FA EMPIRE — Quick Feature Grid
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 30% 97%) 50%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(232 24% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="text-center mb-10">
           <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
@@ -3657,16 +3657,16 @@ const LandingPage = () => {
           <motion.div key={i} variants={fadeUp}
           className="relative p-5 rounded-2xl overflow-hidden border transition-all duration-300 group"
           style={{
-            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(230 20% 97% / 0.88))",
+            background: "linear-gradient(160deg, hsl(228 20% 14% / 0.92), hsl(232 22% 12% / 0.88))",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
-            borderColor: `hsl(${pillar.color} / 0.1)`,
-            boxShadow: `0 4px 28px hsl(${pillar.color} / 0.06), 0 1px 3px hsl(220 20% 80% / 0.12), inset 0 1px 0 hsl(0 0% 100% / 0.5)`,
+            borderColor: `hsl(${pillar.color} / 0.15)`,
+            boxShadow: `0 4px 28px hsl(${pillar.color} / 0.08), 0 1px 3px hsl(0 0% 0% / 0.3), inset 0 1px 0 hsl(0 0% 100% / 0.04)`,
           }}>
             {/* Top accent shimmer line */}
             <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${pillar.color} / 0.4) 30%, hsl(${pillar.color} / 0.6) 50%, hsl(${pillar.color} / 0.4) 70%, transparent 95%)` }} />
             {/* Inner glass reflection */}
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.4) 0%, transparent 25%)" }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 25%)" }} />
             {/* Subtle corner glow */}
             <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-30 pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${pillar.color} / 0.12), transparent 70%)` }} />
             {/* Hover gradient overlay */}
@@ -3709,16 +3709,16 @@ const LandingPage = () => {
           <motion.div key={i} variants={popIn}
           className="relative p-3.5 rounded-2xl overflow-hidden text-center group"
           style={{
-            background: "linear-gradient(160deg, hsl(0 0% 100% / 0.92), hsl(220 20% 98% / 0.85))",
+            background: "linear-gradient(160deg, hsl(228 20% 14% / 0.92), hsl(232 22% 12% / 0.85))",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
-            border: `1px solid hsl(${f.color} / 0.1)`,
-            boxShadow: `0 2px 16px hsl(${f.color} / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)`
+            border: `1px solid hsl(${f.color} / 0.15)`,
+            boxShadow: `0 2px 16px hsl(${f.color} / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.04)`
           }}>
             {/* Top accent line */}
             <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, hsl(${f.color} / 0.25), transparent)` }} />
             {/* Inner reflection */}
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.35) 0%, transparent 30%)" }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 30%)" }} />
             {/* Hover glow */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 30%, hsl(${f.color} / 0.06), transparent 60%)` }} />
             <div className="relative z-10">
@@ -4064,7 +4064,7 @@ const LandingPage = () => {
                              VIDEO HERO — Business Transformation
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(235 22% 95%) 50%, hsl(220 20% 97%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(235 22% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         {/* Premium ambient glows — discovery/innovation luxury */}
         <div className="absolute inset-0 pointer-events-none z-0">
@@ -4091,7 +4091,7 @@ const LandingPage = () => {
           style={{ background: "linear-gradient(180deg, hsla(265,55%,55%,0.25), transparent)" }} />
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-[70px]"
-          style={{ background: "linear-gradient(180deg, transparent, hsla(220,20%,98%,0.8))" }} />
+          style={{ background: "linear-gradient(180deg, transparent, hsl(228 22% 8% / 0.8))" }} />
           {/* Noise texture */}
           <div className="absolute inset-0 opacity-[0]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
@@ -4130,11 +4130,11 @@ const LandingPage = () => {
             <motion.div key={item.label}
               className="group relative px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl border cursor-default overflow-hidden"
               style={{
-                background: "linear-gradient(160deg, hsl(0 0% 100% / 0.88), hsl(248 20% 97% / 0.82))",
+                background: "linear-gradient(160deg, hsl(228 20% 14% / 0.88), hsl(248 20% 12% / 0.82))",
                 backdropFilter: "blur(16px)",
                 WebkitBackdropFilter: "blur(16px)",
-                borderColor: "hsl(var(--primary) / 0.1)",
-                boxShadow: "0 2px 16px hsl(var(--primary) / 0.05), inset 0 1px 0 hsl(0 0% 100% / 0.4)",
+                borderColor: "hsl(var(--primary) / 0.15)",
+                boxShadow: "0 2px 16px hsl(var(--primary) / 0.08), inset 0 1px 0 hsl(0 0% 100% / 0.04)",
               }}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -4142,7 +4142,7 @@ const LandingPage = () => {
               transition={{ delay: 0.3 + i * 0.08 }}
               whileHover={{ scale: 1.04, borderColor: "hsl(var(--primary) / 0.2)", boxShadow: "0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.5)" }}>
               <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.12), transparent)" }} />
-              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.3) 0%, transparent 25%)" }} />
+              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 25%)" }} />
               <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 style={{ background: "radial-gradient(circle at center, hsl(var(--primary) / 0.05), transparent 70%)" }} />
               <span className="relative z-10 text-[0.55rem] sm:text-[0.65rem] font-heading font-bold tracking-[0.15em] uppercase text-foreground/80 group-hover:text-primary transition-colors flex items-center gap-1.5">
@@ -4170,9 +4170,9 @@ const LandingPage = () => {
             className="px-7 py-3.5 rounded-2xl text-foreground/60 text-sm font-semibold font-heading tracking-wide hover:text-foreground transition-all inline-flex items-center gap-2"
             style={{
               border: "1px solid hsl(var(--border) / 0.4)",
-              background: "linear-gradient(160deg, hsl(0 0% 100% / 0.85), hsl(248 18% 97% / 0.8))",
+              background: "linear-gradient(160deg, hsl(228 20% 14% / 0.85), hsl(248 18% 12% / 0.8))",
               backdropFilter: "blur(12px)",
-              boxShadow: "0 2px 12px hsl(var(--primary) / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.4)"
+              boxShadow: "0 2px 12px hsl(var(--primary) / 0.06), inset 0 1px 0 hsl(0 0% 100% / 0.04)"
             }}
             whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary) / 0.2)" }}>
             
@@ -4187,7 +4187,7 @@ const LandingPage = () => {
                              SETTORI
                             ═══════════════════════════════════════════ */}
       <Section id="industries" className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(168 18% 96%) 35%, hsl(180 15% 97%) 65%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(230 24% 10%) 35%, hsl(232 22% 9%) 65%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="absolute inset-0 pointer-events-none z-0">
           {/* Premium violet mesh glow — top-left */}
