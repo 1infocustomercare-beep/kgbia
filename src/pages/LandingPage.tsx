@@ -1130,7 +1130,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
 
         {/* Mode Toggle: Package vs Monthly */}
         <motion.div className="flex items-center justify-center gap-1 mt-6 p-1 rounded-full border border-border/30 max-w-sm mx-auto"
-        style={{ background: "linear-gradient(145deg, hsl(0 0% 100% / 0.95), hsl(220 20% 97% / 0.9))", boxShadow: "0 2px 12px hsl(var(--primary) / 0.06)" }}
+        style={{ background: "linear-gradient(145deg, hsl(228 20% 14% / 0.95), hsl(232 22% 12% / 0.9))", boxShadow: "0 2px 12px hsl(var(--primary) / 0.08)" }}
         initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <button onClick={() => setPricingMode("package")}
           className={`relative flex-1 px-4 py-2.5 rounded-full text-xs font-heading font-semibold tracking-wider uppercase transition-all ${
