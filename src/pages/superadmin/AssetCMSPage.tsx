@@ -77,7 +77,7 @@ export default function AssetCMSPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 pb-24">
+    <div className="min-h-screen text-foreground p-4 pb-24 landing-dark" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <Button variant="ghost" size="icon" className="w-9 h-9" onClick={() => navigate("/superadmin")}>

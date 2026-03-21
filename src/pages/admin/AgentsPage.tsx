@@ -889,7 +889,7 @@ export default function AgentsPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen landing-dark flex items-center justify-center" style={{ background: "hsl(228 22% 7%)" }}>
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );

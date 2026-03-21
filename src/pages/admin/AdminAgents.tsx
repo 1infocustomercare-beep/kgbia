@@ -48,7 +48,7 @@ export default function AdminAgents() {
   const universalCount = allAgents.filter((a) => a.type === "universal").length;
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen pb-24 landing-dark" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
       {/* ─── Compact Header ─── */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary/8 via-background to-primary/5 border-b border-border/40">
         <div className="absolute inset-0 opacity-[0.03]" style={{
