@@ -2480,7 +2480,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
                   whileTap={{ scale: 0.97 }}>
                       Attiva Ora — Prova Gratis 14gg
                     </motion.button>
-                    <p className="text-[0.5rem] text-foreground/20 text-center sm:text-right">Nessuna carta richiesta · Setup in 24h · Assistenza 7/7</p>
+                    <p className="text-[0.5rem] text-foreground/40 text-center sm:text-right">Nessuna carta richiesta · Setup in 24h · Assistenza 7/7</p>
                   </div>
                 </div>
               </div>
