@@ -47,7 +47,7 @@ const HeroSection = () => {
         </motion.p>
 
         <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" className="bg-vibrant-gradient text-white px-8 py-6 text-lg" onClick={() => navigate("/admin")}>
+          <Button size="lg" className="bg-vibrant-gradient text-white px-8 py-6 text-lg" onClick={() => navigate("/auth")}>
             Inizia Gratis <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
           <Button size="lg" variant="outline" className="px-8 py-6 text-lg border-border" onClick={() => navigate("/home")}>
@@ -269,7 +269,7 @@ const PricingSection = () => {
                   <Button
                     className={`w-full ${p.popular ? "bg-vibrant-gradient text-white" : ""}`}
                     variant={p.popular ? "default" : "outline"}
-                    onClick={() => navigate("/admin")}
+                    onClick={() => navigate("/auth")}
                   >
                     Inizia Gratis
                   </Button>
@@ -297,7 +297,7 @@ const CTASection = () => {
           <p className="text-lg text-muted-foreground mb-10">
             Unisciti a centinaia di imprenditori che hanno scelto Empire. 90 giorni gratis, zero rischi.
           </p>
-          <Button size="lg" className="bg-vibrant-gradient text-white px-10 py-6 text-lg" onClick={() => navigate("/admin")}>
+          <Button size="lg" className="bg-vibrant-gradient text-white px-10 py-6 text-lg" onClick={() => navigate("/auth")}>
             Inizia Ora — È Gratis <Rocket className="ml-2 w-5 h-5" />
           </Button>
         </motion.div>

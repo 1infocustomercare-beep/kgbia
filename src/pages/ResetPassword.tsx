@@ -18,7 +18,7 @@ export default function ResetPassword() {
     const hash = window.location.hash;
     if (!hash.includes("type=recovery")) {
       // No recovery token — redirect to login
-      navigate("/admin", { replace: true });
+      navigate("/auth", { replace: true });
     }
   }, [navigate]);
 
@@ -35,7 +35,7 @@ export default function ResetPassword() {
     } else {
       setDone(true);
       toast({ title: "Password aggiornata!", description: "Verrai reindirizzato al login." });
-      setTimeout(() => navigate("/admin", { replace: true }), 2000);
+      setTimeout(() => navigate("/auth", { replace: true }), 2000);
     }
     setLoading(false);
   };

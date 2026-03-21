@@ -22,7 +22,7 @@ export function TopBar() {
 
   const handleLogout = async () => {
     await signOut();
-    navigate("/admin");
+    navigate("/auth");
   };
 
   return (

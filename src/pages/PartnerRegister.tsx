@@ -96,6 +96,7 @@ const PartnerRegister = () => {
             full_name: form.fullName,
             phone: form.phone,
             city: form.city,
+            signup_role: "partner",
             partner_referral: referralId || null,
           },
           emailRedirectTo: window.location.origin + "/partner",
@@ -164,7 +165,7 @@ const PartnerRegister = () => {
             </p>
           )}
           <button
-            onClick={() => navigate("/admin")}
+            onClick={() => navigate("/auth")}
             className="px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm tracking-wide"
           >
             Vai al Login
@@ -190,7 +191,7 @@ const PartnerRegister = () => {
             <span className="font-display font-bold text-sm text-foreground tracking-[0.12em] uppercase">Empire</span>
           </a>
           <button
-            onClick={() => navigate("/admin")}
+            onClick={() => navigate("/auth")}
             className="text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             Hai già un account? <span className="text-primary font-medium">Accedi</span>
@@ -433,7 +434,7 @@ const PartnerRegister = () => {
 
               <p className="text-center text-[10px] text-muted-foreground">
                 Già Partner?{" "}
-                <button type="button" onClick={() => navigate("/admin")} className="text-primary hover:underline font-medium">
+                <button type="button" onClick={() => navigate("/auth")} className="text-primary hover:underline font-medium">
                   Accedi qui
                 </button>
               </p>

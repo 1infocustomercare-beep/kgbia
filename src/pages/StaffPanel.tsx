@@ -82,7 +82,7 @@ const StaffPanel = () => {
 
   const handleLogout = async () => {
     await signOut();
-    navigate("/admin");
+    navigate("/auth");
   };
 
   return (
