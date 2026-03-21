@@ -276,7 +276,7 @@ const PartnerDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden landing-dark" style={{ background: "linear-gradient(145deg, hsl(265 20% 6%) 0%, hsl(255 18% 7%) 40%, hsl(260 20% 6%) 100%)" }}>
+    <div className="min-h-screen flex flex-col relative overflow-hidden landing-dark partner-console" style={{ background: "linear-gradient(145deg, hsl(265 20% 6%) 0%, hsl(255 18% 7%) 40%, hsl(260 20% 6%) 100%)" }}>
       {/* Fully opaque base — blocks underlying animations */}
       <div className="fixed inset-0 z-0" style={{ background: "hsl(260 20% 6%)" }} />
       {/* Premium violet luxury ambient */}
@@ -288,7 +288,7 @@ const PartnerDashboard = () => {
       
       {/* Back integrated in header */}
       {/* Header — Vibrant FLAVR style */}
-      <div className="relative flex flex-col items-center px-3 pt-3 pb-2 border-b safe-top overflow-hidden" style={{ background: 'linear-gradient(180deg, hsla(265,22%,12%,0.98), hsla(255,20%,9%,0.96))', borderColor: 'hsla(265,50%,50%,0.15)', boxShadow: '0 4px 20px hsla(265,40%,15%,0.3)' }}>
+      <div className="relative z-10 flex flex-col items-center px-3 pt-3 pb-2 border-b safe-top overflow-hidden" style={{ background: 'linear-gradient(180deg, hsla(265,22%,12%,0.98), hsla(255,20%,9%,0.96))', borderColor: 'hsla(265,50%,50%,0.15)', boxShadow: '0 4px 20px hsla(265,40%,15%,0.3)' }}>
         {/* DNA scan line */}
         <motion.div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: 'var(--gradient-dna)' }} animate={{ opacity: [0.2, 0.6, 0.2] }} transition={{ duration: 3, repeat: Infinity }} />
         
@@ -365,7 +365,7 @@ const PartnerDashboard = () => {
       </AnimatePresence>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 pb-24">
+      <div className="relative z-10 flex-1 overflow-y-auto px-4 py-4 pb-24">
         <AnimatePresence mode="wait">
           {activeTab === "dashboard" && !demoMode && (
             <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
