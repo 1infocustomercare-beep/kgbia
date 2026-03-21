@@ -38,14 +38,15 @@ const ItemDetailSheet = ({ item, onClose }: ItemDetailSheetProps) => {
       {item && (
         <>
           <motion.div
-            className="fixed inset-0 z-40 bg-background/80 backdrop-blur-lg"
+            className="fixed inset-0 z-40 bg-black/80 backdrop-blur-lg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
           />
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[90vh] bg-card rounded-t-3xl overflow-hidden flex flex-col"
+            className="fixed inset-x-0 bottom-0 z-50 max-h-[90vh] rounded-t-3xl overflow-hidden flex flex-col"
+            style={{ background: "linear-gradient(180deg, hsl(20 8% 9%), hsl(20 10% 5%))", border: "1px solid hsla(30, 20%, 25%, 0.3)", borderBottom: "none" }}
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -68,7 +69,7 @@ const ItemDetailSheet = ({ item, onClose }: ItemDetailSheetProps) => {
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.6 }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(20_8%_9%)] via-transparent to-transparent" />
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 w-9 h-9 rounded-full glass flex items-center justify-center"
@@ -113,7 +114,7 @@ const ItemDetailSheet = ({ item, onClose }: ItemDetailSheetProps) => {
             </div>
 
             {/* Footer with quantity & add */}
-            <div className="p-5 border-t border-border/50 bg-card safe-bottom">
+            <div className="p-5 bg-transparent safe-bottom" style={{ borderTop: "1px solid hsla(30, 20%, 25%, 0.3)" }}>
               <div className="flex items-center justify-between">
                 {/* Quantity selector */}
                 <div className="flex items-center gap-3">

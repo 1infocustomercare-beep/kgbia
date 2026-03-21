@@ -14,7 +14,8 @@ const FloatingCartButton = ({ onClick }: FloatingCartButtonProps) => {
       {itemCount > 0 && (
         <motion.button
           onClick={onClick}
-          className="fixed bottom-4 left-3 right-3 sm:left-4 sm:right-4 z-30 flex items-center justify-between px-4 sm:px-5 py-3 rounded-2xl bg-primary text-primary-foreground gold-glow"
+          className="fixed bottom-4 left-3 right-3 sm:left-4 sm:right-4 z-30 flex items-center justify-between px-4 sm:px-5 py-3 rounded-2xl text-primary-foreground gold-glow"
+          style={{ background: "linear-gradient(135deg, hsl(30 55% 45%), hsl(30 50% 38%))", border: "1px solid hsla(30, 40%, 50%, 0.3)" }}
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}

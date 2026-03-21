@@ -276,7 +276,7 @@ const AdminDashboard = () => {
   const activeOrders = orders.filter(o => ["pending", "preparing", "ready"].includes(o.status));
 
   if (restLoading) return (
-    <div className="min-h-screen landing-dark flex items-center justify-center" style={{ background: "hsl(228 22% 7%)" }}>
+    <div className="min-h-screen cote-luxury flex items-center justify-center" style={{ background: "hsl(20 10% 4%)" }}>
       <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
   );
@@ -297,7 +297,7 @@ const AdminDashboard = () => {
   // Kill-switch: blocked restaurant
   if (restaurant?.is_blocked) {
     return (
-      <div className="min-h-screen landing-dark flex flex-col items-center justify-center px-6 text-center" style={{ background: "hsl(228 22% 7%)" }}>
+      <div className="min-h-screen cote-luxury flex flex-col items-center justify-center px-6 text-center" style={{ background: "hsl(20 10% 4%)" }}>
         <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center mb-5">
           <Settings className="w-10 h-10 text-destructive" />
         </div>
@@ -316,32 +316,32 @@ const AdminDashboard = () => {
   const sectorAccent = settingsPrimaryColor || "#C8963E";
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden landing-dark" style={{ background: "linear-gradient(145deg, hsl(228 22% 6%) 0%, hsl(230 20% 7%) 40%, hsl(228 18% 8%) 100%)" }}>
-      {/* Premium sector-themed admin background */}
+    <div className="min-h-screen flex flex-col relative overflow-hidden cote-luxury" style={{ background: "linear-gradient(145deg, hsl(20 10% 3%) 0%, hsl(20 8% 5%) 40%, hsl(20 6% 6%) 100%)" }}>
+      {/* COTE-style warm ambient glow */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.06]"
-          style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 65%)`, filter: "blur(100px)" }} />
-        <div className="absolute bottom-[-10%] right-[-5%] w-[450px] h-[450px] rounded-full opacity-[0.04]"
-          style={{ background: `radial-gradient(circle, ${sectorAccent}, transparent 70%)`, filter: "blur(120px)" }} />
-        <div className="absolute inset-0" style={{ opacity: 0.012, backgroundImage: "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
+        <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.05]"
+          style={{ background: `radial-gradient(circle, hsl(30 55% 50%), transparent 65%)`, filter: "blur(100px)" }} />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[450px] h-[450px] rounded-full opacity-[0.03]"
+          style={{ background: `radial-gradient(circle, hsl(30 45% 40%), transparent 70%)`, filter: "blur(120px)" }} />
+        <div className="absolute inset-0" style={{ opacity: 0.008, backgroundImage: "linear-gradient(rgba(200,150,62,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,62,0.03) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
       </div>
       
       {/* Back button integrated in header */}
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/50 bg-card/50 safe-top">
-        <div className="flex items-center gap-2 min-w-0">
-          <img src={restaurant?.logo_url || restaurantLogo} alt="" className="w-8 h-8 rounded-xl object-contain" />
+      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b safe-top relative z-10" style={{ background: "linear-gradient(180deg, hsl(20 10% 5% / 0.98), hsl(20 8% 4% / 0.95))", borderColor: "hsla(30, 20%, 25%, 0.25)" }}>
+        <div className="flex items-center gap-2.5 min-w-0">
+          <img src={restaurant?.logo_url || restaurantLogo} alt="" className="w-9 h-9 rounded-xl object-contain border border-primary/20" />
           <div className="min-w-0">
-            <h1 className="text-sm font-display font-bold text-foreground truncate">{restaurantName}</h1>
-            <p className="text-[10px] text-primary">{bottomTabs.find(t => t.id === activeTab)?.label}</p>
+            <h1 className="text-sm font-display font-bold text-foreground truncate tracking-wide uppercase">{restaurantName}</h1>
+            <p className="text-[10px] text-primary/70 font-medium">{bottomTabs.find(t => t.id === activeTab)?.label}</p>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
           <GuidesToggle />
-          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center" title="Home">
+          <button onClick={() => navigate("/home")} className="p-2 rounded-full hover:bg-primary/10 min-w-[40px] min-h-[40px] flex items-center justify-center" title="Home">
             <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </button>
-          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-secondary min-w-[40px] min-h-[40px] flex items-center justify-center" title="Esci">
+          <button onClick={handleLogout} className="p-2 rounded-full hover:bg-primary/10 min-w-[40px] min-h-[40px] flex items-center justify-center" title="Esci">
             <LogOut className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
@@ -461,7 +461,7 @@ const AdminDashboard = () => {
       <EmpireAssistant restaurantId={restaurant?.id} />
 
       {/* Bottom Navigation — 5 tabs */}
-      <div className="fixed bottom-0 inset-x-0 z-40 bg-card/95 backdrop-blur-lg border-t border-border/50 safe-bottom">
+      <div className="fixed bottom-0 inset-x-0 z-40 cote-bottom-nav safe-bottom" style={{ background: "linear-gradient(180deg, hsl(20 8% 6% / 0.98), hsl(20 10% 4%))", borderTop: "1px solid hsla(30, 20%, 25%, 0.25)" }}>
         <div className="flex items-center justify-around px-2 py-1">
           {bottomTabs.map(tab => (
             <motion.button
@@ -475,7 +475,7 @@ const AdminDashboard = () => {
               {tab.icon}
               <span className="text-[10px] font-medium">{tab.label}</span>
               {activeTab === tab.id && (
-                <motion.div className="w-1 h-1 rounded-full bg-primary" layoutId="bottom-dot" />
+                <motion.div className="w-1.5 h-1.5 rounded-full bg-primary" layoutId="bottom-dot" />
               )}
             </motion.button>
           ))}

@@ -37,7 +37,7 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-40 bg-background/70 backdrop-blur-md"
+            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -46,7 +46,8 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
 
           {/* Drawer */}
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] bg-card rounded-t-3xl flex flex-col"
+            className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] rounded-t-3xl flex flex-col"
+            style={{ background: "linear-gradient(180deg, hsl(20 8% 8%), hsl(20 10% 5%))", border: "1px solid hsla(30, 20%, 25%, 0.3)", borderBottom: "none" }}
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -54,7 +55,7 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
           >
             {/* Drag handle */}
             <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 rounded-full bg-muted-foreground/20" />
+              <div className="w-10 h-1 rounded-full" style={{ background: "hsla(30, 20%, 40%, 0.4)" }} />
             </div>
 
             {/* Header */}
@@ -91,7 +92,7 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="flex gap-3 p-3 rounded-2xl bg-secondary/40"
+                    className="flex gap-3 p-3 rounded-2xl cote-card"
                   >
                     <img
                       src={item.image}
@@ -134,7 +135,7 @@ const CartDrawer = ({ open, onClose, allMenuItems = [], restaurantId }: CartDraw
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className="p-5 border-t border-border/50 safe-bottom">
+              <div className="p-5 safe-bottom" style={{ borderTop: "1px solid hsla(30, 20%, 25%, 0.3)" }}>
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-sm text-muted-foreground">Totale</span>
                   <span className="text-2xl font-display font-bold text-primary">

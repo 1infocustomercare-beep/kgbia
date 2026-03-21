@@ -199,7 +199,7 @@ const RestaurantPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden cote-luxury" style={{ background: "linear-gradient(180deg, hsl(20 10% 3%), hsl(20 8% 5%))" }}>
       <BackButton to="/home" label="Indietro" variant="floating" theme="glass" />
       {/* TABLE QR BANNER */}
       {tableFromQR && (
@@ -219,7 +219,7 @@ const RestaurantPage = () => {
 
       {/* ====== NAVBAR — Website Style ====== */}
       <nav className={`fixed ${tableFromQR ? "top-9" : "top-0"} inset-x-0 z-50 transition-all`}>
-        <div className="glass-strong border-b border-border/20">
+        <div style={{ background: "linear-gradient(180deg, hsl(20 10% 4% / 0.96), hsl(20 8% 4% / 0.92))", borderBottom: "1px solid hsla(30, 20%, 25%, 0.2)" }} className="backdrop-blur-2xl">
           <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
             {/* Back button for demo + Logo + Name */}
             <div className="flex items-center gap-2">
@@ -276,7 +276,7 @@ const RestaurantPage = () => {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              className="md:hidden glass-strong border-b border-border/20 overflow-hidden">
+              className="md:hidden overflow-hidden backdrop-blur-2xl" style={{ background: "hsl(20 10% 4% / 0.98)", borderBottom: "1px solid hsla(30, 20%, 25%, 0.2)" }}>
               <div className="flex flex-col items-center py-4 gap-1">
                 {navLinks.map((link) => (
                   <button key={link.id} onClick={() => scrollToSection(link.id)}
@@ -299,11 +299,11 @@ const RestaurantPage = () => {
         <motion.div className="absolute inset-0" style={{ scale: heroScale }}>
           <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-full object-cover object-center" style={{ objectPosition: "center center" }} />
         </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/30 to-background/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/80" />
 
         <motion.div className="relative z-10 text-center px-5" style={{ opacity: heroOpacity }}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-            <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-bold text-foreground tracking-[0.1em] sm:tracking-[0.15em] uppercase leading-none">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-bold text-white tracking-[0.1em] sm:tracking-[0.15em] uppercase leading-none">
               {restaurantName.split(" ").map((word, i) => (
                 <span key={i} className="block">{word}</span>
               ))}
@@ -476,7 +476,7 @@ const RestaurantPage = () => {
           {/* ── Full Menu — Category Tabs + Compact List ── */}
           <div>
             {/* Sticky Category Bar */}
-            <div className="sticky top-[56px] z-20 -mx-4 px-4 sm:mx-0 sm:px-0 py-3 bg-background/80 backdrop-blur-2xl border-b border-border/5 mb-4 sm:mb-5">
+            <div className="sticky top-[56px] z-20 -mx-4 px-4 sm:mx-0 sm:px-0 py-3 mb-4 sm:mb-5 backdrop-blur-2xl" style={{ background: "hsl(20 10% 4% / 0.92)", borderBottom: "1px solid hsla(30, 20%, 25%, 0.15)" }}>
               {/* Desktop: horizontal scroll pills */}
               <div className="hidden sm:flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
                 {menuCategories.map((cat) => {
@@ -523,7 +523,7 @@ const RestaurantPage = () => {
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>
                 {catItems.map((item, i) => (
                   <motion.div key={item.id}
-                    className="group flex items-center gap-3 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-card/80 hover:bg-card border border-border/10 hover:border-primary/15 transition-all duration-300 cursor-pointer active:scale-[0.98]"
+                    className="group flex items-center gap-3 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl cote-card transition-all duration-300 cursor-pointer active:scale-[0.98]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.03, duration: 0.35 }}
                     onClick={() => setSelectedItem(item)}>
