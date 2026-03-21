@@ -3607,7 +3607,7 @@ const LandingPage = () => {
                              COSA FA EMPIRE — Quick Feature Grid
                             ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden" style={{
-        background: "linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 30% 97%) 50%, hsl(0 0% 100%) 100%)"
+        background: "linear-gradient(180deg, hsl(228 22% 8%) 0%, hsl(232 24% 10%) 50%, hsl(228 22% 8%) 100%)"
       }}>
         <div className="text-center mb-10">
           <SectionLabel text="Tutto in un'unica piattaforma" icon={<Layers className="w-3 h-3 text-neon-cyan" />} />
