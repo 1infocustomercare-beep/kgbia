@@ -1,17 +1,18 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
 import { DEMO_INDUSTRY_DATA, DEMO_SLUGS } from "@/data/demo-industries";
+import { SECTOR_MOCKUP_CATALOG, getSectorHeroImages, type MockupImage } from "@/config/demoSiteMockups";
 import { Input } from "@/components/ui/input";
 import {
   ArrowLeft, Search, ArrowRight, ChevronDown, ChevronUp, Crown,
   ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
   Umbrella, Wrench, Zap, Wheat, SprayCan, Scale, Calculator,
   Settings, Camera, HardHat, Flower2, Stethoscope, Pen,
-  Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles, Eye
+  Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles, Eye,
+  ChevronLeft, ChevronRight as ChevronRightIcon, Images
 } from "lucide-react";
-import IndustryPhoneShowcase, { SectorAppIcon } from "@/components/public/IndustryPhoneShowcase";
 import { buildPublicSiteUrl } from "@/lib/public-site-path";
 import demoHeroCta from "@/assets/demo-hero-cta.jpg";
 
