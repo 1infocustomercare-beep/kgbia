@@ -3266,7 +3266,7 @@ const LandingPage = () => {
           <div className="hidden lg:flex items-center gap-1 flex-1 justify-end">
             {navLinks.slice(Math.ceil(navLinks.length / 2)).map((link, i) =>
             <motion.a key={link.href} href={link.href}
-            className="relative px-5 py-2.5 text-[0.68rem] font-medium text-foreground/40 hover:text-foreground transition-all duration-500 tracking-[0.18em] uppercase group rounded-xl"
+            className="relative px-5 py-2.5 text-[0.68rem] font-medium text-white/70 hover:text-white transition-all duration-500 tracking-[0.18em] uppercase group rounded-xl"
             whileHover={{ backgroundColor: "hsla(38,45%,55%,0.08)" }}
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
