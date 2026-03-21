@@ -372,23 +372,26 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
 
         {/* Main row */}
         <div className="flex items-center gap-3 p-3.5 sm:p-4 cursor-pointer" onClick={onToggle}>
-          {/* Round live preview bubble */}
+          {/* Round mockup preview bubble */}
           <div className="relative flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
             <div
-              className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 shadow-lg"
+              className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 shadow-lg bg-black/40"
               style={{
                 borderColor: `${color}60`,
                 boxShadow: `0 0 16px ${color}30`,
               }}
             >
-              <iframe
-                src={buildPublicSiteUrl(DEMO_SLUGS[id], id)}
-                className="w-[390px] h-[844px] border-0 pointer-events-none select-none"
-                style={{ transform: "scale(0.133)", transformOrigin: "top left" }}
-                title={`Preview ${label}`}
-                loading="lazy"
-                tabIndex={-1}
-              />
+              {(() => {
+                const heroImages = getSectorHeroImages(id);
+                const heroUrl = heroImages[0] || SECTOR_MOCKUP_CATALOG[id]?.heroImage;
+                return heroUrl ? (
+                  <img src={heroUrl} alt={label} className="w-full h-full object-cover" loading="lazy" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-lg">
+                    {cfg.icon ? getIcon(cfg.icon) : "⚡"}
+                  </div>
+                );
+              })()}
             </div>
             {isFeatured && (
               <motion.div className="absolute inset-0 rounded-full pointer-events-none"
