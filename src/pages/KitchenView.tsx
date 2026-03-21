@@ -116,7 +116,7 @@ const KitchenView = () => {
 
   useEffect(() => {
     const stored = sessionStorage.getItem("kitchen_mode");
-    if (!stored) { navigate("/admin"); return; }
+    if (!stored) { navigate("/auth"); return; }
     const parsed = JSON.parse(stored) as KitchenSession;
     setSession(parsed);
 
