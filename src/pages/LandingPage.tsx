@@ -3495,15 +3495,14 @@ const LandingPage = () => {
               </motion.p>
 
               {/* ═══ EMPIRE INTERACTIVE SPHERE — originale (click to morph text) ═══ */}
-              <motion.div className="relative mt-6 sm:mt-8 mx-auto flex items-center justify-center"
+              <motion.div className="relative mt-4 sm:mt-6 w-full flex items-center justify-center overflow-hidden"
+                style={{ maxHeight: IS_MOBILE_LP ? 200 : 320 }}
                 initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.9, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}>
-                <div className="relative flex items-center justify-center w-[220px] h-[220px] sm:w-[340px] sm:h-[340px]">
-                  <div className="absolute inset-0 rounded-full pointer-events-none"
-                    style={{ background: "radial-gradient(circle, hsl(var(--primary) / 0.14), transparent 70%)", filter: "blur(24px)" }} />
-                  <InteractiveParticleSphere size={IS_MOBILE_LP ? 190 : 320} />
-                </div>
+                <div className="absolute inset-0 pointer-events-none"
+                  style={{ background: "radial-gradient(ellipse 60% 80% at 50% 50%, hsl(var(--primary) / 0.12), transparent 70%)", filter: "blur(28px)" }} />
+                <InteractiveParticleSphere size={IS_MOBILE_LP ? 340 : 580} />
               </motion.div>
 
               {/* CTA */}
