@@ -11,7 +11,7 @@ import {
   Settings, Camera, HardHat, Flower2, Stethoscope, Pen,
   Baby, GraduationCap, PartyPopper, Truck, Puzzle, Sparkles
 } from "lucide-react";
-import IndustryPhoneShowcase from "@/components/public/IndustryPhoneShowcase";
+import IndustryPhoneShowcase, { SectorAppIcon } from "@/components/public/IndustryPhoneShowcase";
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 
