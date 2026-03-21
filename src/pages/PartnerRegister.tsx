@@ -191,7 +191,7 @@ const PartnerRegister = () => {
             <span className="font-display font-bold text-sm text-foreground tracking-[0.12em] uppercase">Empire</span>
           </a>
           <button
-            onClick={() => navigate("/admin")}
+            onClick={() => navigate("/auth")}
             className="text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             Hai già un account? <span className="text-primary font-medium">Accedi</span>
