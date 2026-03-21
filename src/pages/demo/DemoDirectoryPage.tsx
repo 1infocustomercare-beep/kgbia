@@ -283,10 +283,11 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
         className={`relative rounded-2xl overflow-hidden group transition-all duration-300 ${isExpanded ? "ring-1" : ""}`}
         style={{
           background: isFeatured
-            ? `linear-gradient(155deg, hsla(240,16%,14%,1), hsla(240,20%,10%,1))`
-            : `linear-gradient(155deg, hsla(240,14%,13%,1), hsla(240,18%,9%,1))`,
-          border: `1px solid ${isFeatured ? `${color}40` : "hsla(265,20%,35%,0.25)"}`,
-          ...(isExpanded ? { boxShadow: `0 0 0 1px ${color}30` } : {}),
+            ? `linear-gradient(155deg, hsla(265,22%,16%,0.95), hsla(255,20%,12%,0.93))`
+            : `linear-gradient(155deg, hsla(260,20%,15%,0.94), hsla(255,18%,11%,0.92))`,
+          border: `1px solid ${isFeatured ? `${color}40` : "hsla(265,40%,50%,0.18)"}`,
+          boxShadow: `0 4px 20px hsla(265,40%,15%,0.2), inset 0 1px 0 hsla(265,50%,70%,0.06)`,
+          ...(isExpanded ? { boxShadow: `0 8px 32px hsla(265,50%,20%,0.3), 0 0 0 1px ${color}30, inset 0 1px 0 hsla(265,50%,70%,0.08)` } : {}),
         }}>
 
         {/* Top accent — featured only */}
