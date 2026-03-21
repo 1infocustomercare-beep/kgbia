@@ -208,6 +208,20 @@
   box-shadow: 0 0 30px hsla(172, 80%, 48%, 0.2), 0 0 60px hsla(210, 100%, 62%, 0.08);
 }
 
+/* ═══ ADMIN VISIBLE CARD — high-contrast glassmorphism for dark dashboards ═══ */
+.landing-dark .admin-card {
+  background: linear-gradient(160deg, hsla(230, 18%, 16%, 0.95), hsla(228, 20%, 12%, 0.9));
+  border: 1px solid hsla(250, 60%, 60%, 0.15);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 24px -4px hsla(250, 60%, 40%, 0.1), inset 0 1px 0 hsla(210, 20%, 96%, 0.05);
+}
+.landing-dark .admin-card-accent {
+  background: linear-gradient(160deg, hsla(250, 30%, 18%, 0.95), hsla(228, 20%, 13%, 0.9));
+  border: 1px solid hsla(250, 70%, 60%, 0.25);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 24px -4px hsla(250, 60%, 40%, 0.15), inset 0 1px 0 hsla(250, 60%, 80%, 0.06);
+}
+
   .glass-strong {
     background: hsla(0, 0%, 100%, 0.9);
     backdrop-filter: blur(30px) saturate(1.3);

@@ -459,7 +459,7 @@ const SuperAdminDashboard = () => {
       </div>
       
       {/* Header */}
-      <div className="relative overflow-hidden border-b border-empire-violet-deep/30 bg-gradient-to-br from-empire-violet-surface via-background to-empire-violet/5">
+      <div className="relative overflow-hidden border-b border-empire-violet/30" style={{ background: "linear-gradient(160deg, hsla(250, 30%, 14%, 0.98), hsla(228, 20%, 10%, 0.98), hsla(250, 20%, 12%, 0.95))" }}>
         {/* HUD grid — DNA violet */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `linear-gradient(hsl(var(--empire-violet)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--empire-violet)) 1px, transparent 1px)`,
@@ -592,13 +592,13 @@ const SuperAdminDashboard = () => {
               onClick={() => tab.id === "agents" ? navigate("/admin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : setActiveTab(tab.id)}
               className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-lg text-[0.5rem] font-medium transition-colors min-h-[40px]`}
               style={activeTab === tab.id ? {
-                background: "linear-gradient(160deg, hsl(265 60% 45%), hsl(265 50% 35%))",
+                background: "linear-gradient(160deg, hsl(250 70% 50%), hsl(250 60% 40%))",
                 color: "white",
-                boxShadow: "0 0 16px hsl(265 85% 65% / 0.3), inset 0 1px 0 hsl(265 50% 60% / 0.2)"
+                boxShadow: "0 0 20px hsl(250 85% 65% / 0.35), inset 0 1px 0 hsl(250 50% 70% / 0.25)"
               } : {
-                background: "linear-gradient(160deg, hsl(228 20% 14% / 0.8), hsl(232 22% 12% / 0.7))",
-                color: "hsl(228 15% 60%)",
-                border: "1px solid hsl(228 20% 18% / 0.4)"
+                background: "linear-gradient(160deg, hsl(230 20% 16%), hsl(232 22% 13%))",
+                color: "hsl(220 15% 75%)",
+                border: "1px solid hsl(250 30% 30% / 0.3)"
               }}>
               <span className="[&_svg]:w-3 [&_svg]:h-3">{tab.icon}</span>
               <span className="leading-tight truncate w-full text-center">{tab.label}</span>
@@ -658,22 +658,22 @@ const SuperAdminDashboard = () => {
 
             {/* KPI Cards */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-4 rounded-2xl bg-card border border-primary/20">
+              <div className="p-4 rounded-2xl admin-card-accent">
                 <DollarSign className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-primary">€{mrr.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground">MRR</p>
               </div>
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card">
                 <TrendingUp className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-foreground">€{arr.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground">ARR</p>
               </div>
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card">
                 <Store className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-foreground">{activeTenants}/{tenants.length}</p>
                 <p className="text-xs text-muted-foreground">Tenant attivi</p>
               </div>
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card-accent">
                 <Crown className="w-5 h-5 text-primary mb-2" />
                 <p className="text-2xl font-display font-bold text-primary">€{totalFee.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground">Fee 2% totali</p>
@@ -682,7 +682,7 @@ const SuperAdminDashboard = () => {
 
             {/* Revenue Chart */}
             {revenueByMonth.length > 0 && (
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card">
                 <h3 className="text-sm font-semibold text-foreground mb-3">Revenue Mensile</h3>
                 <ResponsiveContainer width="100%" height={180}>
                   <BarChart data={revenueByMonth}>
@@ -699,7 +699,7 @@ const SuperAdminDashboard = () => {
 
             {/* Industry Distribution */}
             {industryDistribution.length > 0 && (
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card">
                 <h3 className="text-sm font-semibold text-foreground mb-3">Distribuzione Settori</h3>
                 <div className="flex items-center gap-4">
                   <ResponsiveContainer width={120} height={120}>
@@ -730,7 +730,7 @@ const SuperAdminDashboard = () => {
                 <h3 className="text-sm font-semibold text-foreground mb-3">Top Performer</h3>
                 <div className="space-y-2">
                   {tenants.filter(t => t.active).sort((a, b) => b.revenue - a.revenue).slice(0, 3).map((t, i) => (
-                    <div key={t.id} className="flex items-center gap-3 p-3 rounded-xl bg-card">
+                    <div key={t.id} className="flex items-center gap-3 p-3 rounded-xl admin-card">
                       <span className="text-lg font-display font-bold text-primary w-6">#{i + 1}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
@@ -756,7 +756,7 @@ const SuperAdminDashboard = () => {
               <h3 className="text-sm font-semibold text-foreground mb-3">Infrastruttura</h3>
               <div className="grid grid-cols-2 gap-2">
                 {systemStatus.map((sys) => (
-                  <div key={sys.name} className="flex items-center gap-2 p-2.5 rounded-xl bg-card">
+                  <div key={sys.name} className="flex items-center gap-2 p-2.5 rounded-xl admin-card">
                     <CheckCircle2 className="w-4 h-4 text-green-400" />
                     <span className="text-xs text-foreground">{sys.name}</span>
                     <span className="text-[10px] text-muted-foreground ml-auto">{sys.latency}</span>
@@ -813,7 +813,7 @@ const SuperAdminDashboard = () => {
                 const fiscoStatus = fiscoStatuses.find(f => f.restaurantId === tenant.id);
                 return (
                   <div key={tenant.id}
-                    className={`p-4 rounded-2xl ${tenant.active && !tenant.blocked ? "bg-card" : "bg-card/50 opacity-70"} border ${tenant.blocked ? "border-destructive/30" : "border-border"}`}>
+                    className={`p-4 rounded-2xl ${tenant.active && !tenant.blocked ? "admin-card" : "admin-card opacity-50"} border ${tenant.blocked ? "border-destructive/30" : "border-border"}`}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -863,11 +863,11 @@ const SuperAdminDashboard = () => {
         {!loading && activeTab === "payments" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="grid grid-cols-3 gap-2">
-              <div className="p-3 rounded-2xl bg-card border border-border text-center">
+              <div className="p-3 rounded-2xl admin-card text-center">
                 <p className="text-2xl font-display font-bold text-foreground">{payments.length}</p>
                 <p className="text-[10px] text-muted-foreground">Contratti</p>
               </div>
-              <div className="p-3 rounded-2xl bg-card border border-border text-center">
+              <div className="p-3 rounded-2xl admin-card text-center">
                 <p className="text-2xl font-display font-bold text-primary">€{payments.reduce((s, p) => s + p.amountPaid, 0).toLocaleString()}</p>
                 <p className="text-[10px] text-muted-foreground">Incassato</p>
               </div>
@@ -879,7 +879,7 @@ const SuperAdminDashboard = () => {
 
             {/* Revenue by sector chart */}
             {industryDistribution.length > 0 && (
-              <div className="p-4 rounded-2xl bg-card border border-border">
+              <div className="p-4 rounded-2xl admin-card">
                 <h3 className="text-sm font-semibold text-foreground mb-3">Revenue per Settore</h3>
                 <ResponsiveContainer width="100%" height={160}>
                   <BarChart data={industryDistribution} layout="vertical">
@@ -905,7 +905,7 @@ const SuperAdminDashboard = () => {
 
                 return (
                   <motion.div key={payment.id}
-                    className={`p-4 rounded-2xl border ${isComplete ? "bg-card border-green-500/20" : payment.isOverdue ? "bg-destructive/5 border-destructive/30" : "bg-card border-border"}`}>
+                    className={`p-4 rounded-2xl border ${isComplete ? "admin-card border-green-500/20" : payment.isOverdue ? "admin-card border-destructive/30" : "admin-card"}`}>
                     <div className="flex items-center justify-between mb-3">
                       <div>
                         <div className="flex items-center gap-2">
@@ -1014,22 +1014,22 @@ const SuperAdminDashboard = () => {
                 <>
                   {/* KPI Cards */}
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="p-3 rounded-2xl bg-card border border-primary/20">
+                    <div className="p-3 rounded-2xl admin-card-accent">
                       <Calendar className="w-4 h-4 text-primary mb-1" />
                       <p className="text-2xl font-display font-bold text-primary">{activeSubs.length}</p>
                       <p className="text-[10px] text-muted-foreground">Abbonamenti Attivi</p>
                     </div>
-                    <div className="p-3 rounded-2xl bg-card border border-border">
+                    <div className="p-3 rounded-2xl admin-card">
                       <DollarSign className="w-4 h-4 text-primary mb-1" />
                       <p className="text-2xl font-display font-bold text-foreground">€{totalMRRSubs.toLocaleString()}</p>
                       <p className="text-[10px] text-muted-foreground">MRR Abbonamenti</p>
                     </div>
-                    <div className="p-3 rounded-2xl bg-card border border-border">
+                    <div className="p-3 rounded-2xl admin-card">
                       <Clock className="w-4 h-4 text-blue-400 mb-1" />
                       <p className="text-2xl font-display font-bold text-blue-400">{trialSubs.length}</p>
                       <p className="text-[10px] text-muted-foreground">In Prova</p>
                     </div>
-                    <div className="p-3 rounded-2xl bg-card border border-border">
+                    <div className="p-3 rounded-2xl admin-card">
                       <AlertCircle className="w-4 h-4 text-amber-400 mb-1" />
                       <p className="text-2xl font-display font-bold text-amber-400">{cancelingSubs.length}</p>
                       <p className="text-[10px] text-muted-foreground">In Cancellazione</p>
@@ -1037,7 +1037,7 @@ const SuperAdminDashboard = () => {
                   </div>
 
                   {/* Plan distribution */}
-                  <div className="p-4 rounded-2xl bg-card border border-border">
+                  <div className="p-4 rounded-2xl admin-card">
                     <h3 className="text-sm font-semibold text-foreground mb-3">Distribuzione Piani</h3>
                     <div className="space-y-2">
                       {Object.entries(planCounts).sort((a, b) => b[1] - a[1]).map(([plan, count]) => {
@@ -1091,7 +1091,7 @@ const SuperAdminDashboard = () => {
 
                       return (
                         <motion.div key={sub.id}
-                          className="p-4 rounded-2xl bg-card border border-border"
+                          className="p-4 rounded-2xl admin-card"
                           layout>
                           {/* Header */}
                           <div className="flex items-start justify-between mb-2">
@@ -1230,7 +1230,7 @@ const SuperAdminDashboard = () => {
 
             <div className="space-y-2">
               {fiscoStatuses.map((config) => (
-                <div key={config.id} className={`p-4 rounded-2xl border ${config.configured ? "bg-card border-green-500/20" : "bg-card border-destructive/20"}`}>
+                <div key={config.id} className={`p-4 rounded-2xl border ${config.configured ? "admin-card border-green-500/20" : "admin-card border-destructive/20"}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className={`w-3 h-3 rounded-full ${config.configured ? "bg-green-400" : "bg-red-400"}`} />
@@ -1259,11 +1259,11 @@ const SuperAdminDashboard = () => {
         {!loading && activeTab === "billing" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-4 rounded-2xl bg-card"><p className="text-xs text-muted-foreground">MRR</p><p className="text-xl font-display font-bold text-foreground">€{mrr.toLocaleString()}</p></div>
-              <div className="p-4 rounded-2xl bg-card"><p className="text-xs text-muted-foreground">Fee 2%</p><p className="text-xl font-display font-bold text-primary">€{totalFee.toLocaleString()}</p></div>
+              <div className="p-4 rounded-2xl admin-card"><p className="text-xs text-muted-foreground">MRR</p><p className="text-xl font-display font-bold text-foreground">€{mrr.toLocaleString()}</p></div>
+              <div className="p-4 rounded-2xl admin-card"><p className="text-xs text-muted-foreground">Fee 2%</p><p className="text-xl font-display font-bold text-primary">€{totalFee.toLocaleString()}</p></div>
             </div>
 
-            <div className="rounded-2xl bg-card border border-border overflow-hidden">
+            <div className="rounded-2xl admin-card overflow-hidden">
               <div className="px-4 py-3 border-b border-border flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-foreground">Report Commissioni</h3>
                 <div className="flex gap-2">
@@ -1326,7 +1326,7 @@ const SuperAdminDashboard = () => {
               ))}
             </div>
 
-            <div className="rounded-2xl bg-card border border-border overflow-hidden">
+            <div className="rounded-2xl admin-card overflow-hidden">
               <div className="h-80 overflow-y-auto p-4 space-y-3 scrollbar-hide">
                 {maryMessages.map((msg, i) => (
                   <motion.div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
@@ -1532,7 +1532,7 @@ const SuperAdminDashboard = () => {
                 const guideOpen = expandedGuide === item.name;
 
                 return (
-                  <div key={item.name} className={`rounded-lg border transition-all overflow-hidden ${isDisabled ? "border-muted/20 opacity-40" : item.status === "connected" ? "border-green-500/15 bg-green-500/[0.02]" : "border-border bg-card/50"}`}>
+                  <div key={item.name} className={`rounded-lg border transition-all overflow-hidden ${isDisabled ? "border-muted/20 opacity-40" : item.status === "connected" ? "border-green-500/15 bg-green-500/[0.02]" : "border-border admin-card"}`}>
                     {/* Main row — always visible */}
                     <div className="flex items-center gap-2 px-2.5 py-2">
                       <div className={`w-2 h-2 rounded-full shrink-0 ${isDisabled ? "bg-muted-foreground/30" : statusDot(item.status)}`} />
@@ -1862,7 +1862,7 @@ const SuperAdminDashboard = () => {
                   <div className="rounded-xl border border-border overflow-hidden">
                     <button
                       onClick={() => setExpandedSection(expandedSection === "functions" ? null : "functions")}
-                      className="w-full flex items-center justify-between px-3 py-2.5 bg-card hover:bg-muted/20 transition-colors"
+                      className="w-full flex items-center justify-between px-3 py-2.5 admin-card hover:brightness-110 transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <Cpu className="w-3.5 h-3.5 text-muted-foreground" />
@@ -1916,7 +1916,7 @@ const SuperAdminDashboard = () => {
                   <div className="rounded-xl border border-border overflow-hidden">
                     <button
                       onClick={() => setExpandedSection(expandedSection === ("legend" as any) ? null : "legend" as any)}
-                      className="w-full flex items-center justify-between px-3 py-2.5 bg-card hover:bg-muted/20 transition-colors"
+                      className="w-full flex items-center justify-between px-3 py-2.5 admin-card hover:brightness-110 transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <Info className="w-3.5 h-3.5 text-muted-foreground" />
@@ -2109,7 +2109,7 @@ const SuperAdminDashboard = () => {
               </motion.button>
               <motion.button
                 onClick={() => { setActiveTab("integrations"); setExpandedSection("client" as any); }}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card/50 hover:bg-muted/20 transition-colors"
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border admin-card hover:bg-muted/20 transition-colors"
                 whileTap={{ scale: 0.97 }}
               >
                 <Wifi className="w-5 h-5 text-muted-foreground" />
