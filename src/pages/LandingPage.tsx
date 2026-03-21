@@ -1214,7 +1214,7 @@ const PricingConfigurator = ({ navigate }: {navigate: (path: string) => void;}) 
               <div key={i} className="w-6 h-6 rounded-full bg-primary/10 border-2 border-background flex items-center justify-center text-[0.55rem]">{e}</div>
               )}
               </div>
-              <p className="text-[0.55rem] text-foreground/40"><strong className="text-foreground/60">127+ attività</strong> hanno già scelto Empire questa settimana</p>
+              <p className="text-[0.55rem] text-foreground/55"><strong className="text-foreground/75">127+ attività</strong> hanno già scelto Empire questa settimana</p>
             </div>
 
             {/* Package Cards — mobile conversion-optimized */}
